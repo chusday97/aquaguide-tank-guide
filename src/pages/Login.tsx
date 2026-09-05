@@ -9,7 +9,7 @@ export default function Login() {
   const isEn = Boolean(i18n.language?.startsWith('en'));
 
   return (
-    <div className="flex min-h-[100dvh] items-center justify-center bg-[#dfe8e5] px-4 py-8 text-ink">
+    <div className="workspace--standalone flex min-h-[100dvh] items-center justify-center bg-[#dfe8e5] px-4 py-8 text-ink">
       <main className="w-full max-w-[460px] rounded-[30px] border border-white/80 bg-white p-6 shadow-[0_24px_70px_rgba(27,77,62,0.14)]">
         <span className="flex h-12 w-12 items-center justify-center rounded-[18px] bg-emerald-800 text-white"><Cloud className="h-6 w-6" /></span>
         <div className="mt-4 inline-flex rounded-full bg-amber-50 px-3 py-1 text-[11px] font-black text-amber-800">{isEn ? 'COMING SOON' : '功能建设中'}</div>

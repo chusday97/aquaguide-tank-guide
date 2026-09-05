@@ -20,6 +20,9 @@ export interface VisualResultSubject {
 
 export interface VisualResultViewModel {
   status: VisualResultStatus;
+  presentationMode?: 'verdict' | 'confirmed_facts' | 'unavailable';
+  statusLabel?: string;
+  coverageLabel?: string | null;
   title: string;
   conclusion: string;
   emphasis: string[];

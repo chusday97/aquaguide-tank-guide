@@ -43,8 +43,8 @@ try {
     await seedStorage(context);
     const page = await context.newPage();
     page.setDefaultTimeout(20000);
-    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
-    const pager = page.locator('#atlas-pagination-bottom > div:visible');
+    await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'domcontentloaded' });
+    const pager = page.locator('#atlas-pagination-bottom > div').first();
     await pager.waitFor();
     const buttonY = await pager.locator('button').evaluateAll(buttons => buttons.map(button => Math.round(button.getBoundingClientRect().top)));
     assert.equal(new Set(buttonY).size, 1, `${width}px pager stays on one row`);
@@ -62,13 +62,13 @@ try {
   await seedStorage(phoneContext);
   const phonePage = await phoneContext.newPage();
   phonePage.setDefaultTimeout(20000);
-  await phonePage.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
+  await phonePage.goto(`${baseUrl}/care?mode=browse`, { waitUntil: 'domcontentloaded' });
   const recommendation = phonePage.locator('[data-care-recommend-card]').first();
   await recommendation.waitFor();
-  const recommendationCounter = phonePage.locator('#care-recommendations').getByText(/^[0-9]+\/[0-9]+$/);
-  const counterBefore = await recommendationCounter.innerText();
+  const recommendationTitle = recommendation.locator('span.text-\\[15px\\]').first();
+  const titleBefore = await recommendationTitle.innerText();
   await phonePage.waitForTimeout(4500);
-  assert.equal(await recommendationCounter.innerText(), counterBefore, 'care recommendation does not auto rotate');
+  assert.equal(await recommendationTitle.innerText(), titleBefore, 'care recommendation does not auto rotate');
   assert.equal(await recommendation.evaluate(element => element.parentElement?.scrollLeft || 0), 0, 'recommendation does not reveal adjacent cards');
   assert.equal(await phonePage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'care page has no horizontal overflow');
   await phonePage.getByRole('button', { name: /水族册养护/ }).click();
@@ -112,8 +112,11 @@ try {
   await desktopSpeciesEntry.click();
   await desktopPage.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
   await desktopPage.keyboard.press('Escape');
-  await desktopPage.getByText('养护计划', { exact: true }).waitFor();
-  await desktopPage.getByText('如何安全给新鱼过水？', { exact: true }).waitFor();
+  const todayActionHandle = desktopPage.locator('[data-today-action-handle]');
+  await todayActionHandle.waitFor();
+  if ((await todayActionHandle.getAttribute('aria-expanded')) !== 'true') await todayActionHandle.click();
+  await desktopPage.locator('#care-plan').getByText('养护计划', { exact: true }).waitFor();
+  await desktopPage.locator('#care-plan').getByText('如何安全给新鱼过水？', { exact: true }).waitFor();
   assert.equal(await desktopPage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'desktop aquarium has no horizontal overflow');
   await desktopContext.close();
 

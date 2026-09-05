@@ -277,7 +277,7 @@ export default function AdminContent() {
   const statusLabel = useMemo(() => selected?.status === 'published' ? '已发布' : selected?.status === 'archived' ? '已下线' : '草稿', [selected]);
 
   return (
-    <div className="min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
+    <div className="workspace--standalone min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
       <div className="mx-auto max-w-[1440px]">
         <header className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white px-4 py-3 shadow-sm">
           <div className="flex items-center gap-3">

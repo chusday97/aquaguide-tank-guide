@@ -16,3 +16,4 @@ evaluation/reports/*.md
 .vercel
 
 supabase/.temp/
+.artifacts/readiness/

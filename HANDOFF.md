@@ -1,7 +1,198 @@
 # AquaGuide 交接文档
 
-> **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
+## 2026-08-31 专业身份核实进展（当前）
 
+- 当前数据分支 `codex/catalog-cohort-30-v1` 的数据代码复验点为 `e8e6f3ce`；后续仅有文档修订，工作树干净，尚未推送。
+- 新增4条 GBIF Backbone Taxonomy 身份来源，分别核实 Hemigrammus rhodostomus、Corydoras aeneus、Pterophyllum scalare 和 Symphysodon aequifasciatus；GBIF 仅用于身份，不覆盖水体、温度、体型、缸体或行为字段。
+- 当前聚合统计为 30 种/300 字段、105 supported、195 reviewed+unknown、32 条内容已核实来源、99 个字段可进入运行时；486 种 Catalog checksum 为 `05576a71b29b6548efee79a119480fd4ab000674bd110533683bbc91c27bb1c2`。
+- 批次、Catalog、435 组合、Domain/Service/Presentation、authority、lint 和 build 均通过；同一 Critic 已复验本轮来源边界，无实现阻塞。
+- 仍未完成：30 种全部来源核实、数据短 PR 推送/合并、UI 验收、生产第27个 migration、Catalog 发布和正式上线。来源无法明确支持的字段继续保持 unknown，持续推进下一个来源，不等待单个来源恢复。
+
+## 2026-08-29 4319 本地预览恢复（本轮最新）
+
+- 用户报告的“乱码”已复现为 Vite 技术错误遮罩，不是中文编码问题：候选 worktree 的临时 `node_modules` 链接在服务启动后被移除，reload/HMR 再次解析 `@tailwindcss/vite` 时失败。
+- 4319 已重启，并在服务生命周期内保留依赖链接；链接通过仓库本地 exclude 忽略，不进入提交。
+- 同一浏览器标签 reload 后验证：UTF-8、错误遮罩为 0、正式互动内容与候选完整 SHA/seed/build time 可见。Three.js 仅有弃用 warning，没有页面错误。
+- 禁止重踩：候选 worktree 预览存活期间不得移除依赖链接；交付 localhost 前必须在首次加载后再执行一次 reload/HMR 复验。
+
+## 2026-08-29 本地收口复核（本轮最新）
+
+- 4317 冻结视觉基线和 4319 当前候选均已恢复并返回 HTTP 200；4319 元数据对应候选当前 SHA，4317 保持历史构建，不为元数据改写基线。
+- 真实浏览器已通过 Aquarium factual flow（规划只写种草清单、鱼缸不变、现实记录可保存）、正式图鉴/养护 scene/browse、今日行动点击/Escape/拖拽吸附。
+- 当前候选 HEAD、远端候选/PR #142 SHA 和领先数量均由 `git rev-parse`/`git rev-list` 运行时读取；工作树干净，候选已提交但未推送。
+- `check:ui-freeze` 明确报告的是本轮已批准的混养结果区域变化（7 个 visual-owned 文件），不是 Aquarium 舞台布局回退；需要用户确认后再重新 capture freeze。
+- 生产 Supabase、Catalog 发布和 `main` 合并均未执行；本轮没有 GitHub、生产数据库或 Catalog 写入。
+
+## 2026-08-29 浏览器门禁修复（本轮最新）
+
+- 修复 Aquarium 空缸创建后的 React Hook 顺序错误。原因是混养展示 `useMemo` 位于 `!activeAquarium` 条件返回之后；现已移到所有条件返回之前，页面创建空缸后不再进入错误边界。
+- `scripts/verify-aquarium-factual-flow.mjs` 现在走真实的“鱼类 → 黑裙鱼 → 查看规划判断”交互，覆盖：规划不写鱼缸、资料不完整时只写种草清单、不调用新增生物 API、现实记录独立保存、旧 `add-species` 深链兼容。
+- 浏览器回归通过：`PREVIEW_URL=http://localhost:3001 node scripts/verify-aquarium-factual-flow.mjs`；静态/构建门禁也通过。当前 3001 是临时本地候选预览，结束后已关闭临时依赖链接。
+- `check:ui-freeze` 仍是批准范围内混养结果变化导致的预期失败，不代表 Aquarium 舞台回退。当前候选领先远端的提交数以 `git rev-list` 运行时读取，未推送；生产 Supabase、Catalog 和 `main` 均未改动。
+- 双预览已恢复：4317 使用独立基线 worktree `37a8d4d1` 的 production build，4319 使用候选当前提交；两个 `/_preview/interactive` 均已用真实 Chromium 验证 HTTP 200 且无页面错误。4317 不能显示候选版新增的元数据条，因为那会修改冻结 SHA；4319 已显示 branch/SHA/seed/build time。
+
+## 2026-08-29 混养结果体验修复（本轮最新）
+
+- 当前分支：`codex/main-core-foundation-v1`；本轮只改混养结果展示、收藏操作和推荐过滤，不动 Aquarium 舞台、布局、素材、今日行动、Supabase 或生产数据。
+- Domain 仍返回真实 `insufficient_data`，但用户界面改为“当前可确认”或“暂未开放这组混养建议”；有部分事实时列出已核对维度，没有可靠事实时只提供物种养护和种草清单操作。
+- `insufficient_data` 的规划组合不会调用新增缸内生物 API；种草清单复用现有本地收藏服务，保存 species ID，支持重复点击和跨页事件同步。
+- 新增中央展示服务 `src/services/compatibility/compatibility-presentation.service.ts`，并接入 Compatibility Calculator、Visual Result Card、Species Detail、Encyclopedia、Aquarium 和 Recommendation。
+- 验证通过：`test:compatibility-presentation`、`test:recommendation-unknown-filter`、`test:visual-results`、混养 Domain/Service/435 组合矩阵、Catalog、lint、API 类型和 production build。
+- Critic 初审发现两个阻塞：未审核候选仍进入自动推荐、Aquarium 的 `complete_information` 仍进入设置并可能写鱼缸；已在 `ef1bba10` 修复并补回归，未审核候选现在只留在 blocked，规划资料不足只写种草清单。
+- 同一 Critic 已复验 `ef1bba10`：需求完整性、逻辑、边界、代码质量、测试设计和 diff 范围均无新的实现级阻塞；完整交付仍受 UI freeze 人工确认和远端/Preview/Supabase/main 门禁限制。
+- 追加修复 `9584dbef`：Aquarium 规划结果逐项区分“当前可确认”和“暂未开放”，没有确认事实的物种不再被错误标成当前可确认；展示测试、类型检查和 production build 已重新通过，同一 Critic 复验通过。
+- `check:ui-freeze` 当前为 `FROZEN_PROVISIONAL` 失败，原因仅是批准范围内的混养结果区域文件变化；不是舞台或布局回退。用户验收新文案后需要重新 capture freeze。
+- 本地 HEAD 以 `git rev-parse HEAD` 运行时读取，工作树干净；远端候选和 PR #142 仍停留在 `396e71da`，本轮不推送、不执行生产 migration/Catalog 发布、不合并 `main`。
+
+下一步：将 `ef1bba10` 交回同一 Critic 做六维复验；如无阻塞，等待用户确认混养结果显示，再重新 capture UI freeze，之后才讨论一次性推送 PR #142。
+
+## 2026-08-28 当前执行快照（本轮最新）
+
+> 当前本地 HEAD 以 `git rev-parse HEAD` 运行时读取，已提交但尚未推送；远端候选和 PR #142 仍为 `396e71da`。此前“已同步/已推送”描述均为历史记录，不能作为当前状态。
+
+- 当前分支：`codex/main-core-foundation-v1`。UI 继续冻结；本轮未改布局、素材、今日行动或视觉 Owner 文件，未推送 GitHub、未写生产 Supabase、未合并 `main`。
+- 首批 30 个物种队列已改为固定、去重的 Catalog ID；新增逐记录 Catalog 审计报告和只生成草稿的 `catalog:research`/`catalog:review` 命令。审核状态不会因进入队列自动提升。
+- Domain 现在输出个体上下文、现实共处等级和分层数量指导；领地性仅谨慎提示，繁殖护域与现实伤害有独立等级，幼体风险不会覆盖成体风险。旧引擎仍是冻结页面使用的兼容 facade，最终状态由 Domain 决定。
+- 新增 435 组合矩阵门禁，验证无序组合确定性、顺序对称性和资料不足安全降级；本地 324/435 组合返回 `insufficient_data`，其余为明确硬冲突。
+- 本地门禁结果：Domain/Service/legacy facade、Catalog、lint、API 类型、production build、UI freeze、project truth、26+1 migration 重放、pgTAP 19/19、schema lint 0 error 均通过。
+- 当前阻塞：30 种字段级内容仍需水族内容专家整批审核；生产第 27 个 migration、Catalog 发布、最新 Preview exact SHA、人工 release acceptance 和 `main` 合并仍未完成。
+- 下一步：先让同一 Critic 基于本轮 diff 和测试证据复验；随后整理少量本地提交。除非另行授权，不执行生产 migration、Catalog 发布、GitHub 推送或 main 合并。
+
+## 2026-08-28 物种底层修复（最新）
+
+- 当前工作线仍为 `codex/main-core-foundation-v1`；本轮保持冻结 UI，不执行生产 SQL、Catalog 发布、GitHub 推送或 `main` 合并。
+- 已完成 Domain 环境约束（温度/pH/缸温/容量/缸长）和 `decisionReadiness` 元数据；旧引擎入口已固化为 Domain-authoritative facade，正式页面保持原 import 以满足 UI freeze，但最终结论不再来自旧逻辑。
+- 新增 `scripts/audit-species-data-quality.ts` 和 `src/data/compatibility-launch-cohort.ts`：486 条记录审计、30 条确定性研究队列。研究队列只用于排期，不能把未审核物种当作安全可规划加入。
+- 本地验证：`lint`、API 类型、Domain/Service 混养回归、Catalog 快照、30 条队列测试、`check:compatibility-authority`、`check:ui-freeze`、`check:project-truth` 和 production build 通过。
+- 当前阻塞：首批 30 种事实仍需人工逐字段审核；生产第 27 个 migration、Catalog checksum parity、Preview exact SHA、人工验收和 `main` 合并仍未完成。
+- 下一步：先跑完整本地门禁并交独立 Critic 复验，再按授权边界申请生产 migration；任何 UI freeze 差异立即停止。
+
+> 说明：本文件更早日期段中的 `545ac...` checksum、旧 SHA 和“未推送”描述均为历史证据；当前候选状态以本节和 `npm run project:status` 为准。
+
+## 2026-08-28 忽略 Vercel 后的本地收敛（最新）
+
+- 当前工作线仍为 `codex/main-core-foundation-v1`；本轮没有修改冻结 UI、生产 Supabase、Catalog 发布或 `main`。
+- 已完成混养唯一权威静态门禁、486 物种 Catalog 校验、26+1 本地 migration 重放、19/19 pgTAP、schema lint、Domain/Service/API 与浏览器回归。核心 UI 测试中的旧 600px/混养/AI 入口/证据折叠断言已按当前正式契约修正并通过。
+- 当前可复核事实：旧引擎只能作为 facade；生产前 26 个 migration 只读结构等价；第 27 个 migration 仍需生产授权；生产 Catalog checksum、真实身份写入和回滚仍 `UNVERIFIED`。
+- 已完成：独立 Critic 对最新 diff 的复验和一次性 GitHub 同步；`npm run project:status` 显示本地、远端候选和 PR #142 SHA 同步。PR #142 继续 Draft，不合并 `main`。
+- 未完成：新 head 的 Preview exact SHA、生产第 27 个 migration、Catalog 发布、人工 release acceptance 和 `main` 合并。
+- 下一步：读取本次 GitHub CI/Preview 收敛结果；Preview 未验证前不发布，随后由用户单独决定生产 migration 授权。
+
+## 2026-08-28 忽略 Vercel 的安全补救（最新）
+
+- 本轮只处理本地与文档收敛，不等待 Vercel、不修改当前 UI、不执行生产 Supabase SQL。
+- 新增 `check:compatibility-authority` 门禁：旧 `tankCompatibilityEngine` 是冻结页面的兼容 facade，Domain Rules 保留最终结论权威。
+- Feature Catalog/Convergence Ledger 已记录混养本地验证完成；Catalog parity 报告更新为当前 checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- 第 27 个 migration 授权包已生成：`docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`。生产仍只有前 26 个 migration，Catalog 未发布。
+- 下一步：跑完整本地回归、交独立 Critic 复验，再一次性同步 GitHub；Preview 仍按 Vercel 恢复情况单独验证。
+
+## 2026-08-28 最新执行快照：水体事实修复已同步
+
+- 红绿灯 `sp_0431` 和宝莲灯 `sp_0432` 已加入有证据支持的显式 `freshwater`；其余未审核物种保持 `unknown`，未知水体仍安全返回 `insufficient_data`。
+- 完整资料下红绿灯↔宝莲灯返回 `caution`；移除任一方显式水体后返回 `insufficient_data`。Catalog 486 个物种 checksum 为 `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- 本地、远端 `codex/main-core-foundation-v1` 和 PR #142 当前 SHA 已同步，精确值以 `npm run project:status` 运行时读取，工作树干净。上一个代码 head `cdd465817dc796bf77c9d3aef5e95c25366befff` 的 Preview parity 仅作为历史证据保留。
+- 当前候选没有 exact Preview 部署，`check-preview-parity` 为 `UNVERIFIED`；AquaGuide 与 `admin-content` Vercel checks 均因 24 小时部署限流失败。Cloudflare、Foundation、`validate` 的实时结果以 `gh pr checks 142` 读取；未全绿不得发布。
+- 当前没有改 UI、没有执行生产 Supabase migration/Catalog 发布、没有合并 `main`。PR #142 继续保持 Draft，等待生产授权和最终人工验收。
+
+## 2026-08-28 最新执行快照
+
+- 混养结论已完成本地唯一权威闭环：Domain Rules 是最终状态/策略/版本来源，`src/lib/compatibility/canonical-result.adapter.ts` 负责把结构化 ruleCodes 映射为 legacy 页面仍需的证据分组；Service 与旧入口共用同一适配器。最新代码提交为 `b9d56da2`。
+- 本地门禁与独立 Critic 六维复验通过；正式场景、今日行动、UI freeze 和 project truth 均通过，未修改视觉文件。
+- 当前 GitHub 同步已完成：本地、远端候选和 PR #142 均为 `7f0d208f`，工作树干净；当前 head 的 Preview SHA 仍未验证，GitHub 报告 Vercel AquaGuide/admin-content build-rate-limit（24 小时后重试）。生产第 27 个 migration、Catalog 发布和 `main` 合并未执行。
+- 下一步：不再重复推送；等待额度恢复后只读运行 `check:preview-parity`。在此之前可继续本地与生产只读证据整理，PR #142 保持 Draft。
+
+## 2026-08-28 当前执行边界
+
+- 本地 Compatibility Service 与 Domain Rules 权威收敛已通过专项回归；当前候选工作树为 `codex/main-core-foundation-v1`，SHA 由运行时状态命令读取。
+- 4319 已重启到当前工作树，正式图鉴/养护 scene/browse 与今日行动回归通过；4317 冻结视觉基线未动。
+- 页面层 import 切换尝试被 `check:ui-freeze` 正确拦截并回退，因此正式页面仍有旧引擎适配层入口；这是解冻 UI 后的明确待办，不是已完成事项。
+- 当前本地领先远端候选 9 个提交；不要宣称 GitHub/PR/Preview 与当前 head 已同步。生产第 27 个 migration、Catalog 发布和 `main` 合并均未执行。
+- 下一步：等待 Vercel 配额恢复后一次性推送；重跑 `project:status`/Preview parity；随后分别申请生产 migration、Catalog 发布和 main 合并授权。
+
+## 2026-08-28 混养唯一结论闭环
+
+- 旧引擎入口已改为 Domain-authoritative adapter：保留 legacy Fish 输入和说明证据，但最终 `status`、风险等级、策略所依据的元数据来自 Domain Rules；commit `7fa70ac1`。
+- 现有 Aquarium、Encyclopedia、Species Detail 和 Compatibility Calculator 页面文件没有改动，`check:ui-freeze` 通过；无需为了切换逻辑重新设计视觉。
+- 回归通过：`test:compatibility`、`test:compatibility-service`、Catalog、添加/记录、build、UI freeze 和 project truth；正式 scene/browse 与今日行动此前已通过。
+- 当前本地候选领先远端 11 个提交；不要宣称 GitHub、PR #142 或 Preview 已同步。生产第27个 migration、Catalog 发布和 main 合并仍未执行。
+
+## 2026-08-28 Critic 阻塞修复
+
+- 独立 Critic 发现旧入口只同步 Domain 状态、未同步 Domain 证据；现已把证据合并下沉到 `src/lib/compatibility/canonical-result.adapter.ts`，直连旧页面也能显示对应阻断/资料不足理由。（commit: `33576cc6`）
+- 新增 direct-entry 水体冲突回归并通过；类型、混养、UI freeze 和 project truth 继续通过。当前代码修复尚未推送。
+- 后续已删除 Service 内重复的 Domain evidence map，统一复用共享 adapter，并补齐未映射 ruleCodes；Critic 复验结论为本地六维 PASS。（commit: `b9d56da2`）
+
+## 2026-08-28 Domain 结论接管 Service
+
+- Compatibility Service 已把 Domain Rules 的状态与添加策略接到应用/服务层；legacy 引擎仍只提供证据详情，Service 不再把 legacy status 当最终结论。
+- Domain 新增显式候选水体校验及已审核捕食、领地、单养特征规则；未知水体/未审核资料安全返回 `insufficient_data`。
+- 新增 `npm run test:compatibility-service`，并通过 Domain、Catalog、添加意图、现实记录、API 类型、lint、build、UI freeze、project truth 回归。
+- `record_existing` 与 `planned_addition` 现在由记录/规划服务显式传入，现实记录仍可保存，规划加入仍按 `allow / confirm / complete_information / block` 处理。
+- 本步骤已本地提交为 `9d0110f6`，尚未推送；推送前仍需独立 Critic 复验，并考虑 Vercel 配额限制。
+- UI 冻结仍有效：正式页面的旧引擎 import 本轮没有改动，因此布局和素材没有变化；解除冻结后的页面入口切换仍是待办。
+- 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 `main` 合并未执行。
+
+## 2026-08-28 Critic 修复与复验准备
+
+- 修复 `reviewSpeciesAdditions` 的 intent policy：现实记录不再返回规划加入的 `complete_information`，改为保存类策略；新增 Domain ruleCode 到结构化说明的映射，避免状态/理由不一致。
+- 补回 `npm run check:preview-parity` 脚本入口；本地执行因 GitHub DNS/网络限制失败，不能将 Preview parity 记为通过。
+- 修复已提交为 `ba23c69d`；当前需要完成同一 Critic 的复验，再决定在 Vercel 配额恢复后推送。生产 migration、Catalog 发布和 main 合并仍不执行。
+- 追加规则说明归类和重复脚本键修复，提交为 `9495a95b`；Domain-only 水体冲突现在进入 blocking，未知/审核缺口进入 missing/warning，避免风险等级过度放大。
+- 本地 authority checkpoint 已提交且工作树干净；本地门禁通过。当前仍比远端候选领先本地提交，未推送；等待 Vercel 配额恢复后一次性同步并验证 PR/Preview SHA，具体 SHA 以状态命令动态读取。
+
+## 2026-08-28 候选推送与 Preview parity
+
+- 本地候选、远端 `codex/main-core-foundation-v1`、PR #142 Head 与 Vercel Preview 已同步为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。
+- `npm run project:status`：本地/远端同步，PR #142 为 Draft，`releaseReady=false`。
+- `npm run check:preview-parity`：`PASS / EQUIVALENT`；Preview 为 `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app`，实际部署 SHA 与候选一致。
+- 本次只推送候选代码和文档；未执行生产第 27 个 migration、Catalog 发布或 main 合并。当前唯一底层未完成项仍是 legacy UI status/evidence 尚未完全由 Domain 接管。
+
+> 追加事实：后续 docs-only 提交将候选推进到 `df3c4e119b14e323502b9c711ad607b66eeb5435`，本地/远端/PR 仍同步；Vercel 对该 head 受每日额度限制，Preview parity 暂为 `UNVERIFIED`。上一笔代码 head `55a37745` 的 exact Preview parity 保留为历史证据。
+
+## 2026-08-28 admin-content 门禁隔离
+
+- 已更新 Vercel `admin-content` 项目配置：Root Directory 恢复自动检测（仓库根），仅 `feature/admin-content-v0` 执行 `npm run build --workspace @aquaguide/admin-content`；其他分支直接跳过。
+- 该配置不改变 AquaGuide 代码、当前 UI 或仓库分支；旧候选失败部署已按新配置重试并被安全取消（表示忽略构建），需下一次 GitHub push 生成新的 status 才能确认 PR 门禁恢复。
+
+## 2026-08-28 Domain fact source 收敛第二步
+
+- `speciesProfileFromFish` 现在负责将旧 Fish 的显式温度/pH 文本转换为 canonical `SpeciesProfile` 数值范围；Domain adapter 不再直接读取 Fish 文本字段。
+- 补充空文本、无效换水周期、nullable 文案和范围转换回归；`test:species-profile`、Catalog、Domain、lint、API、build、UI freeze 和 project truth 均通过。
+- 本步骤仍未宣称完整 Domain authority：legacy UI status/evidence 仍为迁移期 fallback；生产第 27 个 migration、Catalog 发布和 main 合并未执行。
+
+## 2026-08-28 Compatibility Service 入口收敛
+
+- 新增 `src/services/compatibility/compatibility.service.ts` 作为统一应用入口，服务、知识模块、推荐、Collection 和测试不再直接导入旧引擎；旧引擎仅在该入口内部调用。
+- 页面/组件文件因 UI freeze 约束保持不变，因此正式页面消费者尚未完成最后切换；不能把本步骤描述为 Domain status 已完全接管。
+- `check:ui-freeze`、lint、API 类型、Domain/兼容性回归和 project truth 已通过；当前工作树待提交。
+
+## 2026-08-28 Domain authority 收敛进展
+
+- 已新增 canonical `SpeciesProfile` 类型和 `speciesProfileFromFish` 适配器；旧 Fish 的缺失水体保持 `unknown`，不从名称、分类或描述推断。
+- Catalog Snapshot 与 Domain 输入复用同一 Profile 边界；已审核结构化 pair rule 才能进入 Domain，legacy 总状态不再反向覆盖 Domain。
+- 本地验证：`test:species-profile`、`test:catalog-snapshot`、`test:domain-compatibility`、兼容性引擎回归、lint、API 类型、`check:ui-freeze` 和 `check:project-truth` 通过。
+- 当前仍未完成：所有 Service/Repository/UI 结果完全改由 Domain 决定；生产 Catalog migration、Catalog 发布和 `main` 合并继续未授权。
+
+## 2026-08-28 GitHub 与 Preview parity 已闭合
+
+- 当前候选分支 `codex/main-core-foundation-v1`、远端分支、PR #142 Head 和 Vercel Preview 均为 `1a3d366bd8432eadf20442274ba06dfd90904a98`。
+- `npm run check:preview-parity` 已通过：Preview 为 `https://aquaguide-6xdkkkg9e-chusday97s-projects.vercel.app`，状态 `EQUIVALENT`。
+- PR #142 的 `foundation`、`validate`、Cloudflare Pages 和 aquaguide Vercel 检查通过；PR 仍为 Draft，另有无关的 `Vercel – admin-content` 失败状态，不作为 AquaGuide 候选部署证据。
+- 生产 Supabase 仍只读：前 26 个 migration 与结构基线等价；Catalog 三项仍 `MIGRATION_REQUIRED`。未执行第 27 个 migration、Catalog 发布、生产写入或 `main` 合并。
+- 下一步只有三个独立授权点：生产第 27 个 migration、Catalog 发布、PR #142 转 Ready/合并 `main`。
+
+## 2026-08-28 本地 Supabase 验证续跑
+
+- 当前目标：在 Vercel 等待期间完成候选分支的本地数据库重放与权限门禁，不改变 localhost UI、不写生产 Supabase、不推送 GitHub。
+- 已完成：Docker Desktop + Supabase CLI 本地栈；前 26 个生产 migration 从零重放；七类规范化结构 hash 与生产只读基线完全一致；第 27 个 Catalog migration 本地重放、schema lint 和 19/19 pgTAP 通过；匿名 Catalog REST 读取成功、匿名写入被 `401/42501` 拒绝（commit `b9903924`）。
+- 关键文件：`supabase/config.toml`、`supabase/tests/catalog_rls.test.sql`、`supabase/fixtures/`、`docs/05-validation/SUPABASE_PARITY_REPORT.md`。
+- 当前卡点：生产尚未执行第 27 个 migration，生产 Catalog checksum 与真实身份写入/回滚语义仍 `UNVERIFIED`；PR #142 仍为 Draft，`main` 尚未改变。
+- 下一步：等待 Product Golden Path validate 收尾；随后由用户单独授权第 27 个生产 migration。Catalog 发布与合并 `main` 继续分别授权。
+- 独立 Critic 复验：六维均通过本地范围；确认 26+1 replay、RLS/GRANT、19/19 pgTAP 和 fixture 移动无阻塞。生产 parity、Catalog 发布和身份写入/回滚仍明确为外部门禁。
+- 2026-08-28 生产只读复核：26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；33 个触发器对象对应 35 个 information_schema 事件行（多事件展开）；Catalog 表/水体字段缺失，标记 `MIGRATION_REQUIRED`，未执行任何生产写入。
+- 2026-08-28 GitHub/Preview 同步：历史 `ad858032` 部署 `6133389265` 仅作旧证据；当前候选已同步至 `1a3d366b`，并完成新的 exact Preview SHA 记录。
+- 2026-08-28 parity 门禁修复：Vercel CLI metadata fallback 已加入 `check:preview-parity`，解决 GitHub Deployments API 漏报 Vercel deployment 的误报；修复后候选 `1a3d366b` 的 parity 检查通过。
+- 禁止重踩：不要运行 `supabase db reset --linked`、`supabase db push`、生产 DDL/DML；不要把本地 pgTAP/REST 结果描述为生产写入已验证；不要修改视觉文件。
 
 ## 2026-08-13 Golden Path GP-002 + Compatibility Evidence baseline
 
@@ -492,320 +683,14 @@
 - 根因：旧 `foreignObjectRendering` 在离屏 1080px 克隆上生成全透明画布；常规 html2canvas 又会被 Tailwind `oklch` 阻断。
 - 修复：记录卡使用 Canvas API 固定 1080px 直接绘制，不读取响应式页面 CSS；实际 PNG 为 1080×1000，深色像素和通道对比度门禁通过。
 - 验证：导出模型、分享隐私契约、390/600/1280px 布局和真实下载像素检查。
+## 当前接手快照（2026-08-31，`48c56db7`）
 
-## 2026-08-28 Species SEO Admin 分组与批量模型交接
-- 当前工作位于隔离分支 `feature/admin-content-v0`；不得把本阶段误写成 main 已合并或 Production 已接入。
-- 新接手者先读 `.ai/LIVE_STATUS.md`，再读 `.ai/CURRENT_GOAL.md` / `TASK_QUEUE.md` / `DECISION_LOG.md` / `EXECUTION_LOG.md`。
-- 现有 486 条 Species 不是 486 个独立 SEO 实体；生成层按明确学名/变种标记聚合为 276 个 Base Species。
-- 83 个 Base Species 含多个 catalog 成员，可作为批量 SEO 候选；批量模板按成员名称/Variant 生成独立草稿，不直接复制为 Published 内容。
-- 发现 28 条疑似完全重复 catalog 记录；不得先删原数据，先在 Admin 标记并后续人工确认 canonical/合并策略。
-- 发现 5 个跨分类冲突组（含部分神仙鱼、波子、海葵/珊瑚、红宫廷）；这些组必须人工复核，禁止一键批量发布。
-- 下一阶段核心：A+B 门禁已通过，转入 publish-readiness、可记录的数据复核和非 Production Preview Publish；仍不修改 Product Truth，也不直接连接 Production 发布。
+目标仍是完成首批30种物种的专业来源闭环；当前不修改 UI、不写生产 Supabase、不发布 Catalog、不推送远端。
 
-### 2026-08-28 Base Species → Variant SEO inheritance
-- 不要恢复“每个 Variant 复制一份 Base SEO 文案”的模式。当前契约是 Base Species 保存共享模板/简介，Variant 只保存差异 Override。
-- Effective SEO 在读取/预览时解析；空 Override 表示继承，清空 Override 必须可恢复 Base。
-- 批量操作当前只允许创建继承 Draft shell，不允许静默覆盖 Published Variant。
-- Base SEO 新表为 `species_seo_groups`；只在本地隔离 Supabase 验证过，Production 未应用。
-- 本地 RLS 已验证 admin 可写、普通 authenticated 用户不可见 Draft 且不能写；详细证据见 `.ai/LIVE_STATUS.md` 与 `.ai/EXECUTION_LOG.md`。
+已验证：30种/300字段结构、来源归属与审核分辨率门禁；85条 `supported`、215条 `reviewed + unknown`；20条来源已实际打开核对（其中5条 GBIF 仅支持身份），55个字段允许进入运行时；486种 Catalog 构建/校验、435组矩阵、Domain/Service/Presentation、lint/build 和独立 Critic 复验通过。
 
-### 2026-08-28 Species SEO bilingual authoring handoff
-- Do not treat UI i18n as localized Species content. Admin content rows are now locale-specific: Variant=`catalog_key + locale`, Base=`group_key + locale`.
-- `zh-CN` is the editorial source; `en` has its own Draft/Publish state. English `localized_name` is editorial only and must never replace the catalog/Product Truth name.
-- English authoring workflow is `中文 Source → AI suggestion → human review → English Draft`; no automatic publish and no silent overwrite of Published English.
-- `/api/translate` uses server-only OpenAI-compatible/DeepSeek credentials and re-validates the caller's Supabase JWT + `user_roles=admin`.
-- Base template tokens must survive translation exactly. Empty Variant Overrides must remain empty so Base inheritance is preserved.
-- GitHub references used as architecture patterns: Payload CMS localization (locale-specific content) and Tolgee translation workflow (context-aware suggestion + review). Neither was added as a dependency.
-- Data Review Queue now shows exact category-conflict membership and exact duplicate peer IDs; it does not choose canonical records or rewrite `fishData.ts`.
-- `202608280003_species_seo_localized_name.sql` was tested only in isolated local Supabase. Production remains untouched.
-- Remaining gates for publishing: publish-readiness workflow, explicit source-data review decisions for affected duplicate/category-conflict records, and controlled non-production Preview Publish. A paid persistent staging branch is optional. Live AI translation provider validation is separate from static publishing safety and does not authorize Published content by itself.
+当前卡点：仍有来源页面未打开或未能明确支持字段。未核实引用被运行时门禁拦截，不能将“supported”统计直接当成专业事实，也不能发布 Catalog。
 
-### 2026-08-28 Species SEO public route / indexing handoff
-- Do not treat `/encyclopedia?species=...` as the new SEO canonical. The branch now proposes stable static paths based on Base Scientific Name slug + catalog key.
-- English is the default route; Chinese prepends `/zh/`, matching the existing static Problem SEO pages and their hreflang/x-default pattern.
-- `species_seo.index_strategy` defaults to `noindex`; `canonical_to_sibling` is restricted by the Admin contract to the same Base Species group.
-- Base Species is an inheritance object, not automatically an indexable public page.
-- `PublicSpeciesPreview` is an Admin HTML preview of future page changes; it does not mean a public Species file already exists.
-- The real static Species generator and runtime title/meta/canonical/hreflang/robots/sitemap tests are now implemented and passing locally. Publishing is still intentionally locked at the UI level until publish-readiness and controlled Preview Publish are implemented; the database → snapshot → generator → rendered-page chain itself is already proven by A+B.
-- Migration 004 was verified only in a fresh isolated local Supabase. Never infer that Production has these columns.
+下一步：继续逐页核实剩余来源；每条来源必须记录可访问 URL、发布者、访问日期及明确支持的字段。无法确认就保留 `reviewed + unknown`。完成后重建 Snapshot/checksum、435组矩阵并交同一 Critic 复验，再申请一次性推送数据短分支。
 
-
-### 2026-08-28 Species SEO generator + revision/rollback handoff
-- New generator: `apps/admin-content/scripts/generate-public-species.mjs`. It only accepts explicit `local/test/preview/staging` snapshots, rejects `production`, and requires an explicit output directory. Do not weaken either guard when wiring staging.
-- `test:contract` now includes `test-public-species-generator.mjs`; keep it in the merge gate. It verifies EN/ZH HTML language, Title, Meta, H1, robots, self/cross canonical behavior, hreflang/x-default and sitemap membership.
-- The first runtime test caught a real locale propagation defect (English path with Chinese `lang`/labels); it was fixed before this milestone. This is evidence that static source assertions are not enough.
-- Generator eligibility is stricter than the UI: Published Variant + same-locale Published Base + complete editorial fields; English requires `localized_name`; conflict/duplicate/canonical rules are recomputed at generation time.
-- New branch migration `202608280005_species_seo_revision_history.sql` stores immutable audit snapshots in `content_revisions` for both Base and Variant writes. Authenticated clients receive SELECT only, and RLS makes those rows admin-visible only.
-- Rollback uses `restore_species_seo_revision(uuid)`. It re-checks `is_admin()`, restores content as **Draft only**, clears `published_at`, and creates a new `rollback` revision linked by `source_revision_id`. Do not change rollback into a republish shortcut.
-- Admin now shows Base Species History and Variant History; restore is a two-click action. UI confirmation is secondary defense; DB authorization and Draft coercion are the actual safety boundary.
-- Fresh isolated Supabase applied core + Admin migrations 001–005. Variant and Base each passed `v1 Draft → v2 Published fixture → v3 rollback Draft`; non-admin revision visibility was 0 and restore RPC failed with `Admin role required`; final test residue was 0.
-- Prior Vercel Admin Preview for `43eec47` was READY / HTTP 200 / noindex. The next pushed generator/history SHA must be checked again after deployment.
-- Do not merge to `main`, run these migrations in Production, or map Published directly to Production. A+B already proves migrations 001–006 plus snapshot → generator → rendered-page behavior; the next work is publish-readiness, human data-review decisions and controlled Preview Publish.
-
-### 2026-08-28 Species SEO staging publishing handoff
-- `cd363b4` is pushed to `feature/admin-content-v0`; it contains the static generator, runtime SEO/sitemap checks, and database revision/rollback chain.
-- Do not interpret the missing new Vercel Preview as a code failure: manual Preview deployment hit the Hobby daily deployment cap (`api-deployments-free-per-day`). Retry Preview only after quota reset; do not use `--prod`.
-- AquaGuide currently has no Supabase development branch. Do not use `ice-glide-staging-sg` for AquaGuide validation.
-- Staging release commands now exist: `export:staging-snapshot` and `verify:staging-publish` in `apps/admin-content/package.json`.
-- Required staging identity is explicit: staging DB URL/key/ref plus Production DB ref deny-list; staging public URL plus Production public URL deny-list.
-- `generate-public-species.mjs` now requires explicit `siteUrl` and rejects the known Production canonical host. Never restore a Production default for preview/staging generation.
-- `verify:staging-publish` must see at least one bilingual self-canonical Index pair, then exports Published rows, generates static HTML, serves it locally and fetches EN/ZH pages + sitemap to verify canonical/hreflang/x-default/indexing behavior.
-- If no staging env exists, the correct state is a non-zero gate and disabled Published controls. Provisioning a Supabase branch/project may cost money and requires explicit approval before creation.
-
-### 2026-08-28 Species SEO release-gate probe handoff
-- Staging must now apply migration 006 in addition to 001–005. `species_seo_release_gate_status()` is the data-free proof that Species SEO, Base groups, localized name, index strategy, revision history and rollback RPC exist.
-- The staging exporter calls the probe before exporting Published rows; missing/old schema is a hard failure.
-- Do not replace this with service-role reads. Fresh local proof shows anon can call the probe while `content_revisions` remains unreadable to anon.
-- Staging generator calls must supply both staging `siteUrl` and Production public URL deny-list; omission or host equality is a hard failure.
-- Fresh isolated DB applied core + 001–006 and returned all probe flags true. Temporary stack was removed after verification.
-
-### 2026-08-28 Admin A+B CI / local handoff
-- Current Admin validation model is A+B, not a paid staging branch requirement. B = Mac local Supabase; A = GitHub Actions ephemeral Supabase.
-- Keep `apps/admin-content/scripts/verify-admin-supabase-gate.sh` as the single orchestration entrypoint for both local and CI. Do not fork a second CI-only database setup.
-- CI pins Ubuntu 24.04, Node 24.14.0, Supabase CLI 2.115.0 and immutable action SHAs. Version bumps must be intentional, tested locally first, and recorded in `.ai/DECISION_LOG.md`.
-- The ephemeral database loads only `202607160001_core_schema.sql` plus Admin migrations `202608280001`–`202608280007`; do not switch CI to all repository migrations without resolving historical conflicts first.
-- Fixture preparation uses only the temporary PostgreSQL admin connection to mark the generated test user as admin. Product behavior assertions still go through publishable-key JWT sessions and real RLS.
-- Required gate proof: regular user cannot read Draft/write/read revisions/rollback; Base+Variant rollback returns Draft; Published bilingual `sp_0030` is anonymously readable and generates two indexable EN/ZH pages with canonical/hreflang/sitemap.
-- Workflow must remain validation-only: no Production credentials, DB push, Git commit, Vercel deployment or automatic Published unlock.
-- After push, verify the first GitHub Actions clean Ubuntu run. Until that run is green, A is not considered proven even though the same gate passes locally.
-
-
-### 2026-08-28 A+B gate green handoff
-- `ef2f6ae` corrected the root npm lockfile so `@aquaguide/admin-content` is reproducible under clean `npm ci`; resolved `date-fns` remains 4.1.0.
-- GitHub Actions run `33147127271` completed SUCCESS with every Admin gate step green, including the ephemeral Supabase 001–006/RLS/rollback/static-page chain.
-- Treat `npm run test:supabase-gate -w @aquaguide/admin-content` as the shared A/B database gate. Persistent paid Supabase staging is optional; do not make it a prerequisite again unless an operational need appears.
-
-### 2026-08-28 Next handoff — publish readiness
-- Infrastructure is no longer the primary blocker: A+B is green locally and on GitHub Actions run `33147127271`.
-- Implement a visible publish-readiness state before enabling any Published control. Ready means eligible for controlled Preview Publish only; never equate it with Production deployment.
-- Persist human review decisions for category-conflict and duplicate candidates. Keep Product Truth immutable from this Admin and do not auto-rewrite `fishData.ts`.
-- Independent Index / Preview Publish must fail closed until required review decisions exist.
-- Reuse the existing static generator and shared `test:supabase-gate` for Preview Publish; do not invent a second publishing pipeline.
-- Paid persistent staging remains optional. Production Supabase migrations and `main` integration require explicit approval.
-
-
-### 2026-08-28 Publish readiness / Data Review handoff
-- Migration 007 is the new branch-only readiness layer. Production Supabase has not applied it.
-- Base and Variant review state is separate from content `status`: `editing → ready_for_review → approved`. Do not collapse these into one Published field.
-- PostgreSQL invalidates approval on editorial/index changes; front-end clients must not be treated as the approval authority.
-- Rollback returns Draft + Editing. A restored old revision must be reviewed again.
-- `species_data_reviews` stores human source-data decisions without mutating catalog/Product Truth. Category conflicts may be accepted as intentional or marked source-fix-required; duplicate sets may be distinct or confirmed duplicate with a canonical catalog key.
-- Generator/public staging export only consumes the safe resolution RPC; never grant public access to review notes or reviewer identity.
-- All Base groups, including single-member groups, have the Base editor/review layer. Do not reintroduce `member_count < 2` hiding.
-- `PublishReadinessPanel` is the editor-facing explanation surface. `publish-ready` means only Controlled Preview Publish eligible.
-- B/local schema v7 gate is green; the next required evidence after push is a clean GitHub A-layer run through migration 007.
-- After A is green, build one non-Production Preview Publish command/output that reuses the existing generator rather than introducing a second publishing pipeline.
-
-
-### 2026-08-28 Controlled Preview Publish handoff
-- `3669146` migration-007 milestone passed GitHub Actions run `33149941551`; A+B is green through schema v7.
-- Controlled Preview is a distinct delivery mode, not a new content renderer. It reuses `generate-public-species.mjs` with Preview eligibility.
-- Preview can consume Approved Draft rows, but release/staging must remain Published-only. Do not weaken release eligibility when editing Preview behavior.
-- Preview actual robots must stay `noindex,nofollow`; root `robots.txt` must stay `Disallow: /`; no release `sitemap-species.xml` is emitted.
-- `build-controlled-preview.mjs` must continue refusing deployable `public/` and Admin `dist/` directories and Production canonical hosts.
-- Admin export carries only the selected Species and minimal review resolutions; reviewer IDs and notes are deliberately stripped.
-- Local reference URLs while the current processes remain alive: Admin Review `http://localhost:3020/`; generated static Preview `http://localhost:4020/`.
-- Next implementation should add queue-level counts/filters for Data Review and Publish Readiness before Production integration work.
-
-### 2026-08-30 Admin UI convergence handoff
-- Visual source: private repo `chusday97/aqua-fronted-cms`. Treat it as a design reference only; never copy its mock state/preview/delete/readiness logic as business authority.
-- Logic source remains this branch: `feature/admin-content-v0` with Supabase RLS, migrations 001–007, inheritance, Data Review, readiness, revisions and controlled generator.
-- Current desktop mental model is fixed: left navigation → center editor → right live frontend preview.
-- Left hierarchy is Category → Base Species → Variant. Base parent opens shared authoring; Variant child opens override authoring.
-- Right live preview receives unsaved Variant edits from the real resolver. Base edits continue to use `groupPreviewRows`, so shared-template edits also update the selected page preview before save.
-- Secondary tools are disclosures; do not move them back into permanent large panels unless a workflow requires it.
-- Do not put preview Product Truth fields into `species-groups.generated.json`. `productTruthLoader.js` lazy-loads the existing catalog projection, and contract guards this separation.
-- Local reference: Admin Review `http://localhost:3020/`. At 1600px current measured panes are 270 / 870 / 460 with zero browser page errors.
-- Before treating this UI milestone as stable: commit/push, then require the existing Admin GitHub Actions A-layer to pass. Do not touch Production or `main`.
-
-### 2026-08-31 Admin UI / global language handoff
-- Treat `chusday97/aqua-fronted-cms` as a design source, never as business-logic authority. Do not copy its mock deletion, Preview token, Data Review or Readiness state logic.
-- Current interaction contract: left = choose Category/Base/Variant; center = edit Base or current Variant; right = live public frontend result.
-- `AppLanguageProvider` owns `appLocale` (`zh-CN` / `en`) and persists it under `aquaguide-admin-app-locale`.
-- `contentLocale` remains separate. A global English UI may edit and preview Chinese content without switching the content row.
-- `productTruthLoader.js` dynamically imports `catalog.generated.json`; do not re-add Product Truth fields to `species-groups.generated.json`.
-- Contract tests explicitly enforce the locale separation and lazy Product Truth boundary.
-
-### 2026-08-31 Next handoff — bidirectional Preview Inspector
-- Stable committed baseline is `539baf4`; GitHub Actions run `33323234484` is green end-to-end. Current local delta adds semantic workflow colors only.
-- Next P0 is not another layout rewrite. Preserve left = choose / center = edit / right = frontend result. Add an inspection layer over the existing `LiveFrontendPreview`.
-- Build one explicit element registry for `localizedName`, `h1`, `intro`, `imageAlt`, `seoTitle`, `metaDescription`; each mapping declares preview mode and editor target.
-- Center → Preview: focus/edit should select the mapped element, switch Page/Google if needed, scroll it into view and draw a restrained outline + label.
-- Preview → Center: hover gives a subtle outline; click locks selection and scrolls/highlights the corresponding center field without immediately focusing the input.
-- Selection must explain source: Custom / Inherited from Base / Product Truth · Read only. Product Truth elements are explanatory only and remain immutable here.
-- Add browser regression for both directions before committing; do not weaken current contract/A+B gates.
-### 2026-08-31 Bidirectional Preview Inspector handoff
-- `editorElementRegistry.js` is the stable mapping authority between center-editor fields and preview elements. Extend the registry instead of adding ad-hoc click logic.
-- One `selectedInspectorElement` is shared by Variant editor, Base editor and `LiveFrontendPreview`.
-- Center focus selects the mapped preview element; SEO metadata may switch Preview to Google automatically.
-- Preview click selects and scrolls the editor target. Do not auto-focus the input on preview click; selection/navigation and text editing remain separate actions.
-- Base routing must stay source-aware: Variant-only/custom fields route to Current page, inherited fields may stay in Base authoring.
-- Product Truth facts are inspectable read-only elements and must never gain fake SEO edit controls.
-### 2026-08-31 Inheritance-control handoff
-- Do not represent inherited Variant fields as blank editable inputs by default.
-- Meta Title / Meta Description / H1 use an explicit disclosure: resolved Base value → Override → custom input → Use Base value.
-- `Use Base value` must clear the Variant value; never materialize/copy the Base template into the Variant row.
-- Keep the wrapper non-label to avoid nested interactive-control click ambiguity; actual inputs carry explicit aria-labels.
-
-### 2026-08-31 Secondary tool drawer handoff
-- Secondary workflows use `EditorToolDrawer` in CSS Grid column 2. Do not re-expand Data Review/Readiness/Translation/History/Workflow inline below the editor.
-- Keep column 3 live Preview visible and interactive while a tool is open. `aria-modal=false` is intentional.
-- Close routes: explicit close button, Escape, or editor backdrop. Selecting an editable Preview Inspector element closes the drawer and returns to its mapped editor field.
-- Existing Data Review/RPC, Readiness, Translation, Revision and Workflow callbacks remain the authority; the drawer is presentation only.
-- Species SEO status UI is Draft/Published only, with Published still fail-closed. Do not reintroduce Archived in Variant/Base controls.
-- Browser regression and local B gate are green; Production Supabase and `main` remain untouched.
-
-### 2026-08-31 Generator-aligned Preview handoff
-- Treat `generate-public-species.mjs` as the structural authority for the Page Preview. Do not add Page-tab sections that the static generator does not emit.
-- `speciesPagePresentation.js` is the shared browser/Node presentation contract for publication labels and tank-size localization. Keep generator and live Preview using it.
-- Desktop ≥1180px keeps the persistent third-column Preview. Narrow desktop uses `compactPreviewOpen` and `.compact-preview-toggle`; do not regress to a clipped off-screen 400px column.
-- Editor-origin Inspector selection opens compact Preview on narrow layouts; editable Preview-origin selection closes it and returns to the editor target.
-- Current contract/build/B gate are green; Production Supabase and `main` remain untouched.
-
-## 2026-08-31 Handoff — calm editor + authoritative Inspector routing
-- Variant primary flow now exposes only high-frequency SEO/page-content fields. Advanced SEO contains focus keyword, index strategy, canonical target and derived paths.
-- Advanced SEO defaults closed but is forced open by `indexBlockReason`; do not hide an active safety blocker.
-- Variant/Base headers use a single `editor-status-line`; do not reintroduce catalog/title-inheritance status pill clusters.
-- Inherited Base intro is a collapsed disclosure in Variant authoring. The right Preview remains the canonical visual context.
-- When Inspector selection originates from Preview, route by ownership: Base-owned inherited fields → Base editor; Variant-only/custom → Current page; Product Truth → no editable target. Editor-origin selection must not switch scope.
-
-## 2026-08-31 primary editor UX contract
-- Keep daily Variant authoring calm: Title, Meta Description, H1, Intro, Image Alt first.
-- Do not restore catalog/status/inheritance badge clusters to the editor header.
-- Advanced SEO owns Focus Keyword, index strategy, canonical sibling and route evidence; it is collapsed by default unless a blocker must be shown.
-- Four-row Variant Intro is intentional; users can resize vertically and Inspector mapping must remain intact.
-
-## 2026-08-31 state-control UX
-Keep Base and Variant footer controls semantically identical. Review-state colors are workflow cues only; they do not change the underlying `editing / ready_for_review / approved` contract. Content lifecycle remains Draft/Published with Production Published disabled.
-
-## 2026-08-31 three-pane selection contract
-Use the shared CSS selection tokens for every editable selection surface. Do not introduce component-local greens for sidebar/editor/Preview. Product Truth Inspector is intentionally graphite/read-only, never editable green. When a Variant is active, parent Base context may be lightly emphasized, but only the Variant row is the strong selection.
-
-## 2026-08-31 workflow-filter semantics
-Keep the same issue/review/Preview-ready color meaning in the top workflow status and left Species filters. Filter display labels must be derived from `appLocale`; do not reintroduce mixed-language labels such as `Data Review · 待处理`.
-
-## 2026-08-31 navigation count contract
-The Species tree navigates Base groups: `All` must use `base_group_count` (276), never `catalog_count` (486). Workflow filters may count issues/items/pages, but their unit must remain discoverable and active filters must show affected Base-group count.
-
-## 2026-08-31 unsaved-edit contract
-Live Preview is not persistence. Keep Base/Variant dirty state visible until a successful Supabase save. Any navigation that changes the active editor resource/scope/content locale must confirm before discarding dirty edits. Never clear dirty state for a no-op re-selection. Browser refresh/close protection must remain active while dirty.
-
-## 2026-08-31 workflow-label contract
-Workflow filter state is semantic. Do not cache translated labels as the source of truth; derive banner text from `type/status/locale + appLocale` so active filters follow the global interface-language switch.
-
-## 2026-08-31 image authority contract
-The hero image asset remains Product Truth and read-only in Content Admin. Only Image Alt is editable. Keep the Inspector label/source/path explicit enough that image selection cannot be mistaken for an image-upload or image-replacement workflow.
-
-## 2026-08-31 frontend SEO handoff
-The Admin's purpose is to create reviewed static Species SEO pages, not to become a general-purpose CMS. Keep Product Truth read-only and separate from Editorial SEO. The intended flow is `Product Truth + Base/Variant Editorial SEO → review/readiness → explicit publication snapshot → generate-public-species → AquaGuide frontend artifact`. Controlled Preview remains Draft/Approved, noindex and must never be treated as Production publication.
-
-Product Truth loading correctness is complete and A-gated. Admin authority is now separated: `/admin/content` = Admin Hub, `/admin/product-content` = Product/Care content, `/admin/seo/` = the only Species SEO Admin, and the root AquaGuide build emits the SEO Admin into `dist/admin/seo/`. Next: wire the Species publication generator into the same root `dist`, then build only a small staging Species set and verify source-level SEO (`title`, meta description, H1, canonical, robots, hreflang, alt, sitemap) before unlocking any Production path.
-
-Future SEO landing-page CTAs should carry the current `catalog_key` into AquaGuide compatibility/recommendation flows so organic traffic enters the product funnel instead of ending on an isolated content page.
-
-## 2026-09-01 required handoff — AquaGuide Species SEO integration
-Before any AquaGuide frontend, SEO, Admin, publishing or deployment work, read `.ai/AQUA_SEO_ADMIN_INTEGRATION.md`.
-The key unresolved architecture gap is that the root AquaGuide build still does not include generated Species SEO HTML in its deployment artifact, and the repository currently contains both legacy `src/pages/AdminContent.tsx` and the new `apps/admin-content` Species SEO Admin.
-Completion means: Admin edit → review/publish → AquaGuide build → real staging Species URL → final static HTML contains the reviewed SEO content. Admin UI completion alone is not completion.
-Do not touch Production Supabase or enable Production Published actions while proving this path.
-
-## 2026-09-01 — SEO Admin root artifact integration
-- The authoritative SEO CMS remains `apps/admin-content`; standalone `aqua-fronted-cms` is visual reference only.
-- Root AquaGuide `npm run build` now includes `build:species-pages`. When `SPECIES_SEO_SNAPSHOT_PATH` + `SPECIES_SEO_SITE_URL` are supplied, guarded generator output is merged into the same root `dist/`; with no snapshot, publication is skipped.
-- Local vertical artifact fixture: 3 Species × 2 locales = 6 static pages; index/canonical/noindex behavior and sitemap verified.
-- Do not unlock Production Published. Next: create/obtain a real AquaGuide staging publication snapshot, deploy the root artifact to a non-production URL, and verify returned HTML source end-to-end.
-
-## 2026-09-01 Hosted SEO staging slice
-- Vercel Preview on `feature/admin-content-v0` is now the controlled hosted SEO staging surface. Its root build auto-loads only the committed 3-Species bilingual Published fixture; Production still requires explicit snapshot input and otherwise skips Species generation.
-- Static Species pages now link back into real AquaGuide compatibility, browse/detail and aquarium-planning flows with the catalog key plus `source=seo-species`.
-- Local simulated Vercel Preview build + generator contracts + root artifact verification PASS. Next required evidence is the newly deployed Vercel HTML source and CTA handoff.
-
-## 2026-09-01 SEO compatibility handoff correction
-- Do not treat query preservation as CTA success. For `mode=compatibility`, the SEO `species` query must preselect that catalog ID in the compatibility calculator.
-- Local browser regression now proves `sp_0030` enters as a planned candidate; this regression is wired into CI. Hosted Vercel re-verification is still required.
-
-## 2026-09-01 Hosted Species vertical slice evidence
-- The branch Vercel Preview now proves the real deployment artifact: Species HTML is statically returned with correct EN/ZH SEO metadata, canonical/noindex strategies and sitemap membership.
-- SEO compatibility CTA runtime is also proven: `species=sp_0030&source=seo-species` opens compatibility mode with that catalog Species already selected as a planned candidate; browser `pageErrors=[]`.
-- CI #26 was not a product regression: root build/artifact checks passed and the browser-only gate failed because the clean GitHub runner lacked Chromium. The workflow now installs Playwright Chromium explicitly before that gate.
-
-## 2026-09-01 — Hosted Supabase staging handoff
-- The staging publication exporter is now a server-side release component, not a browser client. Use `STAGING_SUPABASE_SECRET_KEY` (preferred `sb_secret_...`) or legacy `service_role`; never use a VITE-prefixed secret.
-- Migration `20260901064408_species_seo_server_export_boundary.sql` is required after Admin migrations 001–007. It enforces Published + Approved public visibility, explicit service-role read grants, and server-only Data Review release resolution access.
-- `species_seo_release_gate_status()` is schema v8 and must report `server_export_ready=true` before export.
-- Root build command for a future hosted staging DB: `npm run build:staging-from-db`.
-- The connected Supabase account currently has AquaGuide Production and an unrelated IceGlide staging project, but no AquaGuide staging branch. Do not point staging variables at either Production or IceGlide.
-- Next real acceptance after infrastructure provisioning: edit one bilingual Species H1 in Admin → Save → Ready for Review → Approved/Published → `build:staging-from-db` → verify hosted HTML source changed.
-
-## 2026-09-01 — Approved Draft staging release
-- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
-- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
-- Production-style `release` remains Published-only and ignores Approved Drafts.
-- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.
-
-## 2026-09-01 — REQUIRED: Species SEO no-Supabase handoff
-
-- 当前 Species SEO Admin 的运行时权威已经从 Supabase 切换为 GitHub Repo-backed content。此前关于“创建 AquaGuide Supabase staging”的待办已被本决策替代，不再执行。
-- 编辑链路：`/admin/seo/` → HttpOnly Admin Session → `/api/admin-content/query` → `seo-admin-drafts` 分支的 `content/species-seo/admin-store.json`。
-- 普通 Save 只写 Draft 分支；`vercel.json` 对 `seo-admin-drafts` 设置 `deploymentEnabled=false`，因此边改边保存不会反复触发 Vercel。
-- 内容/Index/Canonical 改动会把 `Approved` 自动退回 `Editing`；Repo API 强制 `status=Draft`，不能通过后台把 Production Published 解锁。
-- 显式“发布当前 Species 到 Staging”才生成脱敏、最多 20 Species 的 `content/species-seo/staging-snapshot.json` 并提交到非生产 staging code branch，从而触发一次 Preview build。
-- Root Preview build优先读取这个 Repo Snapshot，并以 `staging_release` 生成真实 EN/ZH 静态 HTML + sitemap；Production-style `release` 继续只接受 Published。
-- AI 翻译服务也复用同一 Admin Session，不再依赖 Supabase JWT/user_roles。浏览器 bundle 不再 import Supabase SDK。
-- 新增自动门禁已证明：完全不启动 Supabase 时，H1 修改会使审核失效 → 重新 Approved → Staging Snapshot → 静态 H1 改变；Production-style release 对这些 Draft 生成 0 页。
-- Primary GitHub Admin CI 已移除 Supabase CLI/Docker/ephemeral DB 步骤；legacy Supabase migration/test 仅保留兼容证据。
-- 下一步只做 hosted Repo vertical slice：配置 Vercel server-only Admin/GitHub credentials → 登录 → Save 确认 Draft branch 不部署 → Approved → Staging Publish → 单次 Preview rebuild → 检查 HTML H1 与 `X-Robots-Tag: noindex`。
-- `main`、Production Published、Production Supabase 均保持不动。
-
-## 2026-09-01 — Repo Admin hosted configuration checkpoint
-- Normal Save cost isolation is now proven, not assumed: a real `seo-admin-drafts` content commit caused 0 Actions runs and 0 Vercel deployments.
-- Preview branch already has the non-secret Repo config plus server-session auth/hash secrets. Do not regenerate these unless rotating access intentionally.
-- The only missing hosted credential is `ADMIN_GITHUB_TOKEN`; it must be a fine-grained token limited to this repository with Contents read/write. The local `gh` OAuth token is intentionally rejected for app use because it has broad `repo + workflow` scopes.
-- `/api/admin-content/health` now reports `repo_readable`, `contents_write_capable`, `draft_branch_ready`, `content_store_readable` and a sanitized `repo_access_error`.
-- The Admin checks that health before login and shows a five-item backend readiness list instead of letting configuration errors surface as editor/schema failures.
-
-## 2026-09-01 — 双仓 Repo-backed 最新权威
-- 不再把后台 Draft 放在公开 `aquaguide-tank-guide` 的任何分支。此前的公共 `seo-admin-drafts` 已删除，公共 `admin-store.json` 也已移除。
-- 私有内容仓库：`chusday97/aquaguide-seo-content`（PRIVATE）→ `seo-admin-drafts` → Draft / Review / Revision / Data Review。
-- 公共 AquaGuide 仓库：只在明确 Staging Publish 后接收脱敏 `content/species-seo/staging-snapshot.json`，再触发一次 Vercel Preview。
-- `ADMIN_GITHUB_CONTENT_REPO` 缺失时必须 fail closed，禁止回退到公开 AquaGuide 仓库。
-- 新增 `test:dual-repo-routing`，已验证 Draft PUT 只去私有仓库、Staging PUT 只去公共 AquaGuide。
-- Vercel Preview 的 Admin Session、密码 Hash、Session Secret、双仓 Repo/Branch/Path 均已配置；当前唯一 Hosted 配置缺口是最小权限 `ADMIN_GITHUB_TOKEN`。
-- 最小权限要求：仅选中 `aquaguide-seo-content` 与 `aquaguide-tank-guide` 两个仓库，只给 Contents Read/Write；不要使用本机 `gh` 的 `repo + workflow` 广权限 OAuth token。
-
-## 2026-09-01 — Hosted dual-repo evidence
-- `eb478ab fix(admin): isolate SEO drafts in private repo` is pushed to `feature/admin-content-v0`.
-- GitHub Admin Content CI #32 completed SUCCESS on a clean runner, including dual-repo routing, root Species artifact integration, catalog parity and diff hygiene.
-- Vercel Preview deployment `dpl_gvQV8AY3cGPC2Vk2J5uFuFfFa6Mx` reached READY for `eb478ab`.
-- Hosted `/api/admin-content/health` returns `auth_configured=true`, `content_repo=chusday97/aquaguide-seo-content`, `staging_repo=chusday97/aquaguide-tank-guide`, correct branches/paths, and `repo_access_error=token_missing`. This proves every hosted dependency except the GitHub write token is wired.
-- Preview responses retain `X-Robots-Tag: noindex`.
-- The remaining hosted external gate is one least-privilege fine-grained GitHub token covering exactly the private content repo + public AquaGuide repo with Contents Read/Write only. The broad local `gh` OAuth token is intentionally not reused.
-- Added `scripts/vercel-ignore-build.mjs`: docs-only `.ai/**`, `HANDOFF.md`, `PROGRESS.md`, and README changes skip Vercel; any code/config/data or `staging-snapshot.json` change continues deployment.
-
-## 2026-09-01 — Hosted dual-repo vertical slice accepted (storage/publish path)
-- Vercel Preview now has the least-privilege fine-grained GitHub token; hosted `/api/admin-content/health` is fully green for both private Content Repo and public Staging Repo.
-- Real private Draft evidence: `aquaguide-seo-content/seo-admin-drafts` commit `d417e11` contains bilingual Approved Draft content for `sp_0001`; no AquaGuide deployment followed that Draft commit.
-- Explicit staging publication: public AquaGuide commit `118fa21` created `content/species-seo/staging-snapshot.json` and caused exactly one Preview build.
-- Hosted EN/ZH static pages render the exact staged H1 values and `noindex,follow`; compatibility/browse/plan CTAs remain intact.
-- CI #34 SUCCESS. Production `main` and Production Published remain untouched.
-- Only remaining acceptance: open hosted `/admin/seo/`, paste the rotated Admin password from the Mac clipboard, sign in, and perform one normal Save through the UI/API. Do not weaken auth or expose the password to automate this step.
-
-## 2026-09-01 — First-use UX correction / duplicate policy
-After the first real human login, the Admin was functionally correct but too implementation-shaped. The user specifically surfaced duplicate Species rows and the phrase `使用 Base 值`. The product rule is now:
-
-1. **Source rows are not SEO pages.** AquaGuide Product Truth currently has 486 source records. The generated grouping identifies 28 extra exact-duplicate records, so the unresolved default SEO candidate set is 458 pages across 276 Base groups.
-2. **Do not delete source duplicates.** Unresolved secondary duplicates are folded from the normal SEO navigation. A Data Review decision controls visibility: `distinct_records` restores each source row as a separate page; `duplicate_records` keeps only the chosen SEO main page.
-3. **Duplicate blocking is local.** An unresolved duplicate pair must not block unrelated variants under the same Base Species. Category conflicts remain group-level.
-4. **Inheritance is an implementation detail, not primary UI language.** Chinese main flow uses `基础种公共内容`, `当前品种页面`, `沿用公共内容`, `为当前页单独编辑`, `恢复公共内容`.
-5. **Editing invalidates approval immediately in UI.** Content edits show `未保存修改 · 保存后需重新审核`; workflow state cannot misleadingly remain Approved while content is dirty. `Draft` is presented as `草稿 · 不会直接上线`.
-
-Implementation commit: `8d1905c refactor(admin): productize species SEO workflow`. Local rendered-DOM acceptance and all Admin/root regression gates passed. GitHub Admin Content CI #36 (`33495672879`) is SUCCESS. Vercel deployment `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` is READY and Hosted Health remains fully green. Human hosted login is confirmed. The remaining acceptance item is a real Save click from the hosted UI followed by verification that the write lands only in private `aquaguide-seo-content/seo-admin-drafts` and causes zero AquaGuide deployment.
-
-
-## 2026-09-02 — Latest continuation pointer
-- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
-- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
-- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
-- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
-- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
-- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
+禁止重踩：不要从名称、分类、模板、搜索结果或 AI 摘要推断水体、行为或数量；不要把本地测试描述为生产权限验证；不要在本阶段改 UI 或执行生产 migration。

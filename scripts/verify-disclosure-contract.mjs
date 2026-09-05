@@ -17,6 +17,7 @@ const allowedPurposes = new Set([
   'advanced_data',
   'overflow_list',
   'alternative_plan',
+  'today_action_surface',
 ]);
 const forbiddenPrimaryContent = [
   /喂养速览/,

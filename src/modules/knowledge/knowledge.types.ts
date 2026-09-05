@@ -1,5 +1,6 @@
 import type { Fish } from '../../types';
-import type { TankCompatibilityResult, TankCompatibilityRule, TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import type { ObservedCoexistenceStatus, StockingGuidance } from '../../../packages/domain-rules/src';
+import type { TankCompatibilityResult, TankCompatibilityRule, TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 
 export type KnowledgeConfidence = 'verified' | 'derived' | 'unknown';
 
@@ -91,6 +92,9 @@ export type CompatibilityDecision = {
   suggestions: string[];
   aggregateResult: TankCompatibilityResult;
   metadata: TankCompatibilityResult['metadata'];
+  stockingGuidance?: StockingGuidance;
+  observedStatus?: ObservedCoexistenceStatus;
+  evidenceIds?: string[];
 };
 
 export type DiagnosisNode = {

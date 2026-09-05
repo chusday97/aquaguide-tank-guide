@@ -5,7 +5,10 @@ import { hydratePublishedContentCatalog } from './data/runtimeContentCatalog';
 import { hydrateReviewedCompatibilityEvidence } from './data/runtimeCompatibilityEvidence';
 import './services/navigation/history-navigation-guard.service';
 import './index.css';
+import './styles/aquarium-stage-layout-v4.css';
+import './styles/immersive-detail-layout-v5.css';
 import { initializeSessionAnalytics } from './services/analytics/session-events.service';
+import { isInteractivePreviewUrl } from './services/preview/preview-session.service';
 
 const isSyntheticTest = typeof window !== 'undefined' && window.location.search.includes('synthetic_test=1');
 const posthogKey = import.meta.env.VITE_POSTHOG_KEY || (isSyntheticTest ? 'phc_synthetic_dummy_key_123' : '');
@@ -35,7 +38,9 @@ if (posthogKey) {
 initializeSessionAnalytics();
 
 const startApplication = async () => {
-  await Promise.all([hydratePublishedContentCatalog(), hydrateReviewedCompatibilityEvidence()]);
+  if (!isInteractivePreviewUrl()) {
+    await Promise.all([hydratePublishedContentCatalog(), hydrateReviewedCompatibilityEvidence()]);
+  }
   const { default: App } = await import('./App.tsx');
   createRoot(document.getElementById('root')!).render(
     <StrictMode>

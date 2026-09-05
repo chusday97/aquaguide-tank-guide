@@ -45,6 +45,7 @@ import {
 import { buildTankCopilotContext, getTankCopilotMissingInfo } from '../modules/copilot/tankBuildCopilot';
 import { weatherService } from '../services/weather/weather.service';
 import type { LocalWeatherOutput } from '../services/weather/weather.schema';
+import { isInteractivePreviewActive } from '../services/preview/preview-session.service';
 import {
   clearLocalAppState,
   importLocalAppState,
@@ -91,6 +92,7 @@ import {
 import { recordExistingLivestock, type RecordExistingResult } from '../services/aquarium/livestock-recording.service';
 import { createAquariumDraft, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { getCompatibilityPresentationForStatus } from '../services/compatibility/compatibility-presentation.service';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
@@ -281,22 +283,28 @@ function AquariumWorkspace({
 
   return (
     <>
-      <section className="aquarium-workspace-zone aquarium-observe-zone" aria-labelledby="aquarium-observe-title">
+      <section className="aquarium-workspace-zone aquarium-observe-zone aquarium-dashboard" aria-labelledby="aquarium-observe-title">
         <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
-        <div className="aquarium-zone-grid aquarium-observe-grid">{tank}{status}{archive}</div>
-      </section>
-      <div className="aquarium-followup-grid">
-        <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-manage-zone" aria-labelledby="aquarium-manage-title">
-          <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-          <div className="aquarium-zone-grid aquarium-manage-grid">{actions}</div>
+        <div className="aquarium-dashboard-stage">
+          <div className="aquarium-dashboard-tank">
+            {tank}
+            <aside className="aquarium-dashboard-rail" aria-label={observeTitle}>
+              {status}
+            </aside>
+            <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-dashboard-actions" aria-labelledby="aquarium-manage-title">
+              <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
+              {actions}
+            </section>
+          </div>
+        </div>
+        <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-followup-grid scroll-mt-4" aria-labelledby="aquarium-learn-title">
+          <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
+          <div className="grid min-w-0 gap-3 md:grid-cols-2">
+            {archive}
+            {discovery}
+          </div>
         </section>
-        {discovery && (
-          <section id="aquarium-learn-zone" tabIndex={-1} className="aquarium-workspace-zone aquarium-learn-zone" aria-labelledby="aquarium-learn-title">
-            <AquariumZoneHeader index={3} title={learnTitle} subtitle={learnSubtitle} titleId="aquarium-learn-title" />
-            <div className="aquarium-zone-grid aquarium-learn-grid">{discovery}</div>
-          </section>
-        )}
-      </div>
+      </section>
     </>
   );
 }
@@ -1338,6 +1346,11 @@ export default function AquariumManager() {
 
   useEffect(() => {
     let isMounted = true;
+    if (isInteractivePreviewActive()) {
+      setLocalWeather(null);
+      setWeatherStatus('unavailable');
+      return () => { isMounted = false; };
+    }
     setWeatherStatus('loading');
 
     weatherService.getLocalWeather({ timeoutMs: 8000 }).then((weather) => {
@@ -1688,6 +1701,34 @@ export default function AquariumManager() {
   };
 
   const activeAquarium = aquariums.find(a => a.id === activeId);
+
+  const addFishReviewPresentation = useMemo(() => {
+    if (!addFishCompatibilityReview) return null;
+    const confirmedFindings = addFishCompatibilityReview.evaluations.flatMap(evaluation => [
+      ...evaluation.result.passedRules,
+      ...evaluation.result.warningRules,
+    ]).map(rule => rule.evidence || rule.title);
+    return getCompatibilityPresentationForStatus({
+      status: addFishCompatibilityReview.status,
+      hasConfirmedFacts: confirmedFindings.length > 0,
+      confirmedFindings,
+    });
+  }, [addFishCompatibilityReview]);
+
+  const addFishEvaluationPresentations = useMemo(() => {
+    if (!addFishCompatibilityReview) return new Map<string, ReturnType<typeof getCompatibilityPresentationForStatus>>();
+    return new Map(addFishCompatibilityReview.evaluations.map(evaluation => {
+      const hasConfirmedFacts = evaluation.result.passedRules.length > 0
+        || evaluation.result.warningRules.length > 0
+        || evaluation.result.blockingRules.length > 0;
+      return [evaluation.fish.id, getCompatibilityPresentationForStatus({
+        status: evaluation.result.status,
+        hasConfirmedFacts,
+        confirmedFindings: evaluation.result.passedRules.map(rule => rule.evidence || rule.title),
+        cautions: evaluation.result.warningRules.map(rule => rule.evidence || rule.title),
+      })] as const;
+    }));
+  }, [addFishCompatibilityReview]);
 
   useEffect(() => {
     const params = new URLSearchParams(routeLocation.search);
@@ -2092,16 +2133,12 @@ export default function AquariumManager() {
       return;
     }
     if (addPolicy === 'complete_information') {
-      const missingCodes = addFishCompatibilityReview.keyRules.map(rule => rule.code);
-      const settingsPanel = missingCodes.some(code => /volume|size|tank/.test(code))
-        ? 'size'
-        : missingCodes.some(code => /filter|heater|equipment/.test(code))
-          ? 'equipment'
-          : 'parameters';
+      const next = new Set(wishlistFishIds);
+      addFishCompatibilityReview.items.forEach(item => next.add(item.fishId));
+      syncWishlistFishIds(next);
       setIsAddFishOpen(false);
       setAddFishCompatibilityReview(null);
-      openAquariumSettings(settingsPanel);
-      setTankActionMessage(Boolean(i18n.language?.startsWith('en')) ? 'Please fill in aquarium details before evaluating.' : '请先补充鱼缸信息，再评估是否可以加入。');
+      setTankActionMessage(Boolean(i18n.language?.startsWith('en')) ? 'Saved to your wishlist. Revisit this mix after more review.' : '已加入种草清单，资料完善后可以再回来判断。');
       return;
     }
     await recordSelectedFishItems(addFishCompatibilityReview.items);
@@ -4843,7 +4880,7 @@ export default function AquariumManager() {
     );
   }
   return (
-    <div className="page-frame-wide aquarium-desktop-layout flex min-w-0 flex-col gap-4 overflow-x-hidden text-[13px] leading-relaxed">
+    <div data-workspace-layout="immersive" className="page-frame-wide aquarium-desktop-layout flex min-w-0 flex-col gap-4 overflow-x-hidden text-[13px] leading-relaxed">
       <aside className="aquarium-side hidden">
         <div className="grid gap-2">
           <div className="relative">
@@ -5286,6 +5323,7 @@ export default function AquariumManager() {
               aquarium={activeAquarium}
               activeSpecies={active3DSpecies}
               onSpeciesSelect={handleAquariumSpeciesSelect}
+              framing="stage-cover"
             />
           </Suspense>
         ) : (
@@ -5301,6 +5339,44 @@ export default function AquariumManager() {
           </div>
         )}
         
+        <div data-aquarium-stage-intro className="aquarium-stage-intro pointer-events-none absolute left-5 top-5 z-10 max-w-[min(72%,500px)] md:left-8 md:top-8">
+          <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-emerald-950/62">
+            {isEn ? `My Aquarium · ${format(new Date(), 'MMM d')}` : `我的鱼缸 · ${format(new Date(), 'M 月 d 日')}`}
+          </span>
+          <h1 className="mt-2 font-serif text-[clamp(25px,3.1vw,48px)] font-semibold leading-[1.02] tracking-[-0.04em] text-emerald-950 drop-shadow-[0_1px_0_rgba(255,255,255,0.28)]">
+            {dailyActionViewModel.level === 'urgent'
+              ? dailyActionViewModel.task.title
+              : (isEn ? 'Start with one calm observation' : '今天先完成一次观察')}
+          </h1>
+          <p className="mt-2 max-w-[43ch] text-[11px] font-bold leading-5 text-emerald-950/64 md:text-[12px]">
+            {dailyActionViewModel.level === 'urgent'
+              ? dailyActionViewModel.task.reason
+              : (isEn ? 'A quick check helps you notice changes before they become a problem.' : '先看看呼吸、水面和活动状态；没有异常，就不需要额外操作。')}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-black text-emerald-900">
+            <span className="rounded-full bg-white/78 px-3 py-2 shadow-sm backdrop-blur-sm">
+              {hasStockedAnimals
+                ? (isEn ? `${stockedSpeciesCount} species · ${totalStockedQuantity} total` : `${stockedSpeciesCount} 种 · ${totalStockedQuantity} 条/只`)
+                : (isEn ? 'No livestock recorded' : '尚未记录缸内生物')}
+            </span>
+            <span className="rounded-full bg-white/78 px-3 py-2 shadow-sm backdrop-blur-sm">
+              {dailyActionViewModel.label}
+            </span>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsTankArchiveExpanded(true)}
+          aria-haspopup="dialog"
+          data-tank-species-entry
+          className="absolute bottom-4 left-4 z-20 inline-flex min-h-11 items-center gap-2 rounded-full border border-white/75 bg-white/84 px-4 text-[11px] font-black text-emerald-900 shadow-[0_8px_24px_rgba(15,77,62,0.16)] backdrop-blur-sm transition-transform hover:-translate-y-0.5 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 md:bottom-5 md:left-6"
+        >
+          {isEn ? 'View tank species' : '查看缸内物种'}
+          <span className="rounded-full bg-emerald-900 px-1.5 py-0.5 text-[9px] text-white">{stockedSpeciesCount}</span>
+          <ChevronRight className="h-4 w-4" />
+        </button>
+
         {/* Environment Info Overlay */}
         <div className="absolute left-2 top-2 z-10 flex max-w-[calc(100%-112px)] flex-wrap gap-1.5 pointer-events-none">
           <div className="bg-white/80 backdrop-blur-sm px-2 py-1 rounded-sm text-[9px] font-bold text-ink shadow-sm border border-white/50">
@@ -5566,6 +5642,7 @@ export default function AquariumManager() {
                 aquarium={activeAquarium}
                 activeSpecies={active3DSpecies}
                 onSpeciesSelect={handleAquariumSpeciesSelect}
+                framing="stage-cover"
               />
             </Suspense>
             <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-1.5 pointer-events-none">
@@ -6270,7 +6347,7 @@ export default function AquariumManager() {
                         addFishSuccess.result.assessment?.status === 'not_recommended'
                           ? '已记录现实情况；当前存在紧急混养风险，请优先查看风险处理。'
                           : addFishSuccess.result.assessment?.status === 'insufficient_data'
-                            ? '已记录现实情况；补充基础尺寸和水体类型后可以得到更完整判断。'
+                            ? '已记录现实情况；当前结论会随着环境和行为资料完善而更新。'
                             : addFishSuccess.result.assessment?.status === 'caution'
                               ? '已记录现实情况；请按提示重点观察，不需要重新添加。'
                               : '当前未发现阻断风险，继续观察实际状态。'
@@ -6336,13 +6413,13 @@ export default function AquariumManager() {
                       <div className={`mt-1 font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[28px] leading-tight text-red-700' : 'text-lg text-ink'}`}>
                         {addFishCompatibilityReview.status === 'not_recommended'
                           ? (isEn ? 'Not recommended to add' : '不建议加入')
-                          : getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
+                          : addFishReviewPresentation?.headline || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
                       </div>
                       <p className={`mt-2 leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[14px] font-black text-red-800' : 'text-[12px] font-bold text-ink/62'}`}>
                         {addFishCompatibilityReview.status === 'not_recommended'
                           ? '当前规划命中阻断风险，不建议实际加入；这不会删除现实中已经存在的记录。'
                           : addFishCompatibilityReview.status === 'insufficient_data'
-                            ? '鱼缸关键信息不足，请先补全后再判断。'
+                            ? '这组规划暂未开放完整建议，可先查看物种养护或加入种草清单。'
                             : addFishCompatibilityReview.status === 'caution'
                               ? '存在需要注意的条件；确认理解后，只有实际入缸时才记录。'
                               : '当前规划允许继续；只有实际入缸后才记录到鱼缸。'}
@@ -6356,16 +6433,23 @@ export default function AquariumManager() {
                   <div className="grid gap-2">
                     {addFishCompatibilityReview.evaluations.map(evaluation => (
                       <div key={evaluation.fish.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[14px] bg-white/82 px-3 py-2 shadow-sm">
-                        <span className="min-w-0">
-                          <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
-                          <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{evaluation.result.summary}</span>
-                        </span>
-                        <span className="shrink-0 text-[10px] font-black text-ink/60">{getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
+                        {(() => {
+                          const presentation = addFishEvaluationPresentations.get(evaluation.fish.id);
+                          return (
+                            <>
+                              <span className="min-w-0">
+                                <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
+                                <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.mode === 'confirmed_facts' ? '当前可确认部分条件' : presentation?.mode === 'unavailable' ? '暂未开放这组混养建议' : evaluation.result.summary}</span>
+                              </span>
+                              <span className="shrink-0 text-[10px] font-black text-ink/60">{presentation?.headline || getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
+                            </>
+                          );
+                        })()}
                       </div>
                     ))}
                   </div>
 
-                  {addFishCompatibilityReview.keyRules.length > 0 && (
+                  {addFishCompatibilityReview.keyRules.length > 0 && addFishCompatibilityReview.status !== 'insufficient_data' && (
                     <div className={`rounded-[16px] p-4 ${addFishCompatibilityReview.status === 'not_recommended' ? 'border-2 border-red-200 bg-white' : 'bg-white/72'}`}>
                       <div className={`font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[15px] text-red-700' : 'text-[11px] text-ink'}`}>{isEn ? 'Key Reasons' : '不建议混养的原因'}</div>
                       <div className="mt-2 grid gap-1.5">
@@ -6725,7 +6809,7 @@ export default function AquariumManager() {
                               ? getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'block'
                                 ? '返回调整组合'
                                 : getTankCompatibilityAddPolicy(addFishCompatibilityReview.status) === 'complete_information'
-                                  ? '先补充鱼缸信息'
+                                  ? '加入种草清单'
                                   : '已经实际入缸，记录下来'
                               : additionIntent === 'record_existing'
                                 ? '保存到鱼缸'

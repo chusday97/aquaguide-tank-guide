@@ -1,5 +1,5 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
-import type { Aquarium, DeceasedRecord, LifeStage, MemorialCauseCode, ReproductiveState } from '../../types';
+import type { Aquarium, DeceasedRecord, LifeStage, MemorialCauseCode, ReproductiveState, SpeciesAdditionIntent, CompatibilityStatus } from '../../types';
 import type { CareEventType } from '../../types/database';
 import type { CareReminderRecord } from '../care/care-activity.service';
 
@@ -57,6 +57,13 @@ export type LivestockAddCommand = {
   lifeStage?: LifeStage;
   reproductiveState?: ReproductiveState;
   operationId: string;
+  intent?: SpeciesAdditionIntent;
+  catalogVersion?: string;
+  compatibilityConfirmation?: {
+    status: CompatibilityStatus;
+    catalogVersion: string;
+    confirmedAt: string;
+  };
 };
 
 export type CareReminderMutation =

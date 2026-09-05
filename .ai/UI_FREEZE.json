@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "status": "FROZEN_PROVISIONAL",
+  "baselineCommit": "02457dd2ded7042cc67c55acfce3c9c4f238aa42",
+  "baselinePreview": "http://127.0.0.1:4317/_preview/interactive",
+  "candidatePreview": "http://127.0.0.1:4319/_preview/interactive",
+  "frozenAt": "2026-08-28",
+  "ownerPrefixes": [
+    "src/App.tsx",
+    "src/main.tsx",
+    "src/index.css",
+    "src/vite-env.d.ts",
+    "src/styles/",
+    "src/pages/",
+    "src/components/",
+    "components/ui/",
+    "src/i18n/",
+    "src/lib/layout-mode.ts",
+    "src/lib/careVisual.ts",
+    "src/lib/speciesVisual.ts",
+    "public/"
+  ],
+  "policy": "Backend, domain, service, repository and migration work must not change an owner path. Visual changes require a separately reviewed baseline refresh after main release."
+}

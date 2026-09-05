@@ -6,7 +6,7 @@ import type {
   CollectionCounts,
   MemorialItem,
 } from '../../modules/collection/collection.types';
-import { evaluateTankCompatibility } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility } from '../compatibility/compatibility.service';
 import {
   getCareFavorites,
   getSpeciesFavoriteIds,

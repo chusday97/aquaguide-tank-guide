@@ -31,6 +31,14 @@ export const reproductiveStateSchema = z.enum([
   'postpartum_recovery',
 ]);
 
+export const compatibilityStatusSchema = z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']);
+export const speciesAdditionIntentSchema = z.enum(['record_existing', 'planned_addition']);
+export const compatibilityConfirmationSchema = z.object({
+  status: compatibilityStatusSchema,
+  catalogVersion: z.string().trim().min(1).max(120),
+  confirmedAt: isoDateTimeSchema,
+});
+
 export const aquariumSpeciesCreateSchema = z.object({
   speciesCatalogKey: z.string().trim().min(1).max(160),
   quantity: z.number().int().positive().max(100000),
@@ -38,6 +46,9 @@ export const aquariumSpeciesCreateSchema = z.object({
   lastWaterChangeAt: isoDateTimeSchema.optional(),
   lifeStage: lifeStageSchema.default('unknown'),
   reproductiveState: reproductiveStateSchema.default('unknown'),
+  intent: speciesAdditionIntentSchema.default('record_existing'),
+  catalogVersion: z.string().trim().min(1).max(120).optional(),
+  compatibilityConfirmation: compatibilityConfirmationSchema.optional(),
 });
 
 export const aquariumSpeciesUpdateSchema = z.object({
@@ -245,6 +256,7 @@ export const migrationPreviewInputSchema = z.object({
 export type AquariumCreateInput = z.infer<typeof aquariumCreateSchema>;
 export type AquariumUpdateInput = z.infer<typeof aquariumUpdateSchema>;
 export type AquariumSpeciesCreateInput = z.infer<typeof aquariumSpeciesCreateSchema>;
+export type CompatibilityConfirmation = z.infer<typeof compatibilityConfirmationSchema>;
 export type AquariumSpeciesUpdateInput = z.infer<typeof aquariumSpeciesUpdateSchema>;
 export type AquariumSpeciesBatchCreateInput = z.infer<typeof aquariumSpeciesBatchCreateSchema>;
 export type AquariumSpeciesBatchUpdateInput = z.infer<typeof aquariumSpeciesBatchUpdateSchema>;

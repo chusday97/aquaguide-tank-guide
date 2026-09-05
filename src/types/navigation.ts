@@ -17,6 +17,8 @@ export type WorkspaceSectionId =
   | 'care-diagnosis'
   | 'care-actions';
 
+export type WorkspaceLayout = 'immersive' | 'content' | 'standalone';
+
 export type WorkspaceNavigationContext = {
   route: string;
   query: string;

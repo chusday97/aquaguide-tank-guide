@@ -38,7 +38,7 @@ export default function SharedReportPage() {
   }, [isEn, token]);
 
   return (
-    <main className="min-h-[100dvh] bg-[#e3ece8] px-4 py-8 text-ink">
+    <main className="workspace--standalone min-h-[100dvh] bg-[#e3ece8] px-4 py-8 text-ink">
       <div className="mx-auto w-full max-w-3xl">
         <header className="rounded-[28px] bg-gradient-to-br from-emerald-950 to-emerald-700 p-6 text-white shadow-xl md:p-8">
           <ShieldCheck className="h-10 w-10" />

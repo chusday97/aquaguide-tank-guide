@@ -8,8 +8,7 @@ import type {
 } from '../../../packages/contracts/src';
 import type { Fish } from '../../../src/types';
 import { fishData as seedFishData } from '../../../src/data/fishData';
-import type { CompatibilityEvidenceProvider, TankCompatibilityResult } from '../../../src/lib/tankCompatibilityEngine';
-import { evaluateTankCompatibility } from '../../../src/lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility, type CompatibilityEvidenceProvider, type TankCompatibilityResult } from '../../../src/services/compatibility/compatibility.service';
 import { getCompatibilityEvidenceAudit, type ReviewedCompatibilityProfile, type ReviewedPairRule } from '../../../src/data/compatibilityEvidence';
 import { mapSpeciesDetail } from './content-mappers';
 import { type PublicationSnapshotPayload, speciesPublicationSelect } from './content-publications';

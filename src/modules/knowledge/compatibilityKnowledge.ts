@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../../types';
-import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
+import type { CompatibilityDecisionReadiness } from '../../../packages/domain-rules/src';
 import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
 
@@ -35,6 +36,14 @@ const statusRank: Record<TankCompatibilityStatus, number> = {
   insufficient_data: 2,
   not_recommended: 3,
 };
+
+const readinessOf = (results: TankCompatibilityResult[]): CompatibilityDecisionReadiness => (
+  results.length > 0 && results.every(result => result.metadata.decisionReadiness === 'reviewed')
+    ? 'reviewed'
+    : results.some(result => result.metadata.decisionReadiness === 'partial')
+      ? 'partial'
+      : 'unknown'
+);
 
 const riskPriority: CompatibilityRiskType[] = [
   'water_type',
@@ -113,10 +122,19 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
     suggestions: Array.from(new Set(results.flatMap(result => result.suggestions))).slice(0, 5),
     metadata: {
       ruleVersion: results[0]?.metadata.ruleVersion || 'tank-compatibility-v1',
+      evidenceAuthorityVersion: results[0]?.metadata.evidenceAuthorityVersion || 'unknown',
       speciesDataVersion: results[0]?.metadata.speciesDataVersion || 'local-fish-data-v1',
       calculatedAt: new Date().toISOString(),
       scope: results[0]?.metadata.scope || 'tank',
+      intent: results[0]?.metadata.intent || 'planned_addition',
+      catalogVersion: results[0]?.metadata.catalogVersion || 'unknown',
+      domainRuleCodes: Array.from(new Set(results.flatMap(result => result.metadata.domainRuleCodes || []))),
+      domainStatus: results[0]?.metadata.domainStatus || status,
+      decisionReadiness: readinessOf(results),
     },
+    stockingGuidance: results.find(result => result.stockingGuidance)?.stockingGuidance,
+    observedStatus: results.find(result => result.observedStatus)?.observedStatus,
+    evidenceIds: Array.from(new Set(results.flatMap(result => result.evidenceIds || []))),
   };
 };
 
@@ -240,10 +258,19 @@ const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompa
     suggestions,
     metadata: {
       ruleVersion: pairResults[0]?.rawResult.metadata.ruleVersion || 'tank-compatibility-v1',
+      evidenceAuthorityVersion: pairResults[0]?.rawResult.metadata.evidenceAuthorityVersion || 'unknown',
       speciesDataVersion: pairResults[0]?.rawResult.metadata.speciesDataVersion || 'local-fish-data-v1',
       calculatedAt: new Date().toISOString(),
       scope: pairResults[0]?.rawResult.metadata.scope || 'tank',
+      intent: pairResults[0]?.rawResult.metadata.intent || 'planned_addition',
+      catalogVersion: pairResults[0]?.rawResult.metadata.catalogVersion || 'unknown',
+      domainRuleCodes: Array.from(new Set(pairResults.flatMap(result => result.rawResult.metadata.domainRuleCodes || []))),
+      domainStatus: pairResults[0]?.rawResult.metadata.domainStatus || status,
+      decisionReadiness: readinessOf(pairResults.map(result => result.rawResult)),
     },
+    stockingGuidance: pairResults.find(result => result.rawResult.stockingGuidance)?.rawResult.stockingGuidance,
+    observedStatus: pairResults.find(result => result.rawResult.observedStatus)?.rawResult.observedStatus,
+    evidenceIds: Array.from(new Set(pairResults.flatMap(result => result.rawResult.evidenceIds || []))),
   };
 };
 
@@ -289,5 +316,8 @@ export const evaluateCompatibilityDecision = ({
     suggestions: aggregateResult.suggestions,
     aggregateResult,
     metadata: aggregateResult.metadata,
+    stockingGuidance: aggregateResult.stockingGuidance,
+    observedStatus: aggregateResult.observedStatus,
+    evidenceIds: aggregateResult.evidenceIds,
   };
 };

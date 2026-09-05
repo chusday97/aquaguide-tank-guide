@@ -1,8 +1,508 @@
 ## 当前任务目标
 
-> **READ FIRST (2026-09-02): `.ai/HANDOFF_LATEST.md` is the canonical current-state handoff. Older sections below are historical unless the latest handoff explicitly retains them.**
+从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。
 
+### 2026-08-31 当前门禁复验（`8bfef23c`）
+
+- [x] 数据短分支治理修复已提交：`project:status`/`check:project-truth` 正确识别包含最新 `main` 的 `codex/*` 短分支；水体契约包含 `brackish`。
+- [x] 本地从零重放前26+第27个本地 Catalog migration；`supabase test db --local` 通过 19/19，`supabase db lint --local --schema public --level error --fail-on error` 为 0 error。
+- [x] 当前 SHA 上 readiness 本地门禁通过 16 项；`test:readiness` 通过，证据报告位于 `.artifacts/readiness/4969b5817184/`。
+- [x] 数据分支 diff 未包含 UI Owner、Supabase migration、生产配置或生产指针文件；UI freeze 仍是历史基线差异，留给 UI 短分支处理。
+- [x] 数据短分支已一次性推送到 `origin/codex/catalog-cohort-30-v1`，远端分支 SHA 与本地一致；数据 PR #143 已创建，等待远端 CI。Preview 与 PR #143 的实时 parity 尚未完成。
+- [ ] 生产 migration、Catalog 发布、UI 人工验收和正式上线仍未执行。
+
+### 2026-08-31 当前短分支治理修复
+
+- [x] 修复 `project:status` 对合法 `codex/*` 短分支的误阻塞；短分支必须包含最新 `main`，并输出分支角色与祖先关系。
+- [x] 统一 `CONTRACT.md`、代码和第27个 migration 的水体类型契约，补齐 `brackish`。
+- [x] 更新 `docs/PROJECT_TRUTH.md`，明确 PR #142 已合并，`main` 是当前代码事实来源。
+- [x] 在 `codex/catalog-cohort-30-v1` 上复验：Catalog审核批次、Catalog checksum、435组合矩阵和项目事实门禁通过。
+- [ ] 本步骤的计划内修改尚未提交；提交后继续运行数据短分支剩余门禁。
+
+### 2026-08-31 P0 回归夹具修复
+
+- [x] 将水体冲突回归改为使用显式 `waterType`，保持“不从名称、分类或描述推断水体”的契约。
+- [x] 授权本地验证通过：P0 tank evidence 10/10、兼容性、Catalog、Domain/Service、添加与写入恢复、lint、API 类型和 production build。
+- [ ] 仍需汇总最终数据门禁并完成独立 Critic 复验。
+
+### 2026-08-31 当前真实快照（代码复验点：`e8e6f3ce`；后续仅文档修订）
+
+- [x] 30种/300条字段审核记录已聚合，格式、批次归属、重复字段、跨物种引用和来源归属门禁通过。
+- [x] 105条记录标记为 `supported`，195条为 `reviewed + unknown`；其中32条来源已核实，99个字段允许进入运行时。
+- [x] 新增9条 GBIF 分类记录，仅用于身份字段；它们不支持水体、缸体、行为或数量字段，相关字段继续保持 `unknown`。
+- [x] 未逐页核实的支持候选不会进入运行时；`test:catalog-review-batches` 已硬断言 `contentVerifiedSources=32`、`runtimeApprovedFields=99`，防止把旧统计误报为完成。
+- [x] Catalog 486种构建/校验通过，当前 checksum 由 `catalog:validate` 运行时生成；435组组合矩阵、Domain/Service/Presentation、lint 和 build 通过。
+- [ ] 30种专业资料闭环尚未完成：仍有未打开或未能明确支持字段的来源；不能宣称30种已完成内容审核，也不能发布 Catalog。
+- [ ] 本分支仍只在本地，未推送 GitHub；UI、生产 Supabase 第27个 migration、Catalog 发布和 `main` 合并均未执行。
+
+### 2026-08-31 并行审核底座
+
+- [x] `bb666b31` 增加 `supported/unknown` 字段审核分辨率；`reviewed + unknown` 可完成审核但不会覆盖运行时 Profile。
+- [x] 三批并行审核已完成：30种/300字段，批次文件分别由子任务提交并已聚合；84条 `supported`、216条 `reviewed + unknown`。
+- [x] `test:catalog-review-batches` 校验批次成员、字段完整性、引用和审核分辨率；`catalog:build`/`catalog:validate` 通过（486种）。
+- [ ] 216个 unknown 字段仍需在网络可用时复核来源页面内容；当前不能把这批资料描述为全字段已确认。
+
+补充：上述并行结果已完成代码聚合与批次门禁；仍未完成的是专业来源页面逐页核验和用户/发布授权，因此本分支不可推送生产或发布 Catalog。
+
+- [x] `66b90d43` 增加来源内容核实门：来源未逐页核实前，84条暂支持字段不会覆盖运行时；当前运行时批准字段为0。
+- [ ] 三个批次正在重新逐页核实来源内容；核实结果只写回各自批次文件。
+
+- [x] 首轮逐页核实完成：15条来源实际打开并核对，50个支持字段可进入运行时；其余候选已降为未知或仍待核实。
+- [x] 当前聚合统计为80条 `supported`、220条 `reviewed + unknown`；运行时实际批准字段50条。
+- [ ] 仍需继续核实未打开来源，尤其高风险行为、缸体和群体字段；当前不具备生产Catalog发布条件。
+
+## 2026-08-31 专业来源候选入口（当前）
+
+- [x] 新增 `catalogReviewSourceCandidates.ts`，为首批第一批10种物种登记 FishBase 专业来源候选；全部保持 `draft`，不会进入运行时 Catalog。
+- [x] `catalog:research --batch 10 --offset 0` 会把来源候选写入研究草稿；字段引用仍为空，必须由审核者逐字段选择并批准。
+- [x] `test:catalog-review` 覆盖来源候选数量、FishBase 发布者、Draft 状态和第二批未研究物种不误带来源。
+- [x] `3bb38297` 增加第一批来源候选 ID 与 cohort 成员集合断言，防止来源映射漂移。
+- [ ] 10种来源页面的字段级阅读、冲突分析和 `reviewed` 批准仍未完成；当前审核进度仍为 `0/30`、`0/300` 字段。
+
+## 2026-08-30 字段级审核门禁实现（当前）
+
+- [x] `9b3b9380` 增加 `CatalogFieldReview` 机器可读契约、10 个待审核字段、审核状态/置信度/引用/冲突记录及批准字段应用器。
+- [x] `62539910` 修复 Critic 指出的引用绕过：reviewed 字段必须引用同物种、已审核的来源；reviewed 值按字段形状校验；领地、捕食和繁殖审核事实保留到 `factEvidence`。
+- [x] `catalog:research` 三批草稿现在每个物种明确生成 10 条 Draft 字段记录；`catalog:review` 会拒绝缺字段、重复字段或无效引用，并统计 reviewed/pending 字段。
+- [x] `test:catalog-review`、`catalog:build`、`catalog:validate`、`lint`、`check:project-truth`、兼容首发队列/435 组合矩阵、Catalog snapshot、authority gate 均通过；当前 Catalog 仍为 486 条、checksum `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`。
+- [x] 研究草稿和批准应用路径已接入，但当前批准记录为空，因此运行时 Catalog 没有被未经审核资料改变。
+- [ ] 30 种逐字段证据仍为 `0/30` 完成；当前 `catalog:review` 明确输出 `reviewedCount=0`、`pendingCount=30`，不能进入正式 Catalog。
+- [ ] `check:ui-freeze` 仍因旧 provisional `02457dd2` 与历史候选视觉 Owner 差异失败；本数据步骤没有修改 UI，需后续视觉短分支重新建立基线。
+- [x] 独立 Critic 已按六维复验 `62539910`/`3fa3e7a0`：字段级审核门禁与草稿管道通过；明确仍为 `0/30 reviewed`，不能当作可发布 Catalog。
+- [x] `95438025` 补充全字段 reviewed 正例、重复字段/无效引用负例，并完成 Critic 同线程复验；当前分支工作树干净、尚未推送。
+- [x] `2b7c34d9` 将首批30种证据缺口登记到项目归档；该记录为历史节点，当前分支提交数以运行时 Git 为准。
+- [ ] 用户整批内容确认、生产 migration、Catalog 发布、Preview 和正式上线均未完成。
+
+## 2026-08-30 当前执行边界
+
+- `main@016dbca5` 与 `origin/main` 同步且干净。
+- `release/production@ed0cf380` 保持冻结，Vercel 继续使用旧生产版本。
+- `codex/catalog-cohort-30-v1` 是唯一数据短分支，当前仅本地存在。
+- UI、生产 migration、Catalog 发布和正式上线均后置。
+
+## 2026-08-30 首批30种资料审计
+
+- [x] 全量审计已运行：486条记录；唯一中文名458、唯一学名437；状态为 `0 VERIFIED / 58 PARTIAL / 348 TEMPLATE_DERIVED / 33 CONFLICT / 47 AMBIGUOUS`。
+- [x] 生成首批30种三批研究草稿；每批10种，均为 Draft。
+- [x] 审核门禁确认 `0/30 reviewed`，草稿不能进入运行时 Catalog。
+- [ ] 字段级来源、冲突分析和一次性整批确认尚未完成。
+
+## 2026-08-30 代码统一完成
+
+- [x] PR #142 已合入 `main`，merge commit 为 `2d0b4cfe5416e706edb6dcf195dc9597d0c94ae6`。
+- [x] `main` 与 `origin/main` 同步；候选 `b87ae5d6` 已确认是 `main` 祖先。
+- [x] `release/production` 继续停在 `ed0cf380`，生产网站未变化。
+- [ ] 首批30种资料审核、UI人工验收、Supabase第27个 migration、Catalog发布和正式上线仍未完成。
 收口核心鱼缸事实链路：把“现实中已经在缸里”和“未来准备养”拆成两套明确流程，停止生成虚假鱼缸资料，并让创建与新增生物统一通过 Repository 命令保存。
+
+## 2026-08-30 可验证进度中心（当前）
+
+- [x] 在 `c63cb2dd` 完成 Vercel-only 生产渠道状态并同步候选：Vercel=`ACTIVE_FROZEN`，Cloudflare=`INACTIVE_LEGACY`；`project:status` 运行时输出 `productionDeploymentFrozen=true`，不会把历史 Cloudflare 绑定误算为活动生产阻塞。
+- [x] `npm run readiness:collect` 在授权环境完成（19 PASS、1 UNVERIFIED、1 USER_ACCEPTANCE_REQUIRED）；本轮报告绑定 `c63cb2dd138a379ec75a5bc867113ce86f9462a9`。PR #142 已读回为 `OPEN/Draft/CLEAN/MERGEABLE`；UI人工验收和Supabase生产写入仍明确保持未通过/未验证。
+- [x] 用户提供 Cloudflare Account home 截图，证明其一侧已登录；自动化浏览器仍读取到登录页，因此项目级生产分支读回继续标记 `UNVERIFIED`。
+- [x] 文档证据提交 `a0bdb3aa` 后重新采集 readiness；当前报告绑定该完整 SHA，`test:readiness` 通过。由于当前网络/DNS 和沙箱写入限制，GitHub/Preview/Supabase 相关门禁继续按 `FAIL`、`BLOCKED` 或 `UNVERIFIED` 展示，不沿用旧绿色结果。
+
+- [x] 新增 `npm run readiness:collect`：在当前 SHA 上运行项目事实、Domain/Service/Presentation、Catalog、API 类型、build、兼容权威和 UI freeze 门禁，并记录每项证据的命令、预期、实际结果、来源和时间。
+- [x] 新增 `npm run readiness:serve`：提供本地只读进度看板（默认 `http://127.0.0.1:4320`），独立于 Aquarium/4319 视觉页面。
+- [x] 新增 `npm run test:readiness`：校验报告 schema、完整 SHA、状态集合、固定业务案例和未完成 UI/生产门禁不会被隐藏。
+- [x] 看板区分 Main 代码收敛与生产发布两个结论；网络不可用、字体/tsx 沙箱限制和旧 UI freeze 基线差异会显示为 `UNVERIFIED` 或 `USER_ACCEPTANCE_REQUIRED`，不伪装成通过。
+- [x] 进度中心实现于 `e3316997`，独立 Critic 已复验通过；当前授权运行报告绑定候选 `fb6db2a2`，为 18 项 PASS、1 项 BLOCKED（生产未冻结）、1 项 UNVERIFIED（生产 Supabase 未写入验证）和 1 项 USER_ACCEPTANCE_REQUIRED（视觉）。
+- [ ] 当前仍需：UI 人工验收、新 UI Freeze、首批30种资料审核、第27个生产 migration、Catalog 发布和 main 合并。Cloudflare 已按用户决定登记为历史渠道，不再阻塞生产冻结；PR #142 合并前仍需用户单独授权。
+
+验证证据：readiness report 始终写入 `.artifacts/readiness/<sha-prefix>/`，报告数量和状态以每次运行时输出为准。工作树有未提交变更时，项目事实为 `BLOCKED`，本地门禁为 `UNVERIFIED`；只有提交后重新采集，才允许生成绑定当前 SHA 的 PASS 证据。
+
+## 2026-08-30 正式本地预览收敛（当前）
+
+- [x] 4319 已按候选构建重启；`/_preview/interactive?module=...` 会进入真实正式 App Shell，而不是只渲染组件展厅。
+- [x] 预览自动使用隔离演示鱼缸、完成 onboarding，并强制本地 Repository；浏览器回归确认四个模块无 `/api` 请求、无页面错误。
+- [x] 正式入口已验证：Aquarium、Encyclopedia Scene、Care Scene、Collection 均可从预览进入，元数据显示候选完整 SHA、seed 和构建时间。
+- [x] `test:formal-scenes`、`test:core-ui`、`test:responsive-routes`、`check:project-truth` 和 `check:compatibility-authority` 通过。
+- [x] 进度中心提交已同步到候选分支；远端候选、PR #142、Vercel Preview 和 Cloudflare 检查已指向 `fb6db2a2`，Foundation、Product Golden Path、Cloudflare 和 AquaGuide Vercel 检查均通过。
+- [ ] 用户视觉验收、新 UI Freeze、Cloudflare 生产冻结、Supabase migration、Catalog 发布和 `main` 合并仍保持外部门禁。
+
+## 2026-08-30 浏览器与本地数据库门禁复验（当前）
+
+- [x] 本轮验证前本地候选、远端候选、PR #142 和 Preview 已由运行时检查确认同步；当前新增验证提交待一次性推送，PR 仍为 Draft、无冲突。
+- [x] 本地 Supabase 26+1 migration 从零重放成功；pgTAP 19/19、Schema lint 0 error；Catalog 486 条、13 个来源、checksum 由 `catalog:validate` 复核通过。
+- [x] Compatibility authority、Domain、Service、Presentation、435 组合矩阵、核心体验、正式 scene、今日行动、Collection 和响应式路由回归通过。
+- [x] 修复 Care 来源链接触控区域不足 44px，并将核心回归断言对齐当前“混养风险计算”标题；类型检查和 production build 通过。
+- [ ] `check:ui-freeze` 仍会对旧 provisional `02457dd2` 报告候选视觉 Owner 差异；这不是新回退，必须由用户完成一次视觉验收后重录基线。
+- [ ] 生产部署仍未完全冻结（`productionDeploymentFrozen=false`）；Vercel 已改为跟随 `release/production` 且仍运行 `ed0cf380`，Cloudflare 生产绑定尚未读回确认。
+- [ ] 首批 30 种逐字段人工审核、第 27 个生产 migration、Catalog 发布、人工 release acceptance 和 PR #142 合并 `main` 尚未执行。
+
+## 2026-08-30 快速收敛推进（当前）
+
+- [x] 只读确认 Vercel 当前生产部署为 `main@ed0cf38025652db901ee81aa697ca55b1c1584b6`。
+- [x] 建立本地 `release/production` 分支并锚定该生产 SHA；该分支只作为部署/回退指针。
+- [x] 已将 `release/production@ed0cf38025652db901ee81aa697ca55b1c1584b6` 建立到 GitHub 远端，未强推。
+- [x] 已在 Vercel Production 环境将 Branch Tracking 从 `main` 改为 `release/production`，并通过设置页与 API 读回确认；正式部署仍为 `ed0cf38025652db901ee81aa697ca55b1c1584b6`。
+- [x] 将项目状态、Project Truth、Release Readiness、Deployment State 和 Handoff 改为区分 `main` 代码源与 `release/production` 生产指针。
+- [x] Cloudflare 已按用户明确决定退出 AquaGuide 正式生产渠道，登记为 `INACTIVE_LEGACY`；不删除、不修改历史 Worker/Pages 资源，也不参与生产冻结计算。
+- [x] 候选与 PR #142 的同步状态由 `npm run project:status` 与 `npm run check:preview-parity` 运行时核对；本轮验证提交完成后再进行一次性推送。
+- [x] `npm run project:status` 同时输出 `productionPointerSha=ed0cf380...`、`productionPointerSynchronized=true`，并明确 `productionDeploymentFrozen=false`，避免把本地回退锚点误当成已冻结生产设置。
+- [ ] PR #142 尚未合入 `main`；即使完成源代码收敛，发布状态仍保持 `NOT_READY`。
+
+## 2026-08-29 4317 严格视觉恢复：候选首轮严格对齐（最新）
+
+- [x] 候选预览保留批准的 `?module=aquarium|encyclopedia|care|collection` 单模块切换，未复制 4317 的旧业务逻辑。
+- [x] Aquarium 预览舞台恢复 4317 的 `72dvh/720px` 高度；互动图鉴场景恢复 500px，互动养护场景恢复 520px，移除过渡版 clamp 放大。
+- [x] 移除 Aquarium、Encyclopedia、Care、CollectionHub 和 Collection 根节点额外的 workspace 内边距，正式图鉴内容起点从约 x=332 回到 4317 的 x=312。
+- [x] 增加独立字体 token，绕过 Tailwind 主题覆盖，候选运行时字体栈与 4317 一致：`Geist Variable → PingFang SC → Microsoft YaHei`。
+- [x] 本地 `npm run build`、`test:desktop-layout`、`test:aquarium-stage-layout`、`test:three-stage-framing` 通过；4319 production preview 已用当前 `git rev-parse HEAD` 构建重启，页面元数据显示同一完整 SHA（运行时核对，不在文档硬编码）。
+- [x] 稳定化截图门禁后，当前候选已生成 4317 Aquarium 母版 + 4319 四模块、390/600/768/1024/1280/1440/1920px 共 35 张截图，manifest 全部 HTTP 200，证据目录为 `/private/tmp/aquaguide-visual-matrix/ui-parity-6396d61e`；候选 SHA 由 manifest 记录为生成时视觉提交，后续仅有测试/文档提交。
+- [ ] 截图只证明结构和运行稳定，尚未替代用户人工视觉验收；仍需确认差异后重录 UI Freeze。
+- [x] 修正 mini compatibility 回归中沿用旧规则码的断言；当前未审核物种仍返回 `species_evidence_unreviewed`，已审核单物种不会因缺少第二种鱼自动降级，混养、添加意图和现实记录回归通过。
+- [ ] 用户人工确认、UI Freeze 新基线、一次性推送 PR #142、Preview SHA parity、生产 migration、Catalog 发布和 main 合并仍未执行。
+
+## 2026-08-29 4317 严格视觉恢复：运行时修复（最新）
+
+- [x] 修复互动预览 Aquarium 容器没有明确高度的问题；候选 4319 的 Canvas 现在按工作区高度布局，不再退化为顶部条带或异常空白。
+- [x] 恢复候选全局字体变量与 4317 的编辑型字体层级，避免 Georgia/Helvetica 替换确认过的 Noto Serif/Geist 组合。
+- [x] 截图门禁等待预览 ready marker、字体和 Canvas 尺寸，并记录页面错误与失败请求；不再用过早 Loading 截图代替视觉证据。
+- [x] 本地 production build preview 已切换回 4319，并确认 WebGL context 正常、鱼缸舞台和透明生物真实可见；运行 SHA 为 `d71ab59d`。
+- [x] 截图门禁已用候选 SHA 生成 `/private/tmp/aquaguide-visual-matrix/ui-parity-d71ab59d`，4317/4319 三视口均 HTTP 200、无页面错误/失败请求。
+- [x] 截图脚本已扩展为 4317 Aquarium 母版 + 候选四模块的 390/600/768/1024/1280/1440/1920px 矩阵；最新 35 张证据位于 `/private/tmp/aquaguide-visual-matrix/ui-parity-126f99b8`，manifest 全部 HTTP 200。
+- [ ] 仍需用户对四模块与正式路由完成最终人工视觉验收；此前的截图只证明运行稳定和结构可比，不自动授予 UI freeze 通过。
+
+## 2026-08-29 网页端布局统一（本轮）
+
+- [x] 建立 `workspace--immersive`、`workspace--content`、`workspace--standalone` 三类桌面布局契约，并让核心正式路由声明 `data-workspace-layout`。
+- [x] 修复 Care Scene 被 Browse 双栏网格挤到右侧的问题；Scene 使用单列连续舞台，Browse 才使用双栏。
+- [x] 互动场景高度按可用视口计算；水族册节点在工作区不足时切换紧凑入口，避免网页端重叠。
+- [x] `/_preview/interactive` 改为 `?module=aquarium|encyclopedia|care|collection` 单模块切换展厅，保留分支、完整 SHA、seed 和构建时间。
+- [x] 覆盖搜索、识别、设置、收藏子页、时间线、纪念详情、Welcome、Login、Shared Report、Admin 和 404 的统一布局类别。
+- [x] `npm run test:desktop-layout`、`npm run lint`、`npm run build`、Aquarium 舞台契约和 Three framing 契约通过；`check:project-truth` 与 `git diff --check` 通过。
+- [ ] 真实浏览器截图验收尚未完成；当前 `check:ui-freeze` 会报告本轮批准的布局 Owner 变化，需完成 390/600/768/1024/1280/1440/1920px 验收后重录新基线。
+
+## 2026-08-29 4319 本地预览恢复（本轮最新）
+
+- [x] 复现用户所称“乱码”：实际是 Vite 错误遮罩，`@tailwindcss/vite` 在 reload/HMR 时无法解析候选 worktree 的依赖；页面响应本身为 UTF-8。
+- [x] 候选预览运行期间保留 `node_modules` 工作树链接，并通过仓库本地 exclude 避免误提交；4319 已重启到当前候选。
+- [x] 使用用户原有 4319 标签页 reload 复验：`vite-error-overlay = 0`，中文正式内容、分支、完整 SHA、seed 和构建时间可见；仅剩不阻断渲染的 Three.js 弃用警告。
+- [ ] 本地预览依赖当前进程和依赖链接持续存在；它不是永久部署地址。GitHub、Preview、生产 Supabase、Catalog 和 `main` 均未变更。
+
+## 2026-08-29 本地收口复核（本轮最新）
+
+- [x] 4317 冻结基线与 4319 当前候选均 HTTP 200；4319 元数据已刷新到当前候选提交，4317 保持历史 SHA 不改写。
+- [x] 真实 Chromium factual flow、正式图鉴/养护 scene/browse、今日行动点击/Escape/拖拽吸附均通过；项目真相与 diff 检查通过。
+- [x] 4319 当前候选 SHA、远端候选/PR #142 SHA 和领先数量均由 `git rev-parse`/`git rev-list` 运行时读取；当前本地已提交但尚未推送。
+- [ ] `check:ui-freeze` 仍只报告已批准的混养结果区域文件变化；需要用户确认文案/操作后再 capture 新基线，不能把该失败描述为舞台回退。
+- [ ] 生产 migration、Catalog 发布、Preview exact SHA parity、人工 release acceptance 和 `main` 合并未执行。
+
+## 2026-08-29 浏览器门禁修复（本轮最新）
+
+- [x] 修复 Aquarium 创建空缸后的 React Hook 顺序回归：展示层 `useMemo` 不再位于 `!activeAquarium` 条件返回之后；真实 Chromium 不再进入错误边界。
+- [x] 更新 `verify-aquarium-factual-flow.mjs` 使用真实“鱼类 → 黑裙鱼”选择路径，不再误点分类按钮。
+- [x] 增加 wishlist-only 浏览器证据：内部 `complete_information` 规划只写现有种草清单，鱼缸生物保持为空，且未调用新增生物 API；现实记录仍可独立保存。
+- [x] 本地验证：浏览器 factual flow、compatibility presentation、unknown recommendation filter、Compatibility Service、addition intents、lint、build、Catalog validate、435 组合矩阵、authority/project truth 通过。
+- [ ] `check:ui-freeze` 仍按预期因本轮已批准的混养结果区域变化而失败，需用户确认后重录基线；本地已提交但尚未推送，领先数量以 `git rev-list` 实时读取；生产 migration、Catalog 发布和 `main` 合并未执行。
+
+## 2026-08-29 双预览复现（本轮最新）
+
+- [x] 4317 已从独立 worktree 的 `37a8d4d1` production build 启动，4319 从候选 worktree 的最新提交启动；两者 `/_preview/interactive` 均 HTTP 200、Chromium 无页面错误。
+- [x] 发现并规避开发服务器共享依赖缓存造成的 R3F 假故障：4317 若与候选同时使用共享 Vite dev cache 会报 `R3F: Hooks can only be used within the Canvas component`，改用基线 production preview 后恢复稳定；未修改基线代码。
+- [ ] 4317 是冻结历史 SHA，原页面没有候选版的 `data-preview-metadata` 元数据；不能为显示元数据而改写冻结基线，否则会改变其 SHA。候选 4319 已显示分支、完整 SHA、seed 和构建时间。
+
+## 2026-08-29 混养结果体验修复（本轮）
+
+- [x] 保留 Domain 内部 `insufficient_data` 安全状态，但新增统一 Compatibility Presentation：完整结论显示适合/调整后可尝试/不建议，部分事实显示“当前可确认”，无可靠事实显示“暂未开放这组混养建议”。
+- [x] 部分或未开放组合的主操作改为加入现有种草清单；不调用新增缸内生物 Repository/API，不新增数据库字段。
+- [x] `VisualResultCard` 支持展示模式、状态文案和判断范围；Species Detail、Encyclopedia、Aquarium 的混养文案不再直接显示“资料不足/信息不足”。
+- [x] 自动推荐排除内部 `insufficient_data` 结果，部分评估仅允许用户主动查看和收藏。
+- [x] Critic 指出的两个体验阻塞已修复：未审核候选不再进入自动推荐；Aquarium 规划资料不足只保存到种草清单，不进入设置或真实鱼缸（commit: `ef1bba10`）。
+- [x] 新增 `test:compatibility-presentation`，覆盖完整结论、部分事实、无结果卡、种草操作和兼容页面文案门禁；混养、Domain、Service、Catalog、构建和类型检查通过。
+- [x] 同一 Critic 已复验最新提交，确认本轮两个阻塞已消除；完整交付仍等待用户确认混养结果文案后更新 UI freeze，且尚未推送远端。
+- [x] Aquarium 逐项结果补上无事实时的 `unavailable` 展示分支，避免空证据被写成“当前可确认”（commit: `9584dbef`）；同一 Critic 已复验通过。
+- [ ] `check:ui-freeze` 按预期报告混养结果区域发生定向变化；需用户确认新结果文案后重新生成冻结基线。4317、4319、GitHub、生产 Supabase 和 `main` 均未改动。
+
+## 2026-08-28 物种底层修复进展（本轮最新）
+
+> 当前工作树最新提交以 `git rev-parse HEAD` 运行时读取。本地已提交但尚未推送；远端候选/PR #142 仍停在 `396e71da`。下方较早的“同步/已推送”条目均为历史证据。
+
+- [x] 首批审核队列已冻结为 30 个明确 Catalog ID，按基础物种去重；不再由排序或新增变种悄悄改变研究范围。泰国斗鱼暂以 `Betta splendens` 品系代表 `sp_0258` 纳入，基础种关系仍待内容审核。
+- [x] Domain 增加个体生命阶段/繁殖状态输入、现实共处等级（stable/observe/intervene/emergency）和分层 `StockingGuidance`；幼体只可降低即时捕食判断，不能覆盖成体风险。
+- [x] 领地冲突改为谨慎提示；繁殖护域、持续追逐、进食排除、伤口/呼吸异常/多只死亡均有结构化规则与证据码。物种未审核时规划结论安全降级，已确认硬冲突仍保留阻断。
+- [x] 新增 435 个无序组合矩阵回归：状态确定性、顺序对称性和未审核资料的安全降级通过（324 组返回 `insufficient_data`、110 组阻断、1 组兼容）。
+- [x] 新增 `catalog:audit` 逐记录质量报告、`catalog:research --batch` 和 `catalog:review` 草稿审核入口；首批草稿仍为 10/10 pending，未进入运行时事实。
+- [x] 本地门禁通过：Domain/Service/legacy facade、Catalog、lint、API 类型、production build、UI freeze、project truth、Supabase 26+1 重放、pgTAP 19/19、schema lint 0 error。
+- [ ] 首批 30 种仍未完成逐字段人工审核；生产第 27 个 migration、Catalog 发布、最新 Preview exact SHA、人工 release acceptance 和 `main` 合并仍未执行。
+
+> 当前本地 Catalog 测试 checksum 为 `6a676e5587e77498c74fa99b79db9d0c7840383d3522543acd628bdbb8d0673b`；生产 checksum 仍为 `UNVERIFIED`。本轮未修改 UI Owner 文件、未写生产数据库、未推送 GitHub。
+
+## 2026-08-28 物种底层修复进行中（最新；提交详情以 `git log` 和 `project:status` 运行时读取）
+
+- [x] Domain compatibility 增加温度、pH、鱼缸温度、最低容量/缸长约束；最终结论继续由 Domain 返回，旧引擎仅作兼容 facade。
+- [x] canonical SpeciesProfile 补齐身份、分类状态、最低容量和社会行为占位字段；缺失事实保持 `null/unknown`，不从名称或描述推断。
+- [x] 旧引擎入口已固化为 Domain-authoritative facade，因此正式 Aquarium、Encyclopedia、Species Detail、Compatibility Calculator 即使保持原 import，也不会拿到旧最终结论；视觉文件未改动。
+- [x] 新增 486 条物种质量审计（重复名称/学名、模板污染、Google 搜索来源、显式水体缺失）和确定性的首批 30 种研究队列；队列成员不会自动获得上线资格。
+- [x] 统一结果新增 `decisionReadiness`：只有已有审核画像和引用的物种才标记 `reviewed`，未审核组合仍为 `unknown` 并按资料不足处理。
+- [ ] 仍未完成首批 30 种逐字段人工审核、生产第 27 个 migration、Catalog 发布、Preview exact SHA、人工 release acceptance 和 `main` 合并。
+- [ ] 当前本地 Catalog checksum 为 `2fdcbc9ddcf1348828bc8cea311c2162a7a2c7ef00184a7b9542dbcc79c57ae2`；旧文档中的 `545ac...` 仅作历史证据，不覆盖本次规范化快照结果。
+
+## 2026-08-28 忽略 Vercel 后的本地收敛结果（最新）
+
+- [x] 完成混养权威静态门禁：旧 `tankCompatibilityEngine` 仅作为兼容 facade，Domain Rules 负责最终状态、策略、规则代码和版本；门禁扫描 226 个源文件通过。
+- [x] 完成 Catalog 与本地 Supabase 演练：486 个物种、13 个证据来源、checksum `545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`；26+1 migration 从零重放，pgTAP 19/19，schema lint 0 error。
+- [x] 完成业务与 UI 回归：Domain/Service/契约、核心体验、正式 scene、今日行动、物种详情、响应式路由、UI freeze、project truth、lint、API 类型和 production build 均通过；本轮只修正过期测试断言，未修改视觉 Owner 文件。
+- [x] 生成第 27 个 Catalog migration 授权包：`docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`；未执行生产 SQL、Catalog 发布或业务数据写入。
+- [x] 独立 Critic 六维复验通过；本地补救已一次性推送候选分支并更新 PR #142。`npm run project:status` 显示本地、远端、PR SHA 同步为当前 head。
+- [ ] 新 head 的 Preview exact SHA 尚未验证；Vercel/AquaGuide 正在部署，admin-content 仍受无关限流影响。继续不重复重试。
+
+> 本文件后续按日期保留历史证据；较早条目中的旧 SHA、checksum 和 `PARTIAL_WITH_FALLBACK` 状态均不覆盖本节最新事实。
+
+## 2026-08-28 忽略 Vercel 的安全补救（进行中）
+
+- [x] 增加 `check:compatibility-authority` 静态门禁，确认旧引擎只作为冻结 UI 的兼容 facade，Domain Rules 决定最终状态、策略、规则代码和版本。
+- [x] 将 Feature Catalog 与 Convergence Ledger 的混养状态更新为本地已验证；未修改页面、布局、素材或数据库字段。
+- [x] 更新 Supabase parity 当前 Catalog checksum，并整理前 26 个 migration 的定义层等价证据。
+- [x] 生成第 27 个 Catalog migration 授权包；未执行生产 SQL、未发布 Catalog、未写入业务数据。
+- [ ] 重新运行完整本地发布演练并完成 Critic 同线程复验；Vercel Preview 继续独立标记为 `UNVERIFIED`。
+
+## 2026-08-28 水体事实修复与发布门禁（最新）
+
+- [x] 为红绿灯 `sp_0431` 与宝莲灯 `sp_0432` 写入有证据支持的显式 `waterType: freshwater`；其他未审核物种仍保持 `unknown`，没有从名称、分类或描述推断水体。
+- [x] 增加“红绿灯↔宝莲灯完整资料返回 `caution`”和“任一方移除显式水体后返回 `insufficient_data`”回归；Catalog 校验现为 486 个物种，checksum：`545ac808b6ef5889f841fd7ab4be77bba752e222f8384e2ac1a082632492c2d3`。
+- [x] 本地 Domain、Service、Repository/API、Catalog、Supabase 26+1、pgTAP、lint、API 类型、build、UI freeze、project truth 和 diff 检查通过；独立 Critic 六维复验通过。
+- [x] 本地、远端候选和 PR #142 当前 SHA 已同步且工作树干净；精确值由 `npm run project:status` 运行时读取，避免文档提交后过期。
+- [x] 上一个代码 head `cdd465817dc796bf77c9d3aef5e95c25366befff` 曾有 exact Preview parity；该证据保留为历史记录，不代表当前 docs head。
+- [ ] 当前候选没有 exact Preview 部署，parity 为 `UNVERIFIED`；AquaGuide 与 admin-content Vercel checks 因部署额度限制失败。Cloudflare、Foundation、`validate` 的实时结果以 `gh pr checks 142` 读取；未全绿不得发布。
+- [ ] PR #142 保持 Draft。生产第 27 个 migration、Catalog 发布、人工 release acceptance 和 `main` 合并均未执行。
+
+## 2026-08-28 当前执行快照（最新）
+
+- [x] 混养唯一结论已在 Domain → Service → legacy 兼容入口闭环；共享适配器同步状态、策略、版本及 blocking/warning/missing 证据，当前页面无需改 UI 即不会再拿到旧最终状态。（最新代码提交：`b9d56da2`）
+- [x] 本地专项回归通过：混养、Service、正式图鉴/养护场景、今日行动、UI freeze、project truth、lint、API 类型、build、Catalog 和本地 Supabase 门禁均通过；独立 Critic 六维复验通过。
+- [x] 本地最新 head `7f0d208f` 已一次性推送；远端候选与 PR #142 已同步到同一 SHA，工作树干净。
+- [ ] 当前 Preview 仍为 `UNVERIFIED`：GitHub 显示 AquaGuide 与 admin-content 均因 Vercel build-rate-limit 失败（24 小时后可重试）；生产第 27 个 migration、Catalog 发布和 main 合并均未执行。
+- [ ] 下一步不是重复推送，而是等待额度恢复后只读复核一次 Preview SHA；额度恢复前可继续本地/生产只读证据整理。
+
+## 2026-08-28 当前门禁复核
+
+- [x] Compatibility Service、Domain 规则与 intent policy 的本地权威回归通过；`record_existing` 可保存事实，`planned_addition` 执行四级策略，Domain-only 冲突/未知资料安全降级。
+- [x] 4319 候选预览已重启并能加载当前工作树；正式图鉴/养护场景和今日行动浏览器回归通过。
+- [x] `check:ui-freeze`、`check:project-truth` 和 `git diff --check` 通过；本轮尝试的页面 import 切换因视觉 Owner 冻结门禁被回退，未改变 UI。
+- [ ] 当前本地候选 `fe062e25` 比远端候选领先 9 个提交；尚未推送，Preview exact SHA 尚未对当前 head 验证。生产第 27 个 migration、Catalog 发布和 main 合并仍未授权。
+
+## 2026-08-28 混养唯一结论闭环
+
+- [x] 旧 `tankCompatibilityEngine` 现在保留原有 Fish 输入和证据结构，但返回前统一应用 Domain Rules 的 `status` 与风险等级；现有页面无需改视觉文件也不会拿到旧状态。（commit: `7fa70ac1`）
+- [x] Compatibility Service 会继续合并 Domain ruleCodes 对应的结构化证据；旧入口与 Service 的状态、策略、版本回归通过。
+- [x] `test:compatibility`、`test:compatibility-service`、Catalog、添加/记录、build、`check:ui-freeze` 和 `check:project-truth` 通过。
+- [ ] 当前本地候选比远端领先 11 个提交；远端/PR/当前 Preview 尚未同步，生产 migration、Catalog 发布和 main 合并仍未授权。
+
+## 2026-08-28 Critic 阻塞修复
+
+- [x] 将 Domain ruleCodes 到 legacy blocking/warning/missing 证据的合并下沉到 `src/lib/compatibility/canonical-result.adapter.ts`；旧页面直连入口不再出现“状态阻断但无阻断理由”。
+- [x] 新增旧入口 Domain-only 水体冲突回归；`test:compatibility` 与 `test:compatibility-service` 均通过，UI 文件未变更。（commit: `33576cc6`）
+- [x] Service 已改为复用共享证据适配器，并补齐 candidate/tank missing 与 unknown water rule codes；Critic 同线程复验六维通过。（commit: `b9d56da2`）
+- [ ] 仍未推送当前候选；远端/PR/Preview、生产 migration、Catalog 发布和 main 合并继续保持外部门禁。
+
+## 2026-08-27 最终统一执行线
+
+- 当前唯一候选工作树为 `codex/main-core-foundation-v1`（SHA 以 `git rev-parse HEAD` 运行时读取）；4317 固定为 `37a8d4d1` 视觉基线，4319 用于候选验收，视觉恢复分支仅保留为历史证据。
+- 生产 Supabase 已完成只读核对：26 个 migration、35 张 RLS 表、89 条 policy；候选缺 8 个生产 migration，生产缺 Catalog 表和 `species.water_type`，必须先做 migration history reconciliation。
+- 当前 release 继续为 `NOT_READY`；禁止把旧候选 CI、旧 Preview 或生产已部署事实当作当前视觉或 Catalog parity 证据。
+
+## 2026-08-28 Domain authority 收敛第一步
+
+- [x] 公共契约正式导出 `SpeciesProfile`，保留 `CatalogSpecies` 作为迁移兼容类型。
+- [x] 新增 `speciesProfileFromFish` 边界适配器；只有显式 `waterType` 才进入 Profile，名称/分类/描述不会推断水体。
+- [x] Catalog Snapshot 与 Domain 输入复用同一 Profile 边界，486 物种 checksum 保持不变。
+- [x] 旧引擎传入 Domain 的 `explicitPairStatus` 仅来自已审核结构化 pair rule；相关类型、Catalog、Domain、API、UI 冻结回归通过。
+- [ ] Domain 结果尚未完全接管 legacy UI evidence/status；下一步收敛 Service/Repository 的统一结果适配，保持当前 UI 不变。
+
+## 2026-08-28 Domain fact source 收敛第二步
+
+- [x] `speciesProfileFromFish` 统一解析显式温度/pH 文本为 Profile 数值范围；`toDomainSpeciesFact` 只读取 Profile，不再绕过适配器读取 legacy Fish 文本。
+- [x] 补充空文本、无效换水周期、nullable 字段和数值范围回归；Catalog checksum 重新生成并通过一致性校验。
+- [ ] legacy UI status/evidence 尚未完全由 Domain 接管，状态继续为 `PARTIAL_WITH_FALLBACK`；生产 migration、Catalog 发布和 main 合并仍未授权。（Service authority commit: `9d0110f6`）
+
+## 2026-08-28 Compatibility Service 入口收敛
+
+- [x] 新增 Compatibility Service 统一封装混养评估、组合评估和添加策略；服务、知识模块、推荐、Collection 和测试改用该入口，旧引擎仅保留在入口内部。
+- [x] 页面/组件因视觉冻结未改动，`check:ui-freeze` 通过；正式 UI 消费者切换仍是解除冻结后的下一步。
+- [ ] Domain 最终状态尚未完全替换 legacy status/evidence；状态继续为 `PARTIAL_WITH_FALLBACK`。（Service authority commit: `9d0110f6`）
+
+## 2026-08-28 Domain 结论接管 Service
+
+- [x] Compatibility Service 现在将 Domain Rules 的 `status`、`addPolicy`、`ruleCodes`、Catalog 版本和规则版本作为服务层唯一结论；legacy 引擎只提供证据丰富的说明结果。
+- [x] Domain 增加显式水体冲突/未知水体、已审核捕食/领地/单养特征规则；未知字段不再从名称、分类或描述推断。
+- [x] 新增 `test:compatibility-service`，覆盖旧引擎与 Domain 冲突、规划加入四级策略、现实记录可保存、缺少鱼缸和版本元数据一致性。
+- [x] 现实记录链路显式传递 `record_existing`；规划加入显式传递 `planned_addition`，避免记录事实被规划阻断策略误用。
+- [x] Domain、Service、Catalog、API、UI freeze、project truth 与 build 门禁通过；无视觉文件变更。
+- [ ] 正式页面仍保留旧引擎导入以满足当前冻结 UI；解除 UI freeze 后需将页面 import 也切换到 Compatibility Service，并补跑固定视口人工验收。（当前 Service authority commit: `9d0110f6`）
+- [ ] 生产第 27 个 migration、Catalog 发布、最新 Preview parity 和 main 合并仍未授权/未执行。
+
+## 2026-08-28 Critic 修复：现实记录 policy 与规则说明
+
+- [x] 修复 `reviewSpeciesAdditions({ intent: 'record_existing' })` 仍返回规划策略的问题；现在按 intent 返回 `save / save_with_warning / save_with_unknown / save_with_urgent_warning`，不会把现实记录误判为需要补资料。
+- [x] Service 将 Domain ruleCodes 映射为结构化 blocking/warning/missing 证据，避免结论与说明文本漂移。
+- [x] 增加现实记录 review policy 回归；`test:compatibility-service`、混养、现实记录、lint、API、build、UI freeze 和 project truth 均通过。
+- [x] 补回 `check:preview-parity` npm 入口；当前实际运行因沙箱无法解析 GitHub，Preview 仍不能宣称已验证。
+- [x] 独立 Critic 已复验 `ba23c69d` 并确认原 intent policy 阻塞已消除；随后补充规则说明归类与 `check:preview-parity` 去重修复（commit: `9495a95b`）。本地代码门禁通过，待同线程对最新提交复验。
+- [x] 本地候选已包含 Domain authority 与 Critic 修复提交；工作树干净，`lint`、API 类型、build、Domain/Service/兼容性、现实记录、Catalog、UI freeze、project truth 和 diff check 通过。具体 SHA 由 `git rev-parse HEAD` 和 `npm run project:status` 动态读取。
+- [ ] 本地领先远端候选 7 个提交；尚未推送，因此远端/PR/Preview parity 暂不能宣称通过。Vercel 配额恢复后一次性推送并重跑 PR/Preview 门禁。
+
+## 2026-08-28 候选推送与 Preview parity
+
+- [x] 推送 `28fa0e8a`、`781c6af9` 至 `codex/main-core-foundation-v1`；本地、远端候选和 PR #142 Head 均为 `781c6af916a012ed4ff25a1e517eca3363ae0862`。
+- [x] 新 Preview `https://aquaguide-a7lldqywp-chusday97s-projects.vercel.app` 实际 SHA 与候选一致，`check:preview-parity` 返回 `PASS / EQUIVALENT`。
+- [历史] PR #142 仍为 Draft；admin-content 无关门禁、生产第27个 migration、Catalog 发布和 main 合并仍未完成/未授权。
+
+## 2026-08-28 admin-content 门禁隔离
+
+- [x] Vercel `admin-content` 已改为仓库根自动检测；仅 `feature/admin-content-v0` 构建后台 workspace，候选及其他普通分支跳过，不断开仓库关联。
+- [ ] 需要下一次候选文档提交触发 GitHub status，确认旧 `Vercel – admin-content` 失败不再复现；该项目配置不影响 AquaGuide Vercel。
+
+## 2026-08-28 最终门禁状态
+
+- [x] 候选已推进至 `df3c4e119b14e323502b9c711ad607b66eeb5435`，`project:status` 显示本地、远端、PR #142 同步，工作树干净；Foundation、Product Golden Path validate、Cloudflare 和 AquaGuide Vercel checks 通过。
+- [ ] 最新 docs-only head 没有新的 Vercel exact Preview deployment，`check:preview-parity` 明确返回 `UNVERIFIED`（Vercel build-rate-limit）；上一笔代码 head `55a37745` 的 parity 证据保留。
+- [历史] PR #142 继续 Draft；生产第27个 migration、Catalog 发布、用户 release acceptance 和 main 合并未执行。
+
+## 2026-08-28 本地 Supabase 验证连续推进
+
+- [x] 启动 Docker Desktop 与本地 Supabase CLI 栈，生成 `supabase/config.toml`；设置保留现有生产 26 个 migration 的 grants parity，`.temp/` 和本地凭据保持忽略（commit: `b9903924`）。
+- [x] 从零重放前 26 个生产 migration；columns、constraints、functions、indexes、policies、table grants、triggers 七类规范化 hash 与生产只读基线完全一致（见 `docs/05-validation/SUPABASE_PARITY_REPORT.md`）。
+- [x] 完整重放第 27 个 Catalog 提案；显式水体、证据表、发布不可变触发器和 RLS 通过 `supabase db lint --local` 与 19/19 pgTAP 回归（commit: `b9903924`）。
+- [x] 本地 PostgREST 验证匿名用户可读取已发布 Catalog、不能写入 Catalog；当时记录的 checksum `5c6fb998…f1bd` 仅为历史产物，当前 checksum 以本文件最新执行快照中的 `545ac808…` 为准。
+- [ ] 生产仍未执行第 27 个 migration、Catalog 发布或业务数据写入；生产 Catalog checksum、生产身份写入/回滚语义继续标记 `UNVERIFIED`，需独立授权后验证。
+- [x] 推送后 Vercel exact Preview SHA 已恢复并通过；当前 deployment `aquaguide-6xdkkkg9e-chusday97s-projects.vercel.app` 对应候选 `1a3d366b`。
+- [x] 生产只读复核再次确认 26 个 migration、35/35 RLS 表、89 条 policy、56 个外键、86 个索引与候选历史一致；触发器为 33 个对象（35 个事件行），Catalog 三项仍为 `MIGRATION_REQUIRED`。
+- [x] 只读复核后已推送候选提交；历史 `ad858032` Preview `6133389265` 仅作旧证据，当前候选已更新至 `1a3d366b`。
+- [x] PR #142 的 Product Golden Path validate 已通过；生产第 27 个 migration、Catalog 发布和 `main` 合并仍未授权。
+- [x] 修复 Preview parity 门禁在 GitHub Deployments API 漏报 Vercel 时的误报，改为安全读取 Vercel CLI metadata（commit: `75dafff3`）。
+- [x] 最新候选 `1a3d366b` 的 Vercel exact SHA 已在 CLI deployment metadata 中确认；`npm run check:preview-parity` 返回 `EQUIVALENT`。
+
+## 2026-08-27 Main 收敛执行
+
+- 已从 `origin/main@ed0cf380` 创建 `codex/main-core-foundation-v1`，不整体合并 PR #141。
+- 选择性迁移已验证 P0 混养能力（`99865414`、`c822bd0e`），解决 main 与统一分支 UI 接口冲突后，本地 `lint` 与 `test:compatibility` 通过；提交 `5b0c8ea7` 记录 Dialog 契约修复。
+- 能力台账已建立于 `.ai/MAIN_CONVERGENCE_LEDGER.md`。Catalog 契约/本地快照、Domain 基础层和添加命令门禁已完成；Supabase parity、完整 Domain Service 切换、release PR 尚未完成。
+
+### 2026-08-27 阶段 1：统一进度入口恢复
+
+- [x] 补回 `.ai/PROJECT_STATE.json`、项目真相路由、视觉/部署/分支/PR 证据文档，并把当前工作线改为 `codex/main-core-foundation-v1 → main`；#141 明确降级为历史迁移证据。
+- [x] 增加 `npm run project:status` 与 `npm run check:project-truth`，候选分支未推送前允许明确显示 `remoteSha:null`，不把本地状态伪装成远端同步。
+- [x] 增加候选分支专用 GitHub Actions 工作流，首个 push/PR 后才产生远端运行证据。
+- [x] 提交并推送候选分支，创建 [Draft PR #142](https://github.com/chusday97/aquaguide-tank-guide/pull/142) 指向 `main`；本地/远端/PR head 由 `npm run project:status` 实时核验。
+
+### 2026-08-27 Catalog 契约与只读发布入口
+
+- [x] 新增 `packages/contracts/src/catalog.ts`，统一 Catalog Manifest、Snapshot、证据、物种和配对规则类型。
+- [x] 新增 `supabase/migrations/202608270001_catalog_releases_and_species_water_type.sql`（仅提案，未执行），补齐显式水体、物种证据链接和不可变发布记录及 RLS。
+- [x] 新增本地 Catalog Snapshot 构建/校验/云端失败回退服务 `src/services/catalog/catalog-snapshot.service.ts`。
+- [x] 新增只读 API `GET /api/v1/catalog/releases/current`。
+- [x] 新增 `npm run test:catalog-snapshot`：486 物种、13 证据来源、SHA-256 和本地/远端回退测试通过。
+- 对应提交：`2eee7c40`
+
+### 2026-08-27 Domain compatibility authority foundation
+
+- [x] 新增 `packages/domain-rules/src/compatibility.ts`，固定 `not_recommended → insufficient_data → caution → compatible` 优先级。
+- [x] `record_existing` 始终返回 `allow`；`planned_addition` 按四级策略返回 `allow / confirm / complete_information / block`。
+- [x] 空缸、未知水体、缺失容量/温度、未审核物种资料均安全降级，不生成虚构物种或安全结论。
+- [x] 新增 `npm run test:domain-compatibility`，并通过 `lint` 与 `check:api`；既有兼容测试待授权环境复跑。
+- 当前仍为基础权威层，旧 `src/lib/tankCompatibilityEngine.ts` 的 UI 适配尚未完全切换，状态保持 `PARTIAL_WITH_FALLBACK`。
+
+## 2026-08-27 UI 回退恢复
+
+- 已确认 main 收敛候选存在真实视觉回退：`/_preview/interactive`、`aquarium-stage-layout-v4.css`、`immersive-detail-layout-v5.css` 被移除，`src/index.css` 相比用户确认基线少约 919 行。
+- 已从 `codex/main-core-foundation-v1` 创建本地恢复分支 `codex/main-visual-recovery-v1`；恢复互动预览路由、场景组件、canonical 舞台/详情样式和互动样式，未回退 Domain/Catalog/Service/API/Supabase。
+- 已恢复生产 Aquarium 的单一沉浸舞台：tank/status/actions 重新归一到 dashboard stage，3D 相机使用 `stage-cover`，并恢复场景标题与缸内物种入口（commit: `5ab8ca79`）。
+- `test:aquarium-stage-layout`、`test:three-stage-framing`、`npm run lint`、`npm run build`、`npm run check:project-truth` 通过；预览构建包含 `InteractivePreview` chunk。4317 已切换为 detached `37a8d4d1` 基线，4319 已切换为候选 `b9203dd3`；固定视口截图已按最新 viewport contract 重拍，人工验收仍待完成。
+- 独立 Critic 复验后将互动 journey 明确标注为 preview-only，并为 Archive 外层补充可访问性标签（commit: `62135580`）；Critic 六维结论为“代码基本合理、视觉发布门禁未通过”，未推送、未更新 PR。
+- 当前视觉门禁：`FAILED / recovery in progress`；PR #142 未更新、未推送、未合并。
+
+### 2026-08-27 统一计划执行：状态真相校正
+
+- 已将当前工作树与 PR 发布候选分离记录：工作树为 `codex/main-visual-recovery-v1`，PR #142 仍为 `codex/main-core-foundation-v1`。
+- 已把正式 Encyclopedia/Care 互动入口降级为 `PARTIAL_WITH_FALLBACK`；预览页存在不再等同于正式页面恢复。
+- 已更新 `.ai/PROJECT_STATE.json`、`docs/PROJECT_TRUTH.md`、`FEATURE_CATALOG.md`、`HANDOFF_LATEST.md` 与 project-truth 校验，避免旧候选 CI 被误当作恢复版本证据。
+- 验证：`npm run project:status`、`npm run check:project-truth`、`git diff --check` 通过；恢复分支尚未推送。
+
+### 2026-08-27 阶段 2：正式视觉与水族册回退恢复
+
+- [x] 恢复共享详情 Surface 契约：桌面使用 persistent `detail-rail`，手机使用受限高度 `bottom-sheet`，不再使用旧 `right-drawer` 断言。
+- [x] `ResilientImage` 增加透明场景 loading/失败容器；互动图鉴与养护场景显式使用透明素材表面，失败时不渲染白色矩形。
+- [x] 恢复 `/collection` creature-first 水族册（桌面四个生物节点、中央聚焦内容、手机紧凑入口），移除旧四卡片首页回退；Aquarium 恢复单一沉浸舞台，不在舞台外重复渲染 follow-up 卡片。
+- [x] 视觉门禁更新为当前契约：`test:responsive-detail-surface`、`test:formal-scenes`、`test:today-action`、`test:collection-hub-ui`、`test:aquarium-stage-layout`、`test:three-stage-framing`、`lint`、`build` 均通过。
+- 当前候选仍未推送；4317 冻结基线与 4319 候选的 SHA parity、固定截图和正式人工验收待后续门禁完成。
+
+### 2026-08-27 阶段 4：Supabase 历史收敛与预览身份
+
+- [x] 本地恢复生产缺失的 8 个 migration，并将 memorial migration 对齐生产版本 `202607290004`；新增 parity 台账 `docs/05-validation/SUPABASE_MIGRATION_PARITY.md`。
+- [x] Vite 构建注入分支、完整 Git SHA、seed 和构建时间；`/_preview/interactive` 显示版本身份，避免同端口误判版本。
+- [x] `PREVIEW_URL=http://127.0.0.1:4319 npm run test:formal-scenes` 已验证预览元数据、透明场景素材和正式图鉴/养护 scene/browse 流程。
+- 当前仍不执行生产 migration、Catalog 上传或 `main` 合并；真实 Supabase schema/RLS/RPC parity 仍是独立只读门禁。
+
+### 2026-08-27 阶段 3：规划加入服务端重算门禁
+
+- [x] API `POST /aquariums/:id/species` 在 `planned_addition` 写入前读取同一已发布 Catalog、鱼缸真实事实、当前缸内物种、物种水体/环境字段和审核证据引用，并通过 `packages/domain-rules` 重新计算。
+- [x] 服务端不再把客户端 `compatibilityConfirmation.status` 作为安全边界：状态不一致返回 `VERSION_CONFLICT`，阻断/资料不足继续返回结构化错误；`record_existing` 不经过规划阻断分支。
+- [x] `test:livestock-addition-api-errors` 增加服务端重算结构门禁；`check:api`、Domain/Intent 回归通过。
+- 由于生产尚未执行 Catalog migration，真实规划写入会安全返回 Catalog parity/资料不足错误；不得将此状态包装为生产功能已可用。
+
+### 2026-08-27 Service/API 添加契约门禁
+
+## 2026-08-27 正式互动场景恢复
+
+- 已在 `codex/main-visual-recovery-v1` 恢复正式 `/encyclopedia` 默认 scene、`/care` 默认 scene，并保留 `?mode=browse` 传统浏览深链；场景数据继续走当前 Service/本地 Catalog 适配。
+- 新增 `npm run test:formal-scenes`，已通过 390px 图鉴场景点选、详情入口、browse 切换，以及养护场景位置选择、browse 切换。
+- 手机图鉴分页在 320px 下改为紧凑布局；`test:mobile-care-ui` 已通过。`test:core-ui` 运行无错误退出。
+- 当前仍未开始今日行动拖拽面板、Supabase 只读 parity、候选推送或 main 合并。
+
+### 今日行动交互
+
+- [x] `StatusSummaryCard` 增加半透明拉手和三档面板状态：collapsed / half / expanded。
+- [x] 支持点击、Esc、鼠标/触控 Pointer 拖拽吸附；拖拽不触发舞台或任务误点。
+- [x] `npm run test:today-action` 通过；未新增数据库字段、API 或 Supabase 写入。
+- [x] 390px 几何门禁确认今日行动位于舞台底部拉起区域，1280px 继续使用右上浮层。
+- [x] 修复 Care hash 深链、Encyclopedia mode URL 持久化，并补齐今日行动 Enter/Space 回归；Critic 阻塞项已处理。
+- [x] `project:status` 支持 recovery/candidate 双入口；候选分支本地与远端 SHA 已一致（`a8532072`）。
+- [x] 修复 GP-001 CI runner 输入框等待窗口（30s），本地 `test:golden-path-gp001-ui` 通过；远端 validate 待推送后重跑。
+- [x] GP-003 已适配今日行动默认收起行为，`test:golden-path-gp003-ui` 本地通过；远端 validate 待本次推送后重跑。
+- [历史] PR #142 最新 head `ff2520c9` 已与本地/远端候选一致；GitHub `validate`、两项 `foundation`、Vercel 和 Cloudflare checks 均通过，PR 当时仍 Draft 且尚未合并 main。
+- [x] `npm run test:disclosures` 通过，今日行动折叠用途已登记为 `today_action_surface`。
+
+### 底层门禁复验
+
+- [x] `test:catalog-snapshot`、`test:domain-compatibility`、`test:addition-intents`、`test:livestock-recording`、`test:livestock-addition-api-errors`、`test:mini-compatibility` 通过。
+- [x] `test:layout-mode`、`test:three-stage-framing`、`check:project-truth` 通过；未执行任何生产 Supabase migration。
+
+- [x] `LivestockAddCommand` 与 `aquariumSpeciesCreateSchema` 增加 `intent`、`catalogVersion`、`compatibilityConfirmation`。
+- [x] API 对 `planned_addition` 增加同版本确认、阻断和资料不足错误语义；`record_existing` 继续允许保存事实。
+- [x] `npm run test:addition-intents`、`npm run test:livestock-addition-api-errors`、`lint`、`check:api` 通过。
+- 尚未完成：云端写入前的服务端 Catalog 重新计算；当前 API 门禁验证客户端提供的同版本确认，需在 Catalog 发布行部署后接入完整 Domain Service。（`15713d32`）
+
+### 2026-08-27 阶段 2：Domain 适配层
+
+- [x] 旧 `src/lib/tankCompatibilityEngine.ts` 现在通过 Domain Rules 生成统一 Catalog 版本、规则版本、规则代码和域状态元数据；现有证据丰富的结果形状与视觉保持兼容。
+- [x] 添加策略统一委托 `packages/domain-rules/src/compatibility.ts`，兼容性回归、Domain 回归、添加意图回归通过。
+- [ ] 仍需把本地/API Repository 的规划写入改为基于同一 Catalog Snapshot 的服务端重新计算；当前旧引擎结果仍是 UI 证据 fallback，状态保持 `PARTIAL_WITH_FALLBACK`。
+
+### 2026-08-27 阶段 3：Catalog 产物流水线
+
+- [x] 新增 `catalog:build`、`catalog:validate`、`catalog:publish` 三个独立命令；构建和校验均验证 486 个物种、13 个证据来源、引用完整性和 SHA-256。
+- [x] `catalog:publish` 默认只生成 `build/catalog-pending/releases/<version>/`，不上传 Storage、不执行 Supabase migration。
+
+### 2026-08-27 候选 CI 回归修复
+
+- [x] 修复候选 CI 暴露的 Catalog tuple 类型检查；`catalog:validate` 在本地和 CI 编译路径均可通过。
+- [x] 为混养记录失败补齐显式 `recordError` 状态、稳定中英文错误文案和保存中禁用状态；核心流程 v1/v2、产品评测、Golden Path 合约和 build 本地通过。
+- [x] PR #142 最近一轮候选 CI 已确认通过：foundation `33041753905` / `33041755993`，Product Golden Path `33041756115`；当前 SHA 以 `npm run project:status` 运行时输出为准。
+
+### 2026-08-27 Golden Path 阻塞修复
+
+- [x] 非空鱼缸从物种详情的主 CTA 进入混养结算；结算自动保留真实缸内生物，空缸仍保持主动规划入口。
+- [x] 混养组合补充数量加号与可见数量，谨慎结果按钮统一为“确认风险后再记录”，Portal 确认按真实页面动作验收。
+- [x] `PREVIEW_URL=http://127.0.0.1:4317 npm run test:golden-path-gp002-ui` 通过，功能修复提交为 `2b841e95`；PR #142 最近一轮远端门禁全绿。
+
+### 2026-08-27 Critic 修复
+
+- [x] 修复无 `tank` 的规划加入误放行：统一返回 `insufficient_data / complete_information`，并新增回归。
+- [x] 已发布 Catalog 记录增加数据库触发器不可变保护；legacy `/species` 查询不再依赖尚未部署的 Catalog migration 字段/关系。
+- [x] `npm run test:domain-compatibility`、`npm run test:catalog-release-contract`、`lint`、`check:api` 通过。
+- Critic 首轮阻塞已修复并由同一线程最终复验通过（六维 PASS，`git diff --check origin/main...HEAD` PASS，`13ce05da`）；服务端基于已发布 Catalog 的重新计算仍是下一阶段工作。
 
 ## 已完成
 - 状态：`核心鱼缸事实链路已完成并通过独立 Critic 与 Evaluator 六维验收`。`record_existing` 先保存事实再评估，任何四态结果均不能回滚现实记录；`planned_addition` 先评估且不写鱼缸，只有用户明确确认已实际入缸才进入记录流程。新鱼缸不再生成尺寸、水体、温度、设备或换水伪数据；创建和新增生物均通过 Repository 命令，旧 `add-species` 深链兼容映射到规划流程。云端新增使用原子 RPC 提交父物种、批次和幂等结果，404/409/503 语义保持清晰。（commits: `56c486b`, `7284008`, `f04f189`, `8d272aa`, `9accb48`, `f97e6ca`, `3af5c61`）
@@ -256,312 +756,26 @@
 - 混养判断统一为四种状态：`compatible / caution / not_recommended / insufficient_data`。
 - 手机端按真实手机设备判定，不再按 `<768px` 判定；桌面缩窄仍保持桌面工作台，平板默认使用桌面布局。
 
-## 2026-08-28 Admin Content / Species SEO 附属项目
-- 独立分支：`feature/admin-content-v0`；不合并 main，不写 Production Supabase。
-- 详细实时状态统一记录在 `.ai/LIVE_STATUS.md`，执行目标见 `.ai/CURRENT_GOAL.md`，决策见 `.ai/DECISION_LOG.md`，任务队列见 `.ai/TASK_QUEUE.md`。
-- Species SEO Admin 已从 486 条平铺 catalog 升级为 `Category → Base Species → Variant` 分组模型。
-- 当前扫描结果：486 条 catalog → 276 个 Base Species；83 个组可批量；293 条记录位于多成员组；223 条识别出明确 Variant；28 条疑似重复；5 个组存在跨分类冲突并强制进入人工复核。
-- 批量 SEO 当前只作用于 Editorial SEO 草稿，不修改温度、pH、混养、难度等 Product Truth；分类冲突组禁止直接批量发布。
+## 2026-08-27 最终统一执行进展
 
-### 2026-08-28 Species SEO 继承模型
-- Base Species 公共 SEO 层与 Variant Override 已在隔离 Admin 分支实现：`Variant Override ?? Base Species Template`。
-- 批量操作不再把同一段 SEO 文案复制到多个变种，只建立 Draft shell；未 Override 字段继续继承 Base。
-- 真实 Chrome 验证 Base 模板/共享简介会立即影响同组 Variant 预览，单个 Variant Override 清空后恢复继承。
-- 新 `species_seo_groups` migration 已仅在本地隔离 Supabase 执行；管理员写入通过，普通用户 Draft 读取为 0 且写入被 RLS 拒绝。Production Supabase 未执行。
+- 候选分支 `codex/main-core-foundation-v1` 的本地、远端和 PR #142 Head 由 `project:status` 运行时核对；最新一次核对通过。
+- 已完成：真实 viewport 响应式契约、Aquarium learn/archive/discovery 恢复、正式详情 Rail/Sheet、透明素材容器、今日推荐深链，以及收敛浏览器测试默认指向 4319。
+- 本地验证：build、lint、API 类型、project truth、Domain/Service/Catalog、正式图鉴/Care 场景、今日行动、水族册、移动端、物种详情、布局与 framing 测试通过。
+- 预览：4317 detached `37a8d4d1` 冻结基线；4319 当前候选，页面显示分支、完整 SHA、seed、build 时间。人工视觉验收仍未授予。
+- 下一步：完成最终候选部署的 exact Preview SHA 记录、Supabase 只读 parity 和用户人工验收；生产第 27 个 migration、Catalog 发布及合并 main 仍需分别授权。PR #142 当前 CI 已全绿。
 
-### 2026-08-28 Species SEO 中英文转化与数据复核
-- Admin 新增独立 `zh-CN / en` 内容层；同一 `catalog_key` / Base Group 可分别保存中文与英文 Draft/Published 状态，互不覆盖。
-- English 增加 editorial `localized_name`，只用于英文 SEO/展示，不修改 `fishData.ts` 中的 Product Truth 名称。
-- 新增中→英翻译工作台：中文 Source → AI English Suggestion → 人工修改/确认 → English Draft；机器结果不能直接发布。
-- 服务端翻译接口复用现有 DeepSeek/OpenAI-compatible 配置，并再次校验 Supabase JWT + admin role；AI key 不进入浏览器。
-- 科学名、catalog key 与 `{{template_tokens}}` 受保护；Base 模板变量丢失或改名会直接拒绝结果。
-- 5 个分类冲突与 28 条疑似重复已升级为可查看证据的 Data Review Queue，不自动删改源 catalog。
-- 本地隔离 Supabase 已验证中文/英文同 key 共存及普通用户 Draft 不可见；Production Supabase 未执行新 migration。
-- 真实 Chrome 已验证 English 双栏翻译界面、神仙鱼分类冲突证据与米虾重复证据；后续已补齐 public Species 多语言 URL/canonical/hreflang contract 与静态生成器。
+## 2026-08-28 UI 冻结与 Supabase 只读 parity
 
-### 2026-08-28 Species SEO Route / Index / 页面效果预览
-- 隔离 Admin 已新增稳定 Species 路由提案：英文 `/species/<scientific-slug>/<catalog-key>.html`，中文对应 `/zh/species/...`；沿用现有 Problem SEO 页的 English-default + `/zh/` + hreflang/x-default 结构。
-- 所有 Species 默认 `noindex`，可人工选择独立 Index 或同 Base Species 内 canonical；分类冲突/疑似重复继续 fail closed。
-- Canonical 不再由运营手填，改为路由契约自动生成；Base Species 继续只承担共享内容继承，不自动产生公共 landing page。
-- Admin 已增加真实 HTML“公开 Species 页面效果预览”，组合 SEO H1/简介与现有 catalog 水温、pH、缸体、难度等只读 Product Truth。
-- 新 migration 004 仅在全新本地隔离 Supabase 验证；管理员写入成功，普通用户 Draft 读取为 0 且写入被 RLS 拒绝。Production 未执行。
-- 正式 Species HTML 生成器与 canonical/hreflang/robots/sitemap 运行时门禁已在隔离分支完成；中英文 Published 仍保持禁用，版本历史/回滚现已在后续里程碑通过本地验证；当前剩余发布门禁是 staging 端到端验证。
+- [x] 将当前候选 `02457dd2` 标记为 `FROZEN_PROVISIONAL`，新增 `.ai/UI_FREEZE.json` 与 `npm run check:ui-freeze`；后续底层提交触碰视觉 owner 会失败。
+- [x] 通过浏览器脚本保存 4317 `37a8d4d1` 基线与 4319 候选在 390/600/1280px 的互动预览截图；证据目录为 `/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2`。
+- [x] Supabase 只读核对确认 26 个 migration、35 张 public 表且全部启用 RLS、89 条 policy、56 条外键、86 个索引和 33 个非内部触发器；已读取 13 个 public RPC 的签名与安全属性。
+- [x] 确认生产尚不存在 `catalog_releases`、`species_reference_links` 或 `species.water_type`，当前 parity 为 `MIGRATION_REQUIRED`；未执行任何 migration、Catalog 发布或业务写入。
+- [x] 新增 `docs/05-validation/SUPABASE_PARITY_REPORT.md` 并同步 Release Readiness、PROJECT_STATE、CHANGELOG。
+- [ ] 逐条比对 RLS/RPC/外键/索引语义，并在取得独立授权后决定是否执行第 27 个 Catalog migration；在此之前不得合并 main。
 
-### 2026-08-28 Species SEO 静态生成器与版本回滚
-- 新增 fail-closed `generate-public-species.mjs`：只消费显式 `local/test/preview/staging` 发布快照，拒绝 `production` 输入，也不会隐式写入根 `public/`。
-- 生成结果包含双语静态 Species HTML、`sitemap-species.xml` 与 manifest；Title、Meta、H1、robots、canonical、hreflang/x-default 和 sitemap 进入运行时回归。
-- 首轮运行时测试实际发现并修复英文页面 locale 未透传的问题：英文路径曾错误渲染中文 `<html lang>` 与事实标签，修复后回归通过。
-- 生成层重复执行 Index 安全门，不信任 Admin UI：分类冲突/疑似重复不能直接 Index，canonical 目标必须同语言 Published 且独立 Index；sitemap 只纳入 self-canonical `index,follow`。
-- migration 005 新增数据库 `content_revisions`、Base/Variant 自动 revision trigger 与 `restore_species_seo_revision`；回滚强制恢复为 Draft、清空 `published_at` 并记录 source revision，不能借回滚重新发布。
-- 全新隔离 Supabase 已从 core + migrations 001–005 重建并验证：Variant 与 Base 均通过 `v1 Draft → v2 Published fixture → v3 rollback Draft`；普通用户历史可见 0、回滚 RPC 被 `Admin role required` 拒绝；最终 SEO/group/revision 测试残留均为 0。
-- Admin UI 新增 Base / Variant History 面板和二次点击恢复；只读 Review 不连接真实 history。真实 Chrome 验证两个 History 面板、Public Species Preview 与两个 disabled Published option，无 page error。
-- `npm run test:contract -w @aquaguide/admin-content` 与 Admin production build 通过；仅保留既有 >500KB bundle warning。
-- 上一提交 `43eec47` 的独立 Vercel `admin-content` Preview 已确认 READY / HTTP 200 / noindex；本批次待集中 commit/push 后再核对新 SHA Preview。
-- Production Supabase 与 `main` 仍未修改。A+B 已完成 migrations 001–006 + schema probe + snapshot → generator → rendered-page 的端到端验证；下一阶段转为 publish-readiness、人工数据复核决策与非 Production Preview Publish。
+## 2026-08-30 可见进展优先：候选运行时稳定化
 
-### 2026-08-28 Species SEO staging release gate hardening
-- Generator/history milestone committed and pushed as `cd363b4`; `main` and Production Supabase unchanged.
-- New Vercel Preview could not be created because the Hobby account hit `api-deployments-free-per-day` (>100/day). Previous Admin Preview remains healthy; no Production deployment was attempted.
-- Supabase inventory confirms AquaGuide has no existing development branch; the separate IceGlide staging project is not reused.
-- Fixed a release-safety gap: static Species generation no longer defaults to the Production canonical host. `siteUrl` is mandatory and the known Production host is rejected for non-production generation.
-- Added staging-only Published snapshot export and end-to-end staging verifier with explicit staging/Production DB and public-site deny-lists.
-- Staging verifier requires at least one bilingual self-canonical Index pair and validates generated EN/ZH pages plus sitemap over a temporary HTTP server.
-- With no staging env configured, `verify:staging-publish` intentionally exits non-zero; Published remains disabled.
-
-### 2026-08-28 Species SEO release-gate schema probe
-- 新增 migration 006 `species_seo_release_gate_status()`，只暴露 schema readiness，不暴露 SEO 内容或 revision 数据。
-- staging exporter 在读取 Published 内容前先调用 probe；`schema_version < 6` 或任一能力缺失都会 fail closed。
-- 全新隔离 Supabase 从 core + migrations 001–006 顺序应用成功；anon publishable 身份读取 probe 全部为 true，同时直接读取 `content_revisions` 仍被 `permission denied`。
-- staging generator 进一步要求显式 Production public URL deny-list；直接 staging 调用也不能只靠固定域名保护。
-- 临时 Supabase 已关闭并删除，Production 未修改。
-
-### 2026-08-28 Admin A+B 稳定验证模式
-- Admin 后续采用 A+B：B 为 Mac 本地 Supabase 快速开发，A 为 GitHub Actions 临时 Supabase 干净机验证；不再把付费 Development Branch 作为当前必选前提。
-- A/B 共用同一个 `test:supabase-gate`，避免本地和 CI 维护两套数据库验证逻辑。
-- GitHub workflow 固定 Ubuntu 24.04、Node 24.14.0、Supabase CLI 2.115.0，并只给 `contents: read` 权限；无 Production Supabase/Vercel secret，无自动 commit/deploy。
-- 临时数据库只加载 core schema + 当前 Admin migrations 001–007，避免历史无关 migration 冲突影响 Admin 门禁；后续新增 Admin migration 必须显式加入 allow-list。
-- 本地第一次执行发现临时 `migrations/` 目录缺失，第二次发现 service_role 无 `user_roles UPDATE`；均在 push 前修复，未通过临时扩权绕过。
-- 最终本地门禁已通过：schema v6、普通用户 Draft 可见 0、普通用户不可写/不可看 revision/不可 rollback、Base/Variant rollback 强制 Draft、数据库读取后生成 2 个中英 Index 页面并验证 canonical/hreflang/sitemap。
-- A 层已由 GitHub Actions run `33147127271` 真实 Ubuntu clean-run PASS 证明；下一步不再重复基础设施，转入 publish-readiness 与 Preview Publish。
-
-
-### 2026-08-28 Admin A+B 首次完整 CI 通过
-- `ef2f6ae` 修复 root lockfile 对 Admin workspace 的缺失登记；实际 `date-fns` 解析版本仍为 4.1.0，没有依赖降级。
-- GitHub Actions `33147127271` 在 Ubuntu 24.04 干净 runner 全绿：Node 24.14.0 / Supabase CLI 2.115.0 / npm ci / contract / 临时 Supabase 001–006 + RLS/rollback/双语静态页 / build / generated catalog parity / diff hygiene 全部 PASS。
-- 至此 A+B 已成为正式稳定门禁：B 本地快速迭代，A 干净机重复验证；两层都不持有或修改 Production。
-
-### 2026-08-28 Admin 下一阶段：发布准备与数据复核闭环
-- A+B 基础设施已验证完成，后续不再把付费 Supabase Development Branch 当作必选阻塞。
-- P0 改为 publish-readiness：对 Base / Variant / locale 显示内容完整性、Base Published/ready、数据复核、Index/canonical、双语 counterpart、revision 等阻塞原因；“Ready”只代表可进入 Preview Publish，不代表 Production 上线。
-- Data Review Queue 要从只读告警升级为人工决策记录：分类冲突记录确认分类/备注；疑似重复记录确认 duplicate / distinct / canonical candidate。不得自动改 `fishData.ts`。
-- P1 为非 Production Preview Publish：显式临时输出 → static generator → canonical/hreflang/sitemap → A+B gate → 可查看 Preview。
-- Live AI 翻译只做 suggestion smoke test，仍要求人工确认并保存为 Draft。
-
-
-### 2026-08-28 Admin Publish Readiness + Data Review 可执行闭环
-- 新增 branch-only migration 007：Base / Variant 增加 `editing → ready_for_review → approved` Editorial Review State；任何正文、SEO、Index/Canonical 修改都会由数据库自动把旧 Approved 退回 Editing。
-- Rollback 继续强制 Draft，并进一步强制 Editing，旧 revision 的审核结论不会跟随恢复后的内容。
-- 新增 `species_data_reviews`：5 个分类冲突与 28 条疑似重复可记录人工决定、备注和 duplicate canonical；该 Admin 仍不自动修改 `fishData.ts` Product Truth。
-- 对静态发布只暴露脱敏 review-resolution RPC；审核备注与审核人保持 admin-only。
-- 新增 Publish Readiness 面板，区分 Blocked / Ready for Review / Publish-ready；后者只代表可进入非 Production Preview Publish。
-- 修复结构缺口：276 个 Base Species 全部拥有 Base 编辑/审核层，单成员组不再因为缺少 Base Editor 永久无法满足 Generator。
-- Generator 现在要求 same-locale Base + Variant 均 Approved，并在生成时再次验证 Data Review / duplicate canonical / Index 规则。
-- B 层从空库顺序应用 core + migrations 001–007 并通过：schema v7、普通用户 Draft/Data Review/History 权限隔离、Approved 修改自动失效、rollback→Draft+Editing、DB→2 个中英 Index 页面。
-- 真实 Chrome 覆盖重复、分类冲突和单成员 Base，修复一个 `groupMember is not defined` 运行时错误后 `PAGE_ERRORS=0`。
-- 下一门禁：push 后要求 GitHub A 层 clean Ubuntu run 对 migration 007 全绿；通过后进入 Controlled Preview Publish。
-
-
-### 2026-08-28 Admin Controlled Preview Publish
-- migration 007 已由 GitHub Actions run `33149941551` 在干净 Ubuntu A 层全绿验证，Publish Readiness/Data Review 不再只是本地证据。
-- 新增受控 Preview 发布：Approved Draft 可进入 Preview，但正式 release/staging 仍只接受 Published。
-- Preview 复用同一个 Species static generator，不建立第二套页面渲染逻辑；实际 HTML 强制 `noindex,nofollow`，同时保留 intended robots 用于人工判断。
-- Preview 根目录生成 `robots.txt` 全站 Disallow，并故意不生成正式 `sitemap-species.xml`；根/应用 public 与 Admin dist 输出目录均硬拒绝。
-- Admin Publish-ready 状态可导出当前 Species 的最小 Preview Snapshot，审核人/备注不会进入导出。
-- 本地实际生成中英 2 页 Approved Draft Preview；`http://localhost:4020/`、英文页、中文页均 HTTP 200，Chromium 无 page error。
-- 正式 Production Published 仍锁定；下一步转向 Data Review / Publish Readiness 队列级总览与筛选。
-
-### 2026-08-30 Admin UI Studio 视觉接线（第一阶段）
-- Google AI Studio 输出已同步到独立仓库 `aqua-fronted-cms`；该仓库只作为视觉/交互参考，不成为 AquaGuide 数据或发布逻辑的新来源。
-- 先收口并提交 `374db2f`：Data Review / Publish Readiness 队列级筛选，真实 Chrome 证明 33 个待复核事项对应 32 个 Base Group，清除后恢复 276 组。
-- 真实 Admin 已改为三栏编辑工作台：左侧 Category→Base→Variant，中心专注编辑，右侧固定实时前端页面预览。1600px 验收宽度为 270 / 870 / 460。
-- Base 父级与 Variant 子级现在对应不同编辑上下文；语言切换只保留在中心工作区。
-- 右侧 Page / Google / Mobile 由真实 AquaGuide state 驱动；中间未保存 H1 修改可以即时反映到右侧。
-- Data Review、发布检查、翻译、批量、History 和 Workflow Overview 均降级为二级展开工具，不再常驻挤压编辑区。
-- 首轮曾把 Product Truth 补进 `species-groups.generated.json` 以验证真实预览，随后因主包膨胀改为按需读取 catalog；当前 Group JSON 不再复制 image / 水温 / pH / 缸体 / 难度 / description。
-- Local contract/build/Chrome 与 schema-v7 Supabase gate 均保持通过；Production Supabase 和 `main` 未修改。
-
-### 2026-08-31 Admin 三栏工作台 + 全局中英文界面
-- `aqua-fronted-cms` 仅作为 UI 参考，真实 Base/Variant/Data Review/Readiness/Preview/History 逻辑继续来自 `feature/admin-content-v0`。
-- Admin 已重构成“左选对象 / 中间编辑 / 右侧实时前端效果”的三栏工作台；Variant 未保存修改也会即时反映到右侧。
-- 新增全局界面语言 `appLocale`，支持中文 / English、刷新记忆和 `<html lang>` 同步；它与内容语言 `contentLocale` 独立。
-- 右侧 Product Truth 改为按需读取 catalog，避免向 Species Group JSON 重复复制图片、水温、pH、缸体等事实数据。
-- B 层 contract/build/Supabase gate 和真实 Chromium 回归均通过。
-
-### 2026-08-31 Admin 工作流状态色 + 下一阶段 Inspector
-- 顶部 `数据复核 / 待审核 / Preview-ready` 不再使用同一视觉：分别使用琥珀色、蓝色、绿色语义，并保留可点击筛选；真实浏览器 computed style 已验证。
-- `539baf4` 三栏工作台/全局中英文里程碑已通过 GitHub Actions run `33323234484`，A 层 contract、migration 001–007 ephemeral Supabase、build、catalog parity、diff hygiene 全绿。
-- 下一阶段 P0 改为 Editor ↔ Preview 双向 Inspector，而不是继续大面积修 CSS：中间 focus/edit → 右侧自动定位高亮；右侧点击元素 → 中间自动定位对应字段。
-- 首批映射：localized name、H1、Intro、Image Alt、SEO Title、Meta Description。SEO Title/Description 可自动切到 Google Preview。
-- 水温、pH、缸体、难度、科学名等 Product Truth 也允许被 Inspector 识别，但必须显示 `Product Truth · Read only`，Content Admin 不提供修改入口。
-- Inspector 使用稳定元素 registry，不做任意 DOM/WYSIWYG 编辑，避免破坏现有 Base/Variant inheritance、RLS、Readiness 和 generator 安全边界。
-### 2026-08-31 双向 Preview Inspector
-- 新增稳定 Element Registry，将中间编辑字段与右侧真实 Page / Google 元素建立一一映射。
-- 中间 focus H1/Intro/Image Alt 等字段时，右侧会自动滚动并高亮；SEO Title / Meta Description 会自动切 Google Preview。
-- 右侧 Hover 显示元素名，点击后锁定选框；中间对应字段自动滚动并高亮，但不会强制抢占输入光标。
-- 选中信息显示元素来源与修改路径：Custom / 继承自 Base / Product Truth 只读，以及 Current page / Base Species / Product Truth。
-- Base 编辑模式已纳入映射；如果元素实际属于 Variant-only 或已有 Variant Override，系统会切回“当前页面”避免误导。
-- 水温、pH、缸体、难度、学名保持 Product Truth 只读，仅用于解释“为什么页面有这个元素但这里不能改”。
-### 2026-08-31 继承编辑交互收敛
-- Meta Title / Meta Description / H1 不再用空输入框表达继承，而是直接显示当前 Base 生效值。
-- 用户点击“单独编辑 / Override”后才进入 Variant 输入；未输入时不会物化 Base 文案。
-- 自定义后提供“使用 Base 值 / Use Base value”，本质是清空 Variant Override，继续由继承 resolver 计算。
-- 与右侧 Inspector 联动保持不变：Inherited/Custom 状态和 Page/Google Preview 会实时同步。
-
-### 2026-08-31 Admin 二级工具抽屉化
-- Data Review、Publish Readiness、Translation、Batch SEO、Revision History、Workflow 不再在编辑器底部大块展开，统一进入中间编辑列的 `EditorToolDrawer`。
-- 1600px Chromium 实测：Editor 270–1140，Drawer 580–1140，Preview 1140–1600；抽屉不侵占右侧 Preview。
-- 支持 ESC / × / 中间遮罩关闭；右侧点击可编辑 Inspector 元素会关闭抽屉并返回对应字段，Product Truth 只读元素不会伪造编辑路径。
-- Workflow Drawer 的 Pending 点击会关闭抽屉并真实作用到左侧筛选；English Translation Source/Target 正常渲染。
-- 清理 Species SEO UI 中错误遗留的 Archived，只保留 Draft / Published（Published 继续锁定）。
-- Contract/build/B 层 ephemeral Supabase schema v7 全部 PASS。
-
-### 2026-08-31 Admin Preview 与发布生成器对齐
-- 右侧 Page Preview 已改为真实静态 Species generator 的同一页面结构：Header → Breadcrumb → Hero（图/H1/学名/Intro）→ 4 个事实卡 → Product Truth 说明。
-- 新增 `speciesPagePresentation.js`，Preview 与 `generate-public-species.mjs` 共用发布文案标签和 English tank-size 本地化规则。
-- 删除此前 Preview 独有但 generator 不会发布的 `Overview & Care / Care essentials` 假正文，避免“后台看得到、上线没有”的误导。
-- Chromium 发现 1120/1080px 旧三栏会把 400px Preview 裁出视口；现改为 1180px 以下双栏，并提供显式 Preview 浮层，不丢核心预览能力。
-- 1120px 实测：编辑 H1 → Preview 浮层自动打开并高亮；点击 Preview H1 → 浮层关闭并回到中间字段。1200px+ 仍保持常驻右栏。
-- Contract / generator tests / build / schema-v7 B gate 全部 PASS。
-
-### 2026-08-31 主编辑器密度收敛 + Inspector 权威路由
-- `d79058f` 的 GitHub Actions run `33326654737` 已全绿。
-- Variant 顶部由 4 个重复状态 pill 收敛为单行 `Draft · 编辑中`，Base Species 同步统一。
-- Focus Keyword / Index Strategy / Canonical / URL 收入默认折叠的“高级 SEO”；若存在索引/Canonical 阻塞会自动展开，安全问题不会被隐藏。
-- Variant 中完整 Base 共享简介改为按需展开，避免 Base 文案增长后把每个 Variant 页面永久撑高。
-- 1440px Chromium 实测常规 Variant 编辑区约 1032px，高于密度优化前约 1333px 的页面减少约 23%，Inspector 仍正常。
-- 修正右侧 Inspector 的“在哪里改”逻辑：从 Preview 点击继承 H1/Intro/metadata 自动进入 Base；Variant-only/自定义内容进入当前页面；Product Truth 只读。中间字段点击仅负责高亮 Preview，不会突然切换编辑上下文。
-- Contract / build / 本地 schema-v7 Supabase gate 全部 PASS。
-
-## 2026-08-31 — Primary editor density refinement
-- Variant authoring default height reduced from ~1333px to ~936px at 1440×900 without removing any persisted field.
-- Primary editor now emphasizes the five daily fields; low-frequency SEO routing controls are progressively disclosed.
-- Lifecycle/review state is summarized once in the header; actual review/status controls remain in the sticky save footer.
-- Intro remains Inspector-mapped after reducing its default textarea to four rows.
-
-## 2026-08-31 — Base / Variant state-control parity
-- Footer controls now state their meaning directly (`审核 · 编辑中`, `状态 · Draft`) instead of exposing contextless dropdown values.
-- Base and Variant share the same review/lifecycle color semantics and continue to use the same persisted fields and fail-closed publication lock.
-
-## 2026-08-31 — Three-pane visual hierarchy convergence
-- Left navigation, center editor Inspector and right Preview now use one shared selection language instead of three different greens.
-- Product Truth facts use a separate graphite read-only Inspector state; editable fields remain green.
-- Selecting a Variant now keeps its parent Base relationship visible through the Base name and hierarchy guide without creating a second strong active row.
-- Browser regression and Admin contract pass; no Product Truth, inheritance, review or publishing behavior changed.
-
-## 2026-08-31 — Workflow filter visual semantics
-- Species quick filters now mirror the top workflow state colors: issue amber, review blue, Preview-ready green.
-- zh-CN and English UI modes no longer produce mixed-language workflow filter labels.
-- Existing filter counts and group mapping remain unchanged and browser-verified.
-
-## 2026-08-31 — Navigation count-unit clarity
-- Fixed the misleading `All 486` sidebar count: the Species tree contains 276 Base groups, so navigation now uses 276.
-- 486 remains the catalog-record total in the summary.
-- Workflow filters keep their native counts and explain units through localized hover help plus affected Base-group counts in the active banner.
-
-## 2026-08-31 — Unsaved edit protection
-- 实时 Preview 与持久化状态正式分离：编辑会立即反映在右侧，但 footer 明确显示“未保存修改”，只有真实保存成功后才清除。
-- Species、Base/当前页面、内容语言、Workflow、批量选择、退出均接入放弃修改确认；刷新/关闭页面接入 `beforeunload`。
-- 修复重复点击当前 Species 时错误清除 dirty 的边界问题。
-- 使用本地临时 Supabase + 临时 admin 账号完成真实可写浏览器回归；测试环境结束后自动销毁。
-
-## 2026-08-31 — Workflow 筛选语言一致性
-- 顶部与左侧 Workflow 入口不再缓存中英混排 label。
-- 已激活的筛选在全局 UI 中文/English 切换时会立即重新本地化，包括内容语言前缀。
-
-## 2026-08-31 — 图片 Inspector 边界
-- 右侧点击鱼图现在明确表示编辑的是 Image Alt，而不是替换图片。
-- 状态条显示“Alt 已自定义/尚未填写 · 图片资源只读”，并定位到“当前页面 → 页面内容 → 主图 Alt 文本”。
-- Product Truth 图片资源继续只读。
-
-## 2026-08-31 — SEO publication path synchronized
-The Admin is now best understood as an SEO publication system rather than a standalone CMS: Product Truth + editorial SEO → inheritance/review → Publish Readiness → immutable snapshot → static Species generator → frontend SEO pages.
-
-Product Truth loading correctness is complete and A-gated. Admin authority is also separated: `/admin/content` is now an Admin Hub, `/admin/product-content` keeps Product Truth/Care editing, and the three-pane Species SEO CMS is the only SEO authority under `/admin/seo/`. Root `npm run build` now emits both the AquaGuide SPA and the SEO Admin subapp into the same `dist`; static `/admin/seo/` and its assets return 200. Next: integrate generated Species SEO pages into that same root deployment artifact.
-
-After it is gated, the next product milestone is a small staging publication slice, not another UI expansion: generate a few reviewed bilingual Species pages, connect them to the AquaGuide frontend artifact, inspect real HTML SEO tags/source and sitemap behavior, then decide whether Production publishing can be unlocked.
-
-## 2026-09-01 — Species SEO now enters the AquaGuide root artifact
-- Root build sequence: web SPA → `/admin/seo/` → guarded static Species publication merge.
-- Explicit staging fixture generated 6 bilingual HTML pages into root `dist/`; Title/Meta/H1/canonical/hreflang/robots/Image Alt/sitemap verification passed.
-- No snapshot means no Species publication; Production snapshot/host remain rejected.
-- Remaining launch gate: real hosted staging snapshot + final HTML-source verification + product CTA return path.
-
-## 2026-09-01 — Hosted SEO staging slice prepared
-- Branch-scoped Vercel Preview fixture injection implemented for 3 representative Species / 6 bilingual static pages.
-- Production build remains fail-closed without explicit Species snapshot.
-- Species pages now include real AquaGuide product CTAs carrying `catalog_key` and `source=seo-species`.
-- Local Preview simulation and generator/root artifact tests PASS; hosted Vercel verification is next.
-
-## 2026-09-01 — SEO CTA runtime correction
-- Fixed compatibility SEO deep link from detail-only behavior to real calculator preselection.
-- Added automated Playwright regression; local PASS with `sp_0030` planned and no page errors.
-
-## 2026-09-01 — Hosted Species vertical slice PASS
-- Vercel Preview static HTML validation passed for bilingual index pages, canonical sibling, noindex page and sitemap.
-- Runtime product handoff passed: SEO Species `sp_0030` enters AquaGuide compatibility as a planned candidate with zero page errors.
-- GitHub clean-runner browser dependency is now explicit (`playwright install --with-deps chromium`) after CI #26 exposed the missing executable.
-
-## 2026-09-01 — Hosted publication hardening
-- Added schema v8 server-export boundary for real hosted staging readiness.
-- Public Species SEO now requires `published + approved`; editing invalidates public visibility until re-approved.
-- Staging exporter moved from publishable key + public Data Review RPC to server-only secret/service-role access with sanitized review projection.
-- Added explicit service_role Data API grants for Supabase's 2026 opt-in exposure defaults.
-- Added `build:staging-from-db` to generate the AquaGuide root Species artifact directly from a hosted staging DB.
-- Local contract and fresh ephemeral Supabase migrations 001–008 are green.
-- No Production migration or Production publish was performed.
-
-## 2026-09-01 — Approved Draft staging release
-- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
-- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
-- Production-style `release` remains Published-only and ignores Approved Drafts.
-- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.
-
-## 2026-09-01 — Species SEO 改为 GitHub Repo-backed 内容源
-
-- 当前 Species SEO Admin 的运行时权威已经从 Supabase 切换为 GitHub Repo-backed content。此前关于“创建 AquaGuide Supabase staging”的待办已被本决策替代，不再执行。
-- 编辑链路：`/admin/seo/` → HttpOnly Admin Session → `/api/admin-content/query` → `seo-admin-drafts` 分支的 `content/species-seo/admin-store.json`。
-- 普通 Save 只写 Draft 分支；`vercel.json` 对 `seo-admin-drafts` 设置 `deploymentEnabled=false`，因此边改边保存不会反复触发 Vercel。
-- 内容/Index/Canonical 改动会把 `Approved` 自动退回 `Editing`；Repo API 强制 `status=Draft`，不能通过后台把 Production Published 解锁。
-- 显式“发布当前 Species 到 Staging”才生成脱敏、最多 20 Species 的 `content/species-seo/staging-snapshot.json` 并提交到非生产 staging code branch，从而触发一次 Preview build。
-- Root Preview build优先读取这个 Repo Snapshot，并以 `staging_release` 生成真实 EN/ZH 静态 HTML + sitemap；Production-style `release` 继续只接受 Published。
-- AI 翻译服务也复用同一 Admin Session，不再依赖 Supabase JWT/user_roles。浏览器 bundle 不再 import Supabase SDK。
-- 新增自动门禁已证明：完全不启动 Supabase 时，H1 修改会使审核失效 → 重新 Approved → Staging Snapshot → 静态 H1 改变；Production-style release 对这些 Draft 生成 0 页。
-- Primary GitHub Admin CI 已移除 Supabase CLI/Docker/ephemeral DB 步骤；legacy Supabase migration/test 仅保留兼容证据。
-- 下一步只做 hosted Repo vertical slice：配置 Vercel server-only Admin/GitHub credentials → 登录 → Save 确认 Draft branch 不部署 → Approved → Staging Publish → 单次 Preview rebuild → 检查 HTML H1 与 `X-Robots-Tag: noindex`。
-- `main`、Production Published、Production Supabase 均保持不动。
-
-## 2026-09-01 — 双仓 Repo-backed 最新权威
-- 不再把后台 Draft 放在公开 `aquaguide-tank-guide` 的任何分支。此前的公共 `seo-admin-drafts` 已删除，公共 `admin-store.json` 也已移除。
-- 私有内容仓库：`chusday97/aquaguide-seo-content`（PRIVATE）→ `seo-admin-drafts` → Draft / Review / Revision / Data Review。
-- 公共 AquaGuide 仓库：只在明确 Staging Publish 后接收脱敏 `content/species-seo/staging-snapshot.json`，再触发一次 Vercel Preview。
-- `ADMIN_GITHUB_CONTENT_REPO` 缺失时必须 fail closed，禁止回退到公开 AquaGuide 仓库。
-- 新增 `test:dual-repo-routing`，已验证 Draft PUT 只去私有仓库、Staging PUT 只去公共 AquaGuide。
-- Vercel Preview 的 Admin Session、密码 Hash、Session Secret、双仓 Repo/Branch/Path 均已配置；当前唯一 Hosted 配置缺口是最小权限 `ADMIN_GITHUB_TOKEN`。
-- 最小权限要求：仅选中 `aquaguide-seo-content` 与 `aquaguide-tank-guide` 两个仓库，只给 Contents Read/Write；不要使用本机 `gh` 的 `repo + workflow` 广权限 OAuth token。
-
-## 2026-09-01 — Hosted dual-repo evidence
-- `eb478ab fix(admin): isolate SEO drafts in private repo` is pushed to `feature/admin-content-v0`.
-- GitHub Admin Content CI #32 completed SUCCESS on a clean runner, including dual-repo routing, root Species artifact integration, catalog parity and diff hygiene.
-- Vercel Preview deployment `dpl_gvQV8AY3cGPC2Vk2J5uFuFfFa6Mx` reached READY for `eb478ab`.
-- Hosted `/api/admin-content/health` returns `auth_configured=true`, `content_repo=chusday97/aquaguide-seo-content`, `staging_repo=chusday97/aquaguide-tank-guide`, correct branches/paths, and `repo_access_error=token_missing`. This proves every hosted dependency except the GitHub write token is wired.
-- Preview responses retain `X-Robots-Tag: noindex`.
-- The remaining hosted external gate is one least-privilege fine-grained GitHub token covering exactly the private content repo + public AquaGuide repo with Contents Read/Write only. The broad local `gh` OAuth token is intentionally not reused.
-- Added `scripts/vercel-ignore-build.mjs`: docs-only `.ai/**`, `HANDOFF.md`, `PROGRESS.md`, and README changes skip Vercel; any code/config/data or `staging-snapshot.json` change continues deployment.
-
-## 2026-09-01 — 双仓 Hosted 链路已真实跑通
-- Fine-grained GitHub token 已配置到 Vercel Preview；Health 中私有内容仓库、公有 Staging 仓库、读写权限、Draft branch/store、Staging branch 全部为 ready。
-- 私有 `aquaguide-seo-content` 已真实写入 `sp_0001` 双语 Approved Draft；这次 Draft 提交没有触发 AquaGuide Vercel 部署。
-- 明确发布 Staging 后，公共 `118fa21` 只触发 1 次 Preview。
-- Hosted English H1 与中文 H1 均精确命中本次 staging 内容；页面为 `noindex,follow`，三个 Aqua 产品 CTA 均保留。
-- GitHub CI #34 SUCCESS；Production 未触碰。
-- 剩余一项仅为人工浏览器验收：用本机剪贴板中的后台密码登录 `/admin/seo/` 并做一次普通 Save，验证 UI/API 的登录会话路径。安全层禁止工具读取密码，不应绕过。
-
-## 2026-09-01 — Productize Species SEO Admin after real-use feedback
-- Human hosted login confirmed; login page now prefills the internal Admin account.
-- Reframed the catalog into 486 source records → 458 current SEO page candidates → 276 Base groups, with 28 unresolved extra duplicate records folded from normal navigation.
-- Duplicate handling is reversible and review-driven; Product Truth is never silently rewritten.
-- Fixed a release-readiness bug where one duplicate pair could block unrelated variants in the same Base group.
-- Replaced Chinese inheritance internals with editorial language (`沿用公共内容`, `为当前页单独编辑`, `恢复公共内容`).
-- Simplified lifecycle UI: dirty content immediately resets approval; Draft is explicitly labeled as not live; review becomes a single `内容流程`.
-- Rendered-DOM check for `极火`: one visible normal 极火虾 row, one duplicate folded; group reports 15 candidate pages + 1 folded duplicate.
-- Commit `8d1905c`; CI #36 SUCCESS; Vercel `dpl_FoNUmLRiTvZbJA8juPWg9A2bLBRJ` READY; Hosted Health all green.
-- Next acceptance is one real hosted Save click, then verify private Draft write / zero public deployment.
-
-
-## 2026-09-02 — Latest continuation pointer
-- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
-- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
-- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
-- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
-- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
-- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
+- [x] 候选预览移除外部 Google Noto Serif SC 请求，继续使用仓库既有/系统字体回退；未改 4317 母版、业务逻辑或数据契约。
+- [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`（当前提交为文档-only amend，UI bytes unchanged；manifest 已记录最终 checkpoint SHA）。
+- [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
+- [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。

@@ -1,13 +1,29 @@
-import type { Aquarium, Fish } from '../types';
+import type { Aquarium, AquariumSpeciesBatch, CompatibilityLifeStage, Fish } from '../types';
 import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
-import type { ReviewedCompatibilityProfile, ReviewedPairRule } from '../data/compatibilityEvidence';
+import { getReviewedStageRiskProfile, type ReviewedCompatibilityProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import {
   getRuntimeReviewedCompatibilityProfile,
   getRuntimeReviewedPairRule,
   getRuntimeCompatibilityStatus,
 } from '../data/runtimeCompatibilityRegistry';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
+import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
+import {
+  COMPATIBILITY_RULE_VERSION,
+  evaluateCompatibility,
+  getCompatibilityAddPolicy,
+  type CompatibilityIntent,
+  type DomainCompatibilityInput,
+  type DomainSpeciesFact,
+  type DomainTankFact,
+  type CompatibilityDecisionReadiness,
+  type CompatibilityIndividualContext,
+  type StockingGuidance,
+  type ObservedCoexistenceStatus,
+} from '../../packages/domain-rules/src';
+import { estimateBioloadUnits } from '../../packages/domain-rules/src';
+import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
@@ -32,10 +48,19 @@ export type TankCompatibilityResult = {
   suggestions: string[];
   metadata: {
     ruleVersion: string;
+    evidenceAuthorityVersion: string;
     speciesDataVersion: string;
     calculatedAt: string;
     scope: TankCompatibilityScope;
+    intent: CompatibilityIntent;
+    catalogVersion: string;
+    domainRuleCodes: string[];
+    domainStatus: TankCompatibilityStatus;
+    decisionReadiness: CompatibilityDecisionReadiness;
   };
+  stockingGuidance?: StockingGuidance;
+  observedStatus?: ObservedCoexistenceStatus;
+  evidenceIds?: string[];
 };
 
 export type CompatibilityEvidenceProvider = {
@@ -52,14 +77,19 @@ const runtimeEvidenceProvider = (): CompatibilityEvidenceProvider => ({
 
 export type EvaluateTankCompatibilityInput = {
   tank?: Aquarium | null;
-  existingSpecies?: Array<Fish | { species?: Fish | null; record?: { quantity?: number } | null }>;
+  existingSpecies?: Array<Fish | { species?: Fish | null; record?: { quantity?: number; batches?: AquariumSpeciesBatch[] } | null }>;
   candidateSpecies?: Fish | null;
   candidateQuantity?: number;
+  candidateLifeStage?: CompatibilityLifeStage;
+  candidateContext?: CompatibilityIndividualContext;
+  observedSignals?: DomainTankFact['observedSignals'];
   scope?: TankCompatibilityScope;
+  intent?: CompatibilityIntent;
   evidenceProvider?: CompatibilityEvidenceProvider;
 };
 
-const SPECIES_DATA_VERSION = 'local-fish-data-v1+compatibility-evidence-v1';
+const SPECIES_DATA_VERSION = 'local-fish-data-v1+compatibility-evidence-v2-stage-risk';
+const CATALOG_VERSION = 'local-fish-data-v1';
 
 const asRule = (
   code: string,
@@ -112,15 +142,17 @@ const normalizeExistingSpecies = (
     if ('species' in item) {
       const species = (item as { species?: Fish | null }).species || null;
       if (!species?.id) return null;
+      const record = (item as { record?: { quantity?: number; batches?: AquariumSpeciesBatch[] } | null }).record;
       return {
         species,
-        quantity: getQuantity((item as { record?: { quantity?: number } | null }).record?.quantity),
+        quantity: getQuantity(record?.quantity),
+        batches: Array.isArray(record?.batches) ? record.batches : [],
       };
     }
     const species = item as Fish;
-    return species?.id ? { species, quantity: 1 } : null;
+    return species?.id ? { species, quantity: 1, batches: [] as AquariumSpeciesBatch[] } : null;
   })
-  .filter((item): item is { species: Fish; quantity: number } => Boolean(item?.species?.id));
+  .filter((item): item is { species: Fish; quantity: number; batches: AquariumSpeciesBatch[] } => Boolean(item?.species?.id));
 
 const parseRange = (value?: string) => {
   const matches = value?.match(/(\d+(?:\.\d+)?)/g);
@@ -141,14 +173,9 @@ const getQuantity = (value?: number) => {
 };
 
 const estimateBioload = (fish: Fish, quantity = 1) => {
-  const base = fish.size === 'Large' ? 8 : fish.size === 'Medium' ? 4 : 1.5;
   const temperament = fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1;
-  return base * temperament * getQuantity(quantity);
+  return estimateBioloadUnits(fish.size, getQuantity(quantity)) * temperament;
 };
-
-const isSchoolingSpecies = (fish: Fish) => /群游|灯|红鼻|斑马|白云|鼠鱼|宝莲|红绿|tetra|rasbora|cory/i.test(
-  `${fish.name} ${fish.category} ${fish.description} ${fish.housingMode || ''}`,
-);
 
 const convertFitItem = (
   item: { type: string; title: string; detail: string; severity?: 'low' | 'medium' | 'high' },
@@ -188,20 +215,31 @@ const formatReviewedPairRuleEvidence = (rule: ReviewedPairRule) => rule.basis ==
   ? `${rule.reason} 该结论有直接配对或捕食风险实验支持；实验条件不等于家庭水族箱长期同缸，因此不外推为“已观察到长期同缸捕食”。`
   : `${rule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`;
 
-export const evaluateTankCompatibility = ({
+const formatReviewedStageRiskEvidence = (rule: ReviewedStageRiskProfile) => (
+  `${rule.reason} 这是生命阶段相关风险，不代表每一只成体都会发生吞食；在没有隔离措施时不应默认安全。`
+);
+
+const evaluateLegacyTankCompatibility = ({
   tank,
   existingSpecies = [],
   candidateSpecies,
   candidateQuantity = 1,
+  candidateLifeStage = 'unknown',
   scope = 'tank',
   evidenceProvider,
 }: EvaluateTankCompatibilityInput): TankCompatibilityResult => {
   const provider = evidenceProvider || runtimeEvidenceProvider();
   const metadata = {
-    ruleVersion: provider.authorityVersion,
+    ruleVersion: 'compatibility-domain-v1',
+    evidenceAuthorityVersion: provider.authorityVersion,
     speciesDataVersion: SPECIES_DATA_VERSION,
     calculatedAt: new Date().toISOString(),
     scope,
+    intent: (scope === 'species_only' ? 'record_existing' : 'planned_addition') as CompatibilityIntent,
+    catalogVersion: 'unknown',
+    domainRuleCodes: [] as string[],
+    domainStatus: 'insufficient_data' as TankCompatibilityStatus,
+    decisionReadiness: 'unknown' as CompatibilityDecisionReadiness,
   };
   const passedRules: TankCompatibilityRule[] = [];
   const warningRules: TankCompatibilityRule[] = [];
@@ -229,8 +267,50 @@ export const evaluateTankCompatibility = ({
     .map(item => item.species)
     .filter(species => species.id !== candidateSpecies.id);
 
+  const sameSpeciesLivestock = currentLivestock.filter(item => item.species.id === candidateSpecies.id);
+  const existingSameSpeciesStages: CompatibilityLifeStage[] = Array.from(new Set(
+    sameSpeciesLivestock
+      .flatMap(item => item.batches.map(batch => batch.lifeStage))
+      .filter(stage => Boolean(stage) && stage !== 'unknown'),
+  ));
+  const reviewedStageRisk = getReviewedStageRiskProfile(candidateSpecies.id);
+  const stageRiskApplies = Boolean(
+    reviewedStageRisk
+    && reviewedStageRisk.youngerStages.includes(candidateLifeStage)
+    && reviewedStageRisk.olderStages.some(stage => existingSameSpeciesStages.includes(stage)),
+  );
+
+  if (stageRiskApplies && reviewedStageRisk) {
+    const target = reviewedStageRisk.verdict === 'not_recommended' ? blockingRules : warningRules;
+    target.push(asRule(
+      reviewedStageRisk.riskType,
+      reviewedStageRisk.verdict === 'not_recommended' ? '同种成鱼与鱼苗存在吞食风险' : '同种不同生命阶段需要谨慎混养',
+      formatReviewedStageRiskEvidence(reviewedStageRisk),
+      reviewedStageRisk.verdict === 'not_recommended' ? 'high' : 'medium',
+      reviewedStageRisk,
+    ));
+    suggestions.push(...reviewedStageRisk.mitigation);
+  } else if (
+    candidateLifeStage === 'fry'
+    && existingSameSpeciesStages.some(stage => stage === 'adult')
+  ) {
+    missingData.push(asRule(
+      'life_stage_evidence_unreviewed',
+      '同种生命阶段风险资料不足',
+      `${candidateSpecies.name} 当前已有较大阶段个体，而候选记录为鱼苗；缺少该阶段组合的已审核风险资料，不能默认判断为安全。`,
+      'medium',
+      {
+        basis: 'species_trait',
+        confidence: 'unknown',
+        reviewStatus: 'draft',
+        affectedSpeciesIds: [candidateSpecies.id],
+        citations: [],
+      },
+    ));
+  }
+
   if (scope === 'species_only') {
-    if (currentSpecies.length === 0) {
+    if (currentSpecies.length === 0 && sameSpeciesLivestock.length === 0) {
       missingData.push(asRule('missing_species_pair', '还需选择生物', '至少选择两种生物，才能判断它们之间的混养关系。', 'high'));
     }
 
@@ -392,12 +472,16 @@ export const evaluateTankCompatibility = ({
   const livestock = currentLivestock.map(item => ({ species: item.species, record: { quantity: item.quantity } }));
   const fit = evaluateSpeciesForAquarium(candidateSpecies, tank, livestock);
 
-  fit.matchedItems.forEach(item => passedRules.push(convertFitItem(item, 'info')));
-  fit.warnings.forEach(item => warningRules.push(convertFitItem(item, item.severity || 'medium')));
-  fit.hardBlocks.forEach(item => blockingRules.push(convertFitItem(item, item.severity || 'high')));
+  const isPairRuleFitItem = (item: { type: string }) => item.type.startsWith('pair_rule_');
+  fit.matchedItems.filter(item => !isPairRuleFitItem(item)).forEach(item => passedRules.push(convertFitItem(item, 'info')));
+  fit.warnings.filter(item => !isPairRuleFitItem(item)).forEach(item => warningRules.push(convertFitItem(item, item.severity || 'medium')));
+  fit.hardBlocks.filter(item => !isPairRuleFitItem(item)).forEach(item => blockingRules.push(convertFitItem(item, item.severity || 'high')));
   fit.confirmations.forEach(item => missingData.push(convertFitItem(item, 'low')));
 
   const tankVolume = getAquariumVolumeLiters(tank);
+  if (tank.waterType !== 'Freshwater' && tank.waterType !== 'Saltwater') {
+    missingData.push(asRule('missing_tank_water_type', '缺少水体类型', '当前鱼缸尚未确认淡水或海水类型，无法可靠判断物种适配。', 'medium'));
+  }
   if (!tankVolume) {
     missingData.push(asRule('missing_tank_volume', '缺少鱼缸容量', '当前鱼缸尺寸不完整，无法确认容量和负载。', 'medium'));
   }
@@ -507,16 +591,18 @@ export const evaluateTankCompatibility = ({
     .filter(item => item.species.id === candidateSpecies.id)
     .reduce((sum, item) => sum + item.quantity, 0);
   const totalCandidateSpeciesQuantity = sameSpeciesExistingQuantity + getQuantity(candidateQuantity);
-  if (isSchoolingSpecies(candidateSpecies) && totalCandidateSpeciesQuantity < 6) {
+  const candidateProfile = provider.getProfile(candidateSpecies.id);
+  const reviewedMinimumGroupSize = Number(candidateProfile?.minimumGroupSize);
+  if (Number.isFinite(reviewedMinimumGroupSize) && reviewedMinimumGroupSize > 1 && totalCandidateSpeciesQuantity < reviewedMinimumGroupSize) {
     warningRules.push(asRule(
-      'schooling_quantity_low',
-      '群游数量不足',
-      `${candidateSpecies.name} 可能需要 6 只/条左右成群更稳定，当前模拟合计 ${totalCandidateSpeciesQuantity}。`,
-      'low',
+      'group_requirement_gap',
+      '群体数量未达到已审核建议',
+      `${candidateSpecies.name} 当前模拟合计 ${totalCandidateSpeciesQuantity} 只/条，已审核 minimumGroupSize 为 ${reviewedMinimumGroupSize}。`,
+      'medium',
+      evidenceFromProfile(candidateSpecies.id, provider),
     ));
   }
 
-  const candidateProfile = provider.getProfile(candidateSpecies.id);
   if (candidateProfile?.behaviorTraits.includes('solitary_required') && currentSpecies.length > 0) {
     blockingRules.push(asRule(
       'single_housing_required',
@@ -576,6 +662,93 @@ export const evaluateTankCompatibility = ({
     suggestions: Array.from(new Set(suggestions)).slice(0, 5),
     metadata,
   };
+};
+
+const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider): DomainSpeciesFact => {
+  const profile = speciesProfileFromFish(fish);
+  const reviewed = provider.getProfile(fish.id);
+  return {
+    id: profile.catalogKey,
+    waterType: profile.waterType,
+    temperatureMinC: profile.waterTemperatureMinC,
+    temperatureMaxC: profile.waterTemperatureMaxC,
+    phMin: profile.phMin,
+    phMax: profile.phMax,
+    minTankLiters: profile.minTankLiters,
+    minTankLengthCm: null,
+    reviewed: Boolean(reviewed),
+    compatibilityRequiredFacts: reviewed?.requiredFacts,
+    minimumGroupSize: reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
+    stockingGuidance: reviewed?.stockingGuidance,
+    evidenceIds: reviewed?.citations.map(citation => citation.id) || [],
+    loadMultiplier: fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1,
+    adultLengthMinCm: profile.adultLengthMinCm,
+    adultLengthMaxCm: profile.adultLengthMaxCm,
+    socialMode: profile.socialMode,
+    behaviorTraits: reviewed?.behaviorTraits || [],
+    size: fish.size,
+  };
+};
+
+const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
+  waterType: tank.waterType === 'Freshwater' ? 'freshwater' : tank.waterType === 'Saltwater' ? 'saltwater' : 'unknown',
+  volumeLiters: getAquariumVolumeLiters(tank) || null,
+  lengthCm: tank.dimensions ? Number(tank.dimensions.length) || null : null,
+  targetTemperatureC: tank.targetTemperature ? Number(tank.targetTemperature) : null,
+});
+
+/**
+ * Compatibility facade for frozen callers. Domain Rules owns the final status,
+ * add-policy metadata, rule codes and catalog/rule versions; this module only
+ * converts legacy Fish inputs and retains evidence-rich presentation details.
+ */
+export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput): TankCompatibilityResult => {
+  const provider = input.evidenceProvider || runtimeEvidenceProvider();
+  const legacy = evaluateLegacyTankCompatibility({ ...input, evidenceProvider: provider });
+  const normalized = normalizeExistingSpecies(input.existingSpecies);
+  const pairStatuses = normalized
+    .map(item => item.species)
+    .filter(species => species.id !== input.candidateSpecies?.id)
+    .map(species => input.candidateSpecies ? provider.getPairRule(species.id, input.candidateSpecies.id)?.verdict : undefined)
+    .filter((status): status is TankCompatibilityStatus => Boolean(status));
+  const pairRank: Record<TankCompatibilityStatus, number> = {
+    compatible: 0,
+    caution: 1,
+    insufficient_data: 2,
+    not_recommended: 3,
+  };
+  const explicitPairStatus = pairStatuses.sort((left, right) => pairRank[right] - pairRank[left])[0];
+  const domainInput: DomainCompatibilityInput = {
+    intent: input.intent || (input.scope === 'species_only' ? 'record_existing' : 'planned_addition'),
+    tank: input.tank ? { ...toDomainTankFact(input.tank), observedSignals: input.observedSignals } : null,
+    existingSpecies: normalized.map(item => toDomainSpeciesFact(item.species, provider)),
+    candidateSpecies: input.candidateSpecies ? toDomainSpeciesFact(input.candidateSpecies, provider) : null,
+    candidateQuantity: input.candidateQuantity,
+    existingQuantities: Object.fromEntries(normalized.map(item => [item.species.id, item.quantity])),
+    candidateContext: input.candidateContext || (input.candidateLifeStage ? {
+      lifeStage: input.candidateLifeStage,
+      reproductiveState: 'unknown',
+    } : undefined),
+    individualContexts: Object.fromEntries(normalized.flatMap(item => {
+      const batch = item.batches[0];
+      return batch ? [[item.species.id, { lifeStage: batch.lifeStage, reproductiveState: batch.reproductiveState }]] : [];
+    })),
+    explicitPairStatus,
+    catalogVersion: CATALOG_VERSION,
+  };
+  const domainDecision = evaluateCompatibility(domainInput);
+  return applyCanonicalCompatibilityDecision({
+    ...legacy,
+    metadata: {
+      ...legacy.metadata,
+      intent: domainInput.intent,
+      ruleVersion: domainDecision.ruleVersion,
+      catalogVersion: domainDecision.catalogVersion,
+      domainRuleCodes: domainDecision.ruleCodes,
+      domainStatus: domainDecision.status,
+      decisionReadiness: domainDecision.decisionReadiness,
+    },
+  }, domainDecision);
 };
 
 export const getTankCompatibilityStatusLabel = (status: TankCompatibilityStatus) => {
@@ -638,8 +811,5 @@ export const evaluateSpeciesCombination = (species: Fish[], evidenceProvider?: C
 export const getTankCompatibilityAddPolicy = (
   status: TankCompatibilityStatus,
 ): TankCompatibilityAddPolicy => {
-  if (status === 'compatible') return 'allow';
-  if (status === 'caution') return 'confirm';
-  if (status === 'insufficient_data') return 'complete_information';
-  return 'block';
+  return getCompatibilityAddPolicy('planned_addition', status);
 };

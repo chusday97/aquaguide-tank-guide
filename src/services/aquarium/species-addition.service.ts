@@ -1,13 +1,11 @@
-import type { Aquarium, Fish } from '../../types';
+import type { Aquarium, Fish, SpeciesAdditionPolicy } from '../../types';
 import { appendSpeciesBatch, createSpeciesBatch } from './species-batches.service';
 import {
   evaluateTankCompatibility,
-  getTankCompatibilityAddPolicy,
-  type TankCompatibilityAddPolicy,
   type TankCompatibilityResult,
   type TankCompatibilityRule,
   type TankCompatibilityStatus,
-} from '../../lib/tankCompatibilityEngine';
+} from '../compatibility/compatibility.service';
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
 
 export type SpeciesAdditionItem = {
@@ -24,7 +22,7 @@ export type SpeciesAdditionEvaluation = {
 
 export type SpeciesAdditionReview = {
   status: TankCompatibilityStatus;
-  policy: TankCompatibilityAddPolicy;
+  policy: SpeciesAdditionPolicy;
   items: SpeciesAdditionItem[];
   evaluations: SpeciesAdditionEvaluation[];
   keyRules: TankCompatibilityRule[];
@@ -44,6 +42,7 @@ type ReviewSpeciesAdditionsInput = {
   aquarium: Aquarium;
   items: SpeciesAdditionItem[];
   speciesCatalog: Fish[];
+  intent?: 'record_existing' | 'planned_addition';
 };
 
 type ExecuteSpeciesAdditionInput = ReviewSpeciesAdditionsInput & {
@@ -97,12 +96,13 @@ export const reviewSpeciesAdditions = ({
   aquarium,
   items,
   speciesCatalog,
+  intent = 'planned_addition',
 }: ReviewSpeciesAdditionsInput): SpeciesAdditionReview | null => {
-  const assessment = assessSpeciesAddition({ aquarium, items, speciesCatalog });
+  const assessment = assessSpeciesAddition({ aquarium, items, speciesCatalog, intent });
   if (!assessment) return null;
   return {
     ...assessment,
-    policy: getTankCompatibilityAddPolicy(assessment.status),
+    policy: getSpeciesAdditionPolicy({ intent, status: assessment.status }),
   };
 };
 
@@ -110,6 +110,7 @@ export const assessSpeciesAddition = ({
   aquarium,
   items,
   speciesCatalog,
+  intent = 'planned_addition',
 }: ReviewSpeciesAdditionsInput): SpeciesAdditionAssessment | null => {
   const normalizedItems = normalizeSpeciesAdditionItems(items, speciesCatalog);
   if (normalizedItems.length === 0) return null;
@@ -136,6 +137,7 @@ export const assessSpeciesAddition = ({
         existingSpecies: [...existingFromTank, ...otherAdditions],
         candidateSpecies: fish,
         candidateQuantity: item.quantity,
+        intent,
       }),
     }];
   });
@@ -162,7 +164,7 @@ export const assessSpeciesAddition = ({
 };
 
 export const preparePlannedAddition = (input: ReviewSpeciesAdditionsInput): PlannedAdditionResult => {
-  const assessment = assessSpeciesAddition(input);
+  const assessment = assessSpeciesAddition({ ...input, intent: 'planned_addition' });
   return {
     assessment,
     policy: assessment
@@ -179,7 +181,7 @@ export const executeSpeciesAddition = ({
   confirmedCaution = false,
   now = new Date().toISOString(),
 }: ExecuteSpeciesAdditionInput): SpeciesAdditionExecution => {
-  const review = reviewSpeciesAdditions({ aquarium, items, speciesCatalog });
+  const review = reviewSpeciesAdditions({ aquarium, items, speciesCatalog, intent: 'planned_addition' });
   if (!review) return { added: false, review, aquariums, reason: 'no_valid_species' };
   if (review.policy === 'block') return { added: false, review, aquariums, reason: 'blocked' };
   if (review.policy === 'complete_information') {

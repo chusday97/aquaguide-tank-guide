@@ -4,6 +4,8 @@ import { getLifeType, getToolFunctions } from '../species/species.service';
 import {
   AquariumProfile,
   CandidateStatus,
+  discoveryBatchInputSchema,
+  DiscoveryBatchResult,
   discoveryAdvanceInputSchema,
   discoveryDeckInputSchema,
   DiscoveryAdvanceOutput,
@@ -19,12 +21,13 @@ import {
   UserPreference,
 } from './recommendation.schema';
 import { evaluateSpeciesForAquarium } from '../../lib/speciesFitEngine';
-import { evaluateTankCompatibility } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility } from '../../services/compatibility/compatibility.service';
 import { RECOMMENDATION_LIMITS, TANK_CAPACITY_MULTIPLIER, TANK_LOAD_THRESHOLDS } from './recommendation.config';
 
 export const DISCOVERY_DAILY_LIMIT = 10;
 export const DISCOVERY_HISTORY_DAYS = 7;
 export const DISCOVERY_STORAGE_KEY = 'aquapediaDiscoveryDeck';
+export const INTERACTIVE_DISCOVERY_BATCH_SIZE = 6;
 
 const getLocalDateKey = (date = new Date()) => {
   const year = date.getFullYear();
@@ -320,7 +323,7 @@ const buildCandidate = (
 
   let status: CandidateStatus = 'blocked';
   if (compatibility.status === 'compatible' && risks.length === 0 && requiredAdjustments.length === 0) status = 'direct';
-  if (compatibility.status === 'caution' || compatibility.status === 'insufficient_data' || (compatibility.status === 'compatible' && (risks.length > 0 || requiredAdjustments.length > 0))) status = 'adjustable';
+  if (compatibility.status === 'caution' || (compatibility.status === 'compatible' && (risks.length > 0 || requiredAdjustments.length > 0))) status = 'adjustable';
   if (compatibility.status === 'not_recommended') status = 'blocked';
   if (profile.load.loadRate >= TANK_LOAD_THRESHOLDS.nearLimit) status = 'blocked';
   if (minGroup > recommendedQuantity && minGroup > 1) status = 'blocked';
@@ -449,6 +452,10 @@ export const normalizeDiscoveryState = (
       queueIds: [],
       consumedIds: [],
       history,
+      sceneBatchIds: [],
+      sceneSeenIds: [],
+      sceneBatchIndex: 0,
+      sceneComplete: false,
     };
   }
 
@@ -457,7 +464,38 @@ export const normalizeDiscoveryState = (
     queueIds: Array.isArray(state.queueIds) ? state.queueIds : [],
     consumedIds: Array.isArray(state.consumedIds) ? state.consumedIds.slice(0, dailyLimit) : [],
     history,
+    sceneBatchIds: Array.isArray(state.sceneBatchIds) ? Array.from(new Set(state.sceneBatchIds)) : [],
+    sceneSeenIds: Array.isArray(state.sceneSeenIds) ? Array.from(new Set(state.sceneSeenIds)) : [],
+    sceneBatchIndex: Number.isInteger(state.sceneBatchIndex) && (state.sceneBatchIndex || 0) >= 0 ? state.sceneBatchIndex || 0 : 0,
+    sceneComplete: Boolean(state.sceneComplete),
   };
+};
+
+const isInteractiveSceneSpecies = (fish: Fish) => {
+  const lifeType = getLifeType(fish);
+  return lifeType !== 'plant' && lifeType !== 'hardscape' && Boolean(fish.image?.trim());
+};
+
+const buildInteractiveDiscoveryBatch = (fishes: Fish[], state: DiscoveryDeckState, wishlistIds: Set<string>, batchSize: number) => {
+  const excludedIds = new Set([...state.sceneSeenIds, ...wishlistIds]);
+  const candidates = fishes.filter(fish => isInteractiveSceneSpecies(fish) && !excludedIds.has(fish.id));
+  return shuffleWithSeed(candidates, `${state.dateKey}-scene-${state.sceneBatchIndex}-${state.sceneSeenIds.length}`)
+    .slice(0, batchSize)
+    .map(fish => fish.id);
+};
+
+const createInteractiveDiscoveryBatch = (fishes: Fish[], state: DiscoveryDeckState, wishlistIds: Set<string>, batchSize = INTERACTIVE_DISCOVERY_BATCH_SIZE): DiscoveryBatchResult => {
+  if (state.sceneComplete || state.sceneBatchIds.length > 0) {
+    return { state, batchIds: state.sceneBatchIds, seenIds: state.sceneSeenIds, batchIndex: state.sceneBatchIndex, complete: state.sceneComplete };
+  }
+  const batchIds = buildInteractiveDiscoveryBatch(fishes, state, wishlistIds, batchSize);
+  const nextState = {
+    ...state,
+    sceneBatchIds: batchIds,
+    sceneBatchIndex: batchIds.length > 0 ? state.sceneBatchIndex + 1 : state.sceneBatchIndex,
+    sceneComplete: batchIds.length === 0,
+  };
+  return { state: nextState, batchIds, seenIds: nextState.sceneSeenIds, batchIndex: nextState.sceneBatchIndex, complete: nextState.sceneComplete };
 };
 
 const createDiscoveryQueue = (fishes: Fish[], state: DiscoveryDeckState, wishlistIds: Set<string>, dailyLimit = DISCOVERY_DAILY_LIMIT) => {
@@ -535,7 +573,7 @@ export const recommendationService = {
         candidateSpecies: candidate,
         candidateQuantity: 1,
       }),
-    })).filter(item => item.compatibility.status !== 'not_recommended');
+    })).filter(item => item.compatibility.status !== 'not_recommended' && item.compatibility.status !== 'insufficient_data');
 
     const strictCandidates = baseCandidates.filter(({ candidate, compatibility }) => {
       if (compatibility.status !== 'compatible') return false;
@@ -713,5 +751,42 @@ export const recommendationService = {
       message,
       remainingToday: Math.max(0, parsed.data.dailyLimit - state.consumedIds.length),
     };
+  },
+
+  createInteractiveDiscoveryBatch: (input: unknown): DiscoveryBatchResult => {
+    const parsed = discoveryBatchInputSchema.safeParse(input);
+    if (!parsed.success) {
+      const state = normalizeDiscoveryState();
+      return { state, batchIds: [], seenIds: [], batchIndex: 0, complete: true };
+    }
+    const state = normalizeDiscoveryState(parsed.data.state as Partial<DiscoveryDeckState> | undefined);
+    return createInteractiveDiscoveryBatch(parsed.data.speciesPool as Fish[], state, new Set(parsed.data.wishlistIds), parsed.data.batchSize);
+  },
+
+  replaceInteractiveDiscoveryBatch: (input: unknown): DiscoveryBatchResult => {
+    const parsed = discoveryBatchInputSchema.safeParse(input);
+    if (!parsed.success) {
+      const state = normalizeDiscoveryState();
+      return { state, batchIds: [], seenIds: [], batchIndex: 0, complete: true };
+    }
+    const current = normalizeDiscoveryState(parsed.data.state as Partial<DiscoveryDeckState> | undefined);
+    const state = {
+      ...current,
+      sceneSeenIds: Array.from(new Set([...current.sceneSeenIds, ...current.sceneBatchIds])),
+      sceneBatchIds: [],
+      sceneComplete: false,
+    };
+    return createInteractiveDiscoveryBatch(parsed.data.speciesPool as Fish[], state, new Set(parsed.data.wishlistIds), parsed.data.batchSize);
+  },
+
+  restartInteractiveDiscoveryBatches: (input: unknown): DiscoveryBatchResult => {
+    const parsed = discoveryBatchInputSchema.safeParse(input);
+    if (!parsed.success) {
+      const state = normalizeDiscoveryState();
+      return { state, batchIds: [], seenIds: [], batchIndex: 0, complete: true };
+    }
+    const current = normalizeDiscoveryState(parsed.data.state as Partial<DiscoveryDeckState> | undefined);
+    const state = { ...current, sceneBatchIds: [], sceneSeenIds: [], sceneBatchIndex: 0, sceneComplete: false };
+    return createInteractiveDiscoveryBatch(parsed.data.speciesPool as Fish[], state, new Set(parsed.data.wishlistIds), parsed.data.batchSize);
   },
 };
