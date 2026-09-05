@@ -303,3 +303,10 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Measured at 1440×900 and 1366×768: fixed chrome drops from ~308px to ~112px and workspace gains 196px. At 390×844 workspace grows from 400px to 712px; focused editor sticky controls shrink from ~140px to 46px.
 - Replaced the green-heavy CMS chrome with white/cool-gray/graphite surfaces and a single blue interaction accent. Status colors remain semantic only.
 - Admin contract and root production build pass; zero horizontal overflow in measured desktop/mobile focus states.
+## 2026-09-06 — Species SEO Admin strict three-color + typography checkpoint
+- User rejected the prior palette as still too colorful and the typography as too flat. The final CMS rule is now **Graphite / White / one Blue `#3157D5` accent only**.
+- Warning/review/ready/error/success states are hue-neutral; status is conveyed by copy, icon/border style and weight. Color transitions were disabled so intermediate click-animation hues cannot create temporary fourth colors.
+- Hidden tools were included, not just the first screen: all six advanced tools were opened and runtime-scanned at 1440×900 and 390×844. Every state reports `0` extra saturated hues and `0` horizontal overflow.
+- Typography hierarchy: desktop page 24, section 18, action 15, field/Species label 13, body 12, meta 10px; mobile 22/17/14/12/11/10px. Focus mode remains compact to maximize editing/Preview space.
+- Removed the superseded 2026-09-05 professional-palette block instead of stacking another permanent theme layer. Current design-system block is the final visual authority.
+- Local Admin contract and full root build PASS. No main/Production/index/live-DB mutation; PR #144 stays parked and Care SEO remains `hold_noindex`.

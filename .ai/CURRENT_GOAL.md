@@ -1,6 +1,6 @@
 # Current Goal
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
 Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
@@ -11,7 +11,7 @@ Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operat
 P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, and the first AI-assisted Care SEO advisory flow are complete. The explicit release decision is **`hold_noindex`**. A newer user-reported usability problem is now the immediate priority: make the **Species SEO Admin understandable and directly acceptable as an operator product**.
 
 ## Why this is current
-The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback showed that selected-state feedback was too weak, then a first fix over-corrected by adding a second green ✓ and disturbing Species-row typography. The active UI rule is now stricter: state must be obvious **without changing information layout**. Workflow `attention` stays separate from operator `selected`; normal Species selection is shown inside the existing 16×16 square control; batch selection uses that same slot only in batch mode; no duplicate row badge is allowed. `当前物种页面` and `基础模板` must also be visibly distinct editing contexts. The hierarchy remains `4-step publishing workflow → one current action → current-page key action → detailed editing → collapsed advanced tools`. Draft PR #144 reconciliation stays parked.
+The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback tightened the visual system further: state must be obvious **without changing information layout**, fixed chrome must yield space to editing/Preview, and the CMS may use only three visible color families: **Graphite / White / one Blue accent**. Warning, review, ready, error and success states must use copy, iconography, border treatment and weight rather than new red/amber/green/purple hues. Typography is a deliberate hierarchy rather than many near-equal micro sizes. Workflow `attention` stays separate from operator `selected`; normal Species selection remains inside the existing 16×16 square control; batch selection uses that same slot only in batch mode. `当前物种页面` and `基础模板` remain distinct contexts. Draft PR #144 reconciliation stays parked.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -179,3 +179,8 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Large workflow guidance is an entry-state aid, not permanent editor chrome. Entering the middle editor or right Preview automatically switches to Workspace Focus; the left Species navigator alone does not.
 - Focus keeps only compact workflow status, counts, primary action, current scope/language and Preview controls; `展开流程` restores the full command center.
 - Admin visual system is now neutral CMS chrome: white / cool gray / graphite with one blue interaction accent. Amber/red/green are semantic states only and must not become page-wide theme colors.
+## 2026-09-06 Species SEO Admin three-color / typography rule
+- Visible CMS palette is hard-limited to three families: Graphite neutrals, White/paper and one Blue `#3157D5` accent. Semantic states may not introduce additional red/amber/green/purple hues.
+- Runtime computed-style scans at 1440×900 and 390×844 cover the initial workspace plus all six advanced tools; extra saturated hue count is `0` in every scanned state and page overflow is `0`.
+- Typography hierarchy is explicit: desktop page 24 / section 18 / action 15 / label 13 / body 12 / meta 10px; mobile uses 22 / 17 / 14 / 12 / 11 / 10px. Workspace Focus remains intentionally compact.
+- Obsolete 2026-09-05 professional-palette override was removed; Focus layout remains, while the strict design-system block is the final visual authority.

@@ -728,3 +728,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Implemented editor/Preview-triggered Workspace Focus with explicit restore control; left navigator excluded from auto-collapse.
 - Re-themed primary CMS surfaces to neutral gray/white/graphite + blue accent, keeping semantic status colors scoped.
 - Browser measurements: 1440/1366 +196px workspace height; 390 +312px, editor sticky bar ~140→46px; overflow 0. Admin contract + root build PASS.
+## 2026-09-06 — Species SEO Admin three-color / type hierarchy convergence
+- Reproduced user complaint by scanning computed colors: legacy state classes still leaked amber/green/blue-gray in queue filters, duplicate review, source evidence and template import.
+- Added strict Graphite / White / Blue design tokens, neutralized semantic hue classes, and reserved `#3157D5` for selected/primary interaction. Disabled color-property transitions to avoid temporary intermediate hues.
+- Opened all six advanced tools and repeated 1440×900 + 390×844 runtime scans. Final result: extra saturated hues `0` in every state; horizontal overflow `0`.
+- Established typography scale and measured it in browser; removed superseded 2026-09-05 palette block while preserving Workspace Focus layout.
+- `npm run test:contract -w @aquaguide/admin-content` PASS; full `npm run build` PASS; `git diff --check` PASS.

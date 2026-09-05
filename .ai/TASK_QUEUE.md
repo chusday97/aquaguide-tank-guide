@@ -91,6 +91,9 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Verify all 4 stages are simultaneously visible at 390px in a 2×2 layout; 1440/390 browser checks have zero page overflow.
 - [x] Visually separate `当前物种页面` from `基础模板`: explicit scope context card, different accent/background, and clear copy explaining page-only vs shared-template impact.
 - [x] In read-only Demo, suppress false `Schema 未应用` error language; show only `只读演示 · 不会写入`.
+- [x] Enforce a strict three-color CMS system: Graphite / White / one Blue accent; all semantic states and all six advanced tools are hue-neutral outside the Blue interaction accent.
+- [x] Establish an explicit typography hierarchy (page → section → action → field label → body → meta) and verify desktop/mobile computed sizes.
+- [x] Runtime-scan 1440/390 initial + all advanced-tool states: zero extra saturated hues and zero horizontal overflow.
 - [ ] User visual/operator acceptance of the new hierarchy on the hosted read-only SEO Admin demo; collect screenshots/feedback.
 - [ ] Restore a writable `admin-content` Preview only through a safe server-side credential binding/transfer. Do not expose or manually shuttle `ADMIN_REPO_*` / `ADMIN_GITHUB_*` secrets; current independent project lacks those write credentials.
 
