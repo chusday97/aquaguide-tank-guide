@@ -11,7 +11,7 @@ Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operat
 P1 Compatibility Admin and P2 Unified Publish Center V1 are complete in code. Care SEO downstream projection, deterministic bilingual routes, Editorial Draft/Review, sanitized explicit Staging handoff and real protected Vercel bilingual acceptance are now complete. The immediate priority is the **Care SEO Index / Production release decision**; default state remains `noindex` and Production locked until explicit authorization.
 
 ## Why this is current
-The upstream Product/Care/Compatibility authorities and Publish Center observability are already converged in code. Care SEO now has deterministic downstream source/route/artifact generation, human Editorial Draft→Review→Approved persistence, approved-only sanitization and a completed hosted Staging proof. The free acceptance path uses an ephemeral local Supabase source and does not require a paid persistent Staging project. Any indexability or Production release is now a separate explicit human release decision.
+The upstream Product/Care/Compatibility authorities and Publish Center observability are already converged in code. Care SEO now has deterministic downstream source/route/artifact generation, human Editorial Draft→Review→Approved persistence, approved-only sanitization, completed hosted Staging proof, and an evidence-bound release-readiness gate. Staging is permanently fail-closed to `noindex`; even a hand-edited Staging snapshot with `index` is rejected. The only remaining release blocker is an explicit human decision; there is still no Production write/index action in this gate.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -33,7 +33,8 @@ Species SEO remains Repo-backed and fail-closed:
 8. [DONE in code] P2 Care SEO projection foundation: Published-Care-bound projection, protected Care facts, deterministic EN/ZH canonical + hreflang routes, and fail-closed static Staging artifact builder.
 9. [DONE in code] Care SEO Editorial Draft/Review persistence + approved-only sanitized explicit Staging snapshot/handoff.
 10. [DONE] Hosted bilingual Care SEO acceptance on protected Vercel Preview using the free ephemeral local Supabase source path; 2/2 EN/ZH pages passed and remained noindex.
-11. [NEXT / LOCKED] Index unlock / Production release is a separate explicit reviewed decision. Do not change the current noindex/Production lock without user authorization.
+11. [DONE in code] Release-readiness mechanics: exact snapshot SHA-256 + Vercel acceptance evidence + explicit human decision contract; Staging remains noindex and acceptance-evidence-only commits do not redeploy runtime.
+12. [NEXT / LOCKED] Record the explicit human release decision. Do not create `approve_index_release`, unlock index, or publish Production without user authorization.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -148,3 +149,11 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Real DB acceptance exposed and fixed RFC3339 offset handling in `5d2542ac`; snapshot publish commit is `18711afc`.
 - Vercel `dpl_5XMFuB4p4VWyKBxyA5ML36ucc6D7` is READY and hosted acceptance passed 2/2 pages with deployment/page noindex, exact metadata/H1, source-version, branch-alias canonical/hreflang and hygiene.
 - Persistent paid Staging is optional. The next gate is an explicit Index/Production release decision; current default remains noindex and Production locked.
+
+## 2026-09-05 Care SEO release-readiness gate closeout
+- `c1f4f35a3d4135f0b1312d655f1bbab258dcc98c` adds a fail-closed release-readiness contract; it performs no Production write and cannot toggle indexability.
+- Closed a bypass found during audit: the Staging static builder now rejects `index` even if `staging-snapshot.json` is hand-edited; Staging sitemap remains non-indexable.
+- `7ba66f9d9d0610d3be3e5ec121f3e157004849d2` is the snapshot-only republish using the new gate. Vercel `dpl_3knobTC9R84wkVfaVsCZrPnnrXrp` is READY; protected hosted acceptance passed 2/2 EN/ZH pages with noindex retained.
+- `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
+- `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
+- Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.

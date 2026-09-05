@@ -70,7 +70,9 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Keep Production locked unless separately authorized.
 - [ ] Care SEO Index / Production release decision.
   - [x] Hosted Staging prerequisite is satisfied.
-  - [ ] Keep `noindex` and Production locked until the user explicitly chooses a release action.
+  - [x] Fail-closed release readiness gate binds the exact Staging snapshot hash to hosted acceptance evidence; Staging builder rejects `index` even if the snapshot is hand-edited.
+  - [x] Persist non-secret hosted acceptance evidence without triggering a Vercel runtime deployment.
+  - [ ] Record an explicit human release decision (`hold_noindex` or `approve_index_release`). Until then `noindex` and Production remain locked.
 - [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
 
 ## Stable completed baseline — do not reimplement

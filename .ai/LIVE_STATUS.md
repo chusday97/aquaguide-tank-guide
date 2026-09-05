@@ -26,11 +26,11 @@ Latest converged functional baseline: `18711afc content(care-seo): publish stagi
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO projection, Editorial Draft/Review, approved-only sanitized handoff and real hosted bilingual Staging acceptance are complete. First unfinished milestone: explicit Care SEO Index / Production release decision; current runtime remains noindex and Production locked.
+P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO projection, Editorial Draft/Review, sanitized handoff, hosted bilingual Staging acceptance and evidence-bound release-readiness mechanics are complete. Current readiness is intentionally false with the sole blocker `explicit_human_release_decision_required`; runtime remains noindex and Production locked.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`.
+- Feature remote before this docs sync: `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -183,3 +183,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - GitHub light CI `33959147061` PASS. Vercel Preview `dpl_5XMFuB4p4VWyKBxyA5ML36ucc6D7` READY and generated 2 Care SEO pages.
 - Hosted protected acceptance PASS 2/2 EN/ZH pages; `X-Robots-Tag: noindex` and page `noindex,follow` retained. Canonical/hreflang use the feature branch alias; source Care version is 2.
 - A paid Supabase Staging branch/project is not required for this acceptance path. Production/index/main remain locked and untouched.
+
+## 2026-09-05 Care SEO release-readiness gate closeout
+- `c1f4f35a3d4135f0b1312d655f1bbab258dcc98c` adds a fail-closed release-readiness contract; it performs no Production write and cannot toggle indexability.
+- Closed a bypass found during audit: the Staging static builder now rejects `index` even if `staging-snapshot.json` is hand-edited; Staging sitemap remains non-indexable.
+- `7ba66f9d9d0610d3be3e5ec121f3e157004849d2` is the snapshot-only republish using the new gate. Vercel `dpl_3knobTC9R84wkVfaVsCZrPnnrXrp` is READY; protected hosted acceptance passed 2/2 EN/ZH pages with noindex retained.
+- `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
+- `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
+- Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.

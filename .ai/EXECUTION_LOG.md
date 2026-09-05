@@ -665,3 +665,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Explicit one-file publish commit `18711afc787dc48c814a63de2551ac56f4a99793`; GitHub CI `33959147061` SUCCESS. Vercel `dpl_5XMFuB4p4VWyKBxyA5ML36ucc6D7` READY; build log confirms 2 Care SEO pages merged into `dist`.
 - Protected hosted acceptance PASS 2/2: HTTP 200, deployment X-Robots noindex, page noindex, title/meta/H1, source version 2, branch-alias canonical, EN/zh-CN/x-default hreflang and hygiene. Temporary Vercel share authentication was used without disabling protection and then removed locally.
 - Production, index, main and live databases remained untouched. Next gate is an explicit Care SEO Index/Production release decision; default remains locked.
+
+## 2026-09-05 Care SEO release-readiness gate closeout
+- `c1f4f35a3d4135f0b1312d655f1bbab258dcc98c` adds a fail-closed release-readiness contract; it performs no Production write and cannot toggle indexability.
+- Closed a bypass found during audit: the Staging static builder now rejects `index` even if `staging-snapshot.json` is hand-edited; Staging sitemap remains non-indexable.
+- `7ba66f9d9d0610d3be3e5ec121f3e157004849d2` is the snapshot-only republish using the new gate. Vercel `dpl_3knobTC9R84wkVfaVsCZrPnnrXrp` is READY; protected hosted acceptance passed 2/2 EN/ZH pages with noindex retained.
+- `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
+- `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
+- Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.

@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`
+Remote feature before this docs sync: `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 151
+- feature-only commits: 155
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -140,3 +140,11 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; measured divergence main-only 269 / feature-only 151; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Hosted Vercel acceptance is complete; this does not make the branch merge-ready. Dedicated main reconciliation remains required.
 - No main merge/rebase, Production mutation, index unlock or paid Staging resource creation occurred.
+
+## 2026-09-05 Care SEO release-readiness gate closeout
+- `c1f4f35a3d4135f0b1312d655f1bbab258dcc98c` adds a fail-closed release-readiness contract; it performs no Production write and cannot toggle indexability.
+- Closed a bypass found during audit: the Staging static builder now rejects `index` even if `staging-snapshot.json` is hand-edited; Staging sitemap remains non-indexable.
+- `7ba66f9d9d0610d3be3e5ec121f3e157004849d2` is the snapshot-only republish using the new gate. Vercel `dpl_3knobTC9R84wkVfaVsCZrPnnrXrp` is READY; protected hosted acceptance passed 2/2 EN/ZH pages with noindex retained.
+- `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
+- `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
+- Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.
