@@ -28,9 +28,13 @@ on:
       - 'scripts/test-compatibility-regression-gate.ts'
       - 'scripts/test-care-seo-projection.ts'
       - 'scripts/test-care-seo-editorial.ts'
+      - 'scripts/test-care-seo-handoff.ts'
+      - 'scripts/test-care-seo-build-routing.ts'
       - 'scripts/test-care-seo-artifact.ts'
       - 'scripts/build-care-seo-artifact.ts'
       - 'scripts/verify-care-seo-route.mjs'
+      - 'scripts/verify-care-seo-hosted.mjs'
+      - 'content/care-seo/**'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
@@ -73,9 +77,13 @@ on:
       - 'scripts/test-compatibility-regression-gate.ts'
       - 'scripts/test-care-seo-projection.ts'
       - 'scripts/test-care-seo-editorial.ts'
+      - 'scripts/test-care-seo-handoff.ts'
+      - 'scripts/test-care-seo-build-routing.ts'
       - 'scripts/test-care-seo-artifact.ts'
       - 'scripts/build-care-seo-artifact.ts'
       - 'scripts/verify-care-seo-route.mjs'
+      - 'scripts/verify-care-seo-hosted.mjs'
+      - 'content/care-seo/**'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
@@ -135,6 +143,10 @@ jobs:
         run: npm run test:care-seo-editorial
       - name: Care SEO static artifact contract
         run: npm run test:care-seo-artifact
+      - name: Care SEO sanitized Staging handoff contract
+        run: npm run test:care-seo-handoff
+      - name: Care SEO explicit build routing contract
+        run: npm run test:care-seo-build-routing
       - name: Publish Center read-only contract
         run: npm run test:publish-center-contract
       - name: Runtime compatibility authority contract
@@ -160,10 +172,13 @@ jobs:
           code_exit=$?
           VERCEL_CHANGED_FILES='content/species-seo/staging-snapshot.json' node scripts/vercel-ignore-build.mjs
           snapshot_exit=$?
+          VERCEL_CHANGED_FILES='content/care-seo/staging-snapshot.json' node scripts/vercel-ignore-build.mjs
+          care_snapshot_exit=$?
           set -e
           test "$docs_exit" -eq 0
           test "$code_exit" -eq 1
           test "$snapshot_exit" -eq 1
+          test "$care_snapshot_exit" -eq 1
 
   heavy:
     name: Heavy browser / SEO handoff gate

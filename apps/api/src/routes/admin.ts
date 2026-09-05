@@ -32,6 +32,7 @@ import {
   saveCareSeoEditorialDraft,
   submitCareSeoEditorialReview,
 } from '../care-seo-editorial';
+import { createCareSeoStagingHandoff } from '../care-seo-handoff';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 import { adminFeedbackRouter } from './feedback';
@@ -154,6 +155,16 @@ adminRouter.post('/care-articles/:id/seo-editorial/approve', asyncRoute(async (r
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Care SEO Approve 请求无效。', parsed.error.flatten());
   const actorId = (request as AuthenticatedRequest).authUser.id;
   return sendData(request, response, await approveCareSeoEditorial(id, parsed.data, actorId));
+}));
+
+adminRouter.post('/care-articles/:id/seo-editorial/staging-handoff', asyncRoute(async (request, response) => {
+  const id = parseId(request.params.id);
+  const snapshot = await createCareSeoStagingHandoff(
+    id,
+    process.env.CARE_SEO_SOURCE_ENVIRONMENT,
+    process.env.CARE_SEO_STAGING_SOURCE_LABEL,
+  );
+  return sendData(request, response, snapshot);
 }));
 
 adminRouter.post('/care-articles', asyncRoute(async (request, response) => {

@@ -143,17 +143,13 @@ const careSeoProjectionSnapshotSchema = z.object({
     }),
   }),
   sourceFacts: z.object({
-    title: z.string().trim().min(1),
     category: z.string().trim().min(1),
     urgency: z.string().trim().min(1),
     summary: z.string().trim().min(1),
-    symptoms: z.array(z.string()),
     immediateActions: z.array(z.string()),
     avoidActions: z.array(z.string()),
     observeItems: z.array(z.string()),
-    diagnoseWhen: z.array(z.string()),
     nextStep: z.string().trim().min(1),
-    evidenceCount: z.number().int().nonnegative(),
   }),
 });
 
@@ -167,6 +163,7 @@ export const careSeoEditorialSnapshotRecordSchema = z.object({
 export const careSeoStagingSnapshotSchema = z.object({
   schemaVersion: z.literal(1),
   environment: z.enum(['staging', 'production']),
+  sourceEnvironment: z.enum(['staging', 'production']),
   sourceLabel: z.string().trim().min(1),
   generatedAt: z.string().datetime(),
   records: z.array(careSeoEditorialSnapshotRecordSchema).min(2),

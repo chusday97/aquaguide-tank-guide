@@ -1,6 +1,7 @@
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 import {
   buildCareSeoAlternates,
   careSeoPublicPath,
@@ -12,6 +13,21 @@ import {
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, '..');
+const REPO_STAGING_SNAPSHOT = 'content/care-seo/staging-snapshot.json';
+const CARE_SEO_STAGING_BRANCH = 'feature/admin-content-v0';
+const PRODUCTION_SITE_HOSTS = new Set(['aqua-tank-guide.vercel.app']);
+
+const currentCommitSubject = () => {
+  if (process.env.VERCEL_GIT_COMMIT_MESSAGE) return process.env.VERCEL_GIT_COMMIT_MESSAGE.split(/\r?\n/)[0].trim();
+  try { return execFileSync('git', ['show', '-s', '--format=%s', 'HEAD'], { cwd: repoRoot, encoding: 'utf8' }).trim(); } catch { return ''; }
+};
+const currentChangedFiles = () => {
+  if (process.env.VERCEL_CHANGED_FILES) return process.env.VERCEL_CHANGED_FILES.split(/\r?\n/).map(item => item.trim()).filter(Boolean);
+  try {
+    return execFileSync('git', ['show', '--pretty=', '--name-only', 'HEAD'], { cwd: repoRoot, encoding: 'utf8' })
+      .split(/\r?\n/).map(item => item.trim()).filter(Boolean);
+  } catch { return []; }
+};
 
 const escapeHtml = (value: unknown) => String(value ?? '')
   .replaceAll('&', '&amp;')
@@ -22,6 +38,46 @@ const escapeHtml = (value: unknown) => String(value ?? '')
 
 const trimSiteUrl = (value: string) => value.replace(/\/+$/, '');
 const absoluteUrl = (siteUrl: string, publicPath: string) => `${trimSiteUrl(siteUrl)}${publicPath}`;
+
+const hygieneMarkers = [
+  /\bacceptance(?:\s+test)?\b/i,
+  /\btest(?:ing)?\s+(?:copy|content|title|h1)\b/i,
+  /\bqa\s*(?:only|test)\b/i,
+  /\bplaceholder\b/i,
+  /验收(?:文案|测试|用|版)?|仅供测试|测试(?:文案|内容|标题|H1|用)/i,
+];
+const assertCleanPublicCopy = (record: CareSeoEditorialSnapshotRecord) => {
+  const values = [
+    record.editorial.seoTitle, record.editorial.metaDescription, record.editorial.h1, record.editorial.focusKeyword,
+    record.projection.sourceFacts.category, record.projection.sourceFacts.urgency, record.projection.sourceFacts.summary,
+    ...record.projection.sourceFacts.immediateActions, ...record.projection.sourceFacts.avoidActions,
+    ...record.projection.sourceFacts.observeItems, record.projection.sourceFacts.nextStep,
+  ];
+  if (values.some(value => hygieneMarkers.some(marker => marker.test(String(value || ''))))) {
+    throw new Error(`Care SEO content hygiene failed: ${record.projection.sourceCareCatalogKey}/${record.projection.locale}`);
+  }
+};
+
+export const resolveCareSeoBuildInputs = ({ snapshotPath, siteUrl, productionSiteUrl }: {
+  snapshotPath?: string; siteUrl?: string; productionSiteUrl?: string;
+} = {}) => {
+  const isPreview = process.env.VERCEL_ENV === 'preview' && process.env.VERCEL_GIT_COMMIT_REF === CARE_SEO_STAGING_BRANCH;
+  const commitSubject = currentCommitSubject();
+  const changedFiles = currentChangedFiles();
+  const explicitPublishCommit = isPreview
+    && /^content\(care-seo\): publish staging\b/.test(commitSubject)
+    && changedFiles.length === 1
+    && changedFiles[0] === REPO_STAGING_SNAPSHOT;
+  const previewHost = process.env.VERCEL_BRANCH_URL || process.env.VERCEL_URL;
+  const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  return {
+    snapshotPath: snapshotPath || (explicitPublishCommit ? REPO_STAGING_SNAPSHOT : ''),
+    siteUrl: siteUrl || (explicitPublishCommit && previewHost ? `https://${previewHost}` : ''),
+    productionSiteUrl: productionSiteUrl || (productionHost ? `https://${productionHost}` : 'https://aqua-tank-guide.vercel.app'),
+    source: snapshotPath ? 'explicit' : explicitPublishCommit ? 'vercel-explicit-care-staging-publish' : 'none',
+    commitSubject, changedFiles,
+  };
+};
 const assertRouteContract = (record: CareSeoEditorialSnapshotRecord) => {
   const { projection } = record;
   const expectedPath = careSeoPublicPath(projection.sourceCareCatalogKey, projection.locale);
@@ -41,9 +97,13 @@ const validateReleaseScope = (snapshot: CareSeoStagingSnapshot) => {
   if (snapshot.environment === 'production') {
     throw new Error('Refusing a Production Care SEO snapshot in the root build integration.');
   }
+  if (snapshot.sourceEnvironment === 'production' || /production|prod\b/i.test(snapshot.sourceLabel)) {
+    throw new Error('Refusing a Production Care SEO source for Staging handoff.');
+  }
   const groups = new Map<string, CareSeoEditorialSnapshotRecord[]>();
   for (const record of snapshot.records) {
     assertRouteContract(record);
+    assertCleanPublicCopy(record);
     if (record.editorial.reviewState !== 'approved') {
       throw new Error(`Care SEO record is not approved: ${record.projection.sourceCareCatalogKey}/${record.projection.locale}`);
     }
@@ -85,9 +145,9 @@ const renderPage = (record: CareSeoEditorialSnapshotRecord, siteUrl: string) => 
   return `<!doctype html>
 <html lang="${projection.locale}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${escapeHtml(editorial.seoTitle)}</title><meta name="description" content="${escapeHtml(editorial.metaDescription)}">
-<meta name="robots" content="${robots}"><link rel="canonical" href="${escapeHtml(absoluteUrl(siteUrl, canonicalPath))}">
+<meta name="robots" content="${robots}"><meta name="aquaguide:care-source-version" content="${projection.sourceCareVersion}"><meta name="aquaguide:care-source-key" content="${escapeHtml(projection.sourceCareCatalogKey)}"><link rel="canonical" href="${escapeHtml(absoluteUrl(siteUrl, canonicalPath))}">
 <link rel="alternate" hreflang="en" href="${escapeHtml(absoluteUrl(siteUrl, alternates.en))}"><link rel="alternate" hreflang="zh-CN" href="${escapeHtml(absoluteUrl(siteUrl, alternates['zh-CN']))}"><link rel="alternate" hreflang="x-default" href="${escapeHtml(absoluteUrl(siteUrl, alternates['x-default']))}">
-<style>body{margin:0;background:#f4f7f5;color:#17211c;font:16px/1.65 system-ui,sans-serif}main{max-width:820px;margin:auto;padding:32px 20px 64px}article{background:#fff;border:1px solid #e5ebe7;border-radius:24px;padding:28px}h1{font-size:32px;line-height:1.2;margin:0 0 16px}h2{font-size:18px;margin:28px 0 8px}ul{padding-left:22px}.meta{font-size:13px;color:#647068}.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.cta a{padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:700;background:#146b4b;color:white}.cta a.secondary{background:#eef5f1;color:#146b4b}</style></head><body><main><article>
+<style>body{margin:0;background:#f4f7f5;color:#17211c;font:16px/1.65 system-ui,sans-serif}main{max-width:820px;margin:auto;padding:32px 20px 64px}article{background:#fff;border:1px solid #e5ebe7;border-radius:24px;padding:28px}h1{font-size:32px;line-height:1.2;margin:0 0 16px}h2{font-size:18px;margin:28px 0 8px}ul{padding-left:22px}.meta{font-size:13px;color:#647068}.cta{display:flex;gap:10px;flex-wrap:wrap;margin-top:28px}.cta a{padding:10px 16px;border-radius:999px;text-decoration:none;font-weight:700;background:#146b4b;color:white}.cta a.secondary{background:#eef5f1;color:#146b4b}</style></head><body><main><article data-care-source-version="${projection.sourceCareVersion}" data-care-source-key="${escapeHtml(projection.sourceCareCatalogKey)}">
 <div class="meta">${escapeHtml(source.category)} · ${escapeHtml(source.urgency)}</div><h1>${escapeHtml(editorial.h1)}</h1><p>${escapeHtml(source.summary)}</p>
 ${renderList(labels.actions, source.immediateActions)}${renderList(labels.avoid, source.avoidActions)}${renderList(labels.observe, source.observeItems)}
 <section><h2>${escapeHtml(labels.next)}</h2><p>${escapeHtml(source.nextStep)}</p></section>
@@ -120,6 +180,10 @@ export const buildCareSeoArtifact = async ({
   productionSiteUrl?: string;
   distDir?: string;
 } = {}) => {
+  const inputs = resolveCareSeoBuildInputs({ snapshotPath, siteUrl, productionSiteUrl });
+  snapshotPath = inputs.snapshotPath;
+  siteUrl = inputs.siteUrl;
+  productionSiteUrl = inputs.productionSiteUrl;
   if (!snapshotPath) {
     console.log('Care SEO artifact: skipped (normal code build; no explicit Staging snapshot input).');
     return { skipped: true as const, reason: 'snapshot-not-configured' };
@@ -127,7 +191,13 @@ export const buildCareSeoArtifact = async ({
   if (!siteUrl) throw new Error('CARE_SEO_SITE_URL is required when CARE_SEO_SNAPSHOT_PATH is configured.');
   const normalizedSite = trimSiteUrl(siteUrl);
   const normalizedProduction = productionSiteUrl ? trimSiteUrl(productionSiteUrl) : '';
-  if (normalizedProduction && normalizedSite === normalizedProduction) {
+  let siteHost = '';
+  let productionHost = '';
+  try { siteHost = new URL(normalizedSite).hostname; } catch { throw new Error(`Invalid CARE_SEO_SITE_URL: ${normalizedSite}`); }
+  if (normalizedProduction) {
+    try { productionHost = new URL(normalizedProduction).hostname; } catch { throw new Error(`Invalid PRODUCTION_PUBLIC_SITE_URL: ${normalizedProduction}`); }
+  }
+  if (PRODUCTION_SITE_HOSTS.has(siteHost) || (productionHost && siteHost === productionHost)) {
     throw new Error('Refusing to publish a Care SEO staging artifact to the Production site URL.');
   }
   const resolvedSnapshot = path.resolve(repoRoot, snapshotPath);
@@ -161,6 +231,8 @@ export const buildCareSeoArtifact = async ({
     source_snapshot: path.relative(repoRoot, resolvedSnapshot) || path.basename(resolvedSnapshot),
     site_url: normalizedSite,
     environment: snapshot.environment,
+    source_environment: snapshot.sourceEnvironment,
+    build_input_source: inputs.source,
     generated_pages: snapshot.records.length,
     indexable_pages: indexablePages,
     output: path.relative(repoRoot, distDir) || 'dist',

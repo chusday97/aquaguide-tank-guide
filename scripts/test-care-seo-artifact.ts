@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
-import type { CareArticleDetailDto, CareSeoStagingSnapshot, SupportedLocale } from '../packages/contracts/src/index';
+import { careSeoStagingSnapshotSchema, type CareArticleDetailDto, type SupportedLocale } from '../packages/contracts/src/index';
 import { buildCareSeoProjection } from '../apps/api/src/care-seo-projection';
 import { buildCareSeoArtifact } from './build-care-seo-artifact';
 
@@ -47,9 +47,10 @@ const recordFor = (catalogKey: string, locale: SupportedLocale, version: number,
     },
   };
 };
-const snapshot: CareSeoStagingSnapshot = {
+const snapshot = careSeoStagingSnapshotSchema.parse({
   schemaVersion: 1,
   environment: 'staging',
+  sourceEnvironment: 'staging',
   sourceLabel: 'care-seo-contract-test',
   generatedAt: '2026-09-05T05:00:00.000Z',
   records: [
@@ -58,7 +59,7 @@ const snapshot: CareSeoStagingSnapshot = {
     recordFor('care_noindex', 'en', 5, 'noindex'),
     recordFor('care_noindex', 'zh-CN', 5, 'noindex'),
   ],
-};
+});
 
 const tempRoot = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-care-seo-test-'));
 const snapshotPath = path.join(tempRoot, 'snapshot.json');
@@ -81,6 +82,7 @@ try {
   ]);
   assert.match(enIndex, /<html lang="en">/);
   assert.match(enIndex, /<meta name="robots" content="index,follow">/);
+  assert.match(enIndex, /<meta name="aquaguide:care-source-version" content="3">/);
   assert.match(enIndex, /href="https:\/\/staging\.aquaguide\.test\/zh\/care\/care_index\.html"/);
   assert.match(enIndex, /<h1>Safe care for care_index<\/h1>/);
   assert.match(zhIndex, /<html lang="zh-CN">/);
@@ -105,6 +107,24 @@ try {
   await assert.rejects(
     buildCareSeoArtifact({ snapshotPath: unapprovedPath, siteUrl, productionSiteUrl, distDir: path.join(tempRoot, 'bad-review') }),
     /not approved/,
+  );
+
+  const productionSource = structuredClone(snapshot);
+  productionSource.sourceEnvironment = 'production';
+  const productionSourcePath = path.join(tempRoot, 'production-source.json');
+  await writeFile(productionSourcePath, JSON.stringify(productionSource), 'utf8');
+  await assert.rejects(
+    buildCareSeoArtifact({ snapshotPath: productionSourcePath, siteUrl, productionSiteUrl, distDir: path.join(tempRoot, 'bad-production-source') }),
+    /Production Care SEO source/,
+  );
+
+  const dirtyCopy = structuredClone(snapshot);
+  dirtyCopy.records[0].editorial.seoTitle = 'QA test content title';
+  const dirtyCopyPath = path.join(tempRoot, 'dirty-copy.json');
+  await writeFile(dirtyCopyPath, JSON.stringify(dirtyCopy), 'utf8');
+  await assert.rejects(
+    buildCareSeoArtifact({ snapshotPath: dirtyCopyPath, siteUrl, productionSiteUrl, distDir: path.join(tempRoot, 'bad-hygiene') }),
+    /content hygiene failed/,
   );
 
   const productionSnapshot = structuredClone(snapshot);
