@@ -144,7 +144,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           </div>
         </div>
       </div>
-      <div className={`workflow-stepper review-${form.reviewState}`} aria-label={isUiEnglish ? 'Base editorial workflow' : '基础种内容审核流程'}>
+      <section className={`page-action-panel review-${form.reviewState}`} aria-label={isUiEnglish ? 'Base editorial workflow' : '基础种内容审核流程'}>
         <div className="workflow-status-block">
           <small className="workflow-section-label">{isUiEnglish ? 'Review progress' : '审核进度'}</small>
           <div className="workflow-stepper-track">
@@ -172,7 +172,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           )}
           </div>
         </div>
-      </div>
+      </section>
       {!baseHygiene.clean ? (
         <div className="content-hygiene-warning" role="alert">
           <div><strong>{isUiEnglish ? 'Test / acceptance copy detected in Base' : '基础模板包含测试 / 验收文案'}</strong><span>{isUiEnglish ? 'Clean the flagged fields before submitting or approving this Base template.' : '清理标记字段后才能提交或批准这套基础模板。'}</span></div>
@@ -182,6 +182,11 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       {group.category_conflict ? (
         <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源数据存在分类冲突；草稿可以继续编辑，但完成数据复核前不能进入预览发布。'}</div>
       ) : null}
+      <div className="editor-detail-heading">
+        <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
+        <h3>{isUiEnglish ? 'Base template fields' : '基础模板字段'}</h3>
+        <p>{isUiEnglish ? 'Edit shared copy here. Review actions stay in the workflow panel above.' : '这里只修改共享模板内容；提交和批准统一在上方流程区完成。'}</p>
+      </div>
       <div className="base-seo-grid">
         <label {...baseFieldProps('seoTitle')}>{isUiEnglish ? 'SEO Title template' : 'Meta 标题模板'}
           <input value={form.seoTitleTemplate} onFocus={() => onInspectorSelect?.('seoTitle')} onChange={(event) => update('seoTitleTemplate', event.target.value)} />

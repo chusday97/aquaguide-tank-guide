@@ -392,7 +392,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         </div>
       </div>
 
-      <div className={`workflow-stepper review-${form.reviewState}`} aria-label={isUiEnglish ? 'Editorial workflow' : '内容审核流程'}>
+      <section className={`page-action-panel review-${form.reviewState}`} aria-label={isUiEnglish ? 'Editorial workflow' : '内容审核流程'}>
         <div className="workflow-status-block">
           <small className="workflow-section-label">{isUiEnglish ? 'Review progress' : '审核进度'}</small>
           <div className="workflow-stepper-track">
@@ -429,7 +429,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           {contentDirty ? <small>{isUiEnglish ? 'Saving content resets approval to Editing.' : '保存内容后会自动退回“编辑中”，避免旧审核结果继续生效。'}</small> : null}
           </div>
         </div>
-      </div>
+      </section>
 
       {!currentHygiene.clean ? (
         <div className="content-hygiene-warning" role="alert">
@@ -441,6 +441,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         </div>
       ) : null}
 
+      <div className="editor-detail-heading">
+        <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
+        <h3>{isUiEnglish ? 'Page content and SEO fields' : '页面内容与 SEO 字段'}</h3>
+        <p>{isUiEnglish ? 'These fields shape the page. Workflow state changes only when you use the action panel above.' : '下面只负责“内容怎么写”；流程状态只通过上方的关键操作区推进。'}</p>
+      </div>
       <div className="editor-grid">
         <div className="form-column">
           <div className="section-card">
@@ -1144,11 +1149,6 @@ export default function App() {
             <span>{t('top.section')}</span>
           </div>
         </div>
-        <nav className="topbar-workflow" aria-label="Workflow queues">
-          <button type="button" className={`workflow-status workflow-status-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('top.dataReview')} <b>{workflowOverview.dataReview.pending}</b></button>
-          <button type="button" className={`workflow-status workflow-status-review ${workflowFilter?.key === `${contentLocale}:ready_for_review` ? 'active' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : (appLocale === 'en' ? 'Chinese' : '中文')} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>{t('top.awaiting')} <b>{workflowOverview.locales[contentLocale].ready_for_review}</b></button>
-          <button type="button" className={`workflow-status workflow-status-ready ${workflowFilter?.key === `${contentLocale}:publish_ready` ? 'active' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : (appLocale === 'en' ? 'Chinese' : '中文')} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>{t('top.previewReady')} <b>{workflowOverview.locales[contentLocale].publish_ready}</b></button>
-        </nav>
         <div className="topbar-actions">
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
           <span>{isReadOnlyDemoMode ? t('top.reviewMode') : t('top.admin')}</span>
@@ -1183,13 +1183,37 @@ export default function App() {
         </div>
       ) : null}
 
-      <section className={`primary-workflow-guide ${primaryWorkflowAction.tone}`} aria-label={appLocale === 'en' ? 'Current next action' : '当前下一步'}>
-        <div className="primary-workflow-guide-copy">
-          <small>{appLocale === 'en' ? 'NEXT ACTION' : '当前下一步'}</small>
-          <strong>{primaryWorkflowAction.title}</strong>
-          <span>{primaryWorkflowAction.detail}</span>
+      <section className="workflow-command-center" aria-label={appLocale === 'en' ? 'SEO publishing workflow' : 'SEO 发布流程'}>
+        <div className="workflow-command-heading">
+          <div>
+            <small>{appLocale === 'en' ? 'SEO OPERATIONS' : 'SEO 工作台'}</small>
+            <h1>{appLocale === 'en' ? 'Publishing workflow' : '发布流程'}</h1>
+            <p>{appLocale === 'en' ? 'Follow the four stages from left to right. The highlighted stage is what needs attention now.' : '只按从左到右的 4 个阶段处理；高亮项就是现在需要关注的步骤。'}</p>
+          </div>
+          <span className="workflow-locale-chip">{contentLocale === 'en' ? 'English' : '中文'}</span>
         </div>
-        <button type="button" className="primary-workflow-guide-button" onClick={primaryWorkflowAction.run}>{primaryWorkflowAction.cta}</button>
+        <div className="workflow-stage-grid">
+          <button type="button" className={`workflow-stage-card ${workflowOverview.dataReview.pending > 0 ? 'active issue' : 'done'}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
+            <b>1</b><span><strong>{appLocale === 'en' ? 'Data review' : '数据复核'}</strong><small>{appLocale === 'en' ? 'Resolve duplicate / source issues' : '判断重复与源数据问题'}</small></span><em>{workflowOverview.dataReview.pending}</em>
+          </button>
+          <button type="button" className={`workflow-stage-card ${workflowOverview.dataReview.pending === 0 && (workflowOverview.locales[contentLocale]?.blocked || 0) > 0 ? 'active' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:blocked`, type: 'readiness', locale: contentLocale, status: 'blocked', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Editing' : '内容编辑'}` })}>
+            <b>2</b><span><strong>{appLocale === 'en' ? 'Edit content' : '内容编辑'}</strong><small>{appLocale === 'en' ? 'Complete SEO copy and page fields' : '补齐 SEO 文案与页面字段'}</small></span><em>{workflowOverview.locales[contentLocale]?.blocked || 0}</em>
+          </button>
+          <button type="button" className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.ready_for_review || 0) > 0 ? 'active review' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>
+            <b>3</b><span><strong>{appLocale === 'en' ? 'Human review' : '人工审核'}</strong><small>{appLocale === 'en' ? 'Approve or return completed pages' : '批准或退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale]?.ready_for_review || 0}</em>
+          </button>
+          <button type="button" className={`workflow-stage-card ${(workflowOverview.locales[contentLocale]?.publish_ready || 0) > 0 ? 'active ready' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>
+            <b>4</b><span><strong>Staging</strong><small>{appLocale === 'en' ? 'Publish a controlled Preview' : '发布受控 Preview'}</small></span><em>{workflowOverview.locales[contentLocale]?.publish_ready || 0}</em>
+          </button>
+        </div>
+        <div className={`primary-workflow-guide ${primaryWorkflowAction.tone}`} aria-label={appLocale === 'en' ? 'Current next action' : '当前下一步'}>
+          <div className="primary-workflow-guide-copy">
+            <small>{appLocale === 'en' ? 'DO THIS NOW' : '现在只做这件事'}</small>
+            <strong>{primaryWorkflowAction.title}</strong>
+            <span>{primaryWorkflowAction.detail}</span>
+          </div>
+          <button type="button" className="primary-workflow-guide-button" onClick={primaryWorkflowAction.run}>{primaryWorkflowAction.cta}</button>
+        </div>
       </section>
 
       <div className="workspace studio-workspace">
@@ -1224,6 +1248,10 @@ export default function App() {
 
         <main className="editor-area studio-editor-area">
           <div className="editor-context-bar">
+            <div className="editor-context-title">
+              <small>{appLocale === 'en' ? 'CURRENT WORKSPACE' : '当前工作区'}</small>
+              <strong>{appLocale === 'en' ? 'Content editor' : '内容编辑'}</strong>
+            </div>
             <div className="editor-scope-switch" aria-label="Editor scope">
               <button type="button" className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
               <button type="button" className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
@@ -1284,7 +1312,12 @@ export default function App() {
             />
           )}
 
-          <div className="editor-secondary-tools editor-tool-launchers">
+          <details className="advanced-tools-disclosure">
+            <summary>
+              <span><strong>{appLocale === 'en' ? 'More tools' : '更多工具'}</strong><small>{appLocale === 'en' ? 'Batch, history, translation and diagnostics' : '批量、历史、翻译与诊断工具'}</small></span>
+              <em>{appLocale === 'en' ? 'Open' : '展开'}</em>
+            </summary>
+            <div className="editor-secondary-tools editor-tool-launchers">
             {selectedDataReviewSummary.open > 0 ? (
               <button type="button" className={`editor-tool-row issue ${activeTool === 'dataReview' ? 'active' : ''}`} onClick={() => setActiveTool('dataReview')}>
                 <span><strong>{t('editor.sourceReview')}</strong><small>{appLocale === 'en' ? 'Source evidence still requires a human decision' : '仍有需要人工判断的源数据证据'}</small></span>
@@ -1320,7 +1353,8 @@ export default function App() {
             <button type="button" className={`editor-tool-row ${activeTool === 'workflow' ? 'active' : ''}`} onClick={() => setActiveTool('workflow')}>
               <span><strong>{t('editor.workflow')}</strong><small>Data Review / Editorial / Preview-ready</small></span><b>›</b>
             </button>
-          </div>
+            </div>
+          </details>
 
 
         </main>

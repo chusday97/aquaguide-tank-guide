@@ -1467,3 +1467,99 @@ input:focus, textarea:focus, select:focus { border-color: #5f8c70; box-shadow: 0
   .primary-workflow-guide-copy span { white-space: normal; }
   .primary-workflow-guide-button { width: 100%; }
 }
+
+/* Information hierarchy V2: workflow first, actions second, editing third. */
+.workflow-command-center {
+  flex: 0 0 auto;
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid #dfe4e0;
+  background: #fff;
+  box-shadow: 0 8px 24px rgba(29, 39, 33, .045);
+  z-index: 12;
+}
+.workflow-command-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; margin-bottom:12px; }
+.workflow-command-heading > div { min-width:0; }
+.workflow-command-heading small { display:block; margin-bottom:4px; color:#849087; font-size:8px; font-weight:850; letter-spacing:.13em; }
+.workflow-command-heading h1 { margin:0; color:#17251d; font-size:20px; line-height:1.15; letter-spacing:-.025em; }
+.workflow-command-heading p { margin:5px 0 0; color:#728078; font-size:10px; line-height:1.45; }
+.workflow-locale-chip { flex:0 0 auto; padding:6px 9px; border:1px solid #dfe5e0; border-radius:999px; background:#f7f9f7; color:#536159; font-size:9px; font-weight:800; }
+.workflow-stage-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; margin-bottom:10px; }
+.workflow-stage-card { min-width:0; min-height:58px; display:grid; grid-template-columns:26px minmax(0,1fr) auto; align-items:center; gap:9px; border:1px solid #e2e7e3; border-radius:11px; padding:9px 10px; background:#fafbfa; text-align:left; cursor:pointer; }
+.workflow-stage-card:hover { border-color:#cbd5ce; background:#f6f8f6; }
+.workflow-stage-card > b { width:26px; height:26px; display:grid; place-items:center; border-radius:8px; background:#edf1ee; color:#5d6a62; font-size:10px; }
+.workflow-stage-card > span { min-width:0; display:grid; gap:2px; }
+.workflow-stage-card > span strong { color:#28362e; font-size:11px; }
+.workflow-stage-card > span small { overflow:hidden; color:#89938d; font-size:8.5px; text-overflow:ellipsis; white-space:nowrap; }
+.workflow-stage-card > em { min-width:24px; height:24px; display:grid; place-items:center; border-radius:999px; background:#edf1ee; color:#516057; font-size:9px; font-style:normal; font-weight:850; }
+.workflow-stage-card.done { opacity:.7; }
+.workflow-stage-card.active { border-color:#759583; background:#f4f8f5; box-shadow:0 0 0 2px rgba(49,95,73,.08); }
+.workflow-stage-card.active > b { background:#1e3428; color:#fff; }
+.workflow-stage-card.active.issue { border-color:#d5af64; background:#fffaf0; box-shadow:0 0 0 2px rgba(138,90,19,.08); }
+.workflow-stage-card.active.issue > b, .workflow-stage-card.active.issue > em { background:#8a5a13; color:#fff; }
+.workflow-stage-card.active.review { border-color:#9ab9df; background:#f7faff; }
+.workflow-stage-card.active.review > b, .workflow-stage-card.active.review > em { background:#3567a6; color:#fff; }
+.workflow-stage-card.active.ready { border-color:#99c3a7; background:#f4faf6; }
+.workflow-stage-card.active.ready > b, .workflow-stage-card.active.ready > em { background:#2e7450; color:#fff; }
+.workflow-command-center .primary-workflow-guide { border:1px solid #e3e8e4; border-radius:11px; padding:10px 12px; }
+.workflow-command-center .primary-workflow-guide-copy small { color:#4e5d54; }
+.workflow-command-center .primary-workflow-guide-copy strong { font-size:13px; }
+.workflow-command-center .primary-workflow-guide-button { min-height:38px; padding:0 16px; font-size:11px; }
+
+.editor-context-bar { height:58px; justify-content:flex-start; }
+.editor-context-title { min-width:122px; display:grid; gap:1px; padding-right:14px; border-right:1px solid #e7ebe8; }
+.editor-context-title small { color:#98a19b; font-size:7.5px; font-weight:850; letter-spacing:.1em; }
+.editor-context-title strong { color:#26362d; font-size:11px; }
+.editor-context-bar .compact-preview-toggle { margin-left:auto; }
+
+.page-action-panel { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:18px; margin:0 0 22px; padding:16px 17px; border:1px solid #cfd9d2; border-radius:14px; background:#f8faf8; box-shadow:0 7px 20px rgba(32,48,39,.05); }
+.page-action-panel::before { content:'关键操作'; grid-column:1 / -1; color:#68766e; font-size:8px; font-weight:900; letter-spacing:.12em; }
+.page-action-panel .workflow-status-block { min-width:0; }
+.page-action-panel .workflow-action-block { min-width:220px; padding-left:16px; border-left:1px solid #dce4de; }
+.page-action-panel .workflow-section-label { color:#6b7970; font-size:8px; font-weight:850; letter-spacing:.06em; }
+.page-action-panel .workflow-stepper-track { margin-top:7px; }
+.page-action-panel .workflow-stepper-track span { font-size:11px; }
+.page-action-panel .workflow-stepper-action { margin-top:6px; justify-content:flex-end; }
+.page-action-panel .workflow-stepper-action .primary-button.compact { min-width:126px; min-height:38px; font-size:11px; }
+.page-action-panel .workflow-stepper-action .staging-action { min-width:148px; }
+
+.editor-detail-heading { margin:6px 0 14px; padding:0 2px 12px; border-bottom:1px solid #e9edea; }
+.editor-detail-heading small { display:block; margin-bottom:4px; color:#919b94; font-size:8px; font-weight:850; letter-spacing:.12em; }
+.editor-detail-heading h3 { margin:0; color:#1d2c23; font-size:16px; letter-spacing:-.015em; }
+.editor-detail-heading p { margin:5px 0 0; color:#7b8780; font-size:9.5px; line-height:1.45; }
+
+.advanced-tools-disclosure { max-width:760px; margin:12px auto 28px; border:1px solid #e2e7e3; border-radius:12px; background:#fafbfa; overflow:hidden; }
+.advanced-tools-disclosure > summary { min-height:46px; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:0 14px; cursor:pointer; list-style:none; }
+.advanced-tools-disclosure > summary::-webkit-details-marker { display:none; }
+.advanced-tools-disclosure > summary span { display:grid; gap:2px; }
+.advanced-tools-disclosure > summary strong { color:#3d4a42; font-size:10px; }
+.advanced-tools-disclosure > summary small { color:#909a94; font-size:8.5px; }
+.advanced-tools-disclosure > summary em { color:#617068; font-size:9px; font-style:normal; font-weight:800; }
+.advanced-tools-disclosure[open] > summary { border-bottom:1px solid #e7ebe8; background:#f6f8f6; }
+.advanced-tools-disclosure .editor-secondary-tools { margin:0; padding:10px 12px 14px; }
+
+@media (max-width: 1050px) {
+  .workflow-command-center { padding:13px 14px 12px; }
+  .workflow-stage-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .page-action-panel { grid-template-columns:1fr; }
+  .page-action-panel .workflow-action-block { min-width:0; padding:12px 0 0; border-left:0; border-top:1px solid #dce4de; }
+  .page-action-panel .workflow-stepper-action { justify-content:flex-start; }
+}
+@media (max-width: 760px) {
+  .workflow-command-center { padding:11px 12px; }
+  .workflow-command-heading h1 { font-size:18px; }
+  .workflow-command-heading p { font-size:9px; }
+  .workflow-stage-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; }
+  .workflow-stage-card { min-width:0; grid-template-columns:24px minmax(0,1fr) auto; padding:8px; }
+  .workflow-stage-card > span small { white-space:normal; line-height:1.25; }
+  .workflow-command-center .primary-workflow-guide { margin-top:4px; }
+  .editor-context-bar { height:auto; min-height:58px; flex-wrap:wrap; padding-top:8px; padding-bottom:8px; }
+  .editor-context-title { width:100%; border-right:0; border-bottom:1px solid #edf0ed; padding:0 0 6px; }
+  .editor-context-bar .compact-preview-toggle { margin-left:auto; }
+  .page-action-panel { margin-bottom:18px; padding:14px; }
+  .page-action-panel .workflow-stepper-track { overflow-x:auto; padding-bottom:3px; }
+  .page-action-panel .workflow-stepper-action { align-items:stretch; flex-direction:column; }
+  .page-action-panel .workflow-stepper-action .primary-button.compact,
+  .page-action-panel .workflow-stepper-action .ghost-button.compact,
+  .page-action-panel .workflow-stepper-action .secondary-button.compact { width:100%; }
+  .advanced-tools-disclosure { margin-left:12px; margin-right:12px; }
+}
