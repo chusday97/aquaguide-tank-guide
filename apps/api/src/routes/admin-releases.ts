@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import type { ReleaseEventDto, ReleaseFeedDto } from '../../../../packages/contracts/src';
+import type { ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto } from '../../../../packages/contracts/src';
 import { asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 import { throwDatabaseError } from '../data-utils';
@@ -29,6 +29,22 @@ const businessCapabilities = [
   { authority: 'compatibility', stage: 'staging', state: 'not_applicable', label: 'Staging', detail: 'Compatibility reviewed authority currently has no separate Staging layer.' },
   { authority: 'compatibility', stage: 'production', state: 'locked', label: 'Production', detail: 'Versioned publish code exists, but live Compatibility migrations remain unapplied.' },
 ] as const;
+
+
+const businessPermissions = (identity?: string): ReleasePermissionDto[] => [
+  { authority: 'product_care', identity, role: 'admin', action: 'read_history', state: 'allowed', detail: 'Authenticated Business Admin may read current Product/Care publication state.' },
+  { authority: 'product_care', identity, role: 'admin', action: 'edit_draft', state: 'allowed', detail: 'Business Admin may edit Product/Care Drafts.' },
+  { authority: 'product_care', identity, role: 'admin', action: 'review', state: 'allowed', detail: 'Current admin role can confirm release; there is no separate reviewer role yet.' },
+  { authority: 'product_care', identity, role: 'admin', action: 'publish_staging', state: 'not_applicable', detail: 'No separate Product/Care Staging authority exists.' },
+  { authority: 'product_care', identity, role: 'admin', action: 'publish_reviewed', state: 'not_applicable', detail: 'Product/Care uses Published snapshots rather than Compatibility reviewed authority.' },
+  { authority: 'product_care', identity, role: 'admin', action: 'publish_production', state: 'locked', detail: 'Production remains locked by project policy.' },
+  { authority: 'compatibility', identity, role: 'admin', action: 'read_history', state: 'allowed', detail: 'Authenticated Business Admin may read Compatibility revision history.' },
+  { authority: 'compatibility', identity, role: 'admin', action: 'edit_draft', state: 'allowed', detail: 'Admin may edit isolated Compatibility revisions.' },
+  { authority: 'compatibility', identity, role: 'admin', action: 'review', state: 'allowed', detail: 'Admin currently performs explicit Approve/Reject; reviewer role is not separated yet.' },
+  { authority: 'compatibility', identity, role: 'admin', action: 'publish_staging', state: 'not_applicable', detail: 'No separate Compatibility Staging layer exists.' },
+  { authority: 'compatibility', identity, role: 'admin', action: 'publish_reviewed', state: 'locked', detail: 'Versioned publish code exists, but live Compatibility migrations remain unapplied.' },
+  { authority: 'compatibility', identity, role: 'admin', action: 'publish_production', state: 'locked', detail: 'Production remains locked by project policy.' },
+];
 
 export const adminReleasesRouter = Router();
 
@@ -119,6 +135,7 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
       },
     ],
     capabilities: businessCapabilities.map(item => ({ ...item })),
+    permissions: businessPermissions((request as any).authUser?.email),
   };
   return sendData(request, response, feed);
 }));

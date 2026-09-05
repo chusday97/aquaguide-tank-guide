@@ -20,6 +20,20 @@ const businessFeed = {
     { authority: 'product_care', availability: 'ready', coverage: 'current_only', label: 'Product / Care publication', detail: 'current only' },
     { authority: 'compatibility', availability: 'ready', coverage: 'revision_history', label: 'Compatibility revisions', detail: 'revision history' },
   ],
+  permissions: [
+    { authority: 'product_care', identity: 'admin-ui-test@example.com', role: 'admin', action: 'read_history', state: 'allowed', detail: 'read' },
+    { authority: 'product_care', identity: 'admin-ui-test@example.com', role: 'admin', action: 'edit_draft', state: 'allowed', detail: 'edit' },
+    { authority: 'product_care', identity: 'admin-ui-test@example.com', role: 'admin', action: 'review', state: 'allowed', detail: 'review' },
+    { authority: 'product_care', identity: 'admin-ui-test@example.com', role: 'admin', action: 'publish_staging', state: 'not_applicable', detail: 'no staging' },
+    { authority: 'product_care', identity: 'admin-ui-test@example.com', role: 'admin', action: 'publish_reviewed', state: 'not_applicable', detail: 'n/a' },
+    { authority: 'product_care', identity: 'admin-ui-test@example.com', role: 'admin', action: 'publish_production', state: 'locked', detail: 'production locked' },
+    { authority: 'compatibility', identity: 'admin-ui-test@example.com', role: 'admin', action: 'read_history', state: 'allowed', detail: 'read' },
+    { authority: 'compatibility', identity: 'admin-ui-test@example.com', role: 'admin', action: 'edit_draft', state: 'allowed', detail: 'edit' },
+    { authority: 'compatibility', identity: 'admin-ui-test@example.com', role: 'admin', action: 'review', state: 'allowed', detail: 'review' },
+    { authority: 'compatibility', identity: 'admin-ui-test@example.com', role: 'admin', action: 'publish_staging', state: 'not_applicable', detail: 'no staging' },
+    { authority: 'compatibility', identity: 'admin-ui-test@example.com', role: 'admin', action: 'publish_reviewed', state: 'locked', detail: 'migration unapplied' },
+    { authority: 'compatibility', identity: 'admin-ui-test@example.com', role: 'admin', action: 'publish_production', state: 'locked', detail: 'production locked' },
+  ],
   capabilities: [
     { authority: 'product_care', stage: 'diff', state: 'available', label: 'Diff', detail: 'field diff' },
     { authority: 'product_care', stage: 'impact', state: 'available', label: 'Impact', detail: 'impact preview' },
@@ -74,6 +88,11 @@ try {
     assert.match(capabilityText, /Product \/ Care[\s\S]*Diff[\s\S]*可用[\s\S]*Review[\s\S]*部分[\s\S]*Production[\s\S]*锁定/i);
     assert.match(capabilityText, /Compatibility[\s\S]*Impact[\s\S]*可用[\s\S]*Staging[\s\S]*不适用/i);
     assert.match(capabilityText, /SEO[\s\S]*Diff[\s\S]*可用[\s\S]*Staging[\s\S]*可用[\s\S]*Production[\s\S]*锁定/i);
+    const permissions = page.getByTestId('publish-center-permission-boundary');
+    const initialPermissions = await permissions.innerText();
+    assert.match(initialPermissions, /Product \/ Care[\s\S]*admin-ui-test@example.com · admin[\s\S]*读取历史[\s\S]*允许[\s\S]*发布 Production[\s\S]*锁定/i);
+    assert.match(initialPermissions, /Compatibility[\s\S]*发布 Reviewed[\s\S]*锁定/i);
+    assert.match(initialPermissions, /SEO[\s\S]*未认证 · repo-admin[\s\S]*读取历史[\s\S]*独立登录[\s\S]*发布 Staging[\s\S]*独立登录/i);
     const detail = page.getByTestId('publish-center-event-detail');
     const productDetail = await detail.innerText();
     assert.match(productDetail, /Product 发布版本/);
@@ -90,6 +109,8 @@ try {
     await page.getByRole('button', { name: '刷新' }).click();
     await timeline.getByRole('button', { name: /SEO success Staging 发布已完成/ }).waitFor();
     assert.match(await sources.innerText(), /SEO[\s\S]*可读取[\s\S]*Activity \/ Revision 历史/);
+    const authenticatedPermissions = await permissions.innerText();
+    assert.match(authenticatedPermissions, /SEO[\s\S]*admin@aquaguide.local · repo-admin[\s\S]*发布 Staging[\s\S]*允许[\s\S]*发布 Production[\s\S]*锁定/i);
     const refreshedTimeline = await timeline.innerText();
     assert.match(refreshedTimeline, /Staging 发布已完成/);
     assert.match(refreshedTimeline, /SEO revision 已记录/);

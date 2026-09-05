@@ -1,4 +1,4 @@
-import type { ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
+import type { ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
 import { apiRequest } from '../api/api-client';
 
 type RepoResult<T> = { data: T | null; error?: { message?: string } | null };
@@ -73,6 +73,23 @@ const seoBatchEvent = (row: SeoImportBatchRow): ReleaseEventDto => ({
 });
 
 
+
+const seoPermissions = (authenticated: boolean, identity?: string): ReleasePermissionDto[] => {
+  const gated = (action: ReleasePermissionDto['action'], allowedDetail: string): ReleasePermissionDto => ({
+    authority: 'seo', identity, role: authenticated ? 'repo-admin' : 'repo-admin', action,
+    state: authenticated ? 'allowed' : 'separate_auth',
+    detail: authenticated ? allowedDetail : 'Requires independent SEO Repo Admin session.',
+  });
+  return [
+    gated('read_history', 'Repo Admin may read SEO revision/activity/import history.'),
+    gated('edit_draft', 'Repo Admin may edit SEO Draft content.'),
+    gated('review', 'Repo Admin may submit/approve editorial review.'),
+    gated('publish_staging', 'Repo Admin may publish batch-scoped Controlled Staging when readiness is green.'),
+    { authority: 'seo', identity, role: 'repo-admin', action: 'publish_reviewed', state: 'not_applicable', detail: 'SEO does not use Compatibility reviewed-authority semantics.' },
+    { authority: 'seo', identity, role: 'repo-admin', action: 'publish_production', state: 'locked', detail: 'Production SEO publish remains separately locked.' },
+  ];
+};
+
 const seoCapabilities: ReleaseCapabilityDto[] = [
   { authority: 'seo', stage: 'diff', state: 'available', label: 'Diff', detail: 'CSV preflight and page/base field Diff are available.' },
   { authority: 'seo', stage: 'impact', state: 'partial', label: 'Impact', detail: 'Readiness and source/data blockers are available; cross-domain impact remains separate.' },
@@ -89,7 +106,7 @@ const seoSource = (availability: ReleaseSourceStatusDto['availability'], detail:
 const loadSeoReleaseFeed = async (limit = 100): Promise<ReleaseFeedDto> => {
   const session = await repoRequest<{ configured?: boolean; session?: { user?: { email?: string } } | null }>('/api/admin-content/session', { method: 'GET' });
   if (!session.response.ok || !session.payload?.session) {
-    return { events: [], sources: [seoSource('auth_required', 'SEO Repo Admin 使用独立 cookie；登录 /admin/seo 后可在这里读取 revision/activity。')], capabilities: seoCapabilities };
+    return { events: [], sources: [seoSource('auth_required', 'SEO Repo Admin 使用独立 cookie；登录 /admin/seo 后可在这里读取 revision/activity。')], capabilities: seoCapabilities, permissions: seoPermissions(false) };
   }
   try {
     const [activity, revisions, batches] = await Promise.all([
@@ -99,9 +116,9 @@ const loadSeoReleaseFeed = async (limit = 100): Promise<ReleaseFeedDto> => {
     ]);
     const events = [...activity.map(seoActivityEvent), ...revisions.map(seoRevisionEvent), ...batches.map(seoBatchEvent)]
       .sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt)).slice(0, limit);
-    return { events, sources: [seoSource('ready', 'Repo revision/activity/import/Staging 历史只读聚合；写 authority 仍留在 SEO Admin。')], capabilities: seoCapabilities };
+    return { events, sources: [seoSource('ready', 'Repo revision/activity/import/Staging 历史只读聚合；写 authority 仍留在 SEO Admin。')], capabilities: seoCapabilities, permissions: seoPermissions(true, session.payload?.session?.user?.email) };
   } catch (error) {
-    return { events: [], sources: [seoSource('unavailable', error instanceof Error ? error.message : 'SEO Repo release history 暂时不可读取。')], capabilities: seoCapabilities };
+    return { events: [], sources: [seoSource('unavailable', error instanceof Error ? error.message : 'SEO Repo release history 暂时不可读取。')], capabilities: seoCapabilities, permissions: seoPermissions(false) };
   }
 };
 export const publishCenterService = {
@@ -119,14 +136,16 @@ export const publishCenterService = {
             { authority: 'compatibility', availability: 'unavailable', coverage: 'revision_history', label: 'Compatibility revisions', detail: 'Business Admin release feed 暂时不可读取。' },
           ],
           capabilities: [],
+          permissions: [],
         };
-    const seoFeed = seo.status === 'fulfilled' ? seo.value : { events: [], sources: [seoSource('unavailable', 'SEO Repo release feed 暂时不可读取。')], capabilities: seoCapabilities };
+    const seoFeed = seo.status === 'fulfilled' ? seo.value : { events: [], sources: [seoSource('unavailable', 'SEO Repo release feed 暂时不可读取。')], capabilities: seoCapabilities, permissions: seoPermissions(false) };
     return {
       events: [...businessFeed.events, ...seoFeed.events]
         .sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt))
         .slice(0, limit),
       sources: [...businessFeed.sources, ...seoFeed.sources],
       capabilities: [...(businessFeed.capabilities || []), ...(seoFeed.capabilities || [])],
+      permissions: [...(businessFeed.permissions || []), ...(seoFeed.permissions || [])],
     };
   },
 };

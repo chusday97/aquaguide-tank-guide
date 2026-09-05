@@ -4,6 +4,8 @@ export type ReleaseSourceAvailability = 'ready' | 'auth_required' | 'unavailable
 export type ReleaseHistoryCoverage = 'current_only' | 'revision_history' | 'activity_history';
 export type ReleaseStage = 'diff' | 'impact' | 'preview' | 'review' | 'staging' | 'production';
 export type ReleaseCapabilityState = 'available' | 'partial' | 'locked' | 'not_applicable';
+export type ReleasePermissionAction = 'read_history' | 'edit_draft' | 'review' | 'publish_staging' | 'publish_reviewed' | 'publish_production';
+export type ReleasePermissionState = 'allowed' | 'separate_auth' | 'locked' | 'not_applicable';
 
 export interface ReleaseEventDto {
   id: string;
@@ -38,8 +40,18 @@ export interface ReleaseCapabilityDto {
   detail: string;
 }
 
+export interface ReleasePermissionDto {
+  authority: ReleaseAuthority;
+  identity?: string;
+  role: string;
+  action: ReleasePermissionAction;
+  state: ReleasePermissionState;
+  detail: string;
+}
+
 export interface ReleaseFeedDto {
   events: ReleaseEventDto[];
   sources: ReleaseSourceStatusDto[];
   capabilities: ReleaseCapabilityDto[];
+  permissions: ReleasePermissionDto[];
 }

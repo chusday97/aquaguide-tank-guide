@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Clock3, Database, Loader2, RefreshCw, Search, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import type { ReleaseAuthority, ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleaseSourceStatusDto, ReleaseStage } from '../../packages/contracts/src';
+import type { ReleaseAuthority, ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto, ReleaseSourceStatusDto, ReleaseStage } from '../../packages/contracts/src';
 import { publishCenterService } from '../services/admin/publish-center.service';
 
 const authorityLabel: Record<ReleaseAuthority, string> = {
@@ -26,7 +26,7 @@ const formatTime = (value: string) => {
 };
 export default function PublishCenter() {
   const navigate = useNavigate();
-  const [feed, setFeed] = useState<ReleaseFeedDto>({ events: [], sources: [], capabilities: [] });
+  const [feed, setFeed] = useState<ReleaseFeedDto>({ events: [], sources: [], capabilities: [], permissions: [] });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState<'all' | ReleaseAuthority>('all');
@@ -93,6 +93,8 @@ export default function PublishCenter() {
 
         <ReleaseCapabilityMatrix capabilities={feed.capabilities} sources={sourceByAuthority} />
 
+        <ReleasePermissionBoundary permissions={feed.permissions} />
+
         <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {([['all', '全部'], ['product_care', 'Product / Care'], ['compatibility', 'Compatibility'], ['seo', 'SEO']] as const).map(([value, label]) => <button key={value} type="button" onClick={() => { setFilter(value); setSelectedEventId(null); }} className={`shrink-0 rounded-full px-4 py-2 text-xs font-black ${filter === value ? 'bg-ink text-white' : 'border border-slate-200 bg-white text-ink/60'}`}>{label}</button>)}
         </div>
@@ -113,6 +115,19 @@ export default function PublishCenter() {
   );
 }
 
+
+
+const permissionActionLabel: Record<ReleasePermissionDto['action'], string> = {
+  read_history: '读取历史', edit_draft: '编辑 Draft', review: '审核', publish_staging: '发布 Staging', publish_reviewed: '发布 Reviewed', publish_production: '发布 Production',
+};
+const permissionStateLabel: Record<ReleasePermissionDto['state'], string> = { allowed: '允许', separate_auth: '独立登录', locked: '锁定', not_applicable: '不适用' };
+const permissionStateClass: Record<ReleasePermissionDto['state'], string> = {
+  allowed: 'border-emerald-200 bg-emerald-50 text-emerald-800', separate_auth: 'border-amber-200 bg-amber-50 text-amber-900', locked: 'border-red-200 bg-red-50 text-red-800', not_applicable: 'border-slate-200 bg-slate-50 text-slate-500',
+};
+
+function ReleasePermissionBoundary({ permissions }: { permissions: ReleasePermissionDto[] }) {
+  return <section data-testid="publish-center-permission-boundary" className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Access boundary</div><h2 className="mt-1 text-lg font-black">当前身份与发布权限</h2><p className="mt-1 text-xs font-semibold leading-5 text-ink/50">这是现有权限事实的只读投影，不会修改 Supabase `user_roles` 或 SEO Repo Admin 认证。</p></div><div className="mt-4 grid gap-3">{(['product_care','compatibility','seo'] as ReleaseAuthority[]).map(authority => { const rows = permissions.filter(item => item.authority === authority); const identity = rows.find(item => item.identity)?.identity; const role = rows[0]?.role || 'unknown'; return <article key={authority} className="rounded-[18px] border border-slate-100 bg-slate-50/60 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-sm font-black">{authorityLabel[authority]}</strong><span className="text-[11px] font-bold text-ink/45">{identity || '未认证'} · {role}</span></div><div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">{rows.map(item => <div key={`${authority}-${item.action}`} className={`rounded-[14px] border px-3 py-2.5 ${permissionStateClass[item.state]}`} title={item.detail}><div className="text-[10px] font-black uppercase tracking-[0.08em] opacity-70">{permissionActionLabel[item.action]}</div><div className="mt-1 text-xs font-black">{permissionStateLabel[item.state]}</div><p className="mt-1 text-[10px] font-semibold leading-4 opacity-75">{item.detail}</p></div>)}</div></article>; })}</div></section>;
+}
 
 function ReleaseCapabilityMatrix({ capabilities, sources }: { capabilities: ReleaseCapabilityDto[]; sources: Map<ReleaseAuthority, ReleaseSourceStatusDto> }) {
   const byAuthority = (authority: ReleaseAuthority) => capabilities.filter(item => item.authority === authority);
