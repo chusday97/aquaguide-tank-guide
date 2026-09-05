@@ -122,6 +122,7 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
     suggestions: Array.from(new Set(results.flatMap(result => result.suggestions))).slice(0, 5),
     metadata: {
       ruleVersion: results[0]?.metadata.ruleVersion || 'tank-compatibility-v1',
+      evidenceAuthorityVersion: results[0]?.metadata.evidenceAuthorityVersion || 'unknown',
       speciesDataVersion: results[0]?.metadata.speciesDataVersion || 'local-fish-data-v1',
       calculatedAt: new Date().toISOString(),
       scope: results[0]?.metadata.scope || 'tank',
@@ -257,6 +258,7 @@ const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompa
     suggestions,
     metadata: {
       ruleVersion: pairResults[0]?.rawResult.metadata.ruleVersion || 'tank-compatibility-v1',
+      evidenceAuthorityVersion: pairResults[0]?.rawResult.metadata.evidenceAuthorityVersion || 'unknown',
       speciesDataVersion: pairResults[0]?.rawResult.metadata.speciesDataVersion || 'local-fish-data-v1',
       calculatedAt: new Date().toISOString(),
       scope: pairResults[0]?.rawResult.metadata.scope || 'tank',

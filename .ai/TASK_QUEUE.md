@@ -1,64 +1,101 @@
 # Task Queue
 
-## 2026-08-28 safe convergence preparation (latest)
+Updated: 2026-09-05
+Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
+Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 
-## 2026-08-30 readiness evidence center
+## P0 — Product/Care authority convergence
+- [x] Inventory every frontend consumer of `fishData.ts` / `careTopicsData.ts` and classify runtime vs build-time use. See `PUBLISHED_CONTENT_AUTHORITY.md`.
+- [x] Define one published Product/Care read contract for Species and Care content. See `PUBLISHED_CONTENT_AUTHORITY.md`.
+- [x] Decide explicit role of static datasets: seed/audit fixture/offline fallback only — never a competing live authority.
+- [x] Implement Draft/save isolation from the last Published Product/Care version using immutable publication snapshots; Production migration remains intentionally unapplied.
+- [x] Route Encyclopedia Product Data to the published authority, with static seed only as explicit API fallback.
+- [x] Route Care Encyclopedia plus Aquarium/Identify diagnosis Care Knowledge to the published authority, with static seed only as explicit API fallback.
+- [x] Prove one Admin Product edit reaches the intended frontend Preview: Save remains private; Publish advances Encyclopedia runtime.
+- [x] Prove one Admin Care edit reaches the intended frontend Preview: Save remains private; Publish advances Care runtime.
+- [x] Verify Product/Care publish does not mutate `aquarium_app_state_v1` and Product runtime hydration does not mutate Compatibility/static authority inputs.
+- [x] Correct Admin publish copy to describe only connected Product/Care consumers and preserve Compatibility authority boundaries.
 
-- [x] Added SHA-bound local readiness collection, read-only dashboard server (port 4320) and evidence schema test.
-- [x] Added explicit six-track statuses and fixed business-case rows; UI acceptance and production freeze cannot be hidden by backend PASS results.
-- [x] Re-ran the collector in an unrestricted environment; local gates and Preview SHA evidence are bound to `3e1dca89`.
-- [x] Pushed the candidate once; remote branch, PR #142, Vercel and Cloudflare Preview now point to `3e1dca89`.
-- [ ] Re-read Product Golden Path once its remaining browser paths finish; keep UI acceptance and production freeze separate.
+## P0 — Existing SEO operational acceptance
+- [x] Authenticated import corrected batch-01 zh-CN → preflight/Diff → Draft batch.
+- [x] Authenticated import corrected batch-01 en → preflight/Diff → Draft batch.
+- [x] Batch-scoped submit/approve intended Species + Base rows.
+- [x] One explicit bilingual Staging Publish when readiness is fully green.
+- [x] Verify 28 hosted EN/ZH pages: metadata, H1, facts, canonical/hreflang, robots, CTA, hygiene.
+- [x] Keep Production locked.
+## CI operating policy — completed
+- [x] Every normal push/PR runs lightweight checks only: contracts, lint/typecheck, builds and diff/generated-data hygiene.
+- [x] Golden / Visual / evaluation-history / browser-heavy suites run only on manual dispatch, merge queue, or PR labels `run-heavy-ci` / `merge-ready`.
+- [x] Preserve existing required-check workflow/job identities for compatibility with branch rules.
 
-- [x] Reviewed tetra water facts and fail-closed regressions are in the canonical Catalog; checksum is recorded in the parity report.
-- [x] Added `check:compatibility-authority` to guard the legacy facade boundary without changing frozen UI files.
-- [x] Updated Feature Catalog and convergence ledger to record local compatibility authority as migrated/currently verified.
-- [x] Prepared `docs/05-validation/SUPABASE_CATALOG_MIGRATION_AUTHORIZATION.md`; production execution remains unauthorized.
-- [x] Re-ran the complete local release rehearsal: compatibility authority, Catalog, Domain/Service, core UI, formal scenes, today action, species detail, responsive routes, Supabase 26+1, pgTAP 19/19, schema lint, lint, API typecheck, build, UI freeze and project truth passed.
-- [x] Same-thread Critic re-review passed and the consolidated local remediation was pushed once; local/remote/PR SHA parity is synchronized.
-- [ ] Read the new Preview/CI result once; Vercel exact SHA remains an external gate and is not retried during rate limiting.
+## P1 — Change Impact Preview
+- [x] Classify fields as display-only, decision-critical Product Data, Care workflow, Compatibility rule or SEO-only.
+- [x] Show affected consumers before release: Encyclopedia, Aquarium, Compatibility, Care and SEO; distinguish direct update vs independent-authority review.
+- [x] Add before/after Preview for decision-critical edits.
+- [x] Add regression checks for compatibility-result changes caused by Product Data edits.
 
-## P0 — Progress unification
+## P1 — Compatibility Admin
+- [x] Operator UI for Species behavior profiles with reviewed-baseline audit plus isolated Draft revision create/edit/submit-review.
+- [x] Pair Rule management with reviewed Evidence snapshots, Confidence and Review Status using isolated Draft revision create/edit/submit-review.
+- [x] Add server-computed Draft-vs-reviewed structural Impact Check plus explicit human Approve/Reject; approval does not publish.
+- [x] Converge reviewed Compatibility publish authority with the runtime read path; exact 7/4 DB authority activates atomically with static reviewed fallback.
+- [x] Version Compatibility rules through the final reviewed publish transition using transactional Profile/Pair RPCs.
+- [x] Require structural impact + real server engine regression + canonical Evidence resolution before human approval/publish, with freshness invalidation.
+- [x] Preserve explicit human review; no opaque AI auto-publish.
 
-- [x] 建立 `codex/unified-rc-visual-v1`，基于用户确认的视觉 SHA `37a8d4d1`。
-- [x] 建立 `.ai/PROJECT_STATE.json` 作为唯一状态入口。
-- [x] 审计 RC 提交并建立 `.ai/RC_MIGRATION_LEDGER.md`。
-- [x] 完成 P0 数据/契约影响评审 `.ai/P0_MIGRATION_IMPACT.md`。
-- [x] 用户确认 P0 迁移的类型、证据和派生服务范围。
-- [x] 只迁入有产品规则、测试和受影响文件证据的 RC 业务能力。
-- [x] 创建唯一 RC 目标 PR，并将本地预览、PR head 和状态入口对齐。
-- [x] 新增 `npm run project:status` 与 RC 收敛 CI，防止状态入口和分支漂移；GitHub Actions run `32846848569` 已真实通过。
-- [x] 对 56 个 GitHub open PR 建立登记表；#141 为唯一收敛入口，其余 55 个只作历史输入。
+## P2 — Operations maturity
+- [x] Unified Publish Center / release history & audit V1.
+  - [x] Architecture inventory: Product/Care + Compatibility remain Business API/Supabase authorities; SEO remains independent Repo Admin / `admin-store.json` authority.
+  - [x] Define one read-only `ReleaseEvent` contract across Product/Care publications, Compatibility revisions/publishes and SEO revisions/activity/import/staging history.
+  - [x] Add read-only aggregation services/API without copying or moving any subsystem write authority.
+  - [x] Add `/admin/publish-center` timeline/readiness UI with source/auth availability clearly shown.
+  - [x] Add read-only release detail/readiness drill-down and explicitly surface Product/Care current-only history coverage.
+  - [x] Add per-authority capability matrix for Diff → Impact → Preview → Review → Staging → Production, distinguishing available / partial / locked / not applicable.
+  - [x] Add read-only cross-authority coordination context by explicit catalog/pair/batch keys, with authority jump links; do not infer dependency or auto-publish.
+  - [x] Close Publish Center V1 as a coordination/read model only; any future cross-domain write orchestration requires a separate product decision.
+- [x] Stronger roles/permissions boundary visibility and release audit history V1.
+  - [x] Expose current Business `admin` vs SEO `repo-admin` permission boundary without merging auth systems.
+  - [x] Add append-only Product/Care publication audit history in code with actor/version/publish/archive events; migration remains unapplied and route falls back to current-only.
+  - [x] Decision: defer editor/reviewer/publisher role split until a real multi-operator requirement exists; do not expand RLS surface speculatively.
+- [x] Care SEO downstream projection foundation from approved Care Knowledge.
+  - [x] Projection reads only the last Published Care snapshot/version; Draft Care never becomes SEO source.
+  - [x] SEO-editable projection fields are isolated from protected Care facts/evidence.
+  - [x] Deterministic bilingual routes: EN `/care/<catalogKey>.html`, zh-CN `/zh/care/<catalogKey>.html`, `x-default` → EN; SPA fallback stays `noindex,follow`.
+  - [x] Fail-closed static Staging artifact builder requires bilingual pairing, equal Care source version, approved editorial and non-Production destination; no explicit snapshot means normal builds skip generation.
+- [x] Care SEO Editorial Draft/Review + Staging acceptance.
+  - [x] Persist downstream SEO Draft/review state without duplicating Care Knowledge authority.
+  - [x] Produce an explicit sanitized Staging snapshot/handoff from approved Care SEO rows.
+  - [x] Hosted bilingual acceptance for title/meta/H1/canonical/hreflang/robots/source-version before any index unlock.
+  - [x] Prove the no-cost acceptance path with ephemeral local Supabase; paid persistent Staging is optional, not required.
+  - [x] Keep Production locked unless separately authorized.
+- [x] Care SEO Index / Production release decision.
+  - [x] Hosted Staging prerequisite is satisfied.
+  - [x] Fail-closed release readiness gate binds the exact Staging snapshot hash to hosted acceptance evidence; Staging builder rejects `index` even if the snapshot is hand-edited.
+  - [x] Persist non-secret hosted acceptance evidence without triggering a Vercel runtime deployment.
+  - [x] Explicit human decision recorded as `hold_noindex`; exact accepted snapshot/deployment are bound and Production/index remain locked.
+- [x] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.
+  - [x] Published-Care-only source binding with exact source-version rejection and legacy-source refusal.
+  - [x] AI output is schema-gated to SEO-only fields with forced `noindex`; protected Care rewrites and auto-save/review/publish are rejected.
+  - [x] Admin UI exposes source extraction, conflicts, impact explanation, review warnings and local-only Draft application.
+  - [x] Contract + 1280/390 browser acceptance prove AI generation/application creates no Editorial write until explicit Save Draft.
 
-## Eight-phase truth consolidation
+## Reconciliation candidate — completed, no merge yet
+- [x] Re-read live `main` / feature refs and run an isolated merge-tree/reconciliation audit against the accepted feature baseline.
+- [x] Classify overlap/conflicts by authority and preserve Product/Care, Compatibility, Publish Center, Species SEO and Care SEO invariants.
+- [x] Validate an isolated two-parent reconciliation candidate locally and on Draft PR #144; Production/index/live migrations remain locked.
 
-- [x] Phase 1: 建立项目、产品、UI、部署的 canonical truth 文件与总入口。
-- [x] Phase 2: 将冲突/重复文档降级为历史入口或改为链接，不删除证据。
-- [x] Phase 3: 将 4317 视觉基线、路由和回归证据整理为唯一 UI 验收入口；2026-08-25 自动门禁通过。
-- [x] Phase 4: 将功能清单收口为“已验证 / 已部署待复验 / 未迁入 / 废弃”。
-- [x] Phase 5a: 启动本地 Supabase 栈并从零重放生产 26 个 migration；七类规范化结构 hash 与生产只读基线完全一致。
-- [x] Phase 5b: 本地重放第 27 个 Catalog 提案；显式 grants/RLS、不可变发布触发器、schema lint 与 19/19 pgTAP 通过；匿名/普通用户 REST 写入边界已验证。
-- [ ] Phase 5c: 生产 Catalog migration、Catalog checksum parity、双身份/管理员生产语义仍需独立授权；不得把本地结果描述为生产写入已验证。
-- [x] Phase 6: 固化 Git/PR 模板和 CI 门禁，阻止新的平行交付线；RC branch protection 等待 workflow 进入基分支后的管理员配置。
-- [x] Phase 7: 用户已接受 P0 兼容性契约；已选择性迁入本地生命周期、审核证据、当前鱼缸/换水纯规则与派生服务，保留现有 UI。
-- [ ] Phase 8: 发布就绪表已建立；本地/远端/PR/Preview exact SHA 已统一，仍等待生产 Supabase migration、Catalog parity 和单独 release acceptance。
+## Next — human visual acceptance + explicit merge decision
+- [x] Current functional HEAD `5169f4fc` has exact branch/PR/Cloudflare Preview SHA parity; GitHub Main Convergence, Product Golden Path light validate and Admin Content CI all pass.
+- [ ] Review the reconciled AquaGuide Preview against the current visual baseline and deliberately accept/update the UI freeze only if the product surface is correct.
+- [ ] Only after visual acceptance, present an explicit merge decision; do not auto-merge `main`.
 
-## Release Gate
-
-- [ ] Visual recovery is being completed on the single candidate branch; formal Encyclopedia/Care scene wiring, transparent assets and fixed-viewport parity remain to be accepted.
-- [ ] Visual recovery: reconnect formal Encyclopedia/Care scene owners and rerun the fixed-viewport matrix before updating PR #142.
-- [x] Keep 4317 as the frozen visual reference and use 4319 for the candidate; every preview must show branch, full SHA, seed and build time.
-- [ ] 统一 RC 分支验收通过后，再单独评估是否合并 `main`。
-- [ ] 视觉 AI 未配置时继续保持 `manual_confirmation` 回退语义。
-- [ ] 关键节点前完成本地验证；未达到关键节点不推送远端。
-
-## Not in Scope
-
-- 不新增静态鱼缸。
-- 不改变业务数据、混养规则、API 或 Supabase 契约。
-
-## Protocol Maintenance
-
-- [x] 建立八文件 `.ai/` 结构、项目协议和 Context Routing。
-- [ ] 每次编码前读取 `CURRENT_GOAL.md`、`PRODUCT_CONTEXT.md`、`DECISION_LOG.md`。
-- [ ] 每次变更后更新 `CHANGELOG_AI.md`、`EXECUTION_LOG.md`、`TASK_QUEUE.md`。
+## Stable completed baseline — do not reimplement
+- [x] Product/Care Admin route exists at `/admin/product-content`.
+- [x] Species SEO Admin authority exists at `/admin/seo/`.
+- [x] SEO private Repo Draft/review/revision authority.
+- [x] Atomic bulk import + missing Base creation.
+- [x] Blank operational CSV template + preflight + field Diff.
+- [x] Source-identity fail-closed gate.
+- [x] Evidence-based duplicate comparison shared by single/bulk review.
+- [x] Durable import batches + server-side review/publish scope checks.
+- [x] Bilingual Staging readiness + Canonical dependencies + noindex Preview safety.

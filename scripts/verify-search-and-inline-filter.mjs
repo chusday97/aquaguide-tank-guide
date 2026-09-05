@@ -8,6 +8,14 @@ const createPage = async (browser, viewport, locale = 'zh-CN') => {
   const page = await browser.newPage({ viewport });
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
+  await page.route('**/api/v1/content-bootstrap*', route => route.fulfill({
+    status: 200,
+    contentType: 'application/json',
+    body: JSON.stringify({
+      data: { species: [], careArticles: [], authority: 'legacy-published', publicationCounts: { species: 0, care: 0 } },
+      requestId: 'search-ui-static-fallback-fixture',
+    }),
+  }));
   await page.addInitScript(value => localStorage.setItem('aquaguide_locale', value), locale);
   return { page, errors };
 };
@@ -24,7 +32,7 @@ const withBrowser = async (run) => {
 if (group === 'atlas') {
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 1280, height: 900 });
-    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
     const input = page.locator('#atlas-toolbar [role="combobox"]');
     await input.fill('孔');
     const listbox = page.locator('#atlas-toolbar [role="listbox"]');
@@ -55,7 +63,7 @@ await withBrowser(async browser => {
 
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 1280, height: 900 });
-    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
     const summaryBefore = await page.locator('#atlas-results').innerText();
     const overflowBefore = await page.locator('body').evaluate(node => getComputedStyle(node).overflow);
     await page.getByRole('button', { name: '更多筛选' }).click();
@@ -117,7 +125,7 @@ await withBrowser(async browser => {
 if (group === 'mobile') {
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 390, height: 844 }, 'en');
-    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
     const input = page.locator('#atlas-toolbar [role="combobox"]');
     await input.fill('Poecilia');
     const options = page.locator('#atlas-toolbar [role="option"]');
@@ -135,7 +143,7 @@ await withBrowser(async browser => {
 if (group === 'care') {
 await withBrowser(async browser => {
     const { page: carePage, errors: careErrors } = await createPage(browser, { width: 390, height: 844 });
-    await carePage.goto(`${baseUrl}/care`, { waitUntil: 'networkidle' });
+    await carePage.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
     const careInput = carePage.locator('#care-search [role="combobox"]');
     await careInput.fill('浮头');
     const careListbox = carePage.locator('#care-search [role="listbox"]');
@@ -154,7 +162,7 @@ await withBrowser(async browser => {
 if (group === 'entries') {
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 1100, height: 850 });
-    await page.goto(`${baseUrl}/search`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/search`, { waitUntil: 'domcontentloaded' });
     const input = page.locator('main [role="combobox"]');
     await input.fill('孔');
     const listbox = page.locator('main [role="listbox"]');
@@ -189,9 +197,9 @@ await withBrowser(async browser => {
 if (group === 'identify') {
 await withBrowser(async browser => {
     const { page, errors } = await createPage(browser, { width: 390, height: 844 });
-    await page.goto(`${baseUrl}/identify`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/identify`, { waitUntil: 'domcontentloaded' });
     await page.locator('input[type="file"]').setInputFiles('public/responsive/care/pregnant_fish_breeder_box_realistic-960.webp');
-    await page.getByText('视觉模型未配置或暂不可用').waitFor({ timeout: 20_000 });
+    await page.getByText(/视觉模型未配置或暂不可用|暂时无法识别，可以手动搜索物种。/).waitFor({ timeout: 20_000 });
     const input = page.getByLabel('没有合适候选？手动搜索物种库');
     await input.fill('孔');
     const listbox = page.locator('[data-search-suggestion-list="true"]');
@@ -201,9 +209,9 @@ await withBrowser(async browser => {
     assert.equal(await page.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, '手动候选选择不能跳过物种确认');
     const selected = page.locator('[data-selected-species-summary="true"]');
     await selected.getByRole('button', { name: '确认是它', exact: true }).click();
-    await page.getByText('识别结果', { exact: true }).waitFor();
+    await page.getByText(/^(识别结果|已确认物种)$/).waitFor();
     assert.equal(await page.getByRole('heading', { name: '它现在有什么异常？' }).count(), 0, '确认物种后不得自动启动健康分诊');
-    assert.equal(await page.getByRole('button', { name: '它有异常？进入健康分诊', exact: true }).count(), 1, '识别结果必须把健康分诊保留为用户主动操作');
+    assert.equal(await page.getByRole('button', { name: /^(它有异常？进入健康分诊|发现异常？检查健康状态)$/ }).count(), 1, '识别结果必须把健康分诊保留为用户主动操作');
     assert.deepEqual(errors, [], `识别页手动搜索不应产生页面错误：${errors.join(' | ')}`);
     console.log('✓ identify manual search');
     await page.close();

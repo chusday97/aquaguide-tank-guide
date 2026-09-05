@@ -423,7 +423,7 @@ export const isSpeciesCompatibleWithWaterType = (fish: Fish, waterType?: Aquariu
   waterType === 'Saltwater' ? isSaltwaterSpecies(fish) : !isSaltwaterSpecies(fish)
 );
 
-export const getDisplayableSpecies = () => fishData.filter((fish) => {
+export const getDisplayableSpecies = (source: Fish[] = fishData) => source.filter((fish) => {
   const lifeType = getLifeType(fish);
   return lifeType !== 'plant' && lifeType !== 'hardscape';
 });

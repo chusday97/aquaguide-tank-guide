@@ -15,8 +15,8 @@ const readGitValue = (args: string[], fallback: string) => {
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
   const previewMetadata = {
-    branch: env.VITE_PREVIEW_BRANCH || readGitValue(['branch', '--show-current'], 'unknown-branch'),
-    sha: env.VITE_GIT_SHA || readGitValue(['rev-parse', 'HEAD'], 'unknown-sha'),
+    branch: env.VITE_PREVIEW_BRANCH || process.env.CF_PAGES_BRANCH || process.env.VERCEL_GIT_COMMIT_REF || readGitValue(['branch', '--show-current'], 'unknown-branch'),
+    sha: env.VITE_GIT_SHA || process.env.CF_PAGES_COMMIT_SHA || process.env.VERCEL_GIT_COMMIT_SHA || readGitValue(['rev-parse', 'HEAD'], 'unknown-sha'),
     seed: env.VITE_PREVIEW_SEED || 'interactive-preview',
     builtAt: env.VITE_BUILD_TIME || new Date().toISOString(),
   };
@@ -34,6 +34,14 @@ export default defineConfig(({mode}) => {
       // HMR is disabled in AI Studio via DISABLE_HMR env var.
       // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
+      proxy: {
+        '/api': {
+          target: `http://localhost:${env.API_PORT || '8787'}`,
+          changeOrigin: true,
+        },
+      },
+    },
+    preview: {
       proxy: {
         '/api': {
           target: `http://localhost:${env.API_PORT || '8787'}`,

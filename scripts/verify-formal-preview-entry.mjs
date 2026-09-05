@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+import { execFileSync } from 'node:child_process';
 
 const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4319';
+const expectedBranch = process.env.VITE_PREVIEW_BRANCH || execFileSync('git', ['branch', '--show-current'], { encoding: 'utf8' }).trim();
+const expectedSha = process.env.VITE_GIT_SHA || execFileSync('git', ['rev-parse', 'HEAD'], { encoding: 'utf8' }).trim();
 const modules = {
   aquarium: {
     expected: /\/aquarium\?preview=interactive$/,
@@ -41,8 +44,8 @@ try {
     const metadata = await page.locator('[data-preview-metadata]').innerText();
 
     assert.match(page.url(), contract.expected, `${module} must land on its formal route`);
-    assert.match(metadata, /codex\/main-core-foundation-v1/);
-    assert.match(metadata, /[0-9a-f]{40}/i, `${module} metadata must expose the full build SHA`);
+    assert.ok(metadata.includes(expectedBranch), `${module} metadata must expose the current preview branch`);
+    assert.ok(metadata.includes(expectedSha), `${module} metadata must expose the current full build SHA`);
     assert.match(metadata, /seed:\s*interactive-preview/);
     assert.equal(apiRequests.length, 0, `${module} preview must not call the API`);
     assert.deepEqual(pageErrors, [], `${module} preview must not raise page errors`);

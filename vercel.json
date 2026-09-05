@@ -31,8 +31,17 @@
   ],
   "rewrites": [
     {
+      "source": "/api/v1/:path*",
+      "destination": "/api/v1/router"
+    },
+    {
+      "source": "/admin/seo",
+      "destination": "/admin/seo/index.html"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }
-  ]
+  ],
+  "ignoreCommand": "node scripts/vercel-ignore-build.mjs"
 }

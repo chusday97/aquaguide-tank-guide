@@ -1,0 +1,10 @@
+{
+  "schemaVersion": 1,
+  "targetEnvironment": "production",
+  "decision": "hold_noindex",
+  "decidedAt": "2026-09-05T11:00:34.000Z",
+  "decidedBy": "human-operator",
+  "snapshotSha256": "cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879",
+  "acceptanceDeploymentId": "dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D",
+  "rationale": "Keep Care SEO noindex and Production locked while AI-assisted source analysis and SEO Draft tooling are developed and reviewed."
+}

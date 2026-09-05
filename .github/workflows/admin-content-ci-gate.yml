@@ -1,0 +1,242 @@
+name: Admin Content CI Gate
+
+on:
+  push:
+    branches: ['feature/admin-content-v0']
+    paths:
+      - 'apps/admin-content/**'
+      - 'apps/api/**'
+      - 'packages/contracts/**'
+      - 'supabase/migrations/**'
+      - 'src/data/fishData.ts'
+      - 'src/pages/AdminContent.tsx'
+      - 'src/pages/CareEncyclopedia.tsx'
+      - 'src/App.tsx'
+      - 'src/pages/AdminHub.tsx'
+      - 'src/pages/CompatibilityAdmin.tsx'
+      - 'src/pages/PublishCenter.tsx'
+      - 'src/data/compatibilityEvidence.ts'
+      - 'src/data/runtimeCompatibilityEvidence.ts'
+      - 'src/data/runtimeCompatibilityRegistry.ts'
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'src/main.tsx'
+      - 'src/components/admin/**'
+      - 'src/services/admin/**'
+      - 'scripts/test-admin-content-impact.ts'
+      - 'scripts/test-admin-compatibility-impact.ts'
+      - 'scripts/test-compatibility-admin-contract.ts'
+      - 'scripts/test-compatibility-regression-gate.ts'
+      - 'scripts/test-care-seo-projection.ts'
+      - 'scripts/test-care-seo-editorial.ts'
+      - 'scripts/test-care-seo-handoff.ts'
+      - 'scripts/test-care-seo-build-routing.ts'
+      - 'scripts/test-care-seo-release-readiness.ts'
+      - 'scripts/test-care-seo-ai.ts'
+      - 'scripts/care-seo-release-readiness.ts'
+      - 'apps/api/src/care-seo-ai.ts'
+      - 'scripts/test-care-seo-artifact.ts'
+      - 'scripts/build-care-seo-artifact.ts'
+      - 'scripts/verify-care-seo-route.mjs'
+      - 'scripts/verify-care-seo-hosted.mjs'
+      - 'content/care-seo/**'
+      - 'scripts/test-publish-center-contract.ts'
+      - 'scripts/verify-publish-center.mjs'
+      - 'scripts/test-runtime-compatibility-authority.ts'
+      - 'server/admin-repo/**'
+      - 'api/admin-content/**'
+      - 'api/translate.js'
+      - 'content/species-seo/**'
+      - 'vercel.json'
+      - 'package.json'
+      - 'scripts/build-species-seo-artifact.mjs'
+      - 'scripts/build-species-seo-from-staging.mjs'
+      - 'scripts/verify-root-species-seo-artifact.mjs'
+      - 'scripts/verify-seo-species-handoff.mjs'
+      - 'package-lock.json'
+      - '.github/workflows/admin-content-ci-gate.yml'
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled, unlabeled]
+    paths:
+      - 'apps/admin-content/**'
+      - 'apps/api/**'
+      - 'packages/contracts/**'
+      - 'supabase/migrations/**'
+      - 'src/data/fishData.ts'
+      - 'src/pages/AdminContent.tsx'
+      - 'src/pages/CareEncyclopedia.tsx'
+      - 'src/App.tsx'
+      - 'src/pages/AdminHub.tsx'
+      - 'src/pages/CompatibilityAdmin.tsx'
+      - 'src/pages/PublishCenter.tsx'
+      - 'src/data/compatibilityEvidence.ts'
+      - 'src/data/runtimeCompatibilityEvidence.ts'
+      - 'src/data/runtimeCompatibilityRegistry.ts'
+      - 'src/lib/tankCompatibilityEngine.ts'
+      - 'src/main.tsx'
+      - 'src/components/admin/**'
+      - 'src/services/admin/**'
+      - 'scripts/test-admin-content-impact.ts'
+      - 'scripts/test-admin-compatibility-impact.ts'
+      - 'scripts/test-compatibility-admin-contract.ts'
+      - 'scripts/test-compatibility-regression-gate.ts'
+      - 'scripts/test-care-seo-projection.ts'
+      - 'scripts/test-care-seo-editorial.ts'
+      - 'scripts/test-care-seo-handoff.ts'
+      - 'scripts/test-care-seo-build-routing.ts'
+      - 'scripts/test-care-seo-release-readiness.ts'
+      - 'scripts/test-care-seo-ai.ts'
+      - 'scripts/care-seo-release-readiness.ts'
+      - 'apps/api/src/care-seo-ai.ts'
+      - 'scripts/test-care-seo-artifact.ts'
+      - 'scripts/build-care-seo-artifact.ts'
+      - 'scripts/verify-care-seo-route.mjs'
+      - 'scripts/verify-care-seo-hosted.mjs'
+      - 'content/care-seo/**'
+      - 'scripts/test-publish-center-contract.ts'
+      - 'scripts/verify-publish-center.mjs'
+      - 'scripts/test-runtime-compatibility-authority.ts'
+      - 'server/admin-repo/**'
+      - 'api/admin-content/**'
+      - 'api/translate.js'
+      - 'content/species-seo/**'
+      - 'vercel.json'
+      - 'package.json'
+      - 'scripts/build-species-seo-artifact.mjs'
+      - 'scripts/build-species-seo-from-staging.mjs'
+      - 'scripts/verify-root-species-seo-artifact.mjs'
+      - 'scripts/verify-seo-species-handoff.mjs'
+      - 'package-lock.json'
+      - '.github/workflows/admin-content-ci-gate.yml'
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: admin-content-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    env:
+      ADMIN_EXPECTED_NODE_VERSION: v24.14.0
+    steps:
+      - name: Checkout pinned revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Setup pinned Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24.14.0
+          cache: npm
+      - name: Verify toolchain version
+        run: test "$(node -v)" = "$ADMIN_EXPECTED_NODE_VERSION"
+      - name: Install exact dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Admin contract tests
+        run: npm run test:contract -w @aquaguide/admin-content
+      - name: Admin impact classification
+        run: npm run test:admin-content-impact
+      - name: Admin compatibility regression contract
+        run: npm run test:admin-compatibility-impact
+      - name: Compatibility admin reviewed-baseline contract
+        run: npm run test:compatibility-admin-contract
+      - name: Compatibility server regression gate
+        run: npm run test:compatibility-regression-gate
+      - name: Care SEO downstream projection contract
+        run: npm run test:care-seo-projection
+      - name: Care SEO editorial authority contract
+        run: npm run test:care-seo-editorial
+      - name: Care SEO static artifact contract
+        run: npm run test:care-seo-artifact
+      - name: Care SEO sanitized Staging handoff contract
+        run: npm run test:care-seo-handoff
+      - name: Care SEO explicit build routing contract
+        run: npm run test:care-seo-build-routing
+      - name: Care SEO release readiness contract
+        run: npm run test:care-seo-release-readiness
+      - name: Care SEO AI advisory contract
+        run: npm run test:care-seo-ai
+      - name: Publish Center read-only contract
+        run: npm run test:publish-center-contract
+      - name: Runtime compatibility authority contract
+        run: npm run test:runtime-compatibility-authority
+      - name: Business API TypeScript check
+        run: npm run check -w @aquaguide/api
+      - name: Admin production build
+        run: npm run build -w @aquaguide/admin-content
+      - name: Generated catalog must be committed
+        run: |
+          git diff --exit-code -- apps/admin-content/src/catalog.generated.json
+          git diff --exit-code -- apps/admin-content/src/species-groups.generated.json
+      - name: Diff hygiene
+        run: git diff --check
+
+      - name: Vercel docs-only deployment guard
+        shell: bash
+        run: |
+          set +e
+          VERCEL_CHANGED_FILES=$'.ai/LIVE_STATUS.md\nHANDOFF.md\napps/admin-content/README.md' node scripts/vercel-ignore-build.mjs
+          docs_exit=$?
+          VERCEL_CHANGED_FILES=$'.ai/LIVE_STATUS.md\nsrc/App.tsx' node scripts/vercel-ignore-build.mjs
+          code_exit=$?
+          VERCEL_CHANGED_FILES='content/species-seo/staging-snapshot.json' node scripts/vercel-ignore-build.mjs
+          snapshot_exit=$?
+          VERCEL_CHANGED_FILES='content/care-seo/staging-snapshot.json' node scripts/vercel-ignore-build.mjs
+          care_snapshot_exit=$?
+          VERCEL_CHANGED_FILES='content/care-seo/staging-acceptance.json' node scripts/vercel-ignore-build.mjs
+          care_acceptance_exit=$?
+          VERCEL_CHANGED_FILES='content/care-seo/release-decision.json' node scripts/vercel-ignore-build.mjs
+          care_decision_exit=$?
+          VERCEL_CHANGED_FILES=$'content/care-seo/staging-acceptance.json\nscripts/care-seo-release-readiness.ts' node scripts/vercel-ignore-build.mjs
+          care_acceptance_mixed_exit=$?
+          set -e
+          test "$docs_exit" -eq 0
+          test "$code_exit" -eq 1
+          test "$snapshot_exit" -eq 1
+          test "$care_snapshot_exit" -eq 1
+          test "$care_acceptance_exit" -eq 0
+          test "$care_decision_exit" -eq 0
+          test "$care_acceptance_mixed_exit" -eq 1
+
+  heavy:
+    name: Heavy browser / SEO handoff gate
+    needs: validate
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event_name == 'merge_group' ||
+      (github.event_name == 'pull_request' &&
+        (contains(github.event.pull_request.labels.*.name, 'run-heavy-ci') ||
+         contains(github.event.pull_request.labels.*.name, 'merge-ready')))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout pinned revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - name: Setup pinned Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 24.14.0
+          cache: npm
+      - name: Install exact dependencies
+        run: npm ci --no-audit --no-fund
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Admin browser regression
+        run: npm run test:admin-content-ui
+      - name: Publish Center browser regression
+        run: npm run test:publish-center-ui
+      - name: Care SEO canonical route browser regression
+        run: npm run test:care-seo-route
+      - name: Root AquaGuide Species SEO artifact integration
+        env:
+          SPECIES_SEO_SNAPSHOT_PATH: apps/admin-content/fixtures/staging-publication-sample.json
+          SPECIES_SEO_SITE_URL: https://staging.aquaguide.test
+          PRODUCTION_PUBLIC_SITE_URL: https://aqua-tank-guide.vercel.app
+        run: |
+          npm run test:species-seo-build-routing
+          npm run build
+          npm run verify:species-pages-artifact
+          npm run verify:seo-species-handoff

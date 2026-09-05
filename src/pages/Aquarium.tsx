@@ -27,7 +27,7 @@ import { isAquaticPlantSpecies, isHardscapeSpecies } from '../lib/speciesClassif
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import { getLifeType, getToolFunctions, isSpeciesCompatibleWithWaterType } from '../modules/species/species.service';
 import type { DiscoveryDeckState, RecommendationCandidate, RecommendationMode, SimulationResult, SmartRecommendationOutput } from '../modules/recommendation/recommendation.schema';
-import { careTopicsData } from '../data/careTopicsData';
+import { runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import { buildDiagnosisResult } from '../modules/diagnosis/diagnosis.rules';
 import {
   diagnosisProblemTypes,

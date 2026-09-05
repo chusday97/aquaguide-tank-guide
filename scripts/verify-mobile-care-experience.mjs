@@ -112,8 +112,11 @@ try {
   await desktopSpeciesEntry.click();
   await desktopPage.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
   await desktopPage.keyboard.press('Escape');
-  await desktopPage.getByText('养护计划', { exact: true }).waitFor();
-  await desktopPage.getByText('如何安全给新鱼过水？', { exact: true }).waitFor();
+  const todayActionHandle = desktopPage.locator('[data-today-action-handle]');
+  await todayActionHandle.waitFor();
+  if ((await todayActionHandle.getAttribute('aria-expanded')) !== 'true') await todayActionHandle.click();
+  await desktopPage.locator('#care-plan').getByText('养护计划', { exact: true }).waitFor();
+  await desktopPage.locator('#care-plan').getByText('如何安全给新鱼过水？', { exact: true }).waitFor();
   assert.equal(await desktopPage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'desktop aquarium has no horizontal overflow');
   await desktopContext.close();
 

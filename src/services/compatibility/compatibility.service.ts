@@ -3,6 +3,7 @@ import {
   evaluateTankCompatibility as evaluateLegacyTankCompatibility,
   getTankCompatibilityAddPolicy as getLegacyTankCompatibilityAddPolicy,
   getTankCompatibilityStatusLabel as getLegacyTankCompatibilityStatusLabel,
+  type CompatibilityEvidenceProvider,
   type EvaluateTankCompatibilityInput,
   type TankCompatibilityAddPolicy,
   type TankCompatibilityResult,
@@ -41,6 +42,7 @@ export type CanonicalCompatibilityDecision = {
   ruleCodes: string[];
   catalogVersion: string;
   ruleVersion: string;
+  evidenceAuthorityVersion: string;
   decisionReadiness: CompatibilityDecisionReadiness;
   stockingGuidance: StockingGuidance;
   observedStatus: ObservedCoexistenceStatus;
@@ -56,6 +58,7 @@ export const getCompatibilityDecision = (
   ruleCodes: result.metadata.domainRuleCodes,
   catalogVersion: result.metadata.catalogVersion,
   ruleVersion: result.metadata.ruleVersion,
+  evidenceAuthorityVersion: result.metadata.evidenceAuthorityVersion,
   decisionReadiness: result.metadata.decisionReadiness,
   stockingGuidance: result.stockingGuidance || {
     kind: 'unknown',
@@ -75,6 +78,7 @@ const normalizeCanonicalResult = (result: TankCompatibilityResult): TankCompatib
 };
 
 export type {
+  CompatibilityEvidenceProvider,
   EvaluateTankCompatibilityInput,
   TankCompatibilityAddPolicy,
   TankCompatibilityResult,

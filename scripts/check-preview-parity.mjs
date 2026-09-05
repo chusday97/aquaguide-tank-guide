@@ -2,7 +2,7 @@ import { execFileSync } from 'node:child_process';
 
 const root = process.cwd();
 const repo = process.env.GITHUB_REPOSITORY ?? 'chusday97/aquaguide-tank-guide';
-const prNumber = process.env.PREVIEW_PR ?? '142';
+const explicitPrNumber = process.env.PREVIEW_PR?.trim() || null;
 
 function command(name, args) {
   return execFileSync(name, args, { cwd: root, encoding: 'utf8' }).trim();
@@ -10,6 +10,27 @@ function command(name, args) {
 
 function jsonCommand(name, args) {
   return JSON.parse(command(name, args));
+}
+
+
+function cloudflarePreviewForSha() {
+  try {
+    const result = jsonCommand('gh', ['api', `repos/${repo}/commits/${localSha}/check-runs`]);
+    const check = result.check_runs?.find((candidate) => candidate.name === 'Cloudflare Pages' && candidate.conclusion === 'success');
+    const summary = check?.output?.summary ?? '';
+    if (!check || !summary.includes(localSha.slice(0, 7))) return null;
+    const match = summary.match(/https:\/\/[a-f0-9]{8,}\.aquaguide-frontend\.pages\.dev/i);
+    return {
+      status: 'EQUIVALENT',
+      provider: 'cloudflare-pages',
+      deploymentId: check.id ?? null,
+      sha: localSha,
+      state: 'success',
+      targetUrl: match?.[0] ?? check.details_url ?? null,
+    };
+  } catch {
+    return null;
+  }
 }
 
 function vercelPreviewForSha() {
@@ -39,10 +60,23 @@ const remoteSha = command('git', ['ls-remote', 'origin', `refs/heads/${branch}`]
 const checks = { localSha, branch, remoteSha, remoteSynchronized: remoteSha === localSha };
 
 try {
-  const pr = jsonCommand('gh', ['api', `repos/${repo}/pulls/${prNumber}`]);
-  checks.prSha = pr.head?.sha ?? null;
-  checks.prState = pr.state ?? null;
-  checks.prIsDraft = Boolean(pr.draft);
+  if (explicitPrNumber) {
+    const pr = jsonCommand('gh', ['api', `repos/${repo}/pulls/${explicitPrNumber}`]);
+    checks.prNumber = Number(explicitPrNumber);
+    checks.prSha = pr.head?.sha ?? null;
+    checks.prState = pr.state ?? null;
+    checks.prIsDraft = Boolean(pr.draft);
+  } else {
+    const rows = jsonCommand('gh', [
+      'pr', 'list', '--repo', repo, '--head', branch, '--state', 'open',
+      '--json', 'number,headRefOid,isDraft,state,baseRefName,headRefName',
+    ]);
+    const pr = rows.find((row) => row.headRefName === branch) ?? rows[0] ?? null;
+    checks.prNumber = pr?.number ?? null;
+    checks.prSha = pr?.headRefOid ?? null;
+    checks.prState = pr?.state?.toLowerCase?.() ?? null;
+    checks.prIsDraft = Boolean(pr?.isDraft);
+  }
   checks.prSynchronized = checks.prSha === localSha;
 } catch (error) {
   checks.githubError = error instanceof Error ? error.message : String(error);
@@ -52,7 +86,7 @@ try {
   const deployments = jsonCommand('gh', ['api', `repos/${repo}/deployments?sha=${localSha}`]);
   const preview = deployments.find((deployment) => deployment.environment === 'Preview' && deployment.sha === localSha);
   if (!preview) {
-    checks.preview = vercelPreviewForSha() ?? { status: 'UNVERIFIED', reason: 'No Preview deployment reports the exact candidate SHA.' };
+    checks.preview = cloudflarePreviewForSha() ?? vercelPreviewForSha() ?? { status: 'UNVERIFIED', reason: 'No Preview deployment reports the exact candidate SHA.' };
   } else {
     const statuses = jsonCommand('gh', ['api', `repos/${repo}/deployments/${preview.id}/statuses`]);
     checks.preview = {

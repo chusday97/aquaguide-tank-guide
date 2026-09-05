@@ -98,4 +98,3 @@ export const getCatalogReviewSourceCandidates = (speciesId: string): CatalogEvid
 
 export const catalogReviewSourceCandidateIds = Object.values(firstBatchFishBaseSources)
   .map(source => source.id);
-

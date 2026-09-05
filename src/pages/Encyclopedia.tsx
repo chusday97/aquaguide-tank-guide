@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { createPortal } from 'react-dom';
 import { Fish, Aquarium } from '../types';
-import { fishData } from '../data/fishData';
+import { runtimeFishData as fishData, runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import { encyclopediaService } from '../modules/encyclopedia/encyclopedia.service';
 import {
   getCareTaxonomyPath,
@@ -63,7 +63,6 @@ import { recordSpeciesMemorial } from '../services/collection/memorial.service';
 import type { WorkspaceNavigationContext } from '../types/navigation';
 import { englishTranslations } from '../i18n/localizeData';
 import { autoTranslations } from '../i18n/localizeDataAuto';
-import { careTopicsData } from '../data/careTopicsData';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
 import {
   getSearchSuggestions,
@@ -645,15 +644,23 @@ export default function Encyclopedia() {
   };
 
   useEffect(() => {
-    const speciesId = new URLSearchParams(location.search).get('species');
+    const params = new URLSearchParams(location.search);
+    const speciesId = params.get('species');
     if (!speciesId) {
       closingDetailRef.current = false;
       return;
     }
     if (closingDetailRef.current) return;
-    if (selectedFish?.id === speciesId) return;
     const fish = fishData.find(item => item.id === speciesId);
-    if (fish) openSpeciesDetail(fish);
+    if (!fish) return;
+
+    if (params.get('mode') === 'compatibility') {
+      setSelectedFish(null);
+      setCalculatorSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
+      return;
+    }
+
+    if (selectedFish?.id !== speciesId) openSpeciesDetail(fish);
   }, [location.search, selectedFish?.id]);
 
   useEffect(() => {
@@ -817,7 +824,7 @@ export default function Encyclopedia() {
   };
 
   const encyclopediaCatalog = useMemo(
-    () => encyclopediaService.search({ limit: 500 }),
+    () => encyclopediaService.search({ limit: 500 }, fishData),
     []
   );
   const allFishes = encyclopediaCatalog.allItems;

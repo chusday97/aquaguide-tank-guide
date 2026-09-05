@@ -1,0 +1,106 @@
+# Aqua Operations Studio — Product / Content / Rules Architecture
+
+Updated: 2026-09-05
+Status: canonical product-operations architecture contract
+
+## 1. Product definition
+AquaGuide is not only a Species encyclopedia. The user product includes aquarium management, care guidance, compatibility decisions, identification/search and SEO acquisition surfaces.
+
+The Admin therefore must not be treated as one generic CMS. The mature target is **Aqua Operations Studio**: one operating surface for Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and controlled publishing.
+
+## 2. Authority map
+| Domain | Owns | User-facing consumers | Current Admin |
+| --- | --- | --- | --- |
+| Product Data | scientific identity, temperature, pH, tank size, temperament, feeding, housing facts, images | Encyclopedia, Aquarium, compatibility inputs, recommendations, SEO facts | `/admin/product-content` → Species |
+| Care Knowledge | symptoms, steps, avoid actions, observe/escalate/next step, care assets | Care Encyclopedia, diagnosis, aquarium care tasks/recommendations | `/admin/product-content` → Care |
+| Compatibility Rules | behavior profiles, pair rules, evidence, confidence, rule versions | compatibility calculator, add-to-tank safety, aquarium risk tasks | `/admin/compatibility` — versioned reviewed workflow in code; live rollout locked |
+| SEO Editorial | title, meta, H1, intro, image alt, localized display copy, canonical/index policy | static SEO landing pages / search acquisition | `/admin/seo/` |
+| User Context | owned livestock, tank volume/conditions, reminders, activity | personalized compatibility/care results | user product, not CMS content |
+## 3. Global content vs personalized results
+Global content is shared after publication: Species facts, approved Care knowledge, Compatibility rules and locale-specific SEO pages are not per-user variants by default.
+
+Personalization is computed from shared knowledge/rules plus each user's aquarium context:
+`Approved Product Data + Approved Compatibility Rules + User Aquarium Context → personalized compatibility / care result`.
+
+SEO is an acquisition projection, not the source of product behavior. Editing an SEO H1 or Meta must never silently change pH, compatibility decisions, aquarium tasks or another user's stored aquarium state.
+
+## 4. Current verified source-of-truth status
+Product/Care P0 is converged and controlled-Preview accepted: public Product/Care APIs are the published runtime authority for the connected Encyclopedia/Care/Aquarium/Identify consumers, while static datasets remain explicit seed/offline fallback.
+
+Compatibility is now converged in code as a reviewed authority with explicit fallback. `tankCompatibilityEngine`, Admin reviewed views and server regression consume the same reviewed authority model. DB authority activates only with exact current 7 Profile / 4 Pair coverage and reviewed Evidence; otherwise the runtime falls back wholesale to the static reviewed baseline. Versioned publish exists behind canonical Evidence, structural Impact, real engine Regression, explicit human approval and freshness/version gates. The migrations remain unapplied to live/Production, so live rollout is still intentionally locked.
+
+## 5. Compatibility boundary
+The compatibility product is real and rule-based. `tankCompatibilityEngine` consumes Approved Product facts plus reviewed Compatibility evidence/rules and user tank context.
+
+The operator model is implemented in code for the current reviewed baseline:
+`Species Behavior Profile + Pair Rule + Evidence + Confidence + Review Status + Rule Version`.
+Rules follow `Draft → structural Impact → real engine Regression → canonical Evidence → human Review/Approve → versioned publish`. Arbitrary new rules without a reviewed DB baseline remain disallowed.
+
+Cross-domain release observability is now covered by Publish Center V1 without creating a competing authority. The current architecture gap is Care SEO editorial persistence/review: SEO may project from Published Care, but it must never copy or override symptoms/actions/evidence as a second Care authority. Indexability stays gated until an approved bilingual Staging artifact passes hosted acceptance.
+
+## 6. Mature publishing model
+A mature change should pass through:
+`Edit → Diff → Impact → Preview → Review → Staging → Production`.
+
+Impact Preview should distinguish:
+- display-only changes;
+- decision-critical Product Data changes;
+- Care workflow changes;
+- Compatibility rule changes;
+- SEO-only acquisition changes.
+
+Decision-critical changes must show affected consumers before release, e.g. Encyclopedia, compatibility outputs, aquarium-fit recommendations, care tasks and SEO facts.
+## 7. Target Studio navigation
+- Dashboard — pending review, data anomalies, recent changes, release readiness.
+- Species — Product Data, source/provenance, confidence, images.
+- Care — structured care playbooks and evidence.
+- Compatibility — behavior profiles, pair rules, evidence, rule tests.
+- SEO — Species/Care acquisition copy and canonical/index policy.
+- Publish Center — Diff, impact, Preview, review, Staging, Production boundary.
+
+## 8. Execution order
+P0-A: converge Product/Care frontend reads onto one published authority; keep static files only as explicit build seed/fallback if required.
+P0-B: finish the already-built 14-Species bilingual SEO batch operational acceptance without changing Production.
+P1: add change-impact classification + Preview across Encyclopedia / SEO / compatibility outcomes.
+P1: build Compatibility Admin for reviewed behavior/evidence/pair rules; do not make arbitrary rule edits directly publishable.
+P2: [done] unify release history/audit in Publish Center and expose role/permission boundaries.
+P2: [foundation done] project Care SEO only from Published Care, with deterministic bilingual routes and fail-closed static Staging handoff; next add editorial Draft/Review + hosted acceptance.
+P2: add AI only as an assistant for extraction, conflict detection, impact explanation and Draft generation from approved facts.
+
+## 9. Non-negotiable rule
+Reliable Product/Care/Compatibility knowledge is upstream. SEO is downstream. Never use SEO copy as authority for product decisions, and never let AI invent decision-critical facts without evidence + human review.
+## 10. Publish Center authority rule
+Publish Center is an operational read/orchestration layer, not a fourth source of truth.
+- Product/Care + Compatibility keep Business API/Supabase write authority.
+- Species SEO keeps Repo Admin / private repo write authority and its separate authentication boundary.
+- V1 Publish Center normalizes read history into `ReleaseEvent` records and surfaces unavailable/unauthenticated sources explicitly.
+- Do not copy SEO revisions into Supabase, or Compatibility/Product releases into the SEO repo, merely to create one timeline.
+- Cross-domain write orchestration may be added only after the read model is accepted and must delegate writes back to each canonical authority.
+
+## 2026-09-05 P2 Unified Publish Center — read-only checkpoint
+- Functional commit `f1b7adae feat(admin): add unified publish center read model`.
+- Added shared `ReleaseEvent` / source-status contract, authenticated Business Admin `GET /api/v1/admin/releases`, independent SEO Repo Admin read adapter, and `/admin/publish-center`.
+- Product/Care + Compatibility remain Business API/Supabase write authorities; SEO remains Repo Admin / `admin-store.json`. Publish Center performs no cross-authority writes.
+- Product/Care source is explicitly marked `current_only` because `content_publications` stores one current Published snapshot per resource; Compatibility exposes revision history and SEO exposes activity/revision/import/Staging history.
+- SEO auth is independent: when Repo Admin is not logged in the Publish Center shows `auth_required` while Product/Care + Compatibility continue to render.
+- PASS: read-only contract, API TS, root lint/build, 390/1280 Publish Center browser flow, existing Admin Hub/Product/Care browser regression, Repo Admin contract.
+- CI policy preserved: read-only contract runs in lightweight CI; Publish Center Playwright runs only in Heavy Gate.
+- Next: read-only release detail/readiness drill-down before any cross-domain write orchestration. Production/main/live DB untouched.
+## 2026-09-05 Publish Center capability rule
+The Publish Center capability matrix is descriptive, not an execution authority. `available` means the subsystem already has that capability; `partial` means a weaker or incomplete control exists; `locked` means the stage must not execute; `not_applicable` means that subsystem has no separate stage. This matrix must never be interpreted as permission to bypass each subsystem's native auth/review/publish gates.
+## 2026-09-05 Release audit / role decision
+`content_publications` remains Product/Care published authority. `content_publication_events` is append-only audit history only and must never drive public content reads. Business auth remains `user/admin`; SEO remains independent `repo-admin`. Do not introduce editor/reviewer/publisher roles until multiple operators create a concrete separation-of-duties need; permission visibility is preferred over speculative RLS expansion.
+
+## 2026-09-05 P2 Publish Center — cross-authority coordination closeout
+- `5a549377` adds read-only cross-authority context by explicit catalog key / Pair key / SEO batch catalogKeys only.
+- Related records are contextual evidence, not dependency inference and not a signal that synchronized publish is required.
+- Event detail links back to the original Product/Care, Compatibility or SEO authority; Publish Center still performs no writes.
+- Online lightweight CI run `33951946893` passed for `5a549377`.
+- Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
+- Business role split is deliberately deferred until a real multi-operator requirement exists.
+- Historical note: Care SEO downstream projection was the next milestone at this checkpoint; the projection/canonical/static-handoff foundation is now complete. Current continuation is Care SEO Editorial Draft/Review + Staging acceptance.
+
+## 2026-09-05 Care SEO downstream authority rule
+Care SEO is a projection, never a Care Knowledge authority. Its source identity is `(care catalog key, Published source version, locale)`. SEO may own title/meta/H1/focus keyword and index/canonical policy, but symptoms, actions, avoid/observe/diagnose/next-step/evidence remain protected upstream facts.
+
+Canonical SEO routing follows the established Species locale convention: EN has no locale prefix, zh-CN uses `/zh`, and x-default points to EN. Client-rendered canonical Care routes stay `noindex,follow`; indexability is allowed only through an explicit approved bilingual static Staging artifact. The static builder must fail closed on locale pairing gaps, Published source-version drift, unapproved editorial, Production snapshots or Production destination leakage.

@@ -2,6 +2,10 @@ import { z } from 'zod';
 
 export * from './business';
 export * from './content-admin';
+export * from './care-seo';
+export * from './compatibility-admin';
+export * from './compatibility-runtime';
+export * from './release-audit';
 export * from './localization';
 export * from './species-diagnosis';
 export * from './share-reports';
