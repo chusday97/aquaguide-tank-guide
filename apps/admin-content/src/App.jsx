@@ -567,10 +567,10 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       <div className="editor-footer">
         <div>
           {!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}
-          {!schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
+          {readOnly ? <span className="footer-context-note">{isUiEnglish ? 'Read-only demo · no writes' : '只读演示 · 不会写入'}</span> : !schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
         </div>
         <div className="footer-actions">
-          <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span>
+          {!readOnly ? <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : 'Published · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span> : null}
           {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
         </div>
       </div>
@@ -1222,6 +1222,7 @@ export default function App() {
           selectedId={selectedId}
           selectedScope={editorScope}
           batchIds={batchIds}
+          batchMode={activeTool === 'batch'}
           search={search}
           onSearch={setSearch}
           category={category}
@@ -1246,7 +1247,7 @@ export default function App() {
           }}
         />
 
-        <main className="editor-area studio-editor-area">
+        <main className={`editor-area studio-editor-area scope-${editorScope}`}>
           <div className="editor-context-bar">
             <div className="editor-context-title">
               <small>{appLocale === 'en' ? 'CURRENT WORKSPACE' : '当前工作区'}</small>
@@ -1263,6 +1264,20 @@ export default function App() {
               ))}
             </div>
           </div>
+
+          <section className={`editor-scope-context ${editorScope}`} aria-label={appLocale === 'en' ? 'Editing context' : '编辑范围'}>
+            <div className="editor-scope-context-badge">
+              <span aria-hidden="true">{editorScope === 'base' ? (appLocale === 'en' ? 'T' : '模') : (appLocale === 'en' ? 'P' : '页')}</span>
+              <small>{editorScope === 'base' ? (appLocale === 'en' ? 'BASE TEMPLATE' : '基础模板') : (appLocale === 'en' ? 'CURRENT SPECIES PAGE' : '当前物种页面')}</small>
+            </div>
+            <div className="editor-scope-context-copy">
+              <strong>{editorScope === 'base' ? selectedGroup?.base_scientific_name : selectedSpecies?.name}</strong>
+              <span>{editorScope === 'base'
+                ? (appLocale === 'en' ? `Shared template inherited by ${selectedGroup?.member_count || 0} pages. Changes here can affect the whole Base group.` : `这是一套共享模板，当前有 ${selectedGroup?.member_count || 0} 个页面继承；修改这里会影响同组页面。`)
+                : (appLocale === 'en' ? 'Edit only this Species page. Base template content stays unchanged unless you switch to Base Template.' : '这里只修改当前物种页面；不会改基础模板。需要改共用内容时再切换到“基础模板”。')}
+              </span>
+            </div>
+          </section>
 
           {editorScope === 'base' ? (
             <BaseSpeciesSeoEditor

@@ -85,10 +85,12 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Verify 1440px / 390px layout, zero horizontal overflow, CTA queue routing and read-only no-write behavior.
 - [x] Add safe `?demo=1` read-only entry only for localhost / `*.pages.dev`; save/review/publish remain disabled.
 - [x] Verify exact-SHA + stable-branch Cloudflare `/admin/seo/?demo=1`; use the stable feature URL as the canonical UI acceptance entry.
-- [x] Make stateful interaction feedback unmistakable: separate workflow `attention` from operator `selected`, add `aria-pressed`, strong selected fills/borders, and explicit ✓ markers for selected Species/Base rows and editor scope/locale controls.
+- [x] Make stateful interaction feedback unmistakable without breaking layout: workflow `attention` is separate from operator `selected`; scope/locale/filter controls use persistent selected styling; normal Species selection uses the existing 16×16 square radio only, while that slot becomes a checkbox only in batch mode. No extra row-level ✓ badge.
 - [x] Rebuild information hierarchy around a visible 4-stage workflow: Data Review → Content Edit → Human Review → Staging.
 - [x] Separate current-page key actions from detailed editing; collapse batch/history/translation/diagnostic tools under `更多工具`.
 - [x] Verify all 4 stages are simultaneously visible at 390px in a 2×2 layout; 1440/390 browser checks have zero page overflow.
+- [x] Visually separate `当前物种页面` from `基础模板`: explicit scope context card, different accent/background, and clear copy explaining page-only vs shared-template impact.
+- [x] In read-only Demo, suppress false `Schema 未应用` error language; show only `只读演示 · 不会写入`.
 - [ ] User visual/operator acceptance of the new hierarchy on the hosted read-only SEO Admin demo; collect screenshots/feedback.
 - [ ] Restore a writable `admin-content` Preview only through a safe server-side credential binding/transfer. Do not expose or manually shuttle `ADMIN_REPO_*` / `ADMIN_GITHUB_*` secrets; current independent project lacks those write credentials.
 

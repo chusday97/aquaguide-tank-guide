@@ -33,6 +33,7 @@ export default function SpeciesGroupSidebar({
   groups,
   selectedId,
   batchIds,
+  batchMode = false,
   search,
   onSearch,
   category,
@@ -183,10 +184,16 @@ export default function SpeciesGroupSidebar({
                       const duplicateSet = (group.duplicate_sets || []).find((set) => set.member_ids.includes(item.catalog_key));
                       const duplicateIssueOpen = duplicateSet ? getDataReviewIssueState({ issue_key: duplicateSet.duplicate_set_key, issue_type: 'duplicate_set', member_ids: duplicateSet.member_ids }, reviewRows) !== 'resolved' : false;
                       return (
-                      <div className={`variant-row ${selectedScope === 'variant' && selectedId === item.id ? 'active' : ''}`} key={item.id}>
-                        <input type="checkbox" checked={batchIds.includes(item.id)} onChange={() => onToggleBatch(item.id)} aria-label={`批量选择 ${item.name}`} />
+                      <div className={`variant-row ${selectedScope === 'variant' && selectedId === item.id ? 'active' : ''} ${batchMode ? 'batch-mode' : ''}`} key={item.id}>
+                        <input
+                          type={batchMode ? 'checkbox' : 'radio'}
+                          name={batchMode ? undefined : 'current-species'}
+                          className={batchMode ? 'batch-select-box' : 'species-select-box'}
+                          checked={batchMode ? batchIds.includes(item.id) : selectedScope === 'variant' && selectedId === item.id}
+                          onChange={() => batchMode ? onToggleBatch(item.id) : onSelect(item.id)}
+                          aria-label={batchMode ? `批量选择 ${item.name}` : `选择 ${item.name}`}
+                        />
                         <button className="variant-main-button" type="button" aria-pressed={selectedScope === 'variant' && selectedId === item.id} onClick={() => onSelect(item.id)}>
-                          <span className="variant-selection-mark" aria-hidden="true">{selectedScope === 'variant' && selectedId === item.id ? '✓' : ''}</span>
                           <span>
                             <strong>{item.name}</strong>
                             <small>{item.variant_label || (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>

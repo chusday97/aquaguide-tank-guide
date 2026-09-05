@@ -216,5 +216,6 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 ## 2026-09-05 — SEO Admin interaction feedback checkpoint
 - Stateful UI selection is now explicit rather than subtle: workflow stages distinguish system attention from operator selection.
 - Species/Base selection, workflow filters, editor scope and locale controls expose persistent selected styling and `aria-pressed` state.
-- Selected Species rows carry a visible ✓ marker and stronger row treatment; 1440/390 browser checks confirm the marker moves with the selected Species and page overflow remains zero.
+- Screenshot-driven correction supersedes the previous strong-row selection treatment: normal Species selection is now shown only in the existing 16×16 square radio; no extra ✓ badge is inserted into the text grid. Batch mode switches the same slot to checkbox semantics. 1440/390 checks confirm left-aligned text, 16×16 controls and zero overflow.
+- Current-page vs Base-template editing now has explicit `页 / 模` context cards with different accents and impact copy. Read-only Demo no longer reports `Schema 未应用`; it says only `只读演示 · 不会写入`.
 - This remains Species SEO Admin-only work on `feature/admin-content-v0`; PR #144 reconciliation stays parked.

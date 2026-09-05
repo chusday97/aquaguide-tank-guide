@@ -714,3 +714,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Selected Species/Base rows now expose a ✓ marker; browser interaction switched from 迷你鹦鹉鱼 to 蓝宝鹦鹉鱼 and verified the marker/pressed state moved correctly.
 - PASS: Admin build, Admin contract, full root build, diff hygiene, 1440/390 interaction checks, zero horizontal overflow.
 - Main/Production/Care SEO `hold_noindex`/live migrations untouched; PR #144 remains parked.
+
+## 2026-09-05 — Species selection + editor-scope visual correction
+- User screenshots showed the first selected-state pass broke Species list typography by adding a second green ✓ next to the existing square control.
+- Removed the extra marker and strong row treatment; normal Species selection now uses the existing 16×16 square as a single-select radio. In batch mode only, the same slot becomes a checkbox.
+- Locked control dimensions against global input padding, restored left-aligned Species/subtitle text, and removed conflicting CSS overrides from the first selected-state pass.
+- Added explicit `当前物种页面` vs `基础模板` scope context (`页 / 模`) with different accents and impact copy.
+- Read-only Demo no longer reports `Schema 未应用`; it shows `只读演示 · 不会写入`.
+- PASS: Admin build, Admin contract, root build; browser 1440/390 confirms 16×16 selection controls, left-aligned rows, clear scope contexts, zero row/page overflow. Main/Production/index/live DB untouched.

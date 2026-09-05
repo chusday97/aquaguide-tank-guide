@@ -173,5 +173,6 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Active work is SEO Admin usability/acceptance only. Draft reconciliation PR #144 remains parked and is not authorized for merge.
 - No Production/index/live-DB mutation occurred.
 ## 2026-09-05 — SEO Admin selected-state checkpoint
-- Functional + docs checkpoint is one feature-branch commit after `ccb4ade8`; expected live divergence after push: main-only 269 / feature-only 168; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
-- No merge/rebase of main and no Production mutation.
+- `1452bf9c` was the first selected-state pass. Screenshot review showed it over-corrected Species rows by adding a second ✓ badge and stronger row geometry; that visual treatment is superseded by the current correction.
+- Current correction restores stable row geometry: existing 16×16 selection square, left-aligned text, batch-only checkbox semantics, and separate Base/current-page context styling.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; no merge/rebase of main and no Production mutation.

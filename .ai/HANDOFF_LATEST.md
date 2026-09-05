@@ -55,6 +55,8 @@ Controlled Preview acceptance now proves Save stays private, Publish advances th
 - 390px shows all four stages simultaneously in a 2×2 grid; 1440/390 browser checks report zero page overflow. Exact-SHA Cloudflare deployment `94ddb622` was browser-verified.
 - Canonical read-only acceptance URL remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - Writable independent `admin-content` Preview credential binding is still a separate security task; do not manually shuttle secrets.
+- Interaction correction after screenshot review: the extra Species-row ✓ badge was removed because it broke row typography. Normal selection now lives in the existing 16×16 square as a single-select radio; batch mode reuses the slot as a checkbox. Base selection remains secondary.
+- `当前物种页面` and `基础模板` now have explicit, differently styled scope context cards (`页` vs `模`) explaining page-only vs shared-template impact. Read-only Demo no longer shows a false `Schema 未应用` warning.
 
 ## Species SEO subsystem — stable baseline
 - Private Draft/review/revision/import-batch authority: `chusday97/aquaguide-seo-content / seo-admin-drafts`.
@@ -292,6 +294,6 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 ## 2026-09-05 — SEO Admin selected-state feedback
 - User reported that clicking tabs/buttons and selecting a Species produced almost no persistent visual feedback.
 - Workflow stage state is now split into `attention` (system says work exists) vs `selected` (operator clicked it), so clicking Content Editing no longer leaves Data Review looking selected just because issues exist.
-- Stateful controls use `aria-pressed`; selected scope/locale/filter controls receive a dark fill, stronger border/shadow, and check feedback where appropriate.
-- Selected Base/Species rows now show an explicit ✓ plus stronger background/left marker; changing Species moves the marker to the newly selected row.
-- Browser checks at 1440/390 verified real computed-style changes, selected Species switching, Base selection, scope selection and zero horizontal overflow. Production/main/index/live DB remain untouched.
+- Stateful controls use `aria-pressed`; selected scope/locale/filter controls receive persistent selected styling.
+- Screenshot correction supersedes the first row treatment: normal Species selection uses only the existing 16×16 square radio; no second ✓ badge is inserted beside the text. The row keeps only a light supporting highlight. Batch mode switches that slot to checkbox semantics.
+- `当前物种页面` vs `基础模板` now has explicit `页 / 模` context styling and impact copy. Browser checks at 1440/390 verify 16×16 controls, left-aligned text and zero overflow. Production/main/index/live DB remain untouched.

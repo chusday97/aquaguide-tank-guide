@@ -1617,13 +1617,6 @@ button:focus-visible {
   font-weight:820;
   box-shadow:0 2px 7px rgba(36,79,56,.18);
 }
-.editor-scope-switch button.active::before,
-.locale-switcher.compact button.active::before {
-  content:'✓';
-  margin-right:4px;
-  font-size:9px;
-}
-
 /* Sidebar queue filters: selected filter is a real selected tab. */
 .species-quick-filters button.active {
   background:#294f3a;
@@ -1639,51 +1632,6 @@ button:focus-visible {
 .species-quick-filters .tone-review.active b,
 .species-quick-filters .tone-ready.active b { color:#fff; }
 
-/* Species selection: strong row background + persistent check mark. */
-.group-header { position:relative; }
-.group-header.active {
-  padding-right:38px;
-  background:#dcece1;
-  color:#173826;
-  box-shadow:inset 4px 0 0 #244f38, inset 0 0 0 1px #9fbea9;
-}
-.group-header.active::after {
-  content:'✓';
-  position:absolute;
-  right:9px;
-  top:50%;
-  width:20px;
-  height:20px;
-  display:grid;
-  place-items:center;
-  transform:translateY(-50%);
-  border-radius:999px;
-  background:#244f38;
-  color:#fff;
-  font-size:10px;
-  font-weight:900;
-}
-.variant-row.active {
-  background:#dcece1;
-  box-shadow:inset 4px 0 0 #244f38, inset 0 0 0 1px #a9c4b1;
-}
-.variant-row.active strong { color:#173826; font-weight:850; }
-.variant-row.active small { color:#526b5c; }
-.variant-main-button { gap:6px; }
-.variant-selection-mark {
-  width:18px;
-  height:18px;
-  flex:0 0 18px;
-  display:grid;
-  place-items:center;
-  border-radius:999px;
-  color:transparent;
-  font-size:9px;
-  font-weight:900;
-}
-.variant-row.active .variant-selection-mark { background:#244f38; color:#fff; }
-.species-group.contains-active .variant-list { border-left:2px solid #8fb29b; }
-
 /* Secondary tool selection should also persist clearly while its panel is open. */
 .editor-tool-row.active {
   border-color:#8eb09a;
@@ -1697,3 +1645,125 @@ button:focus-visible {
 @media (max-width:560px) {
   .workflow-stage-card.selected::after { content:'✓'; top:5px; right:5px; width:17px; height:17px; padding:0; display:grid; place-items:center; }
 }
+
+/* 2026-09-05 interaction correction: selection belongs in the existing square; keep rows typographically stable. */
+.variant-row {
+  grid-template-columns: 22px minmax(0, 1fr) auto;
+  min-height: 46px;
+  align-items: center;
+  padding: 0 2px;
+  background: transparent;
+}
+.variant-row.active {
+  background: #f7faf8;
+  box-shadow: inset 2px 0 0 #7ca08a;
+}
+.variant-row.active strong { color:#173826; font-weight:800; }
+.variant-row.active small { color:#718078; }
+.variant-main-button { width:100%; gap:0; padding:7px 6px; }
+.variant-main-button > span { min-width:0; }
+.variant-main-button strong,
+.variant-main-button small { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.variant-selection-mark { display:none !important; }
+.variant-row > input.species-select-box,
+.variant-row > input.batch-select-box {
+  appearance:none;
+  -webkit-appearance:none;
+  width:16px;
+  height:16px;
+  margin:0 0 0 2px;
+  border:1.5px solid #cfd8d1;
+  border-radius:4px;
+  background:#fff;
+  opacity:1;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  transition:border-color 120ms ease, background-color 120ms ease, box-shadow 120ms ease;
+}
+.variant-row > input.species-select-box:checked {
+  border-color:#285a3f;
+  background:#285a3f;
+  box-shadow:0 0 0 2px rgba(40,90,63,.10);
+}
+.variant-row > input.species-select-box:checked::after,
+.variant-row > input.batch-select-box:checked::after {
+  content:'✓';
+  color:#fff;
+  font-size:10px;
+  font-weight:900;
+  line-height:1;
+}
+.variant-row > input.batch-select-box { border-style:dashed; border-color:#9aa8a0; }
+.variant-row > input.batch-select-box:checked { border-style:solid; border-color:#315f9b; background:#315f9b; }
+.variant-row.batch-mode { background:#fafbfc; }
+.variant-row.batch-mode.active { box-shadow:inset 2px 0 0 #b9c5bd; }
+
+/* Base group selection stays secondary; it must not look like a selected Species row. */
+.group-header.active {
+  padding-right:8px;
+  background:#f1f5f2;
+  color:#244734;
+  box-shadow:inset 3px 0 0 #7c9a87;
+}
+.group-header.active::after { display:none; }
+
+/* Make template editing and page editing two visibly different contexts. */
+.editor-scope-context {
+  max-width:760px;
+  margin:18px auto 0;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:12px;
+  align-items:center;
+  padding:12px 14px;
+  border:1px solid #d9e2dc;
+  border-radius:12px;
+}
+.editor-scope-context.variant { background:#f4f9f6; border-color:#c8dccf; }
+.editor-scope-context.base { background:#f7f5ef; border-color:#ded6c1; }
+.editor-scope-context-badge { display:flex; align-items:center; gap:7px; }
+.editor-scope-context-badge > span {
+  width:26px; height:26px; display:grid; place-items:center; border-radius:8px;
+  font-size:10px; font-weight:900;
+}
+.editor-scope-context.variant .editor-scope-context-badge > span { background:#285a3f; color:#fff; }
+.editor-scope-context.base .editor-scope-context-badge > span { background:#746947; color:#fff; }
+.editor-scope-context-badge small { font-size:8px; font-weight:900; letter-spacing:.08em; color:#6f7c74; white-space:nowrap; }
+.editor-scope-context-copy { min-width:0; display:grid; gap:3px; }
+.editor-scope-context-copy strong { color:#203329; font-size:12px; }
+.editor-scope-context-copy span { color:#748078; font-size:9px; line-height:1.45; }
+.scope-variant .editor-panel { border-top:3px solid #7fa68d; }
+.scope-base .base-seo-panel { border-top:3px solid #a89b72; background:linear-gradient(180deg,#fffdf8 0,#fff 72px); }
+
+/* Scope tabs: clear selection, but less visually aggressive than the previous pass. */
+.editor-scope-switch button.active,
+.locale-switcher.compact button.active {
+  background:#315b43;
+  color:#fff;
+  box-shadow:0 1px 4px rgba(49,91,67,.16);
+}
+.editor-scope-switch button.active::before,
+.locale-switcher.compact button.active::before { content:none; }
+
+@media (max-width:760px) {
+  .editor-scope-context { margin:12px 12px 0; grid-template-columns:1fr; gap:7px; }
+  .editor-scope-context-badge { justify-content:flex-start; }
+}
+
+/* Lock list selection controls against global form input sizing/padding. */
+.variant-row > input.species-select-box,
+.variant-row > input.batch-select-box {
+  box-sizing:border-box;
+  min-width:16px;
+  max-width:16px;
+  width:16px;
+  min-height:16px;
+  max-height:16px;
+  height:16px;
+  padding:0 !important;
+  margin:0 0 0 2px;
+}
+.variant-row { column-gap:6px; }
+.variant-main-button { text-align:left; }
+.variant-main-button > span { width:100%; text-align:left; }
