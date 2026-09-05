@@ -129,7 +129,7 @@ const careSeoProjectionSnapshotSchema = z.object({
   sourceCareId: z.string().trim().min(1),
   sourceCareCatalogKey: z.string().trim().min(1),
   sourceCareVersion: z.number().int().positive(),
-  sourcePublishedAt: z.string().datetime(),
+  sourcePublishedAt: z.string().datetime({ offset: true }),
   sourceAuthority: z.enum(['publication-snapshot', 'legacy-published']),
   locale: supportedLocaleSchema,
   route: z.object({

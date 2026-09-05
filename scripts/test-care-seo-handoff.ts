@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import type { CareSeoEditorialWorkspaceDto } from '../packages/contracts/src/index';
+import { careSeoStagingSnapshotSchema, type CareSeoEditorialWorkspaceDto } from '../packages/contracts/src/index';
 import { createCareSeoStagingHandoff, sanitizeCareSeoWorkspaceRecord } from '../apps/api/src/care-seo-handoff';
 
 const workspace: CareSeoEditorialWorkspaceDto = {
@@ -10,7 +10,7 @@ const workspace: CareSeoEditorialWorkspaceDto = {
     sourceCareId: '00000000-0000-4000-8000-000000000001',
     sourceCareCatalogKey: 'care_water_quality',
     sourceCareVersion: 7,
-    sourcePublishedAt: '2026-09-05T08:00:00.000Z',
+    sourcePublishedAt: '2026-09-05T08:00:00+00:00',
     sourceAuthority: 'publication-snapshot',
     locale: 'en',
     route: {
@@ -81,6 +81,14 @@ for (const forbidden of [
 ]) assert.equal(serialized.includes(String(forbidden)), false, `Staging handoff leaked ${forbidden}`);
 assert.equal(sanitized.editorial.reviewState, 'approved');
 assert.equal(sanitized.editorial.indexStrategy, 'noindex');
+careSeoStagingSnapshotSchema.parse({
+  schemaVersion: 1,
+  environment: 'staging',
+  sourceEnvironment: 'staging',
+  sourceLabel: 'ephemeral-aquaguide-care',
+  generatedAt: '2026-09-05T08:30:00.000Z',
+  records: [sanitized, { ...sanitized, projection: { ...sanitized.projection, locale: 'zh-CN', route: { ...sanitized.projection.route, pathname: '/zh/care/care_water_quality.html', candidateUrl: '/zh/care/care_water_quality.html' } } }],
+});
 
 assert.throws(
   () => sanitizeCareSeoWorkspaceRecord({ ...workspace, editorial: { ...workspace.editorial!, reviewState: 'draft' } }),
