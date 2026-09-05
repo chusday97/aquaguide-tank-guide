@@ -67,6 +67,64 @@ export interface CareSeoProjectionDto {
 export const careSeoEditorialReviewStateSchema = z.enum(['draft', 'ready_for_review', 'approved']);
 export const careSeoIndexStrategySchema = z.enum(['noindex', 'index']);
 
+export const careSeoEditorialFieldsSchema = z.object({
+  seoTitle: z.string().trim().min(1).max(80),
+  metaDescription: z.string().trim().min(1).max(200),
+  h1: z.string().trim().min(1).max(240),
+  focusKeyword: z.string().trim().min(1).max(160),
+  indexStrategy: careSeoIndexStrategySchema,
+});
+
+export const careSeoEditorialDraftMutationSchema = careSeoEditorialFieldsSchema.extend({
+  locale: supportedLocaleSchema,
+  sourceCareVersion: z.number().int().positive(),
+  editorialId: z.string().uuid().optional(),
+  revisionVersion: z.number().int().positive().optional(),
+}).superRefine((value, context) => {
+  if (Boolean(value.editorialId) !== Boolean(value.revisionVersion)) {
+    context.addIssue({ code: 'custom', path: ['revisionVersion'], message: 'Existing Editorial Draft requires both editorialId and revisionVersion.' });
+  }
+});
+
+export const careSeoEditorialTransitionMutationSchema = z.object({
+  locale: supportedLocaleSchema,
+  sourceCareVersion: z.number().int().positive(),
+  editorialId: z.string().uuid(),
+  revisionVersion: z.number().int().positive(),
+});
+
+export type CareSeoEditorialReviewState = z.infer<typeof careSeoEditorialReviewStateSchema>;
+export type CareSeoIndexStrategy = z.infer<typeof careSeoIndexStrategySchema>;
+export type CareSeoEditorialDraftMutation = z.infer<typeof careSeoEditorialDraftMutationSchema>;
+export type CareSeoEditorialTransitionMutation = z.infer<typeof careSeoEditorialTransitionMutationSchema>;
+
+export interface CareSeoEditorialRevisionDto {
+  id: string;
+  sourceCareId: string;
+  sourceCareCatalogKey: string;
+  sourceCareVersion: number;
+  locale: SupportedLocale;
+  revisionNumber: number;
+  version: number;
+  reviewState: CareSeoEditorialReviewState;
+  indexStrategy: CareSeoIndexStrategy;
+  seoTitle: string;
+  metaDescription: string;
+  h1: string;
+  focusKeyword: string;
+  sourceDrift: boolean;
+  createdAt: string;
+  updatedAt: string;
+  submittedAt?: string;
+  approvedAt?: string;
+}
+
+export interface CareSeoEditorialWorkspaceDto {
+  projection: CareSeoProjectionDto;
+  editorial: CareSeoEditorialRevisionDto | null;
+  persistenceAvailable: boolean;
+}
+
 const careSeoProjectionSnapshotSchema = z.object({
   sourceCareId: z.string().trim().min(1),
   sourceCareCatalogKey: z.string().trim().min(1),
@@ -101,13 +159,8 @@ const careSeoProjectionSnapshotSchema = z.object({
 
 export const careSeoEditorialSnapshotRecordSchema = z.object({
   projection: careSeoProjectionSnapshotSchema,
-  editorial: z.object({
+  editorial: careSeoEditorialFieldsSchema.extend({
     reviewState: careSeoEditorialReviewStateSchema,
-    indexStrategy: careSeoIndexStrategySchema,
-    seoTitle: z.string().trim().min(1).max(80),
-    metaDescription: z.string().trim().min(1).max(200),
-    h1: z.string().trim().min(1).max(240),
-    focusKeyword: z.string().trim().min(1).max(160),
   }),
 });
 

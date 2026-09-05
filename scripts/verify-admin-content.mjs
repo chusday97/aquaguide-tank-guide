@@ -119,6 +119,7 @@ try {
     let savedName = '';
     let currentRecord = { ...baseRecord };
     let currentCare = { ...baseCareRecord };
+    const careSeoEditorialByLocale = new Map();
     let compatibilityRevisions = [];
     let pairRuleRevisions = [];
     let compatibilityBootstrap = createCompatibilityBootstrap();
@@ -259,16 +260,100 @@ try {
       contentType: 'application/json',
       body: JSON.stringify({ data: [currentCare], requestId: 'test-care-list' }),
     }));
-    await page.route('**/api/v1/admin/care-articles/*/seo-projection**', async route => {
+    await page.route('**/api/v1/admin/care-articles/*/seo-editorial**', async route => {
+      const request = route.request();
+      const url = new URL(request.url());
+      const body = request.method() === 'GET' ? null : request.postDataJSON();
+      const locale = body?.locale || url.searchParams.get('locale') || 'zh-CN';
+      const localizedTitle = locale === 'en' ? 'After water change observation' : baseCareRecord.title;
+      const localizedSummary = locale === 'en' ? 'Observe fish condition before taking further action.' : baseCareRecord.summary;
+      const localizedKeyword = locale === 'en' ? 'water change' : baseCareRecord.keywords[0];
+      const candidateUrl = locale === 'en' ? '/care/care_demo.html' : '/zh/care/care_demo.html';
       const projection = {
-        sourceCareId: baseCareRecord.id, sourceCareCatalogKey: baseCareRecord.catalogKey, sourceCareVersion: 1,
-        sourcePublishedAt: '2026-09-05T01:00:00.000Z', sourceAuthority: 'publication-snapshot', locale: 'zh-CN',
-        route: { pathname: '/zh/care/care_demo.html', topicParam: baseCareRecord.catalogKey, candidateUrl: '/zh/care/care_demo.html', alternates: { en: '/care/care_demo.html', 'zh-CN': '/zh/care/care_demo.html', 'x-default': '/care/care_demo.html' }, readiness: 'blocked', blockers: ['Canonical Care topic route 已建立，但当前默认 noindex，尚未开放 SEO publication。', 'Care topic 仍由 SPA client render；static SEO artifact / hosted handoff 尚未建立。', 'Care SEO editorial snapshot / static artifact 尚未建立；当前继续 noindex。'] },
-        sourceFacts: { title: baseCareRecord.title, category: baseCareRecord.category, urgency: baseCareRecord.urgency, summary: baseCareRecord.summary, symptoms: baseCareRecord.symptoms, immediateActions: ['先观察'], avoidActions: baseCareRecord.avoidActions, observeItems: baseCareRecord.observeItems, diagnoseWhen: baseCareRecord.diagnoseWhen, nextStep: baseCareRecord.nextStep, evidenceCount: 0 },
-        suggestedEditorial: { seoTitle: `${baseCareRecord.title} | AquaGuide`, metaDescription: baseCareRecord.summary, h1: baseCareRecord.title, focusKeyword: baseCareRecord.keywords[0] },
-        editableFields: ['seoTitle', 'metaDescription', 'h1', 'focusKeyword'], protectedSourceFields: ['title', 'summary', 'symptoms', 'steps', 'avoidActions', 'observeItems', 'diagnoseWhen', 'nextStep', 'references'], publishReady: false,
+        sourceCareId: baseCareRecord.id,
+        sourceCareCatalogKey: baseCareRecord.catalogKey,
+        sourceCareVersion: 1,
+        sourcePublishedAt: '2026-09-05T01:00:00.000Z',
+        sourceAuthority: 'publication-snapshot',
+        locale,
+        route: {
+          pathname: candidateUrl,
+          topicParam: baseCareRecord.catalogKey,
+          candidateUrl,
+          alternates: { en: '/care/care_demo.html', 'zh-CN': '/zh/care/care_demo.html', 'x-default': '/care/care_demo.html' },
+          readiness: 'blocked',
+          blockers: ['Editorial + hosted Staging acceptance pending.'],
+        },        sourceFacts: {
+          title: localizedTitle,
+          category: baseCareRecord.category,
+          urgency: baseCareRecord.urgency,
+          summary: localizedSummary,
+          symptoms: baseCareRecord.symptoms,
+          immediateActions: ['先观察'],
+          avoidActions: baseCareRecord.avoidActions,
+          observeItems: baseCareRecord.observeItems,
+          diagnoseWhen: baseCareRecord.diagnoseWhen,
+          nextStep: baseCareRecord.nextStep,
+          evidenceCount: 0,
+        },
+        suggestedEditorial: {
+          seoTitle: `${localizedTitle} | AquaGuide`,
+          metaDescription: localizedSummary,
+          h1: localizedTitle,
+          focusKeyword: localizedKeyword,
+        },
+        editableFields: ['seoTitle', 'metaDescription', 'h1', 'focusKeyword'],
+        protectedSourceFields: ['title', 'summary', 'symptoms', 'steps', 'avoidActions', 'observeItems', 'diagnoseWhen', 'nextStep', 'references'],
+        publishReady: false,
       };
-      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: projection, requestId: 'test-care-seo-projection' }) });
+      let editorial = careSeoEditorialByLocale.get(locale) || null;      if (request.method() === 'POST') {
+        if (url.pathname.endsWith('/draft')) {
+          editorial = {
+            id: editorial?.id || (locale === 'en'
+              ? 'de1732a3-27d0-4820-986c-2e932990f573'
+              : 'ce1732a3-27d0-4820-986c-2e932990f573'),
+            sourceCareId: baseCareRecord.id,
+            sourceCareCatalogKey: baseCareRecord.catalogKey,
+            sourceCareVersion: 1,
+            locale,
+            revisionNumber: editorial?.revisionNumber || 1,
+            version: (editorial?.version || 0) + 1,
+            reviewState: 'draft',
+            indexStrategy: 'noindex',
+            seoTitle: body.seoTitle,
+            metaDescription: body.metaDescription,
+            h1: body.h1,
+            focusKeyword: body.focusKeyword,
+            sourceDrift: false,
+            createdAt: editorial?.createdAt || new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+        } else if (url.pathname.endsWith('/submit-review')) {
+          editorial = {            ...editorial,
+            reviewState: 'ready_for_review',
+            version: editorial.version + 1,
+            submittedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+        } else if (url.pathname.endsWith('/approve')) {
+          editorial = {
+            ...editorial,
+            reviewState: 'approved',
+            version: editorial.version + 1,
+            approvedAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+        }
+        careSeoEditorialByLocale.set(locale, editorial);
+      }
+      await route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          data: { projection, editorial, persistenceAvailable: true },
+          requestId: 'test-care-seo-editorial',
+        }),
+      });
     });
     await page.route('**/api/v1/admin/care-articles/*', async route => {
       const request = route.request();
@@ -418,8 +503,20 @@ try {
     await careSeoProjection.waitFor();
     const initialCareSeoText = await careSeoProjection.innerText();
     assert.match(initialCareSeoText, /Published v1/i);
-    assert.match(initialCareSeoText, /Route 未就绪/i);
-    assert.match(initialCareSeoText, /换水后观察 \| AquaGuide/);
+    assert.match(initialCareSeoText, /未建 Draft/i);
+    assert.match(initialCareSeoText, /noindex locked/i);
+    assert.equal(await careSeoProjection.getByLabel('SEO Title').inputValue(), '换水后观察 | AquaGuide');
+    await careSeoProjection.getByLabel('SEO Title').fill('换水后异常处理 | AquaGuide');
+    await careSeoProjection.getByRole('button', { name: '创建 SEO Draft' }).click();
+    await page.getByText('Care SEO Draft 已创建', { exact: true }).waitFor();
+    await careSeoProjection.getByText('Draft', { exact: true }).waitFor();
+    await careSeoProjection.getByRole('button', { name: '提交审核' }).click();
+    await page.getByText('Care SEO Draft 已提交审核', { exact: true }).waitFor();
+    await careSeoProjection.getByText('待审核', { exact: true }).waitFor();
+    await careSeoProjection.getByRole('button', { name: '人工批准' }).click();
+    await page.getByText('Care SEO Editorial 已人工批准', { exact: true }).waitFor();
+    await careSeoProjection.getByText('Approved', { exact: true }).waitFor();
+    assert.equal(await careSeoProjection.getByLabel('SEO Title').isDisabled(), true);
     await page.getByLabel('标题').fill('换水后观察草稿修改');
     await page.getByLabel('优先级').selectOption('高优先级');
     const careImpact = page.getByTestId('content-impact-preview');
@@ -429,7 +526,8 @@ try {
     await page.getByText('内容已保存', { exact: true }).waitFor();
     assert.match(await careImpact.innerText(), /当前草稿相对已发布版本/);
     const persistedCareSeoProjection = await careSeoProjection.innerText();
-    assert.match(persistedCareSeoProjection, /Published v1[\s\S]*换水后观察 \| AquaGuide/);
+    assert.match(persistedCareSeoProjection, /Published v1/);
+    assert.equal(await careSeoProjection.getByLabel('SEO Title').inputValue(), '换水后异常处理 | AquaGuide');
     assert.doesNotMatch(persistedCareSeoProjection, /换水后观察草稿修改/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);
     assert.equal(overflow, false, `${viewport.width}px should not overflow horizontally`);

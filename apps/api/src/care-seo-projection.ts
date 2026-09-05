@@ -38,9 +38,9 @@ export const buildCareSeoProjection = (
       alternates,
       readiness: 'blocked',
       blockers: [
-        'Canonical Care topic route 已建立，但当前默认 noindex，尚未开放 SEO publication。',
-        'Care topic 仍由 SPA client render；static SEO artifact / hosted handoff 尚未建立。',
-        'Care SEO editorial snapshot / static artifact 尚未建立；当前继续 noindex。',
+        'Canonical Care topic route 已建立；SPA fallback 继续 noindex,follow。',
+        'Care SEO Editorial 必须基于当前 Published Care source 完成人工 Draft → Review → Approved。',
+        'Approved EN/zh-CN 必须通过显式 Staging snapshot 与 hosted acceptance；Production Index 继续锁定。',
       ],
     },
     sourceFacts: {

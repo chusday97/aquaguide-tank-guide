@@ -5,8 +5,9 @@ import {
   assetUploadQuerySchema,
   careArticleAdminInputSchema,
   careArticleAdminUpdateSchema,
+  careSeoEditorialDraftMutationSchema,
+  careSeoEditorialTransitionMutationSchema,
   supportedLocaleSchema,
-  type CareArticleDetailDto,
   contentStatusMutationSchema,
   speciesAdminInputSchema,
   speciesAdminUpdateSchema,
@@ -23,9 +24,14 @@ import {
   throwDatabaseError,
   throwMissingOrVersionConflict,
 } from '../data-utils';
-import { buildCurrentPublication, carePublicationSelect, ensurePublishedSnapshotBeforeDraft, getLocalizedPublication } from '../content-publications';
-import { mapCareArticleDetail } from '../content-mappers';
-import { buildCareSeoProjection } from '../care-seo-projection';
+import { buildCurrentPublication, ensurePublishedSnapshotBeforeDraft } from '../content-publications';
+import {
+  approveCareSeoEditorial,
+  getCareSeoEditorialWorkspace,
+  getCurrentCareSeoProjection,
+  saveCareSeoEditorialDraft,
+  submitCareSeoEditorialReview,
+} from '../care-seo-editorial';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 import { adminFeedbackRouter } from './feedback';
@@ -116,38 +122,38 @@ adminRouter.get('/care-articles/:id/seo-projection', asyncRoute(async (request, 
   const id = parseId(request.params.id);
   const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');
   if (!localeParsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '语言参数无效。');
-  const locale = localeParsed.data;
-  const client = getAdminSupabase();
-  const { data: publication, error: publicationError } = await client
-    .from('content_publications')
-    .select('snapshot,source_version,published_at')
-    .eq('resource_type', 'care')
-    .eq('resource_id', id)
-    .maybeSingle();
-  if (publicationError && !publicationStoreUnavailable(publicationError)) {
-    throwDatabaseError(publicationError, '暂时无法读取 Care 已发布版本。');
-  }
-  if (publication) {
-    const detail = getLocalizedPublication<CareArticleDetailDto>(publication.snapshot, locale);
-    if (!detail) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Care 已发布快照缺少可用语言版本。');
-    return sendData(request, response, buildCareSeoProjection(
-      detail, publication.source_version, publication.published_at, 'publication-snapshot', locale,
-    ));
-  }
+  return sendData(request, response, await getCurrentCareSeoProjection(id, localeParsed.data));
+}));
 
-  const { data: legacy, error: legacyError } = await client
-    .from('care_articles')
-    .select(carePublicationSelect)
-    .eq('id', id)
-    .eq('status', 'published')
-    .is('deleted_at', null)
-    .maybeSingle();
-  if (legacyError) throwDatabaseError(legacyError, '暂时无法读取 Care 已发布版本。');
-  if (!legacy) throw new ApiError(404, 'NOT_FOUND', '这条 Care 尚未有 Published 版本，不能生成 SEO projection。');
-  const detail = mapCareArticleDetail(legacy, locale);
-  return sendData(request, response, buildCareSeoProjection(
-    detail, legacy.version, legacy.published_at || legacy.updated_at, 'legacy-published', locale,
-  ));
+adminRouter.get('/care-articles/:id/seo-editorial', asyncRoute(async (request, response) => {
+  const id = parseId(request.params.id);
+  const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');
+  if (!localeParsed.success) throw new ApiError(400, 'VALIDATION_ERROR', '语言参数无效。');
+  return sendData(request, response, await getCareSeoEditorialWorkspace(id, localeParsed.data));
+}));
+
+adminRouter.post('/care-articles/:id/seo-editorial/draft', asyncRoute(async (request, response) => {
+  const id = parseId(request.params.id);
+  const parsed = careSeoEditorialDraftMutationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Care SEO Draft 内容无效。', parsed.error.flatten());
+  const actorId = (request as AuthenticatedRequest).authUser.id;
+  return sendData(request, response, await saveCareSeoEditorialDraft(id, parsed.data, actorId));
+}));
+
+adminRouter.post('/care-articles/:id/seo-editorial/submit-review', asyncRoute(async (request, response) => {
+  const id = parseId(request.params.id);
+  const parsed = careSeoEditorialTransitionMutationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Care SEO Review 请求无效。', parsed.error.flatten());
+  const actorId = (request as AuthenticatedRequest).authUser.id;
+  return sendData(request, response, await submitCareSeoEditorialReview(id, parsed.data, actorId));
+}));
+
+adminRouter.post('/care-articles/:id/seo-editorial/approve', asyncRoute(async (request, response) => {
+  const id = parseId(request.params.id);
+  const parsed = careSeoEditorialTransitionMutationSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Care SEO Approve 请求无效。', parsed.error.flatten());
+  const actorId = (request as AuthenticatedRequest).authUser.id;
+  return sendData(request, response, await approveCareSeoEditorial(id, parsed.data, actorId));
 }));
 
 adminRouter.post('/care-articles', asyncRoute(async (request, response) => {

@@ -3,6 +3,9 @@ import {
   careArticleAdminInputSchema,
   speciesAdminInputSchema,
   type CareArticleDetailDto,
+  type CareSeoEditorialDraftMutation,
+  type CareSeoEditorialTransitionMutation,
+  type CareSeoEditorialWorkspaceDto,
   type CareSeoProjectionDto,
   type SpeciesDetailDto,
 } from '../../../packages/contracts/src/index';
@@ -83,6 +86,23 @@ export const contentAdminService = {
   getPublishedSpecies: (catalogKey: string) => publicContentOrNull<SpeciesDetailDto>(`/species/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
   getPublishedCareArticle: (catalogKey: string) => publicContentOrNull<CareArticleDetailDto>(`/care-articles/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
   getCareSeoProjection: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoProjectionDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-projection?locale=${encodeURIComponent(locale)}`),
+
+  getCareSeoEditorialWorkspace: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial?locale=${encodeURIComponent(locale)}`),
+  saveCareSeoEditorialDraft: (id: string, input: CareSeoEditorialDraftMutation) => apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/draft`, {
+    method: 'POST',
+    body: input,
+    idempotencyKey: createIdempotencyKey('admin-care-seo-draft'),
+  }),
+  submitCareSeoEditorialReview: (id: string, input: CareSeoEditorialTransitionMutation) => apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/submit-review`, {
+    method: 'POST',
+    body: input,
+    idempotencyKey: createIdempotencyKey('admin-care-seo-submit'),
+  }),
+  approveCareSeoEditorial: (id: string, input: CareSeoEditorialTransitionMutation) => apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/approve`, {
+    method: 'POST',
+    body: input,
+    idempotencyKey: createIdempotencyKey('admin-care-seo-approve'),
+  }),
 
   createSpecies: (input: SpeciesAdminInput) => apiRequest<AdminSpeciesRecord>('/admin/species', {
     method: 'POST',
