@@ -596,3 +596,11 @@ Next: P2 Unified Publish Center / release history & audit, beginning with a read
 - Decision: Publish Center v1 is read-only multi-authority aggregation. It must not create a new write authority or migrate SEO operational history into Supabase.
 - Next: implement normalized `ReleaseEvent` read contract + source readers/availability state + `/admin/publish-center` timeline.
 - Docs-only round; no business code, main, Production, deployment or live migration changes.
+
+## 2026-09-05 — P2 Unified Publish Center read model
+- Added multi-authority read-only ReleaseEvent contract and Business/SEO adapters without moving any write authority.
+- Added `/admin/publish-center` with per-source availability/coverage and unified timeline; SEO auth failure degrades independently.
+- Product/Care is explicitly current-publication-only; Compatibility and SEO expose their existing richer history.
+- PASS: contract, API TS, lint/build, 390/1280 browser, existing Admin/Repo regressions.
+- Functional commit `f1b7adaee86eecbd99f1b6c908acfb45c0bd6de2`; online light CI run `33950528930` started.
+Next: read-only release detail/readiness drill-down; no cross-domain publish writes yet.

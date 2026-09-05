@@ -21,7 +21,7 @@ A new conversation should read this file first, then read the canonical set belo
 Treat the Admin as **Aqua Operations Studio**, not one SEO CMS. Keep Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and user-specific context as separate authorities.
 
 ## Current first incomplete milestone
-All defined P0 work, P1 Change Impact Preview and P1 Compatibility Admin are closed in code. The first unfinished item is **P2 Unified Publish Center / release history & audit**. Start by defining a read-only `ReleaseEvent` contract and aggregating Product/Care + Compatibility Business API/Supabase history with independently authenticated SEO Repo Admin history. Do not migrate one authority into another, create a fourth publication authority, or unlock Production.
+All defined P0 work and P1 are closed in code. P2 Unified Publish Center now has a read-only `ReleaseEvent` contract, Business/SEO multi-authority aggregation and `/admin/publish-center`. The first unfinished item is **read-only release detail/readiness drill-down**, with Product/Care current-only history coverage shown explicitly; do not introduce cross-domain write orchestration yet.
 
 Continue from `TASK_QUEUE.md`; do not reopen completed Product/Care or SEO P0 work unless a new regression is proven.
 

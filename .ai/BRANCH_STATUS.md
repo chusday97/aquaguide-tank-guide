@@ -94,3 +94,8 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Measured divergence at `57c4ef00`: main-only 269 / feature-only 129; dedicated reconciliation is still required before any future main merge.
 - Online Admin Content CI run `33909317349`: light `validate` success; Heavy browser / SEO handoff gate skipped by policy.
 - No Production mutation and no live Compatibility migration application occurred.
+
+## 2026-09-05 P2 Publish Center checkpoint
+- Functional feature HEAD pushed: `f1b7adaee86eecbd99f1b6c908acfb45c0bd6de2`.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; measured divergence main-only 269 / feature-only 132.
+- No merge/rebase main, no Production mutation, no live DB migration.

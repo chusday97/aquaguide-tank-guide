@@ -75,3 +75,13 @@ Publish Center is an operational read/orchestration layer, not a fourth source o
 - V1 Publish Center normalizes read history into `ReleaseEvent` records and surfaces unavailable/unauthenticated sources explicitly.
 - Do not copy SEO revisions into Supabase, or Compatibility/Product releases into the SEO repo, merely to create one timeline.
 - Cross-domain write orchestration may be added only after the read model is accepted and must delegate writes back to each canonical authority.
+
+## 2026-09-05 P2 Unified Publish Center — read-only checkpoint
+- Functional commit `f1b7adae feat(admin): add unified publish center read model`.
+- Added shared `ReleaseEvent` / source-status contract, authenticated Business Admin `GET /api/v1/admin/releases`, independent SEO Repo Admin read adapter, and `/admin/publish-center`.
+- Product/Care + Compatibility remain Business API/Supabase write authorities; SEO remains Repo Admin / `admin-store.json`. Publish Center performs no cross-authority writes.
+- Product/Care source is explicitly marked `current_only` because `content_publications` stores one current Published snapshot per resource; Compatibility exposes revision history and SEO exposes activity/revision/import/Staging history.
+- SEO auth is independent: when Repo Admin is not logged in the Publish Center shows `auth_required` while Product/Care + Compatibility continue to render.
+- PASS: read-only contract, API TS, root lint/build, 390/1280 Publish Center browser flow, existing Admin Hub/Product/Care browser regression, Repo Admin contract.
+- CI policy preserved: read-only contract runs in lightweight CI; Publish Center Playwright runs only in Heavy Gate.
+- Next: read-only release detail/readiness drill-down before any cross-domain write orchestration. Production/main/live DB untouched.
