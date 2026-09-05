@@ -283,6 +283,16 @@ assert.match(appSource, /advanced-seo-disclosure/, 'Low-frequency keyword/index/
 assert.match(appSource, /open=\{Boolean\(indexBlockReason\)\}/, 'Advanced SEO must automatically surface active index/canonical blockers');
 assert.match(appSource, /inherited-content-disclosure/, 'Inherited Base intro must remain collapsed by default in Variant editing');
 assert.match(pageReviewSource, /publishStatus[\s\S]*reviewState/, 'Standalone review chrome must carry both publish and review state');
+assert.match(pageReviewSource, /data-ui-state=\{uiState\}/, 'Standalone review chrome must expose explicit loading and semantic UI state');
+assert.match(pageReviewSource, /tone-error[\s\S]*tone-warning[\s\S]*tone-success|safeTone/, 'Standalone review chrome must support error, warning and success health states');
+assert.match(stylesSource, /page-review-status-bar\.page-action-panel[\s\S]*position:relative !important[\s\S]*top:auto !important/, 'Current page review must remain in document flow and never overlay editable content');
+assert.match(stylesSource, /--state-error:[\s\S]*--state-warning:[\s\S]*--state-success:/, 'Admin semantic health must use the red/yellow/green state system');
+assert.match(appSource, /data-validation-state/, 'Variant editor must expose field and section validation states');
+assert.match(appSource, /validation-legend/, 'Variant editor must explain red/yellow/green field health inline');
+assert.match(stylesSource, /inspector-editor-field:hover[\s\S]*focus-within[\s\S]*is-inspector-selected/, 'Editor fields must define Hover, Active/focus and Selected states beyond Default');
+assert.match(stylesSource, /data-ui-state=\"empty\"|editor-empty\[data-ui-state=\"empty\"\]/, 'Editor must define an explicit Empty state');
+assert.match(stylesSource, /data-ui-state=\"loading\"/, 'Review workflow must define an explicit Loading state');
+assert.match(stylesSource, /button:disabled/, 'Shared controls must define a Disabled state');
 assert.doesNotMatch(baseSource, /editor-status-cluster/, 'Base publish/review status must not regress into the editor header');
 assert.match(baseSource, /PageReviewStatusBar/, 'Base editor must use the same standalone Page Review Status Bar');
 assert.match(appSource, /source === 'preview'[\s\S]*const targetScope = variantOnly \|\| variantOverride \? 'variant' : 'base'[\s\S]*runEditorNavigation\(\(\) => setEditorScope\(targetScope\)\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor through the unsaved-change guard');

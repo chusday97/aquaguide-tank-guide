@@ -246,3 +246,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Chinese-mode UI scan reports zero ordinary English state-label leakage (`Draft / Preview / Species / Base / Staging / Ready / Published / Production / Source / Review / Editing`) across the scanned tool controls/headings.
 - English-mode UI labels/headings contain no Chinese copy; Chinese common names that remain inside duplicate evidence are authoritative source-data values, not interface labels and are intentionally preserved.
 - Full Admin contract + root build PASS after updating old contract expectations that previously required mixed Chinese/English labels.
+
+## 2026-09-06 — Admin review state UI checkpoint
+- Aqua SEO Admin current-page review no longer overlays editor content; it is a separate in-flow control surface on desktop and mobile.
+- Runtime demo at 1440px showed red review blocker state, green healthy sections, and yellow incomplete section simultaneously; all three semantic colors were visible from actual state, not decorative labels.
+- Split Preview remained side-by-side (editor/review width 742px, Preview 420px) with 0 horizontal overflow. Mobile 390px also had 0 review/editor overlap and 0 horizontal overflow.
+- Editing a healthy SEO title to a blocked acceptance/test value immediately changed field + parent section + review chrome to Error/red while Selected stayed a neutral black outline.
+- No Production/index/live DB mutation is part of this UI checkpoint.

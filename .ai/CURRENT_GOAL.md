@@ -197,3 +197,8 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Interface locale and content locale are now one operator choice in the main workspace. Both top and editor language controls call the same switch action; Chinese/English may not drift independently.
 - Core chrome runtime checks at 1440x900 and 390x844 show zero horizontal overflow. English chrome contains zero Han characters; Chinese chrome contains none of the ordinary English state words Draft/Preview/Species/Base/Staging/Ready.
 - Technical field tokens such as SEO, H1, URL and Canonical remain canonical terms; ordinary product-state language is localized.
+
+## 2026-09-06 Admin UX rule
+- Review progress must stay visually separate from editable content and must never float over the editor.
+- State color is semantic, not decorative: red = blocker/error, yellow = attention/incomplete, green = healthy/success. Neutral black/white remains the base visual system.
+- New editor/control work must define interaction states beyond Default: Hover, Active/focus, Selected, Loading, Disabled, Success, Error and Empty where applicable.

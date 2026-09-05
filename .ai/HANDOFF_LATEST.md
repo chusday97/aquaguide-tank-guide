@@ -324,3 +324,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Contract now protects the split grid, resize handle, non-closing inspector behavior and unified locale action.
 - This round is Aqua SEO Admin only. The user's separate “subscribe current segment -> subscribe competition icon” request belongs to IceGlide and was not written into Aqua.
 - Follow-up locale cleanup completed across advanced tools. Product-state language is localized end-to-end; canonical technical tokens such as SEO, H1, URL, Canonical and `catalog_key` may remain unchanged. Do not translate source-data identities merely to make the UI look monolingual.
+
+## 2026-09-06 — review/editor separation + semantic component states
+- Current-page/Base review chrome is now in normal document flow; it is no longer sticky and cannot cover the editing surface while scrolling or while split Preview is open.
+- Review/editor health uses exactly three semantic colors on top of the neutral UI: red = blocking/error, yellow = incomplete/attention, green = healthy/success.
+- Variant editor computes field + section health from real effective SEO content, required-field completeness, content-hygiene blockers, and index/canonical policy blockers. Base fields use the same health grammar.
+- Component states are now explicit across the editing workflow: Default, Hover, Active/focus, Selected, Loading, Disabled, Success, Error, Empty. Review busy state shows a spinner; editor empty state is visually distinct.
+- Browser proof: desktop review/editor overlap = 0px with 18px gap; split Preview keeps review/editor 742px + Preview 420px with 0 horizontal overflow; mobile 390px overlap = 0 and overflow = 0. A forced hygiene badcase turns field + section + review red immediately.
+- Admin contract, repo backend/API/dual-repo gates, full root build, and `git diff --check` pass.

@@ -4,6 +4,8 @@ export default function PageReviewStatusBar({
   isUiEnglish = false,
   scope = 'page',
   dirtyHint = '',
+  tone = 'default',
+  busy = false,
   children,
 }) {
   const step = reviewState === 'approved' ? 3 : reviewState === 'ready_for_review' ? 2 : 1;
@@ -21,12 +23,31 @@ export default function PageReviewStatusBar({
     [2, isUiEnglish ? 'Awaiting review' : '待审核'],
     [3, isUiEnglish ? 'Preview approved' : '已批准预览'],
   ];
+  const safeTone = ['error', 'warning', 'success'].includes(tone) ? tone : 'default';
+  const healthLabel = busy
+    ? (isUiEnglish ? 'Working' : '处理中')
+    : safeTone === 'error'
+      ? (isUiEnglish ? 'Needs fixing' : '需修复')
+      : safeTone === 'warning'
+        ? (isUiEnglish ? 'Needs attention' : '待处理')
+        : safeTone === 'success'
+          ? (isUiEnglish ? 'Healthy' : '正常')
+          : (isUiEnglish ? 'In progress' : '进行中');
+  const uiState = busy ? 'loading' : safeTone;
 
   return (
-    <section className={`page-review-status-bar page-action-panel review-${reviewState}`} aria-label={scopeLabel}>
+    <section
+      className={`page-review-status-bar page-action-panel review-${reviewState} tone-${safeTone}`}
+      data-ui-state={uiState}
+      aria-busy={busy || undefined}
+      aria-label={scopeLabel}
+    >
       <div className="page-review-meta">
         <small>{scopeLabel}</small>
-        <strong>{isUiEnglish ? `Review ${step}/3` : `审核进度 ${step}/3`}</strong>
+        <div className="page-review-title-row">
+          <strong>{isUiEnglish ? `Review ${step}/3` : `审核进度 ${step}/3`}</strong>
+          <span className={`review-health-chip tone-${safeTone}`}>{healthLabel}</span>
+        </div>
         <span><i className={`editor-status-dot ${publishStatus}`}></i>{publishLabel} · {reviewLabel}</span>
       </div>
       <div className="workflow-status-block">

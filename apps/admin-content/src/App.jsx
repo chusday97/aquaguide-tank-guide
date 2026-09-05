@@ -188,10 +188,14 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     return () => cancelAnimationFrame(frame);
   }, [selectedInspectorElement, species?.id, locale]);
 
-  const editorFieldProps = (key) => ({
-    'data-editor-field': key,
-    className: `inspector-editor-field ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
-  });
+  const editorFieldProps = (key) => {
+    const fieldState = fieldStateByKey?.[key] || 'default';
+    return {
+      'data-editor-field': key,
+      'data-validation-state': fieldState,
+      className: `inspector-editor-field state-${fieldState} ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
+    };
+  };
 
   const hasSpecies = Boolean(species);
   const resolvedSeo = hasSpecies ? resolveEffectiveSeo({
@@ -229,7 +233,37 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     imageAlt: form.imageAlt, focusKeyword: form.focusKeyword,
   }) : { clean: true, issues: [] };
   const hygieneBlockReason = currentHygiene.clean ? '' : hygieneBlockerText(currentHygiene.issues[0], locale);
-
+  const hygieneIssueKeys = new Set(currentHygiene.issues.map((issue) => ({ variantIntro: 'intro' }[issue.field] || issue.field)));
+  const hasIntroContent = Boolean([effectiveSeo?.sharedIntro, effectiveSeo?.variantIntro].filter(Boolean).join('').trim());
+  const requiredFieldPresent = {
+    seoTitle: Boolean(effectiveSeo?.seoTitle?.trim()),
+    metaDescription: Boolean(effectiveSeo?.metaDescription?.trim()),
+    h1: Boolean(effectiveSeo?.h1?.trim()),
+    intro: hasIntroContent,
+    imageAlt: Boolean(form.imageAlt?.trim()),
+    localizedName: !isEnglishLocale(locale) || Boolean(form.localizedName?.trim()),
+  };
+  const fieldStateByKey = {
+    seoTitle: hygieneIssueKeys.has('seoTitle') ? 'error' : requiredFieldPresent.seoTitle ? 'success' : 'warning',
+    metaDescription: hygieneIssueKeys.has('metaDescription') ? 'error' : requiredFieldPresent.metaDescription ? 'success' : 'warning',
+    h1: hygieneIssueKeys.has('h1') ? 'error' : requiredFieldPresent.h1 ? 'success' : 'warning',
+    intro: hygieneIssueKeys.has('intro') || hygieneIssueKeys.has('sharedIntro') ? 'error' : requiredFieldPresent.intro ? 'success' : 'warning',
+    imageAlt: hygieneIssueKeys.has('imageAlt') ? 'error' : requiredFieldPresent.imageAlt ? 'success' : 'warning',
+    localizedName: hygieneIssueKeys.has('localizedName') ? 'error' : requiredFieldPresent.localizedName ? 'success' : 'warning',
+    focusKeyword: hygieneIssueKeys.has('focusKeyword') ? 'error' : form.focusKeyword?.trim() ? 'success' : 'default',
+    indexStrategy: indexBlockReason ? 'error' : 'success',
+  };
+  const stateLabel = (state) => isUiEnglish
+    ? ({ error: 'Needs fixing', warning: 'Needs attention', success: 'Healthy', default: 'Optional' }[state] || 'In progress')
+    : ({ error: '需修复', warning: '待补充', success: '正常', default: '可选' }[state] || '进行中');
+  const sectionState = (keys) => keys.some((key) => fieldStateByKey[key] === 'error')
+    ? 'error'
+    : keys.some((key) => fieldStateByKey[key] === 'warning')
+      ? 'warning'
+      : 'success';
+  const seoSectionState = sectionState(isEnglishLocale(locale) ? ['localizedName', 'seoTitle', 'metaDescription', 'h1'] : ['seoTitle', 'metaDescription', 'h1']);
+  const contentSectionState = sectionState(['intro', 'imageAlt']);
+  const policySectionState = indexBlockReason ? 'error' : 'success';
   useEffect(() => {
     if (!hasSpecies || !effectiveSeo || !routeMeta) {
       onLivePreviewChange?.(null);
@@ -252,11 +286,16 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const baselineForm = fromSeoRow(record, species, locale);
   const contentDirty = !readOnly && EDITORIAL_FORM_KEYS.some((key) => String(form[key] ?? '') !== String(baselineForm[key] ?? ''));
   const isDirty = !readOnly && JSON.stringify(form) !== JSON.stringify(baselineForm);
+  const reviewTone = !currentHygiene.clean || indexBlockReason || publishReadinessState === 'blocked'
+    ? 'error'
+    : contentDirty || form.reviewState !== 'approved'
+      ? 'warning'
+      : 'success';
   useEffect(() => { onDirtyChange?.(isDirty); }, [isDirty, onDirtyChange]);
 
   if (!species) {
     return (
-      <section className="editor-empty">
+      <section className="editor-empty" data-ui-state="empty">
         <div className="empty-icon">↖</div>
         <h2>{isUiEnglish ? 'Select a Species' : '选择一个物种'}</h2>
         <p>{isUiEnglish ? 'Choose a Species from the left navigation to begin editing.' : '从左侧列表选择鱼种，开始编辑 SEO 内容。'}</p>
@@ -384,6 +423,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         reviewState={form.reviewState}
         isUiEnglish={isUiEnglish}
         scope="page"
+        tone={reviewTone}
+        busy={saving || stagingPublishing}
         dirtyHint={contentDirty ? (isUiEnglish ? 'Saving content resets approval to Editing.' : '保存内容后会自动退回“编辑中”，避免旧审核结果继续生效。') : ''}
       >
         {contentDirty ? (
@@ -429,17 +470,25 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 
       <div className="editor-detail-heading">
         <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
-        <h3>{isUiEnglish ? 'Page content and SEO fields' : '页面内容与 SEO 字段'}</h3>
+        <div className="editor-detail-title-row">
+          <h3>{isUiEnglish ? 'Page content and SEO fields' : '页面内容与 SEO 字段'}</h3>
+          <div className="validation-legend" aria-label={isUiEnglish ? 'Field health legend' : '字段状态说明'}>
+            <span className="tone-error">{isUiEnglish ? 'Red · fix' : '红 · 需修复'}</span>
+            <span className="tone-warning">{isUiEnglish ? 'Yellow · attention' : '黄 · 待处理'}</span>
+            <span className="tone-success">{isUiEnglish ? 'Green · healthy' : '绿 · 正常'}</span>
+          </div>
+        </div>
         <p>{isUiEnglish ? 'These fields shape the page. Workflow state changes only when you use the action panel above.' : '下面只负责“内容怎么写”；审核状态只通过上方独立的审核进度栏推进。'}</p>
       </div>
       <div className="editor-grid">
         <div className="form-column">
-          <div className="section-card">
+          <div className={`section-card validation-section state-${seoSectionState}`} data-validation-state={seoSectionState}>
             <div className="section-heading">
               <div>
                 <h3>{t('editor.seo')}</h3>
                 <p>{isUiEnglish ? 'Edit search appearance and page headings without changing source data.' : '控制搜索结果和页面主标题，不修改产品数据。'}</p>
               </div>
+              <span className={`validation-state-chip tone-${seoSectionState}`}>{stateLabel(seoSectionState)}</span>
             </div>
             {isEnglishLocale(locale) ? (
               <label {...editorFieldProps('localizedName')}>
@@ -474,12 +523,13 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             })}
           </div>
 
-          <div className="section-card">
+          <div className={`section-card validation-section state-${contentSectionState}`} data-validation-state={contentSectionState}>
             <div className="section-heading">
               <div>
                 <h3>{t('editor.pageContent')}</h3>
                 <p>{isUiEnglish ? 'Edit the core editorial content for this page.' : '编辑这个页面最核心的内容。'}</p>
               </div>
+              <span className={`validation-state-chip tone-${contentSectionState}`}>{stateLabel(contentSectionState)}</span>
             </div>
             {group?.member_count > 1 ? (
               <details className="inherited-content-disclosure">
@@ -503,20 +553,20 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             </label>
           </div>
 
-          <details className="advanced-seo-disclosure" open={Boolean(indexBlockReason)}>
+          <details className={`advanced-seo-disclosure validation-section state-${policySectionState}`} data-validation-state={policySectionState} open={Boolean(indexBlockReason)}>
             <summary>
               <span>
                 <strong>{isUiEnglish ? 'Advanced SEO' : '高级 SEO'}</strong>
                 <small>{isUiEnglish ? 'Keyword, indexing, canonical and URL settings' : '关键词、收录策略、Canonical 与 URL'}</small>
               </span>
-              <em>{form.indexStrategy === 'index' ? (isUiEnglish ? 'Index' : '独立收录') : form.indexStrategy === 'canonical_to_sibling' ? 'Canonical' : 'Noindex'}</em>
+              <div className="advanced-seo-summary-state"><span className={`validation-state-chip tone-${policySectionState}`}>{stateLabel(policySectionState)}</span><em>{form.indexStrategy === 'index' ? (isUiEnglish ? 'Index' : '独立收录') : form.indexStrategy === 'canonical_to_sibling' ? 'Canonical' : 'Noindex'}</em></div>
             </summary>
             <div className="advanced-seo-body">
               <label>
                 {t('editor.focusKeyword')}
                 <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
               </label>
-              <label>{t('editor.indexStrategy')}
+              <label {...editorFieldProps('indexStrategy')}>{t('editor.indexStrategy')}
                 <select value={form.indexStrategy} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('indexStrategy', event.target.value)}>
                   {INDEX_STRATEGIES.map((item) => (
                     <option

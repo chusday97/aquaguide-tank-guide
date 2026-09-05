@@ -30,10 +30,14 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     return () => cancelAnimationFrame(frame);
   }, [selectedInspectorElement, group?.group_key, locale]);
 
-  const baseFieldProps = (key) => ({
-    'data-base-editor-field': key,
-    className: `inspector-editor-field ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
-  });
+  const baseFieldProps = (key) => {
+    const fieldState = baseFieldStateByKey?.[key] || 'default';
+    return {
+      'data-base-editor-field': key,
+      'data-validation-state': fieldState,
+      className: `inspector-editor-field state-${fieldState} ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
+    };
+  };
 
   const baselineForm = groupSeoFromRow(record, locale);
   const contentDirty = !readOnly && BASE_EDITORIAL_KEYS.some((key) => String(form[key] ?? '') !== String(baselineForm[key] ?? ''));
@@ -44,6 +48,20 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     h1Template: form.h1Template, sharedIntroTemplate: form.sharedIntro,
   });
   const baseHygieneBlockReason = baseHygiene.clean ? '' : hygieneBlockerText(baseHygiene.issues[0], locale);
+  const baseIssueKeys = new Set(baseHygiene.issues.map((issue) => ({
+    seoTitleTemplate: 'seoTitle', metaDescriptionTemplate: 'metaDescription', h1Template: 'h1', sharedIntroTemplate: 'intro',
+  }[issue.field] || issue.field)));
+  const baseFieldStateByKey = {
+    seoTitle: baseIssueKeys.has('seoTitle') ? 'error' : form.seoTitleTemplate?.trim() ? 'success' : 'warning',
+    metaDescription: baseIssueKeys.has('metaDescription') ? 'error' : form.metaDescriptionTemplate?.trim() ? 'success' : 'warning',
+    h1: baseIssueKeys.has('h1') ? 'error' : form.h1Template?.trim() ? 'success' : 'warning',
+    intro: baseIssueKeys.has('intro') ? 'error' : form.sharedIntro?.trim() ? 'success' : 'warning',
+  };
+  const reviewTone = !baseHygiene.clean || group?.category_conflict
+    ? 'error'
+    : contentDirty || form.reviewState !== 'approved'
+      ? 'warning'
+      : 'success';
 
   if (!group) return null;
   const localeLabel = getLocaleLabel(locale);
@@ -133,6 +151,8 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         reviewState={form.reviewState}
         isUiEnglish={isUiEnglish}
         scope="base"
+        tone={reviewTone}
+        busy={saving}
         dirtyHint={contentDirty ? (isUiEnglish ? 'Saving this template resets approval to Editing.' : '保存模板后会自动退回“编辑中”，需要重新审核。') : ''}
       >
         {contentDirty ? (
@@ -168,7 +188,14 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       ) : null}
       <div className="editor-detail-heading">
         <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
-        <h3>{isUiEnglish ? 'Base template fields' : '基础模板字段'}</h3>
+        <div className="editor-detail-title-row">
+          <h3>{isUiEnglish ? 'Base template fields' : '基础模板字段'}</h3>
+          <div className="validation-legend" aria-label={isUiEnglish ? 'Field health legend' : '字段状态说明'}>
+            <span className="tone-error">{isUiEnglish ? 'Red · fix' : '红 · 需修复'}</span>
+            <span className="tone-warning">{isUiEnglish ? 'Yellow · attention' : '黄 · 待处理'}</span>
+            <span className="tone-success">{isUiEnglish ? 'Green · healthy' : '绿 · 正常'}</span>
+          </div>
+        </div>
         <p>{isUiEnglish ? 'Edit shared copy here. Review actions stay in the workflow panel above.' : '这里只修改共享模板内容；提交和批准统一在上方独立审核进度栏完成。'}</p>
       </div>
       <div className="base-seo-grid">

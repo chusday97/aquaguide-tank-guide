@@ -2815,3 +2815,121 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
     white-space:nowrap;
   }
 }
+
+/* 2026-09-06 semantic state system: neutral UI + red/yellow/green health only. */
+:root {
+  --state-error:#b42318;
+  --state-error-bg:#fff4f2;
+  --state-error-line:#f3b7b0;
+  --state-warning:#9a6500;
+  --state-warning-bg:#fff8e6;
+  --state-warning-line:#ead08a;
+  --state-success:#247a4a;
+  --state-success-bg:#f1f8f3;
+  --state-success-line:#a9d2b8;
+}
+
+/* Review is a sibling control surface, never floating on top of editable content. */
+.page-review-status-bar.page-action-panel {
+  position:relative !important;
+  top:auto !important;
+  z-index:1 !important;
+  margin:0 0 18px !important;
+  border:1px solid var(--cms-border) !important;
+  border-left-width:4px !important;
+  border-bottom-width:1px !important;
+  box-shadow:none !important;
+}
+.page-review-status-bar.tone-error { border-left-color:var(--state-error) !important; background:var(--state-error-bg) !important; }
+.page-review-status-bar.tone-warning { border-left-color:var(--state-warning) !important; background:var(--state-warning-bg) !important; }
+.page-review-status-bar.tone-success { border-left-color:var(--state-success) !important; background:var(--state-success-bg) !important; }
+.page-review-title-row { display:flex; align-items:center; gap:7px; min-width:0; }
+.review-health-chip,.validation-state-chip,.validation-legend > span {
+  display:inline-flex; align-items:center; min-height:20px; padding:2px 7px; border:1px solid currentColor;
+  border-radius:999px; font-size:9px; font-weight:800; line-height:1; white-space:nowrap;
+}
+.review-health-chip.tone-error,.validation-state-chip.tone-error,.validation-legend .tone-error { color:var(--state-error) !important; background:var(--state-error-bg) !important; border-color:var(--state-error-line) !important; }
+.review-health-chip.tone-warning,.validation-state-chip.tone-warning,.validation-legend .tone-warning { color:var(--state-warning) !important; background:var(--state-warning-bg) !important; border-color:var(--state-warning-line) !important; }
+.review-health-chip.tone-success,.validation-state-chip.tone-success,.validation-legend .tone-success { color:var(--state-success) !important; background:var(--state-success-bg) !important; border-color:var(--state-success-line) !important; }
+.page-review-status-bar[data-ui-state="loading"] { opacity:.72; }
+.page-review-status-bar[data-ui-state="loading"] .review-health-chip::before {
+  content:''; width:8px; height:8px; margin-right:4px; border:1.5px solid currentColor; border-right-color:transparent; border-radius:999px; animation:review-state-spin .75s linear infinite;
+}
+@keyframes review-state-spin { to { transform:rotate(360deg); } }
+
+.editor-detail-title-row { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.validation-legend { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:5px; }
+.validation-legend > span { min-height:18px; padding:2px 6px; font-size:8px; }
+
+/* Section status: large areas are readable at a glance before field-level inspection. */
+.validation-section { position:relative; border-left:3px solid var(--cms-border-strong) !important; padding-left:16px !important; transition:box-shadow .15s ease, transform .15s ease; }
+.validation-section.state-error { border-left-color:var(--state-error) !important; background:linear-gradient(90deg,var(--state-error-bg),transparent 26%) !important; }
+.validation-section.state-warning { border-left-color:var(--state-warning) !important; background:linear-gradient(90deg,var(--state-warning-bg),transparent 26%) !important; }
+.validation-section.state-success { border-left-color:var(--state-success) !important; background:linear-gradient(90deg,var(--state-success-bg),transparent 26%) !important; }
+.validation-section:hover { box-shadow:0 0 0 1px var(--cms-border) !important; }
+.validation-section .section-heading { align-items:flex-start; }
+.validation-section .validation-state-chip { margin-left:auto; flex:none; }
+.advanced-seo-disclosure.validation-section { padding-left:0 !important; }
+.advanced-seo-disclosure.validation-section > summary { padding-left:16px; }
+.advanced-seo-summary-state { display:flex; align-items:center; gap:7px; flex:none; }
+
+/* Field states: default → hover → active/focus → selected, with health kept orthogonal. */
+.inspector-editor-field { padding:10px; margin:-10px; border:1px solid transparent; border-left:3px solid transparent; transition:box-shadow .15s ease, transform .15s ease; }
+.inspector-editor-field:hover { border-color:var(--cms-border) !important; background:var(--cms-panel); }
+.inspector-editor-field:focus-within { box-shadow:0 0 0 3px rgba(32,36,44,.07); transform:translateY(-1px); }
+.inspector-editor-field.state-error { border-left-color:var(--state-error) !important; background:var(--state-error-bg) !important; }
+.inspector-editor-field.state-warning { border-left-color:var(--state-warning) !important; background:var(--state-warning-bg) !important; }
+.inspector-editor-field.state-success { border-left-color:var(--state-success) !important; background:var(--state-success-bg) !important; }
+.inspector-editor-field.is-inspector-selected { outline:2px solid var(--cms-ink) !important; outline-offset:3px; box-shadow:0 0 0 4px rgba(32,36,44,.06) !important; }
+.inspector-editor-field.state-error input,.inspector-editor-field.state-error textarea,.inspector-editor-field.state-error select { border-color:var(--state-error-line) !important; }
+.inspector-editor-field.state-warning input,.inspector-editor-field.state-warning textarea,.inspector-editor-field.state-warning select { border-color:var(--state-warning-line) !important; }
+.inspector-editor-field.state-success input,.inspector-editor-field.state-success textarea,.inspector-editor-field.state-success select { border-color:var(--state-success-line) !important; }
+
+/* Shared component interaction states. */
+.admin-shell button:not(:disabled):hover { transform:translateY(-1px); }
+.admin-shell button:not(:disabled):active { transform:translateY(0) scale(.985); }
+.admin-shell button[aria-pressed="true"],.admin-shell button.active { box-shadow:0 0 0 2px rgba(32,36,44,.09); }
+.admin-shell button:disabled,.admin-shell [aria-disabled="true"] { opacity:.45 !important; cursor:not-allowed !important; transform:none !important; box-shadow:none !important; }
+.editor-empty[data-ui-state="empty"] { min-height:360px; margin:18px; border:1px dashed var(--cms-border-strong); border-radius:16px; background:var(--cms-panel); }
+
+@media (max-width:760px) {
+  .editor-detail-title-row { align-items:flex-start; flex-direction:column; }
+  .validation-legend { justify-content:flex-start; }
+  .validation-section { padding-left:10px !important; }
+  .page-review-status-bar.page-action-panel { margin-bottom:12px !important; }
+}
+/* Semantic health intentionally overrides the legacy neutral class-name safety net. */
+.admin-shell .page-review-status-bar.page-action-panel.tone-error { border-left-color:var(--state-error) !important; }
+.admin-shell .page-review-status-bar.page-action-panel.tone-warning { border-left-color:var(--state-warning) !important; }
+.admin-shell .page-review-status-bar.page-action-panel.tone-success { border-left-color:var(--state-success) !important; }
+.admin-shell .validation-section.state-error { border-left-color:var(--state-error) !important; }
+.admin-shell .validation-section.state-warning { border-left-color:var(--state-warning) !important; }
+.admin-shell .validation-section.state-success { border-left-color:var(--state-success) !important; }
+.admin-shell .inspector-editor-field.state-error { border-left-color:var(--state-error) !important; }
+.admin-shell .inspector-editor-field.state-warning { border-left-color:var(--state-warning) !important; }
+.admin-shell .inspector-editor-field.state-success { border-left-color:var(--state-success) !important; }
+/* State stripes avoid the legacy neutral border safety net while keeping semantic color explicit. */
+.page-review-status-bar.page-action-panel::after,
+.validation-section::after,
+.inspector-editor-field::after {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px; pointer-events:none;
+}
+.page-review-status-bar.page-action-panel.tone-error::after,.validation-section.state-error::after,.inspector-editor-field.state-error::after { background:var(--state-error); }
+.page-review-status-bar.page-action-panel.tone-warning::after,.validation-section.state-warning::after,.inspector-editor-field.state-warning::after { background:var(--state-warning); }
+.page-review-status-bar.page-action-panel.tone-success::after,.validation-section.state-success::after,.inspector-editor-field.state-success::after { background:var(--state-success); }
+/* Existing blocker/readiness surfaces now use the same three semantic colors. */
+.admin-shell .content-hygiene-warning,.admin-shell .advanced-seo-warning {
+  border-color:var(--state-error-line) !important; background:var(--state-error-bg) !important; color:var(--state-error) !important;
+}
+.admin-shell .batch-warning,.admin-shell .unsaved-indicator {
+  border-color:var(--state-warning-line) !important; background:var(--state-warning-bg) !important; color:var(--state-warning) !important;
+}
+.admin-shell .publish-readiness-panel.blocked,.admin-shell .readiness-pill.blocked {
+  border-color:var(--state-error-line) !important; background:var(--state-error-bg) !important; color:var(--state-error) !important;
+}
+.admin-shell .publish-readiness-panel.review,.admin-shell .readiness-pill.review {
+  border-color:var(--state-warning-line) !important; background:var(--state-warning-bg) !important; color:var(--state-warning) !important;
+}
+.admin-shell .publish-readiness-panel.ready,.admin-shell .readiness-pill.ready {
+  border-color:var(--state-success-line) !important; background:var(--state-success-bg) !important; color:var(--state-success) !important;
+}
