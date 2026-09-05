@@ -30,6 +30,8 @@ on:
       - 'scripts/test-care-seo-editorial.ts'
       - 'scripts/test-care-seo-handoff.ts'
       - 'scripts/test-care-seo-build-routing.ts'
+      - 'scripts/test-care-seo-release-readiness.ts'
+      - 'scripts/care-seo-release-readiness.ts'
       - 'scripts/test-care-seo-artifact.ts'
       - 'scripts/build-care-seo-artifact.ts'
       - 'scripts/verify-care-seo-route.mjs'
@@ -79,6 +81,8 @@ on:
       - 'scripts/test-care-seo-editorial.ts'
       - 'scripts/test-care-seo-handoff.ts'
       - 'scripts/test-care-seo-build-routing.ts'
+      - 'scripts/test-care-seo-release-readiness.ts'
+      - 'scripts/care-seo-release-readiness.ts'
       - 'scripts/test-care-seo-artifact.ts'
       - 'scripts/build-care-seo-artifact.ts'
       - 'scripts/verify-care-seo-route.mjs'
@@ -147,6 +151,8 @@ jobs:
         run: npm run test:care-seo-handoff
       - name: Care SEO explicit build routing contract
         run: npm run test:care-seo-build-routing
+      - name: Care SEO release readiness contract
+        run: npm run test:care-seo-release-readiness
       - name: Publish Center read-only contract
         run: npm run test:publish-center-contract
       - name: Runtime compatibility authority contract
@@ -174,11 +180,17 @@ jobs:
           snapshot_exit=$?
           VERCEL_CHANGED_FILES='content/care-seo/staging-snapshot.json' node scripts/vercel-ignore-build.mjs
           care_snapshot_exit=$?
+          VERCEL_CHANGED_FILES='content/care-seo/staging-acceptance.json' node scripts/vercel-ignore-build.mjs
+          care_acceptance_exit=$?
+          VERCEL_CHANGED_FILES=$'content/care-seo/staging-acceptance.json\nscripts/care-seo-release-readiness.ts' node scripts/vercel-ignore-build.mjs
+          care_acceptance_mixed_exit=$?
           set -e
           test "$docs_exit" -eq 0
           test "$code_exit" -eq 1
           test "$snapshot_exit" -eq 1
           test "$care_snapshot_exit" -eq 1
+          test "$care_acceptance_exit" -eq 0
+          test "$care_acceptance_mixed_exit" -eq 1
 
   heavy:
     name: Heavy browser / SEO handoff gate

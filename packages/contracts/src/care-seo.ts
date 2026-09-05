@@ -169,5 +169,42 @@ export const careSeoStagingSnapshotSchema = z.object({
   records: z.array(careSeoEditorialSnapshotRecordSchema).min(2),
 });
 
+export const careSeoHostedAcceptanceEvidenceSchema = z.object({
+  schemaVersion: z.literal(1),
+  environment: z.literal('staging'),
+  snapshotSha256: z.string().regex(/^[0-9a-f]{64}$/),
+  snapshotGitSha: z.string().regex(/^[0-9a-f]{40}$/),
+  acceptedAt: z.string().datetime({ offset: true }),
+  deployment: z.object({
+    provider: z.literal('vercel'),
+    deploymentId: z.string().startsWith('dpl_'),
+    deploymentUrl: z.string().url(),
+    canonicalBaseUrl: z.string().url(),
+  }),
+  verification: z.object({
+    pagesChecked: z.number().int().positive(),
+    bilingualPairsChecked: z.number().int().positive(),
+    http200: z.literal(true),
+    metadataMatched: z.literal(true),
+    canonicalHreflangMatched: z.literal(true),
+    sourceVersionMatched: z.literal(true),
+    noindexRetained: z.literal(true),
+    hygienePassed: z.literal(true),
+  }),
+});
+
+export const careSeoReleaseDecisionSchema = z.object({
+  schemaVersion: z.literal(1),
+  targetEnvironment: z.literal('production'),
+  decision: z.enum(['hold_noindex', 'approve_index_release']),
+  decidedAt: z.string().datetime({ offset: true }),
+  decidedBy: z.string().trim().min(1),
+  snapshotSha256: z.string().regex(/^[0-9a-f]{64}$/),
+  acceptanceDeploymentId: z.string().startsWith('dpl_'),
+  rationale: z.string().trim().min(1).max(1000),
+});
+
 export type CareSeoEditorialSnapshotRecord = z.infer<typeof careSeoEditorialSnapshotRecordSchema>;
 export type CareSeoStagingSnapshot = z.infer<typeof careSeoStagingSnapshotSchema>;
+export type CareSeoHostedAcceptanceEvidence = z.infer<typeof careSeoHostedAcceptanceEvidenceSchema>;
+export type CareSeoReleaseDecision = z.infer<typeof careSeoReleaseDecisionSchema>;

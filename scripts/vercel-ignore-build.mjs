@@ -1,10 +1,11 @@
 import { execFileSync } from 'node:child_process';
 
-const DOC_ONLY = [
+const NON_RUNTIME_ONLY = [
   /^\.ai\//,
   /^HANDOFF\.md$/,
   /^PROGRESS\.md$/,
   /(^|\/)README\.md$/,
+  /^content\/care-seo\/staging-acceptance\.json$/,
 ];
 
 function changedFiles() {
@@ -24,10 +25,10 @@ function changedFiles() {
 
 const files = changedFiles();
 if (!files.length) {
-  console.log('Vercel build: continue (unable to prove docs-only change).');
+  console.log('Vercel build: continue (unable to prove non-runtime-only change).');
   process.exit(1);
 }
 
-const docsOnly = files.every((file) => DOC_ONLY.some((pattern) => pattern.test(file)));
-console.log(`Vercel build: ${docsOnly ? 'skip docs-only commit' : 'continue'} (${files.join(', ')})`);
-process.exit(docsOnly ? 0 : 1);
+const nonRuntimeOnly = files.every((file) => NON_RUNTIME_ONLY.some((pattern) => pattern.test(file)));
+console.log(`Vercel build: ${nonRuntimeOnly ? 'skip docs/evidence-only commit' : 'continue'} (${files.join(', ')})`);
+process.exit(nonRuntimeOnly ? 0 : 1);

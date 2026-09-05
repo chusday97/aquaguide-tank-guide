@@ -107,6 +107,9 @@ const validateReleaseScope = (snapshot: CareSeoStagingSnapshot) => {
     if (record.editorial.reviewState !== 'approved') {
       throw new Error(`Care SEO record is not approved: ${record.projection.sourceCareCatalogKey}/${record.projection.locale}`);
     }
+    if (record.editorial.indexStrategy !== 'noindex') {
+      throw new Error(`Care SEO Staging must remain noindex: ${record.projection.sourceCareCatalogKey}/${record.projection.locale}`);
+    }
     const key = record.projection.sourceCareCatalogKey;
     groups.set(key, [...(groups.get(key) || []), record]);
   }

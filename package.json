@@ -142,6 +142,8 @@
     "test:care-seo-editorial": "tsx scripts/test-care-seo-editorial.ts",
     "test:care-seo-handoff": "tsx scripts/test-care-seo-handoff.ts",
     "test:care-seo-build-routing": "tsx scripts/test-care-seo-build-routing.ts",
+    "test:care-seo-release-readiness": "tsx scripts/test-care-seo-release-readiness.ts",
+    "check:care-seo-release-readiness": "tsx scripts/care-seo-release-readiness.ts",
     "verify:care-seo-hosted": "tsx scripts/verify-care-seo-hosted.mjs",
     "test:care-seo-route": "node scripts/verify-care-seo-route.mjs",
     "test:publish-center-contract": "tsx scripts/test-publish-center-contract.ts",

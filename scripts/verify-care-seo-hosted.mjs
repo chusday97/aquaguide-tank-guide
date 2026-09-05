@@ -1,21 +1,30 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
-import { careSeoStagingSnapshotSchema } from '../packages/contracts/src/index.ts';
+import { careSeoHostedAcceptanceEvidenceSchema, careSeoStagingSnapshotSchema } from '../packages/contracts/src/index.ts';
 
 const baseUrl = String(process.env.CARE_SEO_ACCEPTANCE_BASE_URL || '').replace(/\/+$/, '');
 const snapshotPath = process.env.CARE_SEO_ACCEPTANCE_SNAPSHOT_PATH;
 const productionUrl = String(process.env.PRODUCTION_PUBLIC_SITE_URL || 'https://aqua-tank-guide.vercel.app').replace(/\/+$/, '');
+const canonicalBaseUrl = String(process.env.CARE_SEO_ACCEPTANCE_CANONICAL_BASE_URL || baseUrl).replace(/\/+$/, '');
+const acceptanceCookie = String(process.env.CARE_SEO_ACCEPTANCE_COOKIE || '').trim();
+const evidencePath = String(process.env.CARE_SEO_ACCEPTANCE_EVIDENCE_PATH || '').trim();
+const deploymentId = String(process.env.CARE_SEO_ACCEPTANCE_DEPLOYMENT_ID || '').trim();
+const snapshotGitSha = String(process.env.CARE_SEO_ACCEPTANCE_GIT_SHA || '').trim();
 if (!baseUrl) throw new Error('CARE_SEO_ACCEPTANCE_BASE_URL is required.');
 if (!snapshotPath) throw new Error('CARE_SEO_ACCEPTANCE_SNAPSHOT_PATH is required.');
 
 const base = new URL(baseUrl);
+const canonicalBase = new URL(canonicalBaseUrl);
 const production = new URL(productionUrl);
-if (base.hostname === production.hostname || base.hostname === 'aqua-tank-guide.vercel.app') {
+if (base.hostname === production.hostname || base.hostname === 'aqua-tank-guide.vercel.app'
+  || canonicalBase.hostname === production.hostname || canonicalBase.hostname === 'aqua-tank-guide.vercel.app') {
   throw new Error('Refusing hosted Care SEO acceptance against Production.');
 }
 
-const raw = JSON.parse(await readFile(path.resolve(snapshotPath), 'utf8'));
+const snapshotRaw = await readFile(path.resolve(snapshotPath), 'utf8');
+const raw = JSON.parse(snapshotRaw);
 const snapshot = careSeoStagingSnapshotSchema.parse(raw);
 assert.equal(snapshot.environment, 'staging');
 assert.equal(snapshot.sourceEnvironment, 'staging');
@@ -47,7 +56,10 @@ let checked = 0;
 for (const record of snapshot.records) {
   const { projection, editorial } = record;
   const pageUrl = `${baseUrl}${projection.route.candidateUrl}`;
-  const response = await fetch(pageUrl, { redirect: 'follow' });
+  const response = await fetch(pageUrl, {
+    redirect: 'follow',
+    ...(acceptanceCookie ? { headers: { Cookie: acceptanceCookie } } : {}),
+  });
   assert.equal(response.status, 200, `${pageUrl}: HTTP ${response.status}`);
   const html = await response.text();
   assert.doesNotMatch(html, hygiene, `${pageUrl}: test/acceptance/placeholder content leaked`);
@@ -60,13 +72,35 @@ for (const record of snapshot.records) {
   assert.equal(attr(html, /<meta\s+name="robots"\s+content="([^"]*)"/i, 'robots'), 'noindex,follow', `${pageUrl}: robots drift`);
   assert.equal(Number(attr(html, /<meta\s+name="aquaguide:care-source-version"\s+content="([^"]*)"/i, 'source version')), projection.sourceCareVersion, `${pageUrl}: source version drift`);
   const canonical = attr(html, /<link\s+rel="canonical"\s+href="([^"]*)"/i, 'canonical');
-  assert.equal(canonical, `${baseUrl}${projection.route.candidateUrl}`, `${pageUrl}: canonical drift`);
+  assert.equal(canonical, `${canonicalBaseUrl}${projection.route.candidateUrl}`, `${pageUrl}: canonical drift`);
   for (const [lang, pathname] of Object.entries(projection.route.alternates)) {
     const escapedLang = lang.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
     const pattern = new RegExp(`<link\\s+rel="alternate"\\s+hreflang="${escapedLang}"\\s+href="([^"]*)"`, 'i');
-    assert.equal(attr(html, pattern, `hreflang=${lang}`), `${baseUrl}${pathname}`, `${pageUrl}: hreflang ${lang} drift`);
+    assert.equal(attr(html, pattern, `hreflang=${lang}`), `${canonicalBaseUrl}${pathname}`, `${pageUrl}: hreflang ${lang} drift`);
   }
   checked += 1;
 }
 
+if (evidencePath) {
+  if (!deploymentId || !snapshotGitSha) throw new Error('Acceptance evidence requires deployment ID and snapshot Git SHA.');
+  const evidence = careSeoHostedAcceptanceEvidenceSchema.parse({
+    schemaVersion: 1,
+    environment: 'staging',
+    snapshotSha256: createHash('sha256').update(snapshotRaw).digest('hex'),
+    snapshotGitSha,
+    acceptedAt: new Date().toISOString(),
+    deployment: { provider: 'vercel', deploymentId, deploymentUrl: baseUrl, canonicalBaseUrl },
+    verification: {
+      pagesChecked: checked,
+      bilingualPairsChecked: byKey.size,
+      http200: true,
+      metadataMatched: true,
+      canonicalHreflangMatched: true,
+      sourceVersionMatched: true,
+      noindexRetained: true,
+      hygienePassed: true,
+    },
+  });
+  await writeFile(path.resolve(evidencePath), `${JSON.stringify(evidence, null, 2)}\n`, 'utf8');
+}
 console.log(`Care SEO hosted acceptance PASS: ${checked}/${snapshot.records.length} pages · ${byKey.size} bilingual pair(s) · noindex retained`);

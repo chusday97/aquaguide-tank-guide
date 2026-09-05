@@ -54,8 +54,8 @@ const snapshot = careSeoStagingSnapshotSchema.parse({
   sourceLabel: 'care-seo-contract-test',
   generatedAt: '2026-09-05T05:00:00.000Z',
   records: [
-    recordFor('care_index', 'en', 3, 'index'),
-    recordFor('care_index', 'zh-CN', 3, 'index'),
+    recordFor('care_index', 'en', 3, 'noindex'),
+    recordFor('care_index', 'zh-CN', 3, 'noindex'),
     recordFor('care_noindex', 'en', 5, 'noindex'),
     recordFor('care_noindex', 'zh-CN', 5, 'noindex'),
   ],
@@ -73,7 +73,7 @@ try {
   assert.equal(result.skipped, false);
   if (result.skipped) throw new Error('Care SEO artifact unexpectedly skipped.');
   assert.equal(result.manifest.generated_pages, 4);
-  assert.equal(result.manifest.indexable_pages, 2);
+  assert.equal(result.manifest.indexable_pages, 0);
   const [enIndex, zhIndex, enNoindex, sitemap] = await Promise.all([
     readFile(path.join(distDir, 'care/care_index.html'), 'utf8'),
     readFile(path.join(distDir, 'zh/care/care_index.html'), 'utf8'),
@@ -81,16 +81,24 @@ try {
     readFile(path.join(distDir, 'sitemap-care.xml'), 'utf8'),
   ]);
   assert.match(enIndex, /<html lang="en">/);
-  assert.match(enIndex, /<meta name="robots" content="index,follow">/);
+  assert.match(enIndex, /<meta name="robots" content="noindex,follow">/);
   assert.match(enIndex, /<meta name="aquaguide:care-source-version" content="3">/);
   assert.match(enIndex, /href="https:\/\/staging\.aquaguide\.test\/zh\/care\/care_index\.html"/);
   assert.match(enIndex, /<h1>Safe care for care_index<\/h1>/);
   assert.match(zhIndex, /<html lang="zh-CN">/);
   assert.match(zhIndex, /<h1>care_index 安全养护<\/h1>/);
   assert.match(enNoindex, /<meta name="robots" content="noindex,follow">/);
-  assert.match(sitemap, /\/care\/care_index\.html/);
-  assert.match(sitemap, /\/zh\/care\/care_index\.html/);
-  assert.doesNotMatch(sitemap, /care_noindex/);
+  assert.doesNotMatch(sitemap, /<url>/);
+
+  const forgedIndex = structuredClone(snapshot);
+  forgedIndex.records[0].editorial.indexStrategy = 'index';
+  forgedIndex.records[1].editorial.indexStrategy = 'index';
+  const forgedIndexPath = path.join(tempRoot, 'forged-index.json');
+  await writeFile(forgedIndexPath, JSON.stringify(forgedIndex), 'utf8');
+  await assert.rejects(
+    buildCareSeoArtifact({ snapshotPath: forgedIndexPath, siteUrl, productionSiteUrl, distDir: path.join(tempRoot, 'bad-index') }),
+    /Staging must remain noindex/,
+  );
 
   const versionMismatch = structuredClone(snapshot);
   versionMismatch.records[1].projection.sourceCareVersion = 4;
