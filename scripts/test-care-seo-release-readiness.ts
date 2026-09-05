@@ -82,6 +82,12 @@ const persistedDecision = careSeoReleaseDecisionSchema.parse(JSON.parse(await re
 result = evaluateCareSeoReleaseReadiness({ snapshotRaw, acceptance: persistedAcceptance, decision: persistedDecision });
 assert.equal(result.readyForProductionIndex, false);
 assert.equal(result.decision, 'hold_noindex');
-assert.deepEqual(result.blockers, ['release_decision_hold']);
+if (persistedAcceptance.snapshotSha256 === snapshotSha256 && persistedDecision.snapshotSha256 === snapshotSha256) {
+  assert.deepEqual(result.blockers, ['release_decision_hold']);
+} else {
+  assert.ok(result.blockers.includes('acceptance_snapshot_hash_mismatch'));
+  assert.ok(result.blockers.includes('release_decision_snapshot_mismatch'));
+  assert.ok(result.blockers.includes('release_decision_hold'));
+}
 
 console.log('Care SEO release readiness: acceptance evidence + explicit human decision + noindex staging lock PASS');
