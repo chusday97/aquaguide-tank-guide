@@ -3,10 +3,12 @@ import { ArrowLeft, Clock3, Database, Loader2, RefreshCw, Search, ShieldCheck } 
 import { useNavigate } from 'react-router-dom';
 import type { ReleaseAuthority, ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto, ReleaseSourceStatusDto, ReleaseStage } from '../../packages/contracts/src';
 import { publishCenterService } from '../services/admin/publish-center.service';
+import { getRelatedReleaseEvents } from '../services/admin/release-coordination';
 
 const authorityLabel: Record<ReleaseAuthority, string> = {
   product_care: 'Product / Care', compatibility: 'Compatibility', seo: 'SEO',
 };
+const authorityAdminHref: Record<ReleaseAuthority, string> = { product_care: '/admin/product-content', compatibility: '/admin/compatibility', seo: '/admin/seo/' };
 const authorityIcon = { product_care: Database, compatibility: ShieldCheck, seo: Search } as const;
 const availabilityLabel = { ready: '可读取', auth_required: '需要登录', unavailable: '暂不可用' } as const;
 const stageLabel: Record<ReleaseStage, string> = { diff: 'Diff', impact: 'Impact', preview: 'Preview', review: 'Review', staging: 'Staging', production: 'Production' };
@@ -49,6 +51,7 @@ export default function PublishCenter() {
   const events = useMemo(() => filter === 'all' ? feed.events : feed.events.filter(item => item.authority === filter), [feed.events, filter]);
   const sourceByAuthority = useMemo(() => new Map(feed.sources.map(item => [item.authority, item])), [feed.sources]);
   const selectedEvent = events.find(item => item.id === selectedEventId) || events[0] || null;
+  const relatedEvents = useMemo(() => selectedEvent ? getRelatedReleaseEvents(feed.events, selectedEvent).slice(0, 8) : [], [feed.events, selectedEvent]);
   const readiness = useMemo(() => ({
     ready: feed.sources.filter(item => item.availability === 'ready').length,
     authRequired: feed.sources.filter(item => item.availability === 'auth_required').length,
@@ -99,7 +102,7 @@ export default function PublishCenter() {
           {([['all', '全部'], ['product_care', 'Product / Care'], ['compatibility', 'Compatibility'], ['seo', 'SEO']] as const).map(([value, label]) => <button key={value} type="button" onClick={() => { setFilter(value); setSelectedEventId(null); }} className={`shrink-0 rounded-full px-4 py-2 text-xs font-black ${filter === value ? 'bg-ink text-white' : 'border border-slate-200 bg-white text-ink/60'}`}>{label}</button>)}
         </div>
 
-        {selectedEvent && <ReleaseEventDetail event={selectedEvent} source={sourceByAuthority.get(selectedEvent.authority)} />}
+        {selectedEvent && <ReleaseEventDetail event={selectedEvent} source={sourceByAuthority.get(selectedEvent.authority)} relatedEvents={relatedEvents} />}
 
         <section className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5">
           <div className="flex items-center justify-between gap-3"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Unified timeline</div><h2 className="mt-1 text-lg font-black">发布 / 审核 / Revision 记录</h2></div><div className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black text-ink/55">{events.length} 条</div></div>
@@ -142,9 +145,13 @@ function ReadinessStat({ label, value, detail }: { label: string; value: string;
   return <article className="rounded-[18px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/38">{label}</div><div className="mt-2 text-2xl font-black text-ink">{value}</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{detail}</p></article>;
 }
 
-function ReleaseEventDetail({ event, source }: { event: ReleaseEventDto; source?: ReleaseSourceStatusDto }) {
+function ReleaseEventDetail({ event, source, relatedEvents }: { event: ReleaseEventDto; source?: ReleaseSourceStatusDto; relatedEvents: ReleaseEventDto[] }) {
   const metadata = Object.entries(event.metadata || {}).filter(([, value]) => value !== undefined && value !== null && value !== '');
-  return <section data-testid="publish-center-event-detail" className="mt-4 rounded-[22px] border border-white/80 bg-white p-4 shadow-sm md:p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Release detail</div><h2 className="mt-1 text-lg font-black">{event.title}</h2><p className="mt-1 text-xs font-semibold text-ink/50">只读审计详情，不提供发布或回滚动作。</p></div><span className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black text-ink/55">{authorityLabel[event.authority]} · {event.status}</span></div><dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"><DetailItem label="发生时间" value={formatTime(event.occurredAt)} /><DetailItem label="资源" value={event.resourceKey || '—'} /><DetailItem label="版本" value={event.version ? `v${event.version}` : '—'} /><DetailItem label="来源覆盖" value={source ? coverageLabel[source.coverage] : '未知'} /><DetailItem label="Event type" value={event.eventType} /><DetailItem label="Actor" value={event.actor || '未记录'} /><DetailItem label="Source ref" value={event.sourceRef || '—'} /><DetailItem label="Locale" value={event.locale || '—'} /></dl>{metadata.length > 0 && <div className="mt-4 border-t border-slate-100 pt-4"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/35">Metadata</div><div className="mt-2 grid gap-2 sm:grid-cols-2">{metadata.slice(0, 12).map(([key, value]) => <DetailItem key={key} label={key} value={typeof value === 'string' ? value : JSON.stringify(value)} />)}</div></div>}</section>;
+  return <section data-testid="publish-center-event-detail" className="mt-4 rounded-[22px] border border-white/80 bg-white p-4 shadow-sm md:p-5"><div className="flex flex-wrap items-start justify-between gap-3"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Release detail</div><h2 className="mt-1 text-lg font-black">{event.title}</h2><p className="mt-1 text-xs font-semibold text-ink/50">只读审计详情，不提供发布或回滚动作。</p></div><a href={authorityAdminHref[event.authority]} className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-black text-ink/60">前往 {authorityLabel[event.authority]} authority →</a></div><dl className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4"><DetailItem label="发生时间" value={formatTime(event.occurredAt)} /><DetailItem label="资源" value={event.resourceKey || '—'} /><DetailItem label="版本" value={event.version ? `v${event.version}` : '—'} /><DetailItem label="来源覆盖" value={source ? coverageLabel[source.coverage] : '未知'} /><DetailItem label="Event type" value={event.eventType} /><DetailItem label="Actor" value={event.actor || '未记录'} /><DetailItem label="Source ref" value={event.sourceRef || '—'} /><DetailItem label="Locale" value={event.locale || '—'} /></dl>{metadata.length > 0 && <div className="mt-4 border-t border-slate-100 pt-4"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/35">Metadata</div><div className="mt-2 grid gap-2 sm:grid-cols-2">{metadata.slice(0, 12).map(([key, value]) => <DetailItem key={key} label={key} value={typeof value === 'string' ? value : JSON.stringify(value)} />)}</div></div>}<RelatedReleaseEvidence events={relatedEvents} /></section>;
+}
+
+function RelatedReleaseEvidence({ events }: { events: ReleaseEventDto[] }) {
+  return <div data-testid="publish-center-related-evidence" className="mt-4 border-t border-slate-100 pt-4"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/35">Cross-authority context</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/45">仅按明确 catalog key 关联其它 authority 的记录；这不是依赖判断，也不表示必须同步发布。</p>{events.length ? <div className="mt-3 grid gap-2 sm:grid-cols-2">{events.map(item => <a key={item.id} href={authorityAdminHref[item.authority]} className="rounded-[14px] border border-slate-100 bg-slate-50 px-3 py-2.5 hover:border-slate-200"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">{authorityLabel[item.authority]} · {item.status}</div><div className="mt-1 text-xs font-black text-ink/70">{item.title}</div><div className="mt-1 text-[10px] font-semibold text-ink/45">{item.resourceKey || '—'} · {formatTime(item.occurredAt)}</div></a>)}</div> : <div className="mt-3 rounded-[14px] bg-slate-50 px-3 py-3 text-xs font-semibold text-ink/40">当前没有可按 catalog key 明确关联的其它 authority 记录。</div>}</div>;
 }
 
 function DetailItem({ label, value }: { label: string; value: string }) {

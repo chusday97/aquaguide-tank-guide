@@ -110,10 +110,13 @@ try {
     assert.match(productDetail, /只读审计详情，不提供发布或回滚动作/);
     assert.match(productDetail, /当前版本/);
     assert.match(productDetail, /sp_0436/);
+    const relatedEvidence = page.getByTestId('publish-center-related-evidence');
+    assert.match(await relatedEvidence.innerText(), /这不是依赖判断，也不表示必须同步发布[\s\S]*Compatibility[\s\S]*Profile reviewed version 已发布/i);
     assert.match(await timeline.innerText(), /Product 发布版本[\s\S]*Profile reviewed version 已发布/);
     await page.getByRole('button', { name: 'Compatibility', exact: true }).click();
-    assert.match(await detail.innerText(), /Compatibility/);
-    assert.doesNotMatch(await detail.innerText(), /Product 发布版本/);
+    const compatibilityDetail = await detail.innerText();
+    assert.match(compatibilityDetail, /Profile reviewed version 已发布/);
+    assert.match(compatibilityDetail, /前往 Compatibility authority/);
     await page.getByRole('button', { name: '全部', exact: true }).click();
 
     seoLoggedIn = true;
@@ -128,6 +131,7 @@ try {
     assert.match(refreshedTimeline, /SEO Staging batch 已发布/);
     await timeline.getByRole('button', { name: /SEO revision 已记录/ }).click();
     assert.match(await detail.innerText(), /SEO revision 已记录[\s\S]*Activity \/ Revision 历史[\s\S]*content_revisions:rev-1[\s\S]*zh-CN/);
+    assert.match(await relatedEvidence.innerText(), /Product \/ Care[\s\S]*Product 发布版本[\s\S]*Compatibility[\s\S]*Profile reviewed version 已发布/i);
 
     productAuditHistoryReady = true;
     await page.getByRole('button', { name: '刷新' }).click();

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { getRelatedReleaseEvents } from '../src/services/admin/release-coordination';
 
 const root = resolve(import.meta.dirname, '..');
 const contract = readFileSync(resolve(root, 'packages/contracts/src/release-audit.ts'), 'utf8');
@@ -53,9 +54,22 @@ assert.match(page, /Product\/Care 当前只有 current Published snapshot/);
 assert.match(page, /publish-center-event-detail/);
 assert.match(page, /publish-center-capability-matrix/);
 assert.match(page, /publish-center-permission-boundary/);
+assert.match(page, /publish-center-related-evidence/);
+assert.match(page, /这不是依赖判断，也不表示必须同步发布/);
 assert.match(apiRoute, /businessPermissions/);
 assert.match(service, /seoPermissions/);
 assert.match(page, /Diff → Impact → Preview → Review → Staging → Production/);
 assert.match(page, /只读审计详情，不提供发布或回滚动作/);
 assert.doesNotMatch(page, /publishProfileRevision|publishPairRuleRevision|publishRepoStaging/);
+
+const selectedEvent = { id: 'product-1', authority: 'product_care', domain: 'product', eventType: 'published', status: 'published', title: 'Product', resourceKey: 'sp_0436', occurredAt: '2026-09-05T06:00:00Z' } as const;
+const related = getRelatedReleaseEvents([
+  selectedEvent,
+  { id: 'product-2', authority: 'product_care', domain: 'product', eventType: 'published', status: 'published', title: 'same authority', resourceKey: 'sp_0436', occurredAt: '2026-09-05T05:50:00Z' },
+  { id: 'compat-1', authority: 'compatibility', domain: 'compatibility_pair', eventType: 'pair', status: 'published', title: 'pair', resourceKey: 'sp_0436__sp_0439', occurredAt: '2026-09-05T05:40:00Z' },
+  { id: 'seo-batch-1', authority: 'seo', domain: 'seo_batch', eventType: 'batch', status: 'staging_published', title: 'batch', resourceKey: 'batch-1', occurredAt: '2026-09-05T05:30:00Z', metadata: { catalogKeys: ['sp_0436', 'sp_0001'] } },
+  { id: 'seo-other', authority: 'seo', domain: 'seo_page', eventType: 'revision', status: 'approved', title: 'other', resourceKey: 'sp_0002', occurredAt: '2026-09-05T05:20:00Z' },
+] as any, selectedEvent as any);
+assert.deepEqual(related.map(item => item.id), ['compat-1', 'seo-batch-1'], 'coordination must use explicit catalog keys and exclude same-authority/unrelated records');
+
 console.log('publish center contract: multi-authority read-only aggregation + detail/readiness PASS');
