@@ -263,7 +263,7 @@ try {
       const projection = {
         sourceCareId: baseCareRecord.id, sourceCareCatalogKey: baseCareRecord.catalogKey, sourceCareVersion: 1,
         sourcePublishedAt: '2026-09-05T01:00:00.000Z', sourceAuthority: 'publication-snapshot', locale: 'zh-CN',
-        route: { pathname: '/care', topicParam: baseCareRecord.catalogKey, candidateUrl: '/care?topic=care_demo', readiness: 'blocked', blockers: ['Care topic 目前通过 /care?topic=... 打开，不是独立可抓取文章路由。', 'Topic detail 当前渲染在 Dialog 内，没有 topic 级 document title / meta description。', 'Topic 级 canonical / hreflang contract 尚未建立。'] },
+        route: { pathname: '/care', topicParam: baseCareRecord.catalogKey, candidateUrl: '/care/care_demo', readiness: 'blocked', blockers: ['Canonical Care topic route 已建立，但当前默认 noindex，尚未开放 SEO publication。', 'Care topic 仍由 SPA client render；static SEO artifact / hosted handoff 尚未建立。', 'Locale-specific hreflang URL contract 尚未建立。'] },
         sourceFacts: { title: baseCareRecord.title, category: baseCareRecord.category, urgency: baseCareRecord.urgency, summary: baseCareRecord.summary, symptoms: baseCareRecord.symptoms, immediateActions: ['先观察'], avoidActions: baseCareRecord.avoidActions, observeItems: baseCareRecord.observeItems, diagnoseWhen: baseCareRecord.diagnoseWhen, nextStep: baseCareRecord.nextStep, evidenceCount: 0 },
         suggestedEditorial: { seoTitle: `${baseCareRecord.title} | AquaGuide`, metaDescription: baseCareRecord.summary, h1: baseCareRecord.title, focusKeyword: baseCareRecord.keywords[0] },
         editableFields: ['seoTitle', 'metaDescription', 'h1', 'focusKeyword'], protectedSourceFields: ['title', 'summary', 'symptoms', 'steps', 'avoidActions', 'observeItems', 'diagnoseWhen', 'nextStep', 'references'], publishReady: false,

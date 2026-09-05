@@ -139,6 +139,7 @@
     "verify:seo-species-handoff": "node scripts/verify-seo-species-handoff.mjs",
     "test:compatibility-regression-gate": "tsx scripts/test-compatibility-regression-gate.ts",
     "test:care-seo-projection": "tsx scripts/test-care-seo-projection.ts",
+    "test:care-seo-route": "node scripts/verify-care-seo-route.mjs",
     "test:publish-center-contract": "tsx scripts/test-publish-center-contract.ts",
     "test:publish-center-ui": "node scripts/verify-publish-center.mjs"
   },

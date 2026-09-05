@@ -16,7 +16,7 @@ export interface CareSeoProjectionDto {
   sourceAuthority: CareSeoProjectionAuthority;
   locale: SupportedLocale;
   route: {
-    pathname: '/care';
+    pathname: string;
     topicParam: string;
     candidateUrl: string;
     readiness: CareSeoRouteReadiness;

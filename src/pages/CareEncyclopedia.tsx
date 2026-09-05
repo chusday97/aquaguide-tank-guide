@@ -2,8 +2,8 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import posthog from 'posthog-js';
 import type { CSSProperties, ReactNode, RefObject } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { AlertTriangle, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { AlertTriangle, ArrowLeft, Baby, Check, ChevronDown, ChevronRight, Copy, Droplets, ExternalLink, Fish, Heart, HelpCircle, Loader2, Maximize2, Search, Settings, Stethoscope, Waves } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import type { CareTopic } from '../data/careTopicsData';
@@ -1523,6 +1523,8 @@ export default function CareEncyclopedia() {
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
   const navigate = useNavigate();
+  const { topicId: routeTopicId } = useParams<{ topicId?: string }>();
+  const isCanonicalTopicRoute = Boolean(routeTopicId);
 
   const categoryChips: Array<{ id: CareCategoryId; label: string }> = [
     { id: 'all', label: t('care.categories.all') },
@@ -1703,13 +1705,42 @@ export default function CareEncyclopedia() {
   };
 
   useEffect(() => {
-    const topicId = new URLSearchParams(location.search).get('topic');
+    const topicId = routeTopicId || new URLSearchParams(location.search).get('topic');
     if (!topicId || selectedTopic?.id === topicId) return;
     openCareDetail(topicId, undefined, false);
-  }, [location.search, selectedTopic?.id]);
+  }, [location.search, routeTopicId, selectedTopic?.id]);
+
+  useEffect(() => {
+    if (!isCanonicalTopicRoute || !selectedTopic) return;
+    const previousTitle = document.title;
+    const meta = document.querySelector<HTMLMetaElement>('meta[name="description"]');
+    const previousDescription = meta?.content;
+    const description = selectedTopic.summary.replace(/\s+/g, ' ').trim().slice(0, 160);
+    const descriptionMeta = meta || document.head.appendChild(Object.assign(document.createElement('meta'), { name: 'description' }));
+    const canonical = document.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    const previousCanonical = canonical?.href;
+    const canonicalLink = canonical || document.head.appendChild(Object.assign(document.createElement('link'), { rel: 'canonical' }));
+    const robots = document.querySelector<HTMLMetaElement>('meta[name="robots"]');
+    const previousRobots = robots?.content;
+    const robotsMeta = robots || document.head.appendChild(Object.assign(document.createElement('meta'), { name: 'robots' }));
+    document.title = `${getDisplayTitle(selectedTopic)} | AquaGuide`;
+    descriptionMeta.content = description;
+    canonicalLink.href = `${window.location.origin}/care/${encodeURIComponent(selectedTopic.id)}`;
+    robotsMeta.content = 'noindex,follow';
+    return () => {
+      document.title = previousTitle;
+      if (meta) meta.content = previousDescription || ''; else descriptionMeta.remove();
+      if (canonical) canonical.href = previousCanonical || ''; else canonicalLink.remove();
+      if (robots) robots.content = previousRobots || ''; else robotsMeta.remove();
+    };
+  }, [isCanonicalTopicRoute, selectedTopic]);
 
   const closeCareDetail = () => {
     setSelectedTopic(null);
+    if (isCanonicalTopicRoute) {
+      navigateToRoute('/care');
+      return;
+    }
     if (new URLSearchParams(location.search).has('topic')) {
       if (new URLSearchParams(location.search).get('source') === 'search') {
         navigate(-1);
@@ -1888,6 +1919,40 @@ export default function CareEncyclopedia() {
   return (
     <div className="page-frame-wide care-workspace-shell min-w-0 overflow-x-hidden">
       <div className="care-workspace-grid flex min-w-0 flex-col gap-3 pb-4 md:pb-8">
+      {isCanonicalTopicRoute ? (
+        selectedTopic ? (
+          <section data-testid="care-canonical-topic-page" className="min-w-0 rounded-[24px] border border-white/80 bg-white shadow-sm">
+            <div className="flex items-center gap-3 border-b border-border px-4 py-3">
+              <button type="button" aria-label={isEn ? 'Back to Care' : '返回养护百科'} onClick={closeCareDetail} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border bg-white text-ink/65">
+                <ArrowLeft className="h-4 w-4" />
+              </button>
+              <div className="min-w-0"><div className="text-[10px] font-black uppercase tracking-[0.12em] text-emerald-700">Care guide</div><div className="truncate text-xs font-bold text-ink/45">/care/{selectedTopic.id}</div></div>
+            </div>
+            <CareArticleDetail
+              key={`canonical-${selectedTopic.id}`}
+              topic={selectedTopic}
+              scrollRef={detailScrollRef}
+              checkedActions={checkedActions}
+              favorite={Boolean(favorites[selectedTopic.id])}
+              onToggleAction={(value) => toggleValue(value, setCheckedActions)}
+              onToggleFavorite={(source) => toggleFavorite(selectedTopic, source)}
+              onOpenShare={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'sharing' } }))}
+              onOpenCareCard={() => setShareTopic(selectedTopic)}
+              onPreview={() => openPreview(selectedTopic)}
+              onSelectRelated={(topic) => navigate(`/care/${encodeURIComponent(topic.id)}`)}
+              onOpenCollection={() => navigateToRoute(taskRoutes.collection.care)}
+              onRestoreActions={setCheckedActions}
+              activeAquarium={activeAquarium}
+              standalone
+            />
+          </section>
+        ) : (
+          <section data-testid="care-canonical-not-found" className="rounded-[24px] border border-white/80 bg-white p-8 text-center shadow-sm">
+            <h1 className="text-xl font-black">{isEn ? 'Care guide not found' : '没有找到这篇养护指南'}</h1>
+            <button type="button" onClick={() => navigateToRoute('/care')} className="mt-4 rounded-full bg-emerald-700 px-5 py-2.5 text-sm font-black text-white">{isEn ? 'Back to Care' : '返回养护百科'}</button>
+          </section>
+        )
+      ) : (<>
       <section className="px-1 py-1 md:hidden">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -2095,7 +2160,9 @@ export default function CareEncyclopedia() {
         )}
       </section>
 
-      <Dialog open={!!selectedTopic} onOpenChange={(open) => !open && closeCareDetail()}>
+      </>)}
+
+      <Dialog open={!isCanonicalTopicRoute && !!selectedTopic} onOpenChange={(open) => !open && closeCareDetail()}>
         <AdaptiveDetailContent>
           {selectedTopic && (
             <CareArticleDetail
@@ -2900,6 +2967,7 @@ export function CareArticleDetail({
   onOpenCollection,
   onRestoreActions,
   activeAquarium,
+  standalone = false,
 }: {
   topic: CareTopic;
   scrollRef: RefObject<HTMLDivElement | null>;
@@ -2914,6 +2982,7 @@ export function CareArticleDetail({
   onOpenCollection?: () => void;
   onRestoreActions?: (values: string[]) => void;
   activeAquarium: Aquarium | null;
+  standalone?: boolean;
 }) {
   const { t, i18n } = useTranslation();
   const isEn = Boolean(i18n.language?.startsWith('en'));
@@ -3227,8 +3296,8 @@ export function CareArticleDetail({
         };
 
   return (
-    <div className="flex max-h-[88vh] flex-col bg-white">
-      <div ref={scrollRef} className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden">
+    <div className={standalone ? 'flex flex-col bg-white' : 'flex max-h-[88vh] flex-col bg-white'}>
+      <div ref={scrollRef} className={standalone ? 'min-h-0 flex-1 overflow-visible' : 'app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden'}>
         <div className="mx-auto max-w-[850px] p-4 pb-8 pt-7">
           <div className="grid gap-3 md:grid-cols-[minmax(0,1.05fr)_minmax(340px,0.95fr)] md:items-stretch">
             <button type="button" onClick={onPreview} data-care-detail-hero className="order-2 block min-w-0 md:order-1" aria-label={isEn ? `View large image of ${topic.title}` : `查看${topic.title}大图`}>
@@ -3245,7 +3314,9 @@ export function CareArticleDetail({
                 </span>
               </div>
               <div className="flex items-start gap-2">
-                <h2 className="min-w-0 flex-1 text-[22px] font-black leading-tight text-ink">{careGuide.title}</h2>
+                {standalone
+                  ? <h1 className="min-w-0 flex-1 text-[22px] font-black leading-tight text-ink">{careGuide.title}</h1>
+                  : <h2 className="min-w-0 flex-1 text-[22px] font-black leading-tight text-ink">{careGuide.title}</h2>}
                 <button
                   type="button"
                   onClick={(event) => onToggleFavorite(event.currentTarget)}

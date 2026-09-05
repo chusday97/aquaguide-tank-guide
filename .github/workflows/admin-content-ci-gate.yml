@@ -10,6 +10,8 @@ on:
       - 'supabase/migrations/**'
       - 'src/data/fishData.ts'
       - 'src/pages/AdminContent.tsx'
+      - 'src/pages/CareEncyclopedia.tsx'
+      - 'src/App.tsx'
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
       - 'src/pages/PublishCenter.tsx'
@@ -25,6 +27,7 @@ on:
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
       - 'scripts/test-care-seo-projection.ts'
+      - 'scripts/verify-care-seo-route.mjs'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
@@ -49,6 +52,8 @@ on:
       - 'supabase/migrations/**'
       - 'src/data/fishData.ts'
       - 'src/pages/AdminContent.tsx'
+      - 'src/pages/CareEncyclopedia.tsx'
+      - 'src/App.tsx'
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
       - 'src/pages/PublishCenter.tsx'
@@ -64,6 +69,7 @@ on:
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
       - 'scripts/test-care-seo-projection.ts'
+      - 'scripts/verify-care-seo-route.mjs'
       - 'scripts/test-publish-center-contract.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
@@ -176,6 +182,8 @@ jobs:
         run: npm run test:admin-content-ui
       - name: Publish Center browser regression
         run: npm run test:publish-center-ui
+      - name: Care SEO canonical route browser regression
+        run: npm run test:care-seo-route
       - name: Root AquaGuide Species SEO artifact integration
         env:
           SPECIES_SEO_SNAPSHOT_PATH: apps/admin-content/fixtures/staging-publication-sample.json

@@ -34,11 +34,11 @@ const projection = buildCareSeoProjection(
 assert.equal(projection.sourceCareCatalogKey, 'care_demo');
 assert.equal(projection.sourceCareVersion, 7);
 assert.equal(projection.sourceAuthority, 'publication-snapshot');
-assert.equal(projection.route.candidateUrl, '/care?topic=care_demo');
+assert.equal(projection.route.candidateUrl, '/care/care_demo');
 assert.equal(projection.route.readiness, 'blocked');
 assert.equal(projection.publishReady, false);
-assert.ok(projection.route.blockers.some(item => item.includes('Dialog')));
-assert.ok(projection.route.blockers.some(item => item.includes('canonical')));
+assert.ok(projection.route.blockers.some(item => item.includes('noindex')));
+assert.ok(projection.route.blockers.some(item => item.includes('static SEO artifact')));
 assert.deepEqual(projection.editableFields, ['seoTitle', 'metaDescription', 'h1', 'focusKeyword']);
 assert.ok(projection.protectedSourceFields.includes('symptoms'));
 assert.ok(projection.protectedSourceFields.includes('steps'));
@@ -51,6 +51,8 @@ const root = resolve(import.meta.dirname, '..');
 const adminRoute = readFileSync(resolve(root, 'apps/api/src/routes/admin.ts'), 'utf8');
 const contract = readFileSync(resolve(root, 'packages/contracts/src/care-seo.ts'), 'utf8');
 const page = readFileSync(resolve(root, 'src/pages/AdminContent.tsx'), 'utf8');
+const app = readFileSync(resolve(root, 'src/App.tsx'), 'utf8');
+const carePage = readFileSync(resolve(root, 'src/pages/CareEncyclopedia.tsx'), 'utf8');
 
 assert.match(adminRoute, /care-articles\/:id\/seo-projection/);
 assert.match(adminRoute, /from\('content_publications'\)/);
@@ -62,5 +64,11 @@ assert.match(contract, /protectedSourceFields/);
 assert.match(contract, /publishReady: boolean/);
 assert.match(page, /CareSeoProjectionPreview/);
 assert.doesNotMatch(page, /saveCareSeo|publishCareSeo|createCareSeo/);
+assert.match(app, /path="\/care\/:topicId"/);
+assert.match(carePage, /care-canonical-topic-page/);
+assert.match(carePage, /meta\[name="robots"\]/);
+assert.match(carePage, /noindex,follow/);
+assert.match(carePage, /link\[rel="canonical"\]/);
+assert.match(carePage, /standalone[\s\S]*<h1/);
 
 console.log('care SEO projection: published-source binding + protected Care facts + route lock PASS');

@@ -16,7 +16,7 @@ export const buildCareSeoProjection = (
   const immediateActions = detail.steps
     .filter(step => step.actionKind === 'immediate')
     .map(step => step.actionTitle || step.instruction);
-  const candidateUrl = `/care?topic=${encodeURIComponent(detail.catalogKey)}`;
+  const candidateUrl = `/care/${encodeURIComponent(detail.catalogKey)}`;
   return {
     sourceCareId: detail.id,
     sourceCareCatalogKey: detail.catalogKey,
@@ -25,14 +25,14 @@ export const buildCareSeoProjection = (
     sourceAuthority,
     locale,
     route: {
-      pathname: '/care',
+      pathname: candidateUrl,
       topicParam: detail.catalogKey,
       candidateUrl,
       readiness: 'blocked',
       blockers: [
-        'Care topic 目前通过 /care?topic=... 打开，不是独立可抓取文章路由。',
-        'Topic detail 当前渲染在 Dialog 内，没有 topic 级 document title / meta description。',
-        'Topic 级 canonical / hreflang contract 尚未建立。',
+        'Canonical Care topic route 已建立，但当前默认 noindex，尚未开放 SEO publication。',
+        'Care topic 仍由 SPA client render；static SEO artifact / hosted handoff 尚未建立。',
+        'Locale-specific hreflang URL contract 尚未建立。',
       ],
     },
     sourceFacts: {
