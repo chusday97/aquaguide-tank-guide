@@ -192,3 +192,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - PASS: read-only contract, API TS, root lint/build, 390/1280 Publish Center browser flow, existing Admin Hub/Product/Care browser regression, Repo Admin contract.
 - CI policy preserved: read-only contract runs in lightweight CI; Publish Center Playwright runs only in Heavy Gate.
 - Next: read-only release detail/readiness drill-down before any cross-domain write orchestration. Production/main/live DB untouched.
+## 2026-09-05 P2 Publish Center — detail/readiness + capability checkpoint
+- Functional commits: `10b90394 feat(admin): deepen publish center audit view` and `bd2e8059 feat(admin): add release capability matrix`.
+- Release detail is selectable and filter-safe; source coverage is explicit, including Product/Care `current_only` history.
+- Readiness summarizes source availability/auth degradation without blocking healthy authorities.
+- New capability matrix distinguishes `available / partial / locked / not_applicable` for Diff → Impact → Preview → Review → Staging → Production.
+- Product/Care has no separate Staging layer; Compatibility live publish remains locked because live migrations are unapplied; SEO Staging is available while Production remains locked.
+- PASS: Publish Center contract, 390/1280 browser flow, API TS, root lint/build, diff hygiene.
+- Next: cross-domain orchestration design + stronger roles/audit; Publish Center must remain a coordination layer, not a fourth authority.

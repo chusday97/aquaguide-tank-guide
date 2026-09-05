@@ -85,3 +85,5 @@ Publish Center is an operational read/orchestration layer, not a fourth source o
 - PASS: read-only contract, API TS, root lint/build, 390/1280 Publish Center browser flow, existing Admin Hub/Product/Care browser regression, Repo Admin contract.
 - CI policy preserved: read-only contract runs in lightweight CI; Publish Center Playwright runs only in Heavy Gate.
 - Next: read-only release detail/readiness drill-down before any cross-domain write orchestration. Production/main/live DB untouched.
+## 2026-09-05 Publish Center capability rule
+The Publish Center capability matrix is descriptive, not an execution authority. `available` means the subsystem already has that capability; `partial` means a weaker or incomplete control exists; `locked` means the stage must not execute; `not_applicable` means that subsystem has no separate stage. This matrix must never be interpreted as permission to bypass each subsystem's native auth/review/publish gates.

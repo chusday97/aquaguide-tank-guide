@@ -49,7 +49,9 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Define one read-only `ReleaseEvent` contract across Product/Care publications, Compatibility revisions/publishes and SEO revisions/activity/import/staging history.
   - [x] Add read-only aggregation services/API without copying or moving any subsystem write authority.
   - [x] Add `/admin/publish-center` timeline/readiness UI with source/auth availability clearly shown.
-  - [ ] Next: add read-only release detail/readiness drill-down and explicitly surface Product/Care current-only history coverage; only after that is accepted, design cross-domain Diff → Impact → Preview → Review → Staging → Production orchestration.
+  - [x] Add read-only release detail/readiness drill-down and explicitly surface Product/Care current-only history coverage.
+  - [x] Add per-authority capability matrix for Diff → Impact → Preview → Review → Staging → Production, distinguishing available / partial / locked / not applicable.
+  - [ ] Next: design cross-domain orchestration as a coordination layer only; do not move Product/Care, Compatibility or SEO write authority into Publish Center.
 - [ ] Stronger roles/permissions and release audit history.
 - [ ] Care SEO as a downstream projection of approved Care Knowledge.
 - [ ] AI-assisted source extraction, conflict detection, impact explanation and Draft generation from approved facts.

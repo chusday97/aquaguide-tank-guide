@@ -133,3 +133,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - PASS: read-only contract, API TS, root lint/build, 390/1280 Publish Center browser flow, existing Admin Hub/Product/Care browser regression, Repo Admin contract.
 - CI policy preserved: read-only contract runs in lightweight CI; Publish Center Playwright runs only in Heavy Gate.
 - Next: read-only release detail/readiness drill-down before any cross-domain write orchestration. Production/main/live DB untouched.
+## 2026-09-05 Publish Center capability checkpoint
+- Read-only ReleaseEvent aggregation is complete across Product/Care, Compatibility and independently authenticated SEO Repo Admin history.
+- Event detail, source-readiness cards and filter-safe selection are implemented.
+- Capability matrix now shows each authority's Diff / Impact / Preview / Review / Staging / Production state with explicit locked/not-applicable distinctions.
+- Production remains locked; Product/Care current history is still current-only by design.
+- First unfinished P2 item: cross-domain orchestration design + stronger roles/audit.

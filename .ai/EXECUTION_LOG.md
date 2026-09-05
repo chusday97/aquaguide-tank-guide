@@ -604,3 +604,10 @@ Next: P2 Unified Publish Center / release history & audit, beginning with a read
 - PASS: contract, API TS, lint/build, 390/1280 browser, existing Admin/Repo regressions.
 - Functional commit `f1b7adaee86eecbd99f1b6c908acfb45c0bd6de2`; online light CI run `33950528930` started.
 Next: read-only release detail/readiness drill-down; no cross-domain publish writes yet.
+## 2026-09-05 — Publish Center detail/readiness + capability matrix
+- Continued from `f1b7adae`/`7c125112` read-only checkpoint.
+- Added selectable event detail, source readiness summary, filter-safe selection and explicit Product/Care current-only coverage.
+- Added typed release capability matrix across Product/Care, Compatibility and SEO for Diff → Impact → Preview → Review → Staging → Production.
+- Verified SEO auth-required degradation, 390/1280 layout, contract, API TS, lint/build and diff hygiene.
+- Functional commits: `10b90394`, `bd2e8059`. No Production/main/live DB mutation.
+Next: cross-domain orchestration design + roles/audit without moving write authority into Publish Center.
