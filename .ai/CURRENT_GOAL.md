@@ -178,3 +178,19 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - AquaGuide Preview for `6e5d9aab` is READY at `aquaguide-cyzedovfy-chusday97s-projects.vercel.app`. The separate Admin Preview project had a branch-allowlist bug; its Vercel Build Command now also permits `codex/reconcile-admin-content-v0-main-*`, and redeploy `dpl_J5EJhtETyvKJWhpGZNTMkhjhB3YB` reached READY.
 - `check:preview-parity` exposed a stale hard-coded PR #142 assumption; current change resolves the open PR by branch by default while preserving `PREVIEW_PR` override. The resolver passes against the deployed `6e5d9aab` checkpoint.
 - Care SEO remains `hold_noindex`; Production, main and live migrations remain untouched. Next gate: current-HEAD Preview parity plus deliberate human visual acceptance; only then present a merge decision.
+
+## 2026-09-05 — Preview parity no-cost fallback
+- Vercel accepted `6e5d9aab` for AquaGuide/Admin Preview, then the account hit a build-rate limit on the later parity/docs-only HEAD; no paid upgrade was authorized or required.
+- Cloudflare Pages check for `0470071c` succeeded and reported an exact-SHA Preview at `https://3ad8a0b0.aquaguide-frontend.pages.dev`. This is Preview evidence only and does not reactivate Cloudflare as a Production provider.
+- `check:preview-parity` now resolves the current open PR by branch and accepts an exact-SHA successful Preview from either GitHub deployment/Vercel or Cloudflare Pages. It does not accept stale SHAs.
+- `scripts/check-preview-parity.mjs` is classified as non-runtime for Vercel ignore-build purposes so CI-only parity changes do not intentionally consume a product build.
+
+## 2026-09-05 — reconciliation technical closeout
+- Validated functional HEAD: `5169f4fc5b4ecac337f6e7fd8b34e869e5dbc435` on Draft PR #144. Original two-parent merge checkpoint remains `6e5d9aab` = feature `3dfa76af` + live main `64fa58a`.
+- GitHub current-head CI PASS: Main Convergence V1 `33967123788`, Product Golden Path `33967123846`, Admin Content CI Gate `33967123945`; heavy suites skipped by the existing cost policy.
+- Exact-SHA Cloudflare Preview PASS: `https://2b65ad0a.aquaguide-frontend.pages.dev`; embedded metadata reports the exact reconciliation branch and `5169f4fc`. `check:preview-parity` PASS using Cloudflare Pages exact-SHA evidence.
+- Remote browser PASS on that exact Preview: formal 4-module Preview has zero API/resource failures; mobile Care/Aquarium covers pager, recommendation, collection, tank species and care-plan flow.
+- Fixed cross-platform Preview metadata so Cloudflare uses `CF_PAGES_BRANCH` / `CF_PAGES_COMMIT_SHA` and Vercel uses its native Git env before falling back to local git.
+- Vercel AquaGuide/Admin builds later returned account build-rate-limit; no paid upgrade was authorized. Earlier `6e5d9aab` AquaGuide/Admin Vercel Previews are READY, and Cloudflare provides the current exact-SHA Preview. Cloudflare remains Preview evidence only, not a Production provider.
+- UI freeze intentionally remains `FROZEN_PROVISIONAL`: visual-owned files differ from baseline `02457dd2...`; this requires deliberate human visual acceptance before any new freeze baseline or merge decision.
+- Production/index/live migrations/main remain untouched; Care SEO stays `hold_noindex`.

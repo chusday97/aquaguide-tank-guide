@@ -85,9 +85,9 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Validate an isolated two-parent reconciliation candidate locally and on Draft PR #144; Production/index/live migrations remain locked.
 
 ## Next — human visual acceptance + explicit merge decision
+- [x] Current functional HEAD `5169f4fc` has exact branch/PR/Cloudflare Preview SHA parity; GitHub Main Convergence, Product Golden Path light validate and Admin Content CI all pass.
 - [ ] Review the reconciled AquaGuide Preview against the current visual baseline and deliberately accept/update the UI freeze only if the product surface is correct.
-- [ ] Re-run current-HEAD Preview parity/readiness after the parity-resolver commit is deployed.
-- [ ] Only after those gates pass, present an explicit merge decision; do not auto-merge `main`.
+- [ ] Only after visual acceptance, present an explicit merge decision; do not auto-merge `main`.
 
 ## Stable completed baseline — do not reimplement
 - [x] Product/Care Admin route exists at `/admin/product-content`.
