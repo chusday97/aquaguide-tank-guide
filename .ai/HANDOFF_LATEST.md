@@ -87,8 +87,8 @@ P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE in 
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`.
-- Current measured divergence against live main and functional HEAD: main-only 269 / feature-only 144 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remote before this docs sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7` (latest docs checkpoint); latest functional checkpoint remains `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`.
+- Current measured divergence against live main and current feature HEAD before this docs-only sync: main-only 269 / feature-only 145 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -227,3 +227,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - PASS: Care projection/artifact contracts, Product/Care authority contract, Published runtime, API/root TS, production root build, canonical route 390/1280, Care guide/assessment/favorite regressions, Care first-screen. Online Admin Content CI `33955509807` validate PASS; Heavy skipped.
 - No Care SEO Production/index unlock, main merge/rebase, live migration or Production mutation occurred.
 - First unfinished item: Care SEO Editorial Draft/Review persistence + explicit sanitized Staging snapshot/handoff + hosted bilingual acceptance.
+
+## 2026-09-05 — Care SEO foundation final sync
+- Functional checkpoint `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622` completed Published-Care-bound projection, deterministic EN `/care/<key>.html` + zh-CN `/zh/care/<key>.html` routing, hreflang/x-default, and a fail-closed static Staging artifact builder.
+- Online Admin Content CI run `33955509807`: lightweight `validate` PASS; Heavy browser / SEO handoff gate skipped by policy.
+- Latest docs checkpoint before this sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`; worktree was clean and local/remote feature matched.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; current pre-sync divergence is main-only 269 / feature-only 145, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature is not merge-ready: dedicated reconciliation against live main remains mandatory. No main merge/rebase, Production deploy, index unlock or live DB migration occurred.
+- Next milestone: Care SEO Editorial Draft/Review persistence → sanitized explicit Staging snapshot/handoff → hosted bilingual acceptance → only then consider index unlock. Production stays locked.

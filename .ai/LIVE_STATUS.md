@@ -2,7 +2,7 @@
 
 Updated: 2026-09-05
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`
+Operational HEAD before this sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`
 Latest converged functional baseline: `8104a1b2 feat(content): add care seo static handoff`
 
 ## Product state
@@ -30,7 +30,7 @@ P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publis
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`.
+- Feature remote before this docs sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -160,3 +160,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - SEO route contract: EN `/care/<key>.html`, zh-CN `/zh/care/<key>.html`, x-default EN; client fallback noindex.
 - Static Care SEO staging artifact generation is explicit-input-only and fail-closed; normal builds skip it.
 - Production/index remains locked. Next is editorial Draft/Review + explicit Staging snapshot/hosted acceptance.
+
+## 2026-09-05 — Care SEO foundation final sync
+- Functional checkpoint `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622` completed Published-Care-bound projection, deterministic EN `/care/<key>.html` + zh-CN `/zh/care/<key>.html` routing, hreflang/x-default, and a fail-closed static Staging artifact builder.
+- Online Admin Content CI run `33955509807`: lightweight `validate` PASS; Heavy browser / SEO handoff gate skipped by policy.
+- Latest docs checkpoint before this sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`; worktree was clean and local/remote feature matched.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; current pre-sync divergence is main-only 269 / feature-only 145, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature is not merge-ready: dedicated reconciliation against live main remains mandatory. No main merge/rebase, Production deploy, index unlock or live DB migration occurred.
+- Next milestone: Care SEO Editorial Draft/Review persistence → sanitized explicit Staging snapshot/handoff → hosted bilingual acceptance → only then consider index unlock. Production stays locked.

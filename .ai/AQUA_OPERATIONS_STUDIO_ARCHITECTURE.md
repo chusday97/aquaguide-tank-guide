@@ -98,7 +98,7 @@ The Publish Center capability matrix is descriptive, not an execution authority.
 - Online lightweight CI run `33951946893` passed for `5a549377`.
 - Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
 - Business role split is deliberately deferred until a real multi-operator requirement exists.
-- First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.
+- Historical note: Care SEO downstream projection was the next milestone at this checkpoint; the projection/canonical/static-handoff foundation is now complete. Current continuation is Care SEO Editorial Draft/Review + Staging acceptance.
 
 ## 2026-09-05 Care SEO downstream authority rule
 Care SEO is a projection, never a Care Knowledge authority. Its source identity is `(care catalog key, Published source version, locale)`. SEO may own title/meta/H1/focus keyword and index/canonical policy, but symptoms, actions, avoid/observe/diagnose/next-step/evidence remain protected upstream facts.
