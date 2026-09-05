@@ -12,6 +12,27 @@ function jsonCommand(name, args) {
   return JSON.parse(command(name, args));
 }
 
+
+function cloudflarePreviewForSha() {
+  try {
+    const result = jsonCommand('gh', ['api', `repos/${repo}/commits/${localSha}/check-runs`]);
+    const check = result.check_runs?.find((candidate) => candidate.name === 'Cloudflare Pages' && candidate.conclusion === 'success');
+    const summary = check?.output?.summary ?? '';
+    if (!check || !summary.includes(localSha.slice(0, 7))) return null;
+    const match = summary.match(/https:\/\/[a-f0-9]{8,}\.aquaguide-frontend\.pages\.dev/i);
+    return {
+      status: 'EQUIVALENT',
+      provider: 'cloudflare-pages',
+      deploymentId: check.id ?? null,
+      sha: localSha,
+      state: 'success',
+      targetUrl: match?.[0] ?? check.details_url ?? null,
+    };
+  } catch {
+    return null;
+  }
+}
+
 function vercelPreviewForSha() {
   try {
     const result = jsonCommand('npx', ['vercel', 'ls', 'aquaguide', '--json']);
@@ -65,7 +86,7 @@ try {
   const deployments = jsonCommand('gh', ['api', `repos/${repo}/deployments?sha=${localSha}`]);
   const preview = deployments.find((deployment) => deployment.environment === 'Preview' && deployment.sha === localSha);
   if (!preview) {
-    checks.preview = vercelPreviewForSha() ?? { status: 'UNVERIFIED', reason: 'No Preview deployment reports the exact candidate SHA.' };
+    checks.preview = cloudflarePreviewForSha() ?? vercelPreviewForSha() ?? { status: 'UNVERIFIED', reason: 'No Preview deployment reports the exact candidate SHA.' };
   } else {
     const statuses = jsonCommand('gh', ['api', `repos/${repo}/deployments/${preview.id}/statuses`]);
     checks.preview = {
