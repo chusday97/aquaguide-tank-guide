@@ -656,3 +656,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Live refs at checkpoint: feature `6079b6d4`, main `64fa58a1`, merge base `ed0cf38`, divergence main-only 269 / feature-only 148.
 - Supabase inventory rechecked: AquaGuide `ydiygvhuqpogmqlcvgob` ACTIVE_HEALTHY with zero development branches; separate `ice-glide-staging-sg` is unrelated. Therefore real hosted Care SEO acceptance cannot honestly use a non-Production AquaGuide source yet.
 - No Production source was substituted, no branch/project was created, no cost was incurred, no index unlock occurred, and no main merge/rebase was performed. Next step requires an existing non-Production AquaGuide source or explicit approval for a cost-bearing Supabase branch/project.
+
+## 2026-09-05 — Care SEO no-cost hosted Staging acceptance
+- Corrected the earlier false blocker: a persistent paid AquaGuide Supabase Staging project is not required. Used disposable local Supabase as the non-Production source, then destroyed it after snapshot export.
+- Ephemeral flow: core publication + Care SEO Editorial migrations → Published Care `care_water_stability` version 2 → EN/zh-CN SEO Draft → submit review → human Approved → sanitized two-record handoff. Local-only service-role grants were used inside the disposable stack to exercise server-only APIs; no grant/migration was applied live.
+- Real DB run found RFC3339 timestamp mismatch (`+00:00` rejected by Z-only schema); fixed in `5d2542ac68121809f68fd12e038a5d158c319606` with regression coverage. Full Care SEO tests, API TS, lint and root build PASS.
+- Snapshot hygiene PASS: only category/urgency/summary/immediateActions/avoidActions/observeItems/nextStep plus approved SEO fields; no symptoms/diagnosis/evidence/revision/audit/operator metadata.
+- Explicit one-file publish commit `18711afc787dc48c814a63de2551ac56f4a99793`; GitHub CI `33959147061` SUCCESS. Vercel `dpl_5XMFuB4p4VWyKBxyA5ML36ucc6D7` READY; build log confirms 2 Care SEO pages merged into `dist`.
+- Protected hosted acceptance PASS 2/2: HTTP 200, deployment X-Robots noindex, page noindex, title/meta/H1, source version 2, branch-alias canonical, EN/zh-CN/x-default hreflang and hygiene. Temporary Vercel share authentication was used without disabling protection and then removed locally.
+- Production, index, main and live databases remained untouched. Next gate is an explicit Care SEO Index/Production release decision; default remains locked.

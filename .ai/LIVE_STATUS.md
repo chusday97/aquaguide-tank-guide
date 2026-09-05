@@ -2,8 +2,8 @@
 
 Updated: 2026-09-05
 Canonical branch: `feature/admin-content-v0`
-Operational HEAD before this sync: `6079b6d44e7e3224822dcf06ae2253427679c632`
-Latest converged functional baseline: `6079b6d4 feat(content): gate care seo staging handoff`
+Operational HEAD before this sync: `18711afc787dc48c814a63de2551ac56f4a99793`
+Latest converged functional baseline: `18711afc content(care-seo): publish staging water stability`
 
 ## Product state
 - AquaGuide product includes Species, Aquarium/Care, Compatibility and SEO acquisition flows.
@@ -26,11 +26,11 @@ Latest converged functional baseline: `6079b6d4 feat(content): gate care seo sta
 ## Current next work
 P0-A: Product/Care target convergence is locally accepted.
 P0-B: completed; Production remained locked.
-P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO Published projection, Editorial Draft/Review and approved-only sanitized Staging handoff are complete in code. First unfinished milestone: real hosted bilingual Care SEO acceptance against a non-Production AquaGuide source.
+P1 Change Impact Preview and Compatibility Admin are complete in code. P2 Publish Center V1 is complete. Care SEO projection, Editorial Draft/Review, approved-only sanitized handoff and real hosted bilingual Staging acceptance are complete. First unfinished milestone: explicit Care SEO Index / Production release decision; current runtime remains noindex and Production locked.
 
 ## Branch / deploy safety
 - Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `6079b6d44e7e3224822dcf06ae2253427679c632`.
+- Feature remote before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`.
 - Do not treat feature as merge-ready for main; dedicated reconciliation remains required.
 - Production/main remain untouched by this documentation sync.
 
@@ -167,7 +167,7 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Latest docs checkpoint before this sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`; worktree was clean and local/remote feature matched.
 - Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; current pre-sync divergence is main-only 269 / feature-only 145, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Feature is not merge-ready: dedicated reconciliation against live main remains mandatory. No main merge/rebase, Production deploy, index unlock or live DB migration occurred.
-- Next milestone: Care SEO Editorial Draft/Review persistence → sanitized explicit Staging snapshot/handoff → hosted bilingual acceptance → only then consider index unlock. Production stays locked.
+- Historical note: the Editorial/handoff/hosted-acceptance milestone is now complete. Current next gate is explicit Index/Production release; Production stays locked.
 
 ## 2026-09-05 Care SEO Editorial + sanitized Staging handoff
 - Functional chain now extends through `a2caf575` Editorial persistence/review and `6079b6d4` sanitized approved-only Staging handoff.
@@ -175,4 +175,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Public Staging snapshot contains only rendering-minimum Care facts plus approved SEO editorial fields; protected diagnosis/evidence/revision/audit metadata are not exported.
 - Local HTTP hosted verifier PASS 2/2 EN/ZH pages. Root build PASS and ordinary code builds skip Care SEO generation.
 - Online Admin Content CI `33958334178`: validate PASS; Heavy skipped.
-- Real hosted acceptance remains blocked on absence of a non-Production AquaGuide data source. Supabase inventory: AquaGuide project `ydiygvhuqpogmqlcvgob` is healthy and has zero development branches; `ice-glide-staging-sg` is unrelated. Production remains locked.
+- Historical note: persistent AquaGuide Staging was later proven unnecessary; the free ephemeral Supabase path completed hosted acceptance. `ice-glide-staging-sg` remains unrelated and Production remains locked.
+
+## 2026-09-05 Care SEO real hosted acceptance
+- Ephemeral local Supabase generated the approved bilingual source-bound snapshot without reading or mutating Production; the temporary database was destroyed after export.
+- Timestamp compatibility fix: `5d2542ac68121809f68fd12e038a5d158c319606`. Explicit Staging snapshot commit: `18711afc787dc48c814a63de2551ac56f4a99793`.
+- GitHub light CI `33959147061` PASS. Vercel Preview `dpl_5XMFuB4p4VWyKBxyA5ML36ucc6D7` READY and generated 2 Care SEO pages.
+- Hosted protected acceptance PASS 2/2 EN/ZH pages; `X-Robots-Tag: noindex` and page `noindex,follow` retained. Canonical/hreflang use the feature branch alias; source Care version is 2.
+- A paid Supabase Staging branch/project is not required for this acceptance path. Production/index/main remain locked and untouched.

@@ -4,8 +4,8 @@ Updated: 2026-09-05
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `6079b6d44e7e3224822dcf06ae2253427679c632`
-Latest operational checkpoint: `6079b6d4 feat(content): gate care seo staging handoff`
+Current functional HEAD before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`
+Latest operational checkpoint: `18711afc content(care-seo): publish staging water stability`
 
 ## Read order for every new session
 1. `.ai/HANDOFF_LATEST.md`
@@ -83,12 +83,12 @@ P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Pu
 
 P1 — [DONE in code] Compatibility Admin: Profile/Pair Draft, structural Impact, real server engine Regression, canonical Evidence resolution, explicit human Review/Approve, exact reviewed runtime authority and atomic versioned publish are implemented. Live migrations remain unapplied.
 
-P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE in code] Care SEO Published projection + Editorial Draft/Review + sanitized explicit Staging handoff. [NEXT] Real hosted bilingual acceptance against a non-Production AquaGuide data source. AI assistance comes only after hosted acceptance and any later index-release decision.
+P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE] Care SEO Published projection + Editorial Draft/Review + sanitized explicit Staging handoff + protected Vercel hosted bilingual acceptance. [NEXT / LOCKED] Care SEO Index / Production release decision; keep noindex and Production locked until explicit authorization. Persistent paid Staging is optional; repeat acceptance with the proven ephemeral local Supabase path when needed.
 
 ## Branch / safety
 - Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `6079b6d44e7e3224822dcf06ae2253427679c632`; latest functional checkpoint is the same commit.
-- Current measured divergence against live main and current feature HEAD before this docs-only sync: main-only 269 / feature-only 148 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remote before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`; latest functional checkpoint is the same commit.
+- Current measured divergence against live main and current feature HEAD before this docs-only sync: main-only 269 / feature-only 151 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -226,7 +226,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - SPA canonical fallback stays `noindex,follow`. Static Staging generation is fail-closed and refuses unpaired locales, source-version drift, unapproved editorial, Production snapshots or a Production staging host.
 - PASS: Care projection/artifact contracts, Product/Care authority contract, Published runtime, API/root TS, production root build, canonical route 390/1280, Care guide/assessment/favorite regressions, Care first-screen. Online Admin Content CI `33955509807` validate PASS; Heavy skipped.
 - No Care SEO Production/index unlock, main merge/rebase, live migration or Production mutation occurred.
-- First unfinished item: Care SEO Editorial Draft/Review persistence + explicit sanitized Staging snapshot/handoff + hosted bilingual acceptance.
+- Historical note: Editorial Draft/Review, sanitized Staging handoff and hosted bilingual acceptance were unfinished at this checkpoint; all are now completed. Use the current summary above.
 
 ## 2026-09-05 — Care SEO foundation final sync
 - Functional checkpoint `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622` completed Published-Care-bound projection, deterministic EN `/care/<key>.html` + zh-CN `/zh/care/<key>.html` routing, hreflang/x-default, and a fail-closed static Staging artifact builder.
@@ -234,14 +234,15 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Latest docs checkpoint before this sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`; worktree was clean and local/remote feature matched.
 - Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; current pre-sync divergence is main-only 269 / feature-only 145, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Feature is not merge-ready: dedicated reconciliation against live main remains mandatory. No main merge/rebase, Production deploy, index unlock or live DB migration occurred.
-- Next milestone: Care SEO Editorial Draft/Review persistence → sanitized explicit Staging snapshot/handoff → hosted bilingual acceptance → only then consider index unlock. Production stays locked.
+- Historical note: that Editorial/handoff/hosted-acceptance milestone is now complete. Current next gate is the explicit Index/Production release decision; Production stays locked.
 
-## 2026-09-05 Care SEO Editorial + sanitized Staging handoff checkpoint
+## 2026-09-05 Care SEO Editorial + hosted Staging acceptance closeout
 - Functional commits: `a2caf575043bc4e36472f57412f469ad168fc652` adds persisted Care SEO Editorial Draft/Review/Human Approve; `6079b6d44e7e3224822dcf06ae2253427679c632` adds the approved-only sanitized Staging handoff and explicit build routing.
 - Editorial is downstream only: it stores SEO Title / Meta / H1 / Focus Keyword / index strategy and source binding; it cannot mutate Care Knowledge. Any new Published Care version makes older Editorial stale and blocks handoff until re-reviewed.
 - Staging handoff accepts only immutable `publication-snapshot` authority, exact Care ID/catalogKey/locale/version alignment, Approved Editorial, bilingual same-version pairing and `noindex`. Sensitive Care facts and Editorial audit/revision metadata are stripped from the public snapshot.
 - Ordinary code builds skip Care SEO generation. Automatic Preview generation is allowed only for an explicit snapshot-only `content(care-seo): publish staging ...` commit on `feature/admin-content-v0`; Production source/destination are denied.
-- Hosted verifier was exercised end-to-end against a local HTTP staging artifact: 2/2 EN/ZH pages PASS for HTTP 200, title/meta/H1, canonical, EN/zh-CN/x-default hreflang, robots, source version and hygiene, with `noindex` retained.
-- Online Admin Content CI run `33958334178` PASS for the lightweight `validate` job, including new handoff/build-routing contracts; Heavy was skipped by policy.
-- Real hosted Staging acceptance remains unfinished because AquaGuide has no Supabase development branch and no separate AquaGuide staging project. Do not use the AquaGuide Production source or the unrelated `ice-glide-staging-sg` project. Creating a Supabase branch/project is a cost-bearing infrastructure decision and requires explicit user approval.
-- No live migration, Production mutation, index unlock, main merge or rebase occurred.
+- The accepted no-cost Staging source path is ephemeral local Supabase, not a paid persistent project. Node 24.14.0 + Supabase CLI 2.115.0 + Docker launched a disposable database with core publication + Care SEO migrations; it produced Published Care version 2, then EN/zh-CN SEO Draft → ready_for_review → Approved and a sanitized two-record snapshot. The ephemeral database was destroyed after export.
+- The real DB run exposed a production-relevant bug: PostgREST emits valid `+00:00` timestamps while the snapshot schema only accepted `Z`. `5d2542ac68121809f68fd12e038a5d158c319606` fixes RFC3339 offset acceptance and adds regression coverage.
+- Explicit snapshot-only commit `18711afc787dc48c814a63de2551ac56f4a99793` published `content/care-seo/staging-snapshot.json`. GitHub Admin Content CI run `33959147061` PASS. Vercel deployment `dpl_5XMFuB4p4VWyKBxyA5ML36ucc6D7` (`aquaguide-4y6g30ndp-chusday97s-projects.vercel.app`) reached READY; build logs prove `Care SEO artifact: merged 2 static pages into dist.` while Species SEO stayed skipped.
+- Protected Vercel hosted acceptance PASS 2/2 EN/ZH pages: HTTP 200, deployment `X-Robots-Tag: noindex`, page `noindex,follow`, exact title/meta/H1, source version 2, branch-alias canonical, reciprocal EN/zh-CN/x-default hreflang and hygiene. Preview Authentication remained enabled; a temporary Vercel share-cookie was used only for verification and was deleted afterward.
+- Paid Supabase branch/project is therefore optional, not a blocker. Do not use Production or unrelated `ice-glide-staging-sg` as Staging. No live migration, Production mutation, index unlock, main merge or rebase occurred. Next gate is the explicit Index/Production release decision.

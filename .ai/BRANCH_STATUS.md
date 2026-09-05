@@ -2,14 +2,14 @@
 
 Updated: 2026-09-05
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `6079b6d44e7e3224822dcf06ae2253427679c632`
+Remote feature before this docs sync: `18711afc787dc48c814a63de2551ac56f4a99793`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 269
-- feature-only commits: 148
+- feature-only commits: 151
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -125,7 +125,7 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Latest docs checkpoint before this sync: `c4b1c1a1a308510029135bbad0f1bb6c552603c7`; worktree was clean and local/remote feature matched.
 - Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; current pre-sync divergence is main-only 269 / feature-only 145, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Feature is not merge-ready: dedicated reconciliation against live main remains mandatory. No main merge/rebase, Production deploy, index unlock or live DB migration occurred.
-- Next milestone: Care SEO Editorial Draft/Review persistence → sanitized explicit Staging snapshot/handoff → hosted bilingual acceptance → only then consider index unlock. Production stays locked.
+- Historical note: Editorial/handoff/hosted acceptance is now complete. Current next gate is the explicit Index/Production release decision; Production stays locked.
 
 ## 2026-09-05 Care SEO Editorial + handoff checkpoint
 - Functional feature HEAD pushed: `6079b6d44e7e3224822dcf06ae2253427679c632`.
@@ -133,3 +133,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Measured divergence: main-only 269 / feature-only 148; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Online light CI `33958334178` PASS; Heavy skipped by policy.
 - Feature remains not merge-ready; dedicated reconciliation is still required. No Production/main/live-DB mutation occurred.
+
+## 2026-09-05 Care SEO hosted acceptance checkpoint
+- Functional feature HEAD before docs sync: `18711afc787dc48c814a63de2551ac56f4a99793` (`content(care-seo): publish staging water stability`).
+- Preceded by timestamp compatibility fix `5d2542ac68121809f68fd12e038a5d158c319606`.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; measured divergence main-only 269 / feature-only 151; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Hosted Vercel acceptance is complete; this does not make the branch merge-ready. Dedicated main reconciliation remains required.
+- No main merge/rebase, Production mutation, index unlock or paid Staging resource creation occurred.

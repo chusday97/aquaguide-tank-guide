@@ -21,7 +21,7 @@ A new conversation should read this file first, then read the canonical set belo
 Treat the Admin as **Aqua Operations Studio**, not one SEO CMS. Keep Product Data, Care Knowledge, Compatibility Rules, SEO Editorial and user-specific context as separate authorities.
 
 ## Current first incomplete milestone
-All defined P0 work, P1, P2 Publish Center V1, Care SEO projection, Editorial Draft/Review and the sanitized explicit Staging handoff are closed in code. Care SEO binds only to immutable Published Care snapshots, requires human Approved Editorial, deterministic EN/ZH `.html` canonical + hreflang routes, and retains `noindex` through Staging. The first unfinished item is **real hosted bilingual Care SEO acceptance against a genuinely non-Production AquaGuide source**. Current AquaGuide Supabase has no development branch; do not substitute Production or the unrelated IceGlide staging project. Creating a Supabase branch/project requires explicit cost approval.
+All defined P0 work, P1, P2 Publish Center V1, Care SEO projection, Editorial Draft/Review, sanitized Staging handoff and real hosted bilingual Staging acceptance are closed. The accepted free path is **ephemeral local Supabase → Approved sanitized snapshot-only commit → protected Vercel Preview → hosted verification → destroy ephemeral DB**; a paid Supabase branch/project is optional, not required. The first unfinished item is the **Care SEO Index/Production release decision**. Keep `noindex` and Production locked unless the user explicitly authorizes a release decision.
 
 Continue from `TASK_QUEUE.md`; do not reopen completed Product/Care or SEO P0 work unless a new regression is proven.
 
@@ -35,7 +35,7 @@ Species SEO already has CSV template/preflight/Diff, durable import batch, dupli
 - Do not bypass authenticated human review or publish Production without explicit authorization.
 
 ## Exact prompt for a new conversation
-`继续 Aqua 项目。不要根据聊天记忆猜测。先读取 /Users/chuchu/aquaguide-admin-content-v0/.ai/CROSS_SESSION_START.md，再按其中顺序读取 HANDOFF_LATEST / AQUA_OPERATIONS_STUDIO_ARCHITECTURE / CURRENT_GOAL / TASK_QUEUE / LIVE_STATUS / BRANCH_STATUS / EXECUTION_LOG 最新记录。真实核对当前 branch、git status、HEAD 和 live remote refs，然后继续 TASK_QUEUE 中第一个未完成项（当前为真实非 Production AquaGuide 来源上的 Care SEO hosted bilingual acceptance）。不要重新实现已完成的 Product/Care、Compatibility、Publish Center、Care SEO projection、Editorial Draft/Review 或 sanitized Staging handoff；不要 merge main；不要动 Production；如果需要创建 Supabase branch/project，先做成本确认并等待我的明确批准；每完成一轮同步 .ai 文档。`
+`继续 Aqua 项目。不要根据聊天记忆猜测。先读取 /Users/chuchu/aquaguide-admin-content-v0/.ai/CROSS_SESSION_START.md，再按其中顺序读取 HANDOFF_LATEST / AQUA_OPERATIONS_STUDIO_ARCHITECTURE / CURRENT_GOAL / TASK_QUEUE / LIVE_STATUS / BRANCH_STATUS / EXECUTION_LOG 最新记录。真实核对当前 branch、git status、HEAD 和 live remote refs，然后继续 TASK_QUEUE 中第一个未完成项（当前为 Care SEO Index/Production release 决策；默认继续 noindex/Production locked，除非我明确授权）。不要重新实现已完成的 Product/Care、Compatibility、Publish Center、Care SEO projection、Editorial Draft/Review、sanitized Staging handoff 或 hosted acceptance；不要 merge main；不要动 Production；需要 Staging 复验时优先复用免费 ephemeral Supabase 路径，不要把付费 Supabase branch/project 当成必需条件；每完成一轮同步 .ai 文档。`
 
 ## Update rule after every material round
 After meaningful code/product changes, update at minimum: `HANDOFF_LATEST.md`, `CURRENT_GOAL.md`, `TASK_QUEUE.md`, `LIVE_STATUS.md`, `BRANCH_STATUS.md` when branch facts changed, and append `EXECUTION_LOG.md`. Keep this file short and only change it when the recovery protocol itself changes.
