@@ -86,6 +86,15 @@ export default function SeoOperations() {
           <Stat label="需处理 / 待读取" value={`${summary.needsAttention} / ${summary.byState.unknown || 0}`} detail="未知状态不会被误算成健康" />
         </section>
 
+        <section className="mt-4 border border-slate-200 bg-white px-4 py-4">
+          <div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">运营队列</div>
+          <div className="mt-3 grid gap-3 sm:grid-cols-3">
+            <QueueItem label="待审核" value={String(summary.byState.ready_for_review || 0)} />
+            <QueueItem label="编辑中" value={String(summary.byState.editing || 0)} />
+            <QueueItem label="源内容未就绪" value={String(summary.byState.source_not_published || 0)} />
+          </div>
+        </section>
+
         <section className="mt-4 grid gap-3 md:grid-cols-2">
           {snapshot.sources.map(source => (
             <article key={source.key} className="border border-slate-200 bg-white px-4 py-3">
@@ -142,6 +151,10 @@ export default function SeoOperations() {
       </div>
     </div>
   );
+}
+
+function QueueItem({ label, value }: { label: string; value: string }) {
+  return <div className="border border-slate-100 px-3 py-2"><div className="text-xs font-black text-ink/45">{label}</div><div className="mt-1 text-xl font-black">{value}</div></div>;
 }
 
 function Stat({ label, value, detail }: { label: string; value: string; detail: string }) {
