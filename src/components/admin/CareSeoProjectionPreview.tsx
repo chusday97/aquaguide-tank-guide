@@ -8,6 +8,7 @@ import { contentAdminService } from '../../services/admin/content-admin.service'
 type Props = {
   careId: string;
   sourceRefreshKey?: number | string;
+  initialLocale?: SupportedLocale;
 };
 
 type EditorialForm = {
@@ -21,9 +22,9 @@ const emptyForm: EditorialForm = { seoTitle: '', metaDescription: '', h1: '', fo
 const errorMessage = (error: unknown) => error instanceof AquaGuideApiError ? error.message : 'Care SEO 操作没有完成，请稍后重试。';
 const factCount = (value: string[]) => value.length ? `${value.length} 项` : '0 项';
 
-export default function CareSeoProjectionPreview({ careId, sourceRefreshKey }: Props) {
+export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, initialLocale = 'zh-CN' }: Props) {
   const { showToast } = useToast();
-  const [locale, setLocale] = useState<SupportedLocale>('zh-CN');
+  const [locale, setLocale] = useState<SupportedLocale>(initialLocale);
   const [workspace, setWorkspace] = useState<CareSeoEditorialWorkspaceDto | null>(null);
   const [form, setForm] = useState<EditorialForm>(emptyForm);
   const [loading, setLoading] = useState(true);
@@ -58,6 +59,7 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey }: P
     }
   };
 
+  useEffect(() => { setLocale(initialLocale); }, [careId, initialLocale]);
   useEffect(() => { void load(locale); }, [careId, locale, sourceRefreshKey]);
 
   if (loading) {

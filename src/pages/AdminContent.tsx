@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileImage, Loader2, Plus, Save, Send, XCircle } from 'lucide-react';
 import {
   careArticleAdminInputSchema,
@@ -84,8 +84,13 @@ const seoAdminUrl = import.meta.env.VITE_SEO_ADMIN_URL || (import.meta.env.DEV ?
 
 export default function AdminContent() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const deepLinkParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const requestedType: ContentType = deepLinkParams.get('type') === 'care' ? 'care' : 'species';
+  const requestedId = deepLinkParams.get('id');
+  const requestedLocale = deepLinkParams.get('locale') === 'en' ? 'en' : 'zh-CN';
   const { showToast } = useToast();
-  const [type, setType] = useState<ContentType>('species');
+  const [type, setType] = useState<ContentType>(requestedType);
   const [speciesItems, setSpeciesItems] = useState<AdminSpeciesRecord[]>([]);
   const [careItems, setCareItems] = useState<AdminCareArticleRecord[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -103,6 +108,7 @@ export default function AdminContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const baselineRequestRef = useRef(0);
+  const deepLinkAppliedRef = useRef(false);
 
   const items = type === 'species' ? speciesItems : careItems;
   const selected = items.find(item => item.id === selectedId);
@@ -159,6 +165,20 @@ export default function AdminContent() {
   };
 
   useEffect(() => { baselineRequestRef.current += 1; setPublishedBaseline(null); setLastSavedImpact(null); void loadItems(type, false); }, [type]);
+  useEffect(() => {
+    if (deepLinkAppliedRef.current || isLoading || !requestedId || type !== requestedType) return;
+    const item = items.find(candidate => candidate.id === requestedId);
+    if (!item) return;
+    deepLinkAppliedRef.current = true;
+    setSelectedId(item.id);
+    setFormError('');
+    setIsDirty(false);
+    setLastSavedImpact(null);
+    setPublishedBaseline(null);
+    if (type === 'species') setSpeciesForm(speciesInputFromRecord(item as AdminSpeciesRecord));
+    else setCareForm(careInputFromRecord(item as AdminCareArticleRecord));
+    void loadPublishedBaseline(item);
+  }, [isLoading, items, requestedId, requestedType, type]);
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (!isDirty) return;
@@ -313,7 +333,7 @@ export default function AdminContent() {
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
             {selected && <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />}
-            {selected && type === 'care' && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} />}
+            {selected && type === 'care' && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} />}
             {selected && type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}
             {selected && compatibilityRegression && <CompatibilityRegressionPreview result={compatibilityRegression} />}
             {type === 'species' ? (

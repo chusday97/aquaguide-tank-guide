@@ -1,9 +1,6 @@
 import { ArrowLeft, Clock3, Database, Search, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-const seoAdminUrl = import.meta.env.VITE_SEO_ADMIN_URL
-  || (import.meta.env.DEV ? 'http://127.0.0.1:3010/' : '/admin/seo/');
-
 export default function AdminHub() {
   const navigate = useNavigate();
   return (
@@ -24,17 +21,17 @@ export default function AdminHub() {
         </p>
 
         <main className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          <a href={seoAdminUrl} className="group rounded-[26px] border border-emerald-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
+          <button type="button" onClick={() => navigate('/admin/seo-pages')} className="group rounded-[26px] border border-emerald-100 bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-700">
               <Search className="h-6 w-6" />
             </div>
             <div className="mt-5 text-xs font-black uppercase tracking-[0.14em] text-emerald-700">SEO Content</div>
-            <h2 className="mt-1 text-xl font-black">Species SEO</h2>
+            <h2 className="mt-1 text-xl font-black">SEO Operations</h2>
             <p className="mt-2 text-sm font-semibold leading-6 text-ink/55">
-              管理 Title、Meta、H1、Intro、Image Alt、Base / Variant、中文 / English、Review 与发布准备度。
+              统一查看全站 SEO 页面。当前接入 Species 与 Care；编辑、审核和发布继续回到各自内容 authority。
             </p>
-            <div className="mt-5 text-sm font-black text-emerald-700">打开 SEO 内容后台 →</div>
-          </a>
+            <div className="mt-5 text-sm font-black text-emerald-700">打开 SEO Operations →</div>
+          </button>
 
           <button type="button" onClick={() => navigate('/admin/product-content')} className="group rounded-[26px] border border-slate-200 bg-white p-6 text-left shadow-sm transition hover:-translate-y-0.5 hover:shadow-md">
             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-100 text-slate-700">

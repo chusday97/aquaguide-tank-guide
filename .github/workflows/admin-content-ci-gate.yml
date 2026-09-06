@@ -15,6 +15,7 @@ on:
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
       - 'src/pages/PublishCenter.tsx'
+      - 'src/pages/SeoOperations.tsx'
       - 'src/data/compatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityRegistry.ts'
@@ -40,6 +41,7 @@ on:
       - 'scripts/verify-care-seo-hosted.mjs'
       - 'content/care-seo/**'
       - 'scripts/test-publish-center-contract.ts'
+      - 'scripts/test-seo-page-registry.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'server/admin-repo/**'
@@ -68,6 +70,7 @@ on:
       - 'src/pages/AdminHub.tsx'
       - 'src/pages/CompatibilityAdmin.tsx'
       - 'src/pages/PublishCenter.tsx'
+      - 'src/pages/SeoOperations.tsx'
       - 'src/data/compatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityEvidence.ts'
       - 'src/data/runtimeCompatibilityRegistry.ts'
@@ -93,6 +96,7 @@ on:
       - 'scripts/verify-care-seo-hosted.mjs'
       - 'content/care-seo/**'
       - 'scripts/test-publish-center-contract.ts'
+      - 'scripts/test-seo-page-registry.ts'
       - 'scripts/verify-publish-center.mjs'
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'server/admin-repo/**'
@@ -161,6 +165,8 @@ jobs:
         run: npm run test:care-seo-ai
       - name: Publish Center read-only contract
         run: npm run test:publish-center-contract
+      - name: SEO Page Registry contract
+        run: npm run test:seo-page-registry
       - name: Runtime compatibility authority contract
         run: npm run test:runtime-compatibility-authority
       - name: Business API TypeScript check

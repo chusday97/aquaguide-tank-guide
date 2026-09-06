@@ -148,6 +148,7 @@
     "verify:care-seo-hosted": "tsx scripts/verify-care-seo-hosted.mjs",
     "test:care-seo-route": "node scripts/verify-care-seo-route.mjs",
     "test:publish-center-contract": "tsx scripts/test-publish-center-contract.ts",
+    "test:seo-page-registry": "tsx scripts/test-seo-page-registry.ts",
     "test:publish-center-ui": "node scripts/verify-publish-center.mjs",
     "build:care-pages": "tsx scripts/build-care-seo-artifact.ts",
     "test:care-seo-artifact": "tsx scripts/test-care-seo-artifact.ts"
