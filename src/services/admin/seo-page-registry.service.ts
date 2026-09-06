@@ -12,6 +12,14 @@ export type SeoRegistryEditorialState =
   | 'source_not_published'
   | 'unknown';
 
+export type SeoHealthSeverity = 'healthy' | 'attention' | 'blocked' | 'unknown';
+export type SeoHealthIssueCode = 'missing_editorial_review' | 'index_strategy_unknown' | 'source_state_unknown';
+
+export type SeoHealthSummary = {
+  severity: SeoHealthSeverity;
+  issues: SeoHealthIssueCode[];
+};
+
 export type SeoPageRegistryEntry = {
   pageKey: string;
   pageType: SeoPageType;
@@ -24,6 +32,7 @@ export type SeoPageRegistryEntry = {
   editorialState: SeoRegistryEditorialState;
   indexStrategy: 'index' | 'noindex' | 'canonical_to_sibling' | 'unknown';
   editorHref: string;
+  health: SeoHealthSummary;
 };
 export type SeoPageRegistrySource = {
   key: 'species' | 'care';
@@ -75,6 +84,17 @@ const repoSelect = async <T>(table: string, limit = 1200): Promise<T[]> => {
 
 const pageKey = (type: 'species' | 'care', sourceKey: string, locale: SeoRegistryLocale) => `${type}:${sourceKey}:${locale}`;
 
+export function deriveSeoHealth(entry: Omit<SeoPageRegistryEntry, 'health'>): SeoHealthSummary {
+  const issues: SeoHealthIssueCode[] = [];
+  if (entry.indexStrategy === 'unknown') issues.push('index_strategy_unknown');
+  if (entry.editorialState === 'unknown') issues.push('source_state_unknown');
+  if (['not_started', 'editing', 'ready_for_review'].includes(entry.editorialState)) issues.push('missing_editorial_review');
+  return {
+    severity: issues.includes('source_state_unknown') ? 'unknown' : issues.includes('missing_editorial_review') ? 'attention' : 'healthy',
+    issues,
+  };
+}
+
 const normalizeSpeciesState = (row?: SpeciesSeoRow): SeoRegistryEditorialState => {
   if (!row) return 'not_started';
   if (row.review_state === 'approved') return 'approved';
@@ -98,6 +118,7 @@ export function buildSpeciesRegistryEntries(rows: SpeciesSeoRow[] | null): SeoPa
       editorialState: rows ? normalizeSpeciesState(row) : 'unknown',
       indexStrategy: row?.index_strategy || 'unknown',
       editorHref: `${speciesSeoAdminHref}${speciesSeoAdminHref.includes('?') ? '&' : '?'}species=${encodeURIComponent(item.id)}&locale=${encodeURIComponent(locale)}`,
+      health: deriveSeoHealth({ pageKey: pageKey('species', item.id, locale), pageType: 'species', locale, label: item.name, secondaryLabel: item.scientificName, sourceAuthority: 'product_catalog', sourceKey: item.id, editorialAuthority: 'species_seo_repo', editorialState: rows ? normalizeSpeciesState(row) : 'unknown', indexStrategy: row?.index_strategy || 'unknown', editorHref: '' }),
     };
   }));
 }
@@ -115,6 +136,7 @@ export function buildCareRegistryEntries(items: AdminCareArticleRecord[]): SeoPa
     editorialState: item.status === 'published' ? 'unknown' : 'source_not_published',
     indexStrategy: 'noindex' as const,
     editorHref: `/admin/product-content?type=care&id=${encodeURIComponent(item.id)}&seo=1&locale=${encodeURIComponent(locale)}`,
+    health: deriveSeoHealth({ pageKey: pageKey('care', item.catalogKey, locale), pageType: 'care', locale, label: item.title, secondaryLabel: item.catalogKey, sourceAuthority: 'published_care', sourceKey: item.catalogKey, editorialAuthority: 'care_seo_editorial', editorialState: item.status === 'published' ? 'unknown' : 'source_not_published', indexStrategy: 'noindex', editorHref: '' }),
   })));
 }
 

@@ -21,6 +21,7 @@ const stateLabel: Record<SeoPageRegistryEntry['editorialState'], string> = {
 };
 
 const availabilityLabel = { ready: '可读取', auth_required: '需要独立登录', unavailable: '暂不可用' } as const;
+const healthLabel = { healthy: '健康', attention: '需处理', blocked: '阻塞', unknown: '待确认' } as const;
 const localeLabel = { 'zh-CN': '中文', en: 'English' } as const;
 
 export default function SeoOperations() {
@@ -129,7 +130,7 @@ export default function SeoOperations() {
           ) : (
             <div className="divide-y divide-slate-100">
               {entries.slice(0, 300).map(entry => (
-                <button key={entry.pageKey} type="button" onClick={() => openEditor(entry)} className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-3 px-4 py-3 text-left hover:bg-slate-50 md:grid-cols-[110px_minmax(0,1fr)_100px_130px_120px_auto] md:items-center">
+                <button key={entry.pageKey} type="button" onClick={() => openEditor(entry)} className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-3 px-4 py-3 text-left hover:bg-slate-50 md:grid-cols-[110px_minmax(0,1fr)_100px_130px_120px_100px_auto] md:items-center">
                   <span className="hidden text-[11px] font-black uppercase tracking-[0.08em] text-ink/35 md:block">{typeLabel[entry.pageType]}</span>
                   <span className="min-w-0"><strong className="block truncate text-sm font-black">{entry.label}</strong><small className="mt-0.5 block truncate text-[11px] font-semibold text-ink/40">{entry.secondaryLabel || entry.sourceKey}</small></span>
                   <span className="hidden text-xs font-bold text-ink/50 md:block">{localeLabel[entry.locale]}</span>
