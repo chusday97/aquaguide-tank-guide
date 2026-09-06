@@ -46,15 +46,13 @@ export default function PageReviewStatusBar({
       aria-label={scopeLabel}
     >
       <div className="page-review-meta">
-        <small>{scopeLabel}</small>
         <div className="page-review-title-row">
-          <strong>{isUiEnglish ? `Review ${step}/3` : `审核进度 ${step}/3`}</strong>
+          <strong>{scopeLabel}</strong>
           <span className={`review-health-chip tone-${safeTone}`}>{healthLabel}</span>
         </div>
         <span><i className={`editor-status-dot ${publishStatus}`}></i>{publishLabel} · {reviewLabel}</span>
       </div>
-      <div className="workflow-status-block">
-        <small className="workflow-section-label">{isUiEnglish ? 'Review progress' : '审核进度'}</small>
+      <div className="workflow-status-block" aria-label={isUiEnglish ? `Review ${step} of 3` : `审核 ${step}/3`}>
         <div className="workflow-stepper-track">
           {steps.map(([index, label], position) => (
             <span key={index} className={index === step ? 'current' : index < step ? 'done' : ''}>
@@ -65,7 +63,6 @@ export default function PageReviewStatusBar({
         </div>
       </div>
       <div className="workflow-action-block">
-        <small className="workflow-section-label">{isUiEnglish ? 'Next action' : '下一步操作'}</small>
         <div className="workflow-stepper-action">
           {children}
           {dirtyHint ? <small className="page-review-dirty-hint">{dirtyHint}</small> : null}

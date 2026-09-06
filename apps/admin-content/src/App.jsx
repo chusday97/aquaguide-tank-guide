@@ -1235,7 +1235,7 @@ export default function App() {
         </div>
         <div className="topbar-actions">
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
-          <span>{isReadOnlyDemoMode ? t('top.reviewMode') : t('top.admin')}</span>
+          <span className="topbar-mode-label">{isReadOnlyDemoMode ? (appLocale === 'en' ? 'Read-only demo · no writes' : '只读演示 · 不会写入') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
           <button type="button" className={`activity-trigger ${activityOpen ? 'active' : ''}`} onClick={() => {
             setActivityOpen(true);
@@ -1249,11 +1249,7 @@ export default function App() {
         </div>
       </header>
 
-      {isReadOnlyDemoMode ? (
-        <div className="schema-banner demo-banner">
-          <strong>{appLocale === 'en' ? 'Read-only UI demo:' : '只读界面演示：'}</strong> {appLocale === 'en' ? 'This demo is disconnected from writable content sources. You can search 486 species pages, use the editor and compare the live preview, but all writes are disabled.' : '此演示环境不连接任何可写内容源。可以搜索 486 个物种页面、体验编辑器并对照实时预览，但所有写入操作均被禁用。'}
-        </div>
-      ) : !schemaReady || !groupSchemaReady ? (
+      {isReadOnlyDemoMode ? null : !schemaReady || !groupSchemaReady ? (
         <div className="schema-banner">
           <strong>安全隔离状态：</strong> {isRepoBackend ? '仓库内容存储当前不可写；可以继续预览继承结构，但保存被阻止。' : '当前页 / 基础模板 SEO 数据结构尚未全部应用；可以预览继承结构，但缺失的层级不会写入。'} 不会自动触碰正式环境。
         </div>
@@ -1333,11 +1329,6 @@ export default function App() {
               <button type="button" aria-pressed={editorScope === 'variant'} className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
             </div>
             <button type="button" className="compact-preview-toggle" aria-expanded={compactPreviewOpen} onClick={() => setCompactPreviewOpen((value) => !value)}>{appLocale === 'en' ? 'Preview' : '效果预览'}</button>
-            <div className="locale-switcher compact" aria-label="Content language">
-              {CONTENT_LOCALES.map((item) => (
-                <button key={item.code} type="button" aria-pressed={contentLocale === item.code} className={contentLocale === item.code ? 'active' : ''} onClick={() => switchWorkspaceLocale(item.code)}>{appLocale === 'en' ? (item.code === 'en' ? 'English' : 'Chinese') : (item.code === 'en' ? '英文' : '中文')}</button>
-              ))}
-            </div>
           </div>
 
           {editorScope === 'base' ? (

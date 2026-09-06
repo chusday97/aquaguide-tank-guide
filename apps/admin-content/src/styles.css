@@ -3269,3 +3269,121 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
     text-align:right;
   }
 }
+
+
+/* 2026-09-06 operator hierarchy cleanup: fewer persistent bands, one visual priority. */
+.topbar { box-shadow:none !important; border-bottom:1px solid var(--cms-border) !important; }
+.topbar-mode-label { color:var(--cms-muted) !important; font-size:9px !important; font-weight:650 !important; }
+.demo-banner { display:none !important; }
+
+.admin-shell.workflow-compact .workflow-command-center {
+  min-height:50px; grid-template-columns:70px minmax(420px,1fr) minmax(190px,auto);
+  gap:12px; padding:5px 14px; border-top:0 !important; border-bottom:1px solid var(--cms-border-strong) !important;
+  background:var(--cms-paper) !important; box-shadow:none !important;
+}
+.workflow-progress-summary {
+  min-height:0; display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:2px;
+  padding:0; border:0; border-radius:0; background:transparent !important; color:var(--cms-ink) !important;
+}
+.workflow-progress-summary > span { font-size:8px; letter-spacing:.04em; color:var(--cms-muted); opacity:1; }
+.workflow-progress-summary > strong { font-size:13px; line-height:1; color:var(--cms-ink); }
+.workflow-progress-summary > strong small { font-size:8px; color:var(--cms-muted); opacity:1; }
+.admin-shell.workflow-compact .workflow-stage-grid { gap:0; }
+.admin-shell.workflow-compact .workflow-stage-grid::before { left:7%; right:7%; height:1px; background:var(--cms-border-strong); }
+.admin-shell.workflow-compact .workflow-stage-card {
+  min-height:32px; grid-template-columns:20px minmax(0,1fr) auto; gap:5px; padding:3px 7px;
+  border:0 !important; border-radius:0; background:transparent !important; box-shadow:none !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card:hover { background:var(--cms-panel) !important; transform:none !important; }
+.admin-shell.workflow-compact .workflow-stage-card > b {
+  width:20px; height:20px; border:1px solid var(--cms-border-strong); border-radius:999px;
+  background:var(--cms-paper) !important; color:var(--cms-muted) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card > em {
+  min-width:18px; height:18px; border-radius:999px; background:transparent !important; color:var(--cms-faint) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.is-complete { border:0 !important; }
+.admin-shell.workflow-compact .workflow-stage-card.is-complete > b { background:var(--cms-ink) !important; color:var(--cms-paper) !important; border-color:var(--cms-ink) !important; }
+.admin-shell.workflow-compact .workflow-stage-card.is-current {
+  border:0 !important; background:transparent !important; color:var(--cms-ink) !important; box-shadow:none !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.is-current > b { background:var(--cms-accent) !important; color:var(--cms-paper) !important; border-color:var(--cms-accent) !important; }
+.admin-shell.workflow-compact .workflow-stage-card.is-current > span strong { color:var(--cms-ink) !important; font-weight:760 !important; }
+.admin-shell.workflow-compact .workflow-stage-card.is-current > em { background:transparent !important; color:var(--cms-accent) !important; }
+.admin-shell.workflow-compact .workflow-stage-card.filter-selected:not(.is-current) { box-shadow:inset 0 -2px 0 var(--cms-accent) !important; }
+.workflow-current-action { grid-template-columns:minmax(0,1fr) auto; gap:8px; padding-left:12px; }
+.workflow-current-action > span { display:none; }
+.workflow-current-action > strong { font-size:9px; }
+.workflow-current-action > button { min-height:28px; border-radius:6px; }
+
+.page-review-top-slot { border-bottom:1px solid var(--cms-border) !important; }
+.page-review-top-slot .page-review-status-bar.page-action-panel {
+  min-height:48px; padding:5px 14px !important; grid-template-columns:140px minmax(0,1fr) auto; gap:12px;
+  background:var(--cms-paper) !important; box-shadow:none !important;
+}
+.page-review-status-bar.tone-error,.page-review-status-bar.tone-warning,.page-review-status-bar.tone-success { background:var(--cms-paper) !important; }
+.page-review-title-row { gap:6px; }
+.page-review-title-row > strong { font-size:10px !important; font-weight:730 !important; letter-spacing:0 !important; }
+.review-health-chip { min-height:0; padding:0; border:0 !important; background:transparent !important; font-size:8px; }
+.review-health-chip::after { content:''; width:5px; height:5px; margin-left:4px; border-radius:999px; background:currentColor; }
+.page-review-meta > span { font-size:8px !important; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-track { margin:0; justify-content:center; gap:8px; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size:8px !important; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-track span b { width:17px; height:17px; border-radius:999px; }
+.page-review-top-slot .page-review-status-bar .workflow-action-block { min-width:0; padding-left:8px; border-left:0; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-action { margin:0; }
+.page-review-top-slot .review-next-step-hint,.page-review-top-slot .page-review-dirty-hint { display:none !important; }
+.page-review-status-bar.page-action-panel::after { width:2px; border-radius:0; }
+
+.species-sidebar { padding:14px 12px !important; background:#fafafa !important; }
+.sidebar-heading { min-height:30px; padding:0 2px 8px !important; }
+.sidebar-heading h2 { font-size:17px !important; letter-spacing:-.02em !important; }
+.count-badge { height:22px; min-width:24px; border-radius:999px; background:transparent !important; color:var(--cms-muted) !important; }
+.search-input,.category-filter { width:100% !important; margin-left:0 !important; margin-right:0 !important; }
+.search-input { height:36px; margin-bottom:8px !important; }
+.category-filter { height:34px; margin:0 0 10px !important; }
+.review-filters.species-quick-filters { margin:0 0 8px !important; padding:2px; border:1px solid var(--cms-border); background:var(--cms-paper) !important; }
+.review-filters.species-quick-filters button { min-height:27px; padding:3px 2px; font-size:8px; }
+.review-filters.species-quick-filters button.active { background:var(--cms-ink) !important; color:var(--cms-paper) !important; box-shadow:none !important; }
+.workflow-filter-banner { margin:0 0 8px !important; }
+.species-list { padding-right:0; }
+.species-group { border:0 !important; border-radius:0 !important; background:transparent !important; }
+.group-header { padding:8px 4px !important; background:transparent !important; }
+.group-header:hover { background:var(--cms-panel) !important; }
+.variant-row { border-radius:7px !important; }
+
+.admin-shell.workflow-compact .editor-context-bar { min-height:44px; height:44px; padding:0 30px; border-bottom:1px solid var(--cms-border); box-shadow:none; }
+.editor-scope-switch { background:transparent !important; border:0 !important; padding:0 !important; gap:2px; }
+.editor-scope-switch button { min-height:28px; padding:0 10px; border-radius:6px !important; border:0 !important; background:transparent !important; color:var(--cms-muted) !important; }
+.editor-scope-switch button.active { background:var(--cms-ink) !important; color:var(--cms-paper) !important; box-shadow:none !important; }
+.compact-preview-toggle { min-height:28px !important; padding:0 10px !important; border-radius:6px !important; }
+.editor-task-header { margin-bottom:26px; padding-bottom:18px; }
+
+@media (max-width:1180px) and (min-width:761px) {
+  .admin-shell.workflow-compact .workflow-command-center { grid-template-columns:60px minmax(0,1fr) minmax(170px,auto); gap:8px; }
+  .workflow-current-action { grid-column:auto; border-top:0; padding-top:0; }
+  .page-review-top-slot .page-review-status-bar.page-action-panel { grid-template-columns:125px minmax(0,1fr) auto; }
+}
+@media (max-width:900px) {
+  .topbar-mode-label { display:none !important; }
+}
+@media (max-width:760px) {
+  .admin-shell.workflow-compact .workflow-command-center { min-height:62px; grid-template-columns:1fr; gap:3px; padding:5px 8px; }
+  .workflow-progress-summary { display:none !important; }
+  .admin-shell.workflow-compact .workflow-stage-grid { gap:0; }
+  .admin-shell.workflow-compact .workflow-stage-card { min-height:28px; grid-template-columns:17px minmax(0,1fr); gap:3px; padding:2px 3px; }
+  .admin-shell.workflow-compact .workflow-stage-card > b { width:17px; height:17px; }
+  .workflow-current-action { min-height:24px; grid-template-columns:minmax(0,1fr) auto; padding:3px 0 0; border-top:1px solid var(--cms-border); }
+  .workflow-current-action > strong { font-size:8px; }
+  .workflow-current-action > button { min-height:23px; }
+  .page-review-top-slot .page-review-status-bar.page-action-panel { min-height:52px; grid-template-columns:minmax(0,1fr) auto; grid-template-rows:auto auto; gap:3px 6px; padding:5px 8px !important; }
+  .page-review-top-slot .page-review-meta { grid-column:1; grid-row:1; display:flex; align-items:center; gap:6px; }
+  .page-review-top-slot .page-review-meta > span { display:none; }
+  .page-review-top-slot .workflow-status-block { grid-column:1 / -1; grid-row:2; }
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-track { justify-content:flex-start; gap:4px; }
+  .page-review-top-slot .page-review-status-bar .workflow-action-block { grid-column:2; grid-row:1; }
+  .species-sidebar { padding:12px 12px 10px !important; }
+  .sidebar-heading { padding-bottom:6px !important; }
+  .admin-shell.workflow-compact .editor-context-bar { min-height:42px; height:42px; padding:0 12px; }
+  .editor-task-header { margin-bottom:22px; padding-bottom:16px; }
+}

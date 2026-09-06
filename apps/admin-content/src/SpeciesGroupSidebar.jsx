@@ -108,15 +108,15 @@ export default function SpeciesGroupSidebar({
   return (
     <aside className="species-sidebar">
       <div className="sidebar-heading">
-        <div>
-          <p className="eyebrow">{t('sidebar.content')}</p>
-          <h2>{t('sidebar.species')}</h2>
-        </div>
+        <h2>{t('sidebar.species')}</h2>
         <span className="count-badge" title={appLocale === 'en' ? `${seoPageCandidateCount} current SEO page candidates` : `${seoPageCandidateCount} 个当前 SEO 页面候选`}>{seoPageCandidateCount}</span>
       </div>
-      <div className="catalog-summary">
-        {speciesGroupStats.catalog_count} {appLocale === 'en' ? 'source records' : '条源记录'} · {speciesGroupStats.exact_duplicate_records} {appLocale === 'en' ? 'duplicate candidates' : '条疑似重复'} · {speciesGroupStats.base_group_count} {appLocale === 'en' ? 'Base groups' : '个基础种'}
-      </div>
+      <input
+        className="search-input"
+        placeholder={t('sidebar.search')}
+        value={search}
+        onChange={(event) => onSearch(event.target.value)}
+      />
       {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}{appLocale === 'en' ? ': ' : '：'}{workflowFilterLabel} · {filtered.length} {appLocale === 'en' ? 'Base groups' : '个基础模板组'}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
       <div className="review-filters species-quick-filters" aria-label="Species workflow filters">
         <button type="button" aria-pressed={!workflowFilter} title={appLocale === 'en' ? `${speciesGroupStats.base_group_count} Base Species groups` : `${speciesGroupStats.base_group_count} 个基础模板组`} className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{appLocale === 'en' ? 'Base groups' : '基础种'} <b>{speciesGroupStats.base_group_count}</b></button>
@@ -134,12 +134,6 @@ export default function SpeciesGroupSidebar({
           <b>{workflowOverview.contentHygiene.byLocale[locale].count}</b>
         </button>
       ) : null}
-      <input
-        className="search-input"
-        placeholder={t('sidebar.search')}
-        value={search}
-        onChange={(event) => onSearch(event.target.value)}
-      />
       <select className="category-filter" value={category} onChange={(event) => onCategory(event.target.value)}>
         <option value="">{t('sidebar.allCategories')}</option>
         {speciesCategories.map((item) => <option key={item} value={item}>{item}</option>)}

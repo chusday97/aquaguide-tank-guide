@@ -293,7 +293,7 @@ assert.match(stylesSource, /preview-split-open[\s\S]*var\(--preview-width/, 'Spl
 assert.doesNotMatch(appSource, /source === 'preview'[\s\S]{0,180}setCompactPreviewOpen\(false\)/, 'Preview inspector selection must not close the Preview while editing side-by-side');
 assert.match(appSource, /switchWorkspaceLocale[\s\S]*setContentLocale\(next\)[\s\S]*setAppLocale\(next\)/, 'Workspace language switching must keep interface and content locale synchronized');
 assert.match(appSource, /InterfaceLanguageSwitch onLocaleChange=\{switchWorkspaceLocale\}/, 'Top language switch must use the unified workspace locale action');
-assert.match(appSource, /onClick=\{\(\) => switchWorkspaceLocale\(item\.code\)\}/, 'Editor language switch must use the same unified workspace locale action');
+assert.doesNotMatch(appSource, /editor-context-bar[\s\S]{0,1200}locale-switcher compact/, 'Editor chrome must not duplicate the global workspace language switch');
 assert.match(appSource, /advanced-seo-disclosure/, 'Focus keyword and indexing controls must stay behind Advanced SEO disclosure');
 assert.match(appSource, /<textarea rows=\"4\" value=\{form\.intro\}/, 'Variant intro must default to a compact four-row editing surface');
 assert.match(appSource, /advanced-seo-disclosure/, 'Low-frequency keyword/index/canonical controls must stay behind Advanced SEO disclosure');
@@ -326,7 +326,7 @@ assert.match(appSource, /editor-task-header/, 'Variant editor must use one task 
 assert.doesNotMatch(appSource, /SPECIES SEO ·/, 'Variant editor must not repeat an internal product eyebrow above the task form');
 assert.doesNotMatch(appSource, /页面内容与 SEO 字段|Page content and SEO fields/, 'Variant editor must not add a redundant generic detail heading before the actual tasks');
 assert.match(appSource, /open=\{seoAttentionCount > 0 \|\| \['seoTitle', 'metaDescription', 'h1'\]\.includes\(selectedEditorField\)\}/, 'Search appearance must stay collapsed by default but open automatically when Preview selects a matching field');
-assert.doesNotMatch(appSource, /只读演示 · 不会写入|Read-only demo · no writes/, 'Editor body must not duplicate the global read-only demo notice');
+assert.doesNotMatch(appSource, /editor-footer[\s\S]{0,500}(只读演示 · 不会写入|Read-only demo · no writes)/, 'Editor body must not duplicate the topbar read-only demo notice');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
 assert.doesNotMatch(appSource, /footer-state-select review-/, 'Variant workflow must not regress to a field-like review-state select');
@@ -346,10 +346,14 @@ assert.match(baseSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s
 assert.match(reviewSource, /DuplicateCandidateComparison/, 'Single-group duplicate review must expose the shared comparison evidence before asking for a human conclusion.');
 assert.match(reviewSource, /resolve_species_duplicate_review/, 'Duplicate review UI must use one atomic Repo operation.');
 assert.match(repoStoreSource, /resolveDuplicateReview/, 'Repo store must resolve review decision and SEO policy in one private-store write.');
-assert.match(pageReviewSource, /审核进度|Review progress/, 'Standalone page review chrome must explicitly label review progress');
-assert.match(pageReviewSource, /下一步操作|Next action/, 'Standalone page review chrome must explicitly label the next action');
+assert.match(pageReviewSource, /aria-label=\{isUiEnglish \? `Review \${step} of 3` : `审核 \${step}\/3`\}/, 'Standalone page review chrome must keep an accessible three-step progress label without duplicating visible headings');
+assert.match(pageReviewSource, /workflow-action-block[\s\S]*workflow-stepper-action/, 'Standalone page review chrome must keep one dedicated next-action area');
+assert.doesNotMatch(pageReviewSource, /workflow-section-label/, 'Top review chrome must not repeat Review progress / Next action headings around already-obvious controls');
 assert.match(pageReviewSource, /workflow-stepper-track/, 'Standalone page review chrome must preserve the three-step progress track');
 assert.match(appSource, /workflow-command-center[\s\S]*page-review-top-slot[\s\S]*workspace studio-workspace/, 'Publish progress, current-page review, and workspace must render in that top-to-bottom order');
+assert.doesNotMatch(appSource, /schema-banner demo-banner/, 'Read-only Demo state must stay in the topbar instead of consuming a separate horizontal banner');
+assert.doesNotMatch(sidebarSource, /catalog-summary/, 'Species navigation must not repeat global catalog statistics above the search task');
+assert.match(stylesSource, /operator hierarchy cleanup[\s\S]*workflow-stage-card[\s\S]*border:0 !important[\s\S]*page-review-status-bar\.tone-error[\s\S]*background:var\(--cms-paper\)/, 'Primary workflow and review chrome must use linear hierarchy and neutral surfaces instead of stacked cards or full semantic fills');
 assert.doesNotMatch(appSource, /mobile-review-progress/, 'Review progress must not be duplicated inside the mobile editor chrome once it lives in the top control stack');
 assert.match(appSource, /unsaved-indicator/, 'Variant editing must expose an explicit unsaved-change indicator');
 assert.match(baseSource, /unsaved-indicator/, 'Base editing must expose the same unsaved-change indicator');
