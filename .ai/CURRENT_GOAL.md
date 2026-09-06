@@ -202,3 +202,10 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Review progress must stay visually separate from editable content and must never float over the editor.
 - State color is semantic, not decorative: red = blocker/error, yellow = attention/incomplete, green = healthy/success. Neutral black/white remains the base visual system.
 - New editor/control work must define interaction states beyond Default: Hover, Active/focus, Selected, Loading, Disabled, Success, Error and Empty where applicable.
+
+
+## 2026-09-06 top-level review progress rule
+- Current information hierarchy is now **Publish Progress Navigation → Current Page Review Progress → Workspace (Species / editor / Preview)**.
+- `PageReviewStatusBar` is portaled into a top-level slot outside `.studio-editor-area`; editor content must contain zero review bars.
+- The mobile duplicate `审核 n/3` editor-toolbar indicator is retired because the full review progress now stays in the top control stack.
+- Keep this top review chrome compact: ~62px in current 1440/390 acceptance, with zero overlay and zero horizontal overflow.

@@ -756,3 +756,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Desktop: sticky full-width review control strip; mobile: normal-flow full strip + compact sticky-toolbar progress indicator to avoid nested sticky collisions.
 - Updated `verify-contract.mjs` to forbid `editor-status-cluster` regression and require the standalone review control layer for both editor scopes.
 - Browser acceptance PASS at 1440/390 with zero horizontal overflow; Admin contract and root build PASS.
+
+
+## 2026-09-06 — promote page review progress to top
+- Re-read canonical Aqua SEO Admin state on `feature/admin-content-v0`; live feature ref matched local start HEAD and main remained untouched.
+- Added `page-review-top-slot` directly after Publish Progress and before `.studio-workspace`; `PageReviewStatusBar` now uses a React portal so review actions keep editor-local save logic without rendering inside editor content.
+- Removed the duplicate mobile `审核 n/3` indicator and compacted the top review surface.
+- Browser acceptance: 1440 and 390 both render Publish → Review → Workspace in order, editor review descendants=0, overlap=0, overflow=0; split Preview remains simultaneous; Base switch updates top review scope correctly.
+- Admin contract and full root build PASS locally.

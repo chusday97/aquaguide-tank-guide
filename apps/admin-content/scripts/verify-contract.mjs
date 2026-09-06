@@ -285,7 +285,9 @@ assert.match(appSource, /inherited-content-disclosure/, 'Inherited Base intro mu
 assert.match(pageReviewSource, /publishStatus[\s\S]*reviewState/, 'Standalone review chrome must carry both publish and review state');
 assert.match(pageReviewSource, /data-ui-state=\{uiState\}/, 'Standalone review chrome must expose explicit loading and semantic UI state');
 assert.match(pageReviewSource, /tone-error[\s\S]*tone-warning[\s\S]*tone-success|safeTone/, 'Standalone review chrome must support error, warning and success health states');
-assert.match(stylesSource, /page-review-status-bar\.page-action-panel[\s\S]*position:relative !important[\s\S]*top:auto !important/, 'Current page review must remain in document flow and never overlay editable content');
+assert.match(appSource, /page-review-top-slot/, 'Current page review must have a top-level slot between Publish Progress and the workspace');
+assert.match(pageReviewSource, /createPortal[\s\S]*portalTarget/, 'Page Review Status Bar must portal into the top-level review slot instead of rendering inside editor content');
+assert.match(stylesSource, /page-review-top-slot[\s\S]*flex:0 0 auto[\s\S]*page-review-status-bar/, 'Top-level review chrome must reserve layout space above the workspace and never overlay editable content');
 assert.match(stylesSource, /--state-error:[\s\S]*--state-warning:[\s\S]*--state-success:/, 'Admin semantic health must use the red/yellow/green state system');
 assert.match(appSource, /data-validation-state/, 'Variant editor must expose field and section validation states');
 assert.match(appSource, /validation-legend/, 'Variant editor must explain red/yellow/green field health inline');
@@ -316,8 +318,8 @@ assert.match(repoStoreSource, /resolveDuplicateReview/, 'Repo store must resolve
 assert.match(pageReviewSource, /审核进度|Review progress/, 'Standalone page review chrome must explicitly label review progress');
 assert.match(pageReviewSource, /下一步操作|Next action/, 'Standalone page review chrome must explicitly label the next action');
 assert.match(pageReviewSource, /workflow-stepper-track/, 'Standalone page review chrome must preserve the three-step progress track');
-assert.match(stylesSource, /page-review-status-bar\.page-action-panel[\s\S]*position:sticky/, 'Desktop review progress must stay visible independently from scrolling editor content');
-assert.match(appSource, /mobile-review-progress/, 'Mobile editor chrome must keep compact review progress visible while the standalone bar scrolls naturally');
+assert.match(appSource, /workflow-command-center[\s\S]*page-review-top-slot[\s\S]*workspace studio-workspace/, 'Publish progress, current-page review, and workspace must render in that top-to-bottom order');
+assert.doesNotMatch(appSource, /mobile-review-progress/, 'Review progress must not be duplicated inside the mobile editor chrome once it lives in the top control stack');
 assert.match(appSource, /unsaved-indicator/, 'Variant editing must expose an explicit unsaved-change indicator');
 assert.match(baseSource, /unsaved-indicator/, 'Base editing must expose the same unsaved-change indicator');
 assert.match(appSource, /beforeunload/, 'Admin must protect dirty editor state from browser refresh or close');

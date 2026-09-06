@@ -2798,24 +2798,6 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
   .page-review-status-bar .workflow-stepper-action .secondary-button.compact { min-height:28px; padding:0 8px; font-size:8px; width:auto; }
   .page-review-dirty-hint { display:none; }
 }
-.mobile-review-progress { display:none; }
-@media (max-width:760px) {
-  .page-review-status-bar.page-action-panel { position:relative; top:auto; }
-  .mobile-review-progress {
-    display:inline-flex;
-    align-items:center;
-    min-height:24px;
-    padding:0 6px;
-    border:1px solid var(--cms-border-strong);
-    border-radius:6px;
-    background:var(--cms-panel);
-    color:var(--cms-ink);
-    font-size:7px;
-    font-weight:720;
-    white-space:nowrap;
-  }
-}
-
 /* 2026-09-06 semantic state system: neutral UI + red/yellow/green health only. */
 :root {
   --state-error:#b42318;
@@ -2829,7 +2811,7 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
   --state-success-line:#a9d2b8;
 }
 
-/* Review is a sibling control surface, never floating on top of editable content. */
+/* Review chrome is top-level workflow control, never floating on top of editable content. */
 .page-review-status-bar.page-action-panel {
   position:relative !important;
   top:auto !important;
@@ -2932,4 +2914,89 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
 }
 .admin-shell .publish-readiness-panel.ready,.admin-shell .readiness-pill.ready {
   border-color:var(--state-success-line) !important; background:var(--state-success-bg) !important; color:var(--state-success) !important;
+}
+
+/* 2026-09-06 top-level review chrome: publish flow → page review → workspace. */
+.page-review-top-slot {
+  flex:0 0 auto;
+  min-height:0;
+  background:var(--cms-paper);
+  border-bottom:1px solid var(--cms-border-strong);
+  position:relative;
+  z-index:10;
+}
+.page-review-top-slot:empty { display:none; }
+.page-review-top-slot .page-review-status-bar.page-action-panel {
+  width:100%;
+  min-height:50px;
+  margin:0 !important;
+  padding:6px 14px !important;
+  grid-template-columns:150px minmax(0,1fr) auto;
+  gap:14px;
+  border-top:0 !important;
+  border-right:0 !important;
+  border-bottom:0 !important;
+  border-radius:0 !important;
+}
+.page-review-top-slot .page-review-status-bar .workflow-stepper-track { margin-top:2px; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size:9px !important; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-track span b { width:18px; height:18px; }
+.page-review-top-slot .page-review-status-bar .workflow-action-block { min-width:180px; padding-left:14px; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-action { margin-top:2px; }
+.page-review-top-slot .page-review-status-bar .workflow-stepper-action .primary-button.compact,
+.page-review-top-slot .page-review-status-bar .workflow-stepper-action .ghost-button.compact,
+.page-review-top-slot .page-review-status-bar .workflow-stepper-action .secondary-button.compact {
+  min-height:30px;
+  padding:0 10px;
+  font-size:9px;
+}
+
+@media (max-width:1180px) and (min-width:761px) {
+  .page-review-top-slot .page-review-status-bar.page-action-panel {
+    grid-template-columns:130px minmax(0,1fr) auto;
+    gap:10px;
+    padding:6px 12px !important;
+  }
+  .page-review-top-slot .page-review-status-bar .workflow-action-block {
+    grid-column:auto;
+    min-width:150px;
+    padding:0 0 0 10px;
+    border-top:0;
+    border-left:1px solid var(--cms-border-strong);
+  }
+}
+@media (max-width:760px) {
+  .page-review-top-slot .page-review-status-bar.page-action-panel {
+    min-height:60px;
+    grid-template-columns:auto minmax(0,1fr) auto;
+    grid-template-rows:auto auto;
+    gap:3px 6px;
+    padding:5px 8px !important;
+  }
+  .page-review-top-slot .page-review-meta { grid-column:1 / 3; grid-row:1; display:flex; align-items:center; gap:6px; }
+  .page-review-top-slot .page-review-meta > small,
+  .page-review-top-slot .page-review-meta > span { display:none; }
+  .page-review-top-slot .page-review-title-row { gap:5px; }
+  .page-review-top-slot .page-review-title-row > strong { font-size:9px; }
+  .page-review-top-slot .review-health-chip { min-height:18px; padding:2px 5px; font-size:7px; }
+  .page-review-top-slot .workflow-status-block { grid-column:1 / -1; grid-row:2; }
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-track { margin:0; justify-content:flex-start; gap:5px; }
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size:7px !important; gap:3px; }
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-track span b { width:16px; height:16px; font-size:7px; }
+  .page-review-top-slot .page-review-status-bar .workflow-action-block {
+    grid-column:3;
+    grid-row:1;
+    min-width:0;
+    padding:0;
+    border:0;
+  }
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-action { width:auto; margin:0; }
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-action .primary-button.compact,
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-action .ghost-button.compact,
+  .page-review-top-slot .page-review-status-bar .workflow-stepper-action .secondary-button.compact {
+    min-height:26px;
+    padding:0 7px;
+    font-size:7px;
+    width:auto;
+  }
 }

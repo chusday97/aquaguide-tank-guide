@@ -10,7 +10,7 @@ import PageReviewStatusBar from './PageReviewStatusBar.jsx';
 const isPublicSpeciesPublishingEnabled = false;
 const BASE_EDITORIAL_KEYS = ['seoTitleTemplate', 'metaDescriptionTemplate', 'h1Template', 'sharedIntro'];
 
-export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved, selectedInspectorElement, onInspectorSelect, onDirtyChange }) {
+export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', schemaReady, readOnly, onPreview, onSaved, selectedInspectorElement, onInspectorSelect, onDirtyChange, reviewPortalTarget }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(() => groupSeoFromRow(record, locale));
@@ -153,6 +153,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         scope="base"
         tone={reviewTone}
         busy={saving}
+        portalTarget={reviewPortalTarget}
         dirtyHint={contentDirty ? (isUiEnglish ? 'Saving this template resets approval to Editing.' : '保存模板后会自动退回“编辑中”，需要重新审核。') : ''}
       >
         {contentDirty ? (

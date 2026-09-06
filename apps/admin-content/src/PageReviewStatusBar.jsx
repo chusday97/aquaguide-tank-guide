@@ -1,3 +1,5 @@
+import { createPortal } from 'react-dom';
+
 export default function PageReviewStatusBar({
   publishStatus = 'draft',
   reviewState = 'editing',
@@ -6,6 +8,7 @@ export default function PageReviewStatusBar({
   dirtyHint = '',
   tone = 'default',
   busy = false,
+  portalTarget = null,
   children,
 }) {
   const step = reviewState === 'approved' ? 3 : reviewState === 'ready_for_review' ? 2 : 1;
@@ -35,7 +38,7 @@ export default function PageReviewStatusBar({
           : (isUiEnglish ? 'In progress' : '进行中');
   const uiState = busy ? 'loading' : safeTone;
 
-  return (
+  const content = (
     <section
       className={`page-review-status-bar page-action-panel review-${reviewState} tone-${safeTone}`}
       data-ui-state={uiState}
@@ -70,4 +73,6 @@ export default function PageReviewStatusBar({
       </div>
     </section>
   );
+
+  return portalTarget ? createPortal(content, portalTarget) : null;
 }

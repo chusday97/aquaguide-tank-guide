@@ -332,3 +332,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Component states are now explicit across the editing workflow: Default, Hover, Active/focus, Selected, Loading, Disabled, Success, Error, Empty. Review busy state shows a spinner; editor empty state is visually distinct.
 - Browser proof: desktop review/editor overlap = 0px with 18px gap; split Preview keeps review/editor 742px + Preview 420px with 0 horizontal overflow; mobile 390px overlap = 0 and overflow = 0. A forced hygiene badcase turns field + section + review red immediately.
 - Admin contract, repo backend/API/dual-repo gates, full root build, and `git diff --check` pass.
+
+
+## 2026-09-06 — review progress promoted to top control stack
+- User clarified that current-page review progress belongs at the top with publishing progress, not inside the editor workspace.
+- The accepted hierarchy is now `Publish Progress → Current Page Review → Workspace`. `PageReviewStatusBar` renders through a top-level portal slot; `.studio-editor-area` contains no review bar.
+- Variant/Base switches update the same top review surface and preserve their own review state/actions. The previous mobile duplicate review pill is removed.
+- Local 1440 acceptance: Publish flow ends at y≈125, top review occupies ≈62px, Workspace starts immediately below at y≈187; editor-review overlap=0. Split Preview remains 742px editor + 420px Preview with overflow=0.
+- Local 390 acceptance: review top strip ≈61px, Workspace ≈639px high, overflow=0. Main/Production/index/live DB remain untouched.

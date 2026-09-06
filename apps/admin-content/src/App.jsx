@@ -156,7 +156,7 @@ function Forbidden({ email, onSignOut }) {
   );
 }
 
-function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange, publishReadinessState = 'blocked', stagingPublishing = false, onPublishStaging, onOpenReadiness, onEditBase }) {
+function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', schemaReady, dataReviewRows = {}, readOnly = false, onSaved, onLivePreviewChange, selectedInspectorElement, onInspectorSelect, onDirtyChange, publishReadinessState = 'blocked', stagingPublishing = false, onPublishStaging, onOpenReadiness, onEditBase, reviewPortalTarget }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [form, setForm] = useState(emptySeo);
@@ -425,6 +425,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         scope="page"
         tone={reviewTone}
         busy={saving || stagingPublishing}
+        portalTarget={reviewPortalTarget}
         dirtyHint={contentDirty ? (isUiEnglish ? 'Saving content resets approval to Editing.' : '保存内容后会自动退回“编辑中”，避免旧审核结果继续生效。') : ''}
       >
         {contentDirty ? (
@@ -638,6 +639,7 @@ export default function App() {
   const [dataReviewRows, setDataReviewRows] = useState({});
   const [revisionRefreshKey, setRevisionRefreshKey] = useState(0);
   const [workflowFilter, setWorkflowFilter] = useState(null);
+  const [reviewPortalTarget, setReviewPortalTarget] = useState(null);
   const [editorScope, setEditorScope] = useState('variant');
   const [livePreview, setLivePreview] = useState(null);
   const [productTruthState, setProductTruthState] = useState({ catalogKey: null, row: null, loading: false, error: false });
@@ -859,13 +861,6 @@ export default function App() {
     ? groupPreviewRows[selectedGroupKey] || selectedGroupPersisted
     : null;
   const selectedVariantRecord = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, contentLocale)] : null;
-  const selectedReviewState = editorScope === 'base'
-    ? (selectedGroupPersisted?.review_state || 'editing')
-    : (selectedVariantRecord?.review_state || 'editing');
-  const selectedReviewStep = selectedReviewState === 'approved' ? 3 : selectedReviewState === 'ready_for_review' ? 2 : 1;
-  const selectedReviewLabel = appLocale === 'en'
-    ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Preview approved' }[selectedReviewState] || selectedReviewState)
-    : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已批准预览' }[selectedReviewState] || selectedReviewState);
   const savedLivePreview = useMemo(() => {
     if (!selectedSpecies || !selectedGroup) return null;
     const resolved = resolveEffectiveSeo({
@@ -1286,6 +1281,8 @@ export default function App() {
         </div>
       </section>
 
+      <div ref={setReviewPortalTarget} className="page-review-top-slot" aria-label={appLocale === 'en' ? 'Current page review controls' : '当前页面审核控制'} />
+
       <div className={`workspace studio-workspace ${compactPreviewOpen ? 'preview-split-open' : ''}`} style={{ '--preview-width': `${previewWidth}px` }}>
         <SpeciesGroupSidebar
           groups={speciesGroups}
@@ -1327,7 +1324,6 @@ export default function App() {
               <button type="button" aria-pressed={editorScope === 'base'} className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
               <button type="button" aria-pressed={editorScope === 'variant'} className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
             </div>
-            <span className="mobile-review-progress" aria-label={appLocale === 'en' ? 'Current review progress' : '当前审核进度'}>{appLocale === 'en' ? `Review ${selectedReviewStep}/3 · ${selectedReviewLabel}` : `审核 ${selectedReviewStep}/3 · ${selectedReviewLabel}`}</span>
             <button type="button" className="compact-preview-toggle" aria-expanded={compactPreviewOpen} onClick={() => setCompactPreviewOpen((value) => !value)}>{appLocale === 'en' ? 'Preview' : '效果预览'}</button>
             <div className="locale-switcher compact" aria-label="Content language">
               {CONTENT_LOCALES.map((item) => (
@@ -1363,6 +1359,7 @@ export default function App() {
               onPublishStaging={publishSelectedToStaging}
               onOpenReadiness={() => setActiveTool('readiness')}
               onEditBase={() => runEditorNavigation(() => setEditorScope('base'))}
+              reviewPortalTarget={reviewPortalTarget}
               onSaved={(row) => {
                 const key = groupSeoRowKey(row.group_key, row.locale);
                 setGroupSeoRows((current) => ({ ...current, [key]: row }));
@@ -1388,6 +1385,7 @@ export default function App() {
               stagingPublishing={stagingPublishing}
               onPublishStaging={publishSelectedToStaging}
               onOpenReadiness={() => setActiveTool('readiness')}
+              reviewPortalTarget={reviewPortalTarget}
               onSaved={(row) => {
                 setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
                 setRevisionRefreshKey((current) => current + 1);

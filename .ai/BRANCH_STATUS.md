@@ -185,3 +185,9 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Local computed-style acceptance covers desktop/mobile initial and six advanced tools with zero extra saturated hues / zero horizontal overflow. Admin contract and root build PASS.
 - Current SEO Admin checkpoint upgrades the permanent strip into dedicated publishing Progress Navigation (current / 4 + four stage buttons + current-action CTA) and keeps system progress distinct from operator filter selection; branch remains `feature/admin-content-v0`, main untouched.
 - Current SEO Admin checkpoint also extracts current-page review progress/actions into standalone `PageReviewStatusBar`; no main reconciliation or Production mutation.
+
+
+## 2026-09-06 — SEO Admin top-review checkpoint
+- Working branch remains `feature/admin-content-v0`; live main remains separately locked and is not merged/rebased in this round.
+- Scope is Species SEO Admin UI only: top-level review portal + compact top control layout + contract/docs.
+- Draft PR #144 reconciliation remains parked. No Production/index/live DB mutation belongs to this checkpoint.

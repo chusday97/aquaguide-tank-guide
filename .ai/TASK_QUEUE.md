@@ -96,7 +96,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Runtime-scan 1440/390 initial + all advanced-tool states: zero extra saturated hues and zero horizontal overflow.
 - [x] Remove the ambiguous `页 / 模` glyph badge; keep scope identity in plain language (`当前物种页面` / `基础模板`).
 - [x] Make Preview explicit-on-demand: visible `效果预览` control in the editor bar, Preview hidden by default, overlay drawer on open, zero page overflow.
-- [x] Extract current-page review status/actions from editor content into a standalone Page Review Status Bar; keep 3-step progress continuously visible on desktop and compact progress visible in mobile editor chrome.
+- [x] Move current-page review status/actions into a top-level Page Review Status Bar directly below Publish Progress; remove the duplicate mobile editor-toolbar review indicator.
 - [ ] User visual/operator acceptance of the new hierarchy on the hosted read-only SEO Admin demo; collect screenshots/feedback.
 - [ ] Restore a writable `admin-content` Preview only through a safe server-side credential binding/transfer. Do not expose or manually shuttle `ADMIN_REPO_*` / `ADMIN_GITHUB_*` secrets; current independent project lacks those write credentials.
 
@@ -132,3 +132,8 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Add explicit Default / Hover / Active / Selected / Loading / Disabled / Success / Error / Empty component-state contracts.
 - [x] Keep Preview split-view compatible and mobile overflow-free.
 - [x] Lock the new behavior in `verify-contract.mjs` and pass full Admin/root build regression.
+
+## 2026-09-06 top review placement
+- [x] Portal Variant/Base review progress and actions into the top control stack above the Workspace.
+- [x] Keep review progress synchronized when switching Current Species Page ↔ Base Template.
+- [x] Preserve split Preview, semantic red/yellow/green states, and 0-overflow mobile/desktop layout.

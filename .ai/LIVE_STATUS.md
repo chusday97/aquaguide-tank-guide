@@ -253,3 +253,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Split Preview remained side-by-side (editor/review width 742px, Preview 420px) with 0 horizontal overflow. Mobile 390px also had 0 review/editor overlap and 0 horizontal overflow.
 - Editing a healthy SEO title to a blocked acceptance/test value immediately changed field + parent section + review chrome to Error/red while Selected stayed a neutral black outline.
 - No Production/index/live DB mutation is part of this UI checkpoint.
+
+
+## 2026-09-06 — top review placement acceptance
+- Species SEO Admin local browser now renders `Publish Progress → Current Page Review → Workspace` in document order.
+- 1440: review top slot ≈61.6px; editor review descendants=0; split Preview still 742/420; page overflow=0.
+- 390: review top slot ≈61px; no duplicate mobile review indicator; page overflow=0.
+- Base-template switch updates the top surface from `当前页面审核` to `基础模板审核` without moving it back into editor content.
