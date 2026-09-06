@@ -94,6 +94,12 @@ export default function SeoOperations() {
             <QueueItem label="编辑中" value={String(summary.byState.editing || 0)} />
             <QueueItem label="源内容未就绪" value={String(summary.byState.source_not_published || 0)} />
           </div>
+          <div className="mt-4 grid gap-3 sm:grid-cols-4">
+            <QueueItem label="健康" value={String(summary.priorityQueue.healthy || 0)} />
+            <QueueItem label="需处理" value={String(summary.priorityQueue.attention || 0)} />
+            <QueueItem label="阻断" value={String(summary.priorityQueue.blocked || 0)} />
+            <QueueItem label="状态未知" value={String(summary.priorityQueue.unknown || 0)} />
+          </div>
         </section>
 
         <section className="mt-4 grid gap-3 md:grid-cols-2">
