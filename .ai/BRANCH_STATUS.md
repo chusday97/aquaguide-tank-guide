@@ -191,3 +191,7 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Working branch remains `feature/admin-content-v0`; live main remains separately locked and is not merged/rebased in this round.
 - Scope is Species SEO Admin UI only: top-level review portal + compact top control layout + contract/docs.
 - Draft PR #144 reconciliation remains parked. No Production/index/live DB mutation belongs to this checkpoint.
+
+## 2026-09-06 — Data Review action-first UI checkpoint
+- Work remains isolated on `feature/admin-content-v0`; live `main` stays `64fa58a16a723b74621ac1db513adb1efb47e282` and is not merged/rebased.
+- Current Data Review UI change is presentation/workflow only: wide decision workspace, action-first command, evidence below, optional notes. No Production/index/live-DB mutation.

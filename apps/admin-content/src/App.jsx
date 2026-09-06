@@ -1103,8 +1103,8 @@ export default function App() {
 
   const toolDrawerMeta = ({
     dataReview: {
-      title: t('editor.sourceReview'),
-      subtitle: appLocale === 'en' ? 'Resolve source-data evidence without changing source data.' : '处理源数据证据，不修改源记录。',
+      title: appLocale === 'en' ? 'Resolve data issues' : '处理数据问题',
+      subtitle: appLocale === 'en' ? 'Choose the action first; supporting evidence stays below.' : '先选择处理结论；判断依据统一放在下方。',
     },
     readiness: {
       title: t('editor.publishCheck'),
@@ -1440,7 +1440,7 @@ export default function App() {
 
         </main>
 
-        <EditorToolDrawer open={Boolean(activeTool)} title={toolDrawerMeta.title} subtitle={toolDrawerMeta.subtitle} onClose={() => setActiveTool(null)}>
+        <EditorToolDrawer open={Boolean(activeTool)} title={toolDrawerMeta.title} subtitle={toolDrawerMeta.subtitle} size={activeTool === 'dataReview' ? 'wide' : 'default'} onClose={() => setActiveTool(null)}>
             {activeTool === 'bulkReview' ? (
               <BulkDuplicateReviewPanel
                 groups={speciesGroups}

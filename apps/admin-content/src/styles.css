@@ -3000,3 +3000,67 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
     width:auto;
   }
 }
+
+/* 2026-09-06 Data Review: action-first hierarchy. */
+.editor-tool-drawer.size-wide { width:min(900px, 96%); }
+.data-review-panel { max-width:none; margin:0; padding:0; border:0; border-radius:0; background:var(--cms-paper); }
+.data-review-header { margin:0; padding:2px 2px 16px; border-bottom:1px solid var(--cms-border); align-items:center; }
+.data-review-header h2 { margin:2px 0 4px; font-size:20px; color:var(--cms-ink); }
+.data-review-header p:last-child { max-width:620px; color:var(--cms-muted); font-size:11px; }
+.data-review-panel .review-issue-card { margin:0; padding:18px 2px 26px; border:0; border-top:1px solid var(--cms-border); border-radius:0; background:transparent; }
+.data-review-panel .review-issue-card:first-of-type { border-top:0; }
+.review-issue-title { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.review-issue-title strong { color:var(--cms-ink); font-size:15px; }
+.review-issue-title span { color:var(--cms-muted); font-size:10px; }
+.review-decision-box { margin-top:12px; padding:0; border:0; display:grid; gap:16px; }
+.review-decision-command { position:sticky; top:0; z-index:6; padding:14px; border:1px solid var(--cms-border-strong); border-left:4px solid var(--state-warning); border-radius:12px; background:var(--cms-paper); box-shadow:0 10px 24px rgba(32,36,44,.08); }
+.review-decision-command[data-ui-state="ready"] { border-left-color:var(--state-success); }
+.review-decision-command[data-ui-state="loading"] { opacity:.72; }
+.review-decision-command-head { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:10px; }
+.review-decision-command-head > div { display:grid; gap:3px; }
+.review-decision-command-head small { color:var(--cms-muted); font-size:8px; font-weight:850; letter-spacing:.1em; }
+.review-decision-command-head strong { color:var(--cms-ink); font-size:15px; line-height:1.3; }
+.review-decision-command-head > span { flex:none; padding:4px 7px; border:1px solid var(--state-warning-line); border-radius:999px; background:var(--state-warning-bg); color:var(--state-warning); font-size:9px; font-weight:800; }
+.review-decision-command-head > span.is-ready { border-color:var(--state-success-line); background:var(--state-success-bg); color:var(--state-success); }
+.review-decision-command .review-decision-options { margin:0; gap:8px; }
+.review-decision-command .review-choice { min-height:72px; padding:11px 12px; border-radius:10px; }
+.review-decision-command .review-choice:hover { border-color:var(--cms-border-strong); transform:translateY(-1px); }
+.review-decision-command .review-choice:active { transform:translateY(0) scale(.99); }
+.review-decision-command .review-choice.active { border-color:var(--cms-accent); background:var(--cms-accent-soft); box-shadow:inset 3px 0 0 var(--cms-accent); }
+.review-decision-command-footer { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-top:10px; padding-top:10px; border-top:1px solid var(--cms-border); }
+.review-decision-command-footer p { flex:1; margin:0; color:var(--cms-muted); font-size:10px; line-height:1.45; }
+.review-decision-primary-actions { flex:none; display:flex; align-items:center; gap:7px; }
+.review-confirm-action { min-width:122px; min-height:38px !important; font-size:10px !important; }
+.review-evidence-section { padding:14px; border:1px solid var(--cms-border); border-radius:12px; background:var(--cms-panel); }
+.review-evidence-section > header { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid var(--cms-border); }
+.review-evidence-section > header > div { display:grid; gap:2px; }
+.review-evidence-section > header small { color:var(--cms-muted); font-size:8px; font-weight:850; letter-spacing:.1em; }
+.review-evidence-section > header strong { color:var(--cms-ink); font-size:13px; }
+.review-evidence-section > header > span { color:var(--cms-muted); font-size:9px; }
+.review-evidence-section .duplicate-comparison-evidence { margin:0; }
+.review-notes-disclosure { border-top:1px solid var(--cms-border); border-bottom:1px solid var(--cms-border); }
+.review-notes-disclosure > summary { list-style:none; display:flex; align-items:center; justify-content:space-between; gap:12px; padding:10px 2px; cursor:pointer; }
+.review-notes-disclosure > summary::-webkit-details-marker { display:none; }
+.review-notes-disclosure > summary span { display:grid; gap:2px; }
+.review-notes-disclosure > summary strong { color:var(--cms-ink); font-size:11px; }
+.review-notes-disclosure > summary small,.review-notes-disclosure > summary em,.review-record-status { color:var(--cms-muted); font-size:9px; font-style:normal; }
+.review-notes-disclosure > label { padding:4px 2px 12px; }
+.review-record-status { padding:0 2px; }
+@media (max-width:1320px) { .editor-tool-drawer.size-wide { width:min(800px, 96%); } }
+@media (max-width:760px) {
+  .editor-tool-drawer.size-wide { width:94vw; }
+  .review-decision-command { position:relative; top:auto; padding:12px; }
+  .review-decision-command-head,.review-decision-command-footer { align-items:stretch; flex-direction:column; }
+  .review-decision-primary-actions { width:100%; }
+  .review-decision-primary-actions > button { flex:1; }
+  .review-evidence-section { padding:10px; }
+}
+.data-review-header { min-height:42px; padding:0 2px 10px; }
+.data-review-header > div { min-width:0; display:flex; align-items:baseline; gap:8px; }
+.data-review-header > div small { color:var(--cms-muted); font-size:8px; font-weight:850; letter-spacing:.08em; }
+.data-review-header > div strong { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; color:var(--cms-ink); font-size:12px; }
+.data-review-panel .review-issue-card { padding-top:10px; }
+.review-decision-issue-context { display:flex; align-items:center; flex-wrap:wrap; gap:5px 8px; margin:4px 0 0 !important; color:var(--cms-muted) !important; font-size:9px !important; font-weight:500; }
+.review-decision-issue-context b { color:var(--cms-ink); font-size:9px; font-weight:700; }
+.review-decision-issue-context span { color:var(--cms-muted); }
+@media (max-width:760px) { .data-review-header > div { display:grid; gap:2px; } }

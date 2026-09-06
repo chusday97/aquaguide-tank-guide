@@ -764,3 +764,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Removed the duplicate mobile `审核 n/3` indicator and compacted the top review surface.
 - Browser acceptance: 1440 and 390 both render Publish → Review → Workspace in order, editor review descendants=0, overlap=0, overflow=0; split Preview remains simultaneous; Base switch updates top review scope correctly.
 - Admin contract and full root build PASS locally.
+
+## 2026-09-06 — Data Review action-first fix
+- Reproduced user complaint in `DataReviewPanel`: default 560px tool drawer placed duplicate comparison/evidence before review choices and left `确认并保存` at the bottom.
+- Refactored `ReviewDecision` so the command surface is first, evidence second and notes optional. Added wide `EditorToolDrawer` size for Data Review and compacted duplicate internal headings.
+- Browser proof: 1440 command y≈344 and fully visible; drawer 900px; after selecting conclusion CTA becomes enabled; after body scroll 700px command remains visible. 390 command fully visible; overflow 0.
+- `npm run test:contract -w @aquaguide/admin-content` PASS; full `npm run build` PASS.

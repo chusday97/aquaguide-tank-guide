@@ -340,3 +340,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Variant/Base switches update the same top review surface and preserve their own review state/actions. The previous mobile duplicate review pill is removed.
 - Local 1440 acceptance: Publish flow ends at y≈125, top review occupies ≈62px, Workspace starts immediately below at y≈187; editor-review overlap=0. Split Preview remains 742px editor + 420px Preview with overflow=0.
 - Local 390 acceptance: review top strip ≈61px, Workspace ≈639px high, overflow=0. Main/Production/index/live DB remain untouched.
+
+## 2026-09-06 — Data Review action-first hierarchy
+- User reported that opening `处理数据` mixed buttons with long evidence/content and made the action difficult to find.
+- Data Review now uses a wide workspace drawer (900px at 1440 when space allows) and a strict order: **decision command → evidence → optional notes**.
+- `需要你做的决定` is the first visual focus. The conclusion choices and the single `确认并保存` CTA are visible in the first viewport; the CTA is Disabled until a valid conclusion is selected and becomes enabled immediately after selection.
+- Desktop keeps the command sticky while evidence scrolls; evidence is explicitly labeled read-only and notes are collapsed as optional secondary content.
+- Runtime acceptance: 1440 drawer 900px, action command fully visible, sticky after 700px scroll, zero overflow; 390 command fully visible in first view with zero overflow.
+- Contract now locks action-before-evidence ordering, wide Data Review mode, obvious primary CTA and subordinate notes. Production/main/live DB remain untouched.

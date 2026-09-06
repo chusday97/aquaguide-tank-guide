@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useAppLanguage } from './AppLanguage.jsx';
 
-export default function EditorToolDrawer({ open, title, subtitle, onClose, children }) {
+export default function EditorToolDrawer({ open, title, subtitle, onClose, size = 'default', children }) {
   const { appLocale } = useAppLanguage();
   const closeLabel = appLocale === 'en' ? 'Close tool panel' : '关闭工具面板';
   useEffect(() => {
@@ -17,7 +17,7 @@ export default function EditorToolDrawer({ open, title, subtitle, onClose, child
   return (
     <div className="editor-tool-drawer-layer" data-tool-drawer-layer>
       <button className="editor-tool-drawer-backdrop" type="button" aria-label={closeLabel} onClick={onClose} />
-      <section className="editor-tool-drawer" role="dialog" aria-modal="false" aria-label={title}>
+      <section className={`editor-tool-drawer size-${size}`} role="dialog" aria-modal="false" aria-label={title}>
         <header className="editor-tool-drawer-header">
           <div>
             <h2>{title}</h2>

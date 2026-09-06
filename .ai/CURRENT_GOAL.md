@@ -209,3 +209,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - `PageReviewStatusBar` is portaled into a top-level slot outside `.studio-editor-area`; editor content must contain zero review bars.
 - The mobile duplicate `审核 n/3` editor-toolbar indicator is retired because the full review progress now stays in the top control stack.
 - Keep this top review chrome compact: ~62px in current 1440/390 acceptance, with zero overlay and zero horizontal overflow.
+
+## 2026-09-06 Data Review operator hierarchy
+- `处理数据问题` must open an action-first decision workspace, not a generic content drawer.
+- Required order: **需要你做的决定 → 判断依据 → 可选审核备注**. The primary confirmation action must be visible before any long evidence content.
+- Desktop Data Review uses the wide drawer variant and keeps the decision command visible while evidence scrolls. Mobile keeps the same information order without sticky obstruction.
+- Base CMS chrome remains neutral; red/yellow/green are reserved for real semantic health states and must not be used decoratively.

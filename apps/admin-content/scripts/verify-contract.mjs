@@ -198,6 +198,12 @@ assert.match(adminNoticeSource, /operation-notice-close/, 'Notices must remain m
 assert.match(appSource, /activityUnread/, 'The top-right activity entry must expose unread operation count');
 assert.match(appSource, /BaseSpeciesSeoEditor/, 'Admin must expose Base Species inheritance editor');
 assert.match(appSource, /DataReviewPanel/, 'Admin must expose source-data review workflow');
+assert.match(reviewSource, /review-decision-command[\s\S]*review-evidence-section/, 'Data Review must place the decision command before supporting evidence');
+assert.match(reviewSource, /review-confirm-action/, 'Data Review must expose one obvious confirm/save primary action in the decision command');
+assert.match(reviewSource, /review-notes-disclosure/, 'Optional review notes must stay subordinate to the primary decision flow');
+assert.match(appSource, /size=\{activeTool === 'dataReview' \? 'wide' : 'default'\}/, 'Data Review must use the wide tool workspace rather than the narrow default drawer');
+assert.match(editorToolDrawerSource, /size-\$\{size\}/, 'Tool drawer must expose an explicit size variant');
+assert.match(stylesSource, /editor-tool-drawer\.size-wide[\s\S]*review-decision-command[\s\S]*position:sticky/, 'Desktop Data Review must keep the action-first command visible while evidence scrolls');
 assert.match(appSource, /PublishReadinessPanel/, 'Admin must expose explicit publish readiness');
 assert.match(appSource, /WorkflowOverview/, 'Admin must expose queue-level workflow overview');
 assert.match(workflowOverviewSource, /workflow-queue-row/, 'Workflow overview must render drawer-safe task rows instead of narrow KPI cards');

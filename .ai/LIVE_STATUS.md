@@ -260,3 +260,8 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - 1440: review top slot ≈61.6px; editor review descendants=0; split Preview still 742/420; page overflow=0.
 - 390: review top slot ≈61px; no duplicate mobile review indicator; page overflow=0.
 - Base-template switch updates the top surface from `当前页面审核` to `基础模板审核` without moving it back into editor content.
+
+## 2026-09-06 — Data Review action-first runtime acceptance
+- Local 1440 demo: Data Review drawer width 900px; decision command is fully visible in the first viewport, `确认并保存` is visible immediately, Disabled before a conclusion and Enabled after selection; command remains visible after 700px evidence scroll; overflow 0.
+- Local 390 demo: action command is fully visible before evidence; confirmation state changes correctly after selection; overflow 0.
+- Supporting evidence and candidate Preview now live below the command; optional notes are collapsed. Admin contract + full root build PASS.

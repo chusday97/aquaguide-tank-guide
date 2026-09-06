@@ -137,3 +137,10 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Portal Variant/Base review progress and actions into the top control stack above the Workspace.
 - [x] Keep review progress synchronized when switching Current Species Page ↔ Base Template.
 - [x] Preserve split Preview, semantic red/yellow/green states, and 0-overflow mobile/desktop layout.
+
+## 2026-09-06 Data Review action hierarchy
+- [x] Widen the single Data Review workspace instead of squeezing comparison evidence into the default narrow drawer.
+- [x] Put conclusion choices + one primary `确认并保存` action before evidence content.
+- [x] Keep the decision command sticky on desktop while long evidence scrolls; keep mobile non-overlapping.
+- [x] Demote evidence to a labeled read-only section and notes to an optional collapsed disclosure.
+- [x] Add contract coverage for action-first ordering / wide drawer / primary action visibility.
