@@ -45,3 +45,6 @@ Species SEO already has CSV template/preflight/Diff, durable import batch, dupli
 
 ## Update rule after every material round
 After meaningful code/product changes, update at minimum: `HANDOFF_LATEST.md`, `CURRENT_GOAL.md`, `TASK_QUEUE.md`, `LIVE_STATUS.md`, `BRANCH_STATUS.md` when branch facts changed, and append `EXECUTION_LOG.md`. Keep this file short and only change it when the recovery protocol itself changes.
+
+## Current UI invariant — task-first editor
+For Species SEO editing, preserve: one page identity → actual page-specific tasks → inherited Search Appearance collapsed when healthy → Advanced SEO collapsed. Do not restore the separate Content Source card, duplicate generic editor headings, or a Current Page explanation card. Base may show one compact impact notice because template edits affect multiple pages.

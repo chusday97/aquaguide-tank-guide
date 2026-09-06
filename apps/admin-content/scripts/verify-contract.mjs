@@ -308,8 +308,15 @@ assert.doesNotMatch(baseSource, /editor-status-cluster/, 'Base publish/review st
 assert.match(baseSource, /PageReviewStatusBar/, 'Base editor must use the same standalone Page Review Status Bar');
 assert.match(appSource, /source === 'preview'[\s\S]*const targetScope = variantOnly \|\| variantOverride \? 'variant' : 'base'[\s\S]*runEditorNavigation\(\(\) => setEditorScope\(targetScope\)\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor through the unsaved-change guard');
 assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !custom/, 'Inspector edit path must identify inherited content as Base-owned regardless of current editor scope');
-assert.match(appSource, /content-source-manager/, 'Variant source inheritance must be centralized instead of repeated under every field');
-assert.match(appSource, /Use template|改用模板/, 'Variant source manager must expose a plain-language return-to-template action');
+assert.doesNotMatch(appSource, /content-source-manager/, 'Variant editing must not regress to a separate Content Source card that competes with the actual form');
+assert.match(appSource, /editor-task-disclosure search-task[\s\S]*inheritedSourceCount[\s\S]*renderInheritedOverrideField/, 'Inherited search fields must stay grouped in the subordinate task disclosure');
+assert.match(appSource, /Use template|改用模板/, 'Inherited search fields must retain a plain-language return-to-template action');
+assert.match(appSource, /pageAttentionCount[\s\S]*当前页面要填写|pageAttentionCount[\s\S]*Page-specific content/, 'Variant editing must lead with actual page-specific tasks instead of a generic field catalog');
+assert.match(appSource, /editor-task-header/, 'Variant editor must use one task header for current-page identity and task summary');
+assert.doesNotMatch(appSource, /SPECIES SEO ·/, 'Variant editor must not repeat an internal product eyebrow above the task form');
+assert.doesNotMatch(appSource, /页面内容与 SEO 字段|Page content and SEO fields/, 'Variant editor must not add a redundant generic detail heading before the actual tasks');
+assert.match(appSource, /open=\{seoAttentionCount > 0\}/, 'Inherited search appearance must stay collapsed unless it actually needs attention or contains page overrides');
+assert.doesNotMatch(appSource, /只读演示 · 不会写入|Read-only demo · no writes/, 'Editor body must not duplicate the global read-only demo notice');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
 assert.doesNotMatch(appSource, /footer-state-select review-/, 'Variant workflow must not regress to a field-like review-state select');

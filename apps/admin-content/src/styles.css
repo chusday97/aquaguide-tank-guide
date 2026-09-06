@@ -3118,3 +3118,76 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
 .review-decision-issue-context b { color:var(--cms-ink); font-size:9px; font-weight:700; }
 .review-decision-issue-context span { color:var(--cms-muted); }
 @media (max-width:760px) { .data-review-header > div { display:grid; gap:2px; } }
+
+/* 2026-09-06 task-first editor: one identity, actionable fields first, inherited/reference content subordinate. */
+.editor-task-header {
+  display:flex; align-items:flex-end; justify-content:space-between; gap:24px;
+  margin:0 0 34px; padding:0 0 22px; border-bottom:1px solid var(--cms-border);
+}
+.editor-task-header > div:first-child { min-width:0; }
+.editor-task-header small { display:block; margin-bottom:6px; color:var(--cms-muted); font-size:10px; font-weight:750; letter-spacing:.06em; }
+.editor-task-header h2 { margin:0; color:var(--cms-ink); font-size:24px; line-height:1.18; font-weight:760; letter-spacing:-.025em; }
+.editor-task-header p { margin:5px 0 0; color:var(--cms-muted); font-size:12px; line-height:1.45; font-style:italic; }
+.editor-task-summary { flex:none; min-width:170px; display:grid; justify-items:end; gap:3px; text-align:right; }
+.editor-task-summary strong { color:var(--cms-ink); font-size:12px; font-weight:720; }
+.editor-task-summary strong.needs-attention { color:var(--state-warning); }
+.editor-task-summary span { color:var(--cms-muted); font-size:11px; }
+
+/* The current-page scope is already selected in the toolbar. Only Base needs an impact notice. */
+.editor-scope-context.variant { display:none !important; }
+.editor-scope-context.base.compact-impact {
+  max-width:760px; min-height:auto; margin:18px auto 0; padding:9px 12px;
+  border:1px solid var(--cms-border); border-radius:8px; background:#fafafa !important; box-shadow:none;
+}
+.editor-scope-context.base.compact-impact .editor-scope-context-copy { display:flex; align-items:center; justify-content:space-between; gap:14px; }
+.editor-scope-context.base.compact-impact strong { font-size:11px !important; font-weight:700 !important; }
+.editor-scope-context.base.compact-impact span { font-size:10px !important; white-space:nowrap; }
+
+/* Primary page task stays open; inherited search settings become a compact disclosure. */
+.editor-task-disclosure {
+  margin:4px 0 28px; border-top:1px solid var(--cms-border); border-bottom:1px solid var(--cms-border); background:transparent;
+}
+.editor-task-disclosure > summary {
+  list-style:none; min-height:66px; display:flex; align-items:center; justify-content:space-between; gap:18px; padding:12px 0; cursor:pointer;
+}
+.editor-task-disclosure > summary::-webkit-details-marker { display:none; }
+.editor-task-disclosure > summary > div { min-width:0; display:grid; gap:3px; }
+.editor-task-disclosure > summary strong { color:var(--cms-ink); font-size:15px; font-weight:700; }
+.editor-task-disclosure > summary small { color:var(--cms-muted); font-size:11px; line-height:1.45; }
+.editor-task-disclosure > summary > span { flex:none; color:var(--cms-muted); font-size:10px; font-weight:650; }
+.editor-task-disclosure.state-error > summary > span { color:var(--state-error); }
+.editor-task-disclosure.state-warning > summary > span { color:var(--state-warning); }
+.editor-task-disclosure[open] > summary { border-bottom:1px solid var(--cms-border); }
+.editor-task-disclosure-body { display:grid; gap:22px; padding:22px 0 26px; }
+
+/* Template/reference information is secondary and follows the fields the operator can actually fill. */
+.inherited-content-disclosure.secondary-reference { margin-top:6px; background:transparent !important; border:0 !important; border-top:1px solid var(--cms-border) !important; border-radius:0 !important; }
+.inherited-content-disclosure.secondary-reference > summary { min-height:48px; padding:10px 0; }
+.inherited-content-disclosure.secondary-reference > summary strong { font-size:11px !important; }
+.inherited-content-disclosure.secondary-reference > summary small,
+.inherited-content-disclosure.secondary-reference > summary em { font-size:10px !important; }
+.inherited-content-disclosure.secondary-reference > p { margin:0; padding:0 0 14px; color:var(--cms-muted); font-size:11px; line-height:1.55; }
+
+/* Do not duplicate the global read-only banner inside the editor footer. */
+.editor-footer:has(.footer-actions:empty) { min-height:0; padding-top:8px; }
+
+@media (max-width:760px) {
+  .editor-task-header { align-items:flex-start; flex-direction:column; gap:10px; margin-bottom:26px; }
+  .editor-task-header h2 { font-size:22px; }
+  .editor-task-summary { min-width:0; justify-items:start; text-align:left; }
+  .editor-scope-context.base.compact-impact { margin:12px 12px 0; }
+  .editor-scope-context.base.compact-impact .editor-scope-context-copy { align-items:flex-start; flex-direction:column; gap:2px; }
+  .editor-scope-context.base.compact-impact span { white-space:normal; }
+}
+
+/* Field prompts explain the task instead of exposing CMS jargon first. */
+.editor-field-question { display:block; color:var(--cms-ink); font-size:12px; font-weight:700; line-height:1.4; }
+.editor-field-guidance { display:block; margin:2px 0 7px; color:var(--cms-muted) !important; font-size:11px !important; font-weight:500 !important; line-height:1.45 !important; }
+/* After removing the redundant workspace label, scope is the left anchor and Preview/language stay on the right. */
+.editor-context-bar { justify-content:flex-start; }
+.editor-context-bar .compact-preview-toggle { margin-left:auto; }
+.inheritance-field-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:7px; }
+.inheritance-field-heading > span { color:var(--cms-ink); font-size:12px; font-weight:650; }
+.inheritance-field-source { flex:none; display:flex; align-items:center; gap:8px; }
+.inheritance-field-source small { color:var(--cms-muted); font-size:10px; font-weight:600; }
+.inheritance-field-source .inline-source-action { font-size:10px !important; }

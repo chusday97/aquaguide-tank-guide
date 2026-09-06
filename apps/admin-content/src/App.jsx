@@ -324,16 +324,26 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     { key: 'h1', label: t('editor.h1'), custom: Boolean(form.h1) },
   ];
   const customSourceCount = sourceFields.filter((item) => item.custom).length;
+  const inheritedSourceCount = sourceFields.length - customSourceCount;
+  const pageTaskKeys = isEnglishLocale(locale) ? ['localizedName', 'intro', 'imageAlt'] : ['intro', 'imageAlt'];
+  const pageAttentionCount = pageTaskKeys.filter((key) => ['warning', 'error'].includes(fieldStateByKey[key])).length;
+  const seoAttentionCount = sourceFields.filter((item) => ['warning', 'error'].includes(fieldStateByKey[item.key]) || item.custom).length;
   const renderInheritedOverrideField = ({ key, label, value, inheritedValue, maxLength, rows }) => {
     const custom = Boolean(value);
     const editing = custom || Boolean(overrideEditing[key]);
     return (
       <div {...editorFieldProps(key)} onClick={() => onInspectorSelect?.(key)}>
-        <div className="inheritance-field-heading"><span>{label}</span></div>
+        <div className="inheritance-field-heading">
+          <span>{label}</span>
+          <div className="inheritance-field-source">
+            <small>{custom ? (isUiEnglish ? 'This page' : '本页专用') : (isUiEnglish ? 'Base template' : '基础模板')}</small>
+            {editing ? <button type="button" className="inline-source-action" onClick={() => useBaseValue(key)}>{custom ? (isUiEnglish ? 'Use template' : '改用模板') : (isUiEnglish ? 'Cancel override' : '取消单独修改')}</button> : null}
+          </div>
+        </div>
         {!editing ? (
           <div className="inherited-field-view compact-source-view">
             <div className="inherited-field-value">{inheritedValue || '—'}</div>
-            <button type="button" className="inline-source-action" onClick={() => startOverride(key)}>{isUiEnglish ? 'Edit for this page' : '单独编辑'}</button>
+            <button type="button" className="inline-source-action" onClick={() => startOverride(key)}>{isUiEnglish ? 'Edit for this page' : '单独修改'}</button>
           </div>
         ) : rows ? (
           <textarea aria-label={label} data-editor-override={key} rows={rows} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
@@ -451,11 +461,15 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       </PageReviewStatusBar>
 
       <section className="editor-panel">
-        <div className="editor-header">
+        <div className="editor-task-header">
           <div>
-            <p className="eyebrow">SPECIES SEO · {getLocaleLabel(locale)}</p>
+            <small>{isUiEnglish ? 'CURRENT PAGE' : '当前页面'}</small>
             <h2>{species.name}</h2>
-            <p className="scientific-name">{species.scientific_name}</p>
+            <p>{species.scientific_name}</p>
+          </div>
+          <div className="editor-task-summary" aria-label={isUiEnglish ? 'Editing summary' : '填写概览'}>
+            <strong className={pageAttentionCount > 0 ? 'needs-attention' : ''}>{pageAttentionCount > 0 ? (isUiEnglish ? `${pageAttentionCount} to complete` : `${pageAttentionCount} 项待填写`) : (isUiEnglish ? 'Page content complete' : '页面内容已完整')}</strong>
+            <span>{isUiEnglish ? `${inheritedSourceCount} search fields use the template` : `${inheritedSourceCount} 项搜索字段沿用模板`}</span>
           </div>
         </div>
 
@@ -469,82 +483,66 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
         </div>
       ) : null}
 
-      <div className="editor-detail-heading">
-        <h3>{isUiEnglish ? 'Page content and SEO fields' : '页面内容与 SEO 字段'}</h3>
-        <p>{isUiEnglish ? 'Edit the page here. Health color appears only where attention is actually needed.' : '这里只编辑页面内容；状态颜色只在真正需要注意的位置出现。'}</p>
-      </div>
       <div className="editor-grid">
         <div className="form-column">
-          <div className={`section-card validation-section state-${seoSectionState}`} data-validation-state={seoSectionState}>
-            <div className="section-heading">
-              <div>
-                <h3>{t('editor.seo')}</h3>
-                <p>{isUiEnglish ? 'Edit search appearance and page headings without changing source data.' : '控制搜索结果和页面主标题，不修改产品数据。'}</p>
-              </div>
-              <span className={`validation-state-chip tone-${seoSectionState}`}>{stateLabel(seoSectionState)}</span>
-            </div>
-            {isEnglishLocale(locale) ? (
-              <label {...editorFieldProps('localizedName')}>
-                English Common Name
-                <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onFocus={() => onInspectorSelect?.('localizedName')} onChange={(event) => update('localizedName', event.target.value)} />
-                <small className="inherit-note">{isUiEnglish ? 'Only affects the English editorial layer; source names remain unchanged.' : '只影响英文内容层；不会改源数据里的中文名称。'}</small>
-              </label>
-            ) : null}
-            <details className="content-source-manager">
-              <summary>
-                <span><strong>{isUiEnglish ? 'Content source' : '内容来源'}</strong><small>{isUiEnglish ? `${customSourceCount} page-specific · ${sourceFields.length - customSourceCount} from template` : `${customSourceCount} 项本页专用 · ${sourceFields.length - customSourceCount} 项使用模板`}</small></span>
-                <em>{isUiEnglish ? 'Manage' : '管理'}</em>
-              </summary>
-              <div className="content-source-list">
-                {sourceFields.map((item) => (
-                  <div className="content-source-row" key={item.key}>
-                    <span>{item.label}</span>
-                    <strong>{item.custom ? (isUiEnglish ? 'This page' : '本页专用') : (isUiEnglish ? 'Base template' : '基础模板')}</strong>
-                    <button type="button" onClick={() => item.custom ? useBaseValue(item.key) : startOverride(item.key)}>{item.custom ? (isUiEnglish ? 'Use template' : '改用模板') : (isUiEnglish ? 'Edit this page' : '单独编辑')}</button>
-                  </div>
-                ))}
-              </div>
-            </details>
-            {renderInheritedOverrideField({
-              key: 'seoTitle', label: t('editor.metaTitle'), value: form.seoTitle, inheritedValue: resolvedSeo.inherited.seoTitle, maxLength: 120,
-            })}
-            {renderInheritedOverrideField({
-              key: 'metaDescription', label: t('editor.metaDescription'), value: form.metaDescription, inheritedValue: resolvedSeo.inherited.metaDescription, maxLength: 320, rows: 3,
-            })}
-            {renderInheritedOverrideField({
-              key: 'h1', label: t('editor.h1'), value: form.h1, inheritedValue: resolvedSeo.inherited.h1,
-            })}
-          </div>
-
           <div className={`section-card validation-section state-${contentSectionState}`} data-validation-state={contentSectionState}>
             <div className="section-heading">
               <div>
-                <h3>{t('editor.pageContent')}</h3>
-                <p>{isUiEnglish ? 'Edit the core editorial content for this page.' : '编辑这个页面最核心的内容。'}</p>
+                <h3>{isUiEnglish ? 'Page-specific content' : '当前页面要填写'}</h3>
+                <p>{isUiEnglish ? 'Only content unique to this page belongs here.' : '这里只填写当前物种页面自己的内容；模板已提供的内容无需重复填写。'}</p>
               </div>
-              <span className={`validation-state-chip tone-${contentSectionState}`}>{stateLabel(contentSectionState)}</span>
+              {contentSectionState !== 'success' ? <span className={`validation-state-chip tone-${contentSectionState}`}>{stateLabel(contentSectionState)}</span> : null}
             </div>
+            {isEnglishLocale(locale) ? (
+              <label {...editorFieldProps('localizedName')}>
+                {isUiEnglish ? 'English common name' : '英文常用名'}
+                <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onFocus={() => onInspectorSelect?.('localizedName')} onChange={(event) => update('localizedName', event.target.value)} />
+                <small className="inherit-note">{isUiEnglish ? 'Required for the English page only.' : '仅英文页面需要填写。'}</small>
+              </label>
+            ) : null}
+            <label {...editorFieldProps('intro')}>
+              <span className="editor-field-question">{isUiEnglish ? 'What is different about this page?' : '这个品种有什么不同？'}</span>
+              <small className="editor-field-guidance">{isUiEnglish ? 'Write only differences from the Base template. If the template already covers the page and there is no difference, leave this blank.' : '只写和基础模板不同的内容；基础模板已有共同内容且当前品种没有差异时，可以留空。'}</small>
+              <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Example: color, temperament or care differences unique to this variant…' : '例如：这个品种独有的颜色、性格或饲养差异…'} />
+            </label>
+            <label {...editorFieldProps('imageAlt')}>
+              <span className="editor-field-question">{isUiEnglish ? 'Describe the main image' : '主图里是什么？'}</span>
+              <small className="editor-field-guidance">{isUiEnglish ? 'One short sentence for accessibility and image search.' : '用一句短句描述图片里的物种，用于无障碍和图片搜索。'}</small>
+              <input value={form.imageAlt} placeholder={isUiEnglish ? `Example: ${species.name} aquarium fish` : `例如：${species.name} 观赏鱼`} onFocus={() => onInspectorSelect?.('imageAlt')} onChange={(event) => update('imageAlt', event.target.value)} />
+            </label>
             {group?.member_count > 1 ? (
-              <details className="inherited-content-disclosure">
+              <details className="inherited-content-disclosure secondary-reference">
                 <summary>
-                  <span>
-                    <strong>{t('editor.sharedIntro')}</strong>
-                    <small>{effectiveSeo.sharedIntro ? (isUiEnglish ? 'Shared across this Base Species group' : '来自基础种模板') : (isUiEnglish ? 'Shared content is empty' : '基础种简介尚未填写')}</small>
-                  </span>
-                  <em>{isUiEnglish ? 'View shared content' : '查看基础种简介'}</em>
+                  <span><strong>{isUiEnglish ? 'Template content' : '基础模板内容'}</strong><small>{isUiEnglish ? 'Already inherited; no need to repeat it here' : '当前页面已自动继承，不需要重复填写'}</small></span>
+                  <em>{isUiEnglish ? 'View' : '查看'}</em>
                 </summary>
                 <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础种简介尚未填写。')}</p>
               </details>
             ) : null}
-            <label {...editorFieldProps('intro')}>
-              {t('editor.variantIntro')}
-              <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Add only what is different on this page; do not repeat shared care content.' : '只补充这个品种与基础种不同的信息；共同饲养内容不要重复写。'} />
-            </label>
-            <label {...editorFieldProps('imageAlt')}>
-              {t('editor.imageAlt')}
-              <input value={form.imageAlt} onFocus={() => onInspectorSelect?.('imageAlt')} onChange={(event) => update('imageAlt', event.target.value)} />
-            </label>
           </div>
+
+          <details className={`editor-task-disclosure search-task state-${seoSectionState}`} open={seoAttentionCount > 0}>
+            <summary>
+              <div>
+                <strong>{isUiEnglish ? 'Search appearance' : '搜索展示'}</strong>
+                <small>{seoAttentionCount > 0
+                  ? (isUiEnglish ? `${seoAttentionCount} item${seoAttentionCount === 1 ? '' : 's'} need attention` : `${seoAttentionCount} 项需要处理`)
+                  : (isUiEnglish ? `${inheritedSourceCount} fields use the Base template` : `${inheritedSourceCount} 项沿用基础模板，无需填写`)}</small>
+              </div>
+              <span>{seoAttentionCount > 0 ? stateLabel(seoSectionState) : (isUiEnglish ? 'Optional override' : '需要时再单独修改')}</span>
+            </summary>
+            <div className="editor-task-disclosure-body">
+              {renderInheritedOverrideField({
+                key: 'seoTitle', label: t('editor.metaTitle'), value: form.seoTitle, inheritedValue: resolvedSeo.inherited.seoTitle, maxLength: 120,
+              })}
+              {renderInheritedOverrideField({
+                key: 'metaDescription', label: t('editor.metaDescription'), value: form.metaDescription, inheritedValue: resolvedSeo.inherited.metaDescription, maxLength: 320, rows: 3,
+              })}
+              {renderInheritedOverrideField({
+                key: 'h1', label: t('editor.h1'), value: form.h1, inheritedValue: resolvedSeo.inherited.h1,
+              })}
+            </div>
+          </details>
 
           <details className={`advanced-seo-disclosure validation-section state-${policySectionState}`} data-validation-state={policySectionState} open={Boolean(indexBlockReason)}>
             <summary>
@@ -552,7 +550,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <strong>{isUiEnglish ? 'Advanced SEO' : '高级 SEO'}</strong>
                 <small>{isUiEnglish ? 'Keyword, indexing, canonical and URL settings' : '关键词、收录策略、Canonical 与 URL'}</small>
               </span>
-              <div className="advanced-seo-summary-state"><span className={`validation-state-chip tone-${policySectionState}`}>{stateLabel(policySectionState)}</span><em>{form.indexStrategy === 'index' ? (isUiEnglish ? 'Index' : '独立收录') : form.indexStrategy === 'canonical_to_sibling' ? 'Canonical' : 'Noindex'}</em></div>
+              <div className="advanced-seo-summary-state">{policySectionState !== 'success' ? <span className={`validation-state-chip tone-${policySectionState}`}>{stateLabel(policySectionState)}</span> : null}<em>{form.indexStrategy === 'index' ? (isUiEnglish ? 'Index' : '独立收录') : form.indexStrategy === 'canonical_to_sibling' ? 'Canonical' : 'Noindex'}</em></div>
             </summary>
             <div className="advanced-seo-body">
               <label>
@@ -596,7 +594,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       <div className="editor-footer">
         <div>
           {!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}
-          {readOnly ? <span className="footer-context-note">{isUiEnglish ? 'Read-only demo · no writes' : '只读演示 · 不会写入'}</span> : !schemaReady ? <span className="warning-text">Schema 未应用：保存会被阻止</span> : null}
+          {!readOnly && !schemaReady ? <span className="warning-text">{isUiEnglish ? 'Storage schema is not ready; saving is blocked.' : '内容存储尚未就绪，保存会被阻止。'}</span> : null}
         </div>
         <div className="footer-actions">
           {!readOnly ? <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : '已发布 · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span> : null}
@@ -1308,10 +1306,6 @@ export default function App() {
 
         <main className={`editor-area studio-editor-area scope-${editorScope}`}>
           <div className="editor-context-bar">
-            <div className="editor-context-title">
-              <small>{appLocale === 'en' ? 'CURRENT WORKSPACE' : '当前工作区'}</small>
-              <strong>{appLocale === 'en' ? 'Content editor' : '内容编辑'}</strong>
-            </div>
             <div className="editor-scope-switch" aria-label="Editor scope">
               <button type="button" aria-pressed={editorScope === 'base'} className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
               <button type="button" aria-pressed={editorScope === 'variant'} className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
@@ -1324,16 +1318,14 @@ export default function App() {
             </div>
           </div>
 
-          <section className={`editor-scope-context ${editorScope}`} aria-label={appLocale === 'en' ? 'Editing context' : '编辑范围'}>
-            <div className="editor-scope-context-copy">
-              <small className="editor-scope-context-label">{editorScope === 'base' ? (appLocale === 'en' ? 'BASE TEMPLATE' : '基础模板') : (appLocale === 'en' ? 'CURRENT SPECIES PAGE' : '当前物种页面')}</small>
-              <strong>{editorScope === 'base' ? selectedGroup?.base_scientific_name : selectedSpecies?.name}</strong>
-              <span>{editorScope === 'base'
-                ? (appLocale === 'en' ? `Shared template inherited by ${selectedGroup?.member_count || 0} pages. Changes here can affect the whole Base group.` : `这是一套共享模板，当前有 ${selectedGroup?.member_count || 0} 个页面继承；修改这里会影响同组页面。`)
-                : (appLocale === 'en' ? 'Edit only this Species page. Base template content stays unchanged unless you switch to Base Template.' : '这里只修改当前物种页面；不会改基础模板。需要改共用内容时再切换到“基础模板”。')}
-              </span>
-            </div>
-          </section>
+          {editorScope === 'base' ? (
+            <section className="editor-scope-context base compact-impact" aria-label={appLocale === 'en' ? 'Base template impact' : '基础模板影响范围'}>
+              <div className="editor-scope-context-copy">
+                <strong>{appLocale === 'en' ? 'Base template' : '基础模板'} · {selectedGroup?.base_scientific_name}</strong>
+                <span>{appLocale === 'en' ? `Shared by ${selectedGroup?.member_count || 0} pages` : `修改会影响同组 ${selectedGroup?.member_count || 0} 个页面`}</span>
+              </div>
+            </section>
+          ) : null}
 
           {editorScope === 'base' ? (
             <BaseSpeciesSeoEditor

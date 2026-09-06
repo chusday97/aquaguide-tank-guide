@@ -171,12 +171,13 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       </PageReviewStatusBar>
 
       <section className="base-seo-panel">
-        <div className="base-seo-header">
+        <div className="editor-task-header base-task-header">
           <div>
-            <p className="eyebrow">BASE SPECIES SEO · {localeLabel}</p>
+            <small>{isUiEnglish ? 'BASE TEMPLATE' : '基础模板'}</small>
             <h2>{group.base_scientific_name}</h2>
-            <p>{isUiEnglish ? `${group.member_count} records use this Base layer. Shared content is inherited while Variant differences remain overrides.` : `${group.member_count} 个品种页面可使用这套基础模板；只有有差异的页面才需要单独修改。`}</p>
+            <p>{isUiEnglish ? `Shared by ${group.member_count} pages` : `同组 ${group.member_count} 个页面共用`}</p>
           </div>
+          <div className="editor-task-summary"><strong>{isUiEnglish ? 'Edit shared content' : '填写共用内容'}</strong><span>{isUiEnglish ? 'Changes can affect every page in this group' : '修改后会同步影响同组页面'}</span></div>
         </div>
       {!baseHygiene.clean ? (
         <div className="content-hygiene-warning" role="alert">
@@ -187,10 +188,6 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       {group.category_conflict ? (
         <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源数据存在分类冲突；草稿可以继续编辑，但完成数据复核前不能进入预览发布。'}</div>
       ) : null}
-      <div className="editor-detail-heading">
-        <h3>{isUiEnglish ? 'Base template fields' : '基础模板字段'}</h3>
-        <p>{isUiEnglish ? 'Edit shared copy here. Health color appears only where attention is actually needed.' : '这里只修改共享模板；状态颜色只在真正需要注意的位置出现。'}</p>
-      </div>
       <div className="base-seo-grid">
         <label {...baseFieldProps('seoTitle')}>{isUiEnglish ? 'SEO Title template' : 'Meta 标题模板'}
           <input value={form.seoTitleTemplate} onFocus={() => onInspectorSelect?.('seoTitle')} onChange={(event) => update('seoTitleTemplate', event.target.value)} />

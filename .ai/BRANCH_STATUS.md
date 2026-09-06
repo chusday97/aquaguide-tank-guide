@@ -195,3 +195,8 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 ## 2026-09-06 — Data Review action-first UI checkpoint
 - Work remains isolated on `feature/admin-content-v0`; live `main` stays `64fa58a16a723b74621ac1db513adb1efb47e282` and is not merged/rebased.
 - Current Data Review UI change is presentation/workflow only: wide decision workspace, action-first command, evidence below, optional notes. No Production/index/live-DB mutation.
+
+## 2026-09-06 task-first editor checkpoint
+- `feature/admin-content-v0` now leads with current-page tasks, not a generic field catalog.
+- Variant scope card / duplicate headings / separate Content Source card are removed; inherited search fields live in a default-collapsed disclosure with override + return-to-template preserved.
+- Base uses the same single-header hierarchy plus one compact impact notice.
