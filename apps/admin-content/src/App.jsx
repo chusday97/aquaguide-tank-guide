@@ -178,22 +178,26 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     onDirtyChange?.(false);
   }, [record, species, locale, resolvedDuplicatePolicy?.indexStrategy, resolvedDuplicatePolicy?.canonicalCatalogKey, onDirtyChange]);
 
+  const selectedInspectorMeta = getEditorElementMeta(selectedInspectorElement);
+  const selectedEditorField = selectedInspectorMeta?.editorField || selectedInspectorElement;
+  const selectedInspectorTargetsVariant = selectedInspectorMeta?.scope !== 'base';
   useEffect(() => {
-    if (!selectedInspectorElement) return;
+    if (!selectedInspectorElement || !selectedInspectorTargetsVariant) return;
     if (selectedInspectorElement === 'localizedName' && !isEnglishLocale(locale)) return;
     const frame = requestAnimationFrame(() => {
-      const target = document.querySelector(`[data-editor-field="${selectedInspectorElement}"]`);
+      const target = document.querySelector(`[data-editor-field="${selectedEditorField}"]`);
       target?.scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
     return () => cancelAnimationFrame(frame);
-  }, [selectedInspectorElement, species?.id, locale]);
+  }, [selectedInspectorElement, selectedEditorField, selectedInspectorTargetsVariant, species?.id, locale]);
 
   const editorFieldProps = (key) => {
     const fieldState = fieldStateByKey?.[key] || 'default';
+    const selected = selectedInspectorTargetsVariant && selectedEditorField === key;
     return {
       'data-editor-field': key,
       'data-validation-state': fieldState,
-      className: `inspector-editor-field state-${fieldState} ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
+      className: `inspector-editor-field state-${fieldState} ${selected ? 'is-inspector-selected' : ''}`,
     };
   };
 
@@ -273,14 +277,24 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       species,
       locale,
       routeMeta,
+      variantRow: {
+        localized_name: form.localizedName,
+        seo_title: form.seoTitle,
+        meta_description: form.metaDescription,
+        h1: form.h1,
+        intro: form.intro,
+        image_alt: form.imageAlt,
+        index_strategy: form.indexStrategy,
+        canonical_catalog_key: form.canonicalCatalogKey,
+      },
       effectiveSeo: { ...effectiveSeo, imageAlt: form.imageAlt },
       override: resolvedSeo.override,
     });
   }, [
     species?.catalog_key, locale, effectiveSeo?.seoTitle, effectiveSeo?.metaDescription, effectiveSeo?.h1,
     effectiveSeo?.sharedIntro, effectiveSeo?.variantIntro, effectiveSeo?.displayName, routeMeta?.selfPath,
-    routeMeta?.canonicalPath, routeMeta?.robots, form.imageAlt, resolvedSeo?.override?.seoTitle,
-    resolvedSeo?.override?.metaDescription, resolvedSeo?.override?.h1, onLivePreviewChange,
+    routeMeta?.canonicalPath, routeMeta?.robots, form.localizedName, form.seoTitle, form.metaDescription, form.h1, form.intro, form.imageAlt,
+    form.indexStrategy, form.canonicalCatalogKey, resolvedSeo?.override?.seoTitle, resolvedSeo?.override?.metaDescription, resolvedSeo?.override?.h1, onLivePreviewChange,
   ]);
 
   const baselineForm = fromSeoRow(record, species, locale);
@@ -503,7 +517,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             <label {...editorFieldProps('intro')}>
               <span className="editor-field-question">{isUiEnglish ? 'What is different about this page?' : '这个品种有什么不同？'}</span>
               <small className="editor-field-guidance">{isUiEnglish ? 'Write only differences from the Base template. If the template already covers the page and there is no difference, leave this blank.' : '只写和基础模板不同的内容；基础模板已有共同内容且当前品种没有差异时，可以留空。'}</small>
-              <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Example: color, temperament or care differences unique to this variant…' : '例如：这个品种独有的颜色、性格或饲养差异…'} />
+              <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('variantIntro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Example: color, temperament or care differences unique to this variant…' : '例如：这个品种独有的颜色、性格或饲养差异…'} />
             </label>
             <label {...editorFieldProps('imageAlt')}>
               <span className="editor-field-question">{isUiEnglish ? 'Describe the main image' : '主图里是什么？'}</span>
@@ -521,7 +535,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             ) : null}
           </div>
 
-          <details className={`editor-task-disclosure search-task state-${seoSectionState}`} open={seoAttentionCount > 0}>
+          <details className={`editor-task-disclosure search-task state-${seoSectionState}`} open={seoAttentionCount > 0 || ['seoTitle', 'metaDescription', 'h1'].includes(selectedEditorField)}>
             <summary>
               <div>
                 <strong>{isUiEnglish ? 'Search appearance' : '搜索展示'}</strong>
@@ -665,7 +679,7 @@ export default function App() {
     };
   }, [previewResizing]);
 
-  useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale, editorScope]);
+  useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale]);
   useEffect(() => {
     setSelectedInspectorElement(null);
     setActiveTool(null);
@@ -851,22 +865,29 @@ export default function App() {
     ? groupPreviewRows[selectedGroupKey] || selectedGroupPersisted
     : null;
   const selectedVariantRecord = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, contentLocale)] : null;
-  const savedLivePreview = useMemo(() => {
+  const liveVariantMatchesSelection = Boolean(
+    livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale,
+  );
+  const previewVariantRecord = liveVariantMatchesSelection && livePreview?.variantRow
+    ? livePreview.variantRow
+    : selectedVariantRecord;
+  const composedLivePreview = useMemo(() => {
     if (!selectedSpecies || !selectedGroup) return null;
     const resolved = resolveEffectiveSeo({
-      member: selectedSpecies, group: selectedGroup, groupRow: selectedGroupRecord, variantRow: selectedVariantRecord, locale: contentLocale,
+      member: selectedSpecies, group: selectedGroup, groupRow: selectedGroupRecord, variantRow: previewVariantRecord, locale: contentLocale,
     });
     const routeMeta = buildSpeciesSeoRouteMeta({
       member: selectedSpecies, group: selectedGroup, locale: contentLocale,
-      indexStrategy: selectedVariantRecord?.index_strategy || 'noindex',
-      canonicalCatalogKey: selectedVariantRecord?.canonical_catalog_key || '',
+      indexStrategy: previewVariantRecord?.index_strategy || 'noindex',
+      canonicalCatalogKey: previewVariantRecord?.canonical_catalog_key || '',
     });
     return {
       species: previewSpecies, locale: contentLocale, routeMeta, productTruthLoading, productTruthError,
-      effectiveSeo: { ...resolved.effective, imageAlt: selectedVariantRecord?.image_alt || '' },
+      effectiveSeo: { ...resolved.effective, imageAlt: previewVariantRecord?.image_alt || '' },
       override: resolved.override,
+      variantRow: previewVariantRecord,
     };
-  }, [selectedSpecies, previewSpecies, selectedGroup, selectedGroupRecord, selectedVariantRecord, contentLocale, productTruthLoading, productTruthError]);
+  }, [selectedSpecies, previewSpecies, selectedGroup, selectedGroupRecord, previewVariantRecord, contentLocale, productTruthLoading, productTruthError]);
   const sourceVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'zh-CN')] : null;
   const sourceGroupRow = selectedGroup ? groupSeoRows[groupSeoRowKey(selectedGroup.group_key, 'zh-CN')] : null;
   const englishVariantRow = selectedSpecies ? seoRows[seoRowKey(selectedSpecies.catalog_key, 'en')] : null;
@@ -896,9 +917,7 @@ export default function App() {
     setImportBatches((current) => [batch, ...current.filter((row) => row.batch_id !== batch.batch_id)]);
   };
   const pendingDuplicateReviewCount = useMemo(() => speciesGroups.reduce((sum, group) => sum + (group.duplicate_sets || []).filter((set) => !['duplicate_records', 'distinct_records'].includes(dataReviewRows?.[set.duplicate_set_key]?.decision)).length, 0), [dataReviewRows]);
-  const activeLivePreview = editorScope === 'variant' && livePreview?.species?.catalog_key === selectedSpecies?.catalog_key && livePreview?.locale === contentLocale
-    ? { ...livePreview, species: previewSpecies || livePreview.species, productTruthLoading, productTruthError }
-    : savedLivePreview;
+  const activeLivePreview = composedLivePreview;
   const confirmDiscardUnsaved = () => {
     if (!editorDirty || isReadOnlyDemoMode) return true;
     return window.confirm(appLocale === 'en'
@@ -927,10 +946,9 @@ export default function App() {
     const inspectorReadOnly = Boolean(elementMeta?.readOnly || (key === 'localizedName' && contentLocale !== 'en'));
     if (source === 'editor') setCompactPreviewOpen(true);
     if (!inspectorReadOnly) setActiveTool(null);
-    const variantOnly = key === 'imageAlt' || (key === 'localizedName' && contentLocale === 'en');
-    const variantOverride = Boolean(activeLivePreview?.override?.[key]);
     if (source === 'preview' && !inspectorReadOnly) {
-      const targetScope = variantOnly || variantOverride ? 'variant' : 'base';
+      const explicitScope = elementMeta?.scope;
+      const targetScope = explicitScope || editorScope;
       if (targetScope !== editorScope) runEditorNavigation(() => setEditorScope(targetScope));
     }
   };

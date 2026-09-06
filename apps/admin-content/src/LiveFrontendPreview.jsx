@@ -23,11 +23,12 @@ function elementSource(key, preview, appLocale) {
       ? `${altState} · ${english ? 'Image source read-only' : '图片资源只读'}`
       : altState;
   }
-  if (key === 'intro') return preview?.override?.intro
-    ? (english ? 'Custom' : '自定义')
-    : preview?.effectiveSeo?.sharedIntro
-      ? (english ? 'Inherited from Base' : '继承自基础模板')
-      : (english ? 'Not set' : '尚未填写');
+  if (key === 'sharedIntro') return preview?.effectiveSeo?.sharedIntro
+    ? (english ? 'Base template' : '基础模板')
+    : (english ? 'Not set in Base' : '基础模板尚未填写');
+  if (key === 'variantIntro' || key === 'intro') return preview?.override?.intro
+    ? (english ? 'Current page · Custom' : '当前页面 · 已填写')
+    : (english ? 'Current page · Not set' : '当前页面 · 尚未填写');
   if (key === 'localizedName') return preview?.override?.localizedName ? (english ? 'Custom' : '自定义') : (english ? 'Not customized' : '未自定义');
   return preview?.override?.[key] ? (english ? 'Custom' : '自定义') : (english ? 'Inherited from Base' : '继承自基础模板');
 }
@@ -37,12 +38,16 @@ function elementEditPath(key, preview, appLocale, editorScope) {
   const meta = getEditorElementMeta(key);
   const dynamicReadOnly = meta?.readOnly || (key === 'localizedName' && preview?.locale !== 'en');
   if (dynamicReadOnly) return english ? 'Source data → Read only' : '源数据 → 只读';
-  const pageContent = key === 'intro' || key === 'imageAlt';
-  const section = pageContent ? (english ? 'Page content' : '页面内容') : 'SEO';
-  const variantOnly = key === 'imageAlt' || (key === 'localizedName' && preview?.locale === 'en');
-  const custom = Boolean(preview?.override?.[key]);
-  const baseContext = !variantOnly && !custom;
-  const scope = baseContext ? (english ? 'Base template' : '基础模板') : (english ? 'Current page' : '当前页面');
+  const pageContent = ['sharedIntro', 'variantIntro', 'intro', 'imageAlt'].includes(key);
+  const section = pageContent ? (english ? 'Page content' : '页面内容') : (english ? 'Search appearance' : '搜索展示');
+  const explicitScope = meta?.scope;
+  const scope = explicitScope === 'base'
+    ? (english ? 'Base template' : '基础模板')
+    : explicitScope === 'variant'
+      ? (english ? 'Current page' : '当前页面')
+      : editorScope === 'base'
+        ? (english ? 'Base template' : '基础模板')
+        : (english ? 'Current page' : '当前页面');
   return `${scope} → ${section} → ${getEditorElementLabel(key, appLocale)}`;
 }
 function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabled, onSelect, onHover, labelLocale = 'zh-CN', children, className = '', readOnlyElement = false }) {
@@ -75,7 +80,8 @@ function SpeciesPage({ preview, mobile = false, inspector }) {
   const loadingLabel = locale === 'en' ? 'Loading…' : '加载中…';
   const unavailableLabel = locale === 'en' ? 'Unavailable' : '数据不可用';
   const truthValue = (value) => productTruthLoading ? loadingLabel : productTruthError ? unavailableLabel : (value || '—');
-  const intro = [effectiveSeo.sharedIntro, effectiveSeo.variantIntro].filter(Boolean).join('\n\n').trim();
+  const sharedIntro = effectiveSeo.sharedIntro?.trim() || '';
+  const variantIntro = effectiveSeo.variantIntro?.trim() || '';
   const inspectProps = (elementKey, className = '') => ({
     elementKey,
     className,
@@ -100,7 +106,17 @@ function SpeciesPage({ preview, mobile = false, inspector }) {
           <div className="live-publish-copy">
             <Inspectable {...inspectProps('h1')}><h1>{effectiveSeo.h1 || ''}</h1></Inspectable>
             <Inspectable {...inspectProps('scientificName')}><div className="live-scientific">{species.scientific_name}</div></Inspectable>
-            <Inspectable {...inspectProps('intro')}><p className="live-publish-intro">{intro}</p></Inspectable>
+            <div className="live-publish-intro-stack">
+              {sharedIntro ? <Inspectable {...inspectProps('sharedIntro')}><p className="live-publish-intro">{sharedIntro}</p></Inspectable> : null}
+              {variantIntro ? (
+                <Inspectable {...inspectProps('variantIntro')}><p className="live-publish-intro live-publish-variant-intro">{variantIntro}</p></Inspectable>
+              ) : inspector.inspectEnabled ? (
+                <Inspectable {...inspectProps('variantIntro', 'preview-addition-target')}>
+                  <button className="preview-addition-button" type="button">{locale === 'en' ? '+ Add page-specific content' : '+ 添加当前页补充'}</button>
+                </Inspectable>
+              ) : null}
+              {!sharedIntro && !variantIntro && !inspector.inspectEnabled ? <p className="live-publish-intro"></p> : null}
+            </div>
           </div>
         </article>
         <section className="live-facts publish-facts">
@@ -174,7 +190,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
             {['page', 'google', 'mobile'].map((item) => <button key={item} type="button" className={mode === item ? 'active' : ''} onClick={() => setMode(item)}>{item === 'page' ? t('preview.page') : item === 'google' ? t('preview.google') : t('preview.mobile')}</button>)}
           </div>
           <button type="button" className={`inspect-toggle ${inspectEnabled ? 'active' : ''}`} onClick={() => setInspectEnabled((value) => !value)}>
-            {appLocale === 'en' ? 'Inspect' : '检查元素'}
+            {appLocale === 'en' ? 'Click content to edit' : '点击内容编辑'}
           </button>
           <button type="button" className="compact-preview-close" onClick={onCloseCompact} aria-label={appLocale === 'en' ? 'Close preview' : '关闭预览'}>×</button>
         </div>

@@ -6,6 +6,7 @@ import { useAppLanguage } from './AppLanguage.jsx';
 import { inspectEditorialContent, hygieneBlockerText } from './contentHygiene.js';
 import { emitAdminNotice } from './AdminNoticeViewport.jsx';
 import PageReviewStatusBar from './PageReviewStatusBar.jsx';
+import { getEditorElementMeta } from './editorElementRegistry.js';
 
 const isPublicSpeciesPublishingEnabled = false;
 const BASE_EDITORIAL_KEYS = ['seoTitleTemplate', 'metaDescriptionTemplate', 'h1Template', 'sharedIntro'];
@@ -21,21 +22,25 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
     onDirtyChange?.(false);
   }, [group?.group_key, record, locale, onDirtyChange]);
 
+  const selectedInspectorMeta = getEditorElementMeta(selectedInspectorElement);
+  const selectedBaseField = selectedInspectorMeta?.editorField || selectedInspectorElement;
+  const selectedInspectorTargetsBase = selectedInspectorMeta?.scope === 'base' || !selectedInspectorMeta?.scope;
   useEffect(() => {
-    if (!selectedInspectorElement) return;
+    if (!selectedInspectorElement || !selectedInspectorTargetsBase) return;
     const frame = requestAnimationFrame(() => {
-      const target = document.querySelector(`[data-base-editor-field="${selectedInspectorElement}"]`);
+      const target = document.querySelector(`[data-base-editor-field="${selectedBaseField}"]`);
       target?.scrollIntoView({ block: 'center', behavior: 'smooth' });
     });
     return () => cancelAnimationFrame(frame);
-  }, [selectedInspectorElement, group?.group_key, locale]);
+  }, [selectedInspectorElement, selectedBaseField, selectedInspectorTargetsBase, group?.group_key, locale]);
 
   const baseFieldProps = (key) => {
     const fieldState = baseFieldStateByKey?.[key] || 'default';
+    const selected = selectedInspectorTargetsBase && selectedBaseField === key;
     return {
       'data-base-editor-field': key,
       'data-validation-state': fieldState,
-      className: `inspector-editor-field state-${fieldState} ${selectedInspectorElement === key ? 'is-inspector-selected' : ''}`,
+      className: `inspector-editor-field state-${fieldState} ${selected ? 'is-inspector-selected' : ''}`,
     };
   };
 
@@ -199,7 +204,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
           <input value={form.h1Template} onFocus={() => onInspectorSelect?.('h1')} onChange={(event) => update('h1Template', event.target.value)} />
         </label>
         <label {...baseFieldProps('intro')}>{isUiEnglish ? 'Shared introduction / Base content' : '基础种简介'}
-          <textarea rows="5" value={form.sharedIntro} onFocus={() => onInspectorSelect?.('intro')} onChange={(event) => update('sharedIntro', event.target.value)} placeholder={isUiEnglish ? 'Write only content shared by this Base Species; keep Variant-specific differences in overrides.' : '只写同一基础种下所有品种都成立的共同内容；某个品种的差异请到“当前品种页面”补充。'} />
+          <textarea rows="5" value={form.sharedIntro} onFocus={() => onInspectorSelect?.('sharedIntro')} onChange={(event) => update('sharedIntro', event.target.value)} placeholder={isUiEnglish ? 'Write only content shared by this Base Species; keep Variant-specific differences in overrides.' : '只写同一基础种下所有品种都成立的共同内容；某个品种的差异请到“当前品种页面”补充。'} />
         </label>
         <p className="template-help">{isUiEnglish ? 'Keep template tokens unchanged: ' : '变量必须原样保留：'}{'{{name}}'} · {'{{variant_name}}'} · {'{{base_species}}'} · {'{{scientific_name}}'}</p>
       </div>

@@ -200,3 +200,11 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - `feature/admin-content-v0` now leads with current-page tasks, not a generic field catalog.
 - Variant scope card / duplicate headings / separate Content Source card are removed; inherited search fields live in a default-collapsed disclosure with override + return-to-template preserved.
 - Base uses the same single-header hierarchy plus one compact impact notice.
+## 2026-09-06 — Preview-linked editor alignment
+- User reported that current-page fields and Preview were structurally misaligned, so visible page content could not be edited directly.
+- Preview/editor ownership is now explicit: `sharedIntro` belongs to Base, `variantIntro` belongs to Current Page, and both map to their own editor target instead of sharing one ambiguous `intro` element.
+- Preview H1 / Meta selection no longer forces inherited content into Base. From Current Page it opens the collapsed Search Appearance section, highlights the exact field, and exposes `Base template / Edit this page`.
+- Preview intro is split into separate inspectable Base and current-page regions; inspect mode exposes an `Add page-specific content` target when the current-page addition is empty.
+- Switching Current Page ↔ Base no longer resets Preview. Preview always composes the latest Base layer and current-page layer into one final-page snapshot.
+- Runtime proof: H1 override updates Preview immediately; current-page intro updates only the current-page Preview region; Base intro updates only the Base region; both remain visible across scope switches; Preview clicks route back to the correct owner editor.
+- Contract, repo backend/API/dual-repo gates, full root build and `git diff --check` pass locally. Production/main/live DB remain untouched.

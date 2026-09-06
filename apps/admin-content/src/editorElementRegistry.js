@@ -7,9 +7,17 @@ export const EDITOR_ELEMENT_REGISTRY = {
     previewMode: 'page', editorField: 'h1',
     label: { 'zh-CN': '页面 H1', en: 'Page H1' },
   },
+  sharedIntro: {
+    previewMode: 'page', editorField: 'intro', scope: 'base',
+    label: { 'zh-CN': '基础模板简介', en: 'Base introduction' },
+  },
+  variantIntro: {
+    previewMode: 'page', editorField: 'intro', scope: 'variant',
+    label: { 'zh-CN': '当前页补充', en: 'Page-specific addition' },
+  },
   intro: {
-    previewMode: 'page', editorField: 'intro',
-    label: { 'zh-CN': '页面简介', en: 'Introduction' },
+    previewMode: 'page', editorField: 'intro', scope: 'variant', legacyAlias: true,
+    label: { 'zh-CN': '当前页补充', en: 'Page-specific addition' },
   },
   imageAlt: {
     previewMode: 'page', editorField: 'imageAlt',

@@ -3191,3 +3191,14 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
 .inheritance-field-source { flex:none; display:flex; align-items:center; gap:8px; }
 .inheritance-field-source small { color:var(--cms-muted); font-size:10px; font-weight:600; }
 .inheritance-field-source .inline-source-action { font-size:10px !important; }
+
+/* 2026-09-06 preview-linked editing: preview regions map 1:1 to editor ownership. */
+.live-publish-intro-stack { display:grid; gap:8px; margin-top:8px; }
+.live-publish-intro-stack .live-publish-intro { margin:0; }
+.live-publish-variant-intro { padding-top:7px; border-top:1px solid var(--cms-border); }
+.preview-addition-target { margin-top:2px; }
+.preview-addition-button {
+  width:100%; min-height:28px; padding:5px 8px; border:1px dashed var(--cms-border-strong); border-radius:7px;
+  background:transparent; color:var(--cms-muted); font-size:9px; font-weight:650; text-align:left; cursor:pointer;
+}
+.preview-addition-button:hover { border-color:var(--cms-accent); color:var(--cms-accent); background:transparent; }

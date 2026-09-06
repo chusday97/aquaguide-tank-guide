@@ -59,6 +59,7 @@ const duplicateComparisonSource = await readFile(path.join(appRoot, 'src/Duplica
 const duplicateEvidenceSource = await readFile(path.join(appRoot, 'src/duplicateReviewEvidence.js'), 'utf8');
 const bulkEditorialSource = await readFile(path.join(appRoot, 'src/BulkEditorialReviewPanel.jsx'), 'utf8');
 const speciesPagePresentationSource = await readFile(path.join(appRoot, 'src/speciesPagePresentation.js'), 'utf8');
+const editorElementRegistrySource = await readFile(path.join(appRoot, 'src/editorElementRegistry.js'), 'utf8');
 const activityCenterSource = await readFile(path.join(appRoot, 'src/ActivityCenter.jsx'), 'utf8');
 const adminNoticeSource = await readFile(path.join(appRoot, 'src/AdminNoticeViewport.jsx'), 'utf8');
 const mainSource = await readFile(path.join(appRoot, 'src/main.jsx'), 'utf8');
@@ -271,6 +272,16 @@ assert.equal(EDITOR_ELEMENT_REGISTRY.imageAlt.assetReadOnly, true, 'Hero image s
 assert.match(liveFrontendPreviewSource, /Image source read-only|图片资源只读/, 'Image inspector must explain the split between read-only asset and editable alt text');
 assert.match(liveFrontendPreviewSource, /getEditorElementLabel\(key, appLocale\)/, 'Inspector edit paths must identify the exact mapped field, not only its section');
 assert.match(appSource, /selectedInspectorElement/, 'Admin must keep one shared inspector selection across editor and preview');
+assert.match(editorElementRegistrySource, /sharedIntro[\s\S]*scope: 'base'[\s\S]*variantIntro[\s\S]*scope: 'variant'/, 'Preview/editor mapping must split Base shared intro from current-page additions with explicit ownership.');
+assert.match(liveFrontendPreviewSource, /data-preview-element|sharedIntro[\s\S]*variantIntro/, 'Live Preview must expose independently selectable Base and current-page intro regions.');
+assert.match(appSource, /selectedEditorField[\s\S]*editor-task-disclosure search-task[\s\S]*includes\(selectedEditorField\)/, 'Selecting H1/Meta from Preview must reveal the matching collapsed search editor automatically.');
+assert.match(appSource, /const explicitScope = elementMeta\?\.scope[\s\S]*targetScope = explicitScope \|\| editorScope/, 'Preview navigation must use explicit ownership only; inherited search fields stay in the current-page override editor instead of being forced into Base.');
+assert.match(baseSource, /onInspectorSelect\?\.\('sharedIntro'\)/, 'Base shared introduction must select its own Preview element key.');
+assert.match(appSource, /onInspectorSelect\?\.\('variantIntro'\)/, 'Current-page introduction must select its own Preview element key.');
+assert.match(liveFrontendPreviewSource, /点击内容编辑|Click content to edit/, 'Preview must explain that visible content is the direct editing entry point.');
+assert.match(appSource, /const composedLivePreview = useMemo[\s\S]*groupRow: selectedGroupRecord[\s\S]*variantRow: previewVariantRecord/, 'Preview must always compose Base and current-page layers into one final-page snapshot.');
+assert.match(appSource, /setLivePreview\(null\); \}, \[selectedId, contentLocale\]\)/, 'Switching Base/current-page editor scope must not reset the current final-page Preview snapshot.');
+assert.doesNotMatch(appSource, /setLivePreview\(null\); \}, \[selectedId, contentLocale, editorScope\]\)/, 'Preview must not reset merely because editor ownership scope changes.');
 assert.match(appSource, /data-editor-field/, 'Variant editor fields must expose stable inspector targets');
 assert.match(appSource, /renderInheritedOverrideField/, 'Variant editor must use explicit inherited/custom field presentation');
 assert.doesNotMatch(appSource, /editor-status-cluster/, 'Publish/review status must not regress into the primary editor header');
@@ -306,8 +317,6 @@ assert.match(stylesSource, /data-ui-state=\"loading\"/, 'Review workflow must de
 assert.match(stylesSource, /button:disabled/, 'Shared controls must define a Disabled state');
 assert.doesNotMatch(baseSource, /editor-status-cluster/, 'Base publish/review status must not regress into the editor header');
 assert.match(baseSource, /PageReviewStatusBar/, 'Base editor must use the same standalone Page Review Status Bar');
-assert.match(appSource, /source === 'preview'[\s\S]*const targetScope = variantOnly \|\| variantOverride \? 'variant' : 'base'[\s\S]*runEditorNavigation\(\(\) => setEditorScope\(targetScope\)\)/, 'Preview-origin Inspector selection must route to the authoritative Base or Variant editor through the unsaved-change guard');
-assert.match(liveFrontendPreviewSource, /const baseContext = !variantOnly && !custom/, 'Inspector edit path must identify inherited content as Base-owned regardless of current editor scope');
 assert.doesNotMatch(appSource, /content-source-manager/, 'Variant editing must not regress to a separate Content Source card that competes with the actual form');
 assert.match(appSource, /editor-task-disclosure search-task[\s\S]*inheritedSourceCount[\s\S]*renderInheritedOverrideField/, 'Inherited search fields must stay grouped in the subordinate task disclosure');
 assert.match(appSource, /Use template|改用模板/, 'Inherited search fields must retain a plain-language return-to-template action');
@@ -315,7 +324,7 @@ assert.match(appSource, /pageAttentionCount[\s\S]*当前页面要填写|pageAtte
 assert.match(appSource, /editor-task-header/, 'Variant editor must use one task header for current-page identity and task summary');
 assert.doesNotMatch(appSource, /SPECIES SEO ·/, 'Variant editor must not repeat an internal product eyebrow above the task form');
 assert.doesNotMatch(appSource, /页面内容与 SEO 字段|Page content and SEO fields/, 'Variant editor must not add a redundant generic detail heading before the actual tasks');
-assert.match(appSource, /open=\{seoAttentionCount > 0\}/, 'Inherited search appearance must stay collapsed unless it actually needs attention or contains page overrides');
+assert.match(appSource, /open=\{seoAttentionCount > 0 \|\| \['seoTitle', 'metaDescription', 'h1'\]\.includes\(selectedEditorField\)\}/, 'Search appearance must stay collapsed by default but open automatically when Preview selects a matching field');
 assert.doesNotMatch(appSource, /只读演示 · 不会写入|Read-only demo · no writes/, 'Editor body must not duplicate the global read-only demo notice');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
