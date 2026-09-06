@@ -1,6 +1,6 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
@@ -389,3 +389,13 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Latest GitHub Admin Content CI run `34026353946`: `validate` PASS; heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA deployment for the functional checkpoint is successful; verified Preview: `https://7ff827d1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable branch Preview remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - Production, live DB, `main`, Care SEO `hold_noindex`, and public indexing remain untouched.
 - Active next work is still **Species SEO Admin operator acceptance / usability convergence**. Do not resume PR #144 reconciliation until the user explicitly returns to branch convergence.
+
+## 2026-09-06 19:05 +08:00 — task prompt alignment acceptance
+- Functional checkpoint `01521a8c fix(admin): align task prompts with inputs` closes the first remaining hosted operator-acceptance defect found after restoring the session from canonical authority.
+- Root cause was legacy global `label > span` CSS (`justify-self:end` + negative top margin) leaking into the newer task-first question spans. The question copy existed, but visually detached from its guidance/input, especially at 390px.
+- Page-specific task questions now explicitly reset to left alignment / zero negative margin and share the same left edge as their input. Contract coverage prevents the legacy label treatment from regressing onto task prompts.
+- Local and hosted exact-SHA acceptance both pass at 1440×900 and 390×844 with horizontal overflow `0`. Desktop Preview remains 742px editor + 420px Preview; Base ↔ Current Page switches preserve the open Preview and synchronize the top review scope. Mobile Preview remains a ~374px fixed overlay. `.studio-editor-area` contains zero review bars.
+- Admin contract (including Repo backend/API/dual-repo gates), Admin build, full root build and `git diff --check` PASS. GitHub Admin Content CI run `34029137779`: `validate` PASS; Heavy browser/SEO handoff gate SKIPPED by policy.
+- Cloudflare exact-SHA Preview PASS: `https://0e0f1106.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable branch Preview remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
+- Before this docs-only sync, feature is `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb`, live main `64fa58a16a723b74621ac1db513adb1efb47e282`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence **269 main-only / 186 feature-only**. PR #144 stays PARKED. Production/live DB/index/Care SEO remain untouched.
+- Active next work remains user/operator visual acceptance and any new Species SEO Admin UX feedback. Writable `admin-content` Preview credential restoration remains separate and must use safe server-side secret binding.

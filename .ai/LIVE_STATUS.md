@@ -1,8 +1,8 @@
 # Live Status
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `1e1414ec768580843e4f9faf2599719fbe5805c7`
+Operational functional HEAD before this docs sync: `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
@@ -306,3 +306,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Latest GitHub Admin Content CI run `34026353946`: `validate` PASS; heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA deployment for the functional checkpoint is successful; verified Preview: `https://7ff827d1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable branch Preview remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - Production, live DB, `main`, Care SEO `hold_noindex`, and public indexing remain untouched.
 - Active next work is still **Species SEO Admin operator acceptance / usability convergence**. Do not resume PR #144 reconciliation until the user explicitly returns to branch convergence.
+
+## 2026-09-06 — Species SEO Admin task-prompt alignment acceptance
+- Functional feature checkpoint: `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb` (`fix(admin): align task prompts with inputs`).
+- Task-first questions (`这个品种有什么不同？` / `主图里是什么？`) now render left-aligned directly above their guidance/input instead of inheriting legacy right-side label positioning.
+- Exact-SHA hosted 1440/390 acceptance: overflow 0; editor review descendants 0; desktop split 742/420; Preview stays open across Base/Current switch; mobile Preview fixed overlay ≈374px.
+- Admin contract + Repo backend/API/dual-repo + Admin build + full root build PASS. GitHub run `34029137779` validate PASS; Heavy skipped. Cloudflare exact-SHA `https://0e0f1106.aquaguide-frontend.pages.dev/admin/seo/?demo=1` PASS.
+- Pre-doc-sync refs: feature `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb`, main `64fa58a16a723b74621ac1db513adb1efb47e282`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence main-only 269 / feature-only 186. PR #144 remains parked; Production/index/live DB unchanged.

@@ -256,3 +256,10 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Latest GitHub Admin Content CI run `34026353946`: `validate` PASS; heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA deployment for the functional checkpoint is successful; verified Preview: `https://7ff827d1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable branch Preview remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - Production, live DB, `main`, Care SEO `hold_noindex`, and public indexing remain untouched.
 - Active next work is still **Species SEO Admin operator acceptance / usability convergence**. Do not resume PR #144 reconciliation until the user explicitly returns to branch convergence.
+
+## 2026-09-06 — task-first prompt alignment checkpoint
+- Hosted acceptance found one remaining hierarchy leak: legacy global label CSS pushed the new task questions to the far-right/negative-offset position, so the operator saw helper copy before a clearly owned question.
+- `01521a8c` resets task prompts to the field's left edge above guidance/input and adds a contract guard. This is presentation-only; review state, Preview ownership, Repo authority and publish boundaries are unchanged.
+- 1440/390 local + exact-SHA hosted checks pass with zero overflow. Desktop Preview remains simultaneous and survives Base/Current switches; mobile remains Overlay.
+- CI `34029137779` validate PASS; Heavy skipped by low-cost policy; exact Cloudflare Preview `0e0f1106` PASS.
+- Next remains Species SEO Admin operator acceptance feedback; do not resume PR #144 reconciliation without explicit user scope change.

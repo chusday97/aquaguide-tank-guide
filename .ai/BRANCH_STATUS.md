@@ -1,8 +1,8 @@
 # Branch Status
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 Feature: `feature/admin-content-v0`
-Remote feature before this docs sync: `1e1414ec768580843e4f9faf2599719fbe5805c7`
+Remote feature before this docs sync: `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb`
 Live main: `64fa58a16a723b74621ac1db513adb1efb47e282`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
@@ -226,3 +226,9 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Latest GitHub Admin Content CI run `34026353946`: `validate` PASS; heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA deployment for the functional checkpoint is successful; verified Preview: `https://7ff827d1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable branch Preview remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - Production, live DB, `main`, Care SEO `hold_noindex`, and public indexing remain untouched.
 - Active next work is still **Species SEO Admin operator acceptance / usability convergence**. Do not resume PR #144 reconciliation until the user explicitly returns to branch convergence.
+
+## 2026-09-06 — task prompt alignment checkpoint
+- Functional feature HEAD pushed: `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb`.
+- Live main remains `64fa58a16a723b74621ac1db513adb1efb47e282`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; measured pre-doc-sync divergence **269 main-only / 186 feature-only**.
+- GitHub Admin Content CI `34029137779`: validate PASS; Heavy gate SKIPPED under the low-cost policy. Cloudflare exact-SHA Preview `0e0f1106` deployed successfully and passed 1440/390 hosted acceptance.
+- This checkpoint touches only Species SEO Admin task-field presentation + its contract. It does not reconcile main and does not modify Production, live DB, Care SEO hold/noindex, or public indexing. Draft PR #144 remains PARKED.

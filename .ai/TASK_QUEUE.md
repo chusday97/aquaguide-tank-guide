@@ -1,6 +1,6 @@
 # Task Queue
 
-Updated: 2026-09-05
+Updated: 2026-09-06
 Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
 Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 
@@ -97,6 +97,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 - [x] Remove the ambiguous `页 / 模` glyph badge; keep scope identity in plain language (`当前物种页面` / `基础模板`).
 - [x] Make Preview explicit-on-demand: visible `效果预览` control in the editor bar, Preview hidden by default, overlay drawer on open, zero page overflow.
 - [x] Move current-page review status/actions into a top-level Page Review Status Bar directly below Publish Progress; remove the duplicate mobile editor-toolbar review indicator.
+- [x] Correct task-first field prompt alignment: page-specific questions are left-aligned directly above guidance/input at 1440/390; legacy global label styling cannot push prompts to the far right. Exact-SHA hosted acceptance preserves Preview split/overlay, review placement and zero overflow.
 - [ ] User visual/operator acceptance of the new hierarchy on the hosted read-only SEO Admin demo; collect screenshots/feedback.
 - [ ] Restore a writable `admin-content` Preview only through a safe server-side credential binding/transfer. Do not expose or manually shuttle `ADMIN_REPO_*` / `ADMIN_GITHUB_*` secrets; current independent project lacks those write credentials.
 

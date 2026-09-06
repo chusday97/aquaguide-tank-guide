@@ -811,3 +811,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Latest GitHub Admin Content CI run `34026353946`: `validate` PASS; heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA deployment for the functional checkpoint is successful; verified Preview: `https://7ff827d1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable branch Preview remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - Production, live DB, `main`, Care SEO `hold_noindex`, and public indexing remain untouched.
 - Active next work is still **Species SEO Admin operator acceptance / usability convergence**. Do not resume PR #144 reconciliation until the user explicitly returns to branch convergence.
+
+## 2026-09-06 — Species SEO Admin task-prompt operator fix
+- Restored authority in the required order and re-read real git state: clean `feature/admin-content-v0`, start HEAD/remote `307366c5`, main `64fa58a16a723b74621ac1db513adb1efb47e282`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence 269/185; PR #144 parked.
+- Audited the current Cloudflare hosted Demo at 1440/390. First unfinished operator defect: task questions were visually detached from their inputs because legacy global `label > span` styling still applied a negative top offset/right alignment.
+- Fixed only the task-prompt CSS and added a contract assertion; no review/Preview/data-authority logic changed.
+- Local 1440/390 proof: task question/input left edges match; overflow 0; top review remains outside editor; desktop Preview 742/420 and survives Base↔Current; mobile Preview remains fixed overlay ~374px.
+- PASS: `npm run test:contract -w @aquaguide/admin-content` (includes Repo backend/API/dual-repo gates), Admin build, full root build, `git diff --check`.
+- Pushed functional `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb`. GitHub CI run `34029137779` validate PASS; Heavy skipped by policy. Cloudflare exact-SHA `https://0e0f1106.aquaguide-frontend.pages.dev/admin/seo/?demo=1` deployed successfully.
+- Repeated online 1440/390 checks against that exact SHA: same alignment and zero overflow; Preview/review/Base↔Current behavior preserved.
+- Pre-doc-sync refs: main-only 269 / feature-only 186. No main merge/rebase, PR #144 change, Production deploy, live DB mutation, or index change.
