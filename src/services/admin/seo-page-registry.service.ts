@@ -149,10 +149,17 @@ export function summarizeSeoRegistry(entries: SeoPageRegistryEntry[]) {
     acc[entry.editorialState] = (acc[entry.editorialState] || 0) + 1;
     return acc;
   }, {});
+  const priorityQueue = entries
+    .filter(entry => entry.health.severity !== 'healthy')
+    .reduce<Record<SeoHealthSeverity, number>>((acc, entry) => {
+      acc[entry.health.severity] = (acc[entry.health.severity] || 0) + 1;
+      return acc;
+    }, { healthy: 0, attention: 0, blocked: 0, unknown: 0 });
   return {
     total: entries.length,
     byType,
     byState,
+    priorityQueue,
     needsAttention: entries.filter(entry => ['not_started', 'editing', 'ready_for_review', 'source_not_published'].includes(entry.editorialState)).length,
   };
 }
