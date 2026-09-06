@@ -13,7 +13,15 @@ export type SeoRegistryEditorialState =
   | 'unknown';
 
 export type SeoHealthSeverity = 'healthy' | 'attention' | 'blocked' | 'unknown';
-export type SeoHealthIssueCode = 'missing_editorial_review' | 'index_strategy_unknown' | 'source_state_unknown';
+export type SeoHealthIssueCode =
+  | 'missing_meta_title'
+  | 'missing_meta_description'
+  | 'missing_h1'
+  | 'missing_bilingual_pair'
+  | 'canonical_conflict'
+  | 'missing_editorial_review'
+  | 'index_strategy_unknown'
+  | 'source_state_unknown';
 
 export type SeoHealthSummary = {
   severity: SeoHealthSeverity;
@@ -51,6 +59,10 @@ type SpeciesSeoRow = {
   locale?: SeoRegistryLocale;
   review_state?: 'editing' | 'ready_for_review' | 'approved';
   index_strategy?: 'index' | 'noindex' | 'canonical_to_sibling';
+  meta_title?: string;
+  meta_description?: string;
+  h1?: string;
+  canonical_url?: string;
   deleted_at?: string | null;
 };
 
@@ -84,13 +96,16 @@ const repoSelect = async <T>(table: string, limit = 1200): Promise<T[]> => {
 
 const pageKey = (type: 'species' | 'care', sourceKey: string, locale: SeoRegistryLocale) => `${type}:${sourceKey}:${locale}`;
 
-export function deriveSeoHealth(entry: Omit<SeoPageRegistryEntry, 'health'>): SeoHealthSummary {
+export function deriveSeoHealth(entry: Omit<SeoPageRegistryEntry, 'health'> & Partial<SpeciesSeoRow>): SeoHealthSummary {
   const issues: SeoHealthIssueCode[] = [];
   if (entry.indexStrategy === 'unknown') issues.push('index_strategy_unknown');
   if (entry.editorialState === 'unknown') issues.push('source_state_unknown');
+  if (entry.meta_title === '') issues.push('missing_meta_title');
+  if (entry.meta_description === '') issues.push('missing_meta_description');
+  if (entry.h1 === '') issues.push('missing_h1');
   if (['not_started', 'editing', 'ready_for_review'].includes(entry.editorialState)) issues.push('missing_editorial_review');
   return {
-    severity: issues.includes('source_state_unknown') ? 'unknown' : issues.includes('missing_editorial_review') ? 'attention' : 'healthy',
+    severity: issues.includes('source_state_unknown') ? 'unknown' : issues.some(issue => ['missing_meta_title', 'missing_meta_description', 'missing_h1', 'canonical_conflict'].includes(issue)) ? 'blocked' : issues.length ? 'attention' : 'healthy',
     issues,
   };
 }
