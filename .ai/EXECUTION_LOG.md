@@ -841,3 +841,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Current refs after sync: local feature `e554fcc816f9e696163b8184144820b1391f9557`; remote feature currently `3dfa76af8d1493b8a7fb17e950afb7849cfb2eac`; live main `64fa58a16a723b74621ac1db513adb1efb47e282`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Measured divergence against live main: `269 main-only / 191 feature-only`. This remains a two-way divergence. Do not merge/rebase or resume PR #144 reconciliation.
 - Production, live DB, Care SEO `hold_noindex`, public indexing and main remain untouched.
+
+## 2026-09-06 — SEO Operations Health Layer V2 start
+- Functional checkpoint `49c136bf` adds the first SEO Operations health layer above the read-only Page Registry.
+- Registry entries now expose derived health severity from existing authoritative signals instead of creating a new content authority. Current checks cover unknown index strategy, unavailable source state and incomplete editorial progression.
+- `/admin/seo-pages` remains read-only: no CMS/database/publication authority was added. Species remains Repo Admin authority; Care remains Published Care / Care SEO authority.
+- Root build PASS after the change. Production/main/live DB/index/Care SEO hold_noindex remain untouched.
+- Next implementation: expand health checks only from real available fields (Meta Title, Meta Description, H1, bilingual completeness, canonical validation, source publication state) and route priority items into existing authority editors.
