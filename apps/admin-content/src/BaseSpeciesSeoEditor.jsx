@@ -188,16 +188,8 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         <div className="batch-warning">{isUiEnglish ? 'The source catalog has a category conflict. Draft editing is allowed, but Preview readiness remains blocked until human review is complete.' : '源数据存在分类冲突；草稿可以继续编辑，但完成数据复核前不能进入预览发布。'}</div>
       ) : null}
       <div className="editor-detail-heading">
-        <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
-        <div className="editor-detail-title-row">
-          <h3>{isUiEnglish ? 'Base template fields' : '基础模板字段'}</h3>
-          <div className="validation-legend" aria-label={isUiEnglish ? 'Field health legend' : '字段状态说明'}>
-            <span className="tone-error">{isUiEnglish ? 'Red · fix' : '红 · 需修复'}</span>
-            <span className="tone-warning">{isUiEnglish ? 'Yellow · attention' : '黄 · 待处理'}</span>
-            <span className="tone-success">{isUiEnglish ? 'Green · healthy' : '绿 · 正常'}</span>
-          </div>
-        </div>
-        <p>{isUiEnglish ? 'Edit shared copy here. Review actions stay in the workflow panel above.' : '这里只修改共享模板内容；提交和批准统一在上方独立审核进度栏完成。'}</p>
+        <h3>{isUiEnglish ? 'Base template fields' : '基础模板字段'}</h3>
+        <p>{isUiEnglish ? 'Edit shared copy here. Health color appears only where attention is actually needed.' : '这里只修改共享模板；状态颜色只在真正需要注意的位置出现。'}</p>
       </div>
       <div className="base-seo-grid">
         <label {...baseFieldProps('seoTitle')}>{isUiEnglish ? 'SEO Title template' : 'Meta 标题模板'}

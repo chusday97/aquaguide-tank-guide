@@ -770,3 +770,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Refactored `ReviewDecision` so the command surface is first, evidence second and notes optional. Added wide `EditorToolDrawer` size for Data Review and compacted duplicate internal headings.
 - Browser proof: 1440 command y≈344 and fully visible; drawer 900px; after selecting conclusion CTA becomes enabled; after body scroll 700px command remains visible. 390 command fully visible; overflow 0.
 - `npm run test:contract -w @aquaguide/admin-content` PASS; full `npm run build` PASS.
+
+## 2026-09-06 — clean editor canvas rule
+- Content editing is a neutral writing surface, not a status dashboard. Variant/Base editor backgrounds stay white/transparent.
+- Success may appear only as a small green status dot/label at section level; healthy fields must not receive green fills or green card backgrounds.
+- Warning/Error remain visible through a slim semantic edge, input border and compact status label; they must not tint the whole section or field.
+- Removed the permanent red/yellow/green legend above forms. Health is shown contextually where it matters.
+- Editor typography is deliberate and stable: page 24px, content heading 18px, section 15px, field/input 12–13px, helper/meta 10–11px. Legacy 9/9.5/10.5px editor copy is retired.

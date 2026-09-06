@@ -144,3 +144,10 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Keep the decision command sticky on desktop while long evidence scrolls; keep mobile non-overlapping.
 - [x] Demote evidence to a labeled read-only section and notes to an optional collapsed disclosure.
 - [x] Add contract coverage for action-first ordering / wide drawer / primary action visibility.
+
+## 2026-09-06 — clean editor canvas rule
+- Content editing is a neutral writing surface, not a status dashboard. Variant/Base editor backgrounds stay white/transparent.
+- Success may appear only as a small green status dot/label at section level; healthy fields must not receive green fills or green card backgrounds.
+- Warning/Error remain visible through a slim semantic edge, input border and compact status label; they must not tint the whole section or field.
+- Removed the permanent red/yellow/green legend above forms. Health is shown contextually where it matters.
+- Editor typography is deliberate and stable: page 24px, content heading 18px, section 15px, field/input 12–13px, helper/meta 10–11px. Legacy 9/9.5/10.5px editor copy is retired.

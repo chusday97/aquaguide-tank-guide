@@ -470,16 +470,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       ) : null}
 
       <div className="editor-detail-heading">
-        <small>{isUiEnglish ? 'DETAIL EDITING' : '详细编辑'}</small>
-        <div className="editor-detail-title-row">
-          <h3>{isUiEnglish ? 'Page content and SEO fields' : '页面内容与 SEO 字段'}</h3>
-          <div className="validation-legend" aria-label={isUiEnglish ? 'Field health legend' : '字段状态说明'}>
-            <span className="tone-error">{isUiEnglish ? 'Red · fix' : '红 · 需修复'}</span>
-            <span className="tone-warning">{isUiEnglish ? 'Yellow · attention' : '黄 · 待处理'}</span>
-            <span className="tone-success">{isUiEnglish ? 'Green · healthy' : '绿 · 正常'}</span>
-          </div>
-        </div>
-        <p>{isUiEnglish ? 'These fields shape the page. Workflow state changes only when you use the action panel above.' : '下面只负责“内容怎么写”；审核状态只通过上方独立的审核进度栏推进。'}</p>
+        <h3>{isUiEnglish ? 'Page content and SEO fields' : '页面内容与 SEO 字段'}</h3>
+        <p>{isUiEnglish ? 'Edit the page here. Health color appears only where attention is actually needed.' : '这里只编辑页面内容；状态颜色只在真正需要注意的位置出现。'}</p>
       </div>
       <div className="editor-grid">
         <div className="form-column">

@@ -215,3 +215,10 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Required order: **需要你做的决定 → 判断依据 → 可选审核备注**. The primary confirmation action must be visible before any long evidence content.
 - Desktop Data Review uses the wide drawer variant and keeps the decision command visible while evidence scrolls. Mobile keeps the same information order without sticky obstruction.
 - Base CMS chrome remains neutral; red/yellow/green are reserved for real semantic health states and must not be used decoratively.
+
+## 2026-09-06 — clean editor canvas rule
+- Content editing is a neutral writing surface, not a status dashboard. Variant/Base editor backgrounds stay white/transparent.
+- Success may appear only as a small green status dot/label at section level; healthy fields must not receive green fills or green card backgrounds.
+- Warning/Error remain visible through a slim semantic edge, input border and compact status label; they must not tint the whole section or field.
+- Removed the permanent red/yellow/green legend above forms. Health is shown contextually where it matters.
+- Editor typography is deliberate and stable: page 24px, content heading 18px, section 15px, field/input 12–13px, helper/meta 10–11px. Legacy 9/9.5/10.5px editor copy is retired.

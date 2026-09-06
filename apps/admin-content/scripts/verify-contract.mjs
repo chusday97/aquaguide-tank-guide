@@ -296,8 +296,11 @@ assert.match(pageReviewSource, /createPortal[\s\S]*portalTarget/, 'Page Review S
 assert.match(stylesSource, /page-review-top-slot[\s\S]*flex:0 0 auto[\s\S]*page-review-status-bar/, 'Top-level review chrome must reserve layout space above the workspace and never overlay editable content');
 assert.match(stylesSource, /--state-error:[\s\S]*--state-warning:[\s\S]*--state-success:/, 'Admin semantic health must use the red/yellow/green state system');
 assert.match(appSource, /data-validation-state/, 'Variant editor must expose field and section validation states');
-assert.match(appSource, /validation-legend/, 'Variant editor must explain red/yellow/green field health inline');
+assert.match(appSource, /validation-state-chip/, 'Variant editor must expose section health without painting the entire editing canvas');
+assert.doesNotMatch(appSource, /validation-legend/, 'Editor must not repeat a permanent red/yellow/green legend above every form');
 assert.match(stylesSource, /inspector-editor-field:hover[\s\S]*focus-within[\s\S]*is-inspector-selected/, 'Editor fields must define Hover, Active/focus and Selected states beyond Default');
+assert.match(stylesSource, /state-success[\s\S]*background:transparent/, 'Healthy editor content must stay neutral instead of filling every field green');
+assert.match(stylesSource, /state-error[\s\S]*state-warning[\s\S]*border-left-color/, 'Error and warning states must remain visible through one slim semantic edge');
 assert.match(stylesSource, /data-ui-state=\"empty\"|editor-empty\[data-ui-state=\"empty\"\]/, 'Editor must define an explicit Empty state');
 assert.match(stylesSource, /data-ui-state=\"loading\"/, 'Review workflow must define an explicit Loading state');
 assert.match(stylesSource, /button:disabled/, 'Shared controls must define a Disabled state');
