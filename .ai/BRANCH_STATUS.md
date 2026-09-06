@@ -243,3 +243,12 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - PASS: Admin contract including Repo backend/API/dual-repo gates, full root build and `git diff --check`. GitHub Admin Content CI `34033618797` validate PASS; Heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA: `https://9660b6c1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable acceptance URL remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
 - Pre-doc-sync refs: feature `e584e3f6fe49159b7896e7a8429bca59a9877f60`, live main `64fa58a16a723b74621ac1db513adb1efb47e282`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence **269 main-only / 188 feature-only**. Draft PR #144 remains PARKED. Production, live DB, Care SEO `hold_noindex` and public indexing remain untouched.
 - Do not reintroduce the removed banner/card/stat/locale layers merely to make status more visible. Future acceptance work should reduce cognition through progressive disclosure, not add another permanent surface.
+
+## 2026-09-06 — SEO Page Registry operator queue checkpoint
+- Functional checkpoint `e554fcc8` (`feat(seo): add registry operator queue summary`).
+- SEO Operations Registry now has the first operator queue summary layer above the read-only page registry: it distinguishes pages requiring attention from unknown/unavailable source states instead of treating unreadable state as healthy.
+- Existing authority boundaries remain unchanged: Species stays Repo Admin authority; Care stays Published Care / Care SEO authority. Registry remains read-only and does not become a new CMS or publication database.
+- Local verification: SEO Page Registry contract PASS (`speciesCandidates=972`, Care candidates verified, unique keys validated), TypeScript check PASS.
+- Current refs after sync: local feature `e554fcc816f9e696163b8184144820b1391f9557`; remote feature currently `3dfa76af8d1493b8a7fb17e950afb7849cfb2eac`; live main `64fa58a16a723b74621ac1db513adb1efb47e282`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Measured divergence against live main: `269 main-only / 191 feature-only`. This remains a two-way divergence. Do not merge/rebase or resume PR #144 reconciliation.
+- Production, live DB, Care SEO `hold_noindex`, public indexing and main remain untouched.
