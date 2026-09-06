@@ -321,6 +321,7 @@ assert.doesNotMatch(appSource, /content-source-manager/, 'Variant editing must n
 assert.match(appSource, /editor-task-disclosure search-task[\s\S]*inheritedSourceCount[\s\S]*renderInheritedOverrideField/, 'Inherited search fields must stay grouped in the subordinate task disclosure');
 assert.match(appSource, /Use template|改用模板/, 'Inherited search fields must retain a plain-language return-to-template action');
 assert.match(appSource, /pageAttentionCount[\s\S]*当前页面要填写|pageAttentionCount[\s\S]*Page-specific content/, 'Variant editing must lead with actual page-specific tasks instead of a generic field catalog');
+assert.match(stylesSource, /editor-field-question[\s\S]*justify-self:start[\s\S]*margin-top:0[\s\S]*text-align:left/, 'Page-specific task questions must stay left-aligned above their guidance and inputs instead of inheriting the legacy right-side label treatment');
 assert.match(appSource, /editor-task-header/, 'Variant editor must use one task header for current-page identity and task summary');
 assert.doesNotMatch(appSource, /SPECIES SEO ·/, 'Variant editor must not repeat an internal product eyebrow above the task form');
 assert.doesNotMatch(appSource, /页面内容与 SEO 字段|Page content and SEO fields/, 'Variant editor must not add a redundant generic detail heading before the actual tasks');
