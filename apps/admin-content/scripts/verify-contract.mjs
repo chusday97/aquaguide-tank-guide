@@ -334,6 +334,11 @@ assert.match(appSource, /save\('ready_for_review'\)/, 'Variant workflow must exp
 assert.match(appSource, /save\('approved'\)/, 'Variant workflow must expose an explicit approve-preview action');
 assert.match(appSource, /onPublishStaging/, 'Approved Variant workflow must expose an explicit Staging publish action');
 assert.match(baseSource, /save\('ready_for_review'\)/, 'Base workflow must expose an explicit submit-for-review action');
+assert.match(appSource, /reviewStateOverride && !contentDirty/, 'Variant submit must preserve metadata-only review transitions when there are no unsaved content changes');
+assert.match(appSource, /review_state: reviewStateOverride \|\| form.reviewState/, 'Variant save-and-submit must persist content and the review transition atomically');
+assert.match(baseSource, /reviewStateOverride && !contentDirty/, 'Base submit must preserve metadata-only review transitions when there are no unsaved template changes');
+assert.match(baseSource, /review_state: reviewStateOverride \|\| form.reviewState/, 'Base save-and-submit must persist template content and the review transition atomically');
+assert.match(stylesSource, /review-submit-action[\s\S]*review-next-step-hint/, 'Top review control must visually emphasize the submit-review handoff and name the next review step');
 assert.match(baseSource, /save\('approved'\)/, 'Base workflow must expose an explicit approve-preview action');
 assert.match(appSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('catalog_key'/, 'Variant review transitions must update review metadata only, not re-upsert content fields');
 assert.match(baseSource, /\.update\(\{ review_state: reviewStateOverride \}\)[\s\S]*\.eq\('group_key'/, 'Base review transitions must update review metadata only, not re-upsert template fields');
@@ -350,8 +355,8 @@ assert.match(baseSource, /unsaved-indicator/, 'Base editing must expose the same
 assert.match(appSource, /beforeunload/, 'Admin must protect dirty editor state from browser refresh or close');
 assert.match(appSource, /confirmDiscardUnsaved/, 'Editor navigation must require explicit confirmation before discarding unsaved changes');
 assert.match(appSource, /runEditorNavigation/, 'Species, scope and locale navigation must share one unsaved-change guard');
-assert.match(appSource, /contentDirty \? <button[\s\S]*保存修改/, 'Variant save action must appear only for actual content changes');
-assert.match(baseSource, /contentDirty \? <button[\s\S]*保存基础模板/, 'Base save action must appear only for actual template changes');
+assert.match(appSource, /contentDirty \? <button[\s\S]*仅保存草稿[\s\S]*保存并提交审核/, 'Variant dirty state must keep review visible: save draft is secondary and save-and-submit is the primary next action');
+assert.match(baseSource, /contentDirty \? <button[\s\S]*仅保存草稿[\s\S]*保存并提交审核/, 'Base dirty state must keep review visible: save draft is secondary and save-and-submit is the primary next action');
 assert.match(appSource, /selectedId === id && editorScope === 'variant'/, 'Re-selecting the current Variant must remain a no-op and must not clear dirty state');
 assert.match(appSource, /workflowFilter\?\.key === next\.key/, 'Re-selecting the active workflow filter must not discard dirty editor state');
 assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');

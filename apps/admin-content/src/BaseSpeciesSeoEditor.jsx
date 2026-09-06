@@ -106,7 +106,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       emitAdminNotice({ status: 'warning', title: isUiEnglish ? 'Review blocked' : '审核被阻止', detail: baseHygieneBlockReason });
       return;
     }
-    if (reviewStateOverride) {
+    if (reviewStateOverride && !contentDirty) {
       const { data, error } = await adminContentClient
         .from('species_seo_groups')
         .update({ review_state: reviewStateOverride })
@@ -132,7 +132,7 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
       h1_template: form.h1Template.trim(),
       shared_intro: form.sharedIntro.trim(),
       status: form.status,
-      review_state: form.reviewState,
+      review_state: reviewStateOverride || form.reviewState,
     };
     const { data, error } = await adminContentClient
       .from('species_seo_groups')
@@ -159,12 +159,16 @@ export default function BaseSpeciesSeoEditor({ group, record, locale = 'zh-CN', 
         tone={reviewTone}
         busy={saving}
         portalTarget={reviewPortalTarget}
-        dirtyHint={contentDirty ? (isUiEnglish ? 'Saving this template resets approval to Editing.' : '保存模板后会自动退回“编辑中”，需要重新审核。') : ''}
+        dirtyHint={contentDirty ? (isUiEnglish ? 'Save a draft, or save and move this template directly into review.' : '可以仅保存草稿，也可以直接保存并进入审核。') : ''}
       >
-        {contentDirty ? (
-          <button type="button" className="primary-button compact" disabled={saving} onClick={() => save()}>{saving ? t('common.saving') : (isUiEnglish ? 'Save base template' : '保存基础模板')}</button>
-        ) : form.reviewState === 'editing' ? (
-          <button type="button" className="primary-button compact" disabled={saving} onClick={() => save('ready_for_review')}>{isUiEnglish ? 'Submit for review' : '提交审核'}</button>
+        {form.reviewState === 'editing' ? (
+          <div className="review-next-action-stack">
+            <div className="review-next-action-buttons">
+              {contentDirty ? <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save()}>{isUiEnglish ? 'Save draft' : '仅保存草稿'}</button> : null}
+              <button type="button" className="primary-button compact review-submit-action" disabled={saving} onClick={() => save('ready_for_review')}>{saving ? t('common.saving') : contentDirty ? (isUiEnglish ? 'Save & submit →' : '保存并提交审核 →') : (isUiEnglish ? 'Submit for review →' : '提交审核 →')}</button>
+            </div>
+            <small className="review-next-step-hint">{isUiEnglish ? 'Next: Awaiting review · 2/3' : '下一步：进入待审核 · 2/3'}</small>
+          </div>
         ) : form.reviewState === 'ready_for_review' ? (
           <>
             <button type="button" className="ghost-button compact" disabled={saving} onClick={() => save('editing')}>{isUiEnglish ? 'Back to editing' : '退回编辑'}</button>

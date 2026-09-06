@@ -3202,3 +3202,70 @@ input:focus,textarea:focus,select:focus,button:focus-visible { border-color:var(
   background:transparent; color:var(--cms-muted); font-size:9px; font-weight:650; text-align:left; cursor:pointer;
 }
 .preview-addition-button:hover { border-color:var(--cms-accent); color:var(--cms-accent); background:transparent; }
+
+/* 2026-09-06 Review handoff: keep the next workflow action obvious while editing. */
+.page-review-top-slot .review-next-action-stack {
+  display:grid;
+  justify-items:end;
+  gap:3px;
+}
+.page-review-top-slot .review-next-action-buttons {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+}
+.page-review-top-slot .review-submit-action.primary-button.compact {
+  min-width:148px;
+  min-height:34px;
+  padding:0 14px;
+  font-size:10px;
+  font-weight:760;
+}
+.page-review-top-slot .review-next-step-hint {
+  max-width:none;
+  color:var(--cms-muted);
+  font-size:9px;
+  font-weight:650;
+  line-height:1.25;
+}
+.page-review-top-slot .page-review-status-bar .workflow-action-block {
+  min-width:270px;
+}
+@media (max-width:1180px) and (min-width:761px) {
+  .page-review-top-slot .page-review-status-bar .workflow-action-block { min-width:230px; }
+  .page-review-top-slot .review-submit-action.primary-button.compact { min-width:132px; }
+}
+@media (max-width:760px) {
+  .page-review-top-slot .review-next-action-stack { display:block; }
+  .page-review-top-slot .review-next-action-buttons { gap:4px; }
+  .page-review-top-slot .review-next-step-hint,
+  .page-review-top-slot .page-review-dirty-hint { display:none; }
+  .page-review-top-slot .review-submit-action.primary-button.compact {
+    min-width:112px;
+    min-height:28px;
+    padding:0 8px;
+    font-size:7.5px;
+  }
+  .page-review-top-slot .review-next-action-buttons .ghost-button.compact {
+    min-width:0;
+    padding:0 6px;
+  }
+}
+@media (max-width:760px) {
+  .page-review-top-slot .page-review-status-bar .workflow-action-block { min-width:0; }
+}
+/* Keep the review handoff on one row so the top control stack stays compact. */
+@media (min-width:761px) {
+  .page-review-top-slot .review-next-action-stack {
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:8px;
+  }
+  .page-review-top-slot .review-next-step-hint {
+    order:-1;
+    max-width:104px;
+    text-align:right;
+  }
+}
