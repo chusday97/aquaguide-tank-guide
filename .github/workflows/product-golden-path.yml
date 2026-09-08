@@ -66,6 +66,9 @@ jobs:
         env:
           PREVIEW_URL: http://127.0.0.1:4173
           AQUAGUIDE_PREVIEW_URL: http://127.0.0.1:4173
+          AQUAGUIDE_URL: http://127.0.0.1:4173
+          PREVIEW_BRANCH: ${{ github.head_ref || github.ref_name }}
+          PREVIEW_SHA: ${{ github.sha }}
         run: |
           npm run test:core-ui
           npm run test:formal-preview-entry
