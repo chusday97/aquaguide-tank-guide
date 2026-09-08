@@ -6,7 +6,7 @@
 - 历史 `codex/ui-atlas-care-v1@4113050e` 领先70个提交，已冻结为只读视觉参考；不从该分支整合页面、CSS或App Shell。
 - 已实现：物种风险原位展开、独立 `/compatibility` 页面、旧混养地址重定向、物种来源上下文参数、稳定 `data-action-id` 和动作契约测试。
 - 已验证：路由/动作契约、引导路径、任务入口、Compatibility、435组合矩阵、API类型、lint、production build；授权 Chromium 已验证风险原位展开、独立混养入口、旧地址重定向、物种详情状态、任务入口和浏览模式筛选。
-- 本轮只修正回归测试契约，没有修改 Domain、Catalog、Supabase 或页面视觉 Owner：测试现在按当前“规划想养的生物”、空缸可加入当前鱼缸、温度冲突为 `not_recommended`、互动默认/传统 browse 显式 URL 等真实产品行为断言。
+- 本轮只修正回归测试契约，没有修改 Domain、Catalog、Supabase 或页面视觉 Owner；提交 `9b633382` 现在按当前“规划想养的生物”、空缸可加入当前鱼缸、温度冲突为 `not_recommended`、互动默认/传统 browse 显式 URL 等真实产品行为断言。
 - 下一步：独立审查本基础分支后，按序创建 Aquarium、Encyclopedia/Care、Collection 和工具页短分支；不推送、不合并、不执行生产操作，直到对应门禁与用户验收完成。
 
 ## 2026-08-31 数据短分支本地门禁复验（当前）
