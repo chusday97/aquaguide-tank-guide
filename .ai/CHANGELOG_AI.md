@@ -115,3 +115,4 @@
 - Fixed collapsed desktop sidebar navigation accessibility by adding stable `aria-label` values for icon-only route buttons.
 - Added stable `data-nav-route` selectors for primary navigation and settings so browser gates remain deterministic across locale and collapsed-shell states.
 - Narrowed the 600px history fixture to direct route entry after confirming navigation itself is covered by the desktop route path.
+- Aligned the 600px history fixture with the product breakpoint contract: phone shell, no desktop sidebar, no overflow.

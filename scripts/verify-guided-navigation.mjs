@@ -152,12 +152,12 @@ try {
   await seed(narrowEnglish, baseState({ withTank: true }), 'en');
   await narrowEnglish.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
   await narrowEnglish.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
-  assert.ok(await narrowEnglish.locator('.desktop-sidebar').isVisible(), '600px desktop must keep the desktop sidebar');
-  assert.equal(await narrowEnglish.locator('[data-layout-mode="phone"]').count(), 0, '600px desktop must not render the phone shell');
+  assert.equal(await narrowEnglish.locator('.desktop-sidebar:visible').count(), 0, '600px wide phone must not render the desktop sidebar');
+  assert.ok(await narrowEnglish.locator('[data-layout-mode="phone"]').count() > 0, '600px wide phone must render the phone shell');
   await narrowEnglish.getByText(/Livestock in Tank|缸内物种/, { exact: true }).last().click();
   await narrowEnglish.getByRole('button', { name: /Manage groups|管理分组/ }).click();
   assert.ok(await narrowEnglish.getByRole('heading', { name: /^Manage |^管理/ }).isVisible());
-  assert.ok(await narrowEnglish.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), '600px English desktop must not overflow');
+  assert.ok(await narrowEnglish.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), '600px English phone must not overflow');
   await narrowEnglish.getByRole('textbox', { name: /Number to update|本次调整数量/ }).fill('2');
   await narrowEnglish.keyboard.press('Escape');
   await narrowEnglish.getByRole('heading', { name: /Discard changes\?|放弃修改/ }).waitFor();
