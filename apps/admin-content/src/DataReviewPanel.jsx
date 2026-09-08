@@ -7,6 +7,43 @@ import DuplicateCandidateComparison from './DuplicateCandidateComparison.jsx';
 import { buildDuplicateRecommendation, mergeDuplicateMembers } from './duplicateReviewEvidence.js';
 import { loadProductTruthCatalog } from './productTruthLoader.js';
 
+function CategoryConflictEvidence({ group, categoryMembers, isUiEnglish }) {
+  const totalRecords = categoryMembers.reduce((sum, item) => sum + item.members.length, 0);
+  return (
+    <div className="category-conflict-evidence">
+      <div className="evidence-summary-grid">
+        <div>
+          <span>{isUiEnglish ? 'System confirmed' : '系统已确认'}</span>
+          <strong>{isUiEnglish ? `One Base Species is mapped to ${categoryMembers.length} categories` : `同一基础物种被映射到 ${categoryMembers.length} 个分类`}</strong>
+          <small>{group.base_scientific_name} · {totalRecords} {isUiEnglish ? 'source records' : '条源记录'}</small>
+        </div>
+        <div>
+          <span>{isUiEnglish ? 'System cannot decide' : '系统无法自动确认'}</span>
+          <strong>{isUiEnglish ? 'Which category is authoritative Product Data' : '哪一个分类才是 Product Data 的最终权威分类'}</strong>
+          <small>{isUiEnglish ? 'SEO evidence cannot rewrite Product Data; a human must verify the source taxonomy.' : 'SEO 证据不能替代 Product Data，需要人工核对源分类。'}</small>
+        </div>
+      </div>
+      <div className="category-compare-table" role="table" aria-label={isUiEnglish ? 'Category comparison' : '分类对比'}>
+        {categoryMembers.map((item) => (
+          <div className="category-compare-row" role="row" key={item.category}>
+            <strong role="cell">{item.category}</strong>
+            <span role="cell">{item.members.length} {isUiEnglish ? 'records' : '条记录'}</span>
+            <div role="cell"><small>{item.members.slice(0, 2).map((member) => member.name).join('、')}{item.members.length > 2 ? (isUiEnglish ? ` +${item.members.length - 2} more` : ` 等 ${item.members.length} 条`) : ''}</small></div>
+          </div>
+        ))}
+      </div>
+      <details className="category-source-records">
+        <summary>{isUiEnglish ? `View all ${totalRecords} source records` : `查看全部 ${totalRecords} 条源记录`}</summary>
+        <div>{categoryMembers.flatMap((item) => item.members.map((member) => <small key={member.catalog_key}><b>{item.category}</b><span>{member.name} · {member.catalog_key}</span></small>))}</div>
+      </details>
+      <div className="review-evidence-guidance">
+        <b>{isUiEnglish ? 'How to decide' : '怎么判断'}</b>
+        <span>{isUiEnglish ? 'If the records intentionally belong to different product categories, keep the categories. If one group is misclassified, mark Source Data for correction.' : '如果这些记录本来就属于不同产品分类，选择“分类没有问题”；如果其中一组是误归类，选择“源数据需要修正”。'}</span>
+      </div>
+    </div>
+  );
+}
+
 function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', issueDescription = '', group, set, categoryMembers = [], row, catalogByKey, seoRows, groupSeoRows, locale, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned, onDefer }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
@@ -75,60 +112,57 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
   };
   const actionBlocked = !decision || (decision === 'duplicate_records' && !canonicalKey);
   const decisionLabel = !decision
-    ? (isUiEnglish ? 'Not selected' : '未选择结论')
+    ? (isUiEnglish ? 'No conclusion selected' : '尚未选择结论')
     : decision === 'duplicate_records'
-      ? (isUiEnglish ? 'Duplicate confirmed' : '已选择：重复记录')
+      ? (isUiEnglish ? 'Duplicate records' : '重复记录')
       : decision === 'distinct_records'
-        ? (isUiEnglish ? 'Distinct records' : '已选择：不是重复')
+        ? (isUiEnglish ? 'Distinct records' : '不是重复')
         : decision === 'accepted_as_is'
-          ? (isUiEnglish ? 'Keep current categories' : '已选择：分类没有问题')
-          : (isUiEnglish ? 'Source correction needed' : '已选择：源数据需修正');
+          ? (isUiEnglish ? 'Keep current categories' : '分类没有问题')
+          : (isUiEnglish ? 'Source Data needs correction' : '源数据需要修正');
   const actionHint = !decision
-    ? (isUiEnglish ? 'Choose one conclusion below. This is the only required decision before saving.' : '先选择一个人工结论；这是保存前唯一必须完成的决定。')
+    ? (isUiEnglish ? 'Choose one conclusion after reviewing the evidence. Nothing is changed until you confirm.' : '先根据上方依据选择一个结论；点击确认前不会产生任何修改。')
     : decision === 'duplicate_records' && !canonicalKey
-      ? (isUiEnglish ? 'Next: choose which page to keep in the evidence section below.' : '下一步：在下方“判断依据”中选择要保留的 SEO 页面。')
-      : (isUiEnglish ? 'Decision is ready. Confirm once to record it.' : '结论已准备好，点击“确认并保存”即可记录。');
+      ? (isUiEnglish ? 'Choose the one SEO page to keep before confirming.' : '确认重复前，还需要选择最终保留的 1 个 SEO 页面。')
+      : (isUiEnglish ? 'Review the “After confirmation” result below, then confirm once.' : '先核对下方“确认后结果”，确认无误后只需保存一次。');
+  const canonicalMember = duplicateMembers.find((item) => item.catalog_key === canonicalKey);
+  const outcome = !decision ? null
+    : decision === 'accepted_as_is'
+      ? {
+          title: isUiEnglish ? 'After confirmation: close this Data Review issue' : '确认后：关闭这条数据复核问题',
+          lines: isUiEnglish
+            ? ['Keep the current category assignments.', 'Source Data is not rewritten here.', 'This Base Species can continue through the SEO workflow.']
+            : ['保留当前分类归属。', '这里不会改写源数据。', '该基础物种可以继续进入 SEO 流程。'],
+        }
+      : decision === 'source_correction_required'
+        ? {
+            title: isUiEnglish ? 'After confirmation: Source Data correction remains required' : '确认后：记录为“源数据需要修正”',
+            lines: isUiEnglish
+              ? ['SEO remains blocked for this Base Species.', 'This screen does not change any category.', 'Correct Product Data in Aqua Operations Studio → Product Data, then review this issue again.']
+              : ['该基础物种的 SEO 继续保持阻塞。', '这个页面不会修改任何分类。', '需要到 Aqua Operations Studio → Product Data 修正源分类，之后再重新复核。'],
+          }
+        : decision === 'duplicate_records'
+          ? {
+              title: isUiEnglish ? 'After confirmation: keep one independent SEO page' : '确认后：只保留 1 个独立 SEO 页面',
+              lines: canonicalKey
+                ? (isUiEnglish
+                    ? [`Keep ${canonicalMember?.name || canonicalKey} (${canonicalKey}).`, `${Math.max(duplicateMembers.length - 1, 0)} duplicate record(s) will canonicalize to it.`, 'Source Data is not rewritten by this review.']
+                    : [`保留 ${canonicalMember?.name || canonicalKey}（${canonicalKey}）。`, `其余 ${Math.max(duplicateMembers.length - 1, 0)} 条重复记录的 SEO Canonical 指向该页面。`, '本次复核不改写源数据。'])
+                : (isUiEnglish ? ['Choose the page to keep first.'] : ['请先选择要保留的 SEO 页面。']),
+            }
+          : {
+              title: isUiEnglish ? 'After confirmation: keep separate SEO pages' : '确认后：继续保留独立 SEO 页面',
+              lines: isUiEnglish
+                ? [`Keep ${duplicateMembers.length} records as separate SEO page candidates.`, 'No Canonical relationship is created by this review.', 'Source Data remains unchanged.']
+                : [`${duplicateMembers.length} 条记录继续作为独立 SEO 页面候选。`, '本次复核不会建立 Canonical 关系。', '源数据保持不变。'],
+            };
+
 
   return (
     <div className="review-decision-box">
-      <section className="review-decision-command" aria-label={isUiEnglish ? 'Decision actions' : '需要你做的决定'} data-ui-state={saving ? 'loading' : actionBlocked ? 'incomplete' : 'ready'}>
-        <div className="review-decision-command-head">
-          <div>
-            <small>{isUiEnglish ? 'ACTION' : '需要你做的决定'}{issueLabel ? ` · ${issueLabel}` : ''}</small>
-            <strong>{isUiEnglish ? 'Choose the conclusion' : '选择这条数据问题的处理结论'}</strong>
-            {issueMeta || issueDescription ? <p className="review-decision-issue-context">{issueMeta ? <b>{issueMeta}</b> : null}{issueDescription ? <span>{issueDescription}</span> : null}</p> : null}
-          </div>
-          <span className={actionBlocked ? 'is-pending' : 'is-ready'}>{saving ? (isUiEnglish ? 'Saving…' : '保存中…') : decisionLabel}</span>
-        </div>
-        <div className="review-decision-options" aria-label={isUiEnglish ? 'Review decision' : '人工结论'}>
-          {issueType === 'category_conflict' ? <>
-            <button type="button" aria-pressed={decision === 'accepted_as_is'} className={`review-choice ${decision === 'accepted_as_is' ? 'active' : ''}`} onClick={() => setDecision('accepted_as_is')}>
-              <strong>{isUiEnglish ? 'Keep current categories' : '分类没有问题'}</strong><small>{isUiEnglish ? 'Continue SEO with current source categories' : '保持源数据分类，继续 SEO'}</small>
-            </button>
-            <button type="button" aria-pressed={decision === 'source_correction_required'} className={`review-choice ${decision === 'source_correction_required' ? 'active' : ''}`} onClick={() => setDecision('source_correction_required')}>
-              <strong>{isUiEnglish ? 'Source data needs correction' : '源数据需要修正'}</strong><small>{isUiEnglish ? 'Keep SEO blocked until corrected' : '修正前继续阻止 SEO 发布'}</small>
-            </button>
-          </> : <>
-            <button type="button" aria-pressed={decision === 'duplicate_records'} className={`review-choice ${decision === 'duplicate_records' ? 'active' : ''}`} onClick={() => { setDecision('duplicate_records'); if (!canonicalKey && recommendedCanonicalKey) setCanonicalKey(recommendedCanonicalKey); }}>
-              <strong>{isUiEnglish ? 'Confirm duplicate' : '确认是重复记录'}</strong><small>{isUiEnglish ? 'Keep one SEO page and canonicalize the rest' : '保留 1 个 SEO 页面，其余自动 Canonical'}</small>
-            </button>
-            <button type="button" aria-pressed={decision === 'distinct_records'} className={`review-choice ${decision === 'distinct_records' ? 'active' : ''}`} onClick={() => { setDecision('distinct_records'); setCanonicalKey(''); }}>
-              <strong>{isUiEnglish ? 'Keep as distinct records' : '确认不是重复'}</strong><small>{isUiEnglish ? 'Keep both SEO pages independent' : '两个 SEO 页面分别保留'}</small>
-            </button>
-          </>}
-        </div>
-        <div className="review-decision-command-footer">
-          <p>{actionHint}</p>
-          <div className="review-decision-primary-actions">
-            {issueType === 'duplicate_set' ? <button type="button" className="ghost-button compact" onClick={() => onDefer?.()}>{isUiEnglish ? 'Later' : '暂不处理'}</button> : null}
-            <button type="button" className="primary-button compact review-confirm-action" onClick={save} disabled={saving || actionBlocked}>{saving ? t('common.saving') : (isUiEnglish ? 'Confirm & save' : '确认并保存')}</button>
-          </div>
-        </div>
-      </section>
-
-      <section className="review-evidence-section" aria-label={isUiEnglish ? 'Decision evidence' : '判断依据'}>
+      <section className="review-evidence-section review-evidence-first" aria-label={isUiEnglish ? 'Decision evidence' : '判断依据'}>
         <header>
-          <div><small>{isUiEnglish ? 'EVIDENCE' : '判断依据'}</small><strong>{isUiEnglish ? 'Use evidence to verify your decision' : '用证据确认你的判断'}</strong></div>
+          <div><small>{isUiEnglish ? '1 · EVIDENCE' : '1 · 先看判断依据'}</small><strong>{isUiEnglish ? 'Compare the facts before choosing' : '先确认系统发现了什么，再做决定'}</strong></div>
           <span>{isUiEnglish ? 'Read-only evidence' : '证据只读'}</span>
         </header>
         {issueType === 'duplicate_set' ? (
@@ -143,26 +177,65 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
             allowKeepSelection={decision === 'duplicate_records'}
             isUiEnglish={isUiEnglish}
           />
-        ) : (
-          <div className="review-evidence-grid">
-            {categoryMembers.map((item) => <div key={item.category}><b>{item.category}</b>{item.members.map((member) => <small key={member.catalog_key}>{member.name} · {member.catalog_key}</small>)}</div>)}
-          </div>
-        )}
+        ) : <CategoryConflictEvidence group={group} categoryMembers={categoryMembers} isUiEnglish={isUiEnglish} />}
       </section>
 
-      {decision ? <div className="review-outcome-note">{decision === 'duplicate_records'
-        ? (isUiEnglish ? 'After saving: one SEO page remains independent; duplicate rows point to it with Canonical. This is one atomic operation.' : '保存后：只保留一个独立 SEO 页面，其他重复记录自动指向它的 Canonical；整套处理作为一次操作完成。')
-        : (isUiEnglish ? 'After saving: both records remain eligible to become separate SEO pages. Existing source data is unchanged.' : '保存后：两条记录继续作为独立 SEO 页面候选；源数据不做修改。')}</div> : null}
+      <section className="review-decision-command" aria-label={isUiEnglish ? 'Decision actions' : '需要你做的决定'} data-ui-state={saving ? 'loading' : actionBlocked ? 'incomplete' : 'ready'}>
+        <div className="review-decision-command-head">
+          <div>
+            <small>{isUiEnglish ? '2 · CONCLUSION' : '2 · 选择处理结论'}{issueLabel ? ` · ${issueLabel}` : ''}</small>
+            <strong>{isUiEnglish ? 'Choose one conclusion' : '根据上方依据，只选择一个结论'}</strong>
+            {issueMeta || issueDescription ? <p className="review-decision-issue-context">{issueMeta ? <b>{issueMeta}</b> : null}{issueDescription ? <span>{issueDescription}</span> : null}</p> : null}
+          </div>
+          <span className="review-decision-current">{decisionLabel}</span>
+        </div>
+        <div className="review-decision-options" role="radiogroup" aria-label={isUiEnglish ? 'Review decision' : '人工结论'}>
+          {issueType === 'category_conflict' ? <>
+            <label className={`review-choice ${decision === 'accepted_as_is' ? 'active' : ''}`}>
+              <input type="radio" name={`decision-${issueKey}`} checked={decision === 'accepted_as_is'} onChange={() => setDecision('accepted_as_is')} />
+              <span><strong>{isUiEnglish ? 'Confirm categories are valid' : '确认分类有效'}</strong><small>{isUiEnglish ? 'The different categories are intentional; continue SEO.' : '这些分类是有意区分的，继续 SEO。'}</small></span>
+            </label>
+            <label className={`review-choice ${decision === 'source_correction_required' ? 'active' : ''}`}>
+              <input type="radio" name={`decision-${issueKey}`} checked={decision === 'source_correction_required'} onChange={() => setDecision('source_correction_required')} />
+              <span><strong>{isUiEnglish ? 'Mark Source Data for correction' : '标记为源数据待修正'}</strong><small>{isUiEnglish ? 'One or more category assignments are wrong; keep SEO blocked.' : '至少一组分类有误，修正前继续阻止 SEO。'}</small></span>
+            </label>
+          </> : <>
+            <label className={`review-choice ${decision === 'duplicate_records' ? 'active' : ''}`}>
+              <input type="radio" name={`decision-${issueKey}`} checked={decision === 'duplicate_records'} onChange={() => { setDecision('duplicate_records'); if (!canonicalKey && recommendedCanonicalKey) setCanonicalKey(recommendedCanonicalKey); }} />
+              <span><strong>{isUiEnglish ? 'They are duplicate records' : '确认是重复记录'}</strong><small>{isUiEnglish ? 'Keep one SEO page and canonicalize the rest.' : '保留 1 个 SEO 页面，其余建立 Canonical。'}</small></span>
+            </label>
+            <label className={`review-choice ${decision === 'distinct_records' ? 'active' : ''}`}>
+              <input type="radio" name={`decision-${issueKey}`} checked={decision === 'distinct_records'} onChange={() => { setDecision('distinct_records'); setCanonicalKey(''); }} />
+              <span><strong>{isUiEnglish ? 'They are distinct records' : '确认不是重复'}</strong><small>{isUiEnglish ? 'Keep the records as separate SEO pages.' : '多个 SEO 页面分别保留。'}</small></span>
+            </label>
+          </>}
+        </div>
+
+        {outcome ? <section className="review-result-preview" aria-label={isUiEnglish ? 'Result after confirmation' : '确认后结果'}>
+          <small>{isUiEnglish ? '3 · AFTER CONFIRMATION' : '3 · 确认后结果'}</small>
+          <strong>{outcome.title}</strong>
+          <ul>{outcome.lines.map((line) => <li key={line}>{line}</li>)}</ul>
+        </section> : null}
+
+        <div className="review-decision-command-footer">
+          <p>{actionHint}</p>
+          <div className="review-decision-primary-actions">
+            {issueType === 'duplicate_set' ? <button type="button" className="review-defer-action" onClick={() => onDefer?.()}>{isUiEnglish ? 'Decide later' : '稍后再判断'}</button> : null}
+            <button type="button" className="primary-button compact review-confirm-action" onClick={save} disabled={saving || actionBlocked}>{saving ? t('common.saving') : issueType === 'category_conflict' ? (isUiEnglish ? 'Record conclusion' : '记录复核结论') : (isUiEnglish ? 'Confirm result' : '确认处理结果')}</button>
+          </div>
+        </div>
+      </section>
 
       <details className="review-notes-disclosure">
-        <summary><span><strong>{isUiEnglish ? 'Review notes' : '审核备注'}</strong><small>{isUiEnglish ? 'Optional · record the evidence behind the decision' : '可选 · 记录判断依据'}</small></span><em>{isUiEnglish ? 'Open' : '展开'}</em></summary>
+        <summary><span><strong>{isUiEnglish ? 'Review notes' : '审核备注'}</strong><small>{isUiEnglish ? 'Optional · record external evidence or source checks' : '可选 · 记录外部依据或源数据核对结果'}</small></span><em>{isUiEnglish ? 'Open' : '展开'}</em></summary>
         <label>{isUiEnglish ? 'Review notes' : '审核备注'}
-          <textarea rows="2" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder={isUiEnglish ? 'Record the evidence for this decision; source data is not rewritten.' : '记录判断依据；不改写源数据。'} />
+          <textarea rows="2" value={notes} onChange={(event) => setNotes(event.target.value)} placeholder={isUiEnglish ? 'Record any external evidence used for this decision.' : '记录做出这个判断时使用的外部依据。'} />
         </label>
       </details>
       <div className="review-record-status">{row?.reviewed_at ? `${isUiEnglish ? 'Recorded' : '已记录'} · ${new Date(row.reviewed_at).toLocaleString()}` : (isUiEnglish ? 'No human conclusion recorded yet' : '尚未记录人工结论')}</div>
     </div>
   );
+
 }
 
 export default function DataReviewPanel({ group, reviewRows = {}, seoRows = {}, groupSeoRows = {}, locale = 'zh-CN', schemaReady = false, readOnly = false, onSaved, onResolved, onSeoPolicyAligned, onDefer }) {

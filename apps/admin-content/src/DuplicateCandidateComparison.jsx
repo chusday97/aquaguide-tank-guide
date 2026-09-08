@@ -74,8 +74,11 @@ export default function DuplicateCandidateComparison({
           </div>
           <div className="duplicate-last-edited"><span>{isUiEnglish ? 'SEO last edited' : 'SEO 最近编辑'}</span><strong>{formatDuplicateEditedAt(signals.latestEditedAt, isUiEnglish)}</strong></div>
           <div className="duplicate-candidate-actions">
-            <button type="button" className="secondary-button compact" onClick={() => { setPreviewLocale(locale); setPreviewCatalogKey(member.catalog_key); }}>{isUiEnglish ? 'Preview page' : '查看预览'}</button>
-            {allowKeepSelection ? <button type="button" className={`duplicate-keep-action ${selectedAsCanonical ? 'active' : ''}`} onClick={() => onCanonicalChange?.(member.catalog_key)}>{selectedAsCanonical ? (isUiEnglish ? '✓ Keep this page' : '✓ 保留此页面') : (isUiEnglish ? 'Keep this page' : '保留此页面')}</button> : null}
+            <button type="button" className="duplicate-preview-action" onClick={() => { setPreviewLocale(locale); setPreviewCatalogKey(member.catalog_key); }}>{isUiEnglish ? 'Preview candidate' : '查看候选页'}</button>
+            {allowKeepSelection ? <label className={`duplicate-keep-choice ${selectedAsCanonical ? 'active' : ''}`}>
+              <input type="radio" name={`duplicate-keep-${group.group_key}`} checked={selectedAsCanonical} onChange={() => onCanonicalChange?.(member.catalog_key)} />
+              <span>{isUiEnglish ? 'Keep this page' : '保留此页面'}</span>
+            </label> : null}
           </div>
         </section>;
       })}
