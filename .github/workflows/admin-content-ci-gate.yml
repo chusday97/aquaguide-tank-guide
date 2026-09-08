@@ -236,6 +236,8 @@ jobs:
         run: npm run test:admin-content-ui
       - name: Publish Center browser regression
         run: npm run test:publish-center-ui
+      - name: Operations Studio populated work-item browser regression
+        run: npm run test:operations-studio-ui
       - name: Care SEO canonical route browser regression
         run: npm run test:care-seo-route
       - name: Root AquaGuide Species SEO artifact integration
