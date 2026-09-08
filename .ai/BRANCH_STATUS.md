@@ -289,3 +289,9 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Divergence at functional checkpoint: **275 main-only / 204 feature-only**.
 - No merge/rebase/Production/index/live-DB action.
+
+## 2026-09-08 19:26 +08:00 — action hierarchy checkpoint
+- Local functional HEAD before docs: `dde46eef0b577b76fc89ed1c912dbde82a75613a`.
+- Fresh live refs: main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before this checkpoint `94a157a141fc1b1b5377839fb75372ed31a416ca`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Divergence at functional checkpoint: **275 main-only / 206 feature-only**. Do not use stale `origin/main` for reconciliation.
+- Branch reconciliation / PR #144 remains PARKED. No merge/rebase/main/Production action.
