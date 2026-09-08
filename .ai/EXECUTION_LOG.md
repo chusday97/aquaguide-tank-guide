@@ -232,3 +232,4 @@
 2026-09-08 CI tiering follow-up: run 34206110762 still could not locate the 600px navigation by localized label; added stable data-nav-route selectors to primary navigation/settings and updated the history gate to target routes directly.
 2026-09-08 CI tiering follow-up: the route selector was still unavailable in the remote 600px fixture; since desktop navigation is already covered earlier, narrowed that case to direct Aquarium/Settings route entry plus layout/task assertions.
 2026-09-08 CI tiering follow-up: run 34207770734 confirmed the implementation follows the agreed <768px phone breakpoint; replaced the stale 600px desktop-sidebar assertion with phone-shell/full-width assertions.
+2026-09-08 CI tiering follow-up: run 34208600174 passed the 600px phone/task flow; replaced the stale compatibility focus assertion with explicit redirect and calculator visibility checks.

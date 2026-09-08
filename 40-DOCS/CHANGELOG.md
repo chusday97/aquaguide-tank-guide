@@ -513,3 +513,4 @@
 - Added route-based selectors to navigation/settings and aligned the history regression with actual route intent.
 - Narrowed the 600px history fixture to direct route entry while retaining task, layout, and overflow checks.
 - Aligned the 600px history fixture with the `<768px` phone breakpoint contract.
+- Updated compatibility history coverage to assert redirect plus visible calculator instead of incidental focus state.
