@@ -162,6 +162,8 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [overrideEditing, setOverrideEditing] = useState({});
+  const [secondarySeoOpen, setSecondarySeoOpen] = useState(false);
+  const [templateReferenceOpen, setTemplateReferenceOpen] = useState(false);
   const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species, group, reviewRows: dataReviewRows });
   const duplicateSetForSpecies = (group?.duplicate_sets || []).find((set) => set.member_ids.includes(species?.catalog_key));
   const duplicateReviewForSpecies = duplicateSetForSpecies ? dataReviewRows[duplicateSetForSpecies.duplicate_set_key] : null;
@@ -175,6 +177,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     }
     setForm(next);
     setOverrideEditing({});
+    setTemplateReferenceOpen(false);
     onDirtyChange?.(false);
   }, [record, species, locale, resolvedDuplicatePolicy?.indexStrategy, resolvedDuplicatePolicy?.canonicalCatalogKey, onDirtyChange]);
 
@@ -305,6 +308,11 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
     : contentDirty || publishReadinessState === 'blocked' || form.reviewState !== 'approved'
       ? 'warning'
       : 'success';
+  const secondarySeoHasProblem = ['seoTitle', 'metaDescription', 'h1'].some((key) => ['warning', 'error'].includes(fieldStateByKey[key])) || Boolean(indexBlockReason);
+  const secondarySeoInspectorTarget = ['seoTitle', 'metaDescription', 'h1', 'focusKeyword', 'indexStrategy', 'canonicalCatalogKey'].includes(selectedEditorField);
+  useEffect(() => {
+    if (secondarySeoHasProblem || secondarySeoInspectorTarget) setSecondarySeoOpen(true);
+  }, [secondarySeoHasProblem, secondarySeoInspectorTarget]);
   useEffect(() => { onDirtyChange?.(isDirty); }, [isDirty, onDirtyChange]);
 
   if (!species) {
@@ -341,7 +349,14 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const inheritedSourceCount = sourceFields.length - customSourceCount;
   const pageTaskKeys = isEnglishLocale(locale) ? ['localizedName', 'intro', 'imageAlt'] : ['intro', 'imageAlt'];
   const pageAttentionCount = pageTaskKeys.filter((key) => ['warning', 'error'].includes(fieldStateByKey[key])).length;
-  const seoAttentionCount = sourceFields.filter((item) => ['warning', 'error'].includes(fieldStateByKey[item.key]) || item.custom).length;
+  const seoProblemCount = sourceFields.filter((item) => ['warning', 'error'].includes(fieldStateByKey[item.key])).length;
+  const secondarySeoProblemCount = seoProblemCount + (indexBlockReason ? 1 : 0);
+  const secondarySeoState = indexBlockReason || seoSectionState === 'error' ? 'error' : seoSectionState === 'warning' ? 'warning' : 'success';
+  const indexStrategyLabel = form.indexStrategy === 'index'
+    ? (isUiEnglish ? 'Index' : '独立收录')
+    : form.indexStrategy === 'canonical_to_sibling'
+      ? 'Canonical'
+      : (isUiEnglish ? 'Noindex' : '暂不收录');
   const renderInheritedOverrideField = ({ key, label, value, inheritedValue, maxLength, rows }) => {
     const custom = Boolean(value);
     const editing = custom || Boolean(overrideEditing[key]);
@@ -506,9 +521,22 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             <div className="section-heading">
               <div>
                 <h3>{isUiEnglish ? 'Page-specific content' : '当前页面要填写'}</h3>
-                <p>{isUiEnglish ? 'Only content unique to this page belongs here.' : '这里只填写当前物种页面自己的内容；模板已提供的内容无需重复填写。'}</p>
+                <p>
+                  {isUiEnglish ? 'Only content unique to this page belongs here.' : '这里只填写当前物种页面自己的内容；模板已提供的内容无需重复填写。'}
+                  {group?.member_count > 1 ? (
+                    <button type="button" className="section-inline-reference-action" aria-expanded={templateReferenceOpen} onClick={() => setTemplateReferenceOpen((value) => !value)}>
+                      {templateReferenceOpen ? (isUiEnglish ? 'Hide template' : '收起模板') : (isUiEnglish ? 'View template content' : '查看模板内容')}
+                    </button>
+                  ) : null}
+                </p>
               </div>
             </div>
+            {group?.member_count > 1 && templateReferenceOpen ? (
+              <aside className="inline-template-reference" aria-label={isUiEnglish ? 'Inherited Base template content' : '继承的基础模板内容'}>
+                <strong>{isUiEnglish ? 'Inherited template content' : '继承的模板内容'}</strong>
+                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础种简介尚未填写。')}</p>
+              </aside>
+            ) : null}
             {isEnglishLocale(locale) ? (
               <label {...editorFieldProps('localizedName')}>
                 {isUiEnglish ? 'English common name' : '英文常用名'}
@@ -526,81 +554,89 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
               <small className="editor-field-guidance">{isUiEnglish ? 'One short sentence for accessibility and image search.' : '用一句短句描述图片里的物种，用于无障碍和图片搜索。'}</small>
               <input value={form.imageAlt} placeholder={isUiEnglish ? `Example: ${species.name} aquarium fish` : `例如：${species.name} 观赏鱼`} onFocus={() => onInspectorSelect?.('imageAlt')} onChange={(event) => update('imageAlt', event.target.value)} />
             </label>
-            {group?.member_count > 1 ? (
-              <details className="inherited-content-disclosure secondary-reference">
-                <summary>
-                  <span><strong>{isUiEnglish ? 'Template content' : '基础模板内容'}</strong><small>{isUiEnglish ? 'Already inherited; no need to repeat it here' : '当前页面已自动继承，不需要重复填写'}</small></span>
-                  <em>{isUiEnglish ? 'View' : '查看'}</em>
-                </summary>
-                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础种简介尚未填写。')}</p>
-              </details>
-            ) : null}
           </div>
 
-          <details className={`editor-task-disclosure search-task state-${seoSectionState}`} open={seoAttentionCount > 0 || ['seoTitle', 'metaDescription', 'h1'].includes(selectedEditorField)}>
+          <details
+            className={`editor-secondary-seo-disclosure state-${secondarySeoState}`}
+            open={secondarySeoOpen}
+            onToggle={(event) => setSecondarySeoOpen(event.currentTarget.open)}
+          >
             <summary>
               <div>
-                <strong>{isUiEnglish ? 'Search appearance' : '搜索展示'}</strong>
-                <small>{seoAttentionCount > 0
-                  ? (isUiEnglish ? `${seoAttentionCount} item${seoAttentionCount === 1 ? '' : 's'} need attention` : `${seoAttentionCount} 项需要处理`)
-                  : (isUiEnglish ? `${inheritedSourceCount} fields use the Base template` : `${inheritedSourceCount} 项沿用基础模板，无需填写`)}</small>
+                <strong>{isUiEnglish ? 'More SEO settings' : '更多 SEO 设置'}</strong>
+                <small>{secondarySeoProblemCount > 0
+                  ? (isUiEnglish ? `${secondarySeoProblemCount} item${secondarySeoProblemCount === 1 ? '' : 's'} need attention` : `${secondarySeoProblemCount} 项需要处理`)
+                  : customSourceCount > 0
+                    ? (isUiEnglish ? `${customSourceCount} page override${customSourceCount === 1 ? '' : 's'} · ${inheritedSourceCount} inherited` : `${customSourceCount} 项本页专用 · ${inheritedSourceCount} 项沿用模板`)
+                    : (isUiEnglish ? `${inheritedSourceCount} search fields inherited · ${indexStrategyLabel}` : `${inheritedSourceCount} 项搜索展示沿用模板 · ${indexStrategyLabel}`)}</small>
               </div>
-              <span>{seoAttentionCount > 0 ? stateLabel(seoSectionState) : (isUiEnglish ? 'Optional override' : '需要时再单独修改')}</span>
+              <span>{secondarySeoProblemCount > 0 ? stateLabel(secondarySeoState) : (secondarySeoOpen ? (isUiEnglish ? 'Hide' : '收起') : (isUiEnglish ? 'Open when needed' : '需要时展开'))}</span>
             </summary>
-            <div className="editor-task-disclosure-body">
-              {renderInheritedOverrideField({
-                key: 'seoTitle', label: t('editor.metaTitle'), value: form.seoTitle, inheritedValue: resolvedSeo.inherited.seoTitle, maxLength: 120,
-              })}
-              {renderInheritedOverrideField({
-                key: 'metaDescription', label: t('editor.metaDescription'), value: form.metaDescription, inheritedValue: resolvedSeo.inherited.metaDescription, maxLength: 320, rows: 3,
-              })}
-              {renderInheritedOverrideField({
-                key: 'h1', label: t('editor.h1'), value: form.h1, inheritedValue: resolvedSeo.inherited.h1,
-              })}
-            </div>
-          </details>
+            <div className="editor-secondary-seo-body">
+              <section className={`secondary-seo-section search-settings state-${seoSectionState}`}>
+                <header>
+                  <div>
+                    <strong>{isUiEnglish ? 'Search appearance' : '搜索展示'}</strong>
+                    <small>{isUiEnglish ? 'Title, description and H1 inherit from the Base template unless overridden.' : '标题、描述与 H1 默认沿用基础模板，只在确有差异时单独修改。'}</small>
+                  </div>
+                  <em>{customSourceCount > 0 ? (isUiEnglish ? `${customSourceCount} override${customSourceCount === 1 ? '' : 's'}` : `${customSourceCount} 项本页专用`) : (isUiEnglish ? 'Inherited' : '沿用模板')}</em>
+                </header>
+                <div className="secondary-seo-fields">
+                  {renderInheritedOverrideField({
+                    key: 'seoTitle', label: t('editor.metaTitle'), value: form.seoTitle, inheritedValue: resolvedSeo.inherited.seoTitle, maxLength: 120,
+                  })}
+                  {renderInheritedOverrideField({
+                    key: 'metaDescription', label: t('editor.metaDescription'), value: form.metaDescription, inheritedValue: resolvedSeo.inherited.metaDescription, maxLength: 320, rows: 3,
+                  })}
+                  {renderInheritedOverrideField({
+                    key: 'h1', label: t('editor.h1'), value: form.h1, inheritedValue: resolvedSeo.inherited.h1,
+                  })}
+                </div>
+              </section>
 
-          <details className={`advanced-seo-disclosure validation-section state-${policySectionState}`} data-validation-state={policySectionState} open={Boolean(indexBlockReason)}>
-            <summary>
-              <span>
-                <strong>{isUiEnglish ? 'Advanced SEO' : '高级 SEO'}</strong>
-                <small>{isUiEnglish ? 'Keyword, indexing, canonical and URL settings' : '关键词、收录策略、Canonical 与 URL'}</small>
-              </span>
-              <div className="advanced-seo-summary-state">{policySectionState !== 'success' ? <span className={`validation-state-chip tone-${policySectionState}`}>{stateLabel(policySectionState)}</span> : null}<em>{form.indexStrategy === 'index' ? (isUiEnglish ? 'Index' : '独立收录') : form.indexStrategy === 'canonical_to_sibling' ? 'Canonical' : 'Noindex'}</em></div>
-            </summary>
-            <div className="advanced-seo-body">
-              <label>
-                {t('editor.focusKeyword')}
-                <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
-              </label>
-              <label {...editorFieldProps('indexStrategy')}>{t('editor.indexStrategy')}
-                <select value={form.indexStrategy} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('indexStrategy', event.target.value)}>
-                  {INDEX_STRATEGIES.map((item) => (
-                    <option
-                      key={item.value}
-                      value={item.value}
-                      disabled={(group?.category_conflict && item.value !== 'noindex') || (duplicateReviewOpen && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
-                    >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
-                  ))}
-                </select>
-                {resolvedDuplicatePolicy ? <small className="inherit-note">{isUiEnglish ? 'Locked by the resolved duplicate-review decision.' : '已由人工重复复核结论锁定；如需改变，请回到“数据问题”重新复核。'}</small> : null}
-              </label>
-              {form.indexStrategy === 'canonical_to_sibling' ? (
-                <label>{t('editor.canonicalTarget')}
-                  <select value={form.canonicalCatalogKey} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
-                    <option value="">{isUiEnglish ? 'Select the canonical page in this Base group' : '请选择同组主页面'}</option>
-                    {(group?.members || []).filter((item) => item.catalog_key !== species.catalog_key).map((item) => (
-                      <option key={item.catalog_key} value={item.catalog_key}>{item.name} · {item.catalog_key}</option>
-                    ))}
-                  </select>
-                </label>
-              ) : null}
-              <div className="route-inline-summary">
-                <span>{t('editor.publicUrl')}</span><code>{routeMeta.selfPath}</code>
-                <span>{t('editor.canonical')}</span><code>{routeMeta.canonicalPath}</code>
-              </div>
-              {indexBlockReason ? <div className="advanced-seo-warning">{indexBlockReason}</div> : null}
-              <small className="inherit-note">{isUiEnglish ? 'The static Species generator is verified, but Production publishing remains locked.' : '静态物种页面生成器已验证；正式发布仍然锁定。'}</small>
+              <section className={`secondary-seo-section policy-settings state-${policySectionState}`} data-validation-state={policySectionState}>
+                <header>
+                  <div>
+                    <strong>{isUiEnglish ? 'Indexing & canonical' : '收录与 Canonical'}</strong>
+                    <small>{isUiEnglish ? 'Only change these when the page needs a different indexing policy.' : '只有页面需要不同收录策略时才修改。'}</small>
+                  </div>
+                  <em>{indexStrategyLabel}</em>
+                </header>
+                <div className="secondary-seo-fields policy-fields">
+                  <label>
+                    {t('editor.focusKeyword')}
+                    <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
+                  </label>
+                  <label {...editorFieldProps('indexStrategy')}>{t('editor.indexStrategy')}
+                    <select value={form.indexStrategy} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('indexStrategy', event.target.value)}>
+                      {INDEX_STRATEGIES.map((item) => (
+                        <option
+                          key={item.value}
+                          value={item.value}
+                          disabled={(group?.category_conflict && item.value !== 'noindex') || (duplicateReviewOpen && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
+                        >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
+                      ))}
+                    </select>
+                    {resolvedDuplicatePolicy ? <small className="inherit-note">{isUiEnglish ? 'Locked by the resolved duplicate-review decision.' : '已由人工重复复核结论锁定；如需改变，请回到“数据问题”重新复核。'}</small> : null}
+                  </label>
+                  {form.indexStrategy === 'canonical_to_sibling' ? (
+                    <label>{t('editor.canonicalTarget')}
+                      <select value={form.canonicalCatalogKey} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
+                        <option value="">{isUiEnglish ? 'Select the canonical page in this Base group' : '请选择同组主页面'}</option>
+                        {(group?.members || []).filter((item) => item.catalog_key !== species.catalog_key).map((item) => (
+                          <option key={item.catalog_key} value={item.catalog_key}>{item.name} · {item.catalog_key}</option>
+                        ))}
+                      </select>
+                    </label>
+                  ) : null}
+                  <div className="route-inline-summary">
+                    <span>{t('editor.publicUrl')}</span><code>{routeMeta.selfPath}</code>
+                    <span>{t('editor.canonical')}</span><code>{routeMeta.canonicalPath}</code>
+                  </div>
+                  {indexBlockReason ? <div className="advanced-seo-warning">{indexBlockReason}</div> : null}
+                  <small className="inherit-note">{isUiEnglish ? 'The static Species generator is verified, but Production publishing remains locked.' : '静态物种页面生成器已验证；正式发布仍然锁定。'}</small>
+                </div>
+              </section>
             </div>
           </details>
         </div>
@@ -904,6 +940,11 @@ export default function App() {
   const publishReadiness = calculatedReadiness && (!schemaReady || !groupSchemaReady || !historySchemaReady || !dataReviewSchemaReady)
     ? { state: 'blocked', blockers: [isRepoBackend ? 'Repo Content Store 尚未完整就绪；Publish Readiness fail closed。' : 'Admin schema 001–008 尚未完整就绪；Publish Readiness fail closed。'] }
     : calculatedReadiness;
+  const publishReadinessLabel = ({
+    blocked: appLocale === 'en' ? 'Blocked' : '未就绪',
+    ready_for_review: appLocale === 'en' ? 'Ready for review' : '待审核',
+    publish_ready: appLocale === 'en' ? 'Preview ready' : '可预览',
+  })[publishReadiness?.state] || (appLocale === 'en' ? 'Unknown' : '状态未知');
   const localeSeoRows = useMemo(() => Object.fromEntries(
     Object.values(seoRows).filter((row) => row.locale === contentLocale).map((row) => [row.catalog_key, row]),
   ), [seoRows, contentLocale]);
@@ -1351,7 +1392,7 @@ export default function App() {
 
           <details className="advanced-tools-disclosure">
             <summary>
-              <span><strong>{appLocale === 'en' ? 'More tools' : '更多工具'}</strong><small>{appLocale === 'en' ? 'Batch, history, translation and diagnostics' : '批量、历史、翻译与诊断工具'}</small></span>
+              <span><strong>{appLocale === 'en' ? 'Utility tools' : '辅助工具'}</strong><small>{appLocale === 'en' ? 'Batch, history, translation and diagnostics' : '批量、历史、翻译与诊断'}</small></span>
               <em>{appLocale === 'en' ? 'Open' : '展开'}</em>
             </summary>
             <div className="editor-secondary-tools editor-tool-launchers">
@@ -1363,7 +1404,7 @@ export default function App() {
             ) : null}
             <button type="button" className={`editor-tool-row readiness ${activeTool === 'readiness' ? 'active' : ''}`} onClick={() => setActiveTool('readiness')}>
               <span><strong>{t('editor.publishCheck')}</strong><small>{appLocale === 'en' ? 'Controlled Preview eligibility' : '受控预览资格检查'}</small></span>
-              <em className={publishReadiness?.state || 'blocked'}>{publishReadiness?.state || 'blocked'}</em>
+              <em className={publishReadiness?.state || 'blocked'}>{publishReadinessLabel}</em>
             </button>
             {contentLocale === 'en' ? (
               <button type="button" className={`editor-tool-row ${activeTool === 'translation' ? 'active' : ''}`} onClick={() => setActiveTool('translation')}>
@@ -1378,9 +1419,11 @@ export default function App() {
             <button type="button" className={`editor-tool-row ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
               <span><strong>{appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录'}</strong><small>{appLocale === 'en' ? `${pendingDuplicateReviewCount} duplicate groups waiting` : `${pendingDuplicateReviewCount} 组重复候选待处理`}</small></span><em>{pendingDuplicateReviewCount}</em>
             </button>
-            <button type="button" className={`editor-tool-row ${activeTool === 'bulkEditorial' ? 'active' : ''}`} onClick={() => setActiveTool('bulkEditorial')}>
-              <span><strong>{appLocale === 'en' ? 'Bulk content review' : '批量内容审核'}</strong><small>{appLocale === 'en' ? 'Submit / approve / return multiple completed pages' : '批量提交 / 批准 / 退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale].ready_for_review}</em>
-            </button>
+            {workflowOverview.locales[contentLocale].ready_for_review > 0 ? (
+              <button type="button" className={`editor-tool-row ${activeTool === 'bulkEditorial' ? 'active' : ''}`} onClick={() => setActiveTool('bulkEditorial')}>
+                <span><strong>{appLocale === 'en' ? 'Bulk content review' : '批量内容审核'}</strong><small>{appLocale === 'en' ? 'Submit / approve / return multiple completed pages' : '批量提交 / 批准 / 退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale].ready_for_review}</em>
+              </button>
+            ) : null}
             <button type="button" className={`editor-tool-row ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
               <span><strong>{appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入'}</strong><small>{appLocale === 'en' ? 'Download template → fill in Excel / Numbers → upload' : '下载模板 → Excel / Numbers 回填 → 上传校验'}</small></span><b>›</b>
             </button>

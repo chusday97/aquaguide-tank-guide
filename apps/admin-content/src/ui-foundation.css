@@ -116,8 +116,7 @@
 .admin-shell .editor-task-summary { min-width: 150px; }
 .admin-shell .editor-task-summary strong { font-size: var(--ui-text-meta); }
 .admin-shell .editor-task-summary span { font-size: var(--ui-text-micro); }
-.admin-shell .section-heading h3,
-.admin-shell .editor-task-disclosure > summary strong { font-size: var(--ui-text-section); }
+.admin-shell .section-heading h3 { font-size: var(--ui-text-section); }
 .admin-shell .editor-field-question { font-size: var(--ui-text-body); line-height: 1.35; }
 .admin-shell .editor-field-guidance { margin: 3px 0 6px; font-size: var(--ui-text-meta) !important; line-height: 1.4 !important; }
 .admin-shell .inspector-editor-field { font-size: var(--ui-text-body); }
@@ -126,15 +125,6 @@
 .admin-shell .section-card label + label { margin-top: var(--ui-space-field); }
 
 /* Progressive disclosure stays compact, but never drops below readable metadata size. */
-.admin-shell .editor-task-disclosure { margin: 4px 0 22px; }
-.admin-shell .editor-task-disclosure > summary { min-height: 54px; padding: 9px 0; }
-.admin-shell .editor-task-disclosure > summary small { font-size: var(--ui-text-micro); }
-.admin-shell .editor-task-disclosure > summary > span { font-size: var(--ui-text-micro); }
-.admin-shell .editor-task-disclosure-body { gap: 18px; padding: 18px 0 22px; }
-.admin-shell .inherited-content-disclosure.secondary-reference > summary { min-height: 44px; padding: 8px 0; }
-.admin-shell .inherited-content-disclosure.secondary-reference > summary strong { font-size: var(--ui-text-meta) !important; }
-.admin-shell .inherited-content-disclosure.secondary-reference > summary small,
-.admin-shell .inherited-content-disclosure.secondary-reference > summary em { font-size: var(--ui-text-micro) !important; }
 .admin-shell .inheritance-field-heading > span { font-size: var(--ui-text-body); }
 .admin-shell .inheritance-field-source small,
 .admin-shell .inheritance-field-source .inline-source-action { font-size: var(--ui-text-micro) !important; }
@@ -208,8 +198,6 @@
   .admin-shell .editor-panel .section-heading { margin-bottom: 12px; padding-bottom: 10px; }
   .admin-shell .section-card label + label { margin-top: 18px; }
   .admin-shell .inspector-editor-field textarea { min-height: 76px; height: 76px; }
-  .admin-shell .inherited-content-disclosure.secondary-reference > summary { min-height: 40px; padding: 6px 0; }
-  .admin-shell .editor-task-disclosure > summary { min-height: 48px; padding: 7px 0; }
 }
 
 /* Final hierarchy guards for selectors that legacy mobile density rules made more specific. */
@@ -655,4 +643,130 @@
 .admin-shell .variant-row.active .variant-main-button strong {
   color: var(--cms-ink) !important;
   font-weight: 700 !important;
+}
+
+/* Secondary SEO: one disclosure for Search Appearance + indexing policy. */
+.admin-shell .editor-secondary-seo-disclosure {
+  margin: 4px 0 18px;
+  border-top: 1px solid var(--cms-border);
+  border-bottom: 1px solid var(--cms-border);
+}
+.admin-shell .editor-secondary-seo-disclosure > summary {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  list-style: none;
+  cursor: pointer;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary::-webkit-details-marker { display: none; }
+.admin-shell .editor-secondary-seo-disclosure > summary > div { min-width: 0; display: grid; gap: 2px; }
+.admin-shell .editor-secondary-seo-disclosure > summary strong { font-size: var(--ui-text-section); }
+.admin-shell .editor-secondary-seo-disclosure > summary small { color: var(--cms-muted); font-size: var(--ui-text-micro); }
+.admin-shell .editor-secondary-seo-disclosure > summary > span { flex: 0 0 auto; color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 650; }
+.admin-shell .editor-secondary-seo-disclosure.state-warning > summary > span { color: var(--state-warning); }
+.admin-shell .editor-secondary-seo-disclosure.state-error > summary > span { color: var(--state-error); }
+.admin-shell .editor-secondary-seo-disclosure[open] > summary { border-bottom: 1px solid var(--cms-border); }
+.admin-shell .editor-secondary-seo-body { display: grid; gap: 0; }
+.admin-shell .secondary-seo-section { padding: 16px 0 18px; }
+.admin-shell .secondary-seo-section + .secondary-seo-section { border-top: 1px solid var(--cms-border); }
+.admin-shell .secondary-seo-section > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.admin-shell .secondary-seo-section > header > div { min-width: 0; display: grid; gap: 3px; }
+.admin-shell .secondary-seo-section > header strong { font-size: var(--ui-text-body); }
+.admin-shell .secondary-seo-section > header small { color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.4; }
+.admin-shell .secondary-seo-section > header em {
+  flex: 0 0 auto;
+  color: var(--cms-muted);
+  font-size: var(--ui-text-micro);
+  font-style: normal;
+  font-weight: 650;
+}
+.admin-shell .secondary-seo-fields { display: grid; gap: 18px; }
+.admin-shell .secondary-seo-fields.policy-fields { gap: 16px; }
+@media (max-width: 760px) {
+  .admin-shell .editor-secondary-seo-disclosure { margin-bottom: 12px; }
+  .admin-shell .editor-secondary-seo-disclosure > summary {
+    min-height: 48px;
+    gap: 10px;
+    padding: 7px 0;
+  }
+  .admin-shell .editor-secondary-seo-disclosure > summary strong { font-size: var(--ui-text-body); }
+  .admin-shell .editor-secondary-seo-disclosure > summary small,
+  .admin-shell .editor-secondary-seo-disclosure > summary > span { font-size: 10px; }
+  .admin-shell .secondary-seo-section { padding: 14px 0 16px; }
+  .admin-shell .secondary-seo-section > header { gap: 10px; margin-bottom: 12px; }
+  .admin-shell .secondary-seo-section > header small,
+  .admin-shell .secondary-seo-section > header em { font-size: 10px; }
+  .admin-shell .secondary-seo-fields { gap: 14px; }
+}
+
+/* Template reference belongs to the current task helper, not a separate hierarchy row. */
+.admin-shell .section-heading p { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.admin-shell .section-inline-reference-action {
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--cms-ink);
+  font-size: var(--ui-text-micro);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.admin-shell .inline-template-reference {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-left: 2px solid var(--cms-border-strong);
+  background: var(--cms-panel);
+}
+.admin-shell .inline-template-reference strong { font-size: var(--ui-text-meta); }
+.admin-shell .inline-template-reference p { margin: 4px 0 0; color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.45; }
+
+/* Utility tools are a footer affordance, not a third editor card. */
+.admin-shell .advanced-tools-disclosure {
+  max-width: var(--ui-editor-width);
+  margin: 8px auto 22px;
+  border: 0 !important;
+  border-top: 1px solid var(--cms-border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible;
+}
+.admin-shell .advanced-tools-disclosure > summary {
+  min-height: 42px;
+  padding: 7px 0;
+  background: transparent !important;
+}
+.admin-shell .advanced-tools-disclosure > summary strong {
+  color: var(--cms-ink) !important;
+  font-size: var(--ui-text-meta) !important;
+  font-weight: 650;
+}
+.admin-shell .advanced-tools-disclosure > summary small,
+.admin-shell .advanced-tools-disclosure > summary em {
+  color: var(--cms-muted) !important;
+  font-size: var(--ui-text-micro) !important;
+}
+.admin-shell .advanced-tools-disclosure[open] > summary {
+  border-bottom: 1px solid var(--cms-border) !important;
+  background: transparent !important;
+}
+.admin-shell .advanced-tools-disclosure .editor-secondary-tools {
+  padding: 12px 0 14px;
+}
+@media (max-width: 760px) {
+  .admin-shell .advanced-tools-disclosure {
+    max-width: none;
+    margin: 6px 20px 18px;
+  }
+  .admin-shell .advanced-tools-disclosure > summary { min-height: 40px; }
 }
