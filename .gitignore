@@ -15,3 +15,4 @@ evaluation/reports/*.md
 !evaluation/reports/.gitkeep
 .vercel
 .artifacts/readiness/
+artifacts/visual-layout/*.png

@@ -8157,7 +8157,8 @@ export default function AquariumManager() {
         onToggleWishlist={(fishId) => toggleWishlist(fishId)}
         onGoCalculator={() => {
           closeAquariumSpeciesDetail(false);
-          navigateToRoute(taskRoutes.encyclopedia.compatibility);
+          const fish = selectedAqFish?.fish || selectedWishlistFish;
+          navigateToRoute(taskRoutes.compatibility.with({ speciesIds: fish ? [fish.id] : undefined, source: 'aquarium' }));
         }}
         onOpenTankSettings={(panel) => {
           closeAquariumSpeciesDetail(false);

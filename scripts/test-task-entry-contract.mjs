@@ -30,7 +30,7 @@ for (const required of [
 }
 
 assert.ok(onboarding.includes("taskRoutes.aquarium.setup('onboarding')"), 'onboarding 的鱼缸设置必须进入真实 setup task');
-assert.ok(onboarding.includes("taskRoutes.encyclopedia.compatibilityWith('onboarding')"), 'onboarding 的混养任务必须直接进入 compatibility mode');
+assert.ok(onboarding.includes("taskRoutes.compatibility.with({ source: 'onboarding' })"), 'onboarding 的混养任务必须直接进入独立 compatibility page');
 assert.ok(onboarding.includes("taskRoutes.aquarium.dailyCheckFrom('onboarding')"), 'onboarding 的每日检查必须直达巡检 task');
 assert.equal(onboarding.includes('action=settings&panel=setup'), false, '禁止把不存在的 action=settings 当任务入口');
 
@@ -40,7 +40,7 @@ assert.equal(aquarium.includes("onBrowseCare={() => navigateToRoute('/care')}"),
 
 assert.ok(/\/encyclopedia\?[^'`\n]*species=/.test(search), '搜索物种结果必须携带 species 定位信息');
 assert.ok(/\/care\?topic=/.test(search), '搜索养护结果必须携带 topic 定位信息');
-assert.ok(identify.includes('taskRoutes.encyclopedia.compatibility'), '识别后的混养入口必须进入 compatibility task');
+assert.ok(identify.includes('taskRoutes.compatibility.with'), '识别后的混养入口必须进入 compatibility task');
 assert.ok(identify.includes("taskRoutes.aquarium.create('identify')"), '识别缺少鱼缸时必须直达建缸任务，而不是落鱼缸首页');
 assert.ok(care.includes("location.hash === '#care-recommendations'"), '养护页必须消费推荐区 deep link');
 assert.ok(care.includes("location.hash === '#care-search'"), '养护页必须消费搜索/检查区 deep link');

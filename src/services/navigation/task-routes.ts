@@ -22,6 +22,15 @@ const encyclopediaCompatibilityWith = (options: { source?: string; speciesId?: s
   return `/encyclopedia?${query.toString()}`;
 };
 
+const compatibilityWith = (options: { source?: string; speciesIds?: string[]; aquariumId?: string } = {}) => {
+  const query = new URLSearchParams();
+  if (options.source) query.set('source', options.source);
+  if (options.aquariumId) query.set('tank', options.aquariumId);
+  if (options.speciesIds?.length) query.set('species', options.speciesIds.join(','));
+  const suffix = query.toString();
+  return suffix ? `/compatibility?${suffix}` : '/compatibility';
+};
+
 export const taskRoutes = {
   aquarium: {
     home: '/aquarium',
@@ -66,6 +75,10 @@ export const taskRoutes = {
     browse: '/encyclopedia?mode=browse',
     browseWith: (options: { source?: string; difficulty?: string } = {}) => encyclopediaBrowseWith(options),
     species: (speciesId: string, source?: string) => encyclopediaBrowseWith({ speciesId, source }),
+  },
+  compatibility: {
+    home: '/compatibility',
+    with: compatibilityWith,
   },
   care: {
     home: '/care',

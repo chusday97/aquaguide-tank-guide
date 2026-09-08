@@ -64,10 +64,12 @@
 - `src/pages/Aquarium.tsx`：我的鱼缸。
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
 - `src/pages/Identify.tsx`：拍照识别候选、手动兜底、物种确认、动态追问与可视化风险结果。
+- `src/pages/Compatibility.tsx`：独立混养计算任务页；接收来源物种、当前鱼缸和返回上下文，不承载图鉴详情视觉。
 - `src/pages/Search.tsx`：物种与养护指南的双语统一搜索，候选先确认具体物种再打开资料。
 - `src/components/search/SearchAutocomplete.tsx`：共享可访问搜索联想、键盘选择和已选物种摘要。
 - `src/services/search/search-suggestions.service.ts`：确定性物种优先排序、养护匹配与受控相关词。
 - `src/services/navigation/task-routes.ts`：添加生物、巡检、换水、缸内物种、混养与设置的正式任务地址契约。
+- `src/services/navigation/ui-action-contracts.ts`：用户可见动作的类型、目标和返回策略登记，供页面与回归测试共同校验。
 - `src/services/aquarium/aquarium-setup.service.ts`：鱼缸未知字段规范化、空白鱼缸草稿和 `empty / incomplete / usable / complete` 资料状态派生。
 - `src/services/aquarium/species-addition-policy.ts`：现实记录与未来规划在混养四态下的独立产品策略。
 - `src/services/aquarium/livestock-recording.service.ts`：现实生物先保存、后评估及批量部分失败保留的统一服务。

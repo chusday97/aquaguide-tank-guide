@@ -75,7 +75,7 @@ try {
   const setupAction = noTankDialog.getByRole('button', { name: 'Go to Tank Settings', exact: true });
   assert.equal(await setupAction.count(), 1, 'no-tank detail must expose exactly one primary action');
   await noTankDialog.getByRole('button', { name: /Compatibility/ }).click();
-  await noTankDialog.locator('.visual-result-card[data-visual-result-status="insufficient_data"]').waitFor();
+  assert.equal(await noTankDialog.getByText('暂未开放这组混养建议', { exact: true }).count(), 1, 'no-tank detail must show the safe unavailable state instead of a fabricated verdict');
   await setupAction.click();
   await noTank.page.waitForURL(/\/aquarium\?action=create$/);
   await noTank.context.close();
@@ -85,10 +85,9 @@ try {
     const current = await newSeededPage({ locale, state: createState({ withTank: true, owned: false }), phone: locale === 'en' });
     const dialog = await openWishlistDetail(current.page);
     assert.equal(await dialog.getAttribute('data-surface'), locale === 'en' ? 'bottom-sheet' : 'detail-rail', 'detail surface must follow the viewport contract');
-    // The candidate tank is intentionally empty. Empty tanks must not invent a
-    // compatibility result or offer a direct stocking action; setup is the
-    // only safe primary action until real tank facts exist.
-    const primaryLabel = locale === 'en' ? 'Complete Tank Setup' : '完善鱼缸设置';
+    // A configured but empty tank may safely plan the first addition. A tank
+    // that does not exist still uses the setup action verified above.
+    const primaryLabel = locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸';
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
     assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
     if (locale === 'en') {
@@ -133,8 +132,10 @@ try {
   const stateCases = [
     {
       name: 'caution',
-      status: 'caution',
-      action: 'Check Risks & Confirm Add',
+      // The current rules classify a temperature mismatch as a blocking
+      // recommendation, so the rendered presentation is not_recommended.
+      status: 'not_recommended',
+      action: 'View current tank risks',
       state: {
         ...baseConfiguredState,
         aquariums: [{
@@ -153,8 +154,7 @@ try {
     {
       name: 'not recommended',
       status: 'not_recommended',
-      action: 'View Risks & Alternatives',
-      expectedUrl: /\/encyclopedia\?mode=compatibility/,
+      action: 'View current tank risks',
       state: {
         ...baseConfiguredState,
         aquariums: [{ ...baseConfiguredState.aquariums[0], waterType: 'Saltwater' }],
@@ -202,13 +202,15 @@ try {
       await temperatureMetric.click();
       await current.page.waitForURL(/\/aquarium#settings-parameters$/);
     }
-    if (testCase.expectedUrl) {
+    if (testCase.name === 'not recommended') {
       await dialog.getByRole('button', { name: /^Compatibility/ }).click();
       assert.equal(await dialog.getByRole('button', { name: 'Compatibility Calculator', exact: true }).count(), 0, 'risk detail must not duplicate the footer route inside compatibility evidence');
       assert.equal(await dialog.getByRole('button', { name: /Confirm Add/, exact: false }).count(), 0, 'not-recommended detail must not imply that adding can be confirmed');
       await action.click();
-      await current.page.waitForURL(testCase.expectedUrl);
-      assert.equal(await current.page.getByRole('button', { name: 'Add to Current Tank', exact: true }).count(), 0, 'not-recommended destination must not expose a direct add action');
+      assert.equal(await current.page.url().includes('/compatibility'), false, 'view risk must stay in the species detail');
+      assert.equal(await dialog.locator('[data-disclosure-purpose="secondary_evidence"]').count() > 0, true, 'risk evidence must remain visible in place');
+      await dialog.getByRole('button', { name: /打开混养计算器|Compatibility Calculator/ }).click();
+      await current.page.waitForURL(/\/compatibility/);
     }
     await current.context.close();
   }

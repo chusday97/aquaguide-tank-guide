@@ -1,5 +1,15 @@
 # AquaGuide Handoff — Latest
 
+## 2026-09-08 UI 分支收敛基础步骤（当前）
+
+- 当前分支：`codex/ui-action-contract-v1`，基于 `origin/main@64fa58a1`，只包含动作语义与独立混养路由基础；工作树除生成目录 `artifacts/` 外无计划外修改。
+- 历史 `codex/ui-atlas-care-v1@4113050e` 领先70个提交，已冻结为只读视觉参考；不从该分支整合页面、CSS或App Shell。
+- 已实现：物种风险原位展开、独立 `/compatibility` 页面、旧混养地址重定向、物种来源上下文参数、稳定 `data-action-id` 和动作契约测试。
+- 已验证：路由/动作契约、引导路径、任务入口、Compatibility、435组合矩阵、API类型、lint、production build；授权 Chromium 已验证风险原位展开、独立混养入口、旧地址重定向、物种详情状态、任务入口和浏览模式筛选。
+- 本轮只修正回归测试契约，没有修改 Domain、Catalog、Supabase 或页面视觉 Owner；提交 `9b633382` 现在按当前“规划想养的生物”、空缸可加入当前鱼缸、温度冲突为 `not_recommended`、互动默认/传统 browse 显式 URL 等真实产品行为断言。
+- 随后发现远端 GP-002 仍假设旧的 `compatibility-checkout-drawer`；已将风险详情补回明确的“混养计算”动作，并让 GP-002 先验证风险原位展开、再进入独立 `/compatibility`。本地 GP-002、lint 和 build 已通过，待提交后重新推送触发最终 PR 检查。
+- 下一步：独立审查本基础分支后，按序创建 Aquarium、Encyclopedia/Care、Collection 和工具页短分支；不推送、不合并、不执行生产操作，直到对应门禁与用户验收完成。
+
 ## 2026-08-31 数据短分支本地门禁复验（当前）
 
 - 当前分支：`codex/catalog-cohort-30-v1`；当前 HEAD：`8bfef23cd667b7aec4ef3028d0ca61cf3771abd9`；工作树干净；分支包含 `origin/main@016dbca5`。

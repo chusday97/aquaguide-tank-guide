@@ -1,5 +1,15 @@
 # AI Changelog
 
+## 2026-09-08 — Action foundation verification
+
+### Fixed
+
+- Updated browser regression contracts to reflect the current explicit browse mode, planning task wording, configured-empty tank action, and fail-safe species-detail status presentation.
+
+### Verified
+
+- Authorized browser and static gates pass for action routes, species details, Compatibility and the 435-pair deterministic launch matrix. No product behavior or public contract was changed.
+
 ## 2026-08-28 — Vercel deferred, local convergence completed
 
 ## 2026-08-30 — Readiness evidence center
