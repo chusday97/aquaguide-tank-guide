@@ -16,6 +16,7 @@
 - PR #145 merged normally as `d3c70dee`; `release/production` remains frozen.
 - Created `codex/ci-tiering-v1` from the new main. Added `ci-lite.yml`; gated Product Golden Path on critical/merge-ready labels, manual dispatch, or main pushes, with full history and self-contained Preview build.
 - Independent CI review found duplicate ordinary-PR Foundation work and no real visual-layout capture. Removed the PR trigger from `main-convergence`, added `verify-visual-layout.mjs`, screenshot artifact upload and explicit history interaction checks; local YAML/lint/visual smoke pass.
+- First merge-ready Actions run correctly caught stale hardcoded preview defaults in existing visual scripts; bound the heavy workflow to its own 4173 Preview and current branch/SHA in `2949f4ee`.
 
 ## 2026-08-30 — Readiness candidate synchronized
 

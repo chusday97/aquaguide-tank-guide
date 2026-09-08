@@ -15,6 +15,7 @@
 - [x] 从新 `main` 创建 `codex/ci-tiering-v1`，新增 CI Lite：每次提交只跑完整历史静态/契约检查和 production build，不安装 Chromium。
 - [x] Product Golden Path 改为在 `critical`、`merge-ready`、手动触发或 `main` 合并推送时运行；关键 job 使用 `fetch-depth: 0`、自建 build、Preview 和完整浏览器检查。
 - [x] 删除普通 PR 上 `main-convergence` 与 CI Lite 的重复触发；补入真实 `test:visual-layout` 截图/边界 smoke、Visual evidence artifact 和 history interaction regression。
+- [x] 首次 merge-ready 运行暴露历史脚本的 `localhost:3000` 默认值，已统一传入隔离 Preview URL、分支和 SHA（`2949f4ee`）。
 - [ ] CI 分层分支尚未推送；需先通过 YAML/本地门禁，再创建短 PR并取得一次真实 Actions 运行证据。
 
 ## 当前任务目标
