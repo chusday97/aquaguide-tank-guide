@@ -104,3 +104,12 @@ The Publish Center capability matrix is descriptive, not an execution authority.
 Care SEO is a projection, never a Care Knowledge authority. Its source identity is `(care catalog key, Published source version, locale)`. SEO may own title/meta/H1/focus keyword and index/canonical policy, but symptoms, actions, avoid/observe/diagnose/next-step/evidence remain protected upstream facts.
 
 Canonical SEO routing follows the established Species locale convention: EN has no locale prefix, zh-CN uses `/zh`, and x-default points to EN. Client-rendered canonical Care routes stay `noindex,follow`; indexability is allowed only through an explicit approved bilingual static Staging artifact. The static builder must fail closed on locale pairing gaps, Published source-version drift, unapproved editorial, Production snapshots or Production destination leakage.
+
+
+## 2026-09-09 Operations WorkItem / Task Gate rule
+Operations Home is a coordination/read model, not another publish authority. A WorkItem may project current resource state into `severity + current gate + next operator step`, but it may not execute or bypass the canonical authority's mutation/review/publish gate.
+- SEO WorkItems derive blockers only from the current SEO Health registry; hard blockers must be surfaced before softer issues.
+- Compatibility WorkItems may report missing Impact / Regression / Canonical Evidence as blockers because those checks already belong to the canonical revision workflow. `approved` is not equivalent to publish-ready; live runtime baseline/freshness must still be rechecked by Compatibility.
+- Product/Care Draft WorkItems may point to impact/Preview and explicit publish, but the immutable last Published snapshot remains public until the Product/Care authority publishes.
+- Unknown/unavailable source state is availability, not a task and not health.
+- WorkItem deep-links return the operator to the original authority; no cross-domain database or write endpoint may be introduced merely to make the Operations UI look unified.

@@ -5,7 +5,7 @@ Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `12f6f9b94c35b709b2f64e4c19172fdbf62144fe`
+Current Operations Studio functional HEAD: `76dfc817cdebf2b6357523e31df08b123d1ed5b3`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
@@ -596,3 +596,14 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Local browser acceptance remains `http://127.0.0.1:3003/admin/content`, API `8788`, with 1440/390 zero horizontal overflow in the current unauthenticated environment.
 - Validation PASS: WorkItem, Product/Care, Compatibility, Publish Center and SEO Registry contracts; root/API TypeScript; full build; diff hygiene.
 - Active next: **Phase 3 task-critical readiness / exact next operator decision**. Keep writable hosted credentials, PR #144 reconciliation, main, Production, live DB and indexing parked.
+
+
+## 2026-09-09 — Aqua Operations Studio Phase 3
+- Functional checkpoint `76dfc817cdebf2b6357523e31df08b123d1ed5b3` adds task-critical readiness to resource-level WorkItems without creating a new authority.
+- Every actionable WorkItem now has `current gate / next step / verification note`. The home page shows these directly for the primary task and queue rows.
+- SEO task reason selection now surfaces the actual hard blocker first; softer health issues cannot hide the condition that caused `blocked`.
+- Compatibility pending/approved revisions are checked for Impact, Regression and Canonical Evidence. Missing checks become blocker tasks. Even fully checked `approved` revisions remain non-green until the Compatibility authority verifies the live runtime baseline/freshness gate.
+- Product/Care Draft next-step copy remains truthful to immutable Published snapshot isolation and points back to impact/Preview + explicit authority publish.
+- Read-only guard remains intact: no WorkItem mutation call, centralized DB or direct publish action was added.
+- Local 1440/390 Operations Home still has zero overflow and zero page errors in unauthenticated mode. This proves fail-isolated behavior, not populated-task click-through.
+- Active next: authenticated populated-state operator acceptance using an existing secure session. If no secure session is available, treat that as a real acceptance blocker rather than inventing fixture data as production truth. Reconciliation/Production/live DB/index remain parked.

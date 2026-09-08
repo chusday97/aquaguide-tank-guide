@@ -1001,3 +1001,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Browser acceptance at 1440×900 / 390×844: zero horizontal overflow; unauthenticated environment still reports source unavailability instead of fake zero work.
 - PASS: WorkItem, Compatibility Admin, Product/Care Admin, SEO Registry, Publish Center, root/API TypeScript, full build and `git diff --check`.
 - Functional commit: `12f6f9b94c35b709b2f64e4c19172fdbf62144fe`. No main/Production/live DB/index action. Next: Phase 3 task-critical readiness / next-decision surfacing.
+
+
+## 2026-09-09 — Aqua Operations Studio Phase 3
+- Reused existing current-state authority data instead of copying Publish Center capability/history into Operations Home. Introduced per-task gate projection only.
+- Added exact `gateLabel / nextStep / verificationNote` fields and rendered them in the primary task + queue.
+- Fixed SEO reason-order bad case: hard blocker now outranks softer `index_strategy_unknown`.
+- Added Compatibility current-gate checks: pending/approved revisions missing structural Impact, evaluated Regression or complete Canonical Evidence become blocker WorkItems. Fully checked approved revisions still require the live authority's runtime baseline/freshness gate.
+- Added UI contract assertions so Task Gate fields cannot silently disappear from Operations Home.
+- Full focused contracts, root/API TS, full build, diff check and 1440/390 unauthenticated browser acceptance PASS.
+- Functional commit `76dfc817cdebf2b6357523e31df08b123d1ed5b3`. Remaining gap: real authenticated populated-state click-through; no credentials were exposed or manually shuttled.

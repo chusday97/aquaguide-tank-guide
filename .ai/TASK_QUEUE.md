@@ -332,5 +332,6 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Add `test:operations-work-items` to lightweight Admin CI; preserve existing Product/Care, Compatibility, Publish Center and SEO contracts.
 - [x] PASS 1440/390 Operations Home browser acceptance with zero horizontal overflow and truthful unavailable-source behavior.
 - [x] Phase 2: generate resource/reason-specific WorkItems with exact deep-links into Product/Care, Compatibility and Species/Care SEO authority targets.
-- [ ] NEXT / Phase 3: surface task-critical Publish Readiness / decision blockers at the WorkItem boundary; keep low-frequency import/diagnostic utilities secondary.
+- [x] Phase 3: surface task-critical readiness at the WorkItem boundary as current gate + exact next step + authority verification; hard blockers must outrank softer issues.
+- [ ] NEXT: authenticated operator acceptance with populated real WorkItems and exact click-through. Use only an existing secure Business/Repo Admin session; do not expose or manually shuttle credentials.
 - [ ] Writable hosted credentials remain a separate security task; branch reconciliation / PR #144, Production, live DB and indexing remain parked.
