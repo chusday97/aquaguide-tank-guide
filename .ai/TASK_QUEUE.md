@@ -1,5 +1,11 @@
 # Task Queue
 
+## 2026-09-08 — Action contract browser gate alignment
+
+- [x] Align product-action and species-detail browser assertions with current routes, labels and safe states.
+- [x] Verify authorized Chromium runs for task routes, action contract, onboarding paths, product actions, task actions, species detail, Compatibility and launch matrix.
+- [ ] Independent Critic review, local commit, one push and short PR remain pending.
+
 ## 2026-08-28 safe convergence preparation (latest)
 
 ## 2026-08-30 readiness evidence center
