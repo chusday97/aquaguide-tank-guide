@@ -4,6 +4,13 @@
 
 - Fixed: 对齐动作基础浏览器门禁与当前产品契约：物种风险在详情内展开，兼容性从显式入口进入独立页面；空缸可规划加入当前鱼缸；温度冲突按当前 Domain 展示为 `not_recommended`；互动图鉴筛选测试显式使用 `mode=browse`。授权环境下动作、路由、详情、Compatibility、lint、API 类型与 production build 均通过。
 - Fixed: 为谨慎/风险状态保留明确的“混养计算”次级入口，Golden Path 不再查找已废弃的内嵌兼容抽屉；风险仍原位展开，独立计算页面负责后续数量与记录流程。
+- Added: 建立 CI Lite 与关键 PR 重型门禁两层；普通提交不安装 Chromium，`critical`/`merge-ready`、手动触发和合并后才运行完整 Golden、Visual、历史回归与全视口检查。
+- Fixed: 去除普通 PR 上旧 Foundation workflow 与 CI Lite 的重复运行；关键 workflow 新增真实页面截图/边界检查、视觉 artifact 上传和历史交互回归。
+- Fixed: 重型 CI 首次真实运行暴露独立混养页标题断言过宽，改为只断言页级 `h1`；Preview 构建改为在 job 级注入当前分支、PR Head SHA 和固定 seed，并让 formal preview gate 按当前分支校验 metadata。
+- Fixed: 资料不足的物种混养证据只保留一个“打开混养计算器”入口，避免证据内容与外层页脚重复渲染同一动作。
+- Fixed: mobile-care 回归不再等待隐藏的重复节点，改为验证返回鱼缸后可见且有尺寸的养护计划与当前指南。
+- Fixed: mobile-care 回归改用稳定 `#care-plan` 区域和正文内容断言，避免响应式隐藏投影造成误报。
+- Fixed: guided-navigation 历史回归接受当前语言回退下的中英文等价控件文案，仍严格验证路由、编辑流程和无溢出。
 
 - Added: 从最新 `main@64fa58a1` 建立 `codex/ui-action-contract-v1`，将物种“查看当前鱼缸风险”与独立混养计算路由分离；旧 `/encyclopedia?mode=compatibility` 保留安全重定向，未验收视觉分支不进入本次基础PR。
 - Verified: 路由、动作契约、引导路径、任务入口、Compatibility回归、API类型、lint、production build及Chromium重定向验证通过；历史70提交UI分支继续冻结。
@@ -501,3 +508,10 @@
 
 - 独立种草图鉴与养护收藏页面实现，旧 URL 仅保留兼容重定向。
 - 路由页面中的空点击、仅日志处理、原生 `alert` 和无可观察结果的按钮。
+## [Unreleased]
+- Fixed collapsed desktop sidebar navigation buttons with stable accessible names for 600px history regression.
+- Added route-based selectors to navigation/settings and aligned the history regression with actual route intent.
+- Narrowed the 600px history fixture to direct route entry while retaining task, layout, and overflow checks.
+- Aligned the 600px history fixture with the `<768px` phone breakpoint contract.
+- Updated compatibility history coverage to assert redirect plus visible calculator instead of incidental focus state.
+- Updated compatibility history coverage to assert the standalone workspace block.

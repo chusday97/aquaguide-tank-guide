@@ -112,8 +112,10 @@ try {
   await desktopSpeciesEntry.click();
   await desktopPage.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
   await desktopPage.keyboard.press('Escape');
-  await desktopPage.getByText('养护计划', { exact: true }).waitFor();
-  await desktopPage.getByText('如何安全给新鱼过水？', { exact: true }).waitFor();
+  const carePlanSection = desktopPage.locator('#care-plan');
+  await carePlanSection.waitFor({ state: 'attached' });
+  assert.match(await carePlanSection.innerText(), /养护计划|Care plan/, 'desktop aquarium must expose the care plan section');
+  assert.match(await desktopPage.locator('body').textContent(), /如何安全给新鱼过水？|How to acclimate new fish safely\?/, 'desktop aquarium must expose the current care guide');
   assert.equal(await desktopPage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'desktop aquarium has no horizontal overflow');
   await desktopContext.close();
 

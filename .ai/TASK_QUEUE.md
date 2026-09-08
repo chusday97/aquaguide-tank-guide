@@ -6,6 +6,12 @@
 - [x] Verify authorized Chromium runs for task routes, action contract, onboarding paths, product actions, task actions, species detail, Compatibility and launch matrix.
 - [ ] Independent Critic review, local commit, one push and short PR remain pending.
 
+## 2026-09-08 — CI tiering
+
+- [x] Merge action foundation PR #145 into `main@d3c70dee` with required checks passing.
+- [x] Add CI Lite workflow and make Product Golden Path opt-in for critical/merge-ready/manual/post-merge runs.
+- [ ] Push `codex/ci-tiering-v1`, validate real Actions evidence, then start UI surface foundation.
+
 ## 2026-08-28 safe convergence preparation (latest)
 
 ## 2026-08-30 readiness evidence center

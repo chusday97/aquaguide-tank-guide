@@ -131,7 +131,10 @@ try {
   }
 
   await page.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
-  await page.getByRole('heading', { name: /混养(?:风险)?(?:判断|计算)/ }).waitFor();
+  // The standalone compatibility page has a single page title plus a result-card
+  // heading. Assert the page-level h1 so the gate does not fail on a valid
+  // duplicate semantic heading inside the result surface.
+  await page.locator('h1').filter({ hasText: /混养(?:风险)?(?:判断|计算)/ }).first().waitFor();
   await page.getByText(/Selected 2 species|已选择 2 种|已选生物 2 种/).waitFor();
   await page.locator('[data-visual-result-status]').waitFor();
 

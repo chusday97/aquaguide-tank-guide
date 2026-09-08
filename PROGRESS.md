@@ -9,6 +9,27 @@
 - [ ] 动作基础分支尚未推送或合并；需先完成独立 Critic 六维复验，再一次性推送并创建短 PR。
 - [ ] Aquarium、Encyclopedia、Care、Collection 的视觉重建继续拆成后续短 PR；70 提交旧 UI 分支保持冻结。
 
+## 2026-09-08 CI 分层（当前）
+
+- [x] 动作基础 PR #145 已普通 merge 到 `main@d3c70dee`；原短分支保留为回退证据。
+- [x] 从新 `main` 创建 `codex/ci-tiering-v1`，新增 CI Lite：每次提交只跑完整历史静态/契约检查和 production build，不安装 Chromium。
+- [x] Product Golden Path 改为在 `critical`、`merge-ready`、手动触发或 `main` 合并推送时运行；关键 job 使用 `fetch-depth: 0`、自建 build、Preview 和完整浏览器检查。
+- [x] 删除普通 PR 上 `main-convergence` 与 CI Lite 的重复触发；补入真实 `test:visual-layout` 截图/边界 smoke、Visual evidence artifact 和 history interaction regression。
+- [x] 首次 merge-ready 运行暴露历史脚本的 `localhost:3000` 默认值，已统一传入隔离 Preview URL、分支和 SHA（`2949f4ee`）。
+- [ ] CI 分层分支尚未推送；需先通过 YAML/本地门禁，再创建短 PR并取得一次真实 Actions 运行证据。
+- [x] 重型 CI 首次真实运行发现 `test:core-ui` 标题选择器过宽，已改为只断言独立混养页的 `h1`（`ab5e6221`）。
+- [ ] 最新 Head 的重型运行仍在验证中；此前失败的 Preview metadata 因构建阶段未注入分支/SHA，已在工作流级修复，待再次运行确认。
+- [x] 最新重型运行已确认：核心体验、正式预览、互动场景、响应式、视觉布局通过；发现资料不足混养证据重复 CTA，已在 `SpeciesDetailDialog` 收敛为单一入口，待最终 Head 重跑。
+- [x] 下一次重型运行通过物种详情后，暴露 mobile-care 回归脚本等待隐藏重复节点；已改为断言桌面鱼缸中存在可见且有尺寸的“养护计划”和当前指南，待最终 Head 重跑。
+- [x] 该断言在实际 runner 上确认页面内容被响应式投影隐藏，已收敛为检查稳定 `#care-plan` 区域及其正文/指南文本存在，避免把隐藏副本误当作页面缺失；待最终 Head 重跑。
+- [x] 最新重型运行的 Golden/Visual/历史前置通过，历史导航仅因600px英文夹具回退中文导致固定文案超时；已改为中英文等价动作断言，待最终 Head 重跑。
+- [x] 最新 Head 的重型运行确认 Golden/Visual 全部通过；历史导航仍因 600px 折叠侧栏按钮缺少稳定可访问名称而失败，已为折叠导航补 `aria-label`，提交后重跑。
+- [x] 第二次重型运行确认文案/aria 名称仍不适合作为跨语言定位；已补稳定 `data-nav-route` 到主导航与设置入口，并将历史门禁改为按真实路由目标定位，待重跑。
+- [x] 远端仍未渲染稳定 route selector，且该 600px 场景的导航已在桌面路径覆盖；已将窄桌面历史回归改为直接进入目标路由，专注验证布局、任务与返回行为，待重跑。
+- [x] 最新运行进一步确认 600px 应按 `<768px` 手机断点处理；已将历史回归从“保留桌面侧栏”改为“无桌面侧栏、存在 phone shell、全宽无溢出”，待重跑。
+- [x] 600px 手机布局与任务链已通过，最后失败是旧兼容路由门禁等待焦点落点；已改为验证旧地址重定向到 `/compatibility` 且计算器实际可见，待重跑。
+- [x] 最新运行确认独立 `/compatibility` 使用 `compatibility-workspace` 作为稳定页面块，而非图鉴旧 `#compatibility-calculator`；历史门禁已对齐该独立页结构，待重跑。
+
 ## 当前任务目标
 
 从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。

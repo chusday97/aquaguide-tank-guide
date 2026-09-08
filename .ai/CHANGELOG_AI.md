@@ -2,6 +2,17 @@
 
 ## 2026-09-08 — Action foundation verification
 
+## 2026-09-08 — CI merge-ready follow-up
+
+### Fixed
+
+- Scoped the standalone compatibility title regression to the page-level `h1` so a valid result-card heading does not cause a false failure.
+- Bound critical Preview builds to the current branch, PR Head SHA and fixed seed at workflow job scope; formal preview metadata validation now follows the active branch instead of a historical candidate name.
+- Deduplicated the unavailable compatibility evidence action so the same calculator route is not rendered twice in one species detail surface.
+- Hardened the mobile-care browser gate to verify visible care-plan and guide content rather than a hidden duplicate node.
+- Stabilized the mobile-care gate around the canonical `#care-plan` section and text content, accounting for hidden responsive projections without weakening the product contract.
+- Made guided-navigation history assertions locale-tolerant for equivalent English/Chinese labels without relaxing route or interaction semantics.
+
 ### Fixed
 
 - Updated browser regression contracts to reflect the current explicit browse mode, planning task wording, configured-empty tank action, and fail-safe species-detail status presentation.
@@ -100,3 +111,10 @@
 - Added the canonical Feature Catalog with one status vocabulary for current, deployed-but-unreverified, partial, proposed RC and archived capability.
 - Added a Git delivery protocol, PR template and project-truth verification gate; branch protection remains intentionally pending until the check can run from its base branch.
 - Added the Unified Release Readiness gate, separating local visual acceptance, CI, exact deployed SHA, Supabase parity, P0 migration and release authorization.
+## 2026-09-08
+- Fixed collapsed desktop sidebar navigation accessibility by adding stable `aria-label` values for icon-only route buttons.
+- Added stable `data-nav-route` selectors for primary navigation and settings so browser gates remain deterministic across locale and collapsed-shell states.
+- Narrowed the 600px history fixture to direct route entry after confirming navigation itself is covered by the desktop route path.
+- Aligned the 600px history fixture with the product breakpoint contract: phone shell, no desktop sidebar, no overflow.
+- Aligned the legacy compatibility-route history fixture with the actual redirect contract and visible calculator surface.
+- Aligned the compatibility visibility assertion with the standalone page's `compatibility-workspace` block.

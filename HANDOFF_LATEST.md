@@ -10,6 +10,26 @@
 - 随后发现远端 GP-002 仍假设旧的 `compatibility-checkout-drawer`；已将风险详情补回明确的“混养计算”动作，并让 GP-002 先验证风险原位展开、再进入独立 `/compatibility`。本地 GP-002、lint 和 build 已通过，待提交后重新推送触发最终 PR 检查。
 - 下一步：独立审查本基础分支后，按序创建 Aquarium、Encyclopedia/Care、Collection 和工具页短分支；不推送、不合并、不执行生产操作，直到对应门禁与用户验收完成。
 
+## 2026-09-08 CI 分层（当前）
+
+- 动作基础 PR #145 已普通 merge 到 `main@d3c70dee`，短分支仍保留；生产指针不变。
+- 当前分支 `codex/ci-tiering-v1` 只修改 `.github/workflows/ci-lite.yml` 和 Product Golden Path：普通更新走轻量检查，关键标签/手动/合并前才跑浏览器重型门禁。
+- 重型 job 已设置完整 Git 历史、独立 build/Preview 和 Golden/Visual/历史回归清单；尚未推送或取得远端运行证据。
+- Critic 指出并已修复两项分层缺口：`main-convergence` 不再对普通 PR 重复运行；新增 `verify-visual-layout.mjs`、截图 artifact 和 history interaction 清单。当前本地 YAML、lint 与代表性视觉 smoke 通过。
+- 首次 `merge-ready` Actions 发现部分历史脚本仍默认 `localhost:3000`；已将重型步骤统一绑定到本 runner 的 `4173` Preview，并传入当前分支/SHA，修复提交为 `2949f4ee`。该新 Head 需要重新跑一次远端重型检查。
+- 下一步：本地校验 workflow 与静态门禁后推送一次，观察普通 PR 与 `merge-ready` 标签两类真实运行，再创建 UI foundation 短分支。
+- 最新重型运行先后暴露两项真实门禁问题：兼容页标题断言过宽已由 `ab5e6221` 修复；随后 Preview 构建未注入 CI 分支/SHA，已改为 job 级 `VITE_PREVIEW_BRANCH/VITE_GIT_SHA`，并让 formal preview gate 按当前 `PREVIEW_BRANCH` 验证，等待新 Head 结果。
+- 第三次重型运行通过核心、正式预览、场景、响应式与视觉布局，随后在物种详情资料不足状态发现混养 CTA 重复；已让该状态只保留证据内的“打开混养计算器”按钮，等待新 Head 重跑。
+- 新 Head 已通过至物种详情回归；mobile-care 脚本随后发现等待隐藏重复“养护计划”节点，已改为检查可见、有尺寸的计划和指南内容，等待最后一次重型运行。
+- runner 进一步确认该文本存在于响应式投影但不一定可见；门禁改为稳定区域 `#care-plan` + 正文内容存在性检查，避免把隐藏副本误报为缺失，等待最后一次重型运行。
+- 随后 Golden/Visual/前置历史路径均通过；历史导航在600px英文夹具中遇到当前语言回退中文，已将 My Aquarium、Settings、Livestock、批次编辑动作改为中英文等价匹配，等待最后一次重型运行。
+- 最新 Head `99f93189` 的重型运行 Golden/Visual 已通过；历史回归最终暴露折叠桌面侧栏导航按钮只有 `title`、没有稳定可访问名称。已在 `src/App.tsx` 为折叠导航补 `aria-label`，待提交并重跑 merge-ready。
+- 第二次重型运行确认仅依赖文案/aria 名称仍不够稳定；已为主导航及设置入口补 `data-nav-route`，历史脚本改按路由目标定位，待提交并重跑。
+- 远端仍未在该场景读到稳定 route selector；桌面宽度导航已由前置路径覆盖，因此 600px 历史回归改为直接进入 Aquarium/Settings，继续验证窄桌面布局与任务交互，待重跑。
+- 最新运行确认实现遵循已确认的 `<768px` 手机断点，而旧历史断言错误要求 600px 保留桌面侧栏；已改为验证 phone shell、无桌面侧栏和全宽无溢出，待重跑。
+- 最新运行已通过 600px 手机布局与任务链；剩余失败来自旧兼容路由测试等待焦点自动落在计算器，已改为验证重定向 URL 和计算器可见性，待重跑。
+- 最新运行确认独立 Compatibility 页没有图鉴旧 ID；历史门禁已改为等待真实 `data-ui-block="compatibility-workspace"`，待重跑。
+
 ## 2026-08-31 数据短分支本地门禁复验（当前）
 
 - 当前分支：`codex/catalog-cohort-30-v1`；当前 HEAD：`8bfef23cd667b7aec4ef3028d0ca61cf3771abd9`；工作树干净；分支包含 `origin/main@016dbca5`。

@@ -1,0 +1,38 @@
+name: CI Lite
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-lite-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  lite:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - name: Static and contract checks
+        run: |
+          npm run lint
+          npm run check:api
+          npm run check:project-truth
+          npm run test:task-routes
+          npm run test:ui-action-contract
+          npm run test:task-entry
+      - name: Production build
+        run: npm run build
