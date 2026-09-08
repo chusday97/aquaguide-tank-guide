@@ -508,3 +508,5 @@
 
 - 独立种草图鉴与养护收藏页面实现，旧 URL 仅保留兼容重定向。
 - 路由页面中的空点击、仅日志处理、原生 `alert` 和无可观察结果的按钮。
+## [Unreleased]
+- Fixed collapsed desktop sidebar navigation buttons with stable accessible names for 600px history regression.

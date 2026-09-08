@@ -470,6 +470,7 @@ function DesktopSidebar({
                   onClick={() => handlePrimaryNav(item.path)}
                   onMouseEnter={() => preloadRoute(item.path)}
                   onFocus={() => preloadRoute(item.path)}
+                  aria-label={collapsed ? t(item.labelKey) : undefined}
                   title={collapsed ? t(item.labelKey) : undefined}
                   className={cn(
                     'flex min-h-[58px] w-full items-center gap-3 rounded-[20px] px-3 text-left transition-colors',

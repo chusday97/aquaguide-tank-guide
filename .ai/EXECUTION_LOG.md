@@ -228,3 +228,4 @@
 - Added npm commands `readiness:collect`, `readiness:serve` and `test:readiness`.
 - Verified report generation at candidate SHA `6d202f9c26581f1e19e70a50b557996fc36ae51e`; 11 local gates PASS, production freeze BLOCKED, 5 remote/environment gates UNVERIFIED, UI freeze USER_ACCEPTANCE_REQUIRED.
 - Sandbox `tsx` IPC `EPERM` and GitHub DNS failure are preserved as evidence limitations, not classified as business failures.
+2026-09-08 CI tiering follow-up: remote merge-ready run 34205109634 passed Golden/Visual and failed only history navigation because collapsed sidebar buttons lacked accessible names; added aria-label in src/App.tsx and queued a rerun.
