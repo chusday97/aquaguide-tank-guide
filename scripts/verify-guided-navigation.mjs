@@ -174,7 +174,7 @@ try {
   await narrowEnglish.locator('#search-species-sp_0001').waitFor();
   await narrowEnglish.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded' });
   await narrowEnglish.waitForURL('**/compatibility');
-  await narrowEnglish.locator('#compatibility-calculator').waitFor();
+  await narrowEnglish.locator('[data-ui-block="compatibility-workspace"]').waitFor();
 
   console.log('guided navigation UI verified: onboarding, direct routes, livestock groups, mobile and narrow English desktop');
 } finally {

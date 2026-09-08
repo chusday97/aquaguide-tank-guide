@@ -117,3 +117,4 @@
 - Narrowed the 600px history fixture to direct route entry after confirming navigation itself is covered by the desktop route path.
 - Aligned the 600px history fixture with the product breakpoint contract: phone shell, no desktop sidebar, no overflow.
 - Aligned the legacy compatibility-route history fixture with the actual redirect contract and visible calculator surface.
+- Aligned the compatibility visibility assertion with the standalone page's `compatibility-workspace` block.
