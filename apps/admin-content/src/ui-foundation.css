@@ -478,3 +478,69 @@
   border-color: var(--cms-ink) !important;
   background: transparent !important;
 }
+
+/* Action semantics: selection/navigation controls stay neutral; green is reserved for true primary actions. */
+.admin-shell .app-language-switch button.active {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+  box-shadow: none !important;
+}
+.admin-shell .workflow-current-action > .workflow-navigation-action {
+  min-height: var(--ui-control-secondary);
+  padding: 0 12px;
+  border: 1px solid var(--cms-border-strong) !important;
+  border-radius: var(--ui-radius-control);
+  background: var(--cms-paper) !important;
+  color: var(--cms-ink) !important;
+  font-size: var(--ui-text-meta);
+  font-weight: 700;
+  box-shadow: none !important;
+}
+.admin-shell .workflow-current-action > .workflow-navigation-action:hover {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-panel) !important;
+}
+/* Inline overrides are text actions, not miniature primary buttons. */
+.admin-shell .inline-source-action {
+  min-height: 24px;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--cms-ink) !important;
+  font-size: var(--ui-text-meta) !important;
+  font-weight: 650 !important;
+  text-decoration: underline;
+  text-decoration-color: var(--cms-border-strong);
+  text-underline-offset: 3px;
+}
+.admin-shell .inline-source-action:hover {
+  color: var(--cms-ink) !important;
+  text-decoration-color: var(--cms-ink);
+}
+.admin-shell .preview-addition-button {
+  min-height: 30px;
+  font-size: var(--ui-text-micro) !important;
+}
+/* Current stage/selection is structural, not success. Use Graphite; reserve Green for completion and primary actions. */
+.admin-shell.workflow-compact .workflow-stage-card.is-current > b {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.is-current > em {
+  color: var(--cms-muted) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.filter-selected:not(.is-current) {
+  box-shadow: inset 0 -2px 0 var(--cms-ink) !important;
+}
+.admin-shell .page-review-top-slot .workflow-stepper-track span.current b {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+}
+.admin-shell .variant-row > input.species-select-box:checked {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  box-shadow: none !important;
+}

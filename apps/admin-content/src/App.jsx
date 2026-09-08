@@ -90,9 +90,9 @@ function InterfaceLanguageSwitch({ onLocaleChange }) {
     setAppLocale(locale);
   };
   return (
-    <div className="app-language-switch" aria-label={t('top.interfaceLanguage')}>
-      <button type="button" className={appLocale === 'zh-CN' ? 'active' : ''} onClick={() => switchLocale('zh-CN')}>{appLocale === 'en' ? 'Chinese' : '中文'}</button>
-      <button type="button" className={appLocale === 'en' ? 'active' : ''} onClick={() => switchLocale('en')}>{appLocale === 'en' ? 'English' : '英文'}</button>
+    <div className="app-language-switch" role="group" aria-label={t('top.interfaceLanguage')}>
+      <button type="button" aria-pressed={appLocale === 'zh-CN'} className={appLocale === 'zh-CN' ? 'active' : ''} onClick={() => switchLocale('zh-CN')}>{appLocale === 'en' ? 'Chinese' : '中文'}</button>
+      <button type="button" aria-pressed={appLocale === 'en'} className={appLocale === 'en' ? 'active' : ''} onClick={() => switchLocale('en')}>{appLocale === 'en' ? 'English' : '英文'}</button>
     </div>
   );
 }
@@ -994,7 +994,7 @@ export default function App() {
         tone: 'issue',
         title: appLocale === 'en' ? `Resolve ${count} source-data issue${count === 1 ? '' : 's'} first` : `先处理 ${count} 个数据问题`,
         detail: appLocale === 'en' ? 'Duplicate/category decisions block editorial approval. Finish these before editing more pages.' : '重复记录或分类问题会阻塞后续审核。先完成这里，再继续改 SEO 内容。',
-        cta: appLocale === 'en' ? 'Start data review' : '开始处理',
+        cta: appLocale === 'en' ? 'View pending issues' : '查看待处理',
         run: () => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' }),
       };
     }
@@ -1022,7 +1022,7 @@ export default function App() {
       tone: 'edit',
       title: appLocale === 'en' ? 'Continue the selected SEO page' : '继续完善当前 SEO 页面',
       detail: appLocale === 'en' ? 'Edit the page below. Open Preview only when you need to compare the rendered result.' : '继续编辑下方页面；需要对照效果时再打开“效果预览”。',
-      cta: appLocale === 'en' ? 'Continue editing' : '继续编辑',
+      cta: appLocale === 'en' ? 'Return to editor' : '返回编辑区',
       run: () => document.querySelector('.studio-editor-area')?.scrollTo({ top: 0, behavior: 'smooth' }),
     };
   })();
@@ -1283,7 +1283,7 @@ export default function App() {
         <div className="workflow-current-action" aria-label={appLocale === 'en' ? 'Current workflow action' : '当前流程操作'}>
           <span>{appLocale === 'en' ? `CURRENT · ${currentWorkflowStage}/4` : `当前 · ${currentWorkflowStage}/4`}</span>
           <strong>{primaryWorkflowAction.title}</strong>
-          <button type="button" onClick={primaryWorkflowAction.run}>{primaryWorkflowAction.cta}</button>
+          <button type="button" className="workflow-navigation-action" onClick={primaryWorkflowAction.run}>{primaryWorkflowAction.cta}</button>
         </div>
       </section>
 
@@ -1326,7 +1326,7 @@ export default function App() {
               <button type="button" aria-pressed={editorScope === 'base'} className={editorScope === 'base' ? 'active' : ''} onClick={() => editorScope === 'base' || runEditorNavigation(() => setEditorScope('base'))}>{t('editor.base')}</button>
               <button type="button" aria-pressed={editorScope === 'variant'} className={editorScope === 'variant' ? 'active' : ''} onClick={() => editorScope === 'variant' || runEditorNavigation(() => setEditorScope('variant'))}>{t('editor.currentPage')}</button>
             </div>
-            <button type="button" className="compact-preview-toggle" aria-expanded={compactPreviewOpen} onClick={() => setCompactPreviewOpen((value) => !value)}>{appLocale === 'en' ? 'Preview' : '效果预览'}</button>
+            <button type="button" className="compact-preview-toggle" aria-expanded={compactPreviewOpen} aria-label={compactPreviewOpen ? (appLocale === 'en' ? 'Close Preview' : '关闭效果预览') : (appLocale === 'en' ? 'Open Preview' : '打开效果预览')} onClick={() => setCompactPreviewOpen((value) => !value)}>{compactPreviewOpen ? (appLocale === 'en' ? 'Close Preview' : '关闭预览') : (appLocale === 'en' ? 'Preview' : '效果预览')}</button>
           </div>
 
           {editorScope === 'base' ? (

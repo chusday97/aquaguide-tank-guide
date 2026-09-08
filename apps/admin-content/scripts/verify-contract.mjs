@@ -258,6 +258,15 @@ assert.match(uiFoundationSource, /workflow-status-block \{ display: none; \}/, '
 assert.match(uiFoundationSource, /editor-tool-row strong[\s\S]*var\(--ui-text-body\)/, 'Secondary tool launchers must use body-size labels instead of micro typography');
 assert.match(uiFoundationSource, /bulk-upload-button[\s\S]*font-size:\s*var\(--ui-text-body\)/, 'Bulk upload must remain a normal secondary action, not a micro control');
 assert.match(uiFoundationSource, /review-confirm-action[\s\S]*var\(--ui-control-primary\)/, 'Data Review confirmation must consume the primary control token');
+assert.match(appSource, /app-language-switch[\s\S]*aria-pressed=\{appLocale === 'zh-CN'\}[\s\S]*aria-pressed=\{appLocale === 'en'\}/, 'Interface language must expose explicit selected state.');
+assert.match(uiFoundationSource, /app-language-switch button\.active[\s\S]*background:\s*var\(--cms-ink\)/, 'Interface language selection must use Graphite rather than Green.');
+assert.match(appSource, /workflow-navigation-action[\s\S]*primaryWorkflowAction\.cta/, 'Global workflow queue jump must stay a navigation action, not a primary mutation CTA.');
+assert.match(appSource, /View pending issues|查看待处理/, 'Data-review workflow CTA must describe queue navigation truthfully.');
+assert.doesNotMatch(appSource, /Start data review|开始处理/, 'Queue navigation must not claim that processing starts immediately.');
+assert.match(uiFoundationSource, /workflow-navigation-action[\s\S]*background:\s*var\(--cms-paper\)/, 'Global workflow navigation must stay visually secondary to Submit Review.');
+assert.match(uiFoundationSource, /inline-source-action[\s\S]*font-size:\s*var\(--ui-text-meta\)[\s\S]*text-decoration:\s*underline/, 'Per-page override must remain a readable text action instead of a micro green button.');
+assert.match(uiFoundationSource, /workflow-stage-card\.is-current > b[\s\S]*background:\s*var\(--cms-ink\)/, 'Current workflow stage must use Graphite, not success Green.');
+assert.match(uiFoundationSource, /species-select-box:checked[\s\S]*background:\s*var\(--cms-ink\)/, 'Current Species selection must use the neutral selected-state color.');
 assert.match(uiFoundationSource, /validation-section\.state-warning[\s\S]*box-shadow:\s*none/, 'Primary editor warning state must not paint a full semantic edge across the task section');
 assert.match(uiFoundationSource, /preview-mode-tabs button\.active[\s\S]*var\(--cms-ink\)/, 'Preview mode selection must use graphite rather than introducing another accent color');
 assert.match(uiFoundationSource, /preview-readiness-row \.preview-inspector-status[\s\S]*background:\s*transparent/, 'Preview readiness and inspector context must share one compact neutral band');
@@ -295,6 +304,8 @@ assert.match(baseSource, /onInspectorSelect\?\.\('sharedIntro'\)/, 'Base shared 
 assert.match(appSource, /onInspectorSelect\?\.\('variantIntro'\)/, 'Current-page introduction must select its own Preview element key.');
 assert.match(liveFrontendPreviewSource, /aria-pressed=\{inspectEnabled\}/, 'Preview pick-to-edit must be a real toggle with explicit pressed state.');
 assert.match(liveFrontendPreviewSource, /点选编辑|Pick to edit/, 'Preview mapping control must use an action label instead of an instructional sentence.');
+assert.match(liveFrontendPreviewSource, /preview-mode-tabs[\s\S]*aria-pressed=\{mode === item\}/, 'Preview Page/Google/Mobile tabs must expose explicit selected state.');
+assert.match(appSource, /compact-preview-toggle[\s\S]*aria-expanded=\{compactPreviewOpen\}[\s\S]*关闭预览/, 'Preview toggle must describe the close action while Preview is open.');
 assert.match(liveFrontendPreviewSource, /点击预览内容可定位到对应编辑字段|Click preview content to jump to its editor field/, 'Preview pick-to-edit guidance must live in help text rather than button copy.');
 assert.doesNotMatch(liveFrontendPreviewSource, />\s*\{appLocale === 'en' \? 'Click content to edit' : '点击内容编辑'\}\s*</, 'Instructional copy must not regress into the toggle label.');
 assert.match(appSource, /const composedLivePreview = useMemo[\s\S]*groupRow: selectedGroupRecord[\s\S]*variantRow: previewVariantRecord/, 'Preview must always compose Base and current-page layers into one final-page snapshot.');

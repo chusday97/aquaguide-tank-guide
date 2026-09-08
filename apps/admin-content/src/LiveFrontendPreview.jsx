@@ -187,8 +187,8 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
       <header className="live-preview-header">
         <div><strong>{t('preview.title')}</strong><small>{getLocaleLabel(preview.locale)}</small></div>
         <div className="preview-header-actions">
-          <div className="preview-mode-tabs">
-            {['page', 'google', 'mobile'].map((item) => <button key={item} type="button" className={mode === item ? 'active' : ''} onClick={() => setMode(item)}>{item === 'page' ? t('preview.page') : item === 'google' ? t('preview.google') : t('preview.mobile')}</button>)}
+          <div className="preview-mode-tabs" role="group" aria-label={appLocale === 'en' ? 'Preview mode' : '预览模式'}>
+            {['page', 'google', 'mobile'].map((item) => <button key={item} type="button" aria-pressed={mode === item} className={mode === item ? 'active' : ''} onClick={() => setMode(item)}>{item === 'page' ? t('preview.page') : item === 'google' ? t('preview.google') : t('preview.mobile')}</button>)}
           </div>
           <button
             type="button"
