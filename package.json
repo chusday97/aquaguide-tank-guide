@@ -151,7 +151,8 @@
     "test:seo-page-registry": "tsx scripts/test-seo-page-registry.ts",
     "test:publish-center-ui": "node scripts/verify-publish-center.mjs",
     "build:care-pages": "tsx scripts/build-care-seo-artifact.ts",
-    "test:care-seo-artifact": "tsx scripts/test-care-seo-artifact.ts"
+    "test:care-seo-artifact": "tsx scripts/test-care-seo-artifact.ts",
+    "test:operations-work-items": "tsx scripts/test-operations-work-items.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
