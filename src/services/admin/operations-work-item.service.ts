@@ -15,6 +15,9 @@ export type OperationsWorkItem = {
   title: string;
   detail: string;
   count: number;
+  resourceKey: string;
+  resourceLabel: string;
+  reason: string;
   actionLabel: string;
   href: string;
 };
@@ -35,36 +38,90 @@ export type OperationsHomeSnapshot = {
 const priority: Record<OperationsSeverity, number> = { blocker: 0, decision: 1, attention: 2, ready: 3, info: 4 };
 export const sortOperationsWorkItems = (items: OperationsWorkItem[]) => [...items].sort((a, b) => priority[a.severity] - priority[b.severity] || b.count - a.count);
 
+const seoIssueLabel: Record<string, string> = {
+  missing_meta_title: '缺少 Meta Title',
+  missing_meta_description: '缺少 Meta Description',
+  missing_h1: '缺少 H1',
+  missing_bilingual_pair: '中英文版本未配对',
+  canonical_conflict: 'Canonical 指向无效或冲突',
+  missing_editorial_review: '尚未完成人工审核',
+  source_not_published: 'Care 源内容尚未发布',
+  source_not_snapshot: 'Care 仍使用旧发布来源',
+  source_drift: 'Care Published source 已更新',
+  index_strategy_unknown: 'Index 策略尚未确认',
+  source_state_unknown: '来源状态尚未就绪',
+};
+const localeLabel = (locale: string) => locale === 'en' ? 'English' : '中文';
+
 export function buildSeoWorkItems(snapshot: SeoPageRegistrySnapshot): OperationsWorkItem[] {
-  const blocked = snapshot.entries.filter(entry => entry.health.severity === 'blocked');
-  const attention = snapshot.entries.filter(entry => entry.health.severity === 'attention');
-  const review = snapshot.entries.filter(entry => entry.editorialState === 'ready_for_review');
-  const items: OperationsWorkItem[] = [];
-  if (blocked.length) items.push({ id: 'seo:blocked', authority: 'seo', severity: 'blocker', title: `${blocked.length} 个 SEO 页面存在发布阻断`, detail: 'Meta / H1 / Canonical / Published source 等条件未满足，需要先处理阻断。', count: blocked.length, actionLabel: '查看 SEO 阻断', href: '/admin/seo-pages' });
-  if (review.length) items.push({ id: 'seo:review', authority: 'seo', severity: 'decision', title: `${review.length} 个 SEO 页面等待人工审核`, detail: '内容已经进入审核阶段，需要人工确认后才能继续。', count: review.length, actionLabel: '进入 SEO 审核', href: '/admin/seo-pages' });
-  if (attention.length) items.push({ id: 'seo:attention', authority: 'seo', severity: 'attention', title: `${attention.length} 个 SEO 页面需要完善`, detail: '这些页面当前不一定阻断发布，但仍有内容或双语完整度问题。', count: attention.length, actionLabel: '查看待完善页面', href: '/admin/seo-pages' });
-  return items;
+  return snapshot.entries.flatMap<OperationsWorkItem>(entry => {
+    if (entry.health.severity === 'unknown' || entry.health.severity === 'healthy') return [];
+    const firstReason = entry.health.issues[0] ? (seoIssueLabel[entry.health.issues[0]] || entry.health.issues[0]) : '需要进一步检查';
+    const reason = `${localeLabel(entry.locale)} · ${firstReason}`;
+    if (entry.health.severity === 'blocked') return [{
+      id: `seo:${entry.pageKey}:blocked`, authority: 'seo' as const, severity: 'blocker' as const,
+      title: `${entry.label} · SEO 发布阻断`, detail: `${reason}。需要回到对应 SEO authority 处理。`, count: 1,
+      resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
+      actionLabel: '处理这个页面', href: entry.editorHref,
+    }];
+    if (entry.editorialState === 'ready_for_review') return [{
+      id: `seo:${entry.pageKey}:review`, authority: 'seo' as const, severity: 'decision' as const,
+      title: `${entry.label} · 等待 SEO 人工审核`, detail: `${reason}。需要人工确认后才能继续。`, count: 1,
+      resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
+      actionLabel: '审核这个页面', href: entry.editorHref,
+    }];
+    return [{
+      id: `seo:${entry.pageKey}:attention`, authority: 'seo' as const, severity: 'attention' as const,
+      title: `${entry.label} · SEO 需要完善`, detail: `${reason}。当前不一定阻断发布，但仍需要处理。`, count: 1,
+      resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
+      actionLabel: '完善这个页面', href: entry.editorHref,
+    }];
+  });
 }
 
 export function buildContentWorkItems(species: AdminSpeciesRecord[], care: AdminCareArticleRecord[]): OperationsWorkItem[] {
-  const speciesDrafts = species.filter(item => item.status === 'draft');
-  const careDrafts = care.filter(item => item.status === 'draft');
-  const items: OperationsWorkItem[] = [];
-  if (speciesDrafts.length) items.push({ id: 'product:drafts', authority: 'product_care', severity: 'attention', title: `${speciesDrafts.length} 个 Product Data Draft 待处理`, detail: 'Draft 尚未成为 Published Product snapshot；继续编辑或完成发布判断。', count: speciesDrafts.length, actionLabel: '打开 Product Data', href: '/admin/product-content?type=species' });
-  if (careDrafts.length) items.push({ id: 'care:drafts', authority: 'product_care', severity: 'attention', title: `${careDrafts.length} 个 Care Draft 待处理`, detail: 'Care Draft 仍与最后 Published snapshot 隔离，需要继续编辑或发布。', count: careDrafts.length, actionLabel: '打开 Care Knowledge', href: '/admin/product-content?type=care' });
-  return items;
+  const speciesItems = species.filter(item => item.status === 'draft').map(item => ({
+    id: `product:${item.id}:draft`, authority: 'product_care' as const, severity: 'attention' as const,
+    title: `${item.name} · Product Data Draft`, detail: `${item.catalogKey} · Draft v${item.version} 尚未成为 Published Product snapshot。`, count: 1,
+    resourceKey: item.catalogKey, resourceLabel: item.name, reason: 'Product Data Draft 尚未发布',
+    actionLabel: '继续这个 Draft', href: `/admin/product-content?type=species&id=${encodeURIComponent(item.id)}`,
+  }));
+  const careItems = care.filter(item => item.status === 'draft').map(item => ({
+    id: `care:${item.id}:draft`, authority: 'product_care' as const, severity: 'attention' as const,
+    title: `${item.title} · Care Draft`, detail: `${item.catalogKey} · Draft v${item.version} 仍与最后 Published snapshot 隔离。`, count: 1,
+    resourceKey: item.catalogKey, resourceLabel: item.title, reason: 'Care Draft 尚未发布',
+    actionLabel: '继续这个 Draft', href: `/admin/product-content?type=care&id=${encodeURIComponent(item.id)}`,
+  }));
+  return [...speciesItems, ...careItems];
 }
 
+const compatibilityStatus = (status: string) => status === 'pending_review'
+  ? { severity: 'decision' as const, label: '等待人工审核', action: '审核这个 revision' }
+  : status === 'approved'
+    ? { severity: 'attention' as const, label: '已批准，待发布资格检查', action: '检查发布资格' }
+    : { severity: 'attention' as const, label: 'Draft 编辑中', action: '继续这个 Draft' };
+
 export function buildCompatibilityWorkItems(profiles: AdminCompatibilityProfileRevision[], pairs: AdminCompatibilityPairRuleRevision[]): OperationsWorkItem[] {
-  const all = [...profiles.map(item => ({ status: item.status })), ...pairs.map(item => ({ status: item.status }))];
-  const pending = all.filter(item => item.status === 'pending_review');
-  const drafts = all.filter(item => item.status === 'draft');
-  const approved = all.filter(item => item.status === 'approved');
-  const items: OperationsWorkItem[] = [];
-  if (pending.length) items.push({ id: 'compatibility:review', authority: 'compatibility', severity: 'decision', title: `${pending.length} 个 Compatibility revision 等待审核`, detail: '这些 revision 需要人工批准或驳回；审核不会自动修改 runtime。', count: pending.length, actionLabel: '进入 Compatibility 审核', href: '/admin/compatibility' });
-  if (drafts.length) items.push({ id: 'compatibility:drafts', authority: 'compatibility', severity: 'attention', title: `${drafts.length} 个 Compatibility Draft 编辑中`, detail: 'Profile / Pair Rule Draft 尚未提交审核。', count: drafts.length, actionLabel: '继续 Compatibility Draft', href: '/admin/compatibility' });
-  if (approved.length) items.push({ id: 'compatibility:approved', authority: 'compatibility', severity: 'attention', title: `${approved.length} 个 Compatibility revision 已批准，需要检查发布资格`, detail: '是否允许 reviewed publish 仍取决于 Regression、Evidence 与 runtime baseline gate。', count: approved.length, actionLabel: '检查发布资格', href: '/admin/compatibility' });
-  return items;
+  const profileItems = profiles.filter(item => ['draft', 'pending_review', 'approved'].includes(item.status)).map(item => {
+    const state = compatibilityStatus(item.status);
+    return {
+      id: `compatibility:profile:${item.id}`, authority: 'compatibility' as const, severity: state.severity,
+      title: `${item.species.name} · Compatibility Profile ${state.label}`, detail: `revision #${item.revisionNumber} · ${item.species.catalogKey}。${item.status === 'approved' ? '仍需通过 Regression / Evidence / runtime baseline gate。' : '当前 reviewed runtime 尚未被这条 revision 改写。'}`, count: 1,
+      resourceKey: item.species.catalogKey, resourceLabel: item.species.name, reason: state.label,
+      actionLabel: state.action, href: `/admin/compatibility?kind=profile&revision=${encodeURIComponent(item.id)}`,
+    };
+  });
+  const pairItems = pairs.filter(item => ['draft', 'pending_review', 'approved'].includes(item.status)).map(item => {
+    const state = compatibilityStatus(item.status);
+    const label = `${item.speciesA.name} × ${item.speciesB.name}`;
+    return {
+      id: `compatibility:pair:${item.id}`, authority: 'compatibility' as const, severity: state.severity,
+      title: `${label} · Pair Rule ${state.label}`, detail: `revision #${item.revisionNumber} · ${item.riskType}。${item.status === 'approved' ? '仍需通过 Regression / Evidence / runtime baseline gate。' : '当前 reviewed runtime 尚未被这条 revision 改写。'}`, count: 1,
+      resourceKey: `${item.speciesA.catalogKey}__${item.speciesB.catalogKey}`, resourceLabel: label, reason: state.label,
+      actionLabel: state.action, href: `/admin/compatibility?kind=pair&revision=${encodeURIComponent(item.id)}`,
+    };
+  });
+  return [...profileItems, ...pairItems];
 }
 
 export const operationsWorkItemService = {

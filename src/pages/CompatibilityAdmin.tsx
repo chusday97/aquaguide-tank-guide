@@ -1,6 +1,6 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowLeft, BookOpenCheck, Loader2, Save, Send, ShieldCheck } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '../components/common/ToastProvider';
 import { fishData } from '../data/fishData';
 import { type ReviewedCompatibilityProfile, type ReviewedPairRule } from '../data/compatibilityEvidence';
@@ -63,6 +63,10 @@ const citationSnapshotsFromPairRule = (rule: ReviewedPairRule) => rule.citations
 
 export default function CompatibilityAdmin() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const deepLinkParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const requestedRevisionKind = deepLinkParams.get('kind');
+  const requestedRevisionId = deepLinkParams.get('revision');
   const { showToast } = useToast();
   const [query, setQuery] = useState('');
   const [revisions, setRevisions] = useState<AdminCompatibilityProfileRevision[]>([]);
@@ -88,6 +92,8 @@ export default function CompatibilityAdmin() {
   const [isPairReviewing, setIsPairReviewing] = useState(false);
   const [isPairPublishing, setIsPairPublishing] = useState(false);
   const [audit, setAudit] = useState(() => getRuntimeCompatibilityEvidenceAudit());
+  const profileDeepLinkAppliedRef = useRef(false);
+  const pairDeepLinkAppliedRef = useRef(false);
   const speciesById = useMemo(() => new Map(fishData.map(item => [item.id, item])), []);
 
   useEffect(() => {
@@ -136,6 +142,34 @@ export default function CompatibilityAdmin() {
     pairRevisions.filter(item => ['draft', 'pending_review', 'approved'].includes(item.status)).map(item => [compatibilityPairKey(item.speciesA.catalogKey, item.speciesB.catalogKey), item]),
   ), [pairRevisions]);
   const selectedPairRevision = pairRevisions.find(item => item.id === selectedPairRevisionId) || null;
+  useEffect(() => {
+    if (profileDeepLinkAppliedRef.current || requestedRevisionKind !== 'profile' || !requestedRevisionId) return;
+    const revision = revisions.find(item => item.id === requestedRevisionId);
+    if (!revision) return;
+    profileDeepLinkAppliedRef.current = true;
+    setSelectedRevisionId(revision.id);
+    setDraftForm(draftFormFromRevision(revision));
+    setProfileReviewNote(revision.reviewNote || '');
+    setRevisionError('');
+  }, [requestedRevisionId, requestedRevisionKind, revisions, selectedRevisionId]);
+  useEffect(() => {
+    if (pairDeepLinkAppliedRef.current || requestedRevisionKind !== 'pair' || !requestedRevisionId) return;
+    const revision = pairRevisions.find(item => item.id === requestedRevisionId);
+    if (!revision) return;
+    pairDeepLinkAppliedRef.current = true;
+    setSelectedPairRevisionId(revision.id);
+    setPairDraftForm(pairDraftFormFromRevision(revision));
+    setPairReviewNote(revision.reviewNote || '');
+    setPairRevisionError('');
+  }, [pairRevisions, requestedRevisionId, requestedRevisionKind, selectedPairRevisionId]);
+  useEffect(() => {
+    const exactMatch = requestedRevisionKind === 'profile'
+      ? selectedRevisionId === requestedRevisionId
+      : requestedRevisionKind === 'pair' && selectedPairRevisionId === requestedRevisionId;
+    if (!exactMatch) return;
+    const testId = requestedRevisionKind === 'profile' ? 'compatibility-draft-editor' : 'compatibility-pair-draft-editor';
+    window.setTimeout(() => document.querySelector(`[data-testid="${testId}"]`)?.scrollIntoView({ block: 'start' }), 0);
+  }, [requestedRevisionId, requestedRevisionKind, selectedPairRevisionId, selectedRevisionId]);
   const profileRegressionReady = Boolean(selectedRevision?.regressionReport && selectedRevision.regressionReport.evaluatedScenarios > 0);
   const pairRegressionReady = Boolean(selectedPairRevision?.regressionReport && selectedPairRevision.regressionReport.evaluatedScenarios > 0);
   const runtimePublishReady = audit.status.source === 'reviewed-db'

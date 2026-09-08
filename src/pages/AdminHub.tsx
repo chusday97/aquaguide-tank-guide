@@ -35,6 +35,8 @@ export default function AdminHub() {
   };
   useEffect(() => { void load(); }, []);
   const primaryTask = snapshot.workItems[0] || null;
+  const queueItems = snapshot.workItems.slice(primaryTask ? 1 : 0, 12);
+  const hiddenTaskCount = Math.max(0, snapshot.workItems.length - (primaryTask ? 1 : 0) - queueItems.length);
   const sourceProblems = useMemo(() => snapshot.sources.filter(source => source.availability !== 'ready'), [snapshot.sources]);
 
   const open = (href: string) => {
@@ -66,9 +68,10 @@ export default function AdminHub() {
         <section className="mt-4 border border-slate-200 bg-white" data-testid="operations-work-queue">
           <div className="flex items-end justify-between gap-3 border-b border-slate-200 px-4 py-3">
             <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Work queue</div><h2 className="mt-0.5 text-lg font-black">现在需要处理</h2></div>
-            <span className="text-xs font-black text-ink/40">{snapshot.workItems.length} 类任务</span>
+            <span className="text-xs font-black text-ink/40">{snapshot.workItems.length} 个真实任务</span>
           </div>
-          {!loading && snapshot.workItems.length === 0 ? <div className="px-4 py-6 text-sm font-semibold text-ink/45">当前没有来自已连接 authority 的任务。</div> : <div className="divide-y divide-slate-100">{snapshot.workItems.map(item => <WorkItemRow key={item.id} item={item} onOpen={open} />)}</div>}
+          {!loading && queueItems.length === 0 ? <div className="px-4 py-6 text-sm font-semibold text-ink/45">{primaryTask ? '当前只有上方这一条优先任务。' : '当前没有来自已连接 authority 的任务。'}</div> : <div className="divide-y divide-slate-100">{queueItems.map(item => <WorkItemRow key={item.id} item={item} onOpen={open} />)}</div>}
+          {!loading && hiddenTaskCount > 0 && <div className="border-t border-slate-100 px-4 py-3 text-xs font-semibold text-ink/45">还有 {hiddenTaskCount} 个任务未在首页展开；进入对应 Authority 查看全量。</div>}
         </section>
 
         <section className="mt-4 border border-slate-200 bg-white" data-testid="operations-source-status">
