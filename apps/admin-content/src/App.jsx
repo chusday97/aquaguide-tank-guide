@@ -1261,8 +1261,8 @@ export default function App() {
           onSearch={setSearch}
           category={category}
           onCategory={setCategory}
-          onSelect={(id) => { if (selectedId === id && editorScope === 'variant') return; runEditorNavigation(() => { setSelectedId(id); setEditorScope('variant'); }); }}
-          onSelectBase={(id) => { if (selectedId === id && editorScope === 'base') return; runEditorNavigation(() => { setSelectedId(id); setEditorScope('base'); }); }}
+          onSelect={(id) => { if (selectedId === id && editorScope === 'variant') return true; return runEditorNavigation(() => { setSelectedId(id); setEditorScope('variant'); }); }}
+          onSelectBase={(id) => { if (selectedId === id && editorScope === 'base') return true; return runEditorNavigation(() => { setSelectedId(id); setEditorScope('base'); }); }}
           onToggleBatch={toggleBatch}
           workflowFilter={workflowFilter}
           workflowGroupKeys={workflowScope.groupKeys}

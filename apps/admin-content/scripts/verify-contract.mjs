@@ -269,6 +269,8 @@ assert.match(uiFoundationSource, /workflow-stage-card\.is-current > b[\s\S]*back
 assert.match(uiFoundationSource, /species-select-box:checked[\s\S]*background:\s*var\(--cms-ink\)/, 'Current Species selection must use the neutral selected-state color.');
 assert.match(sidebarSource, /\{dataIssueCount > 0 \? <button[\s\S]*\{reviewQueueCount > 0 \? <button[\s\S]*\{previewQueueCount > 0 \? <button/, 'Sidebar queue shortcuts must render only when they contain real work.');
 assert.match(sidebarSource, /mobile-species-current[\s\S]*aria-expanded=\{mobileNavOpen\}[\s\S]*更换物种/, 'Mobile Species navigation must default to the current selection with an explicit on-demand Change action.');
+assert.match(appSource, /onSelect=\{\(id\) => \{[\s\S]*return runEditorNavigation[\s\S]*onSelectBase=\{\(id\) => \{[\s\S]*return runEditorNavigation/, 'Species navigation callbacks must preserve the dirty-state navigation result.');
+assert.match(sidebarSource, /navigated !== false[\s\S]*setMobileNavOpen\(false\)/, 'Mobile Species selector must collapse only after navigation is accepted.');
 assert.match(uiFoundationSource, /species-sidebar\.mobile-nav-open[\s\S]*height:\s*min\(64vh, 520px\)/, 'Expanded mobile Species navigation must provide a real scrollable selection surface.');
 assert.match(sidebarSource, /item\.variant_label && item\.variant_label !== item\.name/, 'Sidebar must not repeat the Species name as its own variant metadata.');
 assert.match(uiFoundationSource, /group-header \.group-copy strong[\s\S]*font-size:\s*12px !important[\s\S]*font-weight:\s*600 !important/, 'Scientific grouping labels must stay visually subordinate to Species navigation rows.');

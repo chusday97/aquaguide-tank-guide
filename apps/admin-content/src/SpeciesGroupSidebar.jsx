@@ -182,7 +182,7 @@ export default function SpeciesGroupSidebar({
               return (
                 <div className={`species-group ${issueSummary.open > 0 ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
                   <div className="group-header-row">
-                    <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" aria-pressed={baseActive} onClick={() => { onSelectBase?.(firstVisible.id); setMobileNavOpen(false); }}>
+                    <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" aria-pressed={baseActive} onClick={() => { const navigated = onSelectBase?.(firstVisible.id); if (navigated !== false) setMobileNavOpen(false); }}>
                       <span className="group-copy">
                         <strong>{group.base_scientific_name}</strong>
                         <small>{primaryMembers.length > 1
@@ -207,10 +207,10 @@ export default function SpeciesGroupSidebar({
                           name={batchMode ? undefined : 'current-species'}
                           className={batchMode ? 'batch-select-box' : 'species-select-box'}
                           checked={batchMode ? batchIds.includes(item.id) : selectedScope === 'variant' && selectedId === item.id}
-                          onChange={() => { if (batchMode) onToggleBatch(item.id); else { onSelect(item.id); setMobileNavOpen(false); } }}
+                          onChange={() => { if (batchMode) onToggleBatch(item.id); else { const navigated = onSelect(item.id); if (navigated !== false) setMobileNavOpen(false); } }}
                           aria-label={appLocale === 'en' ? (batchMode ? `Select ${item.scientific_name || item.name} for batch editing` : `Select ${item.scientific_name || item.name}`) : (batchMode ? `批量选择 ${item.name}` : `选择 ${item.name}`)}
                         />
-                        <button className="variant-main-button" type="button" aria-pressed={selectedScope === 'variant' && selectedId === item.id} onClick={() => { onSelect(item.id); if (!batchMode) setMobileNavOpen(false); }}>
+                        <button className="variant-main-button" type="button" aria-pressed={selectedScope === 'variant' && selectedId === item.id} onClick={() => { const navigated = onSelect(item.id); if (!batchMode && navigated !== false) setMobileNavOpen(false); }}>
                           <span>
                             <strong>{item.name}</strong>
                             <small>{item.variant_label && item.variant_label !== item.name ? item.variant_label : (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>
