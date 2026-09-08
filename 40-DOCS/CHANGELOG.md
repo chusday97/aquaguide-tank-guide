@@ -510,3 +510,4 @@
 - 路由页面中的空点击、仅日志处理、原生 `alert` 和无可观察结果的按钮。
 ## [Unreleased]
 - Fixed collapsed desktop sidebar navigation buttons with stable accessible names for 600px history regression.
+- Added route-based selectors to navigation/settings and aligned the history regression with actual route intent.

@@ -113,3 +113,4 @@
 - Added the Unified Release Readiness gate, separating local visual acceptance, CI, exact deployed SHA, Supabase parity, P0 migration and release authorization.
 ## 2026-09-08
 - Fixed collapsed desktop sidebar navigation accessibility by adding stable `aria-label` values for icon-only route buttons.
+- Added stable `data-nav-route` selectors for primary navigation and settings so browser gates remain deterministic across locale and collapsed-shell states.

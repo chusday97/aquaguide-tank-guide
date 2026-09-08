@@ -151,7 +151,7 @@ try {
   narrowEnglish.setDefaultNavigationTimeout(20_000);
   await seed(narrowEnglish, baseState({ withTank: true }), 'en');
   await narrowEnglish.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
-  await narrowEnglish.getByRole('button', { name: /My Aquarium|我的鱼缸/ }).click();
+  await narrowEnglish.locator('[data-nav-route="/aquarium"]').click();
   await narrowEnglish.waitForURL('**/aquarium');
   assert.ok(await narrowEnglish.locator('.desktop-sidebar').isVisible(), '600px desktop must keep the desktop sidebar');
   assert.equal(await narrowEnglish.locator('[data-layout-mode="phone"]').count(), 0, '600px desktop must not render the phone shell');
@@ -170,7 +170,7 @@ try {
   await narrowEnglish.getByRole('heading', { name: /^Manage |^管理/ }).waitFor({ state: 'hidden' });
   await narrowEnglish.keyboard.press('Escape');
   await narrowEnglish.locator('[role="dialog"][data-surface="detail-rail"]:visible, [role="dialog"][data-surface="bottom-sheet"]:visible').first().waitFor({ state: 'hidden' });
-  await narrowEnglish.getByRole('button', { name: /Settings|设置/, exact: true }).click();
+  await narrowEnglish.locator('[data-nav-route="/settings"]').click();
   await narrowEnglish.waitForURL('**/settings');
   await narrowEnglish.goto(`${baseUrl}/search?q=${encodeURIComponent('极火虾')}`, { waitUntil: 'domcontentloaded' });
   await narrowEnglish.locator('#search-species-sp_0001').waitFor();
