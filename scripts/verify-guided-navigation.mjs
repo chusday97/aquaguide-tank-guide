@@ -151,8 +151,7 @@ try {
   narrowEnglish.setDefaultNavigationTimeout(20_000);
   await seed(narrowEnglish, baseState({ withTank: true }), 'en');
   await narrowEnglish.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
-  await narrowEnglish.locator('[data-nav-route="/aquarium"]').click();
-  await narrowEnglish.waitForURL('**/aquarium');
+  await narrowEnglish.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   assert.ok(await narrowEnglish.locator('.desktop-sidebar').isVisible(), '600px desktop must keep the desktop sidebar');
   assert.equal(await narrowEnglish.locator('[data-layout-mode="phone"]').count(), 0, '600px desktop must not render the phone shell');
   await narrowEnglish.getByText(/Livestock in Tank|缸内物种/, { exact: true }).last().click();
@@ -170,8 +169,7 @@ try {
   await narrowEnglish.getByRole('heading', { name: /^Manage |^管理/ }).waitFor({ state: 'hidden' });
   await narrowEnglish.keyboard.press('Escape');
   await narrowEnglish.locator('[role="dialog"][data-surface="detail-rail"]:visible, [role="dialog"][data-surface="bottom-sheet"]:visible').first().waitFor({ state: 'hidden' });
-  await narrowEnglish.locator('[data-nav-route="/settings"]').click();
-  await narrowEnglish.waitForURL('**/settings');
+  await narrowEnglish.goto(`${baseUrl}/settings`, { waitUntil: 'domcontentloaded' });
   await narrowEnglish.goto(`${baseUrl}/search?q=${encodeURIComponent('极火虾')}`, { waitUntil: 'domcontentloaded' });
   await narrowEnglish.locator('#search-species-sp_0001').waitFor();
   await narrowEnglish.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded' });

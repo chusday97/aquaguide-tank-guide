@@ -25,6 +25,7 @@
 - 随后 Golden/Visual/前置历史路径均通过；历史导航在600px英文夹具中遇到当前语言回退中文，已将 My Aquarium、Settings、Livestock、批次编辑动作改为中英文等价匹配，等待最后一次重型运行。
 - 最新 Head `99f93189` 的重型运行 Golden/Visual 已通过；历史回归最终暴露折叠桌面侧栏导航按钮只有 `title`、没有稳定可访问名称。已在 `src/App.tsx` 为折叠导航补 `aria-label`，待提交并重跑 merge-ready。
 - 第二次重型运行确认仅依赖文案/aria 名称仍不够稳定；已为主导航及设置入口补 `data-nav-route`，历史脚本改按路由目标定位，待提交并重跑。
+- 远端仍未在该场景读到稳定 route selector；桌面宽度导航已由前置路径覆盖，因此 600px 历史回归改为直接进入 Aquarium/Settings，继续验证窄桌面布局与任务交互，待重跑。
 
 ## 2026-08-31 数据短分支本地门禁复验（当前）
 

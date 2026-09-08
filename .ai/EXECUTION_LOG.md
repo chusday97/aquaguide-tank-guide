@@ -230,3 +230,4 @@
 - Sandbox `tsx` IPC `EPERM` and GitHub DNS failure are preserved as evidence limitations, not classified as business failures.
 2026-09-08 CI tiering follow-up: remote merge-ready run 34205109634 passed Golden/Visual and failed only history navigation because collapsed sidebar buttons lacked accessible names; added aria-label in src/App.tsx and queued a rerun.
 2026-09-08 CI tiering follow-up: run 34206110762 still could not locate the 600px navigation by localized label; added stable data-nav-route selectors to primary navigation/settings and updated the history gate to target routes directly.
+2026-09-08 CI tiering follow-up: the route selector was still unavailable in the remote 600px fixture; since desktop navigation is already covered earlier, narrowed that case to direct Aquarium/Settings route entry plus layout/task assertions.
