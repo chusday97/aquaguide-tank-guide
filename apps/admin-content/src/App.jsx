@@ -722,7 +722,7 @@ export default function App() {
   const [productTruthState, setProductTruthState] = useState({ catalogKey: null, row: null, loading: false, error: false });
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
-  const [compactPreviewOpen, setCompactPreviewOpen] = useState(false);
+  const [compactPreviewOpen, setCompactPreviewOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 900);
   const [previewWidth, setPreviewWidth] = useState(420);
   const [previewResizing, setPreviewResizing] = useState(false);
   const [editorDirty, setEditorDirty] = useState(false);
@@ -756,7 +756,6 @@ export default function App() {
   useEffect(() => {
     setSelectedInspectorElement(null);
     setActiveTool(null);
-    setCompactPreviewOpen(false);
   }, [selectedId, contentLocale]);
 
   useEffect(() => {

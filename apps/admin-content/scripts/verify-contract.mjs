@@ -343,6 +343,8 @@ assert.match(liveFrontendPreviewSource, /定位字段|Locate field/, 'Preview lo
 assert.match(liveFrontendPreviewSource, /useState\(false\)[\s\S]*inspectEnabled/, 'Preview field locator must default off because it is an optional utility mode.');
 assert.match(liveFrontendPreviewSource, /preview-mode-tabs[\s\S]*aria-pressed=\{mode === item\}/, 'Preview Page/Google/Mobile tabs must expose explicit selected state.');
 assert.match(appSource, /compact-preview-toggle[\s\S]*aria-expanded=\{compactPreviewOpen\}[\s\S]*关闭预览/, 'Preview toggle must describe the close action while Preview is open.');
+assert.match(appSource, /useState\(\(\) => typeof window !== 'undefined' && window\.innerWidth >= 900\)/, 'Desktop Preview must default open while narrow layouts remain closed by default.');
+assert.doesNotMatch(appSource, /setSelectedInspectorElement\(null\);[\s\S]{0,160}setActiveTool\(null\);[\s\S]{0,160}setCompactPreviewOpen\(false\);[\s\S]{0,120}\[selectedId, contentLocale\]/, 'Switching species or locale must not force-close an already open desktop Preview.');
 assert.match(liveFrontendPreviewSource, /点击预览内容会跳到左侧对应编辑字段|click preview content to jump to the matching editor field/, 'Preview locator guidance must explain the destination without becoming button copy.');
 assert.doesNotMatch(liveFrontendPreviewSource, />\s*\{appLocale === 'en' \? 'Click content to edit' : '点击内容编辑'\}\s*</, 'Instructional copy must not regress into the toggle label.');
 assert.match(appSource, /const composedLivePreview = useMemo[\s\S]*groupRow: selectedGroupRecord[\s\S]*variantRow: previewVariantRecord/, 'Preview must always compose Base and current-page layers into one final-page snapshot.');
