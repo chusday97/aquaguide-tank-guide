@@ -6,6 +6,11 @@
 - Authorized evidence: lint, API typecheck, build, task routes, UI action contract, onboarding goals, task entry, product actions, task actions, species detail, Compatibility and 435-pair launch matrix all pass.
 - No Domain, Catalog, Supabase, production or visual-owner files changed; action branch remains unpushed.
 
+## 2026-09-08 — GP-002 compatibility route correction
+
+- Remote Product Golden Path exposed a stale assertion for the retired embedded compatibility drawer. The detail surface now always exposes the explicit compatibility action after risk disclosure, and GP-002 verifies the independent `/compatibility` page before continuing quantity/recording steps.
+- Local GP-002, lint and production build pass; the PR requires a new head check after this fix.
+
 ## 2026-08-30 — Readiness candidate synchronized
 
 - Pushed the clean candidate `3e1dca89` once to `codex/main-core-foundation-v1`; remote branch and PR #142 now report the same head.

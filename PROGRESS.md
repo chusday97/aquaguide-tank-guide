@@ -5,6 +5,7 @@
 - [x] “查看当前鱼缸风险”改为详情内原位展开；只有明确的“打开混养计算器”进入 `/compatibility`，旧 `/encyclopedia?mode=compatibility` 保留重定向兼容。
 - [x] 通过路由、动作契约、引导路径、任务入口、Compatibility Domain 回归、API 类型、lint、production build；真实浏览器已验证新路由与旧地址重定向。
 - [x] 动作基础分支的动作/路由浏览器契约已对齐当前产品行为：风险原位展开、独立混养路由、旧地址重定向、任务入口、物种详情状态和浏览模式筛选均已在授权 Chromium 环境通过（`9b633382`）。
+- [x] 修复 Golden Path 对旧兼容抽屉的依赖：风险展开后明确显示“混养计算”入口，点击后进入独立 `/compatibility` 页面；GP-002 本地浏览器链路恢复通过。
 - [ ] 动作基础分支尚未推送或合并；需先完成独立 Critic 六维复验，再一次性推送并创建短 PR。
 - [ ] Aquarium、Encyclopedia、Care、Collection 的视觉重建继续拆成后续短 PR；70 提交旧 UI 分支保持冻结。
 

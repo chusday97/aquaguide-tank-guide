@@ -62,16 +62,17 @@ try {
   await detail.waitFor();
   await detail.getByText('宝莲灯', { exact: true }).first().waitFor();
 
-  // Milestone 3: use the species detail PRIMARY task CTA. The footer action is the canonical
-  // transition into full compatibility checkout, including caution states.
-  const mainTaskAction = detail.locator('.modalFooter button').first();
-  await mainTaskAction.waitFor();
-  const mainTaskLabel = (await mainTaskAction.textContent())?.trim() || '';
-  assert.match(mainTaskLabel, /风险|混养|加入/, `detail primary CTA must lead toward compatibility, got: ${mainTaskLabel}`);
-  await mainTaskAction.click();
+  // Milestone 3: risk stays inside the species detail. The explicit
+  // compatibility action is the only transition to the full calculator.
+  const riskAction = detail.getByRole('button', { name: '查看当前鱼缸风险', exact: true });
+  await riskAction.click();
+  assert.equal(new URL(page.url()).pathname, '/encyclopedia', 'view risk must stay in the species detail');
+  const calculatorAction = detail.getByRole('button', { name: /混养计算器|混养计算|Compatibility Calculator/ }).last();
+  await calculatorAction.waitFor();
+  await calculatorAction.click();
 
   // Milestones 4–5: the decision drawer must retain the real tank baseline and exact candidate.
-  const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
+  const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible, [data-ui-block="compatibility-workspace"]:visible').first();
   await calculator.waitFor();
   await calculator.getByText('当前鱼缸', { exact: true }).waitFor();
   await calculator.getByText('红绿灯', { exact: true }).first().waitFor();

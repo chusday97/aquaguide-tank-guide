@@ -1025,12 +1025,10 @@ export function SpeciesDetailDialog({
                               {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
                             </div>
                           )}
-                          {!['caution', 'unsuitable', 'conflictRisk'].includes(displayFit.status) && (
-                            <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
-                              <Calculator className="h-4 w-4" />
-                              {inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.compatibilityCalc')}
-                            </button>
-                          )}
+                          <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
+                            <Calculator className="h-4 w-4" />
+                            {inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.compatibilityCalc')}
+                          </button>
                         </div>
                       )}
                     </section>
