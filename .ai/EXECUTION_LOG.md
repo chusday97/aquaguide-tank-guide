@@ -859,3 +859,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: `npm run test:seo-page-registry`, `npm run test:care-seo-editorial`, `npm run check:api`, `npm run lint`, `git diff --check`, full `npm run build`.
 - Committed functional checkpoint `f945e9f86dd0790cbc7e75a57b5968adb08a94e5` (`feat(seo): complete operations health queue`).
 - Fresh refs after fetch: main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence 275/198 at functional checkpoint. Reconciliation remains parked.
+
+## 2026-09-08 18:20 +08:00 — Species SEO CMS UI Foundation convergence
+- Diagnosed real 3010 CMS computed styles using Design System skill principles + Playwright. Found primary actions collapsed to 8–10px/27–30px and legacy CSS selector duplication (`workflow-stage-card` >100 matches, `primary-button` >20 matches).
+- Added late-loaded `ui-foundation.css` with explicit typography/control/editor tokens and hierarchy guards.
+- Browser acceptance: desktop + mobile no horizontal overflow; mobile workflow overflow repaired; Preview behavior preserved.
+- Secondary-tool audit fixed 11/9px launcher typography and 9.5px Bulk upload control.
+- Validation PASS: Admin contract incl Repo backend/API/dual-repo, Admin build, full root build, `git diff --check`.

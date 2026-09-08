@@ -348,3 +348,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Default Health queue hides source-unknown inventory from actionable work; explicit unknown/all/search views remain available and progressive loading is 50 rows.
 - 1440×900 and 390×844 local Playwright acceptance reports 0 horizontal overflow.
 - Functional checkpoint `f945e9f8`; Production/main/live DB/index remain untouched.
+
+## 2026-09-08 18:20 +08:00 — Local Species SEO CMS UI Foundation accepted technically
+- Local read-only CMS: `http://127.0.0.1:3010/?demo=1`.
+- Functional checkpoint: `f57cc39d3e127c34edfcb376c8e83a3d2a59c1e9`.
+- 1440×900: Submit Review 40px/13px; current workflow action 36px/12px; scope/Preview 36px/12px; editor panel ~700×698; split Preview 742/420; overflow 0.
+- 390×844: Submit Review 36px/11px; locale/scope 34–36px/12px; sidebar 180px; editor starts y≈413; Preview overlay ≈374px; overflow 0.
+- Production/main/live DB/index remain untouched.

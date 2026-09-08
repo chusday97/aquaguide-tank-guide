@@ -201,3 +201,14 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [ ] User/hosted read-only visual acceptance of the completed Health queue; local Preview is `http://127.0.0.1:3003/admin/seo-pages`.
 - [ ] Writable `admin-content` Preview remains a separate security task and must use safe server-side credential binding; do not expose or manually shuttle Repo Admin/GitHub secrets.
 - [ ] Branch reconciliation remains parked until explicitly requested.
+
+## Active override — 2026-09-08 18:20 +08:00 — Species SEO CMS UI Foundation
+- [x] Add a dedicated late-loaded UI Foundation instead of continuing ad-hoc edits inside the 3389-line legacy stylesheet.
+- [x] Normalize primary/secondary/ghost/compact control sizes and typography.
+- [x] Normalize workflow, review handoff, locale, scope and Preview controls.
+- [x] Reduce editor width/padding/textarea/disclosure density while increasing task-question readability.
+- [x] Fix mobile workflow overflow and replace tiny review step labels with progressive disclosure.
+- [x] Normalize secondary tool launchers, Bulk upload and Data Review confirm action.
+- [x] Add contract guards for UI Foundation loading and critical tokens.
+- [x] PASS Admin contract + Admin/root builds + diff hygiene + 1440/390 Preview acceptance.
+- [ ] User/operator visual acceptance; repair only observed badcases before any legacy CSS cleanup.

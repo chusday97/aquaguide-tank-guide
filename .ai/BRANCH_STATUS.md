@@ -265,3 +265,12 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Fresh explicit refs: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Divergence at functional checkpoint: **275 main-only / 198 feature-only**. This remains a two-way divergence; no ordinary merge/rebase is safe.
 - PR #144 reconciliation remains parked. No Production/index/live-DB mutation or Care SEO release change.
+
+## 2026-09-08 18:20 +08:00 — UI Foundation checkpoint refs
+- local feature: `f57cc39d3e127c34edfcb376c8e83a3d2a59c1e9`
+- live GitHub main: `d3c70dee633ed4e24bbca161d138a832012b1d40`
+- remote feature before this push: `a7db1e186ec10ad29520f041ff1da03a44a6de06`
+- merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
+- live-main divergence: **275 main-only / 200 feature-only**
+- NOTE: ordinary `origin/main` / `origin/feature...` refs in this worktree can remain stale; use explicit live refs or `git ls-remote` for reconciliation decisions.
+- Do not blind merge/rebase; PR #144 remains PARKED.

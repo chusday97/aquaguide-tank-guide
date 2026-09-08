@@ -439,3 +439,15 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Local Preview is `http://127.0.0.1:3003/admin/seo-pages`. Use `API_PORT=8788` for this worktree while the legacy Aqua worktree owns 8787; do not kill the unrelated process just to reuse the port.
 - PASS: `test:seo-page-registry`, `test:care-seo-editorial`, `check:api`, root `lint`, `git diff --check`, full `npm run build`.
 - Fresh branch read after functional commit: live main `d3c70dee`, remote feature `46418ac5`, merge base `ed0cf380`, divergence **275 main-only / 198 feature-only**. This strengthens the existing rule: no blind merge/rebase and PR #144 stays parked. Production/live DB/index/Care `hold_noindex` remain untouched.
+
+## 2026-09-08 18:20 +08:00 — Species SEO CMS UI Foundation convergence
+- Functional checkpoint `f57cc39d3e127c34edfcb376c8e83a3d2a59c1e9` (`fix(admin): establish ui foundation hierarchy`).
+- Added `apps/admin-content/src/ui-foundation.css`, loaded after legacy `styles.css`, to centralize typography/control/editor-density authority instead of adding more page-local overrides.
+- Primary actions now use stable readable sizes: Submit Review 40px/13px, workflow current action 36px/12px, scope/Preview 36px/12px, global locale 34px/12px.
+- Desktop editor panel reduced from ~760px/772px to 700px/~698px while task-question typography increased to 13px and guidance to 12px; textarea reduced from 104px to 76px.
+- Mobile fixes: workflow action no longer overflows, review uses progressive disclosure instead of 7px step labels, sidebar is capped at 180px, editor begins around y=413, scope controls are 12px/36px; horizontal overflow remains 0.
+- Secondary tool launchers now use 13px labels / 11px helper+status copy; Bulk upload is 13px/36px; Data Review confirm consumes the primary control token.
+- Desktop Preview remains simultaneous at 742px editor + 420px Preview; mobile remains ~374px fixed overlay.
+- PASS: Admin contract, Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`, 1440/390 browser acceptance.
+- Live refs at checkpoint: main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature before push `a7db1e186ec10ad29520f041ff1da03a44a6de06`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence **275 main-only / 200 feature-only**. No main merge/rebase, Production deploy, live DB/index change; PR #144 remains parked.
+- Local CMS Preview: `http://127.0.0.1:3010/?demo=1`.

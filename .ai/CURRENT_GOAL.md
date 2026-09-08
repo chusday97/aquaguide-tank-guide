@@ -296,3 +296,12 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Local Preview: `http://127.0.0.1:3003/admin/seo-pages`; this session uses Aqua API `8788` because another legacy Aqua worktree owns `8787`.
 - PASS: Page Registry contract, Care SEO Editorial contract, root/API TypeScript, `git diff --check`, full production build.
 - Fresh remote read: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature before this checkpoint `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence at functional checkpoint **275 main-only / 198 feature-only**. No merge/rebase/Production/index/live-DB action.
+
+## Active override — 2026-09-08 18:20 +08:00 — CMS UI Foundation
+- [DONE] Establish one late-loaded UI Foundation for Species SEO CMS typography, button variants, inputs, spacing and editor density.
+- [DONE] Restore primary workflow/review actions from 7–10px micro-controls to readable 11–13px controls without increasing card chrome.
+- [DONE] Compress authoring space through padding/textarea/disclosure density rather than shrinking type.
+- [DONE] Carry the same hierarchy into secondary tool launchers, Bulk Import and Data Review confirmation.
+- [DONE] Preserve desktop split Preview, mobile overlay, zero horizontal overflow and all authority boundaries.
+- [NEXT] Operator visual acceptance on `http://127.0.0.1:3010/?demo=1`; fix only concrete hierarchy badcases. After acceptance, consider deleting superseded legacy density rules instead of adding new overrides.
+- [PARKED] Branch reconciliation / PR #144, Production, public indexing and Care SEO release state.
