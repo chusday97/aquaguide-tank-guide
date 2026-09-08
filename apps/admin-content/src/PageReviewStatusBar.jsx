@@ -18,9 +18,6 @@ export default function PageReviewStatusBar({
   const publishLabel = publishStatus === 'published'
     ? (isUiEnglish ? 'Published' : '已发布')
     : (isUiEnglish ? 'Draft' : '草稿');
-  const reviewLabel = isUiEnglish
-    ? ({ editing: 'Editing', ready_for_review: 'Awaiting review', approved: 'Preview approved' }[reviewState] || reviewState)
-    : ({ editing: '编辑中', ready_for_review: '待审核', approved: '已批准预览' }[reviewState] || reviewState);
   const steps = [
     [1, isUiEnglish ? 'Editing' : '编辑中'],
     [2, isUiEnglish ? 'Awaiting review' : '待审核'],
@@ -50,7 +47,7 @@ export default function PageReviewStatusBar({
           <strong>{scopeLabel}</strong>
           <span className={`review-health-chip tone-${safeTone}`}>{healthLabel}</span>
         </div>
-        <span><i className={`editor-status-dot ${publishStatus}`}></i>{publishLabel} · {reviewLabel}</span>
+        <span><i className={`editor-status-dot ${publishStatus}`}></i>{publishLabel}</span>
       </div>
       <div className="workflow-status-block" aria-label={isUiEnglish ? `Review ${step} of 3` : `审核 ${step}/3`}>
         <div className="workflow-stepper-track">

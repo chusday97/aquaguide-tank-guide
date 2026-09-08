@@ -329,6 +329,7 @@ assert.match(appSource, /advanced-seo-disclosure/, 'Low-frequency keyword/index/
 assert.match(appSource, /open=\{Boolean\(indexBlockReason\)\}/, 'Advanced SEO must automatically surface active index/canonical blockers');
 assert.match(appSource, /inherited-content-disclosure/, 'Inherited Base intro must remain collapsed by default in Variant editing');
 assert.match(pageReviewSource, /publishStatus[\s\S]*reviewState/, 'Standalone review chrome must carry both publish and review state');
+assert.doesNotMatch(pageReviewSource, /\{publishLabel\}\s*·\s*\{reviewLabel\}/, 'Review metadata must not duplicate the active review-stage label already shown in the stepper.');
 assert.match(pageReviewSource, /data-ui-state=\{uiState\}/, 'Standalone review chrome must expose explicit loading and semantic UI state');
 assert.match(pageReviewSource, /tone-error[\s\S]*tone-warning[\s\S]*tone-success|safeTone/, 'Standalone review chrome must support error, warning and success health states');
 assert.match(appSource, /page-review-top-slot/, 'Current page review must have a top-level slot between Publish Progress and the workspace');
