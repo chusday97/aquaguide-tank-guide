@@ -50,6 +50,7 @@ function elementEditPath(key, preview, appLocale, editorScope) {
         : (english ? 'Current page' : '当前页面');
   return `${scope} → ${section} → ${getEditorElementLabel(key, appLocale)}`;
 }
+
 function Inspectable({ elementKey, selectedElement, hoveredElement, inspectEnabled, onSelect, onHover, labelLocale = 'zh-CN', children, className = '', readOnlyElement = false }) {
   const selected = selectedElement === elementKey;
   const hovered = inspectEnabled && hoveredElement === elementKey;
@@ -195,17 +196,20 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
           <button type="button" className="compact-preview-close" onClick={onCloseCompact} aria-label={appLocale === 'en' ? 'Close preview' : '关闭预览'}>×</button>
         </div>
       </header>
-      <div className="preview-readiness-row">
+      <div className={`preview-readiness-row ${selectedElement ? 'has-inspector-selection' : ''}`}>
         <span className={`preview-readiness ${meta.tone}`}>{meta.label}{readiness?.blockers?.length ? ` · ${readiness.blockers.length} ${appLocale === 'en' ? 'items' : '项'}` : ''}</span>
-        {readiness?.state === 'publish_ready' ? <button className="preview-generate-button" type="button" onClick={onGeneratePreview}>{t('preview.generate')}</button> : <span className="preview-readiness-hint">{readiness?.state === 'blocked' ? t('preview.blockedHint') : t('preview.reviewHint')}</span>}
+        {selectedElement ? (
+          <div className={`preview-inspector-status ${selectedReadOnly ? 'is-readonly' : 'is-editable'}`} title={selectedPath}>
+            <strong>{selectedLabel}</strong>
+            <span>{selectedSource}</span>
+          </div>
+        ) : readiness?.state === 'publish_ready' ? (
+          <button className="preview-generate-button" type="button" onClick={onGeneratePreview}>{t('preview.generate')}</button>
+        ) : (
+          <span className="preview-readiness-hint">{readiness?.state === 'blocked' ? t('preview.blockedHint') : t('preview.reviewHint')}</span>
+        )}
+        {selectedElement && readiness?.state === 'publish_ready' ? <button className="preview-generate-button" type="button" onClick={onGeneratePreview}>{t('preview.generate')}</button> : null}
       </div>
-      {selectedElement ? (
-        <div className={`preview-inspector-status ${selectedReadOnly ? 'is-readonly' : 'is-editable'}`}>
-          <strong>{selectedLabel}</strong>
-          <span>{selectedSource}</span>
-          <span className="preview-inspector-path">{selectedPath}</span>
-        </div>
-      ) : null}
       <div className={`live-preview-canvas ${mode === 'mobile' ? 'is-mobile' : ''}`}>
         {mode === 'google'
           ? <GooglePreview preview={preview} inspector={inspector} />

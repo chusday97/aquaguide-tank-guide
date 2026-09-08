@@ -258,6 +258,11 @@ assert.match(uiFoundationSource, /workflow-status-block \{ display: none; \}/, '
 assert.match(uiFoundationSource, /editor-tool-row strong[\s\S]*var\(--ui-text-body\)/, 'Secondary tool launchers must use body-size labels instead of micro typography');
 assert.match(uiFoundationSource, /bulk-upload-button[\s\S]*font-size:\s*var\(--ui-text-body\)/, 'Bulk upload must remain a normal secondary action, not a micro control');
 assert.match(uiFoundationSource, /review-confirm-action[\s\S]*var\(--ui-control-primary\)/, 'Data Review confirmation must consume the primary control token');
+assert.match(uiFoundationSource, /validation-section\.state-warning[\s\S]*box-shadow:\s*none/, 'Primary editor warning state must not paint a full semantic edge across the task section');
+assert.match(uiFoundationSource, /preview-mode-tabs button\.active[\s\S]*var\(--cms-ink\)/, 'Preview mode selection must use graphite rather than introducing another accent color');
+assert.match(uiFoundationSource, /preview-readiness-row \.preview-inspector-status[\s\S]*background:\s*transparent/, 'Preview readiness and inspector context must share one compact neutral band');
+assert.match(liveFrontendPreviewSource, /preview-readiness-row \${selectedElement \? 'has-inspector-selection'/, 'Preview inspector context must stay inside the readiness row instead of creating a third persistent band');
+assert.doesNotMatch(liveFrontendPreviewSource, /preview-inspector-path/, 'Preview must not repeat the full editor breadcrumb in a separate hierarchy layer');
 assert.match(appSource, /contentLocale/, 'Content locale must remain a separate editorial state');
 assert.match(appSource, /appLocale/, 'Interface locale must remain separate from content locale');
 assert.match(appLanguageSource, /aquaguide-admin-app-locale/, 'Interface locale must persist across refreshes');

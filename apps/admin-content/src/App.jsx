@@ -481,7 +481,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
       <section className="editor-panel">
         <div className="editor-task-header">
           <div>
-            <small>{isUiEnglish ? 'CURRENT PAGE' : '当前页面'}</small>
             <h2>{species.name}</h2>
             <p>{species.scientific_name}</p>
           </div>
@@ -509,7 +508,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <h3>{isUiEnglish ? 'Page-specific content' : '当前页面要填写'}</h3>
                 <p>{isUiEnglish ? 'Only content unique to this page belongs here.' : '这里只填写当前物种页面自己的内容；模板已提供的内容无需重复填写。'}</p>
               </div>
-              {contentSectionState !== 'success' ? <span className={`validation-state-chip tone-${contentSectionState}`}>{stateLabel(contentSectionState)}</span> : null}
             </div>
             {isEnglishLocale(locale) ? (
               <label {...editorFieldProps('localizedName')}>
