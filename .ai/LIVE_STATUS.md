@@ -340,3 +340,11 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - `/admin/seo-pages` remains read-only: no CMS/database/publication authority was added. Species remains Repo Admin authority; Care remains Published Care / Care SEO authority.
 - Root build PASS after the change. Production/main/live DB/index/Care SEO hold_noindex remain untouched.
 - Next implementation: expand health checks only from real available fields (Meta Title, Meta Description, H1, bilingual completeness, canonical validation, source publication state) and route priority items into existing authority editors.
+
+## 2026-09-08 — SEO Operations Health queue local acceptance
+- Local operator URL: `http://127.0.0.1:3003/admin/seo-pages`. Vite is running with `API_PORT=8788`; API is `http://localhost:8788`.
+- Port 8787 belongs to `/Users/chuchu/Documents/New project/aquaguide-ui-atlas-care`; do not terminate that unrelated process just to run this worktree.
+- Current local environment has no Business Admin login service, so Care health is truthfully `来源待读取`; Species Repo Admin is also independent-login required. This is an environment/auth limitation, not a Health logic failure.
+- Default Health queue hides source-unknown inventory from actionable work; explicit unknown/all/search views remain available and progressive loading is 50 rows.
+- 1440×900 and 390×844 local Playwright acceptance reports 0 horizontal overflow.
+- Functional checkpoint `f945e9f8`; Production/main/live DB/index remain untouched.

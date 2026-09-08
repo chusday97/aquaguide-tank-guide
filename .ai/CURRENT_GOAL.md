@@ -1,6 +1,6 @@
 # Current Goal
 
-Updated: 2026-09-06
+Updated: 2026-09-08
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
 Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
@@ -8,7 +8,7 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, and the first AI-assisted Care SEO advisory flow are complete. The explicit release decision is **`hold_noindex`**. A newer user-reported usability problem is now the immediate priority: make the **Species SEO Admin understandable and directly acceptable as an operator product**.
+P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, the first AI-assisted Care SEO advisory flow, and **SEO Operations Health Layer V2 plus local browser/operator acceptance are complete**. The explicit Care SEO release decision remains **`hold_noindex`**. The immediate next objective is user/hosted visual acceptance of `/admin/seo-pages`; writable Preview credential restoration and branch reconciliation remain separate gated tasks.
 
 ## Why this is current
 The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback tightened the visual system further: state must be obvious **without changing information layout**, workflow chrome must stay permanently compact as a distinct Progress Navigation bar to yield space to editing/Preview, and the CMS may use only three visible color families: **Graphite / White / one Green accent**. Warning, review, ready, error and success states must use copy, iconography, border treatment and weight rather than new red/amber/blue/purple hues. Typography is a deliberate hierarchy rather than many near-equal micro sizes. Workflow `attention` stays separate from operator `selected`; normal Species selection remains inside the existing 16×16 square control; batch selection uses that same slot only in batch mode. `当前物种页面` and `基础模板` remain distinct contexts. Draft PR #144 reconciliation stays parked.
@@ -36,7 +36,10 @@ Species SEO remains Repo-backed and fail-closed:
 11. [DONE in code] Release-readiness mechanics: exact snapshot SHA-256 + Vercel acceptance evidence + explicit human decision contract; Staging remains noindex and acceptance-evidence-only commits do not redeploy runtime.
 12. [DONE] Explicit Care SEO decision recorded as `hold_noindex`; accepted snapshot/deployment binding is current and Production/index remain locked.
 13. [DONE] AI-assisted Care SEO advisory: Published-only source extraction, conflict detection, impact explanation and SEO Draft suggestion with no auto-write/review/publish.
-14. [PARKED] Dedicated feature ↔ live-main reconciliation audit exists separately; current user task is Species SEO Admin usability/acceptance.
+14. [PARKED] Dedicated feature ↔ live-main reconciliation audit exists separately; do not resume it without explicit user scope change.
+15. [DONE locally] SEO Operations Health Layer V2: effective Species Meta/H1 inheritance, bilingual/Canonical checks, Published-Care snapshot-aware batch health, source drift/legacy-source checks, health filtering and authority deep-links.
+16. [DONE locally] Browser/operator acceptance for `/admin/seo-pages`: 1440/390 zero horizontal overflow, priority-vs-unknown separation, health filter toggle/reset, issue copy, search and progressive 50-row loading.
+17. [NEXT] User/hosted read-only visual acceptance of the Health queue. Keep writable Preview credential restoration separate and keep reconciliation parked.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -275,9 +278,21 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Pre-doc-sync refs: feature `e584e3f6fe49159b7896e7a8429bca59a9877f60`, live main `64fa58a16a723b74621ac1db513adb1efb47e282`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence **269 main-only / 188 feature-only**. Draft PR #144 remains PARKED. Production, live DB, Care SEO `hold_noindex` and public indexing remain untouched.
 - Do not reintroduce the removed banner/card/stat/locale layers merely to make status more visible. Future acceptance work should reduce cognition through progressive disclosure, not add another permanent surface.
 
-## 2026-09-06 — SEO Operations Health Layer V2 start
-- Functional checkpoint `49c136bf` adds the first SEO Operations health layer above the read-only Page Registry.
-- Registry entries now expose derived health severity from existing authoritative signals instead of creating a new content authority. Current checks cover unknown index strategy, unavailable source state and incomplete editorial progression.
-- `/admin/seo-pages` remains read-only: no CMS/database/publication authority was added. Species remains Repo Admin authority; Care remains Published Care / Care SEO authority.
-- Root build PASS after the change. Production/main/live DB/index/Care SEO hold_noindex remain untouched.
-- Next implementation: expand health checks only from real available fields (Meta Title, Meta Description, H1, bilingual completeness, canonical validation, source publication state) and route priority items into existing authority editors.
+## 2026-09-08 — SEO Operations Health Layer V2 local completion
+- Species health resolves Variant + Base through the same `resolveEffectiveSeo` inheritance model used by the editor instead of treating raw Variant blanks as missing SEO.
+- Index pages now fail on missing bilingual completion; Canonical-to-sibling validates target existence, non-self reference and same-locale indexed target. Whitespace-only Meta/H1 values are also rejected.
+- Care health no longer infers publication state from editable `care_articles.status`. A batch read composes immutable `content_publications` with per-resource legacy fallback and latest bilingual Care SEO Editorial rows, preserving Published truth while a new Draft is edited.
+- Care blocks legacy-only authority, source-version drift and unpublished source; noindex bilingual incompleteness remains actionable rather than falsely index-blocking.
+- Health totals and priority filters are visible directly in `/admin/seo-pages`, while all writes remain in Species Repo Admin / Care SEO Editorial.
+- Local validation PASS: Care SEO Editorial contract, Page Registry contract, root TS, API TS, diff hygiene and full root build.
+- Next: browser/operator acceptance of this queue. Production/main/live DB/index remain untouched.
+
+## 2026-09-08 — SEO Operations Health queue browser acceptance
+- Functional checkpoint: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5` (`feat(seo): complete operations health queue`).
+- Default Registry view now shows only real actionable `blocked / attention` work. `unknown` source state is isolated and never counted as healthy or as an SEO to-do.
+- Source-unavailable empty state explicitly explains the difference and links to the `来源待读取` filter instead of saying only that no pages exist.
+- Large inventories use 50-row progressive disclosure; search intentionally reaches all states. Health issue copy is operator-facing and explains the required action.
+- 1440×900 and 390×844 Playwright acceptance: zero horizontal overflow; unknown toggle/reset, all-pages mode, `sp_0001` search and progressive footer pass.
+- Local Preview: `http://127.0.0.1:3003/admin/seo-pages`; this session uses Aqua API `8788` because another legacy Aqua worktree owns `8787`.
+- PASS: Page Registry contract, Care SEO Editorial contract, root/API TypeScript, `git diff --check`, full production build.
+- Fresh remote read: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature before this checkpoint `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence at functional checkpoint **275 main-only / 198 feature-only**. No merge/rebase/Production/index/live-DB action.

@@ -1,6 +1,6 @@
 # Task Queue
 
-Updated: 2026-09-06
+Updated: 2026-09-08
 Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
 Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 
@@ -79,7 +79,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
   - [x] Admin UI exposes source extraction, conflicts, impact explanation, review warnings and local-only Draft application.
   - [x] Contract + 1280/390 browser acceptance prove AI generation/application creates no Editorial write until explicit Save Draft.
 
-## Active override — Species SEO Admin usability / acceptance
+## Previous override — Species SEO Admin usability / acceptance
 - [x] Remove duplicated first-screen bulk review / content review / template import controls from the topbar; keep those capabilities in secondary tools.
 - [x] Add one queue-driven `当前下一步` primary action: data review → editorial review → Preview-ready → editing fallback.
 - [x] Verify 1440px / 390px layout, zero horizontal overflow, CTA queue routing and read-only no-write behavior.
@@ -188,9 +188,16 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - Production, live DB, `main`, Care SEO `hold_noindex`, and public indexing remain untouched.
 - Active next work is still **Species SEO Admin operator acceptance / usability convergence**. Do not resume PR #144 reconciliation until the user explicitly returns to branch convergence.
 
-## 2026-09-06 — SEO Operations Health Layer V2 start
-- Functional checkpoint `49c136bf` adds the first SEO Operations health layer above the read-only Page Registry.
-- Registry entries now expose derived health severity from existing authoritative signals instead of creating a new content authority. Current checks cover unknown index strategy, unavailable source state and incomplete editorial progression.
-- `/admin/seo-pages` remains read-only: no CMS/database/publication authority was added. Species remains Repo Admin authority; Care remains Published Care / Care SEO authority.
-- Root build PASS after the change. Production/main/live DB/index/Care SEO hold_noindex remain untouched.
-- Next implementation: expand health checks only from real available fields (Meta Title, Meta Description, H1, bilingual completeness, canonical validation, source publication state) and route priority items into existing authority editors.
+## Active override — SEO Operations Health Layer V2 / acceptance
+- [x] Evaluate Species Meta Title / Meta Description / H1 from effective Variant + Base inheritance, not raw Variant fields.
+- [x] Add Species bilingual completeness and Canonical-to-sibling validation using real same-locale targets.
+- [x] Add authenticated batch Care health read using immutable `content_publications` plus per-resource legacy fallback and latest Care SEO Editorial rows; no N+1 page requests.
+- [x] Preserve Published Care truth while an editable source row returns to Draft.
+- [x] Distinguish Care unpublished source, legacy-not-snapshot authority, source drift, missing bilingual pair, missing Meta/H1 and incomplete review.
+- [x] Keep `/admin/seo-pages` read-only and route issues back to existing Species/Care authority editors.
+- [x] Add truthful all-page health counts, clickable health filters and row-level issue labels.
+- [x] PASS focused contracts, root/API TypeScript, diff hygiene and full root build.
+- [x] Browser/operator acceptance: desktop/mobile health counts, priority/unknown filter toggles, operator issue copy, search/progressive inventory behavior, and authority deep-link contracts.
+- [ ] User/hosted read-only visual acceptance of the completed Health queue; local Preview is `http://127.0.0.1:3003/admin/seo-pages`.
+- [ ] Writable `admin-content` Preview remains a separate security task and must use safe server-side credential binding; do not expose or manually shuttle Repo Admin/GitHub secrets.
+- [ ] Branch reconciliation remains parked until explicitly requested.

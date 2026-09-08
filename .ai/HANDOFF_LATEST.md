@@ -1,10 +1,10 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
-Updated: 2026-09-06
+Updated: 2026-09-08
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
-Current functional HEAD before this docs sync: `e584e3f6fe49159b7896e7a8429bca59a9877f60`
+Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
@@ -95,12 +95,13 @@ P1 — [DONE] Change Impact Preview: field classification, persisted Draft-vs-Pu
 
 P1 — [DONE in code] Compatibility Admin: Profile/Pair Draft, structural Impact, real server engine Regression, canonical Evidence resolution, explicit human Review/Approve, exact reviewed runtime authority and atomic versioned publish are implemented. Live migrations remain unapplied.
 
-P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE] Care SEO Published projection + Editorial Draft/Review + sanitized Staging handoff + protected hosted acceptance + release-readiness evidence. [DONE] Explicit decision is `hold_noindex`. [DONE] First AI advisory layer for Published-Care source extraction/conflict/impact/SEO Draft suggestion. [NEXT] Dedicated feature ↔ live-main reconciliation audit only; no merge is authorized yet.
+P2 — [DONE] Unified Publish Center V1 + permission/audit visibility. [DONE] Care SEO Published projection + Editorial Draft/Review + sanitized Staging handoff + protected hosted acceptance + release-readiness evidence. [DONE] Explicit decision is `hold_noindex`. [DONE] First AI advisory layer for Published-Care source extraction/conflict/impact/SEO Draft suggestion. [DONE] SEO Operations Health Layer V2 + local browser/operator acceptance. [NEXT] User/hosted read-only visual acceptance of `/admin/seo-pages`; writable Preview credentials and reconciliation stay separate/parked unless explicitly requested.
 
 ## Branch / safety
-- Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`.
-- Feature remote before this docs sync: `5899d64343fdc5d6e4929c31ed84a29af437be1c`.
-- Current measured divergence before this docs-only sync: main-only 269 / feature-only 161 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Fresh live `main`: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Remote feature before the Health queue checkpoint: `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`.
+- Health queue functional checkpoint: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`.
+- Measured divergence at that functional checkpoint: main-only 275 / feature-only 198 commits; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Do not blindly merge/rebase main; dedicated reconciliation is required after operational acceptance.
 - Do not unlock Production, bypass Admin authentication, or write private Draft content to the public repo.
 ## Known operational data that must not be forgotten
@@ -420,9 +421,21 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Measured divergence against live main: `269 main-only / 191 feature-only`. This remains a two-way divergence. Do not merge/rebase or resume PR #144 reconciliation.
 - Production, live DB, Care SEO `hold_noindex`, public indexing and main remain untouched.
 
-## 2026-09-06 — SEO Operations Health Layer V2 start
-- Functional checkpoint `49c136bf` adds the first SEO Operations health layer above the read-only Page Registry.
-- Registry entries now expose derived health severity from existing authoritative signals instead of creating a new content authority. Current checks cover unknown index strategy, unavailable source state and incomplete editorial progression.
-- `/admin/seo-pages` remains read-only: no CMS/database/publication authority was added. Species remains Repo Admin authority; Care remains Published Care / Care SEO authority.
-- Root build PASS after the change. Production/main/live DB/index/Care SEO hold_noindex remain untouched.
-- Next implementation: expand health checks only from real available fields (Meta Title, Meta Description, H1, bilingual completeness, canonical validation, source publication state) and route priority items into existing authority editors.
+## 2026-09-08 — SEO Operations Health Layer V2 local completion
+- Restored from real authority at Git HEAD `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`; current changes are intentionally local/uncommitted in this session.
+- Species health now reads Variant + Base Template together and evaluates the **effective** SEO result, so inherited Meta Title / Meta Description / H1 are not falsely reported missing. It also checks bilingual completeness and real Canonical-to-sibling validity.
+- Care health now has one authenticated **batch read** across current `content_publications` + legacy-published fallback + Care SEO Editorial revisions. Per resource, immutable Published snapshot wins; legacy is used only when that resource lacks a snapshot. An editable Care row returning to Draft therefore does not erase its last Published authority.
+- Care health distinguishes not published, legacy-not-snapshot, source drift, missing bilingual pair, missing Meta/H1 and incomplete human review. Legacy source and source drift are hard blockers because Staging handoff requires immutable Published snapshot binding.
+- `/admin/seo-pages` remains read-only. Health cards now show truthful all-page counts, filter the registry, expose row-level issue labels, and route operators back to the existing Species/Care editor authority.
+- PASS: `test:care-seo-editorial`, `test:seo-page-registry`, root TypeScript, `@aquaguide/api` TypeScript, `git diff --check`, and full root `npm run build`. Species/Care artifact builders correctly skipped normal code builds.
+- Current refs after fresh fetch: local `feature/admin-content-v0` HEAD `46418ac5`; remote feature `3dfa76af`; live main `64fa58a1`; divergence **269 main-only / 197 feature-only**, merge base `ed0cf380`. Local HEAD is 35 commits ahead of remote feature before these uncommitted changes.
+- Production, main, live DB, Care SEO `hold_noindex`, public indexing and Draft PR #144 remain untouched. Next: browser/operator acceptance of the Health queue/filter/deep-link behavior before any separate credential or reconciliation work.
+
+## 2026-09-08 — SEO Operations Health queue acceptance closeout
+- `f945e9f8` completes the Health V2 implementation and the operator-facing queue behavior without adding any write authority. Effective Species inheritance, bilingual/Canonical checks and snapshot-aware Care health remain the source of truth.
+- Default `/admin/seo-pages` now prioritizes only `blocked / attention`; source permission/service failures are isolated as `来源待读取`, with an explanatory empty state and explicit filter. Unknown does not masquerade as healthy or actionable SEO work.
+- Inventory rendering is capped to 50 rows per reveal instead of 300. Search spans all states; health cards filter/toggle back to priority. Issue labels explain the operator action instead of exposing raw codes.
+- Local Playwright acceptance at 1440×900 and 390×844: zero horizontal overflow; default priority, unknown expansion/reset, all-pages mode, `sp_0001` search and progressive footer pass.
+- Local Preview is `http://127.0.0.1:3003/admin/seo-pages`. Use `API_PORT=8788` for this worktree while the legacy Aqua worktree owns 8787; do not kill the unrelated process just to reuse the port.
+- PASS: `test:seo-page-registry`, `test:care-seo-editorial`, `check:api`, root `lint`, `git diff --check`, full `npm run build`.
+- Fresh branch read after functional commit: live main `d3c70dee`, remote feature `46418ac5`, merge base `ed0cf380`, divergence **275 main-only / 198 feature-only**. This strengthens the existing rule: no blind merge/rebase and PR #144 stays parked. Production/live DB/index/Care `hold_noindex` remain untouched.

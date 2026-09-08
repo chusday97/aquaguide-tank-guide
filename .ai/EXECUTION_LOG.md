@@ -848,3 +848,14 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - `/admin/seo-pages` remains read-only: no CMS/database/publication authority was added. Species remains Repo Admin authority; Care remains Published Care / Care SEO authority.
 - Root build PASS after the change. Production/main/live DB/index/Care SEO hold_noindex remain untouched.
 - Next implementation: expand health checks only from real available fields (Meta Title, Meta Description, H1, bilingual completeness, canonical validation, source publication state) and route priority items into existing authority editors.
+
+## 2026-09-08 — SEO Operations Health V2 operator acceptance
+- Restored real `feature/admin-content-v0` authority at pre-change HEAD `46418ac5`; preserved the existing Health V2 uncommitted implementation instead of reverting/reimplementing it.
+- Found local port collision: 8787 was serving the legacy `aquaguide-ui-atlas-care` worktree. Started this worktree API on 8788 and Vite on 3003 with `API_PORT=8788`.
+- Browser acceptance exposed a usability badcase: when both authorities are unreadable, 972 Species rows were all `unknown` and the mobile page expanded to ~27k px. Unknown source state looked like an enormous work queue.
+- Fixed queue semantics: default view now includes only `blocked / attention`; `unknown` has an explicit source-waiting filter and explanatory empty state; search/all-pages still reach the full inventory.
+- Replaced 300-row initial rendering with 50-row progressive disclosure; tightened mobile stats/queue grids and rewrote issue labels as operator actions.
+- Local Playwright 1440/390: priority empty state correct under unavailable sources; unknown toggle/reset PASS; all-pages mode PASS; `sp_0001` search returns 2 locale rows; zero horizontal overflow.
+- PASS: `npm run test:seo-page-registry`, `npm run test:care-seo-editorial`, `npm run check:api`, `npm run lint`, `git diff --check`, full `npm run build`.
+- Committed functional checkpoint `f945e9f86dd0790cbc7e75a57b5968adb08a94e5` (`feat(seo): complete operations health queue`).
+- Fresh refs after fetch: main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence 275/198 at functional checkpoint. Reconciliation remains parked.
