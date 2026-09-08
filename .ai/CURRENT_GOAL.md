@@ -305,3 +305,14 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - [DONE] Preserve desktop split Preview, mobile overlay, zero horizontal overflow and all authority boundaries.
 - [NEXT] Operator visual acceptance on `http://127.0.0.1:3010/?demo=1`; fix only concrete hierarchy badcases. After acceptance, consider deleting superseded legacy density rules instead of adding new overrides.
 - [PARKED] Branch reconciliation / PR #144, Production, public indexing and Care SEO release state.
+
+## 2026-09-08 18:37 +08:00 — CMS low-noise hierarchy convergence
+- Functional checkpoint: `8a44d1c8d835ff62c3cee07124b9c541cb8f1cdf` (`fix(admin): reduce editor preview visual noise`).
+- User acceptance found the current-page editor + Preview still expressed the same state at too many nested layers. Warning state appeared in task summary, section edge, field edge and input border; Preview mapping also reused Green across tabs, inspect controls, outlines and tags.
+- New rule: **one state is expressed once**. Page-level `2 项待填写` remains the visible warning. Primary section/fields/inputs stay neutral; selected Preview↔Editor mapping uses Graphite rather than Green.
+- Removed redundant editor hierarchy: the repeated `当前页面` eyebrow and duplicate section `待补充` chip are gone; the decorative section-heading dash is removed.
+- Preview top chrome is reduced from Header + readiness row + inspector breadcrumb row to Header + one context row. Exact editor path remains available via tooltip/contract but no longer occupies a persistent visual band.
+- Preview Page/Google/Mobile selection and `点击内容编辑` use Graphite; Green is reserved for primary workflow actions such as `开始处理` / `提交审核`. The real public-page Preview content is not recolored.
+- Browser acceptance: 1788×846 and 390×844 both have zero horizontal overflow; selected editor field is a single Graphite edge, warning inputs are neutral, Preview context row is 36px.
+- PASS: Admin Content contract including Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index/Care `hold_noindex` remain untouched.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.

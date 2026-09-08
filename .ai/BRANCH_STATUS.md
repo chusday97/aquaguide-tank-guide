@@ -274,3 +274,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - live-main divergence: **275 main-only / 200 feature-only**
 - NOTE: ordinary `origin/main` / `origin/feature...` refs in this worktree can remain stale; use explicit live refs or `git ls-remote` for reconciliation decisions.
 - Do not blind merge/rebase; PR #144 remains PARKED.
+
+## 2026-09-08 18:37 +08:00 — post low-noise UI checkpoint
+- Local feature functional HEAD before docs sync: `8a44d1c8d835ff62c3cee07124b9c541cb8f1cdf`.
+- Live GitHub main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Remote feature before this docs sync: `65a0b1eeb7671a07e3abaabe4515b9a0483ec0fb`.
+- Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Functional divergence: **275 main-only / 202 feature-only**. This remains a two-way divergence; PR #144 stays parked.

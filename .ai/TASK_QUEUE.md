@@ -212,3 +212,13 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Add contract guards for UI Foundation loading and critical tokens.
 - [x] PASS Admin contract + Admin/root builds + diff hygiene + 1440/390 Preview acceptance.
 - [ ] User/operator visual acceptance; repair only observed badcases before any legacy CSS cleanup.
+
+## 2026-09-08 — Species SEO Admin visual hierarchy acceptance
+- [x] Establish UI Foundation tokens for readable Button / Typography / Input / spacing hierarchy.
+- [x] Remove repeated warning paint from section edge, field edge and input border; keep task-level warning once.
+- [x] Remove duplicate Current Page eyebrow and primary-section status chip.
+- [x] Make Preview inspector selection Graphite instead of Green.
+- [x] Merge Preview readiness + selected-element context into one compact row; preserve exact path as tooltip/contract.
+- [x] PASS desktop/mobile 0-overflow acceptance, Admin contract/build, full root build and diff hygiene.
+- [ ] Continue operator visual acceptance only for concrete bad cases; do not add another persistent hierarchy layer.
+- [ ] Writable Preview credentials and branch reconciliation remain separate parked tasks.

@@ -451,3 +451,14 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - PASS: Admin contract, Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`, 1440/390 browser acceptance.
 - Live refs at checkpoint: main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature before push `a7db1e186ec10ad29520f041ff1da03a44a6de06`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence **275 main-only / 200 feature-only**. No main merge/rebase, Production deploy, live DB/index change; PR #144 remains parked.
 - Local CMS Preview: `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 18:37 +08:00 — CMS low-noise hierarchy convergence
+- Functional checkpoint: `8a44d1c8d835ff62c3cee07124b9c541cb8f1cdf` (`fix(admin): reduce editor preview visual noise`).
+- User acceptance found the current-page editor + Preview still expressed the same state at too many nested layers. Warning state appeared in task summary, section edge, field edge and input border; Preview mapping also reused Green across tabs, inspect controls, outlines and tags.
+- New rule: **one state is expressed once**. Page-level `2 项待填写` remains the visible warning. Primary section/fields/inputs stay neutral; selected Preview↔Editor mapping uses Graphite rather than Green.
+- Removed redundant editor hierarchy: the repeated `当前页面` eyebrow and duplicate section `待补充` chip are gone; the decorative section-heading dash is removed.
+- Preview top chrome is reduced from Header + readiness row + inspector breadcrumb row to Header + one context row. Exact editor path remains available via tooltip/contract but no longer occupies a persistent visual band.
+- Preview Page/Google/Mobile selection and `点击内容编辑` use Graphite; Green is reserved for primary workflow actions such as `开始处理` / `提交审核`. The real public-page Preview content is not recolored.
+- Browser acceptance: 1788×846 and 390×844 both have zero horizontal overflow; selected editor field is a single Graphite edge, warning inputs are neutral, Preview context row is 36px.
+- PASS: Admin Content contract including Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index/Care `hold_noindex` remain untouched.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
