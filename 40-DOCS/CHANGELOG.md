@@ -10,6 +10,7 @@
 - Fixed: 资料不足的物种混养证据只保留一个“打开混养计算器”入口，避免证据内容与外层页脚重复渲染同一动作。
 - Fixed: mobile-care 回归不再等待隐藏的重复节点，改为验证返回鱼缸后可见且有尺寸的养护计划与当前指南。
 - Fixed: mobile-care 回归改用稳定 `#care-plan` 区域和正文内容断言，避免响应式隐藏投影造成误报。
+- Fixed: guided-navigation 历史回归接受当前语言回退下的中英文等价控件文案，仍严格验证路由、编辑流程和无溢出。
 
 - Added: 从最新 `main@64fa58a1` 建立 `codex/ui-action-contract-v1`，将物种“查看当前鱼缸风险”与独立混养计算路由分离；旧 `/encyclopedia?mode=compatibility` 保留安全重定向，未验收视觉分支不进入本次基础PR。
 - Verified: 路由、动作契约、引导路径、任务入口、Compatibility回归、API类型、lint、production build及Chromium重定向验证通过；历史70提交UI分支继续冻结。
