@@ -462,3 +462,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Browser acceptance: 1788×846 and 390×844 both have zero horizontal overflow; selected editor field is a single Graphite edge, warning inputs are neutral, Preview context row is 36px.
 - PASS: Admin Content contract including Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index/Care `hold_noindex` remain untouched.
 - Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 19:13 +08:00 — Preview toggle semantics cleanup
+- Functional checkpoint: `c2f52dc619c262289686be37afd286c983ad2430` (`fix(admin): clarify preview pick edit mode`).
+- `点击内容编辑` was an instructional sentence rendered as a button. It is now the actual mode label `点选编辑` / `Pick to edit`.
+- The control now exposes `aria-pressed`, action-specific `aria-label`, and guidance in `title`; instruction is help text, not button copy.
+- Browser acceptance: 1440×900 + 390×844; toggle true→false→true, zero horizontal overflow; Preview clicks do not select editor fields while off and do select when on.
+- Visible-button audit found no other same-class instruction-as-button badcase on the current CMS screen.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.

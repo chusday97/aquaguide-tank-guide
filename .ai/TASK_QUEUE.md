@@ -222,3 +222,12 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] PASS desktop/mobile 0-overflow acceptance, Admin contract/build, full root build and diff hygiene.
 - [ ] Continue operator visual acceptance only for concrete bad cases; do not add another persistent hierarchy layer.
 - [ ] Writable Preview credentials and branch reconciliation remain separate parked tasks.
+
+## 2026-09-08 19:13 +08:00 — Preview toggle semantics cleanup
+- Functional checkpoint: `c2f52dc619c262289686be37afd286c983ad2430` (`fix(admin): clarify preview pick edit mode`).
+- `点击内容编辑` was an instructional sentence rendered as a button. It is now the actual mode label `点选编辑` / `Pick to edit`.
+- The control now exposes `aria-pressed`, action-specific `aria-label`, and guidance in `title`; instruction is help text, not button copy.
+- Browser acceptance: 1440×900 + 390×844; toggle true→false→true, zero horizontal overflow; Preview clicks do not select editor fields while off and do select when on.
+- Visible-button audit found no other same-class instruction-as-button badcase on the current CMS screen.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.

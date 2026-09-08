@@ -281,3 +281,11 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Remote feature before this docs sync: `65a0b1eeb7671a07e3abaabe4515b9a0483ec0fb`.
 - Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Functional divergence: **275 main-only / 202 feature-only**. This remains a two-way divergence; PR #144 stays parked.
+
+## 2026-09-08 19:13 +08:00 — live branch check after Preview toggle cleanup
+- Local feature checkpoint: `c2f52dc619c262289686be37afd286c983ad2430`.
+- Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Remote feature before push: `93ae6163f75b7c3a88955efd95a5771ac113b453`.
+- Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Divergence at functional checkpoint: **275 main-only / 204 feature-only**.
+- No merge/rebase/Production/index/live-DB action.
