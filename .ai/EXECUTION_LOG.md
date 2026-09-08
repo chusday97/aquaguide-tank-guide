@@ -11,6 +11,11 @@
 - Remote Product Golden Path exposed a stale assertion for the retired embedded compatibility drawer. The detail surface now always exposes the explicit compatibility action after risk disclosure, and GP-002 verifies the independent `/compatibility` page before continuing quantity/recording steps.
 - Local GP-002, lint and production build pass; the PR requires a new head check after this fix.
 
+## 2026-09-08 — Action PR merged and CI tiering branch started
+
+- PR #145 merged normally as `d3c70dee`; `release/production` remains frozen.
+- Created `codex/ci-tiering-v1` from the new main. Added `ci-lite.yml`; gated Product Golden Path on critical/merge-ready labels, manual dispatch, or main pushes, with full history and self-contained Preview build.
+
 ## 2026-08-30 — Readiness candidate synchronized
 
 - Pushed the clean candidate `3e1dca89` once to `codex/main-core-foundation-v1`; remote branch and PR #142 now report the same head.

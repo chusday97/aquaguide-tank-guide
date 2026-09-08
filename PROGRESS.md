@@ -9,6 +9,13 @@
 - [ ] 动作基础分支尚未推送或合并；需先完成独立 Critic 六维复验，再一次性推送并创建短 PR。
 - [ ] Aquarium、Encyclopedia、Care、Collection 的视觉重建继续拆成后续短 PR；70 提交旧 UI 分支保持冻结。
 
+## 2026-09-08 CI 分层（当前）
+
+- [x] 动作基础 PR #145 已普通 merge 到 `main@d3c70dee`；原短分支保留为回退证据。
+- [x] 从新 `main` 创建 `codex/ci-tiering-v1`，新增 CI Lite：每次提交只跑完整历史静态/契约检查和 production build，不安装 Chromium。
+- [x] Product Golden Path 改为在 `critical`、`merge-ready`、手动触发或 `main` 合并推送时运行；关键 job 使用 `fetch-depth: 0`、自建 build、Preview 和完整浏览器检查。
+- [ ] CI 分层分支尚未推送；需先通过 YAML/本地门禁，再创建短 PR并取得一次真实 Actions 运行证据。
+
 ## 当前任务目标
 
 从最新 `main` 完成首批30种物种的字段级证据闭环；本阶段不改变 UI、不写生产数据库、不发布 Catalog。

@@ -4,6 +4,7 @@
 
 - Fixed: 对齐动作基础浏览器门禁与当前产品契约：物种风险在详情内展开，兼容性从显式入口进入独立页面；空缸可规划加入当前鱼缸；温度冲突按当前 Domain 展示为 `not_recommended`；互动图鉴筛选测试显式使用 `mode=browse`。授权环境下动作、路由、详情、Compatibility、lint、API 类型与 production build 均通过。
 - Fixed: 为谨慎/风险状态保留明确的“混养计算”次级入口，Golden Path 不再查找已废弃的内嵌兼容抽屉；风险仍原位展开，独立计算页面负责后续数量与记录流程。
+- Added: 建立 CI Lite 与关键 PR 重型门禁两层；普通提交不安装 Chromium，`critical`/`merge-ready`、手动触发和合并后才运行完整 Golden、Visual、历史回归与全视口检查。
 
 - Added: 从最新 `main@64fa58a1` 建立 `codex/ui-action-contract-v1`，将物种“查看当前鱼缸风险”与独立混养计算路由分离；旧 `/encyclopedia?mode=compatibility` 保留安全重定向，未验收视觉分支不进入本次基础PR。
 - Verified: 路由、动作契约、引导路径、任务入口、Compatibility回归、API类型、lint、production build及Chromium重定向验证通过；历史70提交UI分支继续冻结。

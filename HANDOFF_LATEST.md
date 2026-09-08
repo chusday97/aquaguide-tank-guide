@@ -10,6 +10,13 @@
 - 随后发现远端 GP-002 仍假设旧的 `compatibility-checkout-drawer`；已将风险详情补回明确的“混养计算”动作，并让 GP-002 先验证风险原位展开、再进入独立 `/compatibility`。本地 GP-002、lint 和 build 已通过，待提交后重新推送触发最终 PR 检查。
 - 下一步：独立审查本基础分支后，按序创建 Aquarium、Encyclopedia/Care、Collection 和工具页短分支；不推送、不合并、不执行生产操作，直到对应门禁与用户验收完成。
 
+## 2026-09-08 CI 分层（当前）
+
+- 动作基础 PR #145 已普通 merge 到 `main@d3c70dee`，短分支仍保留；生产指针不变。
+- 当前分支 `codex/ci-tiering-v1` 只修改 `.github/workflows/ci-lite.yml` 和 Product Golden Path：普通更新走轻量检查，关键标签/手动/合并前才跑浏览器重型门禁。
+- 重型 job 已设置完整 Git 历史、独立 build/Preview 和 Golden/Visual/历史回归清单；尚未推送或取得远端运行证据。
+- 下一步：本地校验 workflow 与静态门禁后推送一次，观察普通 PR 与 `merge-ready` 标签两类真实运行，再创建 UI foundation 短分支。
+
 ## 2026-08-31 数据短分支本地门禁复验（当前）
 
 - 当前分支：`codex/catalog-cohort-30-v1`；当前 HEAD：`8bfef23cd667b7aec4ef3028d0ca61cf3771abd9`；工作树干净；分支包含 `origin/main@016dbca5`。
