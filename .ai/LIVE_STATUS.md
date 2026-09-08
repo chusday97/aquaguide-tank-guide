@@ -420,3 +420,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Contract guards protect this return-value chain so future UI simplification cannot bypass the existing dirty-state boundary.
 - PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
 - Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `ccf2feac122f288fd0de17665bb9ac3b034032ce`, divergence at functional checkpoint **275 main-only / 214 feature-only**.
+
+## 2026-09-08 22:01 +08:00 — Local CMS acceptance status
+- Local Species SEO CMS remains available at `http://127.0.0.1:3010/?demo=1`.
+- Functional UI checkpoint: `5b4be8cb20ff5bb7d0eb2dd124f26e4c2c048e8b`.
+- Secondary editor hierarchy is compact: default panel ~563px desktop / ~626px mobile, one secondary SEO row, one flat utility footer, zero horizontal overflow at 1440×900 and 390×844.
+- Full Admin contract/build and root build PASS. No Production publish, live DB/index mutation, or main reconciliation was performed.

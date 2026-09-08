@@ -370,3 +370,10 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Contract guards protect this return-value chain so future UI simplification cannot bypass the existing dirty-state boundary.
 - PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
 - Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `ccf2feac122f288fd0de17665bb9ac3b034032ce`, divergence at functional checkpoint **275 main-only / 214 feature-only**.
+
+## 2026-09-08 22:01 +08:00 — Current CMS visual-convergence checkpoint
+- `5b4be8cb` completes the current secondary-editor hierarchy pass: one `更多 SEO 设置`, template reference inline with the current task, and `辅助工具` as a flat footer utility.
+- Preserve the rule: primary page task stays visible; inherited/search/indexing/tooling surfaces are progressive disclosure and must not create another persistent hierarchy row.
+- Operator labels must not expose raw enums (`Noindex`, `blocked`) in the Chinese UI when a clear task-language label exists.
+- Browser acceptance and full contract/build gates are green.
+- NEXT: continue only concrete operator visual/interaction bad cases on the 3010 CMS; do not add a new persistent layer. Writable Preview credentials and branch reconciliation stay parked.

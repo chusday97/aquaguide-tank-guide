@@ -931,3 +931,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Contract guards protect this return-value chain so future UI simplification cannot bypass the existing dirty-state boundary.
 - PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
 - Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `ccf2feac122f288fd0de17665bb9ac3b034032ce`, divergence at functional checkpoint **275 main-only / 214 feature-only**.
+
+## 2026-09-08 22:01 +08:00 — CMS secondary hierarchy convergence
+- Read real branch/HEAD and preserved existing uncommitted work after RDC reconnect.
+- Replaced standalone Search Appearance + Advanced SEO disclosures with one stateful secondary SEO disclosure; preserved Preview inspector deep-link behavior and manual disclosure state.
+- Moved Base template reference into the current task helper; localized indexing/readiness status language; flattened utility tools and removed zero-work bulk review entry.
+- Browser-validated desktop/mobile default/open/reference states with 0 horizontal overflow.
+- Ran Admin contract including Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`: PASS.
+- Created functional checkpoint `5b4be8cb20ff5bb7d0eb2dd124f26e4c2c048e8b`.

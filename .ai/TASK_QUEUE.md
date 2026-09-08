@@ -276,3 +276,12 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - Contract guards protect this return-value chain so future UI simplification cannot bypass the existing dirty-state boundary.
 - PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
 - Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `ccf2feac122f288fd0de17665bb9ac3b034032ce`, divergence at functional checkpoint **275 main-only / 214 feature-only**.
+
+## 2026-09-08 22:01 +08:00 — Secondary editor hierarchy acceptance
+- [x] Merge Search Appearance + Advanced SEO into one stateful `更多 SEO 设置` disclosure.
+- [x] Auto-open secondary SEO for real blockers and Preview Meta/H1 targets while preserving manual open state across rerenders.
+- [x] Move inherited Base intro reference into the current page helper as `查看模板内容`; remove standalone template-content row.
+- [x] Flatten `辅助工具`, localize readiness enum labels, and hide zero-count bulk editorial review entry.
+- [x] PASS desktop/mobile zero-overflow acceptance, Admin contract/build, full root build and diff hygiene.
+- [ ] Continue operator visual acceptance only for concrete bad cases; no new persistent hierarchy layer.
+- [ ] Writable Preview credentials and branch reconciliation remain separate parked tasks.

@@ -516,3 +516,14 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Contract guards protect this return-value chain so future UI simplification cannot bypass the existing dirty-state boundary.
 - PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
 - Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `ccf2feac122f288fd0de17665bb9ac3b034032ce`, divergence at functional checkpoint **275 main-only / 214 feature-only**.
+
+## 2026-09-08 22:01 +08:00 — Secondary editor hierarchy convergence
+- Functional checkpoint: `5b4be8cb20ff5bb7d0eb2dd124f26e4c2c048e8b` (`fix(admin): collapse secondary editor hierarchy`).
+- Variant editor secondary SEO is now one stateful `更多 SEO 设置 / More SEO settings` disclosure. Search Appearance + Indexing/Canonical no longer occupy two persistent hierarchy rows.
+- Secondary SEO defaults collapsed, auto-opens for real Meta/H1/index blockers or Preview pick-to-edit targets, and manual open state survives React rerenders. Chinese `Noindex` is rendered as operator language `暂不收录`.
+- Inherited Base intro reference moved into the current page task helper as a text action (`查看模板内容`); the old standalone `基础模板内容` disclosure is removed. Default editor panel height is ~563px desktop / ~626px mobile versus ~680px / ~743px before this round.
+- `更多工具` is now `辅助工具 / Utility tools`, styled as a flat footer affordance rather than a third editor card. Readiness enum `blocked` is localized to `未就绪`; zero-count `批量内容审核` does not render.
+- Browser acceptance: 1440×900 and 390×844 zero horizontal overflow; old Search/Advanced/Template disclosures count 0; template reference toggle PASS; Preview Meta/H1 selection auto-opens unified secondary SEO; utility drawer entries remain functional.
+- PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview: `http://127.0.0.1:3010/?demo=1`.
+- Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `2d8eaccd71191155d7d62160f66a974c6e5e56a2`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence at functional checkpoint **275 main-only / 216 feature-only**.
