@@ -1037,3 +1037,140 @@
   accent-color: var(--state-warning);
 }
 .admin-shell .duplicate-keep-choice.active { color: var(--state-warning); font-weight: 700; }
+
+/* 2026-09-08 PM + UI review: identity → current task → fields → secondary settings. */
+.admin-shell .editor-panel > .editor-task-header {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--cms-border);
+}
+.admin-shell .editor-panel > .editor-task-header h2 {
+  font-size: 24px;
+  font-weight: 760;
+  letter-spacing: -.02em;
+}
+.admin-shell .editor-primary-task-section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.admin-shell .editor-primary-task-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+  margin: 0 0 4px !important;
+  padding: 0 0 12px !important;
+  border: 0 !important;
+}
+.admin-shell .editor-primary-task-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.admin-shell .editor-primary-task-heading h3 {
+  margin: 0;
+  font-size: 17px !important;
+  line-height: 1.3;
+  font-weight: 760;
+}
+.admin-shell .editor-primary-task-heading p {
+  margin: 5px 0 0;
+  max-width: 560px;
+  color: var(--cms-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.admin-shell .editor-primary-task-progress {
+  color: var(--cms-ink);
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 720;
+}
+.admin-shell .editor-primary-task-progress.is-complete { color: var(--cms-muted); }
+.admin-shell .editor-primary-task-heading .section-inline-reference-action {
+  align-self: start;
+  margin-top: 1px;
+  color: var(--cms-ink) !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+}
+.admin-shell .editor-primary-task-section > label.inspector-editor-field {
+  margin: 0 !important;
+  padding: 16px 0 18px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--cms-border) !important;
+  box-shadow: none !important;
+}
+.admin-shell .editor-field-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+.admin-shell .editor-primary-task-section .editor-field-question {
+  color: var(--cms-ink);
+  font-size: 15px !important;
+  line-height: 1.35;
+  font-weight: 750;
+}
+.admin-shell .editor-field-task-status {
+  flex: none;
+  color: var(--cms-muted);
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+.admin-shell .editor-field-task-status.tone-pending { color: var(--cms-ink); }
+.admin-shell .editor-field-task-status.tone-error { color: var(--state-error); }
+.admin-shell .editor-primary-task-section .editor-field-guidance {
+  margin: 5px 0 9px !important;
+  color: var(--cms-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  font-weight: 450 !important;
+}
+.admin-shell .editor-primary-task-section input,
+.admin-shell .editor-primary-task-section textarea {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+}
+.admin-shell .editor-primary-task-section input::placeholder,
+.admin-shell .editor-primary-task-section textarea::placeholder {
+  color: rgba(32,36,44,.48) !important;
+  font-weight: 400 !important;
+}
+.admin-shell .editor-secondary-seo-disclosure {
+  margin-top: 2px;
+  opacity: 1 !important;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary {
+  min-height: 46px;
+  padding: 7px 0;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary strong {
+  font-size: 13px !important;
+  font-weight: 680 !important;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary small,
+.admin-shell .editor-secondary-seo-disclosure > summary > span {
+  font-size: 10.5px !important;
+}
+@media (max-width: 760px) {
+  .admin-shell .editor-panel > .editor-task-header h2 { font-size: 22px; }
+  .admin-shell .editor-primary-task-heading {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding-bottom: 10px !important;
+  }
+  .admin-shell .editor-primary-task-heading .section-inline-reference-action {
+    justify-self: start;
+  }
+  .admin-shell .editor-primary-task-section > label.inspector-editor-field {
+    padding: 14px 0 16px !important;
+  }
+  .admin-shell .editor-primary-task-section .editor-field-question { font-size: 14px !important; }
+}

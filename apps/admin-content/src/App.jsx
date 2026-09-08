@@ -349,6 +349,27 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const inheritedSourceCount = sourceFields.length - customSourceCount;
   const pageTaskKeys = isEnglishLocale(locale) ? ['localizedName', 'intro', 'imageAlt'] : ['intro', 'imageAlt'];
   const pageAttentionCount = pageTaskKeys.filter((key) => ['warning', 'error'].includes(fieldStateByKey[key])).length;
+  const sharedIntroCoversPage = Boolean(effectiveSeo?.sharedIntro?.trim());
+  const variantIntroPresent = Boolean(form.intro?.trim());
+  const imageAltPresent = Boolean(form.imageAlt?.trim());
+  const localizedNamePresent = Boolean(form.localizedName?.trim());
+  const introTaskStatus = fieldStateByKey.intro === 'error'
+    ? { tone: 'error', label: isUiEnglish ? 'Needs fixing' : '需修复' }
+    : variantIntroPresent
+      ? { tone: 'complete', label: isUiEnglish ? 'Added on this page' : '本页已补充' }
+      : sharedIntroCoversPage
+        ? { tone: 'inherited', label: isUiEnglish ? 'Covered by template' : '模板已覆盖' }
+        : { tone: 'pending', label: isUiEnglish ? 'Required' : '需要填写' };
+  const imageTaskStatus = fieldStateByKey.imageAlt === 'error'
+    ? { tone: 'error', label: isUiEnglish ? 'Needs fixing' : '需修复' }
+    : imageAltPresent
+      ? { tone: 'complete', label: isUiEnglish ? 'Completed' : '已填写' }
+      : { tone: 'pending', label: isUiEnglish ? 'Required' : '需要填写' };
+  const localizedNameTaskStatus = fieldStateByKey.localizedName === 'error'
+    ? { tone: 'error', label: isUiEnglish ? 'Needs fixing' : '需修复' }
+    : localizedNamePresent
+      ? { tone: 'complete', label: isUiEnglish ? 'Completed' : '已填写' }
+      : { tone: 'pending', label: isUiEnglish ? 'Required' : '需要填写' };
   const seoProblemCount = sourceFields.filter((item) => ['warning', 'error'].includes(fieldStateByKey[item.key])).length;
   const secondarySeoProblemCount = seoProblemCount + (indexBlockReason ? 1 : 0);
   const secondarySeoState = indexBlockReason || seoSectionState === 'error' ? 'error' : seoSectionState === 'warning' ? 'warning' : 'success';
@@ -499,10 +520,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
             <h2>{species.name}</h2>
             <p>{species.scientific_name}</p>
           </div>
-          <div className="editor-task-summary" aria-label={isUiEnglish ? 'Editing summary' : '填写概览'}>
-            <strong className={pageAttentionCount > 0 ? 'needs-attention' : ''}>{pageAttentionCount > 0 ? (isUiEnglish ? `${pageAttentionCount} to complete` : `${pageAttentionCount} 项待填写`) : (isUiEnglish ? 'Page content complete' : '页面内容已完整')}</strong>
-            <span>{isUiEnglish ? `${inheritedSourceCount} search fields use the template` : `${inheritedSourceCount} 项搜索字段沿用模板`}</span>
-          </div>
         </div>
 
       {!currentHygiene.clean ? (
@@ -517,41 +534,59 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 
       <div className="editor-grid">
         <div className="form-column">
-          <div className={`section-card validation-section state-${contentSectionState}`} data-validation-state={contentSectionState}>
-            <div className="section-heading">
+          <div className={`section-card validation-section editor-primary-task-section state-${contentSectionState}`} data-validation-state={contentSectionState}>
+            <div className="section-heading editor-primary-task-heading">
               <div>
-                <h3>{isUiEnglish ? 'Page-specific content' : '当前页面要填写'}</h3>
-                <p>
-                  {isUiEnglish ? 'Only content unique to this page belongs here.' : '这里只填写当前物种页面自己的内容；模板已提供的内容无需重复填写。'}
-                  {group?.member_count > 1 ? (
-                    <button type="button" className="section-inline-reference-action" aria-expanded={templateReferenceOpen} onClick={() => setTemplateReferenceOpen((value) => !value)}>
-                      {templateReferenceOpen ? (isUiEnglish ? 'Hide template' : '收起模板') : (isUiEnglish ? 'View template content' : '查看模板内容')}
-                    </button>
-                  ) : null}
-                </p>
+                <div className="editor-primary-task-title-row">
+                  <h3>{isUiEnglish ? 'Complete this page' : '完成本页补充'}</h3>
+                  <span className={`editor-primary-task-progress ${pageAttentionCount > 0 ? 'is-pending' : 'is-complete'}`}>
+                    {pageAttentionCount > 0
+                      ? (isUiEnglish ? `${pageAttentionCount} item${pageAttentionCount === 1 ? '' : 's'} remaining` : `${pageAttentionCount} 项未完成`)
+                      : (isUiEnglish ? 'Complete' : '已完成')}
+                  </span>
+                </div>
+                <p>{isUiEnglish ? 'Only add content that belongs to this page; shared content stays in the Base template.' : '只补充当前页面自己的内容；共同内容继续由基础模板提供。'}</p>
               </div>
+              {group?.member_count > 1 ? (
+                <button type="button" className="section-inline-reference-action" aria-expanded={templateReferenceOpen} onClick={() => setTemplateReferenceOpen((value) => !value)}>
+                  {templateReferenceOpen ? (isUiEnglish ? 'Hide template' : '收起模板') : (isUiEnglish ? 'View template' : '查看模板')}
+                </button>
+              ) : null}
             </div>
             {group?.member_count > 1 && templateReferenceOpen ? (
               <aside className="inline-template-reference" aria-label={isUiEnglish ? 'Inherited Base template content' : '继承的基础模板内容'}>
                 <strong>{isUiEnglish ? 'Inherited template content' : '继承的模板内容'}</strong>
-                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础种简介尚未填写。')}</p>
+                <p>{effectiveSeo.sharedIntro || (isUiEnglish ? 'No shared introduction yet.' : '基础模板还没有共同简介。')}</p>
               </aside>
             ) : null}
             {isEnglishLocale(locale) ? (
               <label {...editorFieldProps('localizedName')}>
-                {isUiEnglish ? 'English common name' : '英文常用名'}
+                <div className="editor-field-title-row">
+                  <span className="editor-field-question">{isUiEnglish ? 'English common name' : '英文常用名'}</span>
+                  <span className={`editor-field-task-status tone-${localizedNameTaskStatus.tone}`}>{localizedNameTaskStatus.label}</span>
+                </div>
+                <small className="editor-field-guidance">{isUiEnglish ? 'Required only for the English page.' : '仅英文页面需要填写。'}</small>
                 <input value={form.localizedName} placeholder={isUiEnglish ? 'e.g. Cherry Shrimp' : '例如 Cherry Shrimp'} onFocus={() => onInspectorSelect?.('localizedName')} onChange={(event) => update('localizedName', event.target.value)} />
-                <small className="inherit-note">{isUiEnglish ? 'Required for the English page only.' : '仅英文页面需要填写。'}</small>
               </label>
             ) : null}
             <label {...editorFieldProps('intro')}>
-              <span className="editor-field-question">{isUiEnglish ? 'What is different about this page?' : '这个品种有什么不同？'}</span>
-              <small className="editor-field-guidance">{isUiEnglish ? 'Write only differences from the Base template. If the template already covers the page and there is no difference, leave this blank.' : '只写和基础模板不同的内容；基础模板已有共同内容且当前品种没有差异时，可以留空。'}</small>
+              <div className="editor-field-title-row">
+                <span className="editor-field-question">{isUiEnglish ? 'What is different about this page?' : '这个品种有什么不同？'}</span>
+                <span className={`editor-field-task-status tone-${introTaskStatus.tone}`}>{introTaskStatus.label}</span>
+              </div>
+              <small className="editor-field-guidance">{sharedIntroCoversPage
+                ? (variantIntroPresent
+                  ? (isUiEnglish ? 'Keep only details that differ from the Base template.' : '这里只保留与基础模板不同的信息。')
+                  : (isUiEnglish ? 'The Base template already covers the shared introduction. Leave this blank when there is no page-specific difference.' : '基础模板已经覆盖共同简介；当前品种没有额外差异时可以留空。'))
+                : (isUiEnglish ? 'The Base template has no shared introduction yet. Add a short page introduction here, or complete the Base template first.' : '基础模板还没有共同简介；请在这里补充当前页介绍，或先去基础模板补齐共同内容。')}</small>
               <textarea rows="4" value={form.intro} onFocus={() => onInspectorSelect?.('variantIntro')} onChange={(event) => update('intro', event.target.value)} placeholder={isUiEnglish ? 'Example: color, temperament or care differences unique to this variant…' : '例如：这个品种独有的颜色、性格或饲养差异…'} />
             </label>
             <label {...editorFieldProps('imageAlt')}>
-              <span className="editor-field-question">{isUiEnglish ? 'Describe the main image' : '主图里是什么？'}</span>
-              <small className="editor-field-guidance">{isUiEnglish ? 'One short sentence for accessibility and image search.' : '用一句短句描述图片里的物种，用于无障碍和图片搜索。'}</small>
+              <div className="editor-field-title-row">
+                <span className="editor-field-question">{isUiEnglish ? 'Describe the main image' : '主图里是什么？'}</span>
+                <span className={`editor-field-task-status tone-${imageTaskStatus.tone}`}>{imageTaskStatus.label}</span>
+              </div>
+              <small className="editor-field-guidance">{isUiEnglish ? 'Use one short sentence for accessibility and image search.' : '用一句短句描述图中的物种，用于无障碍和图片搜索。'}</small>
               <input value={form.imageAlt} placeholder={isUiEnglish ? `Example: ${species.name} aquarium fish` : `例如：${species.name} 观赏鱼`} onFocus={() => onInspectorSelect?.('imageAlt')} onChange={(event) => update('imageAlt', event.target.value)} />
             </label>
           </div>
@@ -563,7 +598,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           >
             <summary>
               <div>
-                <strong>{isUiEnglish ? 'More SEO settings' : '更多 SEO 设置'}</strong>
+                <strong>{isUiEnglish ? 'Search & indexing' : '搜索与收录设置'}</strong>
                 <small>{secondarySeoProblemCount > 0
                   ? (isUiEnglish ? `${secondarySeoProblemCount} item${secondarySeoProblemCount === 1 ? '' : 's'} need attention` : `${secondarySeoProblemCount} 项需要处理`)
                   : customSourceCount > 0

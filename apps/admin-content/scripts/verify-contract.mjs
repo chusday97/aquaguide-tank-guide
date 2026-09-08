@@ -322,7 +322,13 @@ assert.match(liveFrontendPreviewSource, /data-preview-element|sharedIntro[\s\S]*
 assert.match(appSource, /editor-secondary-seo-disclosure[\s\S]*open=\{secondarySeoOpen\}[\s\S]*onToggle=/, 'Secondary SEO settings must use one stateful disclosure instead of two persistent hierarchy rows.');
 assert.match(appSource, /secondarySeoInspectorTarget[\s\S]*seoTitle[\s\S]*metaDescription[\s\S]*h1[\s\S]*setSecondarySeoOpen\(true\)/, 'Selecting H1/Meta from Preview must reveal the unified secondary SEO editor automatically.');
 assert.doesNotMatch(appSource, /editor-task-disclosure search-task|advanced-seo-disclosure/, 'Search Appearance and indexing policy must not regress into separate persistent disclosures.');
-assert.match(appSource, /More SEO settings|更多 SEO 设置/, 'Unified secondary SEO disclosure must use operator-facing copy.');
+assert.match(appSource, /Search & indexing|搜索与收录设置/, 'Unified secondary SEO disclosure must use specific operator-facing copy rather than a generic More settings label.');
+assert.match(appSource, /Complete this page|完成本页补充/, 'Current-page editor must expose one dominant task objective before field details.');
+assert.doesNotMatch(appSource, /editor-task-summary/, 'Variant editor identity header must not compete with the current task using a parallel summary cluster.');
+assert.match(appSource, /sharedIntroCoversPage[\s\S]*模板已经覆盖共同简介[\s\S]*基础模板还没有共同简介/, 'Intro guidance must reflect whether the Base template actually covers shared content; blank-is-okay copy cannot be unconditional.');
+assert.match(appSource, /editor-field-task-status/, 'Primary editor fields must expose explicit task-status text rather than relying on subtle validation paint.');
+assert.match(appSource, /需要填写[\s\S]*模板已覆盖|模板已覆盖[\s\S]*需要填写/, 'Primary editor task-status vocabulary must distinguish required work from template-covered content.');
+assert.match(uiFoundationSource, /PM \+ UI review:[\s\S]*editor-primary-task-heading[\s\S]*editor-field-title-row[\s\S]*editor-secondary-seo-disclosure/, 'UI Foundation must enforce identity → task → field → secondary-settings hierarchy.');
 assert.match(appSource, /Utility tools|辅助工具/, 'Low-frequency tools must be labeled as utilities rather than another editor module.');
 assert.match(uiFoundationSource, /advanced-tools-disclosure[\s\S]*border:\s*0 !important[\s\S]*border-top:\s*1px solid/, 'Utility tools must stay a flat footer affordance instead of a card surface.');
 assert.match(appSource, /publishReadinessLabel[\s\S]*未就绪[\s\S]*待审核[\s\S]*可预览/, 'Readiness utility status must use localized operator language instead of raw enum values.');
@@ -370,7 +376,7 @@ assert.match(pageReviewSource, /createPortal[\s\S]*portalTarget/, 'Page Review S
 assert.match(stylesSource, /page-review-top-slot[\s\S]*flex:0 0 auto[\s\S]*page-review-status-bar/, 'Top-level review chrome must reserve layout space above the workspace and never overlay editable content');
 assert.match(stylesSource, /--state-error:[\s\S]*--state-warning:[\s\S]*--state-success:/, 'Admin semantic health must use the red/yellow/green state system');
 assert.match(appSource, /data-validation-state/, 'Variant editor must expose field and section validation states');
-assert.match(appSource, /validation-section state-\$\{contentSectionState\}[\s\S]*editor-secondary-seo-disclosure state-\$\{secondarySeoState\}/, 'Variant editor must expose section health through restrained section state rather than permanent semantic chips.');
+assert.match(appSource, /validation-section[^`]*state-\$\{contentSectionState\}[\s\S]*editor-secondary-seo-disclosure[^`]*state-\$\{secondarySeoState\}/, 'Variant editor must expose section health through restrained section state rather than permanent semantic chips.');
 assert.doesNotMatch(appSource, /validation-legend/, 'Editor must not repeat a permanent red/yellow/green legend above every form');
 assert.match(stylesSource, /inspector-editor-field:hover[\s\S]*focus-within[\s\S]*is-inspector-selected/, 'Editor fields must define Hover, Active/focus and Selected states beyond Default');
 assert.match(stylesSource, /state-success[\s\S]*background:transparent/, 'Healthy editor content must stay neutral instead of filling every field green');
@@ -383,7 +389,7 @@ assert.match(baseSource, /PageReviewStatusBar/, 'Base editor must use the same s
 assert.doesNotMatch(appSource, /content-source-manager/, 'Variant editing must not regress to a separate Content Source card that competes with the actual form');
 assert.match(appSource, /editor-secondary-seo-disclosure[\s\S]*inheritedSourceCount[\s\S]*renderInheritedOverrideField/, 'Inherited search fields must stay grouped in the unified secondary SEO disclosure');
 assert.match(appSource, /Use template|改用模板/, 'Inherited search fields must retain a plain-language return-to-template action');
-assert.match(appSource, /pageAttentionCount[\s\S]*当前页面要填写|pageAttentionCount[\s\S]*Page-specific content/, 'Variant editing must lead with actual page-specific tasks instead of a generic field catalog');
+assert.match(appSource, /pageAttentionCount[\s\S]*完成本页补充|pageAttentionCount[\s\S]*Complete this page/, 'Variant editing must lead with an explicit current-page task objective instead of a generic field catalog');
 assert.match(stylesSource, /editor-field-question[\s\S]*justify-self:start[\s\S]*margin-top:0[\s\S]*text-align:left/, 'Page-specific task questions must stay left-aligned above their guidance and inputs instead of inheriting the legacy right-side label treatment');
 assert.match(appSource, /editor-task-header/, 'Variant editor must use one task header for current-page identity and task summary');
 assert.doesNotMatch(appSource, /SPECIES SEO ·/, 'Variant editor must not repeat an internal product eyebrow above the task form');
