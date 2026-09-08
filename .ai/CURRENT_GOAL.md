@@ -8,10 +8,10 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, the first AI-assisted Care SEO advisory flow, and **SEO Operations Health Layer V2 plus local browser/operator acceptance are complete**. The explicit Care SEO release decision remains **`hold_noindex`**. The immediate next objective is user/hosted visual acceptance of `/admin/seo-pages`; writable Preview credential restoration and branch reconciliation remain separate gated tasks.
+P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, the first AI-assisted Care SEO advisory flow, and **SEO Operations Health Layer V2 plus local browser/operator acceptance are complete**. The explicit Care SEO release decision remains **`hold_noindex`**. The immediate operator objective is **Species SEO CMS visual/workflow acceptance on the canonical 3010 `apps/admin-content` surface**: remove remaining hierarchy/semantics badcases without adding new permanent layers. `/admin/seo-pages` Health Registry remains a completed read-only subsystem; writable Preview credential restoration and branch reconciliation remain separate gated tasks.
 
 ## Why this is current
-The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback tightened the visual system further: state must be obvious **without changing information layout**, workflow chrome must stay permanently compact as a distinct Progress Navigation bar to yield space to editing/Preview, and the CMS may use only three visible color families: **Graphite / White / one Green accent**. Warning, review, ready, error and success states must use copy, iconography, border treatment and weight rather than new red/amber/blue/purple hues. Typography is a deliberate hierarchy rather than many near-equal micro sizes. Workflow `attention` stays separate from operator `selected`; normal Species selection remains inside the existing 16×16 square control; batch selection uses that same slot only in batch mode. `当前物种页面` and `基础模板` remain distinct contexts. Draft PR #144 reconciliation stays parked.
+The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback tightened the visual system further: state must be obvious **without changing information layout**, workflow chrome must stay permanently compact as a distinct Progress Navigation bar to yield space to editing/Preview, and the CMS defaults to **Graphite / White / one Green publish accent**. **Amber is the single explicit exception for controls that require human judgment / second confirmation** (for example Data Review decisions and Human Review approval queues). Ordinary warnings, navigation, selection, review readiness and decorative status must not spread Amber or introduce extra blue/purple hues; they continue to use copy, iconography, restrained borders and weight. Typography is a deliberate hierarchy rather than many near-equal micro sizes. Workflow `attention` stays separate from operator `selected`; normal Species selection remains inside the existing 16×16 square control; batch selection uses that same slot only in batch mode. `当前物种页面` and `基础模板` remain distinct contexts. Draft PR #144 reconciliation stays parked.
 ## Stable subsystem that must not regress
 Species SEO remains Repo-backed and fail-closed:
 - private Draft/review/import-batch authority;
@@ -39,7 +39,7 @@ Species SEO remains Repo-backed and fail-closed:
 14. [PARKED] Dedicated feature ↔ live-main reconciliation audit exists separately; do not resume it without explicit user scope change.
 15. [DONE locally] SEO Operations Health Layer V2: effective Species Meta/H1 inheritance, bilingual/Canonical checks, Published-Care snapshot-aware batch health, source drift/legacy-source checks, health filtering and authority deep-links.
 16. [DONE locally] Browser/operator acceptance for `/admin/seo-pages`: 1440/390 zero horizontal overflow, priority-vs-unknown separation, health filter toggle/reset, issue copy, search and progressive 50-row loading.
-17. [NEXT] User/hosted read-only visual acceptance of the Health queue. Keep writable Preview credential restoration separate and keep reconciliation parked.
+17. [NEXT] Continue concrete Species SEO CMS operator visual/workflow acceptance on `apps/admin-content` / local `3010`; Health Registry stays completed/read-only. Keep writable Preview credential restoration separate and keep reconciliation parked.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -183,7 +183,7 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - It exposes `current stage / 4`, four clickable stage buttons, completion/current/upcoming states and one current-action CTA. System progress (`aria-current=step`) stays separate from the operator's temporary queue selection (`aria-pressed`). There is no `展开流程 / 专注编辑` mode switch or interaction-driven height change.
 - At that checkpoint the Admin used a blue interaction accent; this is superseded by the 2026-09-06 Green accent rule below.
 ## 2026-09-06 Species SEO Admin three-color / typography rule
-- Visible CMS palette is hard-limited to three families: Graphite neutrals, White/paper and one Green `#2F6F4E` accent. Semantic states may not introduce additional red/amber/blue/purple hues.
+- Visible CMS palette defaults to Graphite neutrals, White/paper and one Green `#2F6F4E` publish accent. Newest operator override (2026-09-08): Amber is allowed only for explicit human-decision / second-confirmation controls; it must not become a general warning/status color or spread to navigation. Blue/purple remain excluded from normal CMS workflow chrome.
 - Runtime computed-style scans at 1440×900 and 390×844 cover the initial workspace plus all six advanced tools; extra saturated hue count is `0` in every scanned state and page overflow is `0`.
 - Typography hierarchy is explicit: workflow chrome uses 8–10px navigation/status type while editor content starts at 18px section / 24px page titles on desktop (17 / 22px mobile).
 - Obsolete 2026-09-05 professional-palette override was removed; Focus layout remains, while the strict design-system block is the final visual authority.
@@ -377,3 +377,14 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Operator labels must not expose raw enums (`Noindex`, `blocked`) in the Chinese UI when a clear task-language label exists.
 - Browser acceptance and full contract/build gates are green.
 - NEXT: continue only concrete operator visual/interaction bad cases on the 3010 CMS; do not add a new persistent layer. Writable Preview credentials and branch reconciliation stay parked.
+
+## 2026-09-08 22:50 +08:00 — Workflow next-action / human-decision convergence
+- Functional checkpoint: `818b049a0df75b72ab72621e459d5161deeb70b9` (`fix(admin): clarify workflow next actions`).
+- Global 1→4 Publish Flow is now a **next-action navigator**, not a numbered decoration. It shows `当前下一步`, the real queue reason/count, and stage-specific click guidance; detached numeric badges are removed.
+- Current demo: `复核 33 个数据问题`; Data Review says `33 项需人工确认 · 继续复核 →`; Content Editing says `458 页待完成 · 查看队列 →`; later stages explain their entry condition when empty.
+- New visual semantic rule: **Amber = explicit human judgment / second confirmation only**. Data Review queue/filter, group `处理数据`, selected decision choice and final `确认并保存` share Amber. Graphite remains navigation/selection; Green remains publish advancement/success.
+- Preview inspector is now optional `定位字段 / Locate field`, defaults OFF, and changes to `退出定位` only while active. OFF clicks do not move editor selection; ON clicks locate the mapped editor field.
+- Browser acceptance: desktop workflow ~72px, mobile ~94px with only the current-stage helper expanded; 1440×900 and 390×844 horizontal overflow = 0. Data Review → group action → decision → confirm chain uses one Amber grammar.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`. No Production/main/live-DB/index/Care release change.
+- Fresh refs at functional checkpoint: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `3894442d3a2a6917e22123ce9542e7392055f543`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; divergence **275 main-only / 218 feature-only**.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
