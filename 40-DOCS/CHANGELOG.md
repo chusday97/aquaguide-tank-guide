@@ -8,6 +8,7 @@
 - Fixed: 去除普通 PR 上旧 Foundation workflow 与 CI Lite 的重复运行；关键 workflow 新增真实页面截图/边界检查、视觉 artifact 上传和历史交互回归。
 - Fixed: 重型 CI 首次真实运行暴露独立混养页标题断言过宽，改为只断言页级 `h1`；Preview 构建改为在 job 级注入当前分支、PR Head SHA 和固定 seed，并让 formal preview gate 按当前分支校验 metadata。
 - Fixed: 资料不足的物种混养证据只保留一个“打开混养计算器”入口，避免证据内容与外层页脚重复渲染同一动作。
+- Fixed: mobile-care 回归不再等待隐藏的重复节点，改为验证返回鱼缸后可见且有尺寸的养护计划与当前指南。
 
 - Added: 从最新 `main@64fa58a1` 建立 `codex/ui-action-contract-v1`，将物种“查看当前鱼缸风险”与独立混养计算路由分离；旧 `/encyclopedia?mode=compatibility` 保留安全重定向，未验收视觉分支不进入本次基础PR。
 - Verified: 路由、动作契约、引导路径、任务入口、Compatibility回归、API类型、lint、production build及Chromium重定向验证通过；历史70提交UI分支继续冻结。

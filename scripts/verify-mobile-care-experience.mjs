@@ -112,8 +112,14 @@ try {
   await desktopSpeciesEntry.click();
   await desktopPage.getByRole('dialog').filter({ hasText: '缸内物种' }).waitFor();
   await desktopPage.keyboard.press('Escape');
-  await desktopPage.getByText('养护计划', { exact: true }).waitFor();
-  await desktopPage.getByText('如何安全给新鱼过水？', { exact: true }).waitFor();
+  const visibleText = async (text) => desktopPage.getByText(text, { exact: true }).evaluateAll(nodes => nodes.some(node => {
+    const element = node;
+    const rect = element.getBoundingClientRect();
+    const style = window.getComputedStyle(element);
+    return rect.width > 0 && rect.height > 0 && style.visibility !== 'hidden' && style.display !== 'none';
+  }));
+  assert.equal(await visibleText('养护计划'), true, 'desktop aquarium must expose a visible care plan section');
+  assert.equal(await visibleText('如何安全给新鱼过水？'), true, 'desktop aquarium must expose the current care guide');
   assert.equal(await desktopPage.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'desktop aquarium has no horizontal overflow');
   await desktopContext.close();
 

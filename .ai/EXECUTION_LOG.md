@@ -10,6 +10,10 @@
 - The third real merge-ready run passed core experience, formal preview entry, formal scenes, responsive route/detail checks and visual layout capture. Species detail regression then found that the unavailable compatibility evidence rendered both its inline calculator action and the outer footer action.
 - Kept the inline evidence action and suppressed the duplicate footer action only for `presentationMode === 'unavailable'`; no Domain or public contract changed.
 
+## 2026-09-08 — Mobile care regression assertion hardening
+
+- The next merge-ready run passed through species detail and failed only because `verify-mobile-care-experience.mjs` waited for a hidden duplicate `养护计划` node. The gate now asserts that the care-plan and current guide have a visible, non-zero layout box after returning to Aquarium.
+
 ## 2026-09-08 — Action contract browser gate alignment
 
 - Updated only regression scripts: browse-mode filter URL, current add-species task title/search selection, current species-detail safe states, and temperature mismatch presentation.
