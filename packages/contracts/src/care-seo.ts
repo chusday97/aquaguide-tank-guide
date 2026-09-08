@@ -125,6 +125,16 @@ export interface CareSeoEditorialWorkspaceDto {
   persistenceAvailable: boolean;
 }
 
+export interface CareSeoHealthIndexEntryDto {
+  sourceCareId: string;
+  sourceCareCatalogKey: string;
+  sourceCareVersion: number;
+  sourceAuthority: CareSeoProjectionAuthority;
+  locale: SupportedLocale;
+  persistenceAvailable: boolean;
+  editorial: CareSeoEditorialRevisionDto | null;
+}
+
 export const careSeoAiAssistRequestSchema = z.object({
   locale: supportedLocaleSchema,
   sourceCareVersion: z.number().int().positive(),

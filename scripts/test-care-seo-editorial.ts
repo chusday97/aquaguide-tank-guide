@@ -55,7 +55,12 @@ assert.match(api, /review_state: 'approved'/);
 assert.doesNotMatch(api, /publish_content_snapshot/);
 assert.doesNotMatch(api, /\.from\('care_articles'\)\s*\.update/);
 assert.doesNotMatch(api, /\.from\('care_article_steps'\)\s*\.update/);
+assert.match(api, /getCareSeoHealthIndex/);
+assert.match(api, /\.from\('content_publications'\)/);
+assert.match(api, /\.in\('source_care_id', sourceIds\)/);
+assert.match(api, /persistenceAvailable: false/);
 
+assert.match(route, /care-seo-health/);
 assert.match(route, /care-articles\/:id\/seo-editorial\/draft/);
 assert.match(route, /care-articles\/:id\/seo-editorial\/submit-review/);
 assert.match(route, /care-articles\/:id\/seo-editorial\/approve/);

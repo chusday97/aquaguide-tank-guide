@@ -8,6 +8,7 @@ import {
   type CareSeoEditorialDraftMutation,
   type CareSeoEditorialTransitionMutation,
   type CareSeoEditorialWorkspaceDto,
+  type CareSeoHealthIndexEntryDto,
   type CareSeoProjectionDto,
   type SpeciesDetailDto,
 } from '../../../packages/contracts/src/index';
@@ -88,6 +89,7 @@ export const contentAdminService = {
   getPublishedSpecies: (catalogKey: string) => publicContentOrNull<SpeciesDetailDto>(`/species/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
   getPublishedCareArticle: (catalogKey: string) => publicContentOrNull<CareArticleDetailDto>(`/care-articles/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
   getCareSeoProjection: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoProjectionDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-projection?locale=${encodeURIComponent(locale)}`),
+  getCareSeoHealthIndex: () => apiRequest<CareSeoHealthIndexEntryDto[]>('/admin/care-seo-health'),
 
   getCareSeoEditorialWorkspace: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial?locale=${encodeURIComponent(locale)}`),
   getCareSeoAiAssist: (id: string, input: CareSeoAiAssistRequest) => apiRequest<CareSeoAiAssistDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/ai-assist`, {

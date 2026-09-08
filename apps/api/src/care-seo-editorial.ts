@@ -2,6 +2,7 @@ import {
   type CareArticleDetailDto,
   type CareSeoEditorialDraftMutation,
   type CareSeoEditorialRevisionDto,
+  type CareSeoHealthIndexEntryDto,
   type CareSeoEditorialTransitionMutation,
   type CareSeoEditorialWorkspaceDto,
   type CareSeoProjectionDto,
@@ -124,6 +125,89 @@ export const getCareSeoEditorialWorkspace = async (
     editorial: data ? mapEditorial(data as EditorialRow, projection.sourceCareVersion) : null,
     persistenceAvailable: true,
   };
+};
+
+const careSeoLocales: SupportedLocale[] = ['zh-CN', 'en'];
+type CareSeoPublicationSource = {
+  sourceCareId: string;
+  sourceCareCatalogKey: string;
+  sourceCareVersion: number;
+  sourceAuthority: CareSeoHealthIndexEntryDto['sourceAuthority'];
+};
+
+export const getCareSeoHealthIndex = async (): Promise<CareSeoHealthIndexEntryDto[]> => {
+  const client = getAdminSupabase();
+  const { data: publications, error: publicationError } = await client
+    .from('content_publications')
+    .select('resource_id,catalog_key,source_version')
+    .eq('resource_type', 'care');
+
+  if (publicationError && !publicationStoreUnavailable(publicationError)) {
+    throwDatabaseError(publicationError, '暂时无法读取 Care Published 状态。');
+  }
+  const { data: legacy, error: legacyError } = await client
+    .from('care_articles')
+    .select('id,catalog_key,version')
+    .eq('status', 'published')
+    .is('deleted_at', null);
+  if (legacyError) throwDatabaseError(legacyError, '暂时无法读取 Care Published 状态。');
+
+  const sourceById = new Map<string, CareSeoPublicationSource>();
+  if (!publicationError) {
+    for (const row of publications || []) {
+      const sourceCareId = String(row.resource_id);
+      sourceById.set(sourceCareId, {
+        sourceCareId,
+        sourceCareCatalogKey: String(row.catalog_key),
+        sourceCareVersion: Number(row.source_version),
+        sourceAuthority: 'publication-snapshot',
+      });
+    }
+  }
+  for (const row of legacy || []) {
+    const sourceCareId = String(row.id);
+    if (sourceById.has(sourceCareId)) continue;
+    sourceById.set(sourceCareId, {
+      sourceCareId,
+      sourceCareCatalogKey: String(row.catalog_key),
+      sourceCareVersion: Number(row.version),
+      sourceAuthority: 'legacy-published',
+    });
+  }
+  const sources = [...sourceById.values()];
+  if (!sources.length) return [];
+  const sourceIds = sources.map(source => source.sourceCareId);
+  const { data: editorialRows, error: editorialError } = await client
+    .from('care_seo_editorial_revisions')
+    .select('*')
+    .in('source_care_id', sourceIds)
+    .order('source_care_version', { ascending: false })
+    .order('revision_number', { ascending: false });
+
+  if (editorialError && editorialStoreUnavailable(editorialError)) {
+    return sources.flatMap(source => careSeoLocales.map(locale => ({
+      ...source,
+      locale,
+      persistenceAvailable: false,
+      editorial: null,
+    })));
+  }
+  if (editorialError) throwDatabaseError(editorialError, '暂时无法读取 Care SEO Editorial 健康状态。');
+
+  const latestByPage = new Map<string, EditorialRow>();
+  for (const candidate of (editorialRows || []) as EditorialRow[]) {
+    const key = `${candidate.source_care_id}:${candidate.locale}`;
+    if (!latestByPage.has(key)) latestByPage.set(key, candidate);
+  }
+  return sources.flatMap(source => careSeoLocales.map(locale => {
+    const editorial = latestByPage.get(`${source.sourceCareId}:${locale}`);
+    return {
+      ...source,
+      locale,
+      persistenceAvailable: true,
+      editorial: editorial ? mapEditorial(editorial, source.sourceCareVersion) : null,
+    };
+  }));
 };
 
 const assertCurrentSource = (

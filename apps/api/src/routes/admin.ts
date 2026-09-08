@@ -29,6 +29,7 @@ import { buildCurrentPublication, ensurePublishedSnapshotBeforeDraft } from '../
 import {
   approveCareSeoEditorial,
   getCareSeoEditorialWorkspace,
+  getCareSeoHealthIndex,
   getCurrentCareSeoProjection,
   saveCareSeoEditorialDraft,
   submitCareSeoEditorialReview,
@@ -119,6 +120,10 @@ adminRouter.get('/care-articles', asyncRoute(async (request, response) => {
   const { data, error } = await client.from('care_articles').select('*,care_article_steps(*),care_article_assets(*)').order('updated_at', { ascending: false }).limit(100);
   if (error) throwDatabaseError(error, '养护内容暂时无法加载。');
   return sendData(request, response, camelize(data || []));
+}));
+
+adminRouter.get('/care-seo-health', asyncRoute(async (request, response) => {
+  return sendData(request, response, await getCareSeoHealthIndex());
 }));
 
 adminRouter.get('/care-articles/:id/seo-projection', asyncRoute(async (request, response) => {
