@@ -36,7 +36,7 @@ assert.deepEqual(browseSpeciesTasks.map(task => task.id), ['view_species', 'choo
 
 assert.equal(buildTankTasks[0].route, '/aquarium?action=setup&source=onboarding', '完善鱼缸参数必须直接进入 setup task，而不是落在鱼缸首页');
 assert.equal(buildTankTasks[1].route, '/encyclopedia?mode=browse&difficulty=Easy&source=onboarding', '选择物种必须直接进入筛选后的图鉴任务');
-assert.equal(buildTankTasks[2].route, '/encyclopedia?mode=compatibility&source=onboarding', '混养任务必须直接进入混养模式');
+assert.equal(buildTankTasks[2].route, '/compatibility?source=onboarding', '混养任务必须直接进入独立混养页面');
 assert.equal(buildTankTasks[3].route, '/aquarium?action=daily-check&source=onboarding', '每日检查必须直接进入巡检任务');
 assert.equal(buildTankTasks.some(task => task.route.includes('action=settings')), false, '不得使用 Aquarium 不消费的伪 action=settings');
 

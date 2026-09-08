@@ -43,6 +43,7 @@ import { activateInteractivePreview, isInteractivePreviewActive, isInteractivePr
 
 const loadAquarium = () => import('./pages/Aquarium');
 const loadEncyclopedia = () => import('./pages/Encyclopedia');
+const loadCompatibility = () => import('./pages/Compatibility');
 const loadCare = () => import('./pages/CareEncyclopedia');
 const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
@@ -58,6 +59,7 @@ const loadSharedReport = () => import('./pages/SharedReport');
 
 const AquariumManager = lazyWithRecovery(loadAquarium, 'aquarium');
 const Encyclopedia = lazyWithRecovery(loadEncyclopedia, 'encyclopedia');
+const Compatibility = lazyWithRecovery(loadCompatibility, 'compatibility');
 const CareEncyclopedia = lazyWithRecovery(loadCare, 'care');
 const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
@@ -76,6 +78,8 @@ const preloadRoute = (path: string) => {
     ? loadAquarium
     : path === '/encyclopedia'
       ? loadEncyclopedia
+      : path === '/compatibility'
+        ? loadCompatibility
       : path === '/identify'
         ? loadIdentify
       : path === '/search'
@@ -212,7 +216,7 @@ const desktopSubMenus: Record<string, Array<{
   ],
   '/encyclopedia': [
     { id: 'browse', labelKey: 'nav.browse', descriptionKey: 'nav.browseDescription', icon: BookOpen, path: taskRoutes.encyclopedia.browse },
-    { id: 'compatibility', labelKey: 'nav.compatibility', descriptionKey: 'nav.compatibilityDescription', icon: Activity, path: taskRoutes.encyclopedia.compatibility },
+    { id: 'compatibility', labelKey: 'nav.compatibility', descriptionKey: 'nav.compatibilityDescription', icon: Activity, path: taskRoutes.compatibility.home },
   ],
   '/collection': [
     { id: 'wishlist', labelKey: 'nav.wishlist', descriptionKey: 'nav.wishlistDescription', icon: Heart, path: taskRoutes.collection.wishlist },
@@ -856,6 +860,17 @@ function NotFoundPage() {
   );
 }
 
+function EncyclopediaEntry() {
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  if (params.get('mode') === 'compatibility') {
+    params.delete('mode');
+    const search = params.toString();
+    return <Navigate to={`/compatibility${search ? `?${search}` : ''}`} replace />;
+  }
+  return <Encyclopedia />;
+}
+
 function WorkspaceRoutes() {
   const isPreviewSession = isInteractivePreviewActive();
   const page = (content: ReactNode, name: string) => <RouteErrorBoundary page={name}>{content}</RouteErrorBoundary>;
@@ -866,7 +881,8 @@ function WorkspaceRoutes() {
         <Routes>
           <Route path="/" element={<Navigate to={shouldStartOnboarding() ? '/welcome' : '/aquarium'} replace />} />
           <Route path="/login" element={page(<Login />, 'login')} />
-          <Route path="/encyclopedia" element={page(<Encyclopedia />, 'encyclopedia')} />
+          <Route path="/encyclopedia" element={page(<EncyclopediaEntry />, 'encyclopedia')} />
+          <Route path="/compatibility" element={page(<Compatibility />, 'compatibility')} />
           <Route path="/identify" element={page(<Identify />, 'identify')} />
           <Route path="/search" element={page(<SearchPage />, 'search')} />
           <Route path="/settings" element={page(<SettingsPage />, 'settings')} />

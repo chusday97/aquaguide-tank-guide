@@ -321,7 +321,7 @@ export default function Identify() {
     const ids = Array.from(new Set([...aquarium.fishes.map(item => item.fishId), selectedFish.id]));
     setCompatibilitySelection(ids);
     trackSessionEvent('compatibility_from_identify_started', { action: 'open', status: 'tank_context', entry: 'identify' });
-    requestNavigation(`${taskRoutes.encyclopedia.compatibility}&source=identify`);
+    requestNavigation(taskRoutes.compatibility.with({ source: 'identify' }));
   };
 
   const requestDiagnosis = async (nextAnswers = answers, nextAsked = askedQuestionIds, lockAcquired = false) => {
@@ -684,7 +684,7 @@ export default function Identify() {
         )}
       </div>
 
-      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
+      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.compatibility.with({ speciesIds: [fish.id], source: 'identify' })); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.compatibility.with({ speciesIds: detailFish ? [detailFish.id] : undefined, source: 'identify' })); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
       <ConfirmDialog
         open={Boolean(pendingNavigationPath)}
         title={t('identify.leaveTitle')}

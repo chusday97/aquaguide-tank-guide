@@ -134,7 +134,7 @@ try {
     {
       name: 'caution',
       status: 'caution',
-      action: 'Check Risks & Confirm Add',
+      action: 'View current tank risks',
       state: {
         ...baseConfiguredState,
         aquariums: [{
@@ -153,8 +153,7 @@ try {
     {
       name: 'not recommended',
       status: 'not_recommended',
-      action: 'View Risks & Alternatives',
-      expectedUrl: /\/encyclopedia\?mode=compatibility/,
+      action: 'View current tank risks',
       state: {
         ...baseConfiguredState,
         aquariums: [{ ...baseConfiguredState.aquariums[0], waterType: 'Saltwater' }],
@@ -202,13 +201,15 @@ try {
       await temperatureMetric.click();
       await current.page.waitForURL(/\/aquarium#settings-parameters$/);
     }
-    if (testCase.expectedUrl) {
+    if (testCase.name === 'not recommended') {
       await dialog.getByRole('button', { name: /^Compatibility/ }).click();
       assert.equal(await dialog.getByRole('button', { name: 'Compatibility Calculator', exact: true }).count(), 0, 'risk detail must not duplicate the footer route inside compatibility evidence');
       assert.equal(await dialog.getByRole('button', { name: /Confirm Add/, exact: false }).count(), 0, 'not-recommended detail must not imply that adding can be confirmed');
       await action.click();
-      await current.page.waitForURL(testCase.expectedUrl);
-      assert.equal(await current.page.getByRole('button', { name: 'Add to Current Tank', exact: true }).count(), 0, 'not-recommended destination must not expose a direct add action');
+      assert.equal(await current.page.url().includes('/compatibility'), false, 'view risk must stay in the species detail');
+      assert.equal(await dialog.locator('[data-disclosure-purpose="secondary_evidence"]').count() > 0, true, 'risk evidence must remain visible in place');
+      await dialog.getByRole('button', { name: /打开混养计算器|Compatibility Calculator/ }).click();
+      await current.page.waitForURL(/\/compatibility/);
     }
     await current.context.close();
   }

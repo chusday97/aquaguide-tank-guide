@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Added: 从最新 `main@64fa58a1` 建立 `codex/ui-action-contract-v1`，将物种“查看当前鱼缸风险”与独立混养计算路由分离；旧 `/encyclopedia?mode=compatibility` 保留安全重定向，未验收视觉分支不进入本次基础PR。
+- Verified: 路由、动作契约、引导路径、任务入口、Compatibility回归、API类型、lint、production build及Chromium重定向验证通过；历史70提交UI分支继续冻结。
+
 - Verified: data short-branch governance now tracks the branch's own remote ref during readiness collection; an unpublished short branch is reported as `UNVERIFIED` instead of incorrectly comparing against the merged source-convergence branch. Local Supabase reset, pgTAP 19/19, schema lint, Catalog, compatibility, typecheck and build were re-run at `4969b581`.
 - Fixed: readiness collection now preserves the underlying timeout/network error message, so Preview failures caused by DNS or service limits are classified as `UNVERIFIED` instead of an opaque implementation failure.
 

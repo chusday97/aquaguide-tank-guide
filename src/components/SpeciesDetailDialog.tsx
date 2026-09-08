@@ -542,8 +542,7 @@ export function SpeciesDetailDialog({
       return source === 'aquarium' ? t('encyclopedia.viewCareEssentials') : t('aquarium.tankContentsTitle');
     }
     if (displayFit.status === 'suitable') return t('encyclopedia.btnJoinTank');
-    if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk') return t('encyclopedia.viewRiskAndAlternatives');
-    if (displayFit.status === 'caution') return t('encyclopedia.viewRiskAndAdd');
+    if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') return t('encyclopedia.viewTankRisk');
     return t('encyclopedia.btnCompleteSetup');
   }, [aquariumContext, displayFit, owned, source, t]);
   const verdictReasons = useMemo(() => {
@@ -657,8 +656,7 @@ export function SpeciesDetailDialog({
       return;
     }
     if (displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') {
-      if (!inCalculator) onAddToCalculator(fish);
-      onGoCalculator?.();
+      setExpandedSection('compatibility');
       return;
     }
     const firstIssue = metricCards.find(item => item.status !== 'ok' && getMetricSettingsPanel(item));
@@ -1018,7 +1016,7 @@ export function SpeciesDetailDialog({
                             <section className="rounded-[18px] border border-sky-100 bg-sky-50/70 p-3" data-visual-result-presentation="unavailable">
                               <div className="text-[13px] font-black text-ink">暂未开放这组混养建议</div>
                               <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">先查看物种养护，或打开混养计算器主动保存这组组合。</p>
-                              <button type="button" onClick={handleOpenCalculator} className="mt-3 min-h-11 rounded-full bg-accent px-4 text-[11px] font-black text-white">打开混养计算器</button>
+                              <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="mt-3 min-h-11 rounded-full bg-accent px-4 text-[11px] font-black text-white">打开混养计算器</button>
                             </section>
                           ) : compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
                           {(fish.housingMode || fish.housingReason) && (
@@ -1028,7 +1026,7 @@ export function SpeciesDetailDialog({
                             </div>
                           )}
                           {!['caution', 'unsuitable', 'conflictRisk'].includes(displayFit.status) && (
-                            <button type="button" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
+                            <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
                               <Calculator className="h-4 w-4" />
                               {inCalculator ? t('encyclopedia.goToCalcBtn') : t('encyclopedia.compatibilityCalc')}
                             </button>
@@ -1060,7 +1058,7 @@ export function SpeciesDetailDialog({
               </div>
 
               <div className="modalFooter shrink-0 border-t border-border bg-white/95 px-4 pb-[calc(12px+env(safe-area-inset-bottom))] pt-3 min-[760px]:px-6">
-                <Button className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
+                <Button data-action-id={(displayFit.status === 'unsuitable' || displayFit.status === 'conflictRisk' || displayFit.status === 'caution') ? 'species.view-tank-risk' : 'species.primary-action'} className="min-h-12 w-full rounded-full bg-accent px-4 text-sm font-black text-white hover:bg-accent/90 min-[760px]:text-base" onClick={handleMainAction}>{mainActionLabel}</Button>
               </div>
 
               {isDeathFormOpen && (

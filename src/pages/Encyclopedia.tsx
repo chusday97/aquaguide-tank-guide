@@ -1332,7 +1332,7 @@ export default function Encyclopedia() {
     setCalculatorSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
     closeAtlasDetail(false);
     setViewMode('compatibility');
-    navigateToRoute(taskRoutes.encyclopedia.compatibility);
+    navigateToRoute(taskRoutes.compatibility.with({ speciesIds: [fish.id], source: 'encyclopedia' }));
   };
 
   const applyFunctionFilter = (label: string) => {
@@ -2407,7 +2407,7 @@ export default function Encyclopedia() {
         onGoCalculator={() => {
           closeAtlasDetail(false);
           setViewMode('compatibility');
-          navigateToRoute(taskRoutes.encyclopedia.compatibility);
+          navigateToRoute(taskRoutes.compatibility.with({ speciesIds: selectedFish ? [selectedFish.id] : undefined, source: 'encyclopedia' }));
         }}
         onViewInTank={() => {
           closeAtlasDetail(false);

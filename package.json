@@ -77,6 +77,7 @@
     "test:care-timeline-ui": "node scripts/verify-care-timeline.mjs",
     "test:product-actions": "node --import tsx scripts/audit-product-actions.ts",
     "test:task-routes": "tsx scripts/test-task-routes.ts",
+    "test:ui-action-contract": "tsx scripts/test-ui-action-contract.ts",
     "test:task-entry": "node scripts/test-task-entry-contract.mjs",
     "test:product-evaluation": "node scripts/test-product-evaluation.mjs",
     "test:responsive-detail-surface": "node scripts/test-responsive-detail-surface.mjs",

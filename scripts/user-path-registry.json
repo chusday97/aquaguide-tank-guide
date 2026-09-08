@@ -102,7 +102,7 @@
     "id": "mini-compatibility",
     "start": "图鉴",
     "target": "完整混养判断",
-    "route": "/encyclopedia",
+    "route": "/compatibility",
     "maxNavigationClicks": 2,
     "taskScreens": 2,
     "safetyConfirmation": false,
