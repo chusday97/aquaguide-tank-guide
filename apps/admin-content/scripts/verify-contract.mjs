@@ -293,7 +293,10 @@ assert.match(appSource, /selectedEditorField[\s\S]*editor-task-disclosure search
 assert.match(appSource, /const explicitScope = elementMeta\?\.scope[\s\S]*targetScope = explicitScope \|\| editorScope/, 'Preview navigation must use explicit ownership only; inherited search fields stay in the current-page override editor instead of being forced into Base.');
 assert.match(baseSource, /onInspectorSelect\?\.\('sharedIntro'\)/, 'Base shared introduction must select its own Preview element key.');
 assert.match(appSource, /onInspectorSelect\?\.\('variantIntro'\)/, 'Current-page introduction must select its own Preview element key.');
-assert.match(liveFrontendPreviewSource, /点击内容编辑|Click content to edit/, 'Preview must explain that visible content is the direct editing entry point.');
+assert.match(liveFrontendPreviewSource, /aria-pressed=\{inspectEnabled\}/, 'Preview pick-to-edit must be a real toggle with explicit pressed state.');
+assert.match(liveFrontendPreviewSource, /点选编辑|Pick to edit/, 'Preview mapping control must use an action label instead of an instructional sentence.');
+assert.match(liveFrontendPreviewSource, /点击预览内容可定位到对应编辑字段|Click preview content to jump to its editor field/, 'Preview pick-to-edit guidance must live in help text rather than button copy.');
+assert.doesNotMatch(liveFrontendPreviewSource, />\s*\{appLocale === 'en' \? 'Click content to edit' : '点击内容编辑'\}\s*</, 'Instructional copy must not regress into the toggle label.');
 assert.match(appSource, /const composedLivePreview = useMemo[\s\S]*groupRow: selectedGroupRecord[\s\S]*variantRow: previewVariantRecord/, 'Preview must always compose Base and current-page layers into one final-page snapshot.');
 assert.match(appSource, /setLivePreview\(null\); \}, \[selectedId, contentLocale\]\)/, 'Switching Base/current-page editor scope must not reset the current final-page Preview snapshot.');
 assert.doesNotMatch(appSource, /setLivePreview\(null\); \}, \[selectedId, contentLocale, editorScope\]\)/, 'Preview must not reset merely because editor ownership scope changes.');

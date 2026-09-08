@@ -190,8 +190,15 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
           <div className="preview-mode-tabs">
             {['page', 'google', 'mobile'].map((item) => <button key={item} type="button" className={mode === item ? 'active' : ''} onClick={() => setMode(item)}>{item === 'page' ? t('preview.page') : item === 'google' ? t('preview.google') : t('preview.mobile')}</button>)}
           </div>
-          <button type="button" className={`inspect-toggle ${inspectEnabled ? 'active' : ''}`} onClick={() => setInspectEnabled((value) => !value)}>
-            {appLocale === 'en' ? 'Click content to edit' : '点击内容编辑'}
+          <button
+            type="button"
+            className={`inspect-toggle ${inspectEnabled ? 'active' : ''}`}
+            aria-pressed={inspectEnabled}
+            aria-label={inspectEnabled ? (appLocale === 'en' ? 'Turn off pick-to-edit' : '关闭点选编辑') : (appLocale === 'en' ? 'Turn on pick-to-edit' : '开启点选编辑')}
+            title={inspectEnabled ? (appLocale === 'en' ? 'Click preview content to jump to its editor field. Click again to turn this mode off.' : '点击预览内容可定位到对应编辑字段；再次点击可关闭该模式。') : (appLocale === 'en' ? 'Turn on to click preview content and jump to its editor field.' : '开启后可点击预览内容并定位到对应编辑字段。')}
+            onClick={() => setInspectEnabled((value) => !value)}
+          >
+            {appLocale === 'en' ? 'Pick to edit' : '点选编辑'}
           </button>
           <button type="button" className="compact-preview-close" onClick={onCloseCompact} aria-label={appLocale === 'en' ? 'Close preview' : '关闭预览'}>×</button>
         </div>
