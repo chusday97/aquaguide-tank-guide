@@ -6,6 +6,7 @@
 - Fixed: 为谨慎/风险状态保留明确的“混养计算”次级入口，Golden Path 不再查找已废弃的内嵌兼容抽屉；风险仍原位展开，独立计算页面负责后续数量与记录流程。
 - Added: 建立 CI Lite 与关键 PR 重型门禁两层；普通提交不安装 Chromium，`critical`/`merge-ready`、手动触发和合并后才运行完整 Golden、Visual、历史回归与全视口检查。
 - Fixed: 去除普通 PR 上旧 Foundation workflow 与 CI Lite 的重复运行；关键 workflow 新增真实页面截图/边界检查、视觉 artifact 上传和历史交互回归。
+- Fixed: 重型 CI 首次真实运行暴露独立混养页标题断言过宽，改为只断言页级 `h1`；Preview 构建改为在 job 级注入当前分支、PR Head SHA 和固定 seed，并让 formal preview gate 按当前分支校验 metadata。
 
 - Added: 从最新 `main@64fa58a1` 建立 `codex/ui-action-contract-v1`，将物种“查看当前鱼缸风险”与独立混养计算路由分离；旧 `/encyclopedia?mode=compatibility` 保留安全重定向，未验收视觉分支不进入本次基础PR。
 - Verified: 路由、动作契约、引导路径、任务入口、Compatibility回归、API类型、lint、production build及Chromium重定向验证通过；历史70提交UI分支继续冻结。

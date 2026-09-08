@@ -18,6 +18,7 @@
 - Critic 指出并已修复两项分层缺口：`main-convergence` 不再对普通 PR 重复运行；新增 `verify-visual-layout.mjs`、截图 artifact 和 history interaction 清单。当前本地 YAML、lint 与代表性视觉 smoke 通过。
 - 首次 `merge-ready` Actions 发现部分历史脚本仍默认 `localhost:3000`；已将重型步骤统一绑定到本 runner 的 `4173` Preview，并传入当前分支/SHA，修复提交为 `2949f4ee`。该新 Head 需要重新跑一次远端重型检查。
 - 下一步：本地校验 workflow 与静态门禁后推送一次，观察普通 PR 与 `merge-ready` 标签两类真实运行，再创建 UI foundation 短分支。
+- 最新重型运行先后暴露两项真实门禁问题：兼容页标题断言过宽已由 `ab5e6221` 修复；随后 Preview 构建未注入 CI 分支/SHA，已改为 job 级 `VITE_PREVIEW_BRANCH/VITE_GIT_SHA`，并让 formal preview gate 按当前 `PREVIEW_BRANCH` 验证，等待新 Head 结果。
 
 ## 2026-08-31 数据短分支本地门禁复验（当前）
 

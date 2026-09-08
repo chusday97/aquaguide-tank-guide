@@ -24,6 +24,10 @@ jobs:
       contains(github.event.pull_request.labels.*.name, 'merge-ready')
     runs-on: ubuntu-latest
     timeout-minutes: 45
+    env:
+      VITE_PREVIEW_BRANCH: ${{ github.head_ref || github.ref_name }}
+      VITE_GIT_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      VITE_PREVIEW_SEED: interactive-preview
     steps:
       - uses: actions/checkout@v4
         with:
@@ -68,7 +72,7 @@ jobs:
           AQUAGUIDE_PREVIEW_URL: http://127.0.0.1:4173
           AQUAGUIDE_URL: http://127.0.0.1:4173
           PREVIEW_BRANCH: ${{ github.head_ref || github.ref_name }}
-          PREVIEW_SHA: ${{ github.sha }}
+          PREVIEW_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: |
           npm run test:core-ui
           npm run test:formal-preview-entry

@@ -17,6 +17,8 @@
 - [x] 删除普通 PR 上 `main-convergence` 与 CI Lite 的重复触发；补入真实 `test:visual-layout` 截图/边界 smoke、Visual evidence artifact 和 history interaction regression。
 - [x] 首次 merge-ready 运行暴露历史脚本的 `localhost:3000` 默认值，已统一传入隔离 Preview URL、分支和 SHA（`2949f4ee`）。
 - [ ] CI 分层分支尚未推送；需先通过 YAML/本地门禁，再创建短 PR并取得一次真实 Actions 运行证据。
+- [x] 重型 CI 首次真实运行发现 `test:core-ui` 标题选择器过宽，已改为只断言独立混养页的 `h1`（`ab5e6221`）。
+- [ ] 最新 Head 的重型运行仍在验证中；此前失败的 Preview metadata 因构建阶段未注入分支/SHA，已在工作流级修复，待再次运行确认。
 
 ## 当前任务目标
 

@@ -1,5 +1,10 @@
 # AI Execution Log
 
+## 2026-09-08 — CI preview metadata binding follow-up
+
+- The second real merge-ready run passed core experience through the standalone compatibility flow but failed formal preview metadata because Vite built without the CI branch/SHA environment. The workflow now injects `VITE_PREVIEW_BRANCH`, `VITE_GIT_SHA`, and `VITE_PREVIEW_SEED` at job scope; the formal preview entry gate reads the expected branch from `PREVIEW_BRANCH` instead of a historical hardcoded branch.
+- The prior compatibility heading assertion fix is committed as `ab5e6221`; the new workflow/script fix is pending commit and another final-Head run.
+
 ## 2026-09-08 — Action contract browser gate alignment
 
 - Updated only regression scripts: browse-mode filter URL, current add-species task title/search selection, current species-detail safe states, and temperature mismatch presentation.
