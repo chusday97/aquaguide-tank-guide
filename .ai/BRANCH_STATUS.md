@@ -2,14 +2,14 @@
 
 Updated: 2026-09-08
 Feature: `feature/admin-content-v0`
-Remote feature before Health queue docs sync: `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`
+Remote feature before latest UI hierarchy checkpoint: `83d7e982dfaf15a8f0c77ae6ef525fa3f0162871`
 Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`
 Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`
 
 ## Authoritative divergence
 Measured using explicit fetched live refs because this worktree has a narrow/stale default remote-tracking refspec:
 - main-only commits: 275
-- feature-only commits at functional checkpoint `f945e9f8`: 198
+- feature-only commits at functional checkpoint `58f6af61`: 210
 
 Do not use plain `origin/main` as authority in this worktree without verifying it against `git ls-remote` or an explicitly fetched live ref.
 
@@ -300,3 +300,14 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Local functional HEAD before docs: `2182bb106a9e76a051cc5fb18ed5dbd1e77315dd`.
 - Fresh live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before this checkpoint `8aa8ed368a0c5a55c8fb98b637973ae8489f244a`.
 - Divergence at functional checkpoint: **275 main-only / 208 feature-only**. Reconciliation remains parked.
+
+## 2026-09-08 19:40 +08:00 — CMS workflow hierarchy simplification
+- Functional checkpoint: `58f6af61af891b16387f03845ed527fedf6f34ea` (`fix(admin): simplify workflow hierarchy`).
+- Removed the duplicate global `workflow-current-action` layer; the four Publish Flow stages are now the single queue navigation authority. Current priority stage derives directly from real Data Review / editorial review / Preview-ready counts.
+- `发布流程` is now only a section label; the redundant `1/4` indicator is removed. Zero-value global stage badges are suppressed while non-zero actionable counts remain.
+- Mobile global workflow height reduced from 88px before convergence / 43px after this round; editor begins at y=368 instead of the earlier y=413 baseline. Desktop/mobile remain zero-overflow.
+- Sidebar quick filters with zero work (`待审核 0`, `预览 0`) are real Disabled controls; actionable `数据问题 33` remains interactive.
+- Page Review severity now treats ordinary incomplete/blocked authoring as Warning (`待处理`), matching `2 项待填写`; Error (`需修复`) is reserved for hygiene/indexing-policy invalidity.
+- PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview: `http://127.0.0.1:3010/?demo=1`.
+- Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `83d7e982dfaf15a8f0c77ae6ef525fa3f0162871`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence at functional checkpoint **275 main-only / 210 feature-only**.
