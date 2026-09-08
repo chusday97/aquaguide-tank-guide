@@ -267,8 +267,11 @@ assert.match(appSource, /ready_for_review \|\| 0\) > 0 \? <em>/, 'Zero-value glo
 assert.match(uiFoundationSource, /inline-source-action[\s\S]*font-size:\s*var\(--ui-text-meta\)[\s\S]*text-decoration:\s*underline/, 'Per-page override must remain a readable text action instead of a micro green button.');
 assert.match(uiFoundationSource, /workflow-stage-card\.is-current > b[\s\S]*background:\s*var\(--cms-ink\)/, 'Current workflow stage must use Graphite, not success Green.');
 assert.match(uiFoundationSource, /species-select-box:checked[\s\S]*background:\s*var\(--cms-ink\)/, 'Current Species selection must use the neutral selected-state color.');
-assert.match(sidebarSource, /disabled=\{dataIssueCount === 0\}[\s\S]*disabled=\{reviewQueueCount === 0\}[\s\S]*disabled=\{previewQueueCount === 0\}/, 'Zero-count workflow queues must be real disabled controls rather than empty-result actions.');
-assert.match(uiFoundationSource, /species-quick-filters button:disabled[\s\S]*cursor:\s*default/, 'Disabled empty queues must be visually quieter and non-actionable.');
+assert.match(sidebarSource, /\{dataIssueCount > 0 \? <button[\s\S]*\{reviewQueueCount > 0 \? <button[\s\S]*\{previewQueueCount > 0 \? <button/, 'Sidebar queue shortcuts must render only when they contain real work.');
+assert.match(sidebarSource, /mobile-species-current[\s\S]*aria-expanded=\{mobileNavOpen\}[\s\S]*更换物种/, 'Mobile Species navigation must default to the current selection with an explicit on-demand Change action.');
+assert.match(uiFoundationSource, /species-sidebar\.mobile-nav-open[\s\S]*height:\s*min\(64vh, 520px\)/, 'Expanded mobile Species navigation must provide a real scrollable selection surface.');
+assert.match(sidebarSource, /item\.variant_label && item\.variant_label !== item\.name/, 'Sidebar must not repeat the Species name as its own variant metadata.');
+assert.match(uiFoundationSource, /group-header \.group-copy strong[\s\S]*font-size:\s*12px !important[\s\S]*font-weight:\s*600 !important/, 'Scientific grouping labels must stay visually subordinate to Species navigation rows.');
 assert.match(appSource, /reviewTone = !currentHygiene\.clean \|\| indexBlockReason[\s\S]*publishReadinessState === 'blocked'[\s\S]*'warning'/, 'Ordinary incomplete/blocked authoring must stay Warning; Error is reserved for invalid hygiene or indexing policy.');
 assert.match(uiFoundationSource, /validation-section\.state-warning[\s\S]*box-shadow:\s*none/, 'Primary editor warning state must not paint a full semantic edge across the task section');
 assert.match(uiFoundationSource, /preview-mode-tabs button\.active[\s\S]*var\(--cms-ink\)/, 'Preview mode selection must use graphite rather than introducing another accent color');

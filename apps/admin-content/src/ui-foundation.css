@@ -161,7 +161,6 @@
   .admin-shell .page-review-title-row > strong { font-size: 11px !important; }
   .admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size: 9px !important; }
   .admin-shell .page-review-top-slot .review-submit-action.primary-button.compact { min-width: 118px; min-height: 36px; padding: 0 9px; font-size: 11px; }
-  .admin-shell .species-sidebar { max-height: 220px; padding: 10px 12px !important; }
   .admin-shell.workflow-compact .editor-context-bar { min-height: 48px; height: 48px; padding: 0 12px; }
   .admin-shell .editor-panel { max-width: 100%; padding: 18px 20px 8px; }
   .admin-shell .editor-task-header { gap: 8px; margin-bottom: 18px; padding-bottom: 14px; }
@@ -192,10 +191,6 @@
   .admin-shell .page-review-top-slot .workflow-status-block { display: none; }
   .admin-shell .page-review-top-slot .page-review-status-bar .workflow-action-block { grid-column: 2; grid-row: 1; }
 
-  .admin-shell.workflow-compact .species-sidebar {
-    max-height: 180px !important;
-    overflow-y: auto;
-  }
   .admin-shell.workflow-compact .editor-scope-switch button {
     min-height: var(--ui-control-secondary);
     padding: 0 10px;
@@ -528,14 +523,136 @@
   letter-spacing: .04em;
 }
 
-/* Empty workflow queues are status, not actions. Keep them visible but unmistakably disabled. */
-.admin-shell .species-quick-filters button:disabled {
-  opacity: .42 !important;
-  cursor: default !important;
-  background: transparent !important;
-  color: var(--cms-muted) !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-  transform: none !important;
+/* Mobile Species navigation: current selection first; full discovery is on-demand. */
+.admin-shell .mobile-species-current { display: none; }
+.admin-shell .species-nav-body { display: contents; }
+
+@media (max-width: 760px) {
+  .admin-shell.workflow-compact .species-sidebar {
+    max-height: 58px !important;
+    min-height: 58px;
+    padding: 6px 10px !important;
+    overflow: hidden;
+  }
+  .admin-shell.workflow-compact .species-sidebar.mobile-nav-open {
+    max-height: min(64vh, 520px) !important;
+    min-height: 0;
+  }
+  .admin-shell .species-sidebar .sidebar-heading { display: none !important; }
+  .admin-shell .mobile-species-current {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .admin-shell .mobile-species-current-copy {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 8px;
+    row-gap: 1px;
+  }
+  .admin-shell .mobile-species-current-copy small {
+    grid-column: 1;
+    color: var(--cms-muted);
+    font-size: var(--ui-text-micro);
+  }
+  .admin-shell .mobile-species-current-copy strong {
+    grid-column: 2;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cms-ink);
+    font-size: var(--ui-text-body);
+  }
+  .admin-shell .mobile-species-current-copy em {
+    grid-column: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cms-muted);
+    font-size: 10px;
+    font-style: normal;
+  }
+  .admin-shell .mobile-species-current > button {
+    flex: 0 0 auto;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--cms-border-strong);
+    border-radius: var(--ui-radius-control);
+    background: var(--cms-paper);
+    color: var(--cms-ink);
+    font-size: var(--ui-text-micro);
+    font-weight: 700;
+  }
+  .admin-shell .species-nav-body { display: none; }
+  .admin-shell .species-nav-body.is-open {
+    min-height: 0;
+    max-height: calc(min(64vh, 520px) - 52px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 6px;
+  }
+  .admin-shell .species-nav-body.is-open .search-input,
+  .admin-shell .species-nav-body.is-open .category-filter { flex: 0 0 auto; margin: 0 !important; }
+  .admin-shell .species-nav-body.is-open .species-quick-filters { flex: 0 0 auto; margin: 0; }
+  .admin-shell .species-nav-body.is-open .species-list {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 }
-.admin-shell .species-quick-filters button:disabled b { color: inherit !important; }
+
+@media (max-width: 760px) {
+  .admin-shell.workflow-compact .species-sidebar.mobile-nav-open {
+    height: min(64vh, 520px);
+  }
+  .admin-shell .species-nav-body.is-open {
+    flex: 1 1 auto;
+    max-height: none;
+  }
+  .admin-shell .species-nav-body.is-open .species-list { min-height: 140px; }
+}
+
+/* Sidebar hierarchy: scientific grouping is structural; Species rows carry the navigation emphasis. */
+.admin-shell .group-header .group-copy strong {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cms-muted);
+}
+.admin-shell .group-header .group-copy small {
+  font-size: 10px;
+  color: var(--cms-faint);
+}
+.admin-shell .variant-main-button strong {
+  font-size: 13px;
+  font-weight: 640;
+}
+.admin-shell .variant-main-button small {
+  font-size: 10px;
+  color: var(--cms-muted);
+}
+
+/* Override legacy !important label rules: sidebar hierarchy must remain below the editor task. */
+.admin-shell .group-header .group-copy strong {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--cms-muted) !important;
+}
+.admin-shell .group-header.active .group-copy strong {
+  color: var(--cms-ink) !important;
+  font-weight: 650 !important;
+}
+.admin-shell .variant-main-button strong {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+.admin-shell .variant-row.active .variant-main-button strong {
+  color: var(--cms-ink) !important;
+  font-weight: 700 !important;
+}

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { speciesCategories, speciesGroupStats } from './speciesGroups.js';
 import { useAppLanguage } from './AppLanguage.jsx';
 import { getDataReviewIssueState, summarizeDataReviewIssues } from './publishReadiness.js';
@@ -53,6 +53,15 @@ export default function SpeciesGroupSidebar({
   onOpenDataReview,
 }) {
   const { appLocale, t } = useAppLanguage();
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const selectedGroup = useMemo(() => groups.find((group) => group.members.some((member) => member.id === selectedId)) || null, [groups, selectedId]);
+  const selectedMember = useMemo(() => selectedGroup?.members.find((member) => member.id === selectedId) || null, [selectedGroup, selectedId]);
+  const mobileSelectionTitle = selectedScope === 'base'
+    ? (selectedGroup?.base_scientific_name || (appLocale === 'en' ? 'Base template' : '基础模板'))
+    : (selectedMember?.name || (appLocale === 'en' ? 'Select a Species' : '选择物种'));
+  const mobileSelectionMeta = selectedScope === 'base'
+    ? (appLocale === 'en' ? 'Base template' : '基础模板')
+    : (selectedMember?.variant_label && selectedMember.variant_label !== selectedMember.name ? selectedMember.variant_label : '');
   const filtered = useMemo(() => {
     const needle = search.trim().toLowerCase();
     return groups.filter((group) => {
@@ -109,11 +118,22 @@ export default function SpeciesGroupSidebar({
   }, [workflowFilter, appLocale]);
 
   return (
-    <aside className="species-sidebar">
+    <aside className={`species-sidebar ${mobileNavOpen ? 'mobile-nav-open' : ''}`}>
+      <div className="mobile-species-current">
+        <span className="mobile-species-current-copy">
+          <small>{appLocale === 'en' ? 'Current selection' : '当前选择'}</small>
+          <strong>{mobileSelectionTitle}</strong>
+          {mobileSelectionMeta ? <em>{mobileSelectionMeta}</em> : null}
+        </span>
+        <button type="button" aria-expanded={mobileNavOpen} onClick={() => setMobileNavOpen((value) => !value)}>
+          {mobileNavOpen ? (appLocale === 'en' ? 'Done' : '收起') : (appLocale === 'en' ? 'Change' : '更换物种')}
+        </button>
+      </div>
       <div className="sidebar-heading">
         <h2>{t('sidebar.species')}</h2>
         <span className="count-badge" title={appLocale === 'en' ? `${seoPageCandidateCount} current SEO page candidates` : `${seoPageCandidateCount} 个当前 SEO 页面候选`}>{seoPageCandidateCount}</span>
       </div>
+      <div className={`species-nav-body ${mobileNavOpen ? 'is-open' : ''}`}>
       <input
         className="search-input"
         placeholder={t('sidebar.search')}
@@ -123,9 +143,9 @@ export default function SpeciesGroupSidebar({
       {workflowFilter ? <div className="workflow-filter-banner"><span>{t('sidebar.workflowFilter')}{appLocale === 'en' ? ': ' : '：'}{workflowFilterLabel} · {filtered.length} {appLocale === 'en' ? 'Base groups' : '个基础模板组'}</span><button type="button" onClick={onClearWorkflowFilter}>{t('common.clear')}</button></div> : null}
       <div className="review-filters species-quick-filters" aria-label="Species workflow filters">
         <button type="button" aria-pressed={!workflowFilter} title={appLocale === 'en' ? `${speciesGroupStats.base_group_count} Base Species groups` : `${speciesGroupStats.base_group_count} 个基础模板组`} className={!workflowFilter ? 'active' : ''} onClick={() => { onClearWorkflowFilter?.(); }}>{appLocale === 'en' ? 'Base groups' : '基础种'} <b>{speciesGroupStats.base_group_count}</b></button>
-        <button type="button" disabled={dataIssueCount === 0} aria-pressed={workflowFilter?.key === 'data:pending'} title={appLocale === 'en' ? `${dataIssueCount} pending Data Review issues` : `${dataIssueCount} 个待处理数据问题`} className={`tone-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('common.issues')} <b>{dataIssueCount}</b></button>
-        <button type="button" disabled={reviewQueueCount === 0} aria-pressed={workflowFilter?.key === `${locale}:ready_for_review`} title={appLocale === 'en' ? `${reviewQueueCount} content items awaiting editorial review` : `${reviewQueueCount} 个等待人工审核的内容条目`} className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{reviewQueueCount}</b></button>
-        <button type="button" disabled={previewQueueCount === 0} aria-pressed={workflowFilter?.key === `${locale}:publish_ready`} title={appLocale === 'en' ? `${previewQueueCount} pages eligible for Controlled Preview` : `${previewQueueCount} 个可进入受控预览的页面`} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: appLocale === 'en' ? 'Preview-ready' : '可预览' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{previewQueueCount}</b></button>
+        {dataIssueCount > 0 ? <button type="button" aria-pressed={workflowFilter?.key === 'data:pending'} title={appLocale === 'en' ? `${dataIssueCount} pending Data Review issues` : `${dataIssueCount} 个待处理数据问题`} className={`tone-issue ${workflowFilter?.key === 'data:pending' ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>{t('common.issues')} <b>{dataIssueCount}</b></button> : null}
+        {reviewQueueCount > 0 ? <button type="button" aria-pressed={workflowFilter?.key === `${locale}:ready_for_review`} title={appLocale === 'en' ? `${reviewQueueCount} content items awaiting editorial review` : `${reviewQueueCount} 个等待人工审核的内容条目`} className={`tone-review ${workflowFilter?.key === `${locale}:ready_for_review` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:ready_for_review`, type: 'readiness', locale, status: 'ready_for_review', label: appLocale === 'en' ? 'Awaiting Review' : '待审核' })}>{t('common.review')} <b>{reviewQueueCount}</b></button> : null}
+        {previewQueueCount > 0 ? <button type="button" aria-pressed={workflowFilter?.key === `${locale}:publish_ready`} title={appLocale === 'en' ? `${previewQueueCount} pages eligible for Controlled Preview` : `${previewQueueCount} 个可进入受控预览的页面`} className={`tone-ready ${workflowFilter?.key === `${locale}:publish_ready` ? 'active' : ''}`} onClick={() => onWorkflowFilter?.({ key: `${locale}:publish_ready`, type: 'readiness', locale, status: 'publish_ready', label: appLocale === 'en' ? 'Preview-ready' : '可预览' })}>{appLocale === 'en' ? 'Preview' : '预览'} <b>{previewQueueCount}</b></button> : null}
       </div>
       {(workflowOverview?.contentHygiene?.byLocale?.[locale]?.count ?? 0) > 0 ? (
         <button
@@ -162,7 +182,7 @@ export default function SpeciesGroupSidebar({
               return (
                 <div className={`species-group ${issueSummary.open > 0 ? 'needs-review' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} key={group.group_key}>
                   <div className="group-header-row">
-                    <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" aria-pressed={baseActive} onClick={() => onSelectBase?.(firstVisible.id)}>
+                    <button className={`group-header ${baseActive ? 'active' : ''} ${containsActiveVariant ? 'contains-active' : ''}`} type="button" aria-pressed={baseActive} onClick={() => { onSelectBase?.(firstVisible.id); setMobileNavOpen(false); }}>
                       <span className="group-copy">
                         <strong>{group.base_scientific_name}</strong>
                         <small>{primaryMembers.length > 1
@@ -187,13 +207,13 @@ export default function SpeciesGroupSidebar({
                           name={batchMode ? undefined : 'current-species'}
                           className={batchMode ? 'batch-select-box' : 'species-select-box'}
                           checked={batchMode ? batchIds.includes(item.id) : selectedScope === 'variant' && selectedId === item.id}
-                          onChange={() => batchMode ? onToggleBatch(item.id) : onSelect(item.id)}
+                          onChange={() => { if (batchMode) onToggleBatch(item.id); else { onSelect(item.id); setMobileNavOpen(false); } }}
                           aria-label={appLocale === 'en' ? (batchMode ? `Select ${item.scientific_name || item.name} for batch editing` : `Select ${item.scientific_name || item.name}`) : (batchMode ? `批量选择 ${item.name}` : `选择 ${item.name}`)}
                         />
-                        <button className="variant-main-button" type="button" aria-pressed={selectedScope === 'variant' && selectedId === item.id} onClick={() => onSelect(item.id)}>
+                        <button className="variant-main-button" type="button" aria-pressed={selectedScope === 'variant' && selectedId === item.id} onClick={() => { onSelect(item.id); if (!batchMode) setMobileNavOpen(false); }}>
                           <span>
                             <strong>{item.name}</strong>
-                            <small>{item.variant_label || (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>
+                            <small>{item.variant_label && item.variant_label !== item.name ? item.variant_label : (group.member_count > 1 ? t('sidebar.inheritsBase') : item.catalog_key)}</small>
                           </span>
                         </button>
                         {duplicateIssueOpen ? (
@@ -209,6 +229,7 @@ export default function SpeciesGroupSidebar({
             })}
           </section>
         ))}
+      </div>
       </div>
     </aside>
   );
