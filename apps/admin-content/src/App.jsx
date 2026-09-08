@@ -1028,13 +1028,24 @@ export default function App() {
   };
 
   const localeWorkflowOverview = workflowOverview.locales?.[contentLocale] || {};
-  const currentWorkflowStage = (workflowOverview.dataReview?.pending || 0) > 0
+  const dataReviewPendingCount = workflowOverview.dataReview?.pending || 0;
+  const editPendingCount = localeWorkflowOverview.blocked || 0;
+  const humanReviewPendingCount = localeWorkflowOverview.ready_for_review || 0;
+  const stagingReadyCount = localeWorkflowOverview.publish_ready || 0;
+  const currentWorkflowStage = dataReviewPendingCount > 0
     ? 1
-    : (localeWorkflowOverview.ready_for_review || 0) > 0
+    : humanReviewPendingCount > 0
       ? 3
-      : (localeWorkflowOverview.publish_ready || 0) > 0
+      : stagingReadyCount > 0
         ? 4
         : 2;
+  const workflowNextLabel = currentWorkflowStage === 1
+    ? (appLocale === 'en' ? `Review ${dataReviewPendingCount} data issues` : `复核 ${dataReviewPendingCount} 个数据问题`)
+    : currentWorkflowStage === 2
+      ? (appLocale === 'en' ? 'Continue content editing' : '继续补齐页面内容')
+      : currentWorkflowStage === 3
+        ? (appLocale === 'en' ? `Review ${humanReviewPendingCount} submitted pages` : `审核 ${humanReviewPendingCount} 个已提交页面`)
+        : (appLocale === 'en' ? `Check ${stagingReadyCount} Preview-ready pages` : `检查 ${stagingReadyCount} 个可预发布页面`);
 
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
   const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
@@ -1271,20 +1282,26 @@ export default function App() {
 
       <section className="workflow-command-center" aria-label={appLocale === 'en' ? 'SEO publishing workflow' : 'SEO 发布流程'} data-current-stage={currentWorkflowStage}>
         <div className="workflow-progress-summary">
-          <span>{appLocale === 'en' ? 'PUBLISH FLOW' : '发布流程'}</span>
+          <span>{appLocale === 'en' ? 'NEXT ACTION' : '当前下一步'}</span>
+          <strong>{workflowNextLabel}</strong>
+          <small>{appLocale === 'en' ? 'Use the highlighted step to continue' : '点击高亮步骤继续处理'}</small>
         </div>
         <nav className="workflow-stage-grid" aria-label={appLocale === 'en' ? 'Publishing stages' : '发布阶段'}>
-          <button type="button" aria-current={currentWorkflowStage === 1 ? 'step' : undefined} aria-pressed={workflowFilter?.key === 'data:pending'} className={`workflow-stage-card ${currentWorkflowStage > 1 ? 'is-complete' : currentWorkflowStage === 1 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === 'data:pending' ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
-            <b>{currentWorkflowStage > 1 ? '✓' : '1'}</b><span><strong>{appLocale === 'en' ? 'Data review' : '数据复核'}</strong></span>{workflowOverview.dataReview.pending > 0 ? <em>{workflowOverview.dataReview.pending}</em> : null}
+          <button type="button" aria-current={currentWorkflowStage === 1 ? 'step' : undefined} aria-pressed={workflowFilter?.key === 'data:pending'} className={`workflow-stage-card needs-human-decision ${currentWorkflowStage > 1 ? 'is-complete' : currentWorkflowStage === 1 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === 'data:pending' ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
+            <b>{currentWorkflowStage > 1 ? '✓' : '1'}</b>
+            <span><strong>{appLocale === 'en' ? 'Data review' : '数据复核'}</strong><small>{dataReviewPendingCount > 0 ? (appLocale === 'en' ? `${dataReviewPendingCount} need human confirmation · Continue →` : `${dataReviewPendingCount} 项需人工确认 · 继续复核 →`) : (appLocale === 'en' ? 'Complete' : '已完成')}</small></span>
           </button>
           <button type="button" aria-current={currentWorkflowStage === 2 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:blocked`} className={`workflow-stage-card ${currentWorkflowStage > 2 ? 'is-complete' : currentWorkflowStage === 2 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:blocked` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:blocked`, type: 'readiness', locale: contentLocale, status: 'blocked', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Editing' : '内容编辑'}` })}>
-            <b>{currentWorkflowStage > 2 ? '✓' : '2'}</b><span><strong>{appLocale === 'en' ? 'Edit content' : '内容编辑'}</strong></span>{(workflowOverview.locales[contentLocale]?.blocked || 0) > 0 ? <em>{workflowOverview.locales[contentLocale]?.blocked}</em> : null}
+            <b>{currentWorkflowStage > 2 ? '✓' : '2'}</b>
+            <span><strong>{appLocale === 'en' ? 'Edit content' : '内容编辑'}</strong><small>{editPendingCount > 0 ? (appLocale === 'en' ? `${editPendingCount} pages not ready · Open queue →` : `${editPendingCount} 页待完成 · 查看队列 →`) : (appLocale === 'en' ? 'Continue current page' : '继续当前页面')}</small></span>
           </button>
-          <button type="button" aria-current={currentWorkflowStage === 3 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:ready_for_review`} className={`workflow-stage-card ${currentWorkflowStage > 3 ? 'is-complete' : currentWorkflowStage === 3 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:ready_for_review` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>
-            <b>{currentWorkflowStage > 3 ? '✓' : '3'}</b><span><strong>{appLocale === 'en' ? 'Human review' : '人工审核'}</strong></span>{(workflowOverview.locales[contentLocale]?.ready_for_review || 0) > 0 ? <em>{workflowOverview.locales[contentLocale]?.ready_for_review}</em> : null}
+          <button type="button" aria-current={currentWorkflowStage === 3 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:ready_for_review`} className={`workflow-stage-card needs-human-decision ${currentWorkflowStage > 3 ? 'is-complete' : currentWorkflowStage === 3 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:ready_for_review` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` })}>
+            <b>{currentWorkflowStage > 3 ? '✓' : '3'}</b>
+            <span><strong>{appLocale === 'en' ? 'Human review' : '人工审核'}</strong><small>{humanReviewPendingCount > 0 ? (appLocale === 'en' ? `${humanReviewPendingCount} await approval · Review →` : `${humanReviewPendingCount} 页待人工确认 · 去审核 →`) : (appLocale === 'en' ? 'Available after submission' : '提交审核后进入')}</small></span>
           </button>
           <button type="button" aria-current={currentWorkflowStage === 4 ? 'step' : undefined} aria-pressed={workflowFilter?.key === `${contentLocale}:publish_ready`} className={`workflow-stage-card ${currentWorkflowStage === 4 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === `${contentLocale}:publish_ready` ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` })}>
-            <b>4</b><span><strong>{appLocale === 'en' ? 'Staging' : '预发布'}</strong></span>{(workflowOverview.locales[contentLocale]?.publish_ready || 0) > 0 ? <em>{workflowOverview.locales[contentLocale]?.publish_ready}</em> : null}
+            <b>4</b>
+            <span><strong>{appLocale === 'en' ? 'Staging' : '预发布'}</strong><small>{stagingReadyCount > 0 ? (appLocale === 'en' ? `${stagingReadyCount} Preview-ready · Check →` : `${stagingReadyCount} 页可预发布 · 去检查 →`) : (appLocale === 'en' ? 'Available after approval' : '审核通过后进入')}</small></span>
           </button>
         </nav>
       </section>

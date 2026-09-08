@@ -147,7 +147,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
   const { appLocale, t } = useAppLanguage();
   const [mode, setMode] = useState('page');
   const [hoveredElement, setHoveredElement] = useState(null);
-  const [inspectEnabled, setInspectEnabled] = useState(true);
+  const [inspectEnabled, setInspectEnabled] = useState(false);
   const paneRef = useRef(null);
   const meta = appLocale === 'en'
     ? (stateMeta[readiness?.state] || stateMeta.blocked)
@@ -194,11 +194,11 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
             type="button"
             className={`inspect-toggle ${inspectEnabled ? 'active' : ''}`}
             aria-pressed={inspectEnabled}
-            aria-label={inspectEnabled ? (appLocale === 'en' ? 'Turn off pick-to-edit' : '关闭点选编辑') : (appLocale === 'en' ? 'Turn on pick-to-edit' : '开启点选编辑')}
-            title={inspectEnabled ? (appLocale === 'en' ? 'Click preview content to jump to its editor field. Click again to turn this mode off.' : '点击预览内容可定位到对应编辑字段；再次点击可关闭该模式。') : (appLocale === 'en' ? 'Turn on to click preview content and jump to its editor field.' : '开启后可点击预览内容并定位到对应编辑字段。')}
+            aria-label={inspectEnabled ? (appLocale === 'en' ? 'Exit field locator' : '退出字段定位') : (appLocale === 'en' ? 'Locate editor field from Preview' : '从预览定位编辑字段')}
+            title={inspectEnabled ? (appLocale === 'en' ? 'Locator is on: click preview content to jump to the matching editor field.' : '字段定位已开启：点击预览内容会跳到左侧对应编辑字段。') : (appLocale === 'en' ? 'Optional tool: turn on to click preview content and jump to the matching editor field.' : '辅助工具：开启后，点击预览内容可跳到左侧对应编辑字段。')}
             onClick={() => setInspectEnabled((value) => !value)}
           >
-            {appLocale === 'en' ? 'Pick to edit' : '点选编辑'}
+            {inspectEnabled ? (appLocale === 'en' ? 'Exit locator' : '退出定位') : (appLocale === 'en' ? 'Locate field' : '定位字段')}
           </button>
           <button type="button" className="compact-preview-close" onClick={onCloseCompact} aria-label={appLocale === 'en' ? 'Close preview' : '关闭预览'}>×</button>
         </div>

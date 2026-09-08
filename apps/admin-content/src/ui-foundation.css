@@ -31,25 +31,35 @@
 .admin-shell select { min-height: var(--ui-field-height); font-size: var(--ui-text-body); }
 .admin-shell textarea { font-size: var(--ui-text-body); line-height: 1.5; }
 
-/* Global workflow: important steps stay readable without becoming card-heavy. */
+/* Global workflow is a next-action navigator, not a numbered decoration. */
 .admin-shell.workflow-compact .workflow-command-center {
-  min-height: 58px;
-  grid-template-columns: 76px minmax(420px, 1fr);
-  gap: 12px;
-  padding: 7px 14px;
+  min-height: 72px;
+  grid-template-columns: 190px minmax(560px, 1fr);
+  gap: 18px;
+  padding: 8px 14px;
 }
-.admin-shell .workflow-progress-summary > span { font-size: var(--ui-text-micro); }
-.admin-shell .workflow-progress-summary > strong { font-size: 14px; }
+.admin-shell .workflow-progress-summary {
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  padding-right: 14px;
+  border-right: 1px solid var(--cms-border);
+}
+.admin-shell .workflow-progress-summary > span { color: var(--cms-muted); font-size: 10px; font-weight: 760; letter-spacing: .08em; }
+.admin-shell .workflow-progress-summary > strong { display: block !important; color: var(--cms-ink); font-size: 14px; line-height: 1.25; }
+.admin-shell .workflow-progress-summary > small { color: var(--cms-muted); font-size: 10px; line-height: 1.3; }
 .admin-shell.workflow-compact .workflow-stage-card {
-  min-height: 40px;
-  grid-template-columns: 24px minmax(0, 1fr) auto;
-  gap: 7px;
-  padding: 4px 8px;
+  min-height: 52px;
+  grid-template-columns: 26px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  padding: 5px 9px;
+  border-radius: 9px;
 }
 .admin-shell.workflow-compact .workflow-stage-card > b { width: 24px; height: 24px; font-size: 11px; }
-.admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 12px !important; line-height: 1.2; }
-.admin-shell.workflow-compact .workflow-stage-card > span small { font-size: 10px !important; }
-.admin-shell.workflow-compact .workflow-stage-card > em { min-width: 22px; height: 22px; font-size: 10px; }
+.admin-shell.workflow-compact .workflow-stage-card > span { min-width: 0; display: grid; gap: 3px; }
+.admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 12px !important; line-height: 1.15; }
+.admin-shell.workflow-compact .workflow-stage-card > span small { display: block !important; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--cms-muted); font-size: 10px !important; line-height: 1.2; }
 
 /* Review handoff: the next action must be stronger than supporting status copy. */
 .admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel {
@@ -143,10 +153,30 @@
     --ui-control-secondary: 36px;
     --ui-control-compact: 34px;
   }
-  .admin-shell.workflow-compact .workflow-command-center { min-height: 42px; padding: 4px 8px; gap: 4px; }
-  .admin-shell.workflow-compact .workflow-stage-card { min-height: 34px; grid-template-columns: 20px minmax(0, 1fr); gap: 4px; padding: 3px 4px; }
+  .admin-shell.workflow-compact .workflow-command-center {
+    min-height: 86px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+    gap: 5px;
+    padding: 5px 8px 6px;
+  }
+  .admin-shell .workflow-progress-summary {
+    min-height: 30px;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    gap: 2px 8px;
+    padding: 0 2px 4px;
+    border-right: 0;
+    border-bottom: 1px solid var(--cms-border);
+  }
+  .admin-shell .workflow-progress-summary > span { font-size: 9px; }
+  .admin-shell .workflow-progress-summary > strong { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .admin-shell .workflow-progress-summary > small { display: none; }
+  .admin-shell.workflow-compact .workflow-stage-card { min-height: 42px; grid-template-columns: 20px minmax(0, 1fr); gap: 5px; padding: 3px 5px; }
   .admin-shell.workflow-compact .workflow-stage-card > b { width: 20px; height: 20px; font-size: 9px; }
   .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 10.5px !important; }
+  .admin-shell.workflow-compact .workflow-stage-card > span small { display: none !important; }
+  .admin-shell.workflow-compact .workflow-stage-card.is-current > span small { display: block !important; font-size: 9px !important; }
   .admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel { min-height: 66px; padding: 6px 8px !important; }
   .admin-shell .page-review-title-row > strong { font-size: 11px !important; }
   .admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size: 9px !important; }
@@ -162,10 +192,11 @@
 /* Mobile convergence: preserve hierarchy through disclosure, not 7–8px controls. */
 @media (max-width: 760px) {
   .admin-shell.workflow-compact .workflow-command-center {
-    min-height: 42px;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: 1fr;
+    min-height: 86px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
   }
+  .admin-shell .workflow-progress-summary { display: grid !important; }
   .admin-shell.workflow-compact .workflow-stage-grid {
     width: 100%;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -499,17 +530,6 @@
   box-shadow: none !important;
 }
 
-/* Global workflow summary is a section label, not a second progress indicator. */
-.admin-shell .workflow-progress-summary {
-  align-items: center;
-  justify-content: flex-start;
-}
-.admin-shell .workflow-progress-summary > strong { display: none !important; }
-.admin-shell .workflow-progress-summary > span {
-  font-size: var(--ui-text-meta);
-  font-weight: 760;
-  letter-spacing: .04em;
-}
 
 /* Mobile Species navigation: current selection first; full discovery is on-demand. */
 .admin-shell .mobile-species-current { display: none; }
@@ -769,4 +789,70 @@
     margin: 6px 20px 18px;
   }
   .admin-shell .advanced-tools-disclosure > summary { min-height: 40px; }
+}
+
+/* Human-decision actions use Amber; navigation stays Graphite and publish actions stay Green. */
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current {
+  border-color: var(--state-warning-line) !important;
+  background: var(--state-warning-bg) !important;
+  box-shadow: inset 0 -2px 0 var(--state-warning) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current > b {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning) !important;
+  color: #fff !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current > span strong,
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current > span small {
+  color: #6f4900 !important;
+}
+.admin-shell .species-quick-filters .tone-issue {
+  border-color: var(--state-warning-line) !important;
+  background: var(--state-warning-bg) !important;
+  color: #6f4900 !important;
+}
+.admin-shell .species-quick-filters .tone-issue b { color: #6f4900 !important; }
+.admin-shell .species-quick-filters .tone-issue.active {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.admin-shell .species-quick-filters .tone-issue.active b { color: #fff !important; }
+.admin-shell .group-review-action,
+.admin-shell .variant-review-action {
+  min-height: 32px;
+  border-color: var(--state-warning-line) !important;
+  background: var(--state-warning-bg) !important;
+  color: #6f4900 !important;
+  box-shadow: none !important;
+}
+.admin-shell .group-review-action:hover,
+.admin-shell .variant-review-action:hover { border-color: var(--state-warning) !important; background: #fff3cf !important; }
+.admin-shell .review-choice { border-color: var(--state-warning-line) !important; }
+.admin-shell .review-choice.active {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning-bg) !important;
+  box-shadow: inset 3px 0 0 var(--state-warning) !important;
+}
+.admin-shell .review-confirm-action.primary-button {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning) !important;
+  color: #fff !important;
+}
+.admin-shell .review-confirm-action.primary-button:hover { filter: brightness(.94); }
+
+/* Preview field locator is optional utility, never a default primary mode. */
+.admin-shell .inspect-toggle {
+  min-height: 30px;
+  padding: 0 9px;
+  border-color: var(--cms-border) !important;
+  background: transparent !important;
+  color: var(--cms-muted) !important;
+  box-shadow: none !important;
+}
+.admin-shell .inspect-toggle.active {
+  border-color: var(--cms-border-strong) !important;
+  background: var(--cms-panel) !important;
+  color: var(--cms-ink) !important;
 }
