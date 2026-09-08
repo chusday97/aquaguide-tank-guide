@@ -1,6 +1,6 @@
 # Task Queue
 
-Updated: 2026-09-08
+Updated: 2026-09-09
 Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
 Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 
@@ -320,3 +320,17 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Remove duplicate `当前下一步` from the 1→4 workflow; keep 1→4 as stage navigation only.
 - [x] PASS 1440/390 browser acceptance, queue-action routing, Admin contract/build, full root build and diff hygiene.
 - [ ] NEXT: move task-critical Publish Readiness / task queue access out of the low-frequency utility disclosure; keep only truly optional tools folded.
+
+
+## Active override — 2026-09-09 01:32 +0800 — Aqua Operations Studio
+- [x] Replace the old AdminHub launcher-card wall with a task-first Operations Home at `/admin/content`.
+- [x] Add a read-only Unified WorkItem model across Product/Care current Drafts, Compatibility current revisions and SEO Health.
+- [x] Keep ReleaseEvent history secondary; never infer current tasks from historical release events.
+- [x] Expose authority availability as `ready / partial / auth_required / unavailable`; unreadable state never becomes fake zero work.
+- [x] Prioritize `blocker → human decision → attention`; do not label approved Compatibility as publish-ready before real publish gates pass.
+- [x] Keep WorkItem actions as deep-links only; add no new database, mutation endpoint or centralized write authority.
+- [x] Add `test:operations-work-items` to lightweight Admin CI; preserve existing Product/Care, Compatibility, Publish Center and SEO contracts.
+- [x] PASS 1440/390 Operations Home browser acceptance with zero horizontal overflow and truthful unavailable-source behavior.
+- [ ] NEXT: generate resource/reason-specific WorkItems with exact deep-links into Product/Care, Compatibility and Species/Care SEO authority targets.
+- [ ] NEXT: surface task-critical Publish Readiness / Task Queue where they are needed; keep low-frequency import/diagnostic utilities secondary.
+- [ ] Writable hosted credentials remain a separate security task; branch reconciliation / PR #144, Production, live DB and indexing remain parked.

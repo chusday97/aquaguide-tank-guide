@@ -1,6 +1,6 @@
 # Current Goal
 
-Updated: 2026-09-08
+Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
 Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
@@ -8,7 +8,7 @@ Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`
 ## Current objective
 Mature Aqua Admin from a Species-SEO-focused publication tool into **Aqua Operations Studio** without breaking the already-working SEO subsystem.
 
-P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, the first AI-assisted Care SEO advisory flow, and **SEO Operations Health Layer V2 plus local browser/operator acceptance are complete**. The explicit Care SEO release decision remains **`hold_noindex`**. The immediate operator objective is **Species SEO CMS visual/workflow acceptance on the canonical 3010 `apps/admin-content` surface**: remove remaining hierarchy/semantics badcases without adding new permanent layers. `/admin/seo-pages` Health Registry remains a completed read-only subsystem; writable Preview credential restoration and branch reconciliation remain separate gated tasks.
+P1 Compatibility Admin, P2 Unified Publish Center V1, Care SEO projection/editorial/handoff/hosted acceptance/release gate, the first AI-assisted Care SEO advisory flow, SEO Operations Health Layer V2, and the current Species SEO CMS operator-convergence baseline are complete. The explicit Care SEO release decision remains **`hold_noindex`**. The user has now returned to the broader **Aqua Operations Studio** product line. **Phase 1 Operations Home + Unified WorkItem is complete locally at `b40011ef`**: `/admin/content` is now a task-first, read-only coordination surface that aggregates current Product/Care Drafts, Compatibility revisions and SEO Health without moving any write authority. The active next objective is Phase 2 resource-level task precision, exact authority deep-links and task-critical readiness surfacing. Writable hosted credentials and branch reconciliation remain separate gated tasks.
 
 ## Why this is current
 The Admin had the required capabilities but exposed too many simultaneous queues/tools, making the first action unclear. Follow-up operator feedback tightened the visual system further: state must be obvious **without changing information layout**, workflow chrome must stay permanently compact as a distinct Progress Navigation bar to yield space to editing/Preview, and the CMS defaults to **Graphite / White / one Green publish accent**. **Amber is the single explicit exception for controls that require human judgment / second confirmation** (for example Data Review decisions and Human Review approval queues). Ordinary warnings, navigation, selection, review readiness and decorative status must not spread Amber or introduce extra blue/purple hues; they continue to use copy, iconography, restrained borders and weight. Typography is a deliberate hierarchy rather than many near-equal micro sizes. Workflow `attention` stays separate from operator `selected`; normal Species selection remains inside the existing 16×16 square control; batch selection uses that same slot only in batch mode. `当前物种页面` and `基础模板` remain distinct contexts. Draft PR #144 reconciliation stays parked.
@@ -39,7 +39,8 @@ Species SEO remains Repo-backed and fail-closed:
 14. [PARKED] Dedicated feature ↔ live-main reconciliation audit exists separately; do not resume it without explicit user scope change.
 15. [DONE locally] SEO Operations Health Layer V2: effective Species Meta/H1 inheritance, bilingual/Canonical checks, Published-Care snapshot-aware batch health, source drift/legacy-source checks, health filtering and authority deep-links.
 16. [DONE locally] Browser/operator acceptance for `/admin/seo-pages`: 1440/390 zero horizontal overflow, priority-vs-unknown separation, health filter toggle/reset, issue copy, search and progressive 50-row loading.
-17. [NEXT] Continue concrete Species SEO CMS operator visual/workflow acceptance on `apps/admin-content` / local `3010`; Health Registry stays completed/read-only. Keep writable Preview credential restoration separate and keep reconciliation parked.
+17. [DONE locally] Aqua Operations Studio Phase 1: task-first Operations Home + read-only Unified WorkItem aggregation across Product/Care current Drafts, Compatibility current revisions and SEO Health, with source availability isolated and ReleaseEvent history kept secondary.
+18. [NEXT] Aqua Operations Studio Phase 2: make WorkItems resource/reason-specific, deep-link to the exact authority target, and surface task-critical Publish Readiness / Task Queue without creating a centralized write authority. Keep writable hosted credentials separate and reconciliation parked.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.
@@ -414,3 +415,16 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Browser acceptance: 1440×900 notification 54px, 390×844 notification 80px, zero horizontal overflow/no page errors. Desktop Preview remains default-open; mobile Preview remains default-closed.
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. No Production/main/live DB/index changes.
 - NEXT: continue operator acceptance by moving task-critical capabilities (especially Publish Readiness / task queue) out of low-frequency utility disclosure without adding another permanent hierarchy layer.
+
+
+## 2026-09-09 01:32 +0800 — Aqua Operations Studio Phase 1
+- Functional checkpoint: `b40011efc60dca0cb77fa37631a2d08a9ca26346` (`feat(admin): add operations studio work queue`).
+- `/admin/content` is now **Aqua Operations Studio / 运营工作台**, not a launcher card wall. Persistent hierarchy is current priority task → work queue → authority source status → authority workspaces → recent release/audit activity.
+- Added a read-only Unified WorkItem model over existing authorities only: Product/Care current Drafts, Compatibility current revisions, and SEO Health. Release history remains recent activity and is never inferred as current work.
+- Source truth is explicit (`ready / partial / auth_required / unavailable`). Unreadable authority state never becomes a fake `0` and never blocks healthy authorities.
+- Priority contract is blocker → explicit human decision → attention. Compatibility `approved` remains attention until real Regression/Evidence/runtime publish gates are checked.
+- WorkItem aggregation has no create/update/submit/approve/publish calls and no new DB/API write authority. Every action deep-links back to the existing authority.
+- Local Operations Home: `http://127.0.0.1:3003/admin/content` using this worktree API on `8788`; Species SEO CMS remains `http://127.0.0.1:3010/?demo=1`. Do not take over unrelated `8787`.
+- Browser acceptance: 1440×900 and 390×844, zero horizontal overflow and no page errors. Current unauthenticated local state truthfully shows SEO partial availability and Product/Care + Compatibility unavailable instead of fake task counts.
+- PASS: WorkItem contract, Product/Care Admin contract, Compatibility Admin contract, Publish Center contract, SEO Page Registry contract, root/API TypeScript, full root build and `git diff --check`.
+- NEXT: Phase 2 resource-level WorkItems + exact deep-links + task-critical readiness; no centralized writes, main merge, Production unlock or live DB/index change.

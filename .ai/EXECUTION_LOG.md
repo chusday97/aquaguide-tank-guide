@@ -979,3 +979,14 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Browser acceptance: 1440×900 notification 54px, 390×844 notification 80px, zero horizontal overflow/no page errors. Desktop Preview remains default-open; mobile Preview remains default-closed.
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. No Production/main/live DB/index changes.
 - NEXT: continue operator acceptance by moving task-critical capabilities (especially Publish Readiness / task queue) out of low-frequency utility disclosure without adding another permanent hierarchy layer.
+
+
+## 2026-09-09 01:32 +0800 — Aqua Operations Studio Phase 1
+- Re-read canonical authority and clean Git state before changing scope. User explicitly chose to proceed with the broader Aqua Operations Studio.
+- Replaced root AdminHub card launcher with a task-first Operations Home and added a read-only Unified WorkItem aggregator.
+- Current task inputs: Product/Care current Drafts, Compatibility current revisions and SEO Health. Publish Center history is shown only as recent activity.
+- Added explicit source availability isolation and prevented unreadable source state from becoming fake 0 work. Added WorkItem priority and read-only contracts to lightweight Admin CI.
+- Local browser acceptance at 1440×900 / 390×844 reports zero horizontal overflow and no page errors. Current unauthenticated state truthfully shows partial/unavailable sources.
+- PASS: Product/Care Admin, Compatibility Admin, Publish Center, SEO Registry, WorkItem contracts; API/root TypeScript; full root build; diff hygiene.
+- Functional checkpoint `b40011efc60dca0cb77fa37631a2d08a9ca26346`. No Production/main/live DB/index changes.
+- Next: resource-level WorkItems + exact deep-links + task-critical readiness.

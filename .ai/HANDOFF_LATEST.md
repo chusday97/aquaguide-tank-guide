@@ -1,6 +1,6 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
-Updated: 2026-09-08
+Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
@@ -573,3 +573,14 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Browser acceptance: 1440×900 notification 54px, 390×844 notification 80px, zero horizontal overflow/no page errors. Desktop Preview remains default-open; mobile Preview remains default-closed.
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. No Production/main/live DB/index changes.
 - NEXT: continue operator acceptance by moving task-critical capabilities (especially Publish Readiness / task queue) out of low-frequency utility disclosure without adding another permanent hierarchy layer.
+
+
+## 2026-09-09 01:32 +0800 — Aqua Operations Studio Phase 1
+- User explicitly moved the active product scope from further Species SEO-only refinement to the broader **Aqua Operations Studio**. Species SEO remains a stable authority/editor subsystem, not the whole Admin.
+- Functional checkpoint `b40011efc60dca0cb77fa37631a2d08a9ca26346` replaces the root AdminHub card launcher with a task-first Operations Home at `/admin/content`.
+- New `operations-work-item.service.ts` is a read-only aggregation layer over existing Product/Care current Drafts, Compatibility current revisions and SEO Health. It does not copy authority state into a new DB and contains no mutation calls.
+- WorkItems sort by blocker → human decision → attention. Unknown/unavailable source state is excluded from task counts and exposed separately as authority availability.
+- Publish Center ReleaseEvents appear only as recent activity; historical events are never used to claim a current task.
+- Local acceptance URLs: Operations Home `http://127.0.0.1:3003/admin/content` with API `8788`; Species SEO CMS `http://127.0.0.1:3010/?demo=1`. Port `8787` belongs another Aqua worktree and must not be killed/reused.
+- Browser PASS at 1440×900 / 390×844 with zero horizontal overflow and truthful partial/unavailable authority rendering. WorkItem + Product/Care + Compatibility + Publish Center + SEO Registry contracts, API/root TS and full build PASS.
+- Active next: **Phase 2 resource-level WorkItems / exact authority deep-links / task-critical readiness**. Do not build a new centralized CMS/write authority, do not infer dependency from release history, and keep reconciliation / Production / live migrations parked.

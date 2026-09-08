@@ -1,6 +1,6 @@
 # Live Status
 
-Updated: 2026-09-06
+Updated: 2026-09-09
 Canonical branch: `feature/admin-content-v0`
 Operational functional HEAD before this docs sync: `e584e3f6fe49159b7896e7a8429bca59a9877f60`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
@@ -462,3 +462,12 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Browser acceptance: 1440×900 notification 54px, 390×844 notification 80px, zero horizontal overflow/no page errors. Desktop Preview remains default-open; mobile Preview remains default-closed.
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. No Production/main/live DB/index changes.
 - NEXT: continue operator acceptance by moving task-critical capabilities (especially Publish Readiness / task queue) out of low-frequency utility disclosure without adding another permanent hierarchy layer.
+
+
+## 2026-09-09 01:32 +0800 — Operations Studio Phase 1 local status
+- Functional checkpoint: `b40011efc60dca0cb77fa37631a2d08a9ca26346`.
+- Root Admin `/admin/content` now renders Aqua Operations Studio task-first Operations Home.
+- Current local Operations UI: `http://127.0.0.1:3003/admin/content`; this worktree API is `8788`. Species SEO CMS remains on `3010`.
+- Current unauthenticated local environment correctly reports SEO `partial` and Product/Care + Compatibility unavailable; it does not invent zero-task health.
+- 1440/390 browser acceptance: zero horizontal overflow / zero page errors. Full contracts/typechecks/build/diff hygiene pass.
+- Production/main/live DB/index remain untouched. Next: resource-level WorkItems and exact authority deep-links.
