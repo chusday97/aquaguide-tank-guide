@@ -313,3 +313,10 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Demote Search & Indexing below primary authoring tasks.
 - [x] PASS desktop/mobile 0-overflow, Preview field mapping, Admin contract/build, full root build and diff hygiene.
 - [ ] Continue operator acceptance only for observed badcases.
+
+## 2026-09-09 00:57 +0800 — Current task notification acceptance
+- [x] Promote the current highest-priority task into a top-level notification directly below the Topbar.
+- [x] Show the problem, reason and one real action; use restrained semantic emphasis (human decision Amber / blocker red / ready Green).
+- [x] Remove duplicate `当前下一步` from the 1→4 workflow; keep 1→4 as stage navigation only.
+- [x] PASS 1440/390 browser acceptance, queue-action routing, Admin contract/build, full root build and diff hygiene.
+- [ ] NEXT: move task-critical Publish Readiness / task queue access out of the low-frequency utility disclosure; keep only truly optional tools folded.
