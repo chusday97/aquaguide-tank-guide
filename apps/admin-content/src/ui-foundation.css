@@ -1,0 +1,287 @@
+/* Aqua Admin UI Foundation — authoritative visual hierarchy layer.
+   Loaded after legacy styles.css so product-level tokens win over page-local density overrides. */
+.admin-shell {
+  --ui-text-page: 24px;
+  --ui-text-task: 18px;
+  --ui-text-section: 15px;
+  --ui-text-body: 13px;
+  --ui-text-meta: 12px;
+  --ui-text-micro: 11px;
+  --ui-control-primary: 40px;
+  --ui-control-secondary: 36px;
+  --ui-control-compact: 34px;
+  --ui-field-height: 42px;
+  --ui-radius-control: 8px;
+  --ui-editor-width: 720px;
+  --ui-space-field: 22px;
+}
+
+/* Generic actions: visual priority follows task importance, never page-specific magic numbers. */
+.admin-shell .primary-button {
+  min-height: var(--ui-control-primary);
+  padding: 0 16px;
+  border-radius: var(--ui-radius-control);
+  font-size: var(--ui-text-body);
+  font-weight: 760;
+}
+.admin-shell .primary-button.compact { min-height: var(--ui-control-secondary); font-size: var(--ui-text-meta); }
+.admin-shell .secondary-button { min-height: var(--ui-control-secondary); padding: 0 14px; border-radius: var(--ui-radius-control); font-size: var(--ui-text-body); }
+.admin-shell .ghost-button { min-height: var(--ui-control-compact); padding: 0 10px; border-radius: var(--ui-radius-control); font-size: var(--ui-text-meta); }
+.admin-shell input,
+.admin-shell select { min-height: var(--ui-field-height); font-size: var(--ui-text-body); }
+.admin-shell textarea { font-size: var(--ui-text-body); line-height: 1.5; }
+
+/* Global workflow: important steps stay readable without becoming card-heavy. */
+.admin-shell.workflow-compact .workflow-command-center {
+  min-height: 58px;
+  grid-template-columns: 76px minmax(420px, 1fr) minmax(220px, auto);
+  gap: 12px;
+  padding: 7px 14px;
+}
+.admin-shell .workflow-progress-summary > span { font-size: var(--ui-text-micro); }
+.admin-shell .workflow-progress-summary > strong { font-size: 14px; }
+.admin-shell.workflow-compact .workflow-stage-card {
+  min-height: 40px;
+  grid-template-columns: 24px minmax(0, 1fr) auto;
+  gap: 7px;
+  padding: 4px 8px;
+}
+.admin-shell.workflow-compact .workflow-stage-card > b { width: 24px; height: 24px; font-size: 11px; }
+.admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 12px !important; line-height: 1.2; }
+.admin-shell.workflow-compact .workflow-stage-card > span small { font-size: 10px !important; }
+.admin-shell.workflow-compact .workflow-stage-card > em { min-width: 22px; height: 22px; font-size: 10px; }
+.admin-shell .workflow-current-action > strong { font-size: var(--ui-text-meta); line-height: 1.3; }
+.admin-shell .workflow-current-action > button { min-height: var(--ui-control-secondary); padding: 0 12px; font-size: var(--ui-text-meta); }
+
+/* Review handoff: the next action must be stronger than supporting status copy. */
+.admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel {
+  min-height: 60px;
+  grid-template-columns: 168px minmax(0, 1fr) auto;
+  gap: 14px;
+  padding: 8px 14px !important;
+}
+.admin-shell .page-review-title-row > strong { font-size: 12px !important; font-weight: 760 !important; }
+.admin-shell .review-health-chip { font-size: var(--ui-text-micro); font-weight: 700; }
+.admin-shell .page-review-meta > span { font-size: var(--ui-text-micro) !important; }
+.admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track { gap: 10px; }
+.admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size: var(--ui-text-micro) !important; }
+.admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span b { width: 22px; height: 22px; font-size: 10px; }
+.admin-shell .page-review-top-slot .review-submit-action.primary-button.compact {
+  min-width: 144px;
+  min-height: var(--ui-control-primary);
+  padding: 0 16px;
+  font-size: var(--ui-text-body);
+}
+.admin-shell .page-review-top-slot .review-next-action-buttons .ghost-button.compact,
+.admin-shell .page-review-top-slot .review-next-action-buttons .secondary-button.compact {
+  min-height: var(--ui-control-secondary);
+  font-size: var(--ui-text-meta);
+}
+
+/* Sidebar: keep navigation readable while recovering vertical density from rows, not typography. */
+.admin-shell .sidebar-heading h2 { font-size: 18px !important; }
+.admin-shell .review-filters.species-quick-filters button {
+  min-height: var(--ui-control-compact);
+  padding: 0 6px;
+  font-size: var(--ui-text-micro);
+  font-weight: 700;
+}
+.admin-shell .search-input,
+.admin-shell .category-filter { height: var(--ui-field-height); font-size: var(--ui-text-meta); }
+.admin-shell .group-header { min-height: 42px; padding: 6px 4px !important; }
+.admin-shell .group-copy strong { font-size: var(--ui-text-body); }
+.admin-shell .group-copy small { font-size: var(--ui-text-micro); }
+.admin-shell .variant-row > button { min-height: 42px; padding-top: 6px; padding-bottom: 6px; }
+.admin-shell .variant-row strong,
+.admin-shell .single-species-row strong { font-size: var(--ui-text-body); }
+.admin-shell .variant-row small,
+.admin-shell .single-species-row small,
+.admin-shell .variant-row code { font-size: var(--ui-text-micro); }
+
+/* Editor toolbar: scope and Preview are secondary controls, not micro-actions. */
+.admin-shell.workflow-compact .editor-context-bar { min-height: 52px; height: 52px; padding: 0 26px; }
+.admin-shell .editor-scope-switch button { min-height: var(--ui-control-secondary); padding: 0 12px; font-size: var(--ui-text-meta); }
+.admin-shell .compact-preview-toggle { min-height: var(--ui-control-secondary) !important; padding: 0 12px !important; font-size: var(--ui-text-meta) !important; }
+
+/* Authoring surface: reduce whitespace before shrinking text. */
+.admin-shell .editor-panel,
+.admin-shell .base-seo-panel { max-width: var(--ui-editor-width); }
+.admin-shell .editor-panel { padding: 20px 28px 10px; }
+.admin-shell .editor-task-header {
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  gap: 18px;
+}
+.admin-shell .editor-task-header small { margin-bottom: 4px; font-size: var(--ui-text-micro); }
+.admin-shell .editor-task-header h2 { font-size: 22px; line-height: 1.18; }
+.admin-shell .editor-task-header p { margin-top: 4px; font-size: var(--ui-text-meta); }
+.admin-shell .editor-task-summary { min-width: 150px; }
+.admin-shell .editor-task-summary strong { font-size: var(--ui-text-meta); }
+.admin-shell .editor-task-summary span { font-size: var(--ui-text-micro); }
+.admin-shell .section-heading h3,
+.admin-shell .editor-task-disclosure > summary strong { font-size: var(--ui-text-section); }
+.admin-shell .editor-field-question { font-size: var(--ui-text-body); line-height: 1.35; }
+.admin-shell .editor-field-guidance { margin: 3px 0 6px; font-size: var(--ui-text-meta) !important; line-height: 1.4 !important; }
+.admin-shell .inspector-editor-field { font-size: var(--ui-text-body); }
+.admin-shell .inspector-editor-field textarea { min-height: 84px; height: 84px; padding: 10px 12px; }
+.admin-shell .inspector-editor-field input { height: var(--ui-field-height); }
+.admin-shell .section-card label + label { margin-top: var(--ui-space-field); }
+
+/* Progressive disclosure stays compact, but never drops below readable metadata size. */
+.admin-shell .editor-task-disclosure { margin: 4px 0 22px; }
+.admin-shell .editor-task-disclosure > summary { min-height: 54px; padding: 9px 0; }
+.admin-shell .editor-task-disclosure > summary small { font-size: var(--ui-text-micro); }
+.admin-shell .editor-task-disclosure > summary > span { font-size: var(--ui-text-micro); }
+.admin-shell .editor-task-disclosure-body { gap: 18px; padding: 18px 0 22px; }
+.admin-shell .inherited-content-disclosure.secondary-reference > summary { min-height: 44px; padding: 8px 0; }
+.admin-shell .inherited-content-disclosure.secondary-reference > summary strong { font-size: var(--ui-text-meta) !important; }
+.admin-shell .inherited-content-disclosure.secondary-reference > summary small,
+.admin-shell .inherited-content-disclosure.secondary-reference > summary em { font-size: var(--ui-text-micro) !important; }
+.admin-shell .inheritance-field-heading > span { font-size: var(--ui-text-body); }
+.admin-shell .inheritance-field-source small,
+.admin-shell .inheritance-field-source .inline-source-action { font-size: var(--ui-text-micro) !important; }
+
+/* Utility/header actions remain quieter than the primary task, but still readable. */
+.admin-shell .activity-trigger { min-height: var(--ui-control-compact); padding: 0 10px; font-size: var(--ui-text-meta); }
+.admin-shell .locale-switcher button { min-height: var(--ui-control-compact); padding: 0 9px; font-size: var(--ui-text-meta); }
+.admin-shell .topbar .ghost-button { min-height: var(--ui-control-compact); font-size: var(--ui-text-meta); }
+.admin-shell .topbar-mode-label { font-size: var(--ui-text-micro) !important; }
+
+@media (max-width: 760px) {
+  .admin-shell {
+    --ui-text-page: 22px;
+    --ui-text-task: 17px;
+    --ui-control-primary: 40px;
+    --ui-control-secondary: 36px;
+    --ui-control-compact: 34px;
+  }
+  .admin-shell.workflow-compact .workflow-command-center { min-height: 70px; padding: 6px 8px; gap: 5px; }
+  .admin-shell.workflow-compact .workflow-stage-card { min-height: 34px; grid-template-columns: 20px minmax(0, 1fr); gap: 4px; padding: 3px 4px; }
+  .admin-shell.workflow-compact .workflow-stage-card > b { width: 20px; height: 20px; font-size: 9px; }
+  .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 10.5px !important; }
+  .admin-shell .workflow-current-action > strong { font-size: var(--ui-text-micro); }
+  .admin-shell .workflow-current-action > button { min-height: 32px; font-size: var(--ui-text-micro); }
+  .admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel { min-height: 66px; padding: 6px 8px !important; }
+  .admin-shell .page-review-title-row > strong { font-size: 11px !important; }
+  .admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size: 9px !important; }
+  .admin-shell .page-review-top-slot .review-submit-action.primary-button.compact { min-width: 118px; min-height: 36px; padding: 0 9px; font-size: 11px; }
+  .admin-shell .species-sidebar { max-height: 220px; padding: 10px 12px !important; }
+  .admin-shell.workflow-compact .editor-context-bar { min-height: 48px; height: 48px; padding: 0 12px; }
+  .admin-shell .editor-panel { max-width: 100%; padding: 18px 20px 8px; }
+  .admin-shell .editor-task-header { gap: 8px; margin-bottom: 18px; padding-bottom: 14px; }
+  .admin-shell .editor-task-header h2 { font-size: var(--ui-text-page); }
+  .admin-shell .editor-task-summary { min-width: 0; }
+  .admin-shell .inspector-editor-field textarea { min-height: 78px; height: 78px; }
+}
+
+/* Mobile convergence: preserve hierarchy through disclosure, not 7–8px controls. */
+@media (max-width: 760px) {
+  .admin-shell.workflow-compact .workflow-command-center {
+    min-height: 76px;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+  .admin-shell.workflow-compact .workflow-stage-grid {
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .admin-shell.workflow-compact .workflow-current-action {
+    width: 100%;
+    min-width: 0;
+    min-height: 32px;
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .admin-shell.workflow-compact .workflow-current-action > strong { min-width: 0; font-size: var(--ui-text-micro); }
+  .admin-shell.workflow-compact .workflow-current-action > button { min-height: 32px; font-size: var(--ui-text-micro); }
+
+  .admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel {
+    min-height: 56px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 1fr;
+    align-items: center;
+  }
+  .admin-shell .page-review-top-slot .page-review-meta { grid-column: 1; grid-row: 1; flex-wrap: wrap; row-gap: 2px; }
+  .admin-shell .page-review-top-slot .page-review-meta > span { display: inline-flex !important; font-size: 10px !important; }
+  .admin-shell .page-review-top-slot .workflow-status-block { display: none; }
+  .admin-shell .page-review-top-slot .page-review-status-bar .workflow-action-block { grid-column: 2; grid-row: 1; }
+
+  .admin-shell.workflow-compact .species-sidebar {
+    max-height: 180px !important;
+    overflow-y: auto;
+  }
+  .admin-shell.workflow-compact .editor-scope-switch button {
+    min-height: var(--ui-control-secondary);
+    padding: 0 10px;
+    font-size: var(--ui-text-meta);
+  }
+}
+
+/* Authoring density refinement: the current two tasks should fit before secondary SEO controls. */
+@media (min-width: 761px) {
+  .admin-shell { --ui-editor-width: 700px; }
+  .admin-shell .editor-panel { padding: 18px 26px 8px; }
+  .admin-shell .editor-task-header { align-items: center; margin-bottom: 18px; padding-bottom: 12px; }
+  .admin-shell .editor-task-header small { margin-bottom: 2px; }
+  .admin-shell .editor-task-header p { margin-top: 2px; }
+  .admin-shell .editor-panel .section-heading { margin-bottom: 12px; padding-bottom: 10px; }
+  .admin-shell .section-card label + label { margin-top: 18px; }
+  .admin-shell .inspector-editor-field textarea { min-height: 76px; height: 76px; }
+  .admin-shell .inherited-content-disclosure.secondary-reference > summary { min-height: 40px; padding: 6px 0; }
+  .admin-shell .editor-task-disclosure > summary { min-height: 48px; padding: 7px 0; }
+}
+
+/* Final hierarchy guards for selectors that legacy mobile density rules made more specific. */
+.admin-shell .app-language-switch button {
+  min-height: var(--ui-control-compact);
+  min-width: 42px;
+  padding: 0 9px;
+  font-size: var(--ui-text-meta);
+}
+.admin-shell.workflow-compact .editor-field-question { font-size: var(--ui-text-body); }
+.admin-shell.workflow-compact .editor-field-guidance { font-size: var(--ui-text-meta) !important; }
+
+@media (max-width: 760px) {
+  .admin-shell .editor-task-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .admin-shell .editor-task-header > div:first-child { min-width: 0; }
+  .admin-shell .editor-task-header p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .admin-shell .editor-task-summary {
+    justify-items: end;
+    align-self: center;
+    text-align: right;
+  }
+  .admin-shell .editor-task-summary span { max-width: 110px; line-height: 1.3; }
+}
+
+/* Secondary tools inherit the same hierarchy instead of becoming a micro-UI island. */
+.admin-shell .editor-tool-row strong { font-size: var(--ui-text-body); }
+.admin-shell .editor-tool-row small,
+.admin-shell .editor-tool-row em { font-size: var(--ui-text-micro); }
+.admin-shell .editor-tool-drawer-close { width: 34px; height: 34px; }
+.admin-shell .bulk-upload-button {
+  min-height: var(--ui-control-secondary);
+  padding: 0 14px;
+  border-radius: var(--ui-radius-control);
+  font-size: var(--ui-text-body);
+  font-weight: 700;
+}
+.admin-shell .review-confirm-action {
+  min-height: var(--ui-control-primary) !important;
+  font-size: var(--ui-text-body) !important;
+}
+.admin-shell .review-decision-command-head small,
+.admin-shell .data-review-header > div small { font-size: var(--ui-text-micro); }
+.admin-shell .review-decision-command-head > span,
+.admin-shell .review-decision-command-footer p,
+.admin-shell .review-decision-issue-context,
+.admin-shell .review-decision-issue-context b { font-size: var(--ui-text-micro) !important; }

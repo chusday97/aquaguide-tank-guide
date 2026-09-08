@@ -4,6 +4,7 @@ import App from './App.jsx';
 import { AppLanguageProvider } from './AppLanguage.jsx';
 import AdminNoticeViewport from './AdminNoticeViewport.jsx';
 import './styles.css';
+import './ui-foundation.css';
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>

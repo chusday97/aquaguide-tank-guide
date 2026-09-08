@@ -63,6 +63,7 @@ const editorElementRegistrySource = await readFile(path.join(appRoot, 'src/edito
 const activityCenterSource = await readFile(path.join(appRoot, 'src/ActivityCenter.jsx'), 'utf8');
 const adminNoticeSource = await readFile(path.join(appRoot, 'src/AdminNoticeViewport.jsx'), 'utf8');
 const mainSource = await readFile(path.join(appRoot, 'src/main.jsx'), 'utf8');
+const uiFoundationSource = await readFile(path.join(appRoot, 'src/ui-foundation.css'), 'utf8');
 
 const catalog = JSON.parse(catalogRaw);
 const groupData = JSON.parse(groupsRaw);
@@ -248,6 +249,15 @@ assert.match(stylesSource, /studio-workspace > \.preview-resize-handle[\s\S]*gri
 assert.doesNotMatch(appSource, /<option value="archived">/, 'Species Variant lifecycle UI must expose Draft/Published only');
 assert.doesNotMatch(baseSource, /<option value="archived">/, 'Base Species lifecycle UI must expose Draft/Published only');
 assert.match(appSource, /app-language-switch/, 'Admin must expose one global interface-language switch');
+assert.match(mainSource, /import '.\/ui-foundation\.css'/, 'Admin must load the UI Foundation after legacy styles');
+assert.match(uiFoundationSource, /--ui-control-primary:\s*40px/, 'UI Foundation must keep primary controls at a readable 40px baseline');
+assert.match(uiFoundationSource, /review-submit-action[\s\S]*min-height:\s*var\(--ui-control-primary\)/, 'Submit Review must consume the primary action token instead of a micro override');
+assert.match(uiFoundationSource, /app-language-switch button[\s\S]*font-size:\s*var\(--ui-text-meta\)/, 'Global language controls must not regress to micro typography');
+assert.match(uiFoundationSource, /--ui-editor-width:\s*700px/, 'Desktop authoring surface must stay compact enough to preserve workspace hierarchy');
+assert.match(uiFoundationSource, /workflow-status-block \{ display: none; \}/, 'Mobile review hierarchy must use progressive disclosure instead of shrinking step labels');
+assert.match(uiFoundationSource, /editor-tool-row strong[\s\S]*var\(--ui-text-body\)/, 'Secondary tool launchers must use body-size labels instead of micro typography');
+assert.match(uiFoundationSource, /bulk-upload-button[\s\S]*font-size:\s*var\(--ui-text-body\)/, 'Bulk upload must remain a normal secondary action, not a micro control');
+assert.match(uiFoundationSource, /review-confirm-action[\s\S]*var\(--ui-control-primary\)/, 'Data Review confirmation must consume the primary control token');
 assert.match(appSource, /contentLocale/, 'Content locale must remain a separate editorial state');
 assert.match(appSource, /appLocale/, 'Interface locale must remain separate from content locale');
 assert.match(appLanguageSource, /aquaguide-admin-app-locale/, 'Interface locale must persist across refreshes');
