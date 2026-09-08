@@ -296,3 +296,12 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`. No Production/main/live-DB/index/Care release change.
 - Fresh refs at functional checkpoint: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `3894442d3a2a6917e22123ce9542e7392055f543`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; divergence **275 main-only / 218 feature-only**.
 - Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 — Data Review operator acceptance
+- [x] Put evidence before the human decision.
+- [x] Show category-conflict facts, uncertainty boundary and concise category comparison.
+- [x] Make conclusion choices radio selections; keep one final confirmation action.
+- [x] Preview the exact result before confirmation, including SEO blocking / Canonical consequences.
+- [x] Reduce duplicate candidate Preview/keep controls to text action + radio selection.
+- [x] PASS 1440/390 browser acceptance, Admin contract/repo gates, root build and diff hygiene.
+- [ ] Continue only with newly observed operator badcases.

@@ -388,3 +388,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`. No Production/main/live-DB/index/Care release change.
 - Fresh refs at functional checkpoint: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `3894442d3a2a6917e22123ce9542e7392055f543`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; divergence **275 main-only / 218 feature-only**.
 - Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 — Current CMS acceptance refinement
+- [DONE] Make Data Review evidence-first: operators must understand the evidence and authority boundary before choosing a conclusion.
+- [DONE] Replace competing conclusion buttons with radio decisions and show the exact after-confirmation result before the single confirm action.
+- [DONE] Clarify that `Source Data needs correction` records a blocker only; Product Data remains a separate authority and is not edited from SEO Data Review.
+- [NEXT] Continue user/operator acceptance on concrete CMS badcases only; do not add new permanent hierarchy layers or reopen reconciliation.

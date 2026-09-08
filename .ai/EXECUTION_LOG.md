@@ -950,3 +950,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`. No Production/main/live-DB/index/Care release change.
 - Fresh refs at functional checkpoint: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `3894442d3a2a6917e22123ce9542e7392055f543`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; divergence **275 main-only / 218 feature-only**.
 - Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 — Data Review evidence-first repair
+- Reproduced operator confusion in category-conflict Data Review: evidence was below the decision, both conclusions looked like buttons, and save consequences were implicit.
+- Rebuilt the flow to evidence-first with explicit known/unknown authority boundaries, radio conclusions, result preview and a single confirm action.
+- Compacted full source-record evidence behind disclosure and simplified duplicate candidate Preview/keep controls.
+- Verified category and duplicate outcomes in browser at desktop/mobile; full Admin contract, Repo backend/API/dual-repo gates, root build and `git diff --check` PASS.

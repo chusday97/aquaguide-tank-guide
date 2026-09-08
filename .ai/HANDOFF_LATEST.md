@@ -538,3 +538,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`. No Production/main/live-DB/index/Care release change.
 - Fresh refs at functional checkpoint: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `3894442d3a2a6917e22123ce9542e7392055f543`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; divergence **275 main-only / 218 feature-only**.
 - Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 23:34 +08:00 — Data Review evidence-first convergence
+- Functional checkpoint: `fdc75d9d3150d4d6bb73b4b2d8d3b09dcf90493f` (`fix(admin): make data review evidence-first`).
+- Data Review now follows `evidence → one human conclusion → after-confirmation result → one confirm action`; the old action-first sticky decision block is retired.
+- Category conflicts explicitly separate `系统已确认` from `系统无法自动确认`, summarize category/record differences, and keep full source rows behind `查看全部 N 条源记录`.
+- Human conclusions are radio selections, not competing action buttons. `标记为源数据待修正` truthfully records a review conclusion only; it does not rewrite Product Data and keeps SEO blocked until Product Data is corrected and re-reviewed.
+- Duplicate review keeps its system recommendation/reasons, uses text-only candidate Preview actions and radio keep-page selection, then previews the exact Canonical outcome before confirmation.
+- Browser acceptance: category + duplicate flows at 1440×900 / 390×844, zero horizontal overflow, no page errors. Admin contract incl. Repo backend/API/dual-repo gates and full root build PASS.
+- Production/main/live DB/index remain untouched. Local CMS: `http://127.0.0.1:3010/?demo=1`.

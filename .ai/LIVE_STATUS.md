@@ -437,3 +437,9 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`. No Production/main/live-DB/index/Care release change.
 - Fresh refs at functional checkpoint: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `3894442d3a2a6917e22123ce9542e7392055f543`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; divergence **275 main-only / 218 feature-only**.
 - Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 23:34 +08:00 — Local CMS Data Review status
+- Local CMS remains `http://127.0.0.1:3010/?demo=1`.
+- Data Review category-conflict and duplicate flows are evidence-first and browser-accepted at 1440×900 and 390×844 with zero horizontal overflow.
+- Functional HEAD before docs sync: `fdc75d9d3150d4d6bb73b4b2d8d3b09dcf90493f`.
+- No Production/main/live DB/index mutation.
