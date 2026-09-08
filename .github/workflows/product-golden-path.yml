@@ -72,10 +72,25 @@ jobs:
           npm run test:formal-scenes
           npm run test:responsive-routes
           npm run test:responsive-detail-surface
+          npm run test:visual-layout
           npm run test:collection-hub-ui
           npm run test:species-detail-ui
           npm run test:mobile-care-ui
           npm run test:visual-results
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: visual-layout-${{ github.sha }}
+          path: artifacts/ci-visual/
+          if-no-files-found: ignore
+      - name: History interaction regression
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+        run: |
+          npm run test:interaction-consistency
+          npm run test:guided-navigation-ui
+          npm run test:disclosures
       - name: GP-001 first tank setup browser path
         env:
           PREVIEW_URL: http://127.0.0.1:4173

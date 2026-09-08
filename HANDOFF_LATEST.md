@@ -15,6 +15,7 @@
 - 动作基础 PR #145 已普通 merge 到 `main@d3c70dee`，短分支仍保留；生产指针不变。
 - 当前分支 `codex/ci-tiering-v1` 只修改 `.github/workflows/ci-lite.yml` 和 Product Golden Path：普通更新走轻量检查，关键标签/手动/合并前才跑浏览器重型门禁。
 - 重型 job 已设置完整 Git 历史、独立 build/Preview 和 Golden/Visual/历史回归清单；尚未推送或取得远端运行证据。
+- Critic 指出并已修复两项分层缺口：`main-convergence` 不再对普通 PR 重复运行；新增 `verify-visual-layout.mjs`、截图 artifact 和 history interaction 清单。当前本地 YAML、lint 与代表性视觉 smoke 通过。
 - 下一步：本地校验 workflow 与静态门禁后推送一次，观察普通 PR 与 `merge-ready` 标签两类真实运行，再创建 UI foundation 短分支。
 
 ## 2026-08-31 数据短分支本地门禁复验（当前）
