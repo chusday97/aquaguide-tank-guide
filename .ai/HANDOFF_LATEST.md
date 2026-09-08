@@ -556,3 +556,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Browser acceptance: 1440×900 + 390×844, zero horizontal overflow/no page errors. Preview `定位字段` still maps H1 to the left editor and auto-opens Search & Indexing.
 - PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`.
 - Functional checkpoint: `02713144bd4b0ae5d0c106cfd957c29c686ed9bc`. No Production/main/live DB/index changes.
+
+## 2026-09-09 00:36 +0800 — Desktop Preview default-open
+- Functional checkpoint: `980a29dcb35365e00fade906dff9816aae7e6183` (`fix(admin): default desktop preview open`).
+- Desktop (`>=900px`) now treats Preview as part of the default authoring workspace: it opens on first load, remains open across Species/locale changes, and closes only when the operator explicitly chooses `关闭预览`.
+- Narrow/mobile layouts still default Preview closed because the Preview surface overlays the editor there.
+- Browser acceptance: 1440×900 initial `aria-expanded=true`, Species/locale persistence PASS, explicit close PASS; 390×844 initial `aria-expanded=false`; horizontal overflow 0 / page errors 0.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. No Production/main/live DB/index changes.
+- Correct local CMS remains `http://127.0.0.1:3010/?demo=1`.

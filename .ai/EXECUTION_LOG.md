@@ -963,3 +963,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Verified Preview locator remains functional: opening Preview + enabling `定位字段` + selecting H1 produces one selected `h1` editor target and auto-opens secondary SEO.
 - PASS Admin contract, Repo backend/API/dual-repo gates, Admin/root build, browser acceptance and diff hygiene.
 - Commit `02713144bd4b0ae5d0c106cfd957c29c686ed9bc`.
+
+## 2026-09-09 00:36 +0800 — Desktop Preview default-open
+- Changed `compactPreviewOpen` initialization to desktop-aware (`window.innerWidth >= 900`).
+- Removed forced Preview close on Species/locale changes.
+- Added contract guards for desktop default-open + persistence.
+- Browser PASS: desktop default open/persistent/manual close; mobile default closed; zero overflow.
+- Contract/build/root build/diff hygiene PASS.

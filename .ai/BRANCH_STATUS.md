@@ -361,3 +361,9 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Fresh live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
 - Remote feature before this checkpoint push: `46fe9eec890001967327dbe78ab5030e359f9dfb`.
 - Divergence at functional checkpoint: **275 main-only / 222 feature-only**. Reconciliation remains parked.
+
+## 2026-09-09 00:36 +0800 — Preview default-open checkpoint
+- Local functional HEAD before docs sync: `980a29dcb35365e00fade906dff9816aae7e6183`.
+- Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Divergence at functional checkpoint: **275 main-only / 224 feature-only**.
+- No merge/rebase/main/Production action.

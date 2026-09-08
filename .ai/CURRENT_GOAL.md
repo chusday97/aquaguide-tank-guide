@@ -399,3 +399,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Current-page authoring hierarchy is now: Species identity → one dominant current task → explicit field task states → secondary Search & Indexing disclosure.
 - Product rule: page-specific intro may be blank only when the Base template actually provides shared intro content; otherwise the editor must state that the current page or Base template still needs content.
 - Continue only with concrete operator badcases; do not add another persistent hierarchy layer.
+
+## 2026-09-09 00:36 +0800 — Preview workspace rule
+- Active CMS acceptance remains `http://127.0.0.1:3010/?demo=1`.
+- Desktop Preview is now default-open and persistent across Species/locale changes; operator manual close is respected. Mobile/narrow Preview remains default-closed.
+- Preserve the product rule: desktop Preview is part of the primary editing workspace when it does not cover editable content, not an optional disclosure the operator must repeatedly open.
+- NEXT: continue concrete operator badcases only; do not add new permanent hierarchy layers or touch main/Production.

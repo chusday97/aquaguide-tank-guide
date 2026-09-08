@@ -448,3 +448,8 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Functional checkpoint: `02713144bd4b0ae5d0c106cfd957c29c686ed9bc`.
 - Current-page editor now presents identity → current task → fields → secondary Search & Indexing; desktop/mobile browser acceptance PASS with 0 horizontal overflow.
 - Production/main/live DB/index remain untouched.
+
+## 2026-09-09 00:36 +0800 — Local CMS Preview behavior
+- `http://127.0.0.1:3010/?demo=1` running.
+- Desktop Preview defaults open; mobile Preview defaults closed.
+- Production/main/live DB/index unchanged.
