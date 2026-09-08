@@ -384,3 +384,12 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Remote feature before Phase 1 push: `9440ade0f95c652de62897a823977c41f013eb9f`.
 - Explicit-live-ref divergence at functional checkpoint: **275 main-only / 228 feature-only**.
 - This remains a two-way divergence. PR #144 reconciliation stays parked; no merge/rebase/main/Production/live-DB/index action is authorized by Phase 1.
+
+
+## 2026-09-09 — Operations Studio Phase 2 functional checkpoint
+- Functional HEAD before docs sync: `12f6f9b94c35b709b2f64e4c19172fdbf62144fe`.
+- Explicit `git ls-remote` live feature before Phase 2 push: `bbb28b8cdeaedc4d4bb2bed9ceb12d207e1bb558`.
+- Explicit `git ls-remote` live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- After refreshing remote-tracking refs with explicit refspec, local Phase 2 functional HEAD is **ahead 1 / behind 0** vs live feature.
+- Live-main ↔ local functional divergence: **275 main-only / 230 feature-only**. This remains a two-way divergence; reconciliation / PR #144 stays parked.
+- No force push, merge, rebase, Production, live DB or indexing change is authorized by Phase 2.

@@ -471,3 +471,13 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Current unauthenticated local environment correctly reports SEO `partial` and Product/Care + Compatibility unavailable; it does not invent zero-task health.
 - 1440/390 browser acceptance: zero horizontal overflow / zero page errors. Full contracts/typechecks/build/diff hygiene pass.
 - Production/main/live DB/index remain untouched. Next: resource-level WorkItems and exact authority deep-links.
+
+
+## 2026-09-09 — Operations Studio Phase 2 local status
+- Functional checkpoint: `12f6f9b94c35b709b2f64e4c19172fdbf62144fe`.
+- `/admin/content` now produces exact resource-level tasks with exact Product/Care, SEO and Compatibility deep-links.
+- Compatibility URL selection uses `kind=profile|pair&revision=<id>` and applies once; operator can switch afterward.
+- Home surface is bounded to one primary + eleven queue rows; hidden remainder is explicitly reported and remains owned by the corresponding authority workspace.
+- Current local URL remains `http://127.0.0.1:3003/admin/content`; API `8788`; Species SEO CMS `3010`. Current unauthenticated source behavior remains fail-isolated/truthful.
+- 1440/390 browser acceptance: zero horizontal overflow. Full focused contracts, root/API TS, full build and diff hygiene PASS.
+- Production/main/live DB/index remain untouched. Next: Phase 3 task-critical readiness / decision surfacing.

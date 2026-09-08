@@ -990,3 +990,14 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: Product/Care Admin, Compatibility Admin, Publish Center, SEO Registry, WorkItem contracts; API/root TypeScript; full root build; diff hygiene.
 - Functional checkpoint `b40011efc60dca0cb77fa37631a2d08a9ca26346`. No Production/main/live DB/index changes.
 - Next: resource-level WorkItems + exact deep-links + task-critical readiness.
+
+
+## 2026-09-09 — Aqua Operations Studio Phase 2
+- Continued from clean Phase 1 docs HEAD and fixed the resource-level WorkItem TypeScript literal-inference failure.
+- Replaced aggregate Product/Care, Compatibility and SEO WorkItems with exact one-resource/one-reason tasks and exact authority deep-links.
+- Added Compatibility `kind + revision` deep-link consumption with one-time application and exact editor scroll; corrected a discovered loop that would otherwise force operators back to the initial revision after manual selection.
+- Capped Operations Home at one primary + eleven queue items, removed primary-task duplication from the queue, and preserved authority workspaces as full-list owners.
+- Updated WorkItem contract to protect exact deep-links, priority ordering, unknown-source exclusion and read-only aggregation.
+- Browser acceptance at 1440×900 / 390×844: zero horizontal overflow; unauthenticated environment still reports source unavailability instead of fake zero work.
+- PASS: WorkItem, Compatibility Admin, Product/Care Admin, SEO Registry, Publish Center, root/API TypeScript, full build and `git diff --check`.
+- Functional commit: `12f6f9b94c35b709b2f64e4c19172fdbf62144fe`. No main/Production/live DB/index action. Next: Phase 3 task-critical readiness / next-decision surfacing.
