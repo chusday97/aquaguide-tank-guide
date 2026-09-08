@@ -31,23 +31,62 @@
 .admin-shell select { min-height: var(--ui-field-height); font-size: var(--ui-text-body); }
 .admin-shell textarea { font-size: var(--ui-text-body); line-height: 1.5; }
 
-/* Global workflow is a next-action navigator, not a numbered decoration. */
-.admin-shell.workflow-compact .workflow-command-center {
-  min-height: 72px;
-  grid-template-columns: 190px minmax(560px, 1fr);
-  gap: 18px;
-  padding: 8px 14px;
-}
-.admin-shell .workflow-progress-summary {
+/* Current task is a top-level notification. Workflow below it only shows stage position. */
+.admin-shell .current-task-notice {
+  min-height: 54px;
   display: grid;
-  align-content: center;
-  gap: 2px;
-  padding-right: 14px;
-  border-right: 1px solid var(--cms-border);
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--cms-border);
+  background: #fff;
 }
-.admin-shell .workflow-progress-summary > span { color: var(--cms-muted); font-size: 10px; font-weight: 760; letter-spacing: .08em; }
-.admin-shell .workflow-progress-summary > strong { display: block !important; color: var(--cms-ink); font-size: 14px; line-height: 1.25; }
-.admin-shell .workflow-progress-summary > small { color: var(--cms-muted); font-size: 10px; line-height: 1.3; }
+.admin-shell .current-task-notice-kicker { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.admin-shell .current-task-notice-kicker > span { color: var(--cms-muted); font-size: 10px; font-weight: 760; letter-spacing: .06em; }
+.admin-shell .current-task-notice-kicker > em {
+  min-height: 24px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 8px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 760;
+}
+.admin-shell .current-task-notice-copy { min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+.admin-shell .current-task-notice-copy > strong { font-size: 14px; line-height: 1.25; color: var(--cms-ink); }
+.admin-shell .current-task-notice-copy > small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--cms-muted); }
+.admin-shell .current-task-notice-action {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--cms-border-strong);
+  border-radius: var(--ui-radius-control);
+  background: #fff;
+  color: var(--cms-ink);
+  font-size: 12px;
+  font-weight: 760;
+}
+.admin-shell .current-task-notice.tone-decision .current-task-notice-kicker > em,
+.admin-shell .current-task-notice.tone-decision .current-task-notice-copy > strong { color: var(--state-warning); }
+.admin-shell .current-task-notice.tone-decision .current-task-notice-kicker > em { border: 1px solid var(--state-warning-line); background: var(--state-warning-bg); }
+.admin-shell .current-task-notice.tone-decision .current-task-notice-action { border-color: var(--state-warning-line); box-shadow: inset 3px 0 0 var(--state-warning); }
+.admin-shell .current-task-notice.tone-warning .current-task-notice-kicker > em,
+.admin-shell .current-task-notice.tone-warning .current-task-notice-copy > strong { color: var(--state-error); }
+.admin-shell .current-task-notice.tone-warning .current-task-notice-kicker > em { border: 1px solid color-mix(in srgb, var(--state-error) 30%, white); background: color-mix(in srgb, var(--state-error) 6%, white); }
+.admin-shell .current-task-notice.tone-warning .current-task-notice-action { border-color: color-mix(in srgb, var(--state-error) 30%, var(--cms-border)); box-shadow: inset 3px 0 0 var(--state-error); }
+.admin-shell .current-task-notice.tone-success .current-task-notice-kicker > em,
+.admin-shell .current-task-notice.tone-success .current-task-notice-copy > strong { color: var(--cms-green); }
+.admin-shell .current-task-notice.tone-success .current-task-notice-kicker > em { border: 1px solid color-mix(in srgb, var(--cms-green) 26%, white); background: color-mix(in srgb, var(--cms-green) 7%, white); }
+.admin-shell .current-task-notice.tone-success .current-task-notice-action { border-color: var(--cms-green); color: var(--cms-green); }
+
+/* Global workflow is stage navigation only; current-task guidance lives above it. */
+.admin-shell.workflow-compact .workflow-command-center {
+  min-height: 58px;
+  grid-template-columns: minmax(560px, 1fr);
+  gap: 0;
+  padding: 5px 14px;
+}
 .admin-shell.workflow-compact .workflow-stage-card {
   min-height: 52px;
   grid-template-columns: 26px minmax(0, 1fr);
@@ -153,25 +192,25 @@
     --ui-control-secondary: 36px;
     --ui-control-compact: 34px;
   }
-  .admin-shell.workflow-compact .workflow-command-center {
-    min-height: 86px;
-    grid-template-columns: 1fr;
+  .admin-shell .current-task-notice {
+    min-height: 72px;
+    grid-template-columns: minmax(0, 1fr) auto;
     grid-template-rows: auto auto;
-    gap: 5px;
-    padding: 5px 8px 6px;
+    gap: 3px 8px;
+    padding: 7px 8px;
   }
-  .admin-shell .workflow-progress-summary {
-    min-height: 30px;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: baseline;
-    gap: 2px 8px;
-    padding: 0 2px 4px;
-    border-right: 0;
-    border-bottom: 1px solid var(--cms-border);
+  .admin-shell .current-task-notice-kicker { grid-column: 1; grid-row: 1; }
+  .admin-shell .current-task-notice-copy { grid-column: 1 / -1; grid-row: 2; display: grid; gap: 2px; padding-right: 86px; }
+  .admin-shell .current-task-notice-copy > strong { font-size: 12px; }
+  .admin-shell .current-task-notice-copy > small { white-space: normal; line-height: 1.3; font-size: 10px; }
+  .admin-shell .current-task-notice-action { grid-column: 2; grid-row: 1; min-height: 32px; font-size: 11px; }
+  .admin-shell.workflow-compact .workflow-command-center {
+    min-height: 48px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    gap: 0;
+    padding: 3px 8px 4px;
   }
-  .admin-shell .workflow-progress-summary > span { font-size: 9px; }
-  .admin-shell .workflow-progress-summary > strong { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .admin-shell .workflow-progress-summary > small { display: none; }
   .admin-shell.workflow-compact .workflow-stage-card { min-height: 42px; grid-template-columns: 20px minmax(0, 1fr); gap: 5px; padding: 3px 5px; }
   .admin-shell.workflow-compact .workflow-stage-card > b { width: 20px; height: 20px; font-size: 9px; }
   .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 10.5px !important; }
@@ -192,11 +231,10 @@
 /* Mobile convergence: preserve hierarchy through disclosure, not 7–8px controls. */
 @media (max-width: 760px) {
   .admin-shell.workflow-compact .workflow-command-center {
-    min-height: 86px;
+    min-height: 48px;
     grid-template-columns: 1fr;
-    grid-template-rows: auto auto;
+    grid-template-rows: 1fr;
   }
-  .admin-shell .workflow-progress-summary { display: grid !important; }
   .admin-shell.workflow-compact .workflow-stage-grid {
     width: 100%;
     grid-template-columns: repeat(4, minmax(0, 1fr));

@@ -272,7 +272,11 @@ assert.match(appSource, /app-language-switch[\s\S]*aria-pressed=\{appLocale === 
 assert.match(uiFoundationSource, /app-language-switch button\.active[\s\S]*background:\s*var\(--cms-ink\)/, 'Interface language selection must use Graphite rather than Green.');
 assert.doesNotMatch(appSource, /workflow-current-action|primaryWorkflowAction/, 'Global workflow stages must be the only queue navigation layer; do not duplicate them with a second current-action block.');
 assert.match(appSource, /dataReviewPendingCount[\s\S]*editPendingCount[\s\S]*humanReviewPendingCount[\s\S]*stagingReadyCount[\s\S]*currentWorkflowStage/, 'Global workflow priority stage must derive directly from real queue counts.');
-assert.match(appSource, /workflow-progress-summary[\s\S]*当前下一步[\s\S]*workflowNextLabel/, 'Global workflow must expose the operator next action instead of only numbered stages.');
+assert.match(appSource, /currentTaskNotice[\s\S]*tone: 'decision'[\s\S]*33|currentTaskNotice[\s\S]*dataReviewPendingCount/, 'Current task notification must derive the highest-priority operator problem from real queue counts.');
+assert.match(appSource, /current-task-notice[\s\S]*当前任务[\s\S]*currentTaskNotice\.status[\s\S]*currentTaskNotice\.title[\s\S]*currentTaskNotice\.detail[\s\S]*currentTaskNotice\.action/, 'Current task must render as a top-level problem notification with status, issue, explanation and one action.');
+assert.match(appSource, /current-task-notice[\s\S]*workflow-command-center/, 'Current task notification must appear above the 1→4 workflow navigator.');
+assert.doesNotMatch(appSource, /workflow-progress-summary/, '1→4 workflow must not repeat the current-task notification.');
+assert.match(uiFoundationSource, /current-task-notice\.tone-decision[\s\S]*--state-warning[\s\S]*current-task-notice\.tone-warning[\s\S]*--state-error[\s\S]*current-task-notice\.tone-success[\s\S]*--cms-green/, 'Current-task issues must use restrained semantic emphasis: decision Amber, blocker red, ready Green.');
 assert.doesNotMatch(appSource, /workflow-stage-card[\s\S]{0,900}<em>/, 'Global workflow counts must live with stage guidance instead of detached numeric badges.');
 assert.match(uiFoundationSource, /inline-source-action[\s\S]*font-size:\s*var\(--ui-text-meta\)[\s\S]*text-decoration:\s*underline/, 'Per-page override must remain a readable text action instead of a micro green button.');
 assert.match(uiFoundationSource, /workflow-stage-card\.is-current > b[\s\S]*background:\s*var\(--cms-ink\)/, 'Current workflow stage must use Graphite, not success Green.');

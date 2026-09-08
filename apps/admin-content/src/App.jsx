@@ -1073,13 +1073,41 @@ export default function App() {
       : stagingReadyCount > 0
         ? 4
         : 2;
-  const workflowNextLabel = currentWorkflowStage === 1
-    ? (appLocale === 'en' ? `Review ${dataReviewPendingCount} data issues` : `复核 ${dataReviewPendingCount} 个数据问题`)
+  const currentTaskNotice = currentWorkflowStage === 1
+    ? {
+        tone: 'decision',
+        status: appLocale === 'en' ? 'Needs confirmation' : '需人工确认',
+        title: appLocale === 'en' ? `${dataReviewPendingCount} data issues need review` : `${dataReviewPendingCount} 个数据问题需要确认`,
+        detail: appLocale === 'en' ? 'These data issues block the downstream SEO workflow until they are reviewed.' : '这些数据问题会阻止后续 SEO 流程，请先完成数据复核。',
+        action: appLocale === 'en' ? 'Review issues' : '去复核',
+        filter: { key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' },
+      }
     : currentWorkflowStage === 2
-      ? (appLocale === 'en' ? 'Continue content editing' : '继续补齐页面内容')
+      ? {
+          tone: editPendingCount > 0 ? 'warning' : 'neutral',
+          status: appLocale === 'en' ? (editPendingCount > 0 ? 'Content incomplete' : 'Editing') : (editPendingCount > 0 ? '内容未完成' : '内容编辑'),
+          title: appLocale === 'en' ? (editPendingCount > 0 ? `${editPendingCount} pages still need content` : 'Continue editing the current page') : (editPendingCount > 0 ? `${editPendingCount} 个页面内容尚未完成` : '继续完成当前页面内容'),
+          detail: appLocale === 'en' ? 'Complete required page content before submitting it for human review.' : '补齐必需的页面内容后，才能提交人工审核。',
+          action: appLocale === 'en' ? 'Open editing queue' : '去补齐',
+          filter: { key: `${contentLocale}:blocked`, type: 'readiness', locale: contentLocale, status: 'blocked', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Editing' : '内容编辑'}` },
+        }
       : currentWorkflowStage === 3
-        ? (appLocale === 'en' ? `Review ${humanReviewPendingCount} submitted pages` : `审核 ${humanReviewPendingCount} 个已提交页面`)
-        : (appLocale === 'en' ? `Check ${stagingReadyCount} Preview-ready pages` : `检查 ${stagingReadyCount} 个可预发布页面`);
+        ? {
+            tone: 'decision',
+            status: appLocale === 'en' ? 'Needs approval' : '待人工审核',
+            title: appLocale === 'en' ? `${humanReviewPendingCount} submitted pages need approval` : `${humanReviewPendingCount} 个已提交页面等待人工审核`,
+            detail: appLocale === 'en' ? 'Human approval is required before these pages can enter Preview-ready.' : '这些页面需要人工批准后，才能进入预发布检查。',
+            action: appLocale === 'en' ? 'Review pages' : '去审核',
+            filter: { key: `${contentLocale}:ready_for_review`, type: 'readiness', locale: contentLocale, status: 'ready_for_review', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Awaiting Review' : '待审核'}` },
+          }
+        : {
+            tone: 'success',
+            status: appLocale === 'en' ? 'Preview-ready' : '可预发布',
+            title: appLocale === 'en' ? `${stagingReadyCount} pages are ready for Preview checks` : `${stagingReadyCount} 个页面已可进入预发布检查`,
+            detail: appLocale === 'en' ? 'Check the final Preview before moving into the controlled Staging flow.' : '检查最终效果预览后，再进入受控预发布流程。',
+            action: appLocale === 'en' ? 'Check pages' : '去检查',
+            filter: { key: `${contentLocale}:publish_ready`, type: 'readiness', locale: contentLocale, status: 'publish_ready', label: `${contentLocale === 'en' ? 'English' : '中文'} · ${appLocale === 'en' ? 'Preview-ready' : '可预览'}` },
+          };
 
   const batchMembers = batchIds.map((id) => species.find((item) => item.id === id)).filter(Boolean);
   const batchGroup = batchMembers.length ? speciesGroupByMemberId.get(batchMembers[0].id) : null;
@@ -1314,12 +1342,21 @@ export default function App() {
         </div>
       ) : null}
 
-      <section className="workflow-command-center" aria-label={appLocale === 'en' ? 'SEO publishing workflow' : 'SEO 发布流程'} data-current-stage={currentWorkflowStage}>
-        <div className="workflow-progress-summary">
-          <span>{appLocale === 'en' ? 'NEXT ACTION' : '当前下一步'}</span>
-          <strong>{workflowNextLabel}</strong>
-          <small>{appLocale === 'en' ? 'Use the highlighted step to continue' : '点击高亮步骤继续处理'}</small>
+      <section className={`current-task-notice tone-${currentTaskNotice.tone}`} aria-label={appLocale === 'en' ? 'Current task notification' : '当前任务通知'}>
+        <div className="current-task-notice-kicker">
+          <span>{appLocale === 'en' ? 'CURRENT TASK' : '当前任务'}</span>
+          <em>{currentTaskNotice.status}</em>
         </div>
+        <div className="current-task-notice-copy">
+          <strong>{currentTaskNotice.title}</strong>
+          <small>{currentTaskNotice.detail}</small>
+        </div>
+        <button type="button" className="current-task-notice-action" onClick={() => applyWorkflowFilter(currentTaskNotice.filter)}>
+          {currentTaskNotice.action} →
+        </button>
+      </section>
+
+      <section className="workflow-command-center" aria-label={appLocale === 'en' ? 'SEO publishing workflow' : 'SEO 发布流程'} data-current-stage={currentWorkflowStage}>
         <nav className="workflow-stage-grid" aria-label={appLocale === 'en' ? 'Publishing stages' : '发布阶段'}>
           <button type="button" aria-current={currentWorkflowStage === 1 ? 'step' : undefined} aria-pressed={workflowFilter?.key === 'data:pending'} className={`workflow-stage-card needs-human-decision ${currentWorkflowStage > 1 ? 'is-complete' : currentWorkflowStage === 1 ? 'is-current' : 'is-upcoming'} ${workflowFilter?.key === 'data:pending' ? 'filter-selected' : ''}`} onClick={() => applyWorkflowFilter({ key: 'data:pending', type: 'data', status: 'pending', label: appLocale === 'en' ? 'Data Review · Pending' : '数据复核 · 待处理' })}>
             <b>{currentWorkflowStage > 1 ? '✓' : '1'}</b>
