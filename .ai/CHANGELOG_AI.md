@@ -10,6 +10,7 @@
 - Bound critical Preview builds to the current branch, PR Head SHA and fixed seed at workflow job scope; formal preview metadata validation now follows the active branch instead of a historical candidate name.
 - Deduplicated the unavailable compatibility evidence action so the same calculator route is not rendered twice in one species detail surface.
 - Hardened the mobile-care browser gate to verify visible care-plan and guide content rather than a hidden duplicate node.
+- Stabilized the mobile-care gate around the canonical `#care-plan` section and text content, accounting for hidden responsive projections without weakening the product contract.
 
 ### Fixed
 

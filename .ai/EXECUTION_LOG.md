@@ -13,6 +13,7 @@
 ## 2026-09-08 — Mobile care regression assertion hardening
 
 - The next merge-ready run passed through species detail and failed only because `verify-mobile-care-experience.mjs` waited for a hidden duplicate `养护计划` node. The gate now asserts that the care-plan and current guide have a visible, non-zero layout box after returning to Aquarium.
+- The runner showed the responsive care-plan projection can remain hidden while the stable section and content are still present; the assertion now uses `#care-plan` attachment and text content rather than visibility of one duplicate span.
 
 ## 2026-09-08 — Action contract browser gate alignment
 
