@@ -547,3 +547,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Duplicate review keeps its system recommendation/reasons, uses text-only candidate Preview actions and radio keep-page selection, then previews the exact Canonical outcome before confirmation.
 - Browser acceptance: category + duplicate flows at 1440×900 / 390×844, zero horizontal overflow, no page errors. Admin contract incl. Repo backend/API/dual-repo gates and full root build PASS.
 - Production/main/live DB/index remain untouched. Local CMS: `http://127.0.0.1:3010/?demo=1`.
+## 2026-09-08 23:57 +0800 — Species editor PM + UI hierarchy convergence
+- Used AquaGuide UI/UX, Product Manager and UI Designer skill rules together for the current-page editor acceptance.
+- Removed the parallel header summary (`2 项待填写 · 3 项搜索字段沿用模板`) so identity no longer competes with task status.
+- Primary editor now leads with `完成本页补充` + remaining task count; fields expose explicit `需要填写 / 模板已覆盖 / 本页已补充 / 已填写 / 需修复` states.
+- Intro guidance is data-dependent: Base shared intro present → current-page difference may be blank; Base shared intro missing → page must add an intro or complete Base first.
+- `更多 SEO 设置` is now the quieter `搜索与收录设置`; typography scale is 24px identity / 17px current task / 15px field question / 12px guidance / 13px secondary settings on desktop.
+- Browser acceptance: 1440×900 + 390×844, zero horizontal overflow/no page errors. Preview `定位字段` still maps H1 to the left editor and auto-opens Search & Indexing.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`.
+- Functional checkpoint: `02713144bd4b0ae5d0c106cfd957c29c686ed9bc`. No Production/main/live DB/index changes.

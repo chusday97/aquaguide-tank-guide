@@ -394,3 +394,8 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - [DONE] Replace competing conclusion buttons with radio decisions and show the exact after-confirmation result before the single confirm action.
 - [DONE] Clarify that `Source Data needs correction` records a blocker only; Product Data remains a separate authority and is not edited from SEO Data Review.
 - [NEXT] Continue user/operator acceptance on concrete CMS badcases only; do not add new permanent hierarchy layers or reopen reconciliation.
+## 2026-09-08 23:57 +0800 — Species editor PM + UI hierarchy convergence
+- Active acceptance remains the local Species SEO CMS at `http://127.0.0.1:3010/?demo=1`.
+- Current-page authoring hierarchy is now: Species identity → one dominant current task → explicit field task states → secondary Search & Indexing disclosure.
+- Product rule: page-specific intro may be blank only when the Base template actually provides shared intro content; otherwise the editor must state that the current page or Base template still needs content.
+- Continue only with concrete operator badcases; do not add another persistent hierarchy layer.

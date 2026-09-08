@@ -443,3 +443,8 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Data Review category-conflict and duplicate flows are evidence-first and browser-accepted at 1440×900 and 390×844 with zero horizontal overflow.
 - Functional HEAD before docs sync: `fdc75d9d3150d4d6bb73b4b2d8d3b09dcf90493f`.
 - No Production/main/live DB/index mutation.
+## 2026-09-08 23:57 +0800 — Local CMS editor hierarchy status
+- Local CMS: `http://127.0.0.1:3010/?demo=1`.
+- Functional checkpoint: `02713144bd4b0ae5d0c106cfd957c29c686ed9bc`.
+- Current-page editor now presents identity → current task → fields → secondary Search & Indexing; desktop/mobile browser acceptance PASS with 0 horizontal overflow.
+- Production/main/live DB/index remain untouched.

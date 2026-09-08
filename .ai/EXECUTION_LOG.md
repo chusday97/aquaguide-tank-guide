@@ -956,3 +956,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Rebuilt the flow to evidence-first with explicit known/unknown authority boundaries, radio conclusions, result preview and a single confirm action.
 - Compacted full source-record evidence behind disclosure and simplified duplicate candidate Preview/keep controls.
 - Verified category and duplicate outcomes in browser at desktop/mobile; full Admin contract, Repo backend/API/dual-repo gates, root build and `git diff --check` PASS.
+## 2026-09-08 23:57 +0800 — Species editor PM + UI hierarchy convergence
+- Reproduced the current-page editor at 1440×900 and 390×844.
+- Identified one product contradiction: fixed `可以留空` copy did not reflect whether Base shared intro actually existed.
+- Reworked the primary authoring hierarchy and field state copy; lowered Search & Indexing to a secondary disclosure.
+- Verified Preview locator remains functional: opening Preview + enabling `定位字段` + selecting H1 produces one selected `h1` editor target and auto-opens secondary SEO.
+- PASS Admin contract, Repo backend/API/dual-repo gates, Admin/root build, browser acceptance and diff hygiene.
+- Commit `02713144bd4b0ae5d0c106cfd957c29c686ed9bc`.

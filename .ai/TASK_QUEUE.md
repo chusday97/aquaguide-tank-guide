@@ -305,3 +305,11 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Reduce duplicate candidate Preview/keep controls to text action + radio selection.
 - [x] PASS 1440/390 browser acceptance, Admin contract/repo gates, root build and diff hygiene.
 - [ ] Continue only with newly observed operator badcases.
+## 2026-09-08 23:57 +0800 — Species editor hierarchy acceptance
+- [x] Audit current-page editor with AquaGuide UI/UX + Product Manager + UI Designer skill rules.
+- [x] Remove competing identity-header task/inheritance summary.
+- [x] Make current task objective and remaining work explicit.
+- [x] Add truthful per-field task states and dynamic Base-intro guidance.
+- [x] Demote Search & Indexing below primary authoring tasks.
+- [x] PASS desktop/mobile 0-overflow, Preview field mapping, Admin contract/build, full root build and diff hygiene.
+- [ ] Continue operator acceptance only for observed badcases.
