@@ -16,6 +16,12 @@
 
 # AquaGuide 交接文档
 
+## 2026-09-10 浏览器环境复查结果
+
+- 本轮重新检查 Computer Use，系统返回 Mac 处于锁定状态且无法自动解锁；未能读取当前页面或执行真实截图。
+- 不再重复启动 Playwright/系统浏览器；静态响应式与结构门禁不能替代真实视觉证据。
+- 解锁后下一步：一次性重跑 Species 与公开路由的 390/600/1440 回归，再依据实际截图进入独立 Critic。
+
 ## 2026-09-10 公开页面滚动根因修复
 
 - 定位并修复桌面应用壳全局 `#root { overflow: hidden; }` 对公开 SEO 长页面的裁切：`.seo-system.css` 对包含公开页面的 `#root` 明确设置 `height: auto`、`overflow: visible`。
