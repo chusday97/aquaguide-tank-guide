@@ -743,3 +743,4 @@
 - 黄金米虾页面展示基础物种共享的活动/觅食内容，未创建重复生活习性 evidence；品系差异仅保留黄色外观及自身参数。
 - 当前仍缺系统 Playwright 三档截图证据、Figma Canonical、可读独立 Critic；不要将当前内置浏览器验证表述为自动化浏览器通过。
 - 本轮内置浏览器已补查 Species 长页面滚动与内容覆盖；当前只能验证可用预览 viewport，不能替代 390/600/1440 的完整视觉回归。
+- 最新工程验收：Evidence、Public Contract、Editorial、lint、build 通过；`test:seo-motion` 因 Playwright Chromium 启动时 `MachPortRendezvousServer: Permission denied` 失败，需恢复浏览器权限后重跑。

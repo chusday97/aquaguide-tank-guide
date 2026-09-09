@@ -824,6 +824,8 @@
 - [ ] 仍未完成系统 Playwright 三档自动化、Figma Canonical 模板和可读独立 Critic；所有页面继续 `noindex,follow`。
 - [x] 在当前可用的内置浏览器预览中补查 Species 长页面：首屏、参数带、生活习性、环境、日常、品系、FAQ、资料来源均可读，章节滚动可达。
 - [ ] 内置浏览器当前不提供动态 viewport 调整；390/600/1440 三档完整截图仍需可调整 viewport 的浏览器环境或现有脚本恢复。
+- [x] 重新执行 `test:seo-evidence-bindings`、`test:public-seo-contract`、`test:seo-editorial-evidence`、`lint` 和 `build`，均通过。
+- [ ] `test:seo-motion` 仍在 Chromium 启动阶段因 macOS MachPort 权限失败；不是页面断言失败，不能记为动效自动化通过。
 
 - [x] 新增统一 motion tokens：160ms / 360ms / 520ms、柔和缓动、16px 章节位移和最多三级延迟。
 - [x] Species 试点接入 Hero 进入、章节首次可见、FAQ 可测量展开、按钮按压/焦点反馈和品系状态过渡；内容首屏即存在，reduced-motion 不隐藏内容。
