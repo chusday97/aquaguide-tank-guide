@@ -1137,3 +1137,16 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Local browser regressions deliberately return 503 for `/api/v1/**` and `/api/admin-content/**` and still pass, proving current Product/Care + Compatibility local flows do not require Supabase/Business Admin API.
 - Added DEV-only contract and Heavy CI browser coverage. Full root/API TypeScript, Admin/Compatibility/Operations/Publish contracts and root build PASS.
 - Product/Care local image writes and Care SEO Editorial local persistence remain open. Supabase Staging is parked. Production/main/live DB/indexing untouched.
+
+## 2026-09-09 23:18 +0800 — Durable Local File Operations checkpoint
+- Re-read real branch/Git/.ai authority first; worktree already contained an unfinished Local File persistence implementation. Preserved and completed that work rather than re-planning from memory.
+- Closed the truncated `scripts/test-local-file-admin.ts` blocker and added `test:local-file-admin` covering atomic JSON state, asset lifecycle, invalid input, disabled guard and server lifecycle persistence.
+- Added DEV-only `/api/v1/local-admin` file routes and `npm run dev:local-admin`; default durable root is `.local/aqua-admin`, which is gitignored.
+- Changed File Mode state semantics to disk-first persistence with localStorage as best-effort cache; a cache failure no longer creates a false failed-save/runtime rollback after disk success.
+- Durable Business/Compatibility/Care SEO corruption now fails closed with `MIGRATION_REJECTED`; browser-only Local Mode keeps its previous seed self-healing behavior.
+- Fixed Vite dev proxy port selection to honor external `API_PORT`, preventing accidental proxying to another local AquaGuide API already bound to 8787. `WEB_PORT` remains overridable with strictPort.
+- Added Product/Care local-file image storage + legacy IndexedDB migration path and Operations Source Status persistence indicator.
+- Added `test:local-file-admin-ui` and Heavy CI coverage. The test starts isolated API/Vite ports, writes Product + image + Compatibility + Care SEO, fully stops the server, restarts it, opens a fresh browser context and proves all durable state + image recovery with zero mobile overflow.
+- Existing browser-only regressions remain PASS: Operations populated UI, Local Product/Care, Local Compatibility, Local Care SEO, IndexedDB assets. Root/API TypeScript, full root build and `git diff --check` PASS.
+- Functional commit: `746d5c66 feat(admin): add durable local file mode`. Live remote feature before this commit was `e9c63560`; live main `d3c70dee`; local vs remote feature = ahead 1 / behind 0; main vs local = 275 / 261. No push, main merge/rebase, Production/live DB/index action.
+- NEXT: Local File backup/restore + schema-version migration/recovery, then resume concrete operator/UI badcases.

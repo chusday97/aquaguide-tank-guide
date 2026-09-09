@@ -1,23 +1,21 @@
 # Current Goal
 
 
-## CURRENT OVERRIDE — 2026-09-09 Local-first execution
-The active objective is now **finish Aqua Operations Studio as a self-contained local development/acceptance environment without Supabase as a prerequisite**. Functional checkpoint: `2d26b1ca`.
+## CURRENT OVERRIDE — 2026-09-09 Durable local execution
+The active objective is **finish Aqua Operations Studio as a durable single-machine operator environment without Supabase as a prerequisite**. Functional checkpoint: `746d5c66`.
 
 Completed in the current local-first phase:
-1. Product/Care Local authority: canonical 486/41 seed, Draft isolation, Published Snapshot, refresh persistence, Operations WorkItem and publish boundary.
-2. Compatibility Local authority: Profile/Pair revisions, Impact, real engine Regression, canonical Evidence, human Review and reviewed runtime publish.
-3. Operations Local routing/readiness and exact Compatibility/Product deep-links.
-4. DEV-only fail-closed local switch; production builds keep the existing deployed authority path.
-5. Heavy browser regressions prove Local Product/Care + Compatibility operate while cloud Admin APIs return 503.
-
-Completed additionally:
-6. Local Publish Center at `174cf174`: local Product/Care publish/archive events + Compatibility submit/review/publish events, with the existing SEO Repo feed unchanged and no new write authority.
-7. Local Care SEO Editorial at `691c4b43`: zh-CN Published Care snapshot binding, Draft→Review→Approved, source-drift recovery, local health-index integration, noindex lock, English/AI fail-closed.
-8. Local Product/Care main-image persistence at `2d26b1ca`: Blob data in IndexedDB, lightweight asset metadata/versioning in the Local Business store, Draft/Published image isolation, local runtime blob URLs, and Production asset API unchanged.
+1. Product/Care Local authority: canonical 486/41 seed, Draft isolation, Published Snapshot, Operations WorkItems and publish boundary.
+2. Compatibility Local authority: Profile/Pair revisions, Impact, real Regression, canonical Evidence, human Review and reviewed runtime publish.
+3. Local Publish Center history/readiness and exact WorkItem deep-links.
+4. Care SEO Editorial Local Draft→Review→Approved with Published-source drift, noindex lock and English/AI fail-closed.
+5. Product/Care image Draft/Published isolation.
+6. Durable Local File Mode at `746d5c66`: Business/Compatibility/Care SEO JSON + image files under `.local/aqua-admin`, disk-first writes, fail-closed corruption handling, startup hydration, and full restart/fresh-browser acceptance.
+7. Existing browser-only Local Mode remains green; Production authority, indexing and Supabase deployment paths are unchanged.
 
 NEXT milestones:
-1. Decide whether browser localStorage + IndexedDB is sufficient for acceptance only or should be promoted to Repo/local-file persistence for durable single-machine use.
+1. Add explicit backup/restore snapshots and schema-version migration/recovery for durable Local File data.
+2. Resume concrete operator/UI badcase convergence after persistence safety is stable.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

@@ -1,12 +1,13 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Local-first checkpoint (2026-09-09)
-- Latest Local-first functional HEAD: `2d26b1ca58665aa59825d757ead7cc599e88596f` (Local Product/Care asset persistence).
-- Live remote feature before docs sync/push: `30ff0119a390b9007a9ab7d5a435f8b7bb335fa2`.
+## CURRENT OVERRIDE — Durable Local File checkpoint (2026-09-09)
+- Latest functional HEAD: `746d5c66 feat(admin): add durable local file mode`.
+- Live remote feature at checkpoint read: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Explicit-ref relation at functional checkpoint: local vs remote feature = `ahead 1 / behind 0`; main vs local = `275 main-only / 259 feature-only`.
-- Merge base with remote feature is exactly `30ff0119`; ordinary fast-forward push is safe.
+- Local vs live remote feature: `ahead 1 / behind 0`; local change is an ordinary fast-forward candidate but is intentionally not pushed in this round to avoid unnecessary deployment/Preview consumption.
+- Main vs local functional checkpoint: `275 main-only / 261 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- The feature is still not merge-ready with main; dedicated reconciliation remains parked.
 - No merge/rebase main, no force push, no Production/live DB/indexing mutation.
 
 Updated: 2026-09-09

@@ -1,21 +1,22 @@
 # Live Status
 
 
-## CURRENT OVERRIDE — Local-first runtime status (2026-09-09)
-- Functional checkpoint: `2d26b1ca feat(admin): add local asset persistence`.
-- Root Admin at local 3003 can run with `VITE_ADMIN_LOCAL_MODE=true`; this is DEV-only.
-- Product/Care local authority: canonical 486/41, Draft + Published Snapshot isolation, save/refresh/publish browser acceptance PASS.
-- Care action metadata round-trip (`actionTitle`, `actionKind`) is preserved; local store corruption self-heals to canonical seed.
-- Compatibility local authority: 7 Profiles / 4 Pair Rules; Draft→Impact→real Regression→Evidence→Review→runtime publish PASS.
-- Local Operations WorkItems and exact deep-links PASS. Cloud Business/Repo Admin API 503 does not block the local Product/Care or Compatibility browser regressions.
-- Local Publish Center PASS: Product/Care publish/archive + Compatibility submit/review/publish history are visible while Business APIs are unavailable; SEO remains independently authenticated.
-- Care SEO Editorial Local PASS: zh-CN Published Care projection, Draft→Review→Approved, Draft isolation from Published source, source drift after re-publish, new-Draft recovery, Registry/Operations health integration; English source and Local AI remain fail-closed; noindex remains locked.
-- Product/Care main images are writable in DEV Local Mode: Blob data persists in IndexedDB, asset versions survive refresh, upload returns the working record to Draft, and explicit Publish alone advances the Local Published image snapshot. Production `/api/v1/admin/assets` remains unchanged.
-- Production/main/live Supabase/indexing are untouched; Supabase Staging is parked for current development.
+## CURRENT OVERRIDE — Durable local runtime status (2026-09-09)
+- Functional checkpoint: `746d5c66 feat(admin): add durable local file mode`.
+- Recommended single-machine entrypoint: `npm run dev:local-admin`; default web port 3003, with `WEB_PORT` / `API_PORT` overrides supported safely.
+- Default durable root: `.local/aqua-admin/`; state partitions are Business, Compatibility and Care SEO JSON, with Product/Care images under `assets/`.
+- Durable state is disk authority; browser localStorage is cache. Corrupt durable Business/Compatibility/Care SEO state fails closed instead of self-healing to seed. Browser-only Local Mode retains its previous self-healing behavior.
+- Product/Care local authority: canonical 486/41, Draft + Published Snapshot isolation, save/publish and durable restart acceptance PASS.
+- Compatibility local authority: 7 Profiles / 4 Pair Rules; Draft→Impact→Regression→Evidence→Review→runtime publish remains PASS and durable revisions survive restart.
+- Care SEO Editorial Local: zh-CN Draft→Review→Approved/source-drift semantics remain PASS and durable revisions survive restart.
+- Product/Care images persist as local files in Durable Mode; asset version/Draft/Published isolation and restart image loading PASS. Browser-only IndexedDB asset regression also remains PASS.
+- Operations Home exposes durable persistence status inside Source Status and remains zero-overflow at mobile/desktop.
+- Full root build, root/API TypeScript, Durable API/E2E and existing Local browser suites PASS.
+- Production/main/live Supabase/indexing are untouched; Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `2d26b1ca58665aa59825d757ead7cc599e88596f`
+Operational functional HEAD before this docs sync: `746d5c66`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

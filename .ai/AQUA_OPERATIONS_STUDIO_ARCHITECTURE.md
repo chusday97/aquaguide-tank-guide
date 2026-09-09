@@ -1,14 +1,17 @@
 # Aqua Operations Studio — Product / Content / Rules Architecture
 
 
-## 2026-09-09 Local-first development authority override
+## 2026-09-09 Durable Local development authority override
 - **Production authority is unchanged.** Product/Care + Compatibility still use the Business API authority in deployed environments; Species SEO remains Repo-backed.
-- Local development/acceptance now has an explicit DEV-only adapter: `import.meta.env.DEV === true && VITE_ADMIN_LOCAL_MODE === "true"`. A production build cannot enable it from the Vite flag alone.
-- In Local Mode, Product/Care use a browser-persisted working store with a separate Published Snapshot; Product/Care main-image Blobs live in IndexedDB while lightweight asset version metadata lives with the Local Business record. Image upload/replace returns the working record to Draft and only explicit Publish advances the Local Published asset snapshot. Compatibility uses an isolated local revision store with structural Impact, real `tankCompatibilityEngine` Regression, canonical Evidence, human review and runtime bootstrap publish. Care SEO Editorial uses the Local Published Care snapshot as its only source and preserves Draft→Review→Approved plus source-drift semantics.
-- Operations Home consumes these local authorities directly and does not let unavailable Supabase Publish Center readiness override local Product/Care/Compatibility readiness.
-- Local Product/Care seed is the existing canonical catalog (486 Species / 41 Care). Local Compatibility starts from the existing reviewed 7 Profile / 4 Pair baseline. No duplicate business-rule fixture becomes authority.
-- Supabase Staging remains a future cloud/multi-operator validation path and is **parked for current product iteration**. Local Mode is for single-machine development/acceptance; it is not a replacement for Production persistence/auth/audit.
-- Current gap before a durable fully-local operator environment: decide whether to promote browser localStorage + IndexedDB to Repo/local-file persistence for long-term single-machine use. Local Publish Center, Care SEO Editorial and Product/Care main-image persistence are available in DEV Local Mode. Production persistence/auth/audit remain unchanged.
+- Browser Local Mode still requires `import.meta.env.DEV === true && VITE_ADMIN_LOCAL_MODE === "true"`. Durable Local File Mode adds `VITE_ADMIN_LOCAL_FILE_MODE === "true"` and a server-side `ADMIN_LOCAL_FILE_MODE === "true"`; server routes also refuse `NODE_ENV=production` and Vercel.
+- Recommended durable entrypoint is `npm run dev:local-admin`. It writes Business, Compatibility and Care SEO partitions to `.local/aqua-admin/*.json` using atomic temp-file rename and writes Product/Care image bytes + metadata under `.local/aqua-admin/assets/`.
+- In Durable File Mode the disk files are the single-machine persistence authority; localStorage is a browser runtime cache. Writes persist disk first. Cache failures do not invalidate a successful durable write.
+- Startup hydrates durable partitions before runtime Product/Care and Compatibility hydration. Existing browser-only state may be promoted into files; legacy IndexedDB image assets are migrated to local files. Missing legacy image bytes fail closed rather than fabricating a successful migration.
+- Structurally invalid durable Business/Compatibility/Care SEO state raises `MIGRATION_REJECTED`; canonical seed fallback is retained only for browser-only Local Mode.
+- Product/Care Draft/Published Snapshot, Compatibility reviewed publish, Care SEO source-drift/review semantics and Publish Center/Operations read models remain unchanged by the storage transport.
+- Operations Home may display the Local File persistence status, but this is infrastructure observability, not a new content/publish authority.
+- Supabase Staging remains a future cloud/multi-operator validation path and is parked for current iteration. Durable Local File Mode is intentionally single-machine and does not replace Production authentication/audit/multi-operator semantics.
+- Next durability gap: explicit backup/restore and schema-version migration/recovery for future Local File format changes.
 
 Updated: 2026-09-09
 Status: canonical product-operations architecture contract

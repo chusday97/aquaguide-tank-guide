@@ -1,20 +1,20 @@
 # Task Queue
 
 
-## ACTIVE OVERRIDE — Local-first Operations Studio (2026-09-09)
+## ACTIVE OVERRIDE — Durable Local Operations Studio (2026-09-09)
 - [x] Product/Care Local adapter from canonical 486 Species / 41 Care.
 - [x] Draft save/refresh persistence and separate Published Snapshot.
 - [x] Preserve Care step `actionTitle` / `actionKind` through Local save→publish round-trip.
-- [x] Compatibility Local Profile + Pair revision stores.
-- [x] Structural Impact + real compatibility Regression + canonical Evidence + human review.
-- [x] Local reviewed publish hydrates actual runtime compatibility bootstrap.
+- [x] Compatibility Local Profile + Pair revision stores with structural Impact + real Regression + Evidence + human review + runtime publish.
 - [x] Operations exact WorkItems/deep-links for local Product/Care + Compatibility.
-- [x] DEV-only local mode guard; production cannot enable local authority from the Vite flag alone.
-- [x] Heavy browser tests run with cloud Admin APIs unavailable.
-- [x] Local Publish Center aggregation/readiness/history (`174cf174`): Product/Care + Compatibility local release events, SEO Repo feed unchanged, Production locked.
-- [x] Care SEO Editorial local persistence/readiness (`691c4b43`): zh-CN Draft→Review→Approved, source version binding/drift, health-index integration, noindex lock, English/AI fail-closed.
-- [x] Local main-image storage for Product/Care assets (`2d26b1ca`): IndexedDB Blob persistence, versioned metadata, Draft/Published isolation and local runtime Preview.
-- [ ] Decide/implement Repo or local-file persistence if Local Mode is to become durable single-machine operations rather than browser-scoped acceptance.
+- [x] DEV-only local authority guard; Production cannot enable local authority from Vite flags alone.
+- [x] Local Publish Center aggregation/readiness/history (`174cf174`).
+- [x] Care SEO Editorial local persistence/readiness (`691c4b43`).
+- [x] Local Product/Care image Draft/Published isolation (`2d26b1ca`).
+- [x] Durable Local File Mode (`746d5c66`): `.local/aqua-admin` JSON partitions + image files, disk-first persistence, startup hydration, corruption fail-closed, overridable safe ports, Operations persistence indicator.
+- [x] Durable full restart regression: Product + image + Compatibility + Care SEO survive server restart and a fresh browser context; browser-only Local regressions remain green.
+- [ ] Add explicit Local File backup/restore snapshot workflow and schema-version migration/recovery contract.
+- [ ] Continue concrete operator/UI badcases after persistence safety closure.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-09
