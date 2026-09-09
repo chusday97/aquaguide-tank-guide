@@ -84,6 +84,7 @@
     "test:species-landing": "node scripts/verify-species-landing.mjs",
     "test:public-seo-contract": "node --import tsx scripts/test-public-seo-contract.ts",
     "test:public-seo-copy": "node scripts/test-public-seo-copy.mjs",
+    "test:public-seo-structure": "node scripts/test-public-seo-structure.mjs",
     "test:seo-evidence-bindings": "node --import tsx scripts/test-seo-evidence-bindings.ts",
     "test:seo-editorial-evidence": "node --import tsx scripts/test-seo-editorial-evidence.ts",
     "test:seo-asset-candidates": "node --import tsx scripts/test-seo-asset-candidates.ts",

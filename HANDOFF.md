@@ -797,6 +797,11 @@
 - 通过公开文案、契约、Editorial、Evidence、lint 与 diff-check；用户未提交的素材/截图脚本仍未纳入。
 - 下一步仍是可调整 viewport 浏览器回归、Figma Canonical 和可读独立 Critic。
 
+## 2026-09-10 公开结构密度自动门禁
+
+- 新增 `npm run test:public-seo-structure`，为四类公开页面检查稳定骨架，并确认 Species 的生活习性、Editorial、FAQ、品系内容仍按 Published 条件显示。
+- 结构、文案、公开契约、lint 与 diff-check 通过；该检查不能替代真实 viewport 视觉验收。
+
 ## 2026-09-10 公开聚合层文案门禁补强
 
 - 文案门禁现在同时覆盖四个公开页面组件和 `publishedSpeciesProfile.ts` 的中文公开摘要，避免后台流程词从数据聚合层泄漏。

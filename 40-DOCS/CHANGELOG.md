@@ -36,6 +36,8 @@
 - Verified: 后台术语未进入公开文案；公开文案、契约、Editorial、Evidence、lint 与 diff-check 通过。
 - Changed: 公开文案回归门禁扩展到 `publishedSpeciesProfile.ts`，同时覆盖页面组件和公开聚合层中文摘要。
 - Verified: 证据、Product Truth、路由和 `noindex,follow` 不变；文案门禁、lint 与 diff-check 通过。
+- Added: `test:public-seo-structure`，检查 Marketing、Category、Species、Guide 的稳定内容骨架与条件内容门禁。
+- Verified: Species 的生活习性、Editorial、FAQ、Base/Variant 和 Guide 准备态结构保持 fail-closed；结构、文案、契约、lint 与 diff-check 通过。
 - Fixed: Guide 准备态移除“事实审核”流程词，改为用户可理解的“具体步骤整理好后开放”。
 - Verified: `test:public-seo-copy`、公开契约、Editorial、Evidence、lint 与 diff-check 通过。
 

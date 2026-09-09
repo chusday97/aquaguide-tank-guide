@@ -876,6 +876,13 @@
 - [x] 通过 lint、公开契约、build 与 diff-check；未改变 Product Truth、路由、内容门禁或 `noindex,follow`。
 - [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
 
+## 2026-09-10 公开 SEO 结构密度门禁
+
+- [x] 新增 `npm run test:public-seo-structure`，检查 Marketing、Category、Species、Guide 是否保留稳定的公共壳层、主内容、资料说明和能力入口。
+- [x] Species 的 Editorial、生活习性、FAQ 与 Base/Variant 均保持条件渲染；Guide 准备态三段阅读结构保持存在。
+- [x] 通过结构、文案、公开契约、lint 与 diff-check；未改变 Product Truth 或索引策略。
+- [ ] 真实三档浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-10 公开聚合层文案门禁补强
 
 - [x] `test:public-seo-copy` 扩展扫描 `publishedSpeciesProfile.ts`，阻止证据聚合层重新带出审核流程词。
