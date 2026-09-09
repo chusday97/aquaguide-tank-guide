@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-09)
-Functional checkpoint: `bf85231b fix(admin): compact seo workflow chrome`.
+Functional checkpoint: `a9a54bc9 fix(admin): clarify seo ownership preview`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Species SEO single-group Data Review is now evidence-first: candidate/source comparison is read-only, then the operator chooses one conclusion.
 - Duplicate decisions no longer mix canonical selection into evidence. Choosing “duplicate records” opens a separate final-page step; the system recommendation is labeled as evidence and is never auto-selected.
@@ -14,14 +14,15 @@ Functional checkpoint: `bf85231b fix(admin): compact seo workflow chrome`.
 - SEO editor action hierarchy is now centralized: current-page/Base save-review actions live only in the top Review bar; duplicate bottom save buttons and repeated Draft chips were removed. Core `搜索与收录设置` defaults open while remaining collapsible by operator choice.
 - Current-page and cross-page tools are now separated: the editor footer contains only current-page Data Review / readiness / translation / history, while one neutral top-level `运营工具` entry opens batch SEO, bulk duplicate/content review, template import and global queues. Desktop + 390px hierarchy regression PASS.
 - Top chrome is compacted without hiding safety context: current-task notification remains actionable, the 4-stage workflow is now stage navigation only, and current-page review remains the single save/review handoff. Desktop top chrome dropped from 178px to 136px; mobile from 187px to 137px, guarded by a <=140px browser budget.
-- NEXT: continue current-page/Base/Preview ownership clarity and remove any remaining duplicate context labels or controls. Supabase Staging remains parked.
+- Base/current-page ownership is clearer: the redundant Base impact strip was removed because the Base task header already owns that explanation; Preview now explicitly labels itself as the final composed page (`基础模板 + 当前页面`).
+- NEXT: audit visible editor actions and remove any remaining duplicate choices that make the operator hesitate about the primary next action. Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `bf85231b`
+Current Operations Studio functional HEAD: `a9a54bc9`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

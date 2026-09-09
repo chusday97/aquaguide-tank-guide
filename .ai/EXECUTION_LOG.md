@@ -1196,3 +1196,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Heavy browser hierarchy regression now enforces <=140px on desktop/mobile and keeps the actual current problem title visible on mobile.
 - PASS: SEO Admin contract/browser regression, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
 - NEXT: current-page/Base/Preview ownership clarity.
+
+## 2026-09-09 — SEO Base/current-page/Preview ownership clarity
+- Functional checkpoint: `a9a54bc9 fix(admin): clarify seo ownership preview`.
+- Removed the duplicate Base impact strip because the Base task header already states shared-page scope and impact.
+- Preview header now explicitly states `最终页面 = 基础模板 + 当前页面`, clarifying that Preview is composed output rather than a single editing layer.
+- Browser regression switches Base/current page and verifies one Base ownership explanation plus final-composition Preview copy.
+- PASS: hierarchy browser regression, SEO Admin contract, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
+- NEXT: visible editor action audit.

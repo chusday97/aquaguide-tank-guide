@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-09 Operator UX convergence
-The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `bf85231b`.
+The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `a9a54bc9`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -12,10 +12,11 @@ Completed in the current local-first / UX phase:
 5. Edit action hierarchy (`b3ec2d8e`): core Search & indexing defaults visible; save/review actions are centralized in the top Review bar; page/Base footer duplicate save buttons and repeated Draft state were removed.
 6. Tool hierarchy (`b6c44a62`): current-page tools are separated from cross-page operations; one neutral top-level Operations entry owns batch SEO, bulk review/import and global queues, including responsive mobile access.
 7. Top workflow chrome (`bf85231b`): current task + 4-stage workflow + page review reduced to 136px desktop / 137px mobile while retaining status, stage semantics and one review action. Browser regression enforces <=140px.
+8. Ownership clarity (`a9a54bc9`): removed the duplicate Base impact strip; Base task header is the single impact explanation; Preview explicitly states it is the final Base + current-page composition.
 
 NEXT milestones:
-1. Continue current-page vs Base vs Preview ownership clarity and remove duplicate context labels/actions where the same state is expressed twice.
-2. Preserve the compact top-chrome budget, centralized review boundary and page/global tool separation.
+1. Audit visible actions inside the current editor and remove only genuinely duplicate/competing choices.
+2. Preserve ownership clarity, compact top chrome, centralized review boundary and page/global tool separation.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

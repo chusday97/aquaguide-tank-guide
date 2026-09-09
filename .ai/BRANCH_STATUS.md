@@ -1,12 +1,12 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — SEO editor compact-workflow checkpoint (2026-09-09)
-- Latest functional HEAD: `bf85231ba824a4b2177fa989916e623d5e216893` (`fix(admin): compact seo workflow chrome`).
+## CURRENT OVERRIDE — SEO ownership-clarity checkpoint (2026-09-09)
+- Latest functional HEAD: `a9a54bc94a404a1abe474184050e6098f3a2fa22` (`fix(admin): clarify seo ownership preview`).
 - Live remote feature at checkpoint read: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Local vs live remote feature before docs sync: `ahead 11 / behind 0`; still intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local functional checkpoint: `275 main-only / 271 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Local vs live remote feature before docs sync: `ahead 13 / behind 0`; still intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local functional checkpoint: `275 main-only / 273 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
 - No merge/rebase main, force push, Production/live DB or indexing mutation.
 

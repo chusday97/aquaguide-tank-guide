@@ -18,7 +18,8 @@
 - [x] Species SEO edit action convergence (`b3ec2d8e`): Search & indexing defaults open; top Review bar owns save/review; page/Base bottom duplicate save buttons and Draft chips removed.
 - [x] Page/global tool hierarchy (`b6c44a62`): current-page footer keeps only contextual tools; one top-level Operations drawer owns batch SEO, bulk duplicate/content review, template import and global queues.
 - [x] Compact top workflow chrome (`bf85231b`): current task + stage navigator + page review stay <=140px on desktop/mobile while retaining one action boundary.
-- [ ] Continue current-page / Base / Preview ownership clarity and remove remaining duplicate context labels or controls.
+- [x] Base / Preview ownership clarity (`a9a54bc9`): remove duplicate Base impact strip; Preview labels final composition as Base + current page.
+- [ ] Audit visible current-editor actions and reduce remaining duplicate/competing choices without weakening save/review/publish gates.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-09
