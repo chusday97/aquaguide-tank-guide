@@ -7,6 +7,14 @@ import { SeoCapabilityCard } from '../components/seo/SeoCapabilityCard';
 import { SeoRelatedLinks } from '../components/seo/SeoRelatedLinks';
 import { SeoSourceFooter } from '../components/seo/SeoSourceFooter';
 import { setSeoDocument } from '../services/seo/seo-document.service';
+import { ResilientImage } from '../components/common/ResilientImage';
+import { getPublishedSpeciesProfile } from '../data/publishedSpeciesProfile';
+import { getSpeciesLandingSelection } from '../services/species/species-landing.service';
+
+const marketingSpeciesAsset = (() => {
+  const selection = getSpeciesLandingSelection('sp_0001');
+  return selection ? getPublishedSpeciesProfile(selection).assets.find(asset => asset.usage === 'hero') : undefined;
+})();
 
 export default function MarketingLanding() {
   useEffect(() => setSeoDocument({ title: 'AquaGuide｜认识物种，照顾好鱼缸', description: 'AquaGuide 把物种百科、养护知识和真实鱼缸工具放在同一条清晰路径上。', canonical: '/', jsonLd: { '@context': 'https://schema.org', '@type': 'WebSite', name: 'AquaGuide', url: window.location.origin } }), []);
@@ -21,8 +29,9 @@ export default function MarketingLanding() {
           <Link to="/aquarium" className="seo-action seo-focus border border-ink/15 bg-white text-ink hover:border-accent hover:text-accent">进入我的鱼缸</Link>
         </div>
       </div>
-      <div className="seo-hero__media seo-card seo-large-card flex min-h-[340px] items-end overflow-hidden bg-[#E8F0EE] p-6 md:min-h-[470px] md:p-10">
-        <div className="max-w-[420px]"><p className="seo-eyebrow">给你的鱼缸的一份图鉴</p><p className="mt-3 font-serif text-3xl font-bold leading-tight text-accent md:text-5xl">把复杂的养护判断，留给清晰的下一步。</p></div>
+      <div className="seo-hero__media seo-card seo-large-card relative flex min-h-[340px] items-end overflow-hidden bg-[#E8F0EE] p-6 md:min-h-[470px] md:p-10">
+        {marketingSpeciesAsset && <ResilientImage src={marketingSpeciesAsset.src} alt={marketingSpeciesAsset.altZh} loading="eager" className="absolute inset-0 h-full w-full object-contain p-[14%] opacity-90" />}
+        <div className="relative z-[1] max-w-[420px] rounded-2xl bg-[#E8F0EE]/82 p-3 backdrop-blur-sm"><p className="seo-eyebrow">给你的鱼缸的一份图鉴</p><p className="mt-3 font-serif text-3xl font-bold leading-tight text-accent md:text-5xl">把复杂的养护判断，留给清晰的下一步。</p></div>
       </div>
     </section>
     <section className="seo-section" aria-labelledby="marketing-value"><SeoSectionHeading number="01" eyebrow="为什么选择 AquaGuide" title="从一页百科，走到一次可靠的决定" description="公开内容负责帮助你理解；应用工具负责把要求与你自己的鱼缸进行比较。" />

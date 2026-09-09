@@ -847,3 +847,10 @@
 - [x] 分类页物种卡接入已批准项目素材，统一 4:3 图片区；缺图时显示明确 fallback，不再出现空白图片区域。
 - [ ] 系统 Chromium/Chrome 仍被 macOS MachPort 权限阻断，动效专项无法完成 Playwright 启动级验证；用户视觉确认、独立 Critic 和 Figma Canonical 仍待完成。
 - 当前保持 `noindex,follow`；此前未提交的宝莲灯素材候选与截图脚本改动未混入本动效提交。
+
+## 2026-09-10 品牌首页 Hero 视觉补齐
+
+- [x] 品牌首页 Hero 复用已批准的 `sp_0001` 项目物种图，不再显示只有文字的空浅绿占位卡；资产通过 `PublishedSpeciesProfile` 的批准 Hero binding 获取，并继续使用 `ResilientImage` 失败回退。
+- [x] 内置浏览器确认首页 Hero 可见真实极火虾图片、中文 Alt、品牌文案与两个入口；公开页面仍不读取鱼缸状态。
+- [x] `npm run lint`、`npm run build`、`npm run test:public-seo-contract`、`npm run test:seo-evidence-bindings` 与 `git diff --check` 通过。
+- [ ] 宝莲灯仍因素材未完成用途级人工确认而显示 fallback；Guide 仍为内容准备态；系统 Playwright 三档截图、Figma Canonical 和可读独立 Critic 仍是发布门禁。
