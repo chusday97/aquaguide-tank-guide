@@ -140,6 +140,8 @@
 
 ### Changed
 
+- 2026-09-10：在纯 Vite 本地预览中补充 Species 品系切换与浏览器历史回退验证，确认黄金米虾与极火虾的 URL、身份、图片 Alt、Product Truth、继承内容和工具入口在切换/返回后保持一致；未改变业务数据或索引策略。
+
 - Updated project truth and release readiness to mark the current UI as frozen provisional and Supabase parity as migration-required, without executing production changes.
 - Updated the Care category browser gate to use the 4319 candidate and the current desktop detail-rail surface instead of the retired 4173/centered-dialog contract.
 - Moved legacy PostgreSQL fixtures out of `supabase/tests/` so `supabase test db --local` executes only transaction-isolated pgTAP tests; local 26-migration normalized hashes now match the production read-only baseline across columns, constraints, functions, indexes, policies, grants and triggers.

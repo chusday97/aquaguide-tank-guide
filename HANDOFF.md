@@ -736,3 +736,9 @@
 - 当前阻塞：Playwright 内置 Chromium 与系统 Chrome 均被 macOS MachPort 权限阻断，不能宣称本轮动效浏览器专项通过。Figma 继续暂停，独立 Critic 尚未取得可读报告。
 - 未提交且明确隔离：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 的既有素材/截图改动。
 - 下一步：恢复可用浏览器后重跑 `test:seo-motion` 和三档 Species 回归；随后做用户视觉确认，再启动一次可读独立 Critic。所有页面保持 `noindex,follow`。
+
+## 2026-09-10 最新验证补充
+
+- 纯 Vite 预览已验证 `极火虾 → 黄金米虾品系 → 浏览器返回 → 极火虾`：返回后恢复 `/species/sp_0001`，H1、图片 Alt、15–28°C Product Truth、当前品系和工具链接均正确。
+- 黄金米虾页面展示基础物种共享的活动/觅食内容，未创建重复生活习性 evidence；品系差异仅保留黄色外观及自身参数。
+- 当前仍缺系统 Playwright 三档截图证据、Figma Canonical、可读独立 Critic；不要将当前内置浏览器验证表述为自动化浏览器通过。

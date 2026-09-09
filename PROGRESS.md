@@ -817,6 +817,12 @@
 - [ ] 既有素材/截图脚本修改仍未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
 - 下一步：在本地 Preview 中检查 Species、Category、Guide 的完整滚动与图片/内容覆盖；浏览器专项和可读独立 Critic 通过前，保持 `noindex,follow`。
 
+## 2026-09-10 品系切换与历史回退验证
+
+- [x] 在纯 Vite `127.0.0.1:3002` 预览中从极火虾切换到黄金米虾，再使用浏览器返回恢复极火虾；URL、H1、图片 Alt、温度参数、当前品系状态和工具入口均随路由正确同步。
+- [x] 确认黄金米虾继续继承基础物种生活习性，不产生独立重复 evidence；返回后极火虾内容与品系选择恢复正常。
+- [ ] 仍未完成系统 Playwright 三档自动化、Figma Canonical 模板和可读独立 Critic；所有页面继续 `noindex,follow`。
+
 - [x] 新增统一 motion tokens：160ms / 360ms / 520ms、柔和缓动、16px 章节位移和最多三级延迟。
 - [x] Species 试点接入 Hero 进入、章节首次可见、FAQ 可测量展开、按钮按压/焦点反馈和品系状态过渡；内容首屏即存在，reduced-motion 不隐藏内容。
 - [x] 新增 `test:seo-motion`，并通过 lint、build、SEO evidence、public contract 和 diff-check；当前本地预览可访问性树确认 Species 页面、FAQ 和章节结构正常。
