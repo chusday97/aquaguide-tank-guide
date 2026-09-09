@@ -342,3 +342,12 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Run this regression only in Heavy browser CI; keep lightweight CI focused on contracts/typechecks.
 - [ ] NEXT: real authenticated Business/Repo Admin operator acceptance with populated current WorkItems. Reuse only an existing secure browser session; never extract or manually shuttle cookies/tokens.
 - [ ] Writable hosted credentials remain separate. Reconciliation / PR #144, main, Production, live DB and indexing remain parked.
+
+## Active continuation — 2026-09-09 09:13 +0800
+- [x] Distinguish Business Admin 401 `AUTH_REQUIRED` from real source/service unavailability in Operations authority status.
+- [x] Distinguish signed-in 403 `FORBIDDEN` as `权限不足`, not `暂不可用`.
+- [x] Preserve `partial` when one sub-source is readable and never infer fake zero/healthy state from unreadable sources.
+- [x] Add Heavy browser proof for no-session and forbidden states while preserving desktop/mobile exact WorkItem routing regression.
+- [x] PASS Operations/Product-Care/Compatibility/SEO Registry/Publish Center contracts, root/API TypeScript, full root build and diff hygiene.
+- [ ] NEXT: real authenticated Business/Repo Admin operator acceptance with populated current WorkItems, using only an existing secure browser session.
+- [ ] Writable hosted credentials, reconciliation / PR #144, main, Production, live DB and indexing remain parked.

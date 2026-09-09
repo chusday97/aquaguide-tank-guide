@@ -408,3 +408,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
 - Live-main ↔ local divergence: **275 main-only / 234 feature-only**.
 - This remains a two-way divergence; no force push, merge/rebase, Production, live DB or indexing action is authorized.
+
+## 2026-09-09 09:13 +0800 — Operations access-state functional checkpoint
+- Local functional HEAD: `6ea35173fb92f69cf7eb90b97c3a56e62b713dfa`.
+- Explicit live feature before this checkpoint push: `116d6bee341d19a853049153fcdf535950db50d6`; local functional HEAD is **ahead 1 / behind 0**.
+- Explicit live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Live-main ↔ local functional divergence: **275 main-only / 236 feature-only**. Two-way divergence remains; reconciliation / PR #144 stays parked.
+- No force push, merge/rebase, Production, live DB or indexing action is part of this checkpoint.

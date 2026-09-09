@@ -1019,3 +1019,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Added root `test:operations-studio-ui` and wired it to `.github/workflows/admin-content-ci-gate.yml` Heavy browser gate only.
 - Full focused contracts, API/root TypeScript, full build and `git diff --check` PASS.
 - Real authenticated populated-state acceptance remains the next environment gate.
+
+## 2026-09-09 09:13 +0800 — Operations authority access truthfulness
+- Re-read real authority/Git state, then traced Business Admin authentication to `apps/api/src/auth.ts`: 401 `AUTH_REQUIRED` for missing/expired session and 403 `FORBIDDEN` for non-admin role; confirmed root `/login` is not an admin login flow.
+- Updated Operations source classification so Product/Care + Compatibility no longer collapse auth/permission failures into service unavailability. Added explicit `forbidden` state and operator-safe recovery copy using the existing refresh action only.
+- Extended `test:operations-work-items` with empty/ready/partial/401/403/5xx classification assertions.
+- Extended `test:operations-studio-ui` to prove rendered no-session `需要登录` and signed-in 403 `权限不足`, plus existing exact Compatibility revision/Product Draft routing at desktop/mobile sizes.
+- Real local 3003 check: Product/Care and Compatibility correctly remain `暂不可用` because login dependency is not configured; SEO `部分可读`; overflow 0; page errors 0.
+- PASS: Operations browser/contract, Admin Content, Compatibility, SEO Registry, Publish Center, root/API TypeScript, full build, diff hygiene. Functional commit `6ea35173fb92f69cf7eb90b97c3a56e62b713dfa`.
+- No Production/main/live DB/index change; real secure authenticated current-state acceptance remains pending.

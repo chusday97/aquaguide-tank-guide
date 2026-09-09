@@ -615,3 +615,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - `test:operations-studio-ui` is wired only into the Heavy browser gate, not lightweight CI. This is durable routing/UI regression evidence, **not** a substitute for real authenticated operator acceptance.
 - Real authenticated acceptance is still pending because the existing Chrome profile has `查看 → 开发者 → 允许 Apple 事件中的 JavaScript` disabled; no credential extraction or manual token shuttling is allowed.
 - NEXT: when a secure existing Business/Repo Admin browser session is automatable, repeat populated WorkItem click-through against real current authority state. Production/main/live DB/index and PR #144 remain parked.
+
+## 2026-09-09 09:13 +0800 — Operations authority access-state checkpoint
+- Functional checkpoint: `6ea35173fb92f69cf7eb90b97c3a56e62b713dfa` (`fix(admin): distinguish authority access states`).
+- Operations Home now tells operators *why* an authority cannot be read: missing Business Admin session → `需要登录`; authenticated but non-admin → `权限不足`; dependency/service failure → `暂不可用`; one of two sub-sources readable → `部分可读`.
+- No admin login UI was invented. The root `/login` is not a Business Admin login flow; Product/Care and Compatibility remain Business API/Supabase authorities. SEO keeps independent Repo Admin authentication.
+- Recovery guidance reuses the existing `刷新任务` after a secure authorized session is restored, avoiding another persistent button layer.
+- Browser regression covers 401 and 403 rendered states plus exact Compatibility revision / Product Draft routing at 1440×900 and 390×844. Local unauthenticated environment remains zero-overflow/zero-page-error and correctly reports dependency unavailability.
+- Full focused contracts, root/API TS, full build and `git diff --check` PASS. No Production/main/live DB/index change.
+- Remaining acceptance gate: real populated current-state click-through using an existing secure Business/Repo Admin browser session; do not expose cookies/tokens or weaken browser security to obtain it.

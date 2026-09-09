@@ -457,3 +457,11 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Checkpoint: `ae818fb9e97fc52b7241d0bfefd9303dcb45d270`. The fixture is isolated, read-only and explicitly non-production truth.
 - This narrows the remaining acceptance gap to **real authenticated current-state proof** only; do not mark that gate complete until an existing secure Business/Repo Admin session is used without exposing credentials.
 - Chrome Apple Events JavaScript is currently disabled, so automated reuse of the real browser session is blocked by browser configuration rather than product code.
+
+## 2026-09-09 09:13 +0800 — Operations authority access truthfulness
+- Functional checkpoint `6ea35173fb92f69cf7eb90b97c3a56e62b713dfa` fixes a real Operations Home availability badcase: Business Admin 401/403 responses are no longer collapsed into generic service-unavailable state.
+- Product/Care + Compatibility now distinguish `auth_required` (no secure Business Admin session), `forbidden` (signed in but insufficient admin permission), `unavailable` (login/source dependency or service failure), plus existing `ready / partial`.
+- UI labels are intentionally restrained: `需要登录` / `权限不足` / `暂不可用`; recovery copy points to the existing top-level `刷新任务` after the operator restores an authorized secure session. No fake `/login` admin flow was added.
+- Heavy browser regression now proves no-session 401 and signed-in 403 states, in addition to exact populated WorkItem routing on desktop/mobile. Full focused contracts, root/API TypeScript, full build and diff hygiene PASS.
+- Local real environment still truthfully shows Product/Care + Compatibility `暂不可用` because Business Admin login service is not configured there; SEO remains partially readable with independent Repo Admin auth.
+- NEXT remains real authenticated current-state operator acceptance using an existing secure Business/Repo Admin browser session. Do not extract/shuttle credentials or weaken browser security settings.

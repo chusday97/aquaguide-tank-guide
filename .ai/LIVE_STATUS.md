@@ -497,3 +497,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Fixture test uses only fake local auth/session values and read-only intercepted responses. Real authenticated current-state acceptance remains pending.
 - Temporary manual fixture server on port 3014 was terminated; the durable test self-manages port 4318 and leaves it closed after completion.
 - Operations dev remains `http://127.0.0.1:3003/admin/content`; API `8788`; Species SEO CMS `3010`.
+
+## 2026-09-09 09:13 +0800 — Operations authority access status
+- Functional checkpoint `6ea35173fb92f69cf7eb90b97c3a56e62b713dfa` adds truthful Business Admin access-state handling to Operations Home.
+- 401/no session renders `需要登录`; 403/non-admin renders `权限不足`; dependency/service failure renders `暂不可用`; partial reads remain `部分可读`.
+- Current local `http://127.0.0.1:3003/admin/content` still shows Product/Care + Compatibility `暂不可用` because the local Business Admin login service is not configured; SEO is `部分可读` with independent Repo Admin requirement. This is expected environment truth, not fake zero work.
+- Local real-page check: 1440px horizontal overflow 0, page errors 0. Heavy fixture browser regression also passes auth-required, forbidden, desktop and mobile exact-routing states.
+- Production/main/live DB/index untouched. Real authenticated populated-state acceptance remains pending.
