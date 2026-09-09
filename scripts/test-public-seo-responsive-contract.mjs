@@ -29,5 +29,6 @@ for (const [pattern, label] of responsiveRules) {
 }
 
 assert.match(species, /aria-label=\{labels\.chapters\}[\s\S]*?overflow-x-auto/, 'chapter navigation must remain horizontally scrollable on narrow screens');
+assert.match(css, /#root:has\(\.seo-page-shell\)[\s\S]*?height: auto[\s\S]*?overflow: visible/, 'public SEO root must not inherit app-shell scroll clipping');
 
 console.log('Public SEO responsive contract checks passed: desktop, tablet, mobile and reduced-motion rules are present.');

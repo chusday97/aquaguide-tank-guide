@@ -40,7 +40,9 @@
 
 #root:has(.seo-page-shell) {
   min-height: 100dvh;
+  height: auto;
   background: var(--seo-color-page);
+  overflow: visible;
 }
 
 html:has(.public-seo-root),

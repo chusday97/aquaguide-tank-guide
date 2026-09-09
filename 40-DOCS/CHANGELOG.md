@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fixed: 公开 SEO 根节点显式恢复 `height: auto` 与 `overflow: visible`，避免桌面应用壳的全局 `#root` 裁切导致长页面无法滚动。
+- Verified: 响应式、结构、文案、公开契约、TypeScript 与 diff-check 通过；真实 viewport 浏览器验收仍未完成。
+
 - Fixed: Marketing Hero 在批准图片缺失时显示稳定的“物种图片暂不可用”回退，避免公开首页出现无说明的空媒体区。
 - Verified: 公开结构、公开文案、响应式契约、TypeScript 与 diff-check 通过；真实 viewport 浏览器验收仍未完成。
 
