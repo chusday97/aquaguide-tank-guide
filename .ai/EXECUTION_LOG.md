@@ -1172,3 +1172,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Added self-contained Playwright `test:data-review-ui` and Heavy CI coverage; duplicate + category conflict + 390px responsive drawer PASS.
 - Full Admin Content contract, root TypeScript/build and diff hygiene PASS. Production/main/Supabase/indexing untouched; no push.
 - NEXT: edit-page hierarchy, button consolidation and essential-function visibility.
+
+## 2026-09-10 00:10 +0800 — Species SEO editor action hierarchy
+- Functional checkpoint: `b3ec2d8e fix(admin): simplify seo editor actions`.
+- Current-page and Base save/review actions now live only in the top Review bar; removed duplicate footer save buttons and repeated Draft chips.
+- Core `搜索与收录设置` defaults open while remaining manually collapsible; Preview field selection still reopens it when needed.
+- Browser smoke confirms Search appearance + Index/Canonical visible by default, no editor-body save buttons, no repeated Draft chip, and 390px no overflow.
+- Contract + Data Review/browser + root TypeScript + full build + diff hygiene PASS. No push, Production, Supabase or main change.
+- NEXT: utility/tool hierarchy and current-page/Base ownership clarity.

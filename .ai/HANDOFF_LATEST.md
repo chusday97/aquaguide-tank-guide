@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + Data Review convergence (2026-09-09)
-Functional checkpoint: `2fcba840 fix(admin): converge data review decisions`.
+Functional checkpoint: `b3ec2d8e fix(admin): simplify seo editor actions`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Species SEO single-group Data Review is now evidence-first: candidate/source comparison is read-only, then the operator chooses one conclusion.
 - Duplicate decisions no longer mix canonical selection into evidence. Choosing “duplicate records” opens a separate final-page step; the system recommendation is labeled as evidence and is never auto-selected.
@@ -11,14 +11,15 @@ Functional checkpoint: `2fcba840 fix(admin): converge data review decisions`.
 - Category-conflict review follows the same evidence → conclusion → final-result pattern and explicitly states that this screen does not rewrite Product Data.
 - Permanent browser regression covers duplicate + category-conflict flows, explicit human canonical selection and responsive 390px drawer width. Heavy CI runs `test:data-review-ui`.
 - Validation PASS: full Species SEO Admin contract, Data Review browser regression, root TypeScript, full root build and diff hygiene.
-- NEXT: continue edit-page hierarchy/button consolidation and keep essential functions visible without adding new authority layers. Supabase Staging remains parked.
+- SEO editor action hierarchy is now centralized: current-page/Base save-review actions live only in the top Review bar; duplicate bottom save buttons and repeated Draft chips were removed. Core `搜索与收录设置` defaults open while remaining collapsible by operator choice.
+- NEXT: continue remaining editor/tool hierarchy convergence (utility tools, dense chrome, and context clarity) without adding new authority layers. Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `2fcba840`
+Current Operations Studio functional HEAD: `b3ec2d8e`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

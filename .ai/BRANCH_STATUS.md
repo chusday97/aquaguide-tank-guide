@@ -1,12 +1,12 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Data Review UX checkpoint (2026-09-09)
-- Latest functional HEAD: `2fcba8404e0c9bf6de014ae70958455c96e69733` (`fix(admin): converge data review decisions`).
+## CURRENT OVERRIDE — SEO editor action checkpoint (2026-09-09)
+- Latest functional HEAD: `b3ec2d8eee3dd1b180cad6d7f7c4bf5ce9f69c9f` (`fix(admin): simplify seo editor actions`).
 - Live remote feature at checkpoint read: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Local vs live remote feature before docs sync: `ahead 5 / behind 0`; still intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local functional checkpoint: `275 main-only / 265 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Local vs live remote feature before docs sync: `ahead 7 / behind 0`; still intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local functional checkpoint: `275 main-only / 267 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
 - No merge/rebase main, force push, Production/live DB or indexing mutation.
 

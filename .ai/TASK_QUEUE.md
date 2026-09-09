@@ -15,7 +15,8 @@
 - [x] Durable full restart regression: Product + image + Compatibility + Care SEO survive server restart and a fresh browser context; browser-only Local regressions remain green.
 - [x] Local File backup/restore + schema safety (`f501a69d`): versioned envelopes, legacy migration, future-version refusal, integrity report, timestamped snapshots, restore safety backup and rollback-on-failure.
 - [x] Data Review decision-basis convergence (`2fcba840`): evidence-only comparison → human conclusion → explicit canonical choice → final-result summary → one confirm; system recommendation is not auto-selected.
-- [ ] Converge Species SEO edit-page hierarchy and button density; necessary editing/review controls must remain visible and context-specific.
+- [x] Species SEO edit action convergence (`b3ec2d8e`): Search & indexing defaults open; top Review bar owns save/review; page/Base bottom duplicate save buttons and Draft chips removed.
+- [ ] Continue utility/tool hierarchy and current-page vs Base ownership clarity; keep low-frequency tools subordinate to the active editing task.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-09

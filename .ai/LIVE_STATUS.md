@@ -2,17 +2,18 @@
 
 
 ## CURRENT OVERRIDE — Durable local runtime + Data Review UX status (2026-09-09)
-- Functional checkpoint: `2fcba840 fix(admin): converge data review decisions`.
+- Functional checkpoint: `b3ec2d8e fix(admin): simplify seo editor actions`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
 - Species SEO Data Review now presents source/candidate evidence as read-only, then one human conclusion. Duplicate canonical selection is a separate explicit step and system recommendations never auto-select the operator decision.
 - `最终确认版本` summarizes the resulting retained page / Canonical policy / Product Data boundary before one final confirmation action. Category-conflict review uses the same pattern without rewriting Product Data.
 - New `test:data-review-ui` validates duplicate and category-conflict flows plus responsive 390px drawer behavior; Heavy CI includes it.
-- Full Species SEO Admin contract, root TypeScript, full root build and diff hygiene PASS.
+- Species SEO editor now defaults core Search & indexing controls open. Current-page/Base save-review actions are centralized in the top Review bar; duplicate footer save actions and repeated Draft chips are removed.
+- Full Species SEO Admin contract, Data Review/editor browser regression, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `2fcba8404e0c9bf6de014ae70958455c96e69733`
+Operational functional HEAD before this docs sync: `b3ec2d8eee3dd1b180cad6d7f7c4bf5ce9f69c9f`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

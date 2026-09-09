@@ -2,17 +2,18 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-09 Operator UX convergence
-The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `2fcba840`.
+The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `b3ec2d8e`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
 2. Species SEO Data Review decision basis is converged (`2fcba840`): read-only evidence → one human conclusion → explicit canonical choice when needed → final-result summary → one confirmation.
 3. System keep-page recommendation is advisory only and is not auto-selected. Category-conflict decisions explicitly preserve Product Data authority boundaries.
 4. Desktop + 390px responsive browser regression and full SEO Admin contract PASS; Production/Supabase/indexing remain unchanged.
+5. Edit action hierarchy (`b3ec2d8e`): core Search & indexing defaults visible; save/review actions are centralized in the top Review bar; page/Base footer duplicate save buttons and repeated Draft state were removed.
 
 NEXT milestones:
-1. Converge edit-page hierarchy: make the current editing task visually primary, reduce repeated status/action chrome, and keep necessary controls visible rather than hidden behind generic disclosures.
-2. Consolidate duplicate save/review buttons into context-appropriate next actions while preserving Draft/review/publish boundaries.
+1. Continue remaining edit-page hierarchy: reduce utility/tool chrome that competes with the current task and clarify current-page vs Base ownership.
+2. Preserve the now-centralized save/review/publish action boundary while simplifying low-frequency tools and secondary navigation.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 
