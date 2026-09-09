@@ -49,7 +49,7 @@ const runViewport = async (label, viewport) => {
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', error => errors.push(String(error)));
-  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'domcontentloaded' });
   const coreSeo = page.locator('.editor-secondary-seo-disclosure');
   await coreSeo.waitFor();
   assert.equal(await coreSeo.evaluate(element => element.open), true, 'Core Search & indexing controls must be visible by default.');
@@ -159,7 +159,8 @@ const runViewport = async (label, viewport) => {
   assert.equal(await canonical.locator('.review-canonical-option').count() >= 2, true);
 
   await page.setViewportSize({ width: 1440, height: 1000 });
-  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'domcontentloaded' });
+  await page.locator('.editor-secondary-seo-disclosure').waitFor();
   await page.getByRole('button', { name: /处理数据/ }).first().click();
   const categoryDrawer = page.locator('.editor-tool-drawer');
   await categoryDrawer.waitFor();
@@ -178,7 +179,8 @@ const verifyPreviewLayoutMatrix = async () => {
   for (const width of [1280, 1080, 1051]) {
     const context = await browser.newContext({ viewport: { width, height: 900 } });
     const page = await context.newPage();
-    await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'domcontentloaded' });
+    await page.locator('.studio-editor-area').waitFor();
     const editorBox = await page.locator('.studio-editor-area').boundingBox();
     const preview = page.locator('.live-preview-pane.compact-open');
     const previewBox = await preview.boundingBox();
@@ -186,13 +188,21 @@ const verifyPreviewLayoutMatrix = async () => {
     assert.equal(await preview.evaluate(element => getComputedStyle(element).position), 'relative', `${width}px Preview must not overlay the editor.`);
     assert.equal(Boolean(editorBox && editorBox.width >= 480), true, `${width}px split view must reserve at least 480px for editing.`);
     assert.equal(Boolean(previewBox && previewBox.width <= 360), true, `${width}px medium desktop Preview must stay compact.`);
+    assert.equal(await page.locator('.studio-editor-area').evaluate(element => element.scrollWidth - element.clientWidth), 0, `${width}px editor must not introduce its own horizontal scroll.`);
+    assert.equal(await page.locator('.editor-panel').evaluate(element => element.scrollWidth - element.clientWidth), 0, `${width}px editor panel content must fit its available column.`);
+    const policyInputs = page.locator('.policy-primary-fields input, .policy-primary-fields select');
+    for (let index = 0; index < await policyInputs.count(); index += 1) {
+      const box = await policyInputs.nth(index).boundingBox();
+      assert.equal(Boolean(box && box.width >= 180), true, `${width}px policy controls must remain at least 180px wide.`);
+    }
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0);
     await context.close();
   }
 
   const context = await browser.newContext({ viewport: { width: 1050, height: 900 } });
   const page = await context.newPage();
-  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'domcontentloaded' });
+  await page.locator('.studio-editor-area').waitFor();
   const preview = page.locator('.live-preview-pane');
   assert.equal(await preview.isVisible(), false, '1050px fresh load must keep Preview closed instead of squeezing the editor.');
   const previewToggle = page.locator('.compact-preview-toggle');
