@@ -44,6 +44,7 @@ Create the 4198 combined HTML review package, then capture 390/600/1024/1440/192
 - A gated CI workflow now exists at `.github/workflows/html-freeze-matrix.yml`; it installs Chromium on Ubuntu, starts the 4198 static server, runs the matrix, and uploads screenshots/report. It has not produced a remote run in this local-only session.
 - Remote connectivity is restored for a read-only fetch; `origin/main` is confirmed at `d3c70dee`, matching the local baseline. The current branch has not been pushed and no remote CI evidence exists yet.
 - PR #148 produced the first real 25-record matrix: only Care at 390px failed (`scrollWidth=667` vs `clientWidth=390`) because direct scene images lacked a mobile width constraint. The fix is scoped to the Care scene CSS owner; matrix rerun is pending.
+- Rerun `34364866656` at PR Head `950ce65e` passed 25/25 records with zero failures across all five pages and required viewports. This is the automatic matrix evidence; visual signoff is still pending.
 
 ## Verification evidence
 

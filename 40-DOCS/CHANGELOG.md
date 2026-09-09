@@ -515,3 +515,4 @@
 - Added: 增加仅关键PR/手动触发的 HTML Freeze Chromium 矩阵工作流，避免本机 MachPort 阻塞成为唯一执行环境。
 - Changed: 远端只读连接恢复并确认 `origin/main@d3c70dee`；当前分支仍未推送，避免把未签字的评审状态提前写入远端。
 - Fixed: CI 首次真实矩阵发现并修复 Care 390px 直出鱼群图片导致的横向溢出（`scrollWidth=667`）。
+- Verified: PR #148 的修复后 HTML Freeze Matrix `34364866656` 在25个页面/视口组合中全部通过。

@@ -677,6 +677,7 @@
 - 已新增 `.github/workflows/html-freeze-matrix.yml`：仅在 `critical`/`merge-ready` 标签、手动触发或带标签PR同步时，在干净 Ubuntu runner 安装 Chromium、启动4198静态服务并上传五视口矩阵产物；矩阵脚本在非 macOS 环境自动使用 Playwright Chromium。
 - GitHub DNS 已恢复；只读 `git fetch origin main` 成功，当前 `origin/main` 仍为 `d3c70dee`，与本分支既定基线一致。尚未推送当前分支或创建远端PR，因此 CI 尚无真实运行记录。
 - 远端 PR #148 的首次 HTML Freeze Matrix 已真实运行25个页面/视口组合，发现唯一阻塞：Care 390px `scrollWidth=667`，原因是场景内直出的鱼群图片未受移动端尺寸约束；已在养护场景唯一 CSS Owner 增加直接图片尺寸限制，待推送后重跑。
+- PR #148 修复后的矩阵运行 `34364866656` 已通过：25/25 记录、0 failures，覆盖五页与390/600/1024/1440/1920px；报告与截图作为 GitHub Actions artifact 保存。当前仍需用户/产品经理签字，Manifest 继续为 `REVIEW_REQUIRED`。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。
