@@ -30,7 +30,7 @@ export default function MarketingLanding() {
         </div>
       </div>
       <div className="seo-hero__media seo-card seo-large-card relative flex min-h-[340px] items-end overflow-hidden bg-[#E8F0EE] p-6 md:min-h-[470px] md:p-10">
-        {marketingSpeciesAsset && <ResilientImage src={marketingSpeciesAsset.src} alt={marketingSpeciesAsset.altZh} loading="eager" className="absolute inset-0 h-full w-full object-contain p-[14%] opacity-90" />}
+        {marketingSpeciesAsset ? <ResilientImage src={marketingSpeciesAsset.src} alt={marketingSpeciesAsset.altZh} loading="eager" className="absolute inset-0 h-full w-full object-contain p-[14%] opacity-90" /> : <div className="absolute inset-0 flex items-center justify-center text-center text-sm font-bold text-accent/65" role="img" aria-label="物种图片暂不可用">物种图片暂不可用</div>}
         <div className="relative z-[1] max-w-[420px] rounded-2xl bg-[#E8F0EE]/82 p-3 backdrop-blur-sm"><p className="seo-eyebrow">给你的鱼缸的一份图鉴</p><p className="mt-3 font-serif text-3xl font-bold leading-tight text-accent md:text-5xl">把复杂的养护判断，留给清晰的下一步。</p></div>
       </div>
     </section>

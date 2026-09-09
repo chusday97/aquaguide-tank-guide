@@ -16,6 +16,12 @@
 
 # AquaGuide 交接文档
 
+## 2026-09-10 品牌 Hero 图片失败回退
+
+- Marketing Hero 现在在批准图片不存在时显示用户可理解的“物种图片暂不可用”，不再留下无说明的空媒体区。
+- `test:public-seo-structure` 已覆盖该回退；结构、文案、响应式契约和 TypeScript 检查通过。
+- 该修复不改变 Product Truth、证据状态、路由、metadata 或 `noindex,follow`；真实 viewport 截图仍待浏览器环境恢复。
+
 ## 2026-09-10 公开响应式约束补强
 
 - 当前新增 `scripts/test-public-seo-responsive-contract.mjs` 与 `npm run test:public-seo-responsive-contract`，把公开 SEO 的桌面、平板、手机和 reduced-motion 关键规则固化为可重复门禁。

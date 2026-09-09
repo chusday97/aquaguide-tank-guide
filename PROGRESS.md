@@ -1,3 +1,9 @@
+## 2026-09-10 品牌 Hero 图片空状态收口
+
+- [x] 修复 Marketing Hero 在批准图片不可用时的空媒体区，改为显示稳定的“物种图片暂不可用”回退；不改变已批准素材、路由或索引策略。
+- [x] 公开结构门禁新增品牌 Hero 图片回退断言；公开结构、文案、响应式契约、lint 与 diff-check 通过。
+- [ ] 未进行真实三档浏览器截图；系统浏览器仍受 macOS 进程权限阻塞，Figma Canonical 与可读独立 Critic 仍待完成。
+
 ## 2026-09-10 公开 SEO 响应式契约门禁
 
 - [x] 新增 `npm run test:public-seo-responsive-contract`，检查 1280px 最大宽度、80/32/24px 页面边距、96/80/64px 章节间距、44px 交互目标、1440/600/390 参数带列数、窄屏章节导航滚动、平板双区 Hero 和 reduced-motion 规则。

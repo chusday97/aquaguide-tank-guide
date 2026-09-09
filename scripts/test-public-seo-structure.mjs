@@ -31,4 +31,7 @@ for (const phrase of ['先看核心结论', '再看分步操作', '最后做后�
   assert.ok(guide.includes(phrase), `Guide preparation state is missing ${phrase}`);
 }
 
+const marketing = read('src/pages/MarketingLanding.tsx');
+assert.match(marketing, /marketingSpeciesAsset \? <ResilientImage[\s\S]*?物种图片暂不可用/, 'Marketing Hero must have a visible image fallback');
+
 console.log('Public SEO structure checks passed: all page types have a stable content skeleton and conditional content gates.');

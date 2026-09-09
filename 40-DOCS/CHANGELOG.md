@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fixed: Marketing Hero 在批准图片缺失时显示稳定的“物种图片暂不可用”回退，避免公开首页出现无说明的空媒体区。
+- Verified: 公开结构、公开文案、响应式契约、TypeScript 与 diff-check 通过；真实 viewport 浏览器验收仍未完成。
+
 - Added: `test:public-seo-responsive-contract`，检查公开 SEO 的桌面、平板、手机三档令牌、参数带列数、窄屏章节导航、平板 Hero 和 reduced-motion 规则。
 - Verified: 响应式契约、公开结构、公开文案、TypeScript 与 diff-check 通过；该静态门禁不替代真实 viewport 浏览器验收。
 
