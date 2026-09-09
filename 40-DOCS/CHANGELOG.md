@@ -514,3 +514,4 @@
 - Changed: 明确自动矩阵仍因本机Chrome MachPort启动失败而保持阻塞，4198继续为 `REVIEW_REQUIRED`。
 - Added: 增加仅关键PR/手动触发的 HTML Freeze Chromium 矩阵工作流，避免本机 MachPort 阻塞成为唯一执行环境。
 - Changed: 远端只读连接恢复并确认 `origin/main@d3c70dee`；当前分支仍未推送，避免把未签字的评审状态提前写入远端。
+- Fixed: CI 首次真实矩阵发现并修复 Care 390px 直出鱼群图片导致的横向溢出（`scrollWidth=667`）。
