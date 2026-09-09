@@ -701,3 +701,10 @@
 - 未修改：React页面、旧视觉分支、PBR、Master 20、Domain、Catalog、Supabase和生产指针。
 - 阻塞：GitHub当前无法解析；4198组合HTML尚未建立；用户视觉确认前不得回写React或合并。
 - 下一步：远端恢复后核对`origin/main`，再创建唯一4198 HTML评审包。
+## 2026-09-09 权威恢复与 4198 组合评审包（当前）
+
+- 当前分支：`codex/project-authority-recovery-v1@62e93d17`，基于缓存 `origin/main@d3c70dee`，工作树需保持干净。
+- 已完成：七个 `.ai` 权威文件；`prototypes/aquaguide-ui-freeze-v3/` 组合 HTML（4196 Aquarium/Collection + 4197 Encyclopedia/Care/Compatibility）；静态本地引用检查与 diff 检查通过。
+- 当前下一步：在 4198 提供静态服务并采集 390/1440 证据，随后由产品经理逐区块标记 `ACCEPTED` 或 `REVIEW_REQUIRED`。
+- 阻塞：GitHub DNS 导致远端未刷新；尚无 HTML Freeze 用户确认；不得以旧 4319 或旧视觉分支作为新证据。
+- 禁止：不修改正式 React、Domain、Catalog、Supabase、PBR/Master20、生产分支；不推送或合并，除非用户明确授权且远端状态已复核。

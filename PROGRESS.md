@@ -795,3 +795,11 @@
 - [x] 从本机最后可确认的 `origin/main@d3c70dee` 建立 `codex/project-authority-recovery-v1`。
 - [x] 补齐并校准 `.ai` 当前目标、交接、接受基线、锁定区域、产品规则、Badcase 和发布门禁；未修改React、Domain、Catalog、Supabase或生产配置。
 - [ ] 远端刷新、4198组合HTML和用户HTML Freeze确认仍未完成。
+## 2026-09-09 权威恢复与组合 HTML（当前）
+
+- [x] 从缓存的 `origin/main@d3c70dee` 创建 `codex/project-authority-recovery-v1`；远端刷新因 DNS 不可用，未声称为最新远端。
+- [x] 补齐七个 `.ai` 权威文件，明确当前目标、锁定区域、产品规则、Badcase 与发布门禁。
+- [x] 生成 `prototypes/aquaguide-ui-freeze-v3/` 组合评审包（4196 鱼缸/水族册，4197 图鉴/养护/混养），静态资源和交互脚本均本地化。
+- [x] 静态引用检查、`git diff --check` 通过；提交 `62e93d17`。
+- [ ] 4198 本地静态服务器与 390/1440 浏览器证据待运行；产品经理尚未确认 HTML Freeze。
+- [ ] 远端可访问后再核对 origin/main；未授权前不推送、不合并、不修改正式 React。
