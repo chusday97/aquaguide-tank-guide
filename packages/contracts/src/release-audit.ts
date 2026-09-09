@@ -1,7 +1,7 @@
 export type ReleaseAuthority = 'product_care' | 'compatibility' | 'seo';
 export type ReleaseDomain = 'product' | 'care' | 'compatibility_profile' | 'compatibility_pair' | 'seo_page' | 'seo_base' | 'seo_batch' | 'seo_admin';
-export type ReleaseSourceAvailability = 'ready' | 'auth_required' | 'unavailable';
-export type ReleaseHistoryCoverage = 'current_only' | 'revision_history' | 'activity_history';
+export type ReleaseSourceAvailability = 'ready' | 'partial' | 'auth_required' | 'forbidden' | 'schema_not_ready' | 'unavailable';
+export type ReleaseHistoryCoverage = 'not_available' | 'current_only' | 'revision_history' | 'activity_history';
 export type ReleaseStage = 'diff' | 'impact' | 'preview' | 'review' | 'staging' | 'production';
 export type ReleaseCapabilityState = 'available' | 'partial' | 'locked' | 'not_applicable';
 export type ReleasePermissionAction = 'read_history' | 'edit_draft' | 'review' | 'publish_staging' | 'publish_reviewed' | 'publish_production';

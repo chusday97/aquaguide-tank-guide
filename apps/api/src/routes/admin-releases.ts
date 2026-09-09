@@ -2,7 +2,7 @@ import { Router } from 'express';
 import type { ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto } from '../../../../packages/contracts/src';
 import { asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
-import { throwDatabaseError } from '../data-utils';
+import { classifyReleaseTableRead, combineReleaseTableStates } from '../release-source-readiness';
 
 const eventTime = (row: Record<string, any>) => row.published_at || row.reviewed_at || row.updated_at || row.created_at || new Date(0).toISOString();
 
@@ -78,25 +78,31 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
       .select('id,species_a_id,species_b_id,revision_number,base_rule_version,status,version,created_at,updated_at,reviewed_at,published_at,reviewed_by')
       .order('updated_at', { ascending: false }).limit(limit),
   ]);
-  if (publicationResult.error) throwDatabaseError(publicationResult.error, 'Product/Care 当前发布状态暂时无法加载。');
-  const publicationAuditReady = !publicationAuditResult.error;
-  const publicationAuditFallbackReason = publicationAuditResult.error
-    ? publicationAuditUnavailable(publicationAuditResult.error)
-      ? 'audit_migration_unapplied'
-      : 'audit_history_unavailable'
-    : undefined;
-  if (profileResult.error) throwDatabaseError(profileResult.error, 'Compatibility Profile revision 暂时无法加载。');
-  if (pairResult.error) throwDatabaseError(pairResult.error, 'Compatibility Pair Rule revision 暂时无法加载。');
+  const publicationState = classifyReleaseTableRead(publicationResult.error, ['content_publications']);
+  const profileState = classifyReleaseTableRead(profileResult.error, ['species_compatibility_profile_revisions']);
+  const pairState = classifyReleaseTableRead(pairResult.error, ['species_pair_compatibility_rule_revisions']);
+  const productCareAvailability = publicationState === 'ready' ? 'ready' : publicationState;
+  let compatibilityAvailability = combineReleaseTableStates([profileState, pairState]);
+  const publicationAuditReady = publicationState === 'ready' && !publicationAuditResult.error;
+  const publicationAuditFallbackReason = publicationResult.error
+    ? undefined
+    : publicationAuditResult.error
+      ? publicationAuditUnavailable(publicationAuditResult.error)
+        ? 'audit_migration_unapplied'
+        : 'audit_history_unavailable'
+      : undefined;
+  const profileRows = profileState === 'ready' ? (profileResult.data || []) : [];
+  const pairRows = pairState === 'ready' ? (pairResult.data || []) : [];
 
   const speciesIds = Array.from(new Set([
-    ...(profileResult.data || []).map(row => row.species_id),
-    ...(pairResult.data || []).flatMap(row => [row.species_a_id, row.species_b_id]),
+    ...profileRows.map(row => row.species_id),
+    ...pairRows.flatMap(row => [row.species_a_id, row.species_b_id]),
   ]));
   const speciesResult = speciesIds.length
     ? await client.from('species').select('id,catalog_key,name,scientific_name').in('id', speciesIds)
     : { data: [], error: null };
-  if (speciesResult.error) throwDatabaseError(speciesResult.error, 'Compatibility 物种身份暂时无法解析。');
-  const speciesById = new Map((speciesResult.data || []).map(row => [row.id, row]));
+  if (speciesResult.error && compatibilityAvailability === 'ready') compatibilityAvailability = 'partial';
+  const speciesById = new Map((speciesResult.error ? [] : speciesResult.data || []).map(row => [row.id, row]));
 
   const publicationEvents: ReleaseEventDto[] = publicationAuditReady
     ? (publicationAuditResult.data || []).map(row => ({
@@ -124,7 +130,7 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
         occurredAt: row.published_at, sourceRef: `content_publications:${row.id}`,
         metadata: { resourceId: row.resource_id, historyCoverage: 'current_only', fallbackReason: publicationAuditFallbackReason },
       }));
-  const profileEvents: ReleaseEventDto[] = (profileResult.data || []).map(row => {
+  const profileEvents: ReleaseEventDto[] = profileRows.map(row => {
     const species = speciesById.get(row.species_id);
     return {
       id: `compat-profile:${row.id}`,
@@ -139,7 +145,7 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
     };
   });
 
-  const pairEvents: ReleaseEventDto[] = (pairResult.data || []).map(row => {
+  const pairEvents: ReleaseEventDto[] = pairRows.map(row => {
     const left = speciesById.get(row.species_a_id);
     const right = speciesById.get(row.species_b_id);
     const pairKey = [left?.catalog_key || row.species_a_id, right?.catalog_key || row.species_b_id].sort().join('__');
@@ -161,16 +167,28 @@ adminReleasesRouter.get('/', asyncRoute(async (request, response) => {
     events,
     sources: [
       {
-        authority: 'product_care', availability: 'ready', coverage: publicationAuditReady ? 'revision_history' : 'current_only',
+        authority: 'product_care', availability: productCareAvailability,
+        coverage: productCareAvailability === 'ready' ? (publicationAuditReady ? 'revision_history' : 'current_only') : 'not_available',
         label: 'Product / Care publication',
-        detail: publicationAuditReady
-          ? 'Append-only publication audit history：baseline / publish / archive，包含版本、时间与可用 actor。'
-          : `content_publications 当前版本回退；完整 audit history ${publicationAuditFallbackReason === 'audit_migration_unapplied' ? 'migration 尚未应用' : '暂不可读取'}。`,
+        detail: productCareAvailability === 'schema_not_ready'
+          ? 'Product/Care immutable Published snapshot authority 尚未部署到当前环境；content_publications migration 未应用。当前列表可读不等于可安全发布。'
+          : productCareAvailability === 'unavailable'
+            ? 'Product/Care publication authority 暂时不可读取；当前列表状态不能代表发布就绪。'
+            : publicationAuditReady
+              ? 'Append-only publication audit history：baseline / publish / archive，包含版本、时间与可用 actor。'
+              : `content_publications 当前版本可读取；完整 audit history ${publicationAuditFallbackReason === 'audit_migration_unapplied' ? 'migration 尚未应用' : '暂不可读取'}。`,
       },
       {
-        authority: 'compatibility', availability: 'ready', coverage: 'revision_history',
+        authority: 'compatibility', availability: compatibilityAvailability,
+        coverage: compatibilityAvailability === 'ready' || compatibilityAvailability === 'partial' ? 'revision_history' : 'not_available',
         label: 'Compatibility revisions',
-        detail: 'Profile / Pair Rule revision 状态、审核与 versioned publish 历史。',
+        detail: compatibilityAvailability === 'schema_not_ready'
+          ? 'Compatibility Profile / Pair Rule revision migrations 尚未应用到当前环境；reviewed runtime 仍保持独立。'
+          : compatibilityAvailability === 'partial'
+            ? `Compatibility revision 只有部分可读取：Profile ${profileState === 'ready' ? '可读' : '未就绪'} · Pair Rule ${pairState === 'ready' ? '可读' : '未就绪'}${speciesResult.error ? ' · 物种身份解析暂不可用' : ''}。`
+            : compatibilityAvailability === 'unavailable'
+              ? 'Compatibility revision authority 暂时不可读取；reviewed runtime 不会被当作 Draft/revision 历史。'
+              : 'Profile / Pair Rule revision 状态、审核与 versioned publish 历史。',
       },
     ],
     capabilities: businessCapabilities.map(item => ({ ...item })),

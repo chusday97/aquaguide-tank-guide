@@ -53,7 +53,15 @@ const profile = {
 const envelope = data => JSON.stringify({ data, requestId: 'fixture-request' });
 const errorEnvelope = (code, message) => JSON.stringify({ error: { code, message }, requestId: 'fixture-request' });
 const releaseFeed = { events: [], sources: [], capabilities: [], permissions: [] };
-const installFixtureRoutes = async (context, { adminAccess = 'ready' } = {}) => {
+const schemaNotReadyReleaseFeed = {
+  events: [],
+  sources: [
+    { authority: 'product_care', availability: 'schema_not_ready', coverage: 'not_available', label: 'Product / Care publication', detail: 'Product/Care immutable Published snapshot authority 尚未部署；content_publications migration 未应用。' },
+    { authority: 'compatibility', availability: 'schema_not_ready', coverage: 'not_available', label: 'Compatibility revisions', detail: 'Compatibility revision migrations 尚未应用到当前环境。' },
+  ],
+  capabilities: [], permissions: [],
+};
+const installFixtureRoutes = async (context, { adminAccess = 'ready', releaseMode = 'ready' } = {}) => {
   await context.route('**/*', async route => {
     const url = new URL(route.request().url());
     const path = url.pathname;
@@ -68,7 +76,7 @@ const installFixtureRoutes = async (context, { adminAccess = 'ready' } = {}) => 
     if (path === '/api/v1/admin/care-seo-health') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope([]) });
     if (path === '/api/v1/admin/compatibility/profile-revisions') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ revisions: [profile], writableCatalogKeys: ['fixture-guppy'] }) });
     if (path === '/api/v1/admin/compatibility/pair-rule-revisions') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ revisions: [], writablePairKeys: [] }) });
-    if (path === '/api/v1/admin/releases') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope(releaseFeed) });
+    if (path === '/api/v1/admin/releases') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope(releaseMode === 'schema_not_ready' ? schemaNotReadyReleaseFeed : releaseFeed) });
     if (path === '/api/admin-content/session') return route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ configured: true, session: null }) });
     if (path === `/api/v1/species/${species.catalogKey}`) return route.fulfill({ status: 200, contentType: 'application/json', body: envelope(species) });
     return route.continue();
@@ -138,6 +146,36 @@ const runForbidden = async () => {
   }
 };
 
+const runSchemaNotReady = async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installFixtureSession(context);
+    await installFixtureRoutes(context, { releaseMode: 'schema_not_ready' });
+    const page = await context.newPage();
+    const pageErrors = [];
+    page.on('pageerror', error => pageErrors.push(String(error)));
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    const productSource = page.getByTestId('operations-source-product_care');
+    const compatibilitySource = page.getByTestId('operations-source-compatibility');
+    await productSource.getByText('尚未启用', { exact: true }).waitFor({ timeout: 10000 });
+    await compatibilitySource.getByText('尚未启用', { exact: true }).waitFor({ timeout: 10000 });
+    assert.equal(await page.getByRole('button', { name: /Fixture Goldfish · Product Data Draft/ }).count(), 0, 'Schema-not-ready Product authority must not emit an actionable Draft WorkItem.');
+    assert.equal(await page.getByRole('button', { name: /Fixture Guppy · Compatibility Profile/ }).count(), 0, 'Schema-not-ready Compatibility authority must not emit revision WorkItems.');
+    assert.match(await page.getByTestId('operations-primary-task').innerText(), /先恢复数据来源/);
+    assert.match(await productSource.innerText(), /migration 未应用/);
+    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
+    const publishSources = await page.getByTestId('publish-center-source-status').innerText();
+    assert.match(publishSources, /Product \/ Care[\s\S]*尚未启用/);
+    assert.match(publishSources, /Compatibility[\s\S]*尚未启用/);
+    assert.match(await page.getByTestId('publish-center-readiness').innerText(), /尚未启用[\s\S]*2/);
+    assert.deepEqual(pageErrors, [], 'schema-not-ready state must not produce page errors.');
+    return { schemaNotReady: 'Operations + Publish Center PASS' };
+  } finally {
+    await browser.close();
+  }
+};
+
 const run = async (viewport, label) => {
   const browser = await chromium.launch({ headless: true });
   try {
@@ -187,11 +225,12 @@ try {
   await waitForServer();
   const authRequired = await runAuthRequired();
   const forbidden = await runForbidden();
+  const schemaNotReady = await runSchemaNotReady();
   const results = [
     await run({ width: 1440, height: 900 }, 'desktop'),
     await run({ width: 390, height: 844 }, 'mobile'),
   ];
-  console.log(JSON.stringify({ gate: 'PASS', authRequired, forbidden, results }));
+  console.log(JSON.stringify({ gate: 'PASS', authRequired, forbidden, schemaNotReady, results }));
 } finally {
   server.kill('SIGTERM');
 }

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { getRelatedReleaseEvents } from '../src/services/admin/release-coordination';
+import { classifyReleaseTableRead, combineReleaseTableStates } from '../apps/api/src/release-source-readiness';
 
 const root = resolve(import.meta.dirname, '..');
 const contract = readFileSync(resolve(root, 'packages/contracts/src/release-audit.ts'), 'utf8');
@@ -12,7 +13,8 @@ const adminRoute = readFileSync(resolve(root, 'apps/api/src/routes/admin.ts'), '
 const auditMigration = readFileSync(resolve(root, 'supabase/migrations/202609050003_content_publication_audit_history.sql'), 'utf8');
 
 assert.match(contract, /ReleaseAuthority = 'product_care' \| 'compatibility' \| 'seo'/);
-assert.match(contract, /ReleaseHistoryCoverage = 'current_only' \| 'revision_history' \| 'activity_history'/);
+assert.match(contract, /ReleaseSourceAvailability = 'ready' \| 'partial' \| 'auth_required' \| 'forbidden' \| 'schema_not_ready' \| 'unavailable'/);
+assert.match(contract, /ReleaseHistoryCoverage = 'not_available' \| 'current_only' \| 'revision_history' \| 'activity_history'/);
 assert.match(contract, /interface ReleaseEventDto/);
 assert.match(contract, /ReleaseStage = 'diff' \| 'impact' \| 'preview' \| 'review' \| 'staging' \| 'production'/);
 assert.match(contract, /ReleaseCapabilityState = 'available' \| 'partial' \| 'locked' \| 'not_applicable'/);
@@ -26,6 +28,13 @@ assert.match(apiRoute, /publicationAuditUnavailable/);
 assert.match(apiRoute, /publicationAuditReady \? 'revision_history' : 'current_only'/);
 assert.match(apiRoute, /species_compatibility_profile_revisions/);
 assert.match(apiRoute, /species_pair_compatibility_rule_revisions/);
+assert.match(apiRoute, /schema_not_ready/);
+assert.match(apiRoute, /not_available/);
+assert.equal(classifyReleaseTableRead({ code: '42P01', message: 'relation does not exist' }, ['content_publications']), 'schema_not_ready');
+assert.equal(classifyReleaseTableRead({ code: 'PGRST205', message: 'table not in schema cache' }, ['species_compatibility_profile_revisions']), 'schema_not_ready');
+assert.equal(classifyReleaseTableRead({ code: '08006', message: 'connection failure' }, ['content_publications']), 'unavailable');
+assert.equal(combineReleaseTableStates(['schema_not_ready', 'schema_not_ready']), 'schema_not_ready');
+assert.equal(combineReleaseTableStates(['ready', 'schema_not_ready']), 'partial');
 assert.match(apiRoute, /historyCoverage: 'current_only'/);
 assert.match(apiRoute, /historyCoverage: 'revision_history'/);
 assert.doesNotMatch(apiRoute, /\.insert\(|\.update\(|\.upsert\(|\.delete\(|\.rpc\(/, 'Business release feed must be read-only.');
@@ -50,6 +59,8 @@ assert.match(page, /Product\/Care 与 Compatibility 继续由 Business API \/ Su
 assert.match(page, /SEO 继续由独立 Repo Admin 管理/);
 assert.match(page, /publish-center-readiness/);
 assert.match(page, /历史覆盖缺口/);
+assert.match(page, /尚未启用/);
+assert.match(page, /schemaNotReady/);
 assert.match(page, /Product\/Care 当前只有 current Published snapshot/);
 assert.match(page, /publish-center-event-detail/);
 assert.match(page, /publish-center-capability-matrix/);

@@ -1,5 +1,5 @@
 import type { ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
-import { apiRequest } from '../api/api-client';
+import { apiRequest, AquaGuideApiError } from '../api/api-client';
 
 type RepoResult<T> = { data: T | null; error?: { message?: string } | null };
 type SeoActivityRow = Record<string, any>;
@@ -127,13 +127,17 @@ export const publishCenterService = {
       apiRequest<ReleaseFeedDto>(`/admin/releases?limit=${Math.max(20, Math.min(200, limit))}`),
       loadSeoReleaseFeed(limit),
     ]);
+    const businessFailureAvailability = business.status === 'rejected' && business.reason instanceof AquaGuideApiError
+      ? business.reason.code === 'AUTH_REQUIRED' ? 'auth_required'
+        : business.reason.code === 'FORBIDDEN' ? 'forbidden' : 'unavailable'
+      : 'unavailable';
     const businessFeed: ReleaseFeedDto = business.status === 'fulfilled'
       ? business.value
       : {
           events: [],
           sources: [
-            { authority: 'product_care', availability: 'unavailable', coverage: 'current_only', label: 'Product / Care publication', detail: 'Business Admin release feed 暂时不可读取。' },
-            { authority: 'compatibility', availability: 'unavailable', coverage: 'revision_history', label: 'Compatibility revisions', detail: 'Business Admin release feed 暂时不可读取。' },
+            { authority: 'product_care', availability: businessFailureAvailability, coverage: 'not_available', label: 'Product / Care publication', detail: businessFailureAvailability === 'auth_required' ? '需要 Business Admin 安全会话后才能读取 Product / Care 发布 authority。' : businessFailureAvailability === 'forbidden' ? '当前账号没有 Product / Care 发布 authority 读取权限。' : 'Business Admin release feed 暂时不可读取。' },
+            { authority: 'compatibility', availability: businessFailureAvailability, coverage: 'not_available', label: 'Compatibility revisions', detail: businessFailureAvailability === 'auth_required' ? '需要 Business Admin 安全会话后才能读取 Compatibility revision authority。' : businessFailureAvailability === 'forbidden' ? '当前账号没有 Compatibility revision authority 读取权限。' : 'Business Admin release feed 暂时不可读取。' },
           ],
           capabilities: [],
           permissions: [],

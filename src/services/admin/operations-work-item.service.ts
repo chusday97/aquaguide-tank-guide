@@ -1,4 +1,4 @@
-import type { ReleaseEventDto } from '../../../packages/contracts/src';
+import type { ReleaseEventDto, ReleaseSourceAvailability, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
 import { compatibilityAdminService, type AdminCompatibilityPairRuleRevision, type AdminCompatibilityProfileRevision } from './compatibility-admin.service';
 import { contentAdminService, type AdminCareArticleRecord, type AdminSpeciesRecord } from './content-admin.service';
 import { publishCenterService } from './publish-center.service';
@@ -7,7 +7,7 @@ import { seoPageRegistryService, type SeoHealthIssueCode, type SeoPageRegistrySn
 
 export type OperationsSeverity = 'blocker' | 'decision' | 'attention' | 'ready' | 'info';
 export type OperationsAuthority = 'product_care' | 'compatibility' | 'seo';
-export type OperationsAvailability = 'ready' | 'partial' | 'auth_required' | 'forbidden' | 'unavailable';
+export type OperationsAvailability = 'ready' | 'partial' | 'auth_required' | 'forbidden' | 'schema_not_ready' | 'unavailable';
 
 export type OperationsWorkItem = {
   id: string;
@@ -56,6 +56,24 @@ export const classifyOperationsReadResults = (results: OperationsReadResult[]): 
   if (results.some(result => hasApiFailure(result, 401, 'AUTH_REQUIRED'))) return 'auth_required';
   if (results.some(result => hasApiFailure(result, 403, 'FORBIDDEN'))) return 'forbidden';
   return 'unavailable';
+};
+
+const releaseAvailabilityToOperations = (availability: ReleaseSourceAvailability): OperationsAvailability => availability;
+
+export const combineOperationsAuthorityReadiness = (
+  currentAvailability: OperationsAvailability,
+  releaseSource?: ReleaseSourceStatusDto,
+): OperationsAvailability => {
+  if (currentAvailability === 'auth_required' || currentAvailability === 'forbidden') return currentAvailability;
+  if (!releaseSource) return currentAvailability;
+  const releaseAvailability = releaseAvailabilityToOperations(releaseSource.availability);
+  if (releaseAvailability === 'schema_not_ready') return 'schema_not_ready';
+  if (releaseAvailability === 'auth_required' || releaseAvailability === 'forbidden') return releaseAvailability;
+  if (currentAvailability === 'ready' && releaseAvailability === 'ready') return 'ready';
+  if (currentAvailability === 'unavailable' && releaseAvailability === 'unavailable') return 'unavailable';
+  if (currentAvailability === 'unavailable' && releaseAvailability === 'ready') return 'unavailable';
+  if (releaseAvailability === 'unavailable' || releaseAvailability === 'partial' || currentAvailability === 'partial') return 'partial';
+  return currentAvailability;
 };
 
 const seoIssueLabel: Record<string, string> = {
@@ -201,10 +219,17 @@ export const operationsWorkItemService = {
       seoPageRegistryService.load(), contentAdminService.listSpecies(), contentAdminService.listCareArticles(),
       compatibilityAdminService.listProfileRevisions(), compatibilityAdminService.listPairRuleRevisions(), publishCenterService.load(24),
     ]);
+    const releaseSources = releaseResult.status === 'fulfilled' ? releaseResult.value.sources : [];
+    const releaseSourceByAuthority = new Map(releaseSources.map(source => [source.authority, source]));
+    const rawProductAvailability = classifyOperationsReadResults([speciesResult, careResult]);
+    const rawCompatibilityAvailability = classifyOperationsReadResults([profilesResult, pairsResult]);
+    const productAvailability = combineOperationsAuthorityReadiness(rawProductAvailability, releaseSourceByAuthority.get('product_care'));
+    const compatibilityAvailability = combineOperationsAuthorityReadiness(rawCompatibilityAvailability, releaseSourceByAuthority.get('compatibility'));
+
     const workItems: OperationsWorkItem[] = [];
     if (seoResult.status === 'fulfilled') workItems.push(...buildSeoWorkItems(seoResult.value));
-    if (speciesResult.status === 'fulfilled' || careResult.status === 'fulfilled') workItems.push(...buildContentWorkItems(speciesResult.status === 'fulfilled' ? speciesResult.value : [], careResult.status === 'fulfilled' ? careResult.value : []));
-    if (profilesResult.status === 'fulfilled' || pairsResult.status === 'fulfilled') workItems.push(...buildCompatibilityWorkItems(profilesResult.status === 'fulfilled' ? profilesResult.value.revisions : [], pairsResult.status === 'fulfilled' ? pairsResult.value.revisions : []));
+    if (productAvailability !== 'schema_not_ready' && (speciesResult.status === 'fulfilled' || careResult.status === 'fulfilled')) workItems.push(...buildContentWorkItems(speciesResult.status === 'fulfilled' ? speciesResult.value : [], careResult.status === 'fulfilled' ? careResult.value : []));
+    if (compatibilityAvailability !== 'schema_not_ready' && (profilesResult.status === 'fulfilled' || pairsResult.status === 'fulfilled')) workItems.push(...buildCompatibilityWorkItems(profilesResult.status === 'fulfilled' ? profilesResult.value.revisions : [], pairsResult.status === 'fulfilled' ? pairsResult.value.revisions : []));
 
     const sources: OperationsSourceStatus[] = [];
     const seoSources = seoResult.status === 'fulfilled' ? seoResult.value.sources : [];
@@ -218,7 +243,7 @@ export const operationsWorkItemService = {
       ? 'SEO task source 暂不可读取。'
       : seoSources.map(source => `${source.label}：${source.detail}`).join(' · ') || 'SEO Registry 可读取。';
     sources.push({ authority: 'seo', label: 'SEO', availability: seoAvailability, detail: seoDetail });
-    const productAvailability = classifyOperationsReadResults([speciesResult, careResult]);
+    const productReleaseSource = releaseSourceByAuthority.get('product_care');
     const productDetail = productAvailability === 'ready'
       ? '当前 Product / Care Draft 状态可读取。'
       : productAvailability === 'partial'
@@ -227,9 +252,11 @@ export const operationsWorkItemService = {
           ? '当前浏览器缺少 Business Admin 会话；使用已配置的安全管理员会话后点击上方「刷新任务」。'
           : productAvailability === 'forbidden'
             ? '当前账号已登录，但没有 Business Admin 内容管理权限；请使用已授权管理员账号后刷新任务。'
-            : 'Product / Care 当前状态暂不可读取；这表示来源/服务异常，不等于没有任务。';
+            : productAvailability === 'schema_not_ready'
+              ? (productReleaseSource?.detail || 'Product / Care 发布 authority 尚未启用；当前列表可读不等于可安全发布。')
+              : 'Product / Care 当前状态暂不可读取；这表示来源/服务异常，不等于没有任务。';
     sources.push({ authority: 'product_care', label: 'Product / Care', availability: productAvailability, detail: productDetail });
-    const compatibilityAvailability = classifyOperationsReadResults([profilesResult, pairsResult]);
+    const compatibilityReleaseSource = releaseSourceByAuthority.get('compatibility');
     const compatibilityDetail = compatibilityAvailability === 'ready'
       ? 'Profile / Pair Rule revision 当前状态可读取。'
       : compatibilityAvailability === 'partial'
@@ -238,7 +265,9 @@ export const operationsWorkItemService = {
           ? '当前浏览器缺少 Business Admin 会话；使用已配置的安全管理员会话后点击上方「刷新任务」。'
           : compatibilityAvailability === 'forbidden'
             ? '当前账号已登录，但没有 Compatibility 管理权限；请使用已授权管理员账号后刷新任务。'
-            : 'Compatibility revision 当前状态暂不可读取；这表示来源/服务异常，不等于没有任务。';
+            : compatibilityAvailability === 'schema_not_ready'
+              ? (compatibilityReleaseSource?.detail || 'Compatibility revision authority 尚未启用；reviewed runtime 不会被当作 Draft/revision 历史。')
+              : 'Compatibility revision 当前状态暂不可读取；这表示来源/服务异常，不等于没有任务。';
     sources.push({ authority: 'compatibility', label: 'Compatibility', availability: compatibilityAvailability, detail: compatibilityDetail });
 
     return { workItems: sortOperationsWorkItems(workItems), sources, recentEvents: releaseResult.status === 'fulfilled' ? releaseResult.value.events.slice(0, 6) : [] };

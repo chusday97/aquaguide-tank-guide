@@ -10,16 +10,16 @@ const authorityLabel: Record<ReleaseAuthority, string> = {
 };
 const authorityAdminHref: Record<ReleaseAuthority, string> = { product_care: '/admin/product-content', compatibility: '/admin/compatibility', seo: '/admin/seo/' };
 const authorityIcon = { product_care: Database, compatibility: ShieldCheck, seo: Search } as const;
-const availabilityLabel = { ready: '可读取', auth_required: '需要登录', unavailable: '暂不可用' } as const;
+const availabilityLabel = { ready: '可读取', partial: '部分可读', auth_required: '需要登录', forbidden: '权限不足', schema_not_ready: '尚未启用', unavailable: '暂不可用' } as const;
 const stageLabel: Record<ReleaseStage, string> = { diff: 'Diff', impact: 'Impact', preview: 'Preview', review: 'Review', staging: 'Staging', production: 'Production' };
 const capabilityStateLabel = { available: '可用', partial: '部分', locked: '锁定', not_applicable: '不适用' } as const;
 const capabilityStateClass = { available: 'border-emerald-200 bg-emerald-50 text-emerald-800', partial: 'border-amber-200 bg-amber-50 text-amber-900', locked: 'border-red-200 bg-red-50 text-red-800', not_applicable: 'border-slate-200 bg-slate-50 text-slate-500' } as const;
-const coverageLabel = { current_only: '当前版本', revision_history: 'Revision 历史', activity_history: 'Activity / Revision 历史' } as const;
+const coverageLabel = { not_available: '尚无可用历史', current_only: '当前版本', revision_history: 'Revision 历史', activity_history: 'Activity / Revision 历史' } as const;
 
 const sourceClass = (source: ReleaseSourceStatusDto) => source.availability === 'ready'
   ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
-  : source.availability === 'auth_required'
-    ? 'border-amber-200 bg-amber-50 text-amber-950'
+  : source.availability === 'forbidden'
+    ? 'border-red-200 bg-red-50 text-red-800'
     : 'border-slate-200 bg-slate-50 text-slate-700';
 
 const formatTime = (value: string) => {
@@ -54,7 +54,8 @@ export default function PublishCenter() {
   const relatedEvents = useMemo(() => selectedEvent ? getRelatedReleaseEvents(feed.events, selectedEvent).slice(0, 8) : [], [feed.events, selectedEvent]);
   const readiness = useMemo(() => ({
     ready: feed.sources.filter(item => item.availability === 'ready').length,
-    authRequired: feed.sources.filter(item => item.availability === 'auth_required').length,
+    accessRequired: feed.sources.filter(item => item.availability === 'auth_required' || item.availability === 'forbidden').length,
+    schemaNotReady: feed.sources.filter(item => item.availability === 'schema_not_ready').length,
     unavailable: feed.sources.filter(item => item.availability === 'unavailable').length,
     currentOnly: feed.sources.filter(item => item.coverage === 'current_only').length,
   }), [feed.sources]);
@@ -87,11 +88,12 @@ export default function PublishCenter() {
           })}
         </section>
 
-        <section data-testid="publish-center-readiness" className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <ReadinessStat label="可读取 authority" value={`${readiness.ready}/3`} detail={readiness.ready === 3 ? '三个发布域都可读取' : '缺失源不会阻塞其它 authority'} />
-          <ReadinessStat label="需要独立登录" value={String(readiness.authRequired)} detail="目前仅 SEO 使用独立 Repo Admin cookie" />
-          <ReadinessStat label="暂不可用" value={String(readiness.unavailable)} detail="不可用源保持 fail-isolated，不影响其它时间线" />
-          <ReadinessStat label="历史覆盖缺口" value={String(readiness.currentOnly)} detail={readiness.currentOnly ? "Product/Care 当前只有 current Published snapshot" : "Product/Care append-only publication history 可读取"} />
+        <section data-testid="publish-center-readiness" className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          <ReadinessStat label="可读取模块" value={`${readiness.ready}/3`} detail={readiness.ready === 3 ? '三个发布域都可读取' : '未就绪来源不会被算成可发布'} />
+          <ReadinessStat label="需要认证 / 授权" value={String(readiness.accessRequired)} detail="登录与权限问题不等于服务故障" />
+          <ReadinessStat label="尚未启用" value={String(readiness.schemaNotReady)} detail="对应 Admin migration / authority schema 尚未部署" />
+          <ReadinessStat label="暂不可用" value={String(readiness.unavailable)} detail="运行故障保持 fail-isolated，不冒充无任务" />
+          <ReadinessStat label="历史覆盖缺口" value={String(readiness.currentOnly)} detail={readiness.currentOnly ? "Product/Care 当前只有 current Published snapshot" : "当前没有仅 current-only 的发布来源"} />
         </section>
 
         <ReleaseCapabilityMatrix capabilities={feed.capabilities} sources={sourceByAuthority} />
