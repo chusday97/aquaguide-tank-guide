@@ -56,6 +56,26 @@ const runViewport = async (label, viewport) => {
   assert.match(await coreSeo.innerText(), /搜索展示[\s\S]*收录与 Canonical/);
   assert.equal(await coreSeo.getByRole('button', { name: '本页自定义', exact: true }).count(), 3, 'Inherited Title/Description/H1 must expose three explicit current-page override choices.');
   assert.equal(await coreSeo.getByRole('button', { name: '单独修改', exact: true }).count(), 0, 'Generic override copy must not remain visible.');
+  const searchFields = coreSeo.locator('.search-settings .inheritance-editor-field');
+  assert.equal(await searchFields.count(), 3, 'Title/Description/H1 must remain visible as three source rows.');
+  for (let index = 0; index < 3; index += 1) {
+    assert.match(await searchFields.nth(index).getAttribute('class'), /is-inherited/);
+    const box = await searchFields.nth(index).boundingBox();
+    assert.equal(Boolean(box && box.height <= 54), true, 'Inherited search rows must stay compact until the operator opens a page override.');
+  }
+  const firstInheritedSearchField = searchFields.first();
+  await firstInheritedSearchField.getByRole('button', { name: '本页自定义', exact: true }).click();
+  assert.match(await firstInheritedSearchField.getAttribute('class'), /is-editing/, 'Choosing page customization must expand exactly that field into editing state.');
+  assert.equal(await firstInheritedSearchField.locator('input, textarea').count(), 1, 'Expanded page customization must expose the real input control.');
+  await firstInheritedSearchField.getByRole('button', { name: '取消本页自定义', exact: true }).click();
+  assert.match(await firstInheritedSearchField.getAttribute('class'), /is-inherited/, 'Cancelling page customization must return the field to compact inherited state.');
+  const policySection = coreSeo.locator('.policy-settings');
+  const policyBox = await policySection.boundingBox();
+  const secondarySeoBox = await coreSeo.boundingBox();
+  assert.equal(Boolean(policyBox && policyBox.height < 300), true, 'Visible indexing/canonical controls must stay below the 300px desktop density budget.');
+  assert.equal(Boolean(secondarySeoBox && secondarySeoBox.height < 620), true, 'The full visible Search & indexing section must stay below the 620px desktop density budget.');
+  assert.equal((await policySection.locator('.policy-primary-fields').evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length)), 2, 'Keyword and indexing policy must share one desktop row.');
+  assert.doesNotMatch(await policySection.innerText(), /静态物种页面生成器已验证；正式发布仍然锁定。/, 'The policy form must not repeat the global Production lock message.');
   assert.match(await page.locator('.live-preview-header').innerText(), /最终页面 = 基础模板 \+ 当前页面/, 'Preview header must explain the composed final-page ownership.');
   await page.getByRole('button', { name: '基础模板', exact: true }).last().click();
   assert.equal(await page.locator('.editor-scope-context').count(), 0, 'Base editor must not repeat ownership in a second impact strip.');
@@ -102,6 +122,7 @@ const runViewport = async (label, viewport) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(100);
   assert.equal(await operationsTrigger.isVisible(), true, 'Operations entry must remain accessible on mobile.');
+  assert.equal((await policySection.locator('.policy-primary-fields').evaluate((element) => getComputedStyle(element).gridTemplateColumns.split(' ').length)), 1, 'Mobile indexing policy must return to one readable column.');
   assert.equal((await topChromeHeight()) <= 140, true, 'Mobile task + workflow + page-review chrome must stay within the compact 140px budget.');
   assert.equal(await page.locator('.current-task-notice').getByText('33 个数据问题需要确认', { exact: true }).isVisible(), true, 'Mobile current-task notification must keep the actual problem title visible after compaction.');
   assert.equal(await operationsDrawer.evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Mobile Operations drawer must not overflow horizontally.');

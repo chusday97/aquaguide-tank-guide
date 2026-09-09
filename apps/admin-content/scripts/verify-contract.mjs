@@ -351,6 +351,9 @@ assert.match(operationsToolsBlock, /批量审核重复记录[\s\S]*SEO 模板导
 assert.match(uiFoundationSource, /advanced-tools-disclosure[\s\S]*border:\s*0 !important[\s\S]*border-top:\s*1px solid/, 'Utility tools must stay a flat footer affordance instead of a card surface.');
 assert.match(appSource, /publishReadinessLabel[\s\S]*未就绪[\s\S]*待审核[\s\S]*可预览/, 'Readiness utility status must use localized operator language instead of raw enum values.');
 assert.match(appSource, /indexStrategyLabel[\s\S]*暂不收录/, 'Chinese UI must translate Noindex into operator-facing indexing language.');
+assert.match(appSource, /policy-primary-fields[\s\S]*focusKeyword[\s\S]*indexStrategy/, 'Keyword and indexing policy must stay visible together in one compact primary policy row.');
+assert.doesNotMatch(appSource, /静态物种页面生成器已验证；正式发布仍然锁定。/, 'Per-field policy UI must not repeat the global Production lock message.');
+assert.match(uiFoundationSource, /policy-primary-fields[\s\S]*repeat\(2[\s\S]*policy-settings \.route-inline-summary[\s\S]*border-top/, 'Indexing policy must use compact desktop columns and a flat read-only route summary.');
 assert.match(uiFoundationSource, /editor-secondary-seo-disclosure[\s\S]*secondary-seo-section/, 'UI Foundation must own the unified secondary SEO hierarchy.');
 assert.doesNotMatch(uiFoundationSource, /editor-task-disclosure/, 'UI Foundation must not retain superseded standalone Search Appearance disclosure overrides.');
 assert.match(appSource, /const explicitScope = elementMeta\?\.scope[\s\S]*targetScope = explicitScope \|\| editorScope/, 'Preview navigation must use explicit ownership only; inherited search fields stay in the current-page override editor instead of being forced into Base.');
@@ -409,6 +412,8 @@ assert.match(baseSource, /PageReviewStatusBar/, 'Base editor must use the same s
 assert.doesNotMatch(appSource, /content-source-manager/, 'Variant editing must not regress to a separate Content Source card that competes with the actual form');
 assert.match(appSource, /editor-secondary-seo-disclosure[\s\S]*inheritedSourceCount[\s\S]*renderInheritedOverrideField/, 'Inherited search fields must stay grouped in the unified secondary SEO disclosure');
 assert.match(appSource, /Use template|改用模板/, 'Inherited search fields must retain a plain-language return-to-template action');
+assert.match(appSource, /inheritance-editor-field \${editing \? 'is-editing' : 'is-inherited'}/, 'Inherited search fields must expose explicit compact-vs-editing UI state without hiding the controls.');
+assert.match(uiFoundationSource, /inheritance-editor-field\.is-inherited[\s\S]*grid-template-columns:[\s\S]*compact-source-view[\s\S]*inline-source-action/, 'Inherited search fields must stay as compact source rows until a page override is opened.');
 assert.match(appSource, /Customize this page|本页自定义/, 'Inherited search-field overrides must name the current-page ownership instead of using ambiguous generic edit copy.');
 assert.doesNotMatch(appSource, />单独修改</, 'Inherited search controls must not regress to ambiguous standalone-edit wording.');
 assert.match(appSource, /pageAttentionCount[\s\S]*完成本页补充|pageAttentionCount[\s\S]*Complete this page/, 'Variant editing must lead with an explicit current-page task objective instead of a generic field catalog');

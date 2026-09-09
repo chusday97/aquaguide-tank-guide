@@ -381,8 +381,9 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const renderInheritedOverrideField = ({ key, label, value, inheritedValue, maxLength, rows }) => {
     const custom = Boolean(value);
     const editing = custom || Boolean(overrideEditing[key]);
+    const fieldProps = editorFieldProps(key);
     return (
-      <div {...editorFieldProps(key)} onClick={() => onInspectorSelect?.(key)}>
+      <div {...fieldProps} className={`${fieldProps.className} inheritance-editor-field ${editing ? 'is-editing' : 'is-inherited'}`} onClick={() => onInspectorSelect?.(key)}>
         <div className="inheritance-field-heading">
           <span>{label}</span>
           <div className="inheritance-field-source">
@@ -638,22 +639,24 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                   <em>{indexStrategyLabel}</em>
                 </header>
                 <div className="secondary-seo-fields policy-fields">
-                  <label>
-                    {t('editor.focusKeyword')}
-                    <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
-                  </label>
-                  <label {...editorFieldProps('indexStrategy')}>{t('editor.indexStrategy')}
-                    <select value={form.indexStrategy} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('indexStrategy', event.target.value)}>
-                      {INDEX_STRATEGIES.map((item) => (
-                        <option
-                          key={item.value}
-                          value={item.value}
-                          disabled={(group?.category_conflict && item.value !== 'noindex') || (duplicateReviewOpen && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
-                        >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
-                      ))}
-                    </select>
-                    {resolvedDuplicatePolicy ? <small className="inherit-note">{isUiEnglish ? 'Locked by the resolved duplicate-review decision.' : '已由人工重复复核结论锁定；如需改变，请回到“数据问题”重新复核。'}</small> : null}
-                  </label>
+                  <div className="policy-primary-fields">
+                    <label>
+                      {t('editor.focusKeyword')}
+                      <input value={form.focusKeyword} onChange={(event) => update('focusKeyword', event.target.value)} />
+                    </label>
+                    <label {...editorFieldProps('indexStrategy')}>{t('editor.indexStrategy')}
+                      <select value={form.indexStrategy} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('indexStrategy', event.target.value)}>
+                        {INDEX_STRATEGIES.map((item) => (
+                          <option
+                            key={item.value}
+                            value={item.value}
+                            disabled={(group?.category_conflict && item.value !== 'noindex') || (duplicateReviewOpen && item.value === 'index') || (item.value === 'canonical_to_sibling' && group?.member_count < 2)}
+                          >{isUiEnglish ? item.label.split(' / ')[0] : (item.label.split(' / ')[1] || item.label)}</option>
+                        ))}
+                      </select>
+                      {resolvedDuplicatePolicy ? <small className="inherit-note">{isUiEnglish ? 'Locked by the resolved duplicate-review decision.' : '已由人工重复复核结论锁定；如需改变，请回到“数据问题”重新复核。'}</small> : null}
+                    </label>
+                  </div>
                   {form.indexStrategy === 'canonical_to_sibling' ? (
                     <label>{t('editor.canonicalTarget')}
                       <select value={form.canonicalCatalogKey} disabled={Boolean(resolvedDuplicatePolicy)} onChange={(event) => update('canonicalCatalogKey', event.target.value)}>
@@ -669,7 +672,6 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                     <span>{t('editor.canonical')}</span><code>{routeMeta.canonicalPath}</code>
                   </div>
                   {indexBlockReason ? <div className="advanced-seo-warning">{indexBlockReason}</div> : null}
-                  <small className="inherit-note">{isUiEnglish ? 'The static Species generator is verified, but Production publishing remains locked.' : '静态物种页面生成器已验证；正式发布仍然锁定。'}</small>
                 </div>
               </section>
             </div>
