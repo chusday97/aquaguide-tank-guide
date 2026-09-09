@@ -36,6 +36,12 @@ Create the 4198 combined HTML review package, then capture 390/600/1024/1440/192
 - Real browser matrix remains blocked by local Chrome MachPort SIGABRT (`BROWSER_UNAVAILABLE`). Manifest stays `REVIEW_REQUIRED`; no Freeze or React rewrite is authorized.
 - Same Critic re-verified `defad8b2`: direct state entry, Care retry, TaskSurface focus and manifest content-snapshot semantics pass static review; only the real five-viewport browser evidence remains blocked.
 
+## 2026-09-09 CUA manual evidence
+
+- Direct Encyclopedia review: scene shows multiple species; clicking a scene species opens only the base-species/variant selection; selecting a variant hides that selection surface and opens the single detail surface; risk expands in place without URL navigation.
+- Direct Care review: default scene exposes only water/livestock/filter; selecting water exposes two problem cards; selecting a card hides the card tray and opens one guide detail with an explicit start-task action.
+- This is manual visual/accessibility evidence only. The automatic matrix still returns `BROWSER_UNAVAILABLE` because local Chrome aborts during Playwright launch, so `REVIEW_REQUIRED` remains authoritative.
+
 ## Verification evidence
 
 Git branch/HEAD and working-tree status are checked before each mutation. Any preview must display the same branch and full SHA as its process working tree.

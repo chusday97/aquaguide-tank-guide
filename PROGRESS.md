@@ -819,3 +819,5 @@
 - [x] 4198 只保留一个 Node 监听，五个直接页面 HTTP 200，静态 H1/本地资源门禁通过。
 - [ ] 真实 Chrome/CUA 视口矩阵仍被 MachPort `BROWSER_UNAVAILABLE` 阻塞；用户和产品经理签字、HTML Freeze、React 回写均保持暂停。
 - [x] 同一 Critic 复验 `defad8b2`：状态直达、Care 重试、任务焦点与 manifest 内容快照语义通过静态复验；不把缺失的真实视觉证据标为通过。
+- [x] CUA人工复核图鉴与养护核心链路：图鉴场景→品系→详情→风险原位展开；养护热点→问题卡→指南详情；两条链路均未出现首层选择与完整详情并存。
+- [ ] 自动矩阵仍被系统Chrome MachPort/SIGABRT阻塞；人工证据不能替代最终自动矩形与截图门禁。

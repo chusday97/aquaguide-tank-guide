@@ -667,6 +667,13 @@
 - `test:html-freeze-matrix` 已运行，但系统 Chrome/Playwright 在本机因 MachPort SIGABRT 返回 `BROWSER_UNAVAILABLE`；没有真实视口截图和边界报告，因此仍不能声称视觉矩阵通过。
 - Manifest 状态继续为 `REVIEW_REQUIRED`；未获得用户/产品经理确认前，不生成 HTML Freeze、不回写 React。
 - 同一 Critic 已复验 `defad8b2`：collapsed/error 直达、Care 重试、TaskSurface 焦点和 manifest 内容快照语义均通过静态复验；唯一明确阻塞仍是 Chrome/MachPort 导致的真实视觉矩阵缺失。
+
+### 2026-09-09 CUA人工矩阵补充
+
+- 使用4198直接页面进行人工视觉/可访问性复核（仅作人工证据，不替代自动矩形报告）：图鉴默认场景可见多个物种；点击场景物种后仅出现品系选择；点击品系后选择板收起并只保留详情表面；“查看当前鱼缸风险”在原页面展开且URL不变。
+- 养护默认仅显示水体、鱼群、过滤三个热点；点击水体后出现2张真实问题卡；点击问题卡后卡片流收起并只保留指南详情，详情内提供“开始排查”与收藏操作。
+- 五个4198直接页面（aquarium、collection、encyclopedia、care、compatibility）经本机HTTP检查均返回200；4198当前只保留Node监听PID 34000。
+- 自动矩阵再次运行仍返回 `BROWSER_UNAVAILABLE`（系统Chrome启动后MachPort/SIGABRT），没有自动截图、矩形或资源失败报告；状态保持 `REVIEW_REQUIRED`，不得签字或生成HTML Freeze。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。
