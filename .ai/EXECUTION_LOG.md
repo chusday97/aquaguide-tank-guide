@@ -1028,3 +1028,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Real local 3003 check: Product/Care and Compatibility correctly remain `暂不可用` because login dependency is not configured; SEO `部分可读`; overflow 0; page errors 0.
 - PASS: Operations browser/contract, Admin Content, Compatibility, SEO Registry, Publish Center, root/API TypeScript, full build, diff hygiene. Functional commit `6ea35173fb92f69cf7eb90b97c3a56e62b713dfa`.
 - No Production/main/live DB/index change; real secure authenticated current-state acceptance remains pending.
+
+## 2026-09-09 10:45 +0800 — Operations source-completeness repair
+- Re-read real branch/authority state from `feature/admin-content-v0`; working tree started clean at `2d21a5e4` and active next remained authenticated current-state acceptance.
+- Inspected live local Operations Home at 1440×900 and 390×844. Found a concrete UX truthfulness badcase: source coverage was incomplete while the UI simultaneously showed `0 个真实任务` / no current task.
+- Added source-recovery primary state, incomplete-source queue count, scoped `当前已读取优先任务`, and direct scroll to source status. Replaced user-facing `authority` jargon in primary copy with business-module/source wording.
+- Preserved visual semantic contract: source recovery uses neutral Graphite/Slate, not Amber.
+- Browser proof: auth-required + forbidden recovery states PASS; populated desktop/mobile exact routing PASS; scoped priority disclosure PASS; real local 390px recovery action scrolls from `0` to `712`, source top ~`16px`, horizontal overflow `0`.
+- PASS: Operations UI/WorkItem, Product/Care, Compatibility, SEO Registry, Publish Center contracts; root/API TypeScript; full root build; diff hygiene.
+- Functional commit: `cab3bc5d6c23e6946dc9ca2017892b90925c3d30`. No Production/main/live DB/index mutation.

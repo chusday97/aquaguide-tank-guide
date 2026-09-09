@@ -465,3 +465,12 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Heavy browser regression now proves no-session 401 and signed-in 403 states, in addition to exact populated WorkItem routing on desktop/mobile. Full focused contracts, root/API TypeScript, full build and diff hygiene PASS.
 - Local real environment still truthfully shows Product/Care + Compatibility `暂不可用` because Business Admin login service is not configured there; SEO remains partially readable with independent Repo Admin auth.
 - NEXT remains real authenticated current-state operator acceptance using an existing secure Business/Repo Admin browser session. Do not extract/shuttle credentials or weaken browser security settings.
+
+## 2026-09-09 10:45 +0800 — Operations source-completeness truthfulness
+- Functional checkpoint: `cab3bc5d6c23e6946dc9ca2017892b90925c3d30` (`fix(admin): scope operations task truth`).
+- When no WorkItem is readable but one or more sources are incomplete, the top task now says `先恢复数据来源，再判断是否真的没有任务` instead of implying a clean queue.
+- Queue totals now say `已读取任务 · 来源未完整`; unreadable sources are never represented as zero work.
+- When a concrete WorkItem exists while any source is incomplete, it is labeled `当前已读取优先任务`, with an explicit note that priority is scoped to readable sources only.
+- Source recovery uses neutral Graphite/Slate, preserving Amber exclusively for human judgment/second-confirmation semantics.
+- Mobile recovery action scrolls to the existing source-status section; no new login/write authority was introduced.
+- NEXT remains real authenticated Business/Repo Admin current-state acceptance using only an existing secure session. Production/main/live DB/index and PR #144 remain parked.

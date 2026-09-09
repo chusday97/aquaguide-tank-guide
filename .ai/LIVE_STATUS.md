@@ -504,3 +504,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Current local `http://127.0.0.1:3003/admin/content` still shows Product/Care + Compatibility `暂不可用` because the local Business Admin login service is not configured; SEO is `部分可读` with independent Repo Admin requirement. This is expected environment truth, not fake zero work.
 - Local real-page check: 1440px horizontal overflow 0, page errors 0. Heavy fixture browser regression also passes auth-required, forbidden, desktop and mobile exact-routing states.
 - Production/main/live DB/index untouched. Real authenticated populated-state acceptance remains pending.
+
+## 2026-09-09 10:45 +0800 — Operations source completeness
+- `/admin/content` no longer presents an incomplete read as `0 个真实任务`.
+- Incomplete sources produce a top recovery task when no WorkItem is known, and known WorkItems are explicitly scoped to `当前已读取优先任务` when other sources remain unreadable.
+- Real local state still has Product/Care + Compatibility unavailable because the Business Admin login dependency is not configured; SEO remains partially readable. This is now visible as incomplete coverage, not an empty healthy queue.
+- Local Operations Home remains `http://127.0.0.1:3003/admin/content`; Species SEO CMS remains `http://127.0.0.1:3010/?demo=1`.
+- No Production/main/live DB/index change. Real authenticated current-state acceptance remains pending.

@@ -351,3 +351,12 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] PASS Operations/Product-Care/Compatibility/SEO Registry/Publish Center contracts, root/API TypeScript, full root build and diff hygiene.
 - [ ] NEXT: real authenticated Business/Repo Admin operator acceptance with populated current WorkItems, using only an existing secure browser session.
 - [ ] Writable hosted credentials, reconciliation / PR #144, main, Production, live DB and indexing remain parked.
+
+## Active continuation — 2026-09-09 10:45 +0800
+- [x] Do not show `0 个真实任务` while any authority source is unreadable/partial; show known/readable task count with incomplete-source qualification.
+- [x] When no readable WorkItem exists but sources are incomplete, promote source recovery to the top operator task with one direct `查看数据来源` action.
+- [x] When a WorkItem exists under incomplete source coverage, scope the claim to `当前已读取优先任务`; do not claim global priority from partial evidence.
+- [x] Preserve Amber for human judgment only; source recovery stays Graphite/Slate.
+- [x] PASS desktop/mobile browser regression, mobile source-scroll behavior, focused contracts, root/API TypeScript, full build and diff hygiene.
+- [ ] NEXT: real authenticated Business/Repo Admin operator acceptance with populated current WorkItems using only an existing secure browser session.
+- [ ] Writable hosted credentials, reconciliation / PR #144, main, Production, live DB and indexing remain parked.

@@ -624,3 +624,12 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Browser regression covers 401 and 403 rendered states plus exact Compatibility revision / Product Draft routing at 1440×900 and 390×844. Local unauthenticated environment remains zero-overflow/zero-page-error and correctly reports dependency unavailability.
 - Full focused contracts, root/API TS, full build and `git diff --check` PASS. No Production/main/live DB/index change.
 - Remaining acceptance gate: real populated current-state click-through using an existing secure Business/Repo Admin browser session; do not expose cookies/tokens or weaken browser security to obtain it.
+
+## 2026-09-09 10:45 +0800 — Operations incomplete-source UX checkpoint
+- Functional checkpoint `cab3bc5d6c23e6946dc9ca2017892b90925c3d30` fixes a task-truth badcase in `/admin/content`: incomplete authority coverage can no longer look like a globally empty queue.
+- No readable WorkItem + incomplete sources now surfaces `先恢复数据来源，再判断是否真的没有任务` as the top operator task and links to the existing source-status section.
+- Work queue totals use `已读取任务 · 来源未完整`; unreadable sources are explicitly excluded from the zero claim.
+- Concrete tasks under partial source coverage are labeled `当前已读取优先任务` and disclose that ranking is based only on readable sources.
+- Source recovery is neutral Graphite/Slate, so Amber remains reserved for explicit human decisions/second confirmation.
+- Browser regression covers auth-required, forbidden, partial-source priority scoping, exact Product/Compatibility routing at 1440/390, and real local mobile source scrolling with zero horizontal overflow.
+- Remaining hard gate is still real current-state acceptance under an existing secure Business/Repo Admin browser session; do not extract/shuttle cookies or tokens. No main/Production/live DB/index change.
