@@ -162,7 +162,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
   const [form, setForm] = useState(emptySeo);
   const [saving, setSaving] = useState(false);
   const [overrideEditing, setOverrideEditing] = useState({});
-  const [secondarySeoOpen, setSecondarySeoOpen] = useState(false);
+  const [secondarySeoOpen, setSecondarySeoOpen] = useState(true);
   const [templateReferenceOpen, setTemplateReferenceOpen] = useState(false);
   const resolvedDuplicatePolicy = getResolvedDuplicateSeoPolicy({ species, group, reviewRows: dataReviewRows });
   const duplicateSetForSpecies = (group?.duplicate_sets || []).find((set) => set.member_ids.includes(species?.catalog_key));
@@ -678,16 +678,12 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
 
       </div>
 
-      <div className="editor-footer">
+      {!readOnly && (contentDirty || !schemaReady) ? <div className="editor-footer editor-status-footer">
         <div>
-          {!readOnly && contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · approval will reset' : '未保存修改 · 保存后需重新审核'}</span> : null}
-          {!readOnly && !schemaReady ? <span className="warning-text">{isUiEnglish ? 'Storage schema is not ready; saving is blocked.' : '内容存储尚未就绪，保存会被阻止。'}</span> : null}
+          {contentDirty ? <span className="unsaved-indicator">{isUiEnglish ? 'Unsaved changes · use the review bar above to save or continue.' : '未保存修改 · 请使用上方审核栏保存或继续下一步'}</span> : null}
+          {!schemaReady ? <span className="warning-text">{isUiEnglish ? 'Storage schema is not ready; saving is blocked.' : '内容存储尚未就绪，保存会被阻止。'}</span> : null}
         </div>
-        <div className="footer-actions">
-          {!readOnly ? <span className={`draft-safety-chip content-${form.status}`} aria-label={isUiEnglish ? 'Content status' : '内容状态'}>{form.status === 'published' ? (isUiEnglish ? 'Published · locked' : '已发布 · 已锁定') : (isUiEnglish ? 'Draft · not live' : '草稿 · 不会直接上线')}</span> : null}
-          {contentDirty ? <button className="primary-button compact" type="button" onClick={() => save()} disabled={saving}>{saving ? t('common.saving') : (isUiEnglish ? 'Save changes' : '保存修改')}</button> : null}
-        </div>
-      </div>
+      </div> : null}
       </section>
     </>
   );

@@ -50,6 +50,12 @@ const runViewport = async (label, viewport) => {
   const errors = [];
   page.on('pageerror', error => errors.push(String(error)));
   await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+  const coreSeo = page.locator('.editor-secondary-seo-disclosure');
+  await coreSeo.waitFor();
+  assert.equal(await coreSeo.evaluate(element => element.open), true, 'Core Search & indexing controls must be visible by default.');
+  assert.match(await coreSeo.innerText(), /搜索展示[\s\S]*收录与 Canonical/);
+  assert.equal(await page.locator('.editor-footer button').count(), 0, 'Editor footer must not duplicate top review actions.');
+  assert.equal(await page.locator('.editor-panel .draft-safety-chip').count(), 0, 'Editor body must not repeat Draft status from the top review bar.');
   await page.getByRole('button', { name: /处理重复/ }).first().click();
   const drawer = page.locator('.editor-tool-drawer');
   await drawer.waitFor();

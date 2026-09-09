@@ -403,7 +403,8 @@ assert.match(stylesSource, /editor-field-question[\s\S]*justify-self:start[\s\S]
 assert.match(appSource, /editor-task-header/, 'Variant editor must use one task header for current-page identity and task summary');
 assert.doesNotMatch(appSource, /SPECIES SEO ·/, 'Variant editor must not repeat an internal product eyebrow above the task form');
 assert.doesNotMatch(appSource, /页面内容与 SEO 字段|Page content and SEO fields/, 'Variant editor must not add a redundant generic detail heading before the actual tasks');
-assert.match(appSource, /secondarySeoInspectorTarget[\s\S]*setSecondarySeoOpen\(true\)/, 'Secondary SEO must stay collapsed by default but open automatically when Preview selects a matching field');
+assert.match(appSource, /useState\(true\)[\s\S]*secondarySeoOpen/, 'Core Search & indexing settings must default open instead of hiding required SEO controls.');
+assert.match(appSource, /secondarySeoInspectorTarget[\s\S]*setSecondarySeoOpen\(true\)/, 'Preview field selection must keep reopening Search & indexing after an intentional collapse.');
 assert.doesNotMatch(appSource, /editor-footer[\s\S]{0,500}(只读演示 · 不会写入|Read-only demo · no writes)/, 'Editor body must not duplicate the topbar read-only demo notice');
 assert.match(appSource, /data-editor-override/, 'Override inputs must remain separately addressable after inherited-state disclosure');
 assert.match(baseSource, /data-base-editor-field/, 'Base editor fields must expose stable inspector targets');
@@ -440,6 +441,8 @@ assert.match(appSource, /confirmDiscardUnsaved/, 'Editor navigation must require
 assert.match(appSource, /runEditorNavigation/, 'Species, scope and locale navigation must share one unsaved-change guard');
 assert.match(appSource, /contentDirty \? <button[\s\S]*仅保存草稿[\s\S]*保存并提交审核/, 'Variant dirty state must keep review visible: save draft is secondary and save-and-submit is the primary next action');
 assert.match(baseSource, /contentDirty \? <button[\s\S]*仅保存草稿[\s\S]*保存并提交审核/, 'Base dirty state must keep review visible: save draft is secondary and save-and-submit is the primary next action');
+assert.doesNotMatch(appSource, /Save changes' : '保存修改|draft-safety-chip/, 'Variant editor footer must not duplicate save actions or Draft status already owned by the top review bar.');
+assert.doesNotMatch(baseSource, /Save base template' : '保存基础模板|draft-safety-chip/, 'Base editor footer must not duplicate save actions or Draft status already owned by the top review bar.');
 assert.match(appSource, /selectedId === id && editorScope === 'variant'/, 'Re-selecting the current Variant must remain a no-op and must not clear dirty state');
 assert.match(appSource, /workflowFilter\?\.key === next\.key/, 'Re-selecting the active workflow filter must not discard dirty editor state');
 assert.match(liveFrontendPreviewSource, /data-preview-element/, 'Live preview elements must expose stable inspector targets');
