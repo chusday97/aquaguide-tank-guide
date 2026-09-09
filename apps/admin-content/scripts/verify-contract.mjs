@@ -364,7 +364,7 @@ assert.match(liveFrontendPreviewSource, /定位字段|Locate field/, 'Preview lo
 assert.match(liveFrontendPreviewSource, /useState\(false\)[\s\S]*inspectEnabled/, 'Preview field locator must default off because it is an optional utility mode.');
 assert.match(liveFrontendPreviewSource, /preview-mode-tabs[\s\S]*aria-pressed=\{mode === item\}/, 'Preview Page/Google/Mobile tabs must expose explicit selected state.');
 assert.match(appSource, /compact-preview-toggle[\s\S]*aria-expanded=\{compactPreviewOpen\}[\s\S]*关闭预览/, 'Preview toggle must describe the close action while Preview is open.');
-assert.match(appSource, /useState\(\(\) => typeof window !== 'undefined' && window\.innerWidth >= 900\)/, 'Desktop Preview must default open while narrow layouts remain closed by default.');
+assert.match(appSource, /PREVIEW_SPLIT_MIN_WIDTH = 1051[\s\S]*window\.innerWidth >= PREVIEW_SPLIT_MIN_WIDTH/, 'Preview must default open only when a true side-by-side editor can fit.');
 assert.doesNotMatch(appSource, /setSelectedInspectorElement\(null\);[\s\S]{0,160}setActiveTool\(null\);[\s\S]{0,160}setCompactPreviewOpen\(false\);[\s\S]{0,120}\[selectedId, contentLocale\]/, 'Switching species or locale must not force-close an already open desktop Preview.');
 assert.match(liveFrontendPreviewSource, /点击预览内容会跳到左侧对应编辑字段|click preview content to jump to the matching editor field/, 'Preview locator guidance must explain the destination without becoming button copy.');
 assert.doesNotMatch(liveFrontendPreviewSource, />\s*\{appLocale === 'en' \? 'Click content to edit' : '点击内容编辑'\}\s*</, 'Instructional copy must not regress into the toggle label.');
@@ -379,6 +379,8 @@ assert.doesNotMatch(appSource, /editor-statuses[\s\S]*status-pill/, 'Primary edi
 assert.match(appSource, /preview-split-open/, 'Preview must open as a dedicated split-view workspace state on desktop');
 assert.match(appSource, /preview-resize-handle/, 'Desktop Preview must expose a draggable editor/preview separator');
 assert.match(stylesSource, /preview-split-open[\s\S]*var\(--preview-width/, 'Split Preview must resize the editor instead of overlaying it on desktop');
+assert.match(appSource, /EDITOR_SPLIT_MIN_WIDTH = 480[\s\S]*window\.innerWidth - sidebarWidth - EDITOR_SPLIT_MIN_WIDTH - PREVIEW_RESIZE_HANDLE_WIDTH/, 'Preview resizing must reserve at least 480px for the editor.');
+assert.match(uiFoundationSource, /min-width: 1051px[\s\S]*minmax\(480px, 1fr\)[\s\S]*max-width: 1050px[\s\S]*position: fixed !important/, 'Medium desktop must use a narrower split Preview while <=1050px falls back to overlay behavior.');
 assert.doesNotMatch(appSource, /source === 'preview'[\s\S]{0,180}setCompactPreviewOpen\(false\)/, 'Preview inspector selection must not close the Preview while editing side-by-side');
 assert.match(appSource, /switchWorkspaceLocale[\s\S]*setContentLocale\(next\)[\s\S]*setAppLocale\(next\)/, 'Workspace language switching must keep interface and content locale synchronized');
 assert.match(appSource, /InterfaceLanguageSwitch onLocaleChange=\{switchWorkspaceLocale\}/, 'Top language switch must use the unified workspace locale action');

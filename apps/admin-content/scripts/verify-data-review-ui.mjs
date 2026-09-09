@@ -174,10 +174,42 @@ const runViewport = async (label, viewport) => {
   await context.close();
 };
 
+const verifyPreviewLayoutMatrix = async () => {
+  for (const width of [1280, 1080, 1051]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 } });
+    const page = await context.newPage();
+    await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+    const editorBox = await page.locator('.studio-editor-area').boundingBox();
+    const preview = page.locator('.live-preview-pane.compact-open');
+    const previewBox = await preview.boundingBox();
+    assert.equal(await preview.isVisible(), true, `${width}px must keep the Preview in a real split view.`);
+    assert.equal(await preview.evaluate(element => getComputedStyle(element).position), 'relative', `${width}px Preview must not overlay the editor.`);
+    assert.equal(Boolean(editorBox && editorBox.width >= 480), true, `${width}px split view must reserve at least 480px for editing.`);
+    assert.equal(Boolean(previewBox && previewBox.width <= 360), true, `${width}px medium desktop Preview must stay compact.`);
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0);
+    await context.close();
+  }
+
+  const context = await browser.newContext({ viewport: { width: 1050, height: 900 } });
+  const page = await context.newPage();
+  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+  const preview = page.locator('.live-preview-pane');
+  assert.equal(await preview.isVisible(), false, '1050px fresh load must keep Preview closed instead of squeezing the editor.');
+  const previewToggle = page.locator('.compact-preview-toggle');
+  assert.equal(await previewToggle.getAttribute('aria-expanded'), 'false', '1050px Preview toggle must start closed.');
+  await previewToggle.click();
+  assert.equal(await previewToggle.getAttribute('aria-expanded'), 'true', '1050px Preview toggle must expose the opened state.');
+  assert.equal(await preview.isVisible(), true, '1050px operator must still be able to open Preview on demand.');
+  assert.equal(await preview.evaluate(element => getComputedStyle(element).position), 'fixed', '1050px on-demand Preview must use overlay mode.');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0);
+  await context.close();
+};
+
 try {
   await waitForReady();
   await runViewport('desktop + responsive mobile', { width: 1440, height: 1000 });
-  console.log('PASS SEO Admin hierarchy: compact top chrome + Data Review decision flow + page/global Operations separation + responsive layout.');
+  await verifyPreviewLayoutMatrix();
+  console.log('PASS SEO Admin hierarchy: compact top chrome + Data Review decision flow + page/global Operations separation + responsive Preview layout.');
 } finally {
   await browser.close();
   await stop();

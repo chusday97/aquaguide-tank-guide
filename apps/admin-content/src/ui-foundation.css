@@ -827,11 +827,11 @@
   }
   .admin-shell .editor-secondary-seo-disclosure > summary strong { font-size: var(--ui-text-body); }
   .admin-shell .editor-secondary-seo-disclosure > summary small,
-  .admin-shell .editor-secondary-seo-disclosure > summary > span { font-size: 10px; }
+  .admin-shell .editor-secondary-seo-disclosure > summary > span { font-size: var(--ui-text-micro); }
   .admin-shell .secondary-seo-section { padding: 14px 0 16px; }
   .admin-shell .secondary-seo-section > header { gap: 10px; margin-bottom: 12px; }
   .admin-shell .secondary-seo-section > header small,
-  .admin-shell .secondary-seo-section > header em { font-size: 10px; }
+  .admin-shell .secondary-seo-section > header em { font-size: var(--ui-text-micro); }
   .admin-shell .secondary-seo-fields { gap: 14px; }
   .admin-shell .policy-primary-fields { grid-template-columns: 1fr; gap: 12px; }
   .admin-shell .policy-settings .route-inline-summary { grid-template-columns: 1fr; gap: 2px; }
@@ -1256,7 +1256,7 @@
 }
 .admin-shell .editor-secondary-seo-disclosure > summary small,
 .admin-shell .editor-secondary-seo-disclosure > summary > span {
-  font-size: 10.5px !important;
+  font-size: var(--ui-text-micro) !important;
 }
 @media (max-width: 760px) {
   .admin-shell .editor-panel > .editor-task-header h2 { font-size: 22px; }
@@ -1342,4 +1342,26 @@
 }
 @media (max-width: 760px) {
   .admin-shell .topbar-operations-trigger { padding: 0 8px; }
+}
+
+/* Medium desktop Preview contract: preserve a real editor width instead of squeezing both panes. */
+@media (min-width: 1051px) and (max-width: 1320px) {
+  .admin-shell .workspace.studio-workspace.preview-split-open {
+    grid-template-columns: 220px minmax(480px, 1fr) 8px var(--preview-width, 340px) !important;
+  }
+}
+@media (min-width: 901px) and (max-width: 1050px) {
+  .admin-shell .workspace.studio-workspace.preview-split-open { grid-template-columns: 220px minmax(0, 1fr) !important; }
+  .admin-shell .workspace.studio-workspace.preview-split-open > .preview-resize-handle { display: none !important; }
+  .admin-shell .workspace.studio-workspace.preview-split-open > .live-preview-pane.compact-open {
+    display: flex !important;
+    position: fixed !important;
+    top: 42px !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: min(460px, 96vw) !important;
+    z-index: 45 !important;
+    box-shadow: -18px 0 44px rgba(32,36,44,.16) !important;
+  }
 }

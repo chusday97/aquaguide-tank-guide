@@ -37,6 +37,14 @@ const initialParams = typeof window !== 'undefined' ? new URLSearchParams(window
 const initialContentLocale = initialParams.get('locale') === 'en' ? 'en' : 'zh-CN';
 const initialSpeciesId = initialParams.get('species') || null;
 
+const PREVIEW_SPLIT_MIN_WIDTH = 1051;
+const PREVIEW_MIN_WIDTH = 340;
+const PREVIEW_MAX_WIDTH = 560;
+const EDITOR_SPLIT_MIN_WIDTH = 480;
+const PREVIEW_RESIZE_HANDLE_WIDTH = 8;
+const previewSidebarWidthForViewport = (width) => width >= 1320 ? 270 : width >= PREVIEW_SPLIT_MIN_WIDTH ? 220 : 0;
+const initialPreviewWidthForViewport = (width) => width >= 1320 ? 420 : width >= 1180 ? 360 : PREVIEW_MIN_WIDTH;
+
 const emptySeo = {
   localizedName: '',
   seoTitle: '',
@@ -720,8 +728,8 @@ export default function App() {
   const [productTruthState, setProductTruthState] = useState({ catalogKey: null, row: null, loading: false, error: false });
   const [selectedInspectorElement, setSelectedInspectorElement] = useState(null);
   const [activeTool, setActiveTool] = useState(null);
-  const [compactPreviewOpen, setCompactPreviewOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= 900);
-  const [previewWidth, setPreviewWidth] = useState(420);
+  const [compactPreviewOpen, setCompactPreviewOpen] = useState(() => typeof window !== 'undefined' && window.innerWidth >= PREVIEW_SPLIT_MIN_WIDTH);
+  const [previewWidth, setPreviewWidth] = useState(() => typeof window === 'undefined' ? 420 : initialPreviewWidthForViewport(window.innerWidth));
   const [previewResizing, setPreviewResizing] = useState(false);
   const [editorDirty, setEditorDirty] = useState(false);
   const [stagingPublishing, setStagingPublishing] = useState(false);
@@ -734,9 +742,9 @@ export default function App() {
   useEffect(() => {
     if (!previewResizing) return undefined;
     const handleMove = (event) => {
-      const sidebarWidth = window.innerWidth >= 1320 ? 270 : window.innerWidth >= 900 ? 220 : 0;
-      const maxWidth = Math.max(340, Math.min(560, window.innerWidth - sidebarWidth - 420));
-      const nextWidth = Math.max(340, Math.min(maxWidth, window.innerWidth - event.clientX));
+      const sidebarWidth = previewSidebarWidthForViewport(window.innerWidth);
+      const maxWidth = Math.max(PREVIEW_MIN_WIDTH, Math.min(PREVIEW_MAX_WIDTH, window.innerWidth - sidebarWidth - EDITOR_SPLIT_MIN_WIDTH - PREVIEW_RESIZE_HANDLE_WIDTH));
+      const nextWidth = Math.max(PREVIEW_MIN_WIDTH, Math.min(maxWidth, window.innerWidth - event.clientX));
       setPreviewWidth(nextWidth);
     };
     const handleEnd = () => setPreviewResizing(false);
@@ -749,6 +757,18 @@ export default function App() {
       window.removeEventListener('pointerup', handleEnd);
     };
   }, [previewResizing]);
+
+  useEffect(() => {
+    const clampPreviewToViewport = () => {
+      if (window.innerWidth < PREVIEW_SPLIT_MIN_WIDTH) return;
+      const sidebarWidth = previewSidebarWidthForViewport(window.innerWidth);
+      const maxWidth = Math.max(PREVIEW_MIN_WIDTH, Math.min(PREVIEW_MAX_WIDTH, window.innerWidth - sidebarWidth - EDITOR_SPLIT_MIN_WIDTH - PREVIEW_RESIZE_HANDLE_WIDTH));
+      setPreviewWidth((current) => Math.max(PREVIEW_MIN_WIDTH, Math.min(current, maxWidth)));
+    };
+    clampPreviewToViewport();
+    window.addEventListener('resize', clampPreviewToViewport);
+    return () => window.removeEventListener('resize', clampPreviewToViewport);
+  }, []);
 
   useEffect(() => { setLivePreview(null); }, [selectedId, contentLocale]);
   useEffect(() => {
