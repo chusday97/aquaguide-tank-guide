@@ -185,7 +185,7 @@ export default function LiveFrontendPreview({ preview, readiness, onGeneratePrev
   return (
     <aside className={`live-preview-pane ${compactOpen ? 'compact-open' : ''}`} ref={paneRef} onPointerEnter={onWorkspaceEngage} onFocusCapture={onWorkspaceEngage} onWheelCapture={onWorkspaceEngage} onTouchStart={onWorkspaceEngage}>
       <header className="live-preview-header">
-        <div><strong>{t('preview.title')}</strong><small>{getLocaleLabel(preview.locale)}</small></div>
+        <div><strong>{t('preview.title')}</strong><small>{getLocaleLabel(preview.locale)} · {appLocale === 'en' ? 'Final page = Base + current page' : '最终页面 = 基础模板 + 当前页面'}</small></div>
         <div className="preview-header-actions">
           <div className="preview-mode-tabs" role="group" aria-label={appLocale === 'en' ? 'Preview mode' : '预览模式'}>
             {['page', 'google', 'mobile'].map((item) => <button key={item} type="button" aria-pressed={mode === item} className={mode === item ? 'active' : ''} onClick={() => setMode(item)}>{item === 'page' ? t('preview.page') : item === 'google' ? t('preview.google') : t('preview.mobile')}</button>)}

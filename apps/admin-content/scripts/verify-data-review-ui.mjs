@@ -54,6 +54,12 @@ const runViewport = async (label, viewport) => {
   await coreSeo.waitFor();
   assert.equal(await coreSeo.evaluate(element => element.open), true, 'Core Search & indexing controls must be visible by default.');
   assert.match(await coreSeo.innerText(), /搜索展示[\s\S]*收录与 Canonical/);
+  assert.match(await page.locator('.live-preview-header').innerText(), /最终页面 = 基础模板 \+ 当前页面/, 'Preview header must explain the composed final-page ownership.');
+  await page.getByRole('button', { name: '基础模板', exact: true }).last().click();
+  assert.equal(await page.locator('.editor-scope-context').count(), 0, 'Base editor must not repeat ownership in a second impact strip.');
+  assert.match(await page.locator('.base-task-header').innerText(), /基础模板[\s\S]*同组 4 个页面共用[\s\S]*修改后会同步影响同组页面/);
+  assert.match(await page.locator('.live-preview-header').innerText(), /最终页面 = 基础模板 \+ 当前页面/);
+  await page.getByRole('button', { name: '当前页面', exact: true }).last().click();
   assert.equal(await page.locator('.editor-footer button').count(), 0, 'Editor footer must not duplicate top review actions.');
   assert.equal(await page.locator('.editor-panel .draft-safety-chip').count(), 0, 'Editor body must not repeat Draft status from the top review bar.');
   const topChromeHeight = async () => {

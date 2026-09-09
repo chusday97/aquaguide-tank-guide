@@ -1421,15 +1421,6 @@ export default function App() {
           </div>
 
           {editorScope === 'base' ? (
-            <section className="editor-scope-context base compact-impact" aria-label={appLocale === 'en' ? 'Base template impact' : '基础模板影响范围'}>
-              <div className="editor-scope-context-copy">
-                <strong>{appLocale === 'en' ? 'Base template' : '基础模板'} · {selectedGroup?.base_scientific_name}</strong>
-                <span>{appLocale === 'en' ? `Shared by ${selectedGroup?.member_count || 0} pages` : `修改会影响同组 ${selectedGroup?.member_count || 0} 个页面`}</span>
-              </div>
-            </section>
-          ) : null}
-
-          {editorScope === 'base' ? (
             <BaseSpeciesSeoEditor
               group={selectedGroup}
               record={selectedGroupPersisted}

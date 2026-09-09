@@ -328,6 +328,9 @@ assert.equal(EDITOR_ELEMENT_REGISTRY.imageAlt.assetReadOnly, true, 'Hero image s
 assert.match(liveFrontendPreviewSource, /Image source read-only|图片资源只读/, 'Image inspector must explain the split between read-only asset and editable alt text');
 assert.match(liveFrontendPreviewSource, /getEditorElementLabel\(key, appLocale\)/, 'Inspector edit paths must identify the exact mapped field, not only its section');
 assert.match(appSource, /selectedInspectorElement/, 'Admin must keep one shared inspector selection across editor and preview');
+assert.doesNotMatch(appSource, /editor-scope-context base compact-impact/, 'Base ownership must not be repeated in a separate impact strip when the Base task header already explains the same scope.');
+assert.match(baseSource, /BASE TEMPLATE|基础模板[\s\S]*同组[\s\S]*修改后会同步影响同组页面/, 'The Base task header must remain the single authoritative ownership/impact explanation.');
+assert.match(liveFrontendPreviewSource, /Final page = Base \+ current page|最终页面 = 基础模板 \+ 当前页面/, 'Preview must state that it renders the final composition of Base plus current-page content.');
 assert.match(editorElementRegistrySource, /sharedIntro[\s\S]*scope: 'base'[\s\S]*variantIntro[\s\S]*scope: 'variant'/, 'Preview/editor mapping must split Base shared intro from current-page additions with explicit ownership.');
 assert.match(liveFrontendPreviewSource, /data-preview-element|sharedIntro[\s\S]*variantIntro/, 'Live Preview must expose independently selectable Base and current-page intro regions.');
 assert.match(appSource, /editor-secondary-seo-disclosure[\s\S]*open=\{secondarySeoOpen\}[\s\S]*onToggle=/, 'Secondary SEO settings must use one stateful disclosure instead of two persistent hierarchy rows.');
