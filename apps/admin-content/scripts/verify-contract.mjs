@@ -343,7 +343,9 @@ assert.match(appSource, /sharedIntroCoversPage[\s\S]*模板已经覆盖共同简
 assert.match(appSource, /editor-field-task-status/, 'Primary editor fields must expose explicit task-status text rather than relying on subtle validation paint.');
 assert.match(appSource, /需要填写[\s\S]*模板已覆盖|模板已覆盖[\s\S]*需要填写/, 'Primary editor task-status vocabulary must distinguish required work from template-covered content.');
 assert.match(uiFoundationSource, /PM \+ UI review:[\s\S]*editor-primary-task-heading[\s\S]*editor-field-title-row[\s\S]*editor-secondary-seo-disclosure/, 'UI Foundation must enforce identity → task → field → secondary-settings hierarchy.');
-assert.match(appSource, /Current-page tools|当前页面工具/, 'The editor footer must identify page-scoped tools instead of presenting one generic utility wall.');
+assert.match(appSource, /Base template tools|基础模板工具[\s\S]*Current-page tools|当前页面工具/, 'The editor footer must identify the active ownership layer instead of presenting one generic utility wall.');
+assert.match(appSource, /Final-page readiness|最终页发布资格[\s\S]*基础模板 \+ 当前页面合成后的最终页/, 'Readiness inside contextual tools must state that it checks the composed final page.');
+assert.match(appSource, /editorScope === 'base'[\s\S]*resourceType="species_seo_group"[\s\S]*resourceType="species_seo"/, 'Revision history must render only the active Base or current-page authority instead of both at once.');
 assert.doesNotMatch(currentPageToolsBlock, /批量审核重复记录|批量内容审核|SEO 模板导入|工作队列|任务队列|Bulk duplicate review|Bulk content review|SEO template import/, 'Current-page tools must not contain cross-page batch or global queue actions.');
 assert.match(operationsToolsBlock, /批量审核重复记录[\s\S]*SEO 模板导入[\s\S]*editor\.workflow|Bulk duplicate review[\s\S]*SEO template import/, 'Cross-page batch work and the global queue must live inside the Operations drawer.');
 assert.match(uiFoundationSource, /advanced-tools-disclosure[\s\S]*border:\s*0 !important[\s\S]*border-top:\s*1px solid/, 'Utility tools must stay a flat footer affordance instead of a card surface.');
@@ -407,6 +409,8 @@ assert.match(baseSource, /PageReviewStatusBar/, 'Base editor must use the same s
 assert.doesNotMatch(appSource, /content-source-manager/, 'Variant editing must not regress to a separate Content Source card that competes with the actual form');
 assert.match(appSource, /editor-secondary-seo-disclosure[\s\S]*inheritedSourceCount[\s\S]*renderInheritedOverrideField/, 'Inherited search fields must stay grouped in the unified secondary SEO disclosure');
 assert.match(appSource, /Use template|改用模板/, 'Inherited search fields must retain a plain-language return-to-template action');
+assert.match(appSource, /Customize this page|本页自定义/, 'Inherited search-field overrides must name the current-page ownership instead of using ambiguous generic edit copy.');
+assert.doesNotMatch(appSource, />单独修改</, 'Inherited search controls must not regress to ambiguous standalone-edit wording.');
 assert.match(appSource, /pageAttentionCount[\s\S]*完成本页补充|pageAttentionCount[\s\S]*Complete this page/, 'Variant editing must lead with an explicit current-page task objective instead of a generic field catalog');
 assert.match(stylesSource, /editor-field-question[\s\S]*justify-self:start[\s\S]*margin-top:0[\s\S]*text-align:left/, 'Page-specific task questions must stay left-aligned above their guidance and inputs instead of inheriting the legacy right-side label treatment');
 assert.match(appSource, /editor-task-header/, 'Variant editor must use one task header for current-page identity and task summary');

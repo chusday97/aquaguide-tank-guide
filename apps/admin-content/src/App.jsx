@@ -387,13 +387,13 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
           <span>{label}</span>
           <div className="inheritance-field-source">
             <small>{custom ? (isUiEnglish ? 'This page' : '本页专用') : (isUiEnglish ? 'Base template' : '基础模板')}</small>
-            {editing ? <button type="button" className="inline-source-action" onClick={() => useBaseValue(key)}>{custom ? (isUiEnglish ? 'Use template' : '改用模板') : (isUiEnglish ? 'Cancel override' : '取消单独修改')}</button> : null}
+            {editing ? <button type="button" className="inline-source-action" onClick={() => useBaseValue(key)}>{custom ? (isUiEnglish ? 'Use template' : '改用模板') : (isUiEnglish ? 'Cancel page override' : '取消本页自定义')}</button> : null}
           </div>
         </div>
         {!editing ? (
           <div className="inherited-field-view compact-source-view">
             <div className="inherited-field-value">{inheritedValue || '—'}</div>
-            <button type="button" className="inline-source-action" onClick={() => startOverride(key)}>{isUiEnglish ? 'Edit for this page' : '单独修改'}</button>
+            <button type="button" className="inline-source-action" onClick={() => startOverride(key)}>{isUiEnglish ? 'Customize this page' : '本页自定义'}</button>
           </div>
         ) : rows ? (
           <textarea aria-label={label} data-editor-override={key} rows={rows} value={value} maxLength={maxLength} placeholder={inheritedValue} onFocus={() => onInspectorSelect?.(key)} onChange={(event) => update(key, event.target.value)} />
@@ -612,7 +612,7 @@ function SeoEditor({ species, group, groupRecord, record, locale = 'zh-CN', sche
                 <header>
                   <div>
                     <strong>{isUiEnglish ? 'Search appearance' : '搜索展示'}</strong>
-                    <small>{isUiEnglish ? 'Title, description and H1 inherit from the Base template unless overridden.' : '标题、描述与 H1 默认沿用基础模板，只在确有差异时单独修改。'}</small>
+                    <small>{isUiEnglish ? 'Title, description and H1 inherit from the Base template unless overridden.' : '标题、描述与 H1 默认沿用基础模板；只有当前页确有差异时才使用“本页自定义”。'}</small>
                   </div>
                   <em>{customSourceCount > 0 ? (isUiEnglish ? `${customSourceCount} override${customSourceCount === 1 ? '' : 's'}` : `${customSourceCount} 项本页专用`) : (isUiEnglish ? 'Inherited' : '沿用模板')}</em>
                 </header>
@@ -1222,8 +1222,12 @@ export default function App() {
       subtitle: appLocale === 'en' ? 'Download the AquaGuide template, fill it in Excel / Numbers, validate it, then import Draft changes.' : '下载 AquaGuide 模板，用 Excel / Numbers 回填，上传校验后批量导入草稿。',
     },
     history: {
-      title: t('editor.history'),
-      subtitle: appLocale === 'en' ? 'Versioned Base and Variant revision history.' : '带版本记录的基础模板 / 当前页面历史。',
+      title: editorScope === 'base'
+        ? (appLocale === 'en' ? 'Base template history' : '基础模板版本历史')
+        : (appLocale === 'en' ? 'Current-page history' : '当前页面版本历史'),
+      subtitle: editorScope === 'base'
+        ? (appLocale === 'en' ? 'Only revisions for the selected Base template.' : '只查看当前基础模板自己的版本记录。')
+        : (appLocale === 'en' ? 'Only revisions for the selected current page.' : '只查看当前页面自己的版本记录。'),
     },
     workflow: {
       title: t('editor.workflow'),
@@ -1472,7 +1476,7 @@ export default function App() {
 
           <details className="advanced-tools-disclosure current-page-tools">
             <summary>
-              <span><strong>{appLocale === 'en' ? 'Current-page tools' : '当前页面工具'}</strong><small>{appLocale === 'en' ? 'Review, readiness, translation and history for this page' : '只处理当前页面的复核、发布资格、翻译与版本历史'}</small></span>
+              <span><strong>{editorScope === 'base' ? (appLocale === 'en' ? 'Base template tools' : '基础模板工具') : (appLocale === 'en' ? 'Current-page tools' : '当前页面工具')}</strong><small>{editorScope === 'base' ? (appLocale === 'en' ? 'Review, final-page readiness, translation and Base history' : '复核、最终页发布资格、翻译与基础模板历史') : (appLocale === 'en' ? 'Review, final-page readiness, translation and current-page history' : '复核、最终页发布资格、翻译与当前页面历史')}</small></span>
               <em>{appLocale === 'en' ? 'Open' : '展开'}</em>
             </summary>
             <div className="editor-secondary-tools editor-tool-launchers">
@@ -1483,7 +1487,7 @@ export default function App() {
                 </button>
               ) : null}
               <button type="button" className={`editor-tool-row readiness ${activeTool === 'readiness' ? 'active' : ''}`} onClick={() => setActiveTool('readiness')}>
-                <span><strong>{t('editor.publishCheck')}</strong><small>{appLocale === 'en' ? 'Controlled Preview eligibility' : '受控预览资格检查'}</small></span>
+                <span><strong>{appLocale === 'en' ? 'Final-page readiness' : '最终页发布资格'}</strong><small>{appLocale === 'en' ? 'Checks the composed Base + current-page Preview' : '检查基础模板 + 当前页面合成后的最终页'}</small></span>
                 <em className={publishReadiness?.state || 'blocked'}>{publishReadinessLabel}</em>
               </button>
               {contentLocale === 'en' ? (
@@ -1492,7 +1496,7 @@ export default function App() {
                 </button>
               ) : null}
               <button type="button" className={`editor-tool-row ${activeTool === 'history' ? 'active' : ''}`} onClick={() => setActiveTool('history')}>
-                <span><strong>{t('editor.history')}</strong><small>Base / Variant revision</small></span><b>›</b>
+                <span><strong>{editorScope === 'base' ? (appLocale === 'en' ? 'Base history' : '基础模板历史') : (appLocale === 'en' ? 'Current-page history' : '当前页面历史')}</strong><small>{editorScope === 'base' ? (appLocale === 'en' ? 'Base revisions only' : '仅基础模板版本') : (appLocale === 'en' ? 'Current-page revisions only' : '仅当前页面版本')}</small></span><b>›</b>
               </button>
             </div>
           </details>
@@ -1644,27 +1648,30 @@ export default function App() {
               />
             ) : null}
             {activeTool === 'history' ? (
-              <div className="revision-grid drawer-revision-grid">
-                <RevisionHistoryPanel
-                  resourceType="species_seo_group" resourceKey={selectedGroup?.group_key || ''} locale={contentLocale}
-                  schemaReady={historySchemaReady} readOnly={isReadOnlyDemoMode} refreshKey={revisionRefreshKey}
-                  onRestored={(row) => {
-                    if (!row?.group_key) return;
-                    const key = groupSeoRowKey(row.group_key, row.locale);
-                    setGroupSeoRows((current) => ({ ...current, [key]: row }));
-                    setGroupPreviewRows((current) => { const next = { ...current }; delete next[key]; return next; });
-                    setRevisionRefreshKey((current) => current + 1);
-                  }}
-                />
-                <RevisionHistoryPanel
-                  resourceType="species_seo" resourceKey={selectedSpecies?.catalog_key || ''} locale={contentLocale}
-                  schemaReady={historySchemaReady} readOnly={isReadOnlyDemoMode} refreshKey={revisionRefreshKey}
-                  onRestored={(row) => {
-                    if (!row?.catalog_key) return;
-                    setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
-                    setRevisionRefreshKey((current) => current + 1);
-                  }}
-                />
+              <div className="revision-grid drawer-revision-grid" data-testid="context-history-panel">
+                {editorScope === 'base' ? (
+                  <RevisionHistoryPanel
+                    resourceType="species_seo_group" resourceKey={selectedGroup?.group_key || ''} locale={contentLocale}
+                    schemaReady={historySchemaReady} readOnly={isReadOnlyDemoMode} refreshKey={revisionRefreshKey}
+                    onRestored={(row) => {
+                      if (!row?.group_key) return;
+                      const key = groupSeoRowKey(row.group_key, row.locale);
+                      setGroupSeoRows((current) => ({ ...current, [key]: row }));
+                      setGroupPreviewRows((current) => { const next = { ...current }; delete next[key]; return next; });
+                      setRevisionRefreshKey((current) => current + 1);
+                    }}
+                  />
+                ) : (
+                  <RevisionHistoryPanel
+                    resourceType="species_seo" resourceKey={selectedSpecies?.catalog_key || ''} locale={contentLocale}
+                    schemaReady={historySchemaReady} readOnly={isReadOnlyDemoMode} refreshKey={revisionRefreshKey}
+                    onRestored={(row) => {
+                      if (!row?.catalog_key) return;
+                      setSeoRows((current) => ({ ...current, [seoRowKey(row.catalog_key, row.locale)]: row }));
+                      setRevisionRefreshKey((current) => current + 1);
+                    }}
+                  />
+                )}
               </div>
             ) : null}
             {activeTool === 'workflow' ? (

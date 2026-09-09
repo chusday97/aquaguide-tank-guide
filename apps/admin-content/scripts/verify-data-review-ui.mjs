@@ -54,12 +54,32 @@ const runViewport = async (label, viewport) => {
   await coreSeo.waitFor();
   assert.equal(await coreSeo.evaluate(element => element.open), true, 'Core Search & indexing controls must be visible by default.');
   assert.match(await coreSeo.innerText(), /搜索展示[\s\S]*收录与 Canonical/);
+  assert.equal(await coreSeo.getByRole('button', { name: '本页自定义', exact: true }).count(), 3, 'Inherited Title/Description/H1 must expose three explicit current-page override choices.');
+  assert.equal(await coreSeo.getByRole('button', { name: '单独修改', exact: true }).count(), 0, 'Generic override copy must not remain visible.');
   assert.match(await page.locator('.live-preview-header').innerText(), /最终页面 = 基础模板 \+ 当前页面/, 'Preview header must explain the composed final-page ownership.');
   await page.getByRole('button', { name: '基础模板', exact: true }).last().click();
   assert.equal(await page.locator('.editor-scope-context').count(), 0, 'Base editor must not repeat ownership in a second impact strip.');
   assert.match(await page.locator('.base-task-header').innerText(), /基础模板[\s\S]*同组 4 个页面共用[\s\S]*修改后会同步影响同组页面/);
   assert.match(await page.locator('.live-preview-header').innerText(), /最终页面 = 基础模板 \+ 当前页面/);
+  const contextualTools = page.locator('.current-page-tools');
+  assert.match(await contextualTools.locator('summary').innerText(), /基础模板工具[\s\S]*最终页发布资格[\s\S]*基础模板历史/);
+  await contextualTools.evaluate(element => { element.open = true; });
+  await contextualTools.getByRole('button', { name: /基础模板历史/ }).click();
+  let ownershipDrawer = page.locator('.editor-tool-drawer');
+  await ownershipDrawer.waitFor();
+  assert.equal(await ownershipDrawer.locator('h2').innerText(), '基础模板版本历史');
+  assert.equal(await ownershipDrawer.getByTestId('context-history-panel').locator(':scope > *').count(), 1, 'Base history drawer must render exactly one Base authority panel.');
+  await ownershipDrawer.getByRole('button', { name: '关闭工具面板' }).click();
+
   await page.getByRole('button', { name: '当前页面', exact: true }).last().click();
+  assert.match(await contextualTools.locator('summary').innerText(), /当前页面工具[\s\S]*最终页发布资格[\s\S]*当前页面历史/);
+  await contextualTools.evaluate(element => { element.open = true; });
+  await contextualTools.getByRole('button', { name: /当前页面历史/ }).click();
+  ownershipDrawer = page.locator('.editor-tool-drawer');
+  await ownershipDrawer.waitFor();
+  assert.equal(await ownershipDrawer.locator('h2').innerText(), '当前页面版本历史');
+  assert.equal(await ownershipDrawer.getByTestId('context-history-panel').locator(':scope > *').count(), 1, 'Current-page history drawer must render exactly one current-page authority panel.');
+  await ownershipDrawer.getByRole('button', { name: '关闭工具面板' }).click();
   assert.equal(await page.locator('.editor-footer button').count(), 0, 'Editor footer must not duplicate top review actions.');
   assert.equal(await page.locator('.editor-panel .draft-safety-chip').count(), 0, 'Editor body must not repeat Draft status from the top review bar.');
   const topChromeHeight = async () => {
