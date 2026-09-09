@@ -95,6 +95,13 @@ try {
     const pairPublishedText = await page.locator('body').innerText();
     assert.match(pairPublishedText, /迷你鹦鹉鱼 × 虎皮鱼[\s\S]{0,300}谨慎混养/);
     assert.match(pairPublishedText, /Local baseline 4\/4/);
+    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
+    await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
+    const publishCenterText = await page.locator('body').innerText();
+    assert.match(publishCenterText, /Local submit\/review\/publish history 从当前本地 store 启用后持续记录/);
+    assert.match(publishCenterText, /Compatibility Profile reviewed authority 已发布/);
+    assert.match(publishCenterText, /Compatibility Pair Rule reviewed authority 已发布/);
+    assert.match(publishCenterText, /DEV Local Mode/);
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     assert.equal(overflow, 0, `Local Compatibility must not overflow at ${viewport.width}px.`);

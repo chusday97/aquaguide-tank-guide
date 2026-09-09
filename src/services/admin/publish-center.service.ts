@@ -1,5 +1,7 @@
 import type { ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
 import { apiRequest, AquaGuideApiError } from '../api/api-client';
+import { isLocalBusinessAdminMode, localBusinessAdminStore } from './local-business-admin.store';
+import { localCompatibilityAdminStore } from './local-compatibility-admin.store';
 
 type RepoResult<T> = { data: T | null; error?: { message?: string } | null };
 type SeoActivityRow = Record<string, any>;
@@ -103,6 +105,54 @@ const seoSource = (availability: ReleaseSourceStatusDto['availability'], detail:
   authority: 'seo', availability, coverage: 'activity_history', label: 'Species SEO Repo Admin', detail,
 });
 
+const localBusinessCapabilities: ReleaseCapabilityDto[] = [
+  { authority: 'product_care', stage: 'diff', state: 'available', label: 'Diff', detail: 'Local Draft 与 Published Snapshot 可直接比较。' },
+  { authority: 'product_care', stage: 'impact', state: 'available', label: 'Impact', detail: 'Local Change Impact Preview 与 Compatibility simulation 可用。' },
+  { authority: 'product_care', stage: 'preview', state: 'available', label: 'Preview', detail: 'Local Published Snapshot 与待发布内容可预览。' },
+  { authority: 'product_care', stage: 'review', state: 'partial', label: 'Review', detail: 'Local 模式保留发布确认，但没有独立 reviewer 身份。' },
+  { authority: 'product_care', stage: 'staging', state: 'not_applicable', label: 'Staging', detail: 'Local Product/Care 没有独立 Staging 层。' },
+  { authority: 'product_care', stage: 'production', state: 'locked', label: 'Production', detail: 'Local Mode 不能发布 Production。' },
+  { authority: 'compatibility', stage: 'diff', state: 'available', label: 'Diff', detail: 'Local revision 与 reviewed baseline Diff 可用。' },
+  { authority: 'compatibility', stage: 'impact', state: 'available', label: 'Impact', detail: 'Local structural Impact 与真实 engine Regression 可用。' },
+  { authority: 'compatibility', stage: 'preview', state: 'available', label: 'Preview', detail: 'Local before/after regression outcome 可用。' },
+  { authority: 'compatibility', stage: 'review', state: 'available', label: 'Review', detail: 'Local human Approve/Reject gate 可用。' },
+  { authority: 'compatibility', stage: 'staging', state: 'not_applicable', label: 'Staging', detail: 'Local Compatibility 没有独立 Staging 层。' },
+  { authority: 'compatibility', stage: 'production', state: 'locked', label: 'Production', detail: 'Local reviewed publish 只更新开发 runtime，不是 Production 发布。' },
+];
+
+const localBusinessPermissions: ReleasePermissionDto[] = [
+  { authority: 'product_care', role: 'local-dev', action: 'read_history', state: 'allowed', detail: 'DEV Local Mode 可读取本地 Product/Care 发布历史。' },
+  { authority: 'product_care', role: 'local-dev', action: 'edit_draft', state: 'allowed', detail: 'DEV Local Mode 可编辑 Product/Care Draft。' },
+  { authority: 'product_care', role: 'local-dev', action: 'review', state: 'allowed', detail: 'DEV Local Mode 可执行显式发布确认。' },
+  { authority: 'product_care', role: 'local-dev', action: 'publish_staging', state: 'not_applicable', detail: 'Local Product/Care 无独立 Staging。' },
+  { authority: 'product_care', role: 'local-dev', action: 'publish_reviewed', state: 'not_applicable', detail: 'Product/Care 使用 Published Snapshot。' },
+  { authority: 'product_care', role: 'local-dev', action: 'publish_production', state: 'locked', detail: 'Local Mode 禁止 Production publish。' },
+  { authority: 'compatibility', role: 'local-dev', action: 'read_history', state: 'allowed', detail: 'DEV Local Mode 可读取 Compatibility revision history。' },
+  { authority: 'compatibility', role: 'local-dev', action: 'edit_draft', state: 'allowed', detail: 'DEV Local Mode 可编辑 Compatibility revision。' },
+  { authority: 'compatibility', role: 'local-dev', action: 'review', state: 'allowed', detail: 'DEV Local Mode 可执行 human Approve/Reject。' },
+  { authority: 'compatibility', role: 'local-dev', action: 'publish_staging', state: 'not_applicable', detail: 'Local Compatibility 无独立 Staging。' },
+  { authority: 'compatibility', role: 'local-dev', action: 'publish_reviewed', state: 'allowed', detail: 'Local reviewed publish 只更新开发 runtime bootstrap。' },
+  { authority: 'compatibility', role: 'local-dev', action: 'publish_production', state: 'locked', detail: 'Local Mode 禁止 Production publish。' },
+];
+
+const loadLocalBusinessReleaseFeed = async (limit: number): Promise<ReleaseFeedDto> => {
+  const [productCareEvents, compatibilityEvents] = await Promise.all([
+    localBusinessAdminStore.getReleaseEvents(),
+    localCompatibilityAdminStore.getReleaseEvents(),
+  ]);
+  return {
+    events: [...productCareEvents, ...compatibilityEvents]
+      .sort((a, b) => Date.parse(b.occurredAt) - Date.parse(a.occurredAt))
+      .slice(0, limit),
+    sources: [
+      { authority: 'product_care', availability: 'ready', coverage: 'revision_history', label: 'Product / Care Local authority', detail: 'Local publish/archive history 从当前本地 store 启用后持续记录；来自浏览器持久化 Published Snapshot authority，不依赖 Supabase。' },
+      { authority: 'compatibility', availability: 'ready', coverage: 'revision_history', label: 'Compatibility Local revisions', detail: 'Local submit/review/publish history 从当前本地 store 启用后持续记录；来自 Compatibility revision store，reviewed publish 只更新开发 runtime。' },
+    ],
+    capabilities: localBusinessCapabilities,
+    permissions: localBusinessPermissions,
+  };
+};
+
 const loadSeoReleaseFeed = async (limit = 100): Promise<ReleaseFeedDto> => {
   const session = await repoRequest<{ configured?: boolean; session?: { user?: { email?: string } } | null }>('/api/admin-content/session', { method: 'GET' });
   if (!session.response.ok || !session.payload?.session) {
@@ -124,7 +174,9 @@ const loadSeoReleaseFeed = async (limit = 100): Promise<ReleaseFeedDto> => {
 export const publishCenterService = {
   async load(limit = 120): Promise<ReleaseFeedDto> {
     const [business, seo] = await Promise.allSettled([
-      apiRequest<ReleaseFeedDto>(`/admin/releases?limit=${Math.max(20, Math.min(200, limit))}`),
+      isLocalBusinessAdminMode
+        ? loadLocalBusinessReleaseFeed(limit)
+        : apiRequest<ReleaseFeedDto>(`/admin/releases?limit=${Math.max(20, Math.min(200, limit))}`),
       loadSeoReleaseFeed(limit),
     ]);
     const businessFailureAvailability = business.status === 'rejected' && business.reason instanceof AquaGuideApiError

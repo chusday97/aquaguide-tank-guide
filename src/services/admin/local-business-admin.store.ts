@@ -1,4 +1,4 @@
-import { careArticleAdminInputSchema, speciesAdminInputSchema, type CareArticleDetailDto, type SpeciesDetailDto } from '../../../packages/contracts/src';
+import { careArticleAdminInputSchema, speciesAdminInputSchema, type CareArticleDetailDto, type ReleaseEventDto, type SpeciesDetailDto } from '../../../packages/contracts/src';
 import { fishData } from '../../data/fishData';
 import { careTopicsData } from '../../data/careTopicsData';
 import type { Fish } from '../../types';
@@ -17,6 +17,7 @@ type LocalBusinessAdminState = {
   care: AdminCareArticleRecord[];
   publishedSpecies: Record<string, SpeciesAdminInput>;
   publishedCare: Record<string, CareArticleAdminInput>;
+  releaseEvents?: ReleaseEventDto[];
   updatedAt: string;
 };
 const numberRange = (value: string): [number | undefined, number | undefined] => {
@@ -68,7 +69,7 @@ const buildSeedState = (): LocalBusinessAdminState => {
   return {
     schemaVersion: 1, species: speciesInputs.map(input => speciesRecord(input)), care: careInputs.map(input => careRecord(input)),
     publishedSpecies: Object.fromEntries(speciesInputs.map(input => [input.catalogKey, input])),
-    publishedCare: Object.fromEntries(careInputs.map(input => [input.catalogKey, input])), updatedAt: now(),
+    publishedCare: Object.fromEntries(careInputs.map(input => [input.catalogKey, input])), releaseEvents: [], updatedAt: now(),
   };
 };
 const readState = (): LocalBusinessAdminState => {
@@ -82,6 +83,7 @@ const readState = (): LocalBusinessAdminState => {
     }
     const parsed = JSON.parse(raw) as LocalBusinessAdminState;
     if (parsed?.schemaVersion !== 1 || !Array.isArray(parsed.species) || !Array.isArray(parsed.care)) throw new Error('invalid local admin store');
+    parsed.releaseEvents = Array.isArray(parsed.releaseEvents) ? parsed.releaseEvents : [];
     return parsed;
   } catch {
     const seeded = buildSeedState();
@@ -97,6 +99,10 @@ const writeState = (state: LocalBusinessAdminState) => {
 
 const assertVersion = (actual: number, expected: number) => {
   if (actual !== expected) throw new AquaGuideApiError(409, 'VERSION_CONFLICT', '本地内容已变化，请刷新后再保存。');
+};
+
+const appendReleaseEvent = (state: LocalBusinessAdminState, event: ReleaseEventDto) => {
+  state.releaseEvents = [event, ...(state.releaseEvents || [])].slice(0, 200);
 };
 
 const clone = <T>(value: T): T => structuredClone(value);
@@ -141,6 +147,7 @@ export const localBusinessAdminStore = {
   listSpecies: async () => clone(readState().species),
   listCareArticles: async () => clone(readState().care),
   getPublishedCompatibilityFish: async () => clone(publishedFishFromState(readState())),
+  getReleaseEvents: async () => clone(readState().releaseEvents || []),
 
   getPublishedSpecies: async (catalogKey: string) => {
     const state = readState();
@@ -217,6 +224,16 @@ export const localBusinessAdminStore = {
         });
       } else delete state.publishedCare[care.catalogKey];
     }
+    const resource = next as AdminSpeciesRecord | AdminCareArticleRecord;
+    appendReleaseEvent(state, {
+      id: `local-product-care:${type}:${resource.catalogKey}:${resource.version}:${Date.now()}`,
+      authority: 'product_care', domain: type === 'care' ? 'care' : 'product',
+      eventType: status === 'published' ? 'publication_publish' : 'publication_archive', status,
+      title: `${type === 'care' ? 'Care' : 'Product'} ${status === 'published' ? '发布版本' : '已下线'}`,
+      detail: `${resource.catalogKey} · source v${resource.version}`, resourceKey: resource.catalogKey, version: resource.version,
+      occurredAt: now(), sourceRef: `local:${type}:${resource.id}:${resource.version}`,
+      metadata: { resourceId: resource.id, historyCoverage: 'revision_history', local: true },
+    });
     writeState(state);
     return clone(next) as AdminSpeciesRecord | AdminCareArticleRecord;
   },

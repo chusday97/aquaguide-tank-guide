@@ -3,6 +3,7 @@ import { ArrowLeft, Clock3, Database, Loader2, RefreshCw, Search, ShieldCheck } 
 import { useNavigate } from 'react-router-dom';
 import type { ReleaseAuthority, ReleaseCapabilityDto, ReleaseEventDto, ReleaseFeedDto, ReleasePermissionDto, ReleaseSourceStatusDto, ReleaseStage } from '../../packages/contracts/src';
 import { publishCenterService } from '../services/admin/publish-center.service';
+import { isLocalBusinessAdminMode } from '../services/admin/local-business-admin.store';
 import { getRelatedReleaseEvents } from '../services/admin/release-coordination';
 
 const authorityLabel: Record<ReleaseAuthority, string> = {
@@ -71,7 +72,7 @@ export default function PublishCenter() {
           <button type="button" onClick={() => void load()} disabled={loading} className="flex h-10 items-center gap-2 rounded-full border border-emerald-200 bg-white px-4 text-sm font-black text-emerald-800 disabled:opacity-50"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />刷新</button>
         </header>
         <section className="mt-4 rounded-[20px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold leading-6 text-amber-950">
-          Publish Center 只聚合已有发布权威，不创建新的写入口。Product/Care 与 Compatibility 继续由 Business API / Supabase 管理；SEO 继续由独立 Repo Admin 管理。
+          Publish Center 只聚合已有发布权威，不创建新的写入口。{isLocalBusinessAdminMode ? '当前 DEV Local Mode：Product/Care 与 Compatibility 使用本地 authority；SEO 仍使用独立 Repo Admin。Production authority 不变。' : 'Product/Care 与 Compatibility 继续由 Business API / Supabase 管理；SEO 继续由独立 Repo Admin 管理。'}
         </section>
 
         <section data-testid="publish-center-source-status" className="mt-4 grid gap-3 md:grid-cols-3">

@@ -94,6 +94,12 @@ try {
     const carePublished = await page.evaluate(([key, catalogKey]) => JSON.parse(localStorage.getItem(key) || '{}').publishedCare[catalogKey], [storageKey, careKey]);
     assert.equal(carePublished.steps[0].actionTitle, '观察状态');
     assert.equal(carePublished.steps[0].actionKind, 'observe', 'Care actionKind must survive Local Draft → publish round-trip.');
+    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
+    await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
+    const publishCenterText = await page.locator('body').innerText();
+    assert.match(publishCenterText, /Local publish\/archive history 从当前本地 store 启用后持续记录/);
+    assert.match(publishCenterText, /Care 发布版本/);
+    assert.match(publishCenterText, /DEV Local Mode/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     assert.equal(overflow, 0, `Local Admin must not overflow at ${viewport.width}px.`);
     assert.deepEqual(errors, []);
