@@ -790,3 +790,9 @@
 - Marketing 的“理解饲养”卡片已改为用户视角的主题阅读说明；Marketing 与 Category 页脚改为“资料说明”，不再把后台审核流程直接呈现给用户。
 - 通过 lint、公开契约、build 与 diff-check；未改变 Product Truth、Published 聚合、路由或索引策略。
 - 当前仍需在可用 viewport 浏览器中复核三档布局，并完成独立 Critic 与 Figma Canonical 门禁。
+
+## 2026-09-10 公开文案自动门禁
+
+- 新增 `npm run test:public-seo-copy`，覆盖四个公开页面文件，阻止 Product Truth、Base Species、Publish Gate、审核流程等后台表达进入用户文案，并检查 Guide 准备态三个不同阅读预期。
+- 通过公开文案、契约、Editorial、Evidence、lint 与 diff-check；用户未提交的素材/截图脚本仍未纳入。
+- 下一步仍是可调整 viewport 浏览器回归、Figma Canonical 和可读独立 Critic。

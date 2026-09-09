@@ -889,6 +889,13 @@
 - [x] 通过公开契约、Editorial、Evidence、lint 与 diff-check；未改变内容门禁或 `noindex,follow`。
 - [ ] 自动化三档浏览器、Figma Canonical 和独立 Critic 仍未完成。
 
+## 2026-09-10 公开 SEO 文案回归门禁
+
+- [x] 新增 `npm run test:public-seo-copy`，扫描 Marketing、Category、Species、Guide 的公开源码，阻止后台术语和流程化措辞进入用户页面。
+- [x] 回归检查 Guide 准备态的三个阅读入口均存在且说明不重复。
+- [x] 通过公开文案、公开契约、Editorial、Evidence、lint 与 diff-check；未改变事实、路由或索引策略。
+- [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-10 宝莲灯公开行为文案去流程化
 
 - [x] 将宝莲灯公开行为卡和生活习性答案中的“已核对资料/现有审核记录”改为直接的用户答案。

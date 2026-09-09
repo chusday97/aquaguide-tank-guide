@@ -77,6 +77,7 @@
 - `src/pages/AdminContent.tsx`：受管理员权限保护的独立内容后台页面，不进入普通用户导航。
 - `src/components/common/RouteErrorBoundary.tsx`：核心路由隔离、友好重试、会话诊断复制与坏数据恢复提示。
 - `src/components/common/ResilientImage.tsx`：图片骨架、单次重试与本地占位兜底。
+- `scripts/test-public-seo-copy.mjs`：公开 SEO 文案与 Guide 准备态结构回归门禁。
 - `src/services/diagnostics/`：`chunk / render / image / data` 会话级失败分类与脱敏诊断。
 - `public/responsive/`：物种 256/768px 与养护 480/960px WebP 衍生资源；原图继续保留。
 
