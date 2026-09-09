@@ -1,5 +1,14 @@
 # Execution Log
 
+## 2026-09-09 — Local Product/Care asset persistence checkpoint
+- Functional commit `2d26b1ca feat(admin): add local asset persistence`.
+- Product/Care main-image Blob data now persists in browser IndexedDB; Local Business records keep lightweight version/current metadata only. Large image data is not stored in localStorage.
+- Upload/replace mirrors the deployed publication boundary: the working record returns to Draft, the previous Local Published image remains unchanged, and only explicit Publish advances the Published asset snapshot. Replacing v1 with v2 keeps v1 public locally until the next publish.
+- Local Published Product/Care DTOs resolve current Published image metadata back to usable `blob:` URLs. Product and Care browser acceptance passes after reload while cloud Admin APIs are forced unavailable.
+- Production asset authority is unchanged: deployed uploads still use `/api/v1/admin/assets`; Local asset routing is DEV-only and covered by contract.
+- PASS: Local Product/Care, Compatibility, Care SEO and asset Heavy regressions; Operations/Publish Center/Care SEO/SEO Registry contracts; root/API TypeScript; full root build; diff/security hygiene.
+- NEXT: decide whether browser localStorage + IndexedDB should be promoted to Repo/local-file persistence for durable single-machine operations. Supabase Staging remains parked.
+
 ## 2026-09-09 — Local Care SEO Editorial checkpoint
 - Functional commit `691c4b43 feat(admin): add local care seo editorial`.
 - zh-CN Local Published Care now drives deterministic SEO projection plus Draft→Review→Approved Editorial persistence; index stays noindex.

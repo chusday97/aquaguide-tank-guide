@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-09 Local-first execution
-The active objective is now **finish Aqua Operations Studio as a self-contained local development/acceptance environment without Supabase as a prerequisite**. Functional checkpoint: `691c4b43`.
+The active objective is now **finish Aqua Operations Studio as a self-contained local development/acceptance environment without Supabase as a prerequisite**. Functional checkpoint: `2d26b1ca`.
 
 Completed in the current local-first phase:
 1. Product/Care Local authority: canonical 486/41 seed, Draft isolation, Published Snapshot, refresh persistence, Operations WorkItem and publish boundary.
@@ -14,10 +14,10 @@ Completed in the current local-first phase:
 Completed additionally:
 6. Local Publish Center at `174cf174`: local Product/Care publish/archive events + Compatibility submit/review/publish events, with the existing SEO Repo feed unchanged and no new write authority.
 7. Local Care SEO Editorial at `691c4b43`: zh-CN Published Care snapshot binding, Draft→Review→Approved, source-drift recovery, local health-index integration, noindex lock, English/AI fail-closed.
+8. Local Product/Care main-image persistence at `2d26b1ca`: Blob data in IndexedDB, lightweight asset metadata/versioning in the Local Business store, Draft/Published image isolation, local runtime blob URLs, and Production asset API unchanged.
 
 NEXT milestones:
-1. Local image/file persistence for Product/Care assets.
-2. Decide whether browser localStorage is sufficient for acceptance only or should be promoted to Repo/local-file persistence for durable single-machine use.
+1. Decide whether browser localStorage + IndexedDB is sufficient for acceptance only or should be promoted to Repo/local-file persistence for durable single-machine use.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

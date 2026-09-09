@@ -2,11 +2,11 @@
 
 
 ## CURRENT OVERRIDE — Local-first checkpoint (2026-09-09)
-- Latest Local-first functional HEAD: `691c4b43404f3c9e1acbbeca27b6a2f6b3495aea` (Local Care SEO Editorial).
-- Live remote feature before docs sync/push: `36498d456c6d840abd234a54cc42a142cee0d83a`.
+- Latest Local-first functional HEAD: `2d26b1ca58665aa59825d757ead7cc599e88596f` (Local Product/Care asset persistence).
+- Live remote feature before docs sync/push: `30ff0119a390b9007a9ab7d5a435f8b7bb335fa2`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Explicit-ref relation at functional checkpoint: local vs remote feature = `ahead 1 / behind 0`; main vs local = `275 main-only / 257 feature-only`.
-- Merge base with remote feature is exactly `36498d45`; ordinary fast-forward push is safe.
+- Explicit-ref relation at functional checkpoint: local vs remote feature = `ahead 1 / behind 0`; main vs local = `275 main-only / 259 feature-only`.
+- Merge base with remote feature is exactly `30ff0119`; ordinary fast-forward push is safe.
 - No merge/rebase main, no force push, no Production/live DB/indexing mutation.
 
 Updated: 2026-09-09
