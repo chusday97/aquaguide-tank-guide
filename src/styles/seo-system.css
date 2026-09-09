@@ -279,6 +279,18 @@
   animation: seo-reveal-in var(--seo-motion-section) var(--seo-motion-ease) var(--seo-reveal-delay, 0ms) both;
 }
 
+.seo-stagger > * {
+  opacity: 1;
+  transform: none;
+}
+
+.seo-reveal--visible .seo-stagger > * {
+  animation: seo-reveal-in var(--seo-motion-section) var(--seo-motion-ease) both;
+}
+
+.seo-stagger > :nth-child(2) { animation-delay: 80ms; }
+.seo-stagger > :nth-child(3) { animation-delay: 160ms; }
+
 .seo-disclosure__trigger {
   display: flex;
   width: 100%;
