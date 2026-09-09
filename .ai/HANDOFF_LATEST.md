@@ -2,23 +2,23 @@
 
 
 ## CURRENT OVERRIDE — Local-first Aqua Operations Studio (2026-09-09)
-Functional checkpoint: `fdfa25fb feat(admin): add local operations authority`.
+Functional checkpoint: `691c4b43 feat(admin): add local care seo editorial`.
 - Current product iteration no longer depends on provisioning AquaGuide Supabase Staging. Staging work is parked, not deleted.
 - Run root Admin locally with `VITE_ADMIN_LOCAL_MODE=true`; the switch is DEV-only and fail-closed in production builds.
 - Product/Care: 486 Species + 41 Care canonical seed, Draft persistence, separate Published Snapshot, save→refresh→Operations WorkItem→publish acceptance. Care step `actionTitle/actionKind` round-trip is protected.
 - Compatibility: 7 reviewed Profiles + 4 Pair Rules, local Draft→Impact→real engine Regression→Evidence→Review→Publish; publish hydrates the existing reviewed runtime bootstrap. Verified Profile regression = 1455 scenarios; verified Pair regression = 3 scenarios / 3 changes.
 - Operations Home deep-links exact local Product/Care and Compatibility work items. Local source readiness is not overridden by Supabase schema status.
 - Cloud `/api/v1/**` and `/api/admin-content/**` can be unavailable and both Local browser regressions still pass.
-- Local mode currently does not write images and does not provide Local Care SEO Editorial persistence. Production/main/live DB remain untouched.
+- Local mode still does not write image assets. Care SEO Editorial is now local: zh-CN Published Care → SEO Draft → Review → Approved, noindex locked, English/AI fail-closed, and Published-source drift is enforced. Production/main/live DB remain untouched.
 - Local Publish Center is now complete at `174cf174`: Product/Care publish/archive and Compatibility submit/review/publish history are read from local authority stores; SEO keeps its separate Repo Admin feed; Production remains locked.
-- NEXT: Care SEO Editorial local adapter → image local-file persistence. Only after that decide whether localStorage should be promoted to Repo/local-file persistence for durable single-machine operation.
+- NEXT: image local-file persistence for Product/Care assets. After that decide whether browser localStorage should be promoted to Repo/local-file persistence for durable single-machine operation.
 
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `fdfa25fbef88c0b62d299fbdb6a1bbe24e17b316`
+Current Operations Studio functional HEAD: `691c4b43404f3c9e1acbbeca27b6a2f6b3495aea`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

@@ -12,7 +12,7 @@
 - [x] DEV-only local mode guard; production cannot enable local authority from the Vite flag alone.
 - [x] Heavy browser tests run with cloud Admin APIs unavailable.
 - [x] Local Publish Center aggregation/readiness/history (`174cf174`): Product/Care + Compatibility local release events, SEO Repo feed unchanged, Production locked.
-- [ ] Care SEO Editorial local persistence/readiness.
+- [x] Care SEO Editorial local persistence/readiness (`691c4b43`): zh-CN Draft→Review→Approved, source version binding/drift, health-index integration, noindex lock, English/AI fail-closed.
 - [ ] Local image/file storage for Product/Care assets.
 - [ ] Decide/implement Repo or local-file persistence if Local Mode is to become durable single-machine operations rather than browser-scoped acceptance.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.

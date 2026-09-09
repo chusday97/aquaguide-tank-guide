@@ -4,11 +4,11 @@
 ## 2026-09-09 Local-first development authority override
 - **Production authority is unchanged.** Product/Care + Compatibility still use the Business API authority in deployed environments; Species SEO remains Repo-backed.
 - Local development/acceptance now has an explicit DEV-only adapter: `import.meta.env.DEV === true && VITE_ADMIN_LOCAL_MODE === "true"`. A production build cannot enable it from the Vite flag alone.
-- In Local Mode, Product/Care use a browser-persisted working store with a separate Published Snapshot; Compatibility uses an isolated local revision store with structural Impact, real `tankCompatibilityEngine` Regression, canonical Evidence, human review and runtime bootstrap publish.
+- In Local Mode, Product/Care use a browser-persisted working store with a separate Published Snapshot; Compatibility uses an isolated local revision store with structural Impact, real `tankCompatibilityEngine` Regression, canonical Evidence, human review and runtime bootstrap publish. Care SEO Editorial uses the Local Published Care snapshot as its only source and preserves Draft→Review→Approved plus source-drift semantics.
 - Operations Home consumes these local authorities directly and does not let unavailable Supabase Publish Center readiness override local Product/Care/Compatibility readiness.
 - Local Product/Care seed is the existing canonical catalog (486 Species / 41 Care). Local Compatibility starts from the existing reviewed 7 Profile / 4 Pair baseline. No duplicate business-rule fixture becomes authority.
 - Supabase Staging remains a future cloud/multi-operator validation path and is **parked for current product iteration**. Local Mode is for single-machine development/acceptance; it is not a replacement for Production persistence/auth/audit.
-- Current gaps before a durable fully-local operator environment: Local Publish Center history/readiness, Care SEO Editorial local persistence, image file storage, and (if long-term single-machine use is desired) promotion from browser localStorage to Repo/local-file persistence.
+- Current gaps before a durable fully-local operator environment: image file storage, and (if long-term single-machine use is desired) promotion from browser localStorage to Repo/local-file persistence. Local Publish Center and Care SEO Editorial are now available in DEV Local Mode.
 
 Updated: 2026-09-09
 Status: canonical product-operations architecture contract

@@ -1,5 +1,14 @@
 # Execution Log
 
+## 2026-09-09 — Local Care SEO Editorial checkpoint
+- Functional commit `691c4b43 feat(admin): add local care seo editorial`.
+- zh-CN Local Published Care now drives deterministic SEO projection plus Draft→Review→Approved Editorial persistence; index stays noindex.
+- Saving a Care Draft does not drift SEO; publishing a new Care version marks the old Editorial stale and requires an explicit new Draft bound to the new Published source.
+- Local English Published Care and Local AI Assist remain fail-closed; Care SEO health is visible through the read-only SEO Registry/Operations aggregation.
+- Operations attention sorting now keeps active Product/Care and Compatibility work ahead of generic SEO-attention queues while blocker/decision priority is unchanged.
+- Heavy browser regression passes with cloud Admin APIs forced unavailable. Production/main/live DB untouched.
+- NEXT: Product/Care image local-file persistence.
+
 ## 2026-09-09 — Local Publish Center checkpoint
 - Functional commit `174cf174 feat(admin): add local publish center history`.
 - Product/Care local publish/archive and Compatibility local submit/review/publish events now feed `/admin/publish-center`.
