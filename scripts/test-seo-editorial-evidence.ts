@@ -31,6 +31,19 @@ assert.equal(cardinalSource?.sourceQuality, 'eligible');
 assert.match(cardinalSource?.support || '', /中层水域成群活动/);
 assert.match(cardinalSource?.support || '', /蠕虫和小型甲壳类/);
 
+const ufSource = getSpeciesEditorialSource('uf-ifas-neocaridina-davidi-2025');
+assert.equal(ufSource?.publisher, 'University of Florida IFAS Extension');
+assert.equal(ufSource?.sourceQuality, 'eligible');
+assert.match(ufSource?.support || '', /淡水物种身份/);
+assert.match(ufSource?.support || '', /台湾淡水溪流分布/);
+assert.match(ufSource?.support || '', /取食和行为概述/);
+
+const usgsSource = getSpeciesEditorialSource('usgs-nas-neocaridina-davidi-2026');
+assert.equal(usgsSource?.publisher, 'U.S. Geological Survey Nonindigenous Aquatic Species Database');
+assert.equal(usgsSource?.sourceQuality, 'eligible');
+assert.match(usgsSource?.support || '', /多种环境/);
+assert.match(usgsSource?.support || '', /机会性杂食/);
+
 const fireProfile = getPublishedSpeciesProfile(getSpeciesLandingSelection('sp_0001')!, 'zh-CN');
 const cardinalProfile = getPublishedSpeciesProfile(getSpeciesLandingSelection('sp_0432')!, 'zh-CN');
 const yellowProfile = getPublishedSpeciesProfile(getSpeciesLandingSelection('sp_0001', 'sp_0030')!, 'zh-CN');

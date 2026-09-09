@@ -855,4 +855,5 @@
 - 宝莲灯的“中层活动”和“取食蠕虫及小型甲壳类”已由 FishBase 物种摘要页直接复核；本地来源登记已统一到主域名 `fishbase.org`，不改变页面结论范围。
 - 本轮只更新来源登记与证据记录，不新增行为事实、不修改 Product Truth、路由或索引策略。
 - Editorial 回归现在同时保护 FishBase 主域名、`eligible` 状态和“中层活动/蠕虫及小型甲壳类”支持范围。
+- UF/IFAS 与 USGS 的来源资格及其对极火虾身份、栖息与机会性取食的支持范围也已纳入 Editorial 回归；未新增未经来源支持的习性。
 - 仍未完成：真实三档截图、可读独立 Critic、Figma Canonical；继续保持 `noindex,follow`。
