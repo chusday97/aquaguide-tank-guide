@@ -854,3 +854,9 @@
 - [x] 内置浏览器确认首页 Hero 可见真实极火虾图片、中文 Alt、品牌文案与两个入口；公开页面仍不读取鱼缸状态。
 - [x] `npm run lint`、`npm run build`、`npm run test:public-seo-contract`、`npm run test:seo-evidence-bindings` 与 `git diff --check` 通过。
 - [ ] 宝莲灯仍因素材未完成用途级人工确认而显示 fallback；Guide 仍为内容准备态；系统 Playwright 三档截图、Figma Canonical 和可读独立 Critic 仍是发布门禁。
+
+## 2026-09-10 公开 SEO 相关内容标题收口
+
+- [x] `SeoRelatedLinks` 移除重复的眉题，只保留正式 H2；Species、Marketing 等公开页面的“继续探索”区不再重复显示同一标题。
+- [x] `npm run lint`、`npm run test:public-seo-contract`、`npm run test:seo-editorial-evidence`、`npm run test:seo-evidence-bindings`、`npm run build` 与 `git diff --check` 通过。
+- [ ] 系统 Playwright 三档截图、Figma Canonical 和可读独立 Critic仍未完成，页面继续 `noindex,follow`。
