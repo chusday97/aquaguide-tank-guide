@@ -39,7 +39,7 @@ const reviewedTraitsFor = (speciesId: string): PublishedSpeciesTrait[] => {
         id: `${speciesId}-shoaling`,
         label: '群游倾向',
         value: evidence.minimumGroupSize ? `建议至少 ${evidence.minimumGroupSize} 条` : '群体活动',
-        summary: '已核对资料将其记录为群游鱼；群体规模是理解其行为的前提。',
+        summary: '它有群游倾向；一起饲养时，建议至少保持这个群体规模。',
         sourceIds,
       };
     }
@@ -47,7 +47,7 @@ const reviewedTraitsFor = (speciesId: string): PublishedSpeciesTrait[] => {
       id: `${speciesId}-${trait}`,
       label: '行为特征',
       value: trait,
-      summary: '该行为标签来自已核对的物种证据。',
+      summary: '这是它在物种资料中呈现出的行为特征。',
       sourceIds,
     };
   }).filter((trait): trait is PublishedSpeciesTrait => Boolean(trait));
@@ -76,7 +76,7 @@ const lifeProfileFor = (baseSpeciesId: string): PublishedSpeciesLifeProfile | un
     const evidence = getReviewedCompatibilityProfile(baseSpeciesId);
     const binding = getSeoEvidenceEntry(baseSpeciesId, 'reviewedTraits.shoaling');
     if (evidence && binding && evidence.minimumGroupSize) {
-      profile.social = lifeAnswer(binding.binding.sourceFingerprint, `它有群游倾向，现有审核记录建议至少 ${evidence.minimumGroupSize} 条一起活动。`, binding.binding.sourceIds, binding.binding.confirmedAt);
+      profile.social = lifeAnswer(binding.binding.sourceFingerprint, `它有群游倾向，建议至少 ${evidence.minimumGroupSize} 条一起活动。`, binding.binding.sourceIds, binding.binding.confirmedAt);
     }
     const activity = getConfirmedSpeciesEditorialEvidence(baseSpeciesId).find(entry => entry.field === 'activity');
     if (activity) profile.activity = lifeAnswer(activity.sourceFingerprint, activity.renderedClaim, activity.sourceIds, activity.confirmedAt || '');

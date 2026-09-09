@@ -28,6 +28,8 @@
 - Verified: 未改变未审核内容门禁或结构化数据；lint、公开契约、Editorial、Evidence、build 与 diff-check 通过。
 - Changed: Category 入口和 Species metadata fallback 改为用户语言，移除“公开路径/已核对”等流程化表达。
 - Verified: 内容、证据、路由和 `noindex,follow` 不变；公开契约、Editorial、Evidence、lint 与 diff-check 通过。
+- Fixed: 宝莲灯公开行为卡和生活习性答案移除“已核对资料/现有审核记录”等流程化措辞，改为直接用户答案。
+- Verified: 来源 ID、fingerprint、结论范围和索引门禁不变；公开契约、Editorial、Evidence、lint 与 diff-check 通过。
 - Changed: Marketing 与 Category 的公开说明改为“资料说明”，并将 Marketing 的饲养能力文案改成用户可理解的主题阅读预期。
 - Verified: 未引入后台审核术语或事实内容；lint、公开契约、build 与 diff-check 通过。
 

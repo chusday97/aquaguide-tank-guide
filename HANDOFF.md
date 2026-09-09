@@ -779,6 +779,12 @@
 - Category 的公开路径说明和 Species metadata fallback 已改为用户语言，不再把“公开路径/已核对”作为用户页面表达。
 - 通过公开契约、Editorial、Evidence、lint 与 diff-check；Product Truth、证据绑定、路由与 `noindex,follow` 未改变。
 
+## 2026-09-10 宝莲灯公开行为答案收口
+
+- 宝莲灯公开的群游描述已改为直接回答“它有群游倾向，建议至少 5 条一起活动”，不再显示审核流程措辞。
+- 同一来源 ID 与 fingerprint 保持不变；这只是公开呈现层修复，不是新增生物事实。
+- 公开契约、Editorial、Evidence、lint 与 diff-check 通过；浏览器三档、Figma Canonical 和独立 Critic 仍待完成。
+
 ## 2026-09-10 Marketing / Category 公开文案收口
 
 - Marketing 的“理解饲养”卡片已改为用户视角的主题阅读说明；Marketing 与 Category 页脚改为“资料说明”，不再把后台审核流程直接呈现给用户。

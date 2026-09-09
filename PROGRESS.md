@@ -888,3 +888,10 @@
 - [x] 物种页 metadata fallback 移除“已核对”措辞，改为基础信息与饲养参考描述。
 - [x] 通过公开契约、Editorial、Evidence、lint 与 diff-check；未改变内容门禁或 `noindex,follow`。
 - [ ] 自动化三档浏览器、Figma Canonical 和独立 Critic 仍未完成。
+
+## 2026-09-10 宝莲灯公开行为文案去流程化
+
+- [x] 将宝莲灯公开行为卡和生活习性答案中的“已核对资料/现有审核记录”改为直接的用户答案。
+- [x] 保留原有来源 ID、证据绑定和 fingerprint；未扩大“群游倾向”结论。
+- [x] 公开契约、Editorial、Evidence、lint 与 diff-check 通过。
+- [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
