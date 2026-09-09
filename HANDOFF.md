@@ -1,16 +1,16 @@
 ## 2026-09-09 Species SEO 干净 Preview 候选
 
-- 远端状态：Draft PR #147 已创建；首个 Vercel Preview 精确绑定 `e6742188`，但 foundation 因 `package.json` 缺 main 门禁脚本失败。
-- 当前修复：已恢复 latest-main 的完整 scripts，SEO 测试/字体保持增量；本地 foundation 等价链路通过，待提交推送后观察新 CI/Preview。
+- 远端状态：Draft PR #147 的稳定提交为 `01d71f12`；`foundation`、`validate`、Vercel、Cloudflare 和 GP-001…GP-005 全部通过，PR 保持 Draft，未合并。
+- Preview parity：本地、远端、PR head 与 READY Vercel deployment 均为 `01d71f12e3538b445b673b8b81acfa5067e6c338`；目标为 `https://aquaguide-pwq75dpnl-chusday97s-projects.vercel.app`。
 - 第二个回归：CI `validate` 发现旧 SEO App Shell 覆盖导致 GP-002 失败；已恢复 main 的 App/Encyclopedia/SpeciesDetail/CSS Owner，只保留 Public SEO 路由增量。GP-001…GP-005、Care、Species 三档和 Public/App 全路由本地生产预览已通过。
 - 托管证据：精确 SHA Preview 的六条公开路由均为 HTTP 200 且带 `x-robots-tag:noindex`；本机 Chrome/Codex Browser 对 Vercel 域名返回 `ERR_CONNECTION_CLOSED`，因此托管截图与 CWV 尚未完成。
 - Preview 安全证据：Vercel 项目只读列表显示 Supabase/Postgres 变量仅属于 `Production`，不属于 `Preview`；公开 SEO 路由仍需在托管 Preview 记录零 Supabase/登录/鱼缸请求。
 - 当前分支：`codex/species-seo-preview-v1`，基于最新 `origin/main@d3c70dee` 的独立 worktree。
 - 已完成：公开 SEO 页面、中文视觉系统、Species 证据/素材门禁和专项测试移植；保留 main 的 App Shell 类型与兼容性能力。
 - 已验证：lint、SEO 证据、公开契约、素材门禁、build、内置浏览器三条 Species 路径 × 390/600/1440 均通过；页面保持 `noindex,follow`。
-- 未完成：Preview parity、托管 Preview 网络边界、独立 Critic、Figma Canonical、关键词归属和索引放行。
+- 未完成：托管 Preview 浏览器截图/网络瀑布/CWV、可读独立 Critic、Figma Canonical、关键词归属和索引放行。
 - 已完成：`scripts/check-preview-parity.mjs` 改为必须显式 `PREVIEW_PR`，严格校验本地/远端/PR/READY Preview SHA；缺少任何一项即失败。
-- 当前阻塞：App Shell 修复尚未提交推送；随后需 PR #147 全绿、最新 SHA parity、托管浏览器证据与独立 Critic。不解除索引、不合并。
+- 当前阻塞：本机 Chrome/Codex Browser 访问 Vercel 域名为 `ERR_CONNECTION_CLOSED`；独立 Critic 持续运行但没有返回可读报告，已关闭并记录为基础设施阻塞。不解除索引、不合并。
 - 禁止项：不改 `main`、不改 Production Supabase、不合并、不部署 Production、不调用 Figma。
 - 用户现有 `feature/admin-content-v0`、PR #144 和未跟踪文件均不在本分支修改范围内。
 
