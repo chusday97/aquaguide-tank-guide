@@ -659,6 +659,13 @@
 1. 先读：根 `PROGRESS.md`、根 `HANDOFF.md`、知识索引、本项目 `PROGRESS.md` 与本文档。
 2. 再检查：`git status --short`、最近 20 条提交和当前差异。
 3. 然后执行：从本文后续独立专项中选择一个继续，不重复本轮已验证功能。
+
+## 2026-09-09 4198矩阵收口（当前）
+
+- 独立 Critic 已对当前 4198 diff 复验：原先的状态属性、选择板归属、桌面详情 fixed 覆盖和矩阵表面统计缺口已在 `984a3f70` 修复。
+- 4198 当前只有一个 Node 监听（PID 34000），五个直接页面均返回 HTTP 200；静态 H1/本地资源门禁通过。
+- `test:html-freeze-matrix` 已运行，但系统 Chrome/Playwright 在本机因 MachPort SIGABRT 返回 `BROWSER_UNAVAILABLE`；没有真实视口截图和边界报告，因此仍不能声称视觉矩阵通过。
+- Manifest 状态继续为 `REVIEW_REQUIRED`；未获得用户/产品经理确认前，不生成 HTML Freeze、不回写 React。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。

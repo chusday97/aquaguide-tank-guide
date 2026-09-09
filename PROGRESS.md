@@ -812,3 +812,9 @@
 - [x] 增加区块状态与本地 JSON 导出签字页 `review/freeze-signoff.html`。
 - [x] 增加 `scripts/generate-html-freeze-manifest.mjs`，生成文件 SHA、页面 H1/外部引用检查和必测视口清单；最新提交 `04fe46e8`。
 - [ ] Playwright Chromium 仍受 macOS MachPort 权限阻塞；完整截图矩阵必须改用系统 Chrome/CUA 后补齐，当前 manifest 不代表视觉通过。
+
+### 2026-09-09 4198矩阵止损
+
+- [x] 独立 Critic 复验并指出状态属性、选择板归属、桌面 Rail 与矩阵统计缺口；`984a3f70` 已完成对应结构修复。
+- [x] 4198 只保留一个 Node 监听，五个直接页面 HTTP 200，静态 H1/本地资源门禁通过。
+- [ ] 真实 Chrome/CUA 视口矩阵仍被 MachPort `BROWSER_UNAVAILABLE` 阻塞；用户和产品经理签字、HTML Freeze、React 回写均保持暂停。
