@@ -1,12 +1,12 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Durable Local File checkpoint (2026-09-09)
-- Latest functional HEAD: `746d5c66 feat(admin): add durable local file mode`.
+## CURRENT OVERRIDE — Durable recovery checkpoint (2026-09-09)
+- Latest functional HEAD: `f501a69de7c609eed7c2f7a9f9c5bfc457887503` (`feat(admin): add local backup recovery`).
 - Live remote feature at checkpoint read: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Local vs live remote feature: `ahead 1 / behind 0`; local change is an ordinary fast-forward candidate but is intentionally not pushed in this round to avoid unnecessary deployment/Preview consumption.
-- Main vs local functional checkpoint: `275 main-only / 261 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Local vs live remote feature: `ahead 3 / behind 0`; changes are ordinary fast-forward candidates but remain intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local functional checkpoint: `275 main-only / 263 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - The feature is still not merge-ready with main; dedicated reconciliation remains parked.
 - No merge/rebase main, no force push, no Production/live DB/indexing mutation.
 

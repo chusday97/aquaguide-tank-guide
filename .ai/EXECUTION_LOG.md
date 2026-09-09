@@ -1150,3 +1150,16 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Existing browser-only regressions remain PASS: Operations populated UI, Local Product/Care, Local Compatibility, Local Care SEO, IndexedDB assets. Root/API TypeScript, full root build and `git diff --check` PASS.
 - Functional commit: `746d5c66 feat(admin): add durable local file mode`. Live remote feature before this commit was `e9c63560`; live main `d3c70dee`; local vs remote feature = ahead 1 / behind 0; main vs local = 275 / 261. No push, main merge/rebase, Production/live DB/index action.
 - NEXT: Local File backup/restore + schema-version migration/recovery, then resume concrete operator/UI badcases.
+
+## 2026-09-09 — Durable Local backup / recovery checkpoint
+- Functional commit: `f501a69d feat(admin): add local backup recovery`.
+- Added Local File envelope format v1. Existing raw partition v1 JSON migrates in place; future envelope/state schema versions fail closed with `MIGRATION_REJECTED`.
+- Added integrity reporting for partition validity, local image metadata/blob pairing + references/orphans, Compatibility 7/4 reviewed baseline and Care SEO Published Care source-version references.
+- Added timestamped snapshots under `.local/aqua-admin/backups/`; healthy state is required for normal backup.
+- Restore validates target snapshot, creates a pre-restore safety snapshot, restores partitions/assets, revalidates, and rolls back automatically on filesystem/post-restore failure.
+- Operations Source Status now exposes compact integrity/latest-backup plus `备份当前数据` and confirmed `恢复最近备份`; no new content authority or Production path.
+- Real browser E2E: Product + image + Compatibility + Care SEO → backup → mutate Product → restore → reload → stop/restart Local Admin → fresh browser context = PASS.
+- Browser-only Local Product/Care, Compatibility, Care SEO, IndexedDB assets and Operations desktop/mobile regressions remain PASS. Root/API TS, full root build, Local File API contract and `git diff --check` PASS.
+- CI lightweight gate now runs `test:local-file-admin`; Heavy gate retains `test:local-file-admin-ui`.
+- Live refs: remote feature `e9c63560`; live main `d3c70dee`; local vs feature ahead 3/behind 0; main vs local 275/263; merge base `ed0cf380`. No push, main merge/rebase, Production/live DB/indexing action.
+- NEXT: resume operator/UI badcase convergence: Data Review decision basis → edit-page hierarchy → button consolidation → essential-function visibility.

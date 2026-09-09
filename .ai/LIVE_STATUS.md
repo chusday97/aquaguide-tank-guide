@@ -1,22 +1,22 @@
 # Live Status
 
 
-## CURRENT OVERRIDE — Durable local runtime status (2026-09-09)
-- Functional checkpoint: `746d5c66 feat(admin): add durable local file mode`.
-- Recommended single-machine entrypoint: `npm run dev:local-admin`; default web port 3003, with `WEB_PORT` / `API_PORT` overrides supported safely.
-- Default durable root: `.local/aqua-admin/`; state partitions are Business, Compatibility and Care SEO JSON, with Product/Care images under `assets/`.
-- Durable state is disk authority; browser localStorage is cache. Corrupt durable Business/Compatibility/Care SEO state fails closed instead of self-healing to seed. Browser-only Local Mode retains its previous self-healing behavior.
-- Product/Care local authority: canonical 486/41, Draft + Published Snapshot isolation, save/publish and durable restart acceptance PASS.
-- Compatibility local authority: 7 Profiles / 4 Pair Rules; Draft→Impact→Regression→Evidence→Review→runtime publish remains PASS and durable revisions survive restart.
-- Care SEO Editorial Local: zh-CN Draft→Review→Approved/source-drift semantics remain PASS and durable revisions survive restart.
-- Product/Care images persist as local files in Durable Mode; asset version/Draft/Published isolation and restart image loading PASS. Browser-only IndexedDB asset regression also remains PASS.
-- Operations Home exposes durable persistence status inside Source Status and remains zero-overflow at mobile/desktop.
-- Full root build, root/API TypeScript, Durable API/E2E and existing Local browser suites PASS.
+## CURRENT OVERRIDE — Durable local runtime + recovery status (2026-09-09)
+- Functional checkpoint: `f501a69d feat(admin): add local backup recovery`.
+- Recommended single-machine entrypoint: `npm run dev:local-admin`; default web port 3003, with safe `WEB_PORT` / `API_PORT` overrides.
+- Default durable root: `.local/aqua-admin/`; Business, Compatibility and Care SEO persist as versioned envelopes, with Product/Care images under `assets/`.
+- Existing raw v1 partition JSON is migrated in place to Local File envelope v1 on first read. Newer file/state schemas fail closed with `MIGRATION_REJECTED` instead of being overwritten by older code.
+- `/api/v1/local-admin/integrity` validates partition readability, image metadata/blob pairs, referenced/orphan assets, Compatibility 7/4 reviewed baseline and Care SEO Published Care source-version references.
+- Timestamped snapshots live under `.local/aqua-admin/backups/`. Manual backup requires a healthy error-free state; warnings such as orphan assets remain visible but do not block a snapshot.
+- Restore pre-validates the target snapshot, creates a pre-restore safety backup, restores state/images, re-runs integrity, and automatically rolls back if restore or post-restore validation fails.
+- Operations Home exposes one compact local data-safety footer inside Source Status: persistence status, integrity, latest backup, `备份当前数据`, and confirmed `恢复最近备份`.
+- Real browser regression proves Product + image + Compatibility + Care SEO → backup → mutate → restore → reload → full server stop/restart → fresh browser context. Browser-only Local Product/Care, Compatibility, Care SEO and IndexedDB asset suites remain PASS.
+- Root/API TypeScript, Operations desktop/mobile, Durable API/E2E, browser-only Local suites, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing are untouched; Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `746d5c66`
+Operational functional HEAD before this docs sync: `f501a69de7c609eed7c2f7a9f9c5bfc457887503`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

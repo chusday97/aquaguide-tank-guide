@@ -13,8 +13,8 @@
 - [x] Local Product/Care image Draft/Published isolation (`2d26b1ca`).
 - [x] Durable Local File Mode (`746d5c66`): `.local/aqua-admin` JSON partitions + image files, disk-first persistence, startup hydration, corruption fail-closed, overridable safe ports, Operations persistence indicator.
 - [x] Durable full restart regression: Product + image + Compatibility + Care SEO survive server restart and a fresh browser context; browser-only Local regressions remain green.
-- [ ] Add explicit Local File backup/restore snapshot workflow and schema-version migration/recovery contract.
-- [ ] Continue concrete operator/UI badcases after persistence safety closure.
+- [x] Local File backup/restore + schema safety (`f501a69d`): versioned envelopes, legacy migration, future-version refusal, integrity report, timestamped snapshots, restore safety backup and rollback-on-failure.
+- [ ] Continue concrete operator/UI badcases after persistence safety closure: Data Review decision basis → edit hierarchy → button consolidation → essential-function visibility.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-09

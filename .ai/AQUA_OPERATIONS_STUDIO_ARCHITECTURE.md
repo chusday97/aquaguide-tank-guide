@@ -11,7 +11,7 @@
 - Product/Care Draft/Published Snapshot, Compatibility reviewed publish, Care SEO source-drift/review semantics and Publish Center/Operations read models remain unchanged by the storage transport.
 - Operations Home may display the Local File persistence status, but this is infrastructure observability, not a new content/publish authority.
 - Supabase Staging remains a future cloud/multi-operator validation path and is parked for current iteration. Durable Local File Mode is intentionally single-machine and does not replace Production authentication/audit/multi-operator semantics.
-- Next durability gap: explicit backup/restore and schema-version migration/recovery for future Local File format changes.
+- Durable safety is now explicit: versioned Local File envelopes migrate legacy raw v1 state and reject future versions; integrity checks cover state/image/domain references; timestamped snapshots support validated restore with automatic pre-restore safety backup and rollback-on-failure. Portable external export/import remains optional, not authority.
 
 Updated: 2026-09-09
 Status: canonical product-operations architecture contract

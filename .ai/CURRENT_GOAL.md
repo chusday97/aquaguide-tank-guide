@@ -1,8 +1,8 @@
 # Current Goal
 
 
-## CURRENT OVERRIDE — 2026-09-09 Durable local execution
-The active objective is **finish Aqua Operations Studio as a durable single-machine operator environment without Supabase as a prerequisite**. Functional checkpoint: `746d5c66`.
+## CURRENT OVERRIDE — 2026-09-09 Durable local safety closure
+The active objective is now **resume concrete Aqua Operations Studio operator/UI badcase convergence on top of a durable single-machine data layer**. Functional checkpoint: `f501a69d`.
 
 Completed in the current local-first phase:
 1. Product/Care Local authority: canonical 486/41 seed, Draft isolation, Published Snapshot, Operations WorkItems and publish boundary.
@@ -10,12 +10,14 @@ Completed in the current local-first phase:
 3. Local Publish Center history/readiness and exact WorkItem deep-links.
 4. Care SEO Editorial Local Draft→Review→Approved with Published-source drift, noindex lock and English/AI fail-closed.
 5. Product/Care image Draft/Published isolation.
-6. Durable Local File Mode at `746d5c66`: Business/Compatibility/Care SEO JSON + image files under `.local/aqua-admin`, disk-first writes, fail-closed corruption handling, startup hydration, and full restart/fresh-browser acceptance.
-7. Existing browser-only Local Mode remains green; Production authority, indexing and Supabase deployment paths are unchanged.
+6. Durable Local File Mode (`746d5c66`): Business/Compatibility/Care SEO + image files under `.local/aqua-admin`, disk-first writes, startup hydration and corruption fail-closed.
+7. Durable data safety (`f501a69d`): versioned file envelopes with legacy migration, future-version refusal, cross-partition/image integrity checks, timestamped snapshots, restore with automatic pre-restore safety backup and rollback-on-failure.
+8. Operations Home exposes compact local integrity / latest-backup / backup-now / restore-latest controls without adding another authority layer.
+9. Existing browser-only Local Mode remains green; Production authority, indexing and Supabase deployment paths are unchanged.
 
 NEXT milestones:
-1. Add explicit backup/restore snapshots and schema-version migration/recovery for durable Local File data.
-2. Resume concrete operator/UI badcase convergence after persistence safety is stable.
+1. Resume concrete operator/UI badcases: Data Review decision basis, edit-page hierarchy, button consolidation, and unfolding essential functions.
+2. Portable external export/import can be added later as a secondary disaster-recovery convenience; it is not required for current in-project snapshot recovery.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

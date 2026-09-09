@@ -1,26 +1,25 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
 
-## CURRENT OVERRIDE — Durable Local Aqua Operations Studio (2026-09-09)
-Functional checkpoint: `746d5c66 feat(admin): add durable local file mode`.
-- Aqua Operations Studio can now run as a durable single-machine environment without Supabase: use `npm run dev:local-admin`.
-- Durable state root defaults to `.local/aqua-admin/`: `business.json`, `compatibility.json`, `care-seo.json`, plus `assets/` for Product/Care images. The directory is gitignored.
-- Product/Care, Compatibility and Care SEO writes persist to the Local File API first; browser localStorage is only a runtime cache in File Mode. A cache write failure cannot roll back an already-persisted disk write.
-- Existing browser-only Local Mode remains supported for lightweight acceptance; deployed/Production authority is unchanged. Local File server routes are disabled in `production` and on Vercel.
-- Corrupt/structurally invalid durable store state fails closed with `MIGRATION_REJECTED`; File Mode no longer silently replaces durable Business/Compatibility/Care SEO state with canonical seed data.
-- Product/Care images use real local files in Durable File Mode and keep Draft/Published snapshot isolation. Legacy IndexedDB assets can be migrated during startup.
-- `vite.config.ts` now honors externally assigned `API_PORT`, preventing a Local Admin instance from proxying to a different AquaGuide process already bound to 8787. `WEB_PORT` remains overridable and `--strictPort` is enforced.
-- Operations Home exposes one compact `本地保存 · 磁盘已持久化` status in the existing Source Status header; it does not add a new authority layer.
-- Permanent regression coverage now proves atomic state writes, asset PUT/GET/DELETE, DEV-only guard, full server stop/restart, fresh-browser hydration, Product + image + Compatibility + Care SEO persistence, and zero mobile overflow. Original browser-only Local Product/Care, Compatibility, Care SEO and asset regressions still pass.
-- Validation PASS: Durable API contract, Durable browser restart E2E, Operations populated UI, browser-only Local suites, root/API TypeScript, full root build and diff hygiene.
-- NEXT: add explicit Local File backup/restore + schema-version migration/recovery before treating this as long-term operator storage across future app schema changes; then return to concrete operator/UI badcases. Supabase Staging remains parked.
+## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + recovery (2026-09-09)
+Functional checkpoint: `f501a69d feat(admin): add local backup recovery`.
+- Aqua Operations Studio runs as a durable single-machine environment without Supabase via `npm run dev:local-admin`.
+- Durable state root defaults to `.local/aqua-admin/`. File Mode writes disk first; browser localStorage is only runtime cache. Production/deployed authority remains unchanged.
+- Local File partition storage now uses versioned envelope v1. Existing raw v1 files are migrated safely on read; newer file/state versions are refused so older code cannot overwrite future data.
+- Integrity checks cover partition parse/schema validity, Product/Care image metadata/blob pairs, referenced/orphan assets, Compatibility reviewed 7 Profiles / 4 Pair Rules, and Care SEO source-version references.
+- Timestamped local snapshots are created under `.local/aqua-admin/backups/`. Normal backup requires a healthy state. Restore validates the snapshot, automatically creates a pre-restore safety backup, restores partitions/assets, validates again, and rolls back on restore/post-validation failure.
+- Operations Home keeps this compact inside existing Source Status: disk persistence + integrity + latest backup + one backup action + one confirmed restore-latest action. No new content authority was added.
+- Permanent regression now proves versioned envelope/legacy migration/future-version refusal, integrity, backup/restore API, one-click browser backup/restore, full process restart and fresh-browser hydration with Product + image + Compatibility + Care SEO.
+- Existing browser-only Local Product/Care, Compatibility, Care SEO, IndexedDB assets and Operations desktop/mobile regressions remain PASS. Root/API TypeScript, full build and diff hygiene PASS.
+- CI: lightweight validation runs `test:local-file-admin`; Heavy runs `test:local-file-admin-ui`.
+- NEXT: return to concrete operator/UI badcases, starting with Data Review decision basis and edit-page hierarchy/button reduction. Optional portable external export/import is secondary. Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `746d5c66`
+Current Operations Studio functional HEAD: `f501a69d`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
