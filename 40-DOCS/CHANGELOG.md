@@ -4,6 +4,8 @@
 
 - Changed: `e347612f` 让 Species 生活习性卡与品系卡复用统一公开 SEO 错峰进入样式，保持内容、路由、Product Truth 与 `noindex,follow` 不变。
 - Verified: 本地 lint、production build 与 diff-check 通过；系统浏览器启动级回归仍受 macOS MachPort 权限限制。
+- Fixed: 修复 Species 相关分类链接按物种分类分流；宝莲灯进入图鉴灯科鱼筛选，虾螺蟹仍进入已开放的公开分类页。
+- Verified: 内置浏览器确认 Species 可滚动，待审核图片预览可加载宝莲灯图片与中文 Alt；普通访问继续显示稳定 fallback。
 
 - Added: Species 公开百科试点的统一 motion tokens、章节首次可见动效和可测量 FAQ 展开组件；保留内容静态可读与 `prefers-reduced-motion` 支持。
 - Changed: Species Hero、章节、按钮、链接和品系卡加入克制的进入/按压/焦点反馈，不改变内容、路由、Product Truth、metadata 或索引策略。

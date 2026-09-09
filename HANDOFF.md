@@ -649,7 +649,9 @@
 
 - 当前分支：`codex/species-seo-preview-v1`；最新代码提交：`e347612f`。
 - 本批已将 Species 的生活习性卡和品系卡接入统一 `seo-stagger` 进入节奏，保留静态可读与 reduced-motion 规则。
+- `f232d884` 修复相关分类真实跳转：宝莲灯的“浏览灯科鱼分类”进入图鉴筛选，不再错误进入虾螺蟹公开分类。
 - 已验证：`npm run lint`、`npm run build`、`git diff --check`。
+- 内置浏览器已复核：Species 页面可向下滚动；本地 `assetPreview=1` 能显示宝莲灯图片和 Alt，普通访问仍按素材审核门禁显示 fallback。
 - 仍未完成：系统 Playwright/Chrome 启动级三档回归（macOS MachPort 权限阻断）、用户完整视觉确认、可读独立 Critic、Figma Canonical 模板。
 - 未提交且必须保持隔离：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
 - 禁止重踩：不要把 build 通过写成浏览器验收通过；不要提交既有未跟踪素材/截图脚本；不要调用 Figma、解除 `noindex`、修改 `main` 或 Production。
