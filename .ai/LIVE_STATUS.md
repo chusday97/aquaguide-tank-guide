@@ -1,8 +1,19 @@
 # Live Status
 
+
+## CURRENT OVERRIDE — Local-first runtime status (2026-09-09)
+- Functional checkpoint: `fdfa25fb feat(admin): add local operations authority`.
+- Root Admin at local 3003 can run with `VITE_ADMIN_LOCAL_MODE=true`; this is DEV-only.
+- Product/Care local authority: canonical 486/41, Draft + Published Snapshot isolation, save/refresh/publish browser acceptance PASS.
+- Care action metadata round-trip (`actionTitle`, `actionKind`) is preserved; local store corruption self-heals to canonical seed.
+- Compatibility local authority: 7 Profiles / 4 Pair Rules; Draft→Impact→real Regression→Evidence→Review→runtime publish PASS.
+- Local Operations WorkItems and exact deep-links PASS. Cloud Business/Repo Admin API 503 does not block the local Product/Care or Compatibility browser regressions.
+- Product/Care images remain read-only/no local write. Care SEO Editorial remains outside the current local adapter.
+- Production/main/live Supabase/indexing are untouched; Supabase Staging is parked for current development.
+
 Updated: 2026-09-09
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `e584e3f6fe49159b7896e7a8429bca59a9877f60`
+Operational functional HEAD before this docs sync: `fdfa25fbef88c0b62d299fbdb6a1bbe24e17b316`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

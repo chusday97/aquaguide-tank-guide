@@ -1,5 +1,22 @@
 # Task Queue
 
+
+## ACTIVE OVERRIDE — Local-first Operations Studio (2026-09-09)
+- [x] Product/Care Local adapter from canonical 486 Species / 41 Care.
+- [x] Draft save/refresh persistence and separate Published Snapshot.
+- [x] Preserve Care step `actionTitle` / `actionKind` through Local save→publish round-trip.
+- [x] Compatibility Local Profile + Pair revision stores.
+- [x] Structural Impact + real compatibility Regression + canonical Evidence + human review.
+- [x] Local reviewed publish hydrates actual runtime compatibility bootstrap.
+- [x] Operations exact WorkItems/deep-links for local Product/Care + Compatibility.
+- [x] DEV-only local mode guard; production cannot enable local authority from the Vite flag alone.
+- [x] Heavy browser tests run with cloud Admin APIs unavailable.
+- [ ] Local Publish Center aggregation/readiness/history.
+- [ ] Care SEO Editorial local persistence/readiness.
+- [ ] Local image/file storage for Product/Care assets.
+- [ ] Decide/implement Repo or local-file persistence if Local Mode is to become durable single-machine operations rather than browser-scoped acceptance.
+- [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
+
 Updated: 2026-09-09
 Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
 Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.

@@ -1,5 +1,24 @@
 # Current Goal
 
+
+## CURRENT OVERRIDE — 2026-09-09 Local-first execution
+The active objective is now **finish Aqua Operations Studio as a self-contained local development/acceptance environment without Supabase as a prerequisite**. Functional checkpoint: `fdfa25fb`.
+
+Completed in the current local-first phase:
+1. Product/Care Local authority: canonical 486/41 seed, Draft isolation, Published Snapshot, refresh persistence, Operations WorkItem and publish boundary.
+2. Compatibility Local authority: Profile/Pair revisions, Impact, real engine Regression, canonical Evidence, human Review and reviewed runtime publish.
+3. Operations Local routing/readiness and exact Compatibility/Product deep-links.
+4. DEV-only fail-closed local switch; production builds keep the existing deployed authority path.
+5. Heavy browser regressions prove Local Product/Care + Compatibility operate while cloud Admin APIs return 503.
+
+NEXT milestones:
+1. Local Publish Center release/readiness aggregation.
+2. Care SEO Editorial Local adapter without copying Care Knowledge authority.
+3. Local image/file persistence.
+4. Decide whether browser localStorage is sufficient for acceptance only or should be promoted to Repo/local-file persistence for durable single-machine use.
+
+Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
+
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`

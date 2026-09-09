@@ -1,5 +1,14 @@
 # Branch Status
 
+
+## CURRENT OVERRIDE — Local-first checkpoint (2026-09-09)
+- Functional local HEAD: `fdfa25fbef88c0b62d299fbdb6a1bbe24e17b316`.
+- Live remote feature before docs sync/push: `4677bcca0f512bee516dae23a0bfcd4f36d12518`.
+- Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Explicit-ref relation at functional checkpoint: local vs remote feature = `ahead 2 / behind 0`; main vs local = `275 main-only / 253 feature-only`.
+- Merge base with remote feature is exactly `4677bcca`; ordinary fast-forward push is safe.
+- No merge/rebase main, no force push, no Production/live DB/indexing mutation.
+
 Updated: 2026-09-09
 Feature: `feature/admin-content-v0`
 Remote feature before latest UI hierarchy checkpoint: `83d7e982dfaf15a8f0c77ae6ef525fa3f0162871`

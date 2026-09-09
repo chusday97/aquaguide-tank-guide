@@ -1102,3 +1102,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Fresh refs before docs sync: remote feature `09c66bb57a6a8c1bfca3b91cdb7014be49d5d9a7`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD ahead 1 / behind 0 vs feature; divergence vs main **275 main-only / 250 feature-only**.
 - Safety unchanged: no Staging cloud project created, no live DB write, no Production migration/account change, no main merge/rebase, no indexing change.
 - NEXT: obtain/provision a dedicated non-Production AquaGuide Supabase project, apply the 16-migration upgrade plan, seed canonical representative data, create/sign in one ordinary Staging Auth user through the Staging Auth flow, dry-run then commit `provision:business-admin-staging`, require `check:business-admin-staging` green, bind Business API/Preview, and run real populated operator acceptance.
+
+
+## 2026-09-09 — Local-first Operations authority checkpoint
+- Functional checkpoint `fdfa25fb feat(admin): add local operations authority`.
+- Added DEV-only `VITE_ADMIN_LOCAL_MODE=true` Product/Care + Compatibility adapters; deployed/Production authority remains unchanged.
+- Product/Care browser acceptance proves canonical 486/41 seed, Draft persistence, separate Published Snapshot, precise Operations WorkItem and Care `actionTitle/actionKind` round-trip.
+- Compatibility browser acceptance proves Profile and Pair Draft persistence, structural Impact, real engine Regression, canonical Evidence, human approval and runtime bootstrap publish. Tested Profile regression evaluated 1455 scenarios; Pair regression evaluated 3 scenarios with 3 result changes.
+- Local browser regressions deliberately return 503 for `/api/v1/**` and `/api/admin-content/**` and still pass, proving current Product/Care + Compatibility local flows do not require Supabase/Business Admin API.
+- Added DEV-only contract and Heavy CI browser coverage. Full root/API TypeScript, Admin/Compatibility/Operations/Publish contracts and root build PASS.
+- Product/Care local image writes and Care SEO Editorial local persistence remain open. Supabase Staging is parked. Production/main/live DB/indexing untouched.
