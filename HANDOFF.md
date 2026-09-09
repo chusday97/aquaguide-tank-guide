@@ -16,6 +16,11 @@
 
 # AquaGuide 交接文档
 
+## 2026-09-10 Species metadata 统一
+
+- Species 公开页现在与 Marketing、Category、Guide 共用 `setSeoDocument`，不再保留第二套 metadata 写入逻辑。
+- 相关结构、契约、文案、TypeScript 与 diff-check 已通过；真实浏览器路由切换和 JSON-LD 清理仍需在 Mac 解锁后复验。
+
 ## 2026-09-10 窄屏导航兼容性补强
 
 - 章节导航的边缘渐隐现在同时使用标准和 WebKit `mask-image`，降低 Safari 下横向可滑动提示缺失的风险。

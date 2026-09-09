@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Changed: Species 页面改用共享 `setSeoDocument` 管理 title、description、robots、canonical 和 JSON-LD 清理，移除重复 metadata 写入器。
+- Verified: 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过；真实路由切换验收仍待浏览器恢复。
+
 - Fixed: 窄屏章节导航补充 WebKit `mask-image`，确保 Safari 也能看到横向滚动边缘提示。
 - Verified: 响应式、结构、文案、TypeScript 与 diff-check 通过；真实 viewport 验收仍未完成。
 

@@ -18,31 +18,8 @@ import { SeoRelatedLinks } from '../components/seo/SeoRelatedLinks';
 import { SeoSectionHeading } from '../components/seo/SeoSectionHeading';
 import { SeoSourceFooter } from '../components/seo/SeoSourceFooter';
 import { SeoDisclosure } from '../components/seo/SeoDisclosure';
+import { setSeoDocument } from '../services/seo/seo-document.service';
 import type { Fish, PublishedContentSection, PublishedLifeAnswer, PublishedSpeciesAsset } from '../types';
-
-const publicEditorialPublished = false;
-
-const setMeta = (name: string, content: string) => {
-  if (typeof document === 'undefined') return;
-  let element = document.head.querySelector(`meta[name="${name}"]`);
-  if (!element) {
-    element = document.createElement('meta');
-    element.setAttribute('name', name);
-    document.head.appendChild(element);
-  }
-  element.setAttribute('content', content);
-};
-
-const setCanonical = (path: string) => {
-  if (typeof document === 'undefined') return;
-  let link = document.head.querySelector('link[rel="canonical"]');
-  if (!link) {
-    link = document.createElement('link');
-    link.setAttribute('rel', 'canonical');
-    document.head.appendChild(link);
-  }
-  link.setAttribute('href', `${window.location.origin}${path}`);
-};
 
 const labels = {
   back: '返回图鉴', freshwater: '淡水', saltwater: '海水', difficulty: '养护难度', easy: '极易', medium: '中等', hard: '困难', favorite: '收藏', saved: '已收藏', identity: '认识这个物种', intro: '先认识它的基础特征，再决定如何把它带进你的鱼缸。', chapters: '章节导航', overview: '一眼了解', behavior: '它如何生活', habitat: '适合怎样的环境', care: '日常怎么养', variants: '外观与品系', faq: '常见问题', showDetails: '展开详情', hideDetails: '收起详情', tool: '把物种要求与你的真实鱼缸进行比较。', toolDetail: '准备好后进入 AquaGuide，检查具体鱼缸或缸内伙伴。', openTool: '检查我的鱼缸', temp: '水温', ph: 'pH', minTank: '最低缸体', size: '体型', temperament: '性情', imageUnavailable: '图片暂时不可用', imageFailed: '图片暂时不可用', related: '继续探索', current: '当前', sources: '资料来源', sourceText: '这里汇总了本页使用的目录与专业资料。', returnSearch: '搜索物种', missing: '没有找到这个物种页面。', learnMore: '回到图鉴选择其他物种。', chapterSignatures: { behavior: '', habitat: '水体、空间与环境稳定性', feeding: '把每天最重要的照料动作放在前面', maintenance: '日常维护内容正在补充' },
@@ -113,11 +90,12 @@ export function SpeciesLanding() {
   useEffect(() => { setHeroImageFailed(false); setActionFeedback(''); }, [fish?.id]);
   useEffect(() => {
     if (!fish || !profile) return;
-    document.title = `${fish.name}：习性、饲养与环境 | AquaGuide`;
-    setMeta('description', profile.editorial?.signature || `${fish.name}的基础信息、核心参数与饲养参考。`);
     document.documentElement.lang = 'zh-CN';
-    setMeta('robots', publicEditorialPublished && profile.metadata.indexPolicy === 'index' ? 'index,follow' : 'noindex,follow');
-    setCanonical(profile.metadata.canonical);
+    return setSeoDocument({
+      title: `${fish.name}：习性、饲养与环境 | AquaGuide`,
+      description: profile.editorial?.signature || `${fish.name}的基础信息、核心参数与饲养参考。`,
+      canonical: profile.metadata.canonical,
+    });
   }, [fish, profile]);
 
   if (!selection || !fish || !baseSpecies || !profile) return <section className="mx-auto flex min-h-[70dvh] w-full max-w-[720px] items-center justify-center px-4 py-10 text-center"><div className="seo-card seo-large-card w-full p-7"><h1 className="font-serif text-2xl font-bold text-ink">{labels.missing}</h1><p className="seo-body mx-auto mt-3">{labels.learnMore}</p><button type="button" onClick={() => navigate('/encyclopedia')} className="seo-action seo-focus mt-5 bg-accent text-white">{labels.returnSearch}</button></div></section>;

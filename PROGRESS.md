@@ -1,3 +1,9 @@
+## 2026-09-10 Species metadata 统一收口
+
+- [x] Species 页移除独立的 `setMeta`/`setCanonical` 写入器，改用共享 `setSeoDocument`；路由切换的 title、description、robots、canonical 和 JSON-LD 清理由同一服务负责。
+- [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过；未改变 Product Truth、内容证据或 `noindex,follow`。
+- [ ] 真实浏览器路由切换仍待 Mac 解锁；Figma Canonical 与可读独立 Critic 仍未完成。
+
 ## 2026-09-10 窄屏章节导航兼容性补强
 
 - [x] 为 559px 以下章节导航补充 `-webkit-mask-image`，确保 WebKit/Safari 也能显示横向滚动边缘提示。

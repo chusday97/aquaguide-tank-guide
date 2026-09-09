@@ -21,6 +21,8 @@ for (const [relativeFile, requiredPieces] of publicPages) {
 }
 
 const species = read('src/pages/SpeciesLanding.tsx');
+assert.match(species, /import \{ setSeoDocument \} from ['"]\.\.\/services\/seo\/seo-document\.service['"]/, 'Species must use the shared SEO document service');
+assert.doesNotMatch(species, /const setMeta|const setCanonical/, 'Species must not keep a second metadata writer');
 assert.match(species, /profile\.editorial\?\.(overview|habitat|feeding|maintenance)/, 'Species must render published editorial conditionally');
 assert.match(species, /groupVariants\.length > 1/, 'Species must keep Base/Variant content conditional');
 assert.match(species, /profile\.faq\.length > 0/, 'Species must keep FAQ fail-closed');
