@@ -804,3 +804,10 @@
 - [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`（当前提交为文档-only amend，UI bytes unchanged；manifest 已记录最终 checkpoint SHA）。
 - [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
 - [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。
+## 2026-09-09 Species SEO 高级动效试点
+
+- [x] 新增统一 motion tokens：160ms / 360ms / 520ms、柔和缓动、16px 章节位移和最多三级延迟。
+- [x] Species 试点接入 Hero 进入、章节首次可见、FAQ 可测量展开、按钮按压/焦点反馈和品系状态过渡；内容首屏即存在，reduced-motion 不隐藏内容。
+- [x] 新增 `test:seo-motion`，并通过 lint、build、SEO evidence、public contract 和 diff-check；当前本地预览可访问性树确认 Species 页面、FAQ 和章节结构正常。
+- [ ] 系统 Chromium/Chrome 仍被 macOS MachPort 权限阻断，动效专项无法完成 Playwright 启动级验证；用户视觉确认、独立 Critic 和 Figma Canonical 仍待完成。
+- 当前保持 `noindex,follow`；此前未提交的宝莲灯素材候选与截图脚本改动未混入本动效提交。

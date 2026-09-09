@@ -710,3 +710,11 @@
 下一步：继续逐页核实剩余来源；每条来源必须记录可访问 URL、发布者、访问日期及明确支持的字段。无法确认就保留 `reviewed + unknown`。完成后重建 Snapshot/checksum、435组矩阵并交同一 Critic 复验，再申请一次性推送数据短分支。
 
 禁止重踩：不要从名称、分类、模板、搜索结果或 AI 摘要推断水体、行为或数量；不要把本地测试描述为生产权限验证；不要在本阶段改 UI 或执行生产 migration。
+## 2026-09-09 Species SEO 高级动效试点
+
+- 当前分支：`codex/species-seo-preview-v1`；动效代码已本地提交 `f1057d71`，未推送。
+- 本轮完成：共享 motion tokens、Species Hero/章节进入、可测量 FAQ 展开、按钮与链接反馈、reduced-motion 静态可读性，以及 `test:seo-motion`。
+- 验证：`npm run lint`、`npm run build`、`npm run test:seo-evidence-bindings`、`npm run test:public-seo-contract`、`npm run test:seo-editorial-evidence`、`git diff --check` 通过；现有 Species/Public route 回归在本轮前已通过。
+- 当前阻塞：Playwright 内置 Chromium 与系统 Chrome 均被 macOS MachPort 权限阻断，不能宣称本轮动效浏览器专项通过。Figma 继续暂停，独立 Critic 尚未取得可读报告。
+- 未提交且明确隔离：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 的既有素材/截图改动。
+- 下一步：恢复可用浏览器后重跑 `test:seo-motion` 和三档 Species 回归；随后做用户视觉确认，再启动一次可读独立 Critic。所有页面保持 `noindex,follow`。
