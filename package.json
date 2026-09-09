@@ -160,7 +160,10 @@
     "test:business-admin-staging-seed": "node apps/admin-content/scripts/test-business-admin-staging-seed.mjs",
     "provision:business-admin-staging": "node scripts/provision-business-admin-staging.mjs",
     "test:business-admin-staging-admin": "node apps/admin-content/scripts/test-business-admin-staging-admin.mjs",
-    "test:admin-login-contract": "tsx scripts/test-admin-login-contract.ts"
+    "test:admin-login-contract": "tsx scripts/test-admin-login-contract.ts",
+    "test:local-business-admin-ui": "node scripts/verify-local-business-admin.mjs",
+    "test:local-compatibility-admin-ui": "node scripts/verify-local-compatibility-admin.mjs",
+    "test:local-admin-mode-contract": "tsx scripts/test-local-admin-mode-contract.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

@@ -1,6 +1,7 @@
 import type { ReleaseEventDto, ReleaseSourceAvailability, ReleaseSourceStatusDto } from '../../../packages/contracts/src';
 import { compatibilityAdminService, type AdminCompatibilityPairRuleRevision, type AdminCompatibilityProfileRevision } from './compatibility-admin.service';
 import { contentAdminService, type AdminCareArticleRecord, type AdminSpeciesRecord } from './content-admin.service';
+import { isLocalBusinessAdminMode } from './local-business-admin.store';
 import { publishCenterService } from './publish-center.service';
 import { AquaGuideApiError } from '../api/api-client';
 import { seoPageRegistryService, type SeoHealthIssueCode, type SeoPageRegistrySnapshot } from './seo-page-registry.service';
@@ -223,8 +224,12 @@ export const operationsWorkItemService = {
     const releaseSourceByAuthority = new Map(releaseSources.map(source => [source.authority, source]));
     const rawProductAvailability = classifyOperationsReadResults([speciesResult, careResult]);
     const rawCompatibilityAvailability = classifyOperationsReadResults([profilesResult, pairsResult]);
-    const productAvailability = combineOperationsAuthorityReadiness(rawProductAvailability, releaseSourceByAuthority.get('product_care'));
-    const compatibilityAvailability = combineOperationsAuthorityReadiness(rawCompatibilityAvailability, releaseSourceByAuthority.get('compatibility'));
+    const productAvailability = isLocalBusinessAdminMode
+      ? rawProductAvailability
+      : combineOperationsAuthorityReadiness(rawProductAvailability, releaseSourceByAuthority.get('product_care'));
+    const compatibilityAvailability = isLocalBusinessAdminMode
+      ? rawCompatibilityAvailability
+      : combineOperationsAuthorityReadiness(rawCompatibilityAvailability, releaseSourceByAuthority.get('compatibility'));
 
     const workItems: OperationsWorkItem[] = [];
     if (seoResult.status === 'fulfilled') workItems.push(...buildSeoWorkItems(seoResult.value));
@@ -245,7 +250,7 @@ export const operationsWorkItemService = {
     sources.push({ authority: 'seo', label: 'SEO', availability: seoAvailability, detail: seoDetail });
     const productReleaseSource = releaseSourceByAuthority.get('product_care');
     const productDetail = productAvailability === 'ready'
-      ? '当前 Product / Care Draft 状态可读取。'
+      ? (isLocalBusinessAdminMode ? '本地 Product / Care store 可读取；Draft 与 Published snapshot 独立保存，不依赖 Supabase。' : '当前 Product / Care Draft 状态可读取。')
       : productAvailability === 'partial'
         ? 'Product / Care 只有部分当前状态可读取；未读取部分不会显示假 0。'
         : productAvailability === 'auth_required'
@@ -258,7 +263,7 @@ export const operationsWorkItemService = {
     sources.push({ authority: 'product_care', label: 'Product / Care', availability: productAvailability, detail: productDetail });
     const compatibilityReleaseSource = releaseSourceByAuthority.get('compatibility');
     const compatibilityDetail = compatibilityAvailability === 'ready'
-      ? 'Profile / Pair Rule revision 当前状态可读取。'
+      ? (isLocalBusinessAdminMode ? '本地 Compatibility revision store 可读取；Review 与 runtime publish gate 不依赖 Supabase。' : 'Profile / Pair Rule revision 当前状态可读取。')
       : compatibilityAvailability === 'partial'
         ? 'Compatibility 只有部分 revision 当前状态可读取；未读取部分不会显示假 0。'
         : compatibilityAvailability === 'auth_required'

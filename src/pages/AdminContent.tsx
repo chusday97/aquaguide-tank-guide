@@ -20,6 +20,7 @@ import {
   type CareArticleAdminInput,
   type SpeciesAdminInput,
 } from '../services/admin/content-admin.service';
+import { isLocalBusinessAdminMode } from '../services/admin/local-business-admin.store';
 import { buildContentImpact, type ContentImpactResult } from '../services/admin/content-impact.service';
 import { runCompatibilityRegression } from '../services/admin/compatibility-impact.service';
 
@@ -47,7 +48,7 @@ const careInputFromRecord = (record: AdminCareArticleRecord): CareArticleAdminIn
   const { id: _id, status: _status, version: _version, careArticleSteps, careArticleAssets: _assets, ...base } = record;
   return careArticleAdminInputSchema.parse({
     ...base,
-    steps: (careArticleSteps || []).sort((a, b) => a.position - b.position).map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel })),
+    steps: (careArticleSteps || []).sort((a, b) => a.position - b.position).map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel, actionTitle: step.actionTitle, actionKind: step.actionKind })),
   });
 };
 
@@ -326,14 +327,14 @@ export default function AdminContent() {
             <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
               <div><div className="text-xs font-black text-emerald-700">{selected ? statusLabel : '新草稿'}</div><h2 className="mt-1 text-lg font-black">{selected ? ('name' in selected ? selected.name : selected.title) : `新建${type === 'species' ? '物种数据' : '养护文章'}`}</h2></div>
               <div className="flex flex-wrap gap-2">
-                {selected && <><button type="button" disabled={isSaving || isDirty} onClick={() => setPendingStatus(selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{selected.status === 'published' ? '下线' : '发布'}</button><label className={`flex h-10 cursor-pointer items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'pointer-events-none opacity-50' : ''}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label></>}
+                {selected && <><button type="button" disabled={isSaving || isDirty} onClick={() => setPendingStatus(selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{selected.status === 'published' ? '下线' : '发布'}</button><label title={isLocalBusinessAdminMode ? 'Local Mode 暂不写图片资产；当前可编辑 Product/Care 结构化内容。' : undefined} className={`flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isLocalBusinessAdminMode || isUploading ? 'cursor-not-allowed opacity-45' : 'cursor-pointer'}`}><FileImage className="h-4 w-4" />{isLocalBusinessAdminMode ? '图片本地写入待接入' : isUploading ? '上传中…' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isLocalBusinessAdminMode || isUploading} /></label></>}
                 <button type="submit" disabled={isSaving || isUploading} className="flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-55">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{isSaving ? '保存中…' : selected ? '保存修改' : '创建草稿'}</button>
               </div>
             </div>
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
             {selected && <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />}
-            {selected && type === 'care' && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} />}
+            {selected && type === 'care' && !isLocalBusinessAdminMode && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} />}
             {selected && type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}
             {selected && compatibilityRegression && <CompatibilityRegressionPreview result={compatibilityRegression} />}
             {type === 'species' ? (

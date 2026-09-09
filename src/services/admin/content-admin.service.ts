@@ -18,6 +18,7 @@ import {
   createIdempotencyKey,
   getApiAccessToken,
 } from '../api/api-client';
+import { isLocalBusinessAdminMode, localBusinessAdminStore } from './local-business-admin.store';
 
 export type SpeciesAdminInput = z.infer<typeof speciesAdminInputSchema>;
 export type CareArticleAdminInput = z.infer<typeof careArticleAdminInputSchema>;
@@ -61,7 +62,7 @@ export type AdminCareArticleRecord = Omit<CareArticleAdminInput, 'steps'> & {
   id: string;
   status: 'draft' | 'published' | 'archived';
   version: number;
-  careArticleSteps?: Array<{ id: string; position: number; instruction: string; durationLabel?: string }>;
+  careArticleSteps?: Array<{ id: string; position: number; instruction: string; durationLabel?: string; actionTitle?: string; actionKind?: 'immediate' | 'avoid' | 'observe' | 'recheck' }>;
   careArticleAssets?: AdminAssetRecord[];
 };
 
@@ -84,10 +85,10 @@ const parseUploadResponse = async <T>(response: Response): Promise<T> => {
 };
 
 export const contentAdminService = {
-  listSpecies: () => apiRequest<AdminSpeciesRecord[]>('/admin/species'),
-  listCareArticles: () => apiRequest<AdminCareArticleRecord[]>('/admin/care-articles'),
-  getPublishedSpecies: (catalogKey: string) => publicContentOrNull<SpeciesDetailDto>(`/species/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
-  getPublishedCareArticle: (catalogKey: string) => publicContentOrNull<CareArticleDetailDto>(`/care-articles/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
+  listSpecies: () => isLocalBusinessAdminMode ? localBusinessAdminStore.listSpecies() : apiRequest<AdminSpeciesRecord[]>('/admin/species'),
+  listCareArticles: () => isLocalBusinessAdminMode ? localBusinessAdminStore.listCareArticles() : apiRequest<AdminCareArticleRecord[]>('/admin/care-articles'),
+  getPublishedSpecies: (catalogKey: string) => isLocalBusinessAdminMode ? localBusinessAdminStore.getPublishedSpecies(catalogKey) : publicContentOrNull<SpeciesDetailDto>(`/species/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
+  getPublishedCareArticle: (catalogKey: string) => isLocalBusinessAdminMode ? localBusinessAdminStore.getPublishedCareArticle(catalogKey) : publicContentOrNull<CareArticleDetailDto>(`/care-articles/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
   getCareSeoProjection: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoProjectionDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-projection?locale=${encodeURIComponent(locale)}`),
   getCareSeoHealthIndex: () => apiRequest<CareSeoHealthIndexEntryDto[]>('/admin/care-seo-health'),
 
@@ -113,32 +114,32 @@ export const contentAdminService = {
     idempotencyKey: createIdempotencyKey('admin-care-seo-approve'),
   }),
 
-  createSpecies: (input: SpeciesAdminInput) => apiRequest<AdminSpeciesRecord>('/admin/species', {
+  createSpecies: (input: SpeciesAdminInput) => isLocalBusinessAdminMode ? localBusinessAdminStore.createSpecies(input) : apiRequest<AdminSpeciesRecord>('/admin/species', {
     method: 'POST',
     body: input,
     idempotencyKey: createIdempotencyKey('admin-species-create'),
   }),
 
-  updateSpecies: (id: string, version: number, input: SpeciesAdminInput) => apiRequest<AdminSpeciesRecord>(`/admin/species/${id}`, {
+  updateSpecies: (id: string, version: number, input: SpeciesAdminInput) => isLocalBusinessAdminMode ? localBusinessAdminStore.updateSpecies(id, version, input) : apiRequest<AdminSpeciesRecord>(`/admin/species/${id}`, {
     method: 'PATCH',
     body: { ...input, version },
     idempotencyKey: createIdempotencyKey('admin-species-update'),
   }),
 
-  createCareArticle: (input: CareArticleAdminInput) => apiRequest<AdminCareArticleRecord>('/admin/care-articles', {
+  createCareArticle: (input: CareArticleAdminInput) => isLocalBusinessAdminMode ? localBusinessAdminStore.createCareArticle(input) : apiRequest<AdminCareArticleRecord>('/admin/care-articles', {
     method: 'POST',
     body: input,
     idempotencyKey: createIdempotencyKey('admin-care-create'),
   }),
 
-  updateCareArticle: (id: string, version: number, input: CareArticleAdminInput) => apiRequest<AdminCareArticleRecord>(`/admin/care-articles/${id}`, {
+  updateCareArticle: (id: string, version: number, input: CareArticleAdminInput) => isLocalBusinessAdminMode ? localBusinessAdminStore.updateCareArticle(id, version, input) : apiRequest<AdminCareArticleRecord>(`/admin/care-articles/${id}`, {
     method: 'PATCH',
     body: { ...input, version },
     idempotencyKey: createIdempotencyKey('admin-care-update'),
   }),
 
   setStatus: (type: 'species' | 'care', id: string, version: number, status: 'published' | 'archived') => (
-    apiRequest<AdminSpeciesRecord | AdminCareArticleRecord>(`/admin/content/${type}/${id}/${status === 'published' ? 'publish' : 'archive'}`, {
+    isLocalBusinessAdminMode ? localBusinessAdminStore.setStatus(type, id, version, status) : apiRequest<AdminSpeciesRecord | AdminCareArticleRecord>(`/admin/content/${type}/${id}/${status === 'published' ? 'publish' : 'archive'}`, {
       method: 'POST',
       body: { version },
       idempotencyKey: createIdempotencyKey(`admin-${status}`),
