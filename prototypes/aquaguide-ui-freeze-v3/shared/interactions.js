@@ -121,8 +121,11 @@ document.addEventListener('DOMContentLoaded', () => {
   if (page === 'care' && requestedState === 'detail') { renderCareCards('water'); q('#problem-water-cloudy')?.click(); }
   if (page === 'care' && requestedState === 'error') {
     const tray = q('[data-care-tray]');
-    if (tray) { tray.innerHTML = '<div class="error-state"><div><strong>养护资料暂时无法打开</strong><p>已保留当前观察位置。你可以重试，或切换到传统浏览。</p><button class="secondary-btn" data-retry-care type="button">重试</button></div></div>'; tray.hidden = false; }
-    q('[data-retry-care]')?.addEventListener('click', () => { if (tray) tray.hidden = true; document.body.dataset.state = 'scene'; });
+    if (tray) {
+      tray.innerHTML = '<div class="error-state"><div><strong>养护资料暂时无法打开</strong><p>已保留当前观察位置。你可以重试，或切换到传统浏览。</p><button class="secondary-btn" data-retry-care type="button">重试</button></div></div>';
+      tray.hidden = false;
+      q('[data-retry-care]')?.addEventListener('click', () => { tray.hidden = true; document.body.dataset.state = 'scene'; });
+    }
   }
   if (page === 'compatibility' && ['safe','adjust','block','unknown'].includes(requestedState)) {
     q(`[data-result-state="${requestedState}"]`)?.click();
