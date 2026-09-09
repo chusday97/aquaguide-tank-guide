@@ -1,6 +1,7 @@
 import { ChevronRight } from 'lucide-react';
 import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
+import { ResilientImage } from '../components/common/ResilientImage';
 import { SeoBreadcrumbs } from '../components/seo/SeoBreadcrumbs';
 import { SeoCapabilityCard } from '../components/seo/SeoCapabilityCard';
 import { SeoPageShell } from '../components/seo/SeoPageShell';
@@ -18,7 +19,7 @@ export default function CategoryLanding() {
     <SeoBreadcrumbs items={[{ label: '首页', href: '/' }, { label: page.category.name }]} ariaLabel="分类路径" />
     <header className="seo-hero__content mt-10 max-w-[760px] md:mt-16"><p className="seo-eyebrow">物种分类</p><h1 className="seo-hero__title mt-3">{page.category.name}</h1><p className="seo-lead mt-5">从基础身份开始，先找到你真正想了解的物种，再进入它自己的百科档案。</p></header>
     <section className="seo-section" aria-labelledby="category-species"><SeoSectionHeading number="01" eyebrow="基础物种" title="从一个物种开始" description="这里列出已经准备好进入公开百科路径的基础物种。" />
-      <div className="seo-stagger mt-8 grid gap-4 md:grid-cols-2">{page.featuredBaseSpecies.map(species => <Link key={species.id} to={species.href} className="seo-card seo-focus group flex min-h-[180px] items-end justify-between gap-5 p-6 hover:border-accent"><div><p className="seo-eyebrow">基础物种</p><h2 className="mt-3 font-serif text-3xl font-bold">{species.name}</h2><p className="seo-meta mt-2 italic">{species.scientificName}</p></div><ChevronRight className="h-5 w-5 text-accent transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>)}</div>
+      <div className="seo-stagger mt-8 grid gap-4 md:grid-cols-2">{page.featuredBaseSpecies.map(species => <Link key={species.id} to={species.href} className="seo-card seo-focus group grid min-h-[180px] grid-cols-[112px_minmax(0,1fr)_20px] items-center gap-5 p-4 hover:border-accent"><div className="seo-category-card__media">{species.image ? <ResilientImage src={species.image.src} alt={species.image.altZh} loading="lazy" className="h-full w-full object-contain p-2" /> : <span role="img" aria-label="物种图片暂不可用">图片暂不可用</span>}</div><div><p className="seo-eyebrow">基础物种</p><h2 className="mt-3 font-serif text-3xl font-bold">{species.name}</h2><p className="seo-meta mt-2 italic">{species.scientificName}</p></div><ChevronRight className="h-5 w-5 text-accent transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>)}</div>
     </section>
     <section className="seo-section"><SeoCapabilityCard title="想知道它是否适合你的缸？" description="浏览百科后，可以把物种带入 AquaGuide 的鱼缸工具完成下一步比较。" href="/aquarium" actionLabel="检查我的鱼缸" /></section>
     <SeoSourceFooter title="内容责任" text="分类页面只展示已进入公开路径的目录信息；具体饲养结论请进入物种档案查看。" status="公开预览 · 暂不进入搜索索引" />

@@ -340,6 +340,20 @@ body:has(.public-seo-root)::-webkit-scrollbar {
   background: rgb(255 255 255 / 28%);
 }
 
+.seo-category-card__media {
+  display: flex;
+  min-width: 0;
+  aspect-ratio: 4 / 3;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 16px;
+  background: var(--seo-color-accent-soft);
+  color: var(--seo-color-subtle);
+  font-size: 12px;
+  text-align: center;
+}
+
 .seo-hero__media,
 .seo-hero__content {
   animation: seo-hero-in var(--seo-motion-section) var(--seo-motion-ease) both;
@@ -572,6 +586,10 @@ body:has(.public-seo-root)::-webkit-scrollbar {
 
   .seo-habitat-visual {
     min-height: 190px;
+  }
+
+  .seo-category-card__media {
+    width: 96px;
   }
 }
 
