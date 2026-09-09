@@ -4,7 +4,9 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   BUSINESS_ADMIN_ACCEPTANCE_DATA_REQUIREMENTS,
-  BUSINESS_ADMIN_STAGING_MIGRATIONS,
+  AQUAGUIDE_LIVE_MIGRATION_BASELINE,
+  BUSINESS_ADMIN_AUTHORITY_MIGRATIONS,
+  BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS,
   evaluateBusinessAdminStagingReadiness,
   flattenBusinessAdminSchemaTables,
 } from './business-admin-staging-readiness.mjs';
@@ -12,11 +14,14 @@ import {
 const root = resolve(import.meta.dirname, '../../..');
 const migrationDir = resolve(root, 'supabase/migrations');
 const migrationNames = readdirSync(migrationDir).filter(name => name.endsWith('.sql')).sort();
-for (const migration of BUSINESS_ADMIN_STAGING_MIGRATIONS) {
-  assert.ok(migrationNames.includes(migration), `required Business Admin migration missing: ${migration}`);
+for (const migration of BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS) {
+  assert.ok(migrationNames.includes(migration), `required staging upgrade migration missing: ${migration}`);
 }
-assert.deepEqual([...BUSINESS_ADMIN_STAGING_MIGRATIONS].sort(), BUSINESS_ADMIN_STAGING_MIGRATIONS, 'Business Admin migration plan must remain chronological.');
-const firstAdminMigration = BUSINESS_ADMIN_STAGING_MIGRATIONS[0];
+assert.deepEqual([...BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS].sort(), BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS, 'Staging upgrade plan must remain chronological.');
+const expectedAfterLiveBaseline = migrationNames.filter(name => name.split('_', 1)[0] > AQUAGUIDE_LIVE_MIGRATION_BASELINE);
+assert.deepEqual(expectedAfterLiveBaseline, BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS, 'Staging upgrade plan must include every migration after the live AquaGuide baseline; no prerequisite migration may be skipped.');
+assert.deepEqual(BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS.slice(-BUSINESS_ADMIN_AUTHORITY_MIGRATIONS.length), BUSINESS_ADMIN_AUTHORITY_MIGRATIONS, 'Business Admin authority migrations must remain the tail of the staging upgrade plan.');
+const firstAdminMigration = BUSINESS_ADMIN_AUTHORITY_MIGRATIONS[0];
 const baseMigrationText = migrationNames
   .filter(name => name < firstAdminMigration)
   .map(name => readFileSync(resolve(migrationDir, name), 'utf8'))

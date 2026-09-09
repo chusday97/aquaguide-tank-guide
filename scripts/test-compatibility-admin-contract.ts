@@ -89,7 +89,7 @@ assert.match(reconciliationMigration, /Compatibility canonical baseline is parti
 assert.match(reconciliationMigration, /existing_count = 0/, 'only a truly absent canonical baseline may skip reconciliation.');
 const canonicalBaselineKeys = ['sp_0021','sp_0049','sp_0224','sp_0431','sp_0432','sp_0434','sp_0435','sp_0436','sp_0439','sp_0451','sp_0475'];
 for (const catalogKey of canonicalBaselineKeys) assert.equal(reconciliationMigration.includes(`'${catalogKey}'`), true, `baseline gate must include ${catalogKey}`);
-const skippedDriftGuards = reconciliationMigration.match(/compatibility_baseline_reconciliation_gate where mode='skip'/g) || [];
+const skippedDriftGuards = reconciliationMigration.match(/if not exists \(select 1 from pg_temp\.compatibility_baseline_reconciliation_gate where mode='skip'\) then/g) || [];
 assert.equal(skippedDriftGuards.length, audit.reviewedProfiles.length + audit.reviewedPairRules.length, 'every data-dependent drift assertion must honor the empty-baseline skip gate.');
 const reviewedSourceKeys = new Set([
   ...audit.reviewedProfiles.flatMap(profile => profile.citations.map(source => source.id)),

@@ -1,4 +1,6 @@
-export const BUSINESS_ADMIN_STAGING_MIGRATIONS = [
+export const AQUAGUIDE_LIVE_MIGRATION_BASELINE = '20260816160129';
+
+export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609040001_product_care_publication_snapshots.sql',
   '202609040002_compatibility_profile_revisions.sql',
   '202609040003_compatibility_pair_rule_revisions.sql',
@@ -7,6 +9,18 @@ export const BUSINESS_ADMIN_STAGING_MIGRATIONS = [
   '202609050002_compatibility_versioned_publish.sql',
   '202609050003_content_publication_audit_history.sql',
   '202609050004_care_seo_editorial_revisions.sql',
+];
+
+export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
+  '202608280001_species_seo_admin.sql',
+  '202608280002_species_seo_group_inheritance.sql',
+  '202608280003_species_seo_localized_name.sql',
+  '202608280004_species_seo_index_strategy.sql',
+  '202608280005_species_seo_revision_history.sql',
+  '202608280006_species_seo_release_gate_probe.sql',
+  '202608280007_species_seo_publish_readiness.sql',
+  '20260901064408_species_seo_server_export_boundary.sql',
+  ...BUSINESS_ADMIN_AUTHORITY_MIGRATIONS,
 ];
 
 export const BUSINESS_ADMIN_SCHEMA_GROUPS = {

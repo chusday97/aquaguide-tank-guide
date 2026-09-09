@@ -1,6 +1,8 @@
 import { createClient } from '@supabase/supabase-js';
 import {
-  BUSINESS_ADMIN_STAGING_MIGRATIONS,
+  AQUAGUIDE_LIVE_MIGRATION_BASELINE,
+  BUSINESS_ADMIN_AUTHORITY_MIGRATIONS,
+  BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS,
   evaluateBusinessAdminStagingReadiness,
   flattenBusinessAdminSchemaTables,
 } from '../apps/admin-content/scripts/business-admin-staging-readiness.mjs';
@@ -52,7 +54,9 @@ const output = {
   schema_missing: readiness.schemaMissing,
   source_unavailable: readiness.schemaUnavailable,
   data_gaps: readiness.dataGaps,
-  expected_admin_migrations: BUSINESS_ADMIN_STAGING_MIGRATIONS,
+  upgrade_from_migration: AQUAGUIDE_LIVE_MIGRATION_BASELINE,
+  expected_upgrade_migrations: BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS,
+  business_admin_authority_migrations: BUSINESS_ADMIN_AUTHORITY_MIGRATIONS,
 };
 console.log(JSON.stringify(output, null, 2));
 if (!readiness.acceptanceReady) process.exitCode = 1;
