@@ -19,7 +19,7 @@
 ## 2026-09-10 公开页面滚动根因修复
 
 - 定位并修复桌面应用壳全局 `#root { overflow: hidden; }` 对公开 SEO 长页面的裁切：`.seo-system.css` 对包含公开页面的 `#root` 明确设置 `height: auto`、`overflow: visible`。
-- 响应式契约、公开结构、公开文案、公开契约、TypeScript 与 diff-check 已通过。
+- 响应式契约、公开结构、公开文案、公开契约、TypeScript、production build 与 diff-check 已通过。
 - 真实三档浏览器截图仍未完成；本轮修复已提交前不应将静态门禁称为视觉验收。
 
 ## 2026-09-10 品牌 Hero 图片失败回退
