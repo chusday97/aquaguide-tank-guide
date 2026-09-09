@@ -7,6 +7,8 @@
 - Verified: 动效代码提交 `f1057d71` 通过 lint、build、SEO evidence、public contract、editorial evidence 与 diff-check；Playwright 启动仍受 macOS MachPort 权限阻断。
 - Added: Marketing、Category、Guide 复用公开 SEO 动效系统；分类/价值卡使用最多三级错峰进入，Guide 准备态保持静态可读。
 - Verified: 公开页面动效扩展提交 `eb98b615` 通过 lint、build 和 diff-check；浏览器自动化仍受 macOS MachPort 权限阻断。
+- Fixed: 公开 SEO 页面覆盖应用壳层的滚动限制，环境章节改为自适应内容布局；缺少生态图片时使用中性环境观察构图，不虚构物种栖息地。
+- Verified: 布局修复提交 `5071ae2c` 通过 lint、build 和 diff-check。
 
 - Fixed: 恢复 latest-main 的完整 package scripts，修复 Species SEO Draft PR #147 首次 foundation 因缺少 `project:status` 等门禁命令而失败；SEO 专项脚本与 Noto 字体保持增量。
 - Fixed: 恢复 latest-main 的 App、图鉴、物种详情和应用 CSS Owner，仅在路由层叠加 Public SEO Shell，关闭 Draft PR #147 暴露的 GP-002 应用行为回归。
