@@ -1189,6 +1189,10 @@ export default function App() {
   };
 
   const toolDrawerMeta = ({
+    operations: {
+      title: appLocale === 'en' ? 'Operations tools' : '运营工具',
+      subtitle: appLocale === 'en' ? 'Cross-page batch work and queue tools. Current-page actions stay in the editor.' : '跨页面批量任务与队列工具；当前页面操作继续留在编辑区。',
+    },
     dataReview: {
       title: appLocale === 'en' ? 'Resolve data issues' : '处理数据问题',
       subtitle: appLocale === 'en' ? 'Review the evidence first, then choose one conclusion and confirm the final result.' : '先看判断依据，再选择一个结论并确认最终结果。',
@@ -1319,6 +1323,7 @@ export default function App() {
           }} aria-label={appLocale === 'en' ? 'Open activity center' : '打开操作中心'}>
             <span>{appLocale === 'en' ? 'Activity' : '操作记录'}</span>{activityUnread > 0 ? <b>{Math.min(activityUnread, 99)}</b> : null}
           </button>
+          <button type="button" className={`topbar-operations-trigger ${activeTool === 'operations' ? 'active' : ''}`} onClick={() => setActiveTool('operations')}>{appLocale === 'en' ? 'Operations' : '运营工具'}</button>
           <InterfaceLanguageSwitch onLocaleChange={switchWorkspaceLocale} />
           <button className="ghost-button" type="button" onClick={signOut}>{t('top.signOut')}</button>
         </div>
@@ -1474,49 +1479,30 @@ export default function App() {
             />
           )}
 
-          <details className="advanced-tools-disclosure">
+          <details className="advanced-tools-disclosure current-page-tools">
             <summary>
-              <span><strong>{appLocale === 'en' ? 'Utility tools' : '辅助工具'}</strong><small>{appLocale === 'en' ? 'Batch, history, translation and diagnostics' : '批量、历史、翻译与诊断'}</small></span>
+              <span><strong>{appLocale === 'en' ? 'Current-page tools' : '当前页面工具'}</strong><small>{appLocale === 'en' ? 'Review, readiness, translation and history for this page' : '只处理当前页面的复核、发布资格、翻译与版本历史'}</small></span>
               <em>{appLocale === 'en' ? 'Open' : '展开'}</em>
             </summary>
             <div className="editor-secondary-tools editor-tool-launchers">
-            {selectedDataReviewSummary.open > 0 ? (
-              <button type="button" className={`editor-tool-row issue ${activeTool === 'dataReview' ? 'active' : ''}`} onClick={() => setActiveTool('dataReview')}>
-                <span><strong>{t('editor.sourceReview')}</strong><small>{appLocale === 'en' ? 'Source evidence still requires a human decision' : '仍有需要人工判断的源数据证据'}</small></span>
-                <em>{selectedDataReviewSummary.open}</em>
+              {selectedDataReviewSummary.open > 0 ? (
+                <button type="button" className={`editor-tool-row issue ${activeTool === 'dataReview' ? 'active' : ''}`} onClick={() => setActiveTool('dataReview')}>
+                  <span><strong>{t('editor.sourceReview')}</strong><small>{appLocale === 'en' ? 'Source evidence still requires a human decision' : '仍有需要人工判断的源数据证据'}</small></span>
+                  <em>{selectedDataReviewSummary.open}</em>
+                </button>
+              ) : null}
+              <button type="button" className={`editor-tool-row readiness ${activeTool === 'readiness' ? 'active' : ''}`} onClick={() => setActiveTool('readiness')}>
+                <span><strong>{t('editor.publishCheck')}</strong><small>{appLocale === 'en' ? 'Controlled Preview eligibility' : '受控预览资格检查'}</small></span>
+                <em className={publishReadiness?.state || 'blocked'}>{publishReadinessLabel}</em>
               </button>
-            ) : null}
-            <button type="button" className={`editor-tool-row readiness ${activeTool === 'readiness' ? 'active' : ''}`} onClick={() => setActiveTool('readiness')}>
-              <span><strong>{t('editor.publishCheck')}</strong><small>{appLocale === 'en' ? 'Controlled Preview eligibility' : '受控预览资格检查'}</small></span>
-              <em className={publishReadiness?.state || 'blocked'}>{publishReadinessLabel}</em>
-            </button>
-            {contentLocale === 'en' ? (
-              <button type="button" className={`editor-tool-row ${activeTool === 'translation' ? 'active' : ''}`} onClick={() => setActiveTool('translation')}>
-                <span><strong>{t('editor.translation')}</strong><small>{appLocale === 'en' ? 'Chinese source → English Draft' : '中文来源 → 英文草稿'}</small></span><b>›</b>
+              {contentLocale === 'en' ? (
+                <button type="button" className={`editor-tool-row ${activeTool === 'translation' ? 'active' : ''}`} onClick={() => setActiveTool('translation')}>
+                  <span><strong>{t('editor.translation')}</strong><small>{appLocale === 'en' ? 'Chinese source → English Draft' : '中文来源 → 英文草稿'}</small></span><b>›</b>
+                </button>
+              ) : null}
+              <button type="button" className={`editor-tool-row ${activeTool === 'history' ? 'active' : ''}`} onClick={() => setActiveTool('history')}>
+                <span><strong>{t('editor.history')}</strong><small>Base / Variant revision</small></span><b>›</b>
               </button>
-            ) : null}
-            {batchGroup && batchMembers.length > 1 ? (
-              <button type="button" className={`editor-tool-row ${activeTool === 'batch' ? 'active' : ''}`} onClick={() => setActiveTool('batch')}>
-                <span><strong>{t('editor.batchSeo')}</strong><small>{batchMembers.length} {appLocale === 'en' ? 'selected records' : '条已选择记录'}</small></span><b>›</b>
-              </button>
-            ) : null}
-            <button type="button" className={`editor-tool-row ${activeTool === 'bulkReview' ? 'active' : ''}`} onClick={() => setActiveTool('bulkReview')}>
-              <span><strong>{appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录'}</strong><small>{appLocale === 'en' ? `${pendingDuplicateReviewCount} duplicate groups waiting` : `${pendingDuplicateReviewCount} 组重复候选待处理`}</small></span><em>{pendingDuplicateReviewCount}</em>
-            </button>
-            {workflowOverview.locales[contentLocale].ready_for_review > 0 ? (
-              <button type="button" className={`editor-tool-row ${activeTool === 'bulkEditorial' ? 'active' : ''}`} onClick={() => setActiveTool('bulkEditorial')}>
-                <span><strong>{appLocale === 'en' ? 'Bulk content review' : '批量内容审核'}</strong><small>{appLocale === 'en' ? 'Submit / approve / return multiple completed pages' : '批量提交 / 批准 / 退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale].ready_for_review}</em>
-              </button>
-            ) : null}
-            <button type="button" className={`editor-tool-row ${activeTool === 'bulkImport' ? 'active' : ''}`} onClick={() => setActiveTool('bulkImport')}>
-              <span><strong>{appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入'}</strong><small>{appLocale === 'en' ? 'Download template → fill in Excel / Numbers → upload' : '下载模板 → Excel / Numbers 回填 → 上传校验'}</small></span><b>›</b>
-            </button>
-            <button type="button" className={`editor-tool-row ${activeTool === 'history' ? 'active' : ''}`} onClick={() => setActiveTool('history')}>
-              <span><strong>{t('editor.history')}</strong><small>Base / Variant revision</small></span><b>›</b>
-            </button>
-            <button type="button" className={`editor-tool-row ${activeTool === 'workflow' ? 'active' : ''}`} onClick={() => setActiveTool('workflow')}>
-              <span><strong>{t('editor.workflow')}</strong><small>{appLocale === 'en' ? 'Data Review / Editorial / Preview-ready' : '数据复核 / 内容审核 / 可预览'}</small></span><b>›</b>
-            </button>
             </div>
           </details>
 
@@ -1524,6 +1510,29 @@ export default function App() {
         </main>
 
         <EditorToolDrawer open={Boolean(activeTool)} title={toolDrawerMeta.title} subtitle={toolDrawerMeta.subtitle} size={activeTool === 'dataReview' ? 'wide' : 'default'} onClose={() => setActiveTool(null)}>
+            {activeTool === 'operations' ? (
+              <div className="editor-secondary-tools editor-tool-launchers operations-tool-menu" data-testid="operations-tool-menu">
+                {batchGroup && batchMembers.length > 1 ? (
+                  <button type="button" className="editor-tool-row" onClick={() => setActiveTool('batch')}>
+                    <span><strong>{t('editor.batchSeo')}</strong><small>{batchMembers.length} {appLocale === 'en' ? 'selected records' : '条已选择记录'}</small></span><b>›</b>
+                  </button>
+                ) : null}
+                <button type="button" className="editor-tool-row" onClick={() => setActiveTool('bulkReview')}>
+                  <span><strong>{appLocale === 'en' ? 'Bulk duplicate review' : '批量审核重复记录'}</strong><small>{appLocale === 'en' ? `${pendingDuplicateReviewCount} duplicate groups waiting` : `${pendingDuplicateReviewCount} 组重复候选待处理`}</small></span><em>{pendingDuplicateReviewCount}</em>
+                </button>
+                {workflowOverview.locales[contentLocale].ready_for_review > 0 ? (
+                  <button type="button" className="editor-tool-row" onClick={() => setActiveTool('bulkEditorial')}>
+                    <span><strong>{appLocale === 'en' ? 'Bulk content review' : '批量内容审核'}</strong><small>{appLocale === 'en' ? 'Submit / approve / return multiple completed pages' : '批量提交 / 批准 / 退回已完成页面'}</small></span><em>{workflowOverview.locales[contentLocale].ready_for_review}</em>
+                  </button>
+                ) : null}
+                <button type="button" className="editor-tool-row" onClick={() => setActiveTool('bulkImport')}>
+                  <span><strong>{appLocale === 'en' ? 'SEO template import' : 'SEO 模板导入'}</strong><small>{appLocale === 'en' ? 'Download template → fill in Excel / Numbers → upload' : '下载模板 → Excel / Numbers 回填 → 上传校验'}</small></span><b>›</b>
+                </button>
+                <button type="button" className="editor-tool-row" onClick={() => setActiveTool('workflow')}>
+                  <span><strong>{t('editor.workflow')}</strong><small>{appLocale === 'en' ? 'Data Review / Editorial / Preview-ready' : '数据复核 / 内容审核 / 可预览'}</small></span><b>›</b>
+                </button>
+              </div>
+            ) : null}
             {activeTool === 'bulkReview' ? (
               <BulkDuplicateReviewPanel
                 groups={speciesGroups}

@@ -65,6 +65,9 @@ const adminNoticeSource = await readFile(path.join(appRoot, 'src/AdminNoticeView
 const mainSource = await readFile(path.join(appRoot, 'src/main.jsx'), 'utf8');
 const uiFoundationSource = await readFile(path.join(appRoot, 'src/ui-foundation.css'), 'utf8');
 
+const currentPageToolsBlock = appSource.match(/<details className="advanced-tools-disclosure current-page-tools">([\s\S]*?)<\/details>/)?.[1] || '';
+const operationsToolsBlock = appSource.match(/data-testid="operations-tool-menu">([\s\S]*?)<\/div>\n\s*\) : null}/)?.[1] || '';
+
 const catalog = JSON.parse(catalogRaw);
 const groupData = JSON.parse(groupsRaw);
 const groupedMembers = groupData.groups.flatMap((group) => group.members);
@@ -194,7 +197,8 @@ assert.match(bulkEditorialSource, /workflowOverview/, 'Bulk editorial candidates
 assert.doesNotMatch(bulkEditorialSource, /<select[^>]*review|review[^>]*<select/s, 'Bulk editorial review must not regress workflow actions into a state dropdown.');
 assert.match(repoStoreSource, /transitionEditorialReviewsBulk/, 'Repo authority must implement atomic bulk editorial transitions.');
 assert.match(repoStoreSource, /Approve Preview requires Awaiting Review state/, 'Bulk approval must enforce strict editorial state transitions server-side.');
-assert.match(stylesSource, /topbar-content-review-trigger[\s\S]*border:\s*1px solid/, 'Bulk content review must remain visibly styled as an action button.');
+assert.match(appSource, /topbar-operations-trigger[\s\S]*setActiveTool\('operations'\)/, 'Global batch operations must be behind one top-level Operations entry instead of separate topbar buttons.');
+assert.match(uiFoundationSource, /topbar-operations-trigger[\s\S]*border:\s*1px solid var\(--cms-border\)/, 'The single Operations entry must stay a neutral Graphite control rather than competing with publish or review actions.');
 assert.match(reviewSource, /emitAdminNotice/, 'Data Review precondition failures must surface as top-right notices');
 assert.match(translationSource, /emitAdminNotice/, 'Translation outcomes and blockers must surface as top-right notices');
 assert.match(historySource, /emitAdminNotice/, 'Revision load and confirmation feedback must surface as top-right notices');
@@ -336,7 +340,9 @@ assert.match(appSource, /sharedIntroCoversPage[\s\S]*模板已经覆盖共同简
 assert.match(appSource, /editor-field-task-status/, 'Primary editor fields must expose explicit task-status text rather than relying on subtle validation paint.');
 assert.match(appSource, /需要填写[\s\S]*模板已覆盖|模板已覆盖[\s\S]*需要填写/, 'Primary editor task-status vocabulary must distinguish required work from template-covered content.');
 assert.match(uiFoundationSource, /PM \+ UI review:[\s\S]*editor-primary-task-heading[\s\S]*editor-field-title-row[\s\S]*editor-secondary-seo-disclosure/, 'UI Foundation must enforce identity → task → field → secondary-settings hierarchy.');
-assert.match(appSource, /Utility tools|辅助工具/, 'Low-frequency tools must be labeled as utilities rather than another editor module.');
+assert.match(appSource, /Current-page tools|当前页面工具/, 'The editor footer must identify page-scoped tools instead of presenting one generic utility wall.');
+assert.doesNotMatch(currentPageToolsBlock, /批量审核重复记录|批量内容审核|SEO 模板导入|工作队列|任务队列|Bulk duplicate review|Bulk content review|SEO template import/, 'Current-page tools must not contain cross-page batch or global queue actions.');
+assert.match(operationsToolsBlock, /批量审核重复记录[\s\S]*SEO 模板导入[\s\S]*editor\.workflow|Bulk duplicate review[\s\S]*SEO template import/, 'Cross-page batch work and the global queue must live inside the Operations drawer.');
 assert.match(uiFoundationSource, /advanced-tools-disclosure[\s\S]*border:\s*0 !important[\s\S]*border-top:\s*1px solid/, 'Utility tools must stay a flat footer affordance instead of a card surface.');
 assert.match(appSource, /publishReadinessLabel[\s\S]*未就绪[\s\S]*待审核[\s\S]*可预览/, 'Readiness utility status must use localized operator language instead of raw enum values.');
 assert.match(appSource, /indexStrategyLabel[\s\S]*暂不收录/, 'Chinese UI must translate Noindex into operator-facing indexing language.');

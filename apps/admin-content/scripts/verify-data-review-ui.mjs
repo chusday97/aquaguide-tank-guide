@@ -56,6 +56,23 @@ const runViewport = async (label, viewport) => {
   assert.match(await coreSeo.innerText(), /搜索展示[\s\S]*收录与 Canonical/);
   assert.equal(await page.locator('.editor-footer button').count(), 0, 'Editor footer must not duplicate top review actions.');
   assert.equal(await page.locator('.editor-panel .draft-safety-chip').count(), 0, 'Editor body must not repeat Draft status from the top review bar.');
+  const currentPageTools = page.locator('.current-page-tools');
+  assert.match(await currentPageTools.evaluate(element => element.textContent || ''), /当前页面工具[\s\S]*发布资格|当前页面工具[\s\S]*发布检查/);
+  assert.doesNotMatch(await currentPageTools.evaluate(element => element.textContent || ''), /批量审核重复记录|批量内容审核|SEO 模板导入|工作队列/);
+  const operationsTrigger = page.getByRole('button', { name: '运营工具', exact: true });
+  await operationsTrigger.click();
+  const operationsDrawer = page.locator('.editor-tool-drawer');
+  await operationsDrawer.waitFor();
+  const operationsMenu = operationsDrawer.getByTestId('operations-tool-menu');
+  assert.match(await operationsMenu.innerText(), /批量审核重复记录[\s\S]*SEO 模板导入[\s\S]*任务队列/);
+  assert.equal(await operationsDrawer.evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Operations drawer must not overflow horizontally.');
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(100);
+  assert.equal(await operationsTrigger.isVisible(), true, 'Operations entry must remain accessible on mobile.');
+  assert.equal(await operationsDrawer.evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Mobile Operations drawer must not overflow horizontally.');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'Mobile SEO Admin must not gain page-level horizontal overflow from the Operations entry.');
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await operationsDrawer.getByRole('button', { name: /关闭|Close/ }).click().catch(async () => { await page.keyboard.press('Escape'); });
   await page.getByRole('button', { name: /处理重复/ }).first().click();
   const drawer = page.locator('.editor-tool-drawer');
   await drawer.waitFor();
@@ -104,7 +121,7 @@ const runViewport = async (label, viewport) => {
 try {
   await waitForReady();
   await runViewport('desktop + responsive mobile', { width: 1440, height: 1000 });
-  console.log('PASS Data Review UI: read-only evidence -> explicit conclusion -> explicit canonical choice -> final summary -> one confirmation.');
+  console.log('PASS SEO Admin hierarchy: Data Review decision flow + current-page/global Operations separation + responsive layout.');
 } finally {
   await browser.close();
   await stop();

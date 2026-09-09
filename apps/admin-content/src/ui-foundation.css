@@ -1246,3 +1246,29 @@
   .admin-shell .review-canonical-option { grid-template-columns: 18px minmax(0, 1fr); }
   .admin-shell .review-canonical-option > em { grid-column: 2; justify-self: start; }
 }
+
+/* Global operations stay out of the current-page editing hierarchy. */
+.admin-shell .topbar-operations-trigger {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--cms-border);
+  border-radius: var(--ui-radius-control);
+  background: var(--cms-paper);
+  color: var(--cms-ink-soft);
+  font-size: var(--ui-text-meta);
+  font-weight: 650;
+}
+.admin-shell .topbar-operations-trigger:hover,
+.admin-shell .topbar-operations-trigger.active {
+  border-color: var(--cms-border-strong);
+  background: var(--cms-panel);
+  color: var(--cms-ink);
+}
+.admin-shell .operations-tool-menu {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 760px) {
+  .admin-shell .topbar-operations-trigger { padding: 0 8px; }
+}
