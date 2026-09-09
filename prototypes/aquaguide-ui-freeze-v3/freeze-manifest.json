@@ -1,9 +1,9 @@
 {
   "schemaVersion": 1,
   "freezeVersion": "html-ui-freeze-v3",
-  "generatedAt": "2026-09-09T13:22:31.025Z",
+  "generatedAt": "2026-09-09T13:24:18.856Z",
   "branch": "codex/project-authority-recovery-v1",
-  "sourceCommit": "7d9cb50d9608ab2030fc7fb7f71b9d9cfa79911e",
+  "sourceCommit": "fa02cbd9556aa46cc5e30ce7f928eb9272f3ec24",
   "contentSha256": "51029b18336e1d8e9ec3250c74afcb401c750709eced0bbcf3b6944d45c432d6",
   "references": {
     "aquarium": "4196",
