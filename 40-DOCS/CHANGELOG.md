@@ -3,6 +3,8 @@
 ## [Unreleased]
 
 - Fixed: 恢复 latest-main 的完整 package scripts，修复 Species SEO Draft PR #147 首次 foundation 因缺少 `project:status` 等门禁命令而失败；SEO 专项脚本与 Noto 字体保持增量。
+- Fixed: 恢复 latest-main 的 App、图鉴、物种详情和应用 CSS Owner，仅在路由层叠加 Public SEO Shell，关闭 Draft PR #147 暴露的 GP-002 应用行为回归。
+- Verified: 本地生产预览通过 GP-001…GP-005、Care 动作、Species 390/600/1440 和 Public/App 九路由回归；精确 SHA Vercel Preview 六条公开路由均返回 HTTP 200 与 `x-robots-tag:noindex`。
 - Verified: Vercel `aquaguide` 项目中的 Supabase/Postgres 变量只绑定 Production、不绑定 Preview；Draft PR #147 与首个 Preview 精确指向 `e6742188`，仍保持 `noindex,follow` 且未合并。
 - Added: 从最新 `origin/main` 建立隔离的 Species SEO Preview 候选，仅移植公开 SEO 页面、证据门禁、素材解析和测试；不带入 Admin、Supabase migration 或 Figma 历史证据。
 - Fixed: 合并最新 main 的 `Fish`、兼容性路由和图片加载能力，避免旧 SEO 分支文件覆盖当前 App Shell 类型；干净 Preview 候选通过 lint、公开契约、证据测试、build 和 diff-check。
