@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "freezeVersion": "html-ui-freeze-v3",
-  "generatedAt": "2026-09-09T13:26:04.302Z",
+  "generatedAt": "2026-09-09T13:27:41.993Z",
   "branch": "codex/project-authority-recovery-v1",
-  "sourceCommit": "93af678327d9cb65520b7143f9a96bd28e6e4602",
-  "contentSha256": "eeb8798e72192f62e2704cd67d341abaa266d2f22df1e98f9189fe701acdd333",
+  "sourceCommit": "efff6f4deff61f04838e534ef88666f691b1e58e",
+  "contentSha256": "3c1ac983415cfa707677f6fe7d88d74dbf833abaa7d7c35c67cc1a4d217d03a5",
   "references": {
     "aquarium": "4196",
     "collection": "4196",
@@ -152,8 +152,8 @@
     },
     {
       "path": "shared/interactions.js",
-      "bytes": 10546,
-      "sha256": "d684a4e2c4c5fdee31137e927abaf19175b9b30f226982b46262aaebee591d22"
+      "bytes": 10554,
+      "sha256": "52b340bb372cf147c46efd97532fcc5cfb44399a64068dd0cc3c1dec14928b7b"
     },
     {
       "path": "shared/layout.css",
