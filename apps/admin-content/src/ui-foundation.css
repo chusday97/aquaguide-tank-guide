@@ -1004,16 +1004,7 @@
 .admin-shell .review-result-preview > small { color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 760; letter-spacing: .06em; }
 .admin-shell .review-result-preview > strong { color: var(--cms-ink); font-size: var(--ui-text-body); }
 .admin-shell .review-result-preview ul { margin: 2px 0 0 18px; padding: 0; color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.5; }
-.admin-shell .review-defer-action {
-  min-height: 32px;
-  padding: 0 4px;
-  border: 0;
-  background: transparent;
-  color: var(--cms-muted);
-  font-size: var(--ui-text-micro);
-  text-decoration: underline;
-  cursor: pointer;
-}
+
 @media (max-width: 760px) {
   .admin-shell .evidence-summary-grid { grid-template-columns: 1fr; }
   .admin-shell .category-compare-row {
@@ -1025,7 +1016,6 @@
   .admin-shell .review-decision-options { grid-template-columns: 1fr !important; }
   .admin-shell .review-decision-command-footer { gap: 8px; }
   .admin-shell .review-decision-primary-actions { align-items: center; }
-  .admin-shell .review-defer-action { flex: 0 0 auto !important; }
 }
 .admin-shell .category-source-records { margin-top: 8px; }
 .admin-shell .category-source-records > summary {
@@ -1211,4 +1201,48 @@
     padding: 14px 0 16px !important;
   }
   .admin-shell .editor-primary-task-section .editor-field-question { font-size: 14px !important; }
+}
+
+/* Data Review convergence: keep evidence read-only and move canonical choice into its own decision step. */
+.admin-shell .review-canonical-choice {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--cms-border);
+}
+.admin-shell .review-canonical-choice-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-shell .review-canonical-choice-head > div { display: grid; gap: 3px; }
+.admin-shell .review-canonical-choice-head small { color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 800; letter-spacing: .08em; }
+.admin-shell .review-canonical-choice-head strong { color: var(--cms-ink); font-size: var(--ui-text-body); }
+.admin-shell .review-canonical-choice-head > span { color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 700; }
+.admin-shell .review-canonical-choice > p { margin: 0; color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.5; }
+.admin-shell .review-canonical-options { display: grid; gap: 6px; }
+.admin-shell .review-canonical-option {
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 9px 11px;
+  border: 1px solid var(--cms-border);
+  border-radius: 8px;
+  background: var(--cms-paper);
+  cursor: pointer;
+}
+.admin-shell .review-canonical-option > input { width: 16px; height: 16px; min-height: 0; margin: 0; accent-color: var(--state-warning); }
+.admin-shell .review-canonical-option > span { min-width: 0; display: grid; gap: 2px; }
+.admin-shell .review-canonical-option > span strong { overflow: hidden; color: var(--cms-ink); font-size: var(--ui-text-body); text-overflow: ellipsis; white-space: nowrap; }
+.admin-shell .review-canonical-option > span small { overflow: hidden; color: var(--cms-muted); font-size: var(--ui-text-micro); text-overflow: ellipsis; white-space: nowrap; }
+.admin-shell .review-canonical-option > em { padding: 3px 6px; border: 1px solid var(--cms-border); border-radius: 999px; color: var(--cms-muted); font-size: var(--ui-text-micro); font-style: normal; font-weight: 750; }
+.admin-shell .review-canonical-option.active { border-color: var(--state-warning-line); background: var(--state-warning-bg); box-shadow: inset 3px 0 0 var(--state-warning); }
+@media (max-width: 760px) {
+  .admin-shell .review-canonical-choice-head { flex-direction: column; gap: 4px; }
+  .admin-shell .review-canonical-option { grid-template-columns: 18px minmax(0, 1fr); }
+  .admin-shell .review-canonical-option > em { grid-column: 2; justify-self: start; }
 }

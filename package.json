@@ -168,7 +168,8 @@
     "test:local-assets-ui": "node scripts/verify-local-assets.mjs",
     "test:local-admin-mode-contract": "tsx scripts/test-local-admin-mode-contract.ts",
     "test:local-file-admin": "tsx scripts/test-local-file-admin.ts",
-    "test:local-file-admin-ui": "node scripts/verify-local-file-admin.mjs"
+    "test:local-file-admin-ui": "node scripts/verify-local-file-admin.mjs",
+    "test:data-review-ui": "node apps/admin-content/scripts/verify-data-review-ui.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

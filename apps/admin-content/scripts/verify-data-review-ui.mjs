@@ -1,0 +1,105 @@
+import assert from 'node:assert/strict';
+import { spawn } from 'node:child_process';
+import net from 'node:net';
+import path from 'node:path';
+import { chromium } from 'playwright';
+
+const getFreePort = () => new Promise((resolve, reject) => {
+  const server = net.createServer();
+  server.once('error', reject);
+  server.listen(0, '127.0.0.1', () => {
+    const address = server.address();
+    if (!address || typeof address === 'string') return reject(new Error('Could not allocate a port.'));
+    server.close(error => error ? reject(error) : resolve(address.port));
+  });
+});
+
+const port = await getFreePort();
+const cwd = path.join(process.cwd(), 'apps/admin-content');
+const viteBin = path.join(process.cwd(), 'node_modules/vite/bin/vite.js');
+const baseUrl = `http://127.0.0.1:${port}`;
+let logs = '';
+const child = spawn(process.execPath, [viteBin, '--host=127.0.0.1', `--port=${port}`, '--strictPort'], {
+  cwd, stdio: ['ignore', 'pipe', 'pipe'],
+});
+child.stdout.on('data', chunk => { logs += chunk.toString(); });
+child.stderr.on('data', chunk => { logs += chunk.toString(); });
+
+const stop = async () => {
+  if (child.exitCode !== null) return;
+  child.kill('SIGTERM');
+  await Promise.race([
+    new Promise(resolve => child.once('exit', resolve)),
+    new Promise(resolve => setTimeout(resolve, 4000)),
+  ]);
+};
+const waitForReady = async () => {
+  const deadline = Date.now() + 20_000;
+  while (Date.now() < deadline) {
+    if (child.exitCode !== null) throw new Error(`SEO Admin exited during startup.\n${logs}`);
+    try { if ((await fetch(`${baseUrl}/?demo=1`)).ok) return; } catch {}
+    await new Promise(resolve => setTimeout(resolve, 150));
+  }
+  throw new Error(`Timed out waiting for SEO Admin.\n${logs}`);
+};
+
+const browser = await chromium.launch({ headless: true });
+const runViewport = async (label, viewport) => {
+  const context = await browser.newContext({ viewport });
+  const page = await context.newPage();
+  const errors = [];
+  page.on('pageerror', error => errors.push(String(error)));
+  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: /处理重复/ }).first().click();
+  const drawer = page.locator('.editor-tool-drawer');
+  await drawer.waitFor();
+  assert.match(await drawer.innerText(), /先看判断依据，再选择一个结论并确认最终结果/);
+  const evidence = drawer.locator('.review-evidence-first');
+  assert.equal(await evidence.getByText('保留此页面', { exact: true }).count(), 0);
+  assert.equal(await evidence.locator('input[type="radio"]').count(), 0);
+  assert.equal(await drawer.getByTestId('review-canonical-choice').count(), 0);
+
+  await drawer.getByText('确认是重复记录', { exact: true }).click();
+  const canonical = drawer.getByTestId('review-canonical-choice');
+  await canonical.waitFor();
+  assert.equal(await canonical.locator('input[type="radio"]:checked').count(), 0, 'System suggestion must not become an automatic human decision.');
+  assert.match(await canonical.innerText(), /仅影响 SEO · 不改源数据[\s\S]*系统建议/);
+  assert.equal(await drawer.getByTestId('review-confirm-final').isEnabled(), false);
+  assert.match(await drawer.getByTestId('review-final-result').innerText(), /最终确认版本[\s\S]*请先选择要保留的 SEO 页面/);
+
+  await canonical.locator('.review-canonical-option').first().click();
+  assert.equal(await canonical.locator('input[type="radio"]:checked').count(), 1);
+  assert.match(await drawer.getByTestId('review-final-result').innerText(), /最终确认版本[\s\S]*Canonical 指向该页面[\s\S]*不改写源数据/);
+  assert.equal(await drawer.getByTestId('review-confirm-final').isEnabled(), true);
+  assert.equal(await drawer.locator('.review-decision-primary-actions button').count(), 1);
+  assert.equal(await drawer.getByText('稍后再判断', { exact: true }).count(), 0);
+  assert.equal(await drawer.evaluate(element => element.scrollWidth - element.clientWidth), 0, `${label} Data Review drawer must not overflow horizontally.`);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.waitForTimeout(100);
+  assert.equal(await drawer.evaluate(element => element.scrollWidth - element.clientWidth), 0, 'mobile Data Review drawer must not overflow horizontally.');
+  assert.equal(await canonical.locator('.review-canonical-option').count() >= 2, true);
+
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'networkidle' });
+  await page.getByRole('button', { name: /处理数据/ }).first().click();
+  const categoryDrawer = page.locator('.editor-tool-drawer');
+  await categoryDrawer.waitFor();
+  const categoryEvidence = categoryDrawer.locator('.review-evidence-first');
+  assert.match(await categoryEvidence.innerText(), /系统已确认[\s\S]*系统无法自动确认[\s\S]*怎么判断/);
+  assert.equal(await categoryDrawer.getByTestId('review-canonical-choice').count(), 0);
+  await categoryDrawer.getByText('确认分类有效', { exact: true }).click();
+  assert.match(await categoryDrawer.getByTestId('review-final-result').innerText(), /3 · 最终确认版本[\s\S]*这里不会改写源数据[\s\S]*继续进入 SEO 流程/);
+  assert.equal(await categoryDrawer.locator('.review-decision-primary-actions button').count(), 1);
+  assert.equal(await categoryDrawer.getByTestId('review-confirm-final').isEnabled(), true);
+  assert.deepEqual(errors, []);
+  await context.close();
+};
+
+try {
+  await waitForReady();
+  await runViewport('desktop + responsive mobile', { width: 1440, height: 1000 });
+  console.log('PASS Data Review UI: read-only evidence -> explicit conclusion -> explicit canonical choice -> final summary -> one confirmation.');
+} finally {
+  await browser.close();
+  await stop();
+}

@@ -163,7 +163,7 @@ assert.match(duplicateEvidenceSource, /duplicateCompleteness/, 'Shared duplicate
 assert.match(duplicateComparisonSource, /Preview candidate|查看候选页/, 'Shared duplicate evidence must offer an in-context candidate Preview without styling it as a primary action.');
 assert.match(duplicateEvidenceSource, /source_primary[\s\S]*approved[\s\S]*completeness[\s\S]*recent_edit/, 'Duplicate recommendation must explain source, approval, completeness and recency evidence in priority order.');
 assert.match(bulkDuplicateSource, /暂不处理/, 'Bulk duplicate review must let operators defer an ambiguous candidate without persisting a decision.');
-assert.match(reviewSource, /稍后再判断|Decide later/, 'Single-group duplicate review must expose a low-priority defer action without persisting a decision.');
+assert.doesNotMatch(reviewSource, /review-defer-action|稍后再判断|Decide later/, 'Single-group Data Review must keep one final action instead of mixing defer and confirm controls.');
 assert.match(duplicateComparisonSource, /water_temperature[\s\S]*ph_level[\s\S]*tank_size/, 'Shared duplicate evidence must compare core source-data facts.');
 assert.match(duplicateComparisonSource, /member\.image/, 'Shared duplicate evidence must show candidate images when available.');
 assert.match(duplicateComparisonSource, /duplicate-preview-action/, 'Duplicate candidate Preview must be a low-priority text action.');
@@ -173,9 +173,12 @@ assert.match(bulkDuplicateSource, /loadProductTruthCatalog[\s\S]*catalogByKey/, 
 assert.match(reviewSource, /loadProductTruthCatalog[\s\S]*catalogByKey/, 'Single-group duplicate review must lazy-load the same source facts.');
 assert.match(bulkDuplicateSource, /DuplicateCandidateComparison/, 'Bulk duplicate review must use the shared comparison component.');
 assert.match(reviewSource, /DuplicateCandidateComparison/, 'Single-group Data Review must use the same duplicate comparison component as bulk review.');
+assert.doesNotMatch(reviewSource, /DuplicateCandidateComparison[\s\S]{0,500}allowKeepSelection/, 'Single-group evidence comparison must remain read-only; canonical choice belongs in the decision step.');
+assert.match(reviewSource, /review-decision-options[\s\S]*review-canonical-choice[\s\S]*review-result-preview/, 'Duplicate Data Review must separate conclusion, final page choice and final-result summary in that order.');
+assert.match(reviewSource, /review-canonical-option[\s\S]*type="radio"/, 'The final SEO page choice must use one explicit radio selection step.');
 assert.match(reviewSource, /type="radio"[\s\S]*review-choice/, 'Single-group Data Review conclusions must be radio decisions rather than competing primary buttons.');
 assert.doesNotMatch(reviewSource, /<button[^>]*review-choice/, 'Data Review conclusions must not regress into large action buttons.');
-assert.match(reviewSource, /review-result-preview[\s\S]*确认后结果|AFTER CONFIRMATION/, 'Data Review must preview the result before final confirmation.');
+assert.match(reviewSource, /review-result-preview[\s\S]*最终确认版本|FINAL RESULT/, 'Data Review must show one explicit final-result summary before confirmation.');
 assert.match(reviewSource, /系统已确认[\s\S]*系统无法自动确认/, 'Category-conflict evidence must state both what the system knows and what still requires human authority.');
 assert.match(reviewSource, /这个页面不会修改任何分类[\s\S]*Product Data/, 'Source-correction outcome must state that Data Review records a conclusion but does not rewrite Product Data.');
 assert.match(uiFoundationSource, /review-choice > input[\s\S]*accent-color:\s*var\(--state-warning\)/, 'Human Data Review choices must use the Amber decision grammar without becoming primary buttons.');

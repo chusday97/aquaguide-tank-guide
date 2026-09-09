@@ -270,6 +270,8 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Admin browser regression
         run: npm run test:admin-content-ui
+      - name: Species SEO Data Review browser regression
+        run: npm run test:data-review-ui
       - name: Publish Center browser regression
         run: npm run test:publish-center-ui
       - name: Operations Studio populated work-item browser regression

@@ -44,7 +44,7 @@ function CategoryConflictEvidence({ group, categoryMembers, isUiEnglish }) {
   );
 }
 
-function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', issueDescription = '', group, set, categoryMembers = [], row, catalogByKey, seoRows, groupSeoRows, locale, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned, onDefer }) {
+function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', issueDescription = '', group, set, categoryMembers = [], row, catalogByKey, seoRows, groupSeoRows, locale, schemaReady, readOnly, onSaved, onResolved, onSeoPolicyAligned }) {
   const { appLocale, t } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [decision, setDecision] = useState(row?.decision || '');
@@ -124,8 +124,9 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
     ? (isUiEnglish ? 'Choose one conclusion after reviewing the evidence. Nothing is changed until you confirm.' : '先根据上方依据选择一个结论；点击确认前不会产生任何修改。')
     : decision === 'duplicate_records' && !canonicalKey
       ? (isUiEnglish ? 'Choose the one SEO page to keep before confirming.' : '确认重复前，还需要选择最终保留的 1 个 SEO 页面。')
-      : (isUiEnglish ? 'Review the “After confirmation” result below, then confirm once.' : '先核对下方“确认后结果”，确认无误后只需保存一次。');
+      : (isUiEnglish ? 'Review the final result below, then confirm once.' : '先核对下方“最终确认版本”，确认无误后只需确认一次。');
   const canonicalMember = duplicateMembers.find((item) => item.catalog_key === canonicalKey);
+  const outcomeStep = decision === 'duplicate_records' ? '4' : '3';
   const outcome = !decision ? null
     : decision === 'accepted_as_is'
       ? {
@@ -172,9 +173,6 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
             seoRows={seoRows}
             groupSeoRows={groupSeoRows}
             locale={locale}
-            canonicalKey={canonicalKey}
-            onCanonicalChange={setCanonicalKey}
-            allowKeepSelection={decision === 'duplicate_records'}
             isUiEnglish={isUiEnglish}
           />
         ) : <CategoryConflictEvidence group={group} categoryMembers={categoryMembers} isUiEnglish={isUiEnglish} />}
@@ -201,7 +199,7 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
             </label>
           </> : <>
             <label className={`review-choice ${decision === 'duplicate_records' ? 'active' : ''}`}>
-              <input type="radio" name={`decision-${issueKey}`} checked={decision === 'duplicate_records'} onChange={() => { setDecision('duplicate_records'); if (!canonicalKey && recommendedCanonicalKey) setCanonicalKey(recommendedCanonicalKey); }} />
+              <input type="radio" name={`decision-${issueKey}`} checked={decision === 'duplicate_records'} onChange={() => setDecision('duplicate_records')} />
               <span><strong>{isUiEnglish ? 'They are duplicate records' : '确认是重复记录'}</strong><small>{isUiEnglish ? 'Keep one SEO page and canonicalize the rest.' : '保留 1 个 SEO 页面，其余建立 Canonical。'}</small></span>
             </label>
             <label className={`review-choice ${decision === 'distinct_records' ? 'active' : ''}`}>
@@ -211,8 +209,27 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
           </>}
         </div>
 
-        {outcome ? <section className="review-result-preview" aria-label={isUiEnglish ? 'Result after confirmation' : '确认后结果'}>
-          <small>{isUiEnglish ? '3 · AFTER CONFIRMATION' : '3 · 确认后结果'}</small>
+        {decision === 'duplicate_records' ? <section className="review-canonical-choice" data-testid="review-canonical-choice" aria-label={isUiEnglish ? 'Choose the final SEO page' : '选择最终保留页面'}>
+          <div className="review-canonical-choice-head">
+            <div><small>{isUiEnglish ? '3 · PAGE TO KEEP' : '3 · 选择最终保留页面'}</small><strong>{isUiEnglish ? 'Choose the one SEO page that remains independent' : '选择最终独立保留的 1 个 SEO 页面'}</strong></div>
+            <span>{isUiEnglish ? 'SEO only · Source Data unchanged' : '仅影响 SEO · 不改源数据'}</span>
+          </div>
+          <p>{isUiEnglish ? 'The other duplicate pages will point their Canonical to this page. The system suggestion is evidence, not an automatic decision.' : '其余重复页面的 Canonical 会指向这里。系统建议只是判断依据，不会替你自动确认。'}</p>
+          <div className="review-canonical-options" role="radiogroup" aria-label={isUiEnglish ? 'Final page to keep' : '最终保留页面'}>
+            {duplicateMembers.map((member) => {
+              const selected = canonicalKey === member.catalog_key;
+              const recommended = recommendedCanonicalKey === member.catalog_key;
+              return <label key={member.catalog_key} className={`review-canonical-option ${selected ? 'active' : ''}`}>
+                <input type="radio" name={`canonical-${issueKey}`} checked={selected} onChange={() => setCanonicalKey(member.catalog_key)} />
+                <span><strong>{member.name}</strong><small>{member.scientific_name} · {member.catalog_key}</small></span>
+                {recommended ? <em>{isUiEnglish ? 'System suggestion' : '系统建议'}</em> : null}
+              </label>;
+            })}
+          </div>
+        </section> : null}
+
+        {outcome ? <section className="review-result-preview" data-testid="review-final-result" aria-label={isUiEnglish ? 'Final result before confirmation' : '最终确认版本'}>
+          <small>{isUiEnglish ? `${outcomeStep} · FINAL RESULT` : `${outcomeStep} · 最终确认版本`}</small>
           <strong>{outcome.title}</strong>
           <ul>{outcome.lines.map((line) => <li key={line}>{line}</li>)}</ul>
         </section> : null}
@@ -220,8 +237,7 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
         <div className="review-decision-command-footer">
           <p>{actionHint}</p>
           <div className="review-decision-primary-actions">
-            {issueType === 'duplicate_set' ? <button type="button" className="review-defer-action" onClick={() => onDefer?.()}>{isUiEnglish ? 'Decide later' : '稍后再判断'}</button> : null}
-            <button type="button" className="primary-button compact review-confirm-action" onClick={save} disabled={saving || actionBlocked}>{saving ? t('common.saving') : issueType === 'category_conflict' ? (isUiEnglish ? 'Record conclusion' : '记录复核结论') : (isUiEnglish ? 'Confirm result' : '确认处理结果')}</button>
+            <button type="button" data-testid="review-confirm-final" className="primary-button compact review-confirm-action" onClick={save} disabled={saving || actionBlocked}>{saving ? t('common.saving') : (isUiEnglish ? 'Confirm final result' : '确认最终结果')}</button>
           </div>
         </div>
       </section>
@@ -238,7 +254,7 @@ function ReviewDecision({ issueKey, issueType, issueLabel = '', issueMeta = '', 
 
 }
 
-export default function DataReviewPanel({ group, reviewRows = {}, seoRows = {}, groupSeoRows = {}, locale = 'zh-CN', schemaReady = false, readOnly = false, onSaved, onResolved, onSeoPolicyAligned, onDefer }) {
+export default function DataReviewPanel({ group, reviewRows = {}, seoRows = {}, groupSeoRows = {}, locale = 'zh-CN', schemaReady = false, readOnly = false, onSaved, onResolved, onSeoPolicyAligned }) {
   const { appLocale } = useAppLanguage();
   const isUiEnglish = appLocale === 'en';
   const [catalogByKey, setCatalogByKey] = useState(() => new Map());
@@ -264,7 +280,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, seoRows = {}, 
             issueLabel={isUiEnglish ? 'Category conflict' : '分类冲突'} issueMeta={group.categories.join(' ↔ ')}
             issueDescription={isUiEnglish ? 'The same Base Species appears in multiple product categories.' : '同一基础物种位于多个产品分类，需要人工确认后才能继续 SEO。'}
             group={group} categoryMembers={categoryMembers}
-            row={reviewRows[categoryIssueKey(group)]} catalogByKey={catalogByKey} seoRows={seoRows} groupSeoRows={groupSeoRows} locale={locale} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} onDefer={onDefer} />
+            row={reviewRows[categoryIssueKey(group)]} catalogByKey={catalogByKey} seoRows={seoRows} groupSeoRows={groupSeoRows} locale={locale} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} />
         </div>
       ) : null}
       {group.duplicate_sets?.map((set) => (
@@ -274,7 +290,7 @@ export default function DataReviewPanel({ group, reviewRows = {}, seoRows = {}, 
             issueMeta={`${set.name} · ${set.scientific_name}`}
             issueDescription={`${set.member_ids.length} ${isUiEnglish ? 'source records need one human decision.' : '条源记录需要一个人工结论。'}`}
             group={group} set={set}
-            row={reviewRows[set.duplicate_set_key]} catalogByKey={catalogByKey} seoRows={seoRows} groupSeoRows={groupSeoRows} locale={locale} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} onDefer={onDefer} />
+            row={reviewRows[set.duplicate_set_key]} catalogByKey={catalogByKey} seoRows={seoRows} groupSeoRows={groupSeoRows} locale={locale} schemaReady={schemaReady} readOnly={readOnly} onSaved={onSaved} onResolved={onResolved} onSeoPolicyAligned={onSeoPolicyAligned} />
         </div>
       ))}
     </section>

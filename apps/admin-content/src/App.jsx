@@ -1195,7 +1195,7 @@ export default function App() {
   const toolDrawerMeta = ({
     dataReview: {
       title: appLocale === 'en' ? 'Resolve data issues' : '处理数据问题',
-      subtitle: appLocale === 'en' ? 'Choose the action first; supporting evidence stays below.' : '先选择处理结论；判断依据统一放在下方。',
+      subtitle: appLocale === 'en' ? 'Review the evidence first, then choose one conclusion and confirm the final result.' : '先看判断依据，再选择一个结论并确认最终结果。',
     },
     readiness: {
       title: t('editor.publishCheck'),
@@ -1576,7 +1576,6 @@ export default function App() {
                 locale={contentLocale}
                 schemaReady={dataReviewSchemaReady}
                 readOnly={isReadOnlyDemoMode}
-                onDefer={() => setActiveTool(null)}
                 onSaved={(row) => setDataReviewRows((current) => ({ ...current, [row.issue_key]: row }))}
                 onResolved={(row) => {
                   const nextRows = { ...dataReviewRows, [row.issue_key]: row };
