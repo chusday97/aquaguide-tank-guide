@@ -1188,3 +1188,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Extended Heavy browser regression verifies desktop + 390px Operations access, no horizontal overflow, and that global batch entries cannot regress into current-page tools.
 - PASS: full Species SEO contract, Repo backend/API/routing gates, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
 - NEXT: compress dense top chrome while preserving one current task and the existing review/publish safety boundary.
+
+## 2026-09-09 — SEO Admin compact top workflow chrome
+- Functional checkpoint: `bf85231b fix(admin): compact seo workflow chrome`.
+- Measured the three layers below topbar before change: 178px desktop / 187px mobile.
+- Preserved the current-task notification, converted workflow cards to stage-only navigation, and compacted the current-page review handoff. New measured total: 136px desktop / 137px mobile.
+- Heavy browser hierarchy regression now enforces <=140px on desktop/mobile and keeps the actual current problem title visible on mobile.
+- PASS: SEO Admin contract/browser regression, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
+- NEXT: current-page/Base/Preview ownership clarity.

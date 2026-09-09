@@ -17,7 +17,8 @@
 - [x] Data Review decision-basis convergence (`2fcba840`): evidence-only comparison → human conclusion → explicit canonical choice → final-result summary → one confirm; system recommendation is not auto-selected.
 - [x] Species SEO edit action convergence (`b3ec2d8e`): Search & indexing defaults open; top Review bar owns save/review; page/Base bottom duplicate save buttons and Draft chips removed.
 - [x] Page/global tool hierarchy (`b6c44a62`): current-page footer keeps only contextual tools; one top-level Operations drawer owns batch SEO, bulk duplicate/content review, template import and global queues.
-- [ ] Reduce dense top chrome (`当前任务` + 4-stage workflow + current-page review) without hiding the active next action or weakening publish/review gates.
+- [x] Compact top workflow chrome (`bf85231b`): current task + stage navigator + page review stay <=140px on desktop/mobile while retaining one action boundary.
+- [ ] Continue current-page / Base / Preview ownership clarity and remove remaining duplicate context labels or controls.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-09
