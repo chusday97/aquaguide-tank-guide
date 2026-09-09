@@ -56,6 +56,13 @@ const runViewport = async (label, viewport) => {
   assert.match(await coreSeo.innerText(), /搜索展示[\s\S]*收录与 Canonical/);
   assert.equal(await page.locator('.editor-footer button').count(), 0, 'Editor footer must not duplicate top review actions.');
   assert.equal(await page.locator('.editor-panel .draft-safety-chip').count(), 0, 'Editor body must not repeat Draft status from the top review bar.');
+  const topChromeHeight = async () => {
+    const selectors = ['.current-task-notice', '.workflow-command-center', '.page-review-top-slot'];
+    let total = 0;
+    for (const selector of selectors) total += await page.locator(selector).evaluate(element => element.getBoundingClientRect().height);
+    return total;
+  };
+  assert.equal((await topChromeHeight()) <= 140, true, 'Desktop task + workflow + page-review chrome must stay within the compact 140px budget.');
   const currentPageTools = page.locator('.current-page-tools');
   assert.match(await currentPageTools.evaluate(element => element.textContent || ''), /当前页面工具[\s\S]*发布资格|当前页面工具[\s\S]*发布检查/);
   assert.doesNotMatch(await currentPageTools.evaluate(element => element.textContent || ''), /批量审核重复记录|批量内容审核|SEO 模板导入|工作队列/);
@@ -69,6 +76,8 @@ const runViewport = async (label, viewport) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.waitForTimeout(100);
   assert.equal(await operationsTrigger.isVisible(), true, 'Operations entry must remain accessible on mobile.');
+  assert.equal((await topChromeHeight()) <= 140, true, 'Mobile task + workflow + page-review chrome must stay within the compact 140px budget.');
+  assert.equal(await page.locator('.current-task-notice').getByText('33 个数据问题需要确认', { exact: true }).isVisible(), true, 'Mobile current-task notification must keep the actual problem title visible after compaction.');
   assert.equal(await operationsDrawer.evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Mobile Operations drawer must not overflow horizontally.');
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0, 'Mobile SEO Admin must not gain page-level horizontal overflow from the Operations entry.');
   await page.setViewportSize({ width: 1440, height: 1000 });
@@ -121,7 +130,7 @@ const runViewport = async (label, viewport) => {
 try {
   await waitForReady();
   await runViewport('desktop + responsive mobile', { width: 1440, height: 1000 });
-  console.log('PASS SEO Admin hierarchy: Data Review decision flow + current-page/global Operations separation + responsive layout.');
+  console.log('PASS SEO Admin hierarchy: compact top chrome + Data Review decision flow + page/global Operations separation + responsive layout.');
 } finally {
   await browser.close();
   await stop();
