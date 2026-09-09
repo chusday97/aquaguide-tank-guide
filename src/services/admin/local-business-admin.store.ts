@@ -1,9 +1,10 @@
-import { careArticleAdminInputSchema, speciesAdminInputSchema, type CareArticleDetailDto, type ReleaseEventDto, type SpeciesDetailDto } from '../../../packages/contracts/src';
+import { careArticleAdminInputSchema, speciesAdminInputSchema, type CareArticleDetailDto, type PublicAssetDto, type ReleaseEventDto, type SpeciesDetailDto } from '../../../packages/contracts/src';
 import { fishData } from '../../data/fishData';
 import { careTopicsData } from '../../data/careTopicsData';
 import type { Fish } from '../../types';
 import { AquaGuideApiError } from '../api/api-client';
-import type { AdminCareArticleRecord, AdminSpeciesRecord, CareArticleAdminInput, SpeciesAdminInput } from './content-admin.service';
+import type { AdminAssetRecord, AdminCareArticleRecord, AdminSpeciesRecord, CareArticleAdminInput, SpeciesAdminInput } from './content-admin.service';
+import { localAssetStore } from './local-asset.store';
 
 const STORAGE_KEY = 'aquaguide-local-business-admin-v1';
 const now = () => new Date().toISOString();
@@ -18,6 +19,8 @@ type LocalBusinessAdminState = {
   publishedSpecies: Record<string, SpeciesAdminInput>;
   publishedCare: Record<string, CareArticleAdminInput>;
   publishedCareMeta?: Record<string, { sourceVersion: number; publishedAt: string }>;
+  publishedSpeciesAssets?: Record<string, AdminAssetRecord[]>;
+  publishedCareAssets?: Record<string, AdminAssetRecord[]>;
   releaseEvents?: ReleaseEventDto[];
   updatedAt: string;
 };
@@ -52,15 +55,15 @@ const careInputFromSeed = (topic: (typeof careTopicsData)[number]): CareArticleA
   nextStep: topic.nextStep?.trim() || topic.diagnoseWhen.at(-1)?.trim() || topic.summary, keywords: topic.keywords,
 });
 
-const speciesRecord = (input: SpeciesAdminInput, status: AdminSpeciesRecord['status'] = 'published', version = 1): AdminSpeciesRecord => ({
-  id: `local-species-${input.catalogKey}`, ...input, status, version, speciesAssets: [],
+const speciesRecord = (input: SpeciesAdminInput, status: AdminSpeciesRecord['status'] = 'published', version = 1, assets: AdminAssetRecord[] = []): AdminSpeciesRecord => ({
+  id: `local-species-${input.catalogKey}`, ...input, status, version, speciesAssets: clone(assets),
 });
 
-const careRecord = (input: CareArticleAdminInput, status: AdminCareArticleRecord['status'] = 'published', version = 1): AdminCareArticleRecord => ({
+const careRecord = (input: CareArticleAdminInput, status: AdminCareArticleRecord['status'] = 'published', version = 1, assets: AdminAssetRecord[] = []): AdminCareArticleRecord => ({
   id: `local-care-${input.catalogKey}`, catalogKey: input.catalogKey, title: input.title, category: input.category,
   urgency: input.urgency, summary: input.summary, symptoms: input.symptoms, avoidActions: input.avoidActions,
   observeItems: input.observeItems, diagnoseWhen: input.diagnoseWhen, nextStep: input.nextStep, keywords: input.keywords,
-  status, version, careArticleAssets: [],
+  status, version, careArticleAssets: clone(assets),
   careArticleSteps: input.steps.map((step, index) => ({ id: `local-care-${input.catalogKey}-step-${index + 1}`, position: index + 1, instruction: step.instruction, durationLabel: step.durationLabel, actionTitle: step.actionTitle, actionKind: step.actionKind })),
 });
 
@@ -72,6 +75,7 @@ const buildSeedState = (): LocalBusinessAdminState => {
     publishedSpecies: Object.fromEntries(speciesInputs.map(input => [input.catalogKey, input])),
     publishedCare: Object.fromEntries(careInputs.map(input => [input.catalogKey, input])),
     publishedCareMeta: Object.fromEntries(careInputs.map(input => [input.catalogKey, { sourceVersion: 1, publishedAt: now() }])),
+    publishedSpeciesAssets: {}, publishedCareAssets: {},
     releaseEvents: [], updatedAt: now(),
   };
 };
@@ -88,6 +92,8 @@ const readState = (): LocalBusinessAdminState => {
     if (parsed?.schemaVersion !== 1 || !Array.isArray(parsed.species) || !Array.isArray(parsed.care)) throw new Error('invalid local admin store');
     parsed.releaseEvents = Array.isArray(parsed.releaseEvents) ? parsed.releaseEvents : [];
     parsed.publishedCareMeta = parsed.publishedCareMeta || {};
+    parsed.publishedSpeciesAssets = parsed.publishedSpeciesAssets || {};
+    parsed.publishedCareAssets = parsed.publishedCareAssets || {};
     for (const record of parsed.care) {
       if (!parsed.publishedCare[record.catalogKey] || parsed.publishedCareMeta[record.catalogKey]) continue;
       const latestPublish = parsed.releaseEvents.find(event => event.authority === 'product_care' && event.domain === 'care' && event.resourceKey === record.catalogKey && event.status === 'published');
@@ -116,7 +122,7 @@ const appendReleaseEvent = (state: LocalBusinessAdminState, event: ReleaseEventD
 
 const clone = <T>(value: T): T => structuredClone(value);
 const localization = { requestedLocale: 'zh-CN' as const, resolvedLocale: 'zh-CN' as const, usedFallback: false };
-const speciesDto = (record: AdminSpeciesRecord, input: SpeciesAdminInput): SpeciesDetailDto => ({
+const speciesDto = (record: AdminSpeciesRecord, input: SpeciesAdminInput, assets: PublicAssetDto[] = []): SpeciesDetailDto => ({
   id: record.id, catalogKey: input.catalogKey, name: input.name, scientificName: input.scientificName,
   category: input.category, difficulty: input.difficulty, waterTemperatureText: input.waterTemperatureText,
   waterTemperatureMinC: input.waterTemperatureMinC, waterTemperatureMaxC: input.waterTemperatureMaxC,
@@ -124,16 +130,22 @@ const speciesDto = (record: AdminSpeciesRecord, input: SpeciesAdminInput): Speci
   waterChangeCycleDays: input.waterChangeCycleDays, description: input.description, diet: input.diet,
   tankSizeText: input.tankSizeText, minTankLiters: input.minTankLiters, temperament: input.temperament,
   sizeClass: input.sizeClass, housingMode: input.housingMode, housingReason: input.housingReason,
-  assets: [], updatedAt: now(), localization,
+  assets, updatedAt: now(), localization,
 });
 
-const careDto = (record: AdminCareArticleRecord, input: CareArticleAdminInput): CareArticleDetailDto => ({
+const careDto = (record: AdminCareArticleRecord, input: CareArticleAdminInput, assets: PublicAssetDto[] = []): CareArticleDetailDto => ({
   id: record.id, catalogKey: input.catalogKey, title: input.title, category: input.category, urgency: input.urgency,
   summary: input.summary, keywords: input.keywords, symptoms: input.symptoms, avoidActions: input.avoidActions,
   observeItems: input.observeItems, diagnoseWhen: input.diagnoseWhen, nextStep: input.nextStep,
   steps: input.steps.map((step, index) => ({ id: `${record.id}-published-step-${index + 1}`, position: index + 1, instruction: step.instruction, durationLabel: step.durationLabel, actionTitle: step.actionTitle, actionKind: step.actionKind })),
-  references: [], assets: [], updatedAt: now(), localization,
+  references: [], assets, updatedAt: now(), localization,
 });
+const resolvePublicAssets = async (assets: AdminAssetRecord[] | undefined): Promise<PublicAssetDto[]> => {
+  const current = (assets || []).filter(asset => asset.isCurrent);
+  const resolved = await Promise.all(current.map(asset => localAssetStore.toPublicAsset(asset)));
+  return resolved.filter((asset): asset is PublicAssetDto => Boolean(asset));
+};
+
 const publishedFishFromState = (state: LocalBusinessAdminState): Fish[] => {
   const seedIds = new Set(fishData.map(item => item.id));
   const seeded = fishData.map(seed => {
@@ -162,14 +174,18 @@ export const localBusinessAdminStore = {
     const state = readState();
     const input = state.publishedSpecies[catalogKey];
     const record = state.species.find(item => item.catalogKey === catalogKey);
-    return input && record ? speciesDto(record, input) : null;
+    if (!input || !record) return null;
+    const assets = await resolvePublicAssets(state.publishedSpeciesAssets?.[catalogKey]);
+    return speciesDto(record, input, assets);
   },
 
   getPublishedCareArticle: async (catalogKey: string) => {
     const state = readState();
     const input = state.publishedCare[catalogKey];
     const record = state.care.find(item => item.catalogKey === catalogKey);
-    return input && record ? careDto(record, input) : null;
+    if (!input || !record) return null;
+    const assets = await resolvePublicAssets(state.publishedCareAssets?.[catalogKey]);
+    return careDto(record, input, assets);
   },
   getPublishedCareSeoSource: async (id: string) => {
     const state = readState();
@@ -212,7 +228,7 @@ export const localBusinessAdminStore = {
     if (index < 0) throw new AquaGuideApiError(404, 'NOT_FOUND', '本地 Species 不存在。');
     const current = state.species[index];
     assertVersion(current.version, version);
-    const next = speciesRecord(input, 'draft', current.version + 1);
+    const next = speciesRecord(input, 'draft', current.version + 1, current.speciesAssets || []);
     next.id = current.id;
     state.species[index] = next; writeState(state); return clone(next);
   },
@@ -224,9 +240,39 @@ export const localBusinessAdminStore = {
     if (index < 0) throw new AquaGuideApiError(404, 'NOT_FOUND', '本地 Care 内容不存在。');
     const current = state.care[index];
     assertVersion(current.version, version);
-    const next = careRecord(input, 'draft', current.version + 1);
+    const next = careRecord(input, 'draft', current.version + 1, current.careArticleAssets || []);
     next.id = current.id;
     state.care[index] = next; writeState(state); return clone(next);
+  },
+
+
+  attachAsset: async (
+    type: 'species' | 'care',
+    id: string,
+    metadata: Omit<AdminAssetRecord, 'assetVersion' | 'isCurrent'>,
+  ) => {
+    const state = readState();
+    const rows = type === 'species' ? state.species : state.care;
+    const index = rows.findIndex(item => item.id === id);
+    if (index < 0) throw new AquaGuideApiError(404, 'NOT_FOUND', '本地内容不存在，图片没有绑定。');
+    const current = rows[index] as AdminSpeciesRecord | AdminCareArticleRecord;
+    const assets = type === 'species'
+      ? [...((current as AdminSpeciesRecord).speciesAssets || [])]
+      : [...((current as AdminCareArticleRecord).careArticleAssets || [])];
+    const assetVersion = Math.max(0, ...assets.map(asset => asset.assetVersion || 0)) + 1;
+    const nextAssets = assets.map(asset => (
+      asset.isCurrent && asset.variant === metadata.variant && asset.stepId === metadata.stepId
+        ? { ...asset, isCurrent: false }
+        : asset
+    ));
+    const nextAsset: AdminAssetRecord = { ...metadata, assetVersion, isCurrent: true };
+    nextAssets.unshift(nextAsset);
+    const next = { ...current, status: current.status === 'published' ? 'draft' : current.status } as AdminSpeciesRecord | AdminCareArticleRecord;
+    if (type === 'species') (next as AdminSpeciesRecord).speciesAssets = nextAssets;
+    else (next as AdminCareArticleRecord).careArticleAssets = nextAssets;
+    rows[index] = next as never;
+    writeState(state);
+    return clone(nextAssets);
   },
 
   setStatus: async (type: 'species' | 'care', id: string, version: number, status: 'published' | 'archived') => {
@@ -239,8 +285,14 @@ export const localBusinessAdminStore = {
     rows[index] = next as never;
     if (type === 'species') {
       const species = next as AdminSpeciesRecord;
-      if (status === 'published') state.publishedSpecies[species.catalogKey] = speciesAdminInputSchema.parse(species);
-      else delete state.publishedSpecies[species.catalogKey];
+      if (status === 'published') {
+        state.publishedSpecies[species.catalogKey] = speciesAdminInputSchema.parse(species);
+        state.publishedSpeciesAssets = state.publishedSpeciesAssets || {};
+        state.publishedSpeciesAssets[species.catalogKey] = clone(species.speciesAssets || []);
+      } else {
+        delete state.publishedSpecies[species.catalogKey];
+        if (state.publishedSpeciesAssets) delete state.publishedSpeciesAssets[species.catalogKey];
+      }
     } else {
       const care = next as AdminCareArticleRecord;
       if (status === 'published') {
@@ -250,9 +302,12 @@ export const localBusinessAdminStore = {
         });
         state.publishedCareMeta = state.publishedCareMeta || {};
         state.publishedCareMeta[care.catalogKey] = { sourceVersion: care.version, publishedAt: now() };
+        state.publishedCareAssets = state.publishedCareAssets || {};
+        state.publishedCareAssets[care.catalogKey] = clone(care.careArticleAssets || []);
       } else {
         delete state.publishedCare[care.catalogKey];
         if (state.publishedCareMeta) delete state.publishedCareMeta[care.catalogKey];
+        if (state.publishedCareAssets) delete state.publishedCareAssets[care.catalogKey];
       }
     }
     const resource = next as AdminSpeciesRecord | AdminCareArticleRecord;

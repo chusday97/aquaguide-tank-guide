@@ -20,6 +20,7 @@ import {
 } from '../api/api-client';
 import { isLocalBusinessAdminMode, localBusinessAdminStore } from './local-business-admin.store';
 import { localCareSeoEditorialStore } from './local-care-seo-editorial.store';
+import { localAssetStore } from './local-asset.store';
 
 export type SpeciesAdminInput = z.infer<typeof speciesAdminInputSchema>;
 export type CareArticleAdminInput = z.infer<typeof careArticleAdminInputSchema>;
@@ -50,6 +51,11 @@ export type AdminAssetRecord = {
   storagePath: string;
   assetVersion: number;
   isCurrent: boolean;
+  mimeType?: string;
+  width?: number;
+  height?: number;
+  byteSize?: number;
+  stepId?: string;
 };
 
 export type AdminSpeciesRecord = SpeciesAdminInput & {
@@ -147,7 +153,25 @@ export const contentAdminService = {
     })
   ),
 
+  getAssetPreviewUrl: (asset: AdminAssetRecord) => (isLocalBusinessAdminMode && asset.storageBucket === 'local-indexeddb' ? localAssetStore.getObjectUrl(asset.id) : Promise.resolve(null)),
+
   async uploadAsset(type: 'species' | 'care', contentId: string, file: File, stepId?: string) {
+    if (isLocalBusinessAdminMode) {
+      const assetId = `local-asset-${globalThis.crypto?.randomUUID?.() || Date.now()}`;
+      let stored = false;
+      try {
+        const blob = await localAssetStore.put(assetId, file);
+        stored = true;
+        return await localBusinessAdminStore.attachAsset(type, contentId, {
+          id: assetId, variant: type === 'species' ? 'detail' : stepId ? 'article_step' : 'article_main',
+          storageBucket: 'local-indexeddb', storagePath: assetId, mimeType: blob.mimeType,
+          width: blob.width, height: blob.height, byteSize: blob.byteSize, stepId,
+        });
+      } catch (error) {
+        if (stored) await localAssetStore.remove(assetId).catch(() => undefined);
+        throw error;
+      }
+    }
     const query = new URLSearchParams({ contentType: type, contentId, fileName: file.name });
     if (stepId) query.set('stepId', stepId);
     let response: Response;
