@@ -1,3 +1,9 @@
+## 2026-09-10 公开页面 metadata 统一门禁
+
+- [x] 公开结构测试现在要求 Marketing、Category、Species、Guide 全部调用共享 `setSeoDocument`，防止页面级 metadata 写入器重新分叉。
+- [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过。
+- [ ] 真实路由切换仍待 Mac 解锁后复验；Figma Canonical、可读独立 Critic 和索引放行仍未完成。
+
 ## 2026-09-10 Species metadata 统一收口
 
 - [x] Species 页移除独立的 `setMeta`/`setCanonical` 写入器，改用共享 `setSeoDocument`；路由切换的 title、description、robots、canonical 和 JSON-LD 清理由同一服务负责。

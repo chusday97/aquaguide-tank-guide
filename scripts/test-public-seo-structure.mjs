@@ -15,6 +15,7 @@ const publicPages = [
 for (const [relativeFile, requiredPieces] of publicPages) {
   const source = read(relativeFile);
   assert.match(source, /<h1\b/, `${relativeFile} must define a visible H1`);
+  assert.match(source, /setSeoDocument/, `${relativeFile} must use the shared SEO document service`);
   for (const piece of requiredPieces) {
     assert.match(source, new RegExp(`\\b${piece}\\b`), `${relativeFile} is missing ${piece}`);
   }

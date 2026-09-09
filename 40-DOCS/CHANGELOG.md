@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Changed: 公开结构回归要求 Marketing、Category、Species、Guide 全部使用共享 SEO metadata 服务，防止 canonical/robots 写入分叉。
+- Verified: 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过；真实路由切换验收仍未完成。
+
 - Changed: Species 页面改用共享 `setSeoDocument` 管理 title、description、robots、canonical 和 JSON-LD 清理，移除重复 metadata 写入器。
 - Verified: 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过；真实路由切换验收仍待浏览器恢复。
 

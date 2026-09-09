@@ -16,6 +16,11 @@
 
 # AquaGuide 交接文档
 
+## 2026-09-10 公开 metadata 架构门禁
+
+- 结构回归现在要求四类公开页面都使用共享 `setSeoDocument`；Species 的第二套写入器已移除并由测试持续保护。
+- 公开结构、契约、文案、TypeScript 与 diff-check 通过；真实路由切换、三档截图和独立 Critic 仍待浏览器恢复。
+
 ## 2026-09-10 Species metadata 统一
 
 - Species 公开页现在与 Marketing、Category、Guide 共用 `setSeoDocument`，不再保留第二套 metadata 写入逻辑。
