@@ -715,6 +715,7 @@
 - 当前分支：`codex/species-seo-preview-v1`；动效代码已本地提交 `f1057d71`，未推送。
 - 本轮完成：共享 motion tokens、Species Hero/章节进入、可测量 FAQ 展开、按钮与链接反馈、reduced-motion 静态可读性，以及 `test:seo-motion`。
 - 验证：`npm run lint`、`npm run build`、`npm run test:seo-evidence-bindings`、`npm run test:public-seo-contract`、`npm run test:seo-editorial-evidence`、`git diff --check` 通过；内置浏览器实测 FAQ 可展开，品系切换后的 URL、H1、图片 Alt 和当前状态一致。
+- 内置浏览器追加检查：Category 与 Guide 路由均可进入并保持 Public Header；Guide 的“内容正在准备”状态没有持续动画。
 - 当前阻塞：Playwright 内置 Chromium 与系统 Chrome 均被 macOS MachPort 权限阻断，不能宣称本轮动效浏览器专项通过。Figma 继续暂停，独立 Critic 尚未取得可读报告。
 - 未提交且明确隔离：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 的既有素材/截图改动。
 - 下一步：恢复可用浏览器后重跑 `test:seo-motion` 和三档 Species 回归；随后做用户视觉确认，再启动一次可读独立 Critic。所有页面保持 `noindex,follow`。
