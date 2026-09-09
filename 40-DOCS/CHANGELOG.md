@@ -146,6 +146,7 @@
 - 2026-09-10：补充自动化浏览器诊断：系统 Chrome 与 Playwright Chromium 同样受 MachPort 阻塞，Playwright WebKit 未安装；保持停止条件，不反复启动。
 - 2026-09-10：确认内置浏览器新标签的 viewport 参数不会改变实际视图宽度；响应式三档验收继续等待可调整 viewport 环境。
 - 2026-09-10：安装并尝试 Playwright WebKit；其启动阶段同样被 macOS 进程环境中止，未将失败误记为页面回归。
+- 2026-09-10：收紧 Species Hero 移动端/平板媒体卡高度至 280px，桌面保持 470px；减少首屏空白且不改变图片裁切策略，lint/build 通过。
 
 - Updated project truth and release readiness to mark the current UI as frozen provisional and Supabase parity as migration-required, without executing production changes.
 - Updated the Care category browser gate to use the 4319 candidate and the current desktop detail-rail surface instead of the retired 4173/centered-dialog contract.
