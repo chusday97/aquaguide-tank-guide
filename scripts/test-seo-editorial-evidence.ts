@@ -6,6 +6,7 @@ import {
   getPublishedSpeciesEditorial,
   getSpeciesEditorialEvidenceReport,
   getSpeciesEditorialEvidenceStatus,
+  getSpeciesEditorialSource,
   speciesEditorialEvidence,
 } from '../src/data/speciesEditorialEvidence';
 import { getPublishedSpeciesProfile } from '../src/data/publishedSpeciesProfile';
@@ -22,6 +23,13 @@ assert.equal(getSpeciesEditorialEvidenceStatus(confirmed), 'confirmed');
 assert.equal(getCurrentSpeciesEditorialEvidence({ ...confirmed, renderedClaim: `${confirmed.renderedClaim} 改写` }).status, 'stale');
 assert.equal(getSpeciesEditorialEvidenceStatus({ ...confirmed, sourceIds: ['missing-source'] }), 'blocked');
 assert.equal(fingerprintSpeciesEditorialEvidence(sample), sample.sourceFingerprint);
+
+const cardinalSource = getSpeciesEditorialSource('fishbase-paracheirodon-axelrodi-2026');
+assert.equal(cardinalSource?.publisher, 'FishBase');
+assert.equal(cardinalSource?.url, 'https://fishbase.org/summary/Paracheirodon_axelrodi.html');
+assert.equal(cardinalSource?.sourceQuality, 'eligible');
+assert.match(cardinalSource?.support || '', /中层水域成群活动/);
+assert.match(cardinalSource?.support || '', /蠕虫和小型甲壳类/);
 
 const fireProfile = getPublishedSpeciesProfile(getSpeciesLandingSelection('sp_0001')!, 'zh-CN');
 const cardinalProfile = getPublishedSpeciesProfile(getSpeciesLandingSelection('sp_0432')!, 'zh-CN');

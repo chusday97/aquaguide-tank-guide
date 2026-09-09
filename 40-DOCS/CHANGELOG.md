@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Verified: FishBase 物种摘要页直接支持宝莲灯主要在中层水域活动并取食蠕虫和小型甲壳类；本地来源登记统一到 FishBase 主域名，未扩写页面事实或改变索引策略。
+- Added: Editorial evidence 回归保护 FishBase 来源主域名、资格状态和对应支持范围，避免来源登记漂移。
 
 - Changed: 公开结构回归要求 Marketing、Category、Species、Guide 全部使用共享 SEO metadata 服务，防止 canonical/robots 写入分叉。
 - Verified: 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过；真实路由切换验收仍未完成。

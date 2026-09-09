@@ -968,4 +968,5 @@
 - [x] 通过 FishBase 物种摘要页复核宝莲灯（`Paracheirodon axelrodi`）的“主要在中层水域活动”和“取食蠕虫及小型甲壳类”表达；页面 Biology 条目直接包含该内容，不是由兼容性标签推导。
 - [x] 将本地来源登记统一到 FishBase 主域名与下划线路径，并保留 Environment、Distribution、Biology 的定位范围；确认后的文案仍只使用既有结论。
 - [x] 重新运行 Editorial evidence、Evidence bindings、Public Contract、lint、build 与 diff-check，确认来源 fingerprint 会随登记 URL 一致重算。
+- [x] Editorial 回归新增 FishBase 来源登记断言，保护来源主域名、资格状态和支持范围不被误改。
 - [ ] 真实 390/600/1440 截图、系统浏览器回归、可读独立 Critic 和 Figma Canonical 仍未完成；页面继续 `noindex,follow`。
