@@ -860,3 +860,11 @@
 - [x] `SeoRelatedLinks` 移除重复的眉题，只保留正式 H2；Species、Marketing 等公开页面的“继续探索”区不再重复显示同一标题。
 - [x] `npm run lint`、`npm run test:public-seo-contract`、`npm run test:seo-editorial-evidence`、`npm run test:seo-evidence-bindings`、`npm run build` 与 `git diff --check` 通过。
 - [ ] 系统 Playwright 三档截图、Figma Canonical 和可读独立 Critic仍未完成，页面继续 `noindex,follow`。
+
+## 2026-09-10 养护指南准备态结构收口
+
+- [x] 为未审核的“新鱼入缸”公开指南补充非事实性的阅读路径预览：核心结论、分步操作、后续观察。
+- [x] 继续保持未审核步骤不进入用户内容；未生成 Article、HowTo 或 FAQ 结构化数据。
+- [x] 内置浏览器确认 Guide 保持 Public Header、可滚动、`/care` 入口可用，且页面没有后台审核术语。
+- [x] `npm run lint`、公开契约、Editorial、Evidence、`npm run build` 与 `git diff --check` 通过。
+- [ ] 系统 Playwright 三档截图、Figma Canonical 和可读独立 Critic 仍未完成；所有公开页面继续 `noindex,follow`。

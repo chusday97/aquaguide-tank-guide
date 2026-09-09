@@ -762,3 +762,9 @@
 - 2026-09-10 UI 修复：Species Hero 移动/平板媒体卡最小高度改为 280px，桌面仍为 470px；lint/build 已通过。待可调整 viewport 环境恢复后重点复核 390/600 构图。
 - 2026-09-10 UI 修复：`SeoSectionHeading` 不再重复显示与正式标题相同的眉题，减少“它如何生活/常见问题”等视觉重复；Editorial、Public Contract、lint/build 已通过。
 - 2026-09-10 浏览器诊断收口：Firefox 也在 headless 启动阶段 `SIGABRT`；Chromium/WebKit/Firefox 三个 Playwright 引擎均不可用。不要再重复安装引擎，等待系统权限或托管浏览器。
+
+## 2026-09-10 Guide 准备态结构补充
+
+- Guide 仍没有可公开的审核步骤；本轮只增加“阅读路径”结构预览，帮助用户理解未来内容组织，不承载生物或操作事实。
+- 内置浏览器复核 `http://127.0.0.1:3000/guides/new-fish-acclimation`：Public Header、面包屑、准备卡、阅读路径和 `/care` 入口均可见，页面可滚动。
+- 本轮通过 lint、公开契约、Editorial、Evidence、build 与 diff-check；系统 Playwright、Figma Canonical、独立 Critic 仍是门禁。

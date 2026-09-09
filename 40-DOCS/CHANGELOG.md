@@ -22,6 +22,8 @@
 - Verified: 内置浏览器首页 Hero 图片可见；lint、build、公开契约、证据绑定和 diff-check 通过。
 - Fixed: 公开 SEO 的“继续探索”组件移除重复眉题，仅保留正式 H2，统一页面标题层级。
 - Verified: 公开契约、Editorial、Evidence、lint、build 和 diff-check 通过。
+- Changed: 未审核的“新鱼入缸”公开指南增加非事实性的阅读路径预览，明确未来的核心结论、分步操作和后续观察结构。
+- Verified: Guide 准备态保持可滚动、Public Header 与 `/care` 入口可用；未生成 Article、HowTo 或 FAQ 结构化数据，相关工程门禁通过。
 
 - Fixed: 恢复 latest-main 的完整 package scripts，修复 Species SEO Draft PR #147 首次 foundation 因缺少 `project:status` 等门禁命令而失败；SEO 专项脚本与 Noto 字体保持增量。
 - Fixed: 恢复 latest-main 的 App、图鉴、物种详情和应用 CSS Owner，仅在路由层叠加 Public SEO Shell，关闭 Draft PR #147 暴露的 GP-002 应用行为回归。
