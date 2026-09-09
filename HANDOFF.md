@@ -4,6 +4,8 @@
 - 已完成：公开 SEO 页面、中文视觉系统、Species 证据/素材门禁和专项测试移植；保留 main 的 App Shell 类型与兼容性能力。
 - 已验证：lint、SEO 证据、公开契约、素材门禁、build、内置浏览器三条 Species 路径 × 390/600/1440 均通过；页面保持 `noindex,follow`。
 - 未完成：Preview parity、托管 Preview 网络边界、独立 Critic、Figma Canonical、关键词归属和索引放行。
+- 已完成：`scripts/check-preview-parity.mjs` 改为必须显式 `PREVIEW_PR`，严格校验本地/远端/PR/READY Preview SHA；缺少任何一项即失败。
+- 当前阻塞：Vercel CLI 在该 worktree 未关联项目且未返回环境信息，不能证明 Preview Supabase 与 Production 隔离；因此未推送、不创建 PR。
 - 禁止项：不改 `main`、不改 Production Supabase、不合并、不部署 Production、不调用 Figma。
 - 用户现有 `feature/admin-content-v0`、PR #144 和未跟踪文件均不在本分支修改范围内。
 

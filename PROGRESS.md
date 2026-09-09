@@ -4,7 +4,9 @@
 - 已修复：保留最新 main 的 `Fish`/兼容性/图片加载能力，改为合并 SEO 增量，避免旧分支覆盖主线类型。
 - 已验证：lint、editorial evidence、evidence bindings、public contract、asset candidates、build 和 diff-check 通过；内置浏览器完成三条 Species 路径 × 390/600/1440，无溢出、单一 H1、中文后台术语为零、robots 为 `noindex,follow`。
 - 当前阻塞：系统 Chrome 仍受 macOS MachPort 环境限制；尚未推送、创建 Draft PR 或部署 Preview；公开路由的网络请求证据需在托管 Preview 阶段补齐。
-- 下一步：审计并固化 Preview parity 脚本，完成 Preview 环境安全检查后再推送新分支。
+- 已完成：新增 fail-closed Preview parity 检查；必须显式提供 `PREVIEW_PR`，并同时匹配本地/远端/PR/READY Preview 的同一 SHA，缺少 PR 或部署时直接失败。
+- 当前阻塞：本机未关联 Vercel 项目，`npx vercel` 无法返回 Preview 环境信息；在确认 Preview 不使用 Production Supabase 前不推送新分支。
+- 下一步：确认 Vercel Preview 项目与环境变量隔离，再创建 Draft PR、推送并运行 parity gate。
 
 ## 2026-09-08 UI 分支收敛基础步骤（当前）
 

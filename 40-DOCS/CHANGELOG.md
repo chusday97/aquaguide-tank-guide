@@ -4,6 +4,7 @@
 
 - Added: 从最新 `origin/main` 建立隔离的 Species SEO Preview 候选，仅移植公开 SEO 页面、证据门禁、素材解析和测试；不带入 Admin、Supabase migration 或 Figma 历史证据。
 - Fixed: 合并最新 main 的 `Fish`、兼容性路由和图片加载能力，避免旧 SEO 分支文件覆盖当前 App Shell 类型；干净 Preview 候选通过 lint、公开契约、证据测试、build 和 diff-check。
+- Added: 新增 fail-closed Preview parity 检查，要求显式 PR 编号并核对本地、远端、Draft PR 与 READY Preview 的同一 SHA；未关联 Vercel 或缺少部署时不通过。
 
 - Fixed: 对齐动作基础浏览器门禁与当前产品契约：物种风险在详情内展开，兼容性从显式入口进入独立页面；空缸可规划加入当前鱼缸；温度冲突按当前 Domain 展示为 `not_recommended`；互动图鉴筛选测试显式使用 `mode=browse`。授权环境下动作、路由、详情、Compatibility、lint、API 类型与 production build 均通过。
 - Fixed: 为谨慎/风险状态保留明确的“混养计算”次级入口，Golden Path 不再查找已废弃的内嵌兼容抽屉；风险仍原位展开，独立计算页面负责后续数量与记录流程。
