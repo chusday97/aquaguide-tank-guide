@@ -600,6 +600,7 @@ body:has(.public-seo-root)::-webkit-scrollbar {
     position: relative;
     margin-right: -24px;
     padding-right: 28px;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
     mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
   }
 }

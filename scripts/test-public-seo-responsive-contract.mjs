@@ -19,7 +19,7 @@ for (const token of requiredTokens) {
 const responsiveRules = [
   [/@media \(max-width: 1023px\)[\s\S]*?--seo-gutter: 32px[\s\S]*?\.seo-data-rail[\s\S]*?repeat\(3, minmax\(0, 1fr\)\)/, 'tablet data rail contract'],
   [/@media \(max-width: 767px\)[\s\S]*?--seo-gutter: 24px[\s\S]*?\.seo-data-rail[\s\S]*?repeat\(2, minmax\(0, 1fr\)\)[\s\S]*?\.seo-editorial-pair[\s\S]*?grid-template-columns: 1fr/, 'mobile single-column contract'],
-  [/@media \(max-width: 559px\)[\s\S]*?mask-image:/, 'narrow chapter navigation affordance'],
+  [/@media \(max-width: 559px\)[\s\S]*?-webkit-mask-image:[\s\S]*?mask-image:/, 'narrow chapter navigation affordance'],
   [/@media \(min-width: 560px\) and \(max-width: 767px\)[\s\S]*?grid-template-columns: minmax\(0, 1fr\) minmax\(0, 1fr\)[\s\S]*?\.seo-hero__media[\s\S]*?min-height: 280px[\s\S]*?\.seo-data-rail[\s\S]*?repeat\(3, minmax\(0, 1fr\)\)/, 'tablet-specific hero contract'],
   [/@media \(prefers-reduced-motion: reduce\)[\s\S]*?scroll-behavior: auto[\s\S]*?animation-duration: 0\.01ms/, 'reduced motion contract'],
 ];

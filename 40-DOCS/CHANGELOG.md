@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fixed: 窄屏章节导航补充 WebKit `mask-image`，确保 Safari 也能看到横向滚动边缘提示。
+- Verified: 响应式、结构、文案、TypeScript 与 diff-check 通过；真实 viewport 验收仍未完成。
+
 - Fixed: 公开 SEO 根节点显式恢复 `height: auto` 与 `overflow: visible`，避免桌面应用壳的全局 `#root` 裁切导致长页面无法滚动。
 - Verified: 响应式、结构、文案、公开契约、TypeScript、production build 与 diff-check 通过；真实 viewport 浏览器验收仍未完成。
 
