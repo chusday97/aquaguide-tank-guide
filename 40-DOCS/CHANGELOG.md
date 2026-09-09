@@ -141,6 +141,7 @@
 ### Changed
 
 - 2026-09-10：在纯 Vite 本地预览中补充 Species 品系切换与浏览器历史回退验证，确认黄金米虾与极火虾的 URL、身份、图片 Alt、Product Truth、继承内容和工具入口在切换/返回后保持一致；未改变业务数据或索引策略。
+- 2026-09-10：补充内置浏览器 Species 长页面滚动与内容覆盖核对；明确当前 viewport 无法动态调整，因此不将该证据计为 390/600/1440 完整回归。
 
 - Updated project truth and release readiness to mark the current UI as frozen provisional and Supabase parity as migration-required, without executing production changes.
 - Updated the Care category browser gate to use the 4319 candidate and the current desktop detail-rail surface instead of the retired 4173/centered-dialog contract.
