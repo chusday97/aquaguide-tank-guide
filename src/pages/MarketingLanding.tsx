@@ -35,10 +35,10 @@ export default function MarketingLanding() {
       </div>
     </section>
     <section className="seo-section" aria-labelledby="marketing-value"><SeoSectionHeading number="01" eyebrow="为什么选择 AquaGuide" title="从一页百科，走到一次可靠的决定" description="公开内容负责帮助你理解；应用工具负责把要求与你自己的鱼缸进行比较。" />
-      <div className="seo-stagger mt-8 grid gap-4 md:grid-cols-3"><article className="seo-card p-6"><Fish className="h-6 w-6 text-accent" aria-hidden="true" /><h3 className="mt-6 font-serif text-2xl font-bold">认识物种</h3><p className="seo-body mt-3">看懂身份、习性、环境和日常节奏，不先被一堆参数淹没。</p></article><article className="seo-card p-6"><BookOpen className="h-6 w-6 text-accent" aria-hidden="true" /><h3 className="mt-6 font-serif text-2xl font-bold">理解饲养</h3><p className="seo-body mt-3">把经过审核的内容放在对应章节里，缺少证据时保持诚实。</p></article><article className="seo-card p-6"><Droplets className="h-6 w-6 text-accent" aria-hidden="true" /><h3 className="mt-6 font-serif text-2xl font-bold">比较鱼缸</h3><p className="seo-body mt-3">准备好后，再把物种要求带进你的真实鱼缸判断。</p></article></div>
+      <div className="seo-stagger mt-8 grid gap-4 md:grid-cols-3"><article className="seo-card p-6"><Fish className="h-6 w-6 text-accent" aria-hidden="true" /><h3 className="mt-6 font-serif text-2xl font-bold">认识物种</h3><p className="seo-body mt-3">看懂身份、习性、环境和日常节奏，不先被一堆参数淹没。</p></article><article className="seo-card p-6"><BookOpen className="h-6 w-6 text-accent" aria-hidden="true" /><h3 className="mt-6 font-serif text-2xl font-bold">理解饲养</h3><p className="seo-body mt-3">按主题查看照料信息；暂时没有答案的地方，会直接告诉你。</p></article><article className="seo-card p-6"><Droplets className="h-6 w-6 text-accent" aria-hidden="true" /><h3 className="mt-6 font-serif text-2xl font-bold">比较鱼缸</h3><p className="seo-body mt-3">准备好后，再把物种要求带进你的真实鱼缸判断。</p></article></div>
     </section>
     <section className="seo-section"><SeoCapabilityCard title="你的鱼缸，才是最后的答案" description="公开百科先帮你建立理解；进入 AquaGuide 后，再使用真实鱼缸数据完成适配与混养判断。" href="/aquarium" actionLabel="进入我的鱼缸" /></section>
     <SeoRelatedLinks title="继续探索" links={[{ id: 'category', label: '浏览虾螺蟹分类', href: '/category/shrimp-snails-crabs' }, { id: 'care', label: '进入养护中心', href: '/care' }]} />
-    <SeoSourceFooter title="内容责任" text="本页是 AquaGuide 的公开入口，产品数据、百科内容和鱼缸判断分别由各自来源负责。" status="公开预览 · 暂不进入搜索索引" />
+    <SeoSourceFooter title="资料说明" text="本页是 AquaGuide 的公开入口：先认识物种，再按需要进入鱼缸工具。" status="公开预览 · 暂不进入搜索索引" />
   </SeoPageShell>;
 }

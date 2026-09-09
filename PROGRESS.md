@@ -869,6 +869,13 @@
 - [x] `npm run lint`、公开契约、Editorial、Evidence、`npm run build` 与 `git diff --check` 通过。
 - [ ] 系统 Playwright 三档截图、Figma Canonical 和可读独立 Critic 仍未完成；所有公开页面继续 `noindex,follow`。
 
+## 2026-09-10 公开入口与分类页文案收口
+
+- [x] 将 Marketing 与 Category 的底部“内容责任”改为用户可理解的“资料说明”，不展示后台审核流程术语。
+- [x] 将 Marketing 的“理解饲养”说明改为按主题阅读和明确缺失信息，避免把审核流程当成用户价值文案。
+- [x] 通过 lint、公开契约、build 与 diff-check；未改变 Product Truth、路由、内容门禁或 `noindex,follow`。
+- [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-10 Guide 准备态文案去重复
 
 - [x] 将阅读路径三个卡片改为不同的用户预期，避免同一句“正式内容准备好后”重复堆叠。
