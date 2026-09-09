@@ -1365,3 +1365,6 @@
     box-shadow: -18px 0 44px rgba(32,36,44,.16) !important;
   }
 }
+
+.admin-shell .topbar-operations-trigger { display:inline-flex; align-items:center; gap:6px; }
+.admin-shell .topbar-operations-trigger > b { min-width:17px; height:17px; display:inline-grid; place-items:center; padding:0 4px; border-radius:999px; background:var(--state-error); color:#fff; font-size:8px; font-weight:800; }

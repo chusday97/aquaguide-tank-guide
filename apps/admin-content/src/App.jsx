@@ -1342,14 +1342,9 @@ export default function App() {
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
           <span className="topbar-mode-label">{isReadOnlyDemoMode ? (appLocale === 'en' ? 'Read-only demo · no writes' : '只读演示 · 不会写入') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
-          <button type="button" className={`activity-trigger ${activityOpen ? 'active' : ''}`} onClick={() => {
-            setActivityOpen(true);
-            setActivityUnread(0);
-            window.localStorage.setItem('aquaguide-admin-activity-seen-at', new Date().toISOString());
-          }} aria-label={appLocale === 'en' ? 'Open activity center' : '打开操作中心'}>
-            <span>{appLocale === 'en' ? 'Activity' : '操作记录'}</span>{activityUnread > 0 ? <b>{Math.min(activityUnread, 99)}</b> : null}
+          <button type="button" className={`topbar-operations-trigger ${activeTool === 'operations' ? 'active' : ''}`} onClick={() => setActiveTool('operations')}>
+            <span>{appLocale === 'en' ? 'Operations' : '运营工具'}</span>{activityUnread > 0 ? <b>{Math.min(activityUnread, 99)}</b> : null}
           </button>
-          <button type="button" className={`topbar-operations-trigger ${activeTool === 'operations' ? 'active' : ''}`} onClick={() => setActiveTool('operations')}>{appLocale === 'en' ? 'Operations' : '运营工具'}</button>
           <InterfaceLanguageSwitch onLocaleChange={switchWorkspaceLocale} />
           <button className="ghost-button" type="button" onClick={signOut}>{t('top.signOut')}</button>
         </div>
@@ -1529,6 +1524,15 @@ export default function App() {
         <EditorToolDrawer open={Boolean(activeTool)} title={toolDrawerMeta.title} subtitle={toolDrawerMeta.subtitle} size={activeTool === 'dataReview' ? 'wide' : 'default'} onClose={() => setActiveTool(null)}>
             {activeTool === 'operations' ? (
               <div className="editor-secondary-tools editor-tool-launchers operations-tool-menu" data-testid="operations-tool-menu">
+                <button type="button" className="editor-tool-row" data-testid="operations-activity-entry" onClick={() => {
+                  setActiveTool(null);
+                  setActivityOpen(true);
+                  setActivityUnread(0);
+                  window.localStorage.setItem('aquaguide-admin-activity-seen-at', new Date().toISOString());
+                }}>
+                  <span><strong>{appLocale === 'en' ? 'Activity history' : '操作记录'}</strong><small>{appLocale === 'en' ? 'Saves, reviews, data decisions and staging actions' : '保存、审核、数据处理与预发布记录'}</small></span>
+                  {activityUnread > 0 ? <em>{Math.min(activityUnread, 99)}</em> : <b>›</b>}
+                </button>
                 {batchGroup && batchMembers.length > 1 ? (
                   <button type="button" className="editor-tool-row" onClick={() => setActiveTool('batch')}>
                     <span><strong>{t('editor.batchSeo')}</strong><small>{batchMembers.length} {appLocale === 'en' ? 'selected records' : '条已选择记录'}</small></span><b>›</b>

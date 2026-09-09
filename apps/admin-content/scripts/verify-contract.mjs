@@ -132,6 +132,8 @@ assert.match(stylesSource, /species-group\.contains-active \.variant-list[\s\S]*
 assert.match(appSource, /BatchSeoEditor/, 'Admin must expose batch SEO editor');
 assert.match(appSource, /BulkImportPanel/, 'Admin must expose template-backed bulk import');
 assert.match(appSource, /ActivityCenter/, 'Admin must expose a persistent operation-history surface');
+assert.doesNotMatch(appSource, /className=\{`activity-trigger/, 'Activity history must not remain a separate top-level action.');
+assert.match(appSource, /operations-activity-entry[\s\S]*setActivityOpen\(true\)[\s\S]*setActivityUnread\(0\)/, 'Global Operations must own the Activity Center entry and clear its unread counter when opened.');
 assert.match(bulkImportSource, /import_action/, 'Bulk template must require an explicit per-row import marker');
 assert.match(bulkImportSource, /VALID_ACTIONS/, 'Bulk import must ignore unmarked template rows');
 assert.match(bulkImportSource, /TEMPLATE_GUIDE/, 'Downloaded import template must explain what every field means.');
