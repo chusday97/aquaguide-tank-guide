@@ -9,6 +9,8 @@
 - Verified: 黄金米虾差异文案、证据 fingerprint、公开中文门禁和结构门禁通过。
 - Added: 中文公开文案回归新增品系确认和待审核流程词扫描，防止内部审核语言回流。
 - Verified: 公开文案、结构、契约、lint 和 diff-check 通过。
+- Added: 公开结构回归增加首页、分类卡、品系卡和鱼缸能力入口的路由目标断言；不替代真实浏览器点击验收。
+- Verified: 公开结构、文案、契约、lint 和 diff-check 通过。
 - Verified: 浏览器环境复查仍受 Mac 锁定阻塞；Editorial、Evidence、公开契约、文案、结构、响应式、lint 和 diff-check 通过，未将静态门禁冒充真实截图验收。
 
 - Changed: 公开结构回归要求 Marketing、Category、Species、Guide 全部使用共享 SEO metadata 服务，防止 canonical/robots 写入分叉。

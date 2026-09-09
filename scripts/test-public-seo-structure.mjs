@@ -36,5 +36,14 @@ for (const phrase of ['先看核心结论', '再看分步操作', '最后做后�
 
 const marketing = read('src/pages/MarketingLanding.tsx');
 assert.match(marketing, /marketingSpeciesAsset \? <ResilientImage[\s\S]*?物种图片暂不可用/, 'Marketing Hero must have a visible image fallback');
+assert.match(marketing, /to="\/category\/shrimp-snails-crabs"/, 'Marketing must link to the public category landing');
+assert.match(marketing, /to="\/aquarium"/, 'Marketing must link to the aquarium app entry');
+
+const category = read('src/pages/CategoryLanding.tsx');
+assert.match(category, /to=\{species\.href\}/, 'Category species cards must use the published species href');
+assert.match(category, /href="\/aquarium"/, 'Category must link to the aquarium app entry');
+
+assert.match(species, /to=\{variantPath\(variant\.id\)\}/, 'Species variant cards must use the variant route');
+assert.match(species, /taskRoutes\.encyclopedia\.compatibilitySpecies\(fish\.id, 'species-profile'\)/, 'Species capability card must preserve the species tool target');
 
 console.log('Public SEO structure checks passed: all page types have a stable content skeleton and conditional content gates.');
