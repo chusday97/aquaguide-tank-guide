@@ -708,3 +708,9 @@
 - 当前下一步：在 4198 提供静态服务并采集 390/1440 证据，随后由产品经理逐区块标记 `ACCEPTED` 或 `REVIEW_REQUIRED`。
 - 阻塞：GitHub DNS 导致远端未刷新；尚无 HTML Freeze 用户确认；不得以旧 4319 或旧视觉分支作为新证据。
 - 禁止：不修改正式 React、Domain、Catalog、Supabase、PBR/Master20、生产分支；不推送或合并，除非用户明确授权且远端状态已复核。
+
+### Freeze 证据状态
+
+- 已增加 `review/freeze-signoff.html`，支持五个区块的 `REVIEW_REQUIRED`/`ACCEPTED` 本地状态和 JSON 导出。
+- `freeze-manifest.json` 由 `scripts/generate-html-freeze-manifest.mjs` 生成，绑定当前 HEAD `52517328` 之前的生成点；每次代码变更后需重新生成。
+- Playwright 截图尝试再次命中已知 macOS MachPort 阻塞，不能把失败当作视觉证据；应使用系统 Chrome/CUA 采集 390/600/1024/1440/1920px。

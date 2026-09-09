@@ -803,3 +803,9 @@
 - [x] 静态引用检查、`git diff --check` 通过；提交 `62e93d17`。
 - [ ] 4198 本地静态服务器与 390/1440 浏览器证据待运行；产品经理尚未确认 HTML Freeze。
 - [ ] 远端可访问后再核对 origin/main；未授权前不推送、不合并、不修改正式 React。
+
+### Freeze 收口追加
+
+- [x] 增加区块状态与本地 JSON 导出签字页 `review/freeze-signoff.html`。
+- [x] 增加 `scripts/generate-html-freeze-manifest.mjs`，生成文件 SHA、页面 H1/外部引用检查和必测视口清单；最新提交 `04fe46e8`。
+- [ ] Playwright Chromium 仍受 macOS MachPort 权限阻塞；完整截图矩阵必须改用系统 Chrome/CUA 后补齐，当前 manifest 不代表视觉通过。
