@@ -145,6 +145,7 @@
 - 2026-09-10：记录 SEO Evidence、Public Contract、Editorial、lint 和 build 回归通过；动效专项仅因 Playwright Chromium 的 macOS MachPort 启动权限失败而阻塞。
 - 2026-09-10：补充自动化浏览器诊断：系统 Chrome 与 Playwright Chromium 同样受 MachPort 阻塞，Playwright WebKit 未安装；保持停止条件，不反复启动。
 - 2026-09-10：确认内置浏览器新标签的 viewport 参数不会改变实际视图宽度；响应式三档验收继续等待可调整 viewport 环境。
+- 2026-09-10：安装并尝试 Playwright WebKit；其启动阶段同样被 macOS 进程环境中止，未将失败误记为页面回归。
 
 - Updated project truth and release readiness to mark the current UI as frozen provisional and Supabase parity as migration-required, without executing production changes.
 - Updated the Care category browser gate to use the 4319 candidate and the current desktop detail-rail surface instead of the retired 4173/centered-dialog contract.
