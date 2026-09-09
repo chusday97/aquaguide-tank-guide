@@ -810,6 +810,7 @@
 - [x] `npm run lint`、`npm run build`、`git diff --check` 通过；build 仅保留既有动态导入与大字体 chunk 警告。
 - [x] `f232d884` 修复 Species 相关分类链接：已开放的虾螺蟹分类进入公开分类页，其他分类进入对应图鉴筛选，避免宝莲灯误跳虾螺蟹。
 - [x] 内置浏览器复核宝莲灯：页面可滚动；`assetPreview=1` 可见图片与中文 Alt；生活习性、环境章节和能力入口均可读。
+- [x] 内置浏览器完成分类 → 极火虾 → 浏览器返回 → 分类页路径；URL、物种页内容和分类页内容均恢复正常。
 - [ ] 真实三档动效自动化仍受系统浏览器 MachPort 权限影响；当前可继续用内置浏览器做人工视觉核对，但不能把它记为 Playwright 通过。
 - [ ] 既有素材/截图脚本修改仍未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
 - 下一步：在本地 Preview 中检查 Species、Category、Guide 的完整滚动与图片/内容覆盖；浏览器专项和可读独立 Critic 通过前，保持 `noindex,follow`。
