@@ -1,3 +1,17 @@
+## 2026-09-09 公开 SEO 干净 Preview 候选
+
+- 已完成：Vercel `aquaguide` 项目变量作用域只读核验；Supabase/Postgres 变量仅绑定 `Production`，未绑定 `Preview`。分支已推送，Draft PR #147 已创建。
+- 已发现并修复：首次 PR foundation 因移植后的 `package.json` 缺失 main 门禁脚本而失败；现已恢复 main 全部脚本，仅保留 SEO 测试与 Noto 字体增量。本地按 foundation 顺序验证 project truth、Catalog、Domain、Compatibility、API 类型、lint 和 build 通过。
+- 已发现并修复：首次修复后的 `validate` 暴露旧 SEO 分支覆盖 App Shell Owner，导致 GP-002 缺少“查看当前鱼缸风险”。现已将 App、图鉴、详情和应用 CSS 恢复为 `origin/main`，只在 App 路由层增加 Public SEO Shell 与字体入口。
+- 已验证：稳定提交 `01d71f12` 的 `foundation`、`validate`、GP-001 至 GP-005、Vercel 与 Cloudflare Preview 全部通过；本地/远端/PR/READY Preview 四方 SHA parity 通过。Care 动作、Species 390/600/1440、Public/App 九路由、metadata、noindex 和无溢出均通过；本地 LCP 基线 332ms。
+- 托管证据：`https://aquaguide-pwq75dpnl-chusday97s-projects.vercel.app` 的六条公开路由均返回 HTTP 200 与 `x-robots-tag:noindex`。本机浏览器访问该域名仍为 `ERR_CONNECTION_CLOSED`，所以托管截图、网络瀑布和 CWV 尚未完成。
+- 已完成：从最新 `origin/main@d3c70dee` 创建隔离分支 `codex/species-seo-preview-v1`，仅移植公开 SEO 页面、契约、证据门禁、素材解析和专项测试；未移植 Admin、Supabase migration 或 Figma 历史证据。
+- 已修复：保留最新 main 的 `Fish`/兼容性/图片加载能力，改为合并 SEO 增量，避免旧分支覆盖主线类型。
+- 已验证：lint、editorial evidence、evidence bindings、public contract、asset candidates、build 和 diff-check 通过；内置浏览器完成三条 Species 路径 × 390/600/1440，无溢出、单一 H1、中文后台术语为零、robots 为 `noindex,follow`。
+- 当前阻塞：独立只读 Critic 在限定等待与收敛提醒后持续处于 `running`，未返回可读六维报告，已关闭并按审查基础设施阻塞处理；托管浏览器证据与 Figma Canonical 也仍未完成。不得解除索引或合并。
+- 已完成：新增 fail-closed Preview parity 检查；必须显式提供 `PREVIEW_PR`，并同时匹配本地/远端/PR/READY Preview 的同一 SHA，缺少 PR 或部署时直接失败。
+- 下一步：由项目负责人查看 Draft Preview 的桌面/平板/手机视觉；浏览器环境可用后补托管截图/CWV，再完成 Figma Canonical、可读 Critic 和 SEO 页面意图归属。当前 PR 保持 Draft。
+
 ## 2026-09-08 UI 分支收敛基础步骤（当前）
 
 - [x] 核对分支关系：`origin/main@64fa58a1` 保持唯一代码事实；历史 `codex/ui-atlas-care-v1@4113050e` 领先70个提交但冻结，不整体合并。

@@ -80,6 +80,9 @@ export const taskRoutes = {
     home: '/compatibility',
     with: compatibilityWith,
   },
+  species: {
+    landing: (speciesId: string, source?: string) => withSource(`/species/${encodeURIComponent(speciesId)}`, source),
+  },
   care: {
     home: '/care',
     recommendations: '/care#care-recommendations',

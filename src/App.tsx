@@ -40,6 +40,7 @@ import { SearchAutocomplete } from './components/search/SearchAutocomplete';
 import type { SearchSuggestion } from './services/search/search-suggestions.service';
 import { taskRoutes } from './services/navigation/task-routes';
 import { activateInteractivePreview, isInteractivePreviewActive, isInteractivePreviewSession } from './services/preview/preview-session.service';
+import { PublicSeoShell } from './components/seo/PublicSeoShell';
 
 const loadAquarium = () => import('./pages/Aquarium');
 const loadEncyclopedia = () => import('./pages/Encyclopedia');
@@ -56,6 +57,10 @@ const loadSearch = () => import('./pages/Search');
 const loadSettings = () => import('./pages/Settings');
 const loadWelcome = () => import('./pages/Welcome');
 const loadSharedReport = () => import('./pages/SharedReport');
+const loadSpeciesLanding = () => import('./pages/SpeciesLanding');
+const loadMarketingLanding = () => import('./pages/MarketingLanding');
+const loadCategoryLanding = () => import('./pages/CategoryLanding');
+const loadCareGuideLanding = () => import('./pages/CareGuideLanding');
 
 const AquariumManager = lazyWithRecovery(loadAquarium, 'aquarium');
 const Encyclopedia = lazyWithRecovery(loadEncyclopedia, 'encyclopedia');
@@ -72,6 +77,10 @@ const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
 const WelcomePage = lazyWithRecovery(loadWelcome, 'welcome');
 const SharedReportPage = lazyWithRecovery(loadSharedReport, 'shared-report');
+const SpeciesLanding = lazyWithRecovery(loadSpeciesLanding, 'species-landing');
+const MarketingLandingPage = lazyWithRecovery(loadMarketingLanding, 'marketing-landing');
+const CategoryLandingPage = lazyWithRecovery(loadCategoryLanding, 'category-landing');
+const CareGuideLandingPage = lazyWithRecovery(loadCareGuideLanding, 'care-guide-landing');
 
 const preloadRoute = (path: string) => {
   const loader = path === '/aquarium'
@@ -626,12 +635,39 @@ export default function App() {
         <ToastProvider>
           <LayoutModeProvider>
             <WorkspaceNavigationProvider>
-              <AppShell />
+              <AppRouter />
             </WorkspaceNavigationProvider>
           </LayoutModeProvider>
         </ToastProvider>
       </Router>
     </AppErrorBoundary>
+  );
+}
+
+const isPublicSeoPath = (pathname: string) => pathname === '/'
+  || pathname.startsWith('/category/')
+  || pathname.startsWith('/species/')
+  || pathname.startsWith('/guides/');
+
+function AppRouter() {
+  const location = useLocation();
+  return isPublicSeoPath(location.pathname) ? <PublicSeoRoutes /> : <AppShell />;
+}
+
+function PublicSeoRoutes() {
+  const page = (content: ReactNode, name: string) => <RouteErrorBoundary page={name}>{content}</RouteErrorBoundary>;
+  return (
+    <PublicSeoShell>
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/" element={page(<MarketingLandingPage />, 'marketing-landing')} />
+          <Route path="/category/:slug" element={page(<CategoryLandingPage />, 'category-landing')} />
+          <Route path="/species/:slug" element={page(<SpeciesLanding />, 'species-landing')} />
+          <Route path="/guides/:slug" element={page(<CareGuideLandingPage />, 'care-guide-landing')} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </Suspense>
+    </PublicSeoShell>
   );
 }
 

@@ -38,6 +38,199 @@ export interface Fish {
   isCustom?: boolean;
 }
 
+/** Public species profile boundaries. Editorial values never override catalog facts. */
+export type ProductTruthSpecies = Fish;
+
+export type PublishedContentSectionId = 'overview' | 'behavior' | 'habitat' | 'feeding' | 'maintenance';
+
+export interface PublishedContentSection {
+  id: PublishedContentSectionId;
+  heading: string;
+  summary: string;
+  details?: string[];
+  sourceIds: string[];
+}
+
+export interface PublishedSpeciesTrait {
+  id: string;
+  label: string;
+  value: string;
+  summary: string;
+  sourceIds: string[];
+}
+
+export interface PublishedLifeAnswer {
+  answer: string;
+  sourceIds: string[];
+  sourceFingerprint: string;
+  confirmedAt: string;
+}
+
+export interface PublishedSpeciesLifeProfile {
+  activity?: PublishedLifeAnswer;
+  social?: PublishedLifeAnswer;
+  foraging?: PublishedLifeAnswer;
+}
+
+export interface PublishedSpeciesAsset {
+  id: string;
+  src: string;
+  usage: 'hero' | 'detail' | 'variant-card';
+  aspectRatio: '16:9' | '4:3';
+  fit: 'contain';
+  altZh: string;
+  altEn: string;
+}
+
+export type PublishedSpeciesAssets = PublishedSpeciesAsset[];
+
+export type SeoEvidenceSourceKind = 'product-truth' | 'reviewed-evidence' | 'asset';
+export type SeoEvidenceBindingStatus = 'confirmed' | 'stale' | 'blocked';
+
+export interface SeoEvidenceBinding {
+  id: string;
+  targetId: string;
+  field: string;
+  renderedClaim: string;
+  sourceKind: SeoEvidenceSourceKind;
+  sourceIds: string[];
+  sourceFingerprint: string;
+  status: SeoEvidenceBindingStatus;
+  confirmedBy: string;
+  confirmedAt: string;
+}
+
+export type SpeciesEditorialEvidenceScope = 'base' | 'variant' | 'faq';
+export type SpeciesEditorialEvidenceField =
+  | 'signature'
+  | 'overview'
+  | 'behavior'
+  | 'activity'
+  | 'social'
+  | 'foraging'
+  | 'habitat'
+  | 'feeding'
+  | 'maintenance'
+  | 'variantDifference'
+  | 'faq';
+export type SpeciesEditorialEvidenceStatus = 'candidate' | 'confirmed' | 'stale' | 'blocked';
+
+/** Internal, local-only evidence candidates. Candidates never enter a published profile. */
+export interface SpeciesEditorialEvidence {
+  id: string;
+  targetId: string;
+  scope: SpeciesEditorialEvidenceScope;
+  field: SpeciesEditorialEvidenceField;
+  renderedClaim: string;
+  question?: string;
+  answer?: string;
+  sourceIds: string[];
+  sourceFingerprint: string;
+  status: SpeciesEditorialEvidenceStatus;
+  confirmedBy?: 'project-owner';
+  confirmedAt?: string;
+}
+
+export interface PublishedSeoMetadata {
+  locale: 'zh-CN' | 'en';
+  canonical: string;
+  indexPolicy: 'index' | 'canonical-to-base' | 'noindex';
+  publishedAt: string;
+  reviewedAt: string;
+}
+
+export interface PublishedSpeciesSummary {
+  id: string;
+  name: string;
+  scientificName: string;
+  image?: PublishedSpeciesAsset;
+  href: string;
+}
+
+export interface PublishedCategorySummary {
+  id: string;
+  name: string;
+  href: string;
+}
+
+export interface PublishedGuideSummary {
+  id: string;
+  title: string;
+  summary: string;
+  href: string;
+}
+
+export type PublishedGuideAssets = PublishedSpeciesAsset[];
+
+export interface PublishedVariantSummary {
+  id: string;
+  name: string;
+  scientificName: string;
+  image?: PublishedSpeciesAsset;
+  difference?: string;
+  indexPolicy: 'index' | 'canonical-to-base' | 'noindex';
+}
+
+export interface PublishedFaqItem {
+  id: string;
+  question: string;
+  answer: string;
+  sourceIds: string[];
+}
+
+export interface PublishedRelatedLink {
+  id: string;
+  label: string;
+  href: string;
+  kind: 'category' | 'care-guide' | 'compatibility' | 'species';
+}
+
+export interface PublishedSourceReference {
+  id: string;
+  title: string;
+  publisher: string;
+  url?: string;
+  kind: 'project-product-truth' | 'government-research' | 'authoritative-database' | 'peer-reviewed';
+}
+
+export interface PublishedSpeciesProfile {
+  catalog: ProductTruthSpecies;
+  editorial?: {
+    signature?: string;
+    overview?: PublishedContentSection;
+    behavior?: PublishedContentSection;
+    habitat?: PublishedContentSection;
+    feeding?: PublishedContentSection;
+    maintenance?: PublishedContentSection;
+  };
+  lifeProfile?: PublishedSpeciesLifeProfile;
+  reviewedTraits: PublishedSpeciesTrait[];
+  assets: PublishedSpeciesAssets;
+  variants: PublishedVariantSummary[];
+  faq: PublishedFaqItem[];
+  sources: PublishedSourceReference[];
+  relatedLinks: PublishedRelatedLink[];
+  metadata: PublishedSeoMetadata;
+}
+
+export interface PublishedCategoryLanding {
+  category: PublishedCategorySummary;
+  intro?: PublishedContentSection;
+  featuredBaseSpecies: PublishedSpeciesSummary[];
+  relatedGuides: PublishedRelatedLink[];
+  relatedCategories: PublishedRelatedLink[];
+  metadata: PublishedSeoMetadata;
+}
+
+export interface PublishedCareGuide {
+  guide: PublishedGuideSummary;
+  sections: PublishedContentSection[];
+  assets: PublishedGuideAssets;
+  relatedSpecies: PublishedSpeciesSummary[];
+  relatedGuides: PublishedRelatedLink[];
+  metadata: PublishedSeoMetadata;
+}
+
 export interface AquariumFish {
   id: string;
   fishId: string;

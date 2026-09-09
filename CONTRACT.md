@@ -1,6 +1,6 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.7.0
+> 版本：2.6.0
 > 状态：已确认，实施中
 > 生效日期：2026-08-09
 > SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090002_atomic_care_reminder_completion.sql`
@@ -103,15 +103,6 @@ interface SyncFields {
 
 物种包含 UUID、`catalogKey`、中英文名、分类、难度、温度/pH 文本与可计算范围、换水周期、描述、食性、缸体要求、性情、体型、混养说明、检索词和发布状态。
 
-统一主数据补充以下契约：
-
-- `species.water_type` 只能是 `freshwater | saltwater | brackish | unknown`，不得从名称、描述或分类文字推断。
-- `species_reference_links` 将身份、环境和养护字段分别绑定到证据来源及审核状态；缺失或未审核字段保持 `null/unknown`。
-- `catalog_releases` 保存不可变 Catalog 版本、Schema 版本、SHA-256、对象数量、Storage 路径和发布时间。
-- 前端内置与云端相同版本的 Snapshot；云端下载只有在 Schema、校验和与引用完整性均通过后才能原子替换，失败继续使用本地版本。
-
-Catalog 的公共类型定义位于 `packages/contracts/src/catalog.ts`，数据库映射类型位于 `src/types/database.ts`。
-
 发布状态：
 
 ```ts
@@ -188,6 +179,132 @@ interface CareActionEvidence {
 
 每条翻译包含父实体、`locale`、发布状态、审核人、审核时间和通用同步字段。父实体与语言唯一。普通用户只有在父内容与翻译均为 `published` 时才能读取；草稿、审核和发布仅管理员可操作。
 
+### 3.8 PublishedSpeciesProfile（公开物种百科聚合）
+
+`/species/:slug` 的公开百科页只接收已经过发布门禁的聚合对象；它不是鱼缸适配结果的缓存，也不是编辑后台状态的展示模型。
+
+```ts
+type PublishedSpeciesProfile = {
+  catalog: ProductTruthSpecies;
+  editorial?: {
+    signature?: string;
+    overview?: PublishedContentSection;
+    behavior?: PublishedContentSection;
+    habitat?: PublishedContentSection;
+    feeding?: PublishedContentSection;
+    maintenance?: PublishedContentSection;
+  };
+  reviewedTraits: PublishedSpeciesTrait[];
+  assets: PublishedSpeciesAssets;
+  variants: PublishedVariantSummary[];
+  faq: PublishedFaqItem[];
+  sources: PublishedSourceReference[];
+  relatedLinks: PublishedRelatedLink[];
+  metadata: PublishedSeoMetadata;
+};
+```
+
+- `catalog` 只来自当前 Product Truth；编辑内容不能覆盖温度、pH、缸体、体型、性情等字段。
+- `editorial`、`reviewedTraits`、`faq` 和素材只有在明确为已发布/已审核且有来源 ID 时才能进入聚合对象；Google 搜索结果链接和 `rule_fallback` 不能成为公开事实来源。
+- `sources` 只列出当前可见内容实际引用的已审核来源；项目内部路径不得输出为公开链接。
+- 鱼缸适配、混养分数、用户鱼缸读取和 AI 解释不进入 `PublishedSpeciesProfile`，百科页只通过物种 ID 跳转现有工具。
+- `editorial` 可以只包含已确认的独立章节；没有确认总览签名时，不生成推测性的 Hero 摘要，但已确认章节仍可单独展示。
+- Base Species 负责共享百科正文，Variant 只表达已确认的差异；普通 Variant 默认 `canonical-to-base` 或 `noindex`。
+- 当前中文试点继续使用 `noindex,follow`。英文保持 Draft/review-only，不进入页面索引或 Sitemap。
+
+### 3.8.1 SEO 证据绑定与变更失效
+
+公开 SEO 的每条编辑表达、已审核习性和素材都必须绑定到 AquaGuide 项目内的来源记录。绑定只保存于本地审核 manifest，不新增生产表或 API：
+
+```ts
+type SeoEvidenceBinding = {
+  id: string;
+  targetId: string;
+  field: string;
+  renderedClaim: string;
+  sourceKind: 'product-truth' | 'reviewed-evidence' | 'asset';
+  sourceIds: string[];
+  sourceFingerprint: string;
+  status: 'confirmed' | 'stale' | 'blocked';
+  confirmedBy: string;
+  confirmedAt: string;
+};
+```
+
+- `product-truth` 绑定当前公开页面直接读取的目录字段；`reviewed-evidence` 只能绑定 `reviewStatus = 'reviewed'` 且带来源 ID 的记录；`asset` 绑定素材用途、Alt、路径和文件 fingerprint。
+- 聚合层每次使用前重新计算当前来源 fingerprint。字段、来源、审核状态、正文、Alt 或素材文件发生变化时，绑定变为 `stale` 或 `blocked`，受影响内容不得进入 Published 聚合、JSON-LD 或 Sitemap。
+- 纯布局、CSS 和组件样式变化不改变事实来源 fingerprint，不触发生物事实重审。
+- `confirmedBy` 与 `confirmedAt` 记录的是页面表达与已审核证据的确认，不把自动匹配或 Codex 检查冒充为新的生物学专家审核。
+
+### 3.8.2 SpeciesEditorialEvidence（候选编辑证据层）
+
+物种百科的新增正文、习性表达、Variant 差异和 FAQ 先登记为本地候选证据，不写入生产数据库或 API：
+
+```ts
+type SpeciesEditorialEvidence = {
+  id: string;
+  targetId: string;
+  scope: 'base' | 'variant' | 'faq';
+  field:
+    | 'signature'
+    | 'overview'
+    | 'behavior'
+    | 'habitat'
+    | 'feeding'
+    | 'maintenance'
+    | 'variantDifference'
+  | 'faq';
+  renderedClaim: string;
+  question?: string;
+  answer?: string;
+  sourceIds: string[];
+  sourceFingerprint: string;
+  status: 'candidate' | 'confirmed' | 'stale' | 'blocked';
+  confirmedBy?: 'project-owner';
+  confirmedAt?: string;
+};
+```
+
+- 候选只保存最小页面表达、来源定位和支持范围，不复制来源原文；搜索摘要、论坛、零售页、AI 文案和无直接支持关系的来源不得进入候选登记。
+- 只有 `status = confirmed`、来源仍可用且当前 fingerprint 与登记值一致的记录，才有资格进入 `PublishedSpeciesProfile`；`candidate` 永远不可公开。
+- 来源、页面表达或审核状态变化时，记录变为 `stale` 或 `blocked`，相关章节和 FAQ 必须退出公开聚合。
+
+### 3.9 PublishedCategoryLanding / PublishedCareGuide
+
+公开分类页与养护文章页复用 `PublishedSeoMetadata`，并只接受本地聚合层筛选后的 Published/Reviewed 内容：
+
+```ts
+type PublishedSeoMetadata = {
+  locale: 'zh-CN' | 'en';
+  canonical: string;
+  indexPolicy: 'index' | 'canonical-to-base' | 'noindex';
+  publishedAt: string;
+  reviewedAt: string;
+};
+
+type PublishedCategoryLanding = {
+  category: PublishedCategorySummary;
+  intro?: PublishedContentSection;
+  featuredBaseSpecies: PublishedSpeciesSummary[];
+  relatedGuides: PublishedRelatedLink[];
+  relatedCategories: PublishedRelatedLink[];
+  metadata: PublishedSeoMetadata;
+};
+
+type PublishedCareGuide = {
+  guide: PublishedGuideSummary;
+  sections: PublishedContentSection[];
+  assets: PublishedGuideAssets;
+  relatedSpecies: PublishedSpeciesSummary[];
+  relatedGuides: PublishedRelatedLink[];
+  metadata: PublishedSeoMetadata;
+};
+```
+
+- 分类与文章聚合不得读取鱼缸状态、混养结果或 Production Supabase。
+- Draft、`needs_review`、缺来源正文、素材或 FAQ 不得进入页面、metadata、JSON-LD 或 Sitemap。
+- 当前所有新增公开路由继续 `noindex,follow`，直到中文内容、素材、canonical 和独立审查完成。
+
 ## 4. 用户业务实体
 
 ### 4.1 Profile / UserRoleRecord
@@ -206,8 +323,6 @@ interface CareActionEvidence {
 - `aquarium_components`：底砂、水草和硬景。
 
 同一鱼缸内同一 `speciesCatalogKey` 只能保留一条有效记录，追加数量通过更新完成。
-
-新增生物命令必须携带 `intent`（`record_existing | planned_addition`）。规划加入还必须携带同一 `catalogVersion` 的 `compatibilityConfirmation`；`not_recommended` 返回 `COMPATIBILITY_BLOCKED`，`insufficient_data` 返回 `COMPATIBILITY_INFORMATION_REQUIRED`。现实中已存在的生物只记录事实，不因混养结论阻止保存。
 
 鱼缸创建时只保存名称、真实建缸日期和来源。尺寸、水体、目标温度、设备、底砂与换水日期在用户未提供时必须保持空值；UI 示例值不得进入持久化对象。`aquarium_species.last_water_change_at` 继续允许为空，入缸日期不得作为换水日期回填。
 
@@ -390,7 +505,6 @@ type ApiErrorCode =
 |---|---|---|---|---|
 | GET | `/species` | `locale cursor? limit? category? query?` | `Page<SpeciesSummary>` | 400/503 |
 | GET | `/species/:catalogKey` | `locale` | `SpeciesWithRelations` | 404/503 |
-| GET | `/catalog/releases/current` | 无 | `CatalogManifest` | 404/503 |
 | GET | `/care-articles` | `locale cursor? limit? category? urgency? query?` | `Page<CareArticleSummary>` | 400/503 |
 | GET | `/care-articles/:catalogKey` | `locale` | `CareArticleWithRelations` | 404/503 |
 

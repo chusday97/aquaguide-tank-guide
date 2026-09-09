@@ -1,0 +1,435 @@
+/* Public SEO System: one visual language for editorial, category and species pages. */
+:root {
+  --seo-font-display: "Noto Serif SC", "Songti SC", Georgia, serif;
+  --seo-font-body: "Geist Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --seo-color-page: #fdfcf8;
+  --seo-color-ink: #1a1a1a;
+  --seo-color-accent: #1b4d3e;
+  --seo-color-accent-soft: #e8f0ee;
+  --seo-color-warm: #f6f3eb;
+  --seo-color-card: #ffffff;
+  --seo-color-border: rgb(26 26 26 / 12%);
+  --seo-color-muted: rgb(26 26 26 / 58%);
+  --seo-color-subtle: rgb(26 26 26 / 45%);
+  --seo-max-width: 1280px;
+  --seo-gutter: 80px;
+  --seo-section-gap: 96px;
+  --seo-radius-card: 20px;
+  --seo-radius-large: 28px;
+  --seo-radius-pill: 999px;
+  --seo-shadow-soft: 0 18px 60px rgb(27 77 62 / 8%);
+  --seo-content-width: 680px;
+  --seo-control-min: 44px;
+}
+
+.seo-page-shell {
+  width: 100%;
+  max-width: var(--seo-max-width);
+  min-width: 0;
+  margin-inline: auto;
+  padding: 24px var(--seo-gutter) 96px;
+  color: var(--seo-color-ink);
+  font-family: var(--seo-font-body);
+  overflow-wrap: anywhere;
+}
+
+#root:has(.seo-page-shell) {
+  min-height: 100dvh;
+  background: var(--seo-color-page);
+}
+
+.seo-page-shell h1,
+.seo-page-shell h2,
+.seo-page-shell h3,
+.seo-page-shell .seo-display {
+  font-family: var(--seo-font-display);
+}
+
+.seo-page-shell h1,
+.seo-page-shell h2,
+.seo-page-shell h3,
+.seo-page-shell p,
+.seo-page-shell dl,
+.seo-page-shell ul {
+  margin-block: 0;
+}
+
+.seo-page-shell a,
+.seo-page-shell button {
+  font-family: var(--seo-font-body);
+}
+
+.seo-eyebrow {
+  color: rgb(27 77 62 / 72%);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.5;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.seo-meta {
+  color: var(--seo-color-subtle);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.seo-lead {
+  max-width: var(--seo-content-width);
+  color: rgb(26 26 26 / 68%);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.seo-body {
+  max-width: var(--seo-content-width);
+  color: rgb(26 26 26 / 68%);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.seo-action {
+  display: inline-flex;
+  min-height: var(--seo-control-min);
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--seo-radius-pill);
+  padding-inline: 20px;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+}
+
+.seo-focus:focus-visible {
+  outline: 2px solid #34d399;
+  outline-offset: 3px;
+}
+
+.seo-public-header__browse,
+.seo-public-header__cta {
+  white-space: nowrap;
+}
+
+.seo-card {
+  border: 1px solid var(--seo-color-border);
+  border-radius: var(--seo-radius-card);
+  background: var(--seo-color-card);
+}
+
+.seo-large-card {
+  border-radius: var(--seo-radius-large);
+}
+
+.seo-hero {
+  display: grid;
+  min-width: 0;
+  gap: 40px;
+  margin-top: 24px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.seo-hero__media {
+  --seo-species-image-max-width: 340px;
+  min-width: 0;
+  min-height: 400px;
+}
+
+.seo-hero__media img {
+  max-width: var(--seo-species-image-max-width);
+  margin-inline: auto;
+}
+
+.seo-hero__content {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.seo-hero__title {
+  margin-top: 8px;
+  color: var(--seo-color-ink);
+  font-size: clamp(46px, 5.2vw, 72px);
+  font-weight: 700;
+  line-height: 1.03;
+  letter-spacing: -0.045em;
+}
+
+.seo-hero__scientific {
+  margin-top: 16px;
+  color: rgb(26 26 26 / 52%);
+  font-family: var(--seo-font-display);
+  font-size: 24px;
+  font-style: italic;
+  line-height: 1.3;
+}
+
+.seo-section {
+  min-width: 0;
+  margin-top: var(--seo-section-gap);
+  scroll-margin-top: 24px;
+}
+
+.seo-section-heading {
+  display: grid;
+  min-width: 0;
+  gap: 32px;
+  grid-template-columns: 96px minmax(0, 1fr);
+}
+
+.seo-section-heading__number {
+  color: rgb(27 77 62 / 20%);
+  font-family: var(--seo-font-display);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.seo-section-heading__title {
+  margin-top: 8px;
+  color: var(--seo-color-ink);
+  font-size: 40px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+}
+
+.seo-section-heading__description {
+  max-width: 680px;
+  margin-top: 12px;
+  color: rgb(26 26 26 / 58%);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+
+.seo-data-rail {
+  display: grid;
+  min-width: 0;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  border-block: 1px solid var(--seo-color-border);
+}
+
+.seo-data-rail__item {
+  min-width: 0;
+  padding: 20px 16px;
+  border-inline-start: 1px solid var(--seo-color-border);
+}
+
+.seo-data-rail__label {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  color: var(--seo-color-subtle);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+
+.seo-data-rail__value {
+  margin-top: 12px;
+  color: var(--seo-color-ink);
+  font-family: var(--seo-font-body);
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.seo-source-footer {
+  margin-top: var(--seo-section-gap);
+  border-top: 1px solid var(--seo-color-border);
+  padding-top: 24px;
+}
+
+@media (max-width: 1023px) {
+  .seo-page-shell {
+    --seo-gutter: 32px;
+    --seo-section-gap: 80px;
+  }
+
+  .seo-data-rail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .seo-data-rail__item:nth-child(4) {
+    border-inline-start: 0;
+    border-block-start: 1px solid var(--seo-color-border);
+  }
+
+  .seo-data-rail__item:nth-child(n + 4) {
+    border-block-start: 1px solid var(--seo-color-border);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .seo-hero {
+    gap: 24px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .seo-hero__media {
+    min-height: 320px;
+  }
+
+  .seo-hero__title {
+    font-size: clamp(48px, 7vw, 60px);
+  }
+
+  .seo-section-heading {
+    gap: 20px;
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .seo-section-heading__number {
+    font-size: 48px;
+  }
+
+  .seo-section-heading__title {
+    font-size: 34px;
+  }
+}
+
+@media (max-width: 767px) {
+  .seo-public-header__browse {
+    display: none;
+  }
+
+  .seo-public-header__cta {
+    padding-inline: 14px;
+  }
+
+  .seo-page-shell {
+    --seo-section-gap: 64px;
+    --seo-gutter: 24px;
+    padding-top: 16px;
+    padding-bottom: 64px;
+  }
+
+  .seo-hero {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(20px, 6vw, 32px);
+    margin-top: 16px;
+  }
+
+  .seo-hero__content {
+    order: 1;
+  }
+
+  .seo-hero__media {
+    --seo-species-image-max-width: min(82vw, 300px);
+    order: 2;
+    min-height: clamp(250px, 68vw, 300px);
+  }
+
+  .seo-hero__title {
+    font-size: 46px;
+    line-height: 1.08;
+  }
+
+  .seo-hero__scientific {
+    font-size: 20px;
+  }
+
+  .seo-lead {
+    font-size: 17px;
+  }
+
+  .seo-section-heading {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .seo-section-heading__number {
+    font-size: 44px;
+  }
+
+  .seo-section-heading__title {
+    font-size: clamp(28px, 7.6vw, 30px);
+  }
+
+  .seo-data-rail {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .seo-data-rail__item:nth-child(3),
+  .seo-data-rail__item:nth-child(5) {
+    border-inline-start: 0;
+  }
+
+  .seo-data-rail__item:nth-child(n + 3) {
+    border-block-start: 1px solid var(--seo-color-border);
+  }
+
+  .seo-data-rail__value {
+    font-size: 16px;
+  }
+
+  .seo-card {
+    border-radius: 18px;
+  }
+}
+
+@media (max-width: 559px) {
+  .seo-page-shell > nav[aria-label="章节导航"] {
+    position: relative;
+    margin-right: -24px;
+    padding-right: 28px;
+    mask-image: linear-gradient(to right, #000 calc(100% - 28px), transparent);
+  }
+}
+
+@media (min-width: 560px) and (max-width: 767px) {
+  .seo-page-shell {
+    --seo-gutter: 32px;
+    --seo-section-gap: 72px;
+  }
+
+  .seo-hero {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .seo-hero__media {
+    min-height: 280px;
+  }
+
+  .seo-hero__title {
+    font-size: 48px;
+  }
+
+  .seo-data-rail {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .seo-data-rail__item:nth-child(3),
+  .seo-data-rail__item:nth-child(5) {
+    border-inline-start: 1px solid var(--seo-color-border);
+  }
+
+  .seo-data-rail__item:nth-child(4) {
+    border-inline-start: 0;
+  }
+
+  .seo-data-rail__item:nth-child(n + 3) {
+    border-block-start: 1px solid var(--seo-color-border);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seo-page-shell *,
+  .seo-page-shell *::before,
+  .seo-page-shell *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
