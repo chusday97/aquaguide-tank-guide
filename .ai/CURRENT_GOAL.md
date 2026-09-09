@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-09 Operator UX convergence
-The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `b3ec2d8e`.
+The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `b6c44a62`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -10,10 +10,11 @@ Completed in the current local-first / UX phase:
 3. System keep-page recommendation is advisory only and is not auto-selected. Category-conflict decisions explicitly preserve Product Data authority boundaries.
 4. Desktop + 390px responsive browser regression and full SEO Admin contract PASS; Production/Supabase/indexing remain unchanged.
 5. Edit action hierarchy (`b3ec2d8e`): core Search & indexing defaults visible; save/review actions are centralized in the top Review bar; page/Base footer duplicate save buttons and repeated Draft state were removed.
+6. Tool hierarchy (`b6c44a62`): current-page tools are separated from cross-page operations; one neutral top-level Operations entry owns batch SEO, bulk review/import and global queues, including responsive mobile access.
 
 NEXT milestones:
-1. Continue remaining edit-page hierarchy: reduce utility/tool chrome that competes with the current task and clarify current-page vs Base ownership.
-2. Preserve the now-centralized save/review/publish action boundary while simplifying low-frequency tools and secondary navigation.
+1. Reduce dense top chrome while preserving the current-task cue, four-stage workflow semantics and the single Review action boundary.
+2. Continue current-page vs Base ownership clarity only where real browser badcases remain; do not re-expand global operations into the editor.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

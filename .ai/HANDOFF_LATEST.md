@@ -1,8 +1,8 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
 
-## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + Data Review convergence (2026-09-09)
-Functional checkpoint: `b3ec2d8e fix(admin): simplify seo editor actions`.
+## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-09)
+Functional checkpoint: `b6c44a62 fix(admin): separate page and operations tools`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Species SEO single-group Data Review is now evidence-first: candidate/source comparison is read-only, then the operator chooses one conclusion.
 - Duplicate decisions no longer mix canonical selection into evidence. Choosing “duplicate records” opens a separate final-page step; the system recommendation is labeled as evidence and is never auto-selected.
@@ -12,14 +12,15 @@ Functional checkpoint: `b3ec2d8e fix(admin): simplify seo editor actions`.
 - Permanent browser regression covers duplicate + category-conflict flows, explicit human canonical selection and responsive 390px drawer width. Heavy CI runs `test:data-review-ui`.
 - Validation PASS: full Species SEO Admin contract, Data Review browser regression, root TypeScript, full root build and diff hygiene.
 - SEO editor action hierarchy is now centralized: current-page/Base save-review actions live only in the top Review bar; duplicate bottom save buttons and repeated Draft chips were removed. Core `搜索与收录设置` defaults open while remaining collapsible by operator choice.
-- NEXT: continue remaining editor/tool hierarchy convergence (utility tools, dense chrome, and context clarity) without adding new authority layers. Supabase Staging remains parked.
+- Current-page and cross-page tools are now separated: the editor footer contains only current-page Data Review / readiness / translation / history, while one neutral top-level `运营工具` entry opens batch SEO, bulk duplicate/content review, template import and global queues. Desktop + 390px hierarchy regression PASS.
+- NEXT: reduce dense top chrome (`当前任务` + 4-stage workflow + current-page review) while preserving one clear current action and the existing review/publish gates. Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `b3ec2d8e`
+Current Operations Studio functional HEAD: `b6c44a62`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

@@ -1180,3 +1180,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Browser smoke confirms Search appearance + Index/Canonical visible by default, no editor-body save buttons, no repeated Draft chip, and 390px no overflow.
 - Contract + Data Review/browser + root TypeScript + full build + diff hygiene PASS. No push, Production, Supabase or main change.
 - NEXT: utility/tool hierarchy and current-page/Base ownership clarity.
+
+## 2026-09-09 — SEO Admin page/global tool hierarchy
+- Functional checkpoint: `b6c44a62 fix(admin): separate page and operations tools`.
+- Moved batch SEO, bulk duplicate/content review, SEO template import and global workflow queues out of the current-page footer into one top-level neutral `运营工具` drawer.
+- Current-page footer now exposes only contextual Data Review, readiness, English translation and revision history.
+- Extended Heavy browser regression verifies desktop + 390px Operations access, no horizontal overflow, and that global batch entries cannot regress into current-page tools.
+- PASS: full Species SEO contract, Repo backend/API/routing gates, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
+- NEXT: compress dense top chrome while preserving one current task and the existing review/publish safety boundary.

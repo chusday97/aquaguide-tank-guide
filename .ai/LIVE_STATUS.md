@@ -1,19 +1,20 @@
 # Live Status
 
 
-## CURRENT OVERRIDE — Durable local runtime + Data Review UX status (2026-09-09)
-- Functional checkpoint: `b3ec2d8e fix(admin): simplify seo editor actions`.
+## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-09)
+- Functional checkpoint: `b6c44a62 fix(admin): separate page and operations tools`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
 - Species SEO Data Review now presents source/candidate evidence as read-only, then one human conclusion. Duplicate canonical selection is a separate explicit step and system recommendations never auto-select the operator decision.
 - `最终确认版本` summarizes the resulting retained page / Canonical policy / Product Data boundary before one final confirmation action. Category-conflict review uses the same pattern without rewriting Product Data.
 - New `test:data-review-ui` validates duplicate and category-conflict flows plus responsive 390px drawer behavior; Heavy CI includes it.
-- Species SEO editor now defaults core Search & indexing controls open. Current-page/Base save-review actions are centralized in the top Review bar; duplicate footer save actions and repeated Draft chips are removed.
+- Species SEO editor defaults core Search & indexing controls open. Current-page/Base save-review actions are centralized in the top Review bar; duplicate footer save actions and repeated Draft chips are removed.
+- Current-page tools are now contextual only (Data Review / readiness / translation / history). Cross-page batch SEO, bulk review, template import and global workflow queues moved behind one top-level `运营工具` drawer; 390px access and page-level no-overflow are browser-verified.
 - Full Species SEO Admin contract, Data Review/editor browser regression, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `b3ec2d8eee3dd1b180cad6d7f7c4bf5ce9f69c9f`
+Operational functional HEAD before this docs sync: `b6c44a62c719f9823e377c1f9ed5b83a46e6492d`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

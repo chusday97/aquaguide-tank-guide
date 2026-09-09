@@ -16,7 +16,8 @@
 - [x] Local File backup/restore + schema safety (`f501a69d`): versioned envelopes, legacy migration, future-version refusal, integrity report, timestamped snapshots, restore safety backup and rollback-on-failure.
 - [x] Data Review decision-basis convergence (`2fcba840`): evidence-only comparison → human conclusion → explicit canonical choice → final-result summary → one confirm; system recommendation is not auto-selected.
 - [x] Species SEO edit action convergence (`b3ec2d8e`): Search & indexing defaults open; top Review bar owns save/review; page/Base bottom duplicate save buttons and Draft chips removed.
-- [ ] Continue utility/tool hierarchy and current-page vs Base ownership clarity; keep low-frequency tools subordinate to the active editing task.
+- [x] Page/global tool hierarchy (`b6c44a62`): current-page footer keeps only contextual tools; one top-level Operations drawer owns batch SEO, bulk duplicate/content review, template import and global queues.
+- [ ] Reduce dense top chrome (`当前任务` + 4-stage workflow + current-page review) without hiding the active next action or weakening publish/review gates.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-09
