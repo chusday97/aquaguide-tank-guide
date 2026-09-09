@@ -1,0 +1,248 @@
+.stage { position: relative; min-height: 640px; overflow: hidden; border-radius: 34px; background: linear-gradient(180deg, #d9f3ec 0 58%, #a9d5c7 59% 72%, #8a7657 73% 100%); box-shadow: var(--shadow); }
+.stage::before { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 28% 12%, rgba(255,255,255,.8), transparent 24%), linear-gradient(115deg, transparent 0 52%, rgba(255,255,255,.2) 56%, transparent 62%); }
+.stage-copy { position: absolute; z-index: 2; left: 30px; top: 28px; max-width: min(470px, 55%); }
+.stage-copy h2 { margin: 9px 0 6px; font: 600 clamp(30px, 3.2vw, 50px)/1.05 var(--font-serif); }
+.stage-copy p { margin: 0; color: #55766b; font-size: 13px; line-height: 1.6; }
+.stage-pills { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 16px; }
+.stage-pills span { padding: 8px 11px; border-radius: 99px; background: rgba(255,255,255,.76); color: var(--green-dark); font-size: 11px; font-weight: 800; }
+.stage-fish { position: absolute; z-index: 2; width: 180px; height: 130px; object-fit: contain; filter: drop-shadow(0 18px 12px rgba(19,59,47,.25)); animation: drift 6s ease-in-out infinite; }
+.fish-a { left: 12%; top: 38%; width: 270px; height: 190px; }
+.fish-b { left: 46%; top: 24%; width: 200px; height: 145px; animation-delay: -1.8s; }
+.fish-c { left: 35%; top: 62%; width: 160px; height: 115px; animation-delay: -3.4s; }
+.stage-control { position: absolute; z-index: 4; display: flex; align-items: center; gap: 8px; min-height: 44px; border: 1px solid rgba(255,255,255,.75); border-radius: 15px; background: rgba(255,255,255,.86); color: var(--green-dark); padding: 0 13px; font-size: 12px; font-weight: 800; }
+.stage-control.species { left: 25px; bottom: 24px; }
+.stage-control.manage { right: 25px; bottom: 24px; }
+.action-card { position: absolute; z-index: 6; top: 24px; right: 24px; width: min(350px, 31%); padding: 20px; border: 1px solid rgba(255,255,255,.82); border-radius: 26px; background: rgba(250,255,252,.92); box-shadow: 0 20px 60px rgba(24,61,52,.15); backdrop-filter: blur(16px); }
+.action-card .row { display: flex; justify-content: space-between; color: var(--warm); font-size: 11px; font-weight: 800; }
+.action-card h3 { margin: 14px 0 8px; font: 600 25px/1.2 var(--font-serif); }
+.action-card p { margin: 0; font-size: 12px; }
+.action-card .button { width: 100%; margin-top: 14px; }
+.mode-switch { display: flex; gap: 4px; padding: 4px; border: 1px solid var(--line); border-radius: 99px; background: rgba(255,255,255,.7); }
+.mode-switch button { min-height: 34px; border: 0; border-radius: 99px; background: transparent; color: var(--muted); padding: 0 11px; font-size: 11px; font-weight: 800; }
+.mode-switch button.active { background: var(--green); color: #fff; }
+.atlas-stage { min-height: 600px; }
+.atlas-fish { width: 180px; height: 130px; }
+.atlas-fish:hover, .atlas-fish.selected { transform: scale(1.08); filter: drop-shadow(0 0 18px rgba(255,255,255,.9)); }
+.variant-panel { display: none; margin-top: 16px; }
+.variant-panel.open { display: block; animation: rise .25s ease; }
+.variant-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 11px; }
+.variant-card { display: grid; grid-template-columns: 60px minmax(0, 1fr); align-items: center; gap: 11px; width: 100%; min-height: 86px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,255,255,.76); padding: 10px; text-align: left; color: var(--ink); }
+.variant-card img { width: 60px; height: 60px; object-fit: contain; }
+.variant-card b, .variant-card span { display: block; min-width: 0; overflow-wrap: anywhere; }
+.variant-card span { margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.4; }
+.profile-rail { position: absolute; z-index: 10; inset: 0 0 0 auto; width: var(--rail); overflow: auto; padding: 24px; border-left: 1px solid rgba(255,255,255,.86); background: rgba(250,255,252,.96); box-shadow: -18px 0 60px rgba(24,61,52,.16); transform: translateX(105%); transition: transform .24s ease; }
+.profile-rail.open { transform: translateX(0); }
+.profile-rail header { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.profile-rail header strong { font: 600 22px var(--font-serif); }
+.icon-close { width: 40px; height: 40px; border: 0; border-radius: 13px; background: #e2f0ea; color: var(--green-dark); font-size: 20px; }
+.profile-hero { margin-top: 16px; padding: 16px; border-radius: 22px; background: #e3f1ec; }
+.profile-hero img { display: block; width: 100%; height: 180px; object-fit: contain; }
+.profile-hero h2 { margin: 8px 0 3px; font: 600 30px var(--font-serif); }
+.latin { color: var(--muted); font: italic 12px var(--font-serif); }
+.fact-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 16px; }
+.fact-strip div { padding: 10px; border-right: 1px solid var(--line); }
+.fact-strip div:last-child { border-right: 0; }
+.fact-strip b, .fact-strip span { display: block; }
+.fact-strip b { font: 600 15px var(--font-serif); }
+.fact-strip span { margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.4; }
+.profile-section { margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--line); }
+.profile-section h3 { font-size: 19px; }
+.profile-section p { margin: 8px 0 0; font-size: 12px; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tag { padding: 6px 8px; border-radius: 99px; background: #e4f2ec; color: var(--green-dark); font-size: 10px; font-weight: 800; }
+.care-layout { display: grid; grid-template-columns: minmax(180px, 260px) minmax(0, 1fr); gap: 18px; }
+.question-list { display: grid; gap: 7px; margin-top: 12px; }
+.question-list button { display: flex; justify-content: space-between; min-height: 45px; border: 1px solid var(--line); border-radius: 13px; background: #fff; padding: 0 12px; color: var(--ink); text-align: left; font-size: 12px; font-weight: 700; }
+.question-list button.active { border-color: var(--green); background: #e3f2ec; color: var(--green-dark); }
+.care-hero { min-height: 500px; position: relative; overflow: hidden; border-radius: 28px; background: linear-gradient(180deg,#d4eee7,#9bcec2 70%,#806b4d 71%); }
+.care-hero img { position: absolute; right: 5%; bottom: 9%; width: 180px; height: 210px; object-fit: contain; }
+.care-hero-copy { position: absolute; left: 26px; top: 28px; max-width: 54%; }
+.care-hero-copy h2 { margin: 9px 0; font: 600 36px/1.08 var(--font-serif); }
+.care-hotspot { position: absolute; display: grid; place-items: center; width: 58px; height: 58px; border: 1px solid rgba(255,255,255,.82); border-radius: 50%; background: rgba(255,255,255,.9); color: var(--green); font-size: 21px; box-shadow: 0 10px 26px rgba(24,61,52,.18); }
+.care-hotspot:hover, .care-hotspot.active { background: var(--green); color: #fff; }
+.hotspot-water { left: 30%; top: 28%; }
+.hotspot-fish { left: 51%; top: 52%; }
+.hotspot-filter { right: 10%; top: 27%; }
+.action-list { display: grid; gap: 9px; margin-top: 14px; }
+.action-list div { padding: 12px; border-left: 3px solid var(--green); background: #eef6f2; color: var(--green-dark); font-size: 12px; line-height: 1.5; }
+.collection-stage { min-height: 660px; background: linear-gradient(180deg,#d5eee8,#b3d7ce 66%,#8c7859 67%); }
+.collection-center { position: absolute; z-index: 3; left: 50%; top: 50%; width: min(420px, 45%); transform: translate(-50%,-50%); padding: 28px; border: 1px solid rgba(255,255,255,.9); border-radius: 28px; background: rgba(248,251,248,.9); box-shadow: 0 22px 62px rgba(24,61,52,.16); text-align: center; }
+.collection-center h2 { margin: 8px 0; font: 600 32px var(--font-serif); }
+.collection-center p { margin: 0; font-size: 12px; }
+.collection-node { position: absolute; z-index: 4; width: 150px; min-height: 88px; border: 1px solid rgba(255,255,255,.9); border-radius: 19px; background: rgba(255,255,255,.84); color: var(--green-dark); box-shadow: 0 15px 36px rgba(24,61,52,.12); font-size: 12px; font-weight: 900; }
+.collection-node span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; font-weight: 700; }
+.node-wish { left: 7%; top: 19%; }.node-care { right: 7%; top: 19%; }.node-memory { left: 7%; bottom: 16%; }.node-achievement { right: 7%; bottom: 16%; }
+.cards-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(210px,1fr)); gap: 14px; }
+.demo-card { padding: 16px; border: 1px solid var(--line); border-radius: 18px; background: rgba(255,255,255,.74); }
+.demo-card img { width: 100%; height: 130px; object-fit: contain; background: #e5f2ed; border-radius: 13px; }
+.demo-card h3 { margin-top: 10px; font-size: 19px; }
+.demo-card p { margin: 5px 0 0; font-size: 11px; }
+@keyframes drift { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+/* Core four-page planner composition */
+.aquarium-page { max-width: 1680px; }
+.aquarium-toolbar { display: grid; grid-template-columns: auto 1fr auto; gap: 18px; align-items: center; margin-bottom: 18px; }
+.tank-picker { display: flex; align-items: center; gap: 11px; padding: 9px 16px 9px 10px; border: 1px solid var(--line); border-radius: 17px; background: rgba(255,255,255,.78); }
+.tank-picker strong { display: block; margin-top: 3px; font-size: 14px; }
+.tank-icon { display: grid; place-items: center; width: 38px; height: 38px; border-radius: 13px; background: var(--green); color: #fff; font-size: 24px; }
+.tank-meta { color: var(--muted); font-size: 12px; font-weight: 700; }
+.aquarium-toolbar-actions { display: flex; align-items: center; gap: 10px; }
+.aquarium-stage { position: relative; min-height: min(760px, calc(100vh - 176px)); overflow: hidden; border-radius: 38px; background: #a9d9cf; box-shadow: var(--shadow); }
+.three-d-stage { position: absolute; inset: 0; overflow: hidden; background: linear-gradient(180deg,#cbeee8 0 59%,#a9d6c4 60% 72%,#806b4d 73% 100%); }
+.water-glow { position: absolute; inset: 0; background: radial-gradient(circle at 31% 18%,rgba(255,255,255,.62),transparent 25%), linear-gradient(110deg,transparent 0 45%,rgba(255,255,255,.18) 54%,transparent 63%); }
+.substrate { position: absolute; inset: 73% 0 0; background: linear-gradient(90deg,rgba(70,48,31,.2),transparent 46%,rgba(255,255,255,.14)); }
+.plant { position: absolute; bottom: 4%; width: 23px; height: 34%; border-radius: 100% 0 100% 0; background: #2b7b60; transform-origin: bottom; }
+.plant-one { left: 5%; transform: rotate(-12deg); }.plant-two { right: 6%; height: 42%; transform: rotate(12deg); }
+.tank-fish { position: absolute; z-index: 2; width: 18%; max-width: 290px; object-fit: contain; filter: drop-shadow(0 18px 12px rgba(19,59,47,.25)); animation: drift 7s ease-in-out infinite; }
+.tank-fish-one { left: 22%; top: 40%; width: 26%; }.tank-fish-two { left: 53%; top: 26%; width: 21%; animation-delay: -2s; }.tank-fish-three { left: 41%; top: 62%; width: 15%; animation-delay: -4s; }
+.aquarium-stage-copy { position: absolute; z-index: 4; left: clamp(28px,4.4vw,72px); top: clamp(28px,4vw,58px); max-width: min(570px, 47%); }
+.stage-kicker { color: #4d756c; font-size: 13px; font-weight: 900; letter-spacing: .15em; }
+.aquarium-stage-copy h1 { margin: 10px 0 9px; color: #164b40; font: 600 clamp(37px,4.2vw,70px)/1.02 var(--font-serif); }
+.aquarium-stage-copy p { margin: 0; color: #4f756b; font-size: 15px; line-height: 1.55; }
+.stage-pills { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 20px; }.stage-pills span { padding: 10px 14px; border-radius: 99px; background: rgba(255,255,255,.76); color: var(--green-dark); font-size: 12px; font-weight: 800; }
+.today-card { position: absolute; z-index: 8; top: 28px; right: 30px; width: min(360px,31%); padding: 28px; border: 1px solid rgba(255,255,255,.9); border-radius: 31px; background: rgba(250,255,252,.92); box-shadow: 0 20px 60px rgba(24,61,52,.14); backdrop-filter: blur(16px); }
+.today-card .row { display:flex; justify-content:space-between; color:var(--warm); font-size:12px; font-weight:900; }.today-card h2 { margin: 19px 0 9px; color:#164b40; font:600 clamp(25px,2.1vw,35px)/1.12 var(--font-serif); }.today-card p { margin:0; color:var(--muted); font-size:13px; line-height:1.6; }.today-card .button { width:100%; margin-top:20px; }.today-next { display:flex; justify-content:space-between; gap:12px; margin-top:22px; padding-top:16px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }.today-next strong { color:var(--green-dark); }
+.stage-edge-control { position:absolute; z-index:8; min-height:48px; padding:0 17px; border:1px solid rgba(255,255,255,.9); border-radius:17px; background:rgba(255,255,255,.86); color:var(--green-dark); font-size:13px; font-weight:900; }.tank-species { left:4%; bottom:18%; }.tank-manage { right:4%; bottom:18%; }
+.aquarium-dock { position:absolute; z-index:8; left:3%; right:3%; bottom:2.7%; display:grid; grid-template-columns:repeat(6,1fr); gap:8px; padding:22px 18px; border:1px solid rgba(255,255,255,.88); border-radius:31px; background:rgba(250,255,252,.9); box-shadow:0 18px 50px rgba(24,61,52,.15); }.aquarium-dock button { display:grid; justify-items:center; gap:8px; min-height:70px; border:0; border-radius:18px; background:transparent; color:var(--green-dark); font-size:23px; font-weight:900; }.aquarium-dock button:hover { background:#e1f1eb; }.aquarium-dock span { font-size:12px; }
+.aquarium-below { margin-top:20px; }
+.encyclopedia-head { align-items:center; }.encyclopedia-head .toolbar { justify-content:flex-end; }
+.atlas-workspace { display:grid; grid-template-columns:minmax(0,1fr); gap:16px; }.atlas-scene { position:relative; min-height:650px; overflow:hidden; border-radius:34px; background:linear-gradient(180deg,#d5f1ea 0 62%,#b5d6ca 63% 75%,#847254 76% 100%); box-shadow:var(--shadow); }.atlas-scene::after { content:''; position:absolute; inset:0; background:radial-gradient(circle at 42% 22%,rgba(255,255,255,.5),transparent 29%); pointer-events:none; }.atlas-scene-copy { position:absolute; z-index:3; left:clamp(28px,4vw,58px); top:30px; max-width:55%; }.atlas-scene-copy h2 { margin:10px 0 8px; color:#164b40; font:600 clamp(34px,4vw,62px)/1.02 var(--font-serif); }.atlas-scene-copy p { margin:0; color:#55766b; font-size:14px; }.atlas-creature { position:absolute; z-index:4; border:0; background:transparent; padding:0; filter:drop-shadow(0 17px 11px rgba(19,59,47,.23)); }.atlas-creature img { display:block; width:100%; height:100%; object-fit:contain; }.atlas-creature span { position:absolute; left:50%; bottom:-25px; transform:translateX(-50%); white-space:nowrap; padding:7px 11px; border-radius:99px; background:rgba(255,255,255,.86); color:var(--green-dark); font-size:11px; font-weight:900; opacity:0; }.atlas-creature:hover span,.atlas-creature:focus-visible span { opacity:1; }.creature-neon { left:12%; top:37%; width:230px; height:150px; }.creature-cardinal { left:48%; top:25%; width:220px; height:160px; }.creature-oscar { right:10%; top:49%; width:210px; height:170px; }.atlas-waterline { position:absolute; z-index:2; left:0; right:0; bottom:24%; border-top:2px solid rgba(255,255,255,.24); }.atlas-plants { position:absolute; inset:auto 0 0; height:26%; background:linear-gradient(100deg,#2c7b5d 0 3%,transparent 3% 12%,#317e61 12% 15%,transparent 15% 78%,#2c7b5d 78% 82%,transparent 82%); }.atlas-observation { position:absolute; z-index:6; left:4%; right:4%; bottom:4%; display:flex; align-items:center; gap:18px; padding:21px 25px; border:1px solid rgba(255,255,255,.88); border-radius:26px; background:rgba(250,255,252,.9); }.atlas-observation strong { display:block; margin-top:5px; font:600 22px var(--font-serif); }.atlas-observation button { margin-left:auto; white-space:nowrap; }.atlas-scene-tools { position:absolute; z-index:7; right:25px; top:24px; display:flex; gap:7px; }.atlas-variants { display:none; padding:22px; }.atlas-variants.open { display:block; }.surface-heading,.profile-header { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }.surface-heading h2 { margin:7px 0 0; font:600 29px var(--font-serif); }.surface-heading p { margin:8px 0 0; font-size:12px; }.variant-grid-large { grid-template-columns:repeat(2,minmax(0,1fr)); margin-top:18px; }.variant-card-large { min-height:120px; grid-template-columns:94px minmax(0,1fr); }.variant-card-large img { width:94px; height:94px; }.variant-card-large b { font-size:16px; }.variant-card-large em,.traditional-card em { display:block; margin-top:5px; color:var(--muted); font:italic 12px var(--font-serif); }.variant-card-large small,.traditional-card small { display:block; margin-top:5px; color:var(--muted); font-size:11px; line-height:1.45; }.species-profile { display:none; position:relative; min-width:0; max-height:calc(100vh - 180px); overflow:hidden; padding:23px; border:1px solid var(--line); border-radius:30px; background:rgba(250,255,252,.97); box-shadow:var(--shadow); }.species-profile.open { display:block; }.profile-header strong { font:600 21px var(--font-serif); }.profile-scroll { max-height:calc(100vh - 260px); overflow:auto; padding-right:4px; }.profile-hero-seo { display:grid; grid-template-columns:145px minmax(0,1fr); align-items:center; gap:18px; margin-top:18px; padding:14px; background:#e7f2ee; }.profile-hero-seo img { width:145px; height:145px; }.profile-hero-seo h2 { margin:8px 0 2px; font:600 32px var(--font-serif); }.profile-judgement strong { display:block; margin-top:9px; color:var(--green); font:600 23px var(--font-serif); }.profile-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:22px; padding-top:17px; border-top:1px solid var(--line); }
+.atlas-workspace:has(.species-profile.open) { grid-template-columns:minmax(0,1.23fr) minmax(360px,.77fr); align-items:start; }.atlas-workspace:has(.species-profile.open) .atlas-variants { grid-column:1; display:block; }.atlas-workspace:has(.species-profile.open) .species-profile { grid-column:2; grid-row:1 / span 2; }.interactive-collapsed .atlas-scene { min-height:650px; }.interactive-collapsed .atlas-scene > *:not(.atlas-scene-tools) { opacity:0; pointer-events:none; }.interactive-collapsed .atlas-scene-tools { left:0; right:auto; top:0; bottom:0; display:grid; place-items:center; width:72px; background:rgba(255,255,255,.84); }.interactive-collapsed .atlas-scene-tools .button:first-child { display:none; }.interactive-restore { display:none; }.interactive-collapsed .interactive-restore { display:block; position:absolute; z-index:12; left:12px; top:50%; width:48px; min-height:120px; writing-mode:vertical-rl; border:1px solid var(--line); border-radius:16px; background:var(--green); color:#fff; font-size:12px; font-weight:900; }
+.traditional-toolbar { display:grid; gap:14px; }.search-row,.filter-row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }.traditional-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:15px; margin-top:18px; }.traditional-card { display:grid; grid-template-columns:115px minmax(0,1fr); align-items:center; gap:13px; min-height:150px; padding:14px; border:1px solid var(--line); border-radius:22px; background:rgba(255,255,255,.78); color:var(--ink); text-align:left; }.traditional-card img { width:115px; height:115px; object-fit:contain; }.traditional-card b { font:600 20px var(--font-serif); }.traditional-profile { margin-top:18px; }
+.care-workspace { display:grid; grid-template-columns:minmax(0,1fr); }.care-scene { position:relative; min-height:670px; overflow:hidden; border-radius:34px; background:#b9ded4; box-shadow:var(--shadow); }.care-scene-copy { position:absolute; z-index:5; left:5%; top:6%; }.care-scene-copy h2 { margin:10px 0 7px; color:#164b40; font:600 clamp(35px,4vw,60px)/1.02 var(--font-serif); }.care-scene-copy p { margin:0; color:#55766b; }.care-tank { position:absolute; inset:0; background:linear-gradient(180deg,#d2f1eb 0 62%,#a6d2c1 63% 74%,#806c50 75%); }.care-water { position:absolute; inset:0; background:radial-gradient(circle at 35% 26%,rgba(255,255,255,.52),transparent 30%); }.care-bottom { position:absolute; inset:75% 0 0; background:linear-gradient(110deg,rgba(83,57,35,.22),transparent 55%); }.care-fish { position:absolute; width:23%; object-fit:contain; filter:drop-shadow(0 14px 12px rgba(19,59,47,.22)); }.care-fish-one { left:25%; top:40%; }.care-fish-two { left:57%; top:27%; width:18%; }.care-hotspot { position:absolute; z-index:6; display:grid; place-items:center; width:58px; height:58px; border:1px solid rgba(255,255,255,.9); border-radius:50%; background:rgba(255,255,255,.9); color:var(--green); font-size:21px; box-shadow:0 10px 26px rgba(24,61,52,.18); }.care-hotspot:hover { background:var(--green); color:#fff; }.care-observation { position:absolute; z-index:7; left:4%; bottom:5%; width:min(510px,48%); padding:22px 25px; border:1px solid rgba(255,255,255,.88); border-radius:25px; background:rgba(250,255,252,.9); }.care-observation strong { display:block; margin-top:7px; font:600 25px var(--font-serif); }.care-observation p { margin:7px 0 0; font-size:12px; }.care-observation .button { margin-top:13px; }.care-surface { display:none; position:absolute; z-index:12; right:24px; top:24px; bottom:24px; width:min(390px,38%); padding:22px; overflow:hidden; border:1px solid var(--line); border-radius:28px; background:rgba(250,255,252,.97); box-shadow:var(--shadow); }.care-surface.open { display:block; }.care-step { display:grid; grid-template-columns:36px minmax(0,1fr); gap:10px; margin-top:20px; padding-bottom:16px; border-bottom:1px solid var(--line); }.care-step > span { display:grid; place-items:center; width:30px; height:30px; border-radius:50%; background:#e4f2ec; color:var(--green); font-size:11px; font-weight:900; }.care-step h3 { margin:0; font:600 18px var(--font-serif); }.care-step p { margin:6px 0 0; font-size:12px; }.care-surface .button { margin-top:20px; width:100%; }.guide-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:15px; margin-top:18px; }.guide-card { display:grid; grid-template-columns:145px minmax(0,1fr); gap:16px; align-items:center; padding:15px; border:1px solid var(--line); border-radius:23px; background:rgba(255,255,255,.78); }.guide-card img { width:145px; height:130px; object-fit:contain; border-radius:15px; background:#e8f3ee; }.guide-card h2 { margin:7px 0 5px; font:600 24px var(--font-serif); }.guide-card p { margin:0; font-size:12px; }
+.collection-tabs { display:flex; gap:8px; margin-bottom:16px; overflow:auto; padding-bottom:3px; }.collection-tabs button { flex:0 0 auto; min-height:44px; padding:0 17px; border:1px solid var(--line); border-radius:99px; background:rgba(255,255,255,.74); color:var(--muted); font-size:12px; font-weight:900; }.collection-tabs button span { margin-left:5px; }.collection-tabs button.active { border-color:var(--green); background:var(--green); color:#fff; }.collection-overview { display:grid; grid-template-columns:220px minmax(0,1fr); gap:18px; }.collection-rail { display:grid; align-content:start; gap:9px; padding:20px; border:1px solid var(--line); border-radius:26px; background:rgba(255,255,255,.72); }.collection-rail h2 { margin:7px 0 2px; font:600 27px var(--font-serif); }.collection-rail p { margin:0 0 8px; color:var(--muted); font-size:12px; line-height:1.5; }.collection-node { position:static; display:grid; grid-template-columns:24px minmax(0,1fr); grid-template-rows:auto auto; column-gap:8px; align-items:center; width:100%; min-height:67px; padding:9px 10px; border:1px solid transparent; border-radius:15px; background:transparent; color:var(--green-dark); text-align:left; }.collection-node:hover,.collection-node.active { border-color:#a8d7c8; background:#e8f4ef; }.collection-node > strong { font-size:12px; }.collection-node > small { grid-column:2; color:var(--muted); font-size:10px; }.collection-content { min-width:0; padding:26px; border:1px solid rgba(255,255,255,.9); border-radius:30px; background:rgba(255,255,255,.82); box-shadow:var(--shadow); }.collection-context h2 { margin:8px 0 5px; font:600 34px var(--font-serif); }.collection-context p { margin:0; color:var(--muted); font-size:13px; }.collection-item-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:24px; }.collection-item { display:grid; grid-template-columns:120px minmax(0,1fr); gap:15px; align-items:center; padding:14px; border:1px solid var(--line); border-radius:20px; background:#f8fbf8; }.collection-item img { width:120px; height:120px; object-fit:contain; border-radius:14px; background:#e7f2ee; }.collection-item h3 { margin:0; font:600 22px var(--font-serif); }.collection-item em { display:block; margin-top:5px; color:var(--muted); font:italic 12px var(--font-serif); }.collection-item p { margin:6px 0 12px; font-size:11px; }.collection-empty { margin-top:24px; padding:35px 20px; border:1px dashed #b5d7cb; border-radius:20px; text-align:center; }.collection-empty strong { font:600 24px var(--font-serif); }.collection-empty p { margin:8px 0 16px; }
+
+@media (max-width: 1023px) {
+  .action-card { width: min(330px, 40%); }
+  .collection-center { width: min(390px, 50%); }
+}
+@media (max-width: 767px) {
+  .stage, .atlas-stage, .collection-stage { min-height: 610px; border-radius: 25px; }
+  .stage-copy { left: 20px; top: 20px; max-width: 68%; }
+  .stage-copy h2 { font-size: 31px; }
+  .stage-copy p { font-size: 11px; }
+  .action-card { top: auto; right: 12px; bottom: 82px; width: calc(100% - 24px); padding: 15px; }
+  .action-card h3 { margin: 9px 0 5px; font-size: 21px; }
+  .action-card p { display: none; }
+  .stage-control.species { left: 15px; bottom: 17px; }
+  .stage-control.manage { right: 15px; bottom: 17px; }
+  .stage-fish { width: 125px; height: 95px; }
+  .fish-a { left: 7%; top: 40%; width: 180px; height: 130px; }
+  .fish-b { left: 47%; top: 28%; width: 135px; height: 100px; }
+  .fish-c { left: 33%; top: 62%; width: 110px; height: 80px; }
+  .care-layout { grid-template-columns: 1fr; }
+  .care-hero { min-height: 430px; }
+  .care-hero-copy { left: 20px; top: 20px; max-width: 70%; }
+  .care-hero-copy h2 { font-size: 29px; }
+  .profile-rail { inset: auto 0 0; width: 100%; height: min(76vh, 680px); padding: 20px 16px 26px; border-left: 0; border-top: 1px solid rgba(255,255,255,.86); transform: translateY(105%); }
+  .profile-rail.open { transform: translateY(0); }
+  .collection-center { width: calc(100% - 42px); padding: 20px; }
+  .collection-center h2 { font-size: 27px; }
+  .collection-node { width: 125px; min-height: 76px; font-size: 11px; }
+  .node-wish { left: 5%; top: 13%; }.node-care { right: 5%; top: 13%; }.node-memory { left: 5%; bottom: 13%; }.node-achievement { right: 5%; bottom: 13%; }
+}
+
+.field-error { display:block; margin-top:6px; color:#b34b3b; font-size:12px; }
+.interactive-collapsed .interactive-restore[hidden] { display:block !important; }
+.interactive-collapsed .atlas-scene-tools .button:nth-child(2) { display:none; }
+.interactive-restore img { display:block; width:30px; height:30px; margin:0 auto 8px; object-fit:contain; }
+.page-frame.state-only > *:not(.state-panels):not(.demo-badge) { display:none !important; }
+@media (min-width: 1280px) {
+  .atlas-workspace:has(.species-profile.open) { grid-template-columns: minmax(0, 1.1fr) minmax(360px, .9fr); }
+}
+
+/* 2026-09-02 planner refinement: stage actions and interactive collection */
+.aquarium-stage-actions { position:absolute; inset:0; z-index:9; pointer-events:none; }
+.aquarium-stage-actions > *, .aquarium-stage-actions button { pointer-events:auto; }
+.stage-edge-group { position:absolute; right:4%; bottom:18%; display:flex; gap:8px; }
+.stage-edge-group .stage-edge-control { position:static; }
+.stage-edge-control { display:inline-flex; align-items:center; justify-content:center; gap:6px; min-height:48px; padding:0 17px; white-space:nowrap; }
+.stage-edge-control span { color:var(--warm); font-size:11px; }
+.tank-species { left:4%; bottom:18%; }
+.aquarium-stage-actions .stage-edge-group,
+.aquarium-stage-actions .tank-species { bottom:24%; }
+.aquarium-icon-tools { position:absolute; z-index:10; left:4%; bottom:29%; display:grid; gap:8px; }
+.aquarium-icon-tools { bottom:34%; }
+.icon-button { display:inline-grid; place-items:center; width:44px; height:44px; padding:0; border:1px solid rgba(255,255,255,.85); border-radius:50%; background:rgba(255,255,255,.86); color:var(--green-dark); font-size:20px; font-weight:900; box-shadow:0 9px 24px rgba(24,61,52,.13); }
+.icon-button:hover { background:#fff; color:var(--green); }
+.aquarium-surface { display:none; position:absolute; z-index:20; right:3%; top:18%; width:min(390px,42%); max-height:58%; padding:20px; overflow:auto; background:rgba(250,255,252,.97); }
+.aquarium-surface.open { display:block; }
+.surface-heading h2 { margin:7px 0 0; font:600 26px var(--font-serif); }
+.surface-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; }
+.surface-list { display:grid; gap:8px; margin:16px 0; }
+.surface-list > div { display:grid; gap:4px; padding:12px 13px; border:1px solid var(--line); border-radius:15px; background:#f8fbf8; }
+.surface-list span, .management-grid span { color:var(--muted); font-size:11px; line-height:1.45; }
+.surface-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+.management-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:16px; }
+.management-grid span { display:grid; gap:4px; padding:11px 12px; border-radius:14px; background:#eef7f2; }
+.management-grid b { color:var(--green-dark); font-size:12px; }
+
+.collection-head { display:flex; align-items:flex-start; justify-content:space-between; gap:24px; margin-bottom:16px; }
+.collection-head .button { white-space:nowrap; }
+.collection-head h1 { margin:8px 0 6px; font:600 clamp(30px,3.4vw,52px)/1.04 var(--font-serif); }
+.collection-head p { margin:0; color:var(--muted); font-size:13px; line-height:1.6; }
+.collection-ecosystem { position:relative; min-height:min(760px,calc(100vh - 180px)); overflow:hidden; border-radius:36px; background:linear-gradient(180deg,#d8f1eb 0 59%,#b6d8ca 60% 72%,#826f52 73% 100%); box-shadow:var(--shadow); }
+.collection-waterline { position:absolute; inset:25% 0 auto; border-top:2px solid rgba(255,255,255,.45); box-shadow:0 0 28px rgba(255,255,255,.55); }
+.collection-sand { position:absolute; inset:auto 0 0; height:27%; background:linear-gradient(100deg,rgba(97,76,52,.72),rgba(145,119,82,.42) 50%,rgba(78,61,42,.73)); }
+.collection-plant { position:absolute; bottom:12%; width:18px; height:34%; border-radius:100% 0 100% 0; background:#2d7659; transform-origin:bottom; opacity:.8; }
+.plant-left { left:7%; transform:rotate(-14deg); }.plant-right { right:8%; transform:rotate(15deg); }
+.collection-bubbles { position:absolute; top:18%; right:12%; color:rgba(255,255,255,.65); font-size:24px; letter-spacing:12px; }
+.collection-scene-title { position:absolute; z-index:2; left:5%; top:6%; display:grid; gap:7px; }.collection-scene-title strong { color:var(--green-dark); font:600 clamp(27px,3.1vw,46px)/1.04 var(--font-serif); }.collection-scene-title small { color:#55766b; font-size:12px; }
+.collection-node-strip { position:absolute; inset:0; z-index:5; }
+.collection-node { position:absolute; display:grid; justify-items:center; gap:4px; width:170px; min-height:132px; padding:10px; border:1px solid rgba(255,255,255,.78); border-radius:28px; background:rgba(255,255,255,.18); color:var(--green-dark); text-align:center; transition:transform .2s, background .2s, opacity .2s; }
+.collection-node:hover, .collection-node:focus-visible, .collection-node.active { transform:translateY(-5px) scale(1.03); border-color:#fff; background:rgba(255,255,255,.78); outline:none; box-shadow:0 18px 34px rgba(24,61,52,.14); }
+.collection-node:not(.active) { opacity:.86; }
+.node-wishlist { left:7%; top:26%; }.node-care { right:7%; top:23%; }.node-memorial { left:9%; bottom:18%; }.node-achievements { right:9%; bottom:17%; }
+.node-visual { display:grid; place-items:center; width:78px; height:62px; color:var(--green); font-size:44px; font-weight:500; }.node-school { font-size:56px; letter-spacing:-14px; }.node-leaf { color:#397d60; }.node-shell { color:#94755d; }.node-pearl { color:#a66f46; }
+.collection-node strong { font-size:13px; }.collection-node small { color:var(--muted); font-size:10px; }
+.collection-focus-panel { position:absolute; z-index:6; left:50%; top:50%; width:min(590px,48%); transform:translate(-50%,-50%); padding:28px; border:1px solid rgba(255,255,255,.92); border-radius:30px; background:rgba(250,255,252,.94); box-shadow:0 24px 65px rgba(24,61,52,.17); backdrop-filter:blur(12px); }
+.collection-focus-view { display:grid; grid-template-columns:56px minmax(0,1fr); gap:14px; align-items:start; }.focus-mark { display:grid; place-items:center; width:50px; height:50px; border-radius:18px; background:#e2f2eb; color:var(--green); font-size:27px; }.collection-focus-view h2 { margin:7px 0 5px; font:600 31px var(--font-serif); }.collection-focus-view p { margin:0; color:var(--muted); font-size:12px; line-height:1.65; }.focus-summary { grid-column:2; display:flex; flex-wrap:wrap; gap:7px; margin-top:5px; }.focus-summary span { padding:7px 10px; border-radius:99px; background:#eef7f2; color:var(--green-dark); font-size:10px; font-weight:800; }
+.collection-preview-list { grid-column:1/-1; display:grid; gap:8px; margin-top:10px; }.collection-preview-list button { display:grid; grid-template-columns:42px minmax(0,1fr) auto; align-items:center; gap:10px; width:100%; padding:9px 10px; border:1px solid var(--line); border-radius:15px; background:rgba(255,255,255,.7); color:var(--ink); text-align:left; }.collection-preview-list button:hover { background:#fff; border-color:#b8d9cc; }.collection-preview-list img { width:42px; height:42px; object-fit:contain; }.collection-preview-list strong { display:block; font-size:12px; }.collection-preview-list small { display:block; margin-top:2px; color:var(--muted); font-size:10px; line-height:1.35; }.collection-preview-list b { color:var(--green); }.preview-icon { display:grid; place-items:center; width:42px; height:42px; border-radius:14px; background:#e8f3ee; color:var(--green); font-size:20px; }.preview-icon.memorial { color:#94755d; background:#f2eee9; }.preview-icon.achievement { color:#a66f46; background:#fbf1df; }
+.collection-surface { display:none; position:fixed; z-index:30; right:24px; top:24px; bottom:24px; width:min(440px,42vw); padding:24px; overflow:auto; background:rgba(250,255,252,.98); }.collection-surface.open { display:block; }.collection-detail-hero { display:flex; align-items:center; gap:14px; margin:18px 0; padding:14px; border-radius:20px; background:#e8f3ee; }.collection-detail-hero img { width:100px; height:100px; object-fit:contain; }.collection-detail-hero strong,.collection-detail-hero span { display:block; }.collection-detail-hero span { margin-top:6px; color:var(--muted); font-size:11px; }
+
+@media (max-width: 1023px) {
+  .aquarium-surface { right:2%; width:min(390px,50%); }
+  .collection-ecosystem { min-height:700px; }.collection-focus-panel { width:min(560px,58%); }.collection-node { width:145px; min-height:116px; }.node-wishlist { left:4%; }.node-care { right:4%; }.node-memorial { left:5%; }.node-achievements { right:5%; }
+}
+@media (max-width: 767px) {
+  .aquarium-stage-actions { display:block; padding:0; }.aquarium-stage-actions .stage-edge-group { position:absolute; right:16px; bottom:92px; display:flex; flex-direction:column; align-items:flex-end; gap:6px; }.aquarium-stage-actions .tank-species { position:absolute; left:16px; bottom:116px; }.aquarium-icon-tools { left:auto; right:4px; top:18px; bottom:auto; }.aquarium-surface,.collection-surface { position:fixed; inset:auto 0 0; width:100%; max-height:78vh; border-radius:26px 26px 0 0; padding:20px 16px 28px; }
+  .collection-head { display:block; }.collection-head .button { margin-top:14px; }.collection-ecosystem { min-height:700px; border-radius:28px; }.collection-scene-title { left:22px; top:24px; }.collection-scene-title strong { font-size:31px; }.collection-node-strip { position:absolute; inset:auto 0 12px; display:flex; gap:8px; overflow-x:auto; padding:0 14px 4px; }.collection-node { position:static; flex:0 0 128px; min-height:104px; padding:8px; border-radius:22px; background:rgba(255,255,255,.62); }.node-visual { width:64px; height:46px; font-size:34px; }.node-school { font-size:46px; }.collection-focus-panel { left:14px; right:14px; top:105px; width:auto; transform:none; padding:19px; }.collection-focus-view h2 { font-size:25px; }.collection-sand { height:24%; }.collection-plant { bottom:20%; }
+}
+
+@media (max-width: 1279px) and (min-width: 768px) {
+  .aquarium-stage { min-height: 700px; }
+  .aquarium-stage-actions .stage-edge-group,
+  .aquarium-stage-actions .tank-species { bottom: 24%; }
+  .today-card { width: min(330px,34%); padding:22px; }
+  .aquarium-dock { left:2.5%; right:2.5%; }
+  .atlas-workspace:has(.species-profile.open) { grid-template-columns:minmax(0,1.1fr) minmax(315px,.9fr); }
+  .species-profile { padding:18px; }.profile-hero-seo { grid-template-columns:105px minmax(0,1fr); }.profile-hero-seo img { width:105px; height:105px; }
+}
+
+@media (max-width: 1023px) {
+  .traditional-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .collection-overview { grid-template-columns:1fr; }.collection-rail { grid-template-columns:repeat(4,minmax(0,1fr)); }.collection-rail h2,.collection-rail p { grid-column:1/-1; }.collection-node { min-height:62px; }
+  .guide-grid { grid-template-columns:1fr; }
+  .atlas-workspace:has(.species-profile.open) { grid-template-columns:1fr; }.atlas-workspace:has(.species-profile.open) .species-profile { grid-column:1; grid-row:auto; }.interactive-collapsed .atlas-scene { min-height:90px; }.interactive-collapsed .atlas-scene > *:not(.atlas-scene-tools) { display:none; }.interactive-collapsed .atlas-scene-tools { position:absolute; width:100%; display:flex; justify-content:center; }
+}
+
+@media (max-width: 1279px) and (min-width: 1024px) {
+  .collection-node { width:150px; min-height:118px; }
+  .node-wishlist, .node-memorial { left:2%; }
+  .node-care, .node-achievements { right:2%; }
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .collection-focus-panel { width:min(500px,52%); }
+  .collection-node { width:120px; min-height:108px; }
+  .node-wishlist, .node-memorial { left:2%; }
+  .node-care, .node-achievements { right:2%; }
+}
+
+@media (max-width: 767px) {
+  .aquarium-toolbar { grid-template-columns:1fr auto; }.tank-meta { grid-column:1/-1; order:3; }.aquarium-toolbar-actions { grid-column:2; grid-row:1; display:block; }.aquarium-toolbar-actions > .button { display:none; }.aquarium-toolbar-actions .mode-switch { white-space:nowrap; }.aquarium-toolbar-actions .mode-switch button { padding-inline:8px; font-size:10px; }
+  .aquarium-stage { min-height:680px; border-radius:27px; }.aquarium-stage-copy { left:22px; top:24px; max-width:80%; }.aquarium-stage-copy h1 { font-size:37px; }.aquarium-stage-copy p { font-size:12px; }.today-card { top:auto; left:16px; right:16px; bottom:210px; width:auto; padding:17px; }.today-card h2 { font-size:24px; margin:10px 0 6px; }.today-card p { display:none; }.today-card .button { margin-top:12px; }.today-next { margin-top:13px; padding-top:11px; }.aquarium-dock { left:10px; right:10px; bottom:10px; grid-template-columns:repeat(6,88px); overflow:auto; justify-content:start; padding:10px; border-radius:20px; }.aquarium-dock button { min-height:60px; }.aquarium-dock span { font-size:10px; white-space:nowrap; }
+  .encyclopedia-head h1 { font-size:36px; }.encyclopedia-head .toolbar { justify-content:flex-start; }.atlas-scene { min-height:610px; border-radius:26px; }.atlas-scene-copy { left:22px; top:22px; max-width:80%; }.atlas-scene-copy h2 { font-size:36px; }.atlas-scene-tools { right:15px; top:15px; }.atlas-scene-tools .button { padding-inline:9px; font-size:10px; }.creature-neon { left:5%; top:38%; width:165px; height:115px; }.creature-cardinal { left:47%; top:27%; width:150px; height:110px; }.creature-oscar { right:5%; top:54%; width:145px; height:120px; }.atlas-observation { left:14px; right:14px; bottom:14px; display:block; padding:16px; }.atlas-observation strong { font-size:19px; }.atlas-observation button { margin-top:10px; }.atlas-variants { padding:17px; }.variant-grid-large,.traditional-grid { grid-template-columns:1fr; }.variant-card-large { grid-template-columns:82px minmax(0,1fr); }.variant-card-large img { width:82px; height:82px; }.species-profile,.traditional-profile { position:fixed; inset:0; z-index:30; max-height:none; border:0; border-radius:0; padding:18px 16px 30px; }.profile-scroll { max-height:calc(100vh - 140px); }.profile-hero-seo { grid-template-columns:110px minmax(0,1fr); }.profile-hero-seo img { width:110px; height:110px; }.interactive-collapsed .interactive-restore { display:none; }
+  .traditional-toolbar { padding:16px; }.traditional-card { grid-template-columns:100px minmax(0,1fr); }.traditional-card img { width:100px; height:100px; }
+  .care-scene { min-height:620px; border-radius:26px; }.care-scene-copy { left:22px; top:22px; max-width:80%; }.care-scene-copy h2 { font-size:36px; }.care-observation { left:14px; right:14px; bottom:14px; width:auto; padding:16px; }.care-observation strong { font-size:21px; }.care-surface { position:fixed; inset:auto 0 0; width:100%; height:min(78vh,680px); top:auto; bottom:0; border-radius:25px 25px 0 0; padding:18px 16px 28px; }.guide-card { grid-template-columns:100px minmax(0,1fr); }.guide-card img { width:100px; height:100px; }.collection-content { padding:20px 16px; }.collection-rail { grid-template-columns:repeat(2,minmax(0,1fr)); }.collection-item-grid { grid-template-columns:1fr; }.collection-item { grid-template-columns:100px minmax(0,1fr); }.collection-item img { width:100px; height:100px; }
+}
