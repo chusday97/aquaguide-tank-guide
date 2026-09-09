@@ -91,7 +91,7 @@ function bindCommon() {
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   });
   qa('[data-open-compatibility]').forEach((button) => button.addEventListener('click', () => { window.location.href = 'compatibility.html?species=' + encodeURIComponent(state.selected || 'cardinal'); }));
-  qa('[data-start-task]').forEach((button) => button.addEventListener('click', () => { state.surface = 'task'; q('[data-surface="detail"]')?.classList.remove('is-open'); show('[data-surface="task"]', true); show('[data-surface="detail"]', false); q('[data-surface="task"]')?.classList.add('is-open'); }));
+  qa('[data-start-task]').forEach((button) => button.addEventListener('click', () => { state.surface = 'task'; q('[data-surface="detail"]')?.classList.remove('is-open'); show('[data-surface="task"]', true); show('[data-surface="detail"]', false); const task = q('[data-surface="task"]'); task?.classList.add('is-open'); task?.querySelector('button, [href], input')?.focus(); }));
   q('[data-detail-risk-toggle]')?.addEventListener('click', () => { const risk = q('[data-detail-risk]'); if (risk) risk.hidden = !risk.hidden; });
 }
 
@@ -117,7 +117,13 @@ document.addEventListener('DOMContentLoaded', () => {
   const requestedState = params.get('state');
   if (page === 'encyclopedia' && requestedState === 'variant-selection') renderVariants('宝莲灯');
   if (page === 'encyclopedia' && requestedState === 'detail') { renderVariants('宝莲灯'); q('#variant-cardinal')?.click(); }
+  if (page === 'encyclopedia' && requestedState === 'collapsed') { renderVariants('宝莲灯'); document.documentElement.classList.add('scene-collapsed'); }
   if (page === 'care' && requestedState === 'detail') { renderCareCards('water'); q('#problem-water-cloudy')?.click(); }
+  if (page === 'care' && requestedState === 'error') {
+    const tray = q('[data-care-tray]');
+    if (tray) { tray.innerHTML = '<div class="error-state"><div><strong>养护资料暂时无法打开</strong><p>已保留当前观察位置。你可以重试，或切换到传统浏览。</p><button class="secondary-btn" data-retry-care type="button">重试</button></div></div>'; tray.hidden = false; }
+    q('[data-retry-care]')?.addEventListener('click', () => { if (tray) tray.hidden = true; document.body.dataset.state = 'scene'; });
+  }
   if (page === 'compatibility' && ['safe','adjust','block','unknown'].includes(requestedState)) {
     q(`[data-result-state="${requestedState}"]`)?.click();
   }
