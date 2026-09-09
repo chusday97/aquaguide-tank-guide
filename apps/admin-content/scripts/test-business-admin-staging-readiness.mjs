@@ -1,11 +1,40 @@
 import assert from 'node:assert/strict';
 import { spawnSync } from 'node:child_process';
+import { readFileSync, readdirSync } from 'node:fs';
 import { resolve } from 'node:path';
 import {
   BUSINESS_ADMIN_ACCEPTANCE_DATA_REQUIREMENTS,
+  BUSINESS_ADMIN_STAGING_MIGRATIONS,
   evaluateBusinessAdminStagingReadiness,
   flattenBusinessAdminSchemaTables,
 } from './business-admin-staging-readiness.mjs';
+
+const root = resolve(import.meta.dirname, '../../..');
+const migrationDir = resolve(root, 'supabase/migrations');
+const migrationNames = readdirSync(migrationDir).filter(name => name.endsWith('.sql')).sort();
+for (const migration of BUSINESS_ADMIN_STAGING_MIGRATIONS) {
+  assert.ok(migrationNames.includes(migration), `required Business Admin migration missing: ${migration}`);
+}
+assert.deepEqual([...BUSINESS_ADMIN_STAGING_MIGRATIONS].sort(), BUSINESS_ADMIN_STAGING_MIGRATIONS, 'Business Admin migration plan must remain chronological.');
+const firstAdminMigration = BUSINESS_ADMIN_STAGING_MIGRATIONS[0];
+const baseMigrationText = migrationNames
+  .filter(name => name < firstAdminMigration)
+  .map(name => readFileSync(resolve(migrationDir, name), 'utf8'))
+  .join('\n');
+const prerequisites = [
+  ['species', /create table(?: if not exists)? public\.species\b/i],
+  ['care_articles', /create table(?: if not exists)? public\.care_articles\b/i],
+  ['evidence_sources', /create table(?: if not exists)? public\.evidence_sources\b/i],
+  ['compatibility profiles', /create table(?: if not exists)? public\.species_compatibility_profiles\b/i],
+  ['compatibility pair rules', /create table(?: if not exists)? public\.species_pair_compatibility_rules\b/i],
+  ['profile evidence links', /create table(?: if not exists)? public\.species_compatibility_profile_sources\b/i],
+  ['pair evidence links', /create table(?: if not exists)? public\.species_pair_compatibility_rule_sources\b/i],
+  ['user_roles', /create table(?: if not exists)? public\.user_roles\b/i],
+  ['idempotency_records', /create table(?: if not exists)? public\.idempotency_records\b/i],
+  ['is_admin()', /function public\.is_admin\s*\(/i],
+  ['set_updated_at_and_version()', /function public\.set_updated_at_and_version\s*\(/i],
+];
+for (const [label, pattern] of prerequisites) assert.match(baseMigrationText, pattern, `Admin staging migration prerequisite missing before ${firstAdminMigration}: ${label}`);
 
 const allTables = Object.fromEntries(flattenBusinessAdminSchemaTables().map(table => [table, 'ready']));
 const allCounts = Object.fromEntries(BUSINESS_ADMIN_ACCEPTANCE_DATA_REQUIREMENTS.map(item => [item.key, item.minimum]));
@@ -35,7 +64,6 @@ const sourceFailure = evaluateBusinessAdminStagingReadiness({
 assert.equal(sourceFailure.groups.access.ready, false);
 assert.deepEqual(sourceFailure.schemaUnavailable, ['user_roles']);
 
-const root = resolve(import.meta.dirname, '../../..');
 const productionRefusal = spawnSync(process.execPath, ['scripts/check-business-admin-staging-readiness.mjs'], {
   cwd: root, encoding: 'utf8',
   env: {

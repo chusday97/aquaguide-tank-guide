@@ -1,3 +1,14 @@
+export const BUSINESS_ADMIN_STAGING_MIGRATIONS = [
+  '202609040001_product_care_publication_snapshots.sql',
+  '202609040002_compatibility_profile_revisions.sql',
+  '202609040003_compatibility_pair_rule_revisions.sql',
+  '202609040004_compatibility_revision_review_gate.sql',
+  '202609050001_compatibility_reviewed_baseline_reconciliation.sql',
+  '202609050002_compatibility_versioned_publish.sql',
+  '202609050003_content_publication_audit_history.sql',
+  '202609050004_care_seo_editorial_revisions.sql',
+];
+
 export const BUSINESS_ADMIN_SCHEMA_GROUPS = {
   access: ['user_roles', 'idempotency_records'],
   productCare: [

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import {
+  BUSINESS_ADMIN_STAGING_MIGRATIONS,
   evaluateBusinessAdminStagingReadiness,
   flattenBusinessAdminSchemaTables,
 } from '../apps/admin-content/scripts/business-admin-staging-readiness.mjs';
@@ -51,6 +52,7 @@ const output = {
   schema_missing: readiness.schemaMissing,
   source_unavailable: readiness.schemaUnavailable,
   data_gaps: readiness.dataGaps,
+  expected_admin_migrations: BUSINESS_ADMIN_STAGING_MIGRATIONS,
 };
 console.log(JSON.stringify(output, null, 2));
 if (!readiness.acceptanceReady) process.exitCode = 1;

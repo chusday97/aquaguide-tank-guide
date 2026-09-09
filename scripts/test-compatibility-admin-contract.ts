@@ -84,6 +84,13 @@ assert.match(pairMigration, /set_updated_at_and_version/);
 const reconciliationMigration = readFileSync('supabase/migrations/202609050001_compatibility_reviewed_baseline_reconciliation.sql', 'utf8');
 assert.match(reconciliationMigration, /add column if not exists source_key text/);
 assert.match(reconciliationMigration, /evidence_resolution jsonb/);
+assert.match(reconciliationMigration, /compatibility_baseline_reconciliation_gate/, 'empty non-Production environments must be able to skip canonical baseline data reconciliation.');
+assert.match(reconciliationMigration, /Compatibility canonical baseline is partial or not fully published/, 'partial or unpublished canonical baseline must fail closed.');
+assert.match(reconciliationMigration, /existing_count = 0/, 'only a truly absent canonical baseline may skip reconciliation.');
+const canonicalBaselineKeys = ['sp_0021','sp_0049','sp_0224','sp_0431','sp_0432','sp_0434','sp_0435','sp_0436','sp_0439','sp_0451','sp_0475'];
+for (const catalogKey of canonicalBaselineKeys) assert.equal(reconciliationMigration.includes(`'${catalogKey}'`), true, `baseline gate must include ${catalogKey}`);
+const skippedDriftGuards = reconciliationMigration.match(/compatibility_baseline_reconciliation_gate where mode='skip'/g) || [];
+assert.equal(skippedDriftGuards.length, audit.reviewedProfiles.length + audit.reviewedPairRules.length, 'every data-dependent drift assertion must honor the empty-baseline skip gate.');
 const reviewedSourceKeys = new Set([
   ...audit.reviewedProfiles.flatMap(profile => profile.citations.map(source => source.id)),
   ...audit.reviewedPairRules.flatMap(rule => rule.citations.map(source => source.id)),

@@ -65,6 +65,41 @@ do $$ begin
   if not exists (select 1 from public.evidence_sources where source_key='white-cloud-shoaling-study' and title='Shoaling in White Cloud Mountain minnows, Tanichthys albonubes: effects of predation risk and prey hunger' and publisher='Animal Behaviour' and url='https://www.sciencedirect.com/science/article/pii/S0003347284712917' and source_type='peer_reviewed' and review_status='reviewed' and deleted_at is null) then raise exception 'Compatibility evidence source drift: white-cloud-shoaling-study'; end if;
 end $$;
 
+-- The canonical reviewed baseline is data-dependent. A fresh/non-Production Admin
+-- environment may legitimately have none of these Species yet; in that case the
+-- schema/evidence migration must still succeed. A partial canonical baseline is
+-- unsafe because it would seed only part of the reviewed authority, so fail closed.
+drop table if exists pg_temp.compatibility_baseline_reconciliation_gate;
+create temporary table compatibility_baseline_reconciliation_gate (mode text not null);
+do $$
+declare
+  required_catalog_keys text[] := ARRAY[
+    'sp_0021','sp_0049','sp_0224','sp_0431','sp_0432','sp_0434',
+    'sp_0435','sp_0436','sp_0439','sp_0451','sp_0475'
+  ];
+  existing_count integer;
+  published_count integer;
+begin
+  select
+    count(*),
+    count(*) filter (where status = 'published')
+  into existing_count, published_count
+  from public.species
+  where catalog_key = any(required_catalog_keys)
+    and deleted_at is null;
+
+  if existing_count = 0 then
+    insert into pg_temp.compatibility_baseline_reconciliation_gate(mode) values ('skip');
+    raise notice 'Compatibility canonical baseline absent; skipping data reconciliation while preserving schema/evidence migration.';
+  elsif existing_count = cardinality(required_catalog_keys)
+    and published_count = cardinality(required_catalog_keys) then
+    insert into pg_temp.compatibility_baseline_reconciliation_gate(mode) values ('run');
+  else
+    raise exception 'Compatibility canonical baseline is partial or not fully published: existing %, published %, required %',
+      existing_count, published_count, cardinality(required_catalog_keys);
+  end if;
+end $$;
+
 insert into public.species_compatibility_profiles(species_id,behavior_traits,minimum_group_size,predation_targets,confidence,review_status,reviewed_at)
 select s.id, ARRAY['shoaling', 'interspecific_aggression', 'fin_nipping']::text[], 6, ARRAY[]::text[], 'medium', 'reviewed', now()
 from public.species s
@@ -74,6 +109,7 @@ insert into public.species_compatibility_profile_sources(profile_id,source_id)
 select p.id,e.id from public.species_compatibility_profiles p join public.species s on s.id=p.species_id join public.evidence_sources e on e.source_key='tiger-barb-group-size-study'
 where s.catalog_key='sp_0439' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where s.catalog_key='sp_0439' and p.behavior_traits=ARRAY['shoaling', 'interspecific_aggression', 'fin_nipping']::text[] and p.minimum_group_size is not distinct from 6 and p.predation_targets=ARRAY[]::text[] and p.confidence='medium' and p.review_status='reviewed' and p.deleted_at is null and s.status='published') then raise exception 'Compatibility profile drift: sp_0439'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_compatibility_profiles p join public.species s on s.id=p.species_id left join public.species_compatibility_profile_sources l on l.profile_id=p.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0439') <> ARRAY['tiger-barb-group-size-study']::text[] then raise exception 'Compatibility profile evidence drift: sp_0439'; end if;
 end $$;
@@ -87,6 +123,7 @@ insert into public.species_compatibility_profile_sources(profile_id,source_id)
 select p.id,e.id from public.species_compatibility_profiles p join public.species s on s.id=p.species_id join public.evidence_sources e on e.source_key='convict-cichlid-territory-study'
 where s.catalog_key='sp_0021' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where s.catalog_key='sp_0021' and p.behavior_traits=ARRAY['territorial', 'breeding_defense', 'chasing', 'biting']::text[] and p.minimum_group_size is not distinct from null and p.predation_targets=ARRAY[]::text[] and p.confidence='high' and p.review_status='reviewed' and p.deleted_at is null and s.status='published') then raise exception 'Compatibility profile drift: sp_0021'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_compatibility_profiles p join public.species s on s.id=p.species_id left join public.species_compatibility_profile_sources l on l.profile_id=p.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0021') <> ARRAY['convict-cichlid-territory-study']::text[] then raise exception 'Compatibility profile evidence drift: sp_0021'; end if;
 end $$;
@@ -100,6 +137,7 @@ insert into public.species_compatibility_profile_sources(profile_id,source_id)
 select p.id,e.id from public.species_compatibility_profiles p join public.species s on s.id=p.species_id join public.evidence_sources e on e.source_key='small-snakehead-fws-assessment'
 where s.catalog_key='sp_0049' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where s.catalog_key='sp_0049' and p.behavior_traits=ARRAY['predatory', 'solitary_required', 'territorial']::text[] and p.minimum_group_size is not distinct from null and p.predation_targets=ARRAY['small_fish']::text[] and p.confidence='medium' and p.review_status='reviewed' and p.deleted_at is null and s.status='published') then raise exception 'Compatibility profile drift: sp_0049'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_compatibility_profiles p join public.species s on s.id=p.species_id left join public.species_compatibility_profile_sources l on l.profile_id=p.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0049') <> ARRAY['small-snakehead-fws-assessment']::text[] then raise exception 'Compatibility profile evidence drift: sp_0049'; end if;
 end $$;
@@ -113,6 +151,7 @@ insert into public.species_compatibility_profile_sources(profile_id,source_id)
 select p.id,e.id from public.species_compatibility_profiles p join public.species s on s.id=p.species_id join public.evidence_sources e on e.source_key='fishbase-paracheirodon-innesi'
 where s.catalog_key='sp_0431' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where s.catalog_key='sp_0431' and p.behavior_traits=ARRAY['shoaling']::text[] and p.minimum_group_size is not distinct from 5 and p.predation_targets=ARRAY[]::text[] and p.confidence='medium' and p.review_status='reviewed' and p.deleted_at is null and s.status='published') then raise exception 'Compatibility profile drift: sp_0431'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_compatibility_profiles p join public.species s on s.id=p.species_id left join public.species_compatibility_profile_sources l on l.profile_id=p.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0431') <> ARRAY['fishbase-paracheirodon-innesi']::text[] then raise exception 'Compatibility profile evidence drift: sp_0431'; end if;
 end $$;
@@ -126,6 +165,7 @@ insert into public.species_compatibility_profile_sources(profile_id,source_id)
 select p.id,e.id from public.species_compatibility_profiles p join public.species s on s.id=p.species_id join public.evidence_sources e on e.source_key='fishbase-paracheirodon-axelrodi'
 where s.catalog_key='sp_0432' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where s.catalog_key='sp_0432' and p.behavior_traits=ARRAY['shoaling']::text[] and p.minimum_group_size is not distinct from 5 and p.predation_targets=ARRAY[]::text[] and p.confidence='medium' and p.review_status='reviewed' and p.deleted_at is null and s.status='published') then raise exception 'Compatibility profile drift: sp_0432'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_compatibility_profiles p join public.species s on s.id=p.species_id left join public.species_compatibility_profile_sources l on l.profile_id=p.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0432') <> ARRAY['fishbase-paracheirodon-axelrodi']::text[] then raise exception 'Compatibility profile evidence drift: sp_0432'; end if;
 end $$;
@@ -142,6 +182,7 @@ insert into public.species_compatibility_profile_sources(profile_id,source_id)
 select p.id,e.id from public.species_compatibility_profiles p join public.species s on s.id=p.species_id join public.evidence_sources e on e.source_key='white-cloud-shoaling-study'
 where s.catalog_key='sp_0434' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where s.catalog_key='sp_0434' and p.behavior_traits=ARRAY['shoaling']::text[] and p.minimum_group_size is not distinct from 5 and p.predation_targets=ARRAY[]::text[] and p.confidence='medium' and p.review_status='reviewed' and p.deleted_at is null and s.status='published') then raise exception 'Compatibility profile drift: sp_0434'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_compatibility_profiles p join public.species s on s.id=p.species_id left join public.species_compatibility_profile_sources l on l.profile_id=p.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0434') <> ARRAY['fishbase-tanichthys-albonubes', 'white-cloud-shoaling-study']::text[] then raise exception 'Compatibility profile evidence drift: sp_0434'; end if;
 end $$;
@@ -158,6 +199,7 @@ insert into public.species_compatibility_profile_sources(profile_id,source_id)
 select p.id,e.id from public.species_compatibility_profiles p join public.species s on s.id=p.species_id join public.evidence_sources e on e.source_key='guppy-schooling-learning-study'
 where s.catalog_key='sp_0436' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_compatibility_profiles p join public.species s on s.id=p.species_id where s.catalog_key='sp_0436' and p.behavior_traits=ARRAY['shoaling']::text[] and p.minimum_group_size is not distinct from 5 and p.predation_targets=ARRAY[]::text[] and p.confidence='medium' and p.review_status='reviewed' and p.deleted_at is null and s.status='published') then raise exception 'Compatibility profile drift: sp_0436'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_compatibility_profiles p join public.species s on s.id=p.species_id left join public.species_compatibility_profile_sources l on l.profile_id=p.id left join public.evidence_sources e on e.id=l.source_id where s.catalog_key='sp_0436') <> ARRAY['fishbase-poecilia-reticulata', 'guppy-schooling-learning-study']::text[] then raise exception 'Compatibility profile evidence drift: sp_0436'; end if;
 end $$;
@@ -174,6 +216,7 @@ insert into public.species_pair_compatibility_rule_sources(pair_rule_id,source_i
 select pr.id,e.id from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id join public.evidence_sources e on e.source_key='convict-cichlid-territory-study'
 where least(a.catalog_key,b.catalog_key)='sp_0021' and greatest(a.catalog_key,b.catalog_key)='sp_0439' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id where least(a.catalog_key,b.catalog_key)='sp_0021' and greatest(a.catalog_key,b.catalog_key)='sp_0439' and pr.verdict='not_recommended' and pr.risk_type='behavior_and_territory_conflict' and pr.reason='虎皮鱼有追鳍与种间攻击倾向，迷你鹦鹉鱼会追逐、啃咬并在繁殖期强烈护域；两者同缸容易形成持续追逐和领地冲突。' and pr.mitigation=ARRAY['优先分缸饲养；不要把增加躲避物当作消除行为冲突的保证。']::text[] and pr.basis='rule_inference' and pr.confidence='medium' and pr.review_status='reviewed' and pr.deleted_at is null and a.status='published' and b.status='published') then raise exception 'Compatibility pair rule drift: sp_0021__sp_0439'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id left join public.species_pair_compatibility_rule_sources l on l.pair_rule_id=pr.id left join public.evidence_sources e on e.id=l.source_id where least(a.catalog_key,b.catalog_key)='sp_0021' and greatest(a.catalog_key,b.catalog_key)='sp_0439') <> ARRAY['convict-cichlid-territory-study', 'tiger-barb-group-size-study']::text[] then raise exception 'Compatibility pair evidence drift: sp_0021__sp_0439'; end if;
 end $$;
@@ -190,6 +233,7 @@ insert into public.species_pair_compatibility_rule_sources(pair_rule_id,source_i
 select pr.id,e.id from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id join public.evidence_sources e on e.source_key='fishbase-paracheirodon-axelrodi'
 where least(a.catalog_key,b.catalog_key)='sp_0431' and greatest(a.catalog_key,b.catalog_key)='sp_0432' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id where least(a.catalog_key,b.catalog_key)='sp_0431' and greatest(a.catalog_key,b.catalog_key)='sp_0432' and pr.verdict='caution' and pr.risk_type='group_size_and_shared_water_window' and pr.reason='FishBase 将红绿灯与宝莲灯都记录为小型淡水群游/群养鱼；两者温度区间在约 23–26°C、pH 区间在约 5.0–6.0 有共同范围。当前没有直接配对实验，因此只作为有条件可尝试，而不是“已证明安全”。' and pr.mitigation=ARRAY['两种鱼都按群体饲养，不以单条长期混养作为目标。', '把温度和 pH 保持在两者共同区间，并避免快速波动。', '分批加入并持续观察摄食、追逐和应激表现。']::text[] and pr.basis='rule_inference' and pr.confidence='medium' and pr.review_status='reviewed' and pr.deleted_at is null and a.status='published' and b.status='published') then raise exception 'Compatibility pair rule drift: sp_0431__sp_0432'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id left join public.species_pair_compatibility_rule_sources l on l.pair_rule_id=pr.id left join public.evidence_sources e on e.id=l.source_id where least(a.catalog_key,b.catalog_key)='sp_0431' and greatest(a.catalog_key,b.catalog_key)='sp_0432') <> ARRAY['fishbase-paracheirodon-axelrodi', 'fishbase-paracheirodon-innesi']::text[] then raise exception 'Compatibility pair evidence drift: sp_0431__sp_0432'; end if;
 end $$;
@@ -206,6 +250,7 @@ insert into public.species_pair_compatibility_rule_sources(pair_rule_id,source_i
 select pr.id,e.id from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id join public.evidence_sources e on e.source_key='oscar-zebrafish-development-predator-study'
 where least(a.catalog_key,b.catalog_key)='sp_0435' and greatest(a.catalog_key,b.catalog_key)='sp_0451' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id where least(a.catalog_key,b.catalog_key)='sp_0435' and greatest(a.catalog_key,b.catalog_key)='sp_0451' and pr.verdict='not_recommended' and pr.risk_type='predation_threat' and pr.reason='多项斑马鱼 predator-response 实验明确把地图鱼 Astronotus ocellatus 作为 Danio rerio 的捕食者刺激；活体地图鱼可诱发稳定回避/恐惧反应，长期视觉暴露研究也将该组合定义为 predator–prey 模型。证据支持存在明确捕食威胁，但这些实验并不是家庭水族箱中的长期同缸吞食试验。' and pr.mitigation=ARRAY['不要把地图鱼与斑马鱼作为长期同缸组合；优先物理分缸。', '不要用增加躲避物或“先试试看”替代捕食风险隔离。']::text[] and pr.basis='pair_rule' and pr.confidence='medium' and pr.review_status='reviewed' and pr.deleted_at is null and a.status='published' and b.status='published') then raise exception 'Compatibility pair rule drift: sp_0435__sp_0451'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id left join public.species_pair_compatibility_rule_sources l on l.pair_rule_id=pr.id left join public.evidence_sources e on e.id=l.source_id where least(a.catalog_key,b.catalog_key)='sp_0435' and greatest(a.catalog_key,b.catalog_key)='sp_0451') <> ARRAY['oscar-zebrafish-development-predator-study', 'oscar-zebrafish-live-predator-study']::text[] then raise exception 'Compatibility pair evidence drift: sp_0435__sp_0451'; end if;
 end $$;
@@ -222,9 +267,12 @@ insert into public.species_pair_compatibility_rule_sources(pair_rule_id,source_i
 select pr.id,e.id from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id join public.evidence_sources e on e.source_key='channa-rhodeus-predation-stress-study'
 where least(a.catalog_key,b.catalog_key)='sp_0224' and greatest(a.catalog_key,b.catalog_key)='sp_0475' on conflict do nothing;
 do $$ begin
+  if exists (select 1 from pg_temp.compatibility_baseline_reconciliation_gate where mode='skip') then return; end if;
   if not exists (select 1 from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id where least(a.catalog_key,b.catalog_key)='sp_0224' and greatest(a.catalog_key,b.catalog_key)='sp_0475' and pr.verdict='not_recommended' and pr.risk_type='predation_threat' and pr.reason='2015 年 predator–prey 实验直接使用高体鳑鲏 Rhodeus ocellatus 作为 prey、乌鳢 Channa argus 作为 predator，并记录到猎物倾向远离捕食者；2026 年研究进一步将乌鳢明确描述为高体鳑鲏的 natural predator，并以 20 天持续视觉/化学线索暴露研究非消耗性捕食压力。证据支持明确捕食威胁，但两项实验均采用物理隔离，不是家庭水族箱长期同缸吞食试验。' and pr.mitigation=ARRAY['不要把白金雷龙与高体鳑鲏作为长期同缸组合；优先物理分缸。', '不要用躲避物、体型暂时接近或短期未追逐来替代捕食风险隔离。']::text[] and pr.basis='pair_rule' and pr.confidence='medium' and pr.review_status='reviewed' and pr.deleted_at is null and a.status='published' and b.status='published') then raise exception 'Compatibility pair rule drift: sp_0224__sp_0475'; end if;
   if (select coalesce(array_agg(e.source_key order by e.source_key),ARRAY[]::text[]) from public.species_pair_compatibility_rules pr join public.species a on a.id=pr.species_a_id join public.species b on b.id=pr.species_b_id left join public.species_pair_compatibility_rule_sources l on l.pair_rule_id=pr.id left join public.evidence_sources e on e.id=l.source_id where least(a.catalog_key,b.catalog_key)='sp_0224' and greatest(a.catalog_key,b.catalog_key)='sp_0475') <> ARRAY['channa-rhodeus-information-dynamics-study', 'channa-rhodeus-predation-stress-study']::text[] then raise exception 'Compatibility pair evidence drift: sp_0224__sp_0475'; end if;
 end $$;
+
+drop table pg_temp.compatibility_baseline_reconciliation_gate;
 
 alter table public.species_compatibility_profile_revisions add column if not exists evidence_resolution jsonb not null default '[]'::jsonb check (jsonb_typeof(evidence_resolution)='array');
 alter table public.species_pair_compatibility_rule_revisions add column if not exists evidence_resolution jsonb not null default '[]'::jsonb check (jsonb_typeof(evidence_resolution)='array');
