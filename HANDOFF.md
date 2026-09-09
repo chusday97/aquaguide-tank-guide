@@ -694,3 +694,10 @@
 下一步：继续逐页核实剩余来源；每条来源必须记录可访问 URL、发布者、访问日期及明确支持的字段。无法确认就保留 `reviewed + unknown`。完成后重建 Snapshot/checksum、435组矩阵并交同一 Critic 复验，再申请一次性推送数据短分支。
 
 禁止重踩：不要从名称、分类、模板、搜索结果或 AI 摘要推断水体、行为或数量；不要把本地测试描述为生产权限验证；不要在本阶段改 UI 或执行生产 migration。
+## 2026-09-09 权威恢复分支（当前）
+
+- 当前分支：`codex/project-authority-recovery-v1`，基于本机最后可确认的 `origin/main@d3c70dee`；权威文件位于 `.ai/`。
+- 已完成：更新 `.ai/CURRENT_GOAL.md` 并新增 `HANDOFF_LATEST.md`、`ACCEPTED_BASELINE.md`、`LOCKED_AREAS.md`、`PRODUCT_RULES.md`、`BADCASE_REGISTRY.md`、`RELEASE_CHECKLIST.md`；同步 `PROJECT_STRUCTURE.md` 与 `40-DOCS/CHANGELOG.md`。
+- 未修改：React页面、旧视觉分支、PBR、Master 20、Domain、Catalog、Supabase和生产指针。
+- 阻塞：GitHub当前无法解析；4198组合HTML尚未建立；用户视觉确认前不得回写React或合并。
+- 下一步：远端恢复后核对`origin/main`，再创建唯一4198 HTML评审包。

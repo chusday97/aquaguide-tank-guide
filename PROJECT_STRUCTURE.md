@@ -180,6 +180,7 @@
 - `scripts/test-care-timeline.ts` / `scripts/verify-care-timeline.mjs`：时间线派生、来源幂等、循环计划和桌面/手机直达回归。
 - `scripts/audit-product-actions.ts`：路由页面空操作、日志操作、原生 alert 与重复伪 CTA 审计。
 - `CONTRACT.md`：三层架构、数据库、RLS、API、Repository、迁移与 AI 边界的权威契约。
+- `.ai/`：当前目标、交接、已接受基线、锁定区域、产品规则、Badcase 与发布门禁。
 - `src/types/database.ts`：camelCase 数据库与关联实体共享类型。
 - `scripts/test-three-tier-contract.ts` / `scripts/test-api-boundary.ts`：三层契约与本地 API 边界回归。
 - `scripts/test-business-api-contract.ts` / `scripts/test-repository-boundary.ts`：业务路由、校验、稳定 ID、安全规则与本地/云端访问边界回归。

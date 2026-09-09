@@ -790,3 +790,8 @@
 - [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`（当前提交为文档-only amend，UI bytes unchanged；manifest 已记录最终 checkpoint SHA）。
 - [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
 - [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。
+## 2026-09-09 项目权威恢复（当前）
+
+- [x] 从本机最后可确认的 `origin/main@d3c70dee` 建立 `codex/project-authority-recovery-v1`。
+- [x] 补齐并校准 `.ai` 当前目标、交接、接受基线、锁定区域、产品规则、Badcase 和发布门禁；未修改React、Domain、Catalog、Supabase或生产配置。
+- [ ] 远端刷新、4198组合HTML和用户HTML Freeze确认仍未完成。
