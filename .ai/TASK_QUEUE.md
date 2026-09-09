@@ -19,10 +19,13 @@
 - [x] Page/global tool hierarchy (`b6c44a62`): current-page footer keeps only contextual tools; one top-level Operations drawer owns batch SEO, bulk duplicate/content review, template import and global queues.
 - [x] Compact top workflow chrome (`bf85231b`): current task + stage navigator + page review stay <=140px on desktop/mobile while retaining one action boundary.
 - [x] Base / Preview ownership clarity (`a9a54bc9`): remove duplicate Base impact strip; Preview labels final composition as Base + current page.
-- [ ] Audit visible current-editor actions and reduce remaining duplicate/competing choices without weakening save/review/publish gates.
+- [x] Editor tool ownership (`466025f7`): current-page/Base tools and revision history follow the active authority; `本页自定义` states override scope explicitly.
+- [x] Visible SEO density (`6a1f1979`): required Search/indexing controls remain open while inherited rows and policy/route controls are compacted.
+- [x] Responsive Preview (`d1af2c08`): >=1051px split keeps editor >=480px; medium Preview is 340–360px; <=1050px uses closed-by-default/on-demand overlay; browser matrix PASS.
+- [ ] Continue medium-width editor acceptance and remove only remaining hierarchy/interaction badcases without weakening save/review/publish gates.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
-Updated: 2026-09-09
+Updated: 2026-09-10
 Canonical continuation: read `.ai/HANDOFF_LATEST.md` first.
 Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 

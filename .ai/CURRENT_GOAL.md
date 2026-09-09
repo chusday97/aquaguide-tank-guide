@@ -1,26 +1,24 @@
 # Current Goal
 
 
-## CURRENT OVERRIDE — 2026-09-09 Operator UX convergence
-The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `a9a54bc9`.
+## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `d1af2c08`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
-2. Species SEO Data Review decision basis is converged (`2fcba840`): read-only evidence → one human conclusion → explicit canonical choice when needed → final-result summary → one confirmation.
-3. System keep-page recommendation is advisory only and is not auto-selected. Category-conflict decisions explicitly preserve Product Data authority boundaries.
-4. Desktop + 390px responsive browser regression and full SEO Admin contract PASS; Production/Supabase/indexing remain unchanged.
-5. Edit action hierarchy (`b3ec2d8e`): core Search & indexing defaults visible; save/review actions are centralized in the top Review bar; page/Base footer duplicate save buttons and repeated Draft state were removed.
-6. Tool hierarchy (`b6c44a62`): current-page tools are separated from cross-page operations; one neutral top-level Operations entry owns batch SEO, bulk review/import and global queues, including responsive mobile access.
-7. Top workflow chrome (`bf85231b`): current task + 4-stage workflow + page review reduced to 136px desktop / 137px mobile while retaining status, stage semantics and one review action. Browser regression enforces <=140px.
-8. Ownership clarity (`a9a54bc9`): removed the duplicate Base impact strip; Base task header is the single impact explanation; Preview explicitly states it is the final Base + current-page composition.
+2. Data Review decision basis is converged (`2fcba840`): read-only evidence → human conclusion → explicit Canonical choice when needed → final-result summary → one confirmation.
+3. Edit action hierarchy (`b3ec2d8e`) centralizes save/review in the top Review bar and keeps core Search & indexing visible.
+4. Tool hierarchy (`b6c44a62`) separates contextual page tools from global Operations.
+5. Top workflow chrome (`bf85231b`) remains <=140px desktop/mobile.
+6. Ownership clarity (`a9a54bc9`, `466025f7`): Preview is final Base + current-page composition; active Base/current-page tool/history authority is explicit; generic `单独修改` is replaced by `本页自定义`.
+7. Visible SEO density (`6a1f1979`): required Search/indexing controls remain expanded while inherited SEO rows and route/policy controls are compacted; desktop full SEO section is ~514px.
+8. Responsive Preview (`d1af2c08`): >=1051px uses side-by-side with editor >=480px; medium Preview defaults 340–360px; <=1050px uses closed-by-default/on-demand overlay. Multi-width browser regression PASS.
 
 NEXT milestones:
-1. Audit visible actions inside the current editor and remove only genuinely duplicate/competing choices.
-2. Preserve ownership clarity, compact top chrome, centralized review boundary and page/global tool separation.
+1. Continue medium-width editor acceptance for internal field/layout readability and interaction, not new features.
+2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
-
-Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
 Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`

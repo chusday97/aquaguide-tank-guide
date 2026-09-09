@@ -1216,3 +1216,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Inherited Meta/H1 rows remain visible but compact until page customization; Policy keeps keyword/index controls visible in two desktop columns and one mobile column; route/canonical are flat read-only summary.
 - Removed redundant per-policy Production-lock copy because global review/publish gates already own that state.
 - Measured desktop Search 311→242px, Policy 370→220px, full Search & indexing 733→514px. PASS: Heavy browser regression, Admin contracts, root TypeScript, full root build, diff hygiene.
+
+## 2026-09-10 — responsive Preview + editor density acceptance
+- Closed editor ownership checkpoint `466025f7` and visible SEO density checkpoint `6a1f1979`; required SEO controls remain visible while inherited/policy rows are compact.
+- Added responsive Preview contract `d1af2c08`: split only at >=1051px, medium Preview 340–360px, editor >=480px, <=1050px closed-by-default/on-demand overlay.
+- Browser matrix PASS at 1280 / 1080 / 1051 / 1050 plus mobile no-overflow; 1080 editor width improved from 432px to 512px.
+- Admin contract, root TypeScript, full root build and diff hygiene PASS. No push, main merge/rebase, Supabase/Production/indexing mutation.

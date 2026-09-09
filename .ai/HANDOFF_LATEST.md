@@ -1,23 +1,18 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
 
-## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-09)
-Functional checkpoint: `a9a54bc9 fix(admin): clarify seo ownership preview`.
+## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
+Functional checkpoint: `d1af2c08 fix(admin): preserve responsive preview space`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
-- Species SEO single-group Data Review is now evidence-first: candidate/source comparison is read-only, then the operator chooses one conclusion.
-- Duplicate decisions no longer mix canonical selection into evidence. Choosing “duplicate records” opens a separate final-page step; the system recommendation is labeled as evidence and is never auto-selected.
-- Before write, the UI shows one explicit `最终确认版本`: retained SEO page, Canonical consequence, source-data boundary and downstream SEO state.
-- Single-group Data Review now has one final primary action only (`确认最终结果`); the previous competing defer action was removed. Optional notes remain subordinate.
-- Category-conflict review follows the same evidence → conclusion → final-result pattern and explicitly states that this screen does not rewrite Product Data.
-- Permanent browser regression covers duplicate + category-conflict flows, explicit human canonical selection and responsive 390px drawer width. Heavy CI runs `test:data-review-ui`.
-- Validation PASS: full Species SEO Admin contract, Data Review browser regression, root TypeScript, full root build and diff hygiene.
-- SEO editor action hierarchy is now centralized: current-page/Base save-review actions live only in the top Review bar; duplicate bottom save buttons and repeated Draft chips were removed. Core `搜索与收录设置` defaults open while remaining collapsible by operator choice.
-- Current-page and cross-page tools are now separated: the editor footer contains only current-page Data Review / readiness / translation / history, while one neutral top-level `运营工具` entry opens batch SEO, bulk duplicate/content review, template import and global queues. Desktop + 390px hierarchy regression PASS.
-- Top chrome is compacted without hiding safety context: current-task notification remains actionable, the 4-stage workflow is now stage navigation only, and current-page review remains the single save/review handoff. Desktop top chrome dropped from 178px to 136px; mobile from 187px to 137px, guarded by a <=140px browser budget.
-- Base/current-page ownership is clearer: the redundant Base impact strip was removed because the Base task header already owns that explanation; Preview now explicitly labels itself as the final composed page (`基础模板 + 当前页面`).
-- NEXT: audit visible editor actions and remove any remaining duplicate choices that make the operator hesitate about the primary next action. Supabase Staging remains parked.
-
-Updated: 2026-09-09
+- Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
+- Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
+- Current-page tools and cross-page Operations are separated; one neutral `运营工具` entry owns batch SEO, bulk review/import and global queues.
+- Top current-task + workflow + page-review chrome remains <=140px on desktop/mobile.
+- Ownership is explicit: Base task header is the single Base impact explanation; Preview labels the final composition as `基础模板 + 当前页面`; Base/current-page history renders only the active authority.
+- Visible Search & indexing controls stay open but compact (`6a1f1979`): inherited Title/Description/H1 remain visible as compact source rows until `本页自定义`; Search display is ~242px, Indexing/Canonical ~220px, full SEO section ~514px on desktop.
+- Responsive Preview contract (`d1af2c08`): split Preview opens only at >=1051px, medium desktop Preview narrows to 340–360px, editing keeps >=480px, <=1050px fresh load keeps Preview closed and on-demand Preview uses overlay. Permanent browser matrix covers 1280/1080/1051/1050 plus mobile no-overflow.
+- Validation PASS: Heavy browser hierarchy/Preview regression, Species SEO contracts, Admin content contract, root TypeScript, full root build and diff hygiene.
+- NEXT: continue real editor acceptance at medium widths and remove only remaining hierarchy/interaction badcases; do not add new authority layers. Supabase Staging remains parked.
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`

@@ -1,20 +1,16 @@
 # Live Status
 
 
-## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-09)
-- Functional checkpoint: `a9a54bc9 fix(admin): clarify seo ownership preview`.
+## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-10)
+- Functional checkpoint: `d1af2c08 fix(admin): preserve responsive preview space`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
-- Species SEO Data Review now presents source/candidate evidence as read-only, then one human conclusion. Duplicate canonical selection is a separate explicit step and system recommendations never auto-select the operator decision.
-- `最终确认版本` summarizes the resulting retained page / Canonical policy / Product Data boundary before one final confirmation action. Category-conflict review uses the same pattern without rewriting Product Data.
-- New `test:data-review-ui` validates duplicate and category-conflict flows plus responsive 390px drawer behavior; Heavy CI includes it.
-- Species SEO editor defaults core Search & indexing controls open. Current-page/Base save-review actions are centralized in the top Review bar; duplicate footer save actions and repeated Draft chips are removed.
-- Current-page tools are contextual only (Data Review / readiness / translation / history). Cross-page batch SEO, bulk review, template import and global workflow queues live behind one top-level `运营工具` drawer; 390px access and page-level no-overflow are browser-verified.
-- Top fixed workflow chrome is compacted to 136px desktop / 137px mobile after the topbar. Current task keeps status/title/action, workflow is stage-only navigation, and current-page review keeps the single transition action. Browser regression enforces a <=140px budget.
-- Base ownership no longer repeats in a second impact strip; the Base task header is authoritative. Preview explicitly labels the rendered surface as the final composition of Base + current page.
-- Full Species SEO Admin contract, Data Review/editor browser regression, root TypeScript, full root build and diff hygiene PASS.
+- Data Review remains evidence-first with explicit human Canonical choice and one final confirmation; Product Data authority is not rewritten by SEO review.
+- Save/review remains centralized in the top Review bar; contextual page/Base tools and history follow the active authority; cross-page work remains behind `运营工具`.
+- Search & indexing remains default-open but compact: inherited SEO fields are source rows until `本页自定义`, and policy/route controls no longer repeat the global Production lock.
+- Preview states the final composition (`基础模板 + 当前页面`). At >=1051px split view keeps editor >=480px and Preview 340–360px on medium desktop; <=1050px fresh load is closed and on-demand Preview is fixed overlay.
+- Permanent `test:data-review-ui` now covers Data Review, ownership/history, SEO density, <=140px top chrome, mobile no-overflow and the 1280/1080/1051/1050 Preview matrix.
+- Full Species SEO contract, Admin content contract, browser regression, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
-
-Updated: 2026-09-09
 Canonical branch: `feature/admin-content-v0`
 Operational functional HEAD before this docs sync: `a9a54bc94a404a1abe474184050e6098f3a2fa22`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
