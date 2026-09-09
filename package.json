@@ -155,7 +155,9 @@
     "test:operations-work-items": "tsx scripts/test-operations-work-items.ts",
     "test:operations-studio-ui": "node scripts/verify-operations-studio-populated.mjs",
     "test:business-admin-staging-preflight": "node --check scripts/check-business-admin-staging-readiness.mjs && node apps/admin-content/scripts/test-business-admin-staging-readiness.mjs",
-    "check:business-admin-staging": "node scripts/check-business-admin-staging-readiness.mjs"
+    "check:business-admin-staging": "node scripts/check-business-admin-staging-readiness.mjs",
+    "seed:business-admin-staging": "node scripts/seed-business-admin-staging.mjs",
+    "test:business-admin-staging-seed": "node apps/admin-content/scripts/test-business-admin-staging-seed.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

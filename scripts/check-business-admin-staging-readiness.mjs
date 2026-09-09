@@ -3,6 +3,7 @@ import {
   AQUAGUIDE_LIVE_MIGRATION_BASELINE,
   BUSINESS_ADMIN_AUTHORITY_MIGRATIONS,
   BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS,
+  BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES,
   evaluateBusinessAdminStagingReadiness,
   flattenBusinessAdminSchemaTables,
 } from '../apps/admin-content/scripts/business-admin-staging-readiness.mjs';
@@ -31,6 +32,12 @@ const countTable = async (table, configure = query => query) => {
 };
 
 const probes = Object.fromEntries(await Promise.all(flattenBusinessAdminSchemaTables().map(async table => [table, await countTable(table)])));
+const columnProbes = Object.fromEntries(await Promise.all(Object.entries(BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES).map(async ([table, columns]) => {
+  const { error } = await client.from(table).select(columns.join(','), { head: true }).limit(1);
+  return [table, { state: classifyError(error, table), columns, errorCode: error?.code || undefined }];
+})));
+const tableStates = Object.fromEntries(Object.entries(probes).map(([table, probe]) => [table, probe.state]));
+for (const [table, probe] of Object.entries(columnProbes)) if (probe.state !== 'ready') tableStates[table] = probe.state;
 const counts = {
   admin_roles: (await countTable('user_roles', query => query.eq('role', 'admin').is('deleted_at', null))).count,
   species: (await countTable('species', query => query.is('deleted_at', null))).count,
@@ -40,7 +47,7 @@ const counts = {
   reviewed_evidence: (await countTable('evidence_sources', query => query.eq('review_status', 'reviewed').is('deleted_at', null))).count,
 };
 const readiness = evaluateBusinessAdminStagingReadiness({
-  tableStates: Object.fromEntries(Object.entries(probes).map(([table, probe]) => [table, probe.state])),
+  tableStates,
   counts,
 });
 const output = {
@@ -53,6 +60,7 @@ const output = {
   counts,
   schema_missing: readiness.schemaMissing,
   source_unavailable: readiness.schemaUnavailable,
+  schema_column_probes: columnProbes,
   data_gaps: readiness.dataGaps,
   upgrade_from_migration: AQUAGUIDE_LIVE_MIGRATION_BASELINE,
   expected_upgrade_migrations: BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS,

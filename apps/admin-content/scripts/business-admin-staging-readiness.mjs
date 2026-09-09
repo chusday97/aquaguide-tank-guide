@@ -26,15 +26,24 @@ export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
 export const BUSINESS_ADMIN_SCHEMA_GROUPS = {
   access: ['user_roles', 'idempotency_records'],
   productCare: [
-    'species', 'care_articles', 'care_article_steps', 'care_article_assets',
+    'species', 'species_feeding_profiles', 'care_articles', 'care_article_steps', 'care_article_assets',
     'content_publications', 'content_publication_events',
   ],
   compatibility: [
-    'species_compatibility_profiles', 'species_pair_compatibility_rules',
+    'species_compatibility_profiles', 'species_compatibility_profile_sources',
+    'species_pair_compatibility_rules', 'species_pair_compatibility_rule_sources',
     'evidence_sources', 'compatibility_authority_state',
-    'species_compatibility_profile_revisions', 'species_pair_compatibility_rule_revisions',
+    'species_compatibility_profile_revisions', 'species_compatibility_profile_revision_sources',
+    'species_pair_compatibility_rule_revisions', 'species_pair_compatibility_rule_revision_sources',
   ],
   careSeo: ['care_seo_editorial_revisions'],
+};
+
+export const BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES = {
+  content_publications: ['snapshot', 'source_version'],
+  evidence_sources: ['source_key'],
+  species_compatibility_profile_revisions: ['impact_report', 'evidence_resolution', 'regression_report'],
+  species_pair_compatibility_rule_revisions: ['impact_report', 'evidence_resolution', 'regression_report'],
 };
 
 export const BUSINESS_ADMIN_ACCEPTANCE_DATA_REQUIREMENTS = [

@@ -6,6 +6,7 @@ import {
   BUSINESS_ADMIN_ACCEPTANCE_DATA_REQUIREMENTS,
   AQUAGUIDE_LIVE_MIGRATION_BASELINE,
   BUSINESS_ADMIN_AUTHORITY_MIGRATIONS,
+  BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES,
   BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS,
   evaluateBusinessAdminStagingReadiness,
   flattenBusinessAdminSchemaTables,
@@ -21,6 +22,10 @@ assert.deepEqual([...BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS].sort(), BUSINESS
 const expectedAfterLiveBaseline = migrationNames.filter(name => name.split('_', 1)[0] > AQUAGUIDE_LIVE_MIGRATION_BASELINE);
 assert.deepEqual(expectedAfterLiveBaseline, BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS, 'Staging upgrade plan must include every migration after the live AquaGuide baseline; no prerequisite migration may be skipped.');
 assert.deepEqual(BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS.slice(-BUSINESS_ADMIN_AUTHORITY_MIGRATIONS.length), BUSINESS_ADMIN_AUTHORITY_MIGRATIONS, 'Business Admin authority migrations must remain the tail of the staging upgrade plan.');
+assert.deepEqual(BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES.evidence_sources, ['source_key']);
+for (const table of ['species_compatibility_profile_revisions', 'species_pair_compatibility_rule_revisions']) {
+  assert.deepEqual(BUSINESS_ADMIN_SCHEMA_COLUMN_PROBES[table], ['impact_report', 'evidence_resolution', 'regression_report']);
+}
 const firstAdminMigration = BUSINESS_ADMIN_AUTHORITY_MIGRATIONS[0];
 const baseMigrationText = migrationNames
   .filter(name => name < firstAdminMigration)
@@ -28,6 +33,7 @@ const baseMigrationText = migrationNames
   .join('\n');
 const prerequisites = [
   ['species', /create table(?: if not exists)? public\.species\b/i],
+  ['species_feeding_profiles', /create table(?: if not exists)? public\.species_feeding_profiles\b/i],
   ['care_articles', /create table(?: if not exists)? public\.care_articles\b/i],
   ['evidence_sources', /create table(?: if not exists)? public\.evidence_sources\b/i],
   ['compatibility profiles', /create table(?: if not exists)? public\.species_compatibility_profiles\b/i],
