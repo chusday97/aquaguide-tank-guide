@@ -147,6 +147,7 @@
 - 2026-09-10：确认内置浏览器新标签的 viewport 参数不会改变实际视图宽度；响应式三档验收继续等待可调整 viewport 环境。
 - 2026-09-10：安装并尝试 Playwright WebKit；其启动阶段同样被 macOS 进程环境中止，未将失败误记为页面回归。
 - 2026-09-10：收紧 Species Hero 移动端/平板媒体卡高度至 280px，桌面保持 470px；减少首屏空白且不改变图片裁切策略，lint/build 通过。
+- 2026-09-10：统一公开 SEO 章节标题层级；相同眉题不再与正式标题重复显示，不影响内容或索引策略。
 - 2026-09-10：完成 Firefox 作为第三种 Playwright 引擎的启动诊断；其同样在 macOS 进程层中止，三档自动化继续保持环境阻塞。
 
 - Updated project truth and release readiness to mark the current UI as frozen provisional and Supabase parity as migration-required, without executing production changes.

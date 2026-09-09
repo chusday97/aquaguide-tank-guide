@@ -835,6 +835,7 @@
 - [ ] 当前自动化验收解除条件明确为 macOS 运行环境恢复或可调整 viewport 的托管浏览器；不再继续安装本地引擎。
 - [x] 收紧 Species Hero 媒体卡：移动端/平板内层最小高度从 340px 调整为 280px，桌面保持 470px，减少手机页面首屏空白并保留主体 `contain`。
 - [x] `npm run lint` 与 `npm run build` 在该 UI 修复后通过。
+- [x] 统一章节标题层级：当眉题与正式标题相同时隐藏重复眉题，保留不同眉题作为分类提示；Editorial、Public Contract、lint 和 build 通过。
 
 - [x] 新增统一 motion tokens：160ms / 360ms / 520ms、柔和缓动、16px 章节位移和最多三级延迟。
 - [x] Species 试点接入 Hero 进入、章节首次可见、FAQ 可测量展开、按钮按压/焦点反馈和品系状态过渡；内容首屏即存在，reduced-motion 不隐藏内容。
