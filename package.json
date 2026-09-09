@@ -153,7 +153,9 @@
     "build:care-pages": "tsx scripts/build-care-seo-artifact.ts",
     "test:care-seo-artifact": "tsx scripts/test-care-seo-artifact.ts",
     "test:operations-work-items": "tsx scripts/test-operations-work-items.ts",
-    "test:operations-studio-ui": "node scripts/verify-operations-studio-populated.mjs"
+    "test:operations-studio-ui": "node scripts/verify-operations-studio-populated.mjs",
+    "test:business-admin-staging-preflight": "node --check scripts/check-business-admin-staging-readiness.mjs && node apps/admin-content/scripts/test-business-admin-staging-readiness.mjs",
+    "check:business-admin-staging": "node scripts/check-business-admin-staging-readiness.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

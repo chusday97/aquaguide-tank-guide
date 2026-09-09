@@ -169,6 +169,8 @@ jobs:
         run: npm run test:seo-page-registry
       - name: Operations Studio WorkItem contract
         run: npm run test:operations-work-items
+      - name: Business Admin Staging preflight contract
+        run: npm run test:business-admin-staging-preflight
       - name: Runtime compatibility authority contract
         run: npm run test:runtime-compatibility-authority
       - name: Business API TypeScript check
