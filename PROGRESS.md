@@ -1,3 +1,11 @@
+## 2026-09-09 公开 SEO 干净 Preview 候选
+
+- 已完成：从最新 `origin/main@d3c70dee` 创建隔离分支 `codex/species-seo-preview-v1`，仅移植公开 SEO 页面、契约、证据门禁、素材解析和专项测试；未移植 Admin、Supabase migration 或 Figma 历史证据。
+- 已修复：保留最新 main 的 `Fish`/兼容性/图片加载能力，改为合并 SEO 增量，避免旧分支覆盖主线类型。
+- 已验证：lint、editorial evidence、evidence bindings、public contract、asset candidates、build 和 diff-check 通过；内置浏览器完成三条 Species 路径 × 390/600/1440，无溢出、单一 H1、中文后台术语为零、robots 为 `noindex,follow`。
+- 当前阻塞：系统 Chrome 仍受 macOS MachPort 环境限制；尚未推送、创建 Draft PR 或部署 Preview；公开路由的网络请求证据需在托管 Preview 阶段补齐。
+- 下一步：审计并固化 Preview parity 脚本，完成 Preview 环境安全检查后再推送新分支。
+
 ## 2026-09-08 UI 分支收敛基础步骤（当前）
 
 - [x] 核对分支关系：`origin/main@64fa58a1` 保持唯一代码事实；历史 `codex/ui-atlas-care-v1@4113050e` 领先70个提交但冻结，不整体合并。

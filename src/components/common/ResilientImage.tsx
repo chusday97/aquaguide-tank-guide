@@ -10,6 +10,7 @@ const withRetryToken = (src: string) => {
 
 type ResilientImageProps = ImgHTMLAttributes<HTMLImageElement> & {
   loadingSurface?: 'neutral' | 'transparent';
+  onFallback?: () => void;
 };
 
 export function ResilientImage({
@@ -17,6 +18,7 @@ export function ResilientImage({
   alt = '',
   className = '',
   onLoad,
+  onFallback,
   loadingSurface = 'neutral',
   loading = 'lazy',
   decoding = 'async',
@@ -55,9 +57,12 @@ export function ResilientImage({
             setAttempt(value => value + 1);
           } else if (loadingSurface === 'transparent') {
             recordUiFailure({ kind: 'image', page: window.location.pathname, resource: src, error: new Error('透明场景图片重试失败') });
+            onFallback?.();
             setFailed(true);
           } else if (attempt < 2) {
             setAttempt(value => value + 1);
+          } else {
+            onFallback?.();
           }
         }}
       />}

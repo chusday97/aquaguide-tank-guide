@@ -1,0 +1,44 @@
+{
+  "updatedAt": "2026-09-01",
+  "policy": {
+    "sourceKinds": ["project-owned", "user-owned"],
+    "heroRule": "match source pixels to actual CSS render size; do not upscale",
+    "heroContainerAspect": "16:9",
+    "cardContainerAspect": "4:3",
+    "humanConfirmationRequired": true
+  },
+  "assets": [
+    {
+      "id": "sp_0001:project-image",
+      "speciesId": "sp_0001",
+      "sourceKind": "project-owned",
+      "sourcePath": "public/species-image-overrides/sp_0001.png",
+      "catalogPath": "public/species-transparent/morph_batch_017_sheet_02_极火虾_Neocaridina_davidi_var._Red.png",
+      "width": 560,
+      "height": 318,
+      "sha256": "af044441e7c8facb4382964a4f97db50007f694d9844e9814012b3899d7f1b38",
+      "usages": [
+        { "purpose": "hero", "container": "16:9", "fit": "contain", "maxCssWidth": 280, "status": "approved", "confirmedBy": "project-owner", "confirmedAt": "2026-09-01" },
+        { "purpose": "variant-card", "container": "4:3", "fit": "contain", "maxCssWidth": 280, "status": "approved", "confirmedBy": "project-owner", "confirmedAt": "2026-09-01" }
+      ],
+      "alt": { "zh-CN": "侧视的红色极火虾。", "en": "Draft: Side view of a red fire shrimp.", "status": "approved" },
+      "review": { "conclusion": "approved" }
+    },
+    {
+      "id": "sp_0030:project-image",
+      "speciesId": "sp_0030",
+      "sourceKind": "project-owned",
+      "sourcePath": "public/species-image-overrides/sp_0030.png",
+      "catalogPath": "public/species-transparent/morph_batch_017_sheet_04_黄金米虾_Neocaridina_davidi_var._Yellow.png",
+      "width": 576,
+      "height": 334,
+      "sha256": "696670603f91edbb92bc51ceae72a5922eb8110094adad9484f5b670aecb6a9b",
+      "usages": [
+        { "purpose": "hero", "container": "16:9", "fit": "contain", "maxCssWidth": 288, "status": "approved", "confirmedBy": "project-owner", "confirmedAt": "2026-09-01" },
+        { "purpose": "variant-card", "container": "4:3", "fit": "contain", "maxCssWidth": 288, "status": "approved", "confirmedBy": "project-owner", "confirmedAt": "2026-09-01" }
+      ],
+      "alt": { "zh-CN": "侧视的黄色黄金米虾。", "en": "Draft: Side view of a yellow fire shrimp.", "status": "approved" },
+      "review": { "conclusion": "approved" }
+    }
+  ]
+}
