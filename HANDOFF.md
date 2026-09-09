@@ -645,6 +645,16 @@
 
 ## 关键文件与入口
 
+## 2026-09-09 当前 Species SEO 接手快照
+
+- 当前分支：`codex/species-seo-preview-v1`；最新代码提交：`e347612f`。
+- 本批已将 Species 的生活习性卡和品系卡接入统一 `seo-stagger` 进入节奏，保留静态可读与 reduced-motion 规则。
+- 已验证：`npm run lint`、`npm run build`、`git diff --check`。
+- 仍未完成：系统 Playwright/Chrome 启动级三档回归（macOS MachPort 权限阻断）、用户完整视觉确认、可读独立 Critic、Figma Canonical 模板。
+- 未提交且必须保持隔离：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+- 禁止重踩：不要把 build 通过写成浏览器验收通过；不要提交既有未跟踪素材/截图脚本；不要调用 Figma、解除 `noindex`、修改 `main` 或 Production。
+- 直接下一步：用内置浏览器核对 Species/Category/Guide 的滚动、图片和内容覆盖，记录可复核截图/AX 证据；然后再决定是否启动一次独立 Critic。
+
 | 用途 | 路径 |
 |---|---|
 | 项目进度 | `PROGRESS.md` |
