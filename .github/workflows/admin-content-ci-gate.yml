@@ -46,6 +46,7 @@ on:
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'scripts/check-business-admin-staging-readiness.mjs'
       - 'scripts/seed-business-admin-staging.mjs'
+      - 'scripts/provision-business-admin-staging.mjs'
       - 'scripts/content-import/**'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
@@ -104,6 +105,7 @@ on:
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'scripts/check-business-admin-staging-readiness.mjs'
       - 'scripts/seed-business-admin-staging.mjs'
+      - 'scripts/provision-business-admin-staging.mjs'
       - 'scripts/content-import/**'
       - 'server/admin-repo/**'
       - 'api/admin-content/**'
@@ -179,6 +181,8 @@ jobs:
         run: npm run test:business-admin-staging-preflight
       - name: Business Admin Staging seed safety contract
         run: npm run test:business-admin-staging-seed
+      - name: Business Admin Staging identity safety contract
+        run: npm run test:business-admin-staging-admin
       - name: Runtime compatibility authority contract
         run: npm run test:runtime-compatibility-authority
       - name: Business API TypeScript check

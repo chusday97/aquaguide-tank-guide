@@ -157,7 +157,9 @@
     "test:business-admin-staging-preflight": "node --check scripts/check-business-admin-staging-readiness.mjs && node apps/admin-content/scripts/test-business-admin-staging-readiness.mjs",
     "check:business-admin-staging": "node scripts/check-business-admin-staging-readiness.mjs",
     "seed:business-admin-staging": "node scripts/seed-business-admin-staging.mjs",
-    "test:business-admin-staging-seed": "node apps/admin-content/scripts/test-business-admin-staging-seed.mjs"
+    "test:business-admin-staging-seed": "node apps/admin-content/scripts/test-business-admin-staging-seed.mjs",
+    "provision:business-admin-staging": "node scripts/provision-business-admin-staging.mjs",
+    "test:business-admin-staging-admin": "node apps/admin-content/scripts/test-business-admin-staging-admin.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
