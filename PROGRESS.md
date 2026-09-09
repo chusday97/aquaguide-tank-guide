@@ -828,6 +828,7 @@
 - [ ] `test:seo-motion` 仍在 Chromium 启动阶段因 macOS MachPort 权限失败；不是页面断言失败，不能记为动效自动化通过。
 - [x] 追加检查系统 Chrome 可执行文件仍在相同 MachPort 阶段退出；Playwright WebKit 也不可用（本机未安装对应浏览器），未继续重复启动。
 - [ ] 三档自动化验收的解除条件为恢复可用浏览器或提供可调整 viewport 的托管/本地运行环境；在此之前仅保留内置浏览器人工证据。
+- [x] 尝试在新建内置浏览器标签时显式传入 `viewport: { width: 390, height: 844 }`；工具仍使用固定宽度，确认该参数不提供响应式模拟能力。
 
 - [x] 新增统一 motion tokens：160ms / 360ms / 520ms、柔和缓动、16px 章节位移和最多三级延迟。
 - [x] Species 试点接入 Hero 进入、章节首次可见、FAQ 可测量展开、按钮按压/焦点反馈和品系状态过渡；内容首屏即存在，reduced-motion 不隐藏内容。
