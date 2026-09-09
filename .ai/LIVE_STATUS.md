@@ -593,3 +593,6 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 
 - Current functional checkpoint: `466025f7 fix(admin): clarify editor tool ownership`.
 - Current-page/Base tool labels now follow active scope; revision history renders one matching authority only; inherited search overrides say `本页自定义`; publish readiness describes the final composed page.
+
+- Current functional checkpoint: `6a1f1979 fix(admin): compact visible seo controls`.
+- Search & indexing remains open by default but desktop height is now ~514px (from ~733px); Policy ~220px (from ~370px); mobile remains one-column and overflow-free.

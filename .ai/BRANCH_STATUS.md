@@ -500,3 +500,5 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - NEXT: obtain/provision a dedicated non-Production AquaGuide Supabase project, apply the 16-migration upgrade plan, seed canonical representative data, create/sign in one ordinary Staging Auth user through the Staging Auth flow, dry-run then commit `provision:business-admin-staging`, require `check:business-admin-staging` green, bind Business API/Preview, and run real populated operator acceptance.
 
 - Latest local functional HEAD: `466025f73477ef2339c5c707507a3bfb9884de5b` (`fix(admin): clarify editor tool ownership`).
+
+- Latest local functional HEAD: `6a1f19790fddd15833bb44d6c10ff2339bac1992` (`fix(admin): compact visible seo controls`).

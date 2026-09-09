@@ -718,3 +718,7 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 
 - SEO editor ownership clarity is complete at `466025f7`: inherited Search fields use explicit `本页自定义`, current-page/Base tool labels follow the active editor scope, history drawers render exactly one matching revision authority, and publish readiness is labeled as final composed-page readiness.
 - NEXT: continue visual hierarchy cleanup in the authoring surface (card/section/color density and context clarity) without changing authority or review semantics.
+
+- Visible Search & indexing density is converged at `6a1f1979`: inherited Meta/H1 stay visible as compact source rows until `本页自定义`; indexing policy keeps keyword + strategy visible side-by-side on desktop; route/canonical are a flat read-only summary; redundant per-form Production lock copy was removed.
+- Measured desktop density improved from Search 311→242px, Policy 370→220px, full Search & indexing 733→514px; mobile returns to one column with no horizontal overflow.
+- NEXT: audit and converge typography hierarchy in the authoring surface; do not hide required SEO controls.

@@ -450,3 +450,6 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 
 - [x] Species SEO ownership clarity (`466025f7`): `本页自定义`, dynamic Base/current-page tool labels, one-scope revision history, final-page readiness wording.
 - [ ] Continue authoring-surface visual hierarchy cleanup: card/section/color density, while preserving required controls and the centralized review boundary.
+
+- [x] Visible SEO control density (`6a1f1979`): inherited Meta/H1 compact source rows, two-column desktop keyword/index policy, flat route summary, no repeated Production-lock note.
+- [ ] Converge authoring typography hierarchy: reduce redundant near-equal font sizes without shrinking required controls or metadata below readable levels.

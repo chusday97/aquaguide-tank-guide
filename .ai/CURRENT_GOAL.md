@@ -562,3 +562,6 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 
 6. Ownership clarity (`466025f7`): current-page overrides are explicitly labeled `本页自定义`; Base/current-page utility labels follow active scope; history shows only the active scope authority; publish readiness is explicitly the final composed page.
 3. Continue visual hierarchy cleanup inside the editing surface: reduce competing cards/colors and keep the primary authoring task visually dominant without hiding required controls.
+
+7. Visible SEO density (`6a1f1979`): required Search/Index controls remain expanded, but inherited fields use compact source rows; desktop Policy uses two columns; redundant Production lock copy is removed.
+4. Audit authoring typography and reduce near-duplicate font tiers that make the page feel visually noisy, while preserving readable task/field/meta hierarchy.

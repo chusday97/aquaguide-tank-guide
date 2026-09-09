@@ -1210,3 +1210,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Inherited Meta/H1 overrides now use explicit current-page ownership copy (`本页自定义`).
 - Base/current-page utility summaries follow active scope; revision history renders only the active scope authority; readiness copy explicitly targets the final composed page.
 - PASS: Data Review / hierarchy browser regression, Admin content contract, root TypeScript, full root build, diff hygiene. Production/main/Supabase/indexing untouched.
+
+## 2026-09-10 — Visible SEO density checkpoint
+- Committed `6a1f1979 fix(admin): compact visible seo controls`.
+- Inherited Meta/H1 rows remain visible but compact until page customization; Policy keeps keyword/index controls visible in two desktop columns and one mobile column; route/canonical are flat read-only summary.
+- Removed redundant per-policy Production-lock copy because global review/publish gates already own that state.
+- Measured desktop Search 311→242px, Policy 370→220px, full Search & indexing 733→514px. PASS: Heavy browser regression, Admin contracts, root TypeScript, full root build, diff hygiene.
