@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Added: `test:public-seo-responsive-contract`，检查公开 SEO 的桌面、平板、手机三档令牌、参数带列数、窄屏章节导航、平板 Hero 和 reduced-motion 规则。
+- Verified: 响应式契约、公开结构、公开文案、TypeScript 与 diff-check 通过；该静态门禁不替代真实 viewport 浏览器验收。
+
 - Changed: `e347612f` 让 Species 生活习性卡与品系卡复用统一公开 SEO 错峰进入样式，保持内容、路由、Product Truth 与 `noindex,follow` 不变。
 - Verified: 本地 lint、production build 与 diff-check 通过；系统浏览器启动级回归仍受 macOS MachPort 权限限制。
 - Fixed: 修复 Species 相关分类链接按物种分类分流；宝莲灯进入图鉴灯科鱼筛选，虾螺蟹仍进入已开放的公开分类页。

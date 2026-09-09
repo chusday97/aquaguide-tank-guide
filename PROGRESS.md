@@ -1,3 +1,9 @@
+## 2026-09-10 公开 SEO 响应式契约门禁
+
+- [x] 新增 `npm run test:public-seo-responsive-contract`，检查 1280px 最大宽度、80/32/24px 页面边距、96/80/64px 章节间距、44px 交互目标、1440/600/390 参数带列数、窄屏章节导航滚动、平板双区 Hero 和 reduced-motion 规则。
+- [x] 同时检查 Species 章节导航源码确实保留 `overflow-x-auto`；门禁通过后续公开结构、文案和 TypeScript 检查。
+- [ ] 该门禁是静态响应式约束，不替代真实 390/600/1440 浏览器截图；系统 Playwright 仍受 macOS 进程权限阻塞，Figma Canonical 与可读独立 Critic 仍待完成。
+
 ## 2026-09-09 公开 SEO 干净 Preview 候选
 
 - 已完成：Vercel `aquaguide` 项目变量作用域只读核验；Supabase/Postgres 变量仅绑定 `Production`，未绑定 `Preview`。分支已推送，Draft PR #147 已创建。

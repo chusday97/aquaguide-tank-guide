@@ -16,6 +16,13 @@
 
 # AquaGuide 交接文档
 
+## 2026-09-10 公开响应式约束补强
+
+- 当前新增 `scripts/test-public-seo-responsive-contract.mjs` 与 `npm run test:public-seo-responsive-contract`，把公开 SEO 的桌面、平板、手机和 reduced-motion 关键规则固化为可重复门禁。
+- 已验证：响应式契约、公开结构、公开文案、TypeScript 与 diff-check 通过；未修改 Product Truth、路由、证据绑定或 `noindex,follow`。
+- 仍未完成：真实可调 viewport 三档截图、系统浏览器启动级回归、Figma Canonical、可读独立 Critic 和索引放行。
+- 本轮只提交新门禁和登记文档；`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 的用户既有改动未暂存。
+
 ## 2026-08-31 专业身份核实进展（当前）
 
 - 当前数据分支 `codex/catalog-cohort-30-v1` 的数据代码复验点为 `e8e6f3ce`；后续仅有文档修订，工作树干净，尚未推送。
