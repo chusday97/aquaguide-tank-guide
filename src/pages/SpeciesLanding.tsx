@@ -114,7 +114,7 @@ export function SpeciesLanding() {
   useEffect(() => {
     if (!fish || !profile) return;
     document.title = `${fish.name}：习性、饲养与环境 | AquaGuide`;
-    setMeta('description', profile.editorial?.signature || `${fish.name}的基础信息、核心参数与已核对的饲养参考。`);
+    setMeta('description', profile.editorial?.signature || `${fish.name}的基础信息、核心参数与饲养参考。`);
     document.documentElement.lang = 'zh-CN';
     setMeta('robots', publicEditorialPublished && profile.metadata.indexPolicy === 'index' ? 'index,follow' : 'noindex,follow');
     setCanonical(profile.metadata.canonical);

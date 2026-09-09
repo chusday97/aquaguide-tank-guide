@@ -26,6 +26,8 @@
 - Verified: Guide 准备态保持可滚动、Public Header 与 `/care` 入口可用；未生成 Article、HowTo 或 FAQ 结构化数据，相关工程门禁通过。
 - Fixed: Guide 准备态阅读路径卡片改为三条不同的用户预期，底部状态改为“资料状态”，减少重复文案与内部流程感。
 - Verified: 未改变未审核内容门禁或结构化数据；lint、公开契约、Editorial、Evidence、build 与 diff-check 通过。
+- Changed: Category 入口和 Species metadata fallback 改为用户语言，移除“公开路径/已核对”等流程化表达。
+- Verified: 内容、证据、路由和 `noindex,follow` 不变；公开契约、Editorial、Evidence、lint 与 diff-check 通过。
 - Changed: Marketing 与 Category 的公开说明改为“资料说明”，并将 Marketing 的饲养能力文案改成用户可理解的主题阅读预期。
 - Verified: 未引入后台审核术语或事实内容；lint、公开契约、build 与 diff-check 通过。
 

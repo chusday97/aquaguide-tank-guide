@@ -774,6 +774,11 @@
 - 三个阅读路径卡片已改为不同的中文用户预期，底部状态标题改为“资料状态”；没有新增未经审核的步骤或事实。
 - 重新通过 lint、公开契约、Editorial、Evidence、build 与 diff-check；内置浏览器本轮启动超时，未将其记为新的页面通过证据。
 
+## 2026-09-10 公开流程文案收口
+
+- Category 的公开路径说明和 Species metadata fallback 已改为用户语言，不再把“公开路径/已核对”作为用户页面表达。
+- 通过公开契约、Editorial、Evidence、lint 与 diff-check；Product Truth、证据绑定、路由与 `noindex,follow` 未改变。
+
 ## 2026-09-10 Marketing / Category 公开文案收口
 
 - Marketing 的“理解饲养”卡片已改为用户视角的主题阅读说明；Marketing 与 Category 页脚改为“资料说明”，不再把后台审核流程直接呈现给用户。
