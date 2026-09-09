@@ -876,6 +876,12 @@
 - [x] 通过 lint、公开契约、build 与 diff-check；未改变 Product Truth、路由、内容门禁或 `noindex,follow`。
 - [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
 
+## 2026-09-10 Guide 状态文案最终收口
+
+- [x] 将“完成事实审核后开放”改为“具体步骤整理好后开放”，让 Guide 准备态只描述用户可理解的内容状态。
+- [x] `test:public-seo-copy` 与公开契约、Editorial、Evidence、lint、diff-check 通过。
+- [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-10 Guide 准备态文案去重复
 
 - [x] 将阅读路径三个卡片改为不同的用户预期，避免同一句“正式内容准备好后”重复堆叠。

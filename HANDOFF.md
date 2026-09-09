@@ -796,3 +796,7 @@
 - 新增 `npm run test:public-seo-copy`，覆盖四个公开页面文件，阻止 Product Truth、Base Species、Publish Gate、审核流程等后台表达进入用户文案，并检查 Guide 准备态三个不同阅读预期。
 - 通过公开文案、契约、Editorial、Evidence、lint 与 diff-check；用户未提交的素材/截图脚本仍未纳入。
 - 下一步仍是可调整 viewport 浏览器回归、Figma Canonical 和可读独立 Critic。
+
+## 2026-09-10 Guide 状态文案最终收口
+
+- Guide 准备卡已移除“事实审核”流程词，改为“具体步骤整理好后开放”；公开文案门禁与相关证据测试通过。
