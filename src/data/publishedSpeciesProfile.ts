@@ -120,6 +120,11 @@ const publishedSourcesFor = (baseId: string, speciesId: string, visibleVariantId
   return [...new Map(references.map(source => [source.id, source])).values()];
 };
 
+const categoryHrefFor = (category: string): string => {
+  if (category === '虾螺蟹') return '/category/shrimp-snails-crabs';
+  return `/encyclopedia?category=${encodeURIComponent(category)}`;
+};
+
 export const getPublishedSpeciesProfile = (
   selection: SpeciesLandingSelection,
   locale: 'zh-CN' | 'en' = 'zh-CN',
@@ -152,7 +157,7 @@ export const getPublishedSpeciesProfile = (
     faq,
     sources: locale === 'zh-CN' ? publishedSourcesFor(baseSpecies.id, species.id, variantSummaries.map(variant => variant.id)) : [],
     relatedLinks: [
-      { id: 'category', label: `浏览${species.category}分类`, href: '/category/shrimp-snails-crabs', kind: 'category' },
+      { id: 'category', label: `浏览${species.category}分类`, href: categoryHrefFor(species.category), kind: 'category' },
       { id: 'care', label: '查看养护百科', href: '/care', kind: 'care-guide' },
       { id: 'compatibility', label: '把它加入混养计算', href: `/encyclopedia?mode=compatibility&species=${encodeURIComponent(species.id)}&source=species-profile`, kind: 'compatibility' },
     ],
