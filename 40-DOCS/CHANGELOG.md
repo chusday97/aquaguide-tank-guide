@@ -24,6 +24,8 @@
 - Verified: 公开契约、Editorial、Evidence、lint、build 和 diff-check 通过。
 - Changed: 未审核的“新鱼入缸”公开指南增加非事实性的阅读路径预览，明确未来的核心结论、分步操作和后续观察结构。
 - Verified: Guide 准备态保持可滚动、Public Header 与 `/care` 入口可用；未生成 Article、HowTo 或 FAQ 结构化数据，相关工程门禁通过。
+- Fixed: Guide 准备态阅读路径卡片改为三条不同的用户预期，底部状态改为“资料状态”，减少重复文案与内部流程感。
+- Verified: 未改变未审核内容门禁或结构化数据；lint、公开契约、Editorial、Evidence、build 与 diff-check 通过。
 
 - Fixed: 恢复 latest-main 的完整 package scripts，修复 Species SEO Draft PR #147 首次 foundation 因缺少 `project:status` 等门禁命令而失败；SEO 专项脚本与 Noto 字体保持增量。
 - Fixed: 恢复 latest-main 的 App、图鉴、物种详情和应用 CSS Owner，仅在路由层叠加 Public SEO Shell，关闭 Draft PR #147 暴露的 GP-002 应用行为回归。

@@ -768,3 +768,8 @@
 - Guide 仍没有可公开的审核步骤；本轮只增加“阅读路径”结构预览，帮助用户理解未来内容组织，不承载生物或操作事实。
 - 内置浏览器复核 `http://127.0.0.1:3000/guides/new-fish-acclimation`：Public Header、面包屑、准备卡、阅读路径和 `/care` 入口均可见，页面可滚动。
 - 本轮通过 lint、公开契约、Editorial、Evidence、build 与 diff-check；系统 Playwright、Figma Canonical、独立 Critic 仍是门禁。
+
+### 本轮后续收口
+
+- 三个阅读路径卡片已改为不同的中文用户预期，底部状态标题改为“资料状态”；没有新增未经审核的步骤或事实。
+- 重新通过 lint、公开契约、Editorial、Evidence、build 与 diff-check；内置浏览器本轮启动超时，未将其记为新的页面通过证据。

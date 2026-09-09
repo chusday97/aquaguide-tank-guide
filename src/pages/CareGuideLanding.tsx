@@ -19,15 +19,19 @@ export default function CareGuideLanding() {
     <section className="seo-section" aria-labelledby="guide-outline-title">
       <SeoSectionHeading id="guide-outline-title" number="01" eyebrow="阅读路径" title="这篇指南会怎么展开" description="正式内容准备好后，你可以按这三个部分阅读，不需要在一页里寻找所有答案。" />
       <div className="mt-8 grid gap-3 md:grid-cols-3">
-        {['先看核心结论', '再看分步操作', '最后做后续观察'].map((item, index) => (
+        {[
+          ['先看核心结论', '先知道这篇指南要解决什么问题。'],
+          ['再看分步操作', '按顺序查看每一步需要做什么。'],
+          ['最后做后续观察', '完成操作后，回来看需要留意什么。'],
+        ].map(([item, description], index) => (
           <article key={item} className="seo-card bg-white p-5">
             <p className="seo-eyebrow">0{index + 1}</p>
             <h3 className="mt-3 font-serif text-xl font-bold text-ink">{item}</h3>
-            <p className="seo-body mt-2">正式内容准备好后，这一部分会呈现对应的公开内容。</p>
+            <p className="seo-body mt-2">{description}</p>
           </article>
         ))}
       </div>
     </section>
-    <SeoSourceFooter title="内容责任" text="未准备好的步骤不会在公开页面显示，也不会生成文章或操作指南结构化数据。" status="公开预览 · 暂不进入搜索索引" />
+    <SeoSourceFooter title="资料状态" text="这篇指南目前还在准备中，完成后会在这里显示公开内容。" status="公开预览 · 暂不进入搜索索引" />
   </SeoPageShell>;
 }

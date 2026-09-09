@@ -868,3 +868,9 @@
 - [x] 内置浏览器确认 Guide 保持 Public Header、可滚动、`/care` 入口可用，且页面没有后台审核术语。
 - [x] `npm run lint`、公开契约、Editorial、Evidence、`npm run build` 与 `git diff --check` 通过。
 - [ ] 系统 Playwright 三档截图、Figma Canonical 和可读独立 Critic 仍未完成；所有公开页面继续 `noindex,follow`。
+
+## 2026-09-10 Guide 准备态文案去重复
+
+- [x] 将阅读路径三个卡片改为不同的用户预期，避免同一句“正式内容准备好后”重复堆叠。
+- [x] 将底部“内容责任”改为“资料状态”，用用户可理解的准备中说明替代流程口吻。
+- [x] 未改变 Guide 的 Published 门禁、结构化数据或索引策略；工程门禁重新通过。
