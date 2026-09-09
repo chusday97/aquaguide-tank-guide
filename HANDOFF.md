@@ -744,3 +744,4 @@
 - 当前仍缺系统 Playwright 三档截图证据、Figma Canonical、可读独立 Critic；不要将当前内置浏览器验证表述为自动化浏览器通过。
 - 本轮内置浏览器已补查 Species 长页面滚动与内容覆盖；当前只能验证可用预览 viewport，不能替代 390/600/1440 的完整视觉回归。
 - 最新工程验收：Evidence、Public Contract、Editorial、lint、build 通过；`test:seo-motion` 因 Playwright Chromium 启动时 `MachPortRendezvousServer: Permission denied` 失败，需恢复浏览器权限后重跑。
+- 2026-09-10 追加诊断：指定系统 Chrome 可执行文件仍在 MachPort 启动阶段崩溃；Playwright WebKit 因本机缺少安装包不可用。不要继续反复启动，待浏览器环境恢复后一次性重跑三档专项。
