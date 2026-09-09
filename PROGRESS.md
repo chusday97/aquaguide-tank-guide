@@ -809,5 +809,6 @@
 - [x] 新增统一 motion tokens：160ms / 360ms / 520ms、柔和缓动、16px 章节位移和最多三级延迟。
 - [x] Species 试点接入 Hero 进入、章节首次可见、FAQ 可测量展开、按钮按压/焦点反馈和品系状态过渡；内容首屏即存在，reduced-motion 不隐藏内容。
 - [x] 新增 `test:seo-motion`，并通过 lint、build、SEO evidence、public contract 和 diff-check；当前本地预览可访问性树确认 Species 页面、FAQ 和章节结构正常。
+- [x] 内置浏览器实测 Species 页面可渲染；FAQ 可展开，品系点击后 URL、H1、图片 Alt 与当前状态同步更新。
 - [ ] 系统 Chromium/Chrome 仍被 macOS MachPort 权限阻断，动效专项无法完成 Playwright 启动级验证；用户视觉确认、独立 Critic 和 Figma Canonical 仍待完成。
 - 当前保持 `noindex,follow`；此前未提交的宝莲灯素材候选与截图脚本改动未混入本动效提交。
