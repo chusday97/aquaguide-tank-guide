@@ -24,6 +24,8 @@ const forbiddenPublicCopy = [
   /审核记录/,
   /只显示有来源/,
   /只呈现有依据/,
+  /目前确认的品系差异/,
+  /待审核/,
 ];
 
 for (const relativeFile of publicPageFiles) {
