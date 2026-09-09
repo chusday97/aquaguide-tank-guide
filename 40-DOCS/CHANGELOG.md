@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed: 4198 HTML Freeze 首轮止损，移除未使用的重复 review CSS/脚本并统一直接页基础壳层；图鉴/养护详情打开时隐藏首层选择板，关闭后恢复；manifest 改为记录排除自身的 `contentSha256`。仅修改 HTML 评审包，未修改正式 React 或生产。
+
 - Added: 建立项目`.ai`权威恢复文件，统一当前HTML Freeze目标、已接受业务基线、锁定区域、Badcase与发布门禁；本步骤未修改正式React或生产配置。
 
 - Fixed: 对齐动作基础浏览器门禁与当前产品契约：物种风险在详情内展开，兼容性从显式入口进入独立页面；空缸可规划加入当前鱼缸；温度冲突按当前 Domain 展示为 `not_recommended`；互动图鉴筛选测试显式使用 `mode=browse`。授权环境下动作、路由、详情、Compatibility、lint、API 类型与 production build 均通过。

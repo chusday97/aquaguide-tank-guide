@@ -25,11 +25,16 @@ function closeSurface() {
   qa('[data-surface]').forEach((el) => { el.hidden = true; el.classList.remove('is-open'); });
   state.surface = null;
   document.body.classList.remove('surface-open');
+  const tray = q('[data-variant-tray], [data-care-tray]');
+  if (tray && (state.group || state.surface === null)) tray.hidden = false;
   focusBack();
 }
 
 function openDetail(item, trigger) {
   state.focus = trigger?.id || null; state.surface = 'detail'; state.selected = item.id;
+  qa('[data-surface]').forEach((el) => { el.hidden = true; el.classList.remove('is-open'); });
+  const tray = q('[data-variant-tray], [data-care-tray]');
+  if (tray) tray.hidden = true;
   const panel = q('[data-surface="detail"]');
   if (!panel) return;
   q('[data-detail-title]', panel).textContent = item.title || item.name;
@@ -44,6 +49,7 @@ function openDetail(item, trigger) {
 }
 
 function renderVariants(group) {
+  state.group = group;
   const tray = q('[data-variant-tray]'); if (!tray) return;
   const groupItems = species.filter((item) => item.base === group);
   tray.innerHTML = `<div class="kicker" data-group-label>${group} · ${groupItems.length} 个可选品系</div><h2>选择具体品系</h2><p>先看基础信息，再决定是否打开完整档案。</p><div class="variant-grid">${groupItems.map((item) => `<button class="variant" id="variant-${item.id}" data-species-id="${item.id}" type="button"><img src="${item.image}" alt=""><span><strong>${item.name}</strong><em>${item.latin}</em><small>${item.layer} · ${item.tags.join(' · ')}</small></span></button>`).join('')}</div><button class="secondary-btn" data-collapse-scene type="button">折叠互动场景</button>`;
@@ -73,7 +79,7 @@ function bindCommon() {
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   });
   qa('[data-open-compatibility]').forEach((button) => button.addEventListener('click', () => { window.location.href = 'compatibility.html?species=' + encodeURIComponent(state.selected || 'cardinal'); }));
-  qa('[data-start-task]').forEach((button) => button.addEventListener('click', () => { state.surface = 'task'; show('[data-surface="task"]', true); show('[data-surface="detail"]', false); }));
+  qa('[data-start-task]').forEach((button) => button.addEventListener('click', () => { state.surface = 'task'; q('[data-surface="detail"]')?.classList.remove('is-open'); show('[data-surface="task"]', true); show('[data-surface="detail"]', false); q('[data-surface="task"]')?.classList.add('is-open'); }));
   q('[data-detail-risk-toggle]')?.addEventListener('click', () => { const risk = q('[data-detail-risk]'); if (risk) risk.hidden = !risk.hidden; });
 }
 
@@ -82,7 +88,7 @@ function bindEncyclopedia() {
   q('[data-collapse-scene]')?.addEventListener('click', () => { root.classList.toggle('scene-collapsed'); });
 }
 
-function bindCare() { qa('[data-care-group-button]').forEach((button) => button.addEventListener('click', () => { state.focus = button.id; renderCareCards(button.dataset.careGroup); })); }
+function bindCare() { qa('[data-care-group-button]').forEach((button) => button.addEventListener('click', () => { state.focus = button.id; state.group = button.dataset.careGroup; renderCareCards(button.dataset.careGroup); })); }
 
 function bindCompatibility() {
   const params = new URLSearchParams(location.search); const selected = params.get('species');

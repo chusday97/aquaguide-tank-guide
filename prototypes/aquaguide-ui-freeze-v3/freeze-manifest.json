@@ -1,9 +1,10 @@
 {
   "schemaVersion": 1,
   "freezeVersion": "html-ui-freeze-v3",
-  "generatedAt": "2026-09-09T12:10:44.810Z",
+  "generatedAt": "2026-09-09T12:42:13.792Z",
   "branch": "codex/project-authority-recovery-v1",
-  "gitSha": "04fe46e8f7abbebf36b66704d9fd7b93ee79f9b1",
+  "sourceCommit": "39b51ba683bd03eec857829782834be8c76824a6",
+  "contentSha256": "7dbd440e7bef78eeedaecb5077cc3a134520c1f8e0cc8559f1681e3a28b190dc",
   "references": {
     "aquarium": "4196",
     "collection": "4196",
@@ -151,33 +152,18 @@
     },
     {
       "path": "shared/interactions.js",
-      "bytes": 8029,
-      "sha256": "a0e741ad70f9f44b2be786e6baa709d83f97b1ed1c6eaeb6a44be9a72f0c6dd2"
+      "bytes": 8526,
+      "sha256": "c66e836f4e69455c550c98732b7cce2eb442ed4ff63311969481b1bf052740c9"
     },
     {
       "path": "shared/layout.css",
-      "bytes": 7758,
-      "sha256": "6c43f411fc3fe08faaefd6c4a65a20be8a3f30265f05725051c3990f322425be"
+      "bytes": 17255,
+      "sha256": "3c9b162f4dca33c02b35de32ba134df45a0edb83019a4f02d8203a2ebd5f40db"
     },
     {
       "path": "shared/prototype.js",
       "bytes": 9716,
       "sha256": "acd8877df5ea9ccd5d3481ca2555dd51881d906143617a279463841b240893f2"
-    },
-    {
-      "path": "shared/review-demo-data.js",
-      "bytes": 1955,
-      "sha256": "20dc8447b9acfe1d9eeeef16242e158a7a1602b7c8455a736b262ca84552ad0c"
-    },
-    {
-      "path": "shared/review-interactions.js",
-      "bytes": 6463,
-      "sha256": "056c168a413d44b954530ba1f7525eccbb0f7dc1213bdd835377fe0055fd6bfb"
-    },
-    {
-      "path": "shared/review-layout.css",
-      "bytes": 8575,
-      "sha256": "4696178e738f12d7650e005fda295fe880fe6e463a1b2e4ca0b8f642ebf759cc"
     },
     {
       "path": "shared/tokens.css",

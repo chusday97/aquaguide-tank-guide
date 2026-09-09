@@ -1,5 +1,11 @@
 # AquaGuide Latest Handoff
 
+## 2026-09-09 4198 cleanup (current)
+
+- Local-only cleanup on `codex/project-authority-recovery-v1`: removed unused duplicate `review-*` CSS/scripts, added the direct-page shell/responsive owner, and made Encyclopedia/Care details hide their first-level selection surface while open.
+- Freeze manifest now records `contentSha256` over files excluding the manifest itself. Five direct pages return HTTP 200; no React, Domain, Catalog, Supabase or production files changed.
+- Status remains `REVIEW_REQUIRED`; no user acceptance or HTML Freeze exists. Next: direct-page matrix at 390/600/1024/1440/1920px, then independent Critic review.
+
 ## Current goal
 
 Recover one authoritative UI direction before further React work. The active deliverable is a combined, clickable HTML Freeze; no formal React page changes are allowed until it is accepted.
