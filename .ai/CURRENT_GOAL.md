@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `d1af2c08`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `1ea56f60`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -13,12 +13,16 @@ Completed in the current local-first / UX phase:
 6. Ownership clarity (`a9a54bc9`, `466025f7`): Preview is final Base + current-page composition; active Base/current-page tool/history authority is explicit; generic `单独修改` is replaced by `本页自定义`.
 7. Visible SEO density (`6a1f1979`): required Search/indexing controls remain expanded while inherited SEO rows and route/policy controls are compacted; desktop full SEO section is ~514px.
 8. Responsive Preview (`d1af2c08`): >=1051px uses side-by-side with editor >=480px; medium Preview defaults 340–360px; <=1050px uses closed-by-default/on-demand overlay. Multi-width browser regression PASS.
+9. Responsive regression hardening (`c258640b`): editor/panel no-overflow and >=180px policy-control readability are now permanent browser guards.
+10. Global topbar simplification (`1ea56f60`): Activity history moved under Operations with unread preservation; mobile topbar reduced from five actions to four.
 
 NEXT milestones:
 1. Continue medium-width editor acceptance for internal field/layout readability and interaction, not new features.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
+
+Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Branch: `feature/admin-content-v0`
 Broader architecture: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`

@@ -2,17 +2,21 @@
 
 
 ## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-10)
-- Functional checkpoint: `d1af2c08 fix(admin): preserve responsive preview space`.
+- Functional checkpoint: `1ea56f60 fix(admin): fold activity into operations`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
 - Data Review remains evidence-first with explicit human Canonical choice and one final confirmation; Product Data authority is not rewritten by SEO review.
 - Save/review remains centralized in the top Review bar; contextual page/Base tools and history follow the active authority; cross-page work remains behind `运营工具`.
 - Search & indexing remains default-open but compact: inherited SEO fields are source rows until `本页自定义`, and policy/route controls no longer repeat the global Production lock.
 - Preview states the final composition (`基础模板 + 当前页面`). At >=1051px split view keeps editor >=480px and Preview 340–360px on medium desktop; <=1050px fresh load is closed and on-demand Preview is fixed overlay.
 - Permanent `test:data-review-ui` now covers Data Review, ownership/history, SEO density, <=140px top chrome, mobile no-overflow and the 1280/1080/1051/1050 Preview matrix.
+- The same browser gate also verifies medium-width editor/panel no-overflow, policy inputs >=180px, and a stable DOM-ready navigation strategy.
+- Activity history is no longer a separate topbar action; it is the first global Operations item, with unread count surfaced on the Operations trigger. 390px topbar now exposes four actions instead of five.
 - Full Species SEO contract, Admin content contract, browser regression, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
+
+Updated: 2026-09-10
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `a9a54bc94a404a1abe474184050e6098f3a2fa22`
+Operational functional HEAD before this docs sync: `1ea56f60`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

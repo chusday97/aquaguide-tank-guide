@@ -1222,3 +1222,8 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Added responsive Preview contract `d1af2c08`: split only at >=1051px, medium Preview 340–360px, editor >=480px, <=1050px closed-by-default/on-demand overlay.
 - Browser matrix PASS at 1280 / 1080 / 1051 / 1050 plus mobile no-overflow; 1080 editor width improved from 432px to 512px.
 - Admin contract, root TypeScript, full root build and diff hygiene PASS. No push, main merge/rebase, Supabase/Production/indexing mutation.
+
+## 2026-09-10 — medium-width regression + topbar action convergence
+- Hardened responsive browser regression at `c258640b`: editor/panel no horizontal overflow, policy controls >=180px, stable DOM-ready navigation.
+- Moved Activity Center under global Operations at `1ea56f60`; unread badge remains on Operations and 390px topbar drops from 5 actions to 4.
+- Browser hierarchy/Activity flow, full SEO contract, root TypeScript, full root build and diff hygiene PASS. No push or Production/Supabase/indexing mutation.

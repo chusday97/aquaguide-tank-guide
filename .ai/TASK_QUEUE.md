@@ -1,7 +1,7 @@
 # Task Queue
 
 
-## ACTIVE OVERRIDE — Durable Local Operations Studio (2026-09-09)
+## ACTIVE OVERRIDE — Durable Local Operations Studio (2026-09-10)
 - [x] Product/Care Local adapter from canonical 486 Species / 41 Care.
 - [x] Draft save/refresh persistence and separate Published Snapshot.
 - [x] Preserve Care step `actionTitle` / `actionKind` through Local save→publish round-trip.
@@ -22,7 +22,9 @@
 - [x] Editor tool ownership (`466025f7`): current-page/Base tools and revision history follow the active authority; `本页自定义` states override scope explicitly.
 - [x] Visible SEO density (`6a1f1979`): required Search/indexing controls remain open while inherited rows and policy/route controls are compacted.
 - [x] Responsive Preview (`d1af2c08`): >=1051px split keeps editor >=480px; medium Preview is 340–360px; <=1050px uses closed-by-default/on-demand overlay; browser matrix PASS.
-- [ ] Continue medium-width editor acceptance and remove only remaining hierarchy/interaction badcases without weakening save/review/publish gates.
+- [x] Medium-width editor acceptance hardening (`c258640b`): editor/panel no internal horizontal scroll; policy controls remain >=180px.
+- [x] Topbar action convergence (`1ea56f60`): Activity Center moved under Operations; unread count preserved; mobile topbar reduced to four actions.
+- [ ] Continue only remaining high-signal hierarchy/interaction badcases; do not add parallel tool surfaces.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

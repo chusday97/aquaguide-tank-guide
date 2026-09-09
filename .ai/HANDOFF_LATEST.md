@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
-Functional checkpoint: `d1af2c08 fix(admin): preserve responsive preview space`.
+Functional checkpoint: `1ea56f60 fix(admin): fold activity into operations`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
 - Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
@@ -11,13 +11,17 @@ Functional checkpoint: `d1af2c08 fix(admin): preserve responsive preview space`.
 - Ownership is explicit: Base task header is the single Base impact explanation; Preview labels the final composition as `基础模板 + 当前页面`; Base/current-page history renders only the active authority.
 - Visible Search & indexing controls stay open but compact (`6a1f1979`): inherited Title/Description/H1 remain visible as compact source rows until `本页自定义`; Search display is ~242px, Indexing/Canonical ~220px, full SEO section ~514px on desktop.
 - Responsive Preview contract (`d1af2c08`): split Preview opens only at >=1051px, medium desktop Preview narrows to 340–360px, editing keeps >=480px, <=1050px fresh load keeps Preview closed and on-demand Preview uses overlay. Permanent browser matrix covers 1280/1080/1051/1050 plus mobile no-overflow.
+- Responsive editor regression is hardened (`c258640b`): medium-width editor/panel have no internal horizontal scroll and policy controls remain >=180px; browser navigation waits for real editor readiness instead of brittle network-idle.
+- Global topbar density is reduced (`1ea56f60`): Activity Center remains fully available but lives inside `运营工具`; unread count moves to the Operations entry. Mobile topbar is now Operations + 中文 + 英文 + 退出 only.
 - Validation PASS: Heavy browser hierarchy/Preview regression, Species SEO contracts, Admin content contract, root TypeScript, full root build and diff hygiene.
 - NEXT: continue real editor acceptance at medium widths and remove only remaining hierarchy/interaction badcases; do not add new authority layers. Supabase Staging remains parked.
+
+Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `a9a54bc9`
+Current Operations Studio functional HEAD: `1ea56f60`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

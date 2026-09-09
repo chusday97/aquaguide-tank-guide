@@ -1,14 +1,17 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Responsive Preview checkpoint (2026-09-10)
-- Latest functional HEAD: `d1af2c089f3739c2e60b271a88b42f6d347e3b6d` (`fix(admin): preserve responsive preview space`).
+## CURRENT OVERRIDE — Topbar action-convergence checkpoint (2026-09-10)
+- Latest functional HEAD: `1ea56f60` (`fix(admin): fold activity into operations`).
 - Live remote feature: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Local vs live remote feature: `ahead 21 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local functional checkpoint: `275 main-only / 279 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Local vs live remote feature: `ahead 24 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local checkpoint: `275 main-only / 282 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
 - No merge/rebase main, force push, Production/live DB or indexing mutation.
+
+Updated: 2026-09-10
+
 Feature: `feature/admin-content-v0`
 Remote feature before latest UI hierarchy checkpoint: `83d7e982dfaf15a8f0c77ae6ef525fa3f0162871`
 Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`
