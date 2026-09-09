@@ -179,7 +179,7 @@ export const speciesEditorialEvidence: SpeciesEditorialEvidence[] = [
     targetId: 'sp_0030',
     scope: 'variant',
     field: 'variantDifference',
-    renderedClaim: '黄金米虾是 Neocaridina davidi 的黄色选育型；目前确认的品系差异是黄色外观。',
+    renderedClaim: '黄金米虾是 Neocaridina davidi 的黄色选育型；它与极火虾的主要区别是黄色外观。',
     sourceIds: ['fishData.ts:sp_0030', 'source-row-map:base_0147_neocaridina_davidi', 'uf-ifas-neocaridina-davidi-2025'],
   }),
   confirmed({

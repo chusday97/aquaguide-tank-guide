@@ -50,7 +50,7 @@ const yellowProfile = getPublishedSpeciesProfile(getSpeciesLandingSelection('sp_
 assert.equal(fireProfile.editorial?.signature, '极火虾是 Neocaridina davidi 的红色选育型；其基础物种是原生于台湾淡水溪流的小型淡水观赏虾。');
 assert.equal(fireProfile.editorial?.maintenance, undefined, 'unsupported maintenance must remain absent from PublishedSpeciesProfile');
 assert.equal(fireProfile.faq.length, 3, 'the three confirmed FAQs must enter the public profile');
-assert.match(yellowProfile.variants.find(variant => variant.id === 'sp_0030')?.difference || '', /黄色选育型/);
+assert.equal(yellowProfile.variants.find(variant => variant.id === 'sp_0030')?.difference, '黄金米虾是 Neocaridina davidi 的黄色选育型；它与极火虾的主要区别是黄色外观。');
 assert.match(fireProfile.lifeProfile?.activity?.answer || '', /水底/);
 assert.match(fireProfile.lifeProfile?.foraging?.answer || '', /生物膜/);
 assert.match(cardinalProfile.lifeProfile?.social?.answer || '', /群游倾向/);

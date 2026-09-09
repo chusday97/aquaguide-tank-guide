@@ -856,5 +856,7 @@
 - 本轮只更新来源登记与证据记录，不新增行为事实、不修改 Product Truth、路由或索引策略。
 - Editorial 回归现在同时保护 FishBase 主域名、`eligible` 状态和“中层活动/蠕虫及小型甲壳类”支持范围。
 - UF/IFAS 与 USGS 的来源资格及其对极火虾身份、栖息与机会性取食的支持范围也已纳入 Editorial 回归；未新增未经来源支持的习性。
+- 黄金米虾公开差异现在显示为“与极火虾的主要区别是黄色外观”，不再把确认流程暴露给用户；事实来源和 Base/Variant 边界不变。
+- 本轮文案 fingerprint 已重算，相关回归通过；真实 viewport 验收仍待 Mac 解锁。
 - 仍未完成：真实三档截图、可读独立 Critic、Figma Canonical；继续保持 `noindex,follow`。
 - 本轮 `cua.getState` 仍返回 Mac 锁定且无法自动解锁；未重复启动浏览器，静态公开 SEO 回归全部通过。
