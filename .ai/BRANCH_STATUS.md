@@ -1,14 +1,14 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Durable recovery checkpoint (2026-09-09)
-- Latest functional HEAD: `f501a69de7c609eed7c2f7a9f9c5bfc457887503` (`feat(admin): add local backup recovery`).
+## CURRENT OVERRIDE — Data Review UX checkpoint (2026-09-09)
+- Latest functional HEAD: `2fcba8404e0c9bf6de014ae70958455c96e69733` (`fix(admin): converge data review decisions`).
 - Live remote feature at checkpoint read: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Local vs live remote feature: `ahead 3 / behind 0`; changes are ordinary fast-forward candidates but remain intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local functional checkpoint: `275 main-only / 263 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
-- The feature is still not merge-ready with main; dedicated reconciliation remains parked.
-- No merge/rebase main, no force push, no Production/live DB/indexing mutation.
+- Local vs live remote feature before docs sync: `ahead 5 / behind 0`; still intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local functional checkpoint: `275 main-only / 265 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Feature remains not merge-ready with main; dedicated reconciliation stays parked.
+- No merge/rebase main, force push, Production/live DB or indexing mutation.
 
 Updated: 2026-09-09
 Feature: `feature/admin-content-v0`

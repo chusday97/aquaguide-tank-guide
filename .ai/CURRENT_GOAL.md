@@ -1,23 +1,18 @@
 # Current Goal
 
 
-## CURRENT OVERRIDE — 2026-09-09 Durable local safety closure
-The active objective is now **resume concrete Aqua Operations Studio operator/UI badcase convergence on top of a durable single-machine data layer**. Functional checkpoint: `f501a69d`.
+## CURRENT OVERRIDE — 2026-09-09 Operator UX convergence
+The active objective is **continue Aqua Operations Studio edit-page hierarchy and action convergence on top of the durable local data layer**. Functional checkpoint: `2fcba840`.
 
-Completed in the current local-first phase:
-1. Product/Care Local authority: canonical 486/41 seed, Draft isolation, Published Snapshot, Operations WorkItems and publish boundary.
-2. Compatibility Local authority: Profile/Pair revisions, Impact, real Regression, canonical Evidence, human Review and reviewed runtime publish.
-3. Local Publish Center history/readiness and exact WorkItem deep-links.
-4. Care SEO Editorial Local Draft→Review→Approved with Published-source drift, noindex lock and English/AI fail-closed.
-5. Product/Care image Draft/Published isolation.
-6. Durable Local File Mode (`746d5c66`): Business/Compatibility/Care SEO + image files under `.local/aqua-admin`, disk-first writes, startup hydration and corruption fail-closed.
-7. Durable data safety (`f501a69d`): versioned file envelopes with legacy migration, future-version refusal, cross-partition/image integrity checks, timestamped snapshots, restore with automatic pre-restore safety backup and rollback-on-failure.
-8. Operations Home exposes compact local integrity / latest-backup / backup-now / restore-latest controls without adding another authority layer.
-9. Existing browser-only Local Mode remains green; Production authority, indexing and Supabase deployment paths are unchanged.
+Completed in the current local-first / UX phase:
+1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
+2. Species SEO Data Review decision basis is converged (`2fcba840`): read-only evidence → one human conclusion → explicit canonical choice when needed → final-result summary → one confirmation.
+3. System keep-page recommendation is advisory only and is not auto-selected. Category-conflict decisions explicitly preserve Product Data authority boundaries.
+4. Desktop + 390px responsive browser regression and full SEO Admin contract PASS; Production/Supabase/indexing remain unchanged.
 
 NEXT milestones:
-1. Resume concrete operator/UI badcases: Data Review decision basis, edit-page hierarchy, button consolidation, and unfolding essential functions.
-2. Portable external export/import can be added later as a secondary disaster-recovery convenience; it is not required for current in-project snapshot recovery.
+1. Converge edit-page hierarchy: make the current editing task visually primary, reduce repeated status/action chrome, and keep necessary controls visible rather than hidden behind generic disclosures.
+2. Consolidate duplicate save/review buttons into context-appropriate next actions while preserving Draft/review/publish boundaries.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

@@ -1,25 +1,24 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
 
-## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + recovery (2026-09-09)
-Functional checkpoint: `f501a69d feat(admin): add local backup recovery`.
-- Aqua Operations Studio runs as a durable single-machine environment without Supabase via `npm run dev:local-admin`.
-- Durable state root defaults to `.local/aqua-admin/`. File Mode writes disk first; browser localStorage is only runtime cache. Production/deployed authority remains unchanged.
-- Local File partition storage now uses versioned envelope v1. Existing raw v1 files are migrated safely on read; newer file/state versions are refused so older code cannot overwrite future data.
-- Integrity checks cover partition parse/schema validity, Product/Care image metadata/blob pairs, referenced/orphan assets, Compatibility reviewed 7 Profiles / 4 Pair Rules, and Care SEO source-version references.
-- Timestamped local snapshots are created under `.local/aqua-admin/backups/`. Normal backup requires a healthy state. Restore validates the snapshot, automatically creates a pre-restore safety backup, restores partitions/assets, validates again, and rolls back on restore/post-validation failure.
-- Operations Home keeps this compact inside existing Source Status: disk persistence + integrity + latest backup + one backup action + one confirmed restore-latest action. No new content authority was added.
-- Permanent regression now proves versioned envelope/legacy migration/future-version refusal, integrity, backup/restore API, one-click browser backup/restore, full process restart and fresh-browser hydration with Product + image + Compatibility + Care SEO.
-- Existing browser-only Local Product/Care, Compatibility, Care SEO, IndexedDB assets and Operations desktop/mobile regressions remain PASS. Root/API TypeScript, full build and diff hygiene PASS.
-- CI: lightweight validation runs `test:local-file-admin`; Heavy runs `test:local-file-admin-ui`.
-- NEXT: return to concrete operator/UI badcases, starting with Data Review decision basis and edit-page hierarchy/button reduction. Optional portable external export/import is secondary. Supabase Staging remains parked.
+## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + Data Review convergence (2026-09-09)
+Functional checkpoint: `2fcba840 fix(admin): converge data review decisions`.
+- Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
+- Species SEO single-group Data Review is now evidence-first: candidate/source comparison is read-only, then the operator chooses one conclusion.
+- Duplicate decisions no longer mix canonical selection into evidence. Choosing “duplicate records” opens a separate final-page step; the system recommendation is labeled as evidence and is never auto-selected.
+- Before write, the UI shows one explicit `最终确认版本`: retained SEO page, Canonical consequence, source-data boundary and downstream SEO state.
+- Single-group Data Review now has one final primary action only (`确认最终结果`); the previous competing defer action was removed. Optional notes remain subordinate.
+- Category-conflict review follows the same evidence → conclusion → final-result pattern and explicitly states that this screen does not rewrite Product Data.
+- Permanent browser regression covers duplicate + category-conflict flows, explicit human canonical selection and responsive 390px drawer width. Heavy CI runs `test:data-review-ui`.
+- Validation PASS: full Species SEO Admin contract, Data Review browser regression, root TypeScript, full root build and diff hygiene.
+- NEXT: continue edit-page hierarchy/button consolidation and keep essential functions visible without adding new authority layers. Supabase Staging remains parked.
 
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `f501a69d`
+Current Operations Studio functional HEAD: `2fcba840`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

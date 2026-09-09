@@ -1163,3 +1163,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - CI lightweight gate now runs `test:local-file-admin`; Heavy gate retains `test:local-file-admin-ui`.
 - Live refs: remote feature `e9c63560`; live main `d3c70dee`; local vs feature ahead 3/behind 0; main vs local 275/263; merge base `ed0cf380`. No push, main merge/rebase, Production/live DB/indexing action.
 - NEXT: resume operator/UI badcase convergence: Data Review decision basis → edit-page hierarchy → button consolidation → essential-function visibility.
+
+## 2026-09-09 23:58 +0800 — Species SEO Data Review decision convergence
+- Functional checkpoint: `2fcba840 fix(admin): converge data review decisions`.
+- Single-group Data Review is now evidence-first; evidence comparison no longer contains canonical keep controls.
+- Duplicate decisions require a separate explicit final-page radio choice. System recommendation is shown but never auto-selected.
+- Added explicit `最终确认版本` before one final confirmation button; removed the competing single-group defer action. Category conflict preserves Product Data authority boundary.
+- Added self-contained Playwright `test:data-review-ui` and Heavy CI coverage; duplicate + category conflict + 390px responsive drawer PASS.
+- Full Admin Content contract, root TypeScript/build and diff hygiene PASS. Production/main/Supabase/indexing untouched; no push.
+- NEXT: edit-page hierarchy, button consolidation and essential-function visibility.
