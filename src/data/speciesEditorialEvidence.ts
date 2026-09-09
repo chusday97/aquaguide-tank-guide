@@ -26,10 +26,10 @@ export const speciesEditorialSources: SpeciesEditorialSource[] = [
     id: 'fishbase-paracheirodon-axelrodi-2026',
     title: 'Paracheirodon axelrodi summary page',
     publisher: 'FishBase',
-    url: 'https://www.fishbase.se/summary/Paracheirodon-axelrodi.html',
+    url: 'https://fishbase.org/summary/Paracheirodon_axelrodi.html',
     sourceType: 'authoritative-database',
-    locator: 'Environment; Biology',
-    support: '支持宝莲灯为淡水、主要在中层水域成群活动，以及取食蠕虫和小型甲壳类的物种资料记录。',
+    locator: 'Environment; Distribution; Biology（FishBase 物种摘要）',
+    support: '支持宝莲灯为淡水、分布于奥里诺科和内格罗河上游流域、主要在中层水域成群活动，以及取食蠕虫和小型甲壳类的物种资料记录。',
     sourceQuality: 'eligible',
   },
   {
