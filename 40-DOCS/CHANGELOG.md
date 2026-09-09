@@ -512,3 +512,4 @@
 
 - Added: 记录图鉴与养护直接页面的人工交互证据，确认选择板、详情表面和风险/排查入口按阶段互斥。
 - Changed: 明确自动矩阵仍因本机Chrome MachPort启动失败而保持阻塞，4198继续为 `REVIEW_REQUIRED`。
+- Added: 增加仅关键PR/手动触发的 HTML Freeze Chromium 矩阵工作流，避免本机 MachPort 阻塞成为唯一执行环境。

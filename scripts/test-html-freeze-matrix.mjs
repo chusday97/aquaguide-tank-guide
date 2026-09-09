@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const baseUrl = process.env.HTML_FREEZE_URL || 'http://127.0.0.1:4198';
 const outputDir = process.env.HTML_FREEZE_OUTPUT || '/private/tmp/aquaguide-html-freeze-v3/matrix';
-const executablePath = process.env.CHROME_EXECUTABLE || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
+const executablePath = process.env.CHROME_EXECUTABLE || (process.platform === 'darwin' ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' : null);
 const viewports = [390, 600, 1024, 1440, 1920];
 const pages = [
   ['aquarium', 'pages/aquarium.html'],
@@ -17,7 +17,7 @@ const pages = [
 mkdirSync(outputDir, { recursive: true });
 let browser;
 try {
-  browser = await chromium.launch({ executablePath, headless: true });
+  browser = await chromium.launch({ ...(executablePath ? { executablePath } : {}), headless: true });
 } catch (error) {
   const report = { schemaVersion: 1, baseUrl, executablePath, viewports, pages: pages.map(([name]) => name), status: 'BROWSER_UNAVAILABLE', error: String(error?.message || error) };
   writeFileSync(join(outputDir, 'matrix-report.json'), `${JSON.stringify(report, null, 2)}\n`);

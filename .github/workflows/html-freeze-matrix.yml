@@ -1,0 +1,47 @@
+name: HTML Freeze Matrix
+
+on:
+  workflow_dispatch:
+  pull_request:
+    types: [labeled, synchronize]
+    branches: [main]
+
+concurrency:
+  group: html-freeze-matrix-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  matrix:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'critical' || github.event.label.name == 'merge-ready' || contains(github.event.pull_request.labels.*.name, 'critical') || contains(github.event.pull_request.labels.*.name, 'merge-ready')
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Start 4198 review server
+        run: |
+          python3 -m http.server 4198 --directory prototypes/aquaguide-ui-freeze-v3 > /tmp/aquaguide-4198.log 2>&1 &
+          for i in $(seq 1 20); do curl --fail --silent http://127.0.0.1:4198/ > /dev/null && exit 0; sleep 1; done
+          cat /tmp/aquaguide-4198.log
+          exit 1
+      - run: npm run test:html-freeze-matrix
+        env:
+          HTML_FREEZE_URL: http://127.0.0.1:4198
+          HTML_FREEZE_OUTPUT: artifacts/html-freeze-matrix
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: html-freeze-matrix-${{ github.sha }}
+          path: artifacts/html-freeze-matrix
+          if-no-files-found: error

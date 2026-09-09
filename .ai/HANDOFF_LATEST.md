@@ -41,6 +41,7 @@ Create the 4198 combined HTML review package, then capture 390/600/1024/1440/192
 - Direct Encyclopedia review: scene shows multiple species; clicking a scene species opens only the base-species/variant selection; selecting a variant hides that selection surface and opens the single detail surface; risk expands in place without URL navigation.
 - Direct Care review: default scene exposes only water/livestock/filter; selecting water exposes two problem cards; selecting a card hides the card tray and opens one guide detail with an explicit start-task action.
 - This is manual visual/accessibility evidence only. The automatic matrix still returns `BROWSER_UNAVAILABLE` because local Chrome aborts during Playwright launch, so `REVIEW_REQUIRED` remains authoritative.
+- A gated CI workflow now exists at `.github/workflows/html-freeze-matrix.yml`; it installs Chromium on Ubuntu, starts the 4198 static server, runs the matrix, and uploads screenshots/report. It has not produced a remote run in this local-only session.
 
 ## Verification evidence
 
