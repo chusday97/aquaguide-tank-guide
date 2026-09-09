@@ -9,6 +9,7 @@ import { profileRouter } from './profile';
 import { speciesAiRouter } from './species-ai';
 import { feedbackRouter } from './feedback';
 import { shareReportsRouter } from './share-reports';
+import { localAdminFileRouter } from './local-admin';
 
 export const v1Router = Router();
 
@@ -25,4 +26,5 @@ v1Router.use(userRecordsRouter);
 v1Router.use(speciesAiRouter);
 v1Router.use(feedbackRouter);
 v1Router.use(shareReportsRouter);
+v1Router.use('/local-admin', localAdminFileRouter);
 v1Router.use('/admin', adminRouter);

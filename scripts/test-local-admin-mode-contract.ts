@@ -4,6 +4,11 @@ import { readFileSync } from 'node:fs';
 const read = (path: string) => readFileSync(path, 'utf8');
 const localStore = read('src/services/admin/local-business-admin.store.ts');
 const localAssetStore = read('src/services/admin/local-asset.store.ts');
+const localFilePersistence = read('src/services/admin/local-file-persistence.ts');
+const localFileRouter = read('apps/api/src/routes/local-admin.ts');
+const localDevScript = read('scripts/dev-local-admin.mjs');
+const operationsUi = read('src/pages/AdminHub.tsx');
+const viteConfig = read('vite.config.ts');
 const contentService = read('src/services/admin/content-admin.service.ts');
 const compatibilityService = read('src/services/admin/compatibility-admin.service.ts');
 const localCareSeoStore = read('src/services/admin/local-care-seo-editorial.store.ts');
@@ -18,14 +23,34 @@ assert.match(contentService, /isLocalBusinessAdminMode \? localBusinessAdminStor
   'Product reads must only switch to the local store behind the local-mode guard.');
 assert.match(contentService, /isLocalBusinessAdminMode \? localBusinessAdminStore\.setStatus/,
   'Product publish/archive must only use local persistence behind the local-mode guard.');
-assert.match(contentService, /if \(isLocalBusinessAdminMode\)[\s\S]*localAssetStore\.put\(/,
-  'Local asset upload must use IndexedDB storage only behind the DEV-only local-mode guard.');
+assert.match(contentService, /isLocalAdminFileMode \? await putLocalFileAsset\(assetId, file\) : await localAssetStore\.put\(assetId, file\)/,
+  'Durable Local File Mode must write assets to disk while browser-only Local Mode retains IndexedDB fallback.');
 assert.match(contentService, /fetch\(`\/api\/v1\/admin\/assets\?\$\{query\}`/,
   'Deployed asset upload must keep the Business API asset authority.');
 assert.match(localAssetStore, /indexedDB\.open\(DB_NAME, DB_VERSION\)/,
   'Local image persistence must use IndexedDB rather than large localStorage payloads.');
 assert.match(localAssetStore, /MAX_BYTES = 20 \* 1024 \* 1024/,
   'Local image upload must preserve the existing 20MB safety limit.');
+assert.match(localFilePersistence, /runtimeEnv\?\.DEV === true[\s\S]*VITE_ADMIN_LOCAL_FILE_MODE === 'true'/,
+  'Durable Local File Mode must require DEV + Local Mode + explicit Local File flag.');
+assert.match(localFilePersistence, /apiRequest\(`\/local-admin\/state\/\$\{partition\}`[\s\S]*method: 'PUT'/,
+  'Durable Local File state writes must cross the local API boundary.');
+assert.match(localFileRouter, /process\.env\.ADMIN_LOCAL_FILE_MODE === 'true'[\s\S]*process\.env\.NODE_ENV !== 'production'[\s\S]*!process\.env\.VERCEL/,
+  'Local File API must be unavailable in Production and Vercel environments.');
+assert.match(localFileRouter, /atomicJsonWrite[\s\S]*rename\(temp, filePath\)/,
+  'Local partition JSON must use atomic temp-file replacement.');
+assert.match(localDevScript, /ADMIN_LOCAL_FILE_MODE = 'true'[\s\S]*VITE_ADMIN_LOCAL_FILE_MODE = 'true'/,
+  'The dedicated local-admin dev entrypoint must enable both server and browser Durable File guards.');
+assert.match(viteConfig, /process\.env\.API_PORT \|\| env\.API_PORT \|\| '8787'/,
+  'Vite proxy must honor an externally assigned API port so Local Admin cannot accidentally connect to another local project.');
+assert.match(operationsUi, /operations-local-persistence[\s\S]*磁盘已持久化/,
+  'Operations Home must expose the active Durable Local File persistence state without adding a write authority.');
+assert.match(localStore, /if \(isLocalAdminFileMode\)[\s\S]*MIGRATION_REJECTED[\s\S]*Local Business 文件状态无效/,
+  'Durable Product/Care state corruption must fail closed instead of silently replacing disk authority with seed data.');
+assert.match(read('src/services/admin/local-compatibility-admin.store.ts'), /if \(isLocalAdminFileMode\)[\s\S]*MIGRATION_REJECTED[\s\S]*Local Compatibility 文件状态无效/,
+  'Durable Compatibility state corruption must fail closed instead of silently replacing reviewed authority.');
+assert.match(localCareSeoStore, /if \(isLocalAdminFileMode\)[\s\S]*MIGRATION_REJECTED[\s\S]*Local Care SEO 文件状态无效/,
+  'Durable Care SEO state corruption must fail closed instead of silently replacing Editorial history.');
 assert.match(compatibilityService, /isLocalBusinessAdminMode \? localCompatibilityAdminStore\.listProfileRevisions\(\)/,
   'Compatibility reads must only switch to the local store behind the local-mode guard.');
 assert.match(compatibilityService, /isLocalBusinessAdminMode \? localCompatibilityAdminStore\.publishPairRuleRevision/,

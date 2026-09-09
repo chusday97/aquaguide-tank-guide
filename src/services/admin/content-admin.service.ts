@@ -21,6 +21,7 @@ import {
 import { isLocalBusinessAdminMode, localBusinessAdminStore } from './local-business-admin.store';
 import { localCareSeoEditorialStore } from './local-care-seo-editorial.store';
 import { localAssetStore } from './local-asset.store';
+import { getLocalFileAssetUrl, isLocalAdminFileMode, putLocalFileAsset, removeLocalFileAsset } from './local-file-persistence';
 
 export type SpeciesAdminInput = z.infer<typeof speciesAdminInputSchema>;
 export type CareArticleAdminInput = z.infer<typeof careArticleAdminInputSchema>;
@@ -153,22 +154,29 @@ export const contentAdminService = {
     })
   ),
 
-  getAssetPreviewUrl: (asset: AdminAssetRecord) => (isLocalBusinessAdminMode && asset.storageBucket === 'local-indexeddb' ? localAssetStore.getObjectUrl(asset.id) : Promise.resolve(null)),
+  getAssetPreviewUrl: (asset: AdminAssetRecord) => {
+    if (!isLocalBusinessAdminMode) return Promise.resolve(null);
+    if (asset.storageBucket === 'local-file') return Promise.resolve(getLocalFileAssetUrl(asset.id));
+    return asset.storageBucket === 'local-indexeddb' ? localAssetStore.getObjectUrl(asset.id) : Promise.resolve(null);
+  },
 
   async uploadAsset(type: 'species' | 'care', contentId: string, file: File, stepId?: string) {
     if (isLocalBusinessAdminMode) {
       const assetId = `local-asset-${globalThis.crypto?.randomUUID?.() || Date.now()}`;
       let stored = false;
       try {
-        const blob = await localAssetStore.put(assetId, file);
+        const blob = isLocalAdminFileMode ? await putLocalFileAsset(assetId, file) : await localAssetStore.put(assetId, file);
         stored = true;
         return await localBusinessAdminStore.attachAsset(type, contentId, {
           id: assetId, variant: type === 'species' ? 'detail' : stepId ? 'article_step' : 'article_main',
-          storageBucket: 'local-indexeddb', storagePath: assetId, mimeType: blob.mimeType,
+          storageBucket: isLocalAdminFileMode ? 'local-file' : 'local-indexeddb', storagePath: assetId, mimeType: blob.mimeType,
           width: blob.width, height: blob.height, byteSize: blob.byteSize, stepId,
         });
       } catch (error) {
-        if (stored) await localAssetStore.remove(assetId).catch(() => undefined);
+        if (stored) {
+          if (isLocalAdminFileMode) await removeLocalFileAsset(assetId).catch(() => undefined);
+          else await localAssetStore.remove(assetId).catch(() => undefined);
+        }
         throw error;
       }
     }

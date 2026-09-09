@@ -5,6 +5,7 @@ import type { Fish } from '../../types';
 import { AquaGuideApiError } from '../api/api-client';
 import type { AdminAssetRecord, AdminCareArticleRecord, AdminSpeciesRecord, CareArticleAdminInput, SpeciesAdminInput } from './content-admin.service';
 import { localAssetStore } from './local-asset.store';
+import { getLocalFileAssetUrl, isLocalAdminFileMode, persistLocalAdminPartition } from './local-file-persistence';
 
 const STORAGE_KEY = 'aquaguide-local-business-admin-v1';
 const now = () => new Date().toISOString();
@@ -100,15 +101,26 @@ const readState = (): LocalBusinessAdminState => {
       parsed.publishedCareMeta[record.catalogKey] = { sourceVersion: latestPublish?.version || (record.status === 'published' ? record.version : 1), publishedAt: latestPublish?.occurredAt || parsed.updatedAt || now() };
     }
     return parsed;
-  } catch {
+  } catch (error) {
+    if (isLocalAdminFileMode) {
+      throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', 'Local Business 文件状态无效；为避免覆盖持久数据，已停止使用 seed 回退。');
+    }
     const seeded = buildSeedState();
     if (typeof window !== 'undefined') window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
     return seeded;
   }
 };
 
-const writeState = (state: LocalBusinessAdminState) => {
+const writeState = async (state: LocalBusinessAdminState) => {
   state.updatedAt = now();
+  if (isLocalAdminFileMode) {
+    await persistLocalAdminPartition('business', state);
+    if (typeof window !== 'undefined') {
+      try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch (error) { console.warn('[local-admin-cache] Business state persisted to file but browser cache update failed.', error); }
+    }
+    return;
+  }
   if (typeof window !== 'undefined') window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 };
 
@@ -142,7 +154,13 @@ const careDto = (record: AdminCareArticleRecord, input: CareArticleAdminInput, a
 });
 const resolvePublicAssets = async (assets: AdminAssetRecord[] | undefined): Promise<PublicAssetDto[]> => {
   const current = (assets || []).filter(asset => asset.isCurrent);
-  const resolved = await Promise.all(current.map(asset => localAssetStore.toPublicAsset(asset)));
+  const resolved = await Promise.all(current.map(async asset => {
+    if (asset.storageBucket === 'local-file') {
+      const url = getLocalFileAssetUrl(asset.id);
+      return url ? { id: asset.id, stepId: asset.stepId, variant: asset.variant, mimeType: asset.mimeType || 'image/webp', width: asset.width, height: asset.height, byteSize: asset.byteSize, assetVersion: asset.assetVersion, url } : null;
+    }
+    return localAssetStore.toPublicAsset(asset);
+  }));
   return resolved.filter((asset): asset is PublicAssetDto => Boolean(asset));
 };
 
@@ -211,7 +229,7 @@ export const localBusinessAdminStore = {
     const state = readState();
     if (state.species.some(item => item.catalogKey === input.catalogKey)) throw new AquaGuideApiError(409, 'DUPLICATE_RESOURCE', '本地 Species catalog key 已存在。');
     const record = speciesRecord(input, 'draft', 1);
-    state.species.unshift(record); writeState(state); return clone(record);
+    state.species.unshift(record); await writeState(state); return clone(record);
   },
 
   createCareArticle: async (raw: CareArticleAdminInput) => {
@@ -219,7 +237,7 @@ export const localBusinessAdminStore = {
     const state = readState();
     if (state.care.some(item => item.catalogKey === input.catalogKey)) throw new AquaGuideApiError(409, 'DUPLICATE_RESOURCE', '本地 Care catalog key 已存在。');
     const record = careRecord(input, 'draft', 1);
-    state.care.unshift(record); writeState(state); return clone(record);
+    state.care.unshift(record); await writeState(state); return clone(record);
   },
   updateSpecies: async (id: string, version: number, raw: SpeciesAdminInput) => {
     const input = speciesAdminInputSchema.parse(raw);
@@ -230,7 +248,7 @@ export const localBusinessAdminStore = {
     assertVersion(current.version, version);
     const next = speciesRecord(input, 'draft', current.version + 1, current.speciesAssets || []);
     next.id = current.id;
-    state.species[index] = next; writeState(state); return clone(next);
+    state.species[index] = next; await writeState(state); return clone(next);
   },
 
   updateCareArticle: async (id: string, version: number, raw: CareArticleAdminInput) => {
@@ -242,7 +260,7 @@ export const localBusinessAdminStore = {
     assertVersion(current.version, version);
     const next = careRecord(input, 'draft', current.version + 1, current.careArticleAssets || []);
     next.id = current.id;
-    state.care[index] = next; writeState(state); return clone(next);
+    state.care[index] = next; await writeState(state); return clone(next);
   },
 
 
@@ -271,7 +289,7 @@ export const localBusinessAdminStore = {
     if (type === 'species') (next as AdminSpeciesRecord).speciesAssets = nextAssets;
     else (next as AdminCareArticleRecord).careArticleAssets = nextAssets;
     rows[index] = next as never;
-    writeState(state);
+    await writeState(state);
     return clone(nextAssets);
   },
 
@@ -320,7 +338,7 @@ export const localBusinessAdminStore = {
       occurredAt: now(), sourceRef: `local:${type}:${resource.id}:${resource.version}`,
       metadata: { resourceId: resource.id, historyCoverage: 'revision_history', local: true },
     });
-    writeState(state);
+    await writeState(state);
     return clone(next) as AdminSpeciesRecord | AdminCareArticleRecord;
   },
 

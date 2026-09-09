@@ -9,6 +9,7 @@
   ],
   "scripts": {
     "dev": "node scripts/dev-with-api.mjs",
+    "dev:local-admin": "node scripts/dev-local-admin.mjs",
     "dev:web": "vite --port=3000 --host=0.0.0.0",
     "dev:api": "tsx apps/api/src/index.ts",
     "check:api": "tsc --noEmit -p apps/api/tsconfig.json",
@@ -165,7 +166,9 @@
     "test:local-compatibility-admin-ui": "node scripts/verify-local-compatibility-admin.mjs",
     "test:local-care-seo-editorial-ui": "node scripts/verify-local-care-seo-editorial.mjs",
     "test:local-assets-ui": "node scripts/verify-local-assets.mjs",
-    "test:local-admin-mode-contract": "tsx scripts/test-local-admin-mode-contract.ts"
+    "test:local-admin-mode-contract": "tsx scripts/test-local-admin-mode-contract.ts",
+    "test:local-file-admin": "tsx scripts/test-local-file-admin.ts",
+    "test:local-file-admin-ui": "node scripts/verify-local-file-admin.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

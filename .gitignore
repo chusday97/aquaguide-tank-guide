@@ -16,3 +16,4 @@ evaluation/reports/*.md
 .vercel
 
 supabase/.temp/
+.local/aqua-admin/

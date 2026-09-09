@@ -276,6 +276,8 @@ jobs:
         run: npm run test:local-care-seo-editorial-ui
       - name: Local Product Care asset browser regression
         run: npm run test:local-assets-ui
+      - name: Durable Local File Admin browser regression
+        run: npm run test:local-file-admin-ui
       - name: Care SEO canonical route browser regression
         run: npm run test:care-seo-route
       - name: Root AquaGuide Species SEO artifact integration

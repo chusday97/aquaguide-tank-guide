@@ -19,6 +19,7 @@ import type {
 } from './compatibility-admin.service';
 import { localBusinessAdminStore } from './local-business-admin.store';
 import { buildLocalPairRegression, buildLocalProfileRegression } from './local-compatibility-regression';
+import { isLocalAdminFileMode, persistLocalAdminPartition } from './local-file-persistence';
 
 const STORAGE_KEY = 'aquaguide-local-compatibility-admin-v1';
 const now = () => new Date().toISOString();
@@ -72,7 +73,10 @@ const readState = (): LocalCompatibilityState => {
     if (parsed?.schemaVersion !== 1 || !Array.isArray(parsed.reviewedProfiles) || !Array.isArray(parsed.reviewedPairRules)) throw new Error('invalid local compatibility store');
     parsed.releaseEvents = Array.isArray(parsed.releaseEvents) ? parsed.releaseEvents : [];
     return parsed;
-  } catch {
+  } catch (error) {
+    if (isLocalAdminFileMode) {
+      throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', 'Local Compatibility 文件状态无效；为避免覆盖 reviewed authority，已停止使用 seed 回退。');
+    }
     const seeded = buildSeedState();
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
     return seeded;
@@ -83,8 +87,16 @@ const appendReleaseEvent = (state: LocalCompatibilityState, event: ReleaseEventD
   state.releaseEvents = [event, ...(state.releaseEvents || [])].slice(0, 300);
 };
 
-const writeState = (state: LocalCompatibilityState) => {
+const writeState = async (state: LocalCompatibilityState) => {
   state.updatedAt = now();
+  if (isLocalAdminFileMode) {
+    await persistLocalAdminPartition('compatibility', state);
+    if (typeof window !== 'undefined') {
+      try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch (error) { console.warn('[local-admin-cache] Compatibility state persisted to file but browser cache update failed.', error); }
+    }
+    return;
+  }
   if (typeof window !== 'undefined') window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 };
 
@@ -207,7 +219,7 @@ export const localCompatibilityAdminStore = {
       predationTargets: [...input.predationTargets], confidence: input.confidence, status: 'draft',
       citationSnapshots: clone(input.citations), version: 1, species,
     };
-    state.profileRevisions.unshift(revision); writeState(state); return clone(revision);
+    state.profileRevisions.unshift(revision); await writeState(state); return clone(revision);
   },
 
   updateProfileRevision: async (id: string, version: number, input: Partial<CompatibilityProfileDraftInput>) => {
@@ -228,7 +240,7 @@ export const localCompatibilityAdminStore = {
       impactReport: undefined, regressionReport: undefined, evidenceResolution: undefined, impactCheckedAt: undefined,
       version: current.version + 1,
     };
-    state.profileRevisions[index] = next; writeState(state); return clone(next);
+    state.profileRevisions[index] = next; await writeState(state); return clone(next);
   },
 
   submitProfileRevision: async (id: string, version: number) => {
@@ -253,7 +265,7 @@ export const localCompatibilityAdminStore = {
     };
     state.profileRevisions[index] = next;
     appendReleaseEvent(state, { id: `local-compat-profile-submit:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_profile', eventType: 'profile_revision', status: next.status, title: 'Compatibility Profile 已提交审核', detail: `${next.species.name} · revision #${next.revisionNumber}`, resourceKey: next.species.catalogKey, version: next.version, occurredAt: now(), sourceRef: `local:compat-profile:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, baseVersion: next.baseProfileVersion, local: true } });
-    writeState(state); return clone(next);
+    await writeState(state); return clone(next);
   },
 
   reviewProfileRevision: async (id: string, raw: Parameters<typeof compatibilityRevisionReviewMutationSchema.parse>[0]) => {
@@ -272,7 +284,7 @@ export const localCompatibilityAdminStore = {
     };
     state.profileRevisions[index] = next;
     appendReleaseEvent(state, { id: `local-compat-profile-review:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_profile', eventType: 'profile_revision', status: next.status, title: input.decision === 'approve' ? 'Compatibility Profile 已批准' : 'Compatibility Profile 已驳回', detail: `${next.species.name} · revision #${next.revisionNumber}`, resourceKey: next.species.catalogKey, version: next.version, occurredAt: now(), sourceRef: `local:compat-profile:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, baseVersion: next.baseProfileVersion, decision: input.decision, local: true } });
-    writeState(state); return clone(next);
+    await writeState(state); return clone(next);
   },
 
   publishProfileRevision: async (id: string, version: number) => {
@@ -286,6 +298,7 @@ export const localCompatibilityAdminStore = {
     const baselineIndex = state.reviewedProfiles.findIndex(item => item.catalogKey === current.species.catalogKey);
     if (baselineIndex < 0) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed Profile baseline 不存在。');
     const baseline = state.reviewedProfiles[baselineIndex];
+    const previousRuntime = bootstrapFromState(state);
     state.reviewedProfiles[baselineIndex] = {
       catalogKey: current.species.catalogKey, behaviorTraits: [...current.behaviorTraits],
       minimumGroupSize: current.minimumGroupSize ?? undefined, predationTargets: [...current.predationTargets],
@@ -298,9 +311,13 @@ export const localCompatibilityAdminStore = {
     state.profileRevisions[updatedIndex] = next;
     state.authoritySequence += 1;
     const runtimeStatus = applyReviewedCompatibilityBootstrap(bootstrapFromState(state));
-    if (runtimeStatus.source !== 'reviewed-db') throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed runtime 未接受新的 Profile authority。');
+    if (runtimeStatus.source !== 'reviewed-db') {
+      applyReviewedCompatibilityBootstrap(previousRuntime);
+      throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed runtime 未接受新的 Profile authority。');
+    }
     appendReleaseEvent(state, { id: `local-compat-profile-publish:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_profile', eventType: 'profile_revision', status: 'published', title: 'Compatibility Profile reviewed authority 已发布', detail: `${next.species.name} · revision #${next.revisionNumber}`, resourceKey: next.species.catalogKey, version: next.version, occurredAt: now(), sourceRef: `local:compat-profile:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, authoritySequence: state.authoritySequence, local: true } });
-    writeState(state); return clone(next);
+    try { await writeState(state); } catch (error) { applyReviewedCompatibilityBootstrap(previousRuntime); throw error; }
+    return clone(next);
   },
 
   createPairRuleRevision: async (raw: CompatibilityPairRuleRevisionInput) => {
@@ -317,7 +334,7 @@ export const localCompatibilityAdminStore = {
       verdict: input.verdict, riskType: input.riskType, reason: input.reason, mitigation: [...input.mitigation], basis: input.basis,
       confidence: input.confidence, status: 'draft', citationSnapshots: clone(input.citations), version: 1, speciesA, speciesB,
     };
-    state.pairRevisions.unshift(revision); writeState(state); return clone(revision);
+    state.pairRevisions.unshift(revision); await writeState(state); return clone(revision);
   },
 
   updatePairRuleRevision: async (id: string, version: number, input: Partial<CompatibilityPairRuleRevisionInput>) => {
@@ -338,7 +355,7 @@ export const localCompatibilityAdminStore = {
       citationSnapshots: clone(parsed.citations), impactReport: undefined, regressionReport: undefined,
       evidenceResolution: undefined, impactCheckedAt: undefined, version: current.version + 1,
     };
-    state.pairRevisions[index] = next; writeState(state); return clone(next);
+    state.pairRevisions[index] = next; await writeState(state); return clone(next);
   },
 
   submitPairRuleRevision: async (id: string, version: number) => {
@@ -364,7 +381,7 @@ export const localCompatibilityAdminStore = {
     };
     state.pairRevisions[index] = next;
     appendReleaseEvent(state, { id: `local-compat-pair-submit:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_pair', eventType: 'pair_rule_revision', status: next.status, title: 'Compatibility Pair Rule 已提交审核', detail: `${next.speciesA.name} × ${next.speciesB.name} · revision #${next.revisionNumber}`, resourceKey: [next.speciesA.catalogKey, next.speciesB.catalogKey].sort().join('__'), version: next.version, occurredAt: now(), sourceRef: `local:compat-pair:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, baseVersion: next.baseRuleVersion, local: true } });
-    writeState(state); return clone(next);
+    await writeState(state); return clone(next);
   },
 
   reviewPairRuleRevision: async (id: string, raw: Parameters<typeof compatibilityRevisionReviewMutationSchema.parse>[0]) => {
@@ -383,7 +400,7 @@ export const localCompatibilityAdminStore = {
     };
     state.pairRevisions[index] = next;
     appendReleaseEvent(state, { id: `local-compat-pair-review:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_pair', eventType: 'pair_rule_revision', status: next.status, title: input.decision === 'approve' ? 'Compatibility Pair Rule 已批准' : 'Compatibility Pair Rule 已驳回', detail: `${next.speciesA.name} × ${next.speciesB.name} · revision #${next.revisionNumber}`, resourceKey: [next.speciesA.catalogKey, next.speciesB.catalogKey].sort().join('__'), version: next.version, occurredAt: now(), sourceRef: `local:compat-pair:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, baseVersion: next.baseRuleVersion, decision: input.decision, local: true } });
-    writeState(state); return clone(next);
+    await writeState(state); return clone(next);
   },
 
   publishPairRuleRevision: async (id: string, version: number) => {
@@ -398,6 +415,7 @@ export const localCompatibilityAdminStore = {
     const baselineIndex = state.reviewedPairRules.findIndex(item => pairKey(...item.catalogKeys) === key);
     if (baselineIndex < 0) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed Pair Rule baseline 不存在。');
     const baseline = state.reviewedPairRules[baselineIndex];
+    const previousRuntime = bootstrapFromState(state);
     state.reviewedPairRules[baselineIndex] = {
       catalogKeys: [...baseline.catalogKeys] as [string, string], verdict: current.verdict,
       riskType: current.riskType, reason: current.reason, mitigation: [...current.mitigation], basis: current.basis,
@@ -410,9 +428,13 @@ export const localCompatibilityAdminStore = {
     state.pairRevisions[updatedIndex] = next;
     state.authoritySequence += 1;
     const runtimeStatus = applyReviewedCompatibilityBootstrap(bootstrapFromState(state));
-    if (runtimeStatus.source !== 'reviewed-db') throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed runtime 未接受新的 Pair Rule authority。');
+    if (runtimeStatus.source !== 'reviewed-db') {
+      applyReviewedCompatibilityBootstrap(previousRuntime);
+      throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed runtime 未接受新的 Pair Rule authority。');
+    }
     appendReleaseEvent(state, { id: `local-compat-pair-publish:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_pair', eventType: 'pair_rule_revision', status: 'published', title: 'Compatibility Pair Rule reviewed authority 已发布', detail: `${next.speciesA.name} × ${next.speciesB.name} · revision #${next.revisionNumber}`, resourceKey: [next.speciesA.catalogKey, next.speciesB.catalogKey].sort().join('__'), version: next.version, occurredAt: now(), sourceRef: `local:compat-pair:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, authoritySequence: state.authoritySequence, local: true } });
-    writeState(state); return clone(next);
+    try { await writeState(state); } catch (error) { applyReviewedCompatibilityBootstrap(previousRuntime); throw error; }
+    return clone(next);
   },
 
   reset: () => {

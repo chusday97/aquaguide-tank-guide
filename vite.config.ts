@@ -5,6 +5,7 @@ import {defineConfig, loadEnv} from 'vite';
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  const apiPort = process.env.API_PORT || env.API_PORT || '8787';
   return {
     plugins: [react(), tailwindcss()],
     resolve: {
@@ -18,7 +19,7 @@ export default defineConfig(({mode}) => {
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
         '/api': {
-          target: `http://localhost:${env.API_PORT || '8787'}`,
+          target: `http://localhost:${apiPort}`,
           changeOrigin: true,
         },
       },
@@ -26,7 +27,7 @@ export default defineConfig(({mode}) => {
     preview: {
       proxy: {
         '/api': {
-          target: `http://localhost:${env.API_PORT || '8787'}`,
+          target: `http://localhost:${apiPort}`,
           changeOrigin: true,
         },
       },

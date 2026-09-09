@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Clock3, Database, Loader2, RefreshCw, Search, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { isSupabaseConfigured } from '../lib/supabaseClient';
+import { getLocalAdminPersistenceStatus, isLocalAdminFileMode } from '../services/admin/local-file-persistence';
 import {
   operationsWorkItemService,
   type OperationsHomeSnapshot,
@@ -40,6 +41,7 @@ export default function AdminHub() {
   const hiddenTaskCount = Math.max(0, snapshot.workItems.length - (primaryTask ? 1 : 0) - queueItems.length);
   const sourceProblems = useMemo(() => snapshot.sources.filter(source => source.availability !== 'ready'), [snapshot.sources]);
   const authRequired = sourceProblems.some(source => source.availability === 'auth_required');
+  const localPersistence = getLocalAdminPersistenceStatus();
 
   const open = (href: string) => {
     if (href.startsWith('/admin/')) navigate(href);
@@ -77,7 +79,7 @@ export default function AdminHub() {
         </section>
 
         <section id="operations-source-status" className="mt-4 scroll-mt-4 border border-slate-200 bg-white" data-testid="operations-source-status">
-          <div className="flex flex-wrap items-end justify-between gap-2 border-b border-slate-200 px-4 py-3"><div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Source status</div><h2 className="mt-0.5 text-base font-black">数据来源</h2></div>{!loading && sourceProblems.length > 0 && <span className="text-[11px] font-semibold text-ink/45">不可读来源不会生成假 0，也不会阻塞其它业务模块</span>}</div>
+          <div className="flex flex-wrap items-end justify-between gap-2 border-b border-slate-200 px-4 py-3"><div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Source status</div><h2 className="mt-0.5 text-base font-black">数据来源</h2></div><div className="flex flex-wrap items-center justify-end gap-2">{isLocalAdminFileMode && <span data-testid="operations-local-persistence" title={localPersistence.root || 'Local File root'} className={`border px-2 py-1 text-[11px] font-black ${localPersistence.mode === 'durable' ? 'border-emerald-200 text-emerald-700' : 'border-red-200 text-red-700'}`}>本地保存 · {localPersistence.mode === 'durable' ? '磁盘已持久化' : '持久化异常'}</span>}{!loading && sourceProblems.length > 0 && <span className="text-[11px] font-semibold text-ink/45">不可读来源不会生成假 0，也不会阻塞其它业务模块</span>}</div></div>
           <div className="grid md:grid-cols-3">{snapshot.sources.map(source => <div key={source.authority} data-testid={`operations-source-${source.authority}`} className="border-b border-slate-100 px-4 py-3 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0"><div className="flex items-center justify-between gap-3"><strong className="text-sm font-black">{source.label}</strong><span className={`text-[11px] font-black ${source.availability === 'ready' ? 'text-emerald-700' : 'text-ink/45'}`}>{source.availability === 'ready' ? '可读取' : source.availability === 'partial' ? '部分可读' : source.availability === 'auth_required' ? '需要登录' : source.availability === 'forbidden' ? '权限不足' : source.availability === 'schema_not_ready' ? '尚未启用' : '暂不可用'}</span></div><p className="mt-1 text-[11px] font-semibold leading-5 text-ink/45">{source.detail}</p></div>)}</div>
         </section>
 

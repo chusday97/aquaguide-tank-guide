@@ -14,6 +14,7 @@ import {
 } from '../../../packages/contracts/src';
 import { AquaGuideApiError } from '../api/api-client';
 import { localBusinessAdminStore } from './local-business-admin.store';
+import { isLocalAdminFileMode, persistLocalAdminPartition } from './local-file-persistence';
 
 const STORAGE_KEY = 'aquaguide-local-care-seo-editorial-v1';
 const now = () => new Date().toISOString();
@@ -39,14 +40,25 @@ const readState = (): LocalCareSeoState => {
     const parsed = JSON.parse(raw) as LocalCareSeoState;
     if (parsed?.schemaVersion !== 1 || !Array.isArray(parsed.revisions)) throw new Error('invalid local Care SEO store');
     return parsed;
-  } catch {
+  } catch (error) {
+    if (isLocalAdminFileMode) {
+      throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', 'Local Care SEO 文件状态无效；为避免覆盖 Editorial revision，已停止使用 seed 回退。');
+    }
     const state = seedState();
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
     return state;
   }
 };
-const writeState = (state: LocalCareSeoState) => {
+const writeState = async (state: LocalCareSeoState) => {
   state.updatedAt = now();
+  if (isLocalAdminFileMode) {
+    await persistLocalAdminPartition('care-seo', state);
+    if (typeof window !== 'undefined') {
+      try { window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+      catch (error) { console.warn('[local-admin-cache] Care SEO state persisted to file but browser cache update failed.', error); }
+    }
+    return;
+  }
   if (typeof window !== 'undefined') window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
 };
 
@@ -150,7 +162,7 @@ const saveDraft = async (id: string, raw: CareSeoEditorialDraftMutation): Promis
     if (current.sourceCareVersion !== projection.sourceCareVersion || current.locale !== input.locale) throw new AquaGuideApiError(409, 'VERSION_CONFLICT', '这份 SEO Draft 已发生 source drift；请基于最新 Published Care 新建 Draft。');
     if (current.version !== input.revisionVersion) throw new AquaGuideApiError(409, 'VERSION_CONFLICT', 'SEO Draft 已被更新，请刷新后重试。');
     state.revisions[index] = { ...current, seoTitle: input.seoTitle, metaDescription: input.metaDescription, h1: input.h1, focusKeyword: input.focusKeyword, indexStrategy: 'noindex', version: current.version + 1, updatedAt: now(), sourceDrift: false };
-    writeState(state);
+    await writeState(state);
     return getWorkspace(id, input.locale);
   }
   const sameSource = state.revisions.filter(item => item.sourceCareId === projection.sourceCareId && item.locale === input.locale && item.sourceCareVersion === projection.sourceCareVersion);
@@ -164,7 +176,7 @@ const saveDraft = async (id: string, raw: CareSeoEditorialDraftMutation): Promis
     metaDescription: input.metaDescription, h1: input.h1, focusKeyword: input.focusKeyword,
     sourceDrift: false, createdAt, updatedAt: createdAt,
   };
-  state.revisions.unshift(revision); writeState(state);
+  state.revisions.unshift(revision); await writeState(state);
   return getWorkspace(id, input.locale);
 };
 
@@ -189,7 +201,7 @@ const transition = async (id: string, raw: CareSeoEditorialTransitionMutation, a
     updatedAt: timestamp,
     ...(action === 'submit' ? { submittedAt: timestamp } : { approvedAt: timestamp }),
   };
-  writeState(state);
+  await writeState(state);
   return getWorkspace(id, input.locale);
 };
 

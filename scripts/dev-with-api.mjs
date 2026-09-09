@@ -14,7 +14,7 @@ const children = [
     stdio: 'inherit',
     env: { ...process.env, API_PORT: process.env.API_PORT || '8787' },
   }),
-  spawn(viteBin, ['--port=3000', '--host=0.0.0.0'], {
+  spawn(viteBin, [`--port=${process.env.WEB_PORT || '3000'}`, '--host=0.0.0.0', '--strictPort'], {
     cwd: rootDir,
     stdio: 'inherit',
     env: process.env,
