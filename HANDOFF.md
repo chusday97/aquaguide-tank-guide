@@ -666,6 +666,7 @@
 - 4198 当前只有一个 Node 监听（PID 34000），五个直接页面均返回 HTTP 200；静态 H1/本地资源门禁通过。
 - `test:html-freeze-matrix` 已运行，但系统 Chrome/Playwright 在本机因 MachPort SIGABRT 返回 `BROWSER_UNAVAILABLE`；没有真实视口截图和边界报告，因此仍不能声称视觉矩阵通过。
 - Manifest 状态继续为 `REVIEW_REQUIRED`；未获得用户/产品经理确认前，不生成 HTML Freeze、不回写 React。
+- 同一 Critic 已复验 `defad8b2`：collapsed/error 直达、Care 重试、TaskSurface 焦点和 manifest 内容快照语义均通过静态复验；唯一明确阻塞仍是 Chrome/MachPort 导致的真实视觉矩阵缺失。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。

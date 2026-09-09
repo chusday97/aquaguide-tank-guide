@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Fixed: 4198 结构复验后统一直接页状态属性，选择板运行时归入水景舞台，桌面详情改为应用网格中的 Rail，移动端保留单一 Sheet；矩阵统计覆盖所有辅助表面。真实 Chrome 视口矩阵仍因本机 MachPort 阻塞，状态继续为 REVIEW_REQUIRED。
+- Verified: 同一 Critic 复验确认图鉴折叠、养护错误重试、任务表面焦点和 manifest 内容快照语义已修复；真实五视口视觉证据仍待可用 Chrome/CUA 环境。
 
 - Fixed: 4198 HTML Freeze 首轮止损，移除未使用的重复 review CSS/脚本并统一直接页基础壳层；图鉴/养护详情打开时隐藏首层选择板，关闭后恢复；manifest 改为记录排除自身的 `contentSha256`。仅修改 HTML 评审包，未修改正式 React 或生产。
 

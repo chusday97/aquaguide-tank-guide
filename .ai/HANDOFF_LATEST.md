@@ -34,6 +34,7 @@ Create the 4198 combined HTML review package, then capture 390/600/1024/1440/192
 - Current 4198 cleanup is at `984a3f70`; direct pages now normalize `data-page`, move selection surfaces into the stage, use an app-level desktop grid rail, and count every `[data-surface]` in the matrix gate.
 - Only the canonical Node listener remains on port 4198; all five direct pages return HTTP 200 and static local-resource/H1 checks pass.
 - Real browser matrix remains blocked by local Chrome MachPort SIGABRT (`BROWSER_UNAVAILABLE`). Manifest stays `REVIEW_REQUIRED`; no Freeze or React rewrite is authorized.
+- Same Critic re-verified `defad8b2`: direct state entry, Care retry, TaskSurface focus and manifest content-snapshot semantics pass static review; only the real five-viewport browser evidence remains blocked.
 
 ## Verification evidence
 

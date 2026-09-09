@@ -818,3 +818,4 @@
 - [x] 独立 Critic 复验并指出状态属性、选择板归属、桌面 Rail 与矩阵统计缺口；`984a3f70` 已完成对应结构修复。
 - [x] 4198 只保留一个 Node 监听，五个直接页面 HTTP 200，静态 H1/本地资源门禁通过。
 - [ ] 真实 Chrome/CUA 视口矩阵仍被 MachPort `BROWSER_UNAVAILABLE` 阻塞；用户和产品经理签字、HTML Freeze、React 回写均保持暂停。
+- [x] 同一 Critic 复验 `defad8b2`：状态直达、Care 重试、任务焦点与 manifest 内容快照语义通过静态复验；不把缺失的真实视觉证据标为通过。
