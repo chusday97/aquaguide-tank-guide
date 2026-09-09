@@ -1,0 +1,230 @@
+{
+  "schemaVersion": 1,
+  "freezeVersion": "html-ui-freeze-v3",
+  "generatedAt": "2026-09-09T12:10:14.785Z",
+  "branch": "codex/project-authority-recovery-v1",
+  "gitSha": "52517328688a40c20b2ae6e503bec027dd4cce3d",
+  "references": {
+    "aquarium": "4196",
+    "collection": "4196",
+    "encyclopedia": "4197",
+    "care": "4197",
+    "compatibility": "4197"
+  },
+  "requiredViewports": [
+    390,
+    600,
+    1024,
+    1440,
+    1920
+  ],
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 1020,
+      "sha256": "955283a78f57af09c01a6ee2caa18376437b9d646c2ab166d9e95209078ad218"
+    },
+    {
+      "path": "assets/acclimation.webp",
+      "bytes": 48188,
+      "sha256": "504aa162413c8ba2bbd3d5764c8734ab4c80b37e9e0ea68ab25b0c850b5015c4"
+    },
+    {
+      "path": "assets/cardinal-tetra.png",
+      "bytes": 103405,
+      "sha256": "b604367fde5fb3941027ac0a3d9560a6bfec57f2b58c92682d93f8dd42d3f3f6"
+    },
+    {
+      "path": "assets/cardinal-tetra.webp",
+      "bytes": 23164,
+      "sha256": "b7b1340a6eadfa7818e03abeaf94315c3ddb8253b919b7d48ccb810486ef0cde"
+    },
+    {
+      "path": "assets/current-care-1440.png",
+      "bytes": 312664,
+      "sha256": "4c34e6197ae440aac6637fd9ddda89bcce7d3a530c0417c7ac981fc39d6e1467"
+    },
+    {
+      "path": "assets/current-care-390.png",
+      "bytes": 133350,
+      "sha256": "689fd8c4a11db748340ed3f93e7d2216a960be6dc70639060778e63d34b9fdda"
+    },
+    {
+      "path": "assets/current-encyclopedia-1440.png",
+      "bytes": 264097,
+      "sha256": "906b728070d6fca8ada128a76fad5ecb2246aa624cc77b21c413ae6cb3aed22e"
+    },
+    {
+      "path": "assets/current-encyclopedia-390.png",
+      "bytes": 92872,
+      "sha256": "cb42b009414e62d7b17aefb258c63c4ddb896604ebf085969d84ab938f1ccb11"
+    },
+    {
+      "path": "assets/neon-tetra.png",
+      "bytes": 93411,
+      "sha256": "6def7906424ca10542684de22eedf14c194fa44299a1f88addc3d3e872c80332"
+    },
+    {
+      "path": "assets/neon-tetra.webp",
+      "bytes": 21224,
+      "sha256": "03dc5e32b2a18b297eda9d18943e3a8afdeab5cb6437b2de12d975b20ccce5b4"
+    },
+    {
+      "path": "assets/oscar.png",
+      "bytes": 168960,
+      "sha256": "3f0d178c8804f7dbc1d3d48ede6a07fba8bb40d9120e20304269a78b6a14d05f"
+    },
+    {
+      "path": "assets/water-care.webp",
+      "bytes": 70210,
+      "sha256": "8705275b399a4ac99ea183d3d54fc3c29e460ff24b8dbed3ffd35e77012a8193"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6202,
+      "sha256": "a06baa6d6e3db8ca2e25507501975374a1145b5c7a64f3f1947c8cc59946a4a1"
+    },
+    {
+      "path": "pages/aquarium.html",
+      "bytes": 8854,
+      "sha256": "217f02ce73ce6400385bbba9ba08233ca0c5a5cadfc9a418c27a16a9977ba532"
+    },
+    {
+      "path": "pages/care.html",
+      "bytes": 3260,
+      "sha256": "5ba431d3836af1dd80bd72c67b9616774200a490d4faedd2ffcb38f74dd7b310"
+    },
+    {
+      "path": "pages/collection.html",
+      "bytes": 8303,
+      "sha256": "0c81e330f5ac298593c0851dd9549ff58f9fffa58b76471c6f15e1e44b37cc97"
+    },
+    {
+      "path": "pages/compatibility.html",
+      "bytes": 3053,
+      "sha256": "3ba09542429f844026d631187629aa060affaff0318f03e094459f0d840b1dc8"
+    },
+    {
+      "path": "pages/encyclopedia.html",
+      "bytes": 3227,
+      "sha256": "3cacfa0c9fd91f99f8cb14165770508a2700d5e663bf9bb98bdf4a31bc642443"
+    },
+    {
+      "path": "pages/search.html",
+      "bytes": 2152,
+      "sha256": "c8485cf1fa2b6c837b1e85eeba0fc29679c542d7c470c41f840c754003ae9b8e"
+    },
+    {
+      "path": "pages/settings.html",
+      "bytes": 2024,
+      "sha256": "165f902641caae8f7bb95ce67fb1a840c044d4c437a75b4d3db8a451293f6422"
+    },
+    {
+      "path": "review/current-problems.html",
+      "bytes": 1550,
+      "sha256": "2f0ac684e7176f7edc3b326d1d89f76e3613ad03e9f5f6782b637f506202d59e"
+    },
+    {
+      "path": "review/decision-checklist.html",
+      "bytes": 1725,
+      "sha256": "f816aa4c4f73ce573ab5eb5f98a34679d60c4221f4a0b2cba54415e84f391a63"
+    },
+    {
+      "path": "review/freeze-signoff.html",
+      "bytes": 2179,
+      "sha256": "1f171a956a52d8b545891930313136bcc9d9e27f078f78460696ba376abecbee"
+    },
+    {
+      "path": "shared/components.css",
+      "bytes": 41821,
+      "sha256": "8cc5aa26bef4363ce2b5be24952bd22fbab2e038dd0a94a908ebbfe16c34435f"
+    },
+    {
+      "path": "shared/demo-data.js",
+      "bytes": 1429,
+      "sha256": "90e75deefcd44a2290e8c38bfec0f765cb9efa8ab530f5acfd86c2955c2b3d7b"
+    },
+    {
+      "path": "shared/freeze-state.js",
+      "bytes": 1894,
+      "sha256": "014e449eb7027d5d7705f6872b527c32270daf132fb7b29dd7b542d37e78ebb8"
+    },
+    {
+      "path": "shared/interactions.js",
+      "bytes": 8029,
+      "sha256": "a0e741ad70f9f44b2be786e6baa709d83f97b1ed1c6eaeb6a44be9a72f0c6dd2"
+    },
+    {
+      "path": "shared/layout.css",
+      "bytes": 7758,
+      "sha256": "6c43f411fc3fe08faaefd6c4a65a20be8a3f30265f05725051c3990f322425be"
+    },
+    {
+      "path": "shared/prototype.js",
+      "bytes": 9716,
+      "sha256": "acd8877df5ea9ccd5d3481ca2555dd51881d906143617a279463841b240893f2"
+    },
+    {
+      "path": "shared/review-demo-data.js",
+      "bytes": 1955,
+      "sha256": "20dc8447b9acfe1d9eeeef16242e158a7a1602b7c8455a736b262ca84552ad0c"
+    },
+    {
+      "path": "shared/review-interactions.js",
+      "bytes": 6463,
+      "sha256": "056c168a413d44b954530ba1f7525eccbb0f7dc1213bdd835377fe0055fd6bfb"
+    },
+    {
+      "path": "shared/review-layout.css",
+      "bytes": 8575,
+      "sha256": "4696178e738f12d7650e005fda295fe880fe6e463a1b2e4ca0b8f642ebf759cc"
+    },
+    {
+      "path": "shared/tokens.css",
+      "bytes": 951,
+      "sha256": "35f0d8a136572934c6586b003f96c327ad927c875c71756b2f99c6f3d8026fdd"
+    }
+  ],
+  "pageChecks": [
+    {
+      "page": "aquarium",
+      "h1Count": 1,
+      "externalReferenceCount": 0,
+      "pass": true
+    },
+    {
+      "page": "collection",
+      "h1Count": 1,
+      "externalReferenceCount": 0,
+      "pass": true
+    },
+    {
+      "page": "encyclopedia",
+      "h1Count": 1,
+      "externalReferenceCount": 0,
+      "pass": true
+    },
+    {
+      "page": "care",
+      "h1Count": 1,
+      "externalReferenceCount": 0,
+      "pass": true
+    },
+    {
+      "page": "compatibility",
+      "h1Count": 1,
+      "externalReferenceCount": 0,
+      "pass": true
+    }
+  ],
+  "acceptance": {
+    "status": "REVIEW_REQUIRED",
+    "blocks": [
+      "aquarium-stage",
+      "collection-overview",
+      "encyclopedia-flow",
+      "care-flow",
+      "compatibility-board"
+    ]
+  }
+}
