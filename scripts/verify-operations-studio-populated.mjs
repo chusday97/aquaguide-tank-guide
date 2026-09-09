@@ -51,11 +51,15 @@ const profile = {
   species: { catalogKey: 'fixture-guppy', name: 'Fixture Guppy', scientificName: 'Poecilia reticulata' },
 };
 const envelope = data => JSON.stringify({ data, requestId: 'fixture-request' });
+const errorEnvelope = (code, message) => JSON.stringify({ error: { code, message }, requestId: 'fixture-request' });
 const releaseFeed = { events: [], sources: [], capabilities: [], permissions: [] };
-const installFixtureRoutes = async context => {
+const installFixtureRoutes = async (context, { adminAccess = 'ready' } = {}) => {
   await context.route('**/*', async route => {
     const url = new URL(route.request().url());
     const path = url.pathname;
+    if (adminAccess === 'forbidden' && path.startsWith('/api/v1/admin/')) {
+      return route.fulfill({ status: 403, contentType: 'application/json', body: errorEnvelope('FORBIDDEN', '没有内容管理权限。') });
+    }
     if (path === '/api/v1/content-bootstrap') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ species: [], careArticles: [], authority: 'publication-snapshot', publicationCounts: { species: 0, care: 0 } }) });
     if (path === '/api/v1/compatibility-bootstrap') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ profiles: [], pairRules: [], authority: 'reviewed-db', counts: { profiles: 0, pairRules: 0 } }) });
     if (path === '/api/v1/profile') return route.fulfill({ status: 200, contentType: 'application/json', body: envelope({ version: 1, preferences: {} }) });
@@ -78,6 +82,55 @@ const installFixtureSession = async context => {
     user: { id: 'fixture-user', aud: 'authenticated', role: 'authenticated', email: 'fixture@example.test', app_metadata: {}, user_metadata: {}, created_at: new Date().toISOString() },
   })));
 };
+const runAuthRequired = async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installFixtureRoutes(context);
+    const page = await context.newPage();
+    const pageErrors = [];
+    page.on('pageerror', error => pageErrors.push(String(error)));
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    const productSource = page.getByTestId('operations-source-product_care');
+    const compatibilitySource = page.getByTestId('operations-source-compatibility');
+    await productSource.getByText('需要登录', { exact: true }).waitFor({ timeout: 10000 });
+    await compatibilitySource.getByText('需要登录', { exact: true }).waitFor({ timeout: 10000 });
+    assert.match(await productSource.innerText(), /Business Admin 会话/);
+    assert.match(await compatibilitySource.innerText(), /Business Admin 会话/);
+    assert.doesNotMatch(await productSource.innerText(), /暂不可用/);
+    assert.doesNotMatch(await compatibilitySource.innerText(), /暂不可用/);
+    assert.deepEqual(pageErrors, [], 'auth-required state must not produce page errors.');
+    return { authRequired: 'Product/Care + Compatibility PASS' };
+  } finally {
+    await browser.close();
+  }
+};
+
+const runForbidden = async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+    await installFixtureSession(context);
+    await installFixtureRoutes(context, { adminAccess: 'forbidden' });
+    const page = await context.newPage();
+    const pageErrors = [];
+    page.on('pageerror', error => pageErrors.push(String(error)));
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    const productSource = page.getByTestId('operations-source-product_care');
+    const compatibilitySource = page.getByTestId('operations-source-compatibility');
+    await productSource.getByText('权限不足', { exact: true }).waitFor({ timeout: 10000 });
+    await compatibilitySource.getByText('权限不足', { exact: true }).waitFor({ timeout: 10000 });
+    assert.match(await productSource.innerText(), /没有 Business Admin 内容管理权限/);
+    assert.match(await compatibilitySource.innerText(), /没有 Compatibility 管理权限/);
+    assert.doesNotMatch(await productSource.innerText(), /暂不可用/);
+    assert.doesNotMatch(await compatibilitySource.innerText(), /暂不可用/);
+    assert.deepEqual(pageErrors, [], 'forbidden state must not produce page errors.');
+    return { forbidden: 'Product/Care + Compatibility PASS' };
+  } finally {
+    await browser.close();
+  }
+};
+
 const run = async (viewport, label) => {
   const browser = await chromium.launch({ headless: true });
   try {
@@ -123,11 +176,13 @@ const run = async (viewport, label) => {
 
 try {
   await waitForServer();
+  const authRequired = await runAuthRequired();
+  const forbidden = await runForbidden();
   const results = [
     await run({ width: 1440, height: 900 }, 'desktop'),
     await run({ width: 390, height: 844 }, 'mobile'),
   ];
-  console.log(JSON.stringify({ gate: 'PASS', results }));
+  console.log(JSON.stringify({ gate: 'PASS', authRequired, forbidden, results }));
 } finally {
   server.kill('SIGTERM');
 }

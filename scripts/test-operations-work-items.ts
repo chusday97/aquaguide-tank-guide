@@ -1,6 +1,17 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { buildCompatibilityWorkItems, buildContentWorkItems, buildSeoWorkItems, sortOperationsWorkItems } from '../src/services/admin/operations-work-item.service';
+import { buildCompatibilityWorkItems, buildContentWorkItems, buildSeoWorkItems, classifyOperationsReadResults, sortOperationsWorkItems } from '../src/services/admin/operations-work-item.service';
+import { AquaGuideApiError } from '../src/services/api/api-client';
+
+const authRequired = new AquaGuideApiError(401, 'AUTH_REQUIRED', '请先登录。');
+const forbidden = new AquaGuideApiError(403, 'FORBIDDEN', '没有内容管理权限。');
+const serviceFailure = new AquaGuideApiError(503, 'INTERNAL_ERROR', '来源暂不可用。');
+assert.equal(classifyOperationsReadResults([]), 'unavailable', 'An empty read set must never imply a healthy authority.');
+assert.equal(classifyOperationsReadResults([{ status: 'fulfilled' }, { status: 'fulfilled' }]), 'ready');
+assert.equal(classifyOperationsReadResults([{ status: 'fulfilled' }, { status: 'rejected', reason: authRequired }]), 'partial');
+assert.equal(classifyOperationsReadResults([{ status: 'rejected', reason: authRequired }, { status: 'rejected', reason: authRequired }]), 'auth_required', '401 Business Admin reads must not be mislabeled as service unavailable.');
+assert.equal(classifyOperationsReadResults([{ status: 'rejected', reason: forbidden }, { status: 'rejected', reason: forbidden }]), 'forbidden', '403 admin-role failures must not be mislabeled as service unavailable.');
+assert.equal(classifyOperationsReadResults([{ status: 'rejected', reason: serviceFailure }, { status: 'rejected', reason: serviceFailure }]), 'unavailable', 'Actual source failures must remain unavailable.');
 
 const seo = buildSeoWorkItems({
   entries: [
