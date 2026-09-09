@@ -33,10 +33,61 @@ type LocalFileStateEnvelope = {
   state: unknown;
 };
 
+export type LocalAdminIntegrityIssue = {
+  severity: 'error' | 'warning';
+  code: string;
+  message: string;
+};
+export type LocalAdminIntegrityReport = {
+  healthy: boolean;
+  checkedAt: string;
+  partitions: Record<LocalAdminPartition, boolean>;
+  assets: { referenced: number; metadata: number; blobs: number; orphaned: number };
+  issues: LocalAdminIntegrityIssue[];
+};
+export type LocalAdminBackupSummary = {
+  backupFormatVersion: number;
+  localFileFormatVersion: number;
+  id: string;
+  createdAt: string;
+  reason: string;
+  healthyAtBackup: boolean;
+  errorCount: number;
+  warningCount: number;
+};
+export type LocalAdminSafetySnapshot = {
+  integrity: LocalAdminIntegrityReport;
+  backups: LocalAdminBackupSummary[];
+};
+
 let status: 'browser-only' | 'hydrating' | 'durable' | 'unavailable' = isLocalAdminFileMode ? 'hydrating' : 'browser-only';
 let rootPath = '';
 
 export const getLocalAdminPersistenceStatus = () => ({ mode: status, root: rootPath });
+
+export const getLocalAdminSafetySnapshot = async (): Promise<LocalAdminSafetySnapshot | null> => {
+  if (!isLocalAdminFileMode) return null;
+  const [integrity, backups] = await Promise.all([
+    apiRequest<LocalAdminIntegrityReport>('/local-admin/integrity', { authenticated: false }),
+    apiRequest<{ backups: LocalAdminBackupSummary[] }>('/local-admin/backups', { authenticated: false }),
+  ]);
+  return { integrity, backups: backups.backups };
+};
+
+export const createLocalAdminBackup = async (reason = 'manual') => {
+  if (!isLocalAdminFileMode) throw new AquaGuideApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Local File Mode 未启用。');
+  return apiRequest<LocalAdminBackupSummary>('/local-admin/backups', {
+    method: 'POST', authenticated: false, body: { reason },
+  });
+};
+
+export const restoreLocalAdminBackup = async (backupId: string) => {
+  if (!isLocalAdminFileMode) throw new AquaGuideApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Local File Mode 未启用。');
+  return apiRequest<{ backupId: string; safetyBackupId: string; integrity: LocalAdminIntegrityReport }>(
+    `/local-admin/backups/${encodeURIComponent(backupId)}/restore`,
+    { method: 'POST', authenticated: false },
+  );
+};
 
 export const persistLocalAdminPartition = async (partition: LocalAdminPartition, state: unknown) => {
   if (!isLocalAdminFileMode) return;

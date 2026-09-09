@@ -73,7 +73,13 @@ const stopLocalAdmin = async () => {
   child = null;
 };
 
-const readJson = async name => JSON.parse(await readFile(path.join(root, `${name}.json`), 'utf8'));
+const readState = async name => {
+  const envelope = JSON.parse(await readFile(path.join(root, `${name}.json`), 'utf8'));
+  assert.equal(envelope.localFileFormatVersion, 1);
+  assert.equal(envelope.partition, name);
+  assert.equal(envelope.stateSchemaVersion, envelope.state.schemaVersion);
+  return envelope.state;
+};
 const browser = await chromium.launch({ headless: true });
 
 try {
@@ -109,16 +115,40 @@ try {
   await persistence.waitFor();
   assert.match(await persistence.innerText(), /磁盘已持久化/);
   assert.equal(await persistence.getAttribute('title'), root);
+  const safety = page.getByTestId('operations-local-safety');
+  await safety.waitFor();
+  await page.waitForFunction(() => document.querySelector('[data-testid="operations-local-integrity"]')?.textContent?.includes('数据完整'));
+  await page.getByTestId('operations-create-backup').click();
+  await page.waitForFunction(() => {
+    const button = document.querySelector('[data-testid="operations-restore-backup"]');
+    return button instanceof HTMLButtonElement && !button.disabled;
+  });
+  assert.match(await safety.innerText(), /最近备份/);
+
+  const afterBackupMarker = '【After backup mutation】';
+  await page.goto(`${baseUrl}/admin/product-content?type=species&id=local-species-sp_0001`, { waitUntil: 'networkidle' });
+  const changedDescription = page.locator('label:has-text("物种说明") textarea').first();
+  await changedDescription.fill(`${await changedDescription.inputValue()}${afterBackupMarker}`);
+  await page.getByRole('button', { name: '保存修改', exact: true }).click();
+  await page.waitForFunction(() => document.querySelector('form')?.textContent?.includes('草稿'));
+  await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByTestId('operations-restore-backup').click();
+  await page.waitForLoadState('networkidle');
+  await page.goto(`${baseUrl}/admin/product-content?type=species&id=local-species-sp_0001`, { waitUntil: 'networkidle' });
+  const restoredDescription = await page.locator('label:has-text("物种说明") textarea').first().inputValue();
+  assert.ok(restoredDescription.endsWith(marker));
+  assert.doesNotMatch(restoredDescription, /After backup mutation/);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0);
   assert.deepEqual(errors, []);
 
-  const business = await readJson('business');
+  const business = await readState('business');
   const species = business.species.find(item => item.catalogKey === 'sp_0001');
   assert.ok(species.description.endsWith(marker));
   assert.equal(species.speciesAssets.find(asset => asset.isCurrent).storageBucket, 'local-file');
-  const compatibility = await readJson('compatibility');
+  const compatibility = await readState('compatibility');
   assert.equal(compatibility.profileRevisions[0].minimumGroupSize, 8);
-  const careSeo = await readJson('care-seo');
+  const careSeo = await readState('care-seo');
   assert.equal(careSeo.revisions[0].reviewState, 'draft');
 
   await context.close();
@@ -150,7 +180,7 @@ try {
   assert.deepEqual(restartErrors, []);
   await context.close();
 
-  console.log('PASS durable Local File Admin: Product + asset + Compatibility + Care SEO survive full server restart and fresh browser context.');
+  console.log('PASS durable Local File Admin: versioned disk state + Product/asset/Compatibility/Care SEO + one-click backup/restore survive full restart.');
 } finally {
   await stopLocalAdmin().catch(() => undefined);
   await browser.close();

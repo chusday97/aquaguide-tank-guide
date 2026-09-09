@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { ArrowLeft, Clock3, Database, Loader2, RefreshCw, Search, ShieldCheck } from 'lucide-react';
+import { ArchiveRestore, ArrowLeft, Clock3, Database, HardDriveDownload, Loader2, RefreshCw, Search, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { isSupabaseConfigured } from '../lib/supabaseClient';
-import { getLocalAdminPersistenceStatus, isLocalAdminFileMode } from '../services/admin/local-file-persistence';
+import { createLocalAdminBackup, getLocalAdminPersistenceStatus, getLocalAdminSafetySnapshot, isLocalAdminFileMode, restoreLocalAdminBackup, type LocalAdminSafetySnapshot } from '../services/admin/local-file-persistence';
 import {
   operationsWorkItemService,
   type OperationsHomeSnapshot,
@@ -28,6 +28,9 @@ export default function AdminHub() {
   const [snapshot, setSnapshot] = useState<OperationsHomeSnapshot>(emptySnapshot);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [localSafety, setLocalSafety] = useState<LocalAdminSafetySnapshot | null>(null);
+  const [safetyBusy, setSafetyBusy] = useState<'backup' | 'restore' | ''>('');
+  const [safetyMessage, setSafetyMessage] = useState('');
 
   const load = async () => {
     setLoading(true); setError('');
@@ -36,12 +39,50 @@ export default function AdminHub() {
     finally { setLoading(false); }
   };
   useEffect(() => { void load(); }, []);
+  useEffect(() => {
+    if (!isLocalAdminFileMode) return;
+    void getLocalAdminSafetySnapshot()
+      .then(snapshot => setLocalSafety(snapshot))
+      .catch(cause => setSafetyMessage(cause instanceof Error ? cause.message : '本地数据安全状态暂时无法读取。'));
+  }, []);
   const primaryTask = snapshot.workItems[0] || null;
   const queueItems = snapshot.workItems.slice(primaryTask ? 1 : 0, 12);
   const hiddenTaskCount = Math.max(0, snapshot.workItems.length - (primaryTask ? 1 : 0) - queueItems.length);
   const sourceProblems = useMemo(() => snapshot.sources.filter(source => source.availability !== 'ready'), [snapshot.sources]);
   const authRequired = sourceProblems.some(source => source.availability === 'auth_required');
   const localPersistence = getLocalAdminPersistenceStatus();
+  const latestBackup = localSafety?.backups[0] || null;
+  const safetyErrorCount = localSafety?.integrity.issues.filter(issue => issue.severity === 'error').length || 0;
+  const safetyWarningCount = localSafety?.integrity.issues.filter(issue => issue.severity === 'warning').length || 0;
+
+  const refreshLocalSafety = async () => {
+    const next = await getLocalAdminSafetySnapshot();
+    setLocalSafety(next);
+    return next;
+  };
+  const createBackup = async () => {
+    setSafetyBusy('backup'); setSafetyMessage('');
+    try {
+      const backup = await createLocalAdminBackup('operations-home-manual');
+      await refreshLocalSafety();
+      setSafetyMessage(`已备份 · ${new Date(backup.createdAt).toLocaleString('zh-CN', { hour12: false })}`);
+    } catch (cause) {
+      setSafetyMessage(cause instanceof Error ? cause.message : '本地备份没有完成。');
+    } finally { setSafetyBusy(''); }
+  };
+  const restoreLatestBackup = async () => {
+    if (!latestBackup) return;
+    const label = new Date(latestBackup.createdAt).toLocaleString('zh-CN', { hour12: false });
+    if (!window.confirm(`恢复 ${label} 的本地备份？恢复前会自动保存当前状态，恢复完成后页面会重新载入。`)) return;
+    setSafetyBusy('restore'); setSafetyMessage('');
+    try {
+      await restoreLocalAdminBackup(latestBackup.id);
+      window.location.reload();
+    } catch (cause) {
+      setSafetyMessage(cause instanceof Error ? cause.message : '本地恢复没有完成。');
+      setSafetyBusy('');
+    }
+  };
 
   const open = (href: string) => {
     if (href.startsWith('/admin/')) navigate(href);
@@ -81,6 +122,7 @@ export default function AdminHub() {
         <section id="operations-source-status" className="mt-4 scroll-mt-4 border border-slate-200 bg-white" data-testid="operations-source-status">
           <div className="flex flex-wrap items-end justify-between gap-2 border-b border-slate-200 px-4 py-3"><div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Source status</div><h2 className="mt-0.5 text-base font-black">数据来源</h2></div><div className="flex flex-wrap items-center justify-end gap-2">{isLocalAdminFileMode && <span data-testid="operations-local-persistence" title={localPersistence.root || 'Local File root'} className={`border px-2 py-1 text-[11px] font-black ${localPersistence.mode === 'durable' ? 'border-emerald-200 text-emerald-700' : 'border-red-200 text-red-700'}`}>本地保存 · {localPersistence.mode === 'durable' ? '磁盘已持久化' : '持久化异常'}</span>}{!loading && sourceProblems.length > 0 && <span className="text-[11px] font-semibold text-ink/45">不可读来源不会生成假 0，也不会阻塞其它业务模块</span>}</div></div>
           <div className="grid md:grid-cols-3">{snapshot.sources.map(source => <div key={source.authority} data-testid={`operations-source-${source.authority}`} className="border-b border-slate-100 px-4 py-3 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0"><div className="flex items-center justify-between gap-3"><strong className="text-sm font-black">{source.label}</strong><span className={`text-[11px] font-black ${source.availability === 'ready' ? 'text-emerald-700' : 'text-ink/45'}`}>{source.availability === 'ready' ? '可读取' : source.availability === 'partial' ? '部分可读' : source.availability === 'auth_required' ? '需要登录' : source.availability === 'forbidden' ? '权限不足' : source.availability === 'schema_not_ready' ? '尚未启用' : '暂不可用'}</span></div><p className="mt-1 text-[11px] font-semibold leading-5 text-ink/45">{source.detail}</p></div>)}</div>
+          {isLocalAdminFileMode && <div data-testid="operations-local-safety" className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 px-4 py-3"><div className="min-w-0"><div className="flex flex-wrap items-center gap-x-3 gap-y-1"><strong className="text-xs font-black">本地数据安全</strong><span data-testid="operations-local-integrity" className={`text-[11px] font-black ${localSafety?.integrity.healthy ? 'text-emerald-700' : localSafety ? 'text-red-700' : 'text-ink/40'}`}>{localSafety ? localSafety.integrity.healthy ? `数据完整${safetyWarningCount ? ` · ${safetyWarningCount} 个提醒` : ''}` : `${safetyErrorCount} 个完整性错误` : '正在检查…'}</span><span className="text-[11px] font-semibold text-ink/40">{latestBackup ? `最近备份 ${new Date(latestBackup.createdAt).toLocaleString('zh-CN', { hour12: false })}` : '尚无备份'}</span></div><p className="mt-1 truncate text-[10px] font-semibold text-ink/35" title={localPersistence.root}>{safetyMessage || localPersistence.root || '.local/aqua-admin'}</p></div><div className="flex shrink-0 gap-2"><button type="button" data-testid="operations-create-backup" onClick={() => void createBackup()} disabled={Boolean(safetyBusy) || !localSafety?.integrity.healthy} className="flex h-9 items-center gap-2 border border-slate-200 bg-white px-3 text-[11px] font-black text-ink/65 disabled:cursor-not-allowed disabled:opacity-40"><HardDriveDownload className="h-3.5 w-3.5" />{safetyBusy === 'backup' ? '备份中…' : '备份当前数据'}</button><button type="button" data-testid="operations-restore-backup" onClick={() => void restoreLatestBackup()} disabled={Boolean(safetyBusy) || !latestBackup} className="flex h-9 items-center gap-2 border border-slate-200 bg-white px-3 text-[11px] font-black text-ink/65 disabled:cursor-not-allowed disabled:opacity-40"><ArchiveRestore className="h-3.5 w-3.5" />{safetyBusy === 'restore' ? '恢复中…' : '恢复最近备份'}</button></div></div>}
         </section>
 
         <section className="mt-4 border border-slate-200 bg-white" data-testid="operations-workspaces">

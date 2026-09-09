@@ -26,6 +26,8 @@ on:
       - 'scripts/test-admin-content-impact.ts'
       - 'scripts/test-admin-login-contract.ts'
       - 'scripts/test-local-admin-mode-contract.ts'
+      - 'scripts/test-local-file-admin.ts'
+      - 'scripts/verify-local-file-admin.mjs'
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
@@ -91,6 +93,8 @@ on:
       - 'scripts/test-admin-content-impact.ts'
       - 'scripts/test-admin-login-contract.ts'
       - 'scripts/test-local-admin-mode-contract.ts'
+      - 'scripts/test-local-file-admin.ts'
+      - 'scripts/verify-local-file-admin.mjs'
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
@@ -199,6 +203,8 @@ jobs:
         run: npm run test:admin-login-contract
       - name: Local Admin DEV-only routing contract
         run: npm run test:local-admin-mode-contract
+      - name: Durable Local File format and backup contract
+        run: npm run test:local-file-admin
       - name: Runtime compatibility authority contract
         run: npm run test:runtime-compatibility-authority
       - name: Business API TypeScript check
