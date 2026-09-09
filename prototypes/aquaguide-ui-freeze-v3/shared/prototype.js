@@ -150,6 +150,9 @@
   });
   const params = new URLSearchParams(window.location.search);
   const page = root();
+  document.querySelectorAll('[data-open]').forEach((opener, index) => {
+    if (!opener.id) opener.id = `review-trigger-${page?.dataset.page || 'page'}-${index + 1}`;
+  });
   document.querySelectorAll('img[src*="neon-tetra.webp"], img[src*="cardinal-tetra.webp"]').forEach((image) => {
     image.src = image.src.replace('neon-tetra.webp', 'neon-tetra.png').replace('cardinal-tetra.webp', 'cardinal-tetra.png');
   });

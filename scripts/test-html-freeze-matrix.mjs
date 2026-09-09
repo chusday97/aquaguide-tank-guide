@@ -49,7 +49,7 @@ for (const [name, path] of pages) {
         header,
         media,
         headerMediaOverlap: overlap,
-        surfaceCount: ['[data-surface="detail"]', '[data-surface="task"]', '[data-surface="media"]'].filter(visible).length,
+        surfaceCount: await page.locator('[data-surface]').evaluateAll((nodes) => nodes.filter((node) => !node.hidden && getComputedStyle(node).display !== 'none').length),
       };
     });
     await page.screenshot({ path: join(outputDir, `${name}-${width}.png`), fullPage: true });

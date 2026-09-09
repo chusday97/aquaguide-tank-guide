@@ -30,6 +30,18 @@ function closeSurface() {
   focusBack();
 }
 
+function normalizeDirectPage() {
+  document.body.dataset.page ||= document.body.dataset.reviewPage || '';
+  const app = q('.app');
+  const stage = q('[data-ui-block$="stage"], .stage');
+  const trays = qa('[data-variant-tray], [data-care-tray]');
+  trays.forEach((tray) => { tray.classList.add('stage-selection-panel'); if (stage && tray.parentElement !== stage) stage.append(tray); });
+  qa('[data-surface]').forEach((surface) => {
+    surface.classList.add('review-page-surface');
+    if (app && surface.parentElement !== app) app.append(surface);
+  });
+}
+
 function openDetail(item, trigger) {
   state.focus = trigger?.id || null; state.surface = 'detail'; state.selected = item.id;
   qa('[data-surface]').forEach((el) => { el.hidden = true; el.classList.remove('is-open'); });
@@ -97,4 +109,16 @@ function bindCompatibility() {
   qa('[data-demo-action]').forEach((button) => button.addEventListener('click', () => { button.textContent = button.closest('[data-result="block"]') ? '已保留阻断 · 不会保存' : '组合已更新 · 不会保存'; button.disabled = true; }));
 }
 
-document.addEventListener('DOMContentLoaded', () => { bindCommon(); bindEncyclopedia(); bindCare(); bindCompatibility(); });
+document.addEventListener('DOMContentLoaded', () => {
+  normalizeDirectPage();
+  bindCommon(); bindEncyclopedia(); bindCare(); bindCompatibility();
+  const params = new URLSearchParams(window.location.search);
+  const page = document.body.dataset.page;
+  const requestedState = params.get('state');
+  if (page === 'encyclopedia' && requestedState === 'variant-selection') renderVariants('宝莲灯');
+  if (page === 'encyclopedia' && requestedState === 'detail') { renderVariants('宝莲灯'); q('#variant-cardinal')?.click(); }
+  if (page === 'care' && requestedState === 'detail') { renderCareCards('water'); q('#problem-water-cloudy')?.click(); }
+  if (page === 'compatibility' && ['safe','adjust','block','unknown'].includes(requestedState)) {
+    q(`[data-result-state="${requestedState}"]`)?.click();
+  }
+});
