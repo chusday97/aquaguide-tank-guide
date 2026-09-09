@@ -41,7 +41,13 @@ export type OperationsHomeSnapshot = {
 };
 
 const priority: Record<OperationsSeverity, number> = { blocker: 0, decision: 1, attention: 2, ready: 3, info: 4 };
-export const sortOperationsWorkItems = (items: OperationsWorkItem[]) => [...items].sort((a, b) => priority[a.severity] - priority[b.severity] || b.count - a.count);
+const attentionAuthorityPriority: Record<OperationsAuthority, number> = { product_care: 0, compatibility: 1, seo: 2 };
+const withinSeverityPriority = (item: OperationsWorkItem) => item.severity === 'attention' ? attentionAuthorityPriority[item.authority] : 0;
+export const sortOperationsWorkItems = (items: OperationsWorkItem[]) => [...items].sort((a, b) =>
+  priority[a.severity] - priority[b.severity]
+  || withinSeverityPriority(a) - withinSeverityPriority(b)
+  || b.count - a.count
+);
 
 export type OperationsReadResult = { status: 'fulfilled' } | { status: 'rejected'; reason: unknown };
 

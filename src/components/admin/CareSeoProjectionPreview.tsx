@@ -4,6 +4,7 @@ import type { CareSeoAiAssistDto, CareSeoEditorialWorkspaceDto, SupportedLocale 
 import { useToast } from '../common/ToastProvider';
 import { AquaGuideApiError } from '../../services/api/api-client';
 import { contentAdminService } from '../../services/admin/content-admin.service';
+import { isLocalBusinessAdminMode } from '../../services/admin/local-business-admin.store';
 
 type Props = {
   careId: string;
@@ -150,7 +151,7 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
       </div>
 
       <div className="mt-3 flex gap-2" aria-label="Care SEO locale">
-        {(['zh-CN', 'en'] as SupportedLocale[]).map(item => <button key={item} type="button" disabled={busy} onClick={() => setLocale(item)} className={`h-9 rounded-full px-3 text-xs font-black ${locale === item ? 'bg-violet-700 text-white' : 'border border-violet-200 bg-white text-violet-700'}`}>{item === 'zh-CN' ? '中文' : 'English'}</button>)}
+        {(['zh-CN', 'en'] as SupportedLocale[]).map(item => <button key={item} type="button" disabled={busy || (isLocalBusinessAdminMode && item === 'en')} onClick={() => setLocale(item)} className={`h-9 rounded-full px-3 text-xs font-black ${locale === item ? 'bg-violet-700 text-white' : 'border border-violet-200 bg-white text-violet-700'}`}>{item === 'zh-CN' ? '中文' : isLocalBusinessAdminMode ? 'English（待接入）' : 'English'}</button>)}
       </div>
 
       {!workspace.persistenceAvailable && <div className="mt-4 flex gap-2 rounded-[14px] border border-amber-200 bg-amber-50 p-3 text-xs font-bold leading-5 text-amber-950"><ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" /><span>当前环境尚未应用 Care SEO Editorial migration，因此这里只读展示 Published projection；不会降级写入其他 authority。</span></div>}
@@ -170,7 +171,7 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
             <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] text-indigo-700"><Sparkles className="h-4 w-4" />AI Assist · suggestion only</div>
             <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">只读取当前 Published Care v{projection.sourceCareVersion}。AI 可以提取搜索意图、指出冲突并建议 SEO 文案，但不能修改 Care facts、审批或发布。</p>
           </div>
-          <button type="button" disabled={aiBusy || busy} onClick={() => void runAiAssist()} className="flex h-9 items-center gap-2 rounded-full bg-indigo-700 px-3 text-xs font-black text-white disabled:opacity-50">{aiBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}{aiBusy ? 'AI 分析中…' : aiAssist ? '重新生成 AI 建议' : 'AI 分析并建议草稿'}</button>
+          <button type="button" disabled={aiBusy || busy || isLocalBusinessAdminMode} onClick={() => void runAiAssist()} className="flex h-9 items-center gap-2 rounded-full bg-indigo-700 px-3 text-xs font-black text-white disabled:opacity-50">{aiBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}{isLocalBusinessAdminMode ? 'Local AI 未接入' : aiBusy ? 'AI 分析中…' : aiAssist ? '重新生成 AI 建议' : 'AI 分析并建议草稿'}</button>
         </div>
         {aiAssist && <div className="mt-3 grid gap-3">
           <div className="grid gap-2 md:grid-cols-2">

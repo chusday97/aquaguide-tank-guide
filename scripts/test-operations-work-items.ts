@@ -18,15 +18,17 @@ const seo = buildSeoWorkItems({
     { pageKey: 'species:a:zh', sourceKey: 'a', label: 'A', locale: 'zh-CN', editorHref: '/admin/seo/?catalogKey=a', health: { severity: 'blocked', issues: ['index_strategy_unknown', 'missing_h1'] }, editorialState: 'editing' },
     { pageKey: 'species:b:en', sourceKey: 'b', label: 'B', locale: 'en', editorHref: '/admin/seo/?catalogKey=b', health: { severity: 'attention', issues: ['missing_editorial_review'] }, editorialState: 'ready_for_review' },
     { pageKey: 'species:c:zh', sourceKey: 'c', label: 'C', locale: 'zh-CN', editorHref: '/admin/seo/?catalogKey=c', health: { severity: 'unknown', issues: ['source_state_unknown'] }, editorialState: 'unknown' },
+    { pageKey: 'species:d:zh', sourceKey: 'd', label: 'D', locale: 'zh-CN', editorHref: '/admin/seo/?catalogKey=d', health: { severity: 'attention', issues: ['index_strategy_unknown'] }, editorialState: 'editing' },
   ] as any,
   sources: [],
 });
-assert.equal(seo.length, 2, 'Unknown source state must not become a work item.');
+assert.equal(seo.length, 3, 'Unknown source state must not become a work item.');
 assert.equal(seo[0]?.id, 'seo:species:a:zh:blocked');
 assert.equal(seo[0]?.href, '/admin/seo/?catalogKey=a');
 assert.equal(seo[0]?.gateLabel, '缺少 H1', 'Blocked SEO must surface the actual hard blocker before softer issues.');
 assert.match(seo[0]?.nextStep || '', /补齐 H1/);
 assert.equal(seo[1]?.severity, 'decision');
+assert.equal(seo[2]?.severity, 'attention');
 
 const content = buildContentWorkItems(
   [{ id: 'sp1', status: 'draft', version: 1, catalogKey: 'goldfish', name: '金鱼' } as any, { id: 'sp2', status: 'published', version: 1 } as any],
@@ -65,6 +67,9 @@ assert.equal(sorted[0]?.severity, 'blocker');
 const firstDecision = sorted.findIndex(item => item.severity === 'decision');
 const firstAttention = sorted.findIndex(item => item.severity === 'attention');
 assert.ok(firstDecision > 0 && firstAttention > firstDecision, 'WorkItems must sort blocker → decision → attention.');
+const firstProductAttention = sorted.findIndex(item => item.severity === 'attention' && item.authority === 'product_care');
+const firstSeoAttention = sorted.findIndex(item => item.severity === 'attention' && item.authority === 'seo');
+assert.ok(firstProductAttention >= 0 && firstSeoAttention > firstProductAttention, 'Active Product/Care Drafts must stay ahead of generic SEO attention work.');
 
 const serviceSource = fs.readFileSync(new URL('../src/services/admin/operations-work-item.service.ts', import.meta.url), 'utf8');
 assert.doesNotMatch(serviceSource, /\.(create|update|submit|approve|publish)[A-Z][A-Za-z]+\(/, 'Operations WorkItem aggregation must remain read-only.');

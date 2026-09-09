@@ -17,6 +17,7 @@ type LocalBusinessAdminState = {
   care: AdminCareArticleRecord[];
   publishedSpecies: Record<string, SpeciesAdminInput>;
   publishedCare: Record<string, CareArticleAdminInput>;
+  publishedCareMeta?: Record<string, { sourceVersion: number; publishedAt: string }>;
   releaseEvents?: ReleaseEventDto[];
   updatedAt: string;
 };
@@ -69,7 +70,9 @@ const buildSeedState = (): LocalBusinessAdminState => {
   return {
     schemaVersion: 1, species: speciesInputs.map(input => speciesRecord(input)), care: careInputs.map(input => careRecord(input)),
     publishedSpecies: Object.fromEntries(speciesInputs.map(input => [input.catalogKey, input])),
-    publishedCare: Object.fromEntries(careInputs.map(input => [input.catalogKey, input])), releaseEvents: [], updatedAt: now(),
+    publishedCare: Object.fromEntries(careInputs.map(input => [input.catalogKey, input])),
+    publishedCareMeta: Object.fromEntries(careInputs.map(input => [input.catalogKey, { sourceVersion: 1, publishedAt: now() }])),
+    releaseEvents: [], updatedAt: now(),
   };
 };
 const readState = (): LocalBusinessAdminState => {
@@ -84,6 +87,12 @@ const readState = (): LocalBusinessAdminState => {
     const parsed = JSON.parse(raw) as LocalBusinessAdminState;
     if (parsed?.schemaVersion !== 1 || !Array.isArray(parsed.species) || !Array.isArray(parsed.care)) throw new Error('invalid local admin store');
     parsed.releaseEvents = Array.isArray(parsed.releaseEvents) ? parsed.releaseEvents : [];
+    parsed.publishedCareMeta = parsed.publishedCareMeta || {};
+    for (const record of parsed.care) {
+      if (!parsed.publishedCare[record.catalogKey] || parsed.publishedCareMeta[record.catalogKey]) continue;
+      const latestPublish = parsed.releaseEvents.find(event => event.authority === 'product_care' && event.domain === 'care' && event.resourceKey === record.catalogKey && event.status === 'published');
+      parsed.publishedCareMeta[record.catalogKey] = { sourceVersion: latestPublish?.version || (record.status === 'published' ? record.version : 1), publishedAt: latestPublish?.occurredAt || parsed.updatedAt || now() };
+    }
     return parsed;
   } catch {
     const seeded = buildSeedState();
@@ -162,6 +171,23 @@ export const localBusinessAdminStore = {
     const record = state.care.find(item => item.catalogKey === catalogKey);
     return input && record ? careDto(record, input) : null;
   },
+  getPublishedCareSeoSource: async (id: string) => {
+    const state = readState();
+    const record = state.care.find(item => item.id === id || item.catalogKey === id);
+    if (!record) return null;
+    const input = state.publishedCare[record.catalogKey];
+    const meta = state.publishedCareMeta?.[record.catalogKey];
+    if (!input || !meta) return null;
+    return { detail: careDto(record, input), sourceVersion: meta.sourceVersion, publishedAt: meta.publishedAt };
+  },
+  listPublishedCareSeoSources: async () => {
+    const state = readState();
+    return state.care.flatMap(record => {
+      const input = state.publishedCare[record.catalogKey];
+      const meta = state.publishedCareMeta?.[record.catalogKey];
+      return input && meta ? [{ detail: careDto(record, input), sourceVersion: meta.sourceVersion, publishedAt: meta.publishedAt }] : [];
+    });
+  },
 
 
   createSpecies: async (raw: SpeciesAdminInput) => {
@@ -222,7 +248,12 @@ export const localBusinessAdminStore = {
           ...care,
           steps: (care.careArticleSteps || []).sort((a, b) => a.position - b.position).map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel, actionTitle: step.actionTitle, actionKind: step.actionKind || 'immediate' })),
         });
-      } else delete state.publishedCare[care.catalogKey];
+        state.publishedCareMeta = state.publishedCareMeta || {};
+        state.publishedCareMeta[care.catalogKey] = { sourceVersion: care.version, publishedAt: now() };
+      } else {
+        delete state.publishedCare[care.catalogKey];
+        if (state.publishedCareMeta) delete state.publishedCareMeta[care.catalogKey];
+      }
     }
     const resource = next as AdminSpeciesRecord | AdminCareArticleRecord;
     appendReleaseEvent(state, {

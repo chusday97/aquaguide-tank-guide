@@ -334,7 +334,7 @@ export default function AdminContent() {
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
             {selected && <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />}
-            {selected && type === 'care' && !isLocalBusinessAdminMode && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} />}
+            {selected && type === 'care' && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} />}
             {selected && type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}
             {selected && compatibilityRegression && <CompatibilityRegressionPreview result={compatibilityRegression} />}
             {type === 'species' ? (

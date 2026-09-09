@@ -19,6 +19,7 @@ import {
   getApiAccessToken,
 } from '../api/api-client';
 import { isLocalBusinessAdminMode, localBusinessAdminStore } from './local-business-admin.store';
+import { localCareSeoEditorialStore } from './local-care-seo-editorial.store';
 
 export type SpeciesAdminInput = z.infer<typeof speciesAdminInputSchema>;
 export type CareArticleAdminInput = z.infer<typeof careArticleAdminInputSchema>;
@@ -89,26 +90,26 @@ export const contentAdminService = {
   listCareArticles: () => isLocalBusinessAdminMode ? localBusinessAdminStore.listCareArticles() : apiRequest<AdminCareArticleRecord[]>('/admin/care-articles'),
   getPublishedSpecies: (catalogKey: string) => isLocalBusinessAdminMode ? localBusinessAdminStore.getPublishedSpecies(catalogKey) : publicContentOrNull<SpeciesDetailDto>(`/species/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
   getPublishedCareArticle: (catalogKey: string) => isLocalBusinessAdminMode ? localBusinessAdminStore.getPublishedCareArticle(catalogKey) : publicContentOrNull<CareArticleDetailDto>(`/care-articles/${encodeURIComponent(catalogKey)}?locale=zh-CN`),
-  getCareSeoProjection: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoProjectionDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-projection?locale=${encodeURIComponent(locale)}`),
-  getCareSeoHealthIndex: () => apiRequest<CareSeoHealthIndexEntryDto[]>('/admin/care-seo-health'),
+  getCareSeoProjection: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => isLocalBusinessAdminMode ? localCareSeoEditorialStore.getProjection(id, locale) : adminContentOrNull<CareSeoProjectionDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-projection?locale=${encodeURIComponent(locale)}`),
+  getCareSeoHealthIndex: () => isLocalBusinessAdminMode ? localCareSeoEditorialStore.getHealthIndex() : apiRequest<CareSeoHealthIndexEntryDto[]>('/admin/care-seo-health'),
 
-  getCareSeoEditorialWorkspace: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => adminContentOrNull<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial?locale=${encodeURIComponent(locale)}`),
-  getCareSeoAiAssist: (id: string, input: CareSeoAiAssistRequest) => apiRequest<CareSeoAiAssistDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/ai-assist`, {
+  getCareSeoEditorialWorkspace: (id: string, locale: 'zh-CN' | 'en' = 'zh-CN') => isLocalBusinessAdminMode ? localCareSeoEditorialStore.getWorkspace(id, locale) : adminContentOrNull<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial?locale=${encodeURIComponent(locale)}`),
+  getCareSeoAiAssist: (id: string, input: CareSeoAiAssistRequest) => isLocalBusinessAdminMode ? Promise.reject(new AquaGuideApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Local Mode AI Assist 尚未接入；不会伪造 AI 输出。')) : apiRequest<CareSeoAiAssistDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/ai-assist`, {
     method: 'POST',
     body: input,
     idempotencyKey: createIdempotencyKey('admin-care-seo-ai-assist'),
   }),
-  saveCareSeoEditorialDraft: (id: string, input: CareSeoEditorialDraftMutation) => apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/draft`, {
+  saveCareSeoEditorialDraft: (id: string, input: CareSeoEditorialDraftMutation) => isLocalBusinessAdminMode ? localCareSeoEditorialStore.saveDraft(id, input) : apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/draft`, {
     method: 'POST',
     body: input,
     idempotencyKey: createIdempotencyKey('admin-care-seo-draft'),
   }),
-  submitCareSeoEditorialReview: (id: string, input: CareSeoEditorialTransitionMutation) => apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/submit-review`, {
+  submitCareSeoEditorialReview: (id: string, input: CareSeoEditorialTransitionMutation) => isLocalBusinessAdminMode ? localCareSeoEditorialStore.submitReview(id, input) : apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/submit-review`, {
     method: 'POST',
     body: input,
     idempotencyKey: createIdempotencyKey('admin-care-seo-submit'),
   }),
-  approveCareSeoEditorial: (id: string, input: CareSeoEditorialTransitionMutation) => apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/approve`, {
+  approveCareSeoEditorial: (id: string, input: CareSeoEditorialTransitionMutation) => isLocalBusinessAdminMode ? localCareSeoEditorialStore.approve(id, input) : apiRequest<CareSeoEditorialWorkspaceDto>(`/admin/care-articles/${encodeURIComponent(id)}/seo-editorial/approve`, {
     method: 'POST',
     body: input,
     idempotencyKey: createIdempotencyKey('admin-care-seo-approve'),

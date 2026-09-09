@@ -48,6 +48,7 @@ on:
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'scripts/verify-local-business-admin.mjs'
       - 'scripts/verify-local-compatibility-admin.mjs'
+      - 'scripts/verify-local-care-seo-editorial.mjs'
       - 'scripts/check-business-admin-staging-readiness.mjs'
       - 'scripts/seed-business-admin-staging.mjs'
       - 'scripts/provision-business-admin-staging.mjs'
@@ -111,6 +112,7 @@ on:
       - 'scripts/test-runtime-compatibility-authority.ts'
       - 'scripts/verify-local-business-admin.mjs'
       - 'scripts/verify-local-compatibility-admin.mjs'
+      - 'scripts/verify-local-care-seo-editorial.mjs'
       - 'scripts/check-business-admin-staging-readiness.mjs'
       - 'scripts/seed-business-admin-staging.mjs'
       - 'scripts/provision-business-admin-staging.mjs'
@@ -268,6 +270,8 @@ jobs:
         run: npm run test:local-business-admin-ui
       - name: Local Compatibility browser regression
         run: npm run test:local-compatibility-admin-ui
+      - name: Local Care SEO Editorial browser regression
+        run: npm run test:local-care-seo-editorial-ui
       - name: Care SEO canonical route browser regression
         run: npm run test:care-seo-route
       - name: Root AquaGuide Species SEO artifact integration
