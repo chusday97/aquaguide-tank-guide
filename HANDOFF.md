@@ -1,5 +1,14 @@
 # AquaGuide 交接文档
 
+## 2026-09-09 4198 Freeze 止损（当前）
+
+- 在 `codex/project-authority-recovery-v1` 本地完成首轮 HTML 结构收敛：删除未引用的重复 `review-*` CSS/脚本，补齐直接页公共壳层与响应式规则。
+- 对应提交：`8e2f4b98`；manifest 刷新提交：`d47f6933`。
+- 图鉴与养护详情打开时隐藏首层选择板，关闭后恢复选择上下文与焦点；manifest 新增排除自身的 `contentSha256`，避免提交后 SHA 永远落后一版。
+- 4198 五个直接页面均返回 HTTP 200，未修改 React、Domain、Catalog、Supabase 或生产；当前仍为 `REVIEW_REQUIRED`，尚无用户 Freeze 确认。
+- 4198 当前只保留一个 Node 监听（重复 Python 进程已停止）。新增 `scripts/test-html-freeze-matrix.mjs` 与 `npm run test:html-freeze-matrix`；本机 Playwright/系统 Chrome 仍因 MachPort 崩溃返回 `BROWSER_UNAVAILABLE`，不能把静态门禁当作视觉通过。
+- 下一步：在可用系统Chrome/CUA环境完成 390/600/1024/1440/1920px 直接页面矩阵和交互证据，再交独立 Critic 复验。
+
 ## 2026-08-31 专业身份核实进展（当前）
 
 - 当前数据分支 `codex/catalog-cohort-30-v1` 的数据代码复验点为 `e8e6f3ce`；后续仅有文档修订，工作树干净，尚未推送。
@@ -650,6 +659,25 @@
 1. 先读：根 `PROGRESS.md`、根 `HANDOFF.md`、知识索引、本项目 `PROGRESS.md` 与本文档。
 2. 再检查：`git status --short`、最近 20 条提交和当前差异。
 3. 然后执行：从本文后续独立专项中选择一个继续，不重复本轮已验证功能。
+
+## 2026-09-09 4198矩阵收口（当前）
+
+- 独立 Critic 已对当前 4198 diff 复验：原先的状态属性、选择板归属、桌面详情 fixed 覆盖和矩阵表面统计缺口已在 `984a3f70` 修复。
+- 4198 当前只有一个 Node 监听（PID 34000），五个直接页面均返回 HTTP 200；静态 H1/本地资源门禁通过。
+- `test:html-freeze-matrix` 已运行，但系统 Chrome/Playwright 在本机因 MachPort SIGABRT 返回 `BROWSER_UNAVAILABLE`；没有真实视口截图和边界报告，因此仍不能声称视觉矩阵通过。
+- Manifest 状态继续为 `REVIEW_REQUIRED`；未获得用户/产品经理确认前，不生成 HTML Freeze、不回写 React。
+- 同一 Critic 已复验 `defad8b2`：collapsed/error 直达、Care 重试、TaskSurface 焦点和 manifest 内容快照语义均通过静态复验；唯一明确阻塞仍是 Chrome/MachPort 导致的真实视觉矩阵缺失。
+
+### 2026-09-09 CUA人工矩阵补充
+
+- 使用4198直接页面进行人工视觉/可访问性复核（仅作人工证据，不替代自动矩形报告）：图鉴默认场景可见多个物种；点击场景物种后仅出现品系选择；点击品系后选择板收起并只保留详情表面；“查看当前鱼缸风险”在原页面展开且URL不变。
+- 养护默认仅显示水体、鱼群、过滤三个热点；点击水体后出现2张真实问题卡；点击问题卡后卡片流收起并只保留指南详情，详情内提供“开始排查”与收藏操作。
+- 五个4198直接页面（aquarium、collection、encyclopedia、care、compatibility）经本机HTTP检查均返回200；4198当前只保留Node监听PID 34000。
+- 自动矩阵再次运行仍返回 `BROWSER_UNAVAILABLE`（系统Chrome启动后MachPort/SIGABRT），没有自动截图、矩形或资源失败报告；状态保持 `REVIEW_REQUIRED`，不得签字或生成HTML Freeze。
+- 已新增 `.github/workflows/html-freeze-matrix.yml`：仅在 `critical`/`merge-ready` 标签、手动触发或带标签PR同步时，在干净 Ubuntu runner 安装 Chromium、启动4198静态服务并上传五视口矩阵产物；矩阵脚本在非 macOS 环境自动使用 Playwright Chromium。
+- GitHub DNS 已恢复；只读 `git fetch origin main` 成功，当前 `origin/main` 仍为 `d3c70dee`，与本分支既定基线一致。尚未推送当前分支或创建远端PR，因此 CI 尚无真实运行记录。
+- 远端 PR #148 的首次 HTML Freeze Matrix 已真实运行25个页面/视口组合，发现唯一阻塞：Care 390px `scrollWidth=667`，原因是场景内直出的鱼群图片未受移动端尺寸约束；已在养护场景唯一 CSS Owner 增加直接图片尺寸限制，待推送后重跑。
+- PR #148 修复后的矩阵运行 `34364866656` 已通过：25/25 记录、0 failures，覆盖五页与390/600/1024/1440/1920px；报告与截图作为 GitHub Actions artifact 保存。当前仍需用户/产品经理签字，Manifest 继续为 `REVIEW_REQUIRED`。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。
@@ -694,3 +722,23 @@
 下一步：继续逐页核实剩余来源；每条来源必须记录可访问 URL、发布者、访问日期及明确支持的字段。无法确认就保留 `reviewed + unknown`。完成后重建 Snapshot/checksum、435组矩阵并交同一 Critic 复验，再申请一次性推送数据短分支。
 
 禁止重踩：不要从名称、分类、模板、搜索结果或 AI 摘要推断水体、行为或数量；不要把本地测试描述为生产权限验证；不要在本阶段改 UI 或执行生产 migration。
+## 2026-09-09 权威恢复分支（当前）
+
+- 当前分支：`codex/project-authority-recovery-v1`，基于本机最后可确认的 `origin/main@d3c70dee`；权威文件位于 `.ai/`。
+- 已完成：更新 `.ai/CURRENT_GOAL.md` 并新增 `HANDOFF_LATEST.md`、`ACCEPTED_BASELINE.md`、`LOCKED_AREAS.md`、`PRODUCT_RULES.md`、`BADCASE_REGISTRY.md`、`RELEASE_CHECKLIST.md`；同步 `PROJECT_STRUCTURE.md` 与 `40-DOCS/CHANGELOG.md`。
+- 未修改：React页面、旧视觉分支、PBR、Master 20、Domain、Catalog、Supabase和生产指针。
+- 阻塞：GitHub当前无法解析；4198组合HTML尚未建立；用户视觉确认前不得回写React或合并。
+- 下一步：远端恢复后核对`origin/main`，再创建唯一4198 HTML评审包。
+## 2026-09-09 权威恢复与 4198 组合评审包（当前）
+
+- 当前分支：`codex/project-authority-recovery-v1@62e93d17`，基于缓存 `origin/main@d3c70dee`，工作树需保持干净。
+- 已完成：七个 `.ai` 权威文件；`prototypes/aquaguide-ui-freeze-v3/` 组合 HTML（4196 Aquarium/Collection + 4197 Encyclopedia/Care/Compatibility）；静态本地引用检查与 diff 检查通过。
+- 当前下一步：在 4198 提供静态服务并采集 390/1440 证据，随后由产品经理逐区块标记 `ACCEPTED` 或 `REVIEW_REQUIRED`。
+- 阻塞：GitHub DNS 导致远端未刷新；尚无 HTML Freeze 用户确认；不得以旧 4319 或旧视觉分支作为新证据。
+- 禁止：不修改正式 React、Domain、Catalog、Supabase、PBR/Master20、生产分支；不推送或合并，除非用户明确授权且远端状态已复核。
+
+### Freeze 证据状态
+
+- 已增加 `review/freeze-signoff.html`，支持五个区块的 `REVIEW_REQUIRED`/`ACCEPTED` 本地状态和 JSON 导出。
+- `freeze-manifest.json` 由 `scripts/generate-html-freeze-manifest.mjs` 生成，绑定当前 HEAD `52517328` 之前的生成点；每次代码变更后需重新生成。
+- Playwright 截图尝试再次命中已知 macOS MachPort 阻塞，不能把失败当作视觉证据；应使用系统 Chrome/CUA 采集 390/600/1024/1440/1920px。

@@ -1,5 +1,17 @@
 # Current Goal
 
+## 2026-09-09 authoritative recovery (current)
+
+The only active goal is to create and obtain user acceptance for one combined HTML UI Freeze:
+
+- 4196 structure for Aquarium and Collection.
+- 4197 structure for Encyclopedia, Care and Compatibility.
+- After acceptance, rebuild React from the latest `origin/main` one page at a time.
+
+Do not continue the legacy 29/70-commit UI branches. Do not modify formal React pages before the combined HTML Freeze is accepted. Master 20, PBR, English translation, SEO indexing, Supabase and production release remain out of scope for this phase.
+
+Current authority branch: `codex/project-authority-recovery-v1` (based on the locally available `origin/main`). Remote freshness must be checked before any push or merge.
+
 > 初始化日期：2026-08-25。以下内容仅整理自当前 `PROGRESS.md` 与 `HANDOFF.md`，没有新增产品决策。
 
 ## 当前目标

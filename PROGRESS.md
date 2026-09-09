@@ -516,6 +516,9 @@
 - Critic 首轮阻塞已修复并由同一线程最终复验通过（六维 PASS，`git diff --check origin/main...HEAD` PASS，`13ce05da`）；服务端基于已发布 Catalog 的重新计算仍是下一阶段工作。
 
 ## 已完成
+
+- 2026-09-09 4198 首轮止损已提交为本地变更（`8e2f4b98`，manifest `d47f6933`，证据文档 `e6eec605`）：直接页面不再依赖重复 review 样式/脚本，统一基础壳层与响应式规则；图鉴/养护详情打开时首层选择板收起、关闭后恢复；Freeze manifest 改用排除自身的 `contentSha256`。五个直接页面 HTTP 200；用户确认、完整视觉矩阵和 Critic 复验仍待完成。
+- 2026-09-09 4198矩阵门禁已加入 `scripts/test-html-freeze-matrix.mjs` 和 `npm run test:html-freeze-matrix`；重复监听已清理为单一Node进程。运行结果明确为 `BROWSER_UNAVAILABLE`（本机MachPort崩溃），因此视觉矩阵仍未通过。
 - 状态：`核心鱼缸事实链路已完成并通过独立 Critic 与 Evaluator 六维验收`。`record_existing` 先保存事实再评估，任何四态结果均不能回滚现实记录；`planned_addition` 先评估且不写鱼缸，只有用户明确确认已实际入缸才进入记录流程。新鱼缸不再生成尺寸、水体、温度、设备或换水伪数据；创建和新增生物均通过 Repository 命令，旧 `add-species` 深链兼容映射到规划流程。云端新增使用原子 RPC 提交父物种、批次和幂等结果，404/409/503 语义保持清晰。（commits: `56c486b`, `7284008`, `f04f189`, `8d272aa`, `9accb48`, `f97e6ca`, `3af5c61`）
 - 状态：`已合并并推送 GitHub main`。`main` 从 `de61600` 安全快进到已验收 P0 `153695e`，远端无独立提交、无冲突、无历史改写；功能分支 `codex/activation-evaluation-v1` 继续保留作为阶段记录。（本次仅补交接记录）
 - 状态：`体态编辑未保存退出竞态已修复`。体态任务不再因父层异步状态同步而覆盖正在编辑的局部选择；数量、日期和体态选择会同步标记草稿，Esc 由草稿所有者优先打开确认。中文手机的部分数量调整及英文 600px 的继续编辑/放弃修改真实 Chromium 路径均通过。（commit: `4e11196`）
@@ -790,3 +793,35 @@
 - [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`（当前提交为文档-only amend，UI bytes unchanged；manifest 已记录最终 checkpoint SHA）。
 - [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
 - [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。
+## 2026-09-09 项目权威恢复（当前）
+
+- [x] 从本机最后可确认的 `origin/main@d3c70dee` 建立 `codex/project-authority-recovery-v1`。
+- [x] 补齐并校准 `.ai` 当前目标、交接、接受基线、锁定区域、产品规则、Badcase 和发布门禁；未修改React、Domain、Catalog、Supabase或生产配置。
+- [ ] 远端刷新、4198组合HTML和用户HTML Freeze确认仍未完成。
+## 2026-09-09 权威恢复与组合 HTML（当前）
+
+- [x] 从缓存的 `origin/main@d3c70dee` 创建 `codex/project-authority-recovery-v1`；远端刷新因 DNS 不可用，未声称为最新远端。
+- [x] 补齐七个 `.ai` 权威文件，明确当前目标、锁定区域、产品规则、Badcase 与发布门禁。
+- [x] 生成 `prototypes/aquaguide-ui-freeze-v3/` 组合评审包（4196 鱼缸/水族册，4197 图鉴/养护/混养），静态资源和交互脚本均本地化。
+- [x] 静态引用检查、`git diff --check` 通过；提交 `62e93d17`。
+- [ ] 4198 本地静态服务器与 390/1440 浏览器证据待运行；产品经理尚未确认 HTML Freeze。
+- [ ] 远端可访问后再核对 origin/main；未授权前不推送、不合并、不修改正式 React。
+
+### Freeze 收口追加
+
+- [x] 增加区块状态与本地 JSON 导出签字页 `review/freeze-signoff.html`。
+- [x] 增加 `scripts/generate-html-freeze-manifest.mjs`，生成文件 SHA、页面 H1/外部引用检查和必测视口清单；最新提交 `04fe46e8`。
+- [ ] Playwright Chromium 仍受 macOS MachPort 权限阻塞；完整截图矩阵必须改用系统 Chrome/CUA 后补齐，当前 manifest 不代表视觉通过。
+
+### 2026-09-09 4198矩阵止损
+
+- [x] 独立 Critic 复验并指出状态属性、选择板归属、桌面 Rail 与矩阵统计缺口；`984a3f70` 已完成对应结构修复。
+- [x] 4198 只保留一个 Node 监听，五个直接页面 HTTP 200，静态 H1/本地资源门禁通过。
+- [ ] 真实 Chrome/CUA 视口矩阵仍被 MachPort `BROWSER_UNAVAILABLE` 阻塞；用户和产品经理签字、HTML Freeze、React 回写均保持暂停。
+- [x] 同一 Critic 复验 `defad8b2`：状态直达、Care 重试、任务焦点与 manifest 内容快照语义通过静态复验；不把缺失的真实视觉证据标为通过。
+- [x] CUA人工复核图鉴与养护核心链路：图鉴场景→品系→详情→风险原位展开；养护热点→问题卡→指南详情；两条链路均未出现首层选择与完整详情并存。
+- [ ] 自动矩阵仍被系统Chrome MachPort/SIGABRT阻塞；人工证据不能替代最终自动矩形与截图门禁。
+- [x] 增加 4198 重型 CI 矩阵工作流：关键标签/手动触发时在干净 Ubuntu runner 安装 Chromium、启动静态服务并上传截图与矩形报告；待远端实际运行取证。
+- [x] GitHub 只读连接恢复，`origin/main` 已核对为 `d3c70dee`；待用户授权后推送当前分支并触发一次真实 CI 矩阵。
+- [x] PR #148 首次真实矩阵完成25条记录，唯一失败为养护390px横向溢出；已定位为直出鱼群图片缺少移动尺寸约束并修复，待重跑。
+- [x] PR #148 修复后 HTML Freeze Matrix run `34364866656` 通过25/25、0 failures，覆盖五页与390/600/1024/1440/1920px；等待用户/产品经理签字后才能生成HTML Freeze。

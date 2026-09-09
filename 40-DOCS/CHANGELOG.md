@@ -2,6 +2,13 @@
 
 ## [Unreleased]
 
+- Fixed: 4198 结构复验后统一直接页状态属性，选择板运行时归入水景舞台，桌面详情改为应用网格中的 Rail，移动端保留单一 Sheet；矩阵统计覆盖所有辅助表面。真实 Chrome 视口矩阵仍因本机 MachPort 阻塞，状态继续为 REVIEW_REQUIRED。
+- Verified: 同一 Critic 复验确认图鉴折叠、养护错误重试、任务表面焦点和 manifest 内容快照语义已修复；真实五视口视觉证据仍待可用 Chrome/CUA 环境。
+
+- Fixed: 4198 HTML Freeze 首轮止损，移除未使用的重复 review CSS/脚本并统一直接页基础壳层；图鉴/养护详情打开时隐藏首层选择板，关闭后恢复；manifest 改为记录排除自身的 `contentSha256`。仅修改 HTML 评审包，未修改正式 React 或生产。
+
+- Added: 建立项目`.ai`权威恢复文件，统一当前HTML Freeze目标、已接受业务基线、锁定区域、Badcase与发布门禁；本步骤未修改正式React或生产配置。
+
 - Fixed: 对齐动作基础浏览器门禁与当前产品契约：物种风险在详情内展开，兼容性从显式入口进入独立页面；空缸可规划加入当前鱼缸；温度冲突按当前 Domain 展示为 `not_recommended`；互动图鉴筛选测试显式使用 `mode=browse`。授权环境下动作、路由、详情、Compatibility、lint、API 类型与 production build 均通过。
 - Fixed: 为谨慎/风险状态保留明确的“混养计算”次级入口，Golden Path 不再查找已废弃的内嵌兼容抽屉；风险仍原位展开，独立计算页面负责后续数量与记录流程。
 
@@ -501,3 +508,11 @@
 
 - 独立种草图鉴与养护收藏页面实现，旧 URL 仅保留兼容重定向。
 - 路由页面中的空点击、仅日志处理、原生 `alert` 和无可观察结果的按钮。
+### 4198 CUA人工复核（2026-09-09）
+
+- Added: 记录图鉴与养护直接页面的人工交互证据，确认选择板、详情表面和风险/排查入口按阶段互斥。
+- Changed: 明确自动矩阵仍因本机Chrome MachPort启动失败而保持阻塞，4198继续为 `REVIEW_REQUIRED`。
+- Added: 增加仅关键PR/手动触发的 HTML Freeze Chromium 矩阵工作流，避免本机 MachPort 阻塞成为唯一执行环境。
+- Changed: 远端只读连接恢复并确认 `origin/main@d3c70dee`；当前分支仍未推送，避免把未签字的评审状态提前写入远端。
+- Fixed: CI 首次真实矩阵发现并修复 Care 390px 直出鱼群图片导致的横向溢出（`scrollWidth=667`）。
+- Verified: PR #148 的修复后 HTML Freeze Matrix `34364866656` 在25个页面/视口组合中全部通过。

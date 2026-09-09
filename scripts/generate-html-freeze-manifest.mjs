@@ -1,0 +1,14 @@
+import { createHash } from 'node:crypto';
+import { execFileSync } from 'node:child_process';
+import { mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { dirname, join, relative, resolve } from 'node:path';
+const root = resolve('prototypes/aquaguide-ui-freeze-v3'); const output = join(root, 'freeze-manifest.json');
+const pages = ['aquarium', 'collection', 'encyclopedia', 'care', 'compatibility']; const files = [];
+const walk = (dir) => readdirSync(dir).forEach((name) => { const path = join(dir, name); if (statSync(path).isDirectory()) walk(path); else if (name !== 'freeze-manifest.json') files.push(path); }); walk(root);
+const digest = (path) => createHash('sha256').update(readFileSync(path)).digest('hex');
+const pageChecks = pages.map((page) => { const html = readFileSync(join(root, 'pages', `${page}.html`), 'utf8'); const h1Count = (html.match(/<h1\b/gi) || []).length; const externalReferenceCount = (html.match(/(?:src|href)=["']https?:\/\//gi) || []).length; return { page, h1Count, externalReferenceCount, pass: h1Count === 1 && externalReferenceCount === 0 }; });
+const git = (args, fallback) => { try { return execFileSync('git', args, { encoding: 'utf8' }).trim(); } catch { return fallback; } };
+const fileRecords = files.sort().map((path) => ({ path: relative(root, path), bytes: statSync(path).size, sha256: digest(path) }));
+const contentSha256 = createHash('sha256').update(fileRecords.map(({ path, sha256 }) => `${path}:${sha256}`).join('\n')).digest('hex');
+const manifest = { schemaVersion: 1, freezeVersion: 'html-ui-freeze-v3', generatedAt: new Date().toISOString(), branch: git(['branch', '--show-current'], 'unknown'), sourceCommit: git(['rev-parse', 'HEAD'], 'unknown'), contentSha256, references: { aquarium: '4196', collection: '4196', encyclopedia: '4197', care: '4197', compatibility: '4197' }, requiredViewports: [390, 600, 1024, 1440, 1920], files: fileRecords, pageChecks, acceptance: { status: 'REVIEW_REQUIRED', blocks: ['aquarium-stage', 'collection-overview', 'encyclopedia-flow', 'care-flow', 'compatibility-board'] } };
+mkdirSync(dirname(output), { recursive: true }); writeFileSync(output, `${JSON.stringify(manifest, null, 2)}\n`); console.log(`wrote ${output} (${manifest.files.length} files)`);

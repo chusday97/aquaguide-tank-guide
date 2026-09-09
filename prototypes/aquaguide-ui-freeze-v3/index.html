@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AquaGuide UI Freeze v3 · 4198</title>
+  <link rel="stylesheet" href="shared/tokens.css"><link rel="stylesheet" href="shared/layout.css"><link rel="stylesheet" href="shared/components.css">
+</head>
+<body data-planner="workbench">
+  <div class="planner-shell planner-workbench">
+    <aside class="planner-sidebar" aria-label="页面列表"><div class="brand-mark">A</div><nav class="planner-nav" id="workbench-nav"></nav><div class="planner-nav planner-nav-bottom"><a href="pages/settings.html">⚙<span>设置</span></a></div></aside>
+    <main class="planner-main"><div class="page-frame">
+      <header class="page-head"><div><div class="eyebrow">AquaGuide / HTML UI Freeze v3 · 4198</div><h1>组合界面评审工作台</h1><p>4196 鱼缸与水族册 + 4197 图鉴、养护与混养；仅用于确认结构、动作和响应式关系。</p></div><div class="toolbar"><button class="button primary" data-demo-toast="当前原型仅演示布局与交互，不会保存数据">演示模式</button><a class="button" href="review/freeze-signoff.html">打开签字页</a></div></header>
+      <section class="planner-controls surface pad" data-ui-block="planner-controls"><div class="toolbar"><strong>页面</strong><select id="page-select" aria-label="选择页面"></select><strong>视口</strong><div id="viewport-buttons" class="toolbar"></div><strong>状态</strong><div id="state-buttons" class="toolbar"></div></div></section>
+      <section class="planner-preview surface" data-ui-block="planner-preview"><div class="preview-meta"><span id="preview-label">Aquarium</span><a id="open-direct" href="pages/aquarium.html" target="_blank">单独打开 ↗</a></div><div class="preview-stage"><iframe id="preview-frame" title="HTML 页面预览"></iframe></div></section>
+    </div></main>
+  </div>
+  <script src="shared/demo-data.js"></script><script src="shared/freeze-state.js"></script><script src="shared/prototype.js"></script>
+  <script>
+  (() => {
+    const pages = [
+      ['aquarium', '我的鱼缸', 'pages/aquarium.html', '◉', [['default','默认'], ['empty','空缸'], ['loading','Loading'], ['error','失败']]],
+      ['encyclopedia', '寻找物种', 'pages/encyclopedia.html', '◈', [['default','互动版'], ['traditional','传统版'], ['variant-selection','品系选择'], ['detail','双屏详情'], ['collapsed','互动已折叠']]],
+      ['care', '物种养护', 'pages/care.html', '✦', [['default','互动版'], ['traditional','传统版'], ['detail','热点详情'], ['error','失败恢复']]],
+      ['collection', '我的物种册', 'pages/collection.html', '◇', [['default','默认'], ['wishlist','种草'], ['care','养护收藏'], ['memorial','生命纪念'], ['achievements','成就'], ['empty','空状态']]],
+      ['compatibility', '混养观察台', 'pages/compatibility.html', '⚖', [['default','选择物种'], ['safe','适合'], ['adjust','调整后可尝试'], ['block','不建议'], ['unknown','资料不足']]]
+    ];
+    const nav = document.querySelector('#workbench-nav');
+    const select = document.querySelector('#page-select');
+    const frame = document.querySelector('#preview-frame');
+    const label = document.querySelector('#preview-label');
+    const direct = document.querySelector('#open-direct');
+    const vp = document.querySelector('#viewport-buttons');
+    const sb = document.querySelector('#state-buttons');
+    pages.forEach(([id, name, url, icon, states]) => {
+      nav.insertAdjacentHTML('beforeend', `<a href="${url}" data-page-link="${id}">${icon}<span>${name}</span></a>`);
+      select.insertAdjacentHTML('beforeend', `<option value="${url}" data-label="${name}">${name}</option>`);
+      states.forEach(([state, labelText]) => sb.insertAdjacentHTML('beforeend', `<button class="pill" data-page-state="${id}" data-state-value="${state}">${name} · ${labelText}</button>`));
+    });
+    const widths = [390, 600, 768, 820, 1024, 1280, 1440, 1920];
+    widths.forEach((width) => vp.insertAdjacentHTML('beforeend', `<button class="pill ${width === 1280 ? 'active' : ''}" data-width="${width}">${width}px</button>`));
+    let width = 1280;
+    let currentState = '';
+    const currentPage = () => select.value.match(/([^/]+)\.html$/)?.[1] || 'aquarium';
+    const load = (url, state = '') => {
+      const opt = [...select.options].find((option) => option.value === url);
+      const page = url.match(/([^/]+)\.html$/)?.[1] || 'aquarium';
+      label.textContent = opt?.dataset.label || '页面';
+      direct.href = url;
+      const params = new URLSearchParams({ planner: '1' });
+      if ((page === 'encyclopedia' || page === 'care') && state === 'traditional') params.set('mode', 'traditional');
+      if (page === 'collection' && ['wishlist','care','memorial','achievements'].includes(state)) params.set('section', state);
+      if (state && !['traditional','wishlist','care','memorial','achievements','default'].includes(state)) params.set('state', state);
+      frame.src = `${url}?${params.toString()}`;
+      frame.style.width = `${width}px`;
+      document.querySelectorAll('[data-page-link]').forEach((link) => link.classList.toggle('active', link.dataset.pageLink === page));
+      document.querySelectorAll('[data-page-state]').forEach((button) => button.classList.toggle('active', button.dataset.pageState === page && button.dataset.stateValue === state));
+    };
+    select.addEventListener('change', () => { currentState = ''; load(select.value); });
+    vp.addEventListener('click', (event) => { const button = event.target.closest('[data-width]'); if (!button) return; width = Number(button.dataset.width); vp.querySelectorAll('button').forEach((item) => item.classList.toggle('active', item === button)); frame.style.width = `${width}px`; });
+    sb.addEventListener('click', (event) => { const button = event.target.closest('[data-page-state]'); if (!button || button.dataset.pageState !== currentPage()) return; currentState = button.dataset.stateValue; load(select.value, currentState); });
+    load('pages/aquarium.html');
+  })();
+  </script>
+</body></html>
