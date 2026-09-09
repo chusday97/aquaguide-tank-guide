@@ -77,6 +77,11 @@ adminRouter.use(adminFeedbackRouter);
 adminRouter.use('/compatibility', adminCompatibilityRouter);
 adminRouter.use('/releases', adminReleasesRouter);
 
+adminRouter.get('/session', asyncRoute(async (request, response) => {
+  const authenticated = request as AuthenticatedRequest;
+  return sendData(request, response, { userId: authenticated.authUser.id, role: 'admin' as const });
+}));
+
 adminRouter.get('/species', asyncRoute(async (request, response) => {
   const client = getAdminSupabase();
   const { data, error } = await client.from('species').select('*,species_assets(*)').order('updated_at', { ascending: false }).limit(100);

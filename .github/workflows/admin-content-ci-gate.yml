@@ -24,6 +24,7 @@ on:
       - 'src/components/admin/**'
       - 'src/services/admin/**'
       - 'scripts/test-admin-content-impact.ts'
+      - 'scripts/test-admin-login-contract.ts'
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
@@ -83,6 +84,7 @@ on:
       - 'src/components/admin/**'
       - 'src/services/admin/**'
       - 'scripts/test-admin-content-impact.ts'
+      - 'scripts/test-admin-login-contract.ts'
       - 'scripts/test-admin-compatibility-impact.ts'
       - 'scripts/test-compatibility-admin-contract.ts'
       - 'scripts/test-compatibility-regression-gate.ts'
@@ -183,6 +185,8 @@ jobs:
         run: npm run test:business-admin-staging-seed
       - name: Business Admin Staging identity safety contract
         run: npm run test:business-admin-staging-admin
+      - name: Admin login boundary contract
+        run: npm run test:admin-login-contract
       - name: Runtime compatibility authority contract
         run: npm run test:runtime-compatibility-authority
       - name: Business API TypeScript check

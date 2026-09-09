@@ -159,7 +159,8 @@
     "seed:business-admin-staging": "node scripts/seed-business-admin-staging.mjs",
     "test:business-admin-staging-seed": "node apps/admin-content/scripts/test-business-admin-staging-seed.mjs",
     "provision:business-admin-staging": "node scripts/provision-business-admin-staging.mjs",
-    "test:business-admin-staging-admin": "node apps/admin-content/scripts/test-business-admin-staging-admin.mjs"
+    "test:business-admin-staging-admin": "node apps/admin-content/scripts/test-business-admin-staging-admin.mjs",
+    "test:admin-login-contract": "tsx scripts/test-admin-login-contract.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

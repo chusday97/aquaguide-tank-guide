@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowLeft, Clock3, Database, Loader2, RefreshCw, Search, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { isSupabaseConfigured } from '../lib/supabaseClient';
 import {
   operationsWorkItemService,
   type OperationsHomeSnapshot,
@@ -38,6 +39,7 @@ export default function AdminHub() {
   const queueItems = snapshot.workItems.slice(primaryTask ? 1 : 0, 12);
   const hiddenTaskCount = Math.max(0, snapshot.workItems.length - (primaryTask ? 1 : 0) - queueItems.length);
   const sourceProblems = useMemo(() => snapshot.sources.filter(source => source.availability !== 'ready'), [snapshot.sources]);
+  const authRequired = sourceProblems.some(source => source.availability === 'auth_required');
 
   const open = (href: string) => {
     if (href.startsWith('/admin/')) navigate(href);
@@ -62,7 +64,7 @@ export default function AdminHub() {
         {error && <div role="alert" className="mt-3 border-l-4 border-red-500 bg-white px-4 py-3 text-sm font-bold text-red-700">{error}</div>}
 
         <section data-testid="operations-primary-task" className={`mt-4 border-l-4 bg-white px-4 py-4 md:px-5 ${primaryTask ? severityClass[primaryTask.severity].split(' ')[1] : sourceProblems.length ? 'border-slate-400' : 'border-emerald-600'}`}>
-          {loading ? <div className="flex min-h-16 items-center gap-2 text-sm font-bold text-ink/45"><Loader2 className="h-5 w-5 animate-spin" />正在汇总各业务模块当前任务…</div> : primaryTask ? <PrimaryTask item={primaryTask} onOpen={open} incompleteSourcesCount={sourceProblems.length} /> : sourceProblems.length ? <SourceRecoveryTask sources={sourceProblems} /> : <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-emerald-700">当前优先任务 · 已清空</div><strong className="mt-1 block text-lg font-black">当前已读取来源没有待处理任务</strong><p className="mt-1 text-xs font-semibold leading-5 text-ink/48">所有业务模块均可读取；需要时可刷新任务获取最新状态。</p></div>}
+          {loading ? <div className="flex min-h-16 items-center gap-2 text-sm font-bold text-ink/45"><Loader2 className="h-5 w-5 animate-spin" />正在汇总各业务模块当前任务…</div> : primaryTask ? <PrimaryTask item={primaryTask} onOpen={open} incompleteSourcesCount={sourceProblems.length} /> : sourceProblems.length ? <SourceRecoveryTask sources={sourceProblems} onLogin={authRequired && isSupabaseConfigured ? () => navigate('/admin/login?next=%2Fadmin%2Fcontent') : undefined} /> : <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-emerald-700">当前优先任务 · 已清空</div><strong className="mt-1 block text-lg font-black">当前已读取来源没有待处理任务</strong><p className="mt-1 text-xs font-semibold leading-5 text-ink/48">所有业务模块均可读取；需要时可刷新任务获取最新状态。</p></div>}
         </section>
 
         <section className="mt-4 border border-slate-200 bg-white" data-testid="operations-work-queue">
@@ -98,7 +100,7 @@ export default function AdminHub() {
   );
 }
 
-function SourceRecoveryTask({ sources }: { sources: OperationsHomeSnapshot['sources'] }) {
+function SourceRecoveryTask({ sources, onLogin }: { sources: OperationsHomeSnapshot['sources']; onLogin?: () => void }) {
   const names = sources.map(source => source.label).join('、');
   const unavailable = sources.filter(source => source.availability === 'unavailable').length;
   const accessIssues = sources.length - unavailable;
@@ -106,7 +108,7 @@ function SourceRecoveryTask({ sources }: { sources: OperationsHomeSnapshot['sour
     unavailable ? `${unavailable} 个来源暂不可用` : '',
     accessIssues ? `${accessIssues} 个来源需要登录、授权或补全读取` : '',
   ].filter(Boolean).join('；');
-  return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/55">当前优先任务 · 恢复来源</div><h2 className="mt-1 text-lg font-black">先恢复数据来源，再判断是否真的没有任务</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{names} 当前未完全可读。{detail}；未读取部分不会被算成 0 个任务。</p><div className="mt-3 grid gap-2 sm:grid-cols-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{sources.length} 个业务模块来源未完整</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">查看具体来源原因；恢复安全会话或服务后刷新任务</div></div></div></div><button type="button" onClick={() => document.getElementById('operations-source-status')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="h-10 border border-slate-300 bg-white px-4 text-xs font-black text-ink/70 hover:bg-slate-50">查看数据来源 →</button></div>;
+  return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/55">当前优先任务 · 恢复来源</div><h2 className="mt-1 text-lg font-black">先恢复数据来源，再判断是否真的没有任务</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{names} 当前未完全可读。{detail}；未读取部分不会被算成 0 个任务。</p><div className="mt-3 grid gap-2 sm:grid-cols-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{sources.length} 个业务模块来源未完整</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">查看具体来源原因；恢复安全会话或服务后刷新任务</div></div></div></div><div className="flex flex-wrap gap-2">{onLogin && <button type="button" onClick={onLogin} className="h-10 bg-ink px-4 text-xs font-black text-white">登录管理员账号 →</button>}<button type="button" onClick={() => document.getElementById('operations-source-status')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="h-10 border border-slate-300 bg-white px-4 text-xs font-black text-ink/70 hover:bg-slate-50">查看数据来源 →</button></div></div>;
 }
 
 function PrimaryTask({ item, onOpen, incompleteSourcesCount }: { item: OperationsWorkItem; onOpen: (href: string) => void; incompleteSourcesCount: number }) {

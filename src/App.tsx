@@ -47,6 +47,7 @@ const loadCollection = () => import('./pages/Collection');
 const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadLogin = () => import('./pages/Login');
+const loadAdminLogin = () => import('./pages/AdminLogin');
 const loadAdminHub = () => import('./pages/AdminHub');
 const loadAdminContent = () => import('./pages/AdminContent');
 const loadCompatibilityAdmin = () => import('./pages/CompatibilityAdmin');
@@ -65,6 +66,7 @@ const Collection = lazyWithRecovery(loadCollection, 'collection-module');
 const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const Login = lazyWithRecovery(loadLogin, 'login');
+const AdminLogin = lazyWithRecovery(loadAdminLogin, 'admin-login');
 const AdminHub = lazyWithRecovery(loadAdminHub, 'admin-hub');
 const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-product-content');
 const CompatibilityAdmin = lazyWithRecovery(loadCompatibilityAdmin, 'admin-compatibility');
@@ -644,7 +646,8 @@ function AppShell() {
   const { isPhoneLayout } = useLayoutMode();
   const [preferencesReady, setPreferencesReady] = useState(false);
   const isLogin = location.pathname === '/login';
-  const isAdminArea = location.pathname.startsWith('/admin/');
+  const isAdminLogin = location.pathname === '/admin/login';
+  const isAdminArea = location.pathname.startsWith('/admin/') && !isAdminLogin;
   const isWelcome = location.pathname === '/welcome';
   const isSharedReport = location.pathname.startsWith('/report/');
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(() => {
@@ -743,7 +746,7 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isLogin && !isAdminArea && !isSharedReport) return <PageLoading />;
+  if (!preferencesReady && !isLogin && !isAdminLogin && !isAdminArea && !isSharedReport) return <PageLoading />;
 
   if (isSharedReport) {
     return (
@@ -763,6 +766,17 @@ function AppShell() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  if (isAdminLogin) {
+    return (
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="*" element={<Navigate to="/admin/login" replace />} />
         </Routes>
       </Suspense>
     );
