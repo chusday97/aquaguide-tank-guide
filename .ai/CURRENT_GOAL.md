@@ -559,3 +559,6 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Fresh refs before docs sync: remote feature `09c66bb57a6a8c1bfca3b91cdb7014be49d5d9a7`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD ahead 1 / behind 0 vs feature; divergence vs main **275 main-only / 250 feature-only**.
 - Safety unchanged: no Staging cloud project created, no live DB write, no Production migration/account change, no main merge/rebase, no indexing change.
 - NEXT: obtain/provision a dedicated non-Production AquaGuide Supabase project, apply the 16-migration upgrade plan, seed canonical representative data, create/sign in one ordinary Staging Auth user through the Staging Auth flow, dry-run then commit `provision:business-admin-staging`, require `check:business-admin-staging` green, bind Business API/Preview, and run real populated operator acceptance.
+
+6. Ownership clarity (`466025f7`): current-page overrides are explicitly labeled `本页自定义`; Base/current-page utility labels follow active scope; history shows only the active scope authority; publish readiness is explicitly the final composed page.
+3. Continue visual hierarchy cleanup inside the editing surface: reduce competing cards/colors and keep the primary authoring task visually dominant without hiding required controls.

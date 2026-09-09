@@ -715,3 +715,6 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Fresh refs before docs sync: remote feature `09c66bb57a6a8c1bfca3b91cdb7014be49d5d9a7`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD ahead 1 / behind 0 vs feature; divergence vs main **275 main-only / 250 feature-only**.
 - Safety unchanged: no Staging cloud project created, no live DB write, no Production migration/account change, no main merge/rebase, no indexing change.
 - NEXT: obtain/provision a dedicated non-Production AquaGuide Supabase project, apply the 16-migration upgrade plan, seed canonical representative data, create/sign in one ordinary Staging Auth user through the Staging Auth flow, dry-run then commit `provision:business-admin-staging`, require `check:business-admin-staging` green, bind Business API/Preview, and run real populated operator acceptance.
+
+- SEO editor ownership clarity is complete at `466025f7`: inherited Search fields use explicit `本页自定义`, current-page/Base tool labels follow the active editor scope, history drawers render exactly one matching revision authority, and publish readiness is labeled as final composed-page readiness.
+- NEXT: continue visual hierarchy cleanup in the authoring surface (card/section/color density and context clarity) without changing authority or review semantics.

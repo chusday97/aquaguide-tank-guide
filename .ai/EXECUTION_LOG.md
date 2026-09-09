@@ -1204,3 +1204,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Browser regression switches Base/current page and verifies one Base ownership explanation plus final-composition Preview copy.
 - PASS: hierarchy browser regression, SEO Admin contract, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
 - NEXT: visible editor action audit.
+
+## 2026-09-10 — SEO editor ownership clarity checkpoint
+- Committed `466025f7 fix(admin): clarify editor tool ownership`.
+- Inherited Meta/H1 overrides now use explicit current-page ownership copy (`本页自定义`).
+- Base/current-page utility summaries follow active scope; revision history renders only the active scope authority; readiness copy explicitly targets the final composed page.
+- PASS: Data Review / hierarchy browser regression, Admin content contract, root TypeScript, full root build, diff hygiene. Production/main/Supabase/indexing untouched.
