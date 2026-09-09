@@ -8,6 +8,7 @@
 - Care action metadata round-trip (`actionTitle`, `actionKind`) is preserved; local store corruption self-heals to canonical seed.
 - Compatibility local authority: 7 Profiles / 4 Pair Rules; Draft→Impact→real Regression→Evidence→Review→runtime publish PASS.
 - Local Operations WorkItems and exact deep-links PASS. Cloud Business/Repo Admin API 503 does not block the local Product/Care or Compatibility browser regressions.
+- Local Publish Center PASS: Product/Care publish/archive + Compatibility submit/review/publish history are visible while Business APIs are unavailable; SEO remains independently authenticated.
 - Product/Care images remain read-only/no local write. Care SEO Editorial remains outside the current local adapter.
 - Production/main/live Supabase/indexing are untouched; Supabase Staging is parked for current development.
 

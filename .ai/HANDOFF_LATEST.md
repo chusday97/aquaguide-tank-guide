@@ -10,7 +10,8 @@ Functional checkpoint: `fdfa25fb feat(admin): add local operations authority`.
 - Operations Home deep-links exact local Product/Care and Compatibility work items. Local source readiness is not overridden by Supabase schema status.
 - Cloud `/api/v1/**` and `/api/admin-content/**` can be unavailable and both Local browser regressions still pass.
 - Local mode currently does not write images and does not provide Local Care SEO Editorial persistence. Production/main/live DB remain untouched.
-- NEXT: Local Publish Center aggregation/readiness → Care SEO Editorial local adapter → image local-file persistence. Only after that decide whether localStorage should be promoted to Repo/local-file persistence for durable single-machine operation.
+- Local Publish Center is now complete at `174cf174`: Product/Care publish/archive and Compatibility submit/review/publish history are read from local authority stores; SEO keeps its separate Repo Admin feed; Production remains locked.
+- NEXT: Care SEO Editorial local adapter → image local-file persistence. Only after that decide whether localStorage should be promoted to Repo/local-file persistence for durable single-machine operation.
 
 Updated: 2026-09-09
 Canonical repo: `chusday97/aquaguide-tank-guide`

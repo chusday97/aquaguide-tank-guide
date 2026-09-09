@@ -11,11 +11,13 @@ Completed in the current local-first phase:
 4. DEV-only fail-closed local switch; production builds keep the existing deployed authority path.
 5. Heavy browser regressions prove Local Product/Care + Compatibility operate while cloud Admin APIs return 503.
 
+Completed additionally:
+6. Local Publish Center at `174cf174`: local Product/Care publish/archive events + Compatibility submit/review/publish events, with the existing SEO Repo feed unchanged and no new write authority.
+
 NEXT milestones:
-1. Local Publish Center release/readiness aggregation.
-2. Care SEO Editorial Local adapter without copying Care Knowledge authority.
-3. Local image/file persistence.
-4. Decide whether browser localStorage is sufficient for acceptance only or should be promoted to Repo/local-file persistence for durable single-machine use.
+1. Care SEO Editorial Local adapter without copying Care Knowledge authority.
+2. Local image/file persistence.
+3. Decide whether browser localStorage is sufficient for acceptance only or should be promoted to Repo/local-file persistence for durable single-machine use.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

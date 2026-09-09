@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Local-first checkpoint (2026-09-09)
-- Functional local HEAD: `fdfa25fbef88c0b62d299fbdb6a1bbe24e17b316`.
+- Latest Local-first functional HEAD: `174cf1746014545cb62a72696088bb5663e2ec9b` (Local Publish Center).
 - Live remote feature before docs sync/push: `4677bcca0f512bee516dae23a0bfcd4f36d12518`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
 - Explicit-ref relation at functional checkpoint: local vs remote feature = `ahead 2 / behind 0`; main vs local = `275 main-only / 253 feature-only`.

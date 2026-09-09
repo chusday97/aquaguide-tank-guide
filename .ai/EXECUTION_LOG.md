@@ -1,5 +1,12 @@
 # Execution Log
 
+## 2026-09-09 — Local Publish Center checkpoint
+- Functional commit `174cf174 feat(admin): add local publish center history`.
+- Product/Care local publish/archive and Compatibility local submit/review/publish events now feed `/admin/publish-center`.
+- Local Publish Center skips Business `/admin/releases`; SEO continues to use its independent Repo Admin read feed.
+- Local Product/Care + Compatibility browser regressions pass with cloud Admin APIs forced unavailable; Production/main/live DB untouched.
+- NEXT: Care SEO Editorial local adapter.
+
 ## 2026-08-28 — Admin Content V0 baseline
 
 - Isolated branch: `feature/admin-content-v0`.

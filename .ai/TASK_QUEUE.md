@@ -11,7 +11,7 @@
 - [x] Operations exact WorkItems/deep-links for local Product/Care + Compatibility.
 - [x] DEV-only local mode guard; production cannot enable local authority from the Vite flag alone.
 - [x] Heavy browser tests run with cloud Admin APIs unavailable.
-- [ ] Local Publish Center aggregation/readiness/history.
+- [x] Local Publish Center aggregation/readiness/history (`174cf174`): Product/Care + Compatibility local release events, SEO Repo feed unchanged, Production locked.
 - [ ] Care SEO Editorial local persistence/readiness.
 - [ ] Local image/file storage for Product/Care assets.
 - [ ] Decide/implement Repo or local-file persistence if Local Mode is to become durable single-machine operations rather than browser-scoped acceptance.
