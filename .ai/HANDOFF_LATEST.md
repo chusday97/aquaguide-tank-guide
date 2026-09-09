@@ -6,6 +6,7 @@
 - Cleanup commit: `8e2f4b98`; manifest refresh: `d47f6933`.
 - Freeze manifest now records `contentSha256` over files excluding the manifest itself. Five direct pages return HTTP 200; no React, Domain, Catalog, Supabase or production files changed.
 - Status remains `REVIEW_REQUIRED`; no user acceptance or HTML Freeze exists. Next: direct-page matrix at 390/600/1024/1440/1920px, then independent Critic review.
+- Only the original Node 4198 listener remains. `test-html-freeze-matrix.mjs` is available, but local Playwright/system Chrome exits with MachPort `BROWSER_UNAVAILABLE`; no visual pass is claimed.
 
 ## Current goal
 
