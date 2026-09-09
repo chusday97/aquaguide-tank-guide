@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project_id": "PRJ-aquaguide",
-  "updated_at": "2026-08-31T00:00:00+08:00",
+  "updated_at": "2026-09-09T11:05:00+08:00",
   "evidence_items": [
     {"id":"EVD-20260715-001","type":"commit","locator":"917b80a","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"今日行动、水族册独立地址与生命纪念回流"},
     {"id":"EVD-20260715-002","type":"test","locator":"npm run lint; npm run build; 1280/390 browser regression","date":"2026-07-15","version":"917b80a","accessible":true,"sensitive":false,"notes":"类型、构建和直达行为验证"},
@@ -106,6 +106,7 @@
     {"id":"EVD-20260831-077","type":"source","locator":"src/data/catalogReviewBatches/batch-03.ts","date":"2026-08-31","version":"1974c744","accessible":true,"sensitive":false,"notes":"基于已读取专业页面新增6条窄范围支持字段（雷龙、斗鱼、Neocaridina体长/繁殖）；未明确支持的字段保持unknown，斑马螺与水晶虾身份仍未确认。"},
     {"id":"EVD-20260831-078","type":"source","locator":"src/data/catalogReviewBatches/batch-03.ts","date":"2026-08-31","version":"aca42ed3","accessible":true,"sensitive":false,"notes":"FishBase页面明确支持Astronotus ocellatus的淡水、水温和成体最大体长，以及Amatitlania nigrofasciata基础种的成体最大体长；商业品系身份与未明确行为字段保持未知。"},
     {"id":"EVD-20260831-079","type":"test","locator":"scripts/test-catalog-review-batches.ts","date":"2026-08-31","version":"e8e6f3ce","accessible":true,"sensitive":false,"notes":"新增迷你鹦鹉鱼精确字段断言：来源白名单后仅adult_size进入运行时，freshwater不会因通用来源分支被意外升级；Catalog checksum更新为05576a71...。"},
-    {"id":"EVD-20260908-080","type":"test","locator":"4822a612; npm run test:task-routes; npm run test:ui-action-contract; npm run test:compatibility; Chromium compatibility route smoke","date":"2026-09-08","version":"codex/ui-action-contract-v1","accessible":true,"sensitive":false,"notes":"从origin/main建立动作基础短分支；物种风险保持原位展开，独立/compatibility路由接收物种与来源上下文，旧混养地址重定向；未验收视觉分支和生产指针未修改。"}
+    {"id":"EVD-20260908-080","type":"test","locator":"4822a612; npm run test:task-routes; npm run test:ui-action-contract; npm run test:compatibility; Chromium compatibility route smoke","date":"2026-09-08","version":"codex/ui-action-contract-v1","accessible":true,"sensitive":false,"notes":"从origin/main建立动作基础短分支；物种风险保持原位展开，独立/compatibility路由接收物种与来源上下文，旧混养地址重定向；未验收视觉分支和生产指针未修改。"},
+    {"id":"EVD-20260909-081","type":"test","locator":"Draft PR #147; Vercel environment scope read-back; local foundation-equivalent commands","date":"2026-09-09","version":"codex/species-seo-preview-v1","accessible":true,"sensitive":false,"notes":"Vercel Supabase/Postgres变量只绑定Production；公开SEO候选保持noindex。恢复latest-main package scripts后，project truth、Catalog、Domain、Compatibility、API类型、lint和build在本地通过；修复后远端CI仍待读回。"}
   ]
 }
