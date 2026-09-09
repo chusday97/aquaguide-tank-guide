@@ -675,6 +675,7 @@
 - 五个4198直接页面（aquarium、collection、encyclopedia、care、compatibility）经本机HTTP检查均返回200；4198当前只保留Node监听PID 34000。
 - 自动矩阵再次运行仍返回 `BROWSER_UNAVAILABLE`（系统Chrome启动后MachPort/SIGABRT），没有自动截图、矩形或资源失败报告；状态保持 `REVIEW_REQUIRED`，不得签字或生成HTML Freeze。
 - 已新增 `.github/workflows/html-freeze-matrix.yml`：仅在 `critical`/`merge-ready` 标签、手动触发或带标签PR同步时，在干净 Ubuntu runner 安装 Chromium、启动4198静态服务并上传五视口矩阵产物；矩阵脚本在非 macOS 环境自动使用 Playwright Chromium。
+- GitHub DNS 已恢复；只读 `git fetch origin main` 成功，当前 `origin/main` 仍为 `d3c70dee`，与本分支既定基线一致。尚未推送当前分支或创建远端PR，因此 CI 尚无真实运行记录。
 # 2026-08-01 结构化生命纪念录入交接
 
 - 当前结果：死亡原因改为受控多选标签；“暂不确定”独占，“其他”必须补充文字，旧 `reason` 继续兼容。

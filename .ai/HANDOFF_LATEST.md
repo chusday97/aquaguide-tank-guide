@@ -42,6 +42,7 @@ Create the 4198 combined HTML review package, then capture 390/600/1024/1440/192
 - Direct Care review: default scene exposes only water/livestock/filter; selecting water exposes two problem cards; selecting a card hides the card tray and opens one guide detail with an explicit start-task action.
 - This is manual visual/accessibility evidence only. The automatic matrix still returns `BROWSER_UNAVAILABLE` because local Chrome aborts during Playwright launch, so `REVIEW_REQUIRED` remains authoritative.
 - A gated CI workflow now exists at `.github/workflows/html-freeze-matrix.yml`; it installs Chromium on Ubuntu, starts the 4198 static server, runs the matrix, and uploads screenshots/report. It has not produced a remote run in this local-only session.
+- Remote connectivity is restored for a read-only fetch; `origin/main` is confirmed at `d3c70dee`, matching the local baseline. The current branch has not been pushed and no remote CI evidence exists yet.
 
 ## Verification evidence
 
