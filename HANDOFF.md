@@ -718,6 +718,7 @@
 - 内置浏览器追加检查：Category 与 Guide 路由均可进入并保持 Public Header；Guide 的“内容正在准备”状态没有持续动画。
 - 动效扩展提交：`eb98b615`；Marketing/Category/Guide 已复用相同 motion tokens 和 PageShell 可见性机制，Guide 准备态不使用循环动画。
 - 最新布局修复提交：`5071ae2c`；公开 SEO 页面覆盖全局滚动限制，环境章节改为自适应双区布局，缺图时不再显示空白大卡。
+- 最新内容占位修复提交：`3832bfcf`；分类页物种卡显示已批准项目图片，统一 4:3 媒体区并提供缺图 fallback。
 - 当前阻塞：Playwright 内置 Chromium 与系统 Chrome 均被 macOS MachPort 权限阻断，不能宣称本轮动效浏览器专项通过。Figma 继续暂停，独立 Critic 尚未取得可读报告。
 - 未提交且明确隔离：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 的既有素材/截图改动。
 - 下一步：恢复可用浏览器后重跑 `test:seo-motion` 和三档 Species 回归；随后做用户视觉确认，再启动一次可读独立 Critic。所有页面保持 `noindex,follow`。

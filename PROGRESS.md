@@ -813,5 +813,6 @@
 - [x] 内置浏览器进一步确认 Category 与 Guide 可正常进入，继续使用 Public Header，未出现 App Shell 侧栏或底栏；Guide 准备态保持静态，不播放持续动画。
 - [x] 公开页面动效扩展至 Marketing、Category、Guide：Hero/文章一次性进入，价值卡和分类卡最多三级错峰；未改变内容、路由或索引策略。
 - [x] 修复公开 SEO 页面滚动边界，并收紧环境章节布局：内容不再因缺图被拉成大面积空白，改用中性环境观察构图与统一内容卡。
+- [x] 分类页物种卡接入已批准项目素材，统一 4:3 图片区；缺图时显示明确 fallback，不再出现空白图片区域。
 - [ ] 系统 Chromium/Chrome 仍被 macOS MachPort 权限阻断，动效专项无法完成 Playwright 启动级验证；用户视觉确认、独立 Critic 和 Figma Canonical 仍待完成。
 - 当前保持 `noindex,follow`；此前未提交的宝莲灯素材候选与截图脚本改动未混入本动效提交。
