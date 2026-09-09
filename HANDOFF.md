@@ -3,6 +3,7 @@
 ## 2026-09-09 4198 Freeze 止损（当前）
 
 - 在 `codex/project-authority-recovery-v1` 本地完成首轮 HTML 结构收敛：删除未引用的重复 `review-*` CSS/脚本，补齐直接页公共壳层与响应式规则。
+- 对应提交：`8e2f4b98`；manifest 刷新提交：`d47f6933`。
 - 图鉴与养护详情打开时隐藏首层选择板，关闭后恢复选择上下文与焦点；manifest 新增排除自身的 `contentSha256`，避免提交后 SHA 永远落后一版。
 - 4198 五个直接页面均返回 HTTP 200，未修改 React、Domain、Catalog、Supabase 或生产；当前仍为 `REVIEW_REQUIRED`，尚无用户 Freeze 确认。
 - 下一步：用系统 Chrome/CUA 完成 390/600/1024/1440/1920px 直接页面矩阵和交互证据，再交独立 Critic 复验。
