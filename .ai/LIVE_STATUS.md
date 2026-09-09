@@ -490,3 +490,10 @@ Use `HANDOFF_LATEST → AQUA_OPERATIONS_STUDIO_ARCHITECTURE → CURRENT_GOAL →
 - Current headless browser is unauthenticated: it truthfully reports SEO partial and Product/Care + Compatibility unavailable. 1440/390 remain zero overflow / zero page errors.
 - Populated real-task browser click-through is not yet accepted because no secure Business/Repo Admin session is attached to this browser. Do not substitute fake production state.
 - Production/main/live DB/index remain untouched. Next: authenticated populated-state operator acceptance only if a secure existing session is available.
+
+## 2026-09-09 02:55 +0800 — Operations populated-state test status
+- Test checkpoint: `ae818fb9e97fc52b7241d0bfefd9303dcb45d270`. Local test `npm run test:operations-studio-ui` PASS at 1440×900 and 390×844.
+- Exact Compatibility revision and Product Draft routing both PASS; zero horizontal overflow, zero page errors and zero intercepted API 5xx.
+- Fixture test uses only fake local auth/session values and read-only intercepted responses. Real authenticated current-state acceptance remains pending.
+- Temporary manual fixture server on port 3014 was terminated; the durable test self-manages port 4318 and leaves it closed after completion.
+- Operations dev remains `http://127.0.0.1:3003/admin/content`; API `8788`; Species SEO CMS `3010`.

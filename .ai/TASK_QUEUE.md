@@ -335,3 +335,10 @@ The isolated reconciliation candidate exists on Draft PR #144. Do not continue/m
 - [x] Phase 3: surface task-critical readiness at the WorkItem boundary as current gate + exact next step + authority verification; hard blockers must outrank softer issues.
 - [ ] NEXT: authenticated operator acceptance with populated real WorkItems and exact click-through. Use only an existing secure Business/Repo Admin session; do not expose or manually shuttle credentials.
 - [ ] Writable hosted credentials remain a separate security task; branch reconciliation / PR #144, Production, live DB and indexing remain parked.
+
+## Active continuation — 2026-09-09 02:55 +0800
+- [x] Add durable populated-state browser regression for Operations Home exact WorkItem routing using isolated fake auth/read fixtures only.
+- [x] Prove desktop/mobile `Operations → exact Compatibility revision` and `Operations → exact Product Draft`, with zero overflow/page errors/API 5xx.
+- [x] Run this regression only in Heavy browser CI; keep lightweight CI focused on contracts/typechecks.
+- [ ] NEXT: real authenticated Business/Repo Admin operator acceptance with populated current WorkItems. Reuse only an existing secure browser session; never extract or manually shuttle cookies/tokens.
+- [ ] Writable hosted credentials remain separate. Reconciliation / PR #144, main, Production, live DB and indexing remain parked.

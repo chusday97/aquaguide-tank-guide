@@ -607,3 +607,11 @@ For a brand-new conversation, start with `.ai/CROSS_SESSION_START.md`. It contai
 - Read-only guard remains intact: no WorkItem mutation call, centralized DB or direct publish action was added.
 - Local 1440/390 Operations Home still has zero overflow and zero page errors in unauthenticated mode. This proves fail-isolated behavior, not populated-task click-through.
 - Active next: authenticated populated-state operator acceptance using an existing secure session. If no secure session is available, treat that as a real acceptance blocker rather than inventing fixture data as production truth. Reconciliation/Production/live DB/index remain parked.
+
+## 2026-09-09 02:55 +0800 — Operations Studio populated-state browser contract
+- Test checkpoint `ae818fb9e97fc52b7241d0bfefd9303dcb45d270` (`test(admin): cover populated operations routing`) adds a credential-free populated-state Playwright regression for Operations Studio.
+- The test starts an isolated Vite instance with fake Supabase config/session and intercepts read endpoints only; it never uses real cookies/tokens and never writes Product/Care/Compatibility/SEO data.
+- Desktop 1440×900 and mobile 390×844 both prove `Operations Home → exact Compatibility revision` and `Operations Home → exact Product Draft`, with zero horizontal overflow, zero page errors and zero API 5xx.
+- `test:operations-studio-ui` is wired only into the Heavy browser gate, not lightweight CI. This is durable routing/UI regression evidence, **not** a substitute for real authenticated operator acceptance.
+- Real authenticated acceptance is still pending because the existing Chrome profile has `查看 → 开发者 → 允许 Apple 事件中的 JavaScript` disabled; no credential extraction or manual token shuttling is allowed.
+- NEXT: when a secure existing Business/Repo Admin browser session is automatable, repeat populated WorkItem click-through against real current authority state. Production/main/live DB/index and PR #144 remain parked.

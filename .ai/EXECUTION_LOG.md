@@ -1011,3 +1011,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Added UI contract assertions so Task Gate fields cannot silently disappear from Operations Home.
 - Full focused contracts, root/API TS, full build, diff check and 1440/390 unauthenticated browser acceptance PASS.
 - Functional commit `76dfc817cdebf2b6357523e31df08b123d1ed5b3`. Remaining gap: real authenticated populated-state click-through; no credentials were exposed or manually shuttled.
+
+## 2026-09-09 02:55 +0800 — Operations populated-state Heavy browser regression
+- Real Chrome-session automation remained blocked because Apple Events JavaScript is disabled; no credential/profile extraction was attempted.
+- Added `scripts/verify-operations-studio-populated.mjs` using an isolated Vite instance, fake Supabase session and read-only intercepted authority responses.
+- Browser proof PASS on 1440×900 and 390×844: Operations Home → exact Compatibility revision and exact Product Draft; zero overflow/page errors/API 5xx.
+- Added root `test:operations-studio-ui` and wired it to `.github/workflows/admin-content-ci-gate.yml` Heavy browser gate only.
+- Full focused contracts, API/root TypeScript, full build and `git diff --check` PASS.
+- Real authenticated populated-state acceptance remains the next environment gate.

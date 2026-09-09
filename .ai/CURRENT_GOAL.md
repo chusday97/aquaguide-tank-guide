@@ -451,3 +451,9 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Operations remains read-only and never claims Production eligibility. Final publish/index decisions stay in each canonical authority.
 - PASS: WorkItem + Compatibility + Product/Care + SEO Registry + Publish Center contracts, root/API TypeScript, full build, diff hygiene, 1440/390 zero-overflow/no-page-error local Operations Home.
 - Remaining acceptance gap is populated-state browser proof under a real authenticated Business/Repo Admin session. Current local Playwright environment has no configured/login session and correctly renders source unavailable/partial rather than fake tasks.
+
+## 2026-09-09 02:55 +0800 — Populated-state acceptance coverage
+- Durable Heavy-CI browser proof now covers populated Operations tasks without real credentials: exact Compatibility revision and Product Draft deep-links pass at 1440/390 with zero overflow/page-error/API-5xx.
+- Checkpoint: `ae818fb9e97fc52b7241d0bfefd9303dcb45d270`. The fixture is isolated, read-only and explicitly non-production truth.
+- This narrows the remaining acceptance gap to **real authenticated current-state proof** only; do not mark that gate complete until an existing secure Business/Repo Admin session is used without exposing credentials.
+- Chrome Apple Events JavaScript is currently disabled, so automated reuse of the real browser session is blocked by browser configuration rather than product code.

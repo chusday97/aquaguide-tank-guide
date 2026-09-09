@@ -401,3 +401,10 @@ Production/main remain outside normal Aqua Operations Studio iteration unless ex
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
 - Live-main ↔ functional HEAD divergence: **275 main-only / 232 feature-only**.
 - No force push, merge/rebase, Production, live DB or indexing action is part of Phase 3. PR #144 remains parked.
+
+## 2026-09-09 02:55 +0800 — Operations populated-state test checkpoint
+- Local functional/test HEAD before docs sync: `ae818fb9e97fc52b7241d0bfefd9303dcb45d270`.
+- Live feature before this test push: `ff05ee6427bb5b2b56b66eb103a5a3cb971ab3e3`; local is ahead 1 / behind 0.
+- Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Live-main ↔ local divergence: **275 main-only / 234 feature-only**.
+- This remains a two-way divergence; no force push, merge/rebase, Production, live DB or indexing action is authorized.
