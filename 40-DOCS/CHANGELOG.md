@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Verified: 当前公开 SEO 提交 `a4c4bcfb` 的 production build 与 `git diff --check` 通过；保留既有字体与代码分包警告，未改变页面内容、索引策略或用户未提交文件。
 - Verified: FishBase 物种摘要页直接支持宝莲灯主要在中层水域活动并取食蠕虫和小型甲壳类；本地来源登记统一到 FishBase 主域名，未扩写页面事实或改变索引策略。
 - Added: Editorial evidence 回归保护 FishBase 来源主域名、资格状态和对应支持范围，避免来源登记漂移。
 - Added: Editorial evidence 回归保护 UF/IFAS 与 USGS 来源资格及极火虾公开内容支持边界。

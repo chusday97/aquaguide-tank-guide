@@ -864,3 +864,9 @@
 - 当前静态导航契约通过；不把它称为真实浏览器点击验收。
 - 仍未完成：真实三档截图、可读独立 Critic、Figma Canonical；继续保持 `noindex,follow`。
 - 本轮 `cua.getState` 仍返回 Mac 锁定且无法自动解锁；未重复启动浏览器，静态公开 SEO 回归全部通过。
+# 2026-09-10 最新构建复验
+
+- 当前提交 `a4c4bcfb` 的 `npm run build` 已成功；`git diff --check` 已通过。
+- 构建输出仍有既有动态/静态导入和大字体/大 chunk 警告，未在本轮扩大范围处理。
+- 当前工作树仍只保留用户未提交的三份修改：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`；本轮未触碰或暂存。
+- 下一步：Mac 解锁后一次性完成真实浏览器三档回归；随后进行可读独立 Critic。Figma 继续暂停，页面保持 `noindex,follow`。

@@ -978,3 +978,9 @@
 - [x] 结构、文案、契约、lint 与 diff-check 回归通过。
 - [ ] 真实 390/600/1440 截图、系统浏览器回归、可读独立 Critic 和 Figma Canonical 仍未完成；页面继续 `noindex,follow`。
 - [x] 本轮复查浏览器环境仍被 Mac 锁定；未重复启动进程，静态 Editorial、Evidence、公开契约、文案、结构、响应式、lint 和 diff-check 全部通过。
+## 2026-09-10 最新公开 SEO 提交构建复验
+
+- [x] 在当前提交 `a4c4bcfb` 上完成 `npm run build`，production bundle 构建成功。
+- [x] `git diff --check` 通过；构建仅保留既有动态/静态导入提示和中文字体、主包体积提示。
+- [ ] Mac 仍处于锁定状态，真实 390/600/1440 截图、点击返回验收、可读独立 Critic 和 Figma Canonical 仍未完成。
+- [ ] 页面继续 `noindex,follow`；不修改 `main`、Production Supabase、生产部署或用户保留的未提交文件。
