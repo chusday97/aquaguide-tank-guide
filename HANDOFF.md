@@ -748,3 +748,4 @@
 - 2026-09-10 追加诊断：内置浏览器新标签显式传入 390px viewport 仍被固定视图忽略；该工具可做人工内容/导航验证，但不能提供三档响应式截图。
 - 2026-09-10 追加诊断：Playwright WebKit 已安装但启动即 `Abort trap: 6`，与 Chromium 一样未进入页面断言；当前不能生成自动化三档截图。
 - 2026-09-10 UI 修复：Species Hero 移动/平板媒体卡最小高度改为 280px，桌面仍为 470px；lint/build 已通过。待可调整 viewport 环境恢复后重点复核 390/600 构图。
+- 2026-09-10 浏览器诊断收口：Firefox 也在 headless 启动阶段 `SIGABRT`；Chromium/WebKit/Firefox 三个 Playwright 引擎均不可用。不要再重复安装引擎，等待系统权限或托管浏览器。

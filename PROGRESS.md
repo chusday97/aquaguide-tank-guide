@@ -831,6 +831,8 @@
 - [x] 尝试在新建内置浏览器标签时显式传入 `viewport: { width: 390, height: 844 }`；工具仍使用固定宽度，确认该参数不提供响应式模拟能力。
 - [x] 安装本地 Playwright WebKit 后尝试执行三档截图；WebKit 同样在 macOS 进程层 `Abort trap: 6` 退出，未进入页面断言或生成截图。
 - [ ] 自动化浏览器阻塞已扩大确认至 Chromium/WebKit 两个引擎；下一次只在系统权限或托管浏览器环境改变后重跑。
+- [x] 追加 Firefox 引擎诊断：Firefox 已安装但 headless 启动即 `SIGABRT`；Chromium、WebKit、Firefox 均无法进入页面断言。
+- [ ] 当前自动化验收解除条件明确为 macOS 运行环境恢复或可调整 viewport 的托管浏览器；不再继续安装本地引擎。
 - [x] 收紧 Species Hero 媒体卡：移动端/平板内层最小高度从 340px 调整为 280px，桌面保持 470px，减少手机页面首屏空白并保留主体 `contain`。
 - [x] `npm run lint` 与 `npm run build` 在该 UI 修复后通过。
 
