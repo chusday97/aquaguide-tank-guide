@@ -34,6 +34,8 @@
 - Verified: 未引入后台审核术语或事实内容；lint、公开契约、build 与 diff-check 通过。
 - Added: `test:public-seo-copy` 公开文案回归门禁，扫描四类公开页面并检查 Guide 准备态的非重复用户预期。
 - Verified: 后台术语未进入公开文案；公开文案、契约、Editorial、Evidence、lint 与 diff-check 通过。
+- Changed: 公开文案回归门禁扩展到 `publishedSpeciesProfile.ts`，同时覆盖页面组件和公开聚合层中文摘要。
+- Verified: 证据、Product Truth、路由和 `noindex,follow` 不变；文案门禁、lint 与 diff-check 通过。
 - Fixed: Guide 准备态移除“事实审核”流程词，改为用户可理解的“具体步骤整理好后开放”。
 - Verified: `test:public-seo-copy`、公开契约、Editorial、Evidence、lint 与 diff-check 通过。
 

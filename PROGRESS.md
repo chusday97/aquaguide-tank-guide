@@ -876,6 +876,12 @@
 - [x] 通过 lint、公开契约、build 与 diff-check；未改变 Product Truth、路由、内容门禁或 `noindex,follow`。
 - [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
 
+## 2026-09-10 公开聚合层文案门禁补强
+
+- [x] `test:public-seo-copy` 扩展扫描 `publishedSpeciesProfile.ts`，阻止证据聚合层重新带出审核流程词。
+- [x] 页面组件与公开聚合层文案扫描均通过；未改变证据、Product Truth、路由或索引策略。
+- [ ] 三档自动化浏览器、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-10 Guide 状态文案最终收口
 
 - [x] 将“完成事实审核后开放”改为“具体步骤整理好后开放”，让 Guide 准备态只描述用户可理解的内容状态。

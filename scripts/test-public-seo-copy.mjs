@@ -8,6 +8,9 @@ const publicPageFiles = [
   'src/pages/SpeciesLanding.tsx',
   'src/pages/CareGuideLanding.tsx',
 ];
+const publicDataFiles = [
+  'src/data/publishedSpeciesProfile.ts',
+];
 const forbiddenPublicCopy = [
   /Product Truth/i,
   /Base Species/i,
@@ -29,6 +32,14 @@ for (const relativeFile of publicPageFiles) {
   const matches = forbiddenPublicCopy.filter(pattern => pattern.test(source));
   if (matches.length > 0) {
     throw new Error(`${relativeFile} contains forbidden public copy: ${matches.map(pattern => pattern.source).join(', ')}`);
+  }
+}
+
+for (const relativeFile of publicDataFiles) {
+  const file = path.join(root, relativeFile);
+  const source = fs.readFileSync(file, 'utf8');
+  for (const pattern of [/已核对资料/, /现有审核记录/, /事实审核/, /审核记录/]) {
+    if (pattern.test(source)) throw new Error(`${relativeFile} contains forbidden published copy: ${pattern.source}`);
   }
 }
 
