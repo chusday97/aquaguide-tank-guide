@@ -857,3 +857,4 @@
 - Editorial 回归现在同时保护 FishBase 主域名、`eligible` 状态和“中层活动/蠕虫及小型甲壳类”支持范围。
 - UF/IFAS 与 USGS 的来源资格及其对极火虾身份、栖息与机会性取食的支持范围也已纳入 Editorial 回归；未新增未经来源支持的习性。
 - 仍未完成：真实三档截图、可读独立 Critic、Figma Canonical；继续保持 `noindex,follow`。
+- 本轮 `cua.getState` 仍返回 Mac 锁定且无法自动解锁；未重复启动浏览器，静态公开 SEO 回归全部通过。

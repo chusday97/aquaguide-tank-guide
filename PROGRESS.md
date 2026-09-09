@@ -971,3 +971,4 @@
 - [x] Editorial 回归新增 FishBase 来源登记断言，保护来源主域名、资格状态和支持范围不被误改。
 - [x] 复核 UF/IFAS 与 USGS 对极火虾公开表达的支持范围；当前 9 条已确认表达未发现需要收窄的过度结论，并将两项来源边界纳入回归。
 - [ ] 真实 390/600/1440 截图、系统浏览器回归、可读独立 Critic 和 Figma Canonical 仍未完成；页面继续 `noindex,follow`。
+- [x] 本轮复查浏览器环境仍被 Mac 锁定；未重复启动进程，静态 Editorial、Evidence、公开契约、文案、结构、响应式、lint 和 diff-check 全部通过。
