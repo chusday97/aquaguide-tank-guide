@@ -53,7 +53,7 @@ export default function AdminHub() {
             <div className="min-w-0">
               <div className="text-[11px] font-black uppercase tracking-[0.12em] text-emerald-700">Aqua Operations Studio</div>
               <h1 className="truncate text-2xl font-black">运营工作台</h1>
-              <p className="mt-0.5 text-xs font-semibold text-ink/45">先处理问题，再进入对应 authority；工作台本身不改写 Product、Care、Compatibility 或 SEO。</p>
+              <p className="mt-0.5 text-xs font-semibold text-ink/45">先处理问题，再进入对应业务模块；工作台本身不改写 Product、Care、Compatibility 或 SEO。</p>
             </div>
           </div>
           <button type="button" onClick={() => void load()} disabled={loading} className="flex h-10 items-center gap-2 border border-slate-200 bg-white px-3 text-xs font-black text-ink/65 disabled:opacity-50"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />刷新任务</button>
@@ -61,21 +61,21 @@ export default function AdminHub() {
 
         {error && <div role="alert" className="mt-3 border-l-4 border-red-500 bg-white px-4 py-3 text-sm font-bold text-red-700">{error}</div>}
 
-        <section data-testid="operations-primary-task" className={`mt-4 border-l-4 bg-white px-4 py-4 md:px-5 ${primaryTask ? severityClass[primaryTask.severity].split(' ')[1] : 'border-slate-300'}`}>
-          {loading ? <div className="flex min-h-16 items-center gap-2 text-sm font-bold text-ink/45"><Loader2 className="h-5 w-5 animate-spin" />正在汇总各 authority 当前任务…</div> : primaryTask ? <PrimaryTask item={primaryTask} onOpen={open} /> : <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">当前优先任务</div><strong className="mt-1 block text-lg font-black">当前没有可读取的待处理工作项</strong><p className="mt-1 text-xs font-semibold leading-5 text-ink/48">这不等于所有系统都健康；请同时查看下方 authority 读取状态。</p></div>}
+        <section data-testid="operations-primary-task" className={`mt-4 border-l-4 bg-white px-4 py-4 md:px-5 ${primaryTask ? severityClass[primaryTask.severity].split(' ')[1] : sourceProblems.length ? 'border-slate-400' : 'border-emerald-600'}`}>
+          {loading ? <div className="flex min-h-16 items-center gap-2 text-sm font-bold text-ink/45"><Loader2 className="h-5 w-5 animate-spin" />正在汇总各业务模块当前任务…</div> : primaryTask ? <PrimaryTask item={primaryTask} onOpen={open} incompleteSourcesCount={sourceProblems.length} /> : sourceProblems.length ? <SourceRecoveryTask sources={sourceProblems} /> : <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-emerald-700">当前优先任务 · 已清空</div><strong className="mt-1 block text-lg font-black">当前已读取来源没有待处理任务</strong><p className="mt-1 text-xs font-semibold leading-5 text-ink/48">所有业务模块均可读取；需要时可刷新任务获取最新状态。</p></div>}
         </section>
 
         <section className="mt-4 border border-slate-200 bg-white" data-testid="operations-work-queue">
           <div className="flex items-end justify-between gap-3 border-b border-slate-200 px-4 py-3">
             <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Work queue</div><h2 className="mt-0.5 text-lg font-black">现在需要处理</h2></div>
-            <span className="text-xs font-black text-ink/40">{snapshot.workItems.length} 个真实任务</span>
+            <span className="text-xs font-black text-ink/40">{sourceProblems.length ? `${snapshot.workItems.length} 个已读取任务 · 来源未完整` : `${snapshot.workItems.length} 个当前任务`}</span>
           </div>
-          {!loading && queueItems.length === 0 ? <div className="px-4 py-6 text-sm font-semibold text-ink/45">{primaryTask ? '当前只有上方这一条优先任务。' : '当前没有来自已连接 authority 的任务。'}</div> : <div className="divide-y divide-slate-100">{queueItems.map(item => <WorkItemRow key={item.id} item={item} onOpen={open} />)}</div>}
-          {!loading && hiddenTaskCount > 0 && <div className="border-t border-slate-100 px-4 py-3 text-xs font-semibold text-ink/45">还有 {hiddenTaskCount} 个任务未在首页展开；进入对应 Authority 查看全量。</div>}
+          {!loading && queueItems.length === 0 ? <div className="px-4 py-6 text-sm font-semibold text-ink/45">{primaryTask ? '当前只有上方这一条优先任务。' : sourceProblems.length ? '当前已读取来源没有任务；未读取来源不计为 0。' : '当前没有来自已连接业务模块的任务。'}</div> : <div className="divide-y divide-slate-100">{queueItems.map(item => <WorkItemRow key={item.id} item={item} onOpen={open} />)}</div>}
+          {!loading && hiddenTaskCount > 0 && <div className="border-t border-slate-100 px-4 py-3 text-xs font-semibold text-ink/45">还有 {hiddenTaskCount} 个任务未在首页展开；进入对应业务模块查看全量。</div>}
         </section>
 
-        <section className="mt-4 border border-slate-200 bg-white" data-testid="operations-source-status">
-          <div className="flex flex-wrap items-end justify-between gap-2 border-b border-slate-200 px-4 py-3"><div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Authority status</div><h2 className="mt-0.5 text-base font-black">数据来源</h2></div>{!loading && sourceProblems.length > 0 && <span className="text-[11px] font-semibold text-ink/45">不可读来源不会生成假 0，也不会阻塞其它 authority</span>}</div>
+        <section id="operations-source-status" className="mt-4 scroll-mt-4 border border-slate-200 bg-white" data-testid="operations-source-status">
+          <div className="flex flex-wrap items-end justify-between gap-2 border-b border-slate-200 px-4 py-3"><div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Source status</div><h2 className="mt-0.5 text-base font-black">数据来源</h2></div>{!loading && sourceProblems.length > 0 && <span className="text-[11px] font-semibold text-ink/45">不可读来源不会生成假 0，也不会阻塞其它业务模块</span>}</div>
           <div className="grid md:grid-cols-3">{snapshot.sources.map(source => <div key={source.authority} data-testid={`operations-source-${source.authority}`} className="border-b border-slate-100 px-4 py-3 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0"><div className="flex items-center justify-between gap-3"><strong className="text-sm font-black">{source.label}</strong><span className={`text-[11px] font-black ${source.availability === 'ready' ? 'text-emerald-700' : 'text-ink/45'}`}>{source.availability === 'ready' ? '可读取' : source.availability === 'partial' ? '部分可读' : source.availability === 'auth_required' ? '需要登录' : source.availability === 'forbidden' ? '权限不足' : '暂不可用'}</span></div><p className="mt-1 text-[11px] font-semibold leading-5 text-ink/45">{source.detail}</p></div>)}</div>
         </section>
 
@@ -98,8 +98,20 @@ export default function AdminHub() {
   );
 }
 
-function PrimaryTask({ item, onOpen }: { item: OperationsWorkItem; onOpen: (href: string) => void }) {
-  return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className={`text-[11px] font-black uppercase tracking-[0.08em] ${severityClass[item.severity].split(' ')[0]}`}>当前优先任务 · {severityLabel[item.severity]}</div><h2 className="mt-1 text-lg font-black">{item.title}</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{item.detail}</p><div className="mt-3 grid gap-2 sm:grid-cols-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{item.gateLabel}</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">{item.nextStep}</div></div></div><p className="mt-2 text-[10px] font-semibold leading-4 text-ink/38">{item.verificationNote}</p></div><button type="button" onClick={() => onOpen(item.href)} className={`h-10 border bg-white px-4 text-xs font-black ${severityClass[item.severity]}`}>{item.actionLabel} →</button></div>;
+function SourceRecoveryTask({ sources }: { sources: OperationsHomeSnapshot['sources'] }) {
+  const names = sources.map(source => source.label).join('、');
+  const unavailable = sources.filter(source => source.availability === 'unavailable').length;
+  const accessIssues = sources.length - unavailable;
+  const detail = [
+    unavailable ? `${unavailable} 个来源暂不可用` : '',
+    accessIssues ? `${accessIssues} 个来源需要登录、授权或补全读取` : '',
+  ].filter(Boolean).join('；');
+  return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/55">当前优先任务 · 恢复来源</div><h2 className="mt-1 text-lg font-black">先恢复数据来源，再判断是否真的没有任务</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{names} 当前未完全可读。{detail}；未读取部分不会被算成 0 个任务。</p><div className="mt-3 grid gap-2 sm:grid-cols-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{sources.length} 个业务模块来源未完整</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">查看具体来源原因；恢复安全会话或服务后刷新任务</div></div></div></div><button type="button" onClick={() => document.getElementById('operations-source-status')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="h-10 border border-slate-300 bg-white px-4 text-xs font-black text-ink/70 hover:bg-slate-50">查看数据来源 →</button></div>;
+}
+
+function PrimaryTask({ item, onOpen, incompleteSourcesCount }: { item: OperationsWorkItem; onOpen: (href: string) => void; incompleteSourcesCount: number }) {
+  const scopedPriority = incompleteSourcesCount > 0;
+  return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className={`text-[11px] font-black uppercase tracking-[0.08em] ${severityClass[item.severity].split(' ')[0]}`}>{scopedPriority ? '当前已读取优先任务' : '当前优先任务'} · {severityLabel[item.severity]}</div><h2 className="mt-1 text-lg font-black">{item.title}</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{item.detail}</p><div className="mt-3 grid gap-2 sm:grid-cols-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{item.gateLabel}</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">{item.nextStep}</div></div></div><p className="mt-2 text-[10px] font-semibold leading-4 text-ink/38">{item.verificationNote}{scopedPriority ? ` · 另有 ${incompleteSourcesCount} 个数据来源未完整；当前优先级仅基于已读取任务。` : ''}</p></div><button type="button" onClick={() => onOpen(item.href)} className={`h-10 border bg-white px-4 text-xs font-black ${severityClass[item.severity]}`}>{item.actionLabel} →</button></div>;
 }
 
 function WorkItemRow({ item, onOpen }: { item: OperationsWorkItem; onOpen: (href: string) => void }) {

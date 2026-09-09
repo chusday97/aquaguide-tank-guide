@@ -95,6 +95,11 @@ const runAuthRequired = async () => {
     const compatibilitySource = page.getByTestId('operations-source-compatibility');
     await productSource.getByText('需要登录', { exact: true }).waitFor({ timeout: 10000 });
     await compatibilitySource.getByText('需要登录', { exact: true }).waitFor({ timeout: 10000 });
+    const primary = page.getByTestId('operations-primary-task');
+    await primary.getByText('先恢复数据来源，再判断是否真的没有任务', { exact: true }).waitFor({ timeout: 10000 });
+    assert.match(await page.getByTestId('operations-work-queue').innerText(), /0 个已读取任务 · 来源未完整/);
+    await primary.getByRole('button', { name: /查看数据来源/ }).click();
+    assert.equal(await page.locator('#operations-source-status').count(), 1, 'source recovery action must target the existing source status section.');
     assert.match(await productSource.innerText(), /Business Admin 会话/);
     assert.match(await compatibilitySource.innerText(), /Business Admin 会话/);
     assert.doesNotMatch(await productSource.innerText(), /暂不可用/);
@@ -120,6 +125,8 @@ const runForbidden = async () => {
     const compatibilitySource = page.getByTestId('operations-source-compatibility');
     await productSource.getByText('权限不足', { exact: true }).waitFor({ timeout: 10000 });
     await compatibilitySource.getByText('权限不足', { exact: true }).waitFor({ timeout: 10000 });
+    await page.getByTestId('operations-primary-task').getByText('先恢复数据来源，再判断是否真的没有任务', { exact: true }).waitFor({ timeout: 10000 });
+    assert.match(await page.getByTestId('operations-work-queue').innerText(), /0 个已读取任务 · 来源未完整/);
     assert.match(await productSource.innerText(), /没有 Business Admin 内容管理权限/);
     assert.match(await compatibilitySource.innerText(), /没有 Compatibility 管理权限/);
     assert.doesNotMatch(await productSource.innerText(), /暂不可用/);
@@ -149,6 +156,8 @@ const run = async (viewport, label) => {
 
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
     await page.getByText('Fixture Guppy · Compatibility Profile 等待人工审核').waitFor({ timeout: 10000 });
+    assert.match(await page.getByTestId('operations-primary-task').innerText(), /当前已读取优先任务/, `${label}: incomplete source coverage must scope the priority claim.`);
+    assert.match(await page.getByTestId('operations-primary-task').innerText(), /当前优先级仅基于已读取任务/, `${label}: scoped priority must disclose incomplete source coverage.`);
     const overflowHome = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     await page.getByRole('button', { name: /审核这个 revision/ }).click();
     await page.waitForURL(/\/admin\/compatibility\?kind=profile&revision=rev-profile-1/);
