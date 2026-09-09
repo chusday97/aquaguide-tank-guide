@@ -653,6 +653,7 @@
 - 已验证：`npm run lint`、`npm run build`、`git diff --check`。
 - 内置浏览器已复核：Species 页面可向下滚动；本地 `assetPreview=1` 能显示宝莲灯图片和 Alt，普通访问仍按素材审核门禁显示 fallback。
 - 内置浏览器已完成分类页点击极火虾并使用浏览器返回；返回后仍在原分类页，公开链接链路可用。
+- 纯 Vite `127.0.0.1:3002` 复核同一路径通过；常规 `npm run dev` 会因 API 8787 已占用/tsx IPC 权限退出，不能将该启动问题误判为公开页面故障。
 - 仍未完成：系统 Playwright/Chrome 启动级三档回归（macOS MachPort 权限阻断）、用户完整视觉确认、可读独立 Critic、Figma Canonical 模板。
 - 未提交且必须保持隔离：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
 - 禁止重踩：不要把 build 通过写成浏览器验收通过；不要提交既有未跟踪素材/截图脚本；不要调用 Figma、解除 `noindex`、修改 `main` 或 Production。
