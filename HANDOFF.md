@@ -20,6 +20,7 @@
 - 修复 Species `assetPreview=1` 品系卡预览调用的最小类型适配；普通公开路由、Published 聚合、metadata、JSON-LD 和 `noindex,follow` 不变。
 - Evidence、Editorial、Public Contract、Responsive Contract、lint、build、diff-check 通过；Species 与动效 Playwright 仍因 macOS MachPort 启动权限失败。
 - 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 未触碰、未暂存。
+- 内置浏览器已补充验证黄金米虾切换、返回恢复和 FAQ 展开；这属于本地交互证据，不替代三档 Playwright 或独立 Critic。
 
 # AquaGuide 交接文档
 

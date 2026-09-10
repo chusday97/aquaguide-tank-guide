@@ -5,6 +5,7 @@
 - Fixed: Species `assetPreview=1` 品系卡预览调用改为传入公开品系摘要所需的最小字段，恢复 TypeScript 类型检查；Published 与普通公开访问边界不变。
 - Verified: 2026-09-10 本地预览在 `3001` 恢复后，内置浏览器确认长页面内容和章节锚点实际可达；Evidence、Editorial、Public Contract、Responsive Contract、lint、build、diff-check 通过。
 - Blocked: Species 与动效 Playwright 仍在 Chromium 启动阶段受 macOS MachPort 权限阻塞；不可读独立 Critic、Figma Canonical 和索引门禁仍未完成。
+- Verified: 内置浏览器补充确认品系切换、浏览器返回和 FAQ 展开；未改变内容、路由或索引门禁。
 - Fixed: 本地 `assetPreview=1` 同时覆盖待审核物种素材的 Hero 与品系卡预览；普通公开路由和 Published 门禁保持不变。
 - Verified: 2026-09-10 核心 Evidence、Public SEO contract、lint、build 和 diff-check 复跑通过；Species Playwright 仍仅在 Chromium 启动阶段受 MachPort 权限阻塞，未冒充浏览器验收通过。
 - Blocked: 2026-09-10 既有 Critic 任务针对当前 worktree 的复验 turn 已完成但无可读正文；旧报告基于旧提交/旧工作树，不作为当前版本独立审查通过证据。

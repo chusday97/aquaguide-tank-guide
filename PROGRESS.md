@@ -1029,3 +1029,4 @@
 - [x] 修复 `assetPreview=1` 品系卡预览的 TypeScript 类型边界：公开品系摘要只向素材预览函数传入所需的最小字段，不改变 Published 聚合或普通访问。
 - [x] `test:seo-evidence-bindings`、`test:seo-editorial-evidence`、`test:public-seo-contract`、`test:public-seo-responsive-contract`、`lint`、`build` 和 `git diff --check` 通过。
 - [ ] `test:species-landing` 与 `test:seo-motion` 仍在 Chromium 启动阶段被 macOS MachPort 权限阻止；独立 Critic 可读报告、Figma Canonical 和索引门禁仍未完成。
+- [x] 内置浏览器进一步实测品系卡切换、浏览器返回和 FAQ 展开；URL、标题、图片、当前状态、`aria-expanded` 与答案显示均正确。
