@@ -1237,3 +1237,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Committed `448bfcd8 fix(admin): prioritize product care editing`.
 - Mobile catalog replaced by compact navigator; fields moved ahead of Impact/downstream review; Care SEO no longer blocks Care editing; dirty publish explains Save-first gate.
 - PASS: Local Business UI, full Admin authority UI including Care SEO/Compatibility, root TypeScript, full build, diff hygiene.
+
+## 2026-09-10 — downstream review visual semantics
+- Committed `340cbfd3 fix(admin): align downstream review visual semantics`.
+- Care SEO moved to Graphite/White/Green visual semantics; violet/indigo/sky parallel product colors are removed. Amber remains only for explicit review/conflict/approval states; Red remains drift/error.
+- Content Impact now uses Amber at container level only when an independent human review is actually required; category chips no longer create blue/purple authority colors.
+- Added contract guards against reintroducing the removed color authorities. PASS: Care SEO projection/editorial/AI, full Admin authority UI, Local Business UI, root TypeScript, full build, diff hygiene.
+- NEXT: Compatibility Admin hierarchy/interaction audit. No push/main/Production/Supabase/indexing mutation.
