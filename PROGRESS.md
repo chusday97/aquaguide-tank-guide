@@ -8,7 +8,7 @@
 
 - [x] Species 页移除独立的 `setMeta`/`setCanonical` 写入器，改用共享 `setSeoDocument`；路由切换的 title、description、robots、canonical 和 JSON-LD 清理由同一服务负责。
 - [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过；未改变 Product Truth、内容证据或 `noindex,follow`。
-- [ ] 真实浏览器路由切换仍待 Mac 解锁；Figma Canonical 与可读独立 Critic 仍未完成。
+- [x] 内置浏览器已完成真实路由与交互检查；系统 Chrome Playwright 仍是独立环境缺口，Figma Canonical 与可读独立 Critic仍未完成。
 
 ## 2026-09-10 窄屏章节导航兼容性补强
 

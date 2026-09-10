@@ -16,6 +16,13 @@
 
 # AquaGuide 交接文档
 
+## 2026-09-10 当前有效状态
+
+- 内置浏览器已完成三条 Species 路径在 390/600/1440px 的真实检查：可滚动、无横向溢出、单一 H1、标题层级、44px 交互目标、中文术语和 `noindex,follow` 均通过。
+- 已实际验证章节锚点、FAQ 展开、黄金米虾品系切换与浏览器返回；宝莲灯普通访问保持图片回退，`assetPreview=1` 仅用于本地预览。
+- 系统 Chrome Playwright 仍是独立环境缺口；reduced-motion、性能指标、托管 Preview 截图和可读独立 Critic 未完成，不能宣称最终验收或解除索引。
+- 下一步：保持 Figma 暂停，先完成可读独立 Critic；系统 Chrome 恢复后只补跑一次，不重复启动失败进程。
+
 ## 2026-09-10 公开 metadata 架构门禁
 
 - 结构回归现在要求四类公开页面都使用共享 `setSeoDocument`；Species 的第二套写入器已移除并由测试持续保护。
