@@ -893,3 +893,10 @@
 - `seoEvidenceBindings.ts` 已为 `sp_0432` Hero 和 `variant-card` 登记当前文件 hash 与 snapshot fingerprint。
 - 两条 binding 当前显式为 `blocked/pending-review`；不会因为文件存在就进入 Published Profile。
 - `test:seo-evidence-bindings`、`lint`、`build` 和 `diff-check` 已通过。批准素材时必须同时更新用途状态、fingerprint 和确认记录。
+# 2026-09-10 内置浏览器真实验收结果
+
+- Codex 内置浏览器已完成三条 Species 路径 × 390/600/1440：页面内容加载后均可滚动且无横向溢出；H1、标题层级、44px 目标、中文术语、robots 均通过。
+- 真实交互已验证：章节导航滚动、FAQ 展开、黄金米虾品系 URL/H1/Alt、浏览器返回。
+- 宝莲灯原图在 `assetPreview=1` 本地预览可见；普通路由图片数量为 0，符合当前 blocked binding 的回退策略。
+- 首次仅等待 250ms 会读到 React 加载壳；本次以 H1 可见作为加载完成信号后再采集，避免误报。
+- 仍缺系统 Chrome Playwright、reduced-motion、性能采样、可读独立 Critic 和 Figma Canonical。

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Verified: Codex 内置浏览器完成三条 Species 路径在 390/600/1440px 的真实滚动、结构、无溢出、robots、图片状态和关键交互验收；系统 Chrome Playwright 仍是独立环境缺口。
 - Verified: 当前公开 SEO 提交 `a4c4bcfb` 的 production build 与 `git diff --check` 通过；保留既有字体与代码分包警告，未改变页面内容、索引策略或用户未提交文件。
 - Blocked: `test:seo-motion` 与 `test:public-seo-routes` 在 Chromium 启动阶段受 macOS MachPort 权限阻塞；本轮未把启动失败计作动效、点击或响应式验收通过。
 - Verified: 宝莲灯原图存在且为 521×316 透明 PNG；公开页缺图来自 Hero/品系卡用途仍为 `needs_review` 的 fail-closed 门禁，未绕过审核显示。

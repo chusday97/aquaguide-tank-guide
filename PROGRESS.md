@@ -1009,3 +1009,10 @@
 - [x] 测试确认两条 binding 在 `needs_review` 时保持 blocked，且不会进入 Published Profile；批准状态变化后会先因 fingerprint 变化进入 stale。
 - [x] `npm run test:seo-evidence-bindings`、`npm run lint`、`npm run build` 和 `git diff --check` 通过。
 - [ ] 仍需项目负责人视觉确认、Mac 解锁后的真实浏览器验收，以及后续独立 Critic。
+## 2026-09-10 内置浏览器 Species 三档真实验收
+
+- [x] 使用 Codex 内置浏览器完成 `/species/sp_0001`、`/species/sp_0432`、`/species/sp_0001?variant=sp_0030` 在 390/600/1440px 的真实 DOM 与布局检查。
+- [x] 三条路径均可滚动、无横向溢出、单一 H1、可见交互目标不小于 44px、无后台术语，并保持 `noindex,follow`。
+- [x] 实际点击章节导航后锚点到达视口顶部；FAQ 可展开；黄金米虾 URL/H1/Alt 正确，浏览器返回回到极火虾。
+- [x] 宝莲灯普通访问不暴露待审核图片；本地 `assetPreview=1` 预览可显示原图。
+- [ ] 系统 Chrome Playwright 仍受 MachPort 权限影响；reduced-motion、性能指标和可读独立 Critic仍需单独完成。
