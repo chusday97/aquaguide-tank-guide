@@ -1031,3 +1031,4 @@
 - [ ] `test:species-landing` 与 `test:seo-motion` 仍在 Chromium 启动阶段被 macOS MachPort 权限阻止；独立 Critic 可读报告、Figma Canonical 和索引门禁仍未完成。
 - [x] 内置浏览器进一步实测品系卡切换、浏览器返回和 FAQ 展开；URL、标题、图片、当前状态、`aria-expanded` 与答案显示均正确。
 - [x] 内置浏览器补充检查分类页入口与未审核指南准备态；公开 Header、分类物种链接和 fail-closed 指南状态可读，证据为 EVD-20260910-139。
+- [ ] 同一独立 Critic 已针对当前 HEAD `93a7fad6` 启动只读复验；截至本轮仍在运行，尚无可读六维正文。
