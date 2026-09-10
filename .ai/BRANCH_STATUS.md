@@ -1,15 +1,15 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Operations action-target convergence checkpoint (2026-09-10)
-- Latest functional HEAD: `f79802b5` (`fix(admin): align seo actions with authority targets`).
+## CURRENT OVERRIDE — Legacy Care snapshot repair checkpoint (2026-09-10)
+- Latest functional HEAD: `1c78ef14` (`fix(admin): repair legacy care publication snapshots`).
 - Care SEO focus checkpoint: `7799d88a` (`fix(admin): focus care seo operations deep links`).
 - Exact action-copy checkpoint: `258a5d0d` (`fix(admin): name exact operations seo actions`).
 - Latest acceptance/test HEAD: `fcc86c0d` (`test(admin): prove operations task closure`).
-- Live remote feature: `e9c63560`.
+- Live remote feature: `30ff0119`.
 - Live main: `d3c70dee`.
-- Local vs live remote feature: `ahead 41 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local checkpoint: `275 main-only / 301 feature-only`; merge base remains `ed0cf380`.
+- Local vs live remote feature: `ahead 45 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local checkpoint: `275 main-only / 303 feature-only`; merge base remains `ed0cf380`.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
 - No merge/rebase main, force push, Production/live DB or indexing mutation.
 

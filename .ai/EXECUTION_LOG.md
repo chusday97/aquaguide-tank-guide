@@ -1289,3 +1289,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: Operations desktop/mobile/auth/forbidden/schema matrix, Care SEO Draft→Review→Approve→Source-drift flow, Admin authority UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build, diff hygiene.
 - Fresh refs: remote feature `e9c63560`, main `d3c70dee`; local ahead 41/behind 0 vs feature, main-only 275/feature-only 301, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
 - NEXT: audit `source_not_snapshot` repair ownership before changing its action or target.
+
+## 2026-09-10 — Legacy Care publication-snapshot repair
+- Committed `1c78ef14 fix(admin): repair legacy care publication snapshots`.
+- `source_not_snapshot` is now owned by Product/Care, not downstream SEO. Its WorkItem opens the exact published Care record with an explicit snapshot-repair context.
+- Added protected `POST /admin/care-articles/:id/repair-publication-snapshot`, reusing immutable publication snapshot logic without changing Care content, status or version. Missing `content_publications` infrastructure remains fail-closed; Local Mode rejects this legacy-only repair instead of faking success.
+- Fixed Product/Care exact-ID deep-link hydration race: duplicate/late list loads cannot clear the requested record back to a new draft.
+- Stabilized browser suites by replacing Vite `networkidle` assumptions with DOM/target readiness where appropriate.
+- PASS: Operations WorkItems + desktop/mobile matrix, Admin publication contract, non-Local Admin 1280/390 repair flow, Local Business, Care SEO Draft→Review→Approve→drift flow, API/root TypeScript, full root build and diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 45/behind 0 vs feature, main-only 275/feature-only 303. No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: audit only remaining WorkItem actions that still fail to land on an executable authority operation; do not refactor already-correct paths.

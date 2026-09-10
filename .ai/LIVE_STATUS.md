@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-10)
-- Functional checkpoint: `f79802b5 fix(admin): align seo actions with authority targets`.
+- Functional checkpoint: `1c78ef14 fix(admin): repair legacy care publication snapshots`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
 - Data Review remains evidence-first with explicit human Canonical choice and one final confirmation; Product Data authority is not rewritten by SEO review.
 - Save/review remains centralized in the top Review bar; contextual page/Base tools and history follow the active authority; cross-page work remains behind `运营工具`.
@@ -19,12 +19,13 @@
 - Home queue presentation caps repeated low-priority attention rows at three per authority/severity/gate and preserves authority-level hidden counts; the source queue and severity ordering are unchanged.
 - Exact task closure is proven in browser (`fcc86c0d`): Product publish and Compatibility Profile reviewed publish return to Operations with the completed task absent and the next priority available immediately.
 - SEO WorkItem actions now name the actual gate (`258a5d0d`); Care SEO `seo=1` routes focus the hydrated downstream editor (`7799d88a`); unpublished Care source tasks instead return to Product/Care source editing (`f79802b5`).
+- Legacy Care `source_not_snapshot` is now executable (`1c78ef14`): Operations returns to Product/Care, a dedicated admin-only repair backfills the immutable publication snapshot without changing Care content/status/version, and missing snapshot infrastructure remains fail-closed. Exact Product/Care deep-links are protected from duplicate-load selection races.
 - Full Species SEO contract, Operations desktop/mobile matrix, Care SEO local editorial flow, Admin content UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
 
 Updated: 2026-09-10
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `f79802b5`
+Operational functional HEAD before this docs sync: `1c78ef14`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
-Functional checkpoint: `f79802b5 fix(admin): align seo actions with authority targets`.
+Functional checkpoint: `1c78ef14 fix(admin): repair legacy care publication snapshots`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
 - Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
@@ -24,15 +24,17 @@ Functional checkpoint: `f79802b5 fix(admin): align seo actions with authority ta
 - SEO WorkItem actions are gate-specific (`258a5d0d`): generic `处理/完善页面` labels are replaced by exact operator actions.
 - Care SEO Operations deep-linking is complete (`7799d88a`): `seo=1` waits for the final Care SEO workspace to hydrate, then focuses it in both desktop internal-scroller and mobile document-scroller layouts.
 - Action targets now preserve authority ownership (`f79802b5`): unpublished Care source tasks strip `seo=1` and return to Product/Care source editing; real SEO tasks keep downstream focus.
+- Legacy Care snapshot repair is closed (`1c78ef14`): `source_not_snapshot` no longer sends the operator to downstream SEO. It opens Product/Care with an explicit repair context and calls a dedicated admin-only snapshot repair endpoint that reuses the immutable publication authority without changing Care content/status/version. Local Mode rejects this legacy-only repair, and missing publication storage remains fail-closed.
+- Product/Care exact-ID deep-link hydration is race-safe (`1c78ef14`): duplicate/late list loads cannot clear an already requested record back to `新草稿`; browser regressions cover 1280/390 and Operations handoffs.
 - Validation PASS: Operations desktop/mobile matrix, Care SEO Draft→Review→Approve→drift browser flow, Admin authority UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene.
-- NEXT: only fix a concrete remaining action→target mismatch. Audit `source_not_snapshot` ownership before changing it. Do not add new authority layers. Supabase Staging remains parked.
+- NEXT: only fix a concrete remaining action→target mismatch when the target still lacks an executable authority action. `source_not_snapshot` is complete. Do not add new authority layers. Supabase Staging remains parked.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `f79802b5`
+Current Operations Studio functional HEAD: `1c78ef14`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

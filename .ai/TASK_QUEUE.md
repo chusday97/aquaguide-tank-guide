@@ -35,7 +35,7 @@
 - [x] Exact SEO WorkItem action semantics (`258a5d0d`): blocker/review/attention actions name the concrete next gate instead of generic page actions.
 - [x] Care SEO Operations focus (`7799d88a`): real `seo=1` deep-links land on the hydrated Care SEO Editorial workspace at 1280/390.
 - [x] Authority-target alignment (`f79802b5`): unpublished Care source work returns to Product/Care editing; actual SEO work retains downstream focus.
-- [ ] Audit `source_not_snapshot` ownership/repair target; change it only if the current button lands in the wrong authority.
+- [x] Legacy `source_not_snapshot` repair ownership (`1c78ef14`): WorkItem returns to Product/Care; dedicated admin-only repair creates the immutable Published Snapshot without changing Care content/status/version; Local Mode rejects the legacy-only action; exact record deep-links are race-safe.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

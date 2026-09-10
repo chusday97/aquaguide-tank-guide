@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `f79802b5`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `1c78ef14`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -27,9 +27,10 @@ Completed in the current local-first / UX phase:
 19. SEO task actions are exact (`258a5d0d`): generic page actions are replaced by blocker-specific labels such as `补齐 H1`, `设置 Index 策略`, `修正 Canonical`, `开始人工审核` and `重新审核 SEO`.
 20. Care SEO deep-links are operational (`7799d88a`): `seo=1` now focuses the hydrated Care SEO Editorial workspace at 1280/390 instead of merely opening the Care record.
 21. Authority targets match the stated action (`f79802b5`): `source_not_published` returns to the Care source editor with `seo=1` removed; true SEO issues retain downstream SEO focus.
+22. Legacy Care snapshot repair is operational (`1c78ef14`): `source_not_snapshot` returns to Product/Care, exposes a dedicated admin-only immutable snapshot repair action, preserves Care content/status/version, fails closed when publication storage is unavailable, and clears the repair context after success. Exact Product/Care deep-links are also guarded against duplicate-load selection races.
 
 NEXT milestones:
-1. Continue only concrete WorkItem action→target audits; the strongest remaining candidate is legacy `source_not_snapshot` ownership. Do not refactor already-correct Product/Care, Compatibility or Species SEO paths.
+1. Continue only concrete WorkItem action→target audits where the stated action still does not land on an executable authority action. `source_not_snapshot` is complete; do not refactor already-correct Product/Care, Compatibility, Care SEO or Species SEO paths.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
