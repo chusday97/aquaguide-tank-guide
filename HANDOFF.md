@@ -908,3 +908,8 @@
 - 宝莲灯原图在 `assetPreview=1` 本地预览可见；普通路由图片数量为 0，符合当前 blocked binding 的回退策略。
 - 首次仅等待 250ms 会读到 React 加载壳；本次以 H1 可见作为加载完成信号后再采集，避免误报。
 - 仍缺系统 Chrome Playwright、reduced-motion、性能采样、可读独立 Critic 和 Figma Canonical。
+## 2026-09-10 当前代码变更
+
+- 本轮只修复本地 `assetPreview=1`：待审核物种素材现在会同时出现在 Hero 和品系卡，便于用途级人工确认。
+- 普通公开访问不会显示 pending 素材；Published 聚合、审核 fingerprint、metadata、JSON-LD 和 `noindex,follow` 未改变。
+- `npm run lint`、`npm run build`、`git diff --check` 通过；用户保留的三份未提交文件未修改。

@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Fixed: 本地 `assetPreview=1` 同时覆盖待审核物种素材的 Hero 与品系卡预览；普通公开路由和 Published 门禁保持不变。
 - Verified: 2026-09-10 核心 Evidence、Public SEO contract、lint、build 和 diff-check 复跑通过；Species Playwright 仍仅在 Chromium 启动阶段受 MachPort 权限阻塞，未冒充浏览器验收通过。
 - Blocked: 2026-09-10 既有 Critic 任务针对当前 worktree 的复验 turn 已完成但无可读正文；旧报告基于旧提交/旧工作树，不作为当前版本独立审查通过证据。
 - Verified: Codex 内置浏览器完成三条 Species 路径在 390/600/1440px 的真实滚动、结构、无溢出、robots、图片状态和关键交互验收；系统 Chrome Playwright 仍是独立环境缺口。

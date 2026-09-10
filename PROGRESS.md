@@ -1017,3 +1017,8 @@
 - [x] 宝莲灯普通访问不暴露待审核图片；本地 `assetPreview=1` 预览可显示原图。
 - [ ] 系统 Chrome Playwright 仍受 MachPort 权限影响；reduced-motion、性能指标和可读独立 Critic仍需单独完成。
 - [x] 既有 Critic 任务已针对当前 worktree 发起只读复验；最新 turn 无可读正文，旧报告基于旧提交/旧工作树，不计为当前版本通过。
+## 2026-09-10 待审核素材预览补齐品系卡
+
+- [x] `assetPreview=1` 现在同时预览待审核素材的 Hero 与品系卡；普通公开路由仍只读取 Published asset，未改变审核状态、聚合、metadata 或 JSON-LD。
+- [x] `npm run lint`、`npm run build` 和 `git diff --check` 通过；构建仍保留既有字体体积与大 chunk 警告。
+- [ ] Playwright、独立 Critic、Figma Canonical 和索引门禁仍未完成。
