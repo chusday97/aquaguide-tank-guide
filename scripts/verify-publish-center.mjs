@@ -57,7 +57,7 @@ const baseUrl = `http://127.0.0.1:${address.port}`;
 const browser = await chromium.launch({ headless: true });
 try {
   for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
-    const page = await browser.newPage({ viewportSize: viewport });
+    const page = await browser.newPage({ viewport });
     await page.addInitScript(({ key, session }) => localStorage.setItem(key, JSON.stringify(session)), { key: authStorageKey, session: fakeSession });
     let seoLoggedIn = false;
     let productAuditHistoryReady = false;
@@ -83,7 +83,7 @@ try {
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: rows, error: null }) });
     });
     await page.goto(`${baseUrl}/admin/content`);
-    await page.getByRole('button', { name: /Unified Publish Center/ }).click();
+    await page.getByRole('button', { name: /Publish[\s\S]*Release readiness/ }).click();
     await page.waitForURL('**/admin/publish-center');
     await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
     const timeline = page.getByTestId('publish-center-timeline');
@@ -93,7 +93,31 @@ try {
     assert.match(await sources.innerText(), /Compatibility[\s\S]*Revision 历史/);
     assert.match(await sources.innerText(), /SEO[\s\S]*需要登录/);
     const readiness = page.getByTestId('publish-center-readiness');
-    assert.match(await readiness.innerText(), /可读取 authority[\s\S]*2\/3[\s\S]*需要独立登录[\s\S]*1[\s\S]*历史覆盖缺口[\s\S]*1/i);
+    const initialReadiness = await readiness.innerText();
+    assert.match(initialReadiness, /2\/3[\s\S]*可读取模块/i);
+    assert.match(initialReadiness, /1[\s\S]*需要认证 \/ 授权/i);
+    assert.match(initialReadiness, /1[\s\S]*历史覆盖缺口[\s\S]*存在 current-only 来源/i);
+    const sourceBox = await sources.boundingBox();
+    const readinessBox = await readiness.boundingBox();
+    const timelineBox = await timeline.boundingBox();
+    if (viewport.width >= 1000) {
+      assert.equal(Boolean(sourceBox && sourceBox.height <= 180), true, 'Desktop source status must remain compact.');
+      assert.equal(Boolean(readinessBox && readinessBox.height <= 80), true, 'Desktop readiness must stay a summary row, not a card wall.');
+      assert.equal(Boolean(timelineBox && timelineBox.y < 760), true, 'Desktop audit timeline must enter the first viewport before low-frequency reference details.');
+    } else {
+      assert.equal(Boolean(sourceBox && sourceBox.height <= 260), true, 'Mobile source status must stay compact enough to preserve the audit flow.');
+      assert.equal(Boolean(readinessBox && readinessBox.height <= 150), true, 'Mobile readiness must use a compact two-column summary.');
+      assert.equal(Boolean(timelineBox && timelineBox.y < 900), true, 'Mobile audit timeline must appear before a full viewport of secondary details.');
+    }
+    const boundary = page.getByTestId('publish-center-release-boundary');
+    assert.equal(await boundary.evaluate(element => element.open), false, 'Capability/permission reference must stay closed by default.');
+    const timelineTop = await timeline.evaluate(element => element.getBoundingClientRect().top + window.scrollY);
+    const boundaryTop = await boundary.evaluate(element => element.getBoundingClientRect().top + window.scrollY);
+    assert.equal(timelineTop < boundaryTop, true, 'Release timeline must appear before low-frequency boundary reference.');
+    const authorityNoteClass = await page.getByTestId('publish-center-authority-note').getAttribute('class');
+    assert.doesNotMatch(authorityNoteClass || '', /amber/, 'Read-only authority note must stay neutral, not decision-Amber.');
+    await boundary.locator('summary').click();
+    assert.equal(await boundary.evaluate(element => element.open), true, 'Operator must be able to expand release boundary reference.');
     const capability = page.getByTestId('publish-center-capability-matrix');
     const capabilityText = await capability.innerText();
     assert.match(capabilityText, /Product \/ Care[\s\S]*Diff[\s\S]*可用[\s\S]*Review[\s\S]*部分[\s\S]*Production[\s\S]*锁定/i);
@@ -104,7 +128,13 @@ try {
     assert.match(initialPermissions, /Product \/ Care[\s\S]*admin-ui-test@example.com · admin[\s\S]*读取历史[\s\S]*允许[\s\S]*发布 Production[\s\S]*锁定/i);
     assert.match(initialPermissions, /Compatibility[\s\S]*发布 Reviewed[\s\S]*锁定/i);
     assert.match(initialPermissions, /SEO[\s\S]*未认证 · repo-admin[\s\S]*读取历史[\s\S]*独立登录[\s\S]*发布 Staging[\s\S]*独立登录/i);
+    await boundary.locator('summary').click();
+    assert.equal(await boundary.evaluate(element => element.open), false);
     const detail = page.getByTestId('publish-center-event-detail');
+    assert.equal(await detail.count(), 0, 'Publish Center must not auto-open the first audit record before the operator chooses one.');
+    assert.match(await timeline.innerText(), /Product 发布版本[\s\S]*Profile reviewed version 已发布/);
+    await timeline.getByRole('button', { name: /Product \/ Care published Product 发布版本/ }).click();
+    await detail.waitFor();
     const productDetail = await detail.innerText();
     assert.match(productDetail, /Product 发布版本/);
     assert.match(productDetail, /只读审计详情，不提供发布或回滚动作/);
@@ -112,19 +142,23 @@ try {
     assert.match(productDetail, /sp_0436/);
     const relatedEvidence = page.getByTestId('publish-center-related-evidence');
     assert.match(await relatedEvidence.innerText(), /这不是依赖判断，也不表示必须同步发布[\s\S]*Compatibility[\s\S]*Profile reviewed version 已发布/i);
-    assert.match(await timeline.innerText(), /Product 发布版本[\s\S]*Profile reviewed version 已发布/);
     await page.getByRole('button', { name: 'Compatibility', exact: true }).click();
+    assert.equal(await detail.count(), 0, 'Changing authority filter must clear stale audit detail.');
+    await timeline.getByRole('button', { name: /Compatibility published Profile reviewed version 已发布/ }).click();
     const compatibilityDetail = await detail.innerText();
     assert.match(compatibilityDetail, /Profile reviewed version 已发布/);
     assert.match(compatibilityDetail, /前往 Compatibility authority/);
     await page.getByRole('button', { name: '全部', exact: true }).click();
+    assert.equal(await detail.count(), 0, 'Returning to all events must keep detail closed until a record is chosen.');
 
     seoLoggedIn = true;
     await page.getByRole('button', { name: '刷新' }).click();
     await timeline.getByRole('button', { name: /SEO success Staging 发布已完成/ }).waitFor();
     assert.match(await sources.innerText(), /SEO[\s\S]*可读取[\s\S]*Activity \/ Revision 历史/);
+    await boundary.locator('summary').click();
     const authenticatedPermissions = await permissions.innerText();
     assert.match(authenticatedPermissions, /SEO[\s\S]*admin@aquaguide.local · repo-admin[\s\S]*发布 Staging[\s\S]*允许[\s\S]*发布 Production[\s\S]*锁定/i);
+    await boundary.locator('summary').click();
     const refreshedTimeline = await timeline.innerText();
     assert.match(refreshedTimeline, /Staging 发布已完成/);
     assert.match(refreshedTimeline, /SEO revision 已记录/);
@@ -137,7 +171,8 @@ try {
     await page.getByRole('button', { name: '刷新' }).click();
     await timeline.getByRole('button', { name: /Product \/ Care archived Product 已归档/ }).waitFor();
     assert.match(await sources.innerText(), /Product \/ Care[\s\S]*可读取[\s\S]*Revision 历史/);
-    assert.match(await readiness.innerText(), /历史覆盖缺口[\s\S]*0[\s\S]*append-only publication history 可读取/i);
+    const refreshedReadiness = await readiness.innerText();
+    assert.match(refreshedReadiness, /0[\s\S]*历史覆盖缺口[\s\S]*历史覆盖完整/i);
     await timeline.getByRole('button', { name: /Product \/ Care archived Product 已归档/ }).click();
     assert.match(await detail.innerText(), /Product 已归档[\s\S]*sp_0436[\s\S]*content_publication_events:audit-1/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth > document.documentElement.clientWidth);

@@ -168,7 +168,7 @@ const runSchemaNotReady = async () => {
     const publishSources = await page.getByTestId('publish-center-source-status').innerText();
     assert.match(publishSources, /Product \/ Care[\s\S]*尚未启用/);
     assert.match(publishSources, /Compatibility[\s\S]*尚未启用/);
-    assert.match(await page.getByTestId('publish-center-readiness').innerText(), /尚未启用[\s\S]*2/);
+    assert.match(await page.getByTestId('publish-center-readiness').innerText(), /2[\s\S]*尚未启用/);
     assert.deepEqual(pageErrors, [], 'schema-not-ready state must not produce page errors.');
     return { schemaNotReady: 'Operations + Publish Center PASS' };
   } finally {

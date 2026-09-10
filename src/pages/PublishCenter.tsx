@@ -14,14 +14,14 @@ const authorityIcon = { product_care: Database, compatibility: ShieldCheck, seo:
 const availabilityLabel = { ready: '可读取', partial: '部分可读', auth_required: '需要登录', forbidden: '权限不足', schema_not_ready: '尚未启用', unavailable: '暂不可用' } as const;
 const stageLabel: Record<ReleaseStage, string> = { diff: 'Diff', impact: 'Impact', preview: 'Preview', review: 'Review', staging: 'Staging', production: 'Production' };
 const capabilityStateLabel = { available: '可用', partial: '部分', locked: '锁定', not_applicable: '不适用' } as const;
-const capabilityStateClass = { available: 'border-emerald-200 bg-emerald-50 text-emerald-800', partial: 'border-amber-200 bg-amber-50 text-amber-900', locked: 'border-red-200 bg-red-50 text-red-800', not_applicable: 'border-slate-200 bg-slate-50 text-slate-500' } as const;
+const capabilityStateClass = { available: 'border-emerald-200 bg-emerald-50 text-emerald-800', partial: 'border-slate-200 bg-white text-ink/65', locked: 'border-red-200 bg-red-50 text-red-800', not_applicable: 'border-slate-200 bg-slate-50 text-slate-500' } as const;
 const coverageLabel = { not_available: '尚无可用历史', current_only: '当前版本', revision_history: 'Revision 历史', activity_history: 'Activity / Revision 历史' } as const;
 
 const sourceClass = (source: ReleaseSourceStatusDto) => source.availability === 'ready'
-  ? 'border-emerald-200 bg-emerald-50 text-emerald-900'
+  ? 'border-l-emerald-600'
   : source.availability === 'forbidden'
-    ? 'border-red-200 bg-red-50 text-red-800'
-    : 'border-slate-200 bg-slate-50 text-slate-700';
+    ? 'border-l-red-500'
+    : 'border-l-slate-300';
 
 const formatTime = (value: string) => {
   const date = new Date(value);
@@ -40,7 +40,7 @@ export default function PublishCenter() {
     try {
       const next = await publishCenterService.load(160);
       setFeed(next);
-      setSelectedEventId(current => current && next.events.some(item => item.id === current) ? current : next.events[0]?.id || null);
+      setSelectedEventId(current => current && next.events.some(item => item.id === current) ? current : null);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : '发布记录暂时无法读取。');
     } finally {
@@ -51,7 +51,7 @@ export default function PublishCenter() {
   useEffect(() => { void load(); }, []);
   const events = useMemo(() => filter === 'all' ? feed.events : feed.events.filter(item => item.authority === filter), [feed.events, filter]);
   const sourceByAuthority = useMemo(() => new Map(feed.sources.map(item => [item.authority, item])), [feed.sources]);
-  const selectedEvent = events.find(item => item.id === selectedEventId) || events[0] || null;
+  const selectedEvent = events.find(item => item.id === selectedEventId) || null;
   const relatedEvents = useMemo(() => selectedEvent ? getRelatedReleaseEvents(feed.events, selectedEvent).slice(0, 8) : [], [feed.events, selectedEvent]);
   const readiness = useMemo(() => ({
     ready: feed.sources.filter(item => item.availability === 'ready').length,
@@ -64,50 +64,46 @@ export default function PublishCenter() {
   return (
     <div className="min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
       <div className="mx-auto max-w-[1280px]">
-        <header className="flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white px-4 py-3 shadow-sm">
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
-            <button type="button" aria-label="返回管理后台" onClick={() => navigate('/admin/content')} className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border hover:bg-bg"><ArrowLeft className="h-5 w-5" /></button>
+            <button type="button" aria-label="返回管理后台" onClick={() => navigate('/admin/content')} className="flex h-10 w-10 shrink-0 items-center justify-center border border-slate-200 bg-white hover:bg-slate-50"><ArrowLeft className="h-5 w-5" /></button>
             <div className="min-w-0"><div className="text-xs font-black uppercase tracking-[0.14em] text-emerald-700">Release Audit</div><h1 className="truncate text-xl font-black">Unified Publish Center</h1></div>
           </div>
-          <button type="button" onClick={() => void load()} disabled={loading} className="flex h-10 items-center gap-2 rounded-full border border-emerald-200 bg-white px-4 text-sm font-black text-emerald-800 disabled:opacity-50"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />刷新</button>
+          <button type="button" onClick={() => void load()} disabled={loading} className="flex h-10 items-center gap-2 border border-slate-200 bg-white px-3 text-xs font-black text-ink/65 disabled:opacity-50"><RefreshCw className={`h-4 w-4 ${loading ? 'animate-spin' : ''}`} />刷新</button>
         </header>
-        <section className="mt-4 rounded-[20px] border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-bold leading-6 text-amber-950">
-          Publish Center 只聚合已有发布权威，不创建新的写入口。{isLocalBusinessAdminMode ? '当前 DEV Local Mode：Product/Care 与 Compatibility 使用本地 authority；SEO 仍使用独立 Repo Admin。Production authority 不变。' : 'Product/Care 与 Compatibility 继续由 Business API / Supabase 管理；SEO 继续由独立 Repo Admin 管理。'}
+        <section className="mt-2 border-b border-slate-200 bg-white px-4 py-2 text-xs font-semibold leading-5 text-ink/50" data-testid="publish-center-authority-note" title={isLocalBusinessAdminMode ? 'DEV Local Mode：Product/Care 与 Compatibility 使用本地 authority；SEO 使用独立 Repo Admin。' : 'Product/Care 与 Compatibility 由 Business API / Supabase 管理；SEO 使用独立 Repo Admin。'}>
+          <strong className="text-ink/70">只读发布审计</strong> · 不创建新的写入口；Production authority 保持锁定。
         </section>
 
-        <section data-testid="publish-center-source-status" className="mt-4 grid gap-3 md:grid-cols-3">
+        <section data-testid="publish-center-source-status" className="mt-3 grid border border-slate-200 bg-white md:grid-cols-3">
           {(['product_care', 'compatibility', 'seo'] as ReleaseAuthority[]).map(authority => {
             const source = sourceByAuthority.get(authority);
             const Icon = authorityIcon[authority];
             return (
-              <article key={authority} className={`rounded-[20px] border p-4 ${source ? sourceClass(source) : 'border-slate-200 bg-slate-50 text-slate-600'}`}>
-                <div className="flex items-start gap-3"><div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white/80"><Icon className="h-5 w-5" /></div><div className="min-w-0"><div className="text-sm font-black">{authorityLabel[authority]}</div><div className="mt-1 text-xs font-bold opacity-70">{source ? `${availabilityLabel[source.availability]} · ${coverageLabel[source.coverage]}` : '读取中'}</div></div></div>
-                {source?.detail && <p className="mt-3 text-xs font-semibold leading-5 opacity-75">{source.detail}</p>}
+              <article key={authority} className={`border-b border-l-2 border-slate-100 px-3 py-2.5 last:border-b-0 md:border-b-0 md:border-r md:last:border-r-0 ${source ? sourceClass(source) : 'border-l-slate-300'}`}>
+                <div className="flex items-center gap-2.5"><div className="flex h-8 w-8 shrink-0 items-center justify-center border border-slate-100 bg-white"><Icon className="h-4 w-4 text-ink/45" /></div><div className="min-w-0"><div className="text-xs font-black">{authorityLabel[authority]}</div><div className="mt-0.5 text-[11px] font-bold text-ink/45">{source ? `${availabilityLabel[source.availability]} · ${coverageLabel[source.coverage]}` : '读取中'}</div></div></div>
+                {source?.detail && source.availability !== 'ready' && <p className="mt-1.5 line-clamp-2 text-[10px] font-semibold leading-4 text-ink/38" title={source.detail}>{source.detail}</p>}
                 {authority === 'seo' && source?.availability === 'auth_required' && <a href="/admin/seo/" className="mt-3 inline-flex text-xs font-black underline">登录 SEO Admin →</a>}
               </article>
             );
           })}
         </section>
 
-        <section data-testid="publish-center-readiness" className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          <ReadinessStat label="可读取模块" value={`${readiness.ready}/3`} detail={readiness.ready === 3 ? '三个发布域都可读取' : '未就绪来源不会被算成可发布'} />
-          <ReadinessStat label="需要认证 / 授权" value={String(readiness.accessRequired)} detail="登录与权限问题不等于服务故障" />
-          <ReadinessStat label="尚未启用" value={String(readiness.schemaNotReady)} detail="对应 Admin migration / authority schema 尚未部署" />
-          <ReadinessStat label="暂不可用" value={String(readiness.unavailable)} detail="运行故障保持 fail-isolated，不冒充无任务" />
-          <ReadinessStat label="历史覆盖缺口" value={String(readiness.currentOnly)} detail={readiness.currentOnly ? "Product/Care 当前只有 current Published snapshot" : "当前没有仅 current-only 的发布来源"} />
+        <section data-testid="publish-center-readiness" className="mt-2 border-y border-slate-200 bg-white px-3 py-2">
+          <div className="grid grid-cols-2 gap-x-3 gap-y-2 text-[11px] lg:grid-cols-5">
+            <ReadinessStat label="可读取模块" value={`${readiness.ready}/3`} detail={readiness.ready === 3 ? '三个发布域都可读取' : '未就绪来源不计为可发布'} />
+            <ReadinessStat label="需要认证 / 授权" value={String(readiness.accessRequired)} detail="登录与权限问题" />
+            <ReadinessStat label="尚未启用" value={String(readiness.schemaNotReady)} detail="Schema / migration 未就绪" />
+            <ReadinessStat label="暂不可用" value={String(readiness.unavailable)} detail="服务读取异常" />
+            <ReadinessStat label="历史覆盖缺口" value={String(readiness.currentOnly)} detail={readiness.currentOnly ? '存在 current-only 来源' : '历史覆盖完整'} />
+          </div>
         </section>
-
-        <ReleaseCapabilityMatrix capabilities={feed.capabilities} sources={sourceByAuthority} />
-
-        <ReleasePermissionBoundary permissions={feed.permissions} />
 
         <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
           {([['all', '全部'], ['product_care', 'Product / Care'], ['compatibility', 'Compatibility'], ['seo', 'SEO']] as const).map(([value, label]) => <button key={value} type="button" onClick={() => { setFilter(value); setSelectedEventId(null); }} className={`shrink-0 rounded-full px-4 py-2 text-xs font-black ${filter === value ? 'bg-ink text-white' : 'border border-slate-200 bg-white text-ink/60'}`}>{label}</button>)}
         </div>
 
-        {selectedEvent && <ReleaseEventDetail event={selectedEvent} source={sourceByAuthority.get(selectedEvent.authority)} relatedEvents={relatedEvents} />}
-
-        <section className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5">
+        <section className="mt-4 border-t border-slate-100 pt-4">
           <div className="flex items-center justify-between gap-3"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Unified timeline</div><h2 className="mt-1 text-lg font-black">发布 / 审核 / Revision 记录</h2></div><div className="rounded-full bg-slate-100 px-3 py-1.5 text-xs font-black text-ink/55">{events.length} 条</div></div>
           {error && <div role="alert" className="mt-4 rounded-[16px] border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{error}</div>}
           {loading && <div className="flex min-h-40 items-center justify-center gap-2 text-sm font-bold text-ink/45"><Loader2 className="h-5 w-5 animate-spin" />读取 release sources…</div>}
@@ -116,6 +112,19 @@ export default function PublishCenter() {
             {events.map(event => <ReleaseEventCard key={event.id} event={event} selected={event.id === selectedEventId} onSelect={() => setSelectedEventId(event.id)} />)}
           </div>}
         </section>
+
+        {selectedEvent && <ReleaseEventDetail event={selectedEvent} source={sourceByAuthority.get(selectedEvent.authority)} relatedEvents={relatedEvents} />}
+
+        <details data-testid="publish-center-release-boundary" className="mt-4 border border-slate-200 bg-white">
+          <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between gap-4 px-4 py-3 text-left [&::-webkit-details-marker]:hidden">
+            <span><strong className="block text-sm font-black">发布边界详情</strong><small className="mt-0.5 block text-[11px] font-semibold text-ink/45">查看各 authority 的 Capability 与当前身份权限；这些是安全参考，不是当前发布动作。</small></span>
+            <span className="text-[11px] font-black text-ink/45">展开</span>
+          </summary>
+          <div className="border-t border-slate-200 px-4 pb-4">
+            <ReleaseCapabilityMatrix capabilities={feed.capabilities} sources={sourceByAuthority} />
+            <ReleasePermissionBoundary permissions={feed.permissions} />
+          </div>
+        </details>
       </div>
     </div>
   );
@@ -128,16 +137,16 @@ const permissionActionLabel: Record<ReleasePermissionDto['action'], string> = {
 };
 const permissionStateLabel: Record<ReleasePermissionDto['state'], string> = { allowed: '允许', separate_auth: '独立登录', locked: '锁定', not_applicable: '不适用' };
 const permissionStateClass: Record<ReleasePermissionDto['state'], string> = {
-  allowed: 'border-emerald-200 bg-emerald-50 text-emerald-800', separate_auth: 'border-amber-200 bg-amber-50 text-amber-900', locked: 'border-red-200 bg-red-50 text-red-800', not_applicable: 'border-slate-200 bg-slate-50 text-slate-500',
+  allowed: 'border-emerald-200 bg-emerald-50 text-emerald-800', separate_auth: 'border-slate-200 bg-white text-ink/65', locked: 'border-red-200 bg-red-50 text-red-800', not_applicable: 'border-slate-200 bg-slate-50 text-slate-500',
 };
 
 function ReleasePermissionBoundary({ permissions }: { permissions: ReleasePermissionDto[] }) {
-  return <section data-testid="publish-center-permission-boundary" className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Access boundary</div><h2 className="mt-1 text-lg font-black">当前身份与发布权限</h2><p className="mt-1 text-xs font-semibold leading-5 text-ink/50">这是现有权限事实的只读投影，不会修改 Supabase `user_roles` 或 SEO Repo Admin 认证。</p></div><div className="mt-4 grid gap-3">{(['product_care','compatibility','seo'] as ReleaseAuthority[]).map(authority => { const rows = permissions.filter(item => item.authority === authority); const identity = rows.find(item => item.identity)?.identity; const role = rows[0]?.role || 'unknown'; return <article key={authority} className="rounded-[18px] border border-slate-100 bg-slate-50/60 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-sm font-black">{authorityLabel[authority]}</strong><span className="text-[11px] font-bold text-ink/45">{identity || '未认证'} · {role}</span></div><div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">{rows.map(item => <div key={`${authority}-${item.action}`} className={`rounded-[14px] border px-3 py-2.5 ${permissionStateClass[item.state]}`} title={item.detail}><div className="text-[10px] font-black uppercase tracking-[0.08em] opacity-70">{permissionActionLabel[item.action]}</div><div className="mt-1 text-xs font-black">{permissionStateLabel[item.state]}</div><p className="mt-1 text-[10px] font-semibold leading-4 opacity-75">{item.detail}</p></div>)}</div></article>; })}</div></section>;
+  return <section data-testid="publish-center-permission-boundary" className="mt-4 border-t border-slate-100 pt-4"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Access boundary</div><h2 className="mt-1 text-lg font-black">当前身份与发布权限</h2><p className="mt-1 text-xs font-semibold leading-5 text-ink/50">这是现有权限事实的只读投影，不会修改 Supabase `user_roles` 或 SEO Repo Admin 认证。</p></div><div className="mt-4 grid gap-3">{(['product_care','compatibility','seo'] as ReleaseAuthority[]).map(authority => { const rows = permissions.filter(item => item.authority === authority); const identity = rows.find(item => item.identity)?.identity; const role = rows[0]?.role || 'unknown'; return <article key={authority} className="rounded-[18px] border border-slate-100 bg-slate-50/60 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-sm font-black">{authorityLabel[authority]}</strong><span className="text-[11px] font-bold text-ink/45">{identity || '未认证'} · {role}</span></div><div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">{rows.map(item => <div key={`${authority}-${item.action}`} className={`rounded-[14px] border px-3 py-2.5 ${permissionStateClass[item.state]}`} title={item.detail}><div className="text-[10px] font-black uppercase tracking-[0.08em] opacity-70">{permissionActionLabel[item.action]}</div><div className="mt-1 text-xs font-black">{permissionStateLabel[item.state]}</div><p className="mt-1 text-[10px] font-semibold leading-4 opacity-75">{item.detail}</p></div>)}</div></article>; })}</div></section>;
 }
 
 function ReleaseCapabilityMatrix({ capabilities, sources }: { capabilities: ReleaseCapabilityDto[]; sources: Map<ReleaseAuthority, ReleaseSourceStatusDto> }) {
   const byAuthority = (authority: ReleaseAuthority) => capabilities.filter(item => item.authority === authority);
-  return <section data-testid="publish-center-capability-matrix" className="mt-4 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Release capability</div><h2 className="mt-1 text-lg font-black">Diff → Impact → Preview → Review → Staging → Production</h2><p className="mt-1 text-xs font-semibold leading-5 text-ink/50">这是当前代码/authority 能力矩阵，不等于 Production 已解锁。来源未登录或不可用时，历史读取状态单独显示在上方。</p></div><div className="mt-4 grid gap-3">{(['product_care','compatibility','seo'] as ReleaseAuthority[]).map(authority => <article key={authority} className="rounded-[18px] border border-slate-100 bg-slate-50/60 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-sm font-black">{authorityLabel[authority]}</strong><span className="text-[11px] font-bold text-ink/40">{sources.get(authority) ? availabilityLabel[sources.get(authority)!.availability] : '未知'}</span></div><div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">{byAuthority(authority).map(item => <CapabilityCell key={`${authority}-${item.stage}`} item={item} />)}</div></article>)}</div></section>;
+  return <section data-testid="publish-center-capability-matrix" className="mt-4 border-t border-slate-100 pt-4"><div><div className="text-xs font-black uppercase tracking-[0.14em] text-ink/40">Release capability</div><h2 className="mt-1 text-lg font-black">Diff → Impact → Preview → Review → Staging → Production</h2><p className="mt-1 text-xs font-semibold leading-5 text-ink/50">这是当前代码/authority 能力矩阵，不等于 Production 已解锁。来源未登录或不可用时，历史读取状态单独显示在上方。</p></div><div className="mt-4 grid gap-3">{(['product_care','compatibility','seo'] as ReleaseAuthority[]).map(authority => <article key={authority} className="rounded-[18px] border border-slate-100 bg-slate-50/60 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><strong className="text-sm font-black">{authorityLabel[authority]}</strong><span className="text-[11px] font-bold text-ink/40">{sources.get(authority) ? availabilityLabel[sources.get(authority)!.availability] : '未知'}</span></div><div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-6">{byAuthority(authority).map(item => <CapabilityCell key={`${authority}-${item.stage}`} item={item} />)}</div></article>)}</div></section>;
 }
 
 function CapabilityCell({ item }: { item: ReleaseCapabilityDto }) {
@@ -145,7 +154,7 @@ function CapabilityCell({ item }: { item: ReleaseCapabilityDto }) {
 }
 
 function ReadinessStat({ label, value, detail }: { label: string; value: string; detail: string }) {
-  return <article className="rounded-[18px] border border-white/80 bg-white p-4 shadow-sm"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/38">{label}</div><div className="mt-2 text-2xl font-black text-ink">{value}</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/48">{detail}</p></article>;
+  return <div className="min-w-0 border-l-2 border-slate-200 pl-2.5"><div className="flex items-baseline gap-2"><span className="text-sm font-black text-ink">{value}</span><strong className="text-[11px] font-black text-ink/60">{label}</strong></div><p className="mt-0.5 truncate text-[10px] font-semibold text-ink/38" title={detail}>{detail}</p></div>;
 }
 
 function ReleaseEventDetail({ event, source, relatedEvents }: { event: ReleaseEventDto; source?: ReleaseSourceStatusDto; relatedEvents: ReleaseEventDto[] }) {
