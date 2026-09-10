@@ -990,3 +990,9 @@
 - [x] Editorial、Evidence、Public Contract、Copy、Structure、Responsive Contract 全部通过。
 - [x] 全路由和动效脚本均在 Chromium 启动阶段被 macOS MachPort 权限阻止；没有把启动失败误记为页面断言通过。
 - [ ] 真实动效、FAQ 键盘展开、品系切换、Public/App 路由和三档截图仍待 Mac 解锁后一次性复验。
+
+## 2026-09-10 宝莲灯素材状态复核
+
+- [x] 确认 `/public/species-image-overrides/sp_0432.png` 文件存在，实际尺寸为 521×316，透明主体完整可读。
+- [x] 确认缺图原因是 Hero 与品系卡用途仍登记为 `needs_review`，Published 聚合按 fail-closed 规则不返回该素材；不是文件路径丢失。
+- [ ] 需要项目负责人分别确认宝莲灯 Hero 和品系卡用途后，才能更新为 `approved`；在此之前继续显示稳定回退。

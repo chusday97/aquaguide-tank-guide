@@ -876,3 +876,9 @@
 - `test:seo-motion` 与 `test:public-seo-routes` 均未进入页面断言阶段，Chromium 在启动时因 `MachPortRendezvous ... Permission denied` 退出。
 - 静态内容、证据、结构、响应式契约和构建门禁通过；不能据此宣称动效或真实点击验收通过。
 - Mac 解锁后优先执行这两个脚本，再导出三档截图；不要在当前锁定环境重复启动。
+
+## 2026-09-10 宝莲灯图片缺失根因
+
+- 原图 `/public/species-image-overrides/sp_0432.png` 存在，尺寸 521×316，透明鱼体可见。
+- `src/data/speciesLandingPilot.ts` 中 Hero 与 `variant-card` 均为 `needs_review`，所以 `publishedSpeciesProfile.ts` 有意不返回图片，页面显示“图片暂时不可用”。
+- 不能仅因文件存在就改成 `approved`；需要项目负责人分别确认两种用途，避免把未确认素材放进公开聚合。
