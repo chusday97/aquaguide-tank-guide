@@ -74,6 +74,10 @@ assert.ok(firstProductAttention >= 0 && firstSeoAttention > firstProductAttentio
 const serviceSource = fs.readFileSync(new URL('../src/services/admin/operations-work-item.service.ts', import.meta.url), 'utf8');
 assert.doesNotMatch(serviceSource, /\.(create|update|submit|approve|publish)[A-Z][A-Za-z]+\(/, 'Operations WorkItem aggregation must remain read-only.');
 const adminHubSource = fs.readFileSync(new URL('../src/pages/AdminHub.tsx', import.meta.url), 'utf8');
+assert.match(adminHubSource, /source\.availability !== 'ready'/, 'Ready sources must not repeat diagnostic detail on Operations Home.');
+assert.match(adminHubSource, /snapshot\.recentEvents\[0\]/, 'Operations Home must show only the latest release handoff instead of duplicating the Publish Center timeline.');
+assert.doesNotMatch(adminHubSource, /recentEvents\.slice\(0, 5\)/, 'Operations Home must not render a second five-event release timeline.');
+assert.match(adminHubSource, /grid grid-cols-2 xl:grid-cols-4/, 'Authority workspaces must stay compact as a 2x2 mobile grid.');
 assert.match(adminHubSource, /item\.gateLabel/, 'Operations Home must render the current task gate.');
 assert.match(adminHubSource, /item\.nextStep/, 'Operations Home must render the exact next operator step.');
 assert.match(adminHubSource, /item\.verificationNote/, 'Operations Home must preserve authority verification notes.');

@@ -196,6 +196,16 @@ const run = async (viewport, label) => {
     await page.getByText('Fixture Guppy · Compatibility Profile 等待人工审核').waitFor({ timeout: 10000 });
     assert.match(await page.getByTestId('operations-primary-task').innerText(), /当前已读取优先任务/, `${label}: incomplete source coverage must scope the priority claim.`);
     assert.match(await page.getByTestId('operations-primary-task').innerText(), /当前优先级仅基于已读取任务/, `${label}: scoped priority must disclose incomplete source coverage.`);
+    if (label === 'mobile') {
+      const primaryTop = await page.getByTestId('operations-primary-task').evaluate(element => element.getBoundingClientRect().top + window.scrollY);
+      const sourceTop = await page.getByTestId('operations-source-status').evaluate(element => element.getBoundingClientRect().top + window.scrollY);
+      const workspaceHeight = await page.getByTestId('operations-workspaces').evaluate(element => element.getBoundingClientRect().height);
+      const activityHeight = await page.getByTestId('operations-recent-activity').evaluate(element => element.getBoundingClientRect().height);
+      assert.equal(primaryTop < 130, true, 'mobile: current task must start near the top, before secondary coordination surfaces.');
+      assert.equal(sourceTop < 780, true, 'mobile: source diagnostics must remain reachable near the first viewport after current tasks.');
+      assert.equal(workspaceHeight < 280, true, 'mobile: four authority workspaces must stay compact instead of stacking four full-width cards.');
+      assert.equal(activityHeight < 90, true, 'mobile: recent release activity must be a compact handoff to Publish Center, not a duplicate timeline.');
+    }
     const overflowHome = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     await page.getByRole('button', { name: /审核这个 revision/ }).click();
     await page.waitForURL(/\/admin\/compatibility\?kind=profile&revision=rev-profile-1/);
@@ -207,8 +217,10 @@ const run = async (viewport, label) => {
     await productTask.waitFor({ timeout: 10000 });
     await productTask.click();
     await page.waitForURL(/\/admin\/product-content\?type=species&id=sp-fixture-1/);
-    await page.getByText('Fixture Goldfish', { exact: true }).last().waitFor({ state: 'visible', timeout: 10000 });
-    assert.equal(await page.getByLabel('目录 ID *').inputValue(), 'fixture-goldfish', `${label}: exact Product Draft must open.`);
+    const productCatalogId = page.getByLabel('目录 ID *');
+    await productCatalogId.waitFor({ state: 'visible', timeout: 10000 });
+    for (let attempt = 0; attempt < 60 && await productCatalogId.inputValue() !== 'fixture-goldfish'; attempt += 1) await sleep(100);
+    assert.equal(await productCatalogId.inputValue(), 'fixture-goldfish', `${label}: exact Product Draft must hydrate after the route opens.`);
     const overflowTarget = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
 
     assert.equal(overflowHome, 0, `${label}: Operations Home must not overflow horizontally.`);
