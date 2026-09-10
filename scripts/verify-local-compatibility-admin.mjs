@@ -81,6 +81,15 @@ try {
     assert.match(profilePublishedText, /虎皮鱼[\s\S]{0,500}最低群体：7/);
     assert.match(profilePublishedText, /Local baseline 7\/7/);
 
+    await page.getByRole('button', { name: '返回管理后台' }).click();
+    await page.waitForURL(/\/admin\/content$/);
+    const profileClosureNotice = page.getByTestId('operations-return-context');
+    await profileClosureNotice.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await profileClosureNotice.innerText(), /已返回工作台[\s\S]*虎皮鱼 · Compatibility Profile[\s\S]*当前队列未找到这条任务/, 'Publishing the exact Compatibility Profile task must close it out of the refreshed Operations queue.');
+    assert.doesNotMatch(await page.getByTestId('operations-primary-task').innerText(), /虎皮鱼 · Compatibility Profile/, 'Completed Compatibility Profile task must not remain as the current priority after returning.');
+
+    await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'networkidle' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     await page.getByRole('button', { name: '创建 Pair Draft' }).first().click();
     const pairEditor = page.getByTestId('compatibility-pair-draft-editor');
     await pairEditor.locator('select').first().selectOption('caution');

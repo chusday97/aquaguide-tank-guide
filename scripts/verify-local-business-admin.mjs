@@ -82,10 +82,18 @@ try {
     assert.equal(await repeatedIndexAttention.count() <= 3, true, 'Operations Home must not expand more than three repeated low-priority Index-strategy attention rows.');
     assert.match(await operationsQueue.innerText(), /还有 \d+ 个任务未在首页展开[\s\S]*SEO \d+/, 'Collapsed Operations tasks must keep an authority-level hidden-count summary.');
 
-    await page.goto(`${baseUrl}/admin/product-content?type=species&id=local-species-sp_0001`, { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: /继续这个 Draft/ }).first().click();
+    await page.waitForURL(/\/admin\/product-content\?type=species&id=local-species-sp_0001/);
     await page.getByRole('button', { name: '发布', exact: true }).click();
     await page.getByRole('dialog').getByRole('button', { name: '确认发布', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('form')?.textContent?.includes('已发布'));
+    await page.getByRole('button', { name: '返回后台首页' }).click();
+    await page.waitForURL(/\/admin\/content$/);
+    const closureNotice = page.getByTestId('operations-return-context');
+    await closureNotice.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await closureNotice.innerText(), /已返回工作台[\s\S]*极火虾 · Product Data Draft[\s\S]*当前队列未找到这条任务/, 'Publishing the exact Product task must close it out of the refreshed Operations queue.');
+    assert.doesNotMatch(await page.getByTestId('operations-primary-task').innerText(), /极火虾 · Product Data Draft/, 'Completed Product task must not remain as the current priority after returning.');
+    assert.match(await page.getByTestId('operations-primary-task').innerText(), /当前.*优先任务|当前已读取来源没有待处理任务/, 'Operations must expose the next current priority immediately after task closure.');
 
     const statePublished = await page.evaluate(key => JSON.parse(localStorage.getItem(key) || '{}'), storageKey);
     assert.ok(statePublished.publishedSpecies.sp_0001.description.endsWith(marker));
