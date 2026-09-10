@@ -887,3 +887,9 @@
 
 - `verify-species-asset-preview.mjs` 已加入宝莲灯待审核预览，以及普通路由不暴露该图片、显示回退、保持 noindex 的断言。
 - 脚本已通过 `node --check` 和 `git diff --check`；真实执行仍受 Chromium MachPort 权限阻塞。
+
+## 2026-09-10 宝莲灯 evidence binding 补齐
+
+- `seoEvidenceBindings.ts` 已为 `sp_0432` Hero 和 `variant-card` 登记当前文件 hash 与 snapshot fingerprint。
+- 两条 binding 当前显式为 `blocked/pending-review`；不会因为文件存在就进入 Published Profile。
+- `test:seo-evidence-bindings`、`lint`、`build` 和 `diff-check` 已通过。批准素材时必须同时更新用途状态、fingerprint 和确认记录。

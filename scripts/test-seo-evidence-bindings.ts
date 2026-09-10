@@ -40,9 +40,12 @@ assert.equal(cardinalProfile.reviewedTraits.length, 1, 'reviewed cardinal shoali
 assert.match(yellowProfile.variants.find(variant => variant.id === 'sp_0030')?.difference || '', /黄色选育型/, 'confirmed variant differences should enter the public profile');
 assert.equal(fireProfile.assets.filter(asset => asset.usage === 'hero').length, 1, 'approved fire shrimp Hero must enter the public profile');
 assert.ok(yellowProfile.variants.find(variant => variant.id === 'sp_0030')?.image, 'approved yellow shrimp card must enter the public profile');
+assert.equal(getSeoEvidenceBindingStatus(getSeoEvidenceEntry('sp_0432', 'assets.hero')!), 'blocked', 'pending cardinal Hero asset must remain blocked');
+assert.equal(getSeoEvidenceBindingStatus(getSeoEvidenceEntry('sp_0432', 'assets.variant-card')!), 'blocked', 'pending cardinal card asset must remain blocked');
+assert.equal(cardinalProfile.assets.length, 0, 'pending cardinal assets must not enter the public profile');
 
 const report = getSeoEvidenceReport();
-assert.equal(report.length, 8, 'the pilot evidence report must cover catalog, behavior and asset bindings');
+assert.equal(report.length, 10, 'the pilot evidence report must cover catalog, behavior and all pilot asset bindings');
 assert.ok(report.every(item => item.currentFingerprint === item.sourceFingerprint || item.status !== 'confirmed'), 'confirmed bindings must match their current source fingerprint');
 
 for (const asset of getSeoAssetFileManifest()) {

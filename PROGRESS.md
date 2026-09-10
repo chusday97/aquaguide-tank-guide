@@ -1002,3 +1002,10 @@
 - [x] 素材预览脚本新增宝莲灯 `sp_0432?assetPreview=1` 三档覆盖。
 - [x] 新增断言：普通宝莲灯路由不得暴露待审核图片，必须显示稳定回退并保持 `noindex,follow`。
 - [ ] 真实截图仍待 Mac 解锁；本轮只完成脚本语法与 diff 校验，未把浏览器专项标记为通过。
+
+## 2026-09-10 宝莲灯素材 evidence binding 补齐
+
+- [x] 为宝莲灯 Hero 与品系卡加入独立 SHA-256、snapshot fingerprint 和 blocked binding。
+- [x] 测试确认两条 binding 在 `needs_review` 时保持 blocked，且不会进入 Published Profile；批准状态变化后会先因 fingerprint 变化进入 stale。
+- [x] `npm run test:seo-evidence-bindings`、`npm run lint`、`npm run build` 和 `git diff --check` 通过。
+- [ ] 仍需项目负责人视觉确认、Mac 解锁后的真实浏览器验收，以及后续独立 Critic。

@@ -155,7 +155,12 @@ const reviewedEvidenceEntry = (speciesId: string): SeoEvidenceManifestEntry => {
   };
 };
 
-const assetEntry = (speciesId: string, usage: 'hero' | 'variant-card', sha256: string): SeoEvidenceManifestEntry => {
+const assetEntry = (
+  speciesId: string,
+  usage: 'hero' | 'variant-card',
+  sha256: string,
+  options: { sourceFingerprint: string; status?: SeoEvidenceBindingStatus; confirmedBy?: string; confirmedAt?: string },
+): SeoEvidenceManifestEntry => {
   const fish = findFish(speciesId);
   const pilot = fish ? getSpeciesLandingPilotRecord(fish) : undefined;
   const source = pilot ? (usage === 'hero' ? pilot.asset.hero : pilot.asset.variantCard) : undefined;
@@ -167,12 +172,10 @@ const assetEntry = (speciesId: string, usage: 'hero' | 'variant-card', sha256: s
       renderedClaim: source?.altZh || `${speciesId} ${usage}`,
       sourceKind: 'asset',
       sourceIds: source?.sourcePath ? [source.sourcePath] : [],
-      sourceFingerprint: usage === 'hero'
-        ? (speciesId === 'sp_0001' ? 'fnv1a32:96cefb53' : 'fnv1a32:0f89a14a')
-        : (speciesId === 'sp_0001' ? 'fnv1a32:e671126f' : 'fnv1a32:1c7b8cf2'),
-      status: 'confirmed',
-      confirmedBy: 'project-owner',
-      confirmedAt: '2026-09-01',
+      sourceFingerprint: options.sourceFingerprint,
+      status: options.status || 'confirmed',
+      confirmedBy: options.confirmedBy || 'project-owner',
+      confirmedAt: options.confirmedAt || '2026-09-01',
     },
     currentSnapshot: () => getAssetSnapshot(speciesId, usage),
     sourceReady: () => getAssetReady(speciesId, usage),
@@ -185,10 +188,12 @@ export const seoEvidenceManifest: SeoEvidenceManifestEntry[] = [
   productEntry(findFish('sp_0030') as Fish, 'fnv1a32:1b8de482'),
   productEntry(findFish('sp_0432') as Fish, 'fnv1a32:55246ea2'),
   reviewedEvidenceEntry('sp_0432'),
-  assetEntry('sp_0001', 'hero', 'af044441e7c8facb4382964a4f97db50007f694d9844e9814012b3899d7f1b38'),
-  assetEntry('sp_0001', 'variant-card', 'af044441e7c8facb4382964a4f97db50007f694d9844e9814012b3899d7f1b38'),
-  assetEntry('sp_0030', 'hero', '696670603f91edbb92bc51ceae72a5922eb8110094adad9484f5b670aecb6a9b'),
-  assetEntry('sp_0030', 'variant-card', '696670603f91edbb92bc51ceae72a5922eb8110094adad9484f5b670aecb6a9b'),
+  assetEntry('sp_0001', 'hero', 'af044441e7c8facb4382964a4f97db50007f694d9844e9814012b3899d7f1b38', { sourceFingerprint: 'fnv1a32:96cefb53' }),
+  assetEntry('sp_0001', 'variant-card', 'af044441e7c8facb4382964a4f97db50007f694d9844e9814012b3899d7f1b38', { sourceFingerprint: 'fnv1a32:e671126f' }),
+  assetEntry('sp_0030', 'hero', '696670603f91edbb92bc51ceae72a5922eb8110094adad9484f5b670aecb6a9b', { sourceFingerprint: 'fnv1a32:0f89a14a' }),
+  assetEntry('sp_0030', 'variant-card', '696670603f91edbb92bc51ceae72a5922eb8110094adad9484f5b670aecb6a9b', { sourceFingerprint: 'fnv1a32:1c7b8cf2' }),
+  assetEntry('sp_0432', 'hero', '760692b8bb1aa527dbead2640660f118b47026b1097fb1c409075a6ecb6bc456', { sourceFingerprint: 'fnv1a32:7b5f6187', status: 'blocked', confirmedBy: 'pending-review', confirmedAt: '2026-09-10' }),
+  assetEntry('sp_0432', 'variant-card', '760692b8bb1aa527dbead2640660f118b47026b1097fb1c409075a6ecb6bc456', { sourceFingerprint: 'fnv1a32:d3e50e53', status: 'blocked', confirmedBy: 'pending-review', confirmedAt: '2026-09-10' }),
 ];
 
 export const getSeoEvidenceBindingStatus = (entry: SeoEvidenceManifestEntry): SeoEvidenceBindingStatus => {
