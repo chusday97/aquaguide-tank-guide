@@ -28,7 +28,8 @@
 - [x] Product/Care editor priority (`448bfcd8`): compact mobile navigator, fields before review/downstream blocks, no internal mobile overflow, explicit Save-before-Publish state.
 - [x] Downstream review visual semantics (`340cbfd3`): Graphite/White/Green default; Amber only for explicit human decision/review; Care SEO purple/indigo parallel theme removed and contract-guarded.
 - [x] Compatibility review hierarchy (`89b6863a`): one Profile/Pair visual authority, explicit state colors, compact authority summary, 390px editor-before-lists/no-overflow guards.
-- [ ] Audit Operations Home first-screen density/duplication next; keep task-first read-only coordination and do not add parallel tool surfaces.
+- [x] Operations Home first-screen density (`ee41c214`): task-first layout preserved; ready-source detail compacted; workspaces 2×2 on mobile; Recent Activity reduced to latest-event summary; 390px total height ~1833→1373px.
+- [ ] Audit cross-workspace task continuity and only remaining high-signal interaction/ownership badcases; do not add parallel tool surfaces.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

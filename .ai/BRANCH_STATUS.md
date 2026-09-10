@@ -1,12 +1,12 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Topbar action-convergence checkpoint (2026-09-10)
-- Latest functional HEAD: `3cb4a569` (`fix(admin): simplify publish center hierarchy`).
-- Live remote feature: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
-- Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
-- Local vs live remote feature: `ahead 24 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local checkpoint: `275 main-only / 282 feature-only`; merge base remains `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+## CURRENT OVERRIDE — Operations Home hierarchy checkpoint (2026-09-10)
+- Latest functional HEAD: `ee41c214` (`fix(admin): compact operations home hierarchy`).
+- Live remote feature: `30ff0119`.
+- Live main: `d3c70dee`.
+- Local vs live remote feature: `ahead 34 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local checkpoint: `275 main-only / 292 feature-only`; merge base remains `ed0cf380`.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
 - No merge/rebase main, force push, Production/live DB or indexing mutation.
 

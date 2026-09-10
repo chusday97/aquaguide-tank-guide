@@ -1251,3 +1251,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Top baseline explanation is neutral and the three authority stats are compacted into one summary strip.
 - Permanent 390px guards: summary <=120px, Profile editor appears before 500px, no internal overflow. PASS: Compatibility contract, Local Profile/Pair Draft→Regression→Review→Publish, full Admin UI, root TypeScript, full build, diff hygiene.
 - NEXT: Operations Home first-screen density/duplication audit. No push/main/Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Operations Home hierarchy convergence
+- Committed `ee41c214 fix(admin): compact operations home hierarchy`.
+- Task-first coordination remains primary; ready-source details are compact, authority workspaces use a 2×2 mobile grid, and Recent Activity is reduced to one latest-event summary linking to Publish Center instead of duplicating the release timeline.
+- 390px measured page height improved ~1833→1373px; primary task starts ~188→102px; workspace block 442→252px; Recent Activity 162→63px.
+- Browser contract also waits for exact Product/Care deep-link hydration instead of hidden catalog text. PASS: Operations WorkItems, populated auth/forbidden/schema/deep-link matrix, Durable Local File full restart/backup-restore, root TypeScript, full build, diff hygiene.
+- Fetched refs after checkpoint: remote feature `30ff0119`, main `d3c70dee`; local ahead 34/behind 0 vs feature, main-only 275/feature-only 292, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
+- NEXT: cross-workspace task continuity and remaining high-signal interaction/ownership badcases.

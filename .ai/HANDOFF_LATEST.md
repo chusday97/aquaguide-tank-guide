@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
-Functional checkpoint: `89b6863a fix(admin): converge compatibility review hierarchy`.
+Functional checkpoint: `ee41c214 fix(admin): compact operations home hierarchy`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
 - Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
@@ -17,15 +17,16 @@ Functional checkpoint: `89b6863a fix(admin): converge compatibility review hiera
 - Product/Care editor hierarchy is converged (`448bfcd8`): mobile uses a compact record navigator instead of stacking the full catalog before editing; Product/Care fields precede Impact/downstream review; Care SEO moved after Care fields; dirty publish says `保存后可发布`; form internal overflow is guarded. 390px form start improved ~934→244px and Care width 504→366px.
 - Downstream review visual semantics are converged (`340cbfd3`): Care SEO no longer looks like a separate violet/indigo product; Graphite/White is default, Green is success/publish-safe, Red is drift/error, and Amber is reserved for explicit human review/conflict/approval. Content Impact uses the same rule.
 - Compatibility review hierarchy is converged (`89b6863a`): Profile/Pair share one visual authority; Draft/Open/Submit/Regression are neutral, pending review/approve/Impact decision support use Amber, reviewed publish uses Green, reject/error uses Red. Compact authority summary and 390px editor-position/no-overflow guards pass.
+- Operations Home hierarchy is converged (`ee41c214`): task remains first, ready sources collapse repeated detail, authority workspaces use a compact 2×2 mobile grid, and Recent Activity is one latest-event summary linking to Publish Center instead of a duplicated timeline. 390px page height improved ~1833→1373px.
 - Validation PASS: Heavy browser hierarchy/Preview regression, Species SEO contracts, Admin content contract, root TypeScript, full root build and diff hygiene.
-- NEXT: audit Operations Home remaining first-screen density and duplication while keeping it task-first/read-only. Do not add new authority layers. Supabase Staging remains parked.
+- NEXT: audit cross-workspace task continuity and only remaining high-signal interaction/ownership badcases. Do not add new authority layers. Supabase Staging remains parked.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `1ea56f60`
+Current Operations Studio functional HEAD: `ee41c214`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
