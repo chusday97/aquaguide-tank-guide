@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `832537db`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `7ec556a3`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -35,6 +35,8 @@ Completed in the current local-first / UX phase:
 27. Legacy Published Snapshot repair is isolated as maintenance-only (`f819182a`): the non-Local repair context locks Care fields, content save, image replacement and downstream SEO; only immutable snapshot repair remains actionable, and normal editing returns after the context clears. Local Mode does not expose the legacy-only repair UI.
 28. Publish audit navigation is resource-aware (`4fd1e280`): Product/Care, Compatibility and Species SEO page events deep-link back to the exact record/revision/locale when the audit event contains stable identity; ambiguous Base/batch/admin events safely fall back to the authority home.
 29. Local Species SEO is part of the canonical Local Admin workspace (`832537db`): `npm run dev:local-admin` starts root Web + API + standalone Species SEO, localhost links resolve to the configured SEO dev port, and Durable restart regression verifies the third app is actually reachable.
+30. Local SEO task return is browser-proven (`af886726`): standalone SEO returns across the dev port boundary with Operations task context intact.
+31. Local launcher safely reuses an already-running healthy Species SEO server (`7ec556a3`); an unrelated app on the configured SEO port is rejected fail-closed instead of being silently reused.
 
 NEXT milestones:
 1. Current Product/Care, Compatibility, SEO WorkItem and Publish Center audit→resource navigation loops are closed. Do not add more navigation machinery unless a concrete reproducible operator dead-end is observed.

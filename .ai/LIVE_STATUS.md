@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-10)
-- Functional checkpoint: `832537db fix(admin): connect local species seo workspace`.
+- Functional checkpoint: `7ec556a3 fix(admin): reuse healthy local seo server`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
 - Data Review remains evidence-first with explicit human Canonical choice and one final confirmation; Product Data authority is not rewritten by SEO review.
 - Save/review remains centralized in the top Review bar; contextual page/Base tools and history follow the active authority; cross-page work remains behind `运营工具`.
@@ -26,13 +26,15 @@
 - Legacy Care snapshot repair is maintenance-isolated (`f819182a`): only immutable snapshot repair remains writable in the repair context; content fields, save/upload and downstream SEO are locked, and Local Mode does not expose the legacy-only repair UI.
 - Publish Center audit details now preserve exact authority identity where possible (`4fd1e280`), including Product/Care record ID, Compatibility revision ID and Species SEO catalog key + locale; ambiguous events fall back safely.
 - Local Admin is now a complete three-process workspace (`832537db`): `dev:local-admin` starts Web + API + standalone Species SEO, localhost links resolve to the configured SEO port, deployed routing is unchanged, and Durable restart E2E asserts the SEO app responds.
+- Cross-port Local SEO return is accepted (`af886726`): the standalone SEO app returns to root Operations with the original task context intact.
+- Existing local SEO process reuse is guarded (`7ec556a3`): a healthy AquaGuide SEO process is reused; unrelated services on the configured SEO port are rejected rather than silently accepted.
 - Compatibility review-check repair is executable (`298f5810`): pending/approved revisions missing Impact / Regression / Canonical Evidence expose a single repair action; approved revisions are reset to pending_review before regenerated checks can be re-approved, and publish/approval UI requires all three artifacts.
 - Full Species SEO contract, Operations desktop/mobile matrix, Care SEO local editorial flow, Admin content UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
 
 Updated: 2026-09-10
 Canonical branch: `feature/admin-content-v0`
-Operational functional HEAD before this docs sync: `832537db`
+Operational functional HEAD before this docs sync: `7ec556a3`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

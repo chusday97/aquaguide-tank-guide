@@ -1,17 +1,18 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Local Species SEO workspace checkpoint (2026-09-10)
-- Latest functional HEAD: `832537db` (`fix(admin): connect local species seo workspace`).
+## CURRENT OVERRIDE — Final Local Acceptance entry checkpoint (2026-09-10)
+- Latest functional HEAD: `7ec556a3` (`fix(admin): reuse healthy local seo server`).
+- Latest local SEO return acceptance: `af886726`.
+- Local Species SEO workspace checkpoint: `832537db`.
 - Publish Center exact audit-link checkpoint: `4fd1e280`.
-- Snapshot maintenance checkpoint: `f819182a`.
 - Live remote feature: `30ff0119`.
 - Live main: `d3c70dee`.
-- Local vs live remote feature: `ahead 57 / behind 0`; intentionally unpushed by this workflow.
-- Main vs local checkpoint: `275 main-only / 315 feature-only`; merge base remains `ed0cf380`.
-- `npm run dev:local-admin` now starts root Web + API + standalone Species SEO; deployed `/admin/seo/` behavior remains unchanged.
+- Local vs live remote feature: `ahead 60 / behind 0`; intentionally unpushed by this workflow.
+- Main vs local checkpoint: `275 main-only / 318 feature-only`; merge base remains `ed0cf380`.
+- Local Admin now supports one-command Web + API + Species SEO, exact audit deep-links, cross-port task return, and safe reuse of an existing healthy SEO server.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
-- No merge/rebase main, force push, Production/live DB, Supabase Staging or indexing mutation by this workflow.
+- No merge/rebase main, force push, Production/live DB, Supabase Staging or indexing mutation.
 
 Updated: 2026-09-10
 

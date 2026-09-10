@@ -1346,3 +1346,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: local-admin mode contract, Publish Center contract/UI 1280/390, Operations desktop/mobile matrix, Durable Local File full restart/backup/restore, root TypeScript, full root build and diff hygiene.
 - Fresh refs after functional commit: remote feature `30ff0119`, main `d3c70dee`; local ahead 57/behind 0 vs feature, main-only 275/feature-only 315, merge base `ed0cf380`.
 - NEXT: stop navigation/WorkItem expansion unless another concrete operator dead-end is reproduced; Supabase Staging and main reconciliation remain separately gated.
+
+## 2026-09-10 — Local Species SEO workspace finalization
+- `4fd1e280 fix(admin): deep-link release audit resources` makes Publish Center audit detail and cross-authority context return to exact Product/Care records, Compatibility revisions and Species SEO locale pages when stable identity exists.
+- `832537db fix(admin): connect local species seo workspace` makes `npm run dev:local-admin` start Web + API + standalone Species SEO and resolve localhost standalone-SEO links to the configured dev port.
+- `af886726 test(admin): prove local seo operations return` browser-proves standalone SEO → root Operations return with the original task context preserved across ports.
+- `7ec556a3 fix(admin): reuse healthy local seo server` safely reuses an already-running AquaGuide Species SEO server; unrelated services occupying the configured SEO port fail closed.
+- PASS: Durable Local File restart/backup/restore E2E, Local Admin contract, Publish Center 1280/390, Operations desktop/mobile, root TypeScript and full build.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 60/behind 0, main-only 275/feature-only 318. No push/main/Production/Supabase/indexing mutation.
+- NEXT: run Final Local Acceptance across Operations → Product/Care → Compatibility → SEO → Publish Center; only fix reproducible operator blockers.

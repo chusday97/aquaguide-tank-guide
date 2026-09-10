@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
-Functional checkpoint: `832537db fix(admin): connect local species seo workspace`.
+Functional checkpoint: `7ec556a3 fix(admin): reuse healthy local seo server`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
 - Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
@@ -34,6 +34,8 @@ Functional checkpoint: `832537db fix(admin): connect local species seo workspace
 - Legacy snapshot repair is strict maintenance-only (`f819182a`): non-Local `snapshot=1` locks Care fields, save/upload and downstream review/SEO so the only write is immutable snapshot repair; Local Mode does not expose this legacy repair context. Normal Product/Care editing returns after repair clears.
 - Publish Center audit navigation is exact where event identity is stable (`4fd1e280`): Product/Care uses resource ID, Compatibility uses revision ID, Species SEO uses catalog key + locale; ambiguous audit events fall back to the authority home instead of guessing.
 - Local Species SEO workspace is connected (`832537db`): `npm run dev:local-admin` starts root Web, Local API and the standalone SEO Admin together; localhost Operations/Publish Center links resolve to the configured SEO port (default 3010), while deployed `/admin/seo/` routing is unchanged. Durable Local File restart E2E verifies the SEO app is reachable.
+- Local SEO → Operations return is browser-proven (`af886726`): cross-port return preserves the original Operations task context.
+- Local launcher reuse is safe (`7ec556a3`): a healthy existing AquaGuide Species SEO server is reused without being killed when the parent Local Admin stops; an unrelated service occupying the configured SEO port causes an explicit startup failure.
 - NEXT: current task loops, Publish Center audit→resource links, and Local Web/API/Species-SEO workspace routing are closed. Stop navigation/WorkItem expansion unless a concrete reproducible operator badcase appears. Supabase Staging and main reconciliation remain separately gated/parked.
 
 Updated: 2026-09-10
@@ -41,7 +43,7 @@ Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `832537db`
+Current Operations Studio functional HEAD: `7ec556a3`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 
