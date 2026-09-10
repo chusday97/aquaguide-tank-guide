@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, Loader2, Save, Send, ShieldAlert, Sparkles } from 'lucide-react';
 import type { CareSeoAiAssistDto, CareSeoEditorialWorkspaceDto, SupportedLocale } from '../../../packages/contracts/src';
 import { useToast } from '../common/ToastProvider';
@@ -10,6 +10,7 @@ type Props = {
   careId: string;
   sourceRefreshKey?: number | string;
   initialLocale?: SupportedLocale;
+  focusOnReady?: boolean;
 };
 
 type EditorialForm = {
@@ -23,7 +24,7 @@ const emptyForm: EditorialForm = { seoTitle: '', metaDescription: '', h1: '', fo
 const errorMessage = (error: unknown) => error instanceof AquaGuideApiError ? error.message : 'Care SEO 操作没有完成，请稍后重试。';
 const factCount = (value: string[]) => value.length ? `${value.length} 项` : '0 项';
 
-export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, initialLocale = 'zh-CN' }: Props) {
+export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, initialLocale = 'zh-CN', focusOnReady = false }: Props) {
   const { showToast } = useToast();
   const [locale, setLocale] = useState<SupportedLocale>(initialLocale);
   const [workspace, setWorkspace] = useState<CareSeoEditorialWorkspaceDto | null>(null);
@@ -33,6 +34,8 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
   const [aiBusy, setAiBusy] = useState(false);
   const [aiAssist, setAiAssist] = useState<CareSeoAiAssistDto | null>(null);
   const [error, setError] = useState('');
+  const sectionRef = useRef<HTMLElement>(null);
+  const focusAppliedRef = useRef(false);
 
   const hydrateForm = (next: CareSeoEditorialWorkspaceDto) => {
     const editorial = next.editorial;
@@ -60,14 +63,19 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
     }
   };
 
-  useEffect(() => { setLocale(initialLocale); }, [careId, initialLocale]);
+  useEffect(() => { setLocale(initialLocale); focusAppliedRef.current = false; }, [careId, initialLocale]);
   useEffect(() => { void load(locale); }, [careId, locale, sourceRefreshKey]);
+  useEffect(() => {
+    if (!focusOnReady || loading || focusAppliedRef.current || !sectionRef.current) return;
+    focusAppliedRef.current = true;
+    sectionRef.current.scrollIntoView({ block: 'start' });
+  }, [focusOnReady, loading, workspace, error]);
 
   if (loading) {
-    return <section data-testid="care-seo-projection" className="mb-4 rounded-[18px] border border-slate-200 bg-slate-50 p-4 text-sm font-bold text-ink/45">正在读取 Published Care + SEO Editorial…</section>;
+    return <section ref={sectionRef} data-testid="care-seo-projection" className="scroll-mt-4 mb-4 rounded-[18px] border border-slate-200 bg-slate-50 p-4 text-sm font-bold text-ink/45">正在读取 Published Care + SEO Editorial…</section>;
   }
   if (!workspace) {
-    return <section data-testid="care-seo-projection" className="mb-4 rounded-[18px] border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-bold text-red-700">{error || '当前 Care 还没有可用的 Published source。SEO 不读取 Draft Care。'}</section>;
+    return <section ref={sectionRef} data-testid="care-seo-projection" className="scroll-mt-4 mb-4 rounded-[18px] border border-dashed border-slate-200 bg-slate-50 p-4 text-sm font-bold text-red-700">{error || '当前 Care 还没有可用的 Published source。SEO 不读取 Draft Care。'}</section>;
   }
 
   const { projection, editorial } = workspace;
@@ -137,7 +145,7 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
   };
 
   return (
-    <section data-testid="care-seo-projection" className="mb-4 border border-slate-200 bg-white p-4 md:p-5">
+    <section ref={sectionRef} data-testid="care-seo-projection" className="scroll-mt-4 mb-4 border border-slate-200 bg-white p-4 md:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <div className="text-xs font-black uppercase tracking-[0.12em] text-ink/45">Care SEO Editorial · downstream only</div>

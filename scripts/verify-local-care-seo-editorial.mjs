@@ -30,8 +30,31 @@ try {
     await page.route('**/api/admin-content/**', unavailable);
 
     await page.goto(`${baseUrl}/admin/product-content?type=care&id=${careId}`, { waitUntil: 'networkidle' });
+    await page.getByLabel('目录 ID *').waitFor({ state: 'visible' });
+    assert.equal(await page.evaluate(() => window.scrollY), 0, 'Ordinary Care deep-link must keep the main editor at the top.');
+
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    const careSeoTask = page.getByTestId('operations-primary-task');
+    await careSeoTask.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await careSeoTask.innerText(), /新鱼入缸 · SEO 需要完善[\s\S]*设置 Index 策略/, 'Operations Care SEO task must expose the exact policy action.');
+    await careSeoTask.getByRole('button', { name: '设置 Index 策略' }).click();
+    await page.waitForFunction((expectedCareId) => {
+      const url = new URL(window.location.href);
+      return url.pathname === '/admin/product-content'
+        && url.searchParams.get('type') === 'care'
+        && url.searchParams.get('id') === expectedCareId
+        && url.searchParams.get('seo') === '1';
+    }, careId);
     const seo = page.getByTestId('care-seo-projection');
     await seo.waitFor();
+    await page.waitForFunction(() => {
+      const target = document.querySelector('[data-testid="care-seo-projection"]');
+      if (!target) return false;
+      const top = target.getBoundingClientRect().top;
+      return top >= -8 && top < 120;
+    });
+    const seoTop = await seo.evaluate(element => element.getBoundingClientRect().top);
+    assert.equal(seoTop >= -8 && seoTop < 120, true, `${viewport.width}px seo=1 deep-link must position Care SEO Editorial inside the visible top region.`);
     assert.match(await seo.innerText(), /Published v1/);
     assert.equal(await seo.getByRole('button', { name: 'English（待接入）' }).isDisabled(), true);
     assert.equal(await seo.getByRole('button', { name: 'Local AI 未接入' }).isDisabled(), true);

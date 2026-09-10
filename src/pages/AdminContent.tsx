@@ -91,6 +91,7 @@ export default function AdminContent() {
   const operationsReturnContext = (location.state as { operationsReturn?: OperationsTaskReturnContext } | null)?.operationsReturn || null;
   const requestedType: ContentType = deepLinkParams.get('type') === 'care' ? 'care' : 'species';
   const requestedId = deepLinkParams.get('id');
+  const requestedSeo = deepLinkParams.get('seo') === '1';
   const requestedLocale = deepLinkParams.get('locale') === 'en' ? 'en' : 'zh-CN';
   const { showToast } = useToast();
   const [type, setType] = useState<ContentType>(requestedType);
@@ -399,7 +400,7 @@ export default function AdminContent() {
               <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />
               {type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}
               {type === 'species' && compatibilityRegression && <CompatibilityRegressionPreview result={compatibilityRegression} />}
-              {type === 'care' && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} />}
+              {type === 'care' && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} focusOnReady={requestedSeo} />}
             </div>}
           </form>
         </main>
