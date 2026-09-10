@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `ee41c214`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `35134b0d`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -20,9 +20,11 @@ Completed in the current local-first / UX phase:
 13. Downstream review visual semantics (`340cbfd3`): Care SEO and Content Impact now follow Graphite/White/Green with Amber reserved for human-review/decision states; violet/indigo/sky parallel themes are contract-blocked. Care SEO projection/editorial/AI + full Admin UI + Local Business + root build PASS.
 14. Compatibility review hierarchy (`89b6863a`): Profile/Pair no longer use separate indigo/violet authorities; revision states now map to neutral/Amber/Green/Red semantics, approve is Amber, publish remains Green, regression is neutral reference, and the authority summary is compact. 390px summary <=120px and Profile editor <500px are regression-guarded.
 15. Operations Home density (`ee41c214`): task-first coordination is preserved while ready-source detail, workspace cards and duplicated recent-release history are compacted. 390px total page height improved ~1833→1373px; exact Product/Care and Compatibility deep-links remain regression-guarded.
+16. Cross-workspace task continuity (`24097c4b`): Product/Care and Compatibility preserve Operations return context through Router state; standalone Species SEO uses a same-host `/admin/content` URL return contract. Returning locates/highlights the original task or explains that it left the current queue.
+17. Operations queue repetition cap (`35134b0d`): repeated low-priority attention rows with the same authority/severity/gate expand at most three times on Home; hidden counts stay visible by authority and underlying WorkItems remain unchanged.
 
 NEXT milestones:
-1. Audit cross-workspace continuity and remaining high-signal operator badcases: returning from exact tasks must preserve task context and not create duplicate navigation/actions.
+1. Prove task completion closure: complete a real local Product/Care or Compatibility task, return to Operations, refresh, and verify the completed task leaves the queue while the next priority becomes explicit.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.

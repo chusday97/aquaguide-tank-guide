@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-10)
-- Functional checkpoint: `ee41c214 fix(admin): compact operations home hierarchy`.
+- Functional checkpoint: `35134b0d fix(admin): collapse repeated operations queue items`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
 - Data Review remains evidence-first with explicit human Canonical choice and one final confirmation; Product Data authority is not rewritten by SEO review.
 - Save/review remains centralized in the top Review bar; contextual page/Base tools and history follow the active authority; cross-page work remains behind `运营工具`.
@@ -15,6 +15,8 @@
 - Product/Care now prioritizes editing: on mobile the full catalog is replaced by a compact selector, main fields precede Impact/downstream references, Care SEO is downstream after Care fields, and Product/Care forms have no internal horizontal overflow.
 - Care SEO and Compatibility now share the same operator visual semantics: neutral Draft/reference states, Amber only for explicit human decisions, Green for reviewed/publish-safe states, Red for errors/drift.
 - Operations Home remains task-first but is materially denser on mobile: ready-source details collapse, authority workspaces render 2×2, Recent Activity is one latest-event summary, and exact deep-link hydration is browser-guarded.
+- Exact Operations task navigation now has return continuity: internal Product/Care + Compatibility use Router state; standalone Species SEO carries a constrained same-host return URL; the original task is highlighted when still queued.
+- Home queue presentation caps repeated low-priority attention rows at three per authority/severity/gate and preserves authority-level hidden counts; the source queue and severity ordering are unchanged.
 - Full Species SEO contract, Admin content contract, browser regression, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
 

@@ -29,7 +29,9 @@
 - [x] Downstream review visual semantics (`340cbfd3`): Graphite/White/Green default; Amber only for explicit human decision/review; Care SEO purple/indigo parallel theme removed and contract-guarded.
 - [x] Compatibility review hierarchy (`89b6863a`): one Profile/Pair visual authority, explicit state colors, compact authority summary, 390px editor-before-lists/no-overflow guards.
 - [x] Operations Home first-screen density (`ee41c214`): task-first layout preserved; ready-source detail compacted; workspaces 2×2 on mobile; Recent Activity reduced to latest-event summary; 390px total height ~1833→1373px.
-- [ ] Audit cross-workspace task continuity and only remaining high-signal interaction/ownership badcases; do not add parallel tool surfaces.
+- [x] Cross-workspace task continuity (`24097c4b`): Product/Care + Compatibility return by Router state; standalone Species SEO has a validated same-host Operations return contract; returned tasks are located/highlighted or explained if no longer queued.
+- [x] Repeated Operations queue cap (`35134b0d`): identical low-priority authority/severity/gate attention rows show at most three on Home; hidden counts remain summarized by authority.
+- [ ] Prove exact task completion → return → Operations refresh closure; fix only if the queue/priority state is stale or ambiguous.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

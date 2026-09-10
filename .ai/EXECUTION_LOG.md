@@ -1259,3 +1259,16 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Browser contract also waits for exact Product/Care deep-link hydration instead of hidden catalog text. PASS: Operations WorkItems, populated auth/forbidden/schema/deep-link matrix, Durable Local File full restart/backup-restore, root TypeScript, full build, diff hygiene.
 - Fetched refs after checkpoint: remote feature `30ff0119`, main `d3c70dee`; local ahead 34/behind 0 vs feature, main-only 275/feature-only 292, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
 - NEXT: cross-workspace task continuity and remaining high-signal interaction/ownership badcases.
+
+## 2026-09-10 — Operations task return continuity
+- Committed `24097c4b fix(admin): preserve operations task return context`.
+- Product/Care and Compatibility exact tasks carry Router return state; returning to Operations restores/highlights the task. If it is no longer present, Operations explains that it may be completed or temporarily unreadable.
+- Standalone Species SEO receives a constrained same-host `/admin/content` return URL contract and shows `返回运营任务` only when launched from Operations; cross-host targets are rejected.
+- PASS: SEO hierarchy browser, Operations desktop/mobile state-return and query-return flows, Product/Care, Compatibility, Admin authority UI, root build.
+
+## 2026-09-10 — Operations repeated-attention queue convergence
+- Committed `35134b0d fix(admin): collapse repeated operations queue items`.
+- Home presentation keeps source WorkItems unchanged but expands at most three low-priority rows per authority/severity/gate; hidden task counts are summarized by authority. Blocker/decision ordering is unchanged.
+- Real Local Business scenario with dozens of SEO Index-strategy attention items now guards the repetition cap; Operations browser matrix and SEO hierarchy remain PASS.
+- Fetched refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 37/behind 0, main-only 275/feature-only 295, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
+- NEXT: exact task completion → return → Operations refresh closure.
