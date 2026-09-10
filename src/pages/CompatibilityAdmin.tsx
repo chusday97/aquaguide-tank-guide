@@ -100,6 +100,7 @@ export default function CompatibilityAdmin() {
   const [isProfileReviewing, setIsProfileReviewing] = useState(false);
   const [isProfileRepairing, setIsProfileRepairing] = useState(false);
   const [isProfilePublishing, setIsProfilePublishing] = useState(false);
+  const [isPublishGateRefreshing, setIsPublishGateRefreshing] = useState(false);
   const [pairRevisions, setPairRevisions] = useState<AdminCompatibilityPairRuleRevision[]>([]);
   const [pairRevisionCapability, setPairRevisionCapability] = useState<RevisionCapability>('loading');
   const [writablePairKeys, setWritablePairKeys] = useState<string[]>([]);
@@ -419,6 +420,21 @@ export default function CompatibilityAdmin() {
     return status;
   };
 
+  const recheckRuntimePublishGate = async () => {
+    setIsPublishGateRefreshing(true);
+    try {
+      const status = await refreshReviewedAuthority();
+      const refreshedAudit = getRuntimeCompatibilityEvidenceAudit();
+      const aligned = status.source === 'reviewed-db'
+        && writableCatalogKeys.length === refreshedAudit.reviewedProfiles.length
+        && writablePairKeys.length === refreshedAudit.reviewedPairRules.length;
+      if (aligned) showToast('Compatibility 发布资格已恢复；可以继续发布', 'success');
+      else showToast(`发布仍锁定：${publishAlignmentLabel} 尚未全量对齐`, 'error');
+    } finally {
+      setIsPublishGateRefreshing(false);
+    }
+  };
+
   const publishProfileRevision = async () => {
     if (!selectedRevision || selectedRevision.status !== 'approved' || !runtimePublishReady) return;
     if (!window.confirm('这会把已批准 Profile revision 作为新的 reviewed Compatibility 版本发布，并立即影响后续混养判断。确认继续吗？')) return;
@@ -502,7 +518,7 @@ export default function CompatibilityAdmin() {
             {selectedRevision.status === 'draft' && <button type="button" disabled={isSaving || isSubmitting} onClick={() => void saveDraft()} className="flex h-10 items-center gap-2 rounded-full border border-slate-200 px-4 text-sm font-black text-ink/65 disabled:opacity-50">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}保存 Draft</button>}
             {selectedRevision.status === 'draft' && <button type="button" disabled={isSaving || isSubmitting} onClick={() => void submitDraft()} className="flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-sm font-black text-white disabled:opacity-50">{isSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}提交审核</button>}
             {selectedRevision.status === 'approved' && runtimePublishReady && profileReviewArtifactsReady && <button type="button" disabled={isProfilePublishing} onClick={() => void publishProfileRevision()} className="flex h-10 items-center gap-2 rounded-full bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50">{isProfilePublishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}发布 reviewed version</button>}
-            {selectedRevision.status === 'approved' && !runtimePublishReady && <span className="self-center text-xs font-bold text-ink/50">发布锁定：{publishAlignmentLabel} 尚未全量对齐</span>}
+            {selectedRevision.status === 'approved' && !runtimePublishReady && <div data-testid="profile-publish-gate-recheck" className="flex flex-wrap items-center justify-end gap-2 text-xs font-bold text-ink/50"><span>发布锁定：{publishAlignmentLabel} 尚未全量对齐</span><button type="button" disabled={isPublishGateRefreshing} onClick={() => void recheckRuntimePublishGate()} className="h-9 border border-slate-200 bg-white px-3 text-xs font-black text-ink/65 disabled:opacity-50">{isPublishGateRefreshing ? '检查中…' : '重新检查发布资格'}</button></div>}
           </div>
         </section>}
 
@@ -528,7 +544,7 @@ export default function CompatibilityAdmin() {
             {selectedPairRevision.status === 'draft' && <button type="button" disabled={isPairSaving || isPairSubmitting} onClick={() => void savePairDraft()} className="flex h-10 items-center gap-2 rounded-full border border-slate-200 px-4 text-sm font-black text-ink/65 disabled:opacity-50">{isPairSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}保存 Pair Draft</button>}
             {selectedPairRevision.status === 'draft' && <button type="button" disabled={isPairSaving || isPairSubmitting} onClick={() => void submitPairDraft()} className="flex h-10 items-center gap-2 rounded-full bg-ink px-4 text-sm font-black text-white disabled:opacity-50">{isPairSubmitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}提交 Pair 审核</button>}
             {selectedPairRevision.status === 'approved' && runtimePublishReady && pairReviewArtifactsReady && <button type="button" disabled={isPairPublishing} onClick={() => void publishPairRevision()} className="flex h-10 items-center gap-2 rounded-full bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50">{isPairPublishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <ShieldCheck className="h-4 w-4" />}发布 Pair reviewed version</button>}
-            {selectedPairRevision.status === 'approved' && !runtimePublishReady && <span className="self-center text-xs font-bold text-ink/50">发布锁定：{publishAlignmentLabel} 尚未全量对齐</span>}
+            {selectedPairRevision.status === 'approved' && !runtimePublishReady && <div data-testid="pair-publish-gate-recheck" className="flex flex-wrap items-center justify-end gap-2 text-xs font-bold text-ink/50"><span>发布锁定：{publishAlignmentLabel} 尚未全量对齐</span><button type="button" disabled={isPublishGateRefreshing} onClick={() => void recheckRuntimePublishGate()} className="h-9 border border-slate-200 bg-white px-3 text-xs font-black text-ink/65 disabled:opacity-50">{isPublishGateRefreshing ? '检查中…' : '重新检查发布资格'}</button></div>}
           </div>
         </section>}
 

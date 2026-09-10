@@ -455,8 +455,24 @@ try {
     await page.getByText('Profile revision 已批准；尚未发布', { exact: true }).waitFor();
     await draftEditor.getByText('已批准', { exact: true }).waitFor();
     assert.match(await draftEditor.innerText(), /Canonical Evidence：1\/1/);
+
+    compatibilityBootstrap = {
+      ...compatibilityBootstrap,
+      profiles: compatibilityBootstrap.profiles.slice(0, -1),
+    };
+    const approvedRevisionId = compatibilityRevisions[0].id;
+    await page.goto(`${baseUrl}/admin/compatibility?kind=profile&revision=${encodeURIComponent(approvedRevisionId)}`, { waitUntil: 'domcontentloaded' });
+    const blockedPublishEditor = page.getByTestId('compatibility-draft-editor');
+    await blockedPublishEditor.waitFor();
+    await blockedPublishEditor.getByTestId('profile-publish-gate-recheck').waitFor();
+    assert.equal(await blockedPublishEditor.getByRole('button', { name: '发布 reviewed version' }).count(), 0, 'Runtime baseline mismatch must hide publish instead of exposing a failing action.');
+    compatibilityBootstrap = createCompatibilityBootstrap();
+    await blockedPublishEditor.getByRole('button', { name: '重新检查发布资格' }).click();
+    await page.getByText('Compatibility 发布资格已恢复；可以继续发布', { exact: true }).waitFor();
+    await blockedPublishEditor.getByRole('button', { name: '发布 reviewed version' }).waitFor();
+    await blockedPublishEditor.getByText('已批准', { exact: true }).waitFor();
     page.once('dialog', dialog => dialog.accept());
-    await draftEditor.getByRole('button', { name: '发布 reviewed version' }).click();
+    await blockedPublishEditor.getByRole('button', { name: '发布 reviewed version' }).click();
     await page.getByText('Profile reviewed version 已发布', { exact: true }).waitFor();
     await draftEditor.getByText('已发布', { exact: true }).waitFor();
     await page.getByText('foraging', { exact: true }).waitFor();

@@ -108,6 +108,9 @@ assert.match(compatibilityUi, /bg-emerald-700[\s\S]{0,180}发布 reviewed versio
 assert.match(compatibilityUi, /bg-emerald-700[\s\S]{0,180}发布 Pair reviewed version/, 'Pair reviewed runtime publish must retain the Green publish action.');
 assert.match(compatibilityUi, /profile-regression-report[^>]*border-slate-200 bg-slate-50/, 'Profile regression evidence is neutral reference, not a separate color authority.');
 assert.match(compatibilityUi, /pair-regression-report[^>]*border-slate-200 bg-slate-50/, 'Pair regression evidence is neutral reference, not a separate color authority.');
+assert.match(compatibilityUi, /profile-publish-gate-recheck[\s\S]*重新检查发布资格/, 'Approved Profile with a runtime alignment blocker must expose an executable publish-gate recheck.');
+assert.match(compatibilityUi, /pair-publish-gate-recheck[\s\S]*重新检查发布资格/, 'Approved Pair with a runtime alignment blocker must expose an executable publish-gate recheck.');
+assert.match(compatibilityUi, /recheckRuntimePublishGate[\s\S]*refreshReviewedAuthority/, 'Publish-gate recheck must refresh the reviewed runtime authority instead of mutating the revision.');
 assert.match(compatibilityUi, /data-testid="profile-review-check-repair"/, 'Incomplete Profile review artifacts must expose one explicit repair action.');
 assert.match(compatibilityUi, /data-testid="pair-review-check-repair"/, 'Incomplete Pair review artifacts must expose one explicit repair action.');
 assert.match(compatibilityUi, /profileReviewArtifactsReady/, 'Profile approval and publish UI must share the full Impact\/Regression\/Evidence readiness gate.');
