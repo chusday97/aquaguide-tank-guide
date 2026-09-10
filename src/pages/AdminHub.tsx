@@ -5,6 +5,7 @@ import { isSupabaseConfigured } from '../lib/supabaseClient';
 import { createLocalAdminBackup, getLocalAdminPersistenceStatus, getLocalAdminSafetySnapshot, isLocalAdminFileMode, restoreLocalAdminBackup, type LocalAdminSafetySnapshot } from '../services/admin/local-file-persistence';
 import {
   operationsWorkItemService,
+  selectOperationsHomeQueueItems,
   type OperationsHomeSnapshot,
   type OperationsSeverity,
   type OperationsTaskReturnContext,
@@ -50,8 +51,15 @@ export default function AdminHub() {
       .catch(cause => setSafetyMessage(cause instanceof Error ? cause.message : '本地数据安全状态暂时无法读取。'));
   }, []);
   const primaryTask = snapshot.workItems[0] || null;
-  const queueItems = snapshot.workItems.slice(primaryTask ? 1 : 0, 12);
-  const hiddenTaskCount = Math.max(0, snapshot.workItems.length - (primaryTask ? 1 : 0) - queueItems.length);
+  const queueItems = useMemo(() => selectOperationsHomeQueueItems(snapshot.workItems, primaryTask?.id || null), [primaryTask?.id, snapshot.workItems]);
+  const visibleQueueIds = useMemo(() => new Set(queueItems.map(item => item.id)), [queueItems]);
+  const hiddenQueueItems = useMemo(() => snapshot.workItems.filter(item => item.id !== primaryTask?.id && !visibleQueueIds.has(item.id)), [primaryTask?.id, snapshot.workItems, visibleQueueIds]);
+  const hiddenTaskCount = hiddenQueueItems.length;
+  const hiddenTaskBreakdown = useMemo(() => {
+    const counts = new Map<OperationsWorkItem['authority'], number>();
+    hiddenQueueItems.forEach(item => counts.set(item.authority, (counts.get(item.authority) || 0) + 1));
+    return Array.from(counts.entries()).map(([authority, count]) => `${authorityLabel[authority]} ${count}`).join(' · ');
+  }, [hiddenQueueItems]);
   const sourceProblems = useMemo(() => snapshot.sources.filter(source => source.availability !== 'ready'), [snapshot.sources]);
   const authRequired = sourceProblems.some(source => source.availability === 'auth_required');
   const localPersistence = getLocalAdminPersistenceStatus();
@@ -150,7 +158,7 @@ export default function AdminHub() {
             <span className="text-xs font-black text-ink/40">{sourceProblems.length ? `${snapshot.workItems.length} 个已读取任务 · 来源未完整` : `${snapshot.workItems.length} 个当前任务`}</span>
           </div>
           {!loading && queueItems.length === 0 ? <div className="px-4 py-6 text-sm font-semibold text-ink/45">{primaryTask ? '当前只有上方这一条优先任务。' : sourceProblems.length ? '当前已读取来源没有任务；未读取来源不计为 0。' : '当前没有来自已连接业务模块的任务。'}</div> : <div className="divide-y divide-slate-100">{queueItems.map(item => <WorkItemRow key={item.id} item={item} onOpen={open} highlighted={Boolean(returnContext?.inQueue && returnContext.taskId === item.id)} />)}</div>}
-          {!loading && hiddenTaskCount > 0 && <div className="border-t border-slate-100 px-4 py-3 text-xs font-semibold text-ink/45">还有 {hiddenTaskCount} 个任务未在首页展开；进入对应业务模块查看全量。</div>}
+          {!loading && hiddenTaskCount > 0 && <div className="border-t border-slate-100 px-4 py-3 text-xs font-semibold text-ink/45">还有 {hiddenTaskCount} 个任务未在首页展开{hiddenTaskBreakdown ? ` · ${hiddenTaskBreakdown}` : ''}；进入对应业务模块查看全量。</div>}
         </section>
 
         <section id="operations-source-status" className="mt-4 scroll-mt-4 border border-slate-200 bg-white" data-testid="operations-source-status">

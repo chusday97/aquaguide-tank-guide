@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { buildCompatibilityWorkItems, buildContentWorkItems, buildSeoWorkItems, classifyOperationsReadResults, sortOperationsWorkItems } from '../src/services/admin/operations-work-item.service';
+import { buildCompatibilityWorkItems, buildContentWorkItems, buildSeoWorkItems, classifyOperationsReadResults, selectOperationsHomeQueueItems, sortOperationsWorkItems } from '../src/services/admin/operations-work-item.service';
 import { AquaGuideApiError } from '../src/services/api/api-client';
 
 const authRequired = new AquaGuideApiError(401, 'AUTH_REQUIRED', '请先登录。');
@@ -61,6 +61,14 @@ assert.equal(compatibility[2]?.href, '/admin/compatibility?kind=pair&revision=p1
 assert.equal(compatibility[2]?.severity, 'attention', 'Approved revision with checks still needs live publish-gate verification.');
 assert.equal(compatibility[3]?.severity, 'blocker', 'Missing regression/evidence must become a blocker.');
 assert.match(compatibility[3]?.gateLabel || '', /Regression/);
+
+const repeatedSeoAttention = Array.from({ length: 8 }, (_, index) => ({
+  id: `seo-repeat-${index}`, authority: 'seo' as const, severity: 'attention' as const,
+  title: `SEO ${index}`, detail: 'same gate', count: 1, resourceKey: `seo-${index}`, resourceLabel: `SEO ${index}`, reason: 'Index 策略尚未确认', gateLabel: 'Index 策略尚未确认', nextStep: 'fix', verificationNote: 'verify', actionLabel: '完善', href: `/seo/${index}`,
+}));
+const queueSample = selectOperationsHomeQueueItems(sortOperationsWorkItems(repeatedSeoAttention), null, 10, 3);
+assert.equal(queueSample.length, 3, 'Repeated low-priority attention rows with the same authority/gate must be capped on Operations Home.');
+assert.equal(queueSample.every(item => item.authority === 'seo'), true);
 
 const sorted = sortOperationsWorkItems([...content, ...compatibility, ...seo]);
 assert.equal(sorted[0]?.severity, 'blocker');

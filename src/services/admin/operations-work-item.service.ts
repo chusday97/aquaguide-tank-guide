@@ -51,6 +51,28 @@ export const sortOperationsWorkItems = (items: OperationsWorkItem[]) => [...item
   || b.count - a.count
 );
 
+export const selectOperationsHomeQueueItems = (
+  items: OperationsWorkItem[],
+  primaryTaskId: string | null,
+  limit = 10,
+  repeatedAttentionLimit = 3,
+) => {
+  const selected: OperationsWorkItem[] = [];
+  const repeatedAttentionCounts = new Map<string, number>();
+  for (const item of items) {
+    if (item.id === primaryTaskId) continue;
+    const bucket = `${item.authority}:${item.severity}:${item.gateLabel}`;
+    if (item.severity === 'attention') {
+      const count = repeatedAttentionCounts.get(bucket) || 0;
+      if (count >= repeatedAttentionLimit) continue;
+      repeatedAttentionCounts.set(bucket, count + 1);
+    }
+    selected.push(item);
+    if (selected.length >= limit) break;
+  }
+  return selected;
+};
+
 export type OperationsReadResult = { status: 'fulfilled' } | { status: 'rejected'; reason: unknown };
 
 const hasApiFailure = (result: OperationsReadResult, status: number, code: 'AUTH_REQUIRED' | 'FORBIDDEN') => result.status === 'rejected'

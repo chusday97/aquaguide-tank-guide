@@ -77,6 +77,10 @@ try {
     const operationsText = await page.locator('body').innerText();
     assert.match(operationsText, /极火虾 · Product Data Draft/);
     assert.match(await page.getByTestId('operations-source-product_care').innerText(), /Product \/ Care[\s\S]*可读取/, 'Ready Product/Care source stays explicit without repeating transport detail.');
+    const operationsQueue = page.getByTestId('operations-work-queue');
+    const repeatedIndexAttention = operationsQueue.locator('[data-work-item-id]').filter({ hasText: 'Index 策略尚未确认' });
+    assert.equal(await repeatedIndexAttention.count() <= 3, true, 'Operations Home must not expand more than three repeated low-priority Index-strategy attention rows.');
+    assert.match(await operationsQueue.innerText(), /还有 \d+ 个任务未在首页展开[\s\S]*SEO \d+/, 'Collapsed Operations tasks must keep an authority-level hidden-count summary.');
 
     await page.goto(`${baseUrl}/admin/product-content?type=species&id=local-species-sp_0001`, { waitUntil: 'networkidle' });
     await page.getByRole('button', { name: '发布', exact: true }).click();
