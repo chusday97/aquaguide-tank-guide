@@ -1308,3 +1308,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - UI now exposes one repair blocker and hides unusable review/publish actions until all three artifacts are ready.
 - PASS: Compatibility contract, Local Profile/Pair repair + publish flow, Operations WorkItems, Admin authority UI, API/root TypeScript, full root build, diff hygiene.
 - Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 47/behind 0 vs feature, main-only 275/feature-only 305. No push/main/Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Bilingual SEO targeting + Compatibility publish-gate recheck
+- Committed `44082ee0 fix(admin): target bilingual seo counterpart`.
+- `missing_bilingual_pair` now targets the actual counterpart locale instead of reopening the already-complete locale; review-ready counterparts route directly to human review. Local Care English remains fail-closed and no longer creates a fake actionable bilingual task while persistence is unavailable.
+- Committed `6d01980a fix(admin): recheck compatibility publish gate`.
+- Approved Compatibility revisions blocked only by reviewed DB/runtime baseline mismatch now expose `重新检查发布资格`; the action refreshes runtime authority only, does not mutate the revision, and publish remains hidden until exact coverage is restored.
+- PASS: SEO registry + WorkItem contracts, standalone Species SEO counterpart browser target, Local Care SEO fail-closed flow, Local/Cloud Compatibility, Operations desktop/mobile matrix, Admin authority UI, API/root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 50/behind 0 vs feature, main-only 275/feature-only 308, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: prove one real SEO WorkItem completion → return → refreshed Operations closure; do not add new authority layers unless a concrete operator dead-end is observed.

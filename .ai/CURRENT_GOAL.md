@@ -29,9 +29,11 @@ Completed in the current local-first / UX phase:
 21. Authority targets match the stated action (`f79802b5`): `source_not_published` returns to the Care source editor with `seo=1` removed; true SEO issues retain downstream SEO focus.
 22. Legacy Care snapshot repair is operational (`1c78ef14`): `source_not_snapshot` returns to Product/Care, exposes a dedicated admin-only immutable snapshot repair action, preserves Care content/status/version, fails closed when publication storage is unavailable, and clears the repair context after success. Exact Product/Care deep-links are also guarded against duplicate-load selection races.
 23. Compatibility pre-publish check repair is operational (`298f5810`): pending/approved revisions missing Impact / Regression / Canonical Evidence expose one executable repair path. Repair recomputes only review artifacts; approved revisions are reset to `pending_review` and require a fresh human approval before publish.
+24. Bilingual SEO task targeting is exact (`44082ee0`): `missing_bilingual_pair` opens the actual counterpart locale; review-ready counterparts go directly to human review. A counterpart authority that is not writable (for example Local Care English) no longer creates a fake bilingual WorkItem.
+25. Compatibility publish-gate checking is executable (`6d01980a`): approved revisions blocked by DB/runtime baseline mismatch expose a read-only `重新检查发布资格` action; refresh never mutates the revision and publish only appears after authority alignment is restored.
 
 NEXT milestones:
-1. Continue only concrete WorkItem action→target audits where the stated action still does not land on an executable authority action. `source_not_snapshot` and Compatibility missing-check repair are complete; do not refactor already-correct Product/Care, Compatibility, Care SEO or Species SEO paths.
+1. WorkItem action→target audit is now closed for the current Product/Care, Compatibility and SEO task classes. Next prove SEO task completion → return → Operations refresh/next-priority closure without weakening any authority boundary.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.

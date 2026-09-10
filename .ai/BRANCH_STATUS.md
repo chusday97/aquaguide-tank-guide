@@ -1,17 +1,18 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Legacy Care snapshot repair checkpoint (2026-09-10)
-- Latest functional HEAD: `1c78ef14` (`fix(admin): repair legacy care publication snapshots`).
-- Care SEO focus checkpoint: `7799d88a` (`fix(admin): focus care seo operations deep links`).
-- Exact action-copy checkpoint: `258a5d0d` (`fix(admin): name exact operations seo actions`).
+## CURRENT OVERRIDE — WorkItem action-target convergence checkpoint (2026-09-10)
+- Latest functional HEAD: `6d01980a` (`fix(admin): recheck compatibility publish gate`).
+- Bilingual SEO counterpart checkpoint: `44082ee0` (`fix(admin): target bilingual seo counterpart`).
+- Compatibility review-check repair: `298f5810` (`fix(admin): repair compatibility review checks`).
+- Legacy Care snapshot repair: `1c78ef14` (`fix(admin): repair legacy care publication snapshots`).
 - Latest acceptance/test HEAD: `fcc86c0d` (`test(admin): prove operations task closure`).
 - Live remote feature: `30ff0119`.
 - Live main: `d3c70dee`.
-- Local vs live remote feature: `ahead 47 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local checkpoint: `275 main-only / 305 feature-only`; merge base remains `ed0cf380`.
+- Local vs live remote feature: `ahead 50 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local checkpoint: `275 main-only / 308 feature-only`; merge base remains `ed0cf380`.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
-- No merge/rebase main, force push, Production/live DB or indexing mutation.
+- No merge/rebase main, force push, Production/live DB, Supabase Staging or indexing mutation.
 
 Updated: 2026-09-10
 
