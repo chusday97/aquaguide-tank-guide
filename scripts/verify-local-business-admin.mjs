@@ -46,6 +46,8 @@ try {
     const description = page.locator('label:has-text("物种说明") textarea').first();
     const original = await description.inputValue();
     await description.fill(`${original}${marker}`);
+    const gatedPublish = page.getByRole('button', { name: '保存后可发布', exact: true });
+    assert.equal(await gatedPublish.isDisabled(), true, 'Dirty Product/Care must explain that Save is required before Publish.');
     await page.getByRole('button', { name: '保存修改', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('form')?.textContent?.includes('草稿'));
 
@@ -54,6 +56,22 @@ try {
     assert.equal(stateDraft.publishedSpecies.sp_0001.description, publishedBefore, 'Saving a Draft must not mutate Published snapshot.');
     await page.reload({ waitUntil: 'networkidle' });
     assert.ok((await page.locator('label:has-text("物种说明") textarea').first().inputValue()).endsWith(marker));
+    const mobileNavigator = page.getByTestId('content-mobile-navigator');
+    const desktopCatalog = page.locator('section[aria-label="内容列表"]');
+    if (viewport.width < 1024) {
+      assert.equal(await mobileNavigator.isVisible(), true, 'Mobile Product/Care must use a compact record navigator.');
+      assert.equal(await desktopCatalog.isVisible(), false, 'Mobile Product/Care must not stack the full catalog before the editor.');
+      assert.equal(await mobileNavigator.locator('select').inputValue(), 'local-species-sp_0001');
+    } else {
+      assert.equal(await mobileNavigator.isVisible(), false);
+      assert.equal(await desktopCatalog.isVisible(), true);
+    }
+    const speciesFirstField = page.getByLabel('目录 ID *');
+    const speciesReviewReference = page.getByTestId('content-review-reference');
+    const speciesFieldBox = await speciesFirstField.boundingBox();
+    const speciesReviewBox = await speciesReviewReference.boundingBox();
+    assert.equal(Boolean(speciesFieldBox && speciesReviewBox && speciesFieldBox.y < speciesReviewBox.y), true, 'Product fields must come before Impact/downstream review references.');
+    assert.equal(await page.locator('form').evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Product form must not hide internal horizontal overflow.');
 
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
     const operationsText = await page.locator('body').innerText();
@@ -78,6 +96,13 @@ try {
     }, [storageKey, careKey]);
     await page.goto(`${baseUrl}/admin/product-content?type=care&id=local-care-${careKey}`, { waitUntil: 'networkidle' });
     const careSummary = page.locator('label:has-text("摘要") textarea').first();
+    const careFirstField = page.getByLabel('目录 ID *');
+    const careSeo = page.getByTestId('care-seo-projection');
+    await careSeo.waitFor();
+    const careFieldBox = await careFirstField.boundingBox();
+    const careSeoBox = await careSeo.boundingBox();
+    assert.equal(Boolean(careFieldBox && careSeoBox && careFieldBox.y < careSeoBox.y), true, 'Care fields must come before downstream Care SEO Editorial.');
+    assert.equal(await page.locator('form').evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Care form must fit its available mobile/desktop width.');
     await careSummary.fill(`${await careSummary.inputValue()}${marker}`);
     await page.getByRole('button', { name: '保存修改', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('form')?.textContent?.includes('草稿'));
@@ -97,9 +122,10 @@ try {
     await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
     const publishCenterText = await page.locator('body').innerText();
-    assert.match(publishCenterText, /Local publish\/archive history 从当前本地 store 启用后持续记录/);
+    assert.match(publishCenterText, /发布 \/ 审核 \/ Revision 记录/);
+    assert.match(publishCenterText, /发布边界详情/);
     assert.match(publishCenterText, /Care 发布版本/);
-    assert.match(publishCenterText, /DEV Local Mode/);
+    assert.match((await page.getByTestId('publish-center-authority-note').getAttribute('title')) || '', /DEV Local Mode/);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     assert.equal(overflow, 0, `Local Admin must not overflow at ${viewport.width}px.`);
     assert.deepEqual(errors, []);

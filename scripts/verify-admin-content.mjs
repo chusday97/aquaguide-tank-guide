@@ -396,12 +396,14 @@ try {
     }));
 
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
-    await page.getByRole('heading', { name: '管理后台' }).waitFor();
-    assert.equal(await page.getByRole('heading', { name: '管理后台' }).isVisible(), true);
-    assert.equal(await page.getByRole('link', { name: /Species SEO/ }).isVisible(), true);
-    assert.equal(await page.getByRole('button', { name: /Product Truth 与养护内容/ }).isVisible(), true);
-    assert.equal(await page.getByRole('button', { name: /Compatibility 规则/ }).isVisible(), true);
-    await page.getByRole('button', { name: /Compatibility 规则/ }).click();
+    await page.getByRole('heading', { name: '运营工作台' }).waitFor();
+    assert.equal(await page.getByTestId('operations-primary-task').isVisible(), true);
+    const workspaces = page.getByTestId('operations-workspaces');
+    assert.equal(await workspaces.getByRole('button', { name: /Product \/ Care/ }).isVisible(), true);
+    assert.equal(await workspaces.getByRole('button', { name: /Compatibility/ }).isVisible(), true);
+    assert.equal(await workspaces.getByRole('button', { name: /^SEO/ }).isVisible(), true);
+    assert.equal(await workspaces.getByRole('button', { name: /Publish/ }).isVisible(), true);
+    await workspaces.getByRole('button', { name: /Compatibility/ }).click();
     await page.waitForURL('**/admin/compatibility');
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     await page.getByRole('heading', { name: 'Species Behavior Profiles' }).waitFor();
@@ -470,7 +472,7 @@ try {
     assert.equal(compatibilityOverflow, false, `${viewport.width}px Compatibility Admin should not overflow horizontally`);
     await page.getByRole('button', { name: '返回管理后台' }).click();
     await page.waitForURL('**/admin/content');
-    await page.getByRole('button', { name: /Product Truth 与养护内容/ }).click();
+    await page.getByTestId('operations-workspaces').getByRole('button', { name: /Product \/ Care/ }).click();
     await page.waitForURL('**/admin/product-content');
     await page.getByRole('heading', { name: 'Product / Care Content' }).waitFor();
     assert.equal(await page.getByRole('button', { name: '物种产品数据' }).isVisible(), true);
@@ -552,6 +554,7 @@ try {
     await page.getByRole('button', { name: '保存修改' }).click();
     await page.getByText('内容已保存', { exact: true }).waitFor();
     assert.match(await careImpact.innerText(), /当前草稿相对已发布版本/);
+    await careSeoProjection.getByLabel('SEO Title').waitFor();
     const persistedCareSeoProjection = await careSeoProjection.innerText();
     assert.match(persistedCareSeoProjection, /Published v1/);
     assert.equal(await careSeoProjection.getByLabel('SEO Title').inputValue(), '换水后异常处理 | AquaGuide');
