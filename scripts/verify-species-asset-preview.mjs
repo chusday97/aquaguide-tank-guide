@@ -8,6 +8,7 @@ const widths = [390, 600, 1440];
 const previews = [
   { name: 'sp_0001', path: '/species/sp_0001?assetPreview=1', sources: ['sp_0001.png'] },
   { name: 'sp_0030-variant', path: '/species/sp_0001?variant=sp_0030&assetPreview=1', sources: ['sp_0001.png', 'sp_0030.png'] },
+  { name: 'sp_0432', path: '/species/sp_0432?assetPreview=1', sources: ['sp_0432.png'] },
 ];
 
 await mkdir(outputDir, { recursive: true });
@@ -46,6 +47,16 @@ try {
   }));
   assert.equal(ordinary.robots, 'noindex,follow');
   assert.ok(ordinary.images.some(image => image.includes('sp_0001.png')), 'ordinary public route must retain the approved Hero asset');
+
+  await page.goto(`${baseUrl}/species/sp_0432`, { waitUntil: 'networkidle' });
+  const pendingOrdinary = await page.evaluate(() => ({
+    robots: document.querySelector('meta[name="robots"]')?.getAttribute('content'),
+    images: [...document.querySelectorAll('main img')].map(image => image.getAttribute('src') || ''),
+    fallback: document.body.innerText.includes('图片暂时不可用'),
+  }));
+  assert.equal(pendingOrdinary.robots, 'noindex,follow');
+  assert.equal(pendingOrdinary.images.some(image => image.includes('sp_0432.png')), false, 'ordinary pending route must not expose unapproved asset');
+  assert.equal(pendingOrdinary.fallback, true, 'ordinary pending route must show a stable image fallback');
 
   console.log(JSON.stringify({
     routes: previews.map(preview => preview.path),

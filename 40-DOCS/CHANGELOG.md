@@ -5,6 +5,7 @@
 - Verified: 当前公开 SEO 提交 `a4c4bcfb` 的 production build 与 `git diff --check` 通过；保留既有字体与代码分包警告，未改变页面内容、索引策略或用户未提交文件。
 - Blocked: `test:seo-motion` 与 `test:public-seo-routes` 在 Chromium 启动阶段受 macOS MachPort 权限阻塞；本轮未把启动失败计作动效、点击或响应式验收通过。
 - Verified: 宝莲灯原图存在且为 521×316 透明 PNG；公开页缺图来自 Hero/品系卡用途仍为 `needs_review` 的 fail-closed 门禁，未绕过审核显示。
+- Added: 素材预览专项加入宝莲灯待审核图片预览与普通公开路由回退断言，防止 pending 素材泄漏到 Published 页面。
 - Verified: FishBase 物种摘要页直接支持宝莲灯主要在中层水域活动并取食蠕虫和小型甲壳类；本地来源登记统一到 FishBase 主域名，未扩写页面事实或改变索引策略。
 - Added: Editorial evidence 回归保护 FishBase 来源主域名、资格状态和对应支持范围，避免来源登记漂移。
 - Added: Editorial evidence 回归保护 UF/IFAS 与 USGS 来源资格及极火虾公开内容支持边界。

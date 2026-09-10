@@ -882,3 +882,8 @@
 - 原图 `/public/species-image-overrides/sp_0432.png` 存在，尺寸 521×316，透明鱼体可见。
 - `src/data/speciesLandingPilot.ts` 中 Hero 与 `variant-card` 均为 `needs_review`，所以 `publishedSpeciesProfile.ts` 有意不返回图片，页面显示“图片暂时不可用”。
 - 不能仅因文件存在就改成 `approved`；需要项目负责人分别确认两种用途，避免把未确认素材放进公开聚合。
+
+## 2026-09-10 素材预览测试更新
+
+- `verify-species-asset-preview.mjs` 已加入宝莲灯待审核预览，以及普通路由不暴露该图片、显示回退、保持 noindex 的断言。
+- 脚本已通过 `node --check` 和 `git diff --check`；真实执行仍受 Chromium MachPort 权限阻塞。
