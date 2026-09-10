@@ -29,7 +29,8 @@
 - Cross-port Local SEO return is accepted (`af886726`): the standalone SEO app returns to root Operations with the original task context intact.
 - Existing local SEO process reuse is guarded (`7ec556a3`): a healthy AquaGuide SEO process is reused; unrelated services on the configured SEO port are rejected rather than silently accepted.
 - Final Local Acceptance is PASS: Durable Local File restart/restore, Product/Care publish isolation, Compatibility, Care SEO, Operations, Publish Center, Data Review, Admin authority UI, TypeScript and full build all pass; no new reproducible operator blocker was found.
-- Active next work is read-only feature ↔ main reconciliation audit. No merge/rebase/cherry-pick to main is authorized by this acceptance step.
+- Read-only reconciliation audit is complete. Main changed 220 files vs 234 local-feature files from the shared base; only 21 overlap and seven product/runtime files need manual semantic merge.
+- Active next work is the Compatibility v3 authority merge gate: Stage Risk must be incorporated without creating split static/runtime decision authority. No merge/rebase/cherry-pick to main is authorized yet.
 - Compatibility review-check repair is executable (`298f5810`): pending/approved revisions missing Impact / Regression / Canonical Evidence expose a single repair action; approved revisions are reset to pending_review before regenerated checks can be re-approved, and publish/approval UI requires all three artifacts.
 - Full Species SEO contract, Operations desktop/mobile matrix, Care SEO local editorial flow, Admin content UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.

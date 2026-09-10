@@ -1361,3 +1361,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - No new reproducible operator blocker was found. Local UI/WorkItem expansion is now closed unless a concrete badcase appears.
 - Explicit remote ref refresh: feature `e9c63560`, main `d3c70dee`, merge base `ed0cf380`; local vs feature `0/59`, main vs local `275/319`.
 - NEXT: read-only feature ↔ main reconciliation audit. Do not merge/rebase/cherry-pick main during the audit.
+
+## 2026-09-11 — Read-only feature ↔ main reconciliation audit
+- Final Local Acceptance baseline remains PASS; local accepted feature docs HEAD at audit start: `a7ee4a13`.
+- Live refs re-read: remote feature `e9c63560`, main `d3c70dee`, merge base `ed0cf380`; local vs remote feature ahead 60/behind 0; main vs local 275 main-only / 320 local-feature-only.
+- From merge base, main changed 220 files and local feature 234; only 21 files overlap. Three-way merge-file simulation shows 7 overlap files with zero conflict hunks.
+- Manual product/runtime conflicts are concentrated in API route registry, package scripts, App shell, Compatibility evidence/engine, Care Encyclopedia composition and Vite config.
+- Compatibility is the semantic merge gate: main v3/domain rules include species-specific Stage Risk evidence, while feature runtime reviewed authority currently versions/validates only Profile + Pair. A mechanical merge would create split decision authority.
+- Canonical audit written to `.ai/RECONCILIATION_AUDIT_20260911.md`. No merge/rebase/cherry-pick/main/Production/Supabase/indexing mutation.
+- NEXT: define the Stage Risk authority extension/adapter plan before building any reconciliation candidate.

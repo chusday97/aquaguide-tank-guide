@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **Final Local Acceptance complete; begin read-only feature ↔ main reconciliation audit without changing main**. Functional checkpoint: `7ec556a3`; acceptance/docs checkpoint: `8438f24e`.
+The active objective is **Final Local Acceptance complete; reconciliation audit complete; resolve Compatibility v3 authority design before any integration branch is built**. Functional checkpoint: `7ec556a3`; final local acceptance docs checkpoint: `a7ee4a13`; reconciliation audit: `.ai/RECONCILIATION_AUDIT_20260911.md`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -41,7 +41,8 @@ Completed in the current local-first / UX phase:
 
 NEXT milestones:
 1. Final Local Acceptance is PASS. Do not resume speculative UI/WorkItem iteration unless a concrete reproducible blocker appears.
-2. Begin **read-only feature ↔ main reconciliation audit**: classify main-only/feature-only overlap, predict conflicts, preserve current functional checkpoints, and produce a safe integration plan. Do not merge/rebase/cherry-pick main yet.
+2. Read-only feature ↔ main reconciliation audit is complete: 220 main-changed files vs 234 local-feature-changed files, only 21 overlaps; 7 overlapping files simulate with zero conflict hunks. See `.ai/RECONCILIATION_AUDIT_20260911.md`.
+3. NEXT: resolve the Compatibility v3 Stage Risk authority design. Main v3/domain rules remain the behavior base; feature runtime reviewed authority must be injected without creating split static/runtime decision authority. No integration branch merge/rebase/cherry-pick yet.
 3. Supabase Staging, Production unlock and indexing remain separately gated.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
@@ -82,7 +83,7 @@ Species SEO remains Repo-backed and fail-closed:
 11. [DONE in code] Release-readiness mechanics: exact snapshot SHA-256 + Vercel acceptance evidence + explicit human decision contract; Staging remains noindex and acceptance-evidence-only commits do not redeploy runtime.
 12. [DONE] Explicit Care SEO decision recorded as `hold_noindex`; accepted snapshot/deployment binding is current and Production/index remain locked.
 13. [DONE] AI-assisted Care SEO advisory: Published-only source extraction, conflict detection, impact explanation and SEO Draft suggestion with no auto-write/review/publish.
-14. [ACTIVE READ-ONLY AUDIT] Dedicated feature ↔ live-main reconciliation audit is now the active post-acceptance task. Do not merge/rebase/cherry-pick main during this audit.
+14. [DONE READ-ONLY AUDIT] Dedicated feature ↔ live-main reconciliation audit completed on 2026-09-11; see `.ai/RECONCILIATION_AUDIT_20260911.md`. Integration remains gated on Compatibility v3 authority design.
 15. [DONE locally] SEO Operations Health Layer V2: effective Species Meta/H1 inheritance, bilingual/Canonical checks, Published-Care snapshot-aware batch health, source drift/legacy-source checks, health filtering and authority deep-links.
 16. [DONE locally] Browser/operator acceptance for `/admin/seo-pages`: 1440/390 zero horizontal overflow, priority-vs-unknown separation, health filter toggle/reset, issue copy, search and progressive 50-row loading.
 17. [DONE locally] Aqua Operations Studio Phase 1: task-first Operations Home + read-only Unified WorkItem aggregation across Product/Care current Drafts, Compatibility current revisions and SEO Health, with source availability isolated and ReleaseEvent history kept secondary.
@@ -219,7 +220,7 @@ Functional checkpoint `d6d2b37e` adds publication snapshots and Draft isolation.
 - Final snapshot-only republish: `fd960667`; Vercel `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` READY; protected hosted acceptance PASS 2/2 EN/ZH with noindex retained.
 - `5899d643` binds the new hosted acceptance evidence and the existing human `hold_noindex` decision to snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`.
 - GitHub light CI: AI commit `33962566946` PASS; reacceptance-test fix `33962759009` PASS; final snapshot `33962809578` PASS; evidence/decision `33962944072` PASS. Heavy remained skipped by policy.
-- All defined functional queue items are now closed. Next: isolated feature ↔ live-main reconciliation audit; no merge/Production/index action is authorized.
+- All defined pre-reconciliation functional queue items are closed. Read-only reconciliation audit is complete; next gate is Compatibility v3 Stage Risk authority design. No merge/Production/index action is authorized.
 
 ## 2026-09-05 Species SEO Admin usability acceptance status
 - Simplified operator flow is hosted and ready for user review at `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.

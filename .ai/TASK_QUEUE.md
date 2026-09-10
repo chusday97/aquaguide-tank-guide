@@ -46,7 +46,8 @@
 - [x] Local SEO task return acceptance (`af886726`): standalone SEO returns to root Operations with task context preserved across the dev-port boundary.
 - [x] Healthy local SEO server reuse (`7ec556a3`): existing AquaGuide SEO on the configured port is reused safely; unrelated port occupants fail closed.
 - [x] Final Local Acceptance (`8438f24e` docs baseline): end-to-end local data/edit/review/publish/navigation/audit regressions + TypeScript + full build PASS with no new operator blocker.
-- [ ] Read-only feature ↔ main reconciliation audit: classify 275 main-only / 319 feature-only divergence from merge base `ed0cf380`, identify overlapping paths/conflict clusters, and define a safe integration sequence without mutating main.
+- [x] Read-only feature ↔ main reconciliation audit: latest accepted local baseline measures 275 main-only / 320 local-feature-only commits from merge base `ed0cf380`; only 21 files overlap and seven product/runtime files require manual semantic resolution. See `.ai/RECONCILIATION_AUDIT_20260911.md`.
+- [ ] Compatibility v3 authority reconciliation: preserve main v3/domain-rule behavior while integrating feature runtime reviewed authority; explicitly resolve Stage Risk authority before any merge candidate is accepted.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10
@@ -155,7 +156,7 @@ Architecture contract: `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md`.
 The isolated reconciliation candidate exists on Draft PR #144. Do not continue/merge it while the user is asking to work on SEO Admin.
 
 ## Next — dedicated branch reconciliation (no merge yet)
-- [ ] Re-read live `main` / feature refs and run an isolated merge-tree/reconciliation audit against the current accepted feature baseline.
+- [x] Re-read live `main` / feature refs and run an isolated merge-tree/reconciliation audit against the current accepted feature baseline. Completed 2026-09-11; canonical result: `.ai/RECONCILIATION_AUDIT_20260911.md`.
 - [ ] Classify overlap/conflicts by authority and preserve all completed Product/Care, Compatibility, Publish Center, Species SEO and Care SEO invariants.
 - [ ] Validate a reconciliation candidate before any explicit decision to merge `main`; do not change Production/index as part of reconciliation.
 
