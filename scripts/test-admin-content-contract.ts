@@ -17,6 +17,7 @@ const contentMapper = readFileSync(resolve(root, 'apps/api/src/content-mappers.t
 const vercelConfig = readFileSync(resolve(root, 'vercel.json'), 'utf8');
 const vercelV1Router = readFileSync(resolve(root, 'api/v1/router.ts'), 'utf8');
 const runtimeCatalog = readFileSync(resolve(root, 'src/data/runtimeContentCatalog.ts'), 'utf8');
+const adminContentPage = readFileSync(resolve(root, 'src/pages/AdminContent.tsx'), 'utf8');
 const aquariumPage = readFileSync(resolve(root, 'src/pages/Aquarium.tsx'), 'utf8');
 const identifyPage = readFileSync(resolve(root, 'src/pages/Identify.tsx'), 'utf8');
 const encyclopediaPage = readFileSync(resolve(root, 'src/pages/Encyclopedia.tsx'), 'utf8');
@@ -56,6 +57,9 @@ assert.match(publicationBoundary, /buildPublicationSnapshot/);
 assert.match(contentRoute, /from\('content_publications'\)/);
 assert.match(adminRoute, /repair-publication-snapshot/, 'Admin API must expose a protected Care publication-snapshot repair route.');
 assert.match(adminRoute, /ensurePublishedSnapshotBeforeDraft\('care', id\)/, 'Snapshot repair must reuse the existing immutable publication guard instead of republishing content.');
+assert.match(adminContentPage, /!isLocalBusinessAdminMode[\s\S]{0,180}requestedSnapshotRepair/, 'Legacy snapshot repair UI must stay unavailable in Local Mode.');
+assert.match(adminContentPage, /fieldset disabled=\{isSnapshotRepair\}/, 'Snapshot repair must lock Product\/Care fields instead of allowing content edits during maintenance.');
+assert.match(adminContentPage, /selected && !isSnapshotRepair[\s\S]{0,180}content-review-reference/, 'Snapshot repair must hide downstream review\/SEO tools until maintenance context clears.');
 assert.match(contentRoute, /publicationKeys/);
 assert.match(contentRoute, /isPublicationStoreNotMigrated/);
 assert.match(contentRoute, /contentRouter\.get\('\/content-bootstrap'/);

@@ -325,7 +325,7 @@ export default function AdminContent() {
   };
 
   const statusLabel = useMemo(() => selected?.status === 'published' ? '已发布' : selected?.status === 'archived' ? '已下线' : '草稿', [selected]);
-  const isSnapshotRepair = Boolean(requestedSnapshotRepair && type === 'care' && selected && selected.id === requestedId && selected.status === 'published');
+  const isSnapshotRepair = Boolean(!isLocalBusinessAdminMode && requestedSnapshotRepair && type === 'care' && selected && selected.id === requestedId && selected.status === 'published');
 
   return (
     <div className="min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
@@ -363,17 +363,19 @@ export default function AdminContent() {
             <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
               <div><div className="text-xs font-black text-emerald-700">{selected ? statusLabel : '新草稿'}</div><h2 className="mt-1 text-lg font-black">{selected ? ('name' in selected ? selected.name : selected.title) : `新建${type === 'species' ? '物种数据' : '养护文章'}`}</h2></div>
               <div className="flex flex-wrap gap-2">
-                {selected && <><button type="button" disabled={isSaving || isDirty} onClick={() => setPendingStatus(isSnapshotRepair ? 'published' : selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{isDirty ? (isSnapshotRepair ? '先保存修改' : '保存后可发布') : isSnapshotRepair ? '生成 Published Snapshot' : selected.status === 'published' ? '下线' : '发布'}</button><label title={isLocalBusinessAdminMode ? (isLocalAdminFileMode ? '图片保存在项目 .local/aqua-admin/assets/；显式发布前不会进入 Local Published Snapshot。' : '图片仅保存在当前浏览器 IndexedDB；显式发布前不会进入 Local Published Snapshot。') : undefined} className={`flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'cursor-not-allowed opacity-45' : 'cursor-pointer'}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : isLocalBusinessAdminMode ? currentAsset ? '替换本地图片' : '添加本地图片' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label></>}
-                <button type="submit" disabled={isSaving || isUploading} className="flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-55">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{isSaving ? '保存中…' : selected ? '保存修改' : '创建草稿'}</button>
+                {selected && <button type="button" disabled={isSaving || (!isSnapshotRepair && isDirty)} onClick={() => setPendingStatus(isSnapshotRepair ? 'published' : selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{isSnapshotRepair ? '生成 Published Snapshot' : isDirty ? '保存后可发布' : selected.status === 'published' ? '下线' : '发布'}</button>}
+                {selected && !isSnapshotRepair && <label title={isLocalBusinessAdminMode ? (isLocalAdminFileMode ? '图片保存在项目 .local/aqua-admin/assets/；显式发布前不会进入 Local Published Snapshot。' : '图片仅保存在当前浏览器 IndexedDB；显式发布前不会进入 Local Published Snapshot。') : undefined} className={`flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'cursor-not-allowed opacity-45' : 'cursor-pointer'}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : isLocalBusinessAdminMode ? currentAsset ? '替换本地图片' : '添加本地图片' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label>}
+                {!isSnapshotRepair && <button type="submit" disabled={isSaving || isUploading} className="flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-55">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{isSaving ? '保存中…' : selected ? '保存修改' : '创建草稿'}</button>}
               </div>
             </div>
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
-            {isSnapshotRepair && <section data-testid="published-snapshot-repair" className="mb-4 border border-slate-200 bg-slate-50 px-4 py-3"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/45">当前任务 · Published Snapshot</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/60">当前 Care 已经发布，但仍是旧发布来源。使用上方「生成 Published Snapshot」把当前已发布版本写入 immutable snapshot；不会修改 Care 内容或 SEO 文案。</p></section>}
+            {isSnapshotRepair && <section data-testid="published-snapshot-repair" className="mb-4 border border-slate-200 bg-slate-50 px-4 py-3"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/45">当前任务 · Published Snapshot</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/60">当前 Care 已经发布，但仍是旧发布来源。此维护模式只允许读取当前已发布内容并生成 immutable snapshot；内容编辑、图片替换和下游 SEO 操作已锁定，不会修改 Care、Compatibility 或 SEO。</p></section>}
             {selected && isLocalBusinessAdminMode && currentAsset && <section data-testid="local-asset-preview" className="mb-4 grid gap-3 rounded-[18px] border border-border bg-bg/50 p-3 md:grid-cols-[160px_minmax(0,1fr)]">
               <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[14px] bg-white">{assetPreviewUrl ? <img src={assetPreviewUrl} alt={`${'name' in selected ? selected.name : selected.title} 本地预览`} className="h-full w-full object-contain" /> : <FileImage className="h-8 w-8 text-ink/25" />}</div>
               <div className="self-center"><div className="text-xs font-black text-ink/45">{isLocalAdminFileMode ? 'LOCAL IMAGE · DURABLE FILE' : 'LOCAL IMAGE · CURRENT BROWSER ONLY'}</div><div className="mt-1 text-sm font-black">{currentAsset.variant} · v{currentAsset.assetVersion}</div><div className="mt-1 text-xs font-bold text-ink/50">{currentAsset.width && currentAsset.height ? `${currentAsset.width}×${currentAsset.height} · ` : ''}{currentAsset.byteSize ? `${Math.round(currentAsset.byteSize / 1024)} KB · ` : ''}{isLocalAdminFileMode ? '.local/aqua-admin/assets 文件持久化' : 'IndexedDB 持久化'}</div><p className="mt-2 text-xs font-bold leading-5 text-ink/55">替换图片会让当前内容回到 Draft；只有显式发布后，这一版图片才进入 Local Published Snapshot。Production 资产路径不受影响。</p></div>
             </section>}
+            <fieldset disabled={isSnapshotRepair} data-testid={isSnapshotRepair ? 'snapshot-repair-readonly-fields' : undefined} className="m-0 min-w-0 border-0 p-0">
             {type === 'species' ? (
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="目录 ID" required><input ref={firstFieldRef} className={inputClass} value={speciesForm.catalogKey} disabled={Boolean(selected)} onChange={e => { setSpeciesForm(v => ({ ...v, catalogKey: e.target.value })); setIsDirty(true); }} /></Field>
@@ -408,8 +410,9 @@ export default function AdminContent() {
                 <div className="md:col-span-2"><Field label="关键词（每行一项）"><textarea className={textareaClass} value={lineText(careForm.keywords)} onChange={e => { setCareForm(v => ({ ...v, keywords: lines(e.target.value) })); setIsDirty(true); }} /></Field></div>
               </div>
             )}
+            </fieldset>
 
-            {selected && <div data-testid="content-review-reference" className="mt-6 border-t border-slate-200 pt-5">
+            {selected && !isSnapshotRepair && <div data-testid="content-review-reference" className="mt-6 border-t border-slate-200 pt-5">
               <div className="mb-3"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/35">保存 / 发布参考</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/45">先完成当前 Product / Care 内容；Impact 与下游 authority 只用于复核，不会替你改写其它业务数据。</p></div>
               <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />
               {type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}

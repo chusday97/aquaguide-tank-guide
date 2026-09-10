@@ -407,7 +407,13 @@ try {
     const snapshotRepair = page.getByTestId('published-snapshot-repair');
     await page.waitForTimeout(1200);
     await snapshotRepair.waitFor({ state: 'visible' });
-    assert.match(await snapshotRepair.innerText(), /旧发布来源[\s\S]*不会修改 Care 内容或 SEO 文案/);
+    assert.match(await snapshotRepair.innerText(), /旧发布来源[\s\S]*内容编辑、图片替换和下游 SEO 操作已锁定/);
+    const readonlyRepairFields = page.getByTestId('snapshot-repair-readonly-fields');
+    assert.equal(await readonlyRepairFields.locator('input:not([type="hidden"]), textarea, select').count() > 0, true, 'Snapshot repair must still expose the current Care values for inspection.');
+    assert.equal(await readonlyRepairFields.locator('input:not([type="hidden"]):enabled, textarea:enabled, select:enabled').count(), 0, 'Snapshot repair must make every Care field read-only.');
+    assert.equal(await page.getByRole('button', { name: '保存修改', exact: true }).count(), 0, 'Snapshot maintenance must not expose a content-save action.');
+    assert.equal(await page.locator('input[type="file"]:enabled').count(), 0, 'Snapshot maintenance must not expose image replacement.');
+    assert.equal(await page.getByTestId('content-review-reference').count(), 0, 'Snapshot maintenance must not expose Impact or downstream SEO editing.');
     await page.getByRole('button', { name: '生成 Published Snapshot', exact: true }).click();
     const snapshotDialog = page.getByRole('dialog');
     assert.match(await snapshotDialog.innerText(), /确认生成 Published Snapshot[\s\S]*不会修改 Care 内容、Compatibility 或 SEO 文案/);
@@ -416,6 +422,8 @@ try {
     assert.equal(snapshotRepairCalls, 1, 'Snapshot repair must call the dedicated repair endpoint exactly once.');
     assert.equal(JSON.stringify(currentCare), snapshotBefore, 'Snapshot repair must not mutate Care content, status or version.');
     assert.equal(await page.getByRole('button', { name: '下线', exact: true }).isVisible(), true, 'Normal published Care actions must return after repair context clears.');
+    assert.equal(await page.getByRole('button', { name: '保存修改', exact: true }).isVisible(), true, 'Normal Care editing must return after snapshot maintenance clears.');
+    assert.equal(await page.getByTestId('content-review-reference').isVisible(), true, 'Downstream review reference must return after maintenance clears.');
     currentCare = { ...baseCareRecord };
 
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
