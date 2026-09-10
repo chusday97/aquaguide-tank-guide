@@ -70,6 +70,18 @@ try {
     await page.waitForFunction(() => document.querySelector('[data-testid="care-seo-projection"]')?.textContent?.includes('Approved'));
     assert.doesNotMatch(await seo.innerText(), /Source drift/);
 
+    await page.getByRole('button', { name: '返回后台首页' }).click();
+    await page.waitForURL(current => current.pathname === '/admin/content');
+    const seoClosureNotice = page.getByTestId('operations-return-context');
+    await seoClosureNotice.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await seoClosureNotice.innerText(), /已返回工作台[\s\S]*新鱼入缸 · SEO 需要完善[\s\S]*当前队列未找到这条任务/, 'Approving the exact Care SEO task must remove the completed task from refreshed Operations.');
+    const nextOperationsTask = page.getByTestId('operations-primary-task');
+    await nextOperationsTask.waitFor({ state: 'visible', timeout: 10000 });
+    assert.doesNotMatch(await nextOperationsTask.innerText(), /新鱼入缸 · SEO 需要完善/, 'Completed Care SEO task must not remain the Operations primary task after return.');
+
+    await page.goto(`${baseUrl}/admin/product-content?type=care&id=${careId}&seo=1&locale=zh-CN`, { waitUntil: 'domcontentloaded' });
+    await seo.waitFor();
+    await page.waitForFunction(() => document.querySelector('[data-testid="care-seo-projection"]')?.textContent?.includes('Approved'));
     const summary = page.locator('label:has-text("摘要") textarea').first();
     const originalSummary = await summary.inputValue();
     await summary.fill(`${originalSummary}【Care source drift regression】`);
