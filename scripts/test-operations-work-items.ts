@@ -30,6 +30,12 @@ assert.match(seo[0]?.nextStep || '', /补齐 H1/);
 assert.equal(seo[0]?.actionLabel, '补齐 H1', 'SEO action copy must name the exact blocker instead of a generic page action.');
 assert.equal(seo[1]?.actionLabel, '开始人工审核', 'SEO review WorkItem must name the human-review action explicitly.');
 assert.equal(seo[2]?.actionLabel, '设置 Index 策略', 'SEO attention WorkItem must name the exact policy action explicitly.');
+const unpublishedCareSeo = buildSeoWorkItems({
+  entries: [{ pageKey: 'care:guide-a:zh-CN', pageType: 'care', sourceKey: 'guide-a', label: 'Care A', locale: 'zh-CN', editorHref: '/admin/product-content?type=care&id=local-care-a&seo=1&locale=zh-CN', health: { severity: 'blocked', issues: ['source_not_published'] }, editorialState: 'source_not_published' }],
+  sources: [],
+} as any);
+assert.equal(unpublishedCareSeo[0]?.actionLabel, '先发布 Care 源内容');
+assert.equal(unpublishedCareSeo[0]?.href, '/admin/product-content?type=care&id=local-care-a&locale=zh-CN', 'Source-not-published Care tasks must return to Product/Care source editing instead of auto-focusing downstream SEO.');
 assert.equal(seo[1]?.severity, 'decision');
 assert.equal(seo[2]?.severity, 'attention');
 

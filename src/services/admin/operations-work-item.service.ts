@@ -159,6 +159,12 @@ const selectSeoIssue = (entry: SeoPageRegistrySnapshot['entries'][number]) => {
   if (entry.editorialState === 'ready_for_review' && entry.health.issues.includes('missing_editorial_review')) return 'missing_editorial_review';
   return entry.health.issues[0] || 'unknown';
 };
+const seoWorkItemHref = (entry: SeoPageRegistrySnapshot['entries'][number], issue: string) => {
+  if (entry.pageType !== 'care' || issue !== 'source_not_published') return entry.editorHref;
+  const target = new URL(entry.editorHref, 'http://aquaguide.local');
+  target.searchParams.delete('seo');
+  return `${target.pathname}${target.search}${target.hash}`;
+};
 
 export function buildSeoWorkItems(snapshot: SeoPageRegistrySnapshot): OperationsWorkItem[] {
   return snapshot.entries.flatMap<OperationsWorkItem>(entry => {
@@ -168,26 +174,27 @@ export function buildSeoWorkItems(snapshot: SeoPageRegistrySnapshot): Operations
     const reason = `${localeLabel(entry.locale)} · ${firstReason}`;
     const nextStep = seoIssueNextStep[issue] || '回到对应 SEO authority 完成该页面处理';
     const actionLabel = seoIssueActionLabel[issue] || '打开 SEO 页面';
+    const href = seoWorkItemHref(entry, issue);
     if (entry.health.severity === 'blocked') return [{
       id: `seo:${entry.pageKey}:blocked`, authority: 'seo' as const, severity: 'blocker' as const,
       title: `${entry.label} · SEO 发布阻断`, detail: `${reason}。需要回到对应 SEO authority 处理。`, count: 1,
       resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
       gateLabel: firstReason, nextStep, verificationNote: '最终发布/索引资格仍由对应 SEO authority 复核。',
-      actionLabel, href: entry.editorHref,
+      actionLabel, href,
     }];
     if (entry.editorialState === 'ready_for_review') return [{
       id: `seo:${entry.pageKey}:review`, authority: 'seo' as const, severity: 'decision' as const,
       title: `${entry.label} · 等待 SEO 人工审核`, detail: `${reason}。需要人工确认后才能继续。`, count: 1,
       resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
       gateLabel: '等待 SEO 人工审核', nextStep: '完成该页面人工审核', verificationNote: '审核结论仍写回原 SEO authority。',
-      actionLabel, href: entry.editorHref,
+      actionLabel, href,
     }];
     return [{
       id: `seo:${entry.pageKey}:attention`, authority: 'seo' as const, severity: 'attention' as const,
       title: `${entry.label} · SEO 需要完善`, detail: `${reason}。当前不一定阻断发布，但仍需要处理。`, count: 1,
       resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
       gateLabel: firstReason, nextStep, verificationNote: 'Operations 只提示下一步，不替代 SEO authority 状态判断。',
-      actionLabel, href: entry.editorHref,
+      actionLabel, href,
     }];
   });
 }
