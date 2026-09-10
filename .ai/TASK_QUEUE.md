@@ -25,6 +25,7 @@
 - [x] Medium-width editor acceptance hardening (`c258640b`): editor/panel no internal horizontal scroll; policy controls remain >=180px.
 - [x] Topbar action convergence (`1ea56f60`): Activity Center moved under Operations; unread count preserved; mobile topbar reduced to four actions.
 - [x] Publish Center hierarchy (`3cb4a569`): compact source/readiness summary, audit-first timeline, explicit-on-selection detail, secondary release-boundary disclosure, true 390px viewport regression.
+- [x] Product/Care editor priority (`448bfcd8`): compact mobile navigator, fields before review/downstream blocks, no internal mobile overflow, explicit Save-before-Publish state.
 - [ ] Continue only remaining high-signal hierarchy/interaction badcases; do not add parallel tool surfaces.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 

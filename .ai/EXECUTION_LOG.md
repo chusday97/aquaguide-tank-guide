@@ -1232,3 +1232,8 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Committed `3cb4a569 fix(admin): simplify publish center hierarchy`.
 - Audit Timeline now precedes Capability/Permission reference; event detail is explicit-on-selection; source/readiness are compact; informational Amber removed.
 - Fixed Publish Center UI regression to use a real 390px Playwright viewport. PASS: Publish Center UI/contract, Operations cross-page states, root TypeScript, full root build, diff hygiene.
+
+## 2026-09-10 — Product/Care editor priority
+- Committed `448bfcd8 fix(admin): prioritize product care editing`.
+- Mobile catalog replaced by compact navigator; fields moved ahead of Impact/downstream review; Care SEO no longer blocks Care editing; dirty publish explains Save-first gate.
+- PASS: Local Business UI, full Admin authority UI including Care SEO/Compatibility, root TypeScript, full build, diff hygiene.

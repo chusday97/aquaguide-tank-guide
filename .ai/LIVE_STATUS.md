@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-10)
-- Functional checkpoint: `3cb4a569 fix(admin): simplify publish center hierarchy`.
+- Functional checkpoint: `448bfcd8 fix(admin): prioritize product care editing`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.
 - Data Review remains evidence-first with explicit human Canonical choice and one final confirmation; Product Data authority is not rewritten by SEO review.
 - Save/review remains centralized in the top Review bar; contextual page/Base tools and history follow the active authority; cross-page work remains behind `运营工具`.
@@ -12,6 +12,7 @@
 - The same browser gate also verifies medium-width editor/panel no-overflow, policy inputs >=180px, and a stable DOM-ready navigation strategy.
 - Activity history is no longer a separate topbar action; it is the first global Operations item, with unread count surfaced on the Operations trigger. 390px topbar now exposes four actions instead of five.
 - Publish Center no longer front-loads five readiness cards plus two full reference matrices. Source/readiness are compact, Timeline is the primary audit surface, event detail opens only after selection, and Capability/Permission stay available under one `发布边界详情` disclosure. Real 390px viewport regression is now valid.
+- Product/Care now prioritizes editing: on mobile the full catalog is replaced by a compact selector, main fields precede Impact/downstream references, Care SEO is downstream after Care fields, and Product/Care forms have no internal horizontal overflow.
 - Full Species SEO contract, Admin content contract, browser regression, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
 

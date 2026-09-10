@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
-Functional checkpoint: `3cb4a569 fix(admin): simplify publish center hierarchy`.
+Functional checkpoint: `448bfcd8 fix(admin): prioritize product care editing`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
 - Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
@@ -14,6 +14,7 @@ Functional checkpoint: `3cb4a569 fix(admin): simplify publish center hierarchy`.
 - Responsive editor regression is hardened (`c258640b`): medium-width editor/panel have no internal horizontal scroll and policy controls remain >=180px; browser navigation waits for real editor readiness instead of brittle network-idle.
 - Global topbar density is reduced (`1ea56f60`): Activity Center remains fully available but lives inside `运营工具`; unread count moves to the Operations entry. Mobile topbar is now Operations + 中文 + 英文 + 退出 only.
 - Publish Center hierarchy is converged (`3cb4a569`): source/readiness are compact summaries, audit timeline comes before low-frequency Capability/Permission reference, details open only after an explicit event choice, and true 390px viewport coverage is enforced. Informational states no longer use decision-Amber.
+- Product/Care editor hierarchy is converged (`448bfcd8`): mobile uses a compact record navigator instead of stacking the full catalog before editing; Product/Care fields precede Impact/downstream review; Care SEO moved after Care fields; dirty publish says `保存后可发布`; form internal overflow is guarded. 390px form start improved ~934→244px and Care width 504→366px.
 - Validation PASS: Heavy browser hierarchy/Preview regression, Species SEO contracts, Admin content contract, root TypeScript, full root build and diff hygiene.
 - NEXT: continue real editor acceptance at medium widths and remove only remaining hierarchy/interaction badcases; do not add new authority layers. Supabase Staging remains parked.
 
