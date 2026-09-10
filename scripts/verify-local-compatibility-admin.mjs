@@ -41,7 +41,16 @@ try {
     assert.match(firstBody, /Local baseline 7\/7/);
     assert.match(firstBody, /Local baseline 4\/4/);
     assert.doesNotMatch(firstBody, /DB baseline/);
+    const authoritySummary = page.getByTestId('compatibility-authority-summary');
+    const summaryHeight = await authoritySummary.evaluate(element => element.getBoundingClientRect().height);
+    assert.equal(summaryHeight <= (viewport.width === 390 ? 120 : 100), true, `${viewport.width}px authority summary must stay compact.`);
+    assert.equal(await authoritySummary.evaluate(element => element.scrollWidth - element.clientWidth), 0, `${viewport.width}px authority summary must not overflow internally.`);
     await page.getByRole('button', { name: '创建 Profile Draft' }).first().click();
+    const profileEditor = page.getByTestId('compatibility-draft-editor');
+    await profileEditor.waitFor();
+    const editorTop = await profileEditor.evaluate(element => element.getBoundingClientRect().top + window.scrollY);
+    if (viewport.width === 390) assert.equal(editorTop < 500, true, '390px Profile editor must appear before the large reviewed lists.');
+    assert.equal(await profileEditor.evaluate(element => element.scrollWidth - element.clientWidth), 0, `${viewport.width}px Profile editor must not overflow internally.`);
     const minGroup = page.locator('input[placeholder="留空表示未设置"]');
     await minGroup.fill('7');
     await page.getByRole('button', { name: '保存 Draft' }).click();
@@ -98,10 +107,10 @@ try {
     await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
     const publishCenterText = await page.locator('body').innerText();
-    assert.match(publishCenterText, /Local submit\/review\/publish history 从当前本地 store 启用后持续记录/);
+    for (const label of ['Compatibility Profile 已提交审核', 'Compatibility Profile 已批准', 'Compatibility Profile reviewed authority 已发布', 'Compatibility Pair Rule 已提交审核', 'Compatibility Pair Rule 已批准', 'Compatibility Pair Rule reviewed authority 已发布']) assert.match(publishCenterText, new RegExp(label));
     assert.match(publishCenterText, /Compatibility Profile reviewed authority 已发布/);
     assert.match(publishCenterText, /Compatibility Pair Rule reviewed authority 已发布/);
-    assert.match(publishCenterText, /DEV Local Mode/);
+    assert.match(await page.getByTestId('publish-center-authority-note').getAttribute('title') || '', /DEV Local Mode/);
 
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
     assert.equal(overflow, 0, `Local Compatibility must not overflow at ${viewport.width}px.`);

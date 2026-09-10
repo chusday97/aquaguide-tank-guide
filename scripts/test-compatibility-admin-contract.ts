@@ -99,6 +99,16 @@ for (const sourceKey of reviewedSourceKeys) assert.equal(reconciliationMigration
 for (const profile of audit.reviewedProfiles) assert.match(reconciliationMigration, new RegExp(profile.speciesId));
 for (const rule of audit.reviewedPairRules) for (const speciesId of rule.speciesIds) assert.equal(reconciliationMigration.includes(speciesId), true, `reconciliation migration must include pair species: ${speciesId}`);
 
+const compatibilityUi = readFileSync('src/pages/CompatibilityAdmin.tsx', 'utf8');
+assert.doesNotMatch(compatibilityUi, /(?:indigo|violet|sky)-/, 'Compatibility Admin must not split Profile/Pair into separate blue/purple visual authorities.');
+assert.match(compatibilityUi, /pending_review: 'border-amber-200 bg-amber-50 text-amber-800'/, 'Pending human review must use decision-Amber.');
+assert.match(compatibilityUi, /bg-amber-600[\s\S]{0,180}批准 revision（不发布）/, 'Profile human approval must use decision-Amber.');
+assert.match(compatibilityUi, /bg-amber-600[\s\S]{0,180}批准 Pair revision（不发布）/, 'Pair human approval must use decision-Amber.');
+assert.match(compatibilityUi, /bg-emerald-700[\s\S]{0,180}发布 reviewed version/, 'Reviewed runtime publish must retain the Green publish action.');
+assert.match(compatibilityUi, /bg-emerald-700[\s\S]{0,180}发布 Pair reviewed version/, 'Pair reviewed runtime publish must retain the Green publish action.');
+assert.match(compatibilityUi, /profile-regression-report[^>]*border-slate-200 bg-slate-50/, 'Profile regression evidence is neutral reference, not a separate color authority.');
+assert.match(compatibilityUi, /pair-regression-report[^>]*border-slate-200 bg-slate-50/, 'Pair regression evidence is neutral reference, not a separate color authority.');
+
 const routeSource = readFileSync('apps/api/src/routes/admin-compatibility.ts', 'utf8');
 assert.match(routeSource, /species_compatibility_profiles[\s\S]*review_status[\s\S]*reviewed/);
 assert.match(routeSource, /species_compatibility_profile_revisions[\s\S]*pending_review/);
