@@ -91,6 +91,25 @@ const browser = await chromium.launch({ headless: true });
 
 try {
   await startLocalAdmin();
+  const handoffContext = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  const handoffPage = await handoffContext.newPage();
+  const returnTask = 'seo:local-handoff:en:attention';
+  const returnTitle = 'Local Species SEO handoff';
+  const seoTarget = new URL(`${seoAdminBaseUrl}/`);
+  seoTarget.searchParams.set('species', 'sp_0436');
+  seoTarget.searchParams.set('locale', 'en');
+  seoTarget.searchParams.set('demo', '1');
+  seoTarget.searchParams.set('returnTo', `${baseUrl}/admin/content`);
+  seoTarget.searchParams.set('returnTask', returnTask);
+  seoTarget.searchParams.set('returnTitle', returnTitle);
+  await handoffPage.goto(seoTarget.toString(), { waitUntil: 'domcontentloaded' });
+  await handoffPage.getByTestId('return-to-operations-task').waitFor();
+  await handoffPage.getByTestId('return-to-operations-task').click();
+  await handoffPage.waitForURL(url => url.origin === baseUrl && url.pathname === '/admin/content');
+  await handoffPage.getByRole('heading', { name: '运营工作台' }).waitFor();
+  assert.match(await handoffPage.locator('body').innerText(), /Local Species SEO handoff/, 'Cross-port Species SEO return must restore Operations task context.');
+  await handoffContext.close();
+
   let context = await browser.newContext({ viewport: { width: 1280, height: 900 } });
   let page = await context.newPage();
   const errors = [];
