@@ -598,6 +598,10 @@
 - 修复详情关闭后滚动、焦点与来源高亮未稳定恢复的问题。
 - 修复手机图鉴分页折叠、养护推荐自动移动和页面底部重复大留白。
 
+### [Unreleased] Verification
+
+- 补充内置浏览器交互证据：Species 品系跳转/返回、FAQ 展开和 Category Public Shell 入口均可复核；不替代系统 Chrome、性能和独立 Critic 门禁。
+
 ### Removed
 
 - 删除已无引用的侧栏语言设置浮层与状态 Provider；设置只通过 `/settings` 正式页面进入。
