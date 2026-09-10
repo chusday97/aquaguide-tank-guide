@@ -45,8 +45,10 @@ assert.match(localDevScript, /ADMIN_LOCAL_FILE_MODE = 'true'[\s\S]*VITE_ADMIN_LO
   'The dedicated local-admin dev entrypoint must enable both server and browser Durable File guards.');
 assert.match(localDevScript, /START_SEO_ADMIN = 'true'[\s\S]*VITE_SEO_ADMIN_PORT/,
   'The Local Admin entrypoint must explicitly start and configure the standalone Species SEO dev app.');
-assert.match(devWithApiScript, /START_SEO_ADMIN === 'true'[\s\S]*seoAdminPort[\s\S]*apps\/admin-content/,
-  'The shared dev launcher must start Species SEO as a third child only for Local Admin mode.');
+assert.match(devWithApiScript, /START_SEO_ADMIN === 'true'[\s\S]*detectExistingSeoAdmin[\s\S]*AquaGuide Species SEO Admin[\s\S]*apps\/admin-content/,
+  'The shared dev launcher must start Species SEO only for Local Admin mode and reuse the canonical app when that port is already healthy.');
+assert.match(devWithApiScript, /already serving another application/,
+  'A Local SEO port occupied by another app must fail clearly instead of silently reusing the wrong service.');
 assert.match(seoAdminNavigation, /VITE_SEO_ADMIN_PORT[\s\S]*3010[\s\S]*admin\/seo/,
   'Local standalone SEO navigation must share the configured dev port while deployed /admin/seo/ paths remain stable.');
 assert.match(viteConfig, /process\.env\.API_PORT \|\| env\.API_PORT \|\| '8787'/,

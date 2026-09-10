@@ -8,6 +8,23 @@ const binDir = path.join(rootDir, 'node_modules', '.bin');
 const viteBin = path.join(binDir, process.platform === 'win32' ? 'vite.cmd' : 'vite');
 const tsxBin = path.join(binDir, process.platform === 'win32' ? 'tsx.cmd' : 'tsx');
 
+const seoAdminRequested = process.env.START_SEO_ADMIN === 'true';
+const seoAdminPort = process.env.SEO_ADMIN_PORT || process.env.VITE_SEO_ADMIN_PORT || '3010';
+
+const detectExistingSeoAdmin = async () => {
+  if (!seoAdminRequested) return false;
+  try {
+    const response = await fetch(`http://127.0.0.1:${seoAdminPort}/`, { signal: AbortSignal.timeout(800) });
+    const html = await response.text();
+    if (response.ok && html.includes('<title>AquaGuide Species SEO Admin</title>')) return true;
+    throw new Error(`Port ${seoAdminPort} is already serving another application.`);
+  } catch (cause) {
+    if (cause instanceof Error && cause.message.includes('already serving another application')) throw cause;
+    return false;
+  }
+};
+
+const reuseSeoAdmin = await detectExistingSeoAdmin();
 const children = [
   spawn(tsxBin, ['apps/api/src/index.ts'], {
     cwd: rootDir,
@@ -21,13 +38,14 @@ const children = [
   }),
 ];
 
-if (process.env.START_SEO_ADMIN === 'true') {
-  const seoAdminPort = process.env.SEO_ADMIN_PORT || process.env.VITE_SEO_ADMIN_PORT || '3010';
+if (seoAdminRequested && !reuseSeoAdmin) {
   children.push(spawn(viteBin, [`--port=${seoAdminPort}`, '--host=0.0.0.0', '--strictPort'], {
     cwd: path.join(rootDir, 'apps/admin-content'),
     stdio: 'inherit',
     env: process.env,
   }));
+} else if (reuseSeoAdmin) {
+  console.log(`Reusing AquaGuide Species SEO Admin at http://127.0.0.1:${seoAdminPort}`);
 }
 
 const stopAll = () => {
