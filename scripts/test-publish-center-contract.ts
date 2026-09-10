@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { getRelatedReleaseEvents } from '../src/services/admin/release-coordination';
+import { getRelatedReleaseEvents, releaseEventAuthorityHref } from '../src/services/admin/release-coordination';
 import { classifyReleaseTableRead, combineReleaseTableStates } from '../apps/api/src/release-source-readiness';
 
 const root = resolve(import.meta.dirname, '..');
@@ -95,5 +95,11 @@ const related = getRelatedReleaseEvents([
   { id: 'seo-other', authority: 'seo', domain: 'seo_page', eventType: 'revision', status: 'approved', title: 'other', resourceKey: 'sp_0002', occurredAt: '2026-09-05T05:20:00Z' },
 ] as any, selectedEvent as any);
 assert.deepEqual(related.map(item => item.id), ['compat-1', 'seo-batch-1'], 'coordination must use explicit catalog keys and exclude same-authority/unrelated records');
+assert.equal(releaseEventAuthorityHref({ ...selectedEvent, metadata: { resourceId: 'species-uuid-1' } } as any), '/admin/product-content?type=species&id=species-uuid-1', 'Product release detail must deep-link to the exact Product record when resourceId is available.');
+assert.equal(releaseEventAuthorityHref({ id: 'care-1', authority: 'product_care', domain: 'care', eventType: 'published', status: 'published', title: 'Care', resourceKey: 'guide-a', occurredAt: selectedEvent.occurredAt, metadata: { resourceId: 'care-uuid-1' } } as any), '/admin/product-content?type=care&id=care-uuid-1', 'Care release detail must deep-link to the exact Care record.');
+assert.equal(releaseEventAuthorityHref({ id: 'compat-profile:rev-profile-1', authority: 'compatibility', domain: 'compatibility_profile', eventType: 'profile_revision', status: 'approved', title: 'Profile', resourceKey: 'sp_0436', occurredAt: selectedEvent.occurredAt, sourceRef: 'species_compatibility_profile_revisions:rev-profile-1' } as any), '/admin/compatibility?kind=profile&revision=rev-profile-1', 'Compatibility Profile release detail must deep-link to the exact revision.');
+assert.equal(releaseEventAuthorityHref({ id: 'compat-pair:rev-pair-1', authority: 'compatibility', domain: 'compatibility_pair', eventType: 'pair_rule_revision', status: 'approved', title: 'Pair', resourceKey: 'sp_0436__sp_0439', occurredAt: selectedEvent.occurredAt, sourceRef: 'local:compat-pair:rev-pair-1:4' } as any), '/admin/compatibility?kind=pair&revision=rev-pair-1', 'Local Compatibility Pair release detail must deep-link to the exact revision.');
+assert.equal(releaseEventAuthorityHref({ id: 'seo-revision:1', authority: 'seo', domain: 'seo_page', eventType: 'revision_updated', status: 'approved', title: 'SEO', resourceKey: 'sp_0436', locale: 'en', occurredAt: selectedEvent.occurredAt } as any), '/admin/seo/?species=sp_0436&locale=en', 'Species SEO page revision must deep-link to the exact locale editor.');
+assert.equal(releaseEventAuthorityHref({ id: 'seo-batch:1', authority: 'seo', domain: 'seo_batch', eventType: 'import_batch', status: 'staging_published', title: 'Batch', resourceKey: 'batch-1', occurredAt: selectedEvent.occurredAt } as any), '/admin/seo/', 'SEO batch events must fall back to the authority home because they do not identify one page.');
 
 console.log('publish center contract: multi-authority read-only aggregation + detail/readiness PASS');

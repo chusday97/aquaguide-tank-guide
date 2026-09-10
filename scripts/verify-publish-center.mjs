@@ -13,8 +13,8 @@ const fakeSession = {
 };
 const businessFeed = {
   events: [
-    { id: 'pc-1', authority: 'product_care', domain: 'product', eventType: 'published_snapshot', status: 'published', title: 'Product 发布版本', detail: 'sp_0436 · source v4', resourceKey: 'sp_0436', version: 4, occurredAt: '2026-09-05T05:00:00.000Z' },
-    { id: 'cp-1', authority: 'compatibility', domain: 'compatibility_profile', eventType: 'profile_revision', status: 'published', title: 'Profile reviewed version 已发布', detail: '孔雀鱼 · revision #2', resourceKey: 'sp_0436', version: 3, occurredAt: '2026-09-05T04:00:00.000Z' },
+    { id: 'pc-1', authority: 'product_care', domain: 'product', eventType: 'published_snapshot', status: 'published', title: 'Product 发布版本', detail: 'sp_0436 · source v4', resourceKey: 'sp_0436', version: 4, occurredAt: '2026-09-05T05:00:00.000Z', metadata: { resourceId: 'species-record-0436' } },
+    { id: 'cp-1', authority: 'compatibility', domain: 'compatibility_profile', eventType: 'profile_revision', status: 'published', title: 'Profile reviewed version 已发布', detail: '孔雀鱼 · revision #2', resourceKey: 'sp_0436', version: 3, occurredAt: '2026-09-05T04:00:00.000Z', sourceRef: 'species_compatibility_profile_revisions:revision-profile-0436' },
   ],
   sources: [
     { authority: 'product_care', availability: 'ready', coverage: 'current_only', label: 'Product / Care publication', detail: 'current only' },
@@ -65,7 +65,7 @@ try {
       const data = productAuditHistoryReady ? {
         ...businessFeed,
         events: [
-          { id: 'pc-archive-1', authority: 'product_care', domain: 'product', eventType: 'publication_archived', status: 'archived', title: 'Product 已归档', detail: 'sp_0436 · source v5', resourceKey: 'sp_0436', version: 5, actor: '8b3f71bd-a1be-4a18-b7f8-5478cf55dc61', occurredAt: '2026-09-05T06:30:00.000Z', sourceRef: 'content_publication_events:audit-1' },
+          { id: 'pc-archive-1', authority: 'product_care', domain: 'product', eventType: 'publication_archived', status: 'archived', title: 'Product 已归档', detail: 'sp_0436 · source v5', resourceKey: 'sp_0436', version: 5, actor: '8b3f71bd-a1be-4a18-b7f8-5478cf55dc61', occurredAt: '2026-09-05T06:30:00.000Z', sourceRef: 'content_publication_events:audit-1', metadata: { resourceId: 'species-record-0436' } },
           ...businessFeed.events,
         ],
         sources: businessFeed.sources.map(source => source.authority === 'product_care' ? { ...source, coverage: 'revision_history', detail: 'append-only history' } : source),
@@ -140,14 +140,17 @@ try {
     assert.match(productDetail, /只读审计详情，不提供发布或回滚动作/);
     assert.match(productDetail, /当前版本/);
     assert.match(productDetail, /sp_0436/);
+    assert.equal(await detail.getByTestId('publish-center-authority-link').getAttribute('href'), '/admin/product-content?type=species&id=species-record-0436', 'Product audit detail must retain the exact Product resource target.');
     const relatedEvidence = page.getByTestId('publish-center-related-evidence');
     assert.match(await relatedEvidence.innerText(), /这不是依赖判断，也不表示必须同步发布[\s\S]*Compatibility[\s\S]*Profile reviewed version 已发布/i);
+    assert.equal(await relatedEvidence.locator('[data-release-event-id="cp-1"]').getAttribute('href'), '/admin/compatibility?kind=profile&revision=revision-profile-0436', 'Cross-authority Compatibility evidence must deep-link to its exact revision.');
     await page.getByRole('button', { name: 'Compatibility', exact: true }).click();
     assert.equal(await detail.count(), 0, 'Changing authority filter must clear stale audit detail.');
     await timeline.getByRole('button', { name: /Compatibility published Profile reviewed version 已发布/ }).click();
     const compatibilityDetail = await detail.innerText();
     assert.match(compatibilityDetail, /Profile reviewed version 已发布/);
     assert.match(compatibilityDetail, /前往 Compatibility authority/);
+    assert.equal(await detail.getByTestId('publish-center-authority-link').getAttribute('href'), '/admin/compatibility?kind=profile&revision=revision-profile-0436', 'Compatibility audit detail must retain the exact Profile revision target.');
     await page.getByRole('button', { name: '全部', exact: true }).click();
     assert.equal(await detail.count(), 0, 'Returning to all events must keep detail closed until a record is chosen.');
 
@@ -165,6 +168,7 @@ try {
     assert.match(refreshedTimeline, /SEO Staging batch 已发布/);
     await timeline.getByRole('button', { name: /SEO revision 已记录/ }).click();
     assert.match(await detail.innerText(), /SEO revision 已记录[\s\S]*Activity \/ Revision 历史[\s\S]*content_revisions:rev-1[\s\S]*zh-CN/);
+    assert.equal(await detail.getByTestId('publish-center-authority-link').getAttribute('href'), '/admin/seo/?species=sp_0436&locale=zh-CN', 'Species SEO revision detail must deep-link to the exact locale editor.');
     assert.match(await relatedEvidence.innerText(), /Product \/ Care[\s\S]*Product 发布版本[\s\S]*Compatibility[\s\S]*Profile reviewed version 已发布/i);
 
     productAuditHistoryReady = true;
