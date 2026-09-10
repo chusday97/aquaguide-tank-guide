@@ -8,8 +8,8 @@
 - Latest acceptance/test HEAD: `fcc86c0d` (`test(admin): prove operations task closure`).
 - Live remote feature: `30ff0119`.
 - Live main: `d3c70dee`.
-- Local vs live remote feature: `ahead 45 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local checkpoint: `275 main-only / 303 feature-only`; merge base remains `ed0cf380`.
+- Local vs live remote feature: `ahead 47 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
+- Main vs local checkpoint: `275 main-only / 305 feature-only`; merge base remains `ed0cf380`.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
 - No merge/rebase main, force push, Production/live DB or indexing mutation.
 

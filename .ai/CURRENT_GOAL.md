@@ -28,9 +28,10 @@ Completed in the current local-first / UX phase:
 20. Care SEO deep-links are operational (`7799d88a`): `seo=1` now focuses the hydrated Care SEO Editorial workspace at 1280/390 instead of merely opening the Care record.
 21. Authority targets match the stated action (`f79802b5`): `source_not_published` returns to the Care source editor with `seo=1` removed; true SEO issues retain downstream SEO focus.
 22. Legacy Care snapshot repair is operational (`1c78ef14`): `source_not_snapshot` returns to Product/Care, exposes a dedicated admin-only immutable snapshot repair action, preserves Care content/status/version, fails closed when publication storage is unavailable, and clears the repair context after success. Exact Product/Care deep-links are also guarded against duplicate-load selection races.
+23. Compatibility pre-publish check repair is operational (`298f5810`): pending/approved revisions missing Impact / Regression / Canonical Evidence expose one executable repair path. Repair recomputes only review artifacts; approved revisions are reset to `pending_review` and require a fresh human approval before publish.
 
 NEXT milestones:
-1. Continue only concrete WorkItem action→target audits where the stated action still does not land on an executable authority action. `source_not_snapshot` is complete; do not refactor already-correct Product/Care, Compatibility, Care SEO or Species SEO paths.
+1. Continue only concrete WorkItem action→target audits where the stated action still does not land on an executable authority action. `source_not_snapshot` and Compatibility missing-check repair are complete; do not refactor already-correct Product/Care, Compatibility, Care SEO or Species SEO paths.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.

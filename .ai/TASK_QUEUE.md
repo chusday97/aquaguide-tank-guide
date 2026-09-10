@@ -36,6 +36,7 @@
 - [x] Care SEO Operations focus (`7799d88a`): real `seo=1` deep-links land on the hydrated Care SEO Editorial workspace at 1280/390.
 - [x] Authority-target alignment (`f79802b5`): unpublished Care source work returns to Product/Care editing; actual SEO work retains downstream focus.
 - [x] Legacy `source_not_snapshot` repair ownership (`1c78ef14`): WorkItem returns to Product/Care; dedicated admin-only repair creates the immutable Published Snapshot without changing Care content/status/version; Local Mode rejects the legacy-only action; exact record deep-links are race-safe.
+- [x] Compatibility missing-check repair (`298f5810`): pending/approved Profile/Pair revisions missing Impact / Regression / Canonical Evidence expose one repair action; approved revisions are demoted to pending_review and require fresh human approval before publish.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

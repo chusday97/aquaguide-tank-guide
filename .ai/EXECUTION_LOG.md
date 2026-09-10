@@ -1299,3 +1299,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: Operations WorkItems + desktop/mobile matrix, Admin publication contract, non-Local Admin 1280/390 repair flow, Local Business, Care SEO Draft→Review→Approve→drift flow, API/root TypeScript, full root build and diff hygiene.
 - Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 45/behind 0 vs feature, main-only 275/feature-only 303. No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
 - NEXT: audit only remaining WorkItem actions that still fail to land on an executable authority operation; do not refactor already-correct paths.
+
+## 2026-09-10 — Compatibility review-check repair
+- Committed `298f5810 fix(admin): repair compatibility review checks`.
+- Pending/approved Profile or Pair revisions missing Impact / Regression / Canonical Evidence no longer dead-end behind disabled approval/publish actions.
+- Added Cloud + Local `repair-checks` paths that recompute review artifacts without mutating Profile/Pair business fields.
+- Approved revisions are safely demoted to `pending_review`, clearing the old approval so regenerated evidence requires a fresh human decision before publish.
+- UI now exposes one repair blocker and hides unusable review/publish actions until all three artifacts are ready.
+- PASS: Compatibility contract, Local Profile/Pair repair + publish flow, Operations WorkItems, Admin authority UI, API/root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 47/behind 0 vs feature, main-only 275/feature-only 305. No push/main/Production/Supabase/indexing mutation.
