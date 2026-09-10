@@ -23,8 +23,10 @@ Completed in the current local-first / UX phase:
 16. Cross-workspace task continuity (`24097c4b`): Product/Care and Compatibility preserve Operations return context through Router state; standalone Species SEO uses a same-host `/admin/content` URL return contract. Returning locates/highlights the original task or explains that it left the current queue.
 17. Operations queue repetition cap (`35134b0d`): repeated low-priority attention rows with the same authority/severity/gate expand at most three times on Home; hidden counts stay visible by authority and underlying WorkItems remain unchanged.
 
+18. Task-completion closure is proven (`fcc86c0d`): a Product Draft publish and a Compatibility Profile reviewed publish both return to refreshed Operations, remove the completed task from the queue, and expose the next current priority without a manual refresh.
+
 NEXT milestones:
-1. Prove task completion closure: complete a real local Product/Care or Compatibility task, return to Operations, refresh, and verify the completed task leaves the queue while the next priority becomes explicit.
+1. Audit remaining WorkItem action semantics after closure (especially approved Compatibility / SEO decision states); action copy must match the exact next authority step and must not imply publish when another gate remains.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.

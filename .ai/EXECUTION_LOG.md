@@ -1272,3 +1272,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Real Local Business scenario with dozens of SEO Index-strategy attention items now guards the repetition cap; Operations browser matrix and SEO hierarchy remain PASS.
 - Fetched refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 37/behind 0, main-only 275/feature-only 295, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
 - NEXT: exact task completion → return → Operations refresh closure.
+
+## 2026-09-10 — Operations exact-task closure acceptance
+- Committed `fcc86c0d test(admin): prove operations task closure`.
+- Browser-proven Product flow: Operations exact Product Draft → publish → return; returned task is absent from refreshed queue and the next current priority is immediately visible.
+- Browser-proven Compatibility flow: Operations exact Profile Draft → submit → Regression/Evidence → approve → reviewed publish → return; completed Profile task is absent from refreshed queue.
+- Re-fetched refs after acceptance: remote feature `e9c63560`, main `d3c70dee`; local ahead 37/behind 0 vs feature, main-only 275/feature-only 297, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: audit WorkItem action semantics only where action copy could overstate or obscure the exact remaining authority gate.

@@ -20,8 +20,9 @@ Functional checkpoint: `35134b0d fix(admin): collapse repeated operations queue 
 - Operations Home hierarchy is converged (`ee41c214`): task remains first, ready sources collapse repeated detail, authority workspaces use a compact 2×2 mobile grid, and Recent Activity is one latest-event summary linking to Publish Center instead of a duplicated timeline. 390px page height improved ~1833→1373px.
 - Cross-workspace return continuity is explicit (`24097c4b`): exact Product/Care and Compatibility tasks return via Router state; standalone Species SEO uses a validated same-host URL handoff. Operations restores and highlights the original task when present, otherwise explains that it is no longer in the current queue.
 - Repeated Operations attention noise is capped (`35134b0d`): the same authority/severity/gate expands at most three low-priority rows on Home; hidden task counts are summarized by authority without mutating the source WorkItems.
-- Validation PASS: Heavy browser hierarchy/Preview regression, Species SEO contracts, Admin content contract, root TypeScript, full root build and diff hygiene.
-- NEXT: prove task-completion closure from an exact local authority task back to refreshed Operations priority; only fix a real closure badcase if observed. Do not add new authority layers. Supabase Staging remains parked.
+- Task closure is browser-proven (`fcc86c0d`): exact Product Draft publish and Compatibility Profile reviewed publish both return to refreshed Operations, remove the completed task from the current queue, and expose the next priority immediately.
+- Validation PASS: Heavy browser hierarchy/Preview regression, Species SEO contracts, Admin content contract, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene.
+- NEXT: audit remaining WorkItem action semantics only where the displayed action can misstate the exact next authority gate. Do not add new authority layers. Supabase Staging remains parked.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`

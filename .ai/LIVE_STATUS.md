@@ -17,7 +17,8 @@
 - Operations Home remains task-first but is materially denser on mobile: ready-source details collapse, authority workspaces render 2×2, Recent Activity is one latest-event summary, and exact deep-link hydration is browser-guarded.
 - Exact Operations task navigation now has return continuity: internal Product/Care + Compatibility use Router state; standalone Species SEO carries a constrained same-host return URL; the original task is highlighted when still queued.
 - Home queue presentation caps repeated low-priority attention rows at three per authority/severity/gate and preserves authority-level hidden counts; the source queue and severity ordering are unchanged.
-- Full Species SEO contract, Admin content contract, browser regression, root TypeScript, full root build and diff hygiene PASS.
+- Exact task closure is proven in browser (`fcc86c0d`): Product publish and Compatibility Profile reviewed publish return to Operations with the completed task absent and the next priority available immediately.
+- Full Species SEO contract, Admin content contract, browser regression, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.
 
 Updated: 2026-09-10

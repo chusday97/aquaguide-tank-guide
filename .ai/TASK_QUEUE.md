@@ -31,7 +31,8 @@
 - [x] Operations Home first-screen density (`ee41c214`): task-first layout preserved; ready-source detail compacted; workspaces 2×2 on mobile; Recent Activity reduced to latest-event summary; 390px total height ~1833→1373px.
 - [x] Cross-workspace task continuity (`24097c4b`): Product/Care + Compatibility return by Router state; standalone Species SEO has a validated same-host Operations return contract; returned tasks are located/highlighted or explained if no longer queued.
 - [x] Repeated Operations queue cap (`35134b0d`): identical low-priority authority/severity/gate attention rows show at most three on Home; hidden counts remain summarized by authority.
-- [ ] Prove exact task completion → return → Operations refresh closure; fix only if the queue/priority state is stale or ambiguous.
+- [x] Exact task completion closure (`fcc86c0d`): Product publish and Compatibility reviewed publish return to Operations with the completed task removed and the next priority visible without manual refresh.
+- [ ] Audit remaining WorkItem action semantics after closure; approved/review/SEO states must name the exact next gate rather than generic publish language.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10
