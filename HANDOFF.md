@@ -909,6 +909,12 @@
 - `seoEvidenceBindings.ts` 已为 `sp_0432` Hero 和 `variant-card` 登记当前文件 hash 与 snapshot fingerprint。
 - 两条 binding 当前显式为 `blocked/pending-review`；不会因为文件存在就进入 Published Profile。
 - `test:seo-evidence-bindings`、`lint`、`build` 和 `diff-check` 已通过。批准素材时必须同时更新用途状态、fingerprint 和确认记录。
+
+## 2026-09-10 分类与指南公开路由复核
+
+- 内置浏览器实际加载分类页，确认公开 Header、虾螺蟹层级和极火虾入口可读。
+- 内置浏览器实际加载新鱼入缸指南，确认未审核步骤保持用户可理解的准备态，不进入公开正文或结构化内容。
+- 证据记录为 EVD-20260910-139；当前视口证据不替代三档自动化、独立 Critic 或 Figma Canonical。
 # 2026-09-10 内置浏览器真实验收结果
 
 - Codex 内置浏览器已完成三条 Species 路径 × 390/600/1440：页面内容加载后均可滚动且无横向溢出；H1、标题层级、44px 目标、中文术语、robots 均通过。
