@@ -32,7 +32,10 @@
 - [x] Cross-workspace task continuity (`24097c4b`): Product/Care + Compatibility return by Router state; standalone Species SEO has a validated same-host Operations return contract; returned tasks are located/highlighted or explained if no longer queued.
 - [x] Repeated Operations queue cap (`35134b0d`): identical low-priority authority/severity/gate attention rows show at most three on Home; hidden counts remain summarized by authority.
 - [x] Exact task completion closure (`fcc86c0d`): Product publish and Compatibility reviewed publish return to Operations with the completed task removed and the next priority visible without manual refresh.
-- [ ] Audit remaining WorkItem action semantics after closure; approved/review/SEO states must name the exact next gate rather than generic publish language.
+- [x] Exact SEO WorkItem action semantics (`258a5d0d`): blocker/review/attention actions name the concrete next gate instead of generic page actions.
+- [x] Care SEO Operations focus (`7799d88a`): real `seo=1` deep-links land on the hydrated Care SEO Editorial workspace at 1280/390.
+- [x] Authority-target alignment (`f79802b5`): unpublished Care source work returns to Product/Care editing; actual SEO work retains downstream focus.
+- [ ] Audit `source_not_snapshot` ownership/repair target; change it only if the current button lands in the wrong authority.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `35134b0d`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `f79802b5`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -24,9 +24,12 @@ Completed in the current local-first / UX phase:
 17. Operations queue repetition cap (`35134b0d`): repeated low-priority attention rows with the same authority/severity/gate expand at most three times on Home; hidden counts stay visible by authority and underlying WorkItems remain unchanged.
 
 18. Task-completion closure is proven (`fcc86c0d`): a Product Draft publish and a Compatibility Profile reviewed publish both return to refreshed Operations, remove the completed task from the queue, and expose the next current priority without a manual refresh.
+19. SEO task actions are exact (`258a5d0d`): generic page actions are replaced by blocker-specific labels such as `补齐 H1`, `设置 Index 策略`, `修正 Canonical`, `开始人工审核` and `重新审核 SEO`.
+20. Care SEO deep-links are operational (`7799d88a`): `seo=1` now focuses the hydrated Care SEO Editorial workspace at 1280/390 instead of merely opening the Care record.
+21. Authority targets match the stated action (`f79802b5`): `source_not_published` returns to the Care source editor with `seo=1` removed; true SEO issues retain downstream SEO focus.
 
 NEXT milestones:
-1. Audit remaining WorkItem action semantics after closure (especially approved Compatibility / SEO decision states); action copy must match the exact next authority step and must not imply publish when another gate remains.
+1. Continue only concrete WorkItem action→target audits; the strongest remaining candidate is legacy `source_not_snapshot` ownership. Do not refactor already-correct Product/Care, Compatibility or Species SEO paths.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.

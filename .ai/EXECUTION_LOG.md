@@ -1280,3 +1280,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Re-fetched refs after acceptance: remote feature `e9c63560`, main `d3c70dee`; local ahead 37/behind 0 vs feature, main-only 275/feature-only 297, merge base `ed0cf380`.
 - No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
 - NEXT: audit WorkItem action semantics only where action copy could overstate or obscure the exact remaining authority gate.
+
+## 2026-09-10 — Operations closure + exact SEO action targeting
+- `fcc86c0d test(admin): prove operations task closure` browser-proves Product publish and Compatibility Profile reviewed publish both return to refreshed Operations with the completed task removed and the next priority visible.
+- `258a5d0d fix(admin): name exact operations seo actions` replaces generic SEO CTAs with exact gate actions (`补齐 H1`, `设置 Index 策略`, `修正 Canonical`, `开始人工审核`, etc.).
+- `7799d88a fix(admin): focus care seo operations deep links` makes `seo=1` operational: after the final Care SEO workspace hydrates, the target is focused correctly in desktop internal-scroll and 390px document-scroll layouts.
+- `f79802b5 fix(admin): align seo actions with authority targets` strips `seo=1` for `source_not_published`, so `先发布 Care 源内容` opens the Product/Care source editor instead of downstream SEO.
+- PASS: Operations desktop/mobile/auth/forbidden/schema matrix, Care SEO Draft→Review→Approve→Source-drift flow, Admin authority UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `e9c63560`, main `d3c70dee`; local ahead 41/behind 0 vs feature, main-only 275/feature-only 301, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
+- NEXT: audit `source_not_snapshot` repair ownership before changing its action or target.
