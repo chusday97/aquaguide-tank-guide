@@ -108,6 +108,11 @@ assert.match(compatibilityUi, /bg-emerald-700[\s\S]{0,180}发布 reviewed versio
 assert.match(compatibilityUi, /bg-emerald-700[\s\S]{0,180}发布 Pair reviewed version/, 'Pair reviewed runtime publish must retain the Green publish action.');
 assert.match(compatibilityUi, /profile-regression-report[^>]*border-slate-200 bg-slate-50/, 'Profile regression evidence is neutral reference, not a separate color authority.');
 assert.match(compatibilityUi, /pair-regression-report[^>]*border-slate-200 bg-slate-50/, 'Pair regression evidence is neutral reference, not a separate color authority.');
+assert.match(compatibilityUi, /data-testid="profile-review-check-repair"/, 'Incomplete Profile review artifacts must expose one explicit repair action.');
+assert.match(compatibilityUi, /data-testid="pair-review-check-repair"/, 'Incomplete Pair review artifacts must expose one explicit repair action.');
+assert.match(compatibilityUi, /profileReviewArtifactsReady/, 'Profile approval and publish UI must share the full Impact\/Regression\/Evidence readiness gate.');
+assert.match(compatibilityUi, /pairReviewArtifactsReady/, 'Pair approval and publish UI must share the full Impact\/Regression\/Evidence readiness gate.');
+assert.match(compatibilityUi, /当前旧批准会撤销并回到待审核，必须重新人工批准/, 'Repair UI must disclose that stale approval is revoked.');
 
 const routeSource = readFileSync('apps/api/src/routes/admin-compatibility.ts', 'utf8');
 assert.match(routeSource, /species_compatibility_profiles[\s\S]*review_status[\s\S]*reviewed/);
@@ -119,6 +124,11 @@ assert.doesNotMatch(routeSource, /from\('species_pair_compatibility_rules'\)[\s\
 assert.match(routeSource, /pair-rule-revisions\/:id\/publish/);
 assert.match(routeSource, /profile-revisions\/:id\/review/);
 assert.match(routeSource, /pair-rule-revisions\/:id\/review/);
+assert.match(routeSource, /profile-revisions\/:id\/repair-checks/, 'Profile revisions with missing review artifacts need an explicit repair route.');
+assert.match(routeSource, /pair-rule-revisions\/:id\/repair-checks/, 'Pair revisions with missing review artifacts need an explicit repair route.');
+assert.match(routeSource, /reviewed_by: null[\s\S]{0,120}reviewed_at: null[\s\S]{0,120}review_note: null/, 'Repairing review artifacts must revoke any stale approval before re-review.');
+assert.match(routeSource, /Compatibility regression 尚未完成，不能发布/, 'Publish API must fail closed when Regression is missing.');
+assert.match(routeSource, /Canonical Evidence 尚未解析完成，不能发布/, 'Publish API must fail closed when Canonical Evidence is missing.');
 assert.match(routeSource, /buildImpactReport\('profile'/);
 assert.match(routeSource, /buildImpactReport\('pair_rule'/);
 assert.match(routeSource, /缺少有效 impact report/);

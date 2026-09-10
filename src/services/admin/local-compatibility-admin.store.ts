@@ -268,6 +268,31 @@ export const localCompatibilityAdminStore = {
     await writeState(state); return clone(next);
   },
 
+  repairProfileReviewChecks: async (id: string, version: number) => {
+    const state = readState();
+    const index = state.profileRevisions.findIndex(item => item.id === id);
+    if (index < 0) throw new AquaGuideApiError(404, 'NOT_FOUND', '本地 Profile revision 不存在。');
+    const current = state.profileRevisions[index];
+    assertVersion(current.version, version);
+    if (!['pending_review', 'approved'].includes(current.status)) throw new AquaGuideApiError(409, 'VERSION_CONFLICT', '只有待审核或已批准 Profile revision 可以重新生成发布前检查。');
+    assertReviewedCitations(current.citationSnapshots);
+    const baseline = state.reviewedProfiles.find(item => item.catalogKey === current.species.catalogKey);
+    if (!baseline) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed Profile baseline 不存在。');
+    const report = impactReport('profile', baseline.version,
+      { behavior_traits: current.behaviorTraits, minimum_group_size: current.minimumGroupSize, predation_targets: current.predationTargets, confidence: current.confidence },
+      { behavior_traits: baseline.behaviorTraits, minimum_group_size: baseline.minimumGroupSize ?? null, predation_targets: baseline.predationTargets, confidence: baseline.confidence },
+      ['behavior_traits', 'minimum_group_size', 'predation_targets', 'confidence']);
+    if (!report.changedFields.length) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '没有实际 Profile 变更，不能重新生成发布前检查。');
+    const regressionReport = await profileRegressionFor(state, current);
+    const next: AdminCompatibilityProfileRevision = {
+      ...current, status: 'pending_review', impactReport: report, regressionReport,
+      evidenceResolution: resolveEvidence(current.citationSnapshots), impactCheckedAt: now(), reviewNote: null, version: current.version + 1,
+    };
+    state.profileRevisions[index] = next;
+    await writeState(state);
+    return clone(next);
+  },
+
   reviewProfileRevision: async (id: string, raw: Parameters<typeof compatibilityRevisionReviewMutationSchema.parse>[0]) => {
     const input = compatibilityRevisionReviewMutationSchema.parse(raw);
     const state = readState();
@@ -382,6 +407,32 @@ export const localCompatibilityAdminStore = {
     state.pairRevisions[index] = next;
     appendReleaseEvent(state, { id: `local-compat-pair-submit:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_pair', eventType: 'pair_rule_revision', status: next.status, title: 'Compatibility Pair Rule 已提交审核', detail: `${next.speciesA.name} × ${next.speciesB.name} · revision #${next.revisionNumber}`, resourceKey: [next.speciesA.catalogKey, next.speciesB.catalogKey].sort().join('__'), version: next.version, occurredAt: now(), sourceRef: `local:compat-pair:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, baseVersion: next.baseRuleVersion, local: true } });
     await writeState(state); return clone(next);
+  },
+
+  repairPairRuleReviewChecks: async (id: string, version: number) => {
+    const state = readState();
+    const index = state.pairRevisions.findIndex(item => item.id === id);
+    if (index < 0) throw new AquaGuideApiError(404, 'NOT_FOUND', '本地 Pair Rule revision 不存在。');
+    const current = state.pairRevisions[index];
+    assertVersion(current.version, version);
+    if (!['pending_review', 'approved'].includes(current.status)) throw new AquaGuideApiError(409, 'VERSION_CONFLICT', '只有待审核或已批准 Pair Rule revision 可以重新生成发布前检查。');
+    assertReviewedCitations(current.citationSnapshots);
+    const key = pairKey(current.speciesA.catalogKey, current.speciesB.catalogKey);
+    const baseline = state.reviewedPairRules.find(item => pairKey(...item.catalogKeys) === key);
+    if (!baseline) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed Pair Rule baseline 不存在。');
+    const report = impactReport('pair_rule', baseline.version,
+      { verdict: current.verdict, risk_type: current.riskType, reason: current.reason, mitigation: current.mitigation, basis: current.basis, confidence: current.confidence },
+      { verdict: baseline.verdict, risk_type: baseline.riskType, reason: baseline.reason, mitigation: baseline.mitigation, basis: baseline.basis, confidence: baseline.confidence },
+      ['verdict', 'risk_type', 'reason', 'mitigation', 'basis', 'confidence']);
+    if (!report.changedFields.length) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '没有实际 Pair Rule 变更，不能重新生成发布前检查。');
+    const regressionReport = await pairRegressionFor(state, current);
+    const next: AdminCompatibilityPairRuleRevision = {
+      ...current, status: 'pending_review', impactReport: report, regressionReport,
+      evidenceResolution: resolveEvidence(current.citationSnapshots), impactCheckedAt: now(), reviewNote: null, version: current.version + 1,
+    };
+    state.pairRevisions[index] = next;
+    await writeState(state);
+    return clone(next);
   },
 
   reviewPairRuleRevision: async (id: string, raw: Parameters<typeof compatibilityRevisionReviewMutationSchema.parse>[0]) => {

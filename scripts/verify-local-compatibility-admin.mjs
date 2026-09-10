@@ -28,12 +28,12 @@ try {
     page.on('dialog', dialog => dialog.accept());
     await page.route('**/api/v1/**', unavailable);
     await page.route('**/api/admin-content/**', unavailable);
-    await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'domcontentloaded' });
     await page.evaluate(([business, compatibility]) => {
       localStorage.removeItem(business);
       localStorage.removeItem(compatibility);
     }, [businessKey, compatibilityKey]);
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
 
     const firstBody = await page.locator('body').innerText();
@@ -54,12 +54,13 @@ try {
     const minGroup = page.locator('input[placeholder="留空表示未设置"]');
     await minGroup.fill('7');
     await page.getByRole('button', { name: '保存 Draft' }).click();
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     await page.getByRole('button', { name: '打开 Draft' }).first().click();
     assert.equal(await page.locator('input[placeholder="留空表示未设置"]').inputValue(), '7');
 
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('operations-primary-task').waitFor({ state: 'visible', timeout: 10000 });
     const operationsText = await page.locator('body').innerText();
     assert.match(operationsText, /虎皮鱼 · Compatibility Profile Draft 未提交审核/);
     assert.match(await page.getByTestId('operations-source-compatibility').innerText(), /Compatibility[\s\S]*可读取/, 'Ready Compatibility source stays explicit without repeating transport detail.');
@@ -72,10 +73,47 @@ try {
     const profileRegression = await page.getByTestId('profile-regression-report').innerText();
     assert.match(profileRegression, /已评估 1455 个场景/);
     assert.match(await page.locator('body').innerText(), /Canonical Evidence：1\/1/);
+
+    const profileRevisionId = new URL(page.url()).searchParams.get('revision');
+    assert.ok(profileRevisionId, 'Profile WorkItem deep-link must retain the selected revision id.');
+    await page.evaluate(([key, revisionId]) => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      const revision = state.profileRevisions.find(item => item.id === revisionId);
+      revision.regressionReport = undefined;
+      revision.evidenceResolution = [];
+      localStorage.setItem(key, JSON.stringify(state));
+    }, [compatibilityKey, profileRevisionId]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    const profileRepair = page.getByTestId('profile-review-check-repair');
+    await profileRepair.waitFor({ state: 'visible' });
+    assert.match(await profileRepair.innerText(), /Regression \/ Canonical Evidence[\s\S]*生成完成后再进入人工审核/);
+    assert.equal(await page.getByRole('button', { name: '批准 revision（不发布）' }).count(), 0, 'Incomplete pending-review checks must hide approval instead of exposing a dead action.');
+    await profileRepair.getByRole('button', { name: '重新生成发布前检查' }).click();
+    await page.getByTestId('profile-regression-report').waitFor();
+    assert.match(await page.locator('body').innerText(), /Canonical Evidence：1\/1/);
+    await page.getByRole('button', { name: '批准 revision（不发布）' }).click();
+
+    await page.evaluate(([key, revisionId]) => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      const revision = state.profileRevisions.find(item => item.id === revisionId);
+      revision.impactReport = undefined;
+      revision.regressionReport = undefined;
+      revision.evidenceResolution = [];
+      localStorage.setItem(key, JSON.stringify(state));
+    }, [compatibilityKey, profileRevisionId]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    const approvedRepair = page.getByTestId('profile-review-check-repair');
+    await approvedRepair.waitFor({ state: 'visible' });
+    assert.match(await approvedRepair.innerText(), /当前旧批准会撤销并回到待审核，必须重新人工批准/);
+    assert.equal(await page.getByRole('button', { name: '发布 reviewed version' }).count(), 0, 'Approved revision with missing checks must not expose publish.');
+    await approvedRepair.getByRole('button', { name: '重新生成发布前检查' }).click();
+    await page.getByTestId('profile-regression-report').waitFor();
+    assert.match(await page.getByTestId('compatibility-draft-editor').innerText(), /待审核/);
+    assert.equal(await page.getByRole('button', { name: '发布 reviewed version' }).count(), 0, 'Repairing an approved revision must revoke the stale approval.');
     await page.getByRole('button', { name: '批准 revision（不发布）' }).click();
     await page.getByRole('button', { name: '发布 reviewed version' }).click();
     await page.waitForFunction(() => document.body.innerText.includes('Profile reviewed version 已发布'));
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     const profilePublishedText = await page.locator('body').innerText();
     assert.match(profilePublishedText, /虎皮鱼[\s\S]{0,500}最低群体：7/);
@@ -88,13 +126,13 @@ try {
     assert.match(await profileClosureNotice.innerText(), /已返回工作台[\s\S]*虎皮鱼 · Compatibility Profile[\s\S]*当前队列未找到这条任务/, 'Publishing the exact Compatibility Profile task must close it out of the refreshed Operations queue.');
     assert.doesNotMatch(await page.getByTestId('operations-primary-task').innerText(), /虎皮鱼 · Compatibility Profile/, 'Completed Compatibility Profile task must not remain as the current priority after returning.');
 
-    await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     await page.getByRole('button', { name: '创建 Pair Draft' }).first().click();
     const pairEditor = page.getByTestId('compatibility-pair-draft-editor');
     await pairEditor.locator('select').first().selectOption('caution');
     await page.getByRole('button', { name: '保存 Pair Draft' }).click();
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     await page.getByRole('button', { name: /打开 Pair Draft/ }).first().click();
     assert.equal(await page.getByTestId('compatibility-pair-draft-editor').locator('select').first().inputValue(), 'caution');
@@ -105,15 +143,34 @@ try {
     assert.match(pairRegression, /已评估 3 个场景/);
     assert.match(pairRegression, /结果变化 3 个/);
     assert.match(await page.locator('body').innerText(), /Canonical Evidence：2\/2/);
+    const pairRevisionId = page.getByTestId('compatibility-pair-draft-editor');
+    const pairStateId = await page.evaluate(key => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      return state.pairRevisions.find(item => item.status === 'pending_review')?.id || null;
+    }, compatibilityKey);
+    assert.ok(pairStateId, 'Pair pending-review fixture must expose an active revision.');
+    await page.evaluate(([key, revisionId]) => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      const revision = state.pairRevisions.find(item => item.id === revisionId);
+      revision.regressionReport = undefined;
+      localStorage.setItem(key, JSON.stringify(state));
+    }, [compatibilityKey, pairStateId]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('button', { name: /打开 Pair 待审核/ }).first().click();
+    const pairRepair = page.getByTestId('pair-review-check-repair');
+    await pairRepair.waitFor({ state: 'visible' });
+    assert.equal(await page.getByRole('button', { name: '批准 Pair revision（不发布）' }).count(), 0, 'Incomplete Pair checks must hide approval.');
+    await pairRepair.getByRole('button', { name: '重新生成发布前检查' }).click();
+    await pairRevisionId.getByTestId('pair-regression-report').waitFor();
     await page.getByRole('button', { name: '批准 Pair revision（不发布）' }).click();
     await page.getByRole('button', { name: '发布 Pair reviewed version' }).click();
     await page.waitForFunction(() => document.body.innerText.includes('Pair Rule reviewed version 已发布'));
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     const pairPublishedText = await page.locator('body').innerText();
     assert.match(pairPublishedText, /迷你鹦鹉鱼 × 虎皮鱼[\s\S]{0,300}谨慎混养/);
     assert.match(pairPublishedText, /Local baseline 4\/4/);
-    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
     const publishCenterText = await page.locator('body').innerText();
     for (const label of ['Compatibility Profile 已提交审核', 'Compatibility Profile 已批准', 'Compatibility Profile reviewed authority 已发布', 'Compatibility Pair Rule 已提交审核', 'Compatibility Pair Rule 已批准', 'Compatibility Pair Rule reviewed authority 已发布']) assert.match(publishCenterText, new RegExp(label));

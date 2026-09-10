@@ -76,6 +76,8 @@ assert.equal(compatibility[2]?.href, '/admin/compatibility?kind=pair&revision=p1
 assert.equal(compatibility[2]?.severity, 'attention', 'Approved revision with checks still needs live publish-gate verification.');
 assert.equal(compatibility[3]?.severity, 'blocker', 'Missing regression/evidence must become a blocker.');
 assert.match(compatibility[3]?.gateLabel || '', /Regression/);
+assert.equal(compatibility[3]?.actionLabel, '修复发布前检查', 'Missing Compatibility review artifacts must point to the explicit repair action, not a disabled approval flow.');
+assert.match(compatibility[3]?.nextStep || '', /恢复.*Regression.*Canonical Evidence/, 'Compatibility repair WorkItem must name the missing review artifacts.');
 
 const repeatedSeoAttention = Array.from({ length: 8 }, (_, index) => ({
   id: `seo-repeat-${index}`, authority: 'seo' as const, severity: 'attention' as const,

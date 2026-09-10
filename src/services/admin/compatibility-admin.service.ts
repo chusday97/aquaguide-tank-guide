@@ -104,6 +104,10 @@ export const compatibilityAdminService = {
     method: 'POST', body: { version }, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-submit'),
   }),
 
+  repairPairRuleReviewChecks: (id: string, version: number) => isLocalBusinessAdminMode ? localCompatibilityAdminStore.repairPairRuleReviewChecks(id, version) : apiRequest<AdminCompatibilityPairRuleRevision>(`/admin/compatibility/pair-rule-revisions/${id}/repair-checks`, {
+    method: 'POST', body: { version }, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-review-check-repair'),
+  }),
+
   reviewPairRuleRevision: (id: string, input: CompatibilityRevisionReviewMutation) => isLocalBusinessAdminMode ? localCompatibilityAdminStore.reviewPairRuleRevision(id, input) : apiRequest<AdminCompatibilityPairRuleRevision>(`/admin/compatibility/pair-rule-revisions/${id}/review`, {
     method: 'POST', body: input, idempotencyKey: createIdempotencyKey('compatibility-pair-rule-revision-review'),
   }),
@@ -128,6 +132,12 @@ export const compatibilityAdminService = {
     method: 'POST',
     body: { version },
     idempotencyKey: createIdempotencyKey('compatibility-profile-revision-submit'),
+  }),
+
+  repairProfileReviewChecks: (id: string, version: number) => isLocalBusinessAdminMode ? localCompatibilityAdminStore.repairProfileReviewChecks(id, version) : apiRequest<AdminCompatibilityProfileRevision>(`/admin/compatibility/profile-revisions/${id}/repair-checks`, {
+    method: 'POST',
+    body: { version },
+    idempotencyKey: createIdempotencyKey('compatibility-profile-review-check-repair'),
   }),
 
   reviewProfileRevision: (id: string, input: CompatibilityRevisionReviewMutation) => isLocalBusinessAdminMode ? localCompatibilityAdminStore.reviewProfileRevision(id, input) : apiRequest<AdminCompatibilityProfileRevision>(`/admin/compatibility/profile-revisions/${id}/review`, {
