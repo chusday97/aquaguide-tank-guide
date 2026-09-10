@@ -1016,7 +1016,7 @@
 - [x] 实际点击章节导航后锚点到达视口顶部；FAQ 可展开；黄金米虾 URL/H1/Alt 正确，浏览器返回回到极火虾。
 - [x] 宝莲灯普通访问不暴露待审核图片；本地 `assetPreview=1` 预览可显示原图。
 - [ ] 系统 Chrome Playwright 仍受 MachPort 权限影响；reduced-motion、性能指标和可读独立 Critic仍需单独完成。
-- [x] 既有 Critic 任务已针对当前 worktree 发起只读复验；最新 turn 无可读正文，旧报告基于旧提交/旧工作树，不计为当前版本通过。
+- [x] 既有 Critic 任务曾出现空输出；随后已读取同一任务针对 `93a7fad6` 的可读六维报告，旧报告仍不作为当前版本依据。
 ## 2026-09-10 待审核素材预览补齐品系卡
 
 - [x] `assetPreview=1` 现在同时预览待审核素材的 Hero 与品系卡；普通公开路由仍只读取 Published asset，未改变审核状态、聚合、metadata 或 JSON-LD。
