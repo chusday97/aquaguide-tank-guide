@@ -23,6 +23,7 @@
 - Bilingual SEO WorkItems now target the real counterpart locale (`44082ee0`); unavailable counterpart persistence is not misreported as actionable bilingual work.
 - Compatibility approved revisions blocked by runtime authority alignment now expose a read-only gate refresh (`6d01980a`); publish stays hidden until the reviewed DB/runtime baseline is exact.
 - SEO task completion is browser-proven (`393f52f7`): Care SEO task completion returns contextually to Operations, removes the completed task, and exposes the next priority without manual refresh.
+- Legacy Care snapshot repair is maintenance-isolated (`f819182a`): only immutable snapshot repair remains writable in the repair context; content fields, save/upload and downstream SEO are locked, and Local Mode does not expose the legacy-only repair UI.
 - Compatibility review-check repair is executable (`298f5810`): pending/approved revisions missing Impact / Regression / Canonical Evidence expose a single repair action; approved revisions are reset to pending_review before regenerated checks can be re-approved, and publish/approval UI requires all three artifacts.
 - Full Species SEO contract, Operations desktop/mobile matrix, Care SEO local editorial flow, Admin content UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene PASS.
 - Production/main/live Supabase/indexing remain untouched; Supabase Staging remains parked.

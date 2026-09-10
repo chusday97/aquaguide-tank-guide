@@ -32,6 +32,7 @@ Completed in the current local-first / UX phase:
 24. Bilingual SEO task targeting is exact (`44082ee0`): `missing_bilingual_pair` opens the actual counterpart locale; review-ready counterparts go directly to human review. A counterpart authority that is not writable (for example Local Care English) no longer creates a fake bilingual WorkItem.
 25. Compatibility publish-gate checking is executable (`6d01980a`): approved revisions blocked by DB/runtime baseline mismatch expose a read-only `重新检查发布资格` action; refresh never mutates the revision and publish only appears after authority alignment is restored.
 26. SEO task completion closure is browser-proven (`393f52f7`): an exact Care SEO task goes Operations → focused SEO authority → Draft → review → human approval → contextual return; the completed SEO task is absent from refreshed Operations and the next priority is immediately visible.
+27. Legacy Published Snapshot repair is isolated as maintenance-only (`f819182a`): the non-Local repair context locks Care fields, content save, image replacement and downstream SEO; only immutable snapshot repair remains actionable, and normal editing returns after the context clears. Local Mode does not expose the legacy-only repair UI.
 
 NEXT milestones:
 1. Current Product/Care, Compatibility and SEO WorkItem action→target→return loops are closed. Do not add more WorkItem machinery unless a concrete reproducible operator dead-end is observed.

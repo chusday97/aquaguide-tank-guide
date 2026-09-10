@@ -31,6 +31,7 @@ Functional checkpoint: `6d01980a fix(admin): recheck compatibility publish gate`
 - Product/Care exact-ID deep-link hydration is race-safe (`1c78ef14`): duplicate/late list loads cannot clear an already requested record back to `新草稿`; browser regressions cover 1280/390 and Operations handoffs.
 - Validation PASS: Operations desktop/mobile matrix, Care SEO Draft→Review→Approve→drift browser flow, Admin authority UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene.
 - SEO task completion is browser-proven (`393f52f7`): the exact Care SEO Operations task is completed through Draft → review → human approval, contextual return lands back on Operations, the old SEO task is gone, and the next priority is immediately visible.
+- Legacy snapshot repair is strict maintenance-only (`f819182a`): non-Local `snapshot=1` locks Care fields, save/upload and downstream review/SEO so the only write is immutable snapshot repair; Local Mode does not expose this legacy repair context. Normal Product/Care editing returns after repair clears.
 - NEXT: current Product/Care, Compatibility and SEO action→target→return loops are closed. Stop WorkItem-layer expansion unless a concrete reproducible operator badcase appears. Supabase Staging and main reconciliation remain separately gated/parked.
 
 Updated: 2026-09-10
@@ -38,7 +39,7 @@ Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `393f52f7`
+Current Operations Studio functional HEAD: `f819182a`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

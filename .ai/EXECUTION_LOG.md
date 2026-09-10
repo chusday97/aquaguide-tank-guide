@@ -1328,3 +1328,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 52/behind 0 vs feature, main-only 275/feature-only 310, merge base `ed0cf380`.
 - No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
 - NEXT: stop WorkItem-layer expansion unless a concrete reproducible operator dead-end is observed; Staging/main reconciliation stays separately gated.
+
+## 2026-09-10 — Snapshot repair maintenance isolation
+- Committed `f819182a fix(admin): isolate snapshot repair maintenance`.
+- The legacy non-Local `snapshot=1` context is now a strict maintenance surface: Care fields are disabled, content save/image replacement are hidden, and Impact/Care SEO downstream tools are not rendered while repair is active.
+- The only writable operation in that context is the dedicated immutable Published Snapshot repair. After success clears the repair context, normal Published Care actions, save/edit and downstream review return.
+- Local Mode does not expose the legacy-only repair UI even if `snapshot=1` is manually appended.
+- PASS: Admin content contract, non-Local 1280/390 repair browser flow, Local Business, Care SEO, Operations matrix, API/root TypeScript, full root build and diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 54/behind 0, main-only 275/feature-only 312, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: stop WorkItem/maintenance expansion unless another concrete reproducible operator dead-end is observed; Staging/main reconciliation remains separately gated.

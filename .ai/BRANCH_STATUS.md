@@ -1,17 +1,16 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Operations task-loop closure checkpoint (2026-09-10)
+## CURRENT OVERRIDE — Snapshot maintenance isolation checkpoint (2026-09-10)
+- Latest functional HEAD: `f819182a` (`fix(admin): isolate snapshot repair maintenance`).
 - Latest acceptance HEAD: `393f52f7` (`test(admin): prove seo task closure`).
-- Latest functional HEAD: `6d01980a` (`fix(admin): recheck compatibility publish gate`).
-- Bilingual SEO counterpart checkpoint: `44082ee0` (`fix(admin): target bilingual seo counterpart`).
-- Compatibility review-check repair: `298f5810` (`fix(admin): repair compatibility review checks`).
-- Legacy Care snapshot repair: `1c78ef14` (`fix(admin): repair legacy care publication snapshots`).
+- Compatibility publish-gate checkpoint: `6d01980a`.
+- Bilingual SEO counterpart checkpoint: `44082ee0`.
 - Live remote feature: `30ff0119`.
 - Live main: `d3c70dee`.
-- Local vs live remote feature: `ahead 52 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.
-- Main vs local checkpoint: `275 main-only / 310 feature-only`; merge base remains `ed0cf380`.
-- Product/Care, Compatibility and SEO exact task action→target→return loops are browser-proven.
+- Local vs live remote feature: `ahead 54 / behind 0`; intentionally unpushed.
+- Main vs local checkpoint: `275 main-only / 312 feature-only`; merge base remains `ed0cf380`.
+- Product/Care, Compatibility and SEO task loops remain browser-proven; legacy snapshot repair is now maintenance-only.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
 - No merge/rebase main, force push, Production/live DB, Supabase Staging or indexing mutation.
 
