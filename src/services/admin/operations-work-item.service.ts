@@ -159,12 +159,32 @@ const selectSeoIssue = (entry: SeoPageRegistrySnapshot['entries'][number]) => {
   if (entry.editorialState === 'ready_for_review' && entry.health.issues.includes('missing_editorial_review')) return 'missing_editorial_review';
   return entry.health.issues[0] || 'unknown';
 };
-const seoWorkItemHref = (entry: SeoPageRegistrySnapshot['entries'][number], issue: string) => {
+const otherSeoLocale = (locale: string) => locale === 'en' ? 'zh-CN' : 'en';
+const seoBilingualTarget = (entry: SeoPageRegistrySnapshot['entries'][number], entries: SeoPageRegistrySnapshot['entries']) => (
+  entries.find(candidate => candidate.pageType === entry.pageType
+    && candidate.sourceKey === entry.sourceKey
+    && candidate.locale === otherSeoLocale(entry.locale)) || null
+);
+const seoWorkItemHref = (entry: SeoPageRegistrySnapshot['entries'][number], issue: string, entries: SeoPageRegistrySnapshot['entries']) => {
+  if (issue === 'missing_bilingual_pair') return seoBilingualTarget(entry, entries)?.editorHref || entry.editorHref;
   if (entry.pageType !== 'care' || !['source_not_published', 'source_not_snapshot'].includes(issue)) return entry.editorHref;
   const target = new URL(entry.editorHref, 'http://aquaguide.local');
   target.searchParams.delete('seo');
   if (issue === 'source_not_snapshot') target.searchParams.set('snapshot', '1');
   return `${target.pathname}${target.search}${target.hash}`;
+};
+const seoWorkItemAction = (entry: SeoPageRegistrySnapshot['entries'][number], issue: string, entries: SeoPageRegistrySnapshot['entries']) => {
+  if (issue !== 'missing_bilingual_pair') return {
+    actionLabel: seoIssueActionLabel[issue] || '打开 SEO 页面',
+    nextStep: seoIssueNextStep[issue] || '回到对应 SEO authority 完成该页面处理',
+  };
+  const counterpart = seoBilingualTarget(entry, entries);
+  const targetLocale = counterpart?.locale === 'en' ? 'English' : counterpart?.locale === 'zh-CN' ? '中文' : '另一语言';
+  const reviewReady = counterpart?.editorialState === 'ready_for_review';
+  return {
+    actionLabel: reviewReady ? `审核 ${targetLocale} 版本` : `补齐 ${targetLocale} 版本`,
+    nextStep: reviewReady ? `打开 ${targetLocale} counterpart 完成人工审核` : `打开 ${targetLocale} counterpart 补齐独立 SEO 内容`,
+  };
 };
 
 export function buildSeoWorkItems(snapshot: SeoPageRegistrySnapshot): OperationsWorkItem[] {
@@ -173,9 +193,8 @@ export function buildSeoWorkItems(snapshot: SeoPageRegistrySnapshot): Operations
     const issue = selectSeoIssue(entry);
     const firstReason = seoIssueLabel[issue] || issue || '需要进一步检查';
     const reason = `${localeLabel(entry.locale)} · ${firstReason}`;
-    const nextStep = seoIssueNextStep[issue] || '回到对应 SEO authority 完成该页面处理';
-    const actionLabel = seoIssueActionLabel[issue] || '打开 SEO 页面';
-    const href = seoWorkItemHref(entry, issue);
+    const { nextStep, actionLabel } = seoWorkItemAction(entry, issue, snapshot.entries);
+    const href = seoWorkItemHref(entry, issue, snapshot.entries);
     if (entry.health.severity === 'blocked') return [{
       id: `seo:${entry.pageKey}:blocked`, authority: 'seo' as const, severity: 'blocker' as const,
       title: `${entry.label} · SEO 发布阻断`, detail: `${reason}。需要回到对应 SEO authority 处理。`, count: 1,

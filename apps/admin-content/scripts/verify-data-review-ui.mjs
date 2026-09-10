@@ -66,6 +66,18 @@ const verifyOperationsReturnHandoff = async () => {
   await unsafeContext.close();
 };
 
+const verifyBilingualCounterpartDeepLink = async () => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  await page.goto(`${baseUrl}/?demo=1&species=sp_0001&locale=en`, { waitUntil: 'domcontentloaded' });
+  const englishOnlyField = page.getByText('英文常用名', { exact: true });
+  await englishOnlyField.waitFor({ state: 'visible', timeout: 10000 });
+  assert.equal(new URL(page.url()).searchParams.get('locale'), 'en', 'Bilingual WorkItem counterpart deep-link must preserve the target locale.');
+  assert.equal(await page.locator('[data-editor-field="localizedName"] input').count(), 1, 'English counterpart must expose its English-only editable field.');
+  assert.equal(await page.locator('.studio-editor-area').evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Counterpart deep-link must keep the editor readable.');
+  await context.close();
+};
+
 const runViewport = async (label, viewport) => {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
@@ -252,6 +264,7 @@ const verifyPreviewLayoutMatrix = async () => {
 try {
   await waitForReady();
   await verifyOperationsReturnHandoff();
+  await verifyBilingualCounterpartDeepLink();
   await runViewport('desktop + responsive mobile', { width: 1440, height: 1000 });
   await verifyPreviewLayoutMatrix();
   console.log('PASS SEO Admin hierarchy: compact top chrome + Data Review decision flow + page/global Operations separation + responsive Preview layout.');

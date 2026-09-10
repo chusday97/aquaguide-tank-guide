@@ -254,13 +254,13 @@ export function buildCareRegistryEntries(items: AdminCareArticleRecord[], health
     const anyEditorialStarted = Boolean(editorial || counterpartEditorial);
     const editorialState = normalizeCareState(healthRow, healthKnown);
     let bilingualComplete: boolean | undefined;
-    if (healthKnown && healthRow && healthRow.persistenceAvailable && anyEditorialStarted) {
+    if (healthKnown && healthRow && healthRow.persistenceAvailable && counterpart?.persistenceAvailable && anyEditorialStarted) {
       bilingualComplete = Boolean(
         editorial
         && counterpartEditorial
         && !editorial.sourceDrift
         && !counterpartEditorial.sourceDrift
-        && counterpart?.sourceCareVersion === healthRow.sourceCareVersion,
+        && counterpart.sourceCareVersion === healthRow.sourceCareVersion,
       );
       if (editorial?.indexStrategy === 'index' && bilingualComplete) bilingualComplete = counterpartEditorial?.reviewState === 'approved';
     }

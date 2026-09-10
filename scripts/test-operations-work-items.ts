@@ -30,6 +30,26 @@ assert.match(seo[0]?.nextStep || '', /补齐 H1/);
 assert.equal(seo[0]?.actionLabel, '补齐 H1', 'SEO action copy must name the exact blocker instead of a generic page action.');
 assert.equal(seo[1]?.actionLabel, '开始人工审核', 'SEO review WorkItem must name the human-review action explicitly.');
 assert.equal(seo[2]?.actionLabel, '设置 Index 策略', 'SEO attention WorkItem must name the exact policy action explicitly.');
+const bilingualSpeciesSeo = buildSeoWorkItems({
+  entries: [
+    { pageKey: 'species:a:zh-CN', pageType: 'species', sourceKey: 'a', label: 'A', locale: 'zh-CN', editorHref: '/admin/seo/?species=a&locale=zh-CN', health: { severity: 'blocked', issues: ['missing_bilingual_pair'] }, editorialState: 'approved' },
+    { pageKey: 'species:a:en', pageType: 'species', sourceKey: 'a', label: 'A', locale: 'en', editorHref: '/admin/seo/?species=a&locale=en', health: { severity: 'attention', issues: ['missing_editorial_review'] }, editorialState: 'editing' },
+  ],
+  sources: [],
+} as any);
+assert.equal(bilingualSpeciesSeo[0]?.actionLabel, '补齐 English 版本', 'Bilingual blocker must name the actual counterpart locale.');
+assert.equal(bilingualSpeciesSeo[0]?.href, '/admin/seo/?species=a&locale=en', 'Bilingual blocker must open the incomplete counterpart instead of the already-complete locale.');
+
+const reviewReadyBilingualSpeciesSeo = buildSeoWorkItems({
+  entries: [
+    { pageKey: 'species:b:zh-CN', pageType: 'species', sourceKey: 'b', label: 'B', locale: 'zh-CN', editorHref: '/admin/seo/?species=b&locale=zh-CN', health: { severity: 'blocked', issues: ['missing_bilingual_pair'] }, editorialState: 'approved' },
+    { pageKey: 'species:b:en', pageType: 'species', sourceKey: 'b', label: 'B', locale: 'en', editorHref: '/admin/seo/?species=b&locale=en', health: { severity: 'decision', issues: ['missing_editorial_review'] }, editorialState: 'ready_for_review' },
+  ],
+  sources: [],
+} as any);
+assert.equal(reviewReadyBilingualSpeciesSeo[0]?.actionLabel, '审核 English 版本', 'Review-ready counterpart should route directly to the human-review step.');
+assert.equal(reviewReadyBilingualSpeciesSeo[0]?.href, '/admin/seo/?species=b&locale=en');
+
 const unpublishedCareSeo = buildSeoWorkItems({
   entries: [{ pageKey: 'care:guide-a:zh-CN', pageType: 'care', sourceKey: 'guide-a', label: 'Care A', locale: 'zh-CN', editorHref: '/admin/product-content?type=care&id=local-care-a&seo=1&locale=zh-CN', health: { severity: 'blocked', issues: ['source_not_published'] }, editorialState: 'source_not_published' }],
   sources: [],

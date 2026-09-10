@@ -99,6 +99,12 @@ const missingCarePair = buildCareRegistryEntries([careArticle], [
 assert.ok(missingCarePair[0]?.health.issues.includes('missing_bilingual_pair'));
 assert.equal(missingCarePair[0]?.health.severity, 'attention', 'Noindex Care bilingual incompleteness is actionable but not an index blocker');
 
+const unavailableCareCounterpart = buildCareRegistryEntries([careArticle], [
+  careHealthIndex[0],
+  { ...careHealthIndex[1], persistenceAvailable: false, editorial: null },
+]);
+assert.equal(unavailableCareCounterpart[0]?.health.issues.includes('missing_bilingual_pair'), false, 'An unavailable counterpart authority must not create a fake bilingual completion task.');
+
 const driftedCare = buildCareRegistryEntries([careArticle], [
   { ...careHealthIndex[0], editorial: careEditorial('zh-CN', true) },
   careHealthIndex[1],
