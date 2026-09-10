@@ -870,3 +870,9 @@
 - 构建输出仍有既有动态/静态导入和大字体/大 chunk 警告，未在本轮扩大范围处理。
 - 当前工作树仍只保留用户未提交的三份修改：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`；本轮未触碰或暂存。
 - 下一步：Mac 解锁后一次性完成真实浏览器三档回归；随后进行可读独立 Critic。Figma 继续暂停，页面保持 `noindex,follow`。
+
+## 2026-09-10 动效/全路由回归复查
+
+- `test:seo-motion` 与 `test:public-seo-routes` 均未进入页面断言阶段，Chromium 在启动时因 `MachPortRendezvous ... Permission denied` 退出。
+- 静态内容、证据、结构、响应式契约和构建门禁通过；不能据此宣称动效或真实点击验收通过。
+- Mac 解锁后优先执行这两个脚本，再导出三档截图；不要在当前锁定环境重复启动。

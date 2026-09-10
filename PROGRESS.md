@@ -984,3 +984,9 @@
 - [x] `git diff --check` 通过；构建仅保留既有动态/静态导入提示和中文字体、主包体积提示。
 - [ ] Mac 仍处于锁定状态，真实 390/600/1440 截图、点击返回验收、可读独立 Critic 和 Figma Canonical 仍未完成。
 - [ ] 页面继续 `noindex,follow`；不修改 `main`、Production Supabase、生产部署或用户保留的未提交文件。
+
+## 2026-09-10 动效与全路由回归环境复查
+
+- [x] Editorial、Evidence、Public Contract、Copy、Structure、Responsive Contract 全部通过。
+- [x] 全路由和动效脚本均在 Chromium 启动阶段被 macOS MachPort 权限阻止；没有把启动失败误记为页面断言通过。
+- [ ] 真实动效、FAQ 键盘展开、品系切换、Public/App 路由和三档截图仍待 Mac 解锁后一次性复验。
