@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `7ec556a3`.
+The active objective is **Final Local Acceptance complete; begin read-only feature ↔ main reconciliation audit without changing main**. Functional checkpoint: `7ec556a3`; acceptance/docs checkpoint: `8438f24e`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -37,10 +37,12 @@ Completed in the current local-first / UX phase:
 29. Local Species SEO is part of the canonical Local Admin workspace (`832537db`): `npm run dev:local-admin` starts root Web + API + standalone Species SEO, localhost links resolve to the configured SEO dev port, and Durable restart regression verifies the third app is actually reachable.
 30. Local SEO task return is browser-proven (`af886726`): standalone SEO returns across the dev port boundary with Operations task context intact.
 31. Local launcher safely reuses an already-running healthy Species SEO server (`7ec556a3`); an unrelated app on the configured SEO port is rejected fail-closed instead of being silently reused.
+32. Final Local Acceptance is PASS (`8438f24e` docs baseline): Durable Local File restart/restore, Product/Care publish isolation, Compatibility review/publish, Care SEO review/drift, Operations exact-task navigation, Publish Center audit/detail, Data Review, Admin authority UI, TypeScript and full root build all pass with no new operator blocker.
 
 NEXT milestones:
-1. Current Product/Care, Compatibility, SEO WorkItem and Publish Center audit→resource navigation loops are closed. Do not add more navigation machinery unless a concrete reproducible operator dead-end is observed.
-2. Preserve the one-command Local Admin workspace (`npm run dev:local-admin`: Web + API + Species SEO), durable data authority, centralized review boundary and Production isolation. Staging/main reconciliation stays separately gated.
+1. Final Local Acceptance is PASS. Do not resume speculative UI/WorkItem iteration unless a concrete reproducible blocker appears.
+2. Begin **read-only feature ↔ main reconciliation audit**: classify main-only/feature-only overlap, predict conflicts, preserve current functional checkpoints, and produce a safe integration plan. Do not merge/rebase/cherry-pick main yet.
+3. Supabase Staging, Production unlock and indexing remain separately gated.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 
@@ -80,13 +82,13 @@ Species SEO remains Repo-backed and fail-closed:
 11. [DONE in code] Release-readiness mechanics: exact snapshot SHA-256 + Vercel acceptance evidence + explicit human decision contract; Staging remains noindex and acceptance-evidence-only commits do not redeploy runtime.
 12. [DONE] Explicit Care SEO decision recorded as `hold_noindex`; accepted snapshot/deployment binding is current and Production/index remain locked.
 13. [DONE] AI-assisted Care SEO advisory: Published-only source extraction, conflict detection, impact explanation and SEO Draft suggestion with no auto-write/review/publish.
-14. [PARKED] Dedicated feature ↔ live-main reconciliation audit exists separately; do not resume it without explicit user scope change.
+14. [ACTIVE READ-ONLY AUDIT] Dedicated feature ↔ live-main reconciliation audit is now the active post-acceptance task. Do not merge/rebase/cherry-pick main during this audit.
 15. [DONE locally] SEO Operations Health Layer V2: effective Species Meta/H1 inheritance, bilingual/Canonical checks, Published-Care snapshot-aware batch health, source drift/legacy-source checks, health filtering and authority deep-links.
 16. [DONE locally] Browser/operator acceptance for `/admin/seo-pages`: 1440/390 zero horizontal overflow, priority-vs-unknown separation, health filter toggle/reset, issue copy, search and progressive 50-row loading.
 17. [DONE locally] Aqua Operations Studio Phase 1: task-first Operations Home + read-only Unified WorkItem aggregation across Product/Care current Drafts, Compatibility current revisions and SEO Health, with source availability isolated and ReleaseEvent history kept secondary.
 18. [DONE] Aqua Operations Studio Phase 2: resource/reason-specific WorkItems now deep-link to exact Product/Care records, Species/Care SEO editor targets, and Compatibility Profile/Pair revisions. Operations Home remains read-only and capped to one primary + eleven queue rows.
 19. [DONE in code] Aqua Operations Studio Phase 3: every actionable WorkItem exposes current gate / next step / authority verification. SEO hard blockers outrank softer issues; Compatibility missing Impact/Regression/Evidence becomes a blocker instead of ordinary attention.
-20. [NEXT] Authenticated operator acceptance with populated real WorkItems: verify resource titles/reasons, exact click-through for Product/Care + Compatibility + Species/Care SEO, and post-click ability to continue normal navigation. Do not shuttle secrets manually; use an existing secure session/binding only.
+20. [DONE locally] Operator acceptance with populated deterministic WorkItems is browser-proven for Product/Care + Compatibility + Care SEO, including exact click-through, completion, contextual return and queue refresh. Hosted credential-dependent validation remains a separate future cloud-stage gate.
 
 ## Safety
 No Production unlock. No blind main merge/rebase. No SEO field may become authority for decision-critical Product Data or Compatibility Rules.

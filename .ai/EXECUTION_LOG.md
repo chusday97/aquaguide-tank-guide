@@ -1355,3 +1355,9 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: Durable Local File restart/backup/restore E2E, Local Admin contract, Publish Center 1280/390, Operations desktop/mobile, root TypeScript and full build.
 - Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 60/behind 0, main-only 275/feature-only 318. No push/main/Production/Supabase/indexing mutation.
 - NEXT: run Final Local Acceptance across Operations → Product/Care → Compatibility → SEO → Publish Center; only fix reproducible operator blockers.
+
+## 2026-09-10 — Final Local Acceptance PASS
+- Final acceptance sequence PASS: Durable Local File full restart/backup/restore; Product/Care Draft→Published isolation; Compatibility Profile/Pair review/publish; Care SEO Draft→Review→Approve→source-drift; Operations auth/forbidden/schema + exact deep-links; Publish Center read/audit/detail; Data Review/SEO hierarchy; non-Local Admin authority UI; Product and Care runtime publish Preview; published-content isolation; Admin/Compatibility contracts; root TypeScript; full root build.
+- No new reproducible operator blocker was found. Local UI/WorkItem expansion is now closed unless a concrete badcase appears.
+- Explicit remote ref refresh: feature `e9c63560`, main `d3c70dee`, merge base `ed0cf380`; local vs feature `0/59`, main vs local `275/319`.
+- NEXT: read-only feature ↔ main reconciliation audit. Do not merge/rebase/cherry-pick main during the audit.

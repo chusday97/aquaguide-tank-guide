@@ -45,6 +45,8 @@
 - [x] One-command Local Species SEO workspace (`832537db`): Local Admin starts Web + API + standalone SEO; localhost links use the configured SEO port and Durable restart E2E verifies that third service.
 - [x] Local SEO task return acceptance (`af886726`): standalone SEO returns to root Operations with task context preserved across the dev-port boundary.
 - [x] Healthy local SEO server reuse (`7ec556a3`): existing AquaGuide SEO on the configured port is reused safely; unrelated port occupants fail closed.
+- [x] Final Local Acceptance (`8438f24e` docs baseline): end-to-end local data/edit/review/publish/navigation/audit regressions + TypeScript + full build PASS with no new operator blocker.
+- [ ] Read-only feature ↔ main reconciliation audit: classify 275 main-only / 319 feature-only divergence from merge base `ed0cf380`, identify overlapping paths/conflict clusters, and define a safe integration sequence without mutating main.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

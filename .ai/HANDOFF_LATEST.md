@@ -36,7 +36,8 @@ Functional checkpoint: `7ec556a3 fix(admin): reuse healthy local seo server`.
 - Local Species SEO workspace is connected (`832537db`): `npm run dev:local-admin` starts root Web, Local API and the standalone SEO Admin together; localhost Operations/Publish Center links resolve to the configured SEO port (default 3010), while deployed `/admin/seo/` routing is unchanged. Durable Local File restart E2E verifies the SEO app is reachable.
 - Local SEO → Operations return is browser-proven (`af886726`): cross-port return preserves the original Operations task context.
 - Local launcher reuse is safe (`7ec556a3`): a healthy existing AquaGuide Species SEO server is reused without being killed when the parent Local Admin stops; an unrelated service occupying the configured SEO port causes an explicit startup failure.
-- NEXT: current task loops, Publish Center audit→resource links, and Local Web/API/Species-SEO workspace routing are closed. Stop navigation/WorkItem expansion unless a concrete reproducible operator badcase appears. Supabase Staging and main reconciliation remain separately gated/parked.
+- Final Local Acceptance is PASS (`8438f24e` docs baseline): Local File restart/backup/restore, Product/Care, Compatibility, Care SEO, Operations, Publish Center, Data Review, Admin authority UI, TypeScript and full root build all passed with no new operator blocker.
+- NEXT: local operator acceptance is complete. Start read-only feature ↔ main reconciliation audit only; do not merge/rebase/cherry-pick main until the overlap/conflict plan is explicit. Supabase Staging/Production/indexing remain separately gated.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`

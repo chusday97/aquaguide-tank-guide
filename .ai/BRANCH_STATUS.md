@@ -1,18 +1,17 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Final Local Acceptance entry checkpoint (2026-09-10)
+## CURRENT OVERRIDE — Final Local Acceptance PASS / reconciliation audit entry (2026-09-10)
 - Latest functional HEAD: `7ec556a3` (`fix(admin): reuse healthy local seo server`).
-- Latest local SEO return acceptance: `af886726`.
-- Local Species SEO workspace checkpoint: `832537db`.
-- Publish Center exact audit-link checkpoint: `4fd1e280`.
-- Live remote feature: `30ff0119`.
-- Live main: `d3c70dee`.
-- Local vs live remote feature: `ahead 60 / behind 0`; intentionally unpushed by this workflow.
-- Main vs local checkpoint: `275 main-only / 318 feature-only`; merge base remains `ed0cf380`.
-- Local Admin now supports one-command Web + API + Species SEO, exact audit deep-links, cross-port task return, and safe reuse of an existing healthy SEO server.
-- Feature remains not merge-ready with main; dedicated reconciliation stays parked.
-- No merge/rebase main, force push, Production/live DB, Supabase Staging or indexing mutation.
+- Latest acceptance/docs HEAD: `8438f24e` (`docs(admin): enter final local acceptance`).
+- Live remote feature re-fetched explicitly: `e9c63560`.
+- Live main re-fetched explicitly: `d3c70dee`.
+- Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Local vs live remote feature: `ahead 59 / behind 0`; intentionally unpushed by this workflow.
+- Main vs local acceptance HEAD: `275 main-only / 319 feature-only`.
+- Final Local Acceptance PASS across local durability, Product/Care, Compatibility, Care SEO, Operations, Publish Center, Data Review, authority UI, TypeScript and full build.
+- Next scope is read-only reconciliation audit only. Feature is not merge-ready by default.
+- No merge/rebase/cherry-pick main, force push, Production/live DB, Supabase Staging or indexing mutation.
 
 Updated: 2026-09-10
 
