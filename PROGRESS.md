@@ -1016,3 +1016,4 @@
 - [x] 实际点击章节导航后锚点到达视口顶部；FAQ 可展开；黄金米虾 URL/H1/Alt 正确，浏览器返回回到极火虾。
 - [x] 宝莲灯普通访问不暴露待审核图片；本地 `assetPreview=1` 预览可显示原图。
 - [ ] 系统 Chrome Playwright 仍受 MachPort 权限影响；reduced-motion、性能指标和可读独立 Critic仍需单独完成。
+- [x] 既有 Critic 任务已针对当前 worktree 发起只读复验；最新 turn 无可读正文，旧报告基于旧提交/旧工作树，不计为当前版本通过。

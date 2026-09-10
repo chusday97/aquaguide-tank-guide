@@ -22,6 +22,7 @@
 - 已实际验证章节锚点、FAQ 展开、黄金米虾品系切换与浏览器返回；宝莲灯普通访问保持图片回退，`assetPreview=1` 仅用于本地预览。
 - 系统 Chrome Playwright 仍是独立环境缺口；reduced-motion、性能指标、托管 Preview 截图和可读独立 Critic 未完成，不能宣称最终验收或解除索引。
 - 下一步：保持 Figma 暂停，先完成可读独立 Critic；系统 Chrome 恢复后只补跑一次，不重复启动失败进程。
+- Critic 状态：当前 worktree 的最新复验 turn 已结束但返回空正文；旧报告仅作历史参考，不能替代当前版本六维审查。
 
 ## 2026-09-10 公开 metadata 架构门禁
 

@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Verified: 2026-09-10 核心 Evidence、Public SEO contract、lint、build 和 diff-check 复跑通过；Species Playwright 仍仅在 Chromium 启动阶段受 MachPort 权限阻塞，未冒充浏览器验收通过。
+- Blocked: 2026-09-10 既有 Critic 任务针对当前 worktree 的复验 turn 已完成但无可读正文；旧报告基于旧提交/旧工作树，不作为当前版本独立审查通过证据。
 - Verified: Codex 内置浏览器完成三条 Species 路径在 390/600/1440px 的真实滚动、结构、无溢出、robots、图片状态和关键交互验收；系统 Chrome Playwright 仍是独立环境缺口。
 - Verified: 当前公开 SEO 提交 `a4c4bcfb` 的 production build 与 `git diff --check` 通过；保留既有字体与代码分包警告，未改变页面内容、索引策略或用户未提交文件。
 - Blocked: `test:seo-motion` 与 `test:public-seo-routes` 在 Chromium 启动阶段受 macOS MachPort 权限阻塞；本轮未把启动失败计作动效、点击或响应式验收通过。

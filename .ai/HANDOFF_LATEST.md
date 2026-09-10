@@ -21,12 +21,13 @@
 ## 阻塞与禁止项
 
 - 系统 Playwright 浏览器仍受 macOS MachPort/进程权限阻塞；内置浏览器证据已通过，但不能把它扩写成系统 Chrome 自动化通过。reduced-motion 与性能指标仍未完成。
+- 已尝试让既有 Critic 任务复验当前 worktree；最新 turn 已结束但没有返回正文。旧 turn 的可读报告基于旧提交/旧工作树，不能作为当前 Critic 通过证据。
 - Figma Canonical 模板和可读独立 Critic 尚未完成。
 - 不调用 Figma、不修改 `main`、Production Supabase 或生产部署，不解除 `noindex`。
 
 ## 下一步
 
-1. 启动一次只读独立 Critic；必须取得可读六维正文，空正文继续按基础设施阻塞处理。
+1. 不把当前空 Critic 输出算作通过；待审查任务可读输出恢复后，再进行一次当前 SHA 的只读复验。
 2. Critic 修复/复验后，系统 Chrome 恢复时只补跑一次 Species/公开路由自动化；不重复启动失败进程。
 3. 等待 Figma 配额恢复后集中补 Canonical 模板。
 4. 最后才做关键词归属、canonical、结构化数据、Sitemap 和用户批准的非生产索引候选。
