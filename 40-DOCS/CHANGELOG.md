@@ -601,6 +601,7 @@
 ### [Unreleased] Verification
 
 - 补充内置浏览器交互证据：Species 品系跳转/返回、FAQ 展开和 Category Public Shell 入口均可复核；不替代系统 Chrome、性能和独立 Critic 门禁。
+- 补充宝莲灯鱼类样板复核：环境、中层活动、群游数量和觅食答案可见，pending 图片继续回退；一次连接拒绝归因为预览服务停止。
 
 ### Removed
 
