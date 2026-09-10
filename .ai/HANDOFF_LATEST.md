@@ -30,14 +30,15 @@ Functional checkpoint: `6d01980a fix(admin): recheck compatibility publish gate`
 - Compatibility publish-gate recheck is closed (`6d01980a`): an approved revision with DB/runtime baseline mismatch now exposes `重新检查发布资格`, which only refreshes the reviewed runtime bootstrap. Publish remains hidden until exact authority coverage returns; the approved revision itself is not mutated by the check.
 - Product/Care exact-ID deep-link hydration is race-safe (`1c78ef14`): duplicate/late list loads cannot clear an already requested record back to `新草稿`; browser regressions cover 1280/390 and Operations handoffs.
 - Validation PASS: Operations desktop/mobile matrix, Care SEO Draft→Review→Approve→drift browser flow, Admin authority UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene.
-- NEXT: current action→target mismatches are closed. Prove SEO task completion → contextual return → Operations refresh/next-priority closure, then stop unless a concrete operator badcase appears. Do not add new authority layers. Supabase Staging remains parked.
+- SEO task completion is browser-proven (`393f52f7`): the exact Care SEO Operations task is completed through Draft → review → human approval, contextual return lands back on Operations, the old SEO task is gone, and the next priority is immediately visible.
+- NEXT: current Product/Care, Compatibility and SEO action→target→return loops are closed. Stop WorkItem-layer expansion unless a concrete reproducible operator badcase appears. Supabase Staging and main reconciliation remain separately gated/parked.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `6d01980a`
+Current Operations Studio functional HEAD: `393f52f7`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

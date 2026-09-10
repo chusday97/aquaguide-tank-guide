@@ -39,7 +39,7 @@
 - [x] Compatibility missing-check repair (`298f5810`): missing Impact / Regression / Canonical Evidence has one executable repair path; approved revisions drop back to pending review and require fresh human approval.
 - [x] Bilingual SEO counterpart targeting (`44082ee0`): tasks open the actual counterpart locale; review-ready counterparts route to review; unavailable Local Care English does not create fake actionable work.
 - [x] Compatibility publish-gate recheck (`6d01980a`): approved revisions blocked on runtime baseline alignment can re-read authority without mutation; publish appears only after exact alignment.
-- [ ] Prove SEO task completion → return → refreshed Operations closure for an executable local/fixture SEO task.
+- [x] SEO task completion closure (`393f52f7`): exact Care SEO task → Draft → review → human approval → contextual return; completed task leaves refreshed Operations and next priority is visible.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

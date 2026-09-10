@@ -1318,3 +1318,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 50/behind 0 vs feature, main-only 275/feature-only 308, merge base `ed0cf380`.
 - No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
 - NEXT: prove one real SEO WorkItem completion → return → refreshed Operations closure; do not add new authority layers unless a concrete operator dead-end is observed.
+
+## 2026-09-10 — SEO exact-task closure acceptance
+- Committed `393f52f7 test(admin): prove seo task closure`.
+- Browser-proven local Care SEO flow: Operations exact `设置 Index 策略` task → focused Care SEO authority → create Draft → submit review → human approve → return to Operations.
+- On return, refreshed Operations no longer contains the completed `新鱼入缸 · SEO 需要完善` task and exposes the next current priority immediately; no manual refresh is required.
+- Existing source-drift regression still runs after the closure assertion, so task closure does not weaken Published-source drift protection or the Local English/AI fail-closed boundary.
+- PASS: Care SEO browser flow at 1280/390, Operations WorkItems + desktop/mobile matrix, Admin authority UI, root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 52/behind 0 vs feature, main-only 275/feature-only 310, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: stop WorkItem-layer expansion unless a concrete reproducible operator dead-end is observed; Staging/main reconciliation stays separately gated.

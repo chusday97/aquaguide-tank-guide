@@ -31,10 +31,11 @@ Completed in the current local-first / UX phase:
 23. Compatibility pre-publish check repair is operational (`298f5810`): pending/approved revisions missing Impact / Regression / Canonical Evidence expose one executable repair path. Repair recomputes only review artifacts; approved revisions are reset to `pending_review` and require a fresh human approval before publish.
 24. Bilingual SEO task targeting is exact (`44082ee0`): `missing_bilingual_pair` opens the actual counterpart locale; review-ready counterparts go directly to human review. A counterpart authority that is not writable (for example Local Care English) no longer creates a fake bilingual WorkItem.
 25. Compatibility publish-gate checking is executable (`6d01980a`): approved revisions blocked by DB/runtime baseline mismatch expose a read-only `重新检查发布资格` action; refresh never mutates the revision and publish only appears after authority alignment is restored.
+26. SEO task completion closure is browser-proven (`393f52f7`): an exact Care SEO task goes Operations → focused SEO authority → Draft → review → human approval → contextual return; the completed SEO task is absent from refreshed Operations and the next priority is immediately visible.
 
 NEXT milestones:
-1. WorkItem action→target audit is now closed for the current Product/Care, Compatibility and SEO task classes. Next prove SEO task completion → return → Operations refresh/next-priority closure without weakening any authority boundary.
-2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
+1. Current Product/Care, Compatibility and SEO WorkItem action→target→return loops are closed. Do not add more WorkItem machinery unless a concrete reproducible operator dead-end is observed.
+2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget. Staging/main reconciliation stays separately gated.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 
