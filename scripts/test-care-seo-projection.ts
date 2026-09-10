@@ -55,6 +55,8 @@ const contract = readFileSync(resolve(root, 'packages/contracts/src/care-seo.ts'
 const page = readFileSync(resolve(root, 'src/pages/AdminContent.tsx'), 'utf8');
 const app = readFileSync(resolve(root, 'src/App.tsx'), 'utf8');
 const carePage = readFileSync(resolve(root, 'src/pages/CareEncyclopedia.tsx'), 'utf8');
+const careSeoUi = readFileSync(resolve(root, 'src/components/admin/CareSeoProjectionPreview.tsx'), 'utf8');
+const impactUi = readFileSync(resolve(root, 'src/components/admin/ContentImpactPreview.tsx'), 'utf8');
 
 assert.match(adminRoute, /care-articles\/:id\/seo-projection/);
 assert.match(adminRoute, /getCurrentCareSeoProjection/);
@@ -66,6 +68,12 @@ assert.match(editorialApi, /legacy-published/);
 assert.match(contract, /protectedSourceFields/);
 assert.match(contract, /publishReady: boolean/);
 assert.match(page, /CareSeoProjectionPreview/);
+assert.doesNotMatch(careSeoUi, /(?:violet|indigo|sky)-/, 'Care SEO downstream UI must stay inside Graphite/White/Green with decision Amber; do not reintroduce a separate purple/blue product theme.');
+assert.match(careSeoUi, /reviewState === 'ready_for_review'[\s\S]*bg-amber-100/, 'Amber status must remain reserved for the human-review state.');
+assert.match(careSeoUi, /care-seo-ai-conflicts[\s\S]*border-amber-200 bg-amber-50/, 'AI conflict evidence must remain an explicit human-confirmation state.');
+assert.match(careSeoUi, /人工批准[\s\S]*bg-amber-600|bg-amber-600[\s\S]*人工批准/, 'Human approval must remain the explicit decision action.');
+assert.doesNotMatch(impactUi, /(?:violet|sky)-/, 'Content Impact categories must not create extra blue/purple visual authorities.');
+assert.match(impactUi, /needsHumanReview[\s\S]*border-amber-200 bg-amber-50\/35[\s\S]*border-slate-200 bg-white/, 'Impact container must use Amber only when an independent human review is actually required.');
 assert.doesNotMatch(page, /saveCareSeo|publishCareSeo|createCareSeo/);
 assert.match(app, /path="\/care\/:topicId"/);
 assert.match(carePage, /care-canonical-topic-page/);

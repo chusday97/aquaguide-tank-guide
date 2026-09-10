@@ -4,9 +4,9 @@ import { contentImpactLabels } from '../../services/admin/content-impact.service
 const kindClass: Record<ContentImpactKind, string> = {
   display_only: 'border-slate-200 bg-slate-50 text-slate-700',
   decision_critical_product: 'border-amber-200 bg-amber-50 text-amber-800',
-  care_workflow: 'border-sky-200 bg-sky-50 text-sky-800',
-  compatibility_rule: 'border-violet-200 bg-violet-50 text-violet-800',
-  seo_only: 'border-emerald-200 bg-emerald-50 text-emerald-800',
+  care_workflow: 'border-slate-200 bg-slate-50 text-slate-700',
+  compatibility_rule: 'border-slate-200 bg-slate-50 text-slate-700',
+  seo_only: 'border-slate-200 bg-slate-50 text-slate-700',
 };
 
 const formatValue = (value: unknown) => {
@@ -36,8 +36,9 @@ export default function ContentImpactPreview({ impact, saved = false, savedLabel
 
   const direct = impact.directConsumers.map(id => contentImpactLabels.consumers[id]);
   const review = impact.reviewConsumers.map(id => contentImpactLabels.consumers[id]);
+  const needsHumanReview = review.length > 0;
   return (
-    <section data-testid="content-impact-preview" className={`${compact ? 'mt-3' : 'mb-5'} rounded-[18px] border border-amber-200 bg-[#fffaf0] p-4`}>
+    <section data-testid="content-impact-preview" className={`${compact ? 'mt-3' : 'mb-5'} border p-4 ${needsHumanReview ? 'border-amber-200 bg-amber-50/35' : 'border-slate-200 bg-white'}`}>
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <div className="text-sm font-black">变更影响预览</div>

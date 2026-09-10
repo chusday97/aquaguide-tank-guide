@@ -137,24 +137,24 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
   };
 
   return (
-    <section data-testid="care-seo-projection" className="mb-4 rounded-[20px] border border-violet-200 bg-violet-50/55 p-4 md:p-5">
+    <section data-testid="care-seo-projection" className="mb-4 border border-slate-200 bg-white p-4 md:p-5">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <div className="text-xs font-black uppercase tracking-[0.12em] text-violet-700">Care SEO Editorial · downstream only</div>
+          <div className="text-xs font-black uppercase tracking-[0.12em] text-ink/45">Care SEO Editorial · downstream only</div>
           <h3 className="mt-1 text-base font-black text-ink">Published Care → SEO Draft → Review → Approved</h3>
         </div>
         <div className="flex flex-wrap gap-2 text-[11px] font-black">
-          <span className="rounded-full bg-white px-3 py-1.5 text-violet-700">Published v{projection.sourceCareVersion}</span>
-          <span className={`rounded-full px-3 py-1.5 ${sourceDrift ? 'bg-red-100 text-red-800' : editorial?.reviewState === 'approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}`}>{reviewLabel}</span>
+          <span className="border border-slate-200 bg-slate-50 px-3 py-1.5 text-ink/60">Published v{projection.sourceCareVersion}</span>
+          <span className={`rounded-full px-3 py-1.5 ${sourceDrift ? 'bg-red-100 text-red-800' : editorial?.reviewState === 'approved' ? 'bg-emerald-100 text-emerald-800' : editorial?.reviewState === 'ready_for_review' ? 'bg-amber-100 text-amber-800' : 'bg-slate-100 text-slate-700'}`}>{reviewLabel}</span>
           <span className="rounded-full bg-slate-100 px-3 py-1.5 text-slate-700">noindex locked</span>
         </div>
       </div>
 
       <div className="mt-3 flex gap-2" aria-label="Care SEO locale">
-        {(['zh-CN', 'en'] as SupportedLocale[]).map(item => <button key={item} type="button" disabled={busy || (isLocalBusinessAdminMode && item === 'en')} onClick={() => setLocale(item)} className={`h-9 rounded-full px-3 text-xs font-black ${locale === item ? 'bg-violet-700 text-white' : 'border border-violet-200 bg-white text-violet-700'}`}>{item === 'zh-CN' ? '中文' : isLocalBusinessAdminMode ? 'English（待接入）' : 'English'}</button>)}
+        {(['zh-CN', 'en'] as SupportedLocale[]).map(item => <button key={item} type="button" disabled={busy || (isLocalBusinessAdminMode && item === 'en')} onClick={() => setLocale(item)} className={`h-9 rounded-full px-3 text-xs font-black ${locale === item ? 'bg-ink text-white' : 'border border-slate-200 bg-white text-ink/60'}`}>{item === 'zh-CN' ? '中文' : isLocalBusinessAdminMode ? 'English（待接入）' : 'English'}</button>)}
       </div>
 
-      {!workspace.persistenceAvailable && <div className="mt-4 flex gap-2 rounded-[14px] border border-amber-200 bg-amber-50 p-3 text-xs font-bold leading-5 text-amber-950"><ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" /><span>当前环境尚未应用 Care SEO Editorial migration，因此这里只读展示 Published projection；不会降级写入其他 authority。</span></div>}
+      {!workspace.persistenceAvailable && <div className="mt-4 flex gap-2 border border-slate-200 bg-slate-50 p-3 text-xs font-bold leading-5 text-ink/65"><ShieldAlert className="mt-0.5 h-4 w-4 shrink-0" /><span>当前环境尚未应用 Care SEO Editorial migration，因此这里只读展示 Published projection；不会降级写入其他 authority。</span></div>}
       {sourceDrift && editorial && <div data-testid="care-seo-source-drift" className="mt-4 rounded-[14px] border border-red-200 bg-red-50 p-3 text-xs font-bold leading-5 text-red-900">Source drift：这份 SEO revision 绑定 Published Care v{editorial.sourceCareVersion}，当前已是 v{projection.sourceCareVersion}。旧 Draft/Review 不能继续批准；需显式创建基于新 Published 版本的 Draft。</div>}
       {error && <div role="alert" className="mt-4 rounded-[14px] bg-red-50 p-3 text-xs font-bold text-red-700">{error}</div>}
 
@@ -165,33 +165,33 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
         <EditorialField label="Focus Keyword" value={form.focusKeyword} disabled={!canEdit || !workspace.persistenceAvailable || busy} maxLength={160} onChange={value => setForm(current => ({ ...current, focusKeyword: value }))} />
       </div>
 
-      <div data-testid="care-seo-ai-assist" className="mt-4 rounded-[16px] border border-indigo-200 bg-white p-3 md:p-4">
+      <div data-testid="care-seo-ai-assist" className="mt-4 border border-slate-200 bg-white p-3 md:p-4">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] text-indigo-700"><Sparkles className="h-4 w-4" />AI Assist · suggestion only</div>
+            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-[0.1em] text-ink/55"><Sparkles className="h-4 w-4" />AI Assist · suggestion only</div>
             <p className="mt-1 text-xs font-semibold leading-5 text-ink/50">只读取当前 Published Care v{projection.sourceCareVersion}。AI 可以提取搜索意图、指出冲突并建议 SEO 文案，但不能修改 Care facts、审批或发布。</p>
           </div>
-          <button type="button" disabled={aiBusy || busy || isLocalBusinessAdminMode} onClick={() => void runAiAssist()} className="flex h-9 items-center gap-2 rounded-full bg-indigo-700 px-3 text-xs font-black text-white disabled:opacity-50">{aiBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}{isLocalBusinessAdminMode ? 'Local AI 未接入' : aiBusy ? 'AI 分析中…' : aiAssist ? '重新生成 AI 建议' : 'AI 分析并建议草稿'}</button>
+          <button type="button" disabled={aiBusy || busy || isLocalBusinessAdminMode} onClick={() => void runAiAssist()} className="flex h-9 items-center gap-2 bg-ink px-3 text-xs font-black text-white disabled:opacity-50">{aiBusy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}{isLocalBusinessAdminMode ? 'Local AI 未接入' : aiBusy ? 'AI 分析中…' : aiAssist ? '重新生成 AI 建议' : 'AI 分析并建议草稿'}</button>
         </div>
         {aiAssist && <div className="mt-3 grid gap-3">
           <div className="grid gap-2 md:grid-cols-2">
-            <div className="rounded-[12px] bg-indigo-50 p-3 text-xs leading-5"><div className="font-black text-indigo-900">Source extraction</div><p className="mt-1 font-bold text-ink/65">{aiAssist.sourceExtraction.primaryTopic}</p><p className="mt-1 text-ink/52">搜索意图：{aiAssist.sourceExtraction.searchIntent}</p><p className="mt-1 text-ink/45">关键词：{aiAssist.sourceExtraction.keyTerms.join(' · ') || '—'}</p></div>
+            <div className="bg-slate-50 p-3 text-xs leading-5"><div className="font-black text-ink/70">Source extraction</div><p className="mt-1 font-bold text-ink/65">{aiAssist.sourceExtraction.primaryTopic}</p><p className="mt-1 text-ink/52">搜索意图：{aiAssist.sourceExtraction.searchIntent}</p><p className="mt-1 text-ink/45">关键词：{aiAssist.sourceExtraction.keyTerms.join(' · ') || '—'}</p></div>
             <div className="rounded-[12px] bg-slate-50 p-3 text-xs leading-5"><div className="font-black text-ink/70">Impact explanation</div><p className="mt-1 font-semibold text-ink/55">{aiAssist.impactExplanation.summary}</p><p className="mt-1 text-ink/45">建议变更：{aiAssist.impactExplanation.changedEditorialFields.join(' / ') || '无'}</p></div>
           </div>
           {aiAssist.sourceExtraction.safetyBoundaries.length > 0 && <div className="rounded-[12px] border border-emerald-200 bg-emerald-50 p-3 text-xs leading-5 text-emerald-950"><div className="font-black">不能越过的 Care 边界</div><ul className="mt-1 list-disc pl-5">{aiAssist.sourceExtraction.safetyBoundaries.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></div>}
           {aiAssist.conflicts.length > 0 && <div data-testid="care-seo-ai-conflicts" className="rounded-[12px] border border-amber-200 bg-amber-50 p-3 text-xs leading-5 text-amber-950"><div className="font-black">冲突 / 缺口 · 需要人工确认</div><ul className="mt-1 grid gap-1">{aiAssist.conflicts.map((item, index) => <li key={`${item.type}-${item.field}-${index}`}><span className="font-black">[{item.severity}] {item.field}</span> · {item.explanation}</li>)}</ul></div>}
           {aiAssist.reviewWarnings.length > 0 && <div className="rounded-[12px] bg-slate-50 p-3 text-xs leading-5 text-ink/60"><div className="font-black">Review warnings</div><ul className="mt-1 list-disc pl-5">{aiAssist.reviewWarnings.map((item, index) => <li key={`${item}-${index}`}>{item}</li>)}</ul></div>}
-          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 text-[11px] font-bold text-ink/40"><span>绑定 Published v{aiAssist.sourceBinding.sourceCareVersion} · {aiAssist.provider.model} · noindex</span>{canEdit && workspace.persistenceAvailable && <button type="button" onClick={applyAiDraftLocally} className="h-9 rounded-full border border-indigo-300 bg-indigo-50 px-3 text-xs font-black text-indigo-800">应用到本地表单（不保存）</button>}</div>
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t border-slate-100 pt-3 text-[11px] font-bold text-ink/40"><span>绑定 Published v{aiAssist.sourceBinding.sourceCareVersion} · {aiAssist.provider.model} · noindex</span>{canEdit && workspace.persistenceAvailable && <button type="button" onClick={applyAiDraftLocally} className="h-9 border border-slate-200 bg-white px-3 text-xs font-black text-ink/65">应用到本地表单（不保存）</button>}</div>
         </div>}
       </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
-        {canEdit && workspace.persistenceAvailable && <button type="button" disabled={busy} onClick={() => void saveDraft()} className="flex h-10 items-center gap-2 rounded-full bg-violet-700 px-4 text-sm font-black text-white disabled:opacity-50">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{currentDraft ? '保存 SEO Draft' : sourceDrift ? `基于 Published v${projection.sourceCareVersion} 新建 Draft` : '创建 SEO Draft'}</button>}
-        {canSubmit && <button type="button" disabled={busy} onClick={() => void transition('submit')} className="flex h-10 items-center gap-2 rounded-full border border-violet-300 bg-white px-4 text-sm font-black text-violet-800 disabled:opacity-50"><Send className="h-4 w-4" />提交审核</button>}
-        {canApprove && <button type="button" disabled={busy} onClick={() => void transition('approve')} className="flex h-10 items-center gap-2 rounded-full bg-emerald-700 px-4 text-sm font-black text-white disabled:opacity-50"><CheckCircle2 className="h-4 w-4" />人工批准</button>}
+        {canEdit && workspace.persistenceAvailable && <button type="button" disabled={busy} onClick={() => void saveDraft()} className="flex h-10 items-center gap-2 bg-ink px-4 text-sm font-black text-white disabled:opacity-50">{busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{currentDraft ? '保存 SEO Draft' : sourceDrift ? `基于 Published v${projection.sourceCareVersion} 新建 Draft` : '创建 SEO Draft'}</button>}
+        {canSubmit && <button type="button" disabled={busy} onClick={() => void transition('submit')} className="flex h-10 items-center gap-2 border border-slate-200 bg-white px-4 text-sm font-black text-ink/65 disabled:opacity-50"><Send className="h-4 w-4" />提交审核</button>}
+        {canApprove && <button type="button" disabled={busy} onClick={() => void transition('approve')} className="flex h-10 items-center gap-2 bg-amber-600 px-4 text-sm font-black text-white disabled:opacity-50"><CheckCircle2 className="h-4 w-4" />人工批准</button>}
       </div>
 
-      <div className="mt-4 rounded-[16px] border border-white/80 bg-white/80 p-3">
+      <div className="mt-4 border border-slate-200 bg-white p-3">
         <div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/35">Protected Care facts · read only</div>
         <div className="mt-2 grid gap-2 text-xs font-bold text-ink/58 sm:grid-cols-2 lg:grid-cols-4">
           <span>症状：{factCount(projection.sourceFacts.symptoms)}</span><span>立即动作：{factCount(projection.sourceFacts.immediateActions)}</span><span>禁止动作：{factCount(projection.sourceFacts.avoidActions)}</span><span>Evidence：{projection.sourceFacts.evidenceCount}</span>
@@ -199,7 +199,7 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
         <p className="mt-2 text-xs font-semibold leading-5 text-ink/48">{projection.sourceFacts.summary}</p>
       </div>
 
-      <div className="mt-4 rounded-[16px] border border-amber-200 bg-amber-50 p-3 text-xs font-bold leading-5 text-amber-950">
+      <div className="mt-4 border border-slate-200 bg-slate-50 p-3 text-xs font-bold leading-5 text-ink/60">
         <div className="font-black">Production / Index 未开放 · {projection.route.candidateUrl}</div>
         <p className="mt-1">Approved 仅代表 Editorial 人工审核完成，不会自动发布。下一阶段还必须生成显式、脱敏、双语成对的 Staging snapshot 并通过 hosted acceptance。</p>
       </div>
@@ -208,5 +208,5 @@ export default function CareSeoProjectionPreview({ careId, sourceRefreshKey, ini
 }
 
 function EditorialField({ label, value, disabled, maxLength, onChange }: { label: string; value: string; disabled: boolean; maxLength: number; onChange: (value: string) => void }) {
-  return <label className="grid gap-1.5 rounded-[14px] bg-white p-3 text-[11px] font-black uppercase tracking-[0.08em] text-ink/35 shadow-sm"><span>{label}</span><textarea aria-label={label} className="min-h-[76px] resize-y rounded-[10px] border border-border px-3 py-2 text-xs font-bold normal-case tracking-normal text-ink outline-none focus:border-violet-400 disabled:bg-slate-50 disabled:text-ink/55" value={value} maxLength={maxLength} disabled={disabled} onChange={event => onChange(event.target.value)} /></label>;
+  return <label className="grid gap-1.5 border border-slate-100 bg-white p-3 text-[11px] font-black uppercase tracking-[0.08em] text-ink/35"><span>{label}</span><textarea aria-label={label} className="min-h-[76px] resize-y border border-border px-3 py-2 text-xs font-bold normal-case tracking-normal text-ink outline-none focus:border-slate-500 focus:ring-2 focus:ring-slate-100 disabled:bg-slate-50 disabled:text-ink/55" value={value} maxLength={maxLength} disabled={disabled} onChange={event => onChange(event.target.value)} /></label>;
 }
