@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `1ea56f60`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `3cb4a569`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -15,6 +15,7 @@ Completed in the current local-first / UX phase:
 8. Responsive Preview (`d1af2c08`): >=1051px uses side-by-side with editor >=480px; medium Preview defaults 340–360px; <=1050px uses closed-by-default/on-demand overlay. Multi-width browser regression PASS.
 9. Responsive regression hardening (`c258640b`): editor/panel no-overflow and >=180px policy-control readability are now permanent browser guards.
 10. Global topbar simplification (`1ea56f60`): Activity history moved under Operations with unread preservation; mobile topbar reduced from five actions to four.
+11. Publish Center hierarchy (`3cb4a569`): timeline is primary, event detail is explicit-on-selection, readiness/source summaries are compact, and Capability/Permission live in one secondary boundary disclosure. Real 390px/1280px UI regression PASS.
 
 NEXT milestones:
 1. Continue medium-width editor acceptance for internal field/layout readability and interaction, not new features.

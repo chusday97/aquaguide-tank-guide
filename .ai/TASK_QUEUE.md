@@ -24,6 +24,7 @@
 - [x] Responsive Preview (`d1af2c08`): >=1051px split keeps editor >=480px; medium Preview is 340–360px; <=1050px uses closed-by-default/on-demand overlay; browser matrix PASS.
 - [x] Medium-width editor acceptance hardening (`c258640b`): editor/panel no internal horizontal scroll; policy controls remain >=180px.
 - [x] Topbar action convergence (`1ea56f60`): Activity Center moved under Operations; unread count preserved; mobile topbar reduced to four actions.
+- [x] Publish Center hierarchy (`3cb4a569`): compact source/readiness summary, audit-first timeline, explicit-on-selection detail, secondary release-boundary disclosure, true 390px viewport regression.
 - [ ] Continue only remaining high-signal hierarchy/interaction badcases; do not add parallel tool surfaces.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 

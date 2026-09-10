@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Topbar action-convergence checkpoint (2026-09-10)
-- Latest functional HEAD: `1ea56f60` (`fix(admin): fold activity into operations`).
+- Latest functional HEAD: `3cb4a569` (`fix(admin): simplify publish center hierarchy`).
 - Live remote feature: `e9c63560de73149a0512dbe1033babf5c188e2e3`.
 - Live main: `d3c70dee633ed4e24bbca161d138a832012b1d40`.
 - Local vs live remote feature: `ahead 24 / behind 0`; intentionally unpushed to avoid unnecessary Preview/deployment consumption.

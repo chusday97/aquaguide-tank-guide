@@ -1227,3 +1227,8 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Hardened responsive browser regression at `c258640b`: editor/panel no horizontal overflow, policy controls >=180px, stable DOM-ready navigation.
 - Moved Activity Center under global Operations at `1ea56f60`; unread badge remains on Operations and 390px topbar drops from 5 actions to 4.
 - Browser hierarchy/Activity flow, full SEO contract, root TypeScript, full root build and diff hygiene PASS. No push or Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Publish Center hierarchy convergence
+- Committed `3cb4a569 fix(admin): simplify publish center hierarchy`.
+- Audit Timeline now precedes Capability/Permission reference; event detail is explicit-on-selection; source/readiness are compact; informational Amber removed.
+- Fixed Publish Center UI regression to use a real 390px Playwright viewport. PASS: Publish Center UI/contract, Operations cross-page states, root TypeScript, full root build, diff hygiene.
