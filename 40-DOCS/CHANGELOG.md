@@ -9,6 +9,7 @@
 - Verified: 内置浏览器确认分类页入口和未审核指南准备态可读；未审核步骤未进入公开内容。
 - Blocked: 当前 HEAD 的 Critic 复验已完成但仍未返回可读六维正文；旧版本报告不作为当前版本通过依据。
 - Verified: 当前 HEAD 公开SEO静态门禁、契约、lint、build 和 diff-check 复跑通过。
+- Blocked: 原生 Chrome CUA 通道返回不可用；结合 Playwright MachPort 失败，最终多视口浏览器证据等待环境恢复。
 - Fixed: 本地 `assetPreview=1` 同时覆盖待审核物种素材的 Hero 与品系卡预览；普通公开路由和 Published 门禁保持不变。
 - Verified: 2026-09-10 核心 Evidence、Public SEO contract、lint、build 和 diff-check 复跑通过；Species Playwright 仍仅在 Chromium 启动阶段受 MachPort 权限阻塞，未冒充浏览器验收通过。
 - Blocked: 2026-09-10 既有 Critic 任务针对当前 worktree 的复验 turn 已完成但无可读正文；旧报告基于旧提交/旧工作树，不作为当前版本独立审查通过证据。
