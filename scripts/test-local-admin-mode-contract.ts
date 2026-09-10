@@ -7,6 +7,8 @@ const localAssetStore = read('src/services/admin/local-asset.store.ts');
 const localFilePersistence = read('src/services/admin/local-file-persistence.ts');
 const localFileRouter = read('apps/api/src/routes/local-admin.ts');
 const localDevScript = read('scripts/dev-local-admin.mjs');
+const devWithApiScript = read('scripts/dev-with-api.mjs');
+const seoAdminNavigation = read('src/services/admin/seo-admin-navigation.ts');
 const operationsUi = read('src/pages/AdminHub.tsx');
 const viteConfig = read('vite.config.ts');
 const contentService = read('src/services/admin/content-admin.service.ts');
@@ -41,6 +43,12 @@ assert.match(localFileRouter, /atomicJsonWrite[\s\S]*rename\(temp, filePath\)/,
   'Local partition JSON must use atomic temp-file replacement.');
 assert.match(localDevScript, /ADMIN_LOCAL_FILE_MODE = 'true'[\s\S]*VITE_ADMIN_LOCAL_FILE_MODE = 'true'/,
   'The dedicated local-admin dev entrypoint must enable both server and browser Durable File guards.');
+assert.match(localDevScript, /START_SEO_ADMIN = 'true'[\s\S]*VITE_SEO_ADMIN_PORT/,
+  'The Local Admin entrypoint must explicitly start and configure the standalone Species SEO dev app.');
+assert.match(devWithApiScript, /START_SEO_ADMIN === 'true'[\s\S]*seoAdminPort[\s\S]*apps\/admin-content/,
+  'The shared dev launcher must start Species SEO as a third child only for Local Admin mode.');
+assert.match(seoAdminNavigation, /VITE_SEO_ADMIN_PORT[\s\S]*3010[\s\S]*admin\/seo/,
+  'Local standalone SEO navigation must share the configured dev port while deployed /admin/seo/ paths remain stable.');
 assert.match(viteConfig, /process\.env\.API_PORT \|\| env\.API_PORT \|\| '8787'/,
   'Vite proxy must honor an externally assigned API port so Local Admin cannot accidentally connect to another local project.');
 assert.match(operationsUi, /operations-local-persistence[\s\S]*磁盘已持久化/,

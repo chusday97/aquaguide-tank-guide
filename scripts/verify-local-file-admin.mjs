@@ -23,7 +23,9 @@ const getFreePort = () => new Promise((resolve, reject) => {
 
 const apiPort = await getFreePort();
 const webPort = await getFreePort();
+const seoAdminPort = await getFreePort();
 const baseUrl = `http://127.0.0.1:${webPort}`;
+const seoAdminBaseUrl = `http://127.0.0.1:${seoAdminPort}`;
 let child = null;
 let logs = '';
 
@@ -36,6 +38,10 @@ const waitForReady = async () => {
       if (response.ok) {
         const payload = await response.json();
         assert.equal(payload.data.root, root);
+        const seoResponse = await fetch(`${seoAdminBaseUrl}/?species=sp_0436&locale=en&demo=1`);
+        if (!seoResponse.ok) throw new Error(`Species SEO dev server returned ${seoResponse.status}.`);
+        const seoHtml = await seoResponse.text();
+        if (!seoHtml.includes('<title>AquaGuide Species SEO Admin</title>')) throw new Error('Species SEO dev server did not return the expected Admin app.');
         return;
       }
     } catch {}
@@ -52,6 +58,7 @@ const startLocalAdmin = async () => {
       ...process.env,
       API_PORT: String(apiPort),
       WEB_PORT: String(webPort),
+      SEO_ADMIN_PORT: String(seoAdminPort),
       ADMIN_LOCAL_FILE_ROOT: root,
       DISABLE_HMR: 'true',
     },

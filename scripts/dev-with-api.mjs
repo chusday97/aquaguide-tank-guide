@@ -21,6 +21,15 @@ const children = [
   }),
 ];
 
+if (process.env.START_SEO_ADMIN === 'true') {
+  const seoAdminPort = process.env.SEO_ADMIN_PORT || process.env.VITE_SEO_ADMIN_PORT || '3010';
+  children.push(spawn(viteBin, [`--port=${seoAdminPort}`, '--host=0.0.0.0', '--strictPort'], {
+    cwd: path.join(rootDir, 'apps/admin-content'),
+    stdio: 'inherit',
+    env: process.env,
+  }));
+}
+
 const stopAll = () => {
   for (const child of children) {
     if (!child.killed) child.kill('SIGTERM');

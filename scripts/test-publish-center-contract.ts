@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { getRelatedReleaseEvents, releaseEventAuthorityHref } from '../src/services/admin/release-coordination';
+import { resolveStandaloneSeoAdminHref } from '../src/services/admin/seo-admin-navigation';
 import { classifyReleaseTableRead, combineReleaseTableStates } from '../apps/api/src/release-source-readiness';
 
 const root = resolve(import.meta.dirname, '..');
@@ -101,5 +102,10 @@ assert.equal(releaseEventAuthorityHref({ id: 'compat-profile:rev-profile-1', aut
 assert.equal(releaseEventAuthorityHref({ id: 'compat-pair:rev-pair-1', authority: 'compatibility', domain: 'compatibility_pair', eventType: 'pair_rule_revision', status: 'approved', title: 'Pair', resourceKey: 'sp_0436__sp_0439', occurredAt: selectedEvent.occurredAt, sourceRef: 'local:compat-pair:rev-pair-1:4' } as any), '/admin/compatibility?kind=pair&revision=rev-pair-1', 'Local Compatibility Pair release detail must deep-link to the exact revision.');
 assert.equal(releaseEventAuthorityHref({ id: 'seo-revision:1', authority: 'seo', domain: 'seo_page', eventType: 'revision_updated', status: 'approved', title: 'SEO', resourceKey: 'sp_0436', locale: 'en', occurredAt: selectedEvent.occurredAt } as any), '/admin/seo/?species=sp_0436&locale=en', 'Species SEO page revision must deep-link to the exact locale editor.');
 assert.equal(releaseEventAuthorityHref({ id: 'seo-batch:1', authority: 'seo', domain: 'seo_batch', eventType: 'import_batch', status: 'staging_published', title: 'Batch', resourceKey: 'batch-1', occurredAt: selectedEvent.occurredAt } as any), '/admin/seo/', 'SEO batch events must fall back to the authority home because they do not identify one page.');
+assert.equal(resolveStandaloneSeoAdminHref('/admin/seo/?species=sp_0436&locale=en', 'http://127.0.0.1:3003/admin/content'), 'http://127.0.0.1:3010/?species=sp_0436&locale=en', 'Local root Admin must route standalone Species SEO to the dedicated 3010 dev app.');
+assert.equal(resolveStandaloneSeoAdminHref('/admin/seo/?species=sp_0436&locale=en', 'http://localhost:3017/admin/content'), 'http://localhost:3010/?species=sp_0436&locale=en', 'localhost root Admin must preserve host while switching to the SEO dev port.');
+assert.equal(resolveStandaloneSeoAdminHref('/admin/seo/?species=sp_0436&locale=en', 'https://feature.example.com/admin/content'), '/admin/seo/?species=sp_0436&locale=en', 'Deployed Admin must keep the stable /admin/seo/ rewrite path.');
+assert.equal(resolveStandaloneSeoAdminHref('/admin/product-content?type=care&id=x&seo=1', 'http://127.0.0.1:3003/admin/content'), '/admin/product-content?type=care&id=x&seo=1', 'Embedded Care SEO must stay inside Product/Care and never redirect to the standalone Species SEO app.');
+assert.equal(resolveStandaloneSeoAdminHref('/admin/seo/?species=sp_0436', 'http://127.0.0.1:3010/'), '/admin/seo/?species=sp_0436', 'Links already running inside the SEO dev app must not rewrite themselves.');
 
 console.log('publish center contract: multi-authority read-only aggregation + detail/readiness PASS');

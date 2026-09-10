@@ -11,6 +11,7 @@ import {
   type OperationsTaskReturnContext,
   type OperationsWorkItem,
 } from '../services/admin/operations-work-item.service';
+import { resolveStandaloneSeoAdminHref } from '../services/admin/seo-admin-navigation';
 
 const emptySnapshot: OperationsHomeSnapshot = { workItems: [], sources: [], recentEvents: [] };
 const authorityLabel = { product_care: 'Product / Care', compatibility: 'Compatibility', seo: 'SEO' } as const;
@@ -103,7 +104,7 @@ export default function AdminHub() {
       navigate(item.href, { state: { operationsReturn } });
       return;
     }
-    const target = new URL(item.href, window.location.href);
+    const target = new URL(resolveStandaloneSeoAdminHref(item.href), window.location.href);
     target.searchParams.set('returnTo', `${window.location.origin}/admin/content`);
     target.searchParams.set('returnTask', item.id);
     target.searchParams.set('returnTitle', item.title);

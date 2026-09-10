@@ -168,7 +168,7 @@ try {
     assert.match(refreshedTimeline, /SEO Staging batch 已发布/);
     await timeline.getByRole('button', { name: /SEO revision 已记录/ }).click();
     assert.match(await detail.innerText(), /SEO revision 已记录[\s\S]*Activity \/ Revision 历史[\s\S]*content_revisions:rev-1[\s\S]*zh-CN/);
-    assert.equal(await detail.getByTestId('publish-center-authority-link').getAttribute('href'), '/admin/seo/?species=sp_0436&locale=zh-CN', 'Species SEO revision detail must deep-link to the exact locale editor.');
+    assert.equal(await detail.getByTestId('publish-center-authority-link').getAttribute('href'), 'http://127.0.0.1:3010/?species=sp_0436&locale=zh-CN', 'Local Species SEO revision detail must deep-link to the dedicated 3010 SEO editor.');
     assert.match(await relatedEvidence.innerText(), /Product \/ Care[\s\S]*Product 发布版本[\s\S]*Compatibility[\s\S]*Profile reviewed version 已发布/i);
 
     productAuditHistoryReady = true;
