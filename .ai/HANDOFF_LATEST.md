@@ -11,11 +11,12 @@
 - Public Shell、Marketing、Category、Species、Guide 的 Web 结构与中文公开文案已完成。
 - Species 的 Product Truth、Base/Variant 继承、素材状态和自然志内容门禁已建立。
 - 新增公开页面结构、中文文案和响应式静态契约回归。
-- 最新相关提交：`b6bd00cf docs: record seo verification rerun`；用户保留的三份未提交文件仍未纳入提交。
+- 最新相关提交：`6bd9341c docs: record public asset fallback check`；素材预览修复提交为 `02a27ea4`，用户保留的三份未提交文件仍未纳入提交。
 
 ## 当前验证
 
 - 通过：`test:public-seo-responsive-contract`、`test:public-seo-structure`、`test:public-seo-copy`、`test:public-seo-contract`、`test:seo-editorial-evidence`、`test:seo-evidence-bindings`、`lint`、`build`、`git diff --check`。
+- 通过：`test:seo-asset-candidates`；内置浏览器实际确认黄金米虾 Hero/品系卡预览和宝莲灯普通路由图片回退，证据为 EVD-20260910-135、EVD-20260910-136。
 - 响应式静态规则覆盖桌面、平板、手机参数带列数、窄屏章节导航、平板 Hero 和 reduced-motion；Codex 内置浏览器已补充三条 Species 路径在 390/600/1440px 的真实 DOM/交互证据，包括滚动、无溢出、锚点、FAQ、品系切换和返回。
 
 ## 阻塞与禁止项
