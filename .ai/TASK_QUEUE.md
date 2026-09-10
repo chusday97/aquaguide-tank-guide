@@ -47,7 +47,8 @@
 - [x] Healthy local SEO server reuse (`7ec556a3`): existing AquaGuide SEO on the configured port is reused safely; unrelated port occupants fail closed.
 - [x] Final Local Acceptance (`8438f24e` docs baseline): end-to-end local data/edit/review/publish/navigation/audit regressions + TypeScript + full build PASS with no new operator blocker.
 - [x] Read-only feature ↔ main reconciliation audit: latest accepted local baseline measures 275 main-only / 320 local-feature-only commits from merge base `ed0cf380`; only 21 files overlap and seven product/runtime files require manual semantic resolution. See `.ai/RECONCILIATION_AUDIT_20260911.md`.
-- [ ] Compatibility v3 authority reconciliation: preserve main v3/domain-rule behavior while integrating feature runtime reviewed authority; explicitly resolve Stage Risk authority before any merge candidate is accepted.
+- [x] Compatibility v3 authority reconciliation design: preserve main v3/domain-rule behavior while integrating feature runtime reviewed authority; Stage Risk is a Profile-owned reviewed child model with dedicated Evidence mapping. Contract: `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`.
+- [ ] Build isolated reconciliation candidate/worktree: resolve low-risk unions and auto-mergeable pages first, then App/Care composition, Compatibility last. No main mutation or push.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

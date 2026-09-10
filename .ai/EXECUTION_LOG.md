@@ -1370,3 +1370,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Compatibility is the semantic merge gate: main v3/domain rules include species-specific Stage Risk evidence, while feature runtime reviewed authority currently versions/validates only Profile + Pair. A mechanical merge would create split decision authority.
 - Canonical audit written to `.ai/RECONCILIATION_AUDIT_20260911.md`. No merge/rebase/cherry-pick/main/Production/Supabase/indexing mutation.
 - NEXT: define the Stage Risk authority extension/adapter plan before building any reconciliation candidate.
+
+## 2026-09-11 — Compatibility v3 authority reconciliation design
+- Canonical implementation contract added: `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`.
+- Decision: main v3/domain-rule engine is the behavioral baseline; feature reviewed runtime authority remains the decision-data authority.
+- Existing Profile authority expands to `requiredFacts`, optional `stockingGuidance`, and Profile-owned Stage Risk rules. Stage Risk keeps dedicated Evidence mapping and publishes atomically with Profile; no third top-level Admin workflow.
+- Compatibility-only life stages retain `fry/subadult` without changing persisted livestock `LifeStage`.
+- Stage Risk evidence must remain separate from ordinary Profile citations because `evidenceFromProfile()` attaches all Profile citations to ordinary species-trait findings.
+- NEXT: build isolated local reconciliation candidate/worktree; low-risk unions first, Compatibility last. Main/Production/Supabase/indexing remain untouched.

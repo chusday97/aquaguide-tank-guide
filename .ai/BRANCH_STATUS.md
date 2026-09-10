@@ -12,7 +12,8 @@
 - Final Local Acceptance PASS across local durability, Product/Care, Compatibility, Care SEO, Operations, Publish Center, Data Review, authority UI, TypeScript and full build.
 - Reconciliation audit completed at local docs HEAD `a7ee4a13`; canonical analysis is `.ai/RECONCILIATION_AUDIT_20260911.md`.
 - File-level result: main changed 220 files, local feature 234, overlap only 21; seven product/runtime files require manual semantic resolution.
-- Merge gate: Compatibility v3 Stage Risk authority. Feature is not merge-ready until that authority boundary is resolved.
+- Compatibility v3 Stage Risk authority design is resolved in `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`; implementation remains pending in an isolated reconciliation candidate.
+- Feature is still not merge-ready; next step is local reconciliation candidate work only, with main untouched.
 - No merge/rebase/cherry-pick main, force push, Production/live DB, Supabase Staging or indexing mutation.
 
 Updated: 2026-09-10

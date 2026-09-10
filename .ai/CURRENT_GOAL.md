@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **Final Local Acceptance complete; reconciliation audit complete; resolve Compatibility v3 authority design before any integration branch is built**. Functional checkpoint: `7ec556a3`; final local acceptance docs checkpoint: `a7ee4a13`; reconciliation audit: `.ai/RECONCILIATION_AUDIT_20260911.md`.
+The active objective is **Final Local Acceptance complete; reconciliation audit + Compatibility v3 authority design complete; build an isolated reconciliation candidate without touching main**. Functional checkpoint: `7ec556a3`; final local acceptance docs checkpoint: `a7ee4a13`; reconciliation audit: `.ai/RECONCILIATION_AUDIT_20260911.md`; v3 authority contract: `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -42,7 +42,8 @@ Completed in the current local-first / UX phase:
 NEXT milestones:
 1. Final Local Acceptance is PASS. Do not resume speculative UI/WorkItem iteration unless a concrete reproducible blocker appears.
 2. Read-only feature ↔ main reconciliation audit is complete: 220 main-changed files vs 234 local-feature-changed files, only 21 overlaps; 7 overlapping files simulate with zero conflict hunks. See `.ai/RECONCILIATION_AUDIT_20260911.md`.
-3. NEXT: resolve the Compatibility v3 Stage Risk authority design. Main v3/domain rules remain the behavior base; feature runtime reviewed authority must be injected without creating split static/runtime decision authority. No integration branch merge/rebase/cherry-pick yet.
+3. Compatibility v3 authority design is complete: main v3/domain rules remain the behavior base; Profile authority expands to requiredFacts + optional stockingGuidance + Profile-owned Stage Risk rules with dedicated Evidence mapping. See `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`.
+4. NEXT: build an isolated local reconciliation candidate/worktree. Do not modify main or push; resolve low-risk unions first and Compatibility last.
 3. Supabase Staging, Production unlock and indexing remain separately gated.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.

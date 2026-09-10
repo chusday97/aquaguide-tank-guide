@@ -38,7 +38,8 @@ Functional checkpoint: `7ec556a3 fix(admin): reuse healthy local seo server`.
 - Local launcher reuse is safe (`7ec556a3`): a healthy existing AquaGuide Species SEO server is reused without being killed when the parent Local Admin stops; an unrelated service occupying the configured SEO port causes an explicit startup failure.
 - Final Local Acceptance is PASS (`8438f24e` docs baseline): Local File restart/backup/restore, Product/Care, Compatibility, Care SEO, Operations, Publish Center, Data Review, Admin authority UI, TypeScript and full root build all passed with no new operator blocker.
 - Reconciliation audit is complete: main changed 220 files, local feature 234, only 21 overlap; 7 overlap files are auto-mergeable by three-way simulation and only seven product/runtime files need manual semantic handling. Canonical audit: `.ai/RECONCILIATION_AUDIT_20260911.md`.
-- NEXT: Compatibility v3 Stage Risk authority is the semantic merge gate. Do not build an integration candidate until this authority boundary is explicit. Supabase Staging/Production/indexing remain separately gated.
+- Compatibility v3 authority design is explicit in `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`: main v3 engine stays behavioral baseline; existing Profile authority expands to requiredFacts/stockingGuidance/Profile-owned Stage Risk with dedicated Evidence mapping.
+- NEXT: build an isolated local reconciliation candidate/worktree, low-risk unions first and Compatibility last. Do not modify main or push. Supabase Staging/Production/indexing remain separately gated.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`
