@@ -134,6 +134,19 @@ const seoIssueNextStep: Record<string, string> = {
   index_strategy_unknown: '明确 index / noindex / canonical_to_sibling 策略',
   source_state_unknown: '先恢复来源权限或服务可读状态',
 };
+const seoIssueActionLabel: Record<string, string> = {
+  missing_meta_title: '补齐 Meta Title',
+  missing_meta_description: '补齐 Meta Description',
+  missing_h1: '补齐 H1',
+  missing_bilingual_pair: '补齐双语版本',
+  canonical_conflict: '修正 Canonical',
+  missing_editorial_review: '开始人工审核',
+  source_not_published: '先发布 Care 源内容',
+  source_not_snapshot: '绑定 Published Snapshot',
+  source_drift: '重新审核 SEO',
+  index_strategy_unknown: '设置 Index 策略',
+  source_state_unknown: '恢复来源状态',
+};
 const seoHardBlockerOrder: SeoHealthIssueCode[] = [
   'source_not_published', 'source_not_snapshot', 'source_drift', 'canonical_conflict',
   'missing_meta_title', 'missing_meta_description', 'missing_h1', 'missing_bilingual_pair',
@@ -154,26 +167,27 @@ export function buildSeoWorkItems(snapshot: SeoPageRegistrySnapshot): Operations
     const firstReason = seoIssueLabel[issue] || issue || '需要进一步检查';
     const reason = `${localeLabel(entry.locale)} · ${firstReason}`;
     const nextStep = seoIssueNextStep[issue] || '回到对应 SEO authority 完成该页面处理';
+    const actionLabel = seoIssueActionLabel[issue] || '打开 SEO 页面';
     if (entry.health.severity === 'blocked') return [{
       id: `seo:${entry.pageKey}:blocked`, authority: 'seo' as const, severity: 'blocker' as const,
       title: `${entry.label} · SEO 发布阻断`, detail: `${reason}。需要回到对应 SEO authority 处理。`, count: 1,
       resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
       gateLabel: firstReason, nextStep, verificationNote: '最终发布/索引资格仍由对应 SEO authority 复核。',
-      actionLabel: '处理这个页面', href: entry.editorHref,
+      actionLabel, href: entry.editorHref,
     }];
     if (entry.editorialState === 'ready_for_review') return [{
       id: `seo:${entry.pageKey}:review`, authority: 'seo' as const, severity: 'decision' as const,
       title: `${entry.label} · 等待 SEO 人工审核`, detail: `${reason}。需要人工确认后才能继续。`, count: 1,
       resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
       gateLabel: '等待 SEO 人工审核', nextStep: '完成该页面人工审核', verificationNote: '审核结论仍写回原 SEO authority。',
-      actionLabel: '审核这个页面', href: entry.editorHref,
+      actionLabel, href: entry.editorHref,
     }];
     return [{
       id: `seo:${entry.pageKey}:attention`, authority: 'seo' as const, severity: 'attention' as const,
       title: `${entry.label} · SEO 需要完善`, detail: `${reason}。当前不一定阻断发布，但仍需要处理。`, count: 1,
       resourceKey: entry.sourceKey, resourceLabel: entry.label, reason: firstReason,
       gateLabel: firstReason, nextStep, verificationNote: 'Operations 只提示下一步，不替代 SEO authority 状态判断。',
-      actionLabel: '完善这个页面', href: entry.editorHref,
+      actionLabel, href: entry.editorHref,
     }];
   });
 }

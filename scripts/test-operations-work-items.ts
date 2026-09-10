@@ -27,6 +27,9 @@ assert.equal(seo[0]?.id, 'seo:species:a:zh:blocked');
 assert.equal(seo[0]?.href, '/admin/seo/?catalogKey=a');
 assert.equal(seo[0]?.gateLabel, '缺少 H1', 'Blocked SEO must surface the actual hard blocker before softer issues.');
 assert.match(seo[0]?.nextStep || '', /补齐 H1/);
+assert.equal(seo[0]?.actionLabel, '补齐 H1', 'SEO action copy must name the exact blocker instead of a generic page action.');
+assert.equal(seo[1]?.actionLabel, '开始人工审核', 'SEO review WorkItem must name the human-review action explicitly.');
+assert.equal(seo[2]?.actionLabel, '设置 Index 策略', 'SEO attention WorkItem must name the exact policy action explicitly.');
 assert.equal(seo[1]?.severity, 'decision');
 assert.equal(seo[2]?.severity, 'attention');
 
