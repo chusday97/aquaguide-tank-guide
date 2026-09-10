@@ -119,6 +119,7 @@ try {
     let savedName = '';
     let currentRecord = { ...baseRecord };
     let currentCare = { ...baseCareRecord };
+    let snapshotRepairCalls = 0;
     const careSeoEditorialByLocale = new Map();
     let compatibilityRevisions = [];
     let pairRuleRevisions = [];
@@ -374,6 +375,7 @@ try {
     });
     await page.route('**/api/v1/admin/care-articles/*', async route => {
       const request = route.request();
+      const url = new URL(request.url());
       const body = request.postDataJSON();
       const { steps = [], ...fields } = body;
       currentCare = {
@@ -381,6 +383,10 @@ try {
         careArticleSteps: steps.map((step, index) => ({ id: `care-step-${index}`, position: index, instruction: step.instruction, durationLabel: step.durationLabel })),
       };
       await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: currentCare, requestId: 'test-care-update' }) });
+    });
+    await page.route('**/api/v1/admin/care-articles/*/repair-publication-snapshot', async route => {
+      snapshotRepairCalls += 1;
+      await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: { repaired: true, resourceId: currentCare.id, catalogKey: currentCare.catalogKey, version: currentCare.version }, requestId: 'test-care-snapshot-repair' }) });
     });
     await page.route('**/api/v1/care-articles/care_demo*', route => route.fulfill({
       status: 200,
@@ -394,6 +400,23 @@ try {
         updatedAt: new Date().toISOString(), localization: {},
       }, requestId: 'test-public-care' }),
     }));
+
+    currentCare = { ...baseCareRecord, status: 'published' };
+    const snapshotBefore = JSON.stringify(currentCare);
+    await page.goto(`${baseUrl}/admin/product-content?type=care&id=${currentCare.id}&locale=zh-CN&snapshot=1`, { waitUntil: 'networkidle' });
+    const snapshotRepair = page.getByTestId('published-snapshot-repair');
+    await page.waitForTimeout(1200);
+    await snapshotRepair.waitFor({ state: 'visible' });
+    assert.match(await snapshotRepair.innerText(), /旧发布来源[\s\S]*不会修改 Care 内容或 SEO 文案/);
+    await page.getByRole('button', { name: '生成 Published Snapshot', exact: true }).click();
+    const snapshotDialog = page.getByRole('dialog');
+    assert.match(await snapshotDialog.innerText(), /确认生成 Published Snapshot[\s\S]*不会修改 Care 内容、Compatibility 或 SEO 文案/);
+    await snapshotDialog.getByRole('button', { name: '确认生成 Snapshot', exact: true }).click();
+    await page.waitForFunction(() => !new URL(window.location.href).searchParams.has('snapshot'));
+    assert.equal(snapshotRepairCalls, 1, 'Snapshot repair must call the dedicated repair endpoint exactly once.');
+    assert.equal(JSON.stringify(currentCare), snapshotBefore, 'Snapshot repair must not mutate Care content, status or version.');
+    assert.equal(await page.getByRole('button', { name: '下线', exact: true }).isVisible(), true, 'Normal published Care actions must return after repair context clears.');
+    currentCare = { ...baseCareRecord };
 
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
     await page.getByRole('heading', { name: '运营工作台' }).waitFor();

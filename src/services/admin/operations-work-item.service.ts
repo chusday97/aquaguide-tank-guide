@@ -129,7 +129,7 @@ const seoIssueNextStep: Record<string, string> = {
   canonical_conflict: '修正 Canonical 目标并确认同语言目标可索引',
   missing_editorial_review: '完成该页面人工审核',
   source_not_published: '先回 Care authority 发布源内容',
-  source_not_snapshot: '先生成并绑定 immutable Published snapshot',
+  source_not_snapshot: '回 Care authority 对当前已发布版本生成 immutable Published Snapshot',
   source_drift: '重新审核 SEO，并绑定最新 Published source',
   index_strategy_unknown: '明确 index / noindex / canonical_to_sibling 策略',
   source_state_unknown: '先恢复来源权限或服务可读状态',
@@ -142,7 +142,7 @@ const seoIssueActionLabel: Record<string, string> = {
   canonical_conflict: '修正 Canonical',
   missing_editorial_review: '开始人工审核',
   source_not_published: '先发布 Care 源内容',
-  source_not_snapshot: '绑定 Published Snapshot',
+  source_not_snapshot: '生成 Published Snapshot',
   source_drift: '重新审核 SEO',
   index_strategy_unknown: '设置 Index 策略',
   source_state_unknown: '恢复来源状态',
@@ -160,9 +160,10 @@ const selectSeoIssue = (entry: SeoPageRegistrySnapshot['entries'][number]) => {
   return entry.health.issues[0] || 'unknown';
 };
 const seoWorkItemHref = (entry: SeoPageRegistrySnapshot['entries'][number], issue: string) => {
-  if (entry.pageType !== 'care' || issue !== 'source_not_published') return entry.editorHref;
+  if (entry.pageType !== 'care' || !['source_not_published', 'source_not_snapshot'].includes(issue)) return entry.editorHref;
   const target = new URL(entry.editorHref, 'http://aquaguide.local');
   target.searchParams.delete('seo');
+  if (issue === 'source_not_snapshot') target.searchParams.set('snapshot', '1');
   return `${target.pathname}${target.search}${target.hash}`;
 };
 

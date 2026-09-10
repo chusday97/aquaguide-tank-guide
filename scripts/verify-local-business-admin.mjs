@@ -30,14 +30,17 @@ try {
     page.on('pageerror', error => errors.push(String(error)));
     await page.route('**/api/admin-content/**', unavailable);
     await page.route('**/api/v1/admin/**', unavailable);
-    await page.goto(`${baseUrl}/admin/product-content?type=species&id=local-species-sp_0001`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/product-content?type=species&id=local-species-sp_0001`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Product / Care Content' }).waitFor();
     await page.evaluate(key => localStorage.setItem(key, '{broken-json'), storageKey);
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(key => { try { const state = JSON.parse(localStorage.getItem(key) || '{}'); return state.species?.length === 486 && state.care?.length === 41; } catch { return false; } }, storageKey);
     const healedState = await page.evaluate(key => JSON.parse(localStorage.getItem(key) || '{}'), storageKey);
     assert.equal(healedState.species.length, 486, 'Corrupted local Product store must self-heal to canonical Species seed.');
     assert.equal(healedState.care.length, 41, 'Corrupted local Product store must self-heal to canonical Care seed.');
     await page.evaluate(key => localStorage.removeItem(key), storageKey);
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.waitForFunction(key => { try { const state = JSON.parse(localStorage.getItem(key) || '{}'); return state.species?.length === 486 && state.care?.length === 41; } catch { return false; } }, storageKey);
     const stateBefore = await page.evaluate(key => JSON.parse(localStorage.getItem(key) || '{}'), storageKey);
     assert.equal(stateBefore.species.length, 486);
     assert.equal(stateBefore.care.length, 41);
@@ -54,8 +57,12 @@ try {
     const stateDraft = await page.evaluate(key => JSON.parse(localStorage.getItem(key) || '{}'), storageKey);
     assert.equal(stateDraft.species.find(item => item.catalogKey === 'sp_0001').status, 'draft');
     assert.equal(stateDraft.publishedSpecies.sp_0001.description, publishedBefore, 'Saving a Draft must not mutate Published snapshot.');
-    await page.reload({ waitUntil: 'networkidle' });
-    assert.ok((await page.locator('label:has-text("物种说明") textarea').first().inputValue()).endsWith(marker));
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Product / Care Content' }).waitFor();
+    const reloadedDescription = page.locator('label:has-text("物种说明") textarea').first();
+    await reloadedDescription.waitFor();
+    for (let attempt = 0; attempt < 60 && !(await reloadedDescription.inputValue()).endsWith(marker); attempt += 1) await new Promise(resolve => setTimeout(resolve, 100));
+    assert.ok((await reloadedDescription.inputValue()).endsWith(marker));
     const mobileNavigator = page.getByTestId('content-mobile-navigator');
     const desktopCatalog = page.locator('section[aria-label="内容列表"]');
     if (viewport.width < 1024) {
@@ -73,7 +80,8 @@ try {
     assert.equal(Boolean(speciesFieldBox && speciesReviewBox && speciesFieldBox.y < speciesReviewBox.y), true, 'Product fields must come before Impact/downstream review references.');
     assert.equal(await page.locator('form').evaluate(element => element.scrollWidth - element.clientWidth), 0, 'Product form must not hide internal horizontal overflow.');
 
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: '运营工作台' }).waitFor();
     const operationsText = await page.locator('body').innerText();
     assert.match(operationsText, /极火虾 · Product Data Draft/);
     assert.match(await page.getByTestId('operations-source-product_care').innerText(), /Product \/ Care[\s\S]*可读取/, 'Ready Product/Care source stays explicit without repeating transport detail.');
@@ -106,7 +114,8 @@ try {
       care.careArticleSteps[0].actionKind = 'observe';
       localStorage.setItem(key, JSON.stringify(state));
     }, [storageKey, careKey]);
-    await page.goto(`${baseUrl}/admin/product-content?type=care&id=local-care-${careKey}`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/product-content?type=care&id=local-care-${careKey}`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Product / Care Content' }).waitFor();
     const careSummary = page.locator('label:has-text("摘要") textarea').first();
     const careFirstField = page.getByLabel('目录 ID *');
     const careSeo = page.getByTestId('care-seo-projection');
@@ -124,14 +133,16 @@ try {
     }, [storageKey, careKey]);
     assert.equal(careDraft.careArticleSteps[0].actionTitle, '观察状态');
     assert.equal(careDraft.careArticleSteps[0].actionKind, 'observe');
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Product / Care Content' }).waitFor();
+    await page.getByRole('button', { name: '发布', exact: true }).waitFor();
     await page.getByRole('button', { name: '发布', exact: true }).click();
     await page.getByRole('dialog').getByRole('button', { name: '确认发布', exact: true }).click();
     await page.waitForFunction(() => document.querySelector('form')?.textContent?.includes('已发布'));
     const carePublished = await page.evaluate(([key, catalogKey]) => JSON.parse(localStorage.getItem(key) || '{}').publishedCare[catalogKey], [storageKey, careKey]);
     assert.equal(carePublished.steps[0].actionTitle, '观察状态');
     assert.equal(carePublished.steps[0].actionKind, 'observe', 'Care actionKind must survive Local Draft → publish round-trip.');
-    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
     const publishCenterText = await page.locator('body').innerText();
     assert.match(publishCenterText, /发布 \/ 审核 \/ Revision 记录/);

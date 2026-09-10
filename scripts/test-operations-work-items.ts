@@ -36,6 +36,12 @@ const unpublishedCareSeo = buildSeoWorkItems({
 } as any);
 assert.equal(unpublishedCareSeo[0]?.actionLabel, '先发布 Care 源内容');
 assert.equal(unpublishedCareSeo[0]?.href, '/admin/product-content?type=care&id=local-care-a&locale=zh-CN', 'Source-not-published Care tasks must return to Product/Care source editing instead of auto-focusing downstream SEO.');
+const legacyCareSeo = buildSeoWorkItems({
+  entries: [{ pageKey: 'care:guide-b:zh-CN', pageType: 'care', sourceKey: 'guide-b', label: 'Care B', locale: 'zh-CN', editorHref: '/admin/product-content?type=care&id=local-care-b&seo=1&locale=zh-CN', health: { severity: 'blocked', issues: ['source_not_snapshot'] }, editorialState: 'editing' }],
+  sources: [],
+} as any);
+assert.equal(legacyCareSeo[0]?.actionLabel, '生成 Published Snapshot');
+assert.equal(legacyCareSeo[0]?.href, '/admin/product-content?type=care&id=local-care-b&locale=zh-CN&snapshot=1', 'Legacy Care publication tasks must land in Product/Care with an explicit snapshot-repair context, not downstream SEO.');
 assert.equal(seo[1]?.severity, 'decision');
 assert.equal(seo[2]?.severity, 'attention');
 

@@ -29,11 +29,11 @@ try {
     await page.route('**/api/v1/admin/**', unavailable);
     await page.route('**/api/admin-content/**', unavailable);
 
-    await page.goto(`${baseUrl}/admin/product-content?type=care&id=${careId}`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/product-content?type=care&id=${careId}`, { waitUntil: 'domcontentloaded' });
     await page.getByLabel('目录 ID *').waitFor({ state: 'visible' });
     assert.equal(await page.evaluate(() => window.scrollY), 0, 'Ordinary Care deep-link must keep the main editor at the top.');
 
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
     const careSeoTask = page.getByTestId('operations-primary-task');
     await careSeoTask.waitFor({ state: 'visible', timeout: 10000 });
     assert.match(await careSeoTask.innerText(), /新鱼入缸 · SEO 需要完善[\s\S]*设置 Index 策略/, 'Operations Care SEO task must expose the exact policy action.');
@@ -61,7 +61,7 @@ try {
 
     await seo.getByRole('button', { name: '创建 SEO Draft' }).click();
     await page.waitForFunction(() => document.querySelector('[data-testid="care-seo-projection"]')?.textContent?.includes('Draft'));
-    await page.reload({ waitUntil: 'networkidle' });
+    await page.reload({ waitUntil: 'domcontentloaded' });
     await seo.waitFor();
     assert.match(await seo.innerText(), /保存 SEO Draft/);
     await seo.getByRole('button', { name: '提交审核' }).click();
@@ -102,7 +102,8 @@ try {
     assert.equal(seoState.revisions[1].reviewState, 'approved');
     assert.equal(seoState.revisions[1].sourceCareVersion, 1);
 
-    await page.goto(`${baseUrl}/admin/seo-pages`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/seo-pages`, { waitUntil: 'domcontentloaded' });
+    await page.getByText('SEO Operations', { exact: true }).waitFor({ state: 'visible', timeout: 10000 });
     const healthText = await page.locator('body').innerText();
     assert.match(healthText, /Published Care \/ Care SEO Editorial[\s\S]{0,120}可读取/);
     assert.match(healthText, /来源待读取/);

@@ -92,6 +92,7 @@ export default function AdminContent() {
   const requestedType: ContentType = deepLinkParams.get('type') === 'care' ? 'care' : 'species';
   const requestedId = deepLinkParams.get('id');
   const requestedSeo = deepLinkParams.get('seo') === '1';
+  const requestedSnapshotRepair = deepLinkParams.get('snapshot') === '1';
   const requestedLocale = deepLinkParams.get('locale') === 'en' ? 'en' : 'zh-CN';
   const { showToast } = useToast();
   const [type, setType] = useState<ContentType>(requestedType);
@@ -113,7 +114,7 @@ export default function AdminContent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
   const baselineRequestRef = useRef(0);
-  const deepLinkAppliedRef = useRef(false);
+  const deepLinkAppliedKeyRef = useRef<string | null>(null);
 
   const items = type === 'species' ? speciesItems : careItems;
   const selected = items.find(item => item.id === selectedId);
@@ -173,7 +174,7 @@ export default function AdminContent() {
     }
   };
 
-  useEffect(() => { baselineRequestRef.current += 1; setPublishedBaseline(null); setLastSavedImpact(null); void loadItems(type, false); }, [type]);
+  useEffect(() => { baselineRequestRef.current += 1; setPublishedBaseline(null); setLastSavedImpact(null); void loadItems(type, Boolean(requestedId && type === requestedType)); }, [type, requestedId, requestedType]);
   useEffect(() => {
     let cancelled = false;
     setAssetPreviewUrl(null);
@@ -184,10 +185,12 @@ export default function AdminContent() {
     return () => { cancelled = true; };
   }, [currentAsset?.id]);
   useEffect(() => {
-    if (deepLinkAppliedRef.current || isLoading || !requestedId || type !== requestedType) return;
+    if (isLoading || !requestedId || type !== requestedType) return;
+    const deepLinkKey = `${requestedType}:${requestedId}`;
+    if (deepLinkAppliedKeyRef.current === deepLinkKey && selectedId === requestedId) return;
     const item = items.find(candidate => candidate.id === requestedId);
     if (!item) return;
-    deepLinkAppliedRef.current = true;
+    deepLinkAppliedKeyRef.current = deepLinkKey;
     setSelectedId(item.id);
     setFormError('');
     setIsDirty(false);
@@ -279,6 +282,15 @@ export default function AdminContent() {
     if (!pendingStatus || !selected) return;
     setIsSaving(true);
     try {
+      if (isSnapshotRepair) {
+        await contentAdminService.repairCarePublishedSnapshot(selected.id);
+        showToast('Published Snapshot 已生成', 'success');
+        setPendingStatus(null);
+        const params = new URLSearchParams(location.search);
+        params.delete('snapshot');
+        navigate(`${location.pathname}${params.size ? `?${params.toString()}` : ''}`, { replace: true, state: location.state });
+        return;
+      }
       await contentAdminService.setStatus(type, selected.id, selected.version, pendingStatus);
       showToast(pendingStatus === 'published' ? '内容已发布' : '内容已下线', 'success');
       const completedStatus = pendingStatus;
@@ -313,6 +325,7 @@ export default function AdminContent() {
   };
 
   const statusLabel = useMemo(() => selected?.status === 'published' ? '已发布' : selected?.status === 'archived' ? '已下线' : '草稿', [selected]);
+  const isSnapshotRepair = Boolean(requestedSnapshotRepair && type === 'care' && selected && selected.id === requestedId && selected.status === 'published');
 
   return (
     <div className="min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
@@ -350,12 +363,13 @@ export default function AdminContent() {
             <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
               <div><div className="text-xs font-black text-emerald-700">{selected ? statusLabel : '新草稿'}</div><h2 className="mt-1 text-lg font-black">{selected ? ('name' in selected ? selected.name : selected.title) : `新建${type === 'species' ? '物种数据' : '养护文章'}`}</h2></div>
               <div className="flex flex-wrap gap-2">
-                {selected && <><button type="button" disabled={isSaving || isDirty} onClick={() => setPendingStatus(selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{isDirty ? '保存后可发布' : selected.status === 'published' ? '下线' : '发布'}</button><label title={isLocalBusinessAdminMode ? (isLocalAdminFileMode ? '图片保存在项目 .local/aqua-admin/assets/；显式发布前不会进入 Local Published Snapshot。' : '图片仅保存在当前浏览器 IndexedDB；显式发布前不会进入 Local Published Snapshot。') : undefined} className={`flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'cursor-not-allowed opacity-45' : 'cursor-pointer'}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : isLocalBusinessAdminMode ? currentAsset ? '替换本地图片' : '添加本地图片' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label></>}
+                {selected && <><button type="button" disabled={isSaving || isDirty} onClick={() => setPendingStatus(isSnapshotRepair ? 'published' : selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{isDirty ? (isSnapshotRepair ? '先保存修改' : '保存后可发布') : isSnapshotRepair ? '生成 Published Snapshot' : selected.status === 'published' ? '下线' : '发布'}</button><label title={isLocalBusinessAdminMode ? (isLocalAdminFileMode ? '图片保存在项目 .local/aqua-admin/assets/；显式发布前不会进入 Local Published Snapshot。' : '图片仅保存在当前浏览器 IndexedDB；显式发布前不会进入 Local Published Snapshot。') : undefined} className={`flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'cursor-not-allowed opacity-45' : 'cursor-pointer'}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : isLocalBusinessAdminMode ? currentAsset ? '替换本地图片' : '添加本地图片' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label></>}
                 <button type="submit" disabled={isSaving || isUploading} className="flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-55">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{isSaving ? '保存中…' : selected ? '保存修改' : '创建草稿'}</button>
               </div>
             </div>
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
+            {isSnapshotRepair && <section data-testid="published-snapshot-repair" className="mb-4 border border-slate-200 bg-slate-50 px-4 py-3"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/45">当前任务 · Published Snapshot</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/60">当前 Care 已经发布，但仍是旧发布来源。使用上方「生成 Published Snapshot」把当前已发布版本写入 immutable snapshot；不会修改 Care 内容或 SEO 文案。</p></section>}
             {selected && isLocalBusinessAdminMode && currentAsset && <section data-testid="local-asset-preview" className="mb-4 grid gap-3 rounded-[18px] border border-border bg-bg/50 p-3 md:grid-cols-[160px_minmax(0,1fr)]">
               <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[14px] bg-white">{assetPreviewUrl ? <img src={assetPreviewUrl} alt={`${'name' in selected ? selected.name : selected.title} 本地预览`} className="h-full w-full object-contain" /> : <FileImage className="h-8 w-8 text-ink/25" />}</div>
               <div className="self-center"><div className="text-xs font-black text-ink/45">{isLocalAdminFileMode ? 'LOCAL IMAGE · DURABLE FILE' : 'LOCAL IMAGE · CURRENT BROWSER ONLY'}</div><div className="mt-1 text-sm font-black">{currentAsset.variant} · v{currentAsset.assetVersion}</div><div className="mt-1 text-xs font-bold text-ink/50">{currentAsset.width && currentAsset.height ? `${currentAsset.width}×${currentAsset.height} · ` : ''}{currentAsset.byteSize ? `${Math.round(currentAsset.byteSize / 1024)} KB · ` : ''}{isLocalAdminFileMode ? '.local/aqua-admin/assets 文件持久化' : 'IndexedDB 持久化'}</div><p className="mt-2 text-xs font-bold leading-5 text-ink/55">替换图片会让当前内容回到 Draft；只有显式发布后，这一版图片才进入 Local Published Snapshot。Production 资产路径不受影响。</p></div>
@@ -406,7 +420,7 @@ export default function AdminContent() {
         </main>
       </div>
 
-      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[520px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? '发布后，直接接入当前 Product/Care authority 的页面会读取新版本；标记为“需单独复核”的 Compatibility、SEO 等独立 authority 不会被自动改写。' : '下线后普通用户将无法继续打开这项内容。'}</p>{pendingStatus === 'published' && <ContentImpactPreview impact={visibleImpact} saved savedLabel={savedImpactLabel} compact />}{pendingStatus === 'published' && compatibilityRegression && <div className={`mb-4 rounded-[14px] border px-3 py-2.5 text-xs font-bold leading-5 ${compatibilityRegression.changedPairs ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-emerald-200 bg-emerald-50 text-emerald-900'}`}><span className="font-black">Compatibility 模拟：</span>{compatibilityRegression.changedPairs ? `发现 ${compatibilityRegression.changedPairs} 个组合结果/规则发生变化，其中 ${compatibilityRegression.statusChangedPairs} 个状态变化；发布 Product 不会自动更新 Compatibility 规则。` : `已对比 ${compatibilityRegression.cohortSize} 个组合，未发现物种级 Compatibility 结果变化。`}</div>}<div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button></div></div></div>}
+      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[520px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? isSnapshotRepair ? '确认生成 Published Snapshot' : '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? isSnapshotRepair ? '这会把当前已发布 Care 版本写入 immutable Published Snapshot；不会修改 Care 内容、Compatibility 或 SEO 文案。' : '发布后，直接接入当前 Product/Care authority 的页面会读取新版本；标记为“需单独复核”的 Compatibility、SEO 等独立 authority 不会被自动改写。' : '下线后普通用户将无法继续打开这项内容。'}</p>{pendingStatus === 'published' && !isSnapshotRepair && <ContentImpactPreview impact={visibleImpact} saved savedLabel={savedImpactLabel} compact />}{pendingStatus === 'published' && !isSnapshotRepair && compatibilityRegression && <div className={`mb-4 rounded-[14px] border px-3 py-2.5 text-xs font-bold leading-5 ${compatibilityRegression.changedPairs ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-emerald-200 bg-emerald-50 text-emerald-900'}`}><span className="font-black">Compatibility 模拟：</span>{compatibilityRegression.changedPairs ? `发现 ${compatibilityRegression.changedPairs} 个组合结果/规则发生变化，其中 ${compatibilityRegression.statusChangedPairs} 个状态变化；发布 Product 不会自动更新 Compatibility 规则。` : `已对比 ${compatibilityRegression.cohortSize} 个组合，未发现物种级 Compatibility 结果变化。`}</div>}<div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : isSnapshotRepair ? 'bg-ink' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? isSnapshotRepair ? '确认生成 Snapshot' : '确认发布' : '确认下线'}</button></div></div></div>}
     </div>
   );
 }

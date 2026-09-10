@@ -54,6 +54,8 @@ assert.match(adminRoute, /rpc\('publish_content_snapshot'/);
 assert.match(adminRoute, /rpc\('archive_content_snapshot'/);
 assert.match(publicationBoundary, /buildPublicationSnapshot/);
 assert.match(contentRoute, /from\('content_publications'\)/);
+assert.match(adminRoute, /repair-publication-snapshot/, 'Admin API must expose a protected Care publication-snapshot repair route.');
+assert.match(adminRoute, /ensurePublishedSnapshotBeforeDraft\('care', id\)/, 'Snapshot repair must reuse the existing immutable publication guard instead of republishing content.');
 assert.match(contentRoute, /publicationKeys/);
 assert.match(contentRoute, /isPublicationStoreNotMigrated/);
 assert.match(contentRoute, /contentRouter\.get\('\/content-bootstrap'/);

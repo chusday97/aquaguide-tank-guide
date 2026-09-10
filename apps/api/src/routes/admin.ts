@@ -131,6 +131,14 @@ adminRouter.get('/care-seo-health', asyncRoute(async (request, response) => {
   return sendData(request, response, await getCareSeoHealthIndex());
 }));
 
+adminRouter.post('/care-articles/:id/repair-publication-snapshot', asyncRoute(async (request, response) => {
+  const id = parseId(request.params.id);
+  const source = await ensurePublishedSnapshotBeforeDraft('care', id);
+  if (source.status !== 'published') throw new ApiError(409, 'VERSION_CONFLICT', '只有当前已发布的 Care 内容可以补建 Published Snapshot。');
+  return sendData(request, response, { repaired: true, resourceId: source.id, catalogKey: source.catalog_key, version: source.version });
+}));
+
+
 adminRouter.get('/care-articles/:id/seo-projection', asyncRoute(async (request, response) => {
   const id = parseId(request.params.id);
   const localeParsed = supportedLocaleSchema.safeParse(request.query.locale || 'zh-CN');

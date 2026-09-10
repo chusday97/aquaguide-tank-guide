@@ -98,7 +98,7 @@ const runAuthRequired = async () => {
     const page = await context.newPage();
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(String(error)));
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
     const productSource = page.getByTestId('operations-source-product_care');
     const compatibilitySource = page.getByTestId('operations-source-compatibility');
     await productSource.getByText('需要登录', { exact: true }).waitFor({ timeout: 10000 });
@@ -128,7 +128,7 @@ const runForbidden = async () => {
     const page = await context.newPage();
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(String(error)));
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
     const productSource = page.getByTestId('operations-source-product_care');
     const compatibilitySource = page.getByTestId('operations-source-compatibility');
     await productSource.getByText('权限不足', { exact: true }).waitFor({ timeout: 10000 });
@@ -155,7 +155,7 @@ const runSchemaNotReady = async () => {
     const page = await context.newPage();
     const pageErrors = [];
     page.on('pageerror', error => pageErrors.push(String(error)));
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
     const productSource = page.getByTestId('operations-source-product_care');
     const compatibilitySource = page.getByTestId('operations-source-compatibility');
     await productSource.getByText('尚未启用', { exact: true }).waitFor({ timeout: 10000 });
@@ -164,7 +164,7 @@ const runSchemaNotReady = async () => {
     assert.equal(await page.getByRole('button', { name: /Fixture Guppy · Compatibility Profile/ }).count(), 0, 'Schema-not-ready Compatibility authority must not emit revision WorkItems.');
     assert.match(await page.getByTestId('operations-primary-task').innerText(), /先恢复数据来源/);
     assert.match(await productSource.innerText(), /migration 未应用/);
-    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'domcontentloaded' });
     const publishSources = await page.getByTestId('publish-center-source-status').innerText();
     assert.match(publishSources, /Product \/ Care[\s\S]*尚未启用/);
     assert.match(publishSources, /Compatibility[\s\S]*尚未启用/);
@@ -192,7 +192,7 @@ const run = async (viewport, label) => {
       }
     });
 
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
     await page.getByText('Fixture Guppy · Compatibility Profile 等待人工审核').waitFor({ timeout: 10000 });
     assert.match(await page.getByTestId('operations-primary-task').innerText(), /当前已读取优先任务/, `${label}: incomplete source coverage must scope the priority claim.`);
     assert.match(await page.getByTestId('operations-primary-task').innerText(), /当前优先级仅基于已读取任务/, `${label}: scoped priority must disclose incomplete source coverage.`);
