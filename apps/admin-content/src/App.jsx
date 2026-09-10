@@ -36,6 +36,22 @@ const isPublicSpeciesPublishingEnabled = false;
 const initialParams = typeof window !== 'undefined' ? new URLSearchParams(window.location.search) : new URLSearchParams();
 const initialContentLocale = initialParams.get('locale') === 'en' ? 'en' : 'zh-CN';
 const initialSpeciesId = initialParams.get('species') || null;
+const operationsReturnHref = (() => {
+  if (typeof window === 'undefined') return null;
+  const rawReturnTo = initialParams.get('returnTo');
+  if (!rawReturnTo) return null;
+  try {
+    const target = new URL(rawReturnTo, window.location.origin);
+    if (target.hostname !== window.location.hostname || target.pathname !== '/admin/content') return null;
+    const returnTask = initialParams.get('returnTask');
+    const returnTitle = initialParams.get('returnTitle');
+    if (returnTask) target.searchParams.set('returnTask', returnTask);
+    if (returnTitle) target.searchParams.set('returnTitle', returnTitle);
+    return target.toString();
+  } catch {
+    return null;
+  }
+})();
 
 const PREVIEW_SPLIT_MIN_WIDTH = 1051;
 const PREVIEW_MIN_WIDTH = 340;
@@ -1342,6 +1358,7 @@ export default function App() {
           <span className={`connection-dot ${schemaReady && groupSchemaReady && historySchemaReady && dataReviewSchemaReady ? 'ready' : 'warning'}`}></span>
           <span className="topbar-mode-label">{isReadOnlyDemoMode ? (appLocale === 'en' ? 'Read-only demo · no writes' : '只读演示 · 不会写入') : t('top.admin')}</span>
           <span className="admin-email">{session.user.email}</span>
+          {operationsReturnHref ? <button type="button" className="ghost-button" data-testid="return-to-operations-task" onClick={() => window.location.assign(operationsReturnHref)}>{appLocale === 'en' ? '← Back to task' : '← 返回运营任务'}</button> : null}
           <button type="button" className={`topbar-operations-trigger ${activeTool === 'operations' ? 'active' : ''}`} onClick={() => setActiveTool('operations')}>
             <span>{appLocale === 'en' ? 'Operations' : '运营工具'}</span>{activityUnread > 0 ? <b>{Math.min(activityUnread, 99)}</b> : null}
           </button>

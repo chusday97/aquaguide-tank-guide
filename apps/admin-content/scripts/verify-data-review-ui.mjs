@@ -44,12 +44,35 @@ const waitForReady = async () => {
 };
 
 const browser = await chromium.launch({ headless: true });
+const verifyOperationsReturnHandoff = async () => {
+  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const page = await context.newPage();
+  const returnTo = `${baseUrl}/admin/content`;
+  const taskId = 'seo:species:sp_0436:zh-CN:review';
+  const taskTitle = '孔雀鱼 · 等待 SEO 人工审核';
+  const url = `${baseUrl}/?demo=1&returnTo=${encodeURIComponent(returnTo)}&returnTask=${encodeURIComponent(taskId)}&returnTitle=${encodeURIComponent(taskTitle)}`;
+  await page.goto(url, { waitUntil: 'domcontentloaded' });
+  const back = page.getByTestId('return-to-operations-task');
+  await back.waitFor({ state: 'visible', timeout: 10000 });
+  assert.match(await back.innerText(), /返回运营任务/);
+  await back.click();
+  await page.waitForURL(current => current.pathname === '/admin/content' && current.searchParams.get('returnTask') === taskId && current.searchParams.get('returnTitle') === taskTitle, { timeout: 10000 });
+  await context.close();
+
+  const unsafeContext = await browser.newContext({ viewport: { width: 1280, height: 800 } });
+  const unsafePage = await unsafeContext.newPage();
+  await unsafePage.goto(`${baseUrl}/?demo=1&returnTo=${encodeURIComponent('https://example.com/admin/content')}&returnTask=x`, { waitUntil: 'domcontentloaded' });
+  assert.equal(await unsafePage.getByTestId('return-to-operations-task').count(), 0, 'Cross-host return targets must be rejected.');
+  await unsafeContext.close();
+};
+
 const runViewport = async (label, viewport) => {
   const context = await browser.newContext({ viewport });
   const page = await context.newPage();
   const errors = [];
   page.on('pageerror', error => errors.push(String(error)));
   await page.goto(`${baseUrl}/?demo=1`, { waitUntil: 'domcontentloaded' });
+  assert.equal(await page.getByTestId('return-to-operations-task').count(), 0, 'Standalone SEO opened normally must not add an Operations return action.');
   const coreSeo = page.locator('.editor-secondary-seo-disclosure');
   await coreSeo.waitFor();
   assert.equal(await coreSeo.evaluate(element => element.open), true, 'Core Search & indexing controls must be visible by default.');
@@ -228,6 +251,7 @@ const verifyPreviewLayoutMatrix = async () => {
 
 try {
   await waitForReady();
+  await verifyOperationsReturnHandoff();
   await runViewport('desktop + responsive mobile', { width: 1440, height: 1000 });
   await verifyPreviewLayoutMatrix();
   console.log('PASS SEO Admin hierarchy: compact top chrome + Data Review decision flow + page/global Operations separation + responsive Preview layout.');

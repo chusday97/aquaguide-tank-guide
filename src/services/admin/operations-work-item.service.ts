@@ -10,6 +10,8 @@ export type OperationsSeverity = 'blocker' | 'decision' | 'attention' | 'ready' 
 export type OperationsAuthority = 'product_care' | 'compatibility' | 'seo';
 export type OperationsAvailability = 'ready' | 'partial' | 'auth_required' | 'forbidden' | 'schema_not_ready' | 'unavailable';
 
+export type OperationsTaskReturnContext = { taskId: string; taskTitle: string };
+
 export type OperationsWorkItem = {
   id: string;
   authority: OperationsAuthority;

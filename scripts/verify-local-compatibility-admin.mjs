@@ -62,7 +62,7 @@ try {
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
     const operationsText = await page.locator('body').innerText();
     assert.match(operationsText, /虎皮鱼 · Compatibility Profile Draft 未提交审核/);
-    assert.match(operationsText, /本地 Compatibility revision store 可读取/);
+    assert.match(await page.getByTestId('operations-source-compatibility').innerText(), /Compatibility[\s\S]*可读取/, 'Ready Compatibility source stays explicit without repeating transport detail.');
     await page.getByRole('button', { name: /继续这个 Draft/ }).first().click();
     await page.waitForSelector('[data-testid="compatibility-draft-editor"]');
     assert.match(page.url(), /kind=profile&revision=/);

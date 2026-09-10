@@ -76,7 +76,7 @@ try {
     await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
     const operationsText = await page.locator('body').innerText();
     assert.match(operationsText, /极火虾 · Product Data Draft/);
-    assert.match(operationsText, /本地 Product \/ Care store 可读取/);
+    assert.match(await page.getByTestId('operations-source-product_care').innerText(), /Product \/ Care[\s\S]*可读取/, 'Ready Product/Care source stays explicit without repeating transport detail.');
 
     await page.goto(`${baseUrl}/admin/product-content?type=species&id=local-species-sp_0001`, { waitUntil: 'networkidle' });
     await page.getByRole('button', { name: '发布', exact: true }).click();

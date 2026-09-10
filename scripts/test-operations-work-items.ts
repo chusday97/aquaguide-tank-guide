@@ -84,4 +84,10 @@ assert.match(adminHubSource, /item\.verificationNote/, 'Operations Home must pre
 const compatibilitySource = fs.readFileSync(new URL('../src/pages/CompatibilityAdmin.tsx', import.meta.url), 'utf8');
 assert.match(compatibilitySource, /deepLinkParams\.get\('kind'\)/, 'Compatibility editor must accept WorkItem kind deep-links.');
 assert.match(compatibilitySource, /deepLinkParams\.get\('revision'\)/, 'Compatibility editor must accept exact revision deep-links.');
+
+const operationsHomeSource = fs.readFileSync('src/pages/AdminHub.tsx', 'utf8');
+const standaloneSeoAdminSource = fs.readFileSync('apps/admin-content/src/App.jsx', 'utf8');
+assert.match(operationsHomeSource, /returnTo[\s\S]*returnTask[\s\S]*returnTitle/, 'Standalone SEO task handoff must carry a return contract.');
+assert.match(standaloneSeoAdminSource, /data-testid="return-to-operations-task"/, 'Standalone Species SEO must expose a contextual return action when launched from Operations.');
+assert.match(standaloneSeoAdminSource, /target\.hostname !== window\.location\.hostname[\s\S]*target\.pathname !== '\/admin\/content'/, 'Standalone return target must be constrained to the same hostname and Operations path.');
 console.log(JSON.stringify({ gate: 'PASS', workItems: sorted.length, first: sorted[0]?.id }));

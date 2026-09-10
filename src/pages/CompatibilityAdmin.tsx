@@ -7,6 +7,7 @@ import { type ReviewedCompatibilityProfile, type ReviewedPairRule } from '../dat
 import { getRuntimeCompatibilityEvidenceAudit, hydrateReviewedCompatibilityEvidence } from '../data/runtimeCompatibilityEvidence';
 import { AquaGuideApiError } from '../services/api/api-client';
 import { isLocalBusinessAdminMode } from '../services/admin/local-business-admin.store';
+import type { OperationsTaskReturnContext } from '../services/admin/operations-work-item.service';
 import {
   compatibilityAdminService,
   type AdminCompatibilityPairRuleRevision,
@@ -74,6 +75,7 @@ export default function CompatibilityAdmin() {
   const navigate = useNavigate();
   const location = useLocation();
   const deepLinkParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const operationsReturnContext = (location.state as { operationsReturn?: OperationsTaskReturnContext } | null)?.operationsReturn || null;
   const requestedRevisionKind = deepLinkParams.get('kind');
   const requestedRevisionId = deepLinkParams.get('revision');
   const { showToast } = useToast();
@@ -414,7 +416,7 @@ export default function CompatibilityAdmin() {
       <div className="mx-auto max-w-[1440px]">
         <header className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 bg-white px-4 py-3">
           <div className="flex min-w-0 items-center gap-3">
-            <button type="button" aria-label="返回管理后台" onClick={() => navigate('/admin/content')} className="flex h-11 w-11 shrink-0 items-center justify-center border border-slate-200 bg-white hover:bg-slate-50"><ArrowLeft className="h-5 w-5" /></button>
+            <button type="button" aria-label="返回管理后台" onClick={() => navigate('/admin/content', { state: operationsReturnContext ? { returnedOperationsTask: operationsReturnContext } : undefined })} className="flex h-11 w-11 shrink-0 items-center justify-center border border-slate-200 bg-white hover:bg-slate-50"><ArrowLeft className="h-5 w-5" /></button>
             <div className="min-w-0"><div className="text-xs font-black uppercase tracking-[0.14em] text-emerald-700">Compatibility Authority</div><h1 className="truncate text-xl font-black">Compatibility Admin</h1></div>
           </div>
           <span className={`rounded-full border px-3 py-1.5 text-xs font-black ${revisionCapability === 'ready' && pairRevisionCapability === 'ready' ? 'border-emerald-200 bg-emerald-50 text-emerald-800' : 'border-slate-200 bg-slate-50 text-ink/55'}`}>

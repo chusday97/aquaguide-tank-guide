@@ -212,7 +212,13 @@ const run = async (viewport, label) => {
     const compatibilityEditor = page.locator('[data-testid="compatibility-draft-editor"]');
     await compatibilityEditor.waitFor({ state: 'visible', timeout: 10000 });
     assert.match(await compatibilityEditor.innerText(), /Fixture Guppy/, `${label}: exact Compatibility revision must open.`);
-    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+    await page.getByRole('button', { name: '返回管理后台' }).click();
+    await page.waitForURL(/\/admin\/content$/);
+    const compatibilityReturn = page.getByTestId('operations-return-context');
+    await compatibilityReturn.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await compatibilityReturn.innerText(), /已回到刚才的任务[\s\S]*Fixture Guppy/, `${label}: returning from Compatibility must preserve task context.`);
+    const returnedCompatibilityTask = page.locator('[data-work-item-id="compatibility:profile:rev-profile-1"]');
+    assert.match(await returnedCompatibilityTask.getAttribute('class') || '', /ring-2/, `${label}: returned Compatibility task must be highlighted.`);
     const productTask = page.getByRole('button', { name: /Fixture Goldfish · Product Data Draft/ });
     await productTask.waitFor({ timeout: 10000 });
     await productTask.click();
@@ -222,6 +228,17 @@ const run = async (viewport, label) => {
     for (let attempt = 0; attempt < 60 && await productCatalogId.inputValue() !== 'fixture-goldfish'; attempt += 1) await sleep(100);
     assert.equal(await productCatalogId.inputValue(), 'fixture-goldfish', `${label}: exact Product Draft must hydrate after the route opens.`);
     const overflowTarget = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    await page.getByRole('button', { name: '返回后台首页' }).click();
+    await page.waitForURL(/\/admin\/content$/);
+    const productReturn = page.getByTestId('operations-return-context');
+    await productReturn.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await productReturn.innerText(), /已回到刚才的任务[\s\S]*Fixture Goldfish/, `${label}: returning from Product/Care must preserve task context.`);
+    const returnedProductTask = page.locator('[data-work-item-id="product:sp-fixture-1:draft"]');
+    assert.match(await returnedProductTask.getAttribute('class') || '', /ring-2/, `${label}: returned Product task must be highlighted.`);
+    await page.goto(`${baseUrl}/admin/content?returnTask=${encodeURIComponent('compatibility:profile:rev-profile-1')}&returnTitle=${encodeURIComponent('Fixture Guppy · SEO handoff return')}`, { waitUntil: 'domcontentloaded' });
+    const queryReturn = page.getByTestId('operations-return-context');
+    await queryReturn.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await queryReturn.innerText(), /已回到刚才的任务[\s\S]*SEO handoff return/, `${label}: query-based standalone return must restore Operations context.`);
 
     assert.equal(overflowHome, 0, `${label}: Operations Home must not overflow horizontally.`);
     assert.equal(overflowTarget, 0, `${label}: deep-linked authority must not overflow horizontally.`);

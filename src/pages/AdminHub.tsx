@@ -1,12 +1,13 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArchiveRestore, ArrowLeft, Clock3, Database, HardDriveDownload, Loader2, RefreshCw, Search, ShieldCheck } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { isSupabaseConfigured } from '../lib/supabaseClient';
 import { createLocalAdminBackup, getLocalAdminPersistenceStatus, getLocalAdminSafetySnapshot, isLocalAdminFileMode, restoreLocalAdminBackup, type LocalAdminSafetySnapshot } from '../services/admin/local-file-persistence';
 import {
   operationsWorkItemService,
   type OperationsHomeSnapshot,
   type OperationsSeverity,
+  type OperationsTaskReturnContext,
   type OperationsWorkItem,
 } from '../services/admin/operations-work-item.service';
 
@@ -25,12 +26,15 @@ const severityClass: Record<OperationsSeverity, string> = {
 
 export default function AdminHub() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [snapshot, setSnapshot] = useState<OperationsHomeSnapshot>(emptySnapshot);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [localSafety, setLocalSafety] = useState<LocalAdminSafetySnapshot | null>(null);
   const [safetyBusy, setSafetyBusy] = useState<'backup' | 'restore' | ''>('');
   const [safetyMessage, setSafetyMessage] = useState('');
+  const [returnContext, setReturnContext] = useState<(OperationsTaskReturnContext & { inQueue: boolean }) | null>(null);
+  const handledReturnTaskRef = useRef<string | null>(null);
 
   const load = async () => {
     setLoading(true); setError('');
@@ -84,10 +88,38 @@ export default function AdminHub() {
     }
   };
 
-  const open = (href: string) => {
-    if (href.startsWith('/admin/')) navigate(href);
-    else window.location.assign(href);
+  const open = (item: OperationsWorkItem) => {
+    const operationsReturn: OperationsTaskReturnContext = { taskId: item.id, taskTitle: item.title };
+    const usesStandaloneSeoAdmin = item.authority === 'seo' && !item.href.startsWith('/admin/product-content');
+    if (item.href.startsWith('/admin/') && !usesStandaloneSeoAdmin) {
+      navigate(item.href, { state: { operationsReturn } });
+      return;
+    }
+    const target = new URL(item.href, window.location.href);
+    target.searchParams.set('returnTo', `${window.location.origin}/admin/content`);
+    target.searchParams.set('returnTask', item.id);
+    target.searchParams.set('returnTitle', item.title);
+    window.location.assign(target.toString());
   };
+
+  const stateReturnTask = (location.state as { returnedOperationsTask?: OperationsTaskReturnContext } | null)?.returnedOperationsTask || null;
+  const queryReturnParams = new URLSearchParams(location.search);
+  const queryReturnTaskId = queryReturnParams.get('returnTask');
+  const returnedOperationsTask = stateReturnTask || (queryReturnTaskId ? { taskId: queryReturnTaskId, taskTitle: queryReturnParams.get('returnTitle') || '刚才的运营任务' } : null);
+  useEffect(() => {
+    if (loading || error || !returnedOperationsTask || handledReturnTaskRef.current === returnedOperationsTask.taskId) return;
+    handledReturnTaskRef.current = returnedOperationsTask.taskId;
+    const inQueue = snapshot.workItems.some(item => item.id === returnedOperationsTask.taskId);
+    setReturnContext({ ...returnedOperationsTask, inQueue });
+    if (inQueue) {
+      window.setTimeout(() => {
+        const target = Array.from(document.querySelectorAll<HTMLElement>('[data-work-item-id]'))
+          .find(element => element.dataset.workItemId === returnedOperationsTask.taskId);
+        target?.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }, 0);
+    }
+    navigate(location.pathname, { replace: true, state: null });
+  }, [error, loading, location.pathname, navigate, returnedOperationsTask, snapshot.workItems]);
 
   return (
     <div className="min-h-[100dvh] bg-[#edf1ef] p-3 text-ink md:p-6">
@@ -106,7 +138,9 @@ export default function AdminHub() {
 
         {error && <div role="alert" className="mt-3 border-l-4 border-red-500 bg-white px-4 py-3 text-sm font-bold text-red-700">{error}</div>}
 
-        <section data-testid="operations-primary-task" className={`mt-4 border-l-4 bg-white px-4 py-4 md:px-5 ${primaryTask ? severityClass[primaryTask.severity].split(' ')[1] : sourceProblems.length ? 'border-slate-400' : 'border-emerald-600'}`}>
+        {returnContext && <div data-testid="operations-return-context" className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 border border-slate-200 bg-white px-4 py-2 text-xs font-semibold text-ink/55"><strong className="font-black text-ink/70">{returnContext.inQueue ? '已回到刚才的任务' : '已返回工作台'}</strong><span>{returnContext.taskTitle}</span>{!returnContext.inQueue && <span className="text-ink/40">当前队列未找到这条任务；它可能已完成，或对应来源暂不可读。</span>}</div>}
+
+        <section data-testid="operations-primary-task" data-work-item-id={primaryTask?.id} className={`mt-4 border-l-4 bg-white px-4 py-4 md:px-5 ${primaryTask ? severityClass[primaryTask.severity].split(' ')[1] : sourceProblems.length ? 'border-slate-400' : 'border-emerald-600'} ${primaryTask && returnContext?.inQueue && returnContext.taskId === primaryTask.id ? 'ring-2 ring-inset ring-slate-300' : ''}`}>
           {loading ? <div className="flex min-h-16 items-center gap-2 text-sm font-bold text-ink/45"><Loader2 className="h-5 w-5 animate-spin" />正在汇总各业务模块当前任务…</div> : primaryTask ? <PrimaryTask item={primaryTask} onOpen={open} incompleteSourcesCount={sourceProblems.length} /> : sourceProblems.length ? <SourceRecoveryTask sources={sourceProblems} onLogin={authRequired && isSupabaseConfigured ? () => navigate('/admin/login?next=%2Fadmin%2Fcontent') : undefined} /> : <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-emerald-700">当前优先任务 · 已清空</div><strong className="mt-1 block text-lg font-black">当前已读取来源没有待处理任务</strong><p className="mt-1 text-xs font-semibold leading-5 text-ink/48">所有业务模块均可读取；需要时可刷新任务获取最新状态。</p></div>}
         </section>
 
@@ -115,7 +149,7 @@ export default function AdminHub() {
             <div><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/35">Work queue</div><h2 className="mt-0.5 text-lg font-black">现在需要处理</h2></div>
             <span className="text-xs font-black text-ink/40">{sourceProblems.length ? `${snapshot.workItems.length} 个已读取任务 · 来源未完整` : `${snapshot.workItems.length} 个当前任务`}</span>
           </div>
-          {!loading && queueItems.length === 0 ? <div className="px-4 py-6 text-sm font-semibold text-ink/45">{primaryTask ? '当前只有上方这一条优先任务。' : sourceProblems.length ? '当前已读取来源没有任务；未读取来源不计为 0。' : '当前没有来自已连接业务模块的任务。'}</div> : <div className="divide-y divide-slate-100">{queueItems.map(item => <WorkItemRow key={item.id} item={item} onOpen={open} />)}</div>}
+          {!loading && queueItems.length === 0 ? <div className="px-4 py-6 text-sm font-semibold text-ink/45">{primaryTask ? '当前只有上方这一条优先任务。' : sourceProblems.length ? '当前已读取来源没有任务；未读取来源不计为 0。' : '当前没有来自已连接业务模块的任务。'}</div> : <div className="divide-y divide-slate-100">{queueItems.map(item => <WorkItemRow key={item.id} item={item} onOpen={open} highlighted={Boolean(returnContext?.inQueue && returnContext.taskId === item.id)} />)}</div>}
           {!loading && hiddenTaskCount > 0 && <div className="border-t border-slate-100 px-4 py-3 text-xs font-semibold text-ink/45">还有 {hiddenTaskCount} 个任务未在首页展开；进入对应业务模块查看全量。</div>}
         </section>
 
@@ -155,13 +189,13 @@ function SourceRecoveryTask({ sources, onLogin }: { sources: OperationsHomeSnaps
   return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className="text-[11px] font-black uppercase tracking-[0.08em] text-ink/55">当前优先任务 · 恢复来源</div><h2 className="mt-1 text-lg font-black">先恢复数据来源，再判断是否真的没有任务</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{names} 当前未完全可读。{detail}；未读取部分不会被算成 0 个任务。</p><div className="mt-3 grid grid-cols-2 gap-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{sources.length} 个业务模块来源未完整</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">查看具体来源原因；恢复安全会话或服务后刷新任务</div></div></div></div><div className="flex flex-wrap gap-2">{onLogin && <button type="button" onClick={onLogin} className="h-10 bg-ink px-4 text-xs font-black text-white">登录管理员账号 →</button>}<button type="button" onClick={() => document.getElementById('operations-source-status')?.scrollIntoView({ behavior: 'smooth', block: 'start' })} className="h-10 border border-slate-300 bg-white px-4 text-xs font-black text-ink/70 hover:bg-slate-50">查看数据来源 →</button></div></div>;
 }
 
-function PrimaryTask({ item, onOpen, incompleteSourcesCount }: { item: OperationsWorkItem; onOpen: (href: string) => void; incompleteSourcesCount: number }) {
+function PrimaryTask({ item, onOpen, incompleteSourcesCount }: { item: OperationsWorkItem; onOpen: (item: OperationsWorkItem) => void; incompleteSourcesCount: number }) {
   const scopedPriority = incompleteSourcesCount > 0;
-  return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className={`text-[11px] font-black uppercase tracking-[0.08em] ${severityClass[item.severity].split(' ')[0]}`}>{scopedPriority ? '当前已读取优先任务' : '当前优先任务'} · {severityLabel[item.severity]}</div><h2 className="mt-1 text-lg font-black">{item.title}</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{item.detail}</p><div className="mt-3 grid grid-cols-2 gap-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{item.gateLabel}</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">{item.nextStep}</div></div></div><p className="mt-2 text-[10px] font-semibold leading-4 text-ink/38">{item.verificationNote}{scopedPriority ? ` · 另有 ${incompleteSourcesCount} 个数据来源未完整；当前优先级仅基于已读取任务。` : ''}</p></div><button type="button" onClick={() => onOpen(item.href)} className={`h-10 border bg-white px-4 text-xs font-black ${severityClass[item.severity]}`}>{item.actionLabel} →</button></div>;
+  return <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start"><div className="min-w-0"><div className={`text-[11px] font-black uppercase tracking-[0.08em] ${severityClass[item.severity].split(' ')[0]}`}>{scopedPriority ? '当前已读取优先任务' : '当前优先任务'} · {severityLabel[item.severity]}</div><h2 className="mt-1 text-lg font-black">{item.title}</h2><p className="mt-1 max-w-[760px] text-xs font-semibold leading-5 text-ink/48">{item.detail}</p><div className="mt-3 grid grid-cols-2 gap-2"><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">当前卡点</div><div className="mt-1 text-xs font-black text-ink/70">{item.gateLabel}</div></div><div className="border border-slate-100 bg-slate-50 px-3 py-2.5"><div className="text-[10px] font-black uppercase tracking-[0.08em] text-ink/35">下一步</div><div className="mt-1 text-xs font-black leading-5 text-ink/70">{item.nextStep}</div></div></div><p className="mt-2 text-[10px] font-semibold leading-4 text-ink/38">{item.verificationNote}{scopedPriority ? ` · 另有 ${incompleteSourcesCount} 个数据来源未完整；当前优先级仅基于已读取任务。` : ''}</p></div><button type="button" onClick={() => onOpen(item)} className={`h-10 border bg-white px-4 text-xs font-black ${severityClass[item.severity]}`}>{item.actionLabel} →</button></div>;
 }
 
-function WorkItemRow({ item, onOpen }: { item: OperationsWorkItem; onOpen: (href: string) => void }) {
-  return <button type="button" onClick={() => onOpen(item.href)} className="grid w-full grid-cols-[minmax(0,1fr)_auto] gap-3 px-4 py-3 text-left hover:bg-slate-50 md:grid-cols-[105px_minmax(0,1fr)_auto] md:items-center"><span className={`hidden border-l-2 pl-2 text-[11px] font-black md:block ${severityClass[item.severity]}`}>{severityLabel[item.severity]}</span><span className="min-w-0"><strong className="block text-sm font-black">{item.title}</strong><small className="mt-0.5 block text-[11px] font-semibold leading-5 text-ink/42">卡点：{item.gateLabel} · 下一步：{item.nextStep}</small><small className={`mt-1 block text-[11px] font-black md:hidden ${severityClass[item.severity].split(' ')[0]}`}>{severityLabel[item.severity]}</small></span><span className="text-xs font-black text-ink/65">{item.actionLabel} →</span></button>;
+function WorkItemRow({ item, onOpen, highlighted }: { item: OperationsWorkItem; onOpen: (item: OperationsWorkItem) => void; highlighted: boolean }) {
+  return <button type="button" data-work-item-id={item.id} onClick={() => onOpen(item)} className={`grid w-full grid-cols-[minmax(0,1fr)_auto] gap-3 px-4 py-3 text-left hover:bg-slate-50 md:grid-cols-[105px_minmax(0,1fr)_auto] md:items-center ${highlighted ? 'ring-2 ring-inset ring-slate-300' : ''}`}><span className={`hidden border-l-2 pl-2 text-[11px] font-black md:block ${severityClass[item.severity]}`}>{severityLabel[item.severity]}</span><span className="min-w-0"><strong className="block text-sm font-black">{item.title}</strong><small className="mt-0.5 block text-[11px] font-semibold leading-5 text-ink/42">卡点：{item.gateLabel} · 下一步：{item.nextStep}</small><small className={`mt-1 block text-[11px] font-black md:hidden ${severityClass[item.severity].split(' ')[0]}`}>{severityLabel[item.severity]}</small></span><span className="text-xs font-black text-ink/65">{item.actionLabel} →</span></button>;
 }
 
 function WorkspaceLink({ icon: Icon, label, detail, onClick }: { icon: typeof Database; label: string; detail: string; onClick: () => void }) {

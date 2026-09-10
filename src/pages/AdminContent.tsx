@@ -24,6 +24,7 @@ import { isLocalBusinessAdminMode } from '../services/admin/local-business-admin
 import { isLocalAdminFileMode } from '../services/admin/local-file-persistence';
 import { buildContentImpact, type ContentImpactResult } from '../services/admin/content-impact.service';
 import { runCompatibilityRegression } from '../services/admin/compatibility-impact.service';
+import type { OperationsTaskReturnContext } from '../services/admin/operations-work-item.service';
 
 type ContentType = 'species' | 'care';
 type StatusAction = 'published' | 'archived';
@@ -87,6 +88,7 @@ export default function AdminContent() {
   const navigate = useNavigate();
   const location = useLocation();
   const deepLinkParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const operationsReturnContext = (location.state as { operationsReturn?: OperationsTaskReturnContext } | null)?.operationsReturn || null;
   const requestedType: ContentType = deepLinkParams.get('type') === 'care' ? 'care' : 'species';
   const requestedId = deepLinkParams.get('id');
   const requestedLocale = deepLinkParams.get('locale') === 'en' ? 'en' : 'zh-CN';
@@ -316,7 +318,7 @@ export default function AdminContent() {
       <div className="mx-auto max-w-[1440px]">
         <header className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white px-4 py-3 shadow-sm">
           <div className="flex items-center gap-3">
-            <button type="button" aria-label="返回后台首页" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/admin/content'); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
+            <button type="button" aria-label="返回后台首页" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/admin/content', { state: operationsReturnContext ? { returnedOperationsTask: operationsReturnContext } : undefined }); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
             <div><h1 className="text-xl font-black">Product / Care Content</h1><p className="text-xs font-bold text-ink/45">管理 Product Truth 与养护内容；Species SEO 使用独立 SEO 后台。</p></div>
           </div>
           <div className="flex flex-wrap items-center gap-2">
