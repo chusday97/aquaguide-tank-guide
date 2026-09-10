@@ -14,6 +14,13 @@
 - 禁止项：不改 `main`、不改 Production Supabase、不合并、不部署 Production、不调用 Figma。
 - 用户现有 `feature/admin-content-v0`、PR #144 和未跟踪文件均不在本分支修改范围内。
 
+## 2026-09-10 本地预览与类型回归修复
+
+- `3000` 当前由残留进程占用，已在 `3001` 启动预览；内置浏览器确认 Species 长页面内容实际存在，章节锚点可到达 FAQ。
+- 修复 Species `assetPreview=1` 品系卡预览调用的最小类型适配；普通公开路由、Published 聚合、metadata、JSON-LD 和 `noindex,follow` 不变。
+- Evidence、Editorial、Public Contract、Responsive Contract、lint、build、diff-check 通过；Species 与动效 Playwright 仍因 macOS MachPort 启动权限失败。
+- 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 未触碰、未暂存。
+
 # AquaGuide 交接文档
 
 ## 2026-09-10 当前有效状态

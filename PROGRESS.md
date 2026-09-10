@@ -1022,3 +1022,10 @@
 - [x] `assetPreview=1` 现在同时预览待审核素材的 Hero 与品系卡；普通公开路由仍只读取 Published asset，未改变审核状态、聚合、metadata 或 JSON-LD。
 - [x] `npm run lint`、`npm run build` 和 `git diff --check` 通过；构建仍保留既有字体体积与大 chunk 警告。
 - [ ] Playwright、独立 Critic、Figma Canonical 和索引门禁仍未完成。
+
+## 2026-09-10 本地预览恢复与品系卡类型边界修复
+
+- [x] 本地 Vite 预览已在备用端口 `3001` 恢复；内置浏览器确认 Species 长页面内容实际存在，章节锚点可定位到 FAQ 和继续探索区域。
+- [x] 修复 `assetPreview=1` 品系卡预览的 TypeScript 类型边界：公开品系摘要只向素材预览函数传入所需的最小字段，不改变 Published 聚合或普通访问。
+- [x] `test:seo-evidence-bindings`、`test:seo-editorial-evidence`、`test:public-seo-contract`、`test:public-seo-responsive-contract`、`lint`、`build` 和 `git diff --check` 通过。
+- [ ] `test:species-landing` 与 `test:seo-motion` 仍在 Chromium 启动阶段被 macOS MachPort 权限阻止；独立 Critic 可读报告、Figma Canonical 和索引门禁仍未完成。
