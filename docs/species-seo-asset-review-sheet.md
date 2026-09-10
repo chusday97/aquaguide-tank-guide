@@ -68,3 +68,31 @@ Variant-card 用途请确认：
 ## 现有卡片素材
 
 现有 `sp_0001` 560×318 与 `sp_0030` 576×334 已在受控尺寸下分别批准为 Hero 和 variant-card；四条 evidence binding 已刷新 fingerprint。
+
+## sp_0432 宝莲灯
+
+- 来源：AquaGuide 项目内 `/species-image-overrides/sp_0432.png`
+- 素材归属：`project-owned`；文件存在，但本表不替代用途级视觉确认
+- Hero 与 variant-card 容器：分别为 16:9 与 4:3，均使用 `contain`
+- 中文 Alt 候选：`侧视的宝莲灯。`
+- 当前结论：`needs_review`；普通公开页面必须显示图片回退，本地 `assetPreview=1` 仅用于人工查看
+
+Hero 用途请确认：
+
+- [ ] 主体是宝莲灯，且页面不会造成身份误解
+- [ ] 鱼鳍、尾部和可见边缘完整
+- [ ] Desktop、平板与 Mobile 预览清晰、不裁切
+- [ ] 中文 Alt 准确描述画面
+- [ ] Hero 结论：`approved / blocked`
+- 确认人：待项目负责人填写
+- 确认时间：待确认
+
+Variant-card 用途请确认：
+
+- [ ] 主体是宝莲灯，且页面不会造成身份误解
+- [ ] 鱼鳍、尾部和可见边缘完整
+- [ ] 4:3 卡片预览清晰、不裁切
+- [ ] 中文 Alt 准确描述画面
+- [ ] Variant-card 结论：`approved / blocked`
+- 确认人：待项目负责人填写
+- 确认时间：待确认
