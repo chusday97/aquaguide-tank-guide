@@ -41,6 +41,8 @@
 - [x] Compatibility publish-gate recheck (`6d01980a`): approved revisions blocked on runtime baseline alignment can re-read authority without mutation; publish appears only after exact alignment.
 - [x] SEO task completion closure (`393f52f7`): exact Care SEO task → Draft → review → human approval → contextual return; completed task leaves refreshed Operations and next priority is visible.
 - [x] Snapshot repair maintenance isolation (`f819182a`): legacy non-Local repair exposes only immutable snapshot repair; Care editing, save/upload and downstream SEO are locked until the repair context clears.
+- [x] Publish Center exact audit targets (`4fd1e280`): stable Product/Care, Compatibility and Species SEO audit identities deep-link to the exact authority resource instead of only the workspace root.
+- [x] One-command Local Species SEO workspace (`832537db`): Local Admin starts Web + API + standalone SEO; localhost links use the configured SEO port and Durable restart E2E verifies that third service.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `1c78ef14`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `832537db`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -33,10 +33,12 @@ Completed in the current local-first / UX phase:
 25. Compatibility publish-gate checking is executable (`6d01980a`): approved revisions blocked by DB/runtime baseline mismatch expose a read-only `重新检查发布资格` action; refresh never mutates the revision and publish only appears after authority alignment is restored.
 26. SEO task completion closure is browser-proven (`393f52f7`): an exact Care SEO task goes Operations → focused SEO authority → Draft → review → human approval → contextual return; the completed SEO task is absent from refreshed Operations and the next priority is immediately visible.
 27. Legacy Published Snapshot repair is isolated as maintenance-only (`f819182a`): the non-Local repair context locks Care fields, content save, image replacement and downstream SEO; only immutable snapshot repair remains actionable, and normal editing returns after the context clears. Local Mode does not expose the legacy-only repair UI.
+28. Publish audit navigation is resource-aware (`4fd1e280`): Product/Care, Compatibility and Species SEO page events deep-link back to the exact record/revision/locale when the audit event contains stable identity; ambiguous Base/batch/admin events safely fall back to the authority home.
+29. Local Species SEO is part of the canonical Local Admin workspace (`832537db`): `npm run dev:local-admin` starts root Web + API + standalone Species SEO, localhost links resolve to the configured SEO dev port, and Durable restart regression verifies the third app is actually reachable.
 
 NEXT milestones:
-1. Current Product/Care, Compatibility and SEO WorkItem action→target→return loops are closed. Do not add more WorkItem machinery unless a concrete reproducible operator dead-end is observed.
-2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget. Staging/main reconciliation stays separately gated.
+1. Current Product/Care, Compatibility, SEO WorkItem and Publish Center audit→resource navigation loops are closed. Do not add more navigation machinery unless a concrete reproducible operator dead-end is observed.
+2. Preserve the one-command Local Admin workspace (`npm run dev:local-admin`: Web + API + Species SEO), durable data authority, centralized review boundary and Production isolation. Staging/main reconciliation stays separately gated.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
 

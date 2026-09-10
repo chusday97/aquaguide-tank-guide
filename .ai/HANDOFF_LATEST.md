@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
-Functional checkpoint: `6d01980a fix(admin): recheck compatibility publish gate`.
+Functional checkpoint: `832537db fix(admin): connect local species seo workspace`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
 - Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
@@ -32,14 +32,16 @@ Functional checkpoint: `6d01980a fix(admin): recheck compatibility publish gate`
 - Validation PASS: Operations desktop/mobile matrix, Care SEO Draft→Review→Approve→drift browser flow, Admin authority UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build and diff hygiene.
 - SEO task completion is browser-proven (`393f52f7`): the exact Care SEO Operations task is completed through Draft → review → human approval, contextual return lands back on Operations, the old SEO task is gone, and the next priority is immediately visible.
 - Legacy snapshot repair is strict maintenance-only (`f819182a`): non-Local `snapshot=1` locks Care fields, save/upload and downstream review/SEO so the only write is immutable snapshot repair; Local Mode does not expose this legacy repair context. Normal Product/Care editing returns after repair clears.
-- NEXT: current Product/Care, Compatibility and SEO action→target→return loops are closed. Stop WorkItem-layer expansion unless a concrete reproducible operator badcase appears. Supabase Staging and main reconciliation remain separately gated/parked.
+- Publish Center audit navigation is exact where event identity is stable (`4fd1e280`): Product/Care uses resource ID, Compatibility uses revision ID, Species SEO uses catalog key + locale; ambiguous audit events fall back to the authority home instead of guessing.
+- Local Species SEO workspace is connected (`832537db`): `npm run dev:local-admin` starts root Web, Local API and the standalone SEO Admin together; localhost Operations/Publish Center links resolve to the configured SEO port (default 3010), while deployed `/admin/seo/` routing is unchanged. Durable Local File restart E2E verifies the SEO app is reachable.
+- NEXT: current task loops, Publish Center audit→resource links, and Local Web/API/Species-SEO workspace routing are closed. Stop navigation/WorkItem expansion unless a concrete reproducible operator badcase appears. Supabase Staging and main reconciliation remain separately gated/parked.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`
 Local worktree: `/Users/chuchu/aquaguide-admin-content-v0`
 Branch: `feature/admin-content-v0`
 Current SEO Operations functional HEAD: `f945e9f86dd0790cbc7e75a57b5968adb08a94e5`
-Current Operations Studio functional HEAD: `f819182a`
+Current Operations Studio functional HEAD: `832537db`
 Latest AI functional checkpoint: `a3f582c22492504edd2de5e1e81a9b43695150ab`
 Final accepted Care SEO snapshot: `fd960667b951cafca83332a4f78a60b413e36d9e`
 

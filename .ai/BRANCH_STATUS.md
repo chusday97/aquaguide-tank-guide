@@ -1,18 +1,17 @@
 # Branch Status
 
 
-## CURRENT OVERRIDE — Snapshot maintenance isolation checkpoint (2026-09-10)
-- Latest functional HEAD: `f819182a` (`fix(admin): isolate snapshot repair maintenance`).
-- Latest acceptance HEAD: `393f52f7` (`test(admin): prove seo task closure`).
-- Compatibility publish-gate checkpoint: `6d01980a`.
-- Bilingual SEO counterpart checkpoint: `44082ee0`.
+## CURRENT OVERRIDE — Local Species SEO workspace checkpoint (2026-09-10)
+- Latest functional HEAD: `832537db` (`fix(admin): connect local species seo workspace`).
+- Publish Center exact audit-link checkpoint: `4fd1e280`.
+- Snapshot maintenance checkpoint: `f819182a`.
 - Live remote feature: `30ff0119`.
 - Live main: `d3c70dee`.
-- Local vs live remote feature: `ahead 54 / behind 0`; intentionally unpushed.
-- Main vs local checkpoint: `275 main-only / 312 feature-only`; merge base remains `ed0cf380`.
-- Product/Care, Compatibility and SEO task loops remain browser-proven; legacy snapshot repair is now maintenance-only.
+- Local vs live remote feature: `ahead 57 / behind 0`; intentionally unpushed by this workflow.
+- Main vs local checkpoint: `275 main-only / 315 feature-only`; merge base remains `ed0cf380`.
+- `npm run dev:local-admin` now starts root Web + API + standalone Species SEO; deployed `/admin/seo/` behavior remains unchanged.
 - Feature remains not merge-ready with main; dedicated reconciliation stays parked.
-- No merge/rebase main, force push, Production/live DB, Supabase Staging or indexing mutation.
+- No merge/rebase main, force push, Production/live DB, Supabase Staging or indexing mutation by this workflow.
 
 Updated: 2026-09-10
 

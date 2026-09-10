@@ -1338,3 +1338,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 54/behind 0, main-only 275/feature-only 312, merge base `ed0cf380`.
 - No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
 - NEXT: stop WorkItem/maintenance expansion unless another concrete reproducible operator dead-end is observed; Staging/main reconciliation remains separately gated.
+
+## 2026-09-10 — Publish audit deep-links + Local Species SEO workspace
+- Committed `4fd1e280 fix(admin): deep-link release audit resources`: Publish Center detail and cross-authority evidence now share one event→authority target contract. Stable Product/Care resource IDs, Compatibility revision IDs and Species SEO catalog key + locale open exact targets; ambiguous events fall back to authority home.
+- Committed `832537db fix(admin): connect local species seo workspace`: `npm run dev:local-admin` now starts Web + API + standalone Species SEO. Localhost standalone SEO links resolve to the configured SEO port (default 3010); deployed `/admin/seo/` paths are unchanged.
+- Real isolated startup PASS with Web 3103 + API 8893 + SEO 3110; root Publish Center rendered its SEO link to 3110 and the English Species SEO editor loaded there. Durable restart E2E now allocates an isolated SEO port and asserts the SEO app title before proceeding.
+- PASS: local-admin mode contract, Publish Center contract/UI 1280/390, Operations desktop/mobile matrix, Durable Local File full restart/backup/restore, root TypeScript, full root build and diff hygiene.
+- Fresh refs after functional commit: remote feature `30ff0119`, main `d3c70dee`; local ahead 57/behind 0 vs feature, main-only 275/feature-only 315, merge base `ed0cf380`.
+- NEXT: stop navigation/WorkItem expansion unless another concrete operator dead-end is reproduced; Supabase Staging and main reconciliation remain separately gated.
