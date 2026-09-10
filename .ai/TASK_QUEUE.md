@@ -27,7 +27,8 @@
 - [x] Publish Center hierarchy (`3cb4a569`): compact source/readiness summary, audit-first timeline, explicit-on-selection detail, secondary release-boundary disclosure, true 390px viewport regression.
 - [x] Product/Care editor priority (`448bfcd8`): compact mobile navigator, fields before review/downstream blocks, no internal mobile overflow, explicit Save-before-Publish state.
 - [x] Downstream review visual semantics (`340cbfd3`): Graphite/White/Green default; Amber only for explicit human decision/review; Care SEO purple/indigo parallel theme removed and contract-guarded.
-- [ ] Audit Compatibility Admin hierarchy/interaction density next; keep Evidence/Impact/Regression/Review authority intact and do not add parallel tool surfaces.
+- [x] Compatibility review hierarchy (`89b6863a`): one Profile/Pair visual authority, explicit state colors, compact authority summary, 390px editor-before-lists/no-overflow guards.
+- [ ] Audit Operations Home first-screen density/duplication next; keep task-first read-only coordination and do not add parallel tool surfaces.
 - [ ] Supabase Staging remains parked until cloud/multi-operator validation is explicitly resumed.
 
 Updated: 2026-09-10

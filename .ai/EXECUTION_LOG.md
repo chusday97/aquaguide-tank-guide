@@ -1244,3 +1244,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Content Impact now uses Amber at container level only when an independent human review is actually required; category chips no longer create blue/purple authority colors.
 - Added contract guards against reintroducing the removed color authorities. PASS: Care SEO projection/editorial/AI, full Admin authority UI, Local Business UI, root TypeScript, full build, diff hygiene.
 - NEXT: Compatibility Admin hierarchy/interaction audit. No push/main/Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Compatibility review hierarchy convergence
+- Committed `89b6863a fix(admin): converge compatibility review hierarchy`.
+- Removed Profile-indigo / Pair-violet split; both revisions now use one neutral authority visual system. Pending human review and approve use Amber; reviewed publish stays Green; reject/error Red; Regression reference Slate.
+- Top baseline explanation is neutral and the three authority stats are compacted into one summary strip.
+- Permanent 390px guards: summary <=120px, Profile editor appears before 500px, no internal overflow. PASS: Compatibility contract, Local Profile/Pair Draft→Regression→Review→Publish, full Admin UI, root TypeScript, full build, diff hygiene.
+- NEXT: Operations Home first-screen density/duplication audit. No push/main/Production/Supabase/indexing mutation.

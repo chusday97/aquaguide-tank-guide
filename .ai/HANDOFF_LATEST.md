@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
-Functional checkpoint: `340cbfd3 fix(admin): align downstream review visual semantics`.
+Functional checkpoint: `89b6863a fix(admin): converge compatibility review hierarchy`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.
 - Data Review remains evidence-first with explicit human conclusion, explicit Canonical choice when needed, one `最终确认版本`, and one final confirmation action.
 - Save/review actions remain centralized in the top Review bar; page/Base footer duplicate actions and repeated Draft chips are removed.
@@ -16,8 +16,9 @@ Functional checkpoint: `340cbfd3 fix(admin): align downstream review visual sema
 - Publish Center hierarchy is converged (`3cb4a569`): source/readiness are compact summaries, audit timeline comes before low-frequency Capability/Permission reference, details open only after an explicit event choice, and true 390px viewport coverage is enforced. Informational states no longer use decision-Amber.
 - Product/Care editor hierarchy is converged (`448bfcd8`): mobile uses a compact record navigator instead of stacking the full catalog before editing; Product/Care fields precede Impact/downstream review; Care SEO moved after Care fields; dirty publish says `保存后可发布`; form internal overflow is guarded. 390px form start improved ~934→244px and Care width 504→366px.
 - Downstream review visual semantics are converged (`340cbfd3`): Care SEO no longer looks like a separate violet/indigo product; Graphite/White is default, Green is success/publish-safe, Red is drift/error, and Amber is reserved for explicit human review/conflict/approval. Content Impact uses the same rule.
+- Compatibility review hierarchy is converged (`89b6863a`): Profile/Pair share one visual authority; Draft/Open/Submit/Regression are neutral, pending review/approve/Impact decision support use Amber, reviewed publish uses Green, reject/error uses Red. Compact authority summary and 390px editor-position/no-overflow guards pass.
 - Validation PASS: Heavy browser hierarchy/Preview regression, Species SEO contracts, Admin content contract, root TypeScript, full root build and diff hygiene.
-- NEXT: audit Compatibility Admin hierarchy/interaction density while preserving Evidence → Impact/Regression → human Review → reviewed publish authority. Do not add new authority layers. Supabase Staging remains parked.
+- NEXT: audit Operations Home remaining first-screen density and duplication while keeping it task-first/read-only. Do not add new authority layers. Supabase Staging remains parked.
 
 Updated: 2026-09-10
 Canonical repo: `chusday97/aquaguide-tank-guide`

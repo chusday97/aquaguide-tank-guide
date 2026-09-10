@@ -2,7 +2,7 @@
 
 
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
-The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `340cbfd3`.
+The active objective is **finish real Aqua Operations Studio editor acceptance on top of the durable local data layer**. Functional checkpoint: `89b6863a`.
 
 Completed in the current local-first / UX phase:
 1. Durable Local File authority + recovery safety remain complete (`746d5c66`, `f501a69d`).
@@ -18,9 +18,10 @@ Completed in the current local-first / UX phase:
 11. Publish Center hierarchy (`3cb4a569`): timeline is primary, event detail is explicit-on-selection, readiness/source summaries are compact, and Capability/Permission live in one secondary boundary disclosure. Real 390px/1280px UI regression PASS.
 12. Product/Care editing priority (`448bfcd8`): mobile record navigation is compact, full catalog is desktop-only, main fields render before Impact/Before-After/Compatibility/Care SEO review references, and dirty publish explicitly requires Save first. Full authority UI + Local Business + root build PASS.
 13. Downstream review visual semantics (`340cbfd3`): Care SEO and Content Impact now follow Graphite/White/Green with Amber reserved for human-review/decision states; violet/indigo/sky parallel themes are contract-blocked. Care SEO projection/editorial/AI + full Admin UI + Local Business + root build PASS.
+14. Compatibility review hierarchy (`89b6863a`): Profile/Pair no longer use separate indigo/violet authorities; revision states now map to neutral/Amber/Green/Red semantics, approve is Amber, publish remains Green, regression is neutral reference, and the authority summary is compact. 390px summary <=120px and Profile editor <500px are regression-guarded.
 
 NEXT milestones:
-1. Audit Compatibility Admin hierarchy/interaction density next; preserve existing Evidence/Impact/Regression/Review authority while reducing simultaneous controls.
+1. Audit Operations Home remaining first-screen density and task/source/tool duplication; keep it task-first and read-only.
 2. Preserve durable data authority, centralized review boundary, explicit ownership, compact visible SEO and Preview editor-width budget.
 
 Supabase Staging, branch reconciliation, Production unlock and indexing remain parked/separately gated.
