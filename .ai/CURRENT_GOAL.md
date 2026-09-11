@@ -42,3 +42,10 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - Social presentation now renders reviewed recommended group range and human-readable swimming-zone labels instead of raw enum values.
 - Reviewed knowledge stays optional: unreviewed species do not receive fabricated space/social sections.
 - The unavailable compatibility disclosure keeps one calculator CTA only; duplicate route actions are prohibited.
+
+## Species Detail presentation checkpoint
+- Reviewed space authority is now rendered as a dedicated `成体与空间 / Adult size & space` disclosure with adult size, planning volume, tank length, swimming zone, activity level, notes, and reviewed sources.
+- Social knowledge now renders recommended group range in addition to minimum group size, and internal swimming-zone enums are localized for users.
+- The detail surface keeps these as progressive evidence rather than moving them into the primary action area.
+- The unavailable compatibility disclosure no longer duplicates the calculator CTA; exactly one route remains.
+- Browser contract updated so a single neon tetra is caution under the reviewed minimum-group rule rather than incorrectly treated as directly addable.

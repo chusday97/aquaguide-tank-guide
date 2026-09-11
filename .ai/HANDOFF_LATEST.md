@@ -55,3 +55,11 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Browser contract updated for the reviewed neon-tetra group-size rule: a default quantity of 1 is caution and exposes the risk action rather than direct stocking.
 - Removed the duplicate calculator CTA from the unavailable compatibility disclosure.
 - Verified: Species Knowledge PASS, TypeScript PASS, production build PASS, Species Detail E2E PASS, Compatibility E2E PASS, GP001–GP004 PASS.
+
+## Latest checkpoint — Species Detail reviewed-knowledge presentation
+- Added a reviewed `Adult size & space` disclosure without redesigning the Species Detail hierarchy.
+- Shows adult size, planning volume, tank length, swimming zone, activity level, notes, and traceable sources only when reviewed knowledge exists.
+- Social/group disclosure now shows recommended group ranges and localized swimming-zone labels.
+- Removed duplicate Compatibility Calculator CTA from the unavailable compatibility state.
+- Species Detail browser contract now respects reviewed group-size authority: one neon tetra is caution, so the footer action is `View current tank risks`, not direct add.
+- Verified: TypeScript PASS, Species Knowledge PASS, production build PASS, Species Detail E2E PASS, Compatibility beginner-action E2E PASS, GP001–GP004 PASS.

@@ -8,7 +8,8 @@ import { fishData } from '../data/fishData';
 import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions } from '../modules/species/species.service';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/tankCompatibilityEngine';
-import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
+import { buildSpeciesKnowledgeProfile, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
+import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
 import { resolveKnowledgeSources } from '../modules/knowledge/knowledgeSources';
 import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
@@ -260,6 +261,49 @@ const getSecondaryCareType = (fish: Fish) => {
   return '';
 };
 
+const getEffectiveHousingPresentation = (fish: Fish, t: any, isEn = false) => {
+  const reviewedProfile = getReviewedCompatibilityProfileForFish(fish);
+  const reviewedSocial = getReviewedSpeciesKnowledgeForFish(fish)?.socialBehavior;
+  const reviewedSolitary = reviewedProfile?.behaviorTraits.includes('solitary_required')
+    || (reviewedSocial?.evidence.reviewStatus === 'reviewed' && reviewedSocial.mode === 'solitary');
+
+  if (reviewedSolitary) {
+    return {
+      label: isEn ? 'Single housing' : '建议单养',
+      status: 'danger' as FitStatus,
+      advice: reviewedSocial?.summary || (isEn ? 'Reviewed behavior evidence supports single housing.' : '已审核行为资料支持单独规划缸位。'),
+    };
+  }
+
+  if (reviewedSocial?.evidence.reviewStatus === 'reviewed') {
+    const minimum = reviewedSocial.minimumGroupSize;
+    if (['shoal', 'school', 'group', 'colony'].includes(reviewedSocial.mode)) {
+      return {
+        label: minimum ? (isEn ? `Group ${minimum}+` : `群体 ${minimum}+`) : (isEn ? 'Group housing' : '群体饲养'),
+        status: 'ok' as FitStatus,
+        advice: reviewedSocial.summary,
+      };
+    }
+    if (reviewedSocial.mode === 'pair') {
+      return { label: isEn ? 'Pair housing' : '成对饲养', status: 'ok' as FitStatus, advice: reviewedSocial.summary };
+    }
+    if (reviewedSocial.mode === 'harem') {
+      return { label: isEn ? 'Ratio-managed group' : '配比群养', status: 'warning' as FitStatus, advice: reviewedSocial.summary };
+    }
+    return {
+      label: isEn ? 'Reviewed social behavior' : '已审核群体习性',
+      status: 'ok' as FitStatus,
+      advice: reviewedSocial.summary,
+    };
+  }
+
+  return {
+    label: fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.fitCaution'),
+    status: fish.housingMode === '建议单养' ? 'danger' as FitStatus : fish.housingMode === '谨慎混养' ? 'warning' as FitStatus : 'ok' as FitStatus,
+    advice: fish.housingReason || t('encyclopedia.adviceHousingDefault'),
+  };
+};
+
 const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefined, t: any, isEn = false): SpeciesFitAssessment => {
   const tempRange = parseRange(fish.waterTemperature);
   const phRange = parseRange(fish.phLevel);
@@ -368,13 +412,14 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
     },
   ];
 
+  const housingPresentation = getEffectiveHousingPresentation(fish, t, isEn);
   const compatibilityFit: FitDimension[] = isEmptyTank ? [] : [{
     type: alreadyInTank ? 'livestock_status' : 'compatibility',
     label: isEn ? "Compatibility" : "混养",
     current: alreadyInTank ? t('encyclopedia.inTankAlready') : t('encyclopedia.livestockCount', { count: existingLivestock.length }),
-    requirement: fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.fitCaution'),
-    status: alreadyInTank ? 'ok' : fish.housingMode === '建议单养' ? 'danger' : fish.housingMode === '谨慎混养' ? 'warning' : 'ok',
-    advice: alreadyInTank ? t('encyclopedia.adviceLivestockInTank') : fish.housingReason || t('encyclopedia.adviceHousingDefault'),
+    requirement: housingPresentation.label,
+    status: alreadyInTank ? 'ok' : housingPresentation.status,
+    advice: alreadyInTank ? t('encyclopedia.adviceLivestockInTank') : housingPresentation.advice,
   }];
   const items = [...environmentFit, ...spaceFit, ...equipmentFit, ...compatibilityFit];
   const compatibilityResult = evaluateTankCompatibility({
@@ -567,6 +612,7 @@ export function SpeciesDetailDialog({
   }, [displayFit]);
 
   const speciesKnowledge = useMemo(() => fish ? buildSpeciesKnowledgeProfile(fish) : null, [fish]);
+  const effectiveHousing = useMemo(() => fish ? getEffectiveHousingPresentation(fish, t, isEn) : null, [fish, isEn, t]);
   const sexIdentificationGuide = speciesKnowledge?.knowledge.sexIdentification || null;
   const reproductionKnowledge = speciesKnowledge?.knowledge.reproduction || null;
   const socialKnowledge = speciesKnowledge?.knowledge.socialBehavior || null;
@@ -828,8 +874,8 @@ export function SpeciesDetailDialog({
                           <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getDifficultyBadgeClass(fish.difficulty)}`}>{fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort')}</span>
                         </div>
                         <div className="mt-2 flex flex-wrap gap-1 min-[760px]:mt-3 min-[760px]:gap-1.5">
-                          {[selectedTaxonomy?.variety, fish.housingMode, ...getToolFunctions(fish)].filter(Boolean).slice(0, 3).map(tag => {
-                            const displayTag = translateTag(tag, t);
+                          {[selectedTaxonomy?.variety, effectiveHousing?.label, ...getToolFunctions(fish)].filter(Boolean).slice(0, 3).map(tag => {
+                            const displayTag = tag === effectiveHousing?.label ? tag : translateTag(tag, t);
                             return <span key={tag} className="rounded-full border border-border bg-white px-2 py-1 text-[10px] font-bold text-ink/60">{displayTag}</span>;
                           })}
                         </div>
@@ -1081,10 +1127,10 @@ export function SpeciesDetailDialog({
                               <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">{isEn ? 'Review species care first, then use the compatibility calculator when you want to evaluate a planned combination.' : '先查看物种养护；需要评估计划组合时，再使用下方混养计算器。'}</p>
                             </section>
                           ) : compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
-                          {(fish.housingMode || fish.housingReason) && (
-                            <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
-                              <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.adviceHousingDefault')}</div>
-                              {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
+                          {effectiveHousing && (
+                            <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60" data-species-effective-housing>
+                              <div className="font-black text-ink">{effectiveHousing.label}</div>
+                              <p className="mt-1">{effectiveHousing.advice}</p>
                             </div>
                           )}
                           <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
