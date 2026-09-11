@@ -1,5 +1,17 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — reconciliation migration invariants closed locally (2026-09-11)
+- [x] Reconciliation candidate contains live main + feature without moving main.
+- [x] Add transactional migration + actionable requiredFacts preflight.
+- [x] Preserve historical revision audit semantics during v3 backfill.
+- [x] Validate full stockingGuidance shape at DB + publish boundaries.
+- [x] Enforce set semantics for requiredFacts and Stage Risk life-stage arrays.
+- [x] Enforce unique Profile/Pair/Stage Risk evidence sourceKeys and stocking evidenceIds.
+- [x] Guard both CREATE and PATCH Compatibility Profile inputs against duplicate set values/rule keys.
+- [x] Re-run Compatibility contract/browser/authority/regression + API/root TypeScript + full build + pglast SQL parse.
+- [ ] Execute migration against a controlled PostgreSQL/Supabase environment; Docker-local execution is blocked by an unresponsive Docker backend.
+- [ ] Main promotion remains separately gated.
+
 ## ACTIVE OVERRIDE — reconciliation candidate migration safety (2026-09-11)
 - [x] Reconciliation candidate contains live main + feature without moving main.
 - [x] Compatibility v3 authority integration and operator UI accepted locally.

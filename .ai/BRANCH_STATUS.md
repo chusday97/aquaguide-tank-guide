@@ -1,5 +1,14 @@
 # Branch Status
 
+## CURRENT OVERRIDE — reconciliation candidate DB-invariant hardened (2026-09-11)
+- Candidate branch `reconcile/admin-content-main-20260911`; latest functional HEAD `b8703fec`.
+- Merge checkpoint remains `80aded34` with parents feature `1a032743` + live main `d3c70dee`.
+- Explicit fetched refs: main `d3c70dee`, remote feature `e9c63560`.
+- `origin/main...candidate = 0 / 330`; `origin/feature/admin-content-v0...candidate = 0 / 345`.
+- Main pointer has not moved; no push/force-push/rebase/cherry-pick to main.
+- Migration remains code-only/unapplied. Docker backend/socket is unresponsive, so true PostgreSQL execution is the remaining validation gate.
+- Compatibility contract/browser/authority/regression, API/root TypeScript, pglast parse, full build and diff hygiene PASS.
+
 ## CURRENT OVERRIDE — reconciliation candidate hardened (2026-09-11)
 - Candidate branch: `reconcile/admin-content-main-20260911`; latest functional HEAD `0a938a12`.
 - Merge checkpoint remains `80aded34` with parents feature `1a032743` + live main `d3c70dee`.

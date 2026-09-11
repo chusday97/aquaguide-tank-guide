@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-11 reconciliation migration invariants complete
+Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional checkpoint: `b8703fec fix(admin): enforce compatibility evidence sets`.
+
+- Candidate contains all fetched live main and remote feature history: `origin/main...HEAD = 0 / 330`; `origin/feature/admin-content-v0...HEAD = 0 / 345`.
+- Compatibility v3 migration now enforces complete `stockingGuidance` shape at DB row + publish boundaries.
+- `requiredFacts`, Stage Risk life-stage arrays and Evidence collections are treated as sets: duplicate values/sourceKeys are rejected by CREATE/PATCH contracts and by DB/publish gates where applicable.
+- Profile/Stage Risk citations and `stockingGuidance.evidenceIds` cannot use duplicates to change authority fingerprints without changing behavior.
+- Validation PASS: Compatibility contract, API/root TypeScript, Local Compatibility browser, authority gate, regression gate, `pglast` SQL parse (41 statements), full build and diff hygiene.
+- Migration execution is still unproven against PostgreSQL because Docker Desktop's backend/socket is unresponsive. Supabase Staging/Production remain untouched.
+- NEXT: no more speculative authority-layer changes. The next real gate is controlled PostgreSQL/Supabase migration execution validation; main promotion remains separate.
+
 ## CURRENT OVERRIDE — 2026-09-11 reconciliation candidate migration hardened
 Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional checkpoint: `0a938a12 fix(admin): harden compatibility v3 migration`.
 

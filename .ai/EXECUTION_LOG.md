@@ -1398,3 +1398,13 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: Compatibility admin contract, Local Compatibility browser, Compatibility authority gate, Stage Risk regression gate, API/root TypeScript, full build and diff hygiene.
 - Docker daemon did not respond, so no local Postgres migration execution was performed or claimed. No Supabase Staging/Production/indexing mutation.
 - Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both histories at main `0/325`, feature `0/340`.
+
+## 2026-09-11 — Compatibility v3 migration invariant closure
+- Committed `8ab60adb fix(admin): add migration preflight guards`, `92ba6c50 fix(admin): validate compatibility stocking guidance`, `f849b6c6 fix(admin): preserve compatibility set invariants`, and `b8703fec fix(admin): enforce compatibility evidence sets`.
+- Migration is now explicitly transactional and fails early with catalog/revision diagnostics when requiredFacts backfill is incomplete.
+- Stocking guidance receives a DB immutable shape validator; requiredFacts and Stage Risk life-stage arrays preserve set semantics; Profile/Pair/Stage Risk citations and stocking evidenceIds reject duplicate source keys/IDs.
+- CREATE + PATCH contracts and the DB publish RPC independently enforce reviewed authority invariants. Historical rejected/published/superseded revisions remain unchanged.
+- PASS: Compatibility admin contract, API/root TypeScript, Local Compatibility browser, authority gate, Stage Risk regression, pglast SQL parse (41 statements), full build, diff hygiene.
+- Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both at main `0/330`, feature `0/345`.
+- Docker Desktop backend/socket remains unresponsive; no local PostgreSQL apply, Supabase Staging/Production migration, indexing mutation or main promotion occurred.
+- NEXT: controlled PostgreSQL/Supabase migration execution validation; do not expand authority/UI scope absent a concrete failure.

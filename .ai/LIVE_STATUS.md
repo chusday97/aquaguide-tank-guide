@@ -1,5 +1,12 @@
 # Live Status
 
+## CURRENT OVERRIDE — reconciliation candidate DB invariants PASS (2026-09-11)
+- Candidate HEAD: `b8703fec` on `reconcile/admin-content-main-20260911`.
+- Live refs: `origin/main=d3c70dee`, `origin/feature/admin-content-v0=e9c63560`; candidate relation is main `0/330`, feature `0/345`.
+- Compatibility v3 migration is transaction-wrapped, preflighted and hardened for stocking guidance, requiredFacts, Stage Risk, Evidence uniqueness and historical-audit preservation.
+- SQL outer syntax parses through `pglast` as 41 statements; Compatibility browser/authority/regression and full build remain PASS.
+- Docker Desktop processes exist but Docker API/socket is unresponsive, so PostgreSQL migration execution has not been claimed. No Staging/Production/indexing mutation occurred.
+
 ## CURRENT OVERRIDE — reconciliation candidate + migration safety PASS (2026-09-11)
 - Candidate HEAD: `0a938a12` on `reconcile/admin-content-main-20260911`.
 - Live refs remain `origin/main=d3c70dee`, `origin/feature/admin-content-v0=e9c63560`; candidate relation is main `0/325`, feature `0/340`.

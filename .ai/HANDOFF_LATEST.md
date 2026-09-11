@@ -1,5 +1,15 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — reconciliation migration invariants complete (2026-09-11)
+- Latest functional checkpoint: `b8703fec fix(admin): enforce compatibility evidence sets`; preceding safety checkpoints: `f849b6c6`, `92ba6c50`, `8ab60adb`.
+- Candidate branch remains `reconcile/admin-content-main-20260911`; main itself has not moved and nothing has been pushed.
+- Compatibility v3 DB boundary now validates full stocking guidance shape, unique requiredFacts/life-stage sets, unique Profile/Stage Risk citation sourceKeys and unique stocking evidenceIds.
+- CREATE and PATCH contracts both reject duplicate requiredFacts, duplicate Stage Risk life stages and duplicate Stage Risk rule keys; Profile/Pair citation arrays share sourceKey uniqueness.
+- Publish RPC independently rejects malformed or duplicate reviewed authority even if Admin API is bypassed. Historical published/rejected/superseded revisions remain untouched by v3 backfill.
+- PASS: Compatibility contract/browser/authority/regression, API/root TypeScript, pglast migration parse (41 statements), full build, diff hygiene.
+- Docker backend remains unresponsive; no local PostgreSQL apply and no Supabase Staging/Production/indexing mutation occurred.
+- NEXT: controlled migration execution validation is the only remaining database gate before any cloud/main promotion discussion.
+
 ## CURRENT OVERRIDE — reconciliation candidate migration hardening complete (2026-09-11)
 - Latest functional checkpoint: `0a938a12 fix(admin): harden compatibility v3 migration` on `reconcile/admin-content-main-20260911`.
 - Candidate contains all live main (`0 / 325`) and all remote feature (`0 / 340`) histories; main itself has not moved and nothing was pushed.
