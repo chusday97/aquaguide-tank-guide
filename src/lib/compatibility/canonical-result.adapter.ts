@@ -9,11 +9,11 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   compatibility_clear: {
     code: 'compatibility_clear', title: '未发现明确阻断', evidence: '已审核事实与当前环境没有发现明确的阻断规则。', severity: 'info', basis: 'rule_inference', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
-  bioload_over_limit: {
-    code: 'bioload_over_limit', title: '生物负荷过高', evidence: '加入后生物负荷筛查达到高风险，不能把此结果当作安全上限。', severity: 'high', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  bioload_screening_high: {
+    code: 'bioload_screening_high', title: '负荷筛查偏高', evidence: '按当前粗粒度体型与数量筛查，负荷偏高；这只是提醒，不等于水体不足或必须换缸，需要结合过滤、成体体型、维护记录与实际水质继续判断。', severity: 'medium', basis: 'tank_condition', confidence: 'low', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
-  bioload_near_limit: {
-    code: 'bioload_near_limit', title: '生物负荷偏高', evidence: '加入后生物负荷筛查偏高，建议减少数量或先改善过滤与空间。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  bioload_screening_elevated: {
+    code: 'bioload_screening_elevated', title: '负荷筛查需要留意', evidence: '按当前粗粒度体型与数量筛查，负荷有所升高；这不是硬性上限，建议结合鱼缸运行稳定性继续观察。', severity: 'medium', basis: 'tank_condition', confidence: 'low', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
   candidate_missing: {
     code: 'candidate_missing', title: '缺少候选生物', evidence: '请先选择要评估的生物。', severity: 'high', basis: 'rule_inference', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
@@ -82,10 +82,10 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
     code: 'tank_temperature_conflict', title: '鱼缸温度不匹配', evidence: '当前鱼缸目标温度不在候选物种的已审核适宜范围内。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
   tank_volume_below_species_minimum: {
-    code: 'tank_volume_below_species_minimum', title: '水体低于物种最低建议', evidence: '当前水体低于候选物种的已审核最低建议，需要先调整空间或更换候选。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+    code: 'tank_volume_below_species_minimum', title: '水体低于物种建议', evidence: '当前水体低于该物种的参考建议值。它用于提醒空间与长期维护压力，不单独作为“不能养”的硬阻断。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
   tank_length_below_species_minimum: {
-    code: 'tank_length_below_species_minimum', title: '缸长低于物种最低建议', evidence: '当前鱼缸长度低于候选物种的已审核最低建议，需要先确认活动空间。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+    code: 'tank_length_below_species_minimum', title: '缸长低于物种建议', evidence: '当前鱼缸长度低于该物种的参考建议值，需要结合成体尺寸、活动方式和可用空间进一步判断。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
   observed_intervention: {
     code: 'observed_intervention', title: '现实观察需要干预', evidence: '已记录持续追逐或进食排除，建议先暂停新增并调整环境或分隔观察。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
@@ -105,6 +105,8 @@ const uniqueRules = (rules: TankCompatibilityRule[]) => {
   });
 };
 
+const LEGACY_SOFT_CAPACITY_CODES = new Set(['bioload_over_limit', 'bioload_near_limit']);
+
 export const applyCanonicalCompatibilityDecision = (
   result: TankCompatibilityResult,
   decision: CompatibilityDecision,
@@ -112,14 +114,28 @@ export const applyCanonicalCompatibilityDecision = (
   const domainRules = decision.ruleCodes
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
-  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'single_housing_required', 'observed_emergency', 'bioload_over_limit']);
-  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_near_limit']);
+  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'single_housing_required', 'observed_emergency']);
+  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
   const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code));
-  // Legacy rules are explanatory input only. Reclassify them by the Domain
-  // status so an old "block" cannot survive when the canonical result is a
-  // caution (for example, territorial labels without a reviewed pair rule).
+
+  // The legacy engine is presentation/evidence input only. Old coarse load
+  // thresholds are explicitly reclassified as warnings so they cannot leak
+  // back into a canonical hard-block decision.
+  const legacySoftCapacityWarnings = [
+    ...result.blockingRules.filter(rule => LEGACY_SOFT_CAPACITY_CODES.has(rule.code)),
+    ...result.warningRules.filter(rule => LEGACY_SOFT_CAPACITY_CODES.has(rule.code)),
+  ].map(rule => ({
+    ...rule,
+    title: '容量/负荷参考提醒',
+    evidence: `${rule.evidence} 该数值只用于粗略筛查，不代表硬性安全上限。`,
+    severity: 'medium' as const,
+    confidence: 'low' as const,
+  }));
+  const legacyHardBlocks = result.blockingRules.filter(rule => !LEGACY_SOFT_CAPACITY_CODES.has(rule.code));
+  const legacyWarnings = result.warningRules.filter(rule => !LEGACY_SOFT_CAPACITY_CODES.has(rule.code));
+
   const reviewedPairBlocking = decision.status === 'not_recommended' && decision.ruleCodes.includes('reviewed_pair_rule')
     ? domainRules.filter(rule => rule.code === 'reviewed_pair_rule')
     : [];
@@ -132,19 +148,18 @@ export const applyCanonicalCompatibilityDecision = (
     predation_risk: 4,
     single_housing_required: 5,
     observed_emergency: 6,
-    bioload_over_limit: 7,
   };
   const orderedDomainBlockingRules = [...domainBlockingWithoutGenericPair].sort(
     (left, right) => (domainBlockingPriority[left.code] ?? 99) - (domainBlockingPriority[right.code] ?? 99),
   );
   const blockingRules = decision.status === 'not_recommended'
-    ? uniqueRules([...orderedDomainBlockingRules, ...result.blockingRules, ...reviewedPairBlocking])
+    ? uniqueRules([...orderedDomainBlockingRules, ...legacyHardBlocks, ...reviewedPairBlocking])
     : [];
   const missingData = decision.status === 'insufficient_data'
     ? uniqueRules([...domainMissingRules, ...result.missingData])
     : [];
   const warningRules = decision.status === 'caution' || decision.status === 'insufficient_data' || decision.status === 'not_recommended'
-    ? uniqueRules([...domainWarningRules, ...result.warningRules])
+    ? uniqueRules([...domainWarningRules, ...legacySoftCapacityWarnings, ...legacyWarnings])
     : [];
   const riskLevel: TankCompatibilityRiskLevel = decision.status === 'not_recommended'
     ? 'high'
