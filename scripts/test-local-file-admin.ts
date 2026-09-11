@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdtemp, readFile, readdir, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import type { AddressInfo } from 'node:net';
@@ -190,13 +190,31 @@ try {
   assert.equal(exported.authority, 'local-file-git');
   assert.equal(exported.productCare.species.length, 1);
   assert.equal(exported.productCare.species[0].input.catalogKey, 'sp-published');
-  assert.equal(exported.productCare.species[0].assets[0].url, `/runtime-assets/${assetId}.png`);
-  assert.deepEqual(Buffer.from(await readFile(path.join(root, 'public/runtime-assets', `${assetId}.png`))), imageBytes);
+  const exportedAssetUrl = exported.productCare.species[0].assets[0].url;
+  assert.match(exportedAssetUrl, new RegExp(`^/runtime-assets/${assetId}-v1-[0-9a-f]{12}\.png$`));
+  const exportedAssetFile = path.basename(exportedAssetUrl);
+  assert.deepEqual(Buffer.from(await readFile(path.join(root, 'public/runtime-assets', exportedAssetFile))), imageBytes);
   assert.equal(JSON.stringify(exported).includes('sp-draft-only'), false);
   assert.equal(exported.productCare.careArticles[0].input.catalogKey, 'care-published');
   assert.equal(exported.compatibility.authority, 'reviewed-git');
   assert.equal(exported.compatibility.profiles.length, 7);
   assert.equal(exported.compatibility.pairRules.length, 4);
+
+  const manifestPath = path.join(root, 'public/runtime-authority.json');
+  const savedManifestPath = `${manifestPath}.saved`;
+  await rename(manifestPath, savedManifestPath);
+  await mkdir(manifestPath);
+  const changedImageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x01]);
+  await writeFile(path.join(root, 'assets', `${assetId}.blob`), changedImageBytes);
+  const failedBusinessState = structuredClone(exportBusinessState);
+  failedBusinessState.publishedSpeciesAssets['sp-published'][0].assetVersion = 2;
+  assert.equal((await putState(started.base, 'business', failedBusinessState)).response.status, 200);
+  const failedRuntimeSnapshot = await requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
+  assert.equal(failedRuntimeSnapshot.response.status, 500);
+  assert.deepEqual((await readdir(path.join(root, 'public/runtime-assets'))).sort(), [exportedAssetFile]);
+  assert.deepEqual(Buffer.from(await readFile(path.join(root, 'public/runtime-assets', exportedAssetFile))), imageBytes);
+  await rm(manifestPath, { recursive: true, force: true });
+  await rename(savedManifestPath, manifestPath);
 
   process.env.ADMIN_LOCAL_FILE_MODE = 'false';
   const disabled = await requestJson(started.base, '/status');

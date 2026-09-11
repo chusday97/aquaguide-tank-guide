@@ -284,7 +284,9 @@ const copyRuntimeAssets = async (root: string, assets: unknown, tempDirectory: s
     if (!extension) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} has unsupported MIME type ${mimeType}.`);
     const body = await readFile(assetFile(root, id)).catch(() => null);
     if (!body) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} blob is missing.`);
-    const fileName = `${id}.${extension}`;
+    const assetVersion = Math.max(1, Number(asset.assetVersion) || 1);
+    const contentHash = createHash('sha256').update(body).digest('hex').slice(0, 12);
+    const fileName = `${id}-v${assetVersion}-${contentHash}.${extension}`;
     await atomicBufferWrite(path.join(tempDirectory, fileName), body);
     result.push({
       id,
@@ -294,7 +296,7 @@ const copyRuntimeAssets = async (root: string, assets: unknown, tempDirectory: s
       ...(Number.isFinite(Number(asset.width)) ? { width: Number(asset.width) } : {}),
       ...(Number.isFinite(Number(asset.height)) ? { height: Number(asset.height) } : {}),
       byteSize: body.length,
-      assetVersion: Math.max(1, Number(asset.assetVersion) || 1),
+      assetVersion,
       url: `/runtime-assets/${fileName}`,
     });
   }
@@ -323,6 +325,8 @@ const exportGitRuntimeAuthority = async () => {
   const publishedCareAssets = asRecord(business.publishedCareAssets) || {};
   const publishedCareMeta = asRecord(business.publishedCareMeta) || {};
   const tempAssets = `${runtimeAssetsDirectory()}.tmp-${process.pid}-${Date.now()}`;
+  const createdRuntimeAssets: string[] = [];
+  let snapshotCommitted = false;
   await rm(tempAssets, { recursive: true, force: true });
   await mkdir(tempAssets, { recursive: true });
   try {
@@ -358,9 +362,30 @@ const exportGitRuntimeAuthority = async () => {
         counts: { profiles: reviewedProfiles.length, pairRules: reviewedPairRules.length },
       },
     };
-    await rm(runtimeAssetsDirectory(), { recursive: true, force: true });
-    await rename(tempAssets, runtimeAssetsDirectory());
+    const liveAssets = runtimeAssetsDirectory();
+    await mkdir(liveAssets, { recursive: true });
+    for (const entry of await readdir(tempAssets, { withFileTypes: true })) {
+      if (!entry.isFile()) continue;
+      const source = path.join(tempAssets, entry.name);
+      const target = path.join(liveAssets, entry.name);
+      if (await pathExists(target)) {
+        await unlink(source);
+        continue;
+      }
+      await rename(source, target);
+      createdRuntimeAssets.push(target);
+    }
     await atomicJsonWrite(runtimeSnapshotFile(), snapshot);
+    snapshotCommitted = true;
+    const referencedAssets = new Set(
+      [...species.flatMap(item => item.assets), ...careArticles.flatMap(item => item.assets)]
+        .map(asset => path.basename(asset.url)),
+    );
+    for (const entry of await readdir(liveAssets, { withFileTypes: true })) {
+      if (entry.isFile() && !referencedAssets.has(entry.name)) {
+        await unlink(path.join(liveAssets, entry.name)).catch(() => undefined);
+      }
+    }
     return {
       generatedAt: snapshot.generatedAt,
       snapshotPath: path.relative(repoRoot, runtimeSnapshotFile()),
@@ -369,8 +394,12 @@ const exportGitRuntimeAuthority = async () => {
       sourceHash: { business: sha256(business), compatibility: sha256(compatibility) },
     };
   } catch (error) {
-    await rm(tempAssets, { recursive: true, force: true });
+    if (!snapshotCommitted) {
+      for (const filePath of createdRuntimeAssets) await unlink(filePath).catch(() => undefined);
+    }
     throw error;
+  } finally {
+    await rm(tempAssets, { recursive: true, force: true });
   }
 };
 
