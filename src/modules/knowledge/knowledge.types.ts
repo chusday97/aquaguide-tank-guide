@@ -3,11 +3,92 @@ import type { ObservedCoexistenceStatus, StockingGuidance } from '../../../packa
 import type { TankCompatibilityResult, TankCompatibilityRule, TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 
 export type KnowledgeConfidence = 'verified' | 'derived' | 'unknown';
+export type KnowledgeReviewStatus = 'reviewed' | 'derived' | 'unreviewed';
 
 export type KnowledgeSource = {
   type: 'species_data' | 'rule_engine' | 'local_graph' | 'unknown';
   label: string;
   confidence: KnowledgeConfidence;
+};
+
+/**
+ * Evidence belongs to individual claims/fields rather than only the whole
+ * species profile. This lets Aqua say "this reproductive mode is verified"
+ * while another field (for example sexing at juvenile stage) remains unknown.
+ */
+export type KnowledgeFieldEvidence = {
+  confidence: KnowledgeConfidence;
+  reviewStatus: KnowledgeReviewStatus;
+  sourceIds: string[];
+  note?: string;
+  reviewedAt?: string;
+};
+
+export type SpeciesSocialMode = 'solitary' | 'pair' | 'harem' | 'shoal' | 'school' | 'group' | 'colony' | 'variable' | 'unknown';
+export type SpeciesSwimmingZone = 'surface' | 'upper' | 'middle' | 'bottom' | 'all' | 'unknown';
+export type SpeciesReproductiveMode =
+  | 'livebearer'
+  | 'egg_scatterer'
+  | 'substrate_spawner'
+  | 'cave_spawner'
+  | 'bubble_nester'
+  | 'mouthbrooder'
+  | 'external_brooder'
+  | 'other'
+  | 'unknown';
+
+export type SpeciesSexIdentificationKnowledge = {
+  title: string;
+  summary: string;
+  points: string[];
+  confidence: KnowledgeConfidence;
+  source: KnowledgeSource;
+  reliableFromLifeStage?: 'juvenile' | 'subadult' | 'adult' | 'unknown';
+  maleTraits?: string[];
+  femaleTraits?: string[];
+  limitations?: string[];
+  evidence?: KnowledgeFieldEvidence;
+};
+
+export type SpeciesReproductionKnowledge = {
+  mode: SpeciesReproductiveMode;
+  plainLanguageLabel: string;
+  summary: string;
+  fertilization?: 'internal' | 'external' | 'variable' | 'unknown';
+  parentalCare?: 'none' | 'egg_guarding' | 'fry_guarding' | 'mouthbrooding' | 'carrying' | 'variable' | 'unknown';
+  gestationOrIncubation?: { minDays?: number; maxDays?: number; label: string };
+  breedingTriggers?: string[];
+  breedingBehavior?: string[];
+  breedingAggression?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  fryCare?: string[];
+  parentFryRisk?: string[];
+  evidence: KnowledgeFieldEvidence;
+};
+
+export type SpeciesSocialKnowledge = {
+  mode: SpeciesSocialMode;
+  minimumGroupSize?: number;
+  recommendedGroupSize?: { min?: number; max?: number };
+  sexRatioGuidance?: string;
+  swimmingZone?: SpeciesSwimmingZone;
+  territoriality?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  finNipping?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  predationRisk?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  summary: string;
+  evidence: KnowledgeFieldEvidence;
+};
+
+export type SpeciesSpaceKnowledge = {
+  adultLengthCm?: { min?: number; max?: number; measurement?: 'SL' | 'TL' | 'unknown' };
+  minVolumeLiters?: number;
+  minTankLengthCm?: number;
+  activityLevel?: 'low' | 'medium' | 'high' | 'unknown';
+  swimmingZone?: SpeciesSwimmingZone;
+  needsCover?: boolean;
+  needsHidingPlaces?: boolean;
+  substrateNotes?: string[];
+  spaceNotes?: string[];
+  evidence: KnowledgeFieldEvidence;
 };
 
 export type SpeciesKnowledgeProfile = {
@@ -26,13 +107,11 @@ export type SpeciesKnowledgeProfile = {
     difficulty: Fish['difficulty'] | 'unknown';
   };
   knowledge: {
-    sexIdentification: {
-      title: string;
-      summary: string;
-      points: string[];
-      confidence: KnowledgeConfidence;
-      source: KnowledgeSource;
-    };
+    sexIdentification: SpeciesSexIdentificationKnowledge;
+    /** V2 blocks are optional during staged migration; absence means unknown, never inferred. */
+    reproduction?: SpeciesReproductionKnowledge;
+    socialBehavior?: SpeciesSocialKnowledge;
+    spaceAndGrowth?: SpeciesSpaceKnowledge;
   };
   source: KnowledgeSource;
 };
