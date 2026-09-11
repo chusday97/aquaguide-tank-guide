@@ -1,5 +1,6 @@
 import type { Fish } from '../../types';
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
+import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
@@ -396,11 +397,6 @@ const reviewedKnowledgeByBaseSpeciesKey: Partial<Record<string, SpeciesKnowledge
   },
 };
 
-const baseSpeciesKey = (scientificName?: string | null) => {
-  const match = scientificName?.trim().match(/^([A-Z][A-Za-z-]+)\s+([a-z][A-Za-z-]+)/);
-  return match ? `${match[1]} ${match[2]}` : null;
-};
-
 const parseRange = (value?: string) => {
   const matches = value?.match(/(\d+(?:\.\d+)?)/g);
   if (!matches?.length) return undefined;
@@ -427,7 +423,7 @@ export const getReviewedSpeciesKnowledge = (speciesId: string) => reviewedKnowle
 export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
   const direct = reviewedKnowledgeBySpeciesId[fish.id];
   if (direct) return direct;
-  const baseKey = baseSpeciesKey(fish.scientificName);
+  const baseKey = getBaseSpeciesScientificName(fish.scientificName);
   return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
 };
 

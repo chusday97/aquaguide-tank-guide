@@ -188,3 +188,11 @@ Draft PR: #149
 - Fish-shrimp Beginner Action browser E2E: PASS.
 - Species Detail browser E2E: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Canonical coverage metric checkpoint
+- Added shared taxonomy helpers for base-species scientific names and canonical taxon keys; runtime inheritance and coverage accounting now use the same biological identity rule.
+- Priority coverage now reports both raw catalogue rows and canonical biological taxa. Duplicate IDs/morphs are integrity-tested but do not inflate progress.
+- Current priority set: 12 raw catalogue records = 132 ordered raw directions; 8 canonical taxa = 56 ordered biological directions.
+- Canonical result: 42/56 directions are recordable and all 42 are caution; 14/56 are `not_recommended`; there are no unconditional compatible canonical directions in this test setup.
+- The previous raw 110/132 number is retained only as a duplicate-record integrity audit, not as the primary progress metric.
+- Duplicate catalogue records for the same taxon must agree on verdict; the coverage test fails if they diverge.

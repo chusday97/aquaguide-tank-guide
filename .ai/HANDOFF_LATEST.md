@@ -88,3 +88,10 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Coverage audit now requires every recordable fish/high-vulnerability-invertebrate direction to expose either prey-vulnerability caution or a stronger predation block.
 - Priority raw catalogue matrix: 132 directions; recordable=110 (108 caution, 2 compatible), not_recommended=22. This raw metric contains duplicate catalogue taxa and must not be described as overall safety/coverage.
 - Verified: Domain PASS, Compatibility PASS, Species Knowledge PASS, Visual Actions PASS, evidence coverage PASS, TypeScript PASS, production build PASS, Compatibility beginner-action browser E2E PASS, Species Detail E2E PASS, GP001–GP004 PASS.
+
+### P1 — Canonical priority coverage metric
+- Centralized base-species scientific-name parsing in `speciesTaxonomy.ts`; compatibility evidence inheritance and Species Knowledge inheritance use the same helper.
+- Coverage now de-duplicates morphs/duplicate catalog IDs into canonical biological taxa.
+- Priority matrix truth: raw catalogue 132 directions / 110 recordable, but canonical biological matrix 56 directions / 42 recordable; all canonical recordable results are caution and 14 are not recommended.
+- The two raw `compatible` results were duplicate Neritina IDs representing the same taxon and are intentionally excluded from canonical progress.
+- Regression requires duplicate records for one taxon to agree on verdict.

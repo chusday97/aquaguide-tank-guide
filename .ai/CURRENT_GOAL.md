@@ -61,3 +61,9 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - Fish + highly vulnerable shrimp is caution unless stronger reviewed predator evidence already hard-blocks the pair.
 - Current priority catalogue-direction coverage is 110/132 recordable, overwhelmingly caution. Do not present this as overall species coverage or a safety rate.
 - Next: canonicalize the coverage metric by biological taxon so duplicate catalogue IDs/variants do not inflate progress, then continue reviewed common-species expansion.
+
+### Current checkpoint — canonical coverage accounting
+- Coverage progress is measured by canonical biological taxon, not raw catalog ID.
+- Priority baseline is now 8 taxa / 56 ordered directions: 42 caution, 14 not_recommended, 0 unconditional compatible.
+- Raw 12-record / 132-direction output remains an integrity audit only. Duplicate IDs/morphs must produce the same canonical verdict.
+- Next reviewed-data work should raise canonical taxon coverage or decision quality, not merely add duplicate catalogue records.

@@ -4,6 +4,7 @@ import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatib
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish, getReviewedPairRule } from '../src/data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
+import { getCanonicalSpeciesTaxonKey } from '../src/modules/species/speciesTaxonomy';
 import type { Aquarium } from '../src/types';
 
 const tank: Aquarium = {
@@ -202,14 +203,47 @@ const counts = rows.reduce<Record<string, number>>((acc, row) => {
   acc[row.status] = (acc[row.status] || 0) + 1;
   return acc;
 }, {});
-const recordableDirections = recordable.map(row => ({
-  direction: `${row.existingId}/${row.existingName} -> ${row.candidateId}/${row.candidateName}`,
-  status: row.status,
-  warningRules: row.warningRules,
-  missingRules: row.missingRules,
-  passedRules: row.passedRules,
-}));
-console.log(`Compatibility evidence coverage passed: ${rows.length} real common-species directions; recordable=${recordable.length}; statuses=${JSON.stringify(counts)}.`);
+
+const fishById = new Map(commonSpecies.map(fish => [fish.id, fish]));
+type CanonicalDirectionAudit = {
+  key: string;
+  existingTaxon: string;
+  candidateTaxon: string;
+  statuses: Set<string>;
+  rawDirections: string[];
+};
+const canonicalDirectionMap = new Map<string, CanonicalDirectionAudit>();
+for (const row of rows) {
+  const existing = fishById.get(row.existingId);
+  const candidate = fishById.get(row.candidateId);
+  if (!existing || !candidate) continue;
+  const existingTaxon = getCanonicalSpeciesTaxonKey(existing);
+  const candidateTaxon = getCanonicalSpeciesTaxonKey(candidate);
+  if (existingTaxon === candidateTaxon) continue;
+  const key = `${existingTaxon} -> ${candidateTaxon}`;
+  const audit = canonicalDirectionMap.get(key) || { key, existingTaxon, candidateTaxon, statuses: new Set<string>(), rawDirections: [] };
+  audit.statuses.add(row.status);
+  audit.rawDirections.push(`${row.existingId}->${row.candidateId}`);
+  canonicalDirectionMap.set(key, audit);
+}
+const canonicalDirections = Array.from(canonicalDirectionMap.values());
+for (const direction of canonicalDirections) {
+  assert.equal(
+    direction.statuses.size,
+    1,
+    `duplicate catalog records disagree for canonical direction ${direction.key}: ${JSON.stringify({ statuses: Array.from(direction.statuses), rawDirections: direction.rawDirections })}`,
+  );
+}
+const canonicalCounts = canonicalDirections.reduce<Record<string, number>>((acc, direction) => {
+  const status = Array.from(direction.statuses)[0];
+  acc[status] = (acc[status] || 0) + 1;
+  return acc;
+}, {});
+const canonicalTaxa = new Set(commonSpecies.map(getCanonicalSpeciesTaxonKey));
+const canonicalExpectedDirections = canonicalTaxa.size * (canonicalTaxa.size - 1);
+assert.equal(canonicalDirections.length, canonicalExpectedDirections, 'canonical direction audit must cover every ordered taxon pair exactly once');
+const canonicalRecordable = (canonicalCounts.compatible || 0) + (canonicalCounts.caution || 0);
+console.log(`Compatibility evidence coverage passed: raw catalogue=${rows.length} directions, recordable=${recordable.length}, statuses=${JSON.stringify(counts)}; canonical taxa=${canonicalTaxa.size}, directions=${canonicalDirections.length}, recordable=${canonicalRecordable}, statuses=${JSON.stringify(canonicalCounts)}.`);
 console.log(`Reviewed pair evidence floor passed: ${evidenceAudit.reviewedPairRules.length} reviewed pair rules.`);
 console.log(`Direct reviewed blocked pair passed: ${oscar.name}/${oscar.id} + ${zebrafish.name}/${zebrafish.id} = ${oscarZebrafishPair.status}.`);
-console.log(`Recordable priority direction audit: ${JSON.stringify(recordableDirections)}`);
+console.log(`Canonical priority coverage is the progress metric; raw catalogue rows remain an integrity audit only.`);

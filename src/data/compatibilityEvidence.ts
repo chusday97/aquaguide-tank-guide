@@ -1,6 +1,7 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
 import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
 import type { CompatibilityLifeStage, Fish } from '../types';
+import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -445,11 +446,6 @@ const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
   },
 };
 
-const baseSpeciesKey = (scientificName?: string | null) => {
-  const match = scientificName?.trim().match(/^([A-Z][A-Za-z-]+)\s+([a-z][A-Za-z-]+)/);
-  return match ? `${match[1]} ${match[2]}` : null;
-};
-
 const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
   sp_0436: {
     speciesId: 'sp_0436',
@@ -533,7 +529,7 @@ const pairRules: ReviewedPairRule[] = [
 export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
 
 export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => (
-  profiles[fish.id] || (baseSpeciesKey(fish.scientificName) ? baseSpeciesProfiles[baseSpeciesKey(fish.scientificName)!] : undefined)
+  profiles[fish.id] || (getBaseSpeciesScientificName(fish.scientificName) ? baseSpeciesProfiles[getBaseSpeciesScientificName(fish.scientificName)!] : undefined)
 );
 
 export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];
