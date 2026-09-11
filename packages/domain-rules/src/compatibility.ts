@@ -86,7 +86,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v1';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v2-soft-capacity';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -101,7 +101,7 @@ const observedStatusOf = (signals?: ObservedCoexistenceSignals): ObservedCoexist
   if (!signals) return 'stable';
   if (signals.respiratoryDistress || signals.multipleDeaths || signals.injuries) return 'emergency';
   if (signals.repeatedChasing || signals.feedingExclusion) return 'intervene';
-  return 'observe';
+  return 'stable';
 };
 
 const stockingGuidanceOf = (species?: DomainSpeciesFact | null, quantity?: number | null): StockingGuidance => {
@@ -270,18 +270,22 @@ export const evaluateCompatibility = ({
 
   if (candidateSpecies && tank?.volumeLiters && tank.volumeLiters > 0) {
     const screening = assessBioloadScreening([
-      ...existingSpecies.map(species => ({ size: species.size, quantity: (existingQuantities?.[species.id] || 1) * (species.loadMultiplier || 1) })),
-      { size: candidateSpecies.size, quantity: (candidateQuantity || 1) * (candidateSpecies.loadMultiplier || 1) },
+      ...existingSpecies.map(species => ({ size: species.size, quantity: existingQuantities?.[species.id] || 1 })),
+      { size: candidateSpecies.size, quantity: candidateQuantity || 1 },
     ], tank.volumeLiters);
-    if (screening.pressure === 'high') raise('not_recommended', 'bioload_over_limit');
-    else if (screening.pressure === 'elevated') raise('caution', 'bioload_near_limit');
+    // Bioload here is deliberately only a coarse screening signal. It uses
+    // broad body-size buckets and does not know filtration turnover, mature
+    // biomass, oxygen, maintenance history or measured nitrogen waste. It may
+    // raise a caution, but it must never be the sole reason to block stocking.
+    if (screening.pressure === 'high') raise('caution', 'bioload_screening_high');
+    else if (screening.pressure === 'elevated') raise('caution', 'bioload_screening_elevated');
   }
 
   if (ruleCodes.length === 0 && status === 'compatible') ruleCodes.push('compatibility_clear');
 
-  // Preserve hard safety blocks (water/temperature/predation/space) even when
-  // evidence is incomplete, but never upgrade an unreviewed combination to a
-  // positive or cautionary planning result.
+  // Preserve hard safety blocks (water/temperature/predation/single-housing)
+  // even when evidence is incomplete, but never upgrade an unreviewed
+  // combination into a positive planning result.
   const finalStatus: CompatibilityDecisionStatus = candidateSpecies && !allSpeciesReviewed && statusRank[status] < statusRank.insufficient_data
     ? 'insufficient_data'
     : status;
@@ -292,8 +296,8 @@ export const evaluateCompatibility = ({
       : 'reviewed';
 
   return {
-    status,
-    addPolicy: getCompatibilityAddPolicy(intent, status),
+    status: finalStatus,
+    addPolicy: getCompatibilityAddPolicy(intent, finalStatus),
     ruleCodes: [...new Set(ruleCodes)],
     catalogVersion,
     ruleVersion: COMPATIBILITY_RULE_VERSION,
