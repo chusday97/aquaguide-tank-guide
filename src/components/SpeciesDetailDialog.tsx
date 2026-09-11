@@ -518,9 +518,17 @@ export function SpeciesDetailDialog({
 
   const speciesKnowledge = useMemo(() => fish ? buildSpeciesKnowledgeProfile(fish) : null, [fish]);
   const sexIdentificationGuide = speciesKnowledge?.knowledge.sexIdentification || null;
+  const reproductionKnowledge = speciesKnowledge?.knowledge.reproduction || null;
+  const socialKnowledge = speciesKnowledge?.knowledge.socialBehavior || null;
   const sexIdentificationSources = useMemo(() => resolveKnowledgeSources(
     sexIdentificationGuide?.evidence?.sourceIds || [],
   ), [sexIdentificationGuide]);
+  const reproductionSources = useMemo(() => resolveKnowledgeSources(
+    reproductionKnowledge?.evidence.sourceIds || [],
+  ), [reproductionKnowledge]);
+  const socialSources = useMemo(() => resolveKnowledgeSources(
+    socialKnowledge?.evidence.sourceIds || [],
+  ), [socialKnowledge]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
   const compatibilityPairs = useMemo(() => {
     if (!fish || !aquariumContext) return [];
@@ -1058,6 +1066,65 @@ export function SpeciesDetailDialog({
                                   {sourceItem.publisher}
                                 </a>
                               ))}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
+                    {reproductionKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-rose-100 bg-rose-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Reproduction' : '繁殖与幼鱼'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <p><strong className="text-ink/80">{reproductionKnowledge.plainLanguageLabel}</strong> · {reproductionKnowledge.summary}</p>
+                          {reproductionKnowledge.gestationOrIncubation?.label && (
+                            <p className="rounded-[12px] bg-white/80 px-2.5 py-2"><strong className="text-ink/75">{isEn ? 'Timing: ' : '周期：'}</strong>{reproductionKnowledge.gestationOrIncubation.label}</p>
+                          )}
+                          {reproductionKnowledge.breedingBehavior?.length ? (
+                            <p><strong className="text-ink/75">{isEn ? 'Behavior: ' : '繁殖行为：'}</strong>{reproductionKnowledge.breedingBehavior.join('；')}</p>
+                          ) : null}
+                          {reproductionKnowledge.fryCare?.length ? (
+                            <p><strong className="text-ink/75">{isEn ? 'Fry care: ' : '幼鱼照护：'}</strong>{reproductionKnowledge.fryCare.join('；')}</p>
+                          ) : null}
+                          {reproductionKnowledge.parentFryRisk?.length ? (
+                            <p className="text-amber-800"><strong>{isEn ? 'Watch for: ' : '注意：'}</strong>{reproductionKnowledge.parentFryRisk.join('；')}</p>
+                          ) : null}
+                        </div>
+                        {reproductionSources.length > 0 && (
+                          <div className="mt-3 border-t border-rose-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {reproductionSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-rose-100 bg-white px-2 py-1 text-[9px] font-black text-rose-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
+                    {socialKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-sky-100 bg-sky-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Social & group needs' : '群体与混养习性'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <p>{socialKnowledge.summary}</p>
+                          {(socialKnowledge.minimumGroupSize || socialKnowledge.swimmingZone || socialKnowledge.sexRatioGuidance) && (
+                            <div className="grid gap-1.5 rounded-[12px] bg-white/80 p-2.5">
+                              {socialKnowledge.minimumGroupSize ? <p><strong className="text-ink/75">{isEn ? 'Minimum group: ' : '最低群体：'}</strong>{socialKnowledge.minimumGroupSize} {isEn ? 'individuals' : '条/只'}</p> : null}
+                              {socialKnowledge.swimmingZone ? <p><strong className="text-ink/75">{isEn ? 'Swimming zone: ' : '活动水层：'}</strong>{socialKnowledge.swimmingZone}</p> : null}
+                              {socialKnowledge.sexRatioGuidance ? <p><strong className="text-ink/75">{isEn ? 'Sex ratio: ' : '性别比例：'}</strong>{socialKnowledge.sexRatioGuidance}</p> : null}
+                            </div>
+                          )}
+                        </div>
+                        {socialSources.length > 0 && (
+                          <div className="mt-3 border-t border-sky-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {socialSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-sky-100 bg-white px-2 py-1 text-[9px] font-black text-sky-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
                             </div>
                           </div>
                         )}

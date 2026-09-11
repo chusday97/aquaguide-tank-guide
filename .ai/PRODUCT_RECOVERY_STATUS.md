@@ -45,6 +45,8 @@ Draft PR: #149
 - `insufficient_data` results now expose missing evidence in the expandable `为什么这样判断` layer instead of hiding the reason.
 - Knowledge Source Registry added for reviewed Species V2 claims; source IDs now resolve to publisher/title/URL instead of remaining opaque strings.
 - Existing sex-identification disclosure now shows traceable reviewed-source links without changing the surrounding Species Detail layout.
+- Reviewed reproduction and social/group blocks now render as additional disclosures inside the existing Species Detail hierarchy; unreviewed species get no fabricated empty sections.
+- Reproduction/social disclosures carry the same traceable reviewed-source links as sex-identification claims.
 
 ## Validation status
 - Main Convergence foundation workflow on the latest pre-golden-case checkpoint: PASS through project truth, catalog, domain compatibility, legacy compatibility, lint, API and production build.
@@ -56,11 +58,12 @@ Draft PR: #149
 - Species V2 → compatibility wiring: domain compatibility PASS, legacy facade PASS, beginner visual/action regression PASS, species knowledge PASS, TypeScript PASS, production build PASS.
 - Knowledge Source Registry checkpoint: source-resolution assertions PASS, TypeScript PASS, full compatibility regressions PASS, production build PASS.
 - User-facing stability confirmation checkpoint: compatibility regression PASS, explicit non-mutating confirmation test PASS, TypeScript PASS, production build PASS.
+- Species Detail reproduction/social disclosure checkpoint: species-knowledge assertions PASS, TypeScript PASS, production build PASS.
 - Local preview verified HTTP 200 at `http://127.0.0.1:4320/`.
 - Do not merge until the latest current-head workflows are green.
 
 ## Next execution order
-1. Present reviewed reproduction/social blocks inside the existing Species Detail hierarchy without a layout rewrite.
+1. Run browser-level golden paths against the recovery head and fix regressions before widening scope.
 2. Expand the reviewed cohort incrementally; do not mass-fill unknown fields.
 3. Add reviewed adult-size / space fields for the next cohort and wire them through the same V2-first authority path.
 4. Add browser-level coverage for the optional stability confirmation and minimum-group-size action.
