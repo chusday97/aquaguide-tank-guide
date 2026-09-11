@@ -186,6 +186,8 @@ assert.match(publishMigration, /evidence_resolution_missing/);
 assert.match(publishMigration, /VERSION_CONFLICT: baseline/);
 
 const v3Migration = readFileSync('supabase/migrations/202609110001_compatibility_v3_profile_authority.sql', 'utf8');
+assert.match(v3Migration, /^-- Compatibility v3 Profile authority extension\.[\s\S]*?\nbegin;/, 'v3 migration must run inside an explicit transaction boundary.');
+assert.match(v3Migration, /commit;\s*$/, 'v3 migration must commit only after all schema, backfill and RPC changes succeed.');
 assert.match(v3Migration, /required_facts text\[\]/, 'v3 Profile authority must persist required facts.');
 assert.match(v3Migration, /stocking_guidance jsonb/, 'v3 Profile authority must persist stocking guidance.');
 assert.match(v3Migration, /species_compatibility_profile_stage_risks/, 'Stage Risk must be Profile-owned reviewed authority.');
@@ -203,6 +205,8 @@ assert.match(v3Migration, /stage_risk_shape_invalid/, 'DB publish must reject ma
 assert.match(v3Migration, /stage_risk_rule_key_duplicate/, 'DB publish must reject duplicate Stage Risk rule keys.');
 assert.match(v3Migration, /stage_risk_citation_duplicate/, 'DB publish must reject duplicate or blank Stage Risk citation source keys.');
 assert.match(v3Migration, /compatibility_profiles_required_facts_v3_check/, 'Reviewed Profile rows must enforce requiredFacts at the database boundary.');
+assert.match(v3Migration, /requiredFacts backfill incomplete for catalog keys/, 'v3 migration must fail with actionable reviewed-Profile diagnostics before installing requiredFacts constraints.');
+assert.match(v3Migration, /active Profile revision requiredFacts backfill incomplete/, 'v3 migration must fail with actionable active-revision diagnostics instead of an opaque CHECK violation.');
 assert.match(v3Migration, /status in \('rejected','published','superseded'\)[\s\S]*cardinality\(required_facts\)>0/, 'Active revisions must enforce v3 requiredFacts while legacy historical revisions remain readable.');
 assert.match(v3Migration, /stage_risk_evidence_resolution_missing/);
 assert.match(v3Migration, /VERSION_CONFLICT: stage_risk_evidence/);

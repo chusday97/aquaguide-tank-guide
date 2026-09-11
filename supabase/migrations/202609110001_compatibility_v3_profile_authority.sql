@@ -1,6 +1,8 @@
 -- Compatibility v3 Profile authority extension.
 -- Additive only; committed for controlled non-Production rollout.
 
+begin;
+
 alter table public.species_compatibility_profiles
   add column if not exists required_facts text[] not null default '{}',
   add column if not exists stocking_guidance jsonb;
@@ -175,6 +177,45 @@ set base_profile_version=p.version,
 from public.species_compatibility_profiles p
 where p.species_id=r.species_id and p.review_status='reviewed' and p.deleted_at is null
   and r.status in ('draft','pending_review','approved');
+
+-- Fail closed with actionable diagnostics before v3 constraints are installed.
+-- Extra reviewed Profiles or orphaned active revisions must not fail later as opaque CHECK violations.
+do $$
+declare
+  v_invalid_profile_keys text[];
+  v_invalid_revision_ids uuid[];
+begin
+  select array_agg(s.catalog_key order by s.catalog_key)
+  into v_invalid_profile_keys
+  from public.species_compatibility_profiles p
+  join public.species s on s.id=p.species_id
+  where p.review_status='reviewed' and p.deleted_at is null
+    and (
+      cardinality(p.required_facts)=0
+      or exists (
+        select 1 from unnest(p.required_facts) fact
+        where fact not in ('water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior')
+      )
+    );
+  if v_invalid_profile_keys is not null then
+    raise exception 'Compatibility v3 reviewed Profile requiredFacts backfill incomplete for catalog keys: %', array_to_string(v_invalid_profile_keys, ', ');
+  end if;
+
+  select array_agg(r.id order by r.id)
+  into v_invalid_revision_ids
+  from public.species_compatibility_profile_revisions r
+  where r.status in ('draft','pending_review','approved')
+    and (
+      cardinality(r.required_facts)=0
+      or exists (
+        select 1 from unnest(r.required_facts) fact
+        where fact not in ('water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior')
+      )
+    );
+  if v_invalid_revision_ids is not null then
+    raise exception 'Compatibility v3 active Profile revision requiredFacts backfill incomplete for revision ids: %', array_to_string(v_invalid_revision_ids::text[], ', ');
+  end if;
+end $$;
 
 alter table public.species_compatibility_profiles
   add constraint compatibility_profiles_required_facts_v3_check
@@ -354,3 +395,5 @@ grant execute on function public.publish_compatibility_profile_revision(uuid,int
 
 comment on function public.publish_compatibility_profile_revision(uuid,integer) is
   'Atomically publishes one approved Compatibility v3 Profile including required facts, stocking guidance, Profile evidence and Profile-owned Stage Risk evidence.';
+
+commit;
