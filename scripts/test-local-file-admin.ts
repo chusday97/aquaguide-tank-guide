@@ -8,6 +8,7 @@ import type { Server } from 'node:http';
 const root = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-local-admin-'));
 process.env.ADMIN_LOCAL_FILE_MODE = 'true';
 process.env.ADMIN_LOCAL_FILE_ROOT = root;
+process.env.ADMIN_RUNTIME_SNAPSHOT_ROOT = path.join(root, 'public');
 process.env.NODE_ENV = 'test';
 delete process.env.VERCEL;
 
@@ -63,6 +64,20 @@ try {
   const futureState = await putState(started.base, 'business', { ...businessState, schemaVersion: 2 });
   assert.equal(futureState.response.status, 409);
   assert.equal(futureState.payload.error.code, 'MIGRATION_REJECTED');
+
+
+  const compatibilityV2 = {
+    schemaVersion: 2,
+    reviewedProfiles: Array.from({ length: 7 }, (_, index) => ({ catalogKey: `sp-test-${index + 1}` })),
+    reviewedPairRules: Array.from({ length: 4 }, (_, index) => ({ catalogKeys: [`sp-test-${index + 1}`, `sp-test-${index + 2}`] })),
+    profileRevisions: [], pairRevisions: [], authoritySequence: 1, updatedAt: 'test',
+  };
+  const compatibilityWrite = await putState(started.base, 'compatibility', compatibilityV2);
+  assert.equal(compatibilityWrite.response.status, 200);
+  assert.equal(compatibilityWrite.payload.data.persisted, true);
+  const compatibilityFuture = await putState(started.base, 'compatibility', { ...compatibilityV2, schemaVersion: 3 });
+  assert.equal(compatibilityFuture.response.status, 409);
+  assert.equal(compatibilityFuture.payload.error.code, 'MIGRATION_REJECTED');
 
   const invalidPartition = await requestJson(started.base, '/state/not-a-partition');
   assert.equal(invalidPartition.response.status, 400);
@@ -137,6 +152,51 @@ try {
   assert.equal(futureDisk.payload.error.code, 'MIGRATION_REJECTED');
   await writeFile(path.join(root, 'business.json'), currentDisk);
   assert.equal((await requestJson(started.base, '/state/business')).response.status, 200);
+
+  const publishedSpeciesInput = {
+    catalogKey: 'sp-published', name: 'Published Fish', scientificName: 'Published fishus', category: 'Fish', difficulty: 'Easy',
+    waterTemperatureText: '24-26°C', phLevelText: '6.5-7.5', waterChangeCycleDays: 7, description: 'Published description', diet: 'Omnivore',
+    tankSizeText: '40 L', temperament: 'Peaceful', sizeClass: 'Small', isCustom: false, searchTerms: ['Published Fish'],
+  };
+  const publishedCareInput = {
+    catalogKey: 'care-published', title: 'Published Care', category: 'Routine', urgency: '日常', summary: 'Published care summary',
+    symptoms: ['symptom'], steps: [{ instruction: 'step', actionKind: 'immediate' }], avoidActions: [], observeItems: [], diagnoseWhen: ['check'], nextStep: 'next', keywords: ['care'],
+  };
+  const exportBusinessState = {
+    schemaVersion: 1,
+    species: [{ id: 'local-species-sp-published', ...publishedSpeciesInput, status: 'published', version: 2 }, { id: 'draft-only', ...publishedSpeciesInput, catalogKey: 'sp-draft-only', status: 'draft', version: 9 }],
+    care: [{ id: 'local-care-care-published', ...publishedCareInput, status: 'published', version: 3, careArticleSteps: [{ id: 'step-1', position: 1, instruction: 'step', actionKind: 'immediate' }] }],
+    publishedSpecies: { 'sp-published': publishedSpeciesInput },
+    publishedCare: { 'care-published': publishedCareInput },
+    publishedCareMeta: { 'care-published': { sourceVersion: 3, publishedAt: '2026-09-11T00:00:00.000Z' } },
+    publishedSpeciesAssets: { 'sp-published': [{ id: assetId, variant: 'detail', storageBucket: 'local-file', storagePath: assetId, assetVersion: 1, isCurrent: true, mimeType: 'image/png' }] }, publishedCareAssets: {},
+    releaseEvents: [
+      { authority: 'product_care', domain: 'product', resourceKey: 'sp-published', status: 'published', version: 2, occurredAt: '2026-09-11T00:00:00.000Z' },
+      { authority: 'product_care', domain: 'product', resourceKey: 'sp-draft-only', status: 'draft', version: 9, occurredAt: '2026-09-11T00:00:00.000Z' },
+    ],
+    updatedAt: '2026-09-11T00:00:00.000Z',
+  };
+  assert.equal((await putState(started.base, 'business', exportBusinessState)).response.status, 200);
+  const reviewedCompatibilityV2 = {
+    ...compatibilityV2,
+    reviewedProfiles: compatibilityV2.reviewedProfiles.map((row, index) => ({ ...row, reviewStatus: 'reviewed', behaviorTraits: [], predationTargets: [], confidence: 'medium', citations: [{ id: `profile-evidence-${index}`, title: 'Evidence', publisher: 'Test', url: 'https://example.com', sourceType: 'peer_reviewed', reviewStatus: 'reviewed', version: 1 }], requiredFacts: ['water'], stageRiskRules: [], version: 1 })),
+    reviewedPairRules: compatibilityV2.reviewedPairRules.map((row, index) => ({ ...row, reviewStatus: 'reviewed', verdict: 'caution', riskType: 'test', reason: 'test', mitigation: [], basis: 'pair_rule', confidence: 'medium', citations: [{ id: `pair-evidence-${index}`, title: 'Evidence', publisher: 'Test', url: 'https://example.com', sourceType: 'peer_reviewed', reviewStatus: 'reviewed', version: 1 }], version: 1 })),
+  };
+  assert.equal((await putState(started.base, 'compatibility', reviewedCompatibilityV2)).response.status, 200);
+  const runtimeSnapshot = await requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
+  assert.equal(runtimeSnapshot.response.status, 201);
+  assert.deepEqual(runtimeSnapshot.payload.data.counts, { species: 1, care: 1, profiles: 7, pairRules: 4 });
+  const exported = JSON.parse(await readFile(path.join(root, 'public/runtime-authority.json'), 'utf8'));
+  assert.equal(exported.authority, 'local-file-git');
+  assert.equal(exported.productCare.species.length, 1);
+  assert.equal(exported.productCare.species[0].input.catalogKey, 'sp-published');
+  assert.equal(exported.productCare.species[0].assets[0].url, `/runtime-assets/${assetId}.png`);
+  assert.deepEqual(Buffer.from(await readFile(path.join(root, 'public/runtime-assets', `${assetId}.png`))), imageBytes);
+  assert.equal(JSON.stringify(exported).includes('sp-draft-only'), false);
+  assert.equal(exported.productCare.careArticles[0].input.catalogKey, 'care-published');
+  assert.equal(exported.compatibility.authority, 'reviewed-git');
+  assert.equal(exported.compatibility.profiles.length, 7);
+  assert.equal(exported.compatibility.pairRules.length, 4);
 
   process.env.ADMIN_LOCAL_FILE_MODE = 'false';
   const disabled = await requestJson(started.base, '/status');

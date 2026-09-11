@@ -1,8 +1,9 @@
-import type { CareArticleDetailDto, SpeciesDetailDto } from '../../packages/contracts/src/index';
+import type { CareArticleDetailDto, RuntimeAuthorityCareInput, RuntimeAuthoritySpeciesInput, SpeciesDetailDto } from '../../packages/contracts/src/index';
 import type { Fish } from '../types';
 import { apiRequest } from '../services/api/api-client';
 import { fishData as seedFishData } from './fishData';
 import { careTopicsData as seedCareTopicsData, type CareTopic } from './careTopicsData';
+import { loadGitRuntimeAuthoritySnapshot } from './gitRuntimeAuthority';
 
 type ContentBootstrapResponse = {
   species: SpeciesDetailDto[];
@@ -14,7 +15,7 @@ type ContentBootstrapResponse = {
 export type RuntimeContentLocale = 'zh-CN' | 'en';
 
 export type RuntimeContentStatus = {
-  source: 'published-api' | 'static-fallback';
+  source: 'git-snapshot' | 'published-api' | 'static-fallback';
   speciesFromPublished: number;
   careFromPublished: number;
   speciesFallback: number;
@@ -80,6 +81,42 @@ const toFish = (detail: SpeciesDetailDto, fallback?: Fish): Fish => {
   };
 };
 
+const toFishFromGitSnapshot = (input: RuntimeAuthoritySpeciesInput, assets: Array<{ variant: string; url: string }>, fallback?: Fish): Fish => ({
+  id: input.catalogKey,
+  name: input.name,
+  scientificName: input.scientificName,
+  category: input.category,
+  image: assets.find(asset => asset.variant === 'detail')?.url || assets[0]?.url || fallback?.image || '',
+  difficulty: input.difficulty,
+  waterTemperature: input.waterTemperatureText,
+  phLevel: input.phLevelText,
+  waterChangeCycle: input.waterChangeCycleDays,
+  description: input.description,
+  diet: input.diet,
+  ...(fallback?.feedingProfile ? { feedingProfile: { ...fallback.feedingProfile } } : {}),
+  tankSize: input.tankSizeText,
+  temperament: input.temperament,
+  size: input.sizeClass,
+  housingMode: input.housingMode,
+  housingReason: input.housingReason,
+  isCustom: input.isCustom,
+});
+const toCareTopicFromGitSnapshot = (input: RuntimeAuthorityCareInput, assets: Array<{ variant: string; url: string }>, fallback?: CareTopic): CareTopic => ({
+  id: input.catalogKey,
+  title: input.title,
+  category: input.category,
+  urgency: input.urgency,
+  summary: input.summary,
+  symptoms: [...input.symptoms],
+  firstSteps: input.steps.map(step => step.instruction),
+  avoid: [...input.avoidActions],
+  observe: [...input.observeItems],
+  diagnoseWhen: [...input.diagnoseWhen],
+  nextStep: input.nextStep,
+  imageUrl: assets.find(asset => asset.variant === 'article_main')?.url || assets[0]?.url || fallback?.imageUrl || '',
+  keywords: [...input.keywords],
+});
+
 const toCareTopic = (detail: CareArticleDetailDto, fallback?: CareTopic): CareTopic => ({
   id: detail.catalogKey,
   title: detail.title,
@@ -141,6 +178,38 @@ const mergeCare = (published: CareArticleDetailDto[]) => {
   return merged;
 };
 
+const applyGitProductCareSnapshot = (snapshot: Awaited<ReturnType<typeof loadGitRuntimeAuthoritySnapshot>>) => {
+  if (!snapshot || snapshot.generatedAt === null) return false;
+  const speciesByKey = new Map(snapshot.productCare.species.map(item => [item.input.catalogKey, item]));
+  const careByKey = new Map(snapshot.productCare.careArticles.map(item => [item.input.catalogKey, item]));
+  const seedSpeciesKeys = new Set(seedFishData.map(item => item.id));
+  const seedCareKeys = new Set(seedCareTopicsData.map(item => item.id));
+  const species = seedFishData.map(seed => {
+    const item = speciesByKey.get(seed.id);
+    return item ? toFishFromGitSnapshot(item.input, item.assets, seed) : cloneFish(seed);
+  });
+  for (const item of snapshot.productCare.species) if (!seedSpeciesKeys.has(item.input.catalogKey)) species.push(toFishFromGitSnapshot(item.input, item.assets));
+  const care = seedCareTopicsData.map(seed => {
+    const item = careByKey.get(seed.id);
+    return item ? toCareTopicFromGitSnapshot(item.input, item.assets, seed) : cloneCareTopic(seed);
+  });
+  for (const item of snapshot.productCare.careArticles) if (!seedCareKeys.has(item.input.catalogKey)) care.push(toCareTopicFromGitSnapshot(item.input, item.assets));
+  publishedSpeciesKeys.clear();
+  publishedCareKeys.clear();
+  snapshot.productCare.species.forEach(item => publishedSpeciesKeys.add(item.input.catalogKey));
+  snapshot.productCare.careArticles.forEach(item => publishedCareKeys.add(item.input.catalogKey));
+  runtimeFishData.splice(0, runtimeFishData.length, ...species);
+  runtimeCareTopicsData.splice(0, runtimeCareTopicsData.length, ...care);
+  runtimeContentStatus = {
+    source: 'git-snapshot',
+    speciesFromPublished: snapshot.productCare.species.length,
+    careFromPublished: snapshot.productCare.careArticles.length,
+    speciesFallback: Math.max(0, species.length - snapshot.productCare.species.length),
+    careFallback: Math.max(0, care.length - snapshot.productCare.careArticles.length),
+  };
+  return true;
+};
+
 export const getRuntimeContentStatus = () => ({ ...runtimeContentStatus });
 
 export const getRuntimeContentLocalePreference = (): RuntimeContentLocale => {
@@ -171,6 +240,8 @@ export const hydratePublishedContentCatalog = async (
   locale: RuntimeContentLocale = getRuntimeContentLocalePreference(),
 ) => {
   try {
+    const gitSnapshot = await loadGitRuntimeAuthoritySnapshot();
+    if (applyGitProductCareSnapshot(gitSnapshot)) return getRuntimeContentStatus();
     const payload = await apiRequest<ContentBootstrapResponse>(`/content-bootstrap?locale=${encodeURIComponent(locale)}`, {
       authenticated: false,
       signal: AbortSignal.timeout(5000),

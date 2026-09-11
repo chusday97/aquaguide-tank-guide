@@ -1,7 +1,9 @@
 import express, { Router } from 'express';
+import { createHash } from 'node:crypto';
 import { cp, mkdir, readFile, readdir, rename, rm, stat, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { careArticleAdminInputSchema, speciesAdminInputSchema, type GitRuntimeAuthoritySnapshot, type RuntimeAuthorityAssetDto } from '../../../../packages/contracts/src/index';
 import { ApiError, asyncRoute, sendData } from '../http';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -9,7 +11,7 @@ const repoRoot = path.resolve(currentDir, '../../../..');
 const partitionNames = ['business', 'compatibility', 'care-seo'] as const;
 type LocalAdminPartition = typeof partitionNames[number];
 const partitions = new Set<string>(partitionNames);
-const supportedStateSchemaVersion: Record<LocalAdminPartition, number> = { business: 1, compatibility: 1, 'care-seo': 1 };
+const supportedStateSchemaVersion: Record<LocalAdminPartition, number> = { business: 1, compatibility: 2, 'care-seo': 1 };
 const localFileFormatVersion = 1;
 const backupFormatVersion = 1;
 const supportedMime = new Set(['image/png', 'image/jpeg', 'image/webp']);
@@ -254,6 +256,124 @@ const inspectRoot = async (root: string): Promise<IntegrityReport> => {
   };
 };
 
+const sha256 = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const runtimePublicationRoot = () => path.resolve(process.env.ADMIN_RUNTIME_SNAPSHOT_ROOT || path.join(repoRoot, 'public'));
+const runtimeSnapshotFile = () => path.join(runtimePublicationRoot(), 'runtime-authority.json');
+const runtimeAssetsDirectory = () => path.join(runtimePublicationRoot(), 'runtime-assets');
+const assetExtension = (mimeType: string) => mimeType === 'image/png' ? 'png' : mimeType === 'image/jpeg' ? 'jpg' : mimeType === 'image/webp' ? 'webp' : null;
+const releaseEventFor = (business: JsonRecord, domain: 'product' | 'care', catalogKey: string) => {
+  const events = Array.isArray(business.releaseEvents) ? business.releaseEvents : [];
+  return events.find(value => {
+    const event = asRecord(value);
+    return event?.authority === 'product_care' && event.domain === domain && event.resourceKey === catalogKey && event.status === 'published';
+  }) as JsonRecord | undefined;
+};
+const copyRuntimeAssets = async (root: string, assets: unknown, tempDirectory: string): Promise<RuntimeAuthorityAssetDto[]> => {
+  if (!Array.isArray(assets)) return [];
+  const current = assets.map(asRecord).filter((asset): asset is JsonRecord => Boolean(asset?.isCurrent));
+  const result: RuntimeAuthorityAssetDto[] = [];
+  for (const asset of current) {
+    const id = String(asset.id || '');
+    if (!/^local-asset-[A-Za-z0-9-]+$/.test(id) || asset.storageBucket !== 'local-file') {
+      throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id || '(missing id)'} is not a durable local-file asset.`);
+    }
+    const metadata = asRecord(await readJsonOrNull(assetMetaFile(root, id)));
+    if (!metadata) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} metadata is missing.`);
+    const mimeType = String(metadata.mimeType || asset.mimeType || '');
+    const extension = assetExtension(mimeType);
+    if (!extension) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} has unsupported MIME type ${mimeType}.`);
+    const body = await readFile(assetFile(root, id)).catch(() => null);
+    if (!body) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} blob is missing.`);
+    const fileName = `${id}.${extension}`;
+    await atomicBufferWrite(path.join(tempDirectory, fileName), body);
+    result.push({
+      id,
+      ...(typeof asset.stepId === 'string' ? { stepId: asset.stepId } : {}),
+      variant: String(asset.variant || 'detail'),
+      mimeType,
+      ...(Number.isFinite(Number(asset.width)) ? { width: Number(asset.width) } : {}),
+      ...(Number.isFinite(Number(asset.height)) ? { height: Number(asset.height) } : {}),
+      byteSize: body.length,
+      assetVersion: Math.max(1, Number(asset.assetVersion) || 1),
+      url: `/runtime-assets/${fileName}`,
+    });
+  }
+  return result;
+};
+const exportGitRuntimeAuthority = async () => {
+  const root = localRoot();
+  const integrity = await inspectRoot(root);
+  if (!integrity.healthy) throw new ApiError(409, 'MIGRATION_REJECTED', 'Local Admin integrity check failed; Git runtime snapshot was not generated.');
+  const business = await readPartitionState(root, 'business', true);
+  const compatibility = await readPartitionState(root, 'compatibility', true);
+  if (!business || !compatibility) throw new ApiError(409, 'MIGRATION_REJECTED', 'Business and Compatibility durable partitions must exist before Git publication.');
+  if (Number(compatibility.schemaVersion) !== 2) throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility v2 durable authority is required before Git publication.');
+
+  const reviewedProfiles = Array.isArray(compatibility.reviewedProfiles) ? compatibility.reviewedProfiles : [];
+  const reviewedPairRules = Array.isArray(compatibility.reviewedPairRules) ? compatibility.reviewedPairRules : [];
+  if (reviewedProfiles.length !== 7 || reviewedPairRules.length !== 4
+    || reviewedProfiles.some(value => asRecord(value)?.reviewStatus !== 'reviewed')
+    || reviewedPairRules.some(value => asRecord(value)?.reviewStatus !== 'reviewed')) {
+    throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility Git publication requires the exact reviewed 7 Profile / 4 Pair authority.');
+  }
+
+  const publishedSpecies = asRecord(business.publishedSpecies) || {};
+  const publishedCare = asRecord(business.publishedCare) || {};
+  const publishedSpeciesAssets = asRecord(business.publishedSpeciesAssets) || {};
+  const publishedCareAssets = asRecord(business.publishedCareAssets) || {};
+  const publishedCareMeta = asRecord(business.publishedCareMeta) || {};
+  const tempAssets = `${runtimeAssetsDirectory()}.tmp-${process.pid}-${Date.now()}`;
+  await rm(tempAssets, { recursive: true, force: true });
+  await mkdir(tempAssets, { recursive: true });
+  try {
+    const species = [] as GitRuntimeAuthoritySnapshot['productCare']['species'];
+    for (const [catalogKey, rawInput] of Object.entries(publishedSpecies).sort(([a], [b]) => a.localeCompare(b))) {
+      const input = speciesAdminInputSchema.parse(rawInput);
+      if (input.catalogKey !== catalogKey) throw new ApiError(409, 'MIGRATION_REJECTED', `Published Species key mismatch for ${catalogKey}.`);
+      const event = releaseEventFor(business, 'product', catalogKey);
+      species.push({ input, version: Math.max(1, Number(event?.version) || 1), publishedAt: String(event?.occurredAt || business.updatedAt || new Date().toISOString()), assets: await copyRuntimeAssets(root, publishedSpeciesAssets[catalogKey], tempAssets) });
+    }
+    const careArticles = [] as GitRuntimeAuthoritySnapshot['productCare']['careArticles'];
+    for (const [catalogKey, rawInput] of Object.entries(publishedCare).sort(([a], [b]) => a.localeCompare(b))) {
+      const input = careArticleAdminInputSchema.parse(rawInput);
+      if (input.catalogKey !== catalogKey) throw new ApiError(409, 'MIGRATION_REJECTED', `Published Care key mismatch for ${catalogKey}.`);
+      const event = releaseEventFor(business, 'care', catalogKey);
+      const meta = asRecord(publishedCareMeta[catalogKey]);
+      careArticles.push({ input, version: Math.max(1, Number(meta?.sourceVersion) || Number(event?.version) || 1), publishedAt: String(meta?.publishedAt || event?.occurredAt || business.updatedAt || new Date().toISOString()), assets: await copyRuntimeAssets(root, publishedCareAssets[catalogKey], tempAssets) });
+    }
+    const snapshot: GitRuntimeAuthoritySnapshot = {
+      schemaVersion: 1,
+      authority: 'local-file-git',
+      generatedAt: new Date().toISOString(),
+      source: {
+        businessUpdatedAt: typeof business.updatedAt === 'string' ? business.updatedAt : null,
+        compatibilityUpdatedAt: typeof compatibility.updatedAt === 'string' ? compatibility.updatedAt : null,
+        compatibilityAuthoritySequence: Number.isInteger(Number(compatibility.authoritySequence)) ? Number(compatibility.authoritySequence) : null,
+      },
+      productCare: { species, careArticles },
+      compatibility: {
+        authority: 'reviewed-git',
+        profiles: reviewedProfiles as GitRuntimeAuthoritySnapshot['compatibility'] extends infer T ? T extends { profiles: infer P } ? P : never : never,
+        pairRules: reviewedPairRules as GitRuntimeAuthoritySnapshot['compatibility'] extends infer T ? T extends { pairRules: infer P } ? P : never : never,
+        counts: { profiles: reviewedProfiles.length, pairRules: reviewedPairRules.length },
+      },
+    };
+    await rm(runtimeAssetsDirectory(), { recursive: true, force: true });
+    await rename(tempAssets, runtimeAssetsDirectory());
+    await atomicJsonWrite(runtimeSnapshotFile(), snapshot);
+    return {
+      generatedAt: snapshot.generatedAt,
+      snapshotPath: path.relative(repoRoot, runtimeSnapshotFile()),
+      assetDirectory: path.relative(repoRoot, runtimeAssetsDirectory()),
+      counts: { species: species.length, care: careArticles.length, profiles: reviewedProfiles.length, pairRules: reviewedPairRules.length },
+      sourceHash: { business: sha256(business), compatibility: sha256(compatibility) },
+    };
+  } catch (error) {
+    await rm(tempAssets, { recursive: true, force: true });
+    throw error;
+  }
+};
+
 const readBackupManifest = async (root: string, backupId: string) => {
   const manifest = asRecord(await readJsonOrNull(path.join(backupDirectory(root, backupId), 'manifest.json')));
   if (!manifest) throw new ApiError(404, 'NOT_FOUND', `Local Admin backup ${backupId} was not found.`);
@@ -365,6 +485,10 @@ localAdminFileRouter.get('/status', asyncRoute(async (request, response) => {
 localAdminFileRouter.get('/integrity', asyncRoute(async (request, response) => {
   requireEnabled();
   return sendData(request, response, await inspectRoot(localRoot()));
+}));
+localAdminFileRouter.post('/runtime-snapshot', asyncRoute(async (request, response) => {
+  requireEnabled();
+  return sendData(request, response, await exportGitRuntimeAuthority(), 201);
 }));
 localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
   requireEnabled();

@@ -13,12 +13,12 @@ import {
 export type CompatibilityBootstrapResponse = {
   profiles: ReviewedCompatibilityProfileDto[];
   pairRules: ReviewedCompatibilityPairRuleDto[];
-  authority: 'reviewed-db';
+  authority: 'reviewed-db' | 'reviewed-git';
   counts: { profiles: number; pairRules: number };
 };
 
 export type RuntimeCompatibilityStatus = {
-  source: 'reviewed-db' | 'static-fallback';
+  source: 'reviewed-db' | 'reviewed-git' | 'static-fallback';
   profiles: number;
   pairRules: number;
   stageRiskRules: number;
@@ -85,7 +85,7 @@ const stageRiskSignature = (rule: ReviewedCompatibilityStageRiskRuleDto) => {
     citations,
   ].join('~');
 };
-const reviewedDbAuthorityVersion = (payload: CompatibilityBootstrapResponse) => {
+const reviewedAuthorityVersion = (payload: CompatibilityBootstrapResponse) => {
   const profileVersions = payload.profiles.map(profile => {
     const citations = profile.citations.map(source => `${source.id}@${source.version}`).sort().join(',');
     const requiredFacts = [...profile.requiredFacts].sort().join(',');
@@ -97,7 +97,8 @@ const reviewedDbAuthorityVersion = (payload: CompatibilityBootstrapResponse) => 
     const citations = rule.citations.map(source => `${source.id}@${source.version}`).sort().join(',');
     return `pair:${pairKey(...rule.catalogKeys)}@${rule.version}[${citations}]`;
   }).sort();
-  return `tank-compatibility-v3-reviewed-db-${hashAuthorityVersion([...profileVersions, ...pairVersions].join('|'))}`;
+  const source = payload.authority === 'reviewed-git' ? 'git' : 'db';
+  return `tank-compatibility-v3-reviewed-${source}-${hashAuthorityVersion([...profileVersions, ...pairVersions].join('|'))}`;
 };
 
 let runtimeProfiles = new Map<string, ReviewedCompatibilityProfile>();
@@ -195,7 +196,7 @@ const toRuntimePairRule = (rule: ReviewedCompatibilityPairRuleDto): ReviewedPair
 
 export const applyReviewedCompatibilityBootstrap = (payload: CompatibilityBootstrapResponse) => {
   if (!exactBaselineCoverage(payload)) {
-    resetRuntimeCompatibilityEvidence('incomplete_or_mismatched_reviewed_db_baseline');
+    resetRuntimeCompatibilityEvidence('incomplete_or_mismatched_reviewed_authority');
     return getRuntimeCompatibilityStatus();
   }
   runtimeProfiles = new Map(payload.profiles.map(profile => [profile.catalogKey, toRuntimeProfile(profile)]));
@@ -205,11 +206,11 @@ export const applyReviewedCompatibilityBootstrap = (payload: CompatibilityBootst
     profile.stageRiskRules.map(rule => toRuntimeStageRisk(profile.catalogKey, rule)),
   ]));
   runtimeStatus = {
-    source: 'reviewed-db',
+    source: payload.authority,
     profiles: runtimeProfiles.size,
     pairRules: runtimePairRules.size,
     stageRiskRules: Array.from(runtimeStageRisks.values()).reduce((sum, rules) => sum + rules.length, 0),
-    authorityVersion: reviewedDbAuthorityVersion(payload),
+    authorityVersion: reviewedAuthorityVersion(payload),
   };
   return getRuntimeCompatibilityStatus();
 };

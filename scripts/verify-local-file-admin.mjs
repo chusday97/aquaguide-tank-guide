@@ -60,6 +60,7 @@ const startLocalAdmin = async () => {
       WEB_PORT: String(webPort),
       SEO_ADMIN_PORT: String(seoAdminPort),
       ADMIN_LOCAL_FILE_ROOT: root,
+      ADMIN_RUNTIME_SNAPSHOT_ROOT: path.join(root, 'public'),
       DISABLE_HMR: 'true',
     },
     stdio: ['ignore', 'pipe', 'pipe'],
@@ -144,6 +145,15 @@ try {
   const safety = page.getByTestId('operations-local-safety');
   await safety.waitFor();
   await page.waitForFunction(() => document.querySelector('[data-testid="operations-local-integrity"]')?.textContent?.includes('数据完整'));
+  page.once('dialog', dialog => dialog.accept());
+  await page.getByTestId('operations-publish-runtime-snapshot').click();
+  await page.waitForFunction(() => document.querySelector('[data-testid="operations-local-safety"]')?.textContent?.includes('Git 发布快照已生成'));
+  const runtimeSnapshot = JSON.parse(await readFile(path.join(root, 'public/runtime-authority.json'), 'utf8'));
+  assert.equal(runtimeSnapshot.authority, 'local-file-git');
+  assert.equal(runtimeSnapshot.compatibility.authority, 'reviewed-git');
+  assert.equal(runtimeSnapshot.compatibility.profiles.length, 7);
+  assert.equal(runtimeSnapshot.compatibility.pairRules.length, 4);
+  assert.equal(JSON.stringify(runtimeSnapshot).includes(marker), false, 'Unpublished Product Draft must not leak into Git runtime snapshot.');
   await page.getByTestId('operations-create-backup').click();
   await page.waitForFunction(() => {
     const button = document.querySelector('[data-testid="operations-restore-backup"]');

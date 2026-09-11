@@ -207,7 +207,8 @@
     "test:livestock-addition-api-behavior": "node --import tsx scripts/test-livestock-addition-api-behavior.ts",
     "test:aquarium-stage-layout": "node --import tsx scripts/test-aquarium-stage-layout-contract.ts",
     "test:three-stage-framing": "node --import tsx scripts/test-three-stage-framing.ts",
-    "test:desktop-layout": "node scripts/test-desktop-layout-contract.mjs"
+    "test:desktop-layout": "node scripts/test-desktop-layout-contract.mjs",
+    "test:git-runtime-authority": "tsx scripts/test-git-runtime-authority.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

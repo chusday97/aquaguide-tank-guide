@@ -81,6 +81,21 @@ export const createLocalAdminBackup = async (reason = 'manual') => {
   });
 };
 
+export type LocalRuntimeSnapshotResult = {
+  generatedAt: string;
+  snapshotPath: string;
+  assetDirectory: string;
+  counts: { species: number; care: number; profiles: number; pairRules: number };
+  sourceHash: { business: string; compatibility: string };
+};
+
+export const publishLocalRuntimeAuthoritySnapshot = async () => {
+  if (!isLocalAdminFileMode) throw new AquaGuideApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Local File Mode 未启用。');
+  return apiRequest<LocalRuntimeSnapshotResult>('/local-admin/runtime-snapshot', {
+    method: 'POST', authenticated: false,
+  });
+};
+
 export const restoreLocalAdminBackup = async (backupId: string) => {
   if (!isLocalAdminFileMode) throw new AquaGuideApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Local File Mode 未启用。');
   return apiRequest<{ backupId: string; safetyBackupId: string; integrity: LocalAdminIntegrityReport }>(
