@@ -113,6 +113,14 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'convict-cichlid-territory-study': {
+    id: 'convict-cichlid-territory-study',
+    title: 'Sex Differences in How Territory Quality Affects Aggression in Convict Cichlids',
+    publisher: 'Integrative and Comparative Biology',
+    url: 'https://pmc.ncbi.nlm.nih.gov/articles/PMC8522484/',
+    sourceType: 'peer_reviewed',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-betta-splendens': {
     id: 'seriouslyfish-betta-splendens',
     title: 'Betta splendens (Siamese Fighting Fish)',

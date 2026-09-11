@@ -1,24 +1,24 @@
 # Current Goal
 
-Updated: 2026-09-11
+Updated: 2026-09-12
 Active branch: `product-recovery-20260911`
 
 ## Goal
-Complete Aqua Product Recovery P1 Compatibility V4 by separating fin-nipping pressure from target vulnerability. Reviewed species traits drive general caution; reviewed direct pair evidence remains the higher-priority override.
+Continue Aqua Product Recovery P1 Species Knowledge V2 coverage expansion without fabricating missing biology. Close reviewed-authority gaps that materially improve Compatibility and Species Detail, using base-species inheritance only when the evidence supports shared biology.
 
 ## Current acceptance target
-- Beginner Action tells the user what to do before professional evidence.
-- `finNippingRisk` and `finNipVulnerability` are separate structured facts; `swimmingPace` may support target vulnerability when reviewed.
-- Generic fin-nipper + vulnerable target is caution, not an invented hard block.
-- A reviewed direct pair rule may upgrade the exact combination to `not_recommended`.
-- Stable-tank history may only downgrade soft load/capacity screening and cannot override behavior hard blocks.
-- Reviewed authority must override stale fish-name regex and legacy housing labels where reviewed facts exist.
+- Add reviewed facts field-by-field; unavailable sex/reproduction/space data stays unknown or absent.
+- Exact reviewed species facts win, then evidence-backed base-species inheritance, then legacy fallback.
+- Species Knowledge V2 and Compatibility must share the same biological authority instead of diverging.
+- Canonical biological-taxon coverage is the progress metric; duplicate catalog IDs/ornamental morphs never inflate progress.
+- Hard biological conflicts and reviewed pair overrides remain stronger than generic trait inference.
+- Frozen global UI/IA stays unchanged; this phase improves decision quality and evidence disclosure, not visual redesign.
 
 ## Validation gate
 Domain compatibility, legacy facade, evidence coverage, visual actions, TypeScript, build, Compatibility beginner-action browser E2E, and GP001-GP004 must pass before checkpoint push.
 
 ## Next
-After this checkpoint, expand target-vulnerability traits only for reviewed species with direct husbandry evidence; then continue the next high-frequency Species V2 cohort. Do not redesign frozen UI.
+Close the remaining reviewed-authority gap for `Channa asiatica` only with facts supported by its existing reviewed source, then reassess canonical high-frequency coverage. Do not mass-fill unknown fields or redesign frozen UI.
 
 ## Base-species inheritance checkpoint
 - Runtime reviewed authority now resolves exact species ID first, then an explicit base-species key derived from scientific name.
@@ -67,3 +67,10 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - Priority baseline is now 8 taxa / 56 ordered directions: 42 caution, 14 not_recommended, 0 unconditional compatible.
 - Raw 12-record / 132-direction output remains an integrity audit only. Duplicate IDs/morphs must produce the same canonical verdict.
 - Next reviewed-data work should raise canonical taxon coverage or decision quality, not merely add duplicate catalogue records.
+
+### Current checkpoint — Amatitlania partial Species Knowledge V2
+- Closed the Compatibility-only gap for `Amatitlania nigrofasciata` using the existing peer-reviewed territory/aggression source.
+- Added only reviewed social/territorial behavior; sex identification explicitly remains unknown, while reproduction and space blocks remain absent.
+- `Amatitlania nigrofasciata var.*` ornamental forms inherit the reviewed base-species behavior authority; direct-ID review counts remain unchanged.
+- Canonical priority coverage expands from 8 taxa / 56 ordered directions to 9 taxa / 72 ordered directions: 56 caution and 16 not_recommended, with 0 unconditional compatible in the audit setup.
+- Next authority gap: `Channa asiatica`; preserve the same partial-review discipline.

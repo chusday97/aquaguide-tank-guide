@@ -95,3 +95,12 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Priority matrix truth: raw catalogue 132 directions / 110 recordable, but canonical biological matrix 56 directions / 42 recordable; all canonical recordable results are caution and 14 are not recommended.
 - The two raw `compatible` results were duplicate Neritina IDs representing the same taxon and are intentionally excluded from canonical progress.
 - Regression requires duplicate records for one taxon to agree on verdict.
+
+### P1 — Amatitlania partial Species Knowledge V2
+- Gap audit found two Compatibility-reviewed species without Species Knowledge V2: `sp_0021` 迷你鹦鹉鱼 and `sp_0049` 珍珠赤雷龙.
+- Prioritized `Amatitlania nigrofasciata` and reused the existing peer-reviewed territory/aggression evidence instead of inventing a second source layer.
+- Added partial V2 social authority only: territoriality high, fin-nipping/aggressive-contact context medium, while sex remains explicit unknown and reproduction/space remain absent.
+- Added base-species Compatibility + Knowledge inheritance for `Amatitlania nigrofasciata var.*`; direct audit counts are not inflated by ornamental variants.
+- Canonical priority matrix now includes 迷你鹦鹉鱼: 9 taxa / 72 ordered directions, 56 caution + 16 not_recommended, 0 unconditional compatible.
+- Verified: Species Knowledge, Compatibility, Domain, Visual Actions, canonical evidence coverage, TypeScript, production build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 all PASS.
+- Next: close `Channa asiatica` partial V2 only to the extent supported by its reviewed USFWS assessment; do not infer sex/reproduction/space facts beyond evidence.

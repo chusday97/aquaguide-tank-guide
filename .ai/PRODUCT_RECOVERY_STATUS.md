@@ -196,3 +196,13 @@ Draft PR: #149
 - Canonical result: 42/56 directions are recordable and all 42 are caution; 14/56 are `not_recommended`; there are no unconditional compatible canonical directions in this test setup.
 - The previous raw 110/132 number is retained only as a duplicate-record integrity audit, not as the primary progress metric.
 - Duplicate catalogue records for the same taxon must agree on verdict; the coverage test fails if they diverge.
+
+### P1 — Amatitlania partial knowledge convergence checkpoint
+- Added evidence-backed base-species Knowledge V2 for `Amatitlania nigrofasciata` from the existing reviewed aggression/territory study.
+- Deliberately kept unsupported fields unknown/absent: no fabricated sexing rule, reproduction timing, adult-size threshold, or space minimum.
+- Compatibility base inheritance now matches Species Knowledge base inheritance for ornamental `var.*` forms.
+- Priority canonical coverage: 9 taxa / 72 directions; 56 caution, 16 not_recommended, 0 unconditional compatible.
+
+#### Validation
+- Species Knowledge / Compatibility / Domain / Visual Results / evidence coverage / TypeScript / production build: PASS.
+- Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.

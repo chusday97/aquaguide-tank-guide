@@ -367,6 +367,25 @@ const reviewedKnowledgeByBaseSpeciesKey: Partial<Record<string, SpeciesKnowledge
       evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['aquariumhq-neritina-natalensis'], reviewedAt: '2026-09-11' },
     },
   },
+  'Amatitlania nigrofasciata': {
+    sexIdentification: {
+      title: '本轮不提供外观公母硬判断',
+      summary: '当前已审核资料足以确认领地与攻击行为，但不足以把外观性别特征作为稳定的用户判断规则。',
+      points: ['如果需要繁殖配对，优先结合可靠繁育来源与成熟个体的持续行为观察。'],
+      confidence: 'unknown',
+      source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+      reliableFromLifeStage: 'unknown',
+    },
+    socialBehavior: {
+      mode: 'variable',
+      territoriality: 'high',
+      finNipping: 'medium',
+      swimmingPace: 'unknown',
+      predationRisk: 'unknown',
+      summary: '领地性与攻击行为是主要混养边界；进入繁殖和护域状态后风险会进一步上升，因此不能把“平时暂时和平”当作长期兼容。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['convict-cichlid-territory-study'], reviewedAt: '2026-09-12' },
+    },
+  },
   'Betta splendens': {
     sexIdentification: {
       title: '成体公母通常较容易区分',

@@ -110,6 +110,20 @@ assert.equal(tigerKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
 assert.equal(tigerKnowledge.knowledge.socialBehavior?.finNipping, 'medium');
 assert.equal(tigerKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 72);
 
+const miniParrot = { ...baseFish, id: 'sp_0021', name: '迷你鹦鹉鱼', scientificName: 'Amatitlania nigrofasciata var.', temperament: 'Aggressive' as const };
+const miniParrotKnowledge = buildSpeciesKnowledgeProfile(miniParrot);
+assert.equal(miniParrotKnowledge.knowledge.sexIdentification.confidence, 'unknown');
+assert.equal(miniParrotKnowledge.knowledge.socialBehavior?.territoriality, 'high');
+assert.equal(miniParrotKnowledge.knowledge.socialBehavior?.finNipping, 'medium');
+assert.equal(miniParrotKnowledge.knowledge.reproduction, undefined);
+assert.equal(miniParrotKnowledge.knowledge.spaceAndGrowth, undefined);
+const miniParrotSources = resolveKnowledgeSources(miniParrotKnowledge.knowledge.socialBehavior?.evidence.sourceIds || []);
+assert.equal(miniParrotSources.length, 1);
+assert.equal(miniParrotSources[0]?.publisher, 'Integrative and Comparative Biology');
+
+const inheritedMiniParrot = { ...baseFish, id: 'sp_0147', name: '蓝宝鹦鹉鱼', scientificName: 'Amatitlania nigrofasciata var. Blue', temperament: 'Aggressive' as const };
+assert.equal(getReviewedSpeciesKnowledgeForFish(inheritedMiniParrot)?.socialBehavior?.territoriality, 'high');
+
 const inheritedBetta = { ...baseFish, id: 'sp_0259', name: '半月斗鱼 (蓝蝴蝶)', scientificName: 'Betta splendens var. Halfmoon' };
 const inheritedBettaKnowledge = buildSpeciesKnowledgeProfile(inheritedBetta);
 assert.equal(inheritedBettaKnowledge.knowledge.socialBehavior?.mode, 'solitary');

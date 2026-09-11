@@ -461,6 +461,21 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'mini parrot ornamental variant inherits reviewed territorial authority',
+    run: () => {
+      const variant = makeFish({
+        id: 'sp_0147',
+        name: '蓝宝鹦鹉鱼',
+        scientificName: 'Amatitlania nigrofasciata var. Blue',
+        temperament: 'Aggressive',
+      });
+      const reviewed = getReviewedCompatibilityProfileForFish(variant);
+      return reviewed?.speciesId === 'base:Amatitlania nigrofasciata'
+        && reviewed.behaviorTraits.includes('territorial')
+        && reviewed.behaviorTraits.includes('breeding_defense');
+    },
+  },
+  {
     name: 'betta ornamental variant inherits reviewed base-species authority without faking direct audit',
     run: () => {
       const halfmoon = makeFish({

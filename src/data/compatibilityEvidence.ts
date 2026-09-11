@@ -434,6 +434,16 @@ const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [neriteHusbandrySource],
     requiredFacts: ['water', 'temperature', 'adult_size'],
   },
+  'Amatitlania nigrofasciata': {
+    speciesId: 'base:Amatitlania nigrofasciata',
+    waterType: 'freshwater',
+    behaviorTraits: ['territorial', 'breeding_defense', 'chasing', 'biting'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [convictCichlidTerritoryStudy],
+    requiredFacts: ['water', 'temperature', 'territoriality', 'breeding_behavior'],
+  },
   'Betta splendens': {
     speciesId: 'base:Betta splendens',
     waterType: 'freshwater',
