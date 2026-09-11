@@ -1,5 +1,14 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-12 local main promoted, remote release gated
+The reconciliation phase is locally complete. Local `main` now contains the accepted Aqua Operations Studio candidate; remote `origin/main` and deployment remain unchanged.
+
+- Local main HEAD before this docs checkpoint: `83f8fd7a`; rollback anchor: `d3c70dee633e`.
+- Promotion was strict fast-forward only and the resulting tree matched the candidate exactly.
+- Main-branch smoke gates all pass. No Supabase Staging/Production/indexing mutation occurred.
+- NEXT: no new feature work. The only release step is an explicit push/deploy decision after a final origin refresh.
+
+
 ## CURRENT OVERRIDE — 2026-09-12 candidate main-promotion ready
 The active objective is now **hold the validated candidate at the explicit main-promotion boundary; do not add speculative Admin features**. Functional checkpoint: `72ad2693`.
 

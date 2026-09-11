@@ -1,5 +1,12 @@
 # Branch Status
 
+## CURRENT OVERRIDE — local main now contains accepted candidate (2026-09-12)
+- Local branch `main` was created from `origin/main=d3c70dee633e` and fast-forwarded to candidate `83f8fd7a`.
+- Rollback branch: `rollback/main-pre-aqua-admin-20260912` at `d3c70dee633e`.
+- No merge commit, rebase or force update; post-promotion tree matched candidate exactly.
+- Remote main has not moved and nothing has been pushed.
+
+
 ## CURRENT OVERRIDE — candidate ready for explicit ff-only main promotion (2026-09-12)
 - Candidate branch: `reconcile/admin-content-main-20260911`; functional checkpoint `72ad2693`.
 - `origin/main=d3c70dee633e` is a strict ancestor; disposable `git merge --ff-only` rehearsal PASS and exact tree equality verified.

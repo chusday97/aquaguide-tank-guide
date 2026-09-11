@@ -1,5 +1,12 @@
 # Live Status
 
+## CURRENT OVERRIDE — local main promotion PASS (2026-09-12)
+- Local `main` fast-forwarded from `d3c70dee` to accepted candidate `83f8fd7a`; rollback ref `rollback/main-pre-aqua-admin-20260912` preserves the pre-promotion state.
+- Post-promotion main smoke PASS for Git runtime authority/fallback, Published Content isolation, Compatibility authority, Local Admin mode, root/API TypeScript.
+- Local main worktree is clean.
+- Remote `origin/main` remains `d3c70dee`; no push/deploy and no Supabase Staging/Production/indexing mutation.
+
+
 ## CURRENT OVERRIDE — main promotion rehearsal PASS (2026-09-12)
 - Candidate functional HEAD: `72ad2693`; real `origin/main` remains `d3c70dee633e` and is an ancestor of candidate.
 - P0 runtime authority shadowing is closed: Product/Care Git authority requires at least one Git-published Product/Care record; otherwise runtime continues to Published API.

@@ -1441,3 +1441,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Updated stale browser acceptance to current Encyclopedia search and Care `传统浏览 / Browse guides`; zh-CN and EN Published API values reach frontend consumers.
 - PASS: Git runtime authority, Published runtime, Local File Admin, root/API TypeScript, full build, Compatibility runtime/admin/regression, Published isolation, Local Admin mode and authority scan.
 - Disposable `origin/main → candidate` ff-only rehearsal PASS with exact candidate tree; rehearsal resources removed. Real main/push/Production/Staging untouched.
+
+## 2026-09-12 — local main promotion
+- Refreshed origin; `origin/main` remained `d3c70dee633e`, candidate remained a strict descendant.
+- Created rollback ref `rollback/main-pre-aqua-admin-20260912` at the remote-main anchor.
+- Created local `main` from `origin/main` and fast-forwarded it to accepted candidate `83f8fd7a`; tree equality PASS.
+- Post-promotion main smoke PASS: Git runtime fallback, Published Content isolation, Compatibility authority, Local Admin mode, root/API TypeScript.
+- No push, deployment, Supabase Staging/Production migration or indexing mutation.

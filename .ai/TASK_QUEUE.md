@@ -1,5 +1,15 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — local main promotion closed (2026-09-12)
+- [x] Refresh origin and verify no new main commits.
+- [x] Preserve pre-promotion main as `rollback/main-pre-aqua-admin-20260912`.
+- [x] Create local main from origin/main and fast-forward only to accepted candidate.
+- [x] Verify main tree equals candidate and main worktree is clean.
+- [x] Run post-promotion main smoke gates.
+- [ ] Push local main to origin remains a separate explicit release action.
+- [ ] Production deployment/indexing remains untriggered.
+
+
 ## ACTIVE OVERRIDE — main promotion readiness closed (2026-09-12)
 - [x] Re-fetch origin and prove no new main commits are missing from candidate.
 - [x] Audit committed Git runtime snapshot before promotion.

@@ -1,5 +1,14 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — local main promotion PASS; remote push still gated (2026-09-12)
+- Local `main` was created from `origin/main=d3c70dee633e` and fast-forwarded to accepted candidate `83f8fd7a`; no merge commit or conflict was introduced.
+- Rollback ref preserved before promotion: `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e`.
+- Post-promotion main smoke PASS: Git runtime Product/Care fallback, Published Content isolation, Compatibility runtime authority, Local Admin DEV-only contract, Compatibility authority scan, root TypeScript and API TypeScript.
+- The temporary `node_modules` validation symlink was removed; local main worktree is clean.
+- `origin/main` is still `d3c70dee633e`: nothing has been pushed and no deployment was triggered. Supabase Staging/Production/indexing remain untouched.
+- NEXT: treat `main push` as an explicit release action. Refresh origin and re-run ancestry/smoke checks immediately before any push.
+
+
 ## CURRENT OVERRIDE — candidate is main-ready after promotion rehearsal (2026-09-12)
 - Functional checkpoint `72ad2693 fix(runtime): preserve published api under empty git snapshot`; promotion-readiness record: `.ai/MAIN_PROMOTION_READINESS_20260912.md`.
 - P0 closed: the committed Git snapshot has Compatibility 7/4 but Product/Care 0/0; empty Product/Care no longer suppresses `/content-bootstrap`. Non-empty Git Product/Care still wins, while Compatibility can independently remain `reviewed-git`.
