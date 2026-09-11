@@ -87,6 +87,8 @@ export type LocalRuntimeSnapshotResult = {
   assetDirectory: string;
   counts: { species: number; care: number; profiles: number; pairRules: number };
   sourceHash: { business: string; compatibility: string };
+  gitCommitRequired: true;
+  deploymentTriggered: false;
 };
 
 export const publishLocalRuntimeAuthoritySnapshot = async () => {

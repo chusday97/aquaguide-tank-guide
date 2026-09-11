@@ -147,7 +147,7 @@ try {
   await page.waitForFunction(() => document.querySelector('[data-testid="operations-local-integrity"]')?.textContent?.includes('数据完整'));
   page.once('dialog', dialog => dialog.accept());
   await page.getByTestId('operations-publish-runtime-snapshot').click();
-  await page.waitForFunction(() => document.querySelector('[data-testid="operations-local-safety"]')?.textContent?.includes('Git 发布快照已生成'));
+  await page.waitForFunction(() => document.querySelector('[data-testid="operations-local-safety"]')?.textContent?.includes('运行时快照已生成 · 尚未提交 Git / 部署'));
   const runtimeSnapshot = JSON.parse(await readFile(path.join(root, 'public/runtime-authority.json'), 'utf8'));
   assert.equal(runtimeSnapshot.authority, 'local-file-git');
   assert.equal(runtimeSnapshot.compatibility.authority, 'reviewed-git');

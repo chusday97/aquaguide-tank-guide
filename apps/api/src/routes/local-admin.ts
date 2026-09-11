@@ -392,6 +392,8 @@ const exportGitRuntimeAuthority = async () => {
       assetDirectory: path.relative(repoRoot, runtimeAssetsDirectory()),
       counts: { species: species.length, care: careArticles.length, profiles: reviewedProfiles.length, pairRules: reviewedPairRules.length },
       sourceHash: { business: sha256(business), compatibility: sha256(compatibility) },
+      gitCommitRequired: true,
+      deploymentTriggered: false,
     };
   } catch (error) {
     if (!snapshotCommitted) {

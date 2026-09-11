@@ -186,6 +186,8 @@ try {
   const runtimeSnapshot = await requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
   assert.equal(runtimeSnapshot.response.status, 201);
   assert.deepEqual(runtimeSnapshot.payload.data.counts, { species: 1, care: 1, profiles: 7, pairRules: 4 });
+  assert.equal(runtimeSnapshot.payload.data.gitCommitRequired, true);
+  assert.equal(runtimeSnapshot.payload.data.deploymentTriggered, false);
   const exported = JSON.parse(await readFile(path.join(root, 'public/runtime-authority.json'), 'utf8'));
   assert.equal(exported.authority, 'local-file-git');
   assert.equal(exported.productCare.species.length, 1);
