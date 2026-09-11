@@ -132,6 +132,34 @@ const emergencyObservation = evaluateCompatibility({
 assert.equal(emergencyObservation.status, 'not_recommended');
 assert.equal(emergencyObservation.observedStatus, 'emergency');
 
+// Recovery invariant: coarse size/volume screening is advisory only. A high
+// screening ratio may require confirmation, but it must never be the sole
+// reason to block a stocking plan because filtration, mature biomass, oxygen
+// and maintenance stability are not represented by this coarse heuristic.
+const highBioloadScreening = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 30, targetTemperatureC: 24 },
+  existingSpecies: Array.from({ length: 4 }, (_, index) => ({ ...base, id: `load-${index}`, size: 'Large' })),
+  existingQuantities: Object.fromEntries(Array.from({ length: 4 }, (_, index) => [`load-${index}`, 1])),
+  candidateSpecies: { ...base, id: 'load-candidate', size: 'Large' },
+  candidateQuantity: 1,
+});
+assert.equal(highBioloadScreening.status, 'caution');
+assert.equal(highBioloadScreening.addPolicy, 'confirm');
+assert.ok(highBioloadScreening.ruleCodes.includes('bioload_screening_high'));
+
+// Aggression/territoriality is a behavior risk, not a waste-production
+// multiplier. Behavior can still raise its own caution but cannot inflate the
+// coarse bioload screening by itself.
+const aggressionIsNotBioload = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'calm', size: 'Medium', loadMultiplier: 9 }],
+  candidateSpecies: { ...base, id: 'candidate', size: 'Medium', loadMultiplier: 9 },
+});
+assert.equal(aggressionIsNotBioload.status, 'compatible');
+assert.ok(!aggressionIsNotBioload.ruleCodes.some(code => code.startsWith('bioload_screening_')));
+
 const miniParrot = {
   ...base,
   id: 'sp_0021',
@@ -185,4 +213,4 @@ const miniParrotEmergency = evaluateCompatibility({
 assert.equal(miniParrotEmergency.status, 'not_recommended');
 assert.equal(miniParrotEmergency.observedStatus, 'emergency');
 
-console.log('domain compatibility policy verified: fail-closed precedence and record-existing allowance');
+console.log('domain compatibility policy verified: hard biological blocks + soft capacity screening + record-existing allowance');
