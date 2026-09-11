@@ -126,3 +126,18 @@ Draft PR: #149
 - Production build: PASS.
 - Compatibility beginner-action browser E2E: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Capacity heuristic cleanup checkpoint
+- Removed the last legacy aggression/territoriality multiplier from bioload calculations.
+- Removed `loadMultiplier` from the domain contract.
+- Removed the generic raw-count `density_high` rule from Species Fit.
+- Behavior risk is now modeled through behavior rules; waste/capacity screening remains independent.
+- No new universal stocking threshold replaces these heuristics.
+
+#### Validation
+- Domain compatibility: PASS.
+- Legacy/canonical compatibility: PASS.
+- TypeScript: PASS.
+- Production build: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.

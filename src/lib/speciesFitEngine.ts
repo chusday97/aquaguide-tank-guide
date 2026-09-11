@@ -329,12 +329,6 @@ export const evaluateSpeciesForAquarium = (
     score += 8;
   }
 
-  const livestockCount = currentLivestock.reduce((sum, item) => sum + (item.record?.quantity || 1), 0);
-  if (volumeLiters && livestockCount > 0 && livestockCount >= Math.max(20, volumeLiters / 3)) {
-    warnings.push({ type: 'density_high', title: '当前密度偏高', detail: `当前已有约 ${livestockCount} 只/条活体，新增前建议先复核密度。`, severity: 'medium' });
-    score -= 14;
-  }
-
   if (species.difficulty === 'Easy') score += 8;
   if (species.difficulty === 'Hard') {
     warnings.push({ type: 'hard_species', title: '养护难度较高', detail: '该物种对经验和稳定性要求更高。', severity: 'low' });

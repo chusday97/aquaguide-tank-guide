@@ -158,10 +158,9 @@ const getQuantity = (value?: number) => {
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 1;
 };
 
-const estimateBioload = (fish: Fish, quantity = 1) => {
-  const temperament = fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1;
-  return estimateBioloadUnits(fish.size, getQuantity(quantity)) * temperament;
-};
+const estimateBioload = (fish: Fish, quantity = 1) => (
+  estimateBioloadUnits(fish.size, getQuantity(quantity))
+);
 
 const convertFitItem = (
   item: { type: string; title: string; detail: string; severity?: 'low' | 'medium' | 'high' },
@@ -684,7 +683,6 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     minimumGroupSize: reviewedSocial?.minimumGroupSize ?? reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
     stockingGuidance: reviewed?.stockingGuidance,
     evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...knowledgeEvidenceIds])),
-    loadMultiplier: fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1,
     adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
     adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
     socialMode: reviewedSocial?.mode ?? profile.socialMode,

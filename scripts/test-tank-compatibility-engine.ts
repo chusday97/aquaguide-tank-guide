@@ -571,6 +571,38 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'temperament never changes coarse load screening for the same body size and quantity',
+    run: () => {
+      const tank = makeTank({ dimensions: { length: '70', width: '40', height: '25' } });
+      const calm = makeFish({ id: 'sp_0436', name: '孔雀鱼', scientificName: 'Poecilia reticulata', size: 'Medium', temperament: 'Peaceful' });
+      const aggressive = { ...calm, temperament: 'Aggressive' as const };
+      const evaluate = (species: Fish) => evaluateLegacyTankCompatibility({
+        tank,
+        existingSpecies: [{ species, record: { quantity: 9 } }],
+        candidateSpecies: species,
+        candidateQuantity: 1,
+      });
+      const loadCodes = (result: ReturnType<typeof evaluateLegacyTankCompatibility>) => [
+        ...result.blockingRules,
+        ...result.warningRules,
+      ].map(rule => rule.code).filter(code => /bioload|density/.test(code)).sort();
+      return JSON.stringify(loadCodes(evaluate(calm))) === JSON.stringify(loadCodes(evaluate(aggressive)));
+    },
+  },
+  {
+    name: 'species fit no longer invents density risk from raw livestock count',
+    run: () => {
+      const tiny = makeFish({ id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi', size: 'Small' });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '50', height: '50' } }),
+        existingSpecies: [{ species: tiny, record: { quantity: 40 } }],
+        candidateSpecies: tiny,
+        candidateQuantity: 1,
+      });
+      return [...result.warningRules, ...result.blockingRules].every(rule => rule.code !== 'density_high');
+    },
+  },
+  {
     name: 'addition service blocks incompatible species before write',
     run: () => {
       const freshwater = makeFish({ waterType: 'freshwater' });

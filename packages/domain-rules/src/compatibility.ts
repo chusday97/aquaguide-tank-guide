@@ -56,7 +56,6 @@ export type DomainSpeciesFact = {
   minimumGroupSize?: number | null;
   stockingGuidance?: StockingGuidance;
   evidenceIds?: string[];
-  loadMultiplier?: number;
   behaviorTraits?: string[];
   territoriality?: BehaviorRiskLevel;
   finNippingRisk?: BehaviorRiskLevel;

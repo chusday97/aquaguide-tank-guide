@@ -26,3 +26,8 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - `Betta splendens var.*` can inherit the reviewed `Betta splendens` baseline; variant-specific exceptions remain eligible for exact-ID overrides.
 - `Pterophyllum scalare` is reviewed directly and now contributes structured fin-nip vulnerability instead of name-regex inference.
 - Acceptance remains: inherited authority may improve runtime decisions, but must not inflate direct review coverage or override explicit pair/hard-risk evidence.
+
+## Capacity heuristic cleanup checkpoint
+- Aggressive/Territorial temperament must never multiply waste/bioload screening. Behavior risk and carrying-capacity screening are separate dimensions.
+- Raw livestock count must not create a generic density warning; capacity remains based on reviewed species facts plus coarse body-size screening until filtration/flow/water-quality facts are added.
+- No replacement hard limit is introduced here. This checkpoint removes false precision rather than inventing a new universal stocking formula.

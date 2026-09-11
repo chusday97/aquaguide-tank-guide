@@ -154,8 +154,8 @@ assert.ok(highBioloadScreening.ruleCodes.includes('bioload_screening_high'));
 const aggressionIsNotBioload = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 24 },
-  existingSpecies: [{ ...base, id: 'calm', size: 'Medium', loadMultiplier: 9 }],
-  candidateSpecies: { ...base, id: 'candidate', size: 'Medium', loadMultiplier: 9 },
+  existingSpecies: [{ ...base, id: 'calm', size: 'Medium' }],
+  candidateSpecies: { ...base, id: 'candidate', size: 'Medium' },
 });
 assert.equal(aggressionIsNotBioload.status, 'compatible');
 

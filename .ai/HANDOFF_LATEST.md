@@ -33,3 +33,10 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Added direct reviewed `Pterophyllum scalare` knowledge/profile; tiger barb × angelfish now surfaces structured fin-nipping target vulnerability without a stale single-housing or fake predation block.
 - Runtime Compatibility, Species Fit, compatibility presentation, and housing labels use inheritance-aware authority consistently.
 - Verified: Species Knowledge PASS, Compatibility PASS, Domain PASS, TypeScript PASS, production build PASS, Compatibility beginner-action E2E PASS, GP001–GP004 PASS.
+
+## Latest checkpoint — capacity heuristic cleanup
+- Removed the remaining legacy 1.35× Aggressive/Territorial multiplier from bioload estimation.
+- Removed `loadMultiplier` from the Domain species contract because behavior must not act as a waste-production proxy.
+- Retired Species Fit `density_high`, which treated raw animal count as comparable regardless of adult size/species needs.
+- Added regressions proving temperament cannot change load screening for the same species/size/quantity and raw count alone cannot produce `density_high`.
+- Verified: Domain PASS, Compatibility PASS, TypeScript PASS, production build PASS, Compatibility beginner-action E2E PASS, GP001–GP004 PASS.
