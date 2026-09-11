@@ -67,15 +67,21 @@ assert.equal(guppyKnowledge.knowledge.sexIdentification.confidence, 'verified');
 assert.equal(guppyKnowledge.knowledge.reproduction?.mode, 'livebearer');
 assert.equal(guppyKnowledge.knowledge.reproduction?.fertilization, 'internal');
 assert.ok(guppyKnowledge.knowledge.sexIdentification.maleTraits?.some(item => item.includes('交接器')));
+assert.equal(guppyKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 45);
+assert.equal(guppyKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 6);
 
 const neonKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi' });
 assert.equal(neonKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
 assert.equal(neonKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
 assert.equal(neonKnowledge.knowledge.reproduction?.parentalCare, 'none');
+assert.equal(neonKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
+assert.equal(neonKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 54);
 
 const cardinalKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0432', name: '宝莲灯', scientificName: 'Paracheirodon axelrodi' });
 assert.equal(cardinalKnowledge.knowledge.sexIdentification.reliableFromLifeStage, 'adult');
 assert.equal(cardinalKnowledge.knowledge.socialBehavior?.recommendedGroupSize?.min, 8);
+assert.equal(cardinalKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 3.5);
+assert.equal(cardinalKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
 
 const unknownKnowledge = buildSpeciesKnowledgeProfile(baseFish);
 assert.equal(unknownKnowledge.knowledge.sexIdentification.confidence, 'unknown');

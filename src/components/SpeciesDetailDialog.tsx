@@ -103,9 +103,28 @@ const getTankVolumeLiters = (aquarium?: Aquarium | null) => {
   return Math.round((length * width * height * 0.85) / 1000);
 };
 
+const getReviewedSpaceKnowledge = (fish: Fish) => {
+  const space = buildSpeciesKnowledgeProfile(fish).knowledge.spaceAndGrowth;
+  return space?.evidence.reviewStatus === 'reviewed' ? space : undefined;
+};
+
 const getMinimumTankLiters = (fish: Fish) => {
+  const reviewedSpace = getReviewedSpaceKnowledge(fish);
+  if (reviewedSpace?.minVolumeLiters != null) return reviewedSpace.minVolumeLiters;
   const match = fish.tankSize.match(/(\d+)/);
   return match ? Number(match[1]) : null;
+};
+
+const getTankSizeRequirementLabel = (fish: Fish, isEn = false) => {
+  const reviewedSpace = getReviewedSpaceKnowledge(fish);
+  if (!reviewedSpace) return fish.tankSize;
+  const parts = [
+    reviewedSpace.minVolumeLiters != null ? `≥${reviewedSpace.minVolumeLiters}L` : null,
+    reviewedSpace.minTankLengthCm != null
+      ? (isEn ? `tank length ≥${reviewedSpace.minTankLengthCm}cm` : `缸长 ≥${reviewedSpace.minTankLengthCm}cm`)
+      : null,
+  ].filter(Boolean);
+  return parts.join(' · ') || fish.tankSize;
 };
 
 const getExistingLivestock = (aquarium?: Aquarium | null) => (
@@ -269,7 +288,7 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
       type: 'space',
       label: isEn ? "Tank Size" : "缸体大小",
       current: tankLiters ? `~${tankLiters}L` : t('encyclopedia.noTankSelected'),
-      requirement: fish.tankSize,
+      requirement: getTankSizeRequirementLabel(fish, isEn),
       status: !tankLiters || !minLiters ? 'info' : tankLiters >= minLiters ? 'ok' : tankLiters < minLiters * 0.65 ? 'danger' : 'warning',
       advice: !tankLiters || !minLiters
         ? t('encyclopedia.adviceSpaceNoTank')
@@ -879,7 +898,7 @@ export function SpeciesDetailDialog({
                       {[
                         { label: isEn ? 'Temperature' : '水温', value: fish.waterTemperature },
                         { label: isEn ? 'Water' : '水体', value: selectedTaxonomy?.waterType || fish.category },
-                        { label: isEn ? 'Space' : '空间', value: fish.tankSize },
+                        { label: isEn ? 'Space' : '空间', value: getTankSizeRequirementLabel(fish, isEn) },
                         { label: isEn ? 'Water change' : '换水', value: t('encyclopedia.careWaterChangeValue', { days: fish.waterChangeCycle }) },
                       ].map(item => (
                         <div key={item.label} className="min-w-0 rounded-[13px] bg-bg p-2.5">

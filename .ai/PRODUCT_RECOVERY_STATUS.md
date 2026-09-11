@@ -45,6 +45,8 @@ Draft PR: #149
 - `insufficient_data` results now expose missing evidence in the expandable `为什么这样判断` layer instead of hiding the reason.
 - Knowledge Source Registry added for reviewed Species V2 claims; source IDs now resolve to publisher/title/URL instead of remaining opaque strings.
 - Existing sex-identification disclosure now shows traceable reviewed-source links without changing the surrounding Species Detail layout.
+- First reviewed cohort now includes reviewed adult-size / space authority: guppy 6 cm SL / 45 cm tank length / ~41L; neon tetra 3 cm SL / 60 cm / ~54L; cardinal tetra 3.5 cm SL / 60 cm / ~54L.
+- Species Detail space labels now use reviewed V2 space authority when available, preventing old `fish.tankSize` copy from disagreeing with the compatibility engine.
 - Reviewed reproduction and social/group blocks now render as additional disclosures inside the existing Species Detail hierarchy; unreviewed species get no fabricated empty sections.
 - Reproduction/social disclosures carry the same traceable reviewed-source links as sex-identification claims.
 
@@ -59,7 +61,7 @@ Draft PR: #149
 - Knowledge Source Registry checkpoint: source-resolution assertions PASS, TypeScript PASS, full compatibility regressions PASS, production build PASS.
 - User-facing stability confirmation checkpoint: compatibility regression PASS, explicit non-mutating confirmation test PASS, TypeScript PASS, production build PASS.
 - Species Detail reproduction/social disclosure checkpoint: species-knowledge assertions PASS, TypeScript PASS, production build PASS.
-- Browser Golden Path contract + GP001/GP002/GP003/GP004: PASS on production preview after aligning the shoaling fixture to the reviewed 8-fish minimum.
+- Browser Golden Path contract + GP001/GP002/GP003/GP004: PASS on production preview after aligning the shoaling fixture to the reviewed 8-fish minimum. Re-ran all four UI paths after reviewed space authority wiring: PASS.
 - GP002 now asserts the real recordable action instead of brittle status copy and persists 8 cardinal tetras; existing 6 neon tetras remain unchanged.
 - Local preview verified HTTP 200 at `http://127.0.0.1:4320/`; production preview verified at `http://127.0.0.1:4173/`.
 - Do not merge until the latest current-head workflows are green.

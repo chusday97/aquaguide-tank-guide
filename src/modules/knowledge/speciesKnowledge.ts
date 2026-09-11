@@ -39,6 +39,15 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
       summary: '总体温和，适合温和社区缸；繁殖群体需重点管理公鱼持续追逐母鱼的问题。',
       evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-poecilia-reticulata'], reviewedAt: '2026-09-11' },
     },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 6, measurement: 'SL' },
+      minVolumeLiters: 41,
+      minTankLengthCm: 45,
+      activityLevel: 'medium',
+      needsCover: true,
+      spaceNotes: ['以成体约 6 cm 标准体长和至少 45 × 30 cm 缸底作为空间规划参考。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-poecilia-reticulata'], reviewedAt: '2026-09-11' },
+    },
   },
   sp_0431: {
     sexIdentification: {
@@ -76,6 +85,16 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
       summary: '温和群游鱼，建议至少 8–10 条成群饲养，并避免与明显更大的捕食性鱼混养。',
       evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-paracheirodon-innesi'], reviewedAt: '2026-09-11' },
     },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 3, measurement: 'SL' },
+      minVolumeLiters: 54,
+      minTankLengthCm: 60,
+      activityLevel: 'medium',
+      swimmingZone: 'middle',
+      needsCover: true,
+      spaceNotes: ['成体约 3 cm 标准体长，但群游与水平活动空间使 60 × 30 cm 缸底比单看体长更重要。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-paracheirodon-innesi'], reviewedAt: '2026-09-11' },
+    },
   },
   sp_0432: {
     sexIdentification: {
@@ -108,6 +127,16 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
       finNipping: 'low',
       predationRisk: 'low',
       summary: '温和群游鱼，建议至少 8–10 条成群饲养，并选择体型相近、非捕食性的混养对象。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-paracheirodon-axelrodi'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 3.5, measurement: 'SL' },
+      minVolumeLiters: 54,
+      minTankLengthCm: 60,
+      activityLevel: 'medium',
+      swimmingZone: 'middle',
+      needsCover: true,
+      spaceNotes: ['成体约 3.5 cm 标准体长，长期群养按至少 60 × 30 cm 缸底规划。'],
       evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-paracheirodon-axelrodi'], reviewedAt: '2026-09-11' },
     },
   },
