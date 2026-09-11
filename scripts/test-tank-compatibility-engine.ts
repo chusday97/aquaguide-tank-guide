@@ -55,7 +55,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish(),
       });
       return result.metadata.catalogVersion === 'local-fish-data-v1'
-        && result.metadata.ruleVersion === 'compatibility-domain-v1'
+        && result.metadata.ruleVersion === 'compatibility-domain-v2-soft-capacity'
         && result.metadata.domainRuleCodes.length > 0
         && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
     },
@@ -292,7 +292,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'same species quantity counts toward load without self conflict',
+    name: 'same species quantity counts toward soft load screening without self conflict',
     run: () => {
       const species = makeFish();
       const result = evaluateLegacyTankCompatibility({
@@ -301,9 +301,9 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: species,
         candidateQuantity: 10,
       });
-      return result.status === 'not_recommended'
-        && result.blockingRules.some(rule => rule.code === 'bioload_over_limit')
-        && result.blockingRules.every(rule => !['territorial_conflict', 'single_housing_required'].includes(rule.code));
+      return result.status !== 'not_recommended'
+        && result.blockingRules.every(rule => !['bioload_over_limit', 'bioload_near_limit', 'territorial_conflict', 'single_housing_required'].includes(rule.code))
+        && result.warningRules.some(rule => ['bioload_screening_high', 'bioload_screening_elevated', 'bioload_over_limit', 'bioload_near_limit'].includes(rule.code));
     },
   },
   {
@@ -331,7 +331,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'aggressive temperament keeps the legacy load threshold',
+    name: 'aggressive temperament does not turn coarse load screening into a hard block',
     run: () => {
       const aggressive = makeFish({ size: 'Large', temperament: 'Aggressive' });
       const result = evaluateLegacyTankCompatibility({
@@ -340,8 +340,9 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish({ id: 'candidate-small', size: 'Small' }),
         candidateQuantity: 1,
       });
-      return result.status === 'not_recommended'
-        && result.blockingRules.some(rule => rule.code === 'bioload_over_limit');
+      return result.status !== 'not_recommended'
+        && result.blockingRules.every(rule => !['bioload_over_limit', 'bioload_near_limit'].includes(rule.code))
+        && result.warningRules.some(rule => ['bioload_screening_high', 'bioload_screening_elevated', 'bioload_over_limit', 'bioload_near_limit'].includes(rule.code));
     },
   },
   {
