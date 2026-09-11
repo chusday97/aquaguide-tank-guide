@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
-import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
+import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../src/data/compatibilityEvidence';
 import { getLifeType } from '../src/modules/species/species.service';
 import type { Aquarium } from '../src/types';
 
@@ -98,26 +98,21 @@ const unknownWaterPair = evaluateCompatibilityDecision({
     { species: cardinalWithoutWater, quantity: 6, origin: 'candidate' },
   ],
 }).pairResults[0];
-assert.ok(unknownWaterPair, 'the reviewed pair must still be testable when explicit water facts are removed');
-assert.equal(unknownWaterPair.status, 'insufficient_data', 'missing explicit water type must remain fail-closed even for a reviewed pair');
-assert.ok(unknownWaterPair.rawResult.missingData.some(item => item.code === 'water_type_unknown' || item.code === 'candidate_water_type_missing'), 'missing explicit water type must be visible in evidence');
+assert.ok(unknownWaterPair, 'the reviewed pair must still be testable when legacy catalog water-type fields are removed');
+assert.equal(unknownWaterPair.status, 'caution', 'reviewed water-type authority must fill legacy catalog gaps instead of creating false insufficient-data results');
+assert.equal(unknownWaterPair.rawResult.missingData.some(item => item.code === 'water_type_unknown' || item.code === 'candidate_water_type_missing'), false, 'reviewed freshwater evidence must suppress obsolete water-type missing warnings');
 
 const guppyNeon = rows.find(row => row.existingId === 'sp_0436' && row.candidateId === 'sp_0431');
 assert.ok(guppyNeon, 'reviewed guppy and neon profiles must be present in the priority matrix');
-assert.equal(guppyNeon.status, 'insufficient_data', 'reviewed species profiles without a reviewed pair rule must not become recordable by absence-of-risk inference');
-assert.ok(guppyNeon.missingRules.some(item => item.code === 'pair_evidence_unreviewed' && item.severity === 'medium'), 'guppy → neon must expose the missing pair-evidence boundary');
+assert.equal(guppyNeon.status, 'caution', 'reviewed species traits may produce a recordable caution without requiring a bespoke pair study');
+assert.ok(guppyNeon.passedRules.some(item => item.code === 'pair_trait_inference' && item.severity === 'info'), 'guppy → neon must expose reviewed trait-based inference provenance');
+assert.equal(guppyNeon.missingRules.some(item => item.code === 'pair_evidence_unreviewed'), false, 'absence of a bespoke pair study must not be treated as missing decision-critical data');
 
 const whiteCloudGuppy = rows.find(row => row.existingId === 'sp_0434' && row.candidateId === 'sp_0436');
 assert.ok(whiteCloudGuppy, 'reviewed white-cloud and guppy profiles must be present in the priority matrix');
-assert.ok(
-  whiteCloudGuppy.status === 'insufficient_data' || whiteCloudGuppy.status === 'not_recommended',
-  'two reviewed species profiles without a reviewed pair rule must never become recordable; a higher-priority hard block may correctly return not_recommended.',
-);
-if (whiteCloudGuppy.status === 'insufficient_data') {
-  assert.ok(whiteCloudGuppy.missingRules.some(item => item.code === 'pair_evidence_unreviewed' && item.severity === 'medium'), 'white cloud → guppy must expose pair-evidence missing when no hard block outranks it');
-} else {
-  assert.ok(whiteCloudGuppy.blockingRules.length > 0, 'white cloud → guppy may bypass pair-evidence missing only when an explicit hard block is present');
-}
+assert.equal(whiteCloudGuppy.status, 'not_recommended', 'a real tank-temperature conflict must still outrank pair-level trait inference');
+assert.ok(whiteCloudGuppy.blockingRules.some(item => item.code === 'tank_temperature_conflict'), 'white cloud → guppy must expose the actual temperature hard block at 24°C');
+assert.equal(whiteCloudGuppy.missingRules.some(item => item.code === 'pair_evidence_unreviewed'), false, 'hard biological conflicts must not be mixed with obsolete pair-evidence missing rules');
 
 const oscar = fishData.find(fish => fish.id === 'sp_0451');
 const zebrafish = fishData.find(fish => fish.id === 'sp_0435');
@@ -162,7 +157,7 @@ assert.equal(channaDirectPairRule.evidence.includes('并非直接配对实验'),
 assert.ok(channaDirectPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'Channa–Rhodeus direct evidence must preserve the laboratory-to-husbandry limitation');
 
 const recordable = rows.filter(row => row.status === 'compatible' || row.status === 'caution');
-assert.equal(recordable.length, 2, 'Batch 2 adds a reviewed blocked pair outside the priority cohort; recordable priority directions must remain the explicit tetra pair in both directions.');
+assert.ok(recordable.length >= 2, 'reviewed trait inference should expand recordable directions beyond only bespoke pair rules.');
 
 for (const row of recordable) {
   assert.ok(
@@ -172,6 +167,12 @@ for (const row of recordable) {
   assert.ok(
     getReviewedCompatibilityProfile(row.candidateId),
     `recordable pair ${row.existingName} → ${row.candidateName} is missing reviewed candidate-species evidence`,
+  );
+  const hasDirectPairRule = Boolean(getReviewedPairRule(row.existingId, row.candidateId));
+  const hasReviewedTraitInference = row.passedRules.some(item => item.code === 'pair_trait_inference');
+  assert.ok(
+    hasDirectPairRule || hasReviewedTraitInference,
+    `recordable pair ${row.existingName} → ${row.candidateName} must expose direct pair evidence or reviewed trait-inference provenance`,
   );
   const blockingMissing = row.missingRules.filter(item => item.severity === 'high' || item.severity === 'medium');
   assert.equal(

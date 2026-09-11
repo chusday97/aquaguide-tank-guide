@@ -4,6 +4,7 @@ import type { CompatibilityLifeStage } from '../types';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
+  waterType?: 'freshwater' | 'saltwater' | 'brackish';
   behaviorTraits: string[];
   minimumGroupSize?: number;
   predationTargets: string[];
@@ -180,6 +181,7 @@ const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0439: {
     speciesId: 'sp_0439',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling', 'interspecific_aggression', 'fin_nipping'],
     minimumGroupSize: 6,
     predationTargets: [],
@@ -190,6 +192,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0021: {
     speciesId: 'sp_0021',
+    waterType: 'freshwater',
     behaviorTraits: ['territorial', 'breeding_defense', 'chasing', 'biting'],
     predationTargets: [],
     confidence: 'high',
@@ -199,6 +202,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0049: {
     speciesId: 'sp_0049',
+    waterType: 'freshwater',
     behaviorTraits: ['predatory', 'solitary_required', 'territorial'],
     predationTargets: ['small_fish'],
     confidence: 'medium',
@@ -208,6 +212,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0431: {
     speciesId: 'sp_0431',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -218,6 +223,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0432: {
     speciesId: 'sp_0432',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -228,6 +234,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0434: {
     speciesId: 'sp_0434',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -238,6 +245,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0435: {
     speciesId: 'sp_0435',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 8,
     predationTargets: [],
@@ -248,6 +256,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0436: {
     speciesId: 'sp_0436',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],

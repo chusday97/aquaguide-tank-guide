@@ -80,3 +80,18 @@ Draft PR: #149
 3. Expand the reviewed cohort incrementally with high-frequency species; keep V2 data + compatibility authority in the same checkpoint.
 4. Continue replacing coarse capacity heuristics with reviewed adult size, tank length, activity and later filtration/flow facts; keep volume guidance soft unless it is a true physical constraint.
 5. Continue full Golden Path validation before any merge to main.
+
+### P1 — Trait-inference authority checkpoint
+- Removed the bespoke-pair-study requirement as a universal recordability gate. Reviewed species traits + general rules may now produce compatible/caution outcomes; direct pair rules remain higher-priority overrides.
+- Added `pair_trait_inference` as visible provenance instead of turning absent direct pair research into missing decision-critical data.
+- Reviewed compatibility profiles now carry reviewed water type for the active cohort, filling stale legacy catalog gaps.
+- Species Fit no longer equates `Aggressive` or `Large` with predation when reviewed behavior authority exists.
+- Compatibility UI now prefers reviewed social housing labels over stale legacy `housingMode` values; tiger barb shows group guidance instead of `建议单养`.
+- Browser acceptance added for tiger-barb group-pressure action and stable-tank soft-load downgrade, including visible positive evidence after expanding details.
+- GP001 E2E now clicks the actual settings navigation button, reducing pointer-interception flakes.
+
+#### Validation
+- Evidence coverage PASS: 132 real common-species directions; 6 reviewed recordable directions under the new provenance contract.
+- Domain compatibility, legacy facade, visual results, TypeScript, production build: PASS.
+- Compatibility beginner-action E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.

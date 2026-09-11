@@ -669,7 +669,7 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
   ];
   return {
     id: profile.catalogKey,
-    waterType: profile.waterType,
+    waterType: reviewed?.waterType ?? profile.waterType,
     temperatureMinC: profile.waterTemperatureMinC,
     temperatureMaxC: profile.waterTemperatureMaxC,
     phMin: profile.phMin,

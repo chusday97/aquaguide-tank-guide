@@ -2,6 +2,7 @@ import type { Aquarium, Fish } from '../types';
 import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
 import { estimateWaterProfile } from './waterProfileEstimate';
+import { getReviewedCompatibilityProfile } from '../data/compatibilityEvidence';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -82,6 +83,8 @@ const getSpeciesMinLengthCm = (species: Fish) => {
 };
 
 const getSpeciesWaterType = (species: Fish): SpeciesWaterType => {
+  const reviewedWaterType = getReviewedCompatibilityProfile(species.id)?.waterType;
+  if (reviewedWaterType) return reviewedWaterType;
   const text = textOf(species);
   if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
   if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
@@ -124,10 +127,10 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
   const selectedIsSmall = species.size === 'Small';
   const selectedIsLongFin = /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
   const predator = validLivestock.find(item => {
-    const predatorIdentity = `${item.species.name} ${item.species.category}`;
-    return item.species.temperament === 'Aggressive'
-      || item.species.size === 'Large'
-      || /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗/i.test(predatorIdentity);
+    const reviewed = getReviewedCompatibilityProfile(item.species.id);
+    if (reviewed) return reviewed.behaviorTraits.includes('predatory');
+    const predatorIdentity = `${item.species.name} ${item.species.category} ${item.species.description}`;
+    return /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
   });
   if (predator && selectedIsSmall) {
     return {
@@ -138,7 +141,10 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
     };
   }
 
-  const nipper = validLivestock.find(item => /虎皮|黑裙|红十字|彩裙|玫瑰鲫|啄鳍|追咬/i.test(textOf(item.species)));
+  const nipper = validLivestock.find(item => {
+    const reviewed = getReviewedCompatibilityProfile(item.species.id);
+    return reviewed ? reviewed.behaviorTraits.includes('fin_nipping') : /虎皮|黑裙|红十字|彩裙|玫瑰鲫|啄鳍|追咬/i.test(textOf(item.species));
+  });
   if (nipper && selectedIsLongFin) {
     return {
       type: 'fin_nipping_risk',
@@ -329,7 +335,11 @@ export const evaluateSpeciesForAquarium = (
     score -= 10;
   }
   if (species.temperament === 'Peaceful') score += 5;
-  if (species.housingMode === '建议单养' && otherLivestock.length > 0) {
+  const reviewedHousing = getReviewedCompatibilityProfile(species.id);
+  const solitaryRequired = reviewedHousing
+    ? reviewedHousing.behaviorTraits.includes('solitary_required')
+    : species.housingMode === '建议单养';
+  if (solitaryRequired && otherLivestock.length > 0) {
     warnings.push({ type: 'single_housing', title: '更适合单养', detail: '该物种更适合单独规划缸位。', severity: 'medium' });
     score -= 15;
   }

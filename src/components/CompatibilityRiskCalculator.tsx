@@ -109,10 +109,34 @@ import { getCompatibilityPreviewSpecies } from '../services/compatibility/compat
 import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
+import { getReviewedCompatibilityProfile } from '../data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledge } from '../modules/knowledge/speciesKnowledge';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
 const isCompatibilityLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
+
+const isReviewedSolitaryRequirement = (fish: Fish) => {
+  const profile = getReviewedCompatibilityProfile(fish.id);
+  const social = getReviewedSpeciesKnowledge(fish.id)?.socialBehavior;
+  if (profile?.behaviorTraits.includes('solitary_required')) return true;
+  if (social?.evidence.reviewStatus === 'reviewed') return social.mode === 'solitary';
+  return !profile && fish.housingMode === '建议单养';
+};
+
+const getEffectiveHousingLabel = (fish: Fish, isEn = false) => {
+  const social = getReviewedSpeciesKnowledge(fish.id)?.socialBehavior;
+  if (social?.evidence.reviewStatus === 'reviewed') {
+    if (social.mode === 'solitary') return isEn ? 'Single housing' : '建议单养';
+    if (['shoal', 'school', 'group', 'colony'].includes(social.mode)) {
+      const minimum = social.minimumGroupSize;
+      return minimum ? (isEn ? `Group ${minimum}+` : `群体 ${minimum}+`) : (isEn ? 'Group housing' : '群体饲养');
+    }
+    if (social.mode === 'pair') return isEn ? 'Pair housing' : '成对饲养';
+    if (social.mode === 'harem') return isEn ? 'Ratio-managed group' : '配比群养';
+  }
+  return getHousingModeLocalized(fish.housingMode, isEn);
+};
 
 type CompatibilityRiskLevel = 'empty' | TankCompatibilityStatus;
 type ResultModal = null | 'adjustment';
@@ -250,7 +274,7 @@ const getConflictTags = (species: Fish[], reasons: string[]) => {
   if (species.length < 2) return [];
   const tags = new Set<string>();
   const isEn = Boolean(i18n.language?.startsWith('en'));
-  if (species.some(item => item.housingMode === '建议单养')) tags.add(isEn ? 'Single Species Recommended' : '建议单养');
+  if (species.some(isReviewedSolitaryRequirement)) tags.add(isEn ? 'Single Species Recommended' : '建议单养');
   if (new Set(species.map(getCompatibilityWaterType)).size > 1) tags.add(isEn ? 'Incompatible Water Type' : '水体不兼容');
   reasons.forEach(reason => {
     if (reason.includes('水温')) tags.add(isEn ? 'Water Temp' : '水温');
@@ -338,7 +362,7 @@ const getActionHints = (result: ReturnType<typeof calculateRisk>, species: Fish[
   const level = result.level;
   if (result.ruleResult?.suggestions.length) return result.ruleResult.suggestions.slice(0, 3);
   if (level === 'not_recommended') {
-    const single = species.find(item => item.housingMode === '建议单养');
+    const single = species.find(isReviewedSolitaryRequirement);
     const aggressive = species.find(item => item.temperament === 'Aggressive');
     const removeName = single?.name || aggressive?.name || species[species.length - 1]?.name;
     return [
@@ -997,7 +1021,7 @@ export function CompatibilityRiskCalculator({
                     <span className="min-w-0">
                       <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
                       <span className="block truncate text-[10px] font-medium text-ink/45">
-                        {taxonomy.temperatureBand} · {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Observe' : '混养待评估')}
+                        {taxonomy.temperatureBand} · {taxonomy.size} · {getEffectiveHousingLabel(fish, isEn)}
                       </span>
                     </span>
                     <span className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-black text-amber-700">{isEn ? 'Add' : '加入'}</span>
@@ -1038,7 +1062,7 @@ export function CompatibilityRiskCalculator({
                     <span className="min-w-0">
                       <span className="block truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
                       <span className="mt-0.5 block truncate text-[9px] font-bold text-ink/42">
-                        {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Assessable' : '可评估')}
+                        {taxonomy.size} · {getEffectiveHousingLabel(fish, isEn)}
                       </span>
                     </span>
                   </button>

@@ -57,7 +57,7 @@ try {
   await initialNumberInputs.nth(2).fill('30');
 
   // Move to water parameters using the product's own settings navigation.
-  await settingsDialog.getByText('参数', { exact: true }).first().click();
+  await settingsDialog.getByText('参数', { exact: true }).first().locator('xpath=ancestor::button[1]').click();
   await settingsDialog.getByText('淡水', { exact: true }).last().click();
   const parameterInputs = settingsDialog.locator('input[type="number"]');
   const parameterInputCount = await parameterInputs.count();

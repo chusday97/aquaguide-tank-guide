@@ -63,7 +63,7 @@ const inferRiskType = (rule: TankCompatibilityRule): CompatibilityRiskType => {
   const text = `${rule.code} ${rule.title} ${rule.evidence}`;
   if (/water|水体|海水|淡水/.test(text)) return 'water_type';
   if (/predation|捕食|吞食|体型/.test(text)) return 'predation';
-  if (/attack|攻击|追咬|性情/.test(text)) return 'aggression';
+  if (/attack|攻击|追咬|追鳍|fin_nipping|性情/.test(text)) return 'aggression';
   if (/territor|领地|单养/.test(text)) return 'territory';
   if (/equipment|过滤|加热|设备/.test(text)) return 'equipment';
   if (/space|volume|tank|容量|空间|躲避|缸/.test(text)) return 'space';
@@ -137,7 +137,7 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
   };
 };
 
-const enforcePairEvidenceBoundary = (
+const annotatePairInference = (
   result: TankCompatibilityResult,
   itemA: CompatibilityItem,
   itemB: CompatibilityItem,
@@ -150,28 +150,21 @@ const enforcePairEvidenceBoundary = (
   const profileB = getReviewedCompatibilityProfile(itemB.species.id);
   if (!profileA || !profileB) return result;
 
-  const pairEvidenceRule: TankCompatibilityRule = {
-    code: 'pair_evidence_unreviewed',
-    title: '配对证据尚未审核',
-    evidence: `${itemA.species.name} 与 ${itemB.species.name} 虽各自已有审核物种资料，但缺少已审核的配对结论；物种 profile 未记录风险不能视为已证明不存在配对风险。`,
-    severity: 'medium',
+  const pairInferenceRule: TankCompatibilityRule = {
+    code: 'pair_trait_inference',
+    title: '基于审核物种特征推断',
+    evidence: `${itemA.species.name} 与 ${itemB.species.name} 暂无专门配对研究；当前结论由双方已审核的水体、温度、空间、群体和行为特征通过通用规则推断，后续若有直接配对证据则以直接证据优先。`,
+    severity: 'info',
     basis: 'rule_inference',
-    confidence: 'unknown',
-    reviewStatus: 'draft',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
     affectedSpeciesIds: [itemA.species.id, itemB.species.id],
     citations: [...profileA.citations, ...profileB.citations],
   };
 
   return {
     ...result,
-    status: 'insufficient_data',
-    riskLevel: 'unknown',
-    summary: pairEvidenceRule.evidence,
-    missingData: uniqueRules([...result.missingData, pairEvidenceRule]),
-    suggestions: Array.from(new Set([
-      '先补充该物种组合的已审核配对证据，再把结果提升为可记录的 compatible/caution。',
-      ...result.suggestions,
-    ])).slice(0, 5),
+    passedRules: uniqueRules([...result.passedRules, pairInferenceRule]),
   };
 };
 
@@ -194,7 +187,7 @@ const buildPairResult = (
     candidateSpecies: itemA.species,
     candidateQuantity: quantityA,
   });
-  const rawResult = enforcePairEvidenceBoundary(
+  const rawResult = annotatePairInference(
     mergeDirectionalResults([forwardResult, reverseResult]),
     itemA,
     itemB,
