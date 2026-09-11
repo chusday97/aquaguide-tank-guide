@@ -8,8 +8,8 @@ import { fishData } from '../data/fishData';
 import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions } from '../modules/species/species.service';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/tankCompatibilityEngine';
-import { buildSpeciesKnowledgeProfile, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
-import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
+import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
+import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 import { resolveKnowledgeSources } from '../modules/knowledge/knowledgeSources';
 import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
@@ -261,49 +261,6 @@ const getSecondaryCareType = (fish: Fish) => {
   return '';
 };
 
-const getEffectiveHousingPresentation = (fish: Fish, t: any, isEn = false) => {
-  const reviewedProfile = getReviewedCompatibilityProfileForFish(fish);
-  const reviewedSocial = getReviewedSpeciesKnowledgeForFish(fish)?.socialBehavior;
-  const reviewedSolitary = reviewedProfile?.behaviorTraits.includes('solitary_required')
-    || (reviewedSocial?.evidence.reviewStatus === 'reviewed' && reviewedSocial.mode === 'solitary');
-
-  if (reviewedSolitary) {
-    return {
-      label: isEn ? 'Single housing' : '建议单养',
-      status: 'danger' as FitStatus,
-      advice: reviewedSocial?.summary || (isEn ? 'Reviewed behavior evidence supports single housing.' : '已审核行为资料支持单独规划缸位。'),
-    };
-  }
-
-  if (reviewedSocial?.evidence.reviewStatus === 'reviewed') {
-    const minimum = reviewedSocial.minimumGroupSize;
-    if (['shoal', 'school', 'group', 'colony'].includes(reviewedSocial.mode)) {
-      return {
-        label: minimum ? (isEn ? `Group ${minimum}+` : `群体 ${minimum}+`) : (isEn ? 'Group housing' : '群体饲养'),
-        status: 'ok' as FitStatus,
-        advice: reviewedSocial.summary,
-      };
-    }
-    if (reviewedSocial.mode === 'pair') {
-      return { label: isEn ? 'Pair housing' : '成对饲养', status: 'ok' as FitStatus, advice: reviewedSocial.summary };
-    }
-    if (reviewedSocial.mode === 'harem') {
-      return { label: isEn ? 'Ratio-managed group' : '配比群养', status: 'warning' as FitStatus, advice: reviewedSocial.summary };
-    }
-    return {
-      label: isEn ? 'Reviewed social behavior' : '已审核群体习性',
-      status: 'ok' as FitStatus,
-      advice: reviewedSocial.summary,
-    };
-  }
-
-  return {
-    label: fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.fitCaution'),
-    status: fish.housingMode === '建议单养' ? 'danger' as FitStatus : fish.housingMode === '谨慎混养' ? 'warning' as FitStatus : 'ok' as FitStatus,
-    advice: fish.housingReason || t('encyclopedia.adviceHousingDefault'),
-  };
-};
-
 const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefined, t: any, isEn = false): SpeciesFitAssessment => {
   const tempRange = parseRange(fish.waterTemperature);
   const phRange = parseRange(fish.phLevel);
@@ -412,7 +369,7 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
     },
   ];
 
-  const housingPresentation = getEffectiveHousingPresentation(fish, t, isEn);
+  const housingPresentation = getSpeciesHousingAuthority(fish, isEn);
   const compatibilityFit: FitDimension[] = isEmptyTank ? [] : [{
     type: alreadyInTank ? 'livestock_status' : 'compatibility',
     label: isEn ? "Compatibility" : "混养",
@@ -612,7 +569,7 @@ export function SpeciesDetailDialog({
   }, [displayFit]);
 
   const speciesKnowledge = useMemo(() => fish ? buildSpeciesKnowledgeProfile(fish) : null, [fish]);
-  const effectiveHousing = useMemo(() => fish ? getEffectiveHousingPresentation(fish, t, isEn) : null, [fish, isEn, t]);
+  const effectiveHousing = useMemo(() => fish ? getSpeciesHousingAuthority(fish, isEn) : null, [fish, isEn]);
   const sexIdentificationGuide = speciesKnowledge?.knowledge.sexIdentification || null;
   const reproductionKnowledge = speciesKnowledge?.knowledge.reproduction || null;
   const socialKnowledge = speciesKnowledge?.knowledge.socialBehavior || null;

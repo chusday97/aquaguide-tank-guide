@@ -80,6 +80,7 @@ import {
   recommendationService,
 } from '../modules/recommendation/recommendation.service';
 import type { DiscoveryDeckState } from '../modules/recommendation/recommendation.schema';
+import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
 const ImagePreviewModal = lazy(() => import('../components/common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 
@@ -361,9 +362,12 @@ const getFitStatusLabel = (status: 'ok' | 'warning' | 'danger' | 'info') => {
 
 const getSpeciesReminder = (fish: Fish) => {
   const tools = getToolFunctions(fish);
+  const housing = getSpeciesHousingAuthority(fish);
+  if (housing.source === 'reviewed' && housing.solitaryRequired) return '已审核行为资料建议单独规划缸位。';
+  if (housing.source === 'reviewed' && housing.minimumGroupSize) return `建议按至少 ${housing.minimumGroupSize} 条/只规划群体，少量个体不等于更保守。`;
+  if (housing.status === 'warning') return '加入前建议先做混养计算。';
   if (fish.name.includes('红莲灯') || fish.name.includes('灯')) return '建议成群饲养，状态更稳定。';
-  if (fish.housingMode === '谨慎混养') return '加入前建议先做混养计算。';
-  if (fish.housingMode === '建议单养') return '更适合作为单独规划的主题生物。';
+  if (housing.solitaryRequired) return '更适合作为单独规划的主题生物。';
   if (tools.includes('除藻') && getLifeType(fish) === 'invertebrate') return '避免含铜药剂，保持水质稳定。';
   if (fish.difficulty === 'Hard') return '对水质和环境稳定性要求较高。';
   return '';
@@ -487,13 +491,14 @@ const getFilteredSpecies = (
 };
 
 const getSpeciesFitText = (fish: Fish) => {
+  const housing = getSpeciesHousingAuthority(fish);
   const suitable = [
     fish.difficulty === 'Easy' ? '新手' : '有一定经验的玩家',
     fish.size === 'Small' ? '小型缸或草缸' : fish.size === 'Medium' ? '中型鱼缸' : '大缸',
     ...(getToolFunctions(fish).slice(0, 1)),
   ].filter(Boolean);
   const unsuitable = [
-    fish.housingMode === '建议单养' ? '混养缸' : null,
+    housing.solitaryRequired ? '混养缸' : null,
     fish.temperament !== 'Peaceful' ? '长鳍慢游鱼' : null,
     getFishTemperatureTheme(fish.waterTemperature).needsHeater ? '无加热设备的低温缸' : null,
   ].filter(Boolean);
@@ -1085,6 +1090,7 @@ export default function Encyclopedia() {
     const waterTypeMismatch = Boolean(waterTypeKnown && ((aquarium!.waterType === 'Saltwater') !== isSaltwaterSpecies));
     const needsHeater = getFishTemperatureTheme(fish.waterTemperature).needsHeater;
     const heaterMissing = needsHeater && aquarium?.equipment?.heater === false;
+    const housing = getSpeciesHousingAuthority(fish, isEn);
 
     const items = [
       {
@@ -1119,9 +1125,9 @@ export default function Encyclopedia() {
       {
         label: '性情 / 混养',
         current: aquarium?.fishes.length ? `已有 ${aquarium.fishes.length} 种生物` : '暂无生物',
-        requirement: fish.housingMode || '需观察',
-        status: fish.housingMode === '建议单养' ? 'danger' : fish.housingMode === '谨慎混养' ? 'warning' : 'ok',
-        advice: fish.housingReason || '建议加入混养计算后再确认组合风险。',
+        requirement: housing.label,
+        status: housing.status,
+        advice: housing.advice,
       },
       {
         label: '养护难度',
@@ -2454,7 +2460,7 @@ export default function Encyclopedia() {
                       </span>
                     </div>
                     <div className="mt-3 flex flex-wrap gap-1.5">
-                      {[selectedTaxonomy?.variety, selectedFish.housingMode, ...getToolFunctions(selectedFish)].filter(Boolean).slice(0, 3).map(tag => {
+                      {[selectedTaxonomy?.variety, getSpeciesHousingAuthority(selectedFish, isEn).label, ...getToolFunctions(selectedFish)].filter(Boolean).slice(0, 3).map(tag => {
                         const displayTag = tag === '主题生物' ? '观赏鱼' : tag === '单独饲养' ? '建议单养' : tag;
                         const translatedTag = filterLabelKeys[displayTag] ? t('encyclopedia.' + filterLabelKeys[displayTag]) : displayTag;
                         return (
@@ -2600,10 +2606,10 @@ export default function Encyclopedia() {
                     <div className="mt-3 grid gap-2">
                       <div className="rounded-[12px] bg-bg p-2">
                         <div className="text-[10px] font-bold text-ink/42">{t('encyclopedia.temperamentMixing')}</div>
-                        <div className="mt-1 text-[12px] font-black text-ink">{getTemperamentLabel(selectedFish.temperament, isEn)} · {selectedFish.housingMode || (isEn ? 'Observe' : '需观察')}</div>
+                        <div className="mt-1 text-[12px] font-black text-ink">{getTemperamentLabel(selectedFish.temperament, isEn)} · {getSpeciesHousingAuthority(selectedFish, isEn).label}</div>
                       </div>
                       <p className="rounded-[12px] bg-bg p-2 text-[11px] font-medium leading-relaxed text-ink/65">
-                        {selectedFish.housingReason || (isEn ? 'Recommended to run compatibility check first.' : '建议加入混养计算后再确认。')}
+                        {getSpeciesHousingAuthority(selectedFish, isEn).advice}
                       </p>
                       {selectedFit.risks.length > 0 && (
                         <div className="grid gap-1.5">

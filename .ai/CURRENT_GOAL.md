@@ -49,3 +49,8 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - The detail surface keeps these as progressive evidence rather than moving them into the primary action area.
 - The unavailable compatibility disclosure no longer duplicates the calculator CTA; exactly one route remains.
 - Browser contract updated so a single neon tetra is caution under the reviewed minimum-group rule rather than incorrectly treated as directly addable.
+
+### Current checkpoint — housing authority convergence
+- Shared reviewed housing authority now drives Species Detail, Compatibility, Encyclopedia, and Aquarium.
+- Exact reviewed species facts win, then base-species inheritance, then legacy fallback.
+- Next focus: increase reviewed common-species coverage; do not reopen broad UI redesign.

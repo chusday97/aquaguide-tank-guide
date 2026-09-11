@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { buildSpeciesCarePresentation } from '../src/modules/knowledge/speciesCarePresentation';
 import { buildSpeciesKnowledgeProfile, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
+import { getSpeciesHousingAuthority } from '../src/modules/knowledge/speciesHousingAuthority';
+import { getSpeciesFilterTags, getSpeciesPositioning, getSpeciesRoleLabel } from '../src/modules/species/species.service';
 import type { Fish } from '../src/types';
 
 const baseFish: Fish = {
@@ -141,5 +143,30 @@ assert.equal(sexSourceRefs.length, 1);
 assert.equal(sexSourceRefs[0]?.publisher, 'Seriously Fish');
 assert.ok(sexSourceRefs[0]?.url.includes('paracheirodon-innesi'));
 assert.deepEqual(resolveKnowledgeSources(['unknown-source']), []);
+
+
+
+const tigerHousingFish: Fish = { ...baseFish, id: 'sp_0439', name: '虎皮鱼', scientificName: 'Puntigrus tetrazona', temperament: 'Aggressive', housingMode: '建议单养' };
+const tigerHousing = getSpeciesHousingAuthority(tigerHousingFish);
+assert.equal(tigerHousing.source, 'reviewed');
+assert.equal(tigerHousing.label, '群体 8+');
+assert.equal(tigerHousing.minimumGroupSize, 8);
+assert.equal(tigerHousing.solitaryRequired, false);
+assert.equal(tigerHousing.status, 'warning');
+assert.equal(tigerHousing.communityCategory, '谨慎混养');
+assert.equal(getSpeciesFilterTags(tigerHousingFish).housingTags.includes('建议单养'), false);
+assert.equal(getSpeciesFilterTags(tigerHousingFish).housingTags.includes('谨慎混养'), true);
+assert.doesNotMatch(getSpeciesRoleLabel(tigerHousingFish), /建议单养/);
+assert.match(getSpeciesPositioning(tigerHousingFish), /至少 8/);
+
+const bettaVariantHousing = getSpeciesHousingAuthority({ ...baseFish, id: 'test-betta-halfmoon', name: '半月斗鱼', scientificName: 'Betta splendens var. Halfmoon', housingMode: '适合混养' });
+assert.equal(bettaVariantHousing.source, 'reviewed');
+assert.equal(bettaVariantHousing.solitaryRequired, true);
+assert.equal(bettaVariantHousing.communityCategory, '建议单养');
+
+const legacyHousing = getSpeciesHousingAuthority({ ...baseFish, id: 'legacy-species', housingMode: '谨慎混养' });
+assert.equal(legacyHousing.source, 'legacy');
+assert.equal(legacyHousing.status, 'warning');
+assert.equal(legacyHousing.communityCategory, '谨慎混养');
 
 console.log('species detail knowledge assertions passed');

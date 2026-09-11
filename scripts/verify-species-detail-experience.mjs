@@ -53,7 +53,7 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
   await context.addInitScript(({ saved, language }) => {
     localStorage.setItem('aquarium_app_state_v1', JSON.stringify(saved));
     localStorage.setItem('aquariums', JSON.stringify(saved.aquariums));
-    localStorage.setItem('wishlistFishIds', JSON.stringify(['sp_0431']));
+    localStorage.setItem('wishlistFishIds', JSON.stringify(saved.wishlist || ['sp_0431']));
     localStorage.setItem('aquaguide_locale', language);
   }, { saved: state, language: locale });
   const page = await context.newPage();
@@ -61,15 +61,22 @@ const newSeededPage = async ({ locale = 'en', state = createState(), phone = fal
   return { context, page };
 };
 
-const openWishlistDetail = async page => {
+const openWishlistDetail = async (page, fishId = 'sp_0431') => {
   await page.goto(`${baseUrl}/collection/wishlist`, { waitUntil: 'domcontentloaded' });
-  await page.locator('#collection-wishlist-sp_0431 button').first().click();
+  await page.locator(`#collection-wishlist-${fishId} button`).first().click();
   const dialog = page.locator('[role="dialog"][data-surface]:visible');
   await dialog.waitFor();
   return dialog;
 };
 
 try {
+  const tigerState = { ...createState({ withTank: true, owned: false }), wishlist: ['sp_0439'] };
+  const tiger = await newSeededPage({ locale: 'zh-CN', state: tigerState });
+  const tigerDialog = await openWishlistDetail(tiger.page, 'sp_0439');
+  assert.equal(await tigerDialog.getByText('群体 8+', { exact: true }).count() > 0, true, 'reviewed tiger-barb group authority must replace stale single-housing label');
+  assert.equal(await tigerDialog.getByText('建议单养', { exact: true }).count(), 0, 'stale catalog single-housing label must not leak into reviewed tiger-barb detail');
+  await tiger.context.close();
+
   const noTank = await newSeededPage({ state: createState({ withTank: false }) });
   const noTankDialog = await openWishlistDetail(noTank.page);
   const setupAction = noTankDialog.getByRole('button', { name: 'Go to Tank Settings', exact: true });

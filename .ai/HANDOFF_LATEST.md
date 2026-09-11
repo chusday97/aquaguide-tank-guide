@@ -63,3 +63,20 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Removed duplicate Compatibility Calculator CTA from the unavailable compatibility state.
 - Species Detail browser contract now respects reviewed group-size authority: one neon tetra is caution, so the footer action is `View current tank risks`, not direct add.
 - Verified: TypeScript PASS, Species Knowledge PASS, production build PASS, Species Detail E2E PASS, Compatibility beginner-action E2E PASS, GP001–GP004 PASS.
+
+### P1 — Reviewed housing authority convergence
+- Unified Species Detail, Compatibility Calculator, Encyclopedia, and Aquarium surfaces on one reviewed housing authority.
+- Authority order: exact reviewed species -> inherited base-species authority -> legacy catalog fallback.
+- Social structure and community-tank risk are represented separately: e.g. tiger barb is `Group 8+` while community status remains caution because reviewed fin-nipping/aggression evidence still applies.
+- Removed remaining user-facing direct reads of stale `fish.housingMode` from Encyclopedia and Aquarium decision surfaces.
+- Removed Aquarium-only aggression/territoriality multiplier from coarse bioload calculation.
+
+#### Validation
+- Species Knowledge: PASS.
+- Compatibility: PASS.
+- Compatibility evidence coverage: PASS (132 directions; recordable 12; reviewed pair rules 5).
+- TypeScript: PASS.
+- Production build: PASS.
+- Species Detail browser E2E: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.

@@ -109,34 +109,15 @@ import { getCompatibilityPreviewSpecies } from '../services/compatibility/compat
 import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
-import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
-import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
+import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
 const isCompatibilityLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
 
-const isReviewedSolitaryRequirement = (fish: Fish) => {
-  const profile = getReviewedCompatibilityProfileForFish(fish);
-  const social = getReviewedSpeciesKnowledgeForFish(fish)?.socialBehavior;
-  if (profile?.behaviorTraits.includes('solitary_required')) return true;
-  if (social?.evidence.reviewStatus === 'reviewed') return social.mode === 'solitary';
-  return !profile && fish.housingMode === '建议单养';
-};
+const isReviewedSolitaryRequirement = (fish: Fish) => getSpeciesHousingAuthority(fish).solitaryRequired;
 
-const getEffectiveHousingLabel = (fish: Fish, isEn = false) => {
-  const social = getReviewedSpeciesKnowledgeForFish(fish)?.socialBehavior;
-  if (social?.evidence.reviewStatus === 'reviewed') {
-    if (social.mode === 'solitary') return isEn ? 'Single housing' : '建议单养';
-    if (['shoal', 'school', 'group', 'colony'].includes(social.mode)) {
-      const minimum = social.minimumGroupSize;
-      return minimum ? (isEn ? `Group ${minimum}+` : `群体 ${minimum}+`) : (isEn ? 'Group housing' : '群体饲养');
-    }
-    if (social.mode === 'pair') return isEn ? 'Pair housing' : '成对饲养';
-    if (social.mode === 'harem') return isEn ? 'Ratio-managed group' : '配比群养';
-  }
-  return getHousingModeLocalized(fish.housingMode, isEn);
-};
+const getEffectiveHousingLabel = (fish: Fish, isEn = false) => getSpeciesHousingAuthority(fish, isEn).label;
 
 type CompatibilityRiskLevel = 'empty' | TankCompatibilityStatus;
 type ResultModal = null | 'adjustment';
