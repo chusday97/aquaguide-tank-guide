@@ -58,6 +58,20 @@ $$;
 comment on function public.is_valid_compatibility_stocking_guidance(jsonb) is
   'Pure validator for Compatibility v3 stocking guidance persisted in reviewed Profile authority.';
 
+create or replace function public.is_unique_text_array(p_value text[])
+returns boolean
+language sql
+immutable
+set search_path=public
+as $$
+  select coalesce(cardinality(p_value),0) = (
+    select count(distinct item) from unnest(coalesce(p_value,ARRAY[]::text[])) item
+  );
+$$;
+
+comment on function public.is_unique_text_array(text[]) is
+  'Treats Compatibility array fields as mathematical sets so duplicates cannot alter authority fingerprints without changing behavior.';
+
 alter table public.species_compatibility_profile_revisions
   add constraint compatibility_profile_revision_stage_risk_rules_array_check
     check (jsonb_typeof(stage_risk_rules) = 'array'),
@@ -69,9 +83,9 @@ create table if not exists public.species_compatibility_profile_stage_risks (
   profile_id uuid not null references public.species_compatibility_profiles(id) on delete cascade,
   rule_key text not null check (length(btrim(rule_key))>0),
   younger_stages text[] not null
-    check (cardinality(younger_stages)>0 and younger_stages <@ ARRAY['unknown','juvenile','adult','fry','subadult']::text[]),
+    check (cardinality(younger_stages)>0 and public.is_unique_text_array(younger_stages) and younger_stages <@ ARRAY['unknown','juvenile','adult','fry','subadult']::text[]),
   older_stages text[] not null
-    check (cardinality(older_stages)>0 and older_stages <@ ARRAY['unknown','juvenile','adult','fry','subadult']::text[]),
+    check (cardinality(older_stages)>0 and public.is_unique_text_array(older_stages) and older_stages <@ ARRAY['unknown','juvenile','adult','fry','subadult']::text[]),
   verdict text not null check (verdict in ('caution','not_recommended')),
   risk_type text not null check (length(btrim(risk_type))>0),
   reason text not null check (length(btrim(reason))>0),
@@ -237,6 +251,7 @@ begin
   where p.review_status='reviewed' and p.deleted_at is null
     and (
       cardinality(p.required_facts)=0
+      or not public.is_unique_text_array(p.required_facts)
       or exists (
         select 1 from unnest(p.required_facts) fact
         where fact not in ('water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior')
@@ -252,6 +267,7 @@ begin
   where r.status in ('draft','pending_review','approved')
     and (
       cardinality(r.required_facts)=0
+      or not public.is_unique_text_array(r.required_facts)
       or exists (
         select 1 from unnest(r.required_facts) fact
         where fact not in ('water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior')
@@ -265,7 +281,7 @@ end $$;
 alter table public.species_compatibility_profiles
   add constraint compatibility_profiles_required_facts_v3_check
     check (review_status<>'reviewed' or (
-      cardinality(required_facts)>0 and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
+      cardinality(required_facts)>0 and public.is_unique_text_array(required_facts) and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
     )),
   add constraint compatibility_profiles_stocking_guidance_v3_check
     check (public.is_valid_compatibility_stocking_guidance(stocking_guidance));
@@ -273,7 +289,7 @@ alter table public.species_compatibility_profiles
 alter table public.species_compatibility_profile_revisions
   add constraint compatibility_profile_revisions_required_facts_v3_check
     check (status in ('rejected','published','superseded') or (
-      cardinality(required_facts)>0 and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
+      cardinality(required_facts)>0 and public.is_unique_text_array(required_facts) and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
     )),
   add constraint compatibility_profile_revisions_stocking_guidance_v3_check
     check (public.is_valid_compatibility_stocking_guidance(stocking_guidance));
@@ -310,7 +326,7 @@ begin
   if coalesce((v_revision.regression_report->>'authoritySequence')::bigint,0) <> v_authority_version then raise exception 'VERSION_CONFLICT: regression_authority'; end if;
   if coalesce((v_revision.regression_report->>'baselineVersion')::integer,0) <> v_revision.base_profile_version then raise exception 'VERSION_CONFLICT: regression_baseline'; end if;
   if coalesce(jsonb_array_length(v_revision.impact_report->'changedFields'),0)=0 then raise exception 'PUBLISH_GATE_REJECTED: impact_missing'; end if;
-  if cardinality(v_revision.required_facts)=0 or exists (
+  if cardinality(v_revision.required_facts)=0 or not public.is_unique_text_array(v_revision.required_facts) or exists (
     select 1 from unnest(v_revision.required_facts) fact
     where fact not in ('water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior')
   ) then raise exception 'PUBLISH_GATE_REJECTED: required_facts_invalid'; end if;
@@ -322,9 +338,11 @@ begin
        or nullif(btrim(rule->>'reason'),'') is null
        or jsonb_typeof(rule->'youngerStages') is distinct from 'array'
        or jsonb_array_length(coalesce(rule->'youngerStages','[]'::jsonb))=0
+       or not public.is_unique_text_array(array(select jsonb_array_elements_text(coalesce(rule->'youngerStages','[]'::jsonb))))
        or exists (select 1 from jsonb_array_elements_text(coalesce(rule->'youngerStages','[]'::jsonb)) stage where stage not in ('unknown','juvenile','adult','fry','subadult'))
        or jsonb_typeof(rule->'olderStages') is distinct from 'array'
        or jsonb_array_length(coalesce(rule->'olderStages','[]'::jsonb))=0
+       or not public.is_unique_text_array(array(select jsonb_array_elements_text(coalesce(rule->'olderStages','[]'::jsonb))))
        or exists (select 1 from jsonb_array_elements_text(coalesce(rule->'olderStages','[]'::jsonb)) stage where stage not in ('unknown','juvenile','adult','fry','subadult'))
        or jsonb_typeof(rule->'citations') is distinct from 'array'
        or jsonb_array_length(coalesce(rule->'citations','[]'::jsonb))=0

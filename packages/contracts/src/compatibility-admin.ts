@@ -5,6 +5,10 @@ import { compatibilityRequiredFactSchema } from './catalog';
 export const compatibilityConfidenceSchema = z.enum(['high', 'medium', 'low', 'unknown']);
 export const compatibilityRuleBasisSchema = z.enum(['species_trait', 'pair_rule', 'tank_condition', 'rule_inference']);
 export const compatibilityLifeStageSchema = z.enum(['unknown', 'juvenile', 'adult', 'fry', 'subadult']);
+const compatibilityLifeStageSetSchema = z.array(compatibilityLifeStageSchema).min(1).max(5)
+  .refine(values => new Set(values).size === values.length, 'Compatibility life stage 不能重复。');
+const compatibilityRequiredFactSetSchema = z.array(compatibilityRequiredFactSchema).min(1).max(9)
+  .refine(values => new Set(values).size === values.length, 'Compatibility requiredFacts 不能重复。');
 export const compatibilityProfileRevisionStatusSchema = z.enum([
   'draft',
   'pending_review',
@@ -34,8 +38,8 @@ export const compatibilityStockingGuidanceSchema = z.object({
 
 export const compatibilityStageRiskRuleInputSchema = z.object({
   ruleKey: z.string().trim().min(1).max(200).regex(/^[\w.:-]+$/),
-  youngerStages: z.array(compatibilityLifeStageSchema).min(1).max(5),
-  olderStages: z.array(compatibilityLifeStageSchema).min(1).max(5),
+  youngerStages: compatibilityLifeStageSetSchema,
+  olderStages: compatibilityLifeStageSetSchema,
   verdict: z.enum(['caution', 'not_recommended']),
   riskType: z.string().trim().min(1).max(160),
   reason: z.string().trim().min(1).max(6000),
@@ -52,7 +56,7 @@ export const compatibilityProfileRevisionInputSchema = z.object({
   predationTargets: z.array(z.string().trim().min(1).max(120)).max(40).default([]),
   confidence: compatibilityConfidenceSchema,
   citations: z.array(compatibilityCitationSnapshotSchema).min(1).max(30),
-  requiredFacts: z.array(compatibilityRequiredFactSchema).min(1).max(9),
+  requiredFacts: compatibilityRequiredFactSetSchema,
   stockingGuidance: compatibilityStockingGuidanceSchema.optional(),
   stageRiskRules: z.array(compatibilityStageRiskRuleInputSchema).max(20).default([]),
 }).superRefine((value, ctx) => {
@@ -66,10 +70,14 @@ export const compatibilityProfileRevisionUpdateSchema = z.object({
   predationTargets: z.array(z.string().trim().min(1).max(120)).max(40).optional(),
   confidence: compatibilityConfidenceSchema.optional(),
   citations: z.array(compatibilityCitationSnapshotSchema).min(1).max(30).optional(),
-  requiredFacts: z.array(compatibilityRequiredFactSchema).min(1).max(9).optional(),
+  requiredFacts: compatibilityRequiredFactSetSchema.optional(),
   stockingGuidance: compatibilityStockingGuidanceSchema.optional(),
   stageRiskRules: z.array(compatibilityStageRiskRuleInputSchema).max(20).optional(),
   version: versionSchema,
+}).superRefine((value, ctx) => {
+  if (!value.stageRiskRules) return;
+  const keys = value.stageRiskRules.map(rule => rule.ruleKey);
+  if (new Set(keys).size !== keys.length) ctx.addIssue({ code: 'custom', path: ['stageRiskRules'], message: 'Stage Risk ruleKey 不能重复。' });
 });
 
 export const compatibilityProfileRevisionStatusMutationSchema = z.object({

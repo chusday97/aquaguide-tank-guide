@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
-import { compatibilityPairRuleRevisionInputSchema, compatibilityProfileRevisionInputSchema, compatibilityRevisionReviewMutationSchema } from '../packages/contracts/src';
+import { compatibilityPairRuleRevisionInputSchema, compatibilityProfileRevisionInputSchema, compatibilityProfileRevisionUpdateSchema, compatibilityRevisionReviewMutationSchema } from '../packages/contracts/src';
 
 const audit = getCompatibilityEvidenceAudit();
 const speciesIds = new Set(fishData.map(item => item.id));
@@ -56,6 +56,32 @@ for (const profile of audit.reviewedProfiles) {
   });
   assert.equal(parsed.success, true, `reviewed profile must be clonable into a safe revision: ${profile.speciesId}`);
 }
+
+const duplicateFactsProfile = audit.reviewedProfiles[0];
+assert.ok(duplicateFactsProfile, 'one reviewed Profile fixture is required for v3 set checks');
+assert.equal(compatibilityProfileRevisionInputSchema.safeParse({
+  catalogKey: duplicateFactsProfile.speciesId,
+  behaviorTraits: duplicateFactsProfile.behaviorTraits,
+  minimumGroupSize: duplicateFactsProfile.minimumGroupSize ?? null,
+  predationTargets: duplicateFactsProfile.predationTargets,
+  confidence: duplicateFactsProfile.confidence,
+  citations: duplicateFactsProfile.citations.map(source => ({ sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus })),
+  requiredFacts: ['water', 'water'], stageRiskRules: [],
+}).success, false, 'CREATE must reject duplicate requiredFacts.');
+assert.equal(compatibilityProfileRevisionUpdateSchema.safeParse({ version: 1, requiredFacts: ['water', 'water'] }).success, false, 'PATCH must reject duplicate requiredFacts.');
+const stageRiskSample = audit.reviewedStageRiskProfiles[0];
+assert.ok(stageRiskSample, 'one reviewed Stage Risk fixture is required for v3 uniqueness checks');
+const stageRiskCitation = stageRiskSample.citations[0];
+assert.ok(stageRiskCitation, 'Stage Risk uniqueness fixture needs evidence');
+const stageRiskDraft = {
+  ruleKey: `${stageRiskSample.speciesId}:${stageRiskSample.riskType}`,
+  youngerStages: [...stageRiskSample.youngerStages], olderStages: [...stageRiskSample.olderStages],
+  verdict: stageRiskSample.verdict, riskType: stageRiskSample.riskType, reason: stageRiskSample.reason,
+  mitigation: [...stageRiskSample.mitigation], basis: stageRiskSample.basis, confidence: stageRiskSample.confidence,
+  citations: [{ sourceKey: stageRiskCitation.id, title: stageRiskCitation.title, publisher: stageRiskCitation.publisher, url: stageRiskCitation.url, sourceType: stageRiskCitation.sourceType, reviewStatus: stageRiskCitation.reviewStatus }],
+};
+assert.equal(compatibilityProfileRevisionUpdateSchema.safeParse({ version: 1, stageRiskRules: [{ ...stageRiskDraft, youngerStages: [stageRiskDraft.youngerStages[0], stageRiskDraft.youngerStages[0]] }] }).success, false, 'PATCH must reject duplicate younger life stages.');
+assert.equal(compatibilityProfileRevisionUpdateSchema.safeParse({ version: 1, stageRiskRules: [stageRiskDraft, { ...stageRiskDraft }] }).success, false, 'PATCH must reject duplicate Stage Risk rule keys.');
 
 const migration = readFileSync('supabase/migrations/202609040002_compatibility_profile_revisions.sql', 'utf8');
 assert.match(migration, /create table public\.species_compatibility_profile_revisions/);
@@ -206,6 +232,7 @@ assert.match(v3Migration, /required_facts_invalid/, 'DB publish must reject miss
 assert.match(v3Migration, /stage_risk_shape_invalid/, 'DB publish must reject malformed Stage Risk rules.');
 assert.match(v3Migration, /stage_risk_rule_key_duplicate/, 'DB publish must reject duplicate Stage Risk rule keys.');
 assert.match(v3Migration, /stage_risk_citation_duplicate/, 'DB publish must reject duplicate or blank Stage Risk citation source keys.');
+assert.match(v3Migration, /is_unique_text_array/, 'v3 migration must preserve set semantics for requiredFacts and Stage Risk life-stage arrays.');
 assert.match(v3Migration, /compatibility_profiles_required_facts_v3_check/, 'Reviewed Profile rows must enforce requiredFacts at the database boundary.');
 assert.match(v3Migration, /requiredFacts backfill incomplete for catalog keys/, 'v3 migration must fail with actionable reviewed-Profile diagnostics before installing requiredFacts constraints.');
 assert.match(v3Migration, /active Profile revision requiredFacts backfill incomplete/, 'v3 migration must fail with actionable active-revision diagnostics instead of an opaque CHECK violation.');
