@@ -1427,3 +1427,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: `test:local-file-admin`, `test:git-runtime-authority`, `test:local-file-admin-ui`, `check:api`, root TypeScript (`lint`), full composite build and `git diff --check`.
 - Candidate relation after functional commit: main `d3c70dee...HEAD = 0/334`; feature `e9c63560...HEAD = 0/349`. No push/main/Production/Supabase Staging/indexing mutation.
 - NEXT: Local File + Git authority is locally usable and safety-closed. Do not reintroduce Supabase Staging as an implicit requirement; cloud validation and main promotion remain explicit separate gates.
+
+## 2026-09-12 — Git snapshot operator boundary correction
+- Found a product-semantics risk after atomic publication hardening: Operations called the action `Git 发布快照`, but the endpoint only writes `public/runtime-authority.json` / runtime assets into the repository worktree; it does not perform Git commit, push or deployment.
+- Committed `65af7dd2 fix(admin): clarify git snapshot publish boundary`. API result now declares `gitCommitRequired=true` and `deploymentTriggered=false`; the Local persistence client types that contract.
+- Operations confirmation now says the action only writes a pending runtime snapshot and will not commit/push/deploy. Success state says `运行时快照已生成 · 尚未提交 Git / 部署`; button label is `生成待提交快照`.
+- Browser regression and API contract were updated together. PASS: Local File API/failure regression, Git runtime authority preference, Local Admin browser, API/root TypeScript and full composite build.
+- Candidate relation after the functional commit: main `d3c70dee...HEAD = 0/336`; feature `e9c63560...HEAD = 0/351`. No push/main/Production/Supabase Staging/indexing mutation.

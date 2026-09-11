@@ -7,6 +7,7 @@
 - [x] Use versioned/content-addressed runtime assets so the manifest is the only authority pointer that changes.
 - [x] Make publication failure-safe: final manifest failure preserves the old runtime asset set and rolls back newly staged assets.
 - [x] Verify API contract, forced failure rollback, real Local Admin browser flow, TypeScript, full build and diff hygiene.
+- [x] Make the operator boundary explicit: snapshot generation writes the repo working tree only; it does not commit, push or deploy, and UI/API both say so.
 - [ ] Supabase Staging validation remains optional/separately gated and unapplied.
 - [ ] Candidate→main promotion remains separately gated and unperformed.
 

@@ -1,12 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
 ## CURRENT OVERRIDE — atomic Local File → Git runtime publication closed (2026-09-12)
-- Active candidate: `reconcile/admin-content-main-20260911`; functional checkpoint `e7b445c1 fix(admin): make git runtime snapshot atomic`, built on `d93ae6b feat(admin): publish local authority through git snapshot`.
-- Local Operations can publish one Git runtime authority containing only Published Product/Care + reviewed Compatibility. Draft rows, review notes and machine-local file paths remain excluded.
+- Active candidate: `reconcile/admin-content-main-20260911`; functional checkpoints `e7b445c1 fix(admin): make git runtime snapshot atomic` and `65af7dd2 fix(admin): clarify git snapshot publish boundary`, built on `d93ae6b feat(admin): publish local authority through git snapshot`.
+- Local Operations can generate one **pending Git runtime snapshot** containing only Published Product/Care + reviewed Compatibility. Draft rows, review notes and machine-local file paths remain excluded. The action explicitly does not commit, push or deploy.
 - Runtime assets are content-addressed as `assetId-v<version>-<sha12>.<ext>`. New files land before the manifest switch; `runtime-authority.json` is the final atomic authority pointer.
 - Failure rollback is browser/API guarded: a forced final-manifest write failure after an asset version/content change preserves the previous referenced asset and removes the uncommitted new asset. A failed publication therefore cannot strand the previous Git authority with missing media.
 - PASS after the fix: `test:local-file-admin`, `test:git-runtime-authority`, `test:local-file-admin-ui`, API TypeScript, root TypeScript, full root build and `git diff --check`.
-- Candidate contains live main and remote feature histories (`main...HEAD 0/334`, `feature...HEAD 0/349`). Main pointer was not moved and nothing was pushed; Supabase Staging/Production/indexing remain untouched.
+- Candidate contains live main and remote feature histories (`main...HEAD 0/336`, `feature...HEAD 0/351`). Main pointer was not moved and nothing was pushed; Supabase Staging/Production/indexing remain untouched.
 - NEXT: Local File → reviewed publish → Git runtime authority is locally closed. Any Supabase Staging validation or candidate→main promotion is a separate explicit gate, not the next implicit development step.
 
 

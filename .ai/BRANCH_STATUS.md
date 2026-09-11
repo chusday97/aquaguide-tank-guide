@@ -1,9 +1,9 @@
 # Branch Status
 
 ## CURRENT OVERRIDE — reconciliation candidate local runtime publication hardened (2026-09-12)
-- Candidate branch: `reconcile/admin-content-main-20260911`; latest functional HEAD `e7b445c1`.
-- Candidate contains known live main `d3c70dee` (`0 / 334`) and remote feature `e9c63560` (`0 / 349`).
-- Local File → Git runtime publication is now atomic at the manifest boundary and failure-safe for media.
+- Candidate branch: `reconcile/admin-content-main-20260911`; latest functional HEAD `65af7dd2`.
+- Candidate contains known live main `d3c70dee` (`0 / 336`) and remote feature `e9c63560` (`0 / 351`).
+- Local File → Git runtime snapshot generation is atomic at the manifest boundary and failure-safe for media; generation is explicitly not equivalent to Git commit/push/deploy.
 - Validation PASS: Local File failure regression, Git runtime authority, Local Admin browser, API/root TypeScript, full build, diff hygiene.
 - Main pointer was not moved; no push/rebase/force-push. Supabase Staging/Production/indexing remain untouched.
 

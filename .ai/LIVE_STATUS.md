@@ -1,10 +1,10 @@
 # Live Status
 
 ## CURRENT OVERRIDE — Git runtime authority atomic publication PASS (2026-09-12)
-- Candidate HEAD: `e7b445c1` on `reconcile/admin-content-main-20260911`; relation to known live main `d3c70dee` is `0/334`, and to remote feature `e9c63560` is `0/349`.
-- Durable Local File can now publish Published Product/Care + reviewed Compatibility to Git runtime authority without Supabase Staging.
+- Candidate functional HEAD: `65af7dd2` on `reconcile/admin-content-main-20260911`; relation to known live main `d3c70dee` is `0/336`, and to remote feature `e9c63560` is `0/351`.
+- Durable Local File can now generate a pending Git runtime authority snapshot for Published Product/Care + reviewed Compatibility without Supabase Staging; generation does not itself commit, push or deploy.
 - Runtime assets are content-addressed and staged before the atomic manifest switch. Forced manifest failure preserves the previous asset referenced by the old manifest and removes uncommitted new media.
-- PASS: Local File API/failure regression, Git runtime authority preference, real Local Admin browser full-restart/backup/restore flow, API/root TypeScript, full build and diff hygiene.
+- PASS: Local File API/failure regression, Git runtime authority preference, explicit `gitCommitRequired=true` / `deploymentTriggered=false` boundary, real Local Admin browser full-restart/backup/restore flow, API/root TypeScript, full build and diff hygiene.
 - Main pointer unchanged; no push, Supabase Staging/Production/indexing mutation.
 
 

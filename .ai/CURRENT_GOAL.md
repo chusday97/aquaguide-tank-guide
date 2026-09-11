@@ -1,12 +1,12 @@
 # Current Goal
 
 ## CURRENT OVERRIDE — 2026-09-12 Local File → Git runtime authority closed locally
-Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional checkpoint: `e7b445c1 fix(admin): make git runtime snapshot atomic`.
+Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional checkpoints: `e7b445c1 fix(admin): make git runtime snapshot atomic` and `65af7dd2 fix(admin): clarify git snapshot publish boundary`.
 
 - Aqua Admin now has a complete single-machine operating path without Supabase Staging: Durable Local File Draft/review/publish → explicit Git runtime snapshot → frontend Product/Care + Compatibility runtime.
-- The Git snapshot exports Published Product/Care and exact reviewed Compatibility only; Draft/review-only state never becomes runtime authority.
+- The Git snapshot exports Published Product/Care and exact reviewed Compatibility only; Draft/review-only state never becomes runtime authority. Snapshot generation is explicitly distinct from Git commit/push/deploy.
 - Runtime media publication is crash-safe: version + content-hash filenames are staged first, the manifest switches last, and pre-manifest failure removes only newly staged files while preserving the previous published asset set.
-- Forced failure regression plus real Local Admin browser flow PASS. API/root TypeScript and full build also PASS.
+- Forced failure regression plus real Local Admin browser flow PASS. API response explicitly reports `gitCommitRequired=true` and `deploymentTriggered=false`; Operations shows `尚未提交 Git / 部署`. API/root TypeScript and full build also PASS.
 - No main move, push, Supabase Staging/Production migration or indexing mutation occurred.
 - NEXT: stop speculative Local/Admin expansion. Remaining actions are explicit promotion decisions: optional cloud/Staging validation and candidate→main review.
 
