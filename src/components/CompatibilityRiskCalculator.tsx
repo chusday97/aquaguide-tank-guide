@@ -108,6 +108,7 @@ import { trackSessionEvent } from '../services/analytics/session-events.service'
 import { getCompatibilityPreviewSpecies } from '../services/compatibility/compatibility-preview.service';
 import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
+import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
@@ -567,6 +568,7 @@ export function CompatibilityRiskCalculator({
   const [isAddingToAquarium, setIsAddingToAquarium] = useState(false);
   const [confirmingCautionAdd, setConfirmingCautionAdd] = useState(false);
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
+  const [stabilityConfirmationByAquariumId, setStabilityConfirmationByAquariumId] = useState<Record<string, CompatibilityStabilityConfirmation>>({});
   const selectedAquarium = useMemo(() => (
     aquariums.find(aquarium => aquarium.id === (selectedAquariumId || activeAquariumId))
     || aquariums.find(aquarium => aquarium.id === activeAquariumId)
@@ -621,7 +623,14 @@ export function CompatibilityRiskCalculator({
     species,
     quantity: selectedQuantitiesById[species.id] || currentQuantityBySpeciesId[species.id] || 1,
   })), [currentQuantityBySpeciesId, selectedQuantitiesById, selectedSpecies]);
-  const result = useMemo(() => calculateRisk(selectedItems, selectedAquarium), [selectedAquarium, selectedItems]);
+  const stabilityConfirmation = selectedAquarium
+    ? (stabilityConfirmationByAquariumId[selectedAquarium.id] || 'unknown')
+    : 'unknown';
+  const evaluationAquarium = useMemo(() => applyCompatibilityStabilityConfirmation(
+    selectedAquarium,
+    stabilityConfirmation,
+  ), [selectedAquarium, stabilityConfirmation]);
+  const result = useMemo(() => calculateRisk(selectedItems, evaluationAquarium), [evaluationAquarium, selectedItems]);
   const recordedEvaluationKeyRef = useRef('');
   useEffect(() => {
     if (!selectedAquarium || selectedItems.length < 2 || !result.ruleResult || result.level === 'empty') return;
@@ -929,6 +938,37 @@ export function CompatibilityRiskCalculator({
             {missingLivestockCount > 0 && (
               <div className="mt-2 text-[10px] font-bold text-amber-700">
                 有 {missingLivestockCount} 条旧记录缺少图鉴数据，已跳过。
+              </div>
+            )}
+            {selectedAquarium && (
+              <div className="mt-2 rounded-[13px] border border-sky-100 bg-sky-50/65 p-2.5">
+                <div className="text-[10px] font-black text-sky-900">{isEn ? 'Optional: include your real tank experience' : '可选：把你的实际养缸经验算进去'}</div>
+                <p className="mt-1 text-[10px] font-semibold leading-4 text-sky-950/65">
+                  {isEn
+                    ? 'Has this tank run for 3+ months, stayed stable for 2+ months, with regular maintenance and no recent water-quality incident?'
+                    : '这个缸是否已运行 ≥3 个月，最近 ≥2 个月状态稳定、维护规律，且没有近期水质事故？'}
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    aria-pressed={stabilityConfirmation === 'stable'}
+                    onClick={() => setStabilityConfirmationByAquariumId(prev => ({ ...prev, [selectedAquarium.id]: 'stable' }))}
+                    className={`min-h-9 rounded-full border px-2 text-[10px] font-black ${stabilityConfirmation === 'stable' ? 'border-sky-300 bg-white text-sky-800' : 'border-sky-100 bg-white/70 text-ink/52'}`}
+                  >
+                    {isEn ? 'Yes, stable' : '是，符合'}
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={stabilityConfirmation === 'unknown'}
+                    onClick={() => setStabilityConfirmationByAquariumId(prev => ({ ...prev, [selectedAquarium.id]: 'unknown' }))}
+                    className={`min-h-9 rounded-full border px-2 text-[10px] font-black ${stabilityConfirmation === 'unknown' ? 'border-slate-300 bg-white text-ink/70' : 'border-sky-100 bg-white/70 text-ink/52'}`}
+                  >
+                    {isEn ? 'Not sure' : '不确定'}
+                  </button>
+                </div>
+                <p className="mt-1.5 text-[9px] font-semibold leading-4 text-sky-950/48">
+                  {isEn ? 'This can only soften capacity/load reminders. It never overrides predation, water-type or temperature conflicts.' : '只会修正容量/负荷类软提醒，不会覆盖捕食、水体类型或温度冲突。'}
+                </p>
               </div>
             )}
             <button

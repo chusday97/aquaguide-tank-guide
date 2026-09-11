@@ -5,6 +5,7 @@ import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatib
 import { executeSpeciesAddition, reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';
 import { getCompatibilityPreviewSpecies } from '../src/services/compatibility/compatibility-preview.service';
+import { applyCompatibilityStabilityConfirmation } from '../src/services/compatibility/compatibility-stability.service';
 
 const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   id: 'peaceful-small-fish',
@@ -304,6 +305,21 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       return result.status !== 'not_recommended'
         && result.blockingRules.every(rule => !['bioload_over_limit', 'bioload_near_limit', 'territorial_conflict', 'single_housing_required'].includes(rule.code))
         && result.warningRules.some(rule => ['bioload_screening_high', 'bioload_screening_elevated', 'bioload_over_limit', 'bioload_near_limit'].includes(rule.code));
+    },
+  },
+  {
+    name: 'user-confirmed stable tank context is explicit and non-mutating',
+    run: () => {
+      const tank = makeTank();
+      const confirmed = applyCompatibilityStabilityConfirmation(tank, 'stable');
+      const unknown = applyCompatibilityStabilityConfirmation(tank, 'unknown');
+      return !tank.stabilityContext
+        && unknown === tank
+        && confirmed !== tank
+        && confirmed?.stabilityContext?.establishedDays === 90
+        && confirmed.stabilityContext.stableCoexistenceDays === 60
+        && confirmed.stabilityContext.maintenanceConsistent === true
+        && confirmed.stabilityContext.recentWaterQualityIncident === false;
     },
   },
   {

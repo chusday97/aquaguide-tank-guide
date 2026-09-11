@@ -7,7 +7,7 @@ Draft PR: #149
 
 ## Branch authority
 - `product-recovery-20260911` is the only active Aqua product recovery branch for this effort.
-- Latest measured relation to `main` before this status commit: ahead 14 / behind 0.
+- Latest measured relation to `main` before this status commit: ahead 19 / behind 0.
 - Merge base is exactly the current main base commit above.
 - `feature/admin-content-v0` remains reference-only. Do not merge/rebase it wholesale.
 
@@ -30,6 +30,8 @@ Draft PR: #149
 - Tank Stability Context added: established duration, stable coexistence duration, maintenance consistency and recent water-quality incident.
 - Trusted stability can downgrade only an elevated coarse-load screening to informational context; high screening remains caution.
 - Stability context cannot override water-type, temperature, predation, single-housing or observed emergency hard blocks.
+- Compatibility calculator now exposes one optional beginner question for real tank stability; confirmation is scoped per tank and is not persisted back into the aquarium record.
+- Selecting “stable” only supplies the guarded stability context used by soft capacity/load screening; “not sure” leaves the original tank facts untouched.
 
 ### P1 — Species Knowledge V2 contract checkpoint
 - Added field-level evidence contract.
@@ -53,12 +55,13 @@ Draft PR: #149
 - Species Knowledge V2 first-cohort assertions PASS; TypeScript lint PASS after reviewed cohort wiring.
 - Species V2 → compatibility wiring: domain compatibility PASS, legacy facade PASS, beginner visual/action regression PASS, species knowledge PASS, TypeScript PASS, production build PASS.
 - Knowledge Source Registry checkpoint: source-resolution assertions PASS, TypeScript PASS, full compatibility regressions PASS, production build PASS.
+- User-facing stability confirmation checkpoint: compatibility regression PASS, explicit non-mutating confirmation test PASS, TypeScript PASS, production build PASS.
 - Local preview verified HTTP 200 at `http://127.0.0.1:4320/`.
 - Do not merge until the latest current-head workflows are green.
 
 ## Next execution order
-1. Add user-facing stability evidence capture with progressive disclosure; do not require advanced inputs for beginners.
+1. Present reviewed reproduction/social blocks inside the existing Species Detail hierarchy without a layout rewrite.
 2. Expand the reviewed cohort incrementally; do not mass-fill unknown fields.
 3. Add reviewed adult-size / space fields for the next cohort and wire them through the same V2-first authority path.
-4. Present reviewed reproduction/social blocks inside the existing Species Detail hierarchy without a layout rewrite.
+4. Add browser-level coverage for the optional stability confirmation and minimum-group-size action.
 5. Continue browser-level golden-path validation before any merge to main.
