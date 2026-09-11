@@ -95,6 +95,16 @@ const whiteCloudShoalingStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+
+const zebrafishSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-danio-rerio',
+  title: "Brachydanio rerio (Zebra 'Danio')",
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/danio-rerio',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const guppyFishBase: EvidenceSourceDto = {
   id: 'fishbase-poecilia-reticulata',
   title: 'Poecilia reticulata (Guppy) species summary',
@@ -225,6 +235,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [whiteCloudFishBase, whiteCloudShoalingStudy],
     requiredFacts: ['water', 'temperature', 'social_behavior'],
+  },
+  sp_0435: {
+    speciesId: 'sp_0435',
+    behaviorTraits: ['shoaling'],
+    minimumGroupSize: 8,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [zebrafishSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'adult_size'],
   },
   sp_0436: {
     speciesId: 'sp_0436',

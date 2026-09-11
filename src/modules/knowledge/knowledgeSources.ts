@@ -33,6 +33,30 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-tanichthys-albonubes': {
+    id: 'seriouslyfish-tanichthys-albonubes',
+    title: 'Tanichthys albonubes (White Cloud Mountain Minnow)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/tanichthys-albonubes',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'seriouslyfish-danio-rerio': {
+    id: 'seriouslyfish-danio-rerio',
+    title: "Brachydanio rerio (Zebra 'Danio')",
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/danio-rerio',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'seriouslyfish-puntigrus-tetrazona': {
+    id: 'seriouslyfish-puntigrus-tetrazona',
+    title: 'Puntigrus tetrazona (Tiger Barb)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/puntigrus-tetrazona',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
 };
 export const getKnowledgeSource = (sourceId: string) => knowledgeSources[sourceId];
 

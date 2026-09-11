@@ -344,6 +344,48 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'white cloud reviewed V2 group size overrides legacy five-fish fallback',
+    run: () => {
+      const whiteCloud = makeFish({
+        id: 'sp_0434',
+        name: '白云金丝',
+        scientificName: 'Tanichthys albonubes',
+        waterTemperature: '14-22°C',
+        tankSize: '至少 32 升',
+      });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '80', width: '35', height: '35' }, targetTemperature: '20' }),
+        candidateSpecies: whiteCloud,
+        candidateQuantity: 5,
+      });
+      return result.status === 'caution'
+        && result.stockingGuidance?.recommendedMin === 10
+        && result.warningRules.some(rule => rule.code === 'group_requirement_gap' && rule.evidence.includes('10'))
+        && result.metadata.domainRuleCodes.includes('minimum_group_not_met');
+    },
+  },
+  {
+    name: 'zebrafish second cohort has independent reviewed compatibility authority',
+    run: () => {
+      const zebra = makeFish({
+        id: 'sp_0435',
+        name: '斑马鱼',
+        scientificName: 'Brachydanio rerio',
+        waterTemperature: '18-25°C',
+        tankSize: '至少 40 升',
+      });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '30' }, targetTemperature: '22' }),
+        candidateSpecies: zebra,
+        candidateQuantity: 8,
+      });
+      return result.status === 'compatible'
+        && result.metadata.decisionReadiness === 'reviewed'
+        && result.stockingGuidance?.recommendedMin === 8
+        && result.missingData.every(rule => rule.code !== 'species_evidence_unreviewed');
+    },
+  },
+  {
     name: 'mini parrot juvenile record is allowed without inventing a safe maximum',
     run: () => {
       const miniParrot = makeFish({

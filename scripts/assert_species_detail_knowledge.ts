@@ -83,6 +83,19 @@ assert.equal(cardinalKnowledge.knowledge.socialBehavior?.recommendedGroupSize?.m
 assert.equal(cardinalKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 3.5);
 assert.equal(cardinalKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
 
+
+const whiteCloudKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0434', name: '白云金丝', scientificName: 'Tanichthys albonubes' });
+assert.equal(whiteCloudKnowledge.knowledge.socialBehavior?.minimumGroupSize, 10);
+assert.equal(whiteCloudKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
+const zebraKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0435', name: '斑马鱼', scientificName: 'Danio rerio' });
+assert.equal(zebraKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
+assert.equal(zebraKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 90);
+assert.equal(zebraKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
+const tigerKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0439', name: '虎皮鱼', scientificName: 'Puntigrus tetrazona' });
+assert.equal(tigerKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
+assert.equal(tigerKnowledge.knowledge.socialBehavior?.finNipping, 'medium');
+assert.equal(tigerKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 72);
+
 const unknownKnowledge = buildSpeciesKnowledgeProfile(baseFish);
 assert.equal(unknownKnowledge.knowledge.sexIdentification.confidence, 'unknown');
 assert.equal(unknownKnowledge.knowledge.reproduction, undefined);

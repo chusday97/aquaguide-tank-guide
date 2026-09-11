@@ -140,6 +140,89 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
       evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-paracheirodon-axelrodi'], reviewedAt: '2026-09-11' },
     },
   },
+  sp_0434: {
+    sexIdentification: {
+      title: '成熟后可通过体型和颜色辅助判断',
+      summary: '成熟母鱼通常腹部更圆、略大；公鱼更纤细，繁殖状态下颜色往往更鲜明。',
+      points: ['母鱼：成熟后腹部通常更圆、体型略大。', '公鱼：通常更纤细，竞争展示时颜色更明显。'],
+      confidence: 'verified',
+      source: { type: 'species_data', label: 'SeriouslyFish', confidence: 'verified' },
+      reliableFromLifeStage: 'adult',
+      maleTraits: ['通常更纤细', '繁殖展示时颜色更明显'],
+      femaleTraits: ['成熟后腹部更圆', '通常略大'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-tanichthys-albonubes'], reviewedAt: '2026-09-11' },
+    },
+    reproduction: {
+      mode: 'egg_scatterer', plainLanguageLabel: '持续散卵型', summary: '状态良好时可频繁散卵，不护卵也不护幼。',
+      fertilization: 'external', parentalCare: 'none',
+      gestationOrIncubation: { minDays: 2, maxDays: 3, label: '卵通常约 48–60 小时孵化' },
+      parentFryRisk: ['成鱼可能吃卵，应使用密植、网格或产卵拖把降低损失。'],
+      fryCare: ['初期开口需要微小饵料，之后再过渡到微虫或丰年虾无节幼体。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-tanichthys-albonubes'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'school', minimumGroupSize: 10, recommendedGroupSize: { min: 10 }, swimmingZone: 'middle', territoriality: 'none', finNipping: 'low', predationRisk: 'low',
+      summary: '天然群游，建议 10 条以上；足够群体能减少紧张并让公鱼呈现更自然的展示行为。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-tanichthys-albonubes'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 4, measurement: 'SL' }, minVolumeLiters: 54, minTankLengthCm: 60, activityLevel: 'medium', swimmingZone: 'middle', needsCover: true,
+      spaceNotes: ['长期群养按至少 60 × 30 cm 缸底规划。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-tanichthys-albonubes'], reviewedAt: '2026-09-11' },
+    },
+  },
+  sp_0435: {
+    sexIdentification: {
+      title: '成熟后可通过体型辅助判断', summary: '成熟母鱼通常腹部更圆、略大且颜色稍淡；公鱼相对纤细，繁殖状态下颜色更强。',
+      points: ['母鱼：成熟后腹部更圆，通常略大。', '公鱼：相对纤细，繁殖状态下颜色更强。'], confidence: 'verified',
+      source: { type: 'species_data', label: 'SeriouslyFish', confidence: 'verified' }, reliableFromLifeStage: 'adult',
+      maleTraits: ['相对纤细', '繁殖状态下颜色更强'], femaleTraits: ['腹部更圆', '通常略大'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-danio-rerio'], reviewedAt: '2026-09-11' },
+    },
+    reproduction: {
+      mode: 'egg_scatterer', plainLanguageLabel: '散卵型', summary: '散卵繁殖且不护卵，成鱼会吃掉找到的卵。', fertilization: 'external', parentalCare: 'none',
+      gestationOrIncubation: { minDays: 1, maxDays: 2, label: '常见孵化约 24–36 小时' },
+      parentFryRisk: ['成鱼会吃卵，繁殖时应使用网格、细叶植物或在产卵后移走成鱼。'],
+      fryCare: ['初期使用极细小饵料，幼鱼长大后再过渡到丰年虾无节幼体等。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-danio-rerio'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'school', minimumGroupSize: 8, recommendedGroupSize: { min: 8, max: 10 }, swimmingZone: 'middle', territoriality: 'none', finNipping: 'low', predationRisk: 'low',
+      summary: '活跃群游鱼，建议至少 8–10 条；足够群体能降低紧张并呈现更自然的活动。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-danio-rerio'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 5, measurement: 'SL' }, minVolumeLiters: 81, minTankLengthCm: 90, activityLevel: 'high', swimmingZone: 'middle', needsCover: true,
+      spaceNotes: ['斑马鱼活动量高，即使小群也优先保证至少 90 × 30 cm 的水平游动空间。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-danio-rerio'], reviewedAt: '2026-09-11' },
+    },
+  },
+  sp_0439: {
+    sexIdentification: {
+      title: '成体公母通常可通过体型和颜色辅助判断', summary: '成年公鱼通常更小、更纤细且颜色更强；母鱼通常更丰满。',
+      points: ['公鱼：通常更小、更纤细、颜色更强。', '母鱼：通常腹部更丰满。'], confidence: 'verified',
+      source: { type: 'species_data', label: 'SeriouslyFish', confidence: 'verified' }, reliableFromLifeStage: 'adult',
+      maleTraits: ['更小、更纤细', '颜色通常更强'], femaleTraits: ['腹部通常更丰满'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-puntigrus-tetrazona'], reviewedAt: '2026-09-11' },
+    },
+    reproduction: {
+      mode: 'egg_scatterer', plainLanguageLabel: '散卵型', summary: '自由散卵且不护卵，繁殖后应避免成鱼继续接触鱼卵。', fertilization: 'external', parentalCare: 'none',
+      gestationOrIncubation: { minDays: 1, maxDays: 2, label: '卵通常约 24–48 小时孵化' },
+      parentFryRisk: ['成鱼会吃卵，产卵后应移出成鱼或使用隔离结构。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-puntigrus-tetrazona'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'group', minimumGroupSize: 8, recommendedGroupSize: { min: 8, max: 10 }, swimmingZone: 'middle', territoriality: 'low', finNipping: 'medium', predationRisk: 'low',
+      summary: '群体内会形成松散等级并互相追逐；至少 8–10 条更能把注意力留在同类之间，减少骚扰同缸鱼。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-puntigrus-tetrazona'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 6, measurement: 'SL' }, minVolumeLiters: 72, minTankLengthCm: 80, activityLevel: 'high', swimmingZone: 'middle', needsCover: true,
+      spaceNotes: ['按至少 80 × 30 cm 缸底规划，并为群体追逐和等级互动留出水平空间。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-puntigrus-tetrazona'], reviewedAt: '2026-09-11' },
+    },
+  },
+
 };
 
 const parseRange = (value?: string) => {
