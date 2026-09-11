@@ -4,6 +4,7 @@ import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFi
 import { getReviewedCompatibilityProfile, getReviewedPairRule, getReviewedStageRiskProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
+import { getReviewedSpeciesKnowledge } from '../modules/knowledge/speciesKnowledge';
 import {
   COMPATIBILITY_RULE_VERSION,
   evaluateCompatibility,
@@ -571,7 +572,11 @@ const evaluateLegacyTankCompatibility = ({
     .reduce((sum, item) => sum + item.quantity, 0);
   const totalCandidateSpeciesQuantity = sameSpeciesExistingQuantity + getQuantity(candidateQuantity);
   const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
-  const reviewedMinimumGroupSize = Number(candidateProfile?.minimumGroupSize);
+  const candidateKnowledge = getReviewedSpeciesKnowledge(candidateSpecies.id);
+  const reviewedKnowledgeGroupSize = candidateKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
+    ? candidateKnowledge.socialBehavior.minimumGroupSize
+    : undefined;
+  const reviewedMinimumGroupSize = Number(reviewedKnowledgeGroupSize ?? candidateProfile?.minimumGroupSize);
   if (Number.isFinite(reviewedMinimumGroupSize) && reviewedMinimumGroupSize > 1 && totalCandidateSpeciesQuantity < reviewedMinimumGroupSize) {
     warningRules.push(asRule(
       'group_requirement_gap',
@@ -595,8 +600,10 @@ const evaluateLegacyTankCompatibility = ({
   if (blockingRules.length > 0) {
     suggestions.push('先移除阻断风险或更换候选生物。');
   }
-  if (warningRules.length > 0) {
-    suggestions.push('如需尝试，请先补充躲避空间、确认水质，并少量加入观察。');
+  if (warningRules.some(rule => rule.code === 'group_requirement_gap')) {
+    suggestions.push(`群游物种不要只按少量个体试养；先把 ${candidateSpecies.name} 规划到已审核的最低群体数量。`);
+  } else if (warningRules.length > 0) {
+    suggestions.push('如需尝试，请先处理主要风险项，再按计划加入并观察。');
   }
   if (missingData.length > 0) {
     const blockingMissing = missingData.filter(item => item.severity === 'high' || item.severity === 'medium');
@@ -646,6 +653,20 @@ const evaluateLegacyTankCompatibility = ({
 const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
   const profile = speciesProfileFromFish(fish);
   const reviewed = getReviewedCompatibilityProfile(fish.id);
+  const reviewedKnowledge = getReviewedSpeciesKnowledge(fish.id);
+  const reviewedSocial = reviewedKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.socialBehavior
+    : undefined;
+  const reviewedSpace = reviewedKnowledge?.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.spaceAndGrowth
+    : undefined;
+  const knowledgeEvidenceIds = [
+    ...(reviewedSocial?.evidence.sourceIds || []),
+    ...(reviewedSpace?.evidence.sourceIds || []),
+    ...(reviewedKnowledge?.reproduction?.evidence.reviewStatus === 'reviewed'
+      ? reviewedKnowledge.reproduction.evidence.sourceIds
+      : []),
+  ];
   return {
     id: profile.catalogKey,
     waterType: profile.waterType,
@@ -653,17 +674,17 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     temperatureMaxC: profile.waterTemperatureMaxC,
     phMin: profile.phMin,
     phMax: profile.phMax,
-    minTankLiters: profile.minTankLiters,
-    minTankLengthCm: null,
+    minTankLiters: reviewedSpace?.minVolumeLiters ?? profile.minTankLiters,
+    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? null,
     reviewed: Boolean(reviewed),
     compatibilityRequiredFacts: reviewed?.requiredFacts,
-    minimumGroupSize: reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
+    minimumGroupSize: reviewedSocial?.minimumGroupSize ?? reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
     stockingGuidance: reviewed?.stockingGuidance,
-    evidenceIds: reviewed?.citations.map(citation => citation.id) || [],
+    evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...knowledgeEvidenceIds])),
     loadMultiplier: fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1,
-    adultLengthMinCm: profile.adultLengthMinCm,
-    adultLengthMaxCm: profile.adultLengthMaxCm,
-    socialMode: profile.socialMode,
+    adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
+    adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
+    socialMode: reviewedSocial?.mode ?? profile.socialMode,
     behaviorTraits: reviewed?.behaviorTraits || [],
     size: fish.size,
   };

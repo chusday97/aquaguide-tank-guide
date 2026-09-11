@@ -134,6 +134,8 @@ const getWaterType = (fish: Fish): SpeciesKnowledgeProfile['facts']['waterType']
   return 'unknown';
 };
 
+export const getReviewedSpeciesKnowledge = (speciesId: string) => reviewedKnowledgeBySpeciesId[speciesId];
+
 export const buildSpeciesKnowledgeProfile = (fish: Fish): SpeciesKnowledgeProfile => {
   const topTags = [
     fish.category,

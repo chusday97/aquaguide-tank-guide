@@ -93,6 +93,9 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   tank_length_below_species_minimum: {
     code: 'tank_length_below_species_minimum', title: '缸长低于物种建议', evidence: '当前鱼缸长度低于该物种的参考建议值，需要结合成体尺寸、活动方式和可用空间进一步判断。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  minimum_group_not_met: {
+    code: 'minimum_group_not_met', title: '群体数量还不够', evidence: '该物种有已审核的最低群体数量要求；当前计划总数不足时，不建议把少量个体当成更保守的长期饲养方案。', severity: 'medium', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   observed_intervention: {
     code: 'observed_intervention', title: '现实观察需要干预', evidence: '已记录持续追逐或进食排除，建议先暂停新增并调整环境或分隔观察。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
@@ -121,7 +124,7 @@ export const applyCanonicalCompatibilityDecision = (
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
   const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'single_housing_required', 'observed_emergency']);
-  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context']);
+  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
   const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context']);

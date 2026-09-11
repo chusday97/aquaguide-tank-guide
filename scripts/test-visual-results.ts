@@ -108,6 +108,25 @@ assert.equal(softCapacityAction.headline, '可以尝试，但别一次加太多'
 assert.ok(softCapacityAction.immediateAction.includes('不要只因为低于一个参考水体值就立刻换缸'));
 assert.ok(softCapacityAction.observeAfterAction?.includes('3–7 天'));
 
+const groupSizeAction = buildBeginnerCompatibilityAction({
+  ...actionDecision(
+    'caution',
+    ['minimum_group_not_met'],
+    { warningRules: [makeRule('minimum_group_not_met', '红绿灯当前计划数量低于已审核最低群体要求。')] },
+  ),
+  stockingGuidance: {
+    kind: 'minimum_group_only',
+    recommendedMin: 8,
+    recommendedMax: null,
+    constraints: ['最低群体数量 8'],
+    confidence: 'high',
+    evidenceIds: ['seriouslyfish-paracheirodon-innesi'],
+  },
+});
+assert.equal(groupSizeAction.headline, '可以养，但数量要够');
+assert.ok(groupSizeAction.immediateAction.includes('至少 8 条/只'));
+assert.ok(groupSizeAction.detailsLabel.includes('数量'));
+
 const hardBlockAction = buildBeginnerCompatibilityAction(actionDecision(
   'not_recommended',
   ['predation_risk'],

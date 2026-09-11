@@ -307,6 +307,27 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Species Knowledge V2 group size overrides legacy profile minimum',
+    run: () => {
+      const neon = makeFish({
+        id: 'sp_0431',
+        name: '红绿灯',
+        scientificName: 'Paracheirodon innesi',
+        tankSize: '至少 32 升',
+      });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '80', width: '35', height: '35' } }),
+        candidateSpecies: neon,
+        candidateQuantity: 5,
+      });
+      return result.status === 'caution'
+        && result.metadata.domainStatus === 'caution'
+        && result.stockingGuidance?.recommendedMin === 8
+        && result.warningRules.some(rule => rule.code === 'group_requirement_gap' && rule.evidence.includes('8'))
+        && result.metadata.domainRuleCodes.includes('minimum_group_not_met');
+    },
+  },
+  {
     name: 'mini parrot juvenile record is allowed without inventing a safe maximum',
     run: () => {
       const miniParrot = makeFish({

@@ -105,9 +105,9 @@ export function buildCompatibilityVisualResult({
     emphasis: getVisualEmphasis(focusReason),
   }, ...related] : [];
 
-  const riskRules = [...decision.blockingRules, ...decision.warningRules];
+  const decisionReasonRules = [...decision.blockingRules, ...decision.warningRules, ...decision.missingData];
   const detailSections = [
-    { id: 'risks', title: '为什么这样判断', items: riskRules.map(rule => rule.evidence || rule.title) },
+    { id: 'risks', title: '为什么这样判断', items: decisionReasonRules.map(rule => rule.evidence || rule.title) },
     { id: 'scope', title: '本次核对范围', items: presentation.coverageLabel ? [presentation.coverageLabel] : [] },
     { id: 'passed', title: '已确认没问题', items: decision.passedRules.map(rule => rule.title) },
   ].filter(section => section.items.length > 0);

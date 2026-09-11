@@ -198,6 +198,28 @@ const stabilityCannotOverrideHardBlock = evaluateCompatibility({
 assert.equal(stabilityCannotOverrideHardBlock.status, 'not_recommended');
 assert.ok(stabilityCannotOverrideHardBlock.ruleCodes.includes('candidate_tank_water_type_conflict'));
 
+const groupMinimum = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 24 },
+  existingSpecies: [],
+  candidateSpecies: { ...base, id: 'shoaling-reviewed', minimumGroupSize: 8, socialMode: 'shoal' },
+  candidateQuantity: 5,
+});
+assert.equal(groupMinimum.status, 'caution');
+assert.equal(groupMinimum.addPolicy, 'confirm');
+assert.equal(groupMinimum.stockingGuidance.recommendedMin, 8);
+assert.ok(groupMinimum.ruleCodes.includes('minimum_group_not_met'));
+
+const groupMinimumMet = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 24 },
+  existingSpecies: [],
+  candidateSpecies: { ...base, id: 'shoaling-reviewed-ok', minimumGroupSize: 8, socialMode: 'shoal' },
+  candidateQuantity: 8,
+});
+assert.equal(groupMinimumMet.status, 'compatible');
+assert.ok(!groupMinimumMet.ruleCodes.includes('minimum_group_not_met'));
+
 const miniParrot = {
   ...base,
   id: 'sp_0021',

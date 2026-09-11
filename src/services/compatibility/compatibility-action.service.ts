@@ -54,6 +54,7 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   const codes = codesOf(decision);
   const hasHardBlock = Array.from(codes).some(code => HARD_BLOCK_CODES.has(code));
   const hasSoftCapacityConcern = Array.from(codes).some(code => SOFT_CAPACITY_CODES.has(code));
+  const hasGroupSizeGap = codes.has('minimum_group_not_met') || codes.has('group_requirement_gap');
 
   if (decision.status === 'not_recommended') {
     return {
@@ -80,6 +81,19 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   }
 
   if (decision.status === 'caution') {
+    if (hasGroupSizeGap) {
+      const minimumGroupSize = decision.stockingGuidance?.recommendedMin;
+      return {
+        verdict: 'add_with_conditions',
+        headline: '可以养，但数量要够',
+        immediateAction: minimumGroupSize
+          ? `不要只加 1–2 条；把该物种规划到至少 ${minimumGroupSize} 条/只，再观察是否正常群游和进食。`
+          : '不要只加 1–2 条；按该物种的最低群体数量规划到位，再观察是否正常群游和进食。',
+        primaryReason: firstText(decision.warningRules, '该物种需要达到最低群体数量；少量个体长期饲养并不一定更保守。'),
+        observeAfterAction: '加入后 3–7 天观察是否正常结群、进食，以及是否长期躲藏或被排挤。',
+        detailsLabel: '为什么数量不能太少？',
+      };
+    }
     if (hasSoftCapacityConcern) {
       return {
         verdict: 'add_with_conditions',

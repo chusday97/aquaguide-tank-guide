@@ -51,7 +51,7 @@ export type DomainSpeciesFact = {
   compatibilityRequiredFacts?: CompatibilityRequiredFact[];
   adultLengthMinCm?: number | null;
   adultLengthMaxCm?: number | null;
-  socialMode?: 'solitary' | 'pair' | 'group' | 'colony' | 'variable' | 'unknown';
+  socialMode?: 'solitary' | 'pair' | 'harem' | 'shoal' | 'school' | 'group' | 'colony' | 'variable' | 'unknown';
   minimumGroupSize?: number | null;
   stockingGuidance?: StockingGuidance;
   evidenceIds?: string[];
@@ -280,6 +280,14 @@ export const evaluateCompatibility = ({
       if (existingTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
     }
   }
+  if (candidateSpecies?.minimumGroupSize != null && candidateSpecies.minimumGroupSize > 1) {
+    const existingSameSpecies = existingQuantities?.[candidateSpecies.id] || 0;
+    const plannedTotal = existingSameSpecies + (candidateQuantity || 1);
+    if (plannedTotal < candidateSpecies.minimumGroupSize) {
+      raise('caution', 'minimum_group_not_met');
+    }
+  }
+
   if (explicitPairStatus) raise(explicitPairStatus, 'reviewed_pair_rule');
 
   const observedStatus = observedStatusOf(tank?.observedSignals);
