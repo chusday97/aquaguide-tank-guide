@@ -1,5 +1,16 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — Local File → Git runtime authority closed (2026-09-12)
+- [x] Export only Published Product/Care + reviewed Compatibility from Durable Local File authority.
+- [x] Make frontend Product/Care and Compatibility prefer the committed Git runtime snapshot before network authority fallback.
+- [x] Keep Draft/review notes and machine-local paths out of the runtime snapshot.
+- [x] Use versioned/content-addressed runtime assets so the manifest is the only authority pointer that changes.
+- [x] Make publication failure-safe: final manifest failure preserves the old runtime asset set and rolls back newly staged assets.
+- [x] Verify API contract, forced failure rollback, real Local Admin browser flow, TypeScript, full build and diff hygiene.
+- [ ] Supabase Staging validation remains optional/separately gated and unapplied.
+- [ ] Candidate→main promotion remains separately gated and unperformed.
+
+
 ## ACTIVE OVERRIDE — populated migration gate closed (2026-09-11)
 - [x] Execute Compatibility v3 migration on real local Supabase PostgreSQL 17.
 - [x] Verify populated pre-v3 Profile/approved revision backfill.

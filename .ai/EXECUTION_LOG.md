@@ -1419,3 +1419,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both at main `0/330`, feature `0/345`.
 - Docker Desktop backend/socket remains unresponsive; no local PostgreSQL apply, Supabase Staging/Production migration, indexing mutation or main promotion occurred.
 - NEXT: controlled PostgreSQL/Supabase migration execution validation; do not expand authority/UI scope absent a concrete failure.
+## 2026-09-12 — Atomic Local File → Git runtime publication closeout
+- Continued from `d93ae6b feat(admin): publish local authority through git snapshot` on the isolated reconciliation worktree only.
+- Found a real crash-consistency gap: runtime-assets were replaced before `runtime-authority.json`, so interruption between those steps could leave the old manifest pointing at removed media.
+- Committed `e7b445c1 fix(admin): make git runtime snapshot atomic`: runtime media now uses asset version + SHA-256-derived filenames, new assets are staged into the live immutable pool first, the manifest switches last, and unreferenced old media is cleaned only after a successful switch.
+- Added failure injection: after changing asset content/version, force the final manifest path to fail; previous published asset remains byte-identical and newly staged media is removed. This proves failure cannot corrupt the prior Git authority.
+- PASS: `test:local-file-admin`, `test:git-runtime-authority`, `test:local-file-admin-ui`, `check:api`, root TypeScript (`lint`), full composite build and `git diff --check`.
+- Candidate relation after functional commit: main `d3c70dee...HEAD = 0/334`; feature `e9c63560...HEAD = 0/349`. No push/main/Production/Supabase Staging/indexing mutation.
+- NEXT: Local File + Git authority is locally usable and safety-closed. Do not reintroduce Supabase Staging as an implicit requirement; cloud validation and main promotion remain explicit separate gates.
