@@ -1,6 +1,15 @@
 # Live Status
 
 
+## CURRENT OVERRIDE — isolated reconciliation candidate PASS (2026-09-11)
+- Candidate HEAD: `80aded34` on `reconcile/admin-content-main-20260911`.
+- Live main remains `d3c70dee`; remote feature remains `e9c63560`.
+- Candidate contains both histories: main `0/323`, remote feature `0/338` when measured left/right against candidate.
+- No main pointer movement, push, Production mutation, Supabase Staging migration or indexing mutation occurred.
+- Compatibility v3 authority is locally integrated and validated, including Profile-owned Stage Risk with dedicated Evidence and same-species adult→fry regression coverage.
+- Additive migration `202609110001_compatibility_v3_profile_authority.sql` exists only in code and remains unapplied.
+- Full local candidate validation PASS: Compatibility suites, Local browser publish, Operations, Publish Center, Admin UI, authority gate, API/root TypeScript, full build and diff hygiene.
+
 ## CURRENT OVERRIDE — Durable local runtime + SEO editor hierarchy status (2026-09-10)
 - Functional checkpoint: `7ec556a3 fix(admin): reuse healthy local seo server`.
 - Durable Local File + recovery status remains PASS; recommended single-machine entrypoint is `npm run dev:local-admin`.

@@ -1,6 +1,17 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
 
+## CURRENT OVERRIDE — isolated reconciliation candidate accepted locally (2026-09-11)
+- Candidate branch/worktree: `reconcile/admin-content-main-20260911` at `/private/tmp/aqua-admin-reconcile-20260911`.
+- Merge checkpoint: `80aded34 merge: reconcile admin content with main compatibility v3`. Parents: `1a032743` (accepted feature) + `d3c70dee` (live main).
+- Git relation after explicit fetch: candidate contains all live main (`0 / 323`) and all remote feature (`0 / 338`); worktree was clean after merge commit. Main itself was not moved and nothing was pushed.
+- Compatibility v3 is semantically merged, not ours/theirs: main domain engine remains behavior base; reviewed runtime authority now carries Profile/Pair + Profile-owned Stage Risk with independent Evidence.
+- Local and Cloud contracts include `requiredFacts`, optional `stockingGuidance`, `stageRiskRules`, independent `stageRiskEvidenceResolution`, exact DB coverage and fail-closed fallback.
+- New additive migration `202609110001_compatibility_v3_profile_authority.sql` remains code-only/unapplied. Old approved Profile revisions are designed to return to pending review during the v3 migration rather than retaining stale approval.
+- Operator UI exposes Required Facts and Stage Risk review/editing; guppy adult→fry Stage Risk browser flow is proven Draft → review → regression → publish.
+- PASS: Compatibility/domain/runtime/service/launch tests, admin contract, Local Compatibility browser, Operations desktop/mobile, Publish Center, Admin authority UI, authority gate, API/root TypeScript, full build, diff hygiene.
+- NEXT: no further speculative reconciliation coding. Keep candidate isolated until explicit decision to validate Staging migration or promote toward main.
+
 ## CURRENT OVERRIDE — Durable Local Aqua Operations Studio + editor hierarchy convergence (2026-09-10)
 Functional checkpoint: `7ec556a3 fix(admin): reuse healthy local seo server`.
 - Durable Local File + recovery remains stable: versioned disk authority, integrity checks, backup/restore safety and Production isolation are unchanged.

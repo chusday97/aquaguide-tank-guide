@@ -1,6 +1,16 @@
 # Current Goal
 
 
+## CURRENT OVERRIDE — 2026-09-11 isolated reconciliation candidate PASS
+The active objective is **validate and preserve the isolated reconciliation candidate; do not move main or apply cloud migrations without explicit authorization**. Candidate merge checkpoint: `80aded34` on `reconcile/admin-content-main-20260911`, with parents feature `1a032743` and live main `d3c70dee`.
+
+- Candidate contains the full live-main history: `origin/main...HEAD = 0 / 323`.
+- Candidate contains the full remote feature history: `origin/feature/admin-content-v0...HEAD = 0 / 338`.
+- Compatibility reconciliation is implemented as main v3/domain-rule behavior + reviewed runtime authority, including `requiredFacts`, `stockingGuidance`, Profile-owned Stage Risk, dedicated Stage Risk Evidence, `ruleVersion` + `authorityVersion`, and canonical-service-only regression callers.
+- Additive migration `202609110001_compatibility_v3_profile_authority.sql` is committed in the candidate only and has **not** been applied to Supabase Staging or Production.
+- Validation PASS: main Compatibility/domain tests, runtime-authority/regression/admin contracts, Local Profile/Pair + Stage Risk browser publish, Operations desktop/390 exact tasks, Publish Center, Admin authority UI, Compatibility authority gate, root/API TypeScript, full build and diff hygiene.
+- NEXT: keep candidate isolated; perform only final candidate review or explicitly authorized cloud/main promotion.
+
 ## CURRENT OVERRIDE — 2026-09-10 Operator UX convergence
 The active objective is **Final Local Acceptance complete; reconciliation audit + Compatibility v3 authority design complete; build an isolated reconciliation candidate without touching main**. Functional checkpoint: `7ec556a3`; final local acceptance docs checkpoint: `a7ee4a13`; reconciliation audit: `.ai/RECONCILIATION_AUDIT_20260911.md`; v3 authority contract: `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`.
 

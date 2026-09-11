@@ -1,6 +1,18 @@
 # Branch Status
 
 
+## CURRENT OVERRIDE — reconciliation candidate contains main + feature (2026-09-11)
+- Candidate branch: `reconcile/admin-content-main-20260911`.
+- Candidate merge HEAD: `80aded34`.
+- Merge parents: accepted feature `1a032743` and live main `d3c70dee`.
+- Explicitly fetched refs: `origin/main=d3c70dee`, `origin/feature/admin-content-v0=e9c63560`.
+- `origin/main...candidate = 0 main-only / 323 candidate-only`.
+- `origin/feature/admin-content-v0...candidate = 0 feature-only / 338 candidate-only`.
+- Therefore the isolated candidate contains both live-main and remote-feature histories; the old 275-vs-320 divergence is resolved **inside the candidate only**.
+- Main itself has not moved; no push/force-push/rebase/cherry-pick to main occurred.
+- Supabase v3 migration is code-only and unapplied; Production/indexing untouched.
+- Candidate validation PASS across Compatibility/domain/runtime/admin/browser, Operations, Publish Center, authority gate, TypeScript, build and diff hygiene.
+
 ## CURRENT OVERRIDE — Final Local Acceptance PASS / reconciliation audit complete (2026-09-11)
 - Latest functional HEAD: `7ec556a3` (`fix(admin): reuse healthy local seo server`).
 - Latest acceptance/docs HEAD: `8438f24e` (`docs(admin): enter final local acceptance`).

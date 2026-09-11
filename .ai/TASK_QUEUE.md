@@ -1,6 +1,18 @@
 # Task Queue
 
 
+## ACTIVE OVERRIDE — reconciliation candidate complete locally (2026-09-11)
+- [x] Build isolated reconciliation candidate without modifying main.
+- [x] Resolve all Git conflicts and preserve both main product changes and Aqua Operations Studio authorities.
+- [x] Reconcile Compatibility v3 domain behavior with reviewed runtime authority.
+- [x] Add Profile v3 authority: requiredFacts + stockingGuidance + Profile-owned Stage Risk + dedicated Evidence.
+- [x] Add Local v1→v2 compatibility migration and Stage Risk regression/browser publish coverage.
+- [x] Add Cloud additive migration/API contracts fail-closed; migration remains unapplied.
+- [x] Restore canonical Compatibility service boundary and authority gate.
+- [x] Full candidate regression/build PASS.
+- [ ] Supabase Staging migration validation remains gated and requires explicit resume.
+- [ ] Main promotion/merge remains gated; do not move main or push by default.
+
 ## ACTIVE OVERRIDE — Durable Local Operations Studio (2026-09-10)
 - [x] Product/Care Local adapter from canonical 486 Species / 41 Care.
 - [x] Draft save/refresh persistence and separate Published Snapshot.

@@ -1378,3 +1378,14 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Compatibility-only life stages retain `fry/subadult` without changing persisted livestock `LifeStage`.
 - Stage Risk evidence must remain separate from ordinary Profile citations because `evidenceFromProfile()` attaches all Profile citations to ordinary species-trait findings.
 - NEXT: build isolated local reconciliation candidate/worktree; low-risk unions first, Compatibility last. Main/Production/Supabase/indexing remain untouched.
+
+## 2026-09-11 — Isolated main reconciliation candidate PASS
+- Created isolated worktree `/private/tmp/aqua-admin-reconcile-20260911` and branch `reconcile/admin-content-main-20260911`; main was never checked out for mutation.
+- Resolved the real feature + live-main merge and committed `80aded34 merge: reconcile admin content with main compatibility v3` with parents `1a032743` + `d3c70dee`.
+- Compatibility semantic merge keeps main v3/domain rules as behavior authority while routing Profile/Pair/Stage Risk evidence through the reviewed runtime provider. Added explicit `authorityVersion` beside domain `ruleVersion`.
+- Profile v3 authority now carries requiredFacts, optional stockingGuidance and Profile-owned Stage Risk with dedicated Evidence resolution. Added same-species adult→fry regression coverage and operator-visible Stage Risk review/edit UI.
+- Added code-only additive migration `202609110001_compatibility_v3_profile_authority.sql`; it seeds canonical guppy Stage Risk evidence, backfills v3 snapshots, invalidates stale approvals, and version-publishes Profile + Stage Risk atomically. Migration was not applied anywhere.
+- Compatibility direct regression/impact/page callers were moved back behind the canonical service boundary; authority gate PASS without widening legacy allowlists.
+- PASS: main Compatibility/domain/service/launch tests; runtime authority/regression/admin contract; Local Profile/Pair/Stage Risk browser publish; Operations desktop/mobile; Publish Center; Admin authority UI; Compatibility authority gate; API/root TypeScript; full build; diff hygiene.
+- Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both (`main...candidate 0/323`, `feature...candidate 0/338`). No push/main/Production/Supabase Staging/indexing mutation.
+- NEXT: keep candidate isolated until explicit authorization for Staging migration validation or main promotion.
