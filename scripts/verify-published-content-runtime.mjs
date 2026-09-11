@@ -80,10 +80,10 @@ try {
     const seenRequests = [];
     await installBootstrapFixture(page, 'zh-CN', seenRequests);
     await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
-    const input = page.locator('#atlas-toolbar [role="combobox"]');
+    const input = page.locator('input[role="combobox"]').first();
     await input.waitFor({ state: 'visible' });
     await input.fill('P0 已发布极火虾');
-    const listbox = page.locator('#atlas-toolbar [role="listbox"]');
+    const listbox = page.locator('[role="listbox"]').first();
     await listbox.waitFor({ state: 'visible' });
     assert.match(await listbox.innerText(), /P0 已发布极火虾/, 'Species Guide must render the Published Product name');
     assert.deepEqual(seenRequests, ['zh-CN'], 'initial Product/Care bootstrap must request the active locale');
@@ -96,6 +96,7 @@ try {
     const seenRequests = [];
     await installBootstrapFixture(page, 'zh-CN', seenRequests);
     await page.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('button', { name: '传统浏览', exact: true }).click();
     const careInput = page.locator('#care-search [role="combobox"]');
     await careInput.waitFor({ state: 'visible' });
     await careInput.fill('P0 已发布新鱼入缸');
@@ -112,6 +113,7 @@ try {
     const seenRequests = [];
     await installBootstrapFixture(page, 'en', seenRequests);
     await page.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('button', { name: 'Browse guides', exact: true }).click();
     const careInput = page.locator('#care-search [role="combobox"]');
     await careInput.waitFor({ state: 'visible' });
     await careInput.fill('P0 Published New Fish Acclimation');

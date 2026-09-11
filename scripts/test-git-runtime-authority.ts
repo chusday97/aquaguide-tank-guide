@@ -51,6 +51,24 @@ await hydratePublishedContentCatalog('zh-CN');
 assert.equal(getRuntimeContentStatus().source, 'git-snapshot');
 assert.equal(runtimeFishData.find(item => item.id === 'sp_0001')?.name, 'Git Snapshot Fish');
 assert.equal(runtimeCareTopicsData.find(item => item.id === 'water_stability')?.title, 'Git Snapshot Care');
+assert(urls.every(url => url.startsWith('/runtime-authority.json')));
+
+const emptyProductCareSnapshot: GitRuntimeAuthoritySnapshot = {
+  ...snapshot,
+  productCare: { species: [], careArticles: [] },
+};
+const fallbackUrls: string[] = [];
+globalThis.fetch = (async (input: string | URL | Request) => {
+  const url = typeof input === 'string' ? input : input instanceof URL ? input.toString() : input.url;
+  fallbackUrls.push(url);
+  if (url.startsWith('/runtime-authority.json')) return new Response(JSON.stringify(emptyProductCareSnapshot), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  if (url.startsWith('/api/v1/content-bootstrap?')) return new Response(JSON.stringify({ data: { species: [], careArticles: [], authority: 'publication-snapshot', publicationCounts: { species: 0, care: 0 } }, requestId: 'git-runtime-authority-test' }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  throw new Error(`unexpected network request: ${url}`);
+}) as typeof fetch;
+resetGitRuntimeAuthoritySnapshotForTest();
+await hydratePublishedContentCatalog('zh-CN');
+assert.equal(getRuntimeContentStatus().source, 'static-fallback');
+assert(fallbackUrls.some(url => url.startsWith('/api/v1/content-bootstrap?')), 'empty Git Product/Care must not suppress Published API bootstrap');
 
 resetRuntimeCompatibilityEvidenceForTest();
 await hydrateReviewedCompatibilityEvidence(true);
@@ -58,5 +76,4 @@ assert.equal(getRuntimeCompatibilityStatus().source, 'reviewed-git');
 assert.match(getRuntimeCompatibilityStatus().authorityVersion, /^tank-compatibility-v3-reviewed-git-[0-9a-f]{8}$/);
 assert.equal(getRuntimeCompatibilityStatus().profiles, 7);
 assert.equal(getRuntimeCompatibilityStatus().pairRules, 4);
-assert(urls.every(url => url.startsWith('/runtime-authority.json')));
-console.log('git runtime authority: Product/Care + Compatibility snapshot preferred with zero API fallback PASS');
+console.log('git runtime authority: non-empty Product/Care + Compatibility preferred; empty Product/Care falls through to Published API PASS');

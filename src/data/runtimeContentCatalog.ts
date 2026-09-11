@@ -180,6 +180,7 @@ const mergeCare = (published: CareArticleDetailDto[]) => {
 
 const applyGitProductCareSnapshot = (snapshot: Awaited<ReturnType<typeof loadGitRuntimeAuthoritySnapshot>>) => {
   if (!snapshot || snapshot.generatedAt === null) return false;
+  if (snapshot.productCare.species.length === 0 && snapshot.productCare.careArticles.length === 0) return false;
   const speciesByKey = new Map(snapshot.productCare.species.map(item => [item.input.catalogKey, item]));
   const careByKey = new Map(snapshot.productCare.careArticles.map(item => [item.input.catalogKey, item]));
   const seedSpeciesKeys = new Set(seedFishData.map(item => item.id));
