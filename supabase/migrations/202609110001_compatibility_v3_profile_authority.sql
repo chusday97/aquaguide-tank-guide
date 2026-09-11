@@ -20,12 +20,14 @@ alter table public.species_compatibility_profile_revisions
 create table if not exists public.species_compatibility_profile_stage_risks (
   id uuid primary key default gen_random_uuid(),
   profile_id uuid not null references public.species_compatibility_profiles(id) on delete cascade,
-  rule_key text not null,
-  younger_stages text[] not null default '{}',
-  older_stages text[] not null default '{}',
+  rule_key text not null check (length(btrim(rule_key))>0),
+  younger_stages text[] not null
+    check (cardinality(younger_stages)>0 and younger_stages <@ ARRAY['unknown','juvenile','adult','fry','subadult']::text[]),
+  older_stages text[] not null
+    check (cardinality(older_stages)>0 and older_stages <@ ARRAY['unknown','juvenile','adult','fry','subadult']::text[]),
   verdict text not null check (verdict in ('caution','not_recommended')),
-  risk_type text not null,
-  reason text not null,
+  risk_type text not null check (length(btrim(risk_type))>0),
+  reason text not null check (length(btrim(reason))>0),
   mitigation text[] not null default '{}',
   basis text not null default 'species_trait' check (basis in ('species_trait','pair_rule','tank_condition','rule_inference')),
   confidence text not null default 'unknown' check (confidence in ('high','medium','low','unknown')),
@@ -62,7 +64,14 @@ create policy compatibility_profile_stage_risks_admin_all
   using (public.is_admin()) with check (public.is_admin());
 create policy compatibility_profile_stage_risk_sources_public_select
   on public.species_compatibility_profile_stage_risk_sources for select using (
-    (exists (select 1 from public.species_compatibility_profile_stage_risks r where r.id=stage_risk_id and r.review_status='reviewed' and r.deleted_at is null)
+    (exists (
+       select 1 from public.species_compatibility_profile_stage_risks r
+       join public.species_compatibility_profiles p on p.id=r.profile_id
+       join public.species s on s.id=p.species_id
+       where r.id=stage_risk_id and r.review_status='reviewed' and r.deleted_at is null
+         and p.review_status='reviewed' and p.deleted_at is null
+         and s.status='published' and s.deleted_at is null
+     )
      and exists (select 1 from public.evidence_sources e where e.id=source_id and e.review_status='reviewed' and e.deleted_at is null))
     or public.is_admin()
   );
@@ -143,7 +152,8 @@ join public.species s on s.id=p.species_id
 join public.evidence_sources e on e.source_key in ('guppy-cannibalism-refuge-study','guppy-fry-yield-cannibalism-study')
 where s.catalog_key='sp_0436' and r.rule_key='sp_0436:conspecific_fry_predation'
 on conflict do nothing;
--- Backfill v3 snapshots into existing Profile revisions without inventing a second authority.
+-- Backfill v3 snapshots only into active Profile revisions. Historical rejected/published/superseded revisions remain untouched
+-- so the audit trail never claims that legacy approvals included Compatibility v3 fields that did not exist yet.
 update public.species_compatibility_profile_revisions r
 set base_profile_version=p.version,
     required_facts=p.required_facts,
@@ -163,7 +173,24 @@ set base_profile_version=p.version,
       where sr.profile_id=p.id and sr.review_status='reviewed' and sr.deleted_at is null
     ),'[]'::jsonb)
 from public.species_compatibility_profiles p
-where p.species_id=r.species_id and p.review_status='reviewed' and p.deleted_at is null;
+where p.species_id=r.species_id and p.review_status='reviewed' and p.deleted_at is null
+  and r.status in ('draft','pending_review','approved');
+
+alter table public.species_compatibility_profiles
+  add constraint compatibility_profiles_required_facts_v3_check
+    check (review_status<>'reviewed' or (
+      cardinality(required_facts)>0 and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
+    )),
+  add constraint compatibility_profiles_stocking_guidance_object_check
+    check (stocking_guidance is null or jsonb_typeof(stocking_guidance)='object');
+
+alter table public.species_compatibility_profile_revisions
+  add constraint compatibility_profile_revisions_required_facts_v3_check
+    check (status in ('rejected','published','superseded') or (
+      cardinality(required_facts)>0 and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
+    )),
+  add constraint compatibility_profile_revisions_stocking_guidance_object_check
+    check (stocking_guidance is null or jsonb_typeof(stocking_guidance)='object');
 
 update public.species_compatibility_profile_revisions
 set status=case when status='approved' then 'pending_review' else status end,
@@ -197,6 +224,42 @@ begin
   if coalesce((v_revision.regression_report->>'authoritySequence')::bigint,0) <> v_authority_version then raise exception 'VERSION_CONFLICT: regression_authority'; end if;
   if coalesce((v_revision.regression_report->>'baselineVersion')::integer,0) <> v_revision.base_profile_version then raise exception 'VERSION_CONFLICT: regression_baseline'; end if;
   if coalesce(jsonb_array_length(v_revision.impact_report->'changedFields'),0)=0 then raise exception 'PUBLISH_GATE_REJECTED: impact_missing'; end if;
+  if cardinality(v_revision.required_facts)=0 or exists (
+    select 1 from unnest(v_revision.required_facts) fact
+    where fact not in ('water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior')
+  ) then raise exception 'PUBLISH_GATE_REJECTED: required_facts_invalid'; end if;
+  if exists (
+    select 1 from jsonb_array_elements(v_revision.stage_risk_rules) rule
+    where nullif(btrim(rule->>'ruleKey'),'') is null
+       or nullif(btrim(rule->>'riskType'),'') is null
+       or nullif(btrim(rule->>'reason'),'') is null
+       or jsonb_typeof(rule->'youngerStages') is distinct from 'array'
+       or jsonb_array_length(coalesce(rule->'youngerStages','[]'::jsonb))=0
+       or exists (select 1 from jsonb_array_elements_text(coalesce(rule->'youngerStages','[]'::jsonb)) stage where stage not in ('unknown','juvenile','adult','fry','subadult'))
+       or jsonb_typeof(rule->'olderStages') is distinct from 'array'
+       or jsonb_array_length(coalesce(rule->'olderStages','[]'::jsonb))=0
+       or exists (select 1 from jsonb_array_elements_text(coalesce(rule->'olderStages','[]'::jsonb)) stage where stage not in ('unknown','juvenile','adult','fry','subadult'))
+       or jsonb_typeof(rule->'citations') is distinct from 'array'
+       or jsonb_array_length(coalesce(rule->'citations','[]'::jsonb))=0
+  ) then raise exception 'PUBLISH_GATE_REJECTED: stage_risk_shape_invalid'; end if;
+  if exists (
+    select 1 from (
+      select rule->>'ruleKey' as rule_key, count(*)
+      from jsonb_array_elements(v_revision.stage_risk_rules) rule
+      group by rule->>'ruleKey' having count(*)>1
+    ) duplicate_rule
+  ) then raise exception 'PUBLISH_GATE_REJECTED: stage_risk_rule_key_duplicate'; end if;
+  if exists (
+    select 1 from jsonb_array_elements(v_revision.stage_risk_rules) rule
+    where exists (
+      select 1 from (
+        select citation->>'sourceKey' as source_key, count(*)
+        from jsonb_array_elements(coalesce(rule->'citations','[]'::jsonb)) citation
+        group by citation->>'sourceKey'
+        having nullif(btrim(citation->>'sourceKey'),'') is null or count(*)>1
+      ) duplicate_source
+    )
+  ) then raise exception 'PUBLISH_GATE_REJECTED: stage_risk_citation_duplicate'; end if;
   if jsonb_array_length(v_revision.evidence_resolution)=0
      or jsonb_array_length(v_revision.evidence_resolution)<>jsonb_array_length(v_revision.citation_snapshots)
   then raise exception 'PUBLISH_GATE_REJECTED: evidence_resolution_missing'; end if;
