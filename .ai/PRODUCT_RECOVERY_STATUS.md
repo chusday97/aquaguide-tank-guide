@@ -158,3 +158,18 @@ Draft PR: #149
 - Production build: PASS.
 - Compatibility beginner-action browser E2E: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Species Detail reviewed-knowledge presentation checkpoint
+- Existing reviewed Species V2 space facts are now visible in Species Detail rather than only feeding the compatibility engine.
+- Added human-readable adult size, planning volume, tank length, swimming zone, activity level and reviewed sources.
+- Social disclosure now exposes recommended group range and localized swimming-zone labels.
+- The UI explicitly frames space values as long-term planning references, not one-number hard pass/fail limits.
+- Removed a duplicate Compatibility Calculator action from the unavailable evidence state.
+
+#### Validation
+- Species Knowledge: PASS.
+- TypeScript: PASS.
+- Production build: PASS.
+- Species Detail browser E2E: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.

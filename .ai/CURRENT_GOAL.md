@@ -36,3 +36,9 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - Compatibility now carries reviewed swimming-zone context without turning shared zones into automatic incompatibility.
 - `shared_bottom_zone_context` is informational only: it explains shared substrate/feeding pressure while preserving the underlying verdict.
 - First bottom-dweller cohort: `sp_0014` Corydoras aeneus and `sp_0443` Corydoras panda with reviewed group size, adult size, tank footprint guidance and bottom-zone authority.
+
+## Species Detail reviewed-knowledge presentation checkpoint
+- Species Detail now renders reviewed adult size / planning volume / tank length / swimming zone / activity as a dedicated secondary evidence disclosure.
+- Social presentation now renders reviewed recommended group range and human-readable swimming-zone labels instead of raw enum values.
+- Reviewed knowledge stays optional: unreviewed species do not receive fabricated space/social sections.
+- The unavailable compatibility disclosure keeps one calculator CTA only; duplicate route actions are prohibited.

@@ -48,3 +48,10 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Added informational `shared_bottom_zone_context`; two bottom dwellers no longer disappear into generic compatibility, but the shared zone does not itself raise caution.
 - Evidence coverage remains fail-closed: 132 priority directions, 12 reviewed recordable directions, 98 insufficient, 22 not recommended, 12 caution.
 - Verified: Species Knowledge PASS, Domain PASS, Compatibility PASS, evidence coverage PASS, TypeScript PASS, production build PASS, Compatibility beginner-action E2E PASS, GP001–GP004 PASS.
+
+## Latest checkpoint — Species Detail reviewed knowledge presentation
+- Added a reviewed `Adult size & space / 成体与空间` disclosure using Species V2 authority.
+- Social/group disclosure now includes reviewed recommended-group guidance and localized swimming-zone labels.
+- Browser contract updated for the reviewed neon-tetra group-size rule: a default quantity of 1 is caution and exposes the risk action rather than direct stocking.
+- Removed the duplicate calculator CTA from the unavailable compatibility disclosure.
+- Verified: Species Knowledge PASS, TypeScript PASS, production build PASS, Species Detail E2E PASS, Compatibility E2E PASS, GP001–GP004 PASS.

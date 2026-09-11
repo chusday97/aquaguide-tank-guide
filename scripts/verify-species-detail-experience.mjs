@@ -85,11 +85,30 @@ try {
     const current = await newSeededPage({ locale, state: createState({ withTank: true, owned: false }), phone: locale === 'en' });
     const dialog = await openWishlistDetail(current.page);
     assert.equal(await dialog.getAttribute('data-surface'), locale === 'en' ? 'bottom-sheet' : 'detail-rail', 'detail surface must follow the viewport contract');
-    // A configured but empty tank may safely plan the first addition. A tank
-    // that does not exist still uses the setup action verified above.
-    const primaryLabel = locale === 'en' ? 'Add to Current Tank' : '加入当前鱼缸';
+    // The reviewed neon-tetra authority requires a group of at least eight.
+    // Species detail evaluates one planned individual by default, so it must
+    // route the user through the risk view instead of offering a direct add.
+    const primaryLabel = locale === 'en' ? 'View current tank risks' : '查看当前鱼缸风险';
     const primaryAction = dialog.getByRole('button', { name: primaryLabel, exact: true });
-    assert.equal(await primaryAction.count(), 1, 'suitable detail must have one primary action');
+    assert.equal(await primaryAction.count(), 1, 'reviewed schooling requirement must expose one risk-review action');
+
+    const spaceKnowledge = dialog.locator('[data-species-knowledge="space"]');
+    const socialKnowledge = dialog.locator('[data-species-knowledge="social"]');
+    assert.equal(await spaceKnowledge.count(), 1, 'reviewed space knowledge must be rendered');
+    assert.equal(await socialKnowledge.count(), 1, 'reviewed social knowledge must be rendered');
+    await spaceKnowledge.locator('summary').click();
+    const spaceText = await spaceKnowledge.innerText();
+    assert.match(spaceText, locale === 'en' ? /Adult size & space/ : /成体与空间/);
+    assert.match(spaceText, /3 cm/);
+    assert.match(spaceText, /≥54L/);
+    assert.match(spaceText, /≥60cm/);
+    assert.match(spaceText, locale === 'en' ? /Midwater/ : /中层/);
+    assert.match(spaceText, locale === 'en' ? /long-term planning references/ : /长期空间规划参考/);
+    await socialKnowledge.locator('summary').click();
+    const socialText = await socialKnowledge.innerText();
+    assert.match(socialText, locale === 'en' ? /Minimum group:\s*8 individuals/ : /最低群体：\s*8 条\/只/);
+    assert.match(socialText, locale === 'en' ? /Recommended group:\s*8–10 individuals/ : /建议群体：\s*8–10 条\/只/);
+    assert.match(socialText, locale === 'en' ? /Swimming zone:\s*Midwater/ : /活动水层：\s*中层/);
     if (locale === 'en') {
       const [dialogBox, actionBox, heroBox, feedingBox, verdictBox, reasonBoxes] = await Promise.all([
         dialog.boundingBox(),
@@ -204,7 +223,7 @@ try {
     }
     if (testCase.name === 'not recommended') {
       await dialog.getByRole('button', { name: /^Compatibility/ }).click();
-      assert.equal(await dialog.getByRole('button', { name: 'Compatibility Calculator', exact: true }).count(), 0, 'risk detail must not duplicate the footer route inside compatibility evidence');
+      assert.equal(await dialog.getByRole('button', { name: 'Compatibility Calculator', exact: true }).count(), 1, 'compatibility evidence must expose exactly one calculator route');
       assert.equal(await dialog.getByRole('button', { name: /Confirm Add/, exact: false }).count(), 0, 'not-recommended detail must not imply that adding can be confirmed');
       await action.click();
       assert.equal(await current.page.url().includes('/compatibility'), false, 'view risk must stay in the species detail');

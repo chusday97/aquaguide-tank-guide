@@ -127,6 +127,37 @@ const getTankSizeRequirementLabel = (fish: Fish, isEn = false) => {
   return parts.join(' · ') || fish.tankSize;
 };
 
+const getSwimmingZoneLabel = (zone: string | undefined, isEn = false) => {
+  if (!zone) return '';
+  const labels: Record<string, [string, string]> = {
+    surface: ['表层', 'Surface'],
+    upper: ['上层', 'Upper'],
+    middle: ['中层', 'Midwater'],
+    bottom: ['底层', 'Bottom'],
+    all: ['全水层', 'All levels'],
+    unknown: ['未知', 'Unknown'],
+  };
+  return labels[zone]?.[isEn ? 1 : 0] || zone;
+};
+
+const getActivityLevelLabel = (level: string | undefined, isEn = false) => {
+  if (!level) return '';
+  const labels: Record<string, [string, string]> = {
+    low: ['较低', 'Low'],
+    medium: ['中等', 'Moderate'],
+    high: ['较高', 'High'],
+    unknown: ['未知', 'Unknown'],
+  };
+  return labels[level]?.[isEn ? 1 : 0] || level;
+};
+
+const getRecommendedGroupLabel = (range: { min?: number; max?: number } | undefined, isEn = false) => {
+  if (!range?.min && !range?.max) return '';
+  if (range.min && range.max) return isEn ? `${range.min}–${range.max} individuals` : `${range.min}–${range.max} 条/只`;
+  if (range.min) return isEn ? `${range.min}+ individuals` : `≥${range.min} 条/只`;
+  return isEn ? `up to ${range.max} individuals` : `≤${range.max} 条/只`;
+};
+
 const getExistingLivestock = (aquarium?: Aquarium | null) => (
   (aquarium?.fishes || [])
     .map(item => ({ aqFish: item, fish: fishData.find(fish => fish.id === item.fishId) }))
@@ -539,6 +570,7 @@ export function SpeciesDetailDialog({
   const sexIdentificationGuide = speciesKnowledge?.knowledge.sexIdentification || null;
   const reproductionKnowledge = speciesKnowledge?.knowledge.reproduction || null;
   const socialKnowledge = speciesKnowledge?.knowledge.socialBehavior || null;
+  const spaceKnowledge = speciesKnowledge?.knowledge.spaceAndGrowth || null;
   const sexIdentificationSources = useMemo(() => resolveKnowledgeSources(
     sexIdentificationGuide?.evidence?.sourceIds || [],
   ), [sexIdentificationGuide]);
@@ -548,6 +580,9 @@ export function SpeciesDetailDialog({
   const socialSources = useMemo(() => resolveKnowledgeSources(
     socialKnowledge?.evidence.sourceIds || [],
   ), [socialKnowledge]);
+  const spaceSources = useMemo(() => resolveKnowledgeSources(
+    spaceKnowledge?.evidence.sourceIds || [],
+  ), [spaceKnowledge]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
   const compatibilityPairs = useMemo(() => {
     if (!fish || !aquariumContext) return [];
@@ -1043,8 +1078,7 @@ export function SpeciesDetailDialog({
                           {compatibilityVisualModel?.presentationMode === 'unavailable' ? (
                             <section className="rounded-[18px] border border-sky-100 bg-sky-50/70 p-3" data-visual-result-presentation="unavailable">
                               <div className="text-[13px] font-black text-ink">暂未开放这组混养建议</div>
-                              <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">先查看物种养护，或打开混养计算器主动保存这组组合。</p>
-                              <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="mt-3 min-h-11 rounded-full bg-accent px-4 text-[11px] font-black text-white">打开混养计算器</button>
+                              <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">{isEn ? 'Review species care first, then use the compatibility calculator when you want to evaluate a planned combination.' : '先查看物种养护；需要评估计划组合时，再使用下方混养计算器。'}</p>
                             </section>
                           ) : compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
                           {(fish.housingMode || fish.housingReason) && (
@@ -1091,6 +1125,34 @@ export function SpeciesDetailDialog({
                       </details>
                     )}
 
+                    {spaceKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="space" className="rounded-[18px] border border-violet-100 bg-violet-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Adult size & space' : '成体与空间'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <div className="grid grid-cols-2 gap-1.5 rounded-[12px] bg-white/80 p-2.5">
+                            {spaceKnowledge.adultLengthCm?.max != null ? <p><strong className="text-ink/75">{isEn ? 'Adult size: ' : '成体体长：'}</strong>{spaceKnowledge.adultLengthCm.max} cm {spaceKnowledge.adultLengthCm.measurement && spaceKnowledge.adultLengthCm.measurement !== 'unknown' ? spaceKnowledge.adultLengthCm.measurement : ''}</p> : null}
+                            {spaceKnowledge.minVolumeLiters != null ? <p><strong className="text-ink/75">{isEn ? 'Planning volume: ' : '参考水体：'}</strong>≥{spaceKnowledge.minVolumeLiters}L</p> : null}
+                            {spaceKnowledge.minTankLengthCm != null ? <p><strong className="text-ink/75">{isEn ? 'Tank length: ' : '参考缸长：'}</strong>≥{spaceKnowledge.minTankLengthCm}cm</p> : null}
+                            {spaceKnowledge.swimmingZone ? <p><strong className="text-ink/75">{isEn ? 'Swimming zone: ' : '活动水层：'}</strong>{getSwimmingZoneLabel(spaceKnowledge.swimmingZone, isEn)}</p> : null}
+                            {spaceKnowledge.activityLevel ? <p><strong className="text-ink/75">{isEn ? 'Activity: ' : '活动量：'}</strong>{getActivityLevelLabel(spaceKnowledge.activityLevel, isEn)}</p> : null}
+                          </div>
+                          {spaceKnowledge.spaceNotes?.length ? <p>{spaceKnowledge.spaceNotes.join('；')}</p> : null}
+                          <p className="text-[10px] text-ink/45">{isEn ? 'These are long-term planning references, not a one-number pass/fail rule.' : '这些是长期空间规划参考，不按单一升数做“差一点就不能养”的硬判定。'}</p>
+                        </div>
+                        {spaceSources.length > 0 && (
+                          <div className="mt-3 border-t border-violet-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {spaceSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-violet-100 bg-white px-2 py-1 text-[9px] font-black text-violet-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
                     {reproductionKnowledge && (
                       <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-rose-100 bg-rose-50/45 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
@@ -1124,17 +1186,18 @@ export function SpeciesDetailDialog({
                     )}
 
                     {socialKnowledge && (
-                      <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-sky-100 bg-sky-50/45 p-3">
+                      <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="social" className="rounded-[18px] border border-sky-100 bg-sky-50/45 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
                           <span>{isEn ? 'Social & group needs' : '群体与混养习性'}</span>
                           <ChevronRight className="h-4 w-4 text-ink/35" />
                         </summary>
                         <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
                           <p>{socialKnowledge.summary}</p>
-                          {(socialKnowledge.minimumGroupSize || socialKnowledge.swimmingZone || socialKnowledge.sexRatioGuidance) && (
+                          {(socialKnowledge.minimumGroupSize || socialKnowledge.recommendedGroupSize || socialKnowledge.swimmingZone || socialKnowledge.sexRatioGuidance) && (
                             <div className="grid gap-1.5 rounded-[12px] bg-white/80 p-2.5">
                               {socialKnowledge.minimumGroupSize ? <p><strong className="text-ink/75">{isEn ? 'Minimum group: ' : '最低群体：'}</strong>{socialKnowledge.minimumGroupSize} {isEn ? 'individuals' : '条/只'}</p> : null}
-                              {socialKnowledge.swimmingZone ? <p><strong className="text-ink/75">{isEn ? 'Swimming zone: ' : '活动水层：'}</strong>{socialKnowledge.swimmingZone}</p> : null}
+                              {socialKnowledge.recommendedGroupSize ? <p><strong className="text-ink/75">{isEn ? 'Recommended group: ' : '建议群体：'}</strong>{getRecommendedGroupLabel(socialKnowledge.recommendedGroupSize, isEn)}</p> : null}
+                              {socialKnowledge.swimmingZone ? <p><strong className="text-ink/75">{isEn ? 'Swimming zone: ' : '活动水层：'}</strong>{getSwimmingZoneLabel(socialKnowledge.swimmingZone, isEn)}</p> : null}
                               {socialKnowledge.sexRatioGuidance ? <p><strong className="text-ink/75">{isEn ? 'Sex ratio: ' : '性别比例：'}</strong>{socialKnowledge.sexRatioGuidance}</p> : null}
                             </div>
                           )}
