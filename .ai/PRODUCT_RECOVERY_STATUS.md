@@ -59,7 +59,9 @@ Draft PR: #149
 - Knowledge Source Registry checkpoint: source-resolution assertions PASS, TypeScript PASS, full compatibility regressions PASS, production build PASS.
 - User-facing stability confirmation checkpoint: compatibility regression PASS, explicit non-mutating confirmation test PASS, TypeScript PASS, production build PASS.
 - Species Detail reproduction/social disclosure checkpoint: species-knowledge assertions PASS, TypeScript PASS, production build PASS.
-- Local preview verified HTTP 200 at `http://127.0.0.1:4320/`.
+- Browser Golden Path contract + GP001/GP002/GP003/GP004: PASS on production preview after aligning the shoaling fixture to the reviewed 8-fish minimum.
+- GP002 now asserts the real recordable action instead of brittle status copy and persists 8 cardinal tetras; existing 6 neon tetras remain unchanged.
+- Local preview verified HTTP 200 at `http://127.0.0.1:4320/`; production preview verified at `http://127.0.0.1:4173/`.
 - Do not merge until the latest current-head workflows are green.
 
 ## Next execution order
