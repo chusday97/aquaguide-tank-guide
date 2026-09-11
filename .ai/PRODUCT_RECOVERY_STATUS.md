@@ -35,6 +35,8 @@ Draft PR: #149
 - Added field-level evidence contract.
 - Added staged structured contracts for sex identification, reproduction, social behavior, adult size / space and swimming zone.
 - New V2 blocks are optional during migration so existing species do not receive invented facts.
+- First reviewed V2 cohort added: `sp_0436` 孔雀鱼, `sp_0431` 红绿灯, `sp_0432` 宝莲灯.
+- Cohort includes reviewed sex-identification, reproduction and social-behavior facts with field-level source IDs; unknown species continue to return unknown rather than generic invented biology.
 
 ## Validation status
 - Main Convergence foundation workflow on the latest pre-golden-case checkpoint: PASS through project truth, catalog, domain compatibility, legacy compatibility, lint, API and production build.
@@ -42,12 +44,14 @@ Draft PR: #149
 - Legacy compatibility facade regression: PASS after canonical adapter/test alignment.
 - Main Convergence foundation workflow passed through project truth, catalog, compatibility, lint, API and build on the recovery line.
 - Local recovery validation after Tank Stability Context: domain compatibility PASS, legacy compatibility PASS, TypeScript lint PASS, production build PASS.
+- Species Knowledge V2 first-cohort assertions PASS; TypeScript lint PASS after reviewed cohort wiring.
 - Local preview verified HTTP 200 at `http://127.0.0.1:4320/`.
 - Do not merge until the latest current-head workflows are green.
 
 ## Next execution order
 1. Push Tank Stability Context checkpoint and complete current-head CI.
-2. Populate the first reviewed Species Knowledge V2 cohort; do not mass-fill unknown fields.
-3. Connect verified Species V2 fields to compatibility traits and action explanations.
+2. Connect verified Species V2 fields to compatibility traits and action explanations.
+3. Add source-registry presentation so reviewed claims can expose traceable references in the product.
 4. Add user-facing stability evidence capture only after the domain contract is stable.
-5. Only after contracts and golden cases are stable, adjust Species detail presentation and compatibility result polish.
+5. Expand the reviewed cohort incrementally; do not mass-fill unknown fields.
+6. Only after contracts and golden cases are stable, adjust Species detail presentation and compatibility result polish.

@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict';
 import { buildSpeciesCarePresentation } from '../src/modules/knowledge/speciesCarePresentation';
+import { buildSpeciesKnowledgeProfile } from '../src/modules/knowledge/speciesKnowledge';
 import type { Fish } from '../src/types';
 
 const baseFish: Fish = {
@@ -58,5 +59,26 @@ const generic = buildSpeciesCarePresentation({
 });
 assert.equal(generic.sourceStatus, 'generic');
 assert.equal(generic.sourceLabel, '通用参考');
+
+
+const guppyKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0436', name: '孔雀鱼', scientificName: 'Poecilia reticulata' });
+assert.equal(guppyKnowledge.knowledge.sexIdentification.confidence, 'verified');
+assert.equal(guppyKnowledge.knowledge.reproduction?.mode, 'livebearer');
+assert.equal(guppyKnowledge.knowledge.reproduction?.fertilization, 'internal');
+assert.ok(guppyKnowledge.knowledge.sexIdentification.maleTraits?.some(item => item.includes('交接器')));
+
+const neonKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi' });
+assert.equal(neonKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
+assert.equal(neonKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
+assert.equal(neonKnowledge.knowledge.reproduction?.parentalCare, 'none');
+
+const cardinalKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0432', name: '宝莲灯', scientificName: 'Paracheirodon axelrodi' });
+assert.equal(cardinalKnowledge.knowledge.sexIdentification.reliableFromLifeStage, 'adult');
+assert.equal(cardinalKnowledge.knowledge.socialBehavior?.recommendedGroupSize?.min, 8);
+
+const unknownKnowledge = buildSpeciesKnowledgeProfile(baseFish);
+assert.equal(unknownKnowledge.knowledge.sexIdentification.confidence, 'unknown');
+assert.equal(unknownKnowledge.knowledge.reproduction, undefined);
+
 
 console.log('species detail knowledge assertions passed');
