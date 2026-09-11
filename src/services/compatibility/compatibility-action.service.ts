@@ -26,6 +26,7 @@ const HARD_BLOCK_CODES = new Set([
   'predation_risk',
   'single_housing_required',
   'observed_emergency',
+  'reviewed_pair_rule',
 ]);
 
 const SOFT_CAPACITY_CODES = new Set([
@@ -56,6 +57,7 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   const hasSoftCapacityConcern = Array.from(codes).some(code => SOFT_CAPACITY_CODES.has(code));
   const hasGroupSizeGap = codes.has('minimum_group_not_met') || codes.has('group_requirement_gap');
   const hasFinNippingGroupPressure = codes.has('fin_nipping_group_pressure');
+  const hasFinNippingTargetVulnerability = codes.has('fin_nipping_target_vulnerability');
 
   if (decision.status === 'not_recommended') {
     return {
@@ -82,6 +84,16 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   }
 
   if (decision.status === 'caution') {
+    if (hasFinNippingTargetVulnerability) {
+      return {
+        verdict: 'add_with_conditions',
+        headline: '先不要把追鳍鱼和脆弱鳍型直接混养',
+        immediateAction: '优先更换其中一方；如果只是暂时观察，也要准备立即分隔，不要把短期没追咬当成长期安全。',
+        primaryReason: firstText(decision.warningRules.filter(rule => rule.code === 'fin_nipping_target_vulnerability'), '一方有追鳍倾向，另一方对追鳍更脆弱。'),
+        observeAfterAction: '重点看持续追逐、鳍条破损、躲藏和进食受阻；出现任一持续异常就分隔。',
+        detailsLabel: '为什么这组风险更高？',
+      };
+    }
     if (hasFinNippingGroupPressure) {
       return {
         verdict: 'add_with_conditions',

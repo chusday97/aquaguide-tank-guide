@@ -7,7 +7,7 @@ Draft PR: #149
 
 ## Branch authority
 - `product-recovery-20260911` is the only active Aqua product recovery branch for this effort.
-- Latest measured relation to `main` before this status commit: ahead 24 / behind 0.
+- Latest measured relation to `main` before this status commit: ahead 26 / behind 0.
 - Merge base is exactly the current main base commit above.
 - `feature/admin-content-v0` remains reference-only. Do not merge/rebase it wholesale.
 
@@ -94,4 +94,18 @@ Draft PR: #149
 - Evidence coverage PASS: 132 real common-species directions; 6 reviewed recordable directions under the new provenance contract.
 - Domain compatibility, legacy facade, visual results, TypeScript, production build: PASS.
 - Compatibility beginner-action E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Target-vulnerability checkpoint
+- Compatibility authority advanced to `compatibility-domain-v4-target-vulnerability`.
+- Added reviewed target-side behavior facts: `finNipVulnerability` and `swimmingPace`; these are distinct from the aggressor-side `finNippingRisk`.
+- Generic fin-nipping pressure against a reviewed vulnerable/slow target produces caution (`fin_nipping_target_vulnerability`), not a fabricated hard block.
+- Guppy is the first reviewed vulnerable target; Species Fit and Domain use the reviewed field before legacy fish-name heuristics.
+- Added reviewed tiger-barb × guppy pair evidence as a direct `not_recommended` override. Meeting tiger-barb group-size guidance does not erase the pair-level long-fin conflict.
+- Beginner Action renders a dedicated vulnerability warning for generic caution and treats reviewed pair blocks as explicit `不建议混养`.
+
+#### Validation
+- Evidence coverage PASS; reviewed pair-rule floor = 5.
+- Domain compatibility / legacy facade / visual actions / TypeScript / production build: PASS.
+- Compatibility beginner-action browser E2E covers group pressure, stable-load downgrade, and tiger-barb × guppy reviewed block: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.

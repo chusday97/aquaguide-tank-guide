@@ -261,6 +261,18 @@ const unknownExistingFinNippingQuantityDoesNotInventOne = evaluateCompatibility(
 });
 assert.ok(!unknownExistingFinNippingQuantityDoesNotInventOne.ruleCodes.includes('fin_nipping_group_pressure'));
 
+const finNippingTargetVulnerability = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'structured-fin-nipper', finNippingRisk: 'high' }],
+  existingQuantities: { 'structured-fin-nipper': 8 },
+  candidateSpecies: { ...base, id: 'structured-fin-vulnerable', finNipVulnerability: 'high' },
+  candidateQuantity: 5,
+});
+assert.equal(finNippingTargetVulnerability.status, 'caution');
+assert.equal(finNippingTargetVulnerability.addPolicy, 'confirm');
+assert.ok(finNippingTargetVulnerability.ruleCodes.includes('fin_nipping_target_vulnerability'));
+
 const structuredTerritoriality = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },

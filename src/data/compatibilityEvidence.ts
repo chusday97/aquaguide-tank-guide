@@ -115,6 +115,24 @@ const guppyFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const guppySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-poecilia-reticulata',
+  title: 'Poecilia reticulata (Guppy)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/poecilia-reticulata/',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const tigerBarbSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-puntigrus-tetrazona',
+  title: 'Puntigrus tetrazona (Tiger Barb)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/puntigrus-tetrazona',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const guppyShoalingStudy: EvidenceSourceDto = {
   id: 'guppy-schooling-learning-study',
   title: 'Schooling and learning: early social environment predicts social learning ability in the guppy, Poecilia reticulata',
@@ -285,6 +303,18 @@ const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
 };
 
 const pairRules: ReviewedPairRule[] = [
+  {
+    speciesIds: ['sp_0439', 'sp_0436'],
+    verdict: 'not_recommended',
+    riskType: 'fin_nipping_long_fin_conflict',
+    reason: '孔雀鱼资料明确建议不要与虎皮等追鳍鱼混养；虎皮鱼资料也明确指出其不适合作为长鳍或慢游鱼的同伴。该组合有直接的养护层配对建议，不应仅作为一般性 caution。',
+    mitigation: ['优先不要长期混养；选择非追鳍同伴，或将两者分缸。', '不要把“虎皮数量够了”理解为已经消除对长鳍鱼的追鳍风险。'],
+    basis: 'pair_rule',
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0439', 'sp_0436'],
+    citations: [guppySeriouslyFish, tigerBarbSeriouslyFish],
+  },
   {
     speciesIds: ['sp_0021', 'sp_0439'],
     verdict: 'not_recommended',

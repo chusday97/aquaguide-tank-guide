@@ -688,6 +688,8 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     behaviorTraits: reviewed?.behaviorTraits || [],
     territoriality: reviewedSocial?.territoriality,
     finNippingRisk: reviewedSocial?.finNipping,
+    finNipVulnerability: reviewedSocial?.finNipVulnerability,
+    swimmingPace: reviewedSocial?.swimmingPace,
     predationRisk: reviewedSocial?.predationRisk,
     size: fish.size,
   };

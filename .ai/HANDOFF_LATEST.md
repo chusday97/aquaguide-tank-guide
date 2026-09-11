@@ -5,24 +5,23 @@ Branch: `product-recovery-20260911`
 Base: current recovery line from `main`
 
 ## Current checkpoint
-- Replaced the old “no direct pair study = insufficient_data” gate with explicit `pair_trait_inference` provenance.
-- Direct reviewed pair rules still override trait inference and can block.
-- Reviewed compatibility profiles now provide water type authority for the reviewed cohort.
-- Species Fit no longer treats `Aggressive` or `Large` as automatic predation when reviewed behavior evidence exists.
-- Reviewed solitary/group behavior overrides stale `housingMode` labels in Compatibility UI.
-- Tiger barb now presents reviewed group guidance rather than the stale `建议单养` label.
-- New browser test covers tiger-barb group pressure and stable-tank soft-load downgrade.
-- GP001 navigation click was hardened to target the real button rather than a child text span.
+- Compatibility rule authority advanced to `compatibility-domain-v4-target-vulnerability`.
+- Added structured `finNipVulnerability` and `swimmingPace` alongside existing `finNippingRisk`.
+- Generic reviewed fin-nipper + reviewed vulnerable target now raises `fin_nipping_target_vulnerability` as caution.
+- Species Fit prefers reviewed vulnerability/fin-nipping facts over fish-name regex when reviewed knowledge exists.
+- Guppy is the first reviewed vulnerable target; its social authority records high fin-nip vulnerability.
+- Added a reviewed tiger-barb × guppy pair override as `not_recommended`; sufficient tiger-barb group size does not erase the long-fin fin-nipping conflict.
+- Beginner Action has a dedicated vulnerability caution and recognizes reviewed pair blocks as explicit `不建议混养`.
 
 ## Verified
-- Compatibility evidence coverage: PASS; 132 common-species directions, 6 currently recordable reviewed directions.
-- Domain compatibility: PASS.
-- Legacy compatibility facade: PASS.
+- Compatibility evidence coverage: PASS; reviewed pair-rule floor is now 5.
+- Domain compatibility: PASS, including generic target-vulnerability caution.
+- Legacy compatibility facade: PASS, including tiger-barb × guppy reviewed block.
 - Visual result actions: PASS.
 - TypeScript lint: PASS.
 - Production build: PASS.
-- Compatibility beginner-action browser E2E: PASS.
+- Compatibility beginner-action browser E2E: PASS, including tiger-barb × guppy reviewed block.
 - GP001, GP002, GP003, GP004: PASS.
 
 ## Next task
-Add reviewed target-vulnerability traits (for example long-fin / slow-swimming susceptibility) to the same domain contract so fin-nipping risk is inferred from structured evidence rather than fish-name regex. Keep direct pair rules as overrides.
+Expand target vulnerability only where reviewed husbandry evidence supports it, then continue the next high-frequency Species Knowledge V2 cohort. Keep pair rules as overrides and do not infer vulnerability from names.

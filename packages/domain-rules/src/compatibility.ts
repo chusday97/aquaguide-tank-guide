@@ -60,6 +60,8 @@ export type DomainSpeciesFact = {
   behaviorTraits?: string[];
   territoriality?: BehaviorRiskLevel;
   finNippingRisk?: BehaviorRiskLevel;
+  finNipVulnerability?: BehaviorRiskLevel;
+  swimmingPace?: 'slow' | 'moderate' | 'fast' | 'unknown';
   predationRisk?: BehaviorRiskLevel;
   size?: 'Small' | 'Medium' | 'Large' | string;
 };
@@ -98,7 +100,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v3-contextual-behavior';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v4-target-vulnerability';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -229,6 +231,22 @@ export const evaluateCompatibility = ({
         || candidateSpecies.territoriality === 'high';
       if (existingTerritorial && candidateTerritorial) {
         raise('caution', 'territorial_conflict');
+      }
+      const hasFinNippingPressure = (species: DomainSpeciesFact) => (
+        species.behaviorTraits?.includes('fin_nipping')
+        || species.finNippingRisk === 'medium'
+        || species.finNippingRisk === 'high'
+      );
+      const isFinNipVulnerable = (species: DomainSpeciesFact) => (
+        species.finNipVulnerability === 'medium'
+        || species.finNipVulnerability === 'high'
+        || species.swimmingPace === 'slow'
+      );
+      if (existing.id !== candidateSpecies.id && (
+        (hasFinNippingPressure(existing) && isFinNipVulnerable(candidateSpecies))
+        || (hasFinNippingPressure(candidateSpecies) && isFinNipVulnerable(existing))
+      )) {
+        raise('caution', 'fin_nipping_target_vulnerability');
       }
       if (existing.behaviorTraits?.includes('solitary_required') || candidateSpecies.behaviorTraits?.includes('solitary_required')) {
         raise('not_recommended', 'single_housing_required');

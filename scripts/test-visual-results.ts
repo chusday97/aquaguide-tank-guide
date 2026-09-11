@@ -109,6 +109,23 @@ assert.equal(softCapacityAction.headline, '可以尝试，但别一次加太多'
 assert.ok(softCapacityAction.immediateAction.includes('不要只因为低于一个参考水体值就立刻换缸'));
 assert.ok(softCapacityAction.observeAfterAction?.includes('3–7 天'));
 
+const finNippingTargetAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['fin_nipping_target_vulnerability'],
+  { warningRules: [makeRule('fin_nipping_target_vulnerability', '追鳍鱼与脆弱鳍型不匹配。')] },
+));
+assert.equal(finNippingTargetAction.headline, '先不要把追鳍鱼和脆弱鳍型直接混养');
+assert.ok(finNippingTargetAction.immediateAction.includes('优先更换其中一方'));
+assert.ok(finNippingTargetAction.observeAfterAction?.includes('鳍条破损'));
+
+const reviewedPairBlockAction = buildBeginnerCompatibilityAction(actionDecision(
+  'not_recommended',
+  ['reviewed_pair_rule', 'fin_nipping_target_vulnerability'],
+  { blockingRules: [makeRule('pair_rule_fin_nipping_long_fin_conflict', '虎皮鱼与孔雀鱼有已审核的长鳍追咬冲突。', 'high')] },
+));
+assert.equal(reviewedPairBlockAction.headline, '不建议混养');
+assert.ok(reviewedPairBlockAction.immediateAction.includes('先不要把这组生物放在一起'));
+
 const finNippingGroupAction = buildBeginnerCompatibilityAction(actionDecision(
   'caution',
   ['minimum_group_not_met', 'fin_nipping_group_pressure'],

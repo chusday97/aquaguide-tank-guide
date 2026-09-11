@@ -56,7 +56,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish(),
       });
       return result.metadata.catalogVersion === 'local-fish-data-v1'
-        && result.metadata.ruleVersion === 'compatibility-domain-v3-contextual-behavior'
+        && result.metadata.ruleVersion === 'compatibility-domain-v4-target-vulnerability'
         && result.metadata.domainRuleCodes.length > 0
         && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
     },
@@ -383,6 +383,38 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       return result.status !== 'not_recommended'
         && !result.metadata.domainRuleCodes.includes('fin_nipping_group_pressure')
         && result.warningRules.every(rule => rule.code !== 'fin_nipping_group_pressure');
+    },
+  },
+  {
+    name: 'tiger barb and guppy direct reviewed pair blocks long-fin fin-nipping mix',
+    run: () => {
+      const tigerBarb = makeFish({
+        id: 'sp_0439',
+        name: '虎皮鱼',
+        scientificName: 'Puntigrus tetrazona',
+        waterTemperature: '20-28°C',
+        tankSize: '至少 72 升',
+        size: 'Small',
+      });
+      const guppy = makeFish({
+        id: 'sp_0436',
+        name: '孔雀鱼',
+        scientificName: 'Poecilia reticulata',
+        waterTemperature: '18-28°C',
+        tankSize: '至少 41 升',
+        size: 'Small',
+      });
+      const result = evaluateCompatibilityDecision({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' }, targetTemperature: '24' }),
+        items: [
+          { species: tigerBarb, quantity: 8, origin: 'existing' },
+          { species: guppy, quantity: 5, origin: 'candidate' },
+        ],
+      });
+      return result.status === 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('reviewed_pair_rule')
+        && result.blockingRules.some(rule => rule.code === 'pair_rule_fin_nipping_long_fin_conflict')
+        && result.blockingRules.some(rule => rule.reviewStatus === 'reviewed' && rule.citations.length >= 2);
     },
   },
   {

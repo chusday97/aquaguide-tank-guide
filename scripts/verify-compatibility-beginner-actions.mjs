@@ -95,7 +95,20 @@ try {
     await page.close();
   }
 
-  console.log('Compatibility beginner-action E2E passed: fin-nipping group pressure + stable soft-load downgrade.');
+  {
+    const state = makeState({ id: 'tank-tiger-guppy', name: '虎皮孔雀测试缸', fishId: 'sp_0439', quantity: 8, temperature: '24' });
+    const { page, calculator } = await openCompatibility({ state, candidateId: 'sp_0436' });
+    await calculator.getByText('虎皮鱼', { exact: true }).first().waitFor();
+    await setQuantity(calculator, '孔雀鱼', 5);
+    await calculator.getByRole('heading', { name: '不建议混养', exact: true }).waitFor();
+    const resultText = (await calculator.textContent()) || '';
+    assert.match(resultText, /先不要把这组生物放在一起/);
+    assert.match(resultText, /长鳍|追鳍/);
+    assert.doesNotMatch(resultText, /可以尝试，但别一次加太多/);
+    await page.close();
+  }
+
+  console.log('Compatibility beginner-action E2E passed: fin-nipping group pressure + stable soft-load downgrade + tiger-barb/guppy reviewed block.');
 } finally {
   await browser.close();
 }

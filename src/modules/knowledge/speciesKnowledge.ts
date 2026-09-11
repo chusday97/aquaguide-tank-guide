@@ -35,8 +35,10 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
       sexRatioGuidance: '繁殖群体中建议一公搭配多母，减少单只母鱼被持续追逐。',
       territoriality: 'low',
       finNipping: 'low',
+      finNipVulnerability: 'high',
+      swimmingPace: 'unknown',
       predationRisk: 'low',
-      summary: '总体温和，适合温和社区缸；繁殖群体需重点管理公鱼持续追逐母鱼的问题。',
+      summary: '总体温和，适合温和社区缸；成年公鱼和观赏品系常有延长鳍条，对追鳍鱼更脆弱；繁殖群体还需管理公鱼持续追逐母鱼的问题。',
       evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-poecilia-reticulata'], reviewedAt: '2026-09-11' },
     },
     spaceAndGrowth: {

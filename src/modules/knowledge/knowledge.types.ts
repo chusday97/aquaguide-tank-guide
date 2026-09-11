@@ -73,6 +73,8 @@ export type SpeciesSocialKnowledge = {
   swimmingZone?: SpeciesSwimmingZone;
   territoriality?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
   finNipping?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  finNipVulnerability?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  swimmingPace?: 'slow' | 'moderate' | 'fast' | 'unknown';
   predationRisk?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
   summary: string;
   evidence: KnowledgeFieldEvidence;

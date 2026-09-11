@@ -3,6 +3,7 @@ import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.serv
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
 import { estimateWaterProfile } from './waterProfileEstimate';
 import { getReviewedCompatibilityProfile } from '../data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledge } from '../modules/knowledge/speciesKnowledge';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -125,7 +126,12 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
   if (validLivestock.length === 0) return null;
   const speciesText = textOf(species);
   const selectedIsSmall = species.size === 'Small';
-  const selectedIsLongFin = /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
+  const reviewedTargetSocial = getReviewedSpeciesKnowledge(species.id)?.socialBehavior;
+  const selectedIsFinNipVulnerable = reviewedTargetSocial?.evidence.reviewStatus === 'reviewed'
+    ? reviewedTargetSocial.finNipVulnerability === 'medium'
+      || reviewedTargetSocial.finNipVulnerability === 'high'
+      || reviewedTargetSocial.swimmingPace === 'slow'
+    : /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
   const predator = validLivestock.find(item => {
     const reviewed = getReviewedCompatibilityProfile(item.species.id);
     if (reviewed) return reviewed.behaviorTraits.includes('predatory');
@@ -145,7 +151,7 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
     const reviewed = getReviewedCompatibilityProfile(item.species.id);
     return reviewed ? reviewed.behaviorTraits.includes('fin_nipping') : /虎皮|黑裙|红十字|彩裙|玫瑰鲫|啄鳍|追咬/i.test(textOf(item.species));
   });
-  if (nipper && selectedIsLongFin) {
+  if (nipper && selectedIsFinNipVulnerable) {
     return {
       type: 'fin_nipping_risk',
       title: '长鳍被啄咬风险',
