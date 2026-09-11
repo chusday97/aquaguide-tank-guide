@@ -1,5 +1,13 @@
 # Live Status
 
+## CURRENT OVERRIDE — main promotion rehearsal PASS (2026-09-12)
+- Candidate functional HEAD: `72ad2693`; real `origin/main` remains `d3c70dee633e` and is an ancestor of candidate.
+- P0 runtime authority shadowing is closed: Product/Care Git authority requires at least one Git-published Product/Care record; otherwise runtime continues to Published API.
+- Disposable fast-forward rehearsal from real main reached the exact candidate tree; temporary branch/worktree were deleted.
+- Promotion delta at functional checkpoint: 243 files, 60,220 insertions, 485 deletions.
+- Full build + Product/Care runtime + Compatibility + Published isolation + Local Admin gates PASS.
+- No main move, push, Production deployment, Supabase Staging/Production migration or indexing mutation.
+
 ## CURRENT OVERRIDE — Git runtime authority atomic publication PASS (2026-09-12)
 - Candidate functional HEAD: `65af7dd2` on `reconcile/admin-content-main-20260911`; relation to known live main `d3c70dee` is `0/336`, and to remote feature `e9c63560` is `0/351`.
 - Durable Local File can now generate a pending Git runtime authority snapshot for Published Product/Care + reviewed Compatibility without Supabase Staging; generation does not itself commit, push or deploy.

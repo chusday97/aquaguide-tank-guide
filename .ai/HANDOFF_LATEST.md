@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — candidate is main-ready after promotion rehearsal (2026-09-12)
+- Functional checkpoint `72ad2693 fix(runtime): preserve published api under empty git snapshot`; promotion-readiness record: `.ai/MAIN_PROMOTION_READINESS_20260912.md`.
+- P0 closed: the committed Git snapshot has Compatibility 7/4 but Product/Care 0/0; empty Product/Care no longer suppresses `/content-bootstrap`. Non-empty Git Product/Care still wins, while Compatibility can independently remain `reviewed-git`.
+- Current Published Content browser contract was repaired to the real Encyclopedia search and Care `传统浏览 / Browse guides` flow; zh-CN + EN PASS.
+- Disposable `origin/main → candidate` `git merge --ff-only` rehearsal PASS with exact tree equality; rehearsal worktree/branch were removed. Real main remains `d3c70dee633e`, unchanged.
+- Authority gates, TypeScript, full build and diff hygiene PASS. Candidate is READY for an explicit main fast-forward, but no main move/push/deploy occurred.
+- NEXT: preserve `d3c70dee633e` as rollback anchor before any explicit promotion; treat main push/deployment as a separate action.
+
 ## CURRENT OVERRIDE — atomic Local File → Git runtime publication closed (2026-09-12)
 - Active candidate: `reconcile/admin-content-main-20260911`; functional checkpoints `e7b445c1 fix(admin): make git runtime snapshot atomic` and `65af7dd2 fix(admin): clarify git snapshot publish boundary`, built on `d93ae6b feat(admin): publish local authority through git snapshot`.
 - Local Operations can generate one **pending Git runtime snapshot** containing only Published Product/Care + reviewed Compatibility. Draft rows, review notes and machine-local file paths remain excluded. The action explicitly does not commit, push or deploy.

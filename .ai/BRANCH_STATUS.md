@@ -1,5 +1,12 @@
 # Branch Status
 
+## CURRENT OVERRIDE — candidate ready for explicit ff-only main promotion (2026-09-12)
+- Candidate branch: `reconcile/admin-content-main-20260911`; functional checkpoint `72ad2693`.
+- `origin/main=d3c70dee633e` is a strict ancestor; disposable `git merge --ff-only` rehearsal PASS and exact tree equality verified.
+- Runtime promotion blocker from empty Product/Care Git snapshot is fixed and regression-covered.
+- Current main is the rollback anchor and has not moved. No push/deploy occurred.
+- Promotion readiness details: `.ai/MAIN_PROMOTION_READINESS_20260912.md`.
+
 ## CURRENT OVERRIDE — reconciliation candidate local runtime publication hardened (2026-09-12)
 - Candidate branch: `reconcile/admin-content-main-20260911`; latest functional HEAD `65af7dd2`.
 - Candidate contains known live main `d3c70dee` (`0 / 336`) and remote feature `e9c63560` (`0 / 351`).

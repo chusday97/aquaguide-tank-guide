@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-12 candidate main-promotion ready
+The active objective is now **hold the validated candidate at the explicit main-promotion boundary; do not add speculative Admin features**. Functional checkpoint: `72ad2693`.
+
+- Promotion P0 fixed: an empty Product/Care Git snapshot can no longer shadow Published API data.
+- Current Product/Care browser consumption is proven in zh-CN and EN against the reconciled UI.
+- Real `origin/main=d3c70dee633e` is an ancestor of candidate; a disposable ff-only promotion rehearsal reached the exact candidate tree and was cleaned up.
+- Compatibility authority, Published Content isolation, Local Admin mode, TypeScript and full build gates are green.
+- Main, push, Production and Supabase Staging remain untouched.
+- NEXT: only an explicit main-promotion action remains; preserve the old main SHA as rollback ref and separate local main movement from push/deployment.
+
 ## CURRENT OVERRIDE — 2026-09-12 Local File → Git runtime authority closed locally
 Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional checkpoints: `e7b445c1 fix(admin): make git runtime snapshot atomic` and `65af7dd2 fix(admin): clarify git snapshot publish boundary`.
 

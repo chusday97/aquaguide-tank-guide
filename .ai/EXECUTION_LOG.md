@@ -1434,3 +1434,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Operations confirmation now says the action only writes a pending runtime snapshot and will not commit/push/deploy. Success state says `运行时快照已生成 · 尚未提交 Git / 部署`; button label is `生成待提交快照`.
 - Browser regression and API contract were updated together. PASS: Local File API/failure regression, Git runtime authority preference, Local Admin browser, API/root TypeScript and full composite build.
 - Candidate relation after the functional commit: main `d3c70dee...HEAD = 0/336`; feature `e9c63560...HEAD = 0/351`. No push/main/Production/Supabase Staging/indexing mutation.
+## 2026-09-12 — Main promotion readiness + empty Git Product/Care P0 closure
+- Re-fetched origin: `origin/main=d3c70dee633e`, no main-only commits; candidate remains a strict descendant.
+- Found promotion P0: committed Git snapshot has Product/Care 0/0, and the runtime previously treated any generated snapshot as Product/Care authority, suppressing Published API bootstrap.
+- Committed `72ad2693 fix(runtime): preserve published api under empty git snapshot`: empty Product/Care Git authority now falls through to Published API; non-empty Git authority remains preferred.
+- Updated stale browser acceptance to current Encyclopedia search and Care `传统浏览 / Browse guides`; zh-CN and EN Published API values reach frontend consumers.
+- PASS: Git runtime authority, Published runtime, Local File Admin, root/API TypeScript, full build, Compatibility runtime/admin/regression, Published isolation, Local Admin mode and authority scan.
+- Disposable `origin/main → candidate` ff-only rehearsal PASS with exact candidate tree; rehearsal resources removed. Real main/push/Production/Staging untouched.

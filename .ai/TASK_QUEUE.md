@@ -1,5 +1,16 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — main promotion readiness closed (2026-09-12)
+- [x] Re-fetch origin and prove no new main commits are missing from candidate.
+- [x] Audit committed Git runtime snapshot before promotion.
+- [x] Fix empty Product/Care Git snapshot suppressing Published API.
+- [x] Repair Published Content browser gate to current Encyclopedia/Care UI; zh-CN + EN PASS.
+- [x] Re-run Compatibility authority/regression, Published isolation, Local Admin, TypeScript and full build gates.
+- [x] Rehearse `origin/main → candidate` with `git merge --ff-only` in a disposable worktree; exact tree equality PASS.
+- [ ] Preserve current main `d3c70dee633e` as rollback ref when promotion is explicitly authorized.
+- [ ] Move main only after explicit promotion authorization.
+- [ ] Push/deploy remains a separate explicit action.
+
 ## ACTIVE OVERRIDE — Local File → Git runtime authority closed (2026-09-12)
 - [x] Export only Published Product/Care + reviewed Compatibility from Durable Local File authority.
 - [x] Make frontend Product/Care and Compatibility prefer the committed Git runtime snapshot before network authority fallback.
