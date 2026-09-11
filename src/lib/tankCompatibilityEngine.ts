@@ -686,6 +686,9 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
     socialMode: reviewedSocial?.mode ?? profile.socialMode,
     behaviorTraits: reviewed?.behaviorTraits || [],
+    territoriality: reviewedSocial?.territoriality,
+    finNippingRisk: reviewedSocial?.finNipping,
+    predationRisk: reviewedSocial?.predationRisk,
     size: fish.size,
   };
 };

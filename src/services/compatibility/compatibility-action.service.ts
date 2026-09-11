@@ -55,6 +55,7 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   const hasHardBlock = Array.from(codes).some(code => HARD_BLOCK_CODES.has(code));
   const hasSoftCapacityConcern = Array.from(codes).some(code => SOFT_CAPACITY_CODES.has(code));
   const hasGroupSizeGap = codes.has('minimum_group_not_met') || codes.has('group_requirement_gap');
+  const hasFinNippingGroupPressure = codes.has('fin_nipping_group_pressure');
 
   if (decision.status === 'not_recommended') {
     return {
@@ -81,6 +82,16 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   }
 
   if (decision.status === 'caution') {
+    if (hasFinNippingGroupPressure) {
+      return {
+        verdict: 'add_with_conditions',
+        headline: '先把群体数量补够，再混养',
+        immediateAction: '当前不是“少养几条更安全”：先满足追鳍物种的同种最低群体要求，再考虑加入其他鱼。',
+        primaryReason: firstText(decision.warningRules.filter(rule => rule.code === 'fin_nipping_group_pressure'), '该物种有追鳍倾向，群体不足时对同缸鱼的骚扰压力更难管理。'),
+        observeAfterAction: '群体调整后继续观察 3–7 天；如果仍有持续追鳍、躲藏、破鳍或抢食，再暂停新增并考虑分隔。',
+        detailsLabel: '为什么先补群体？',
+      };
+    }
     if (hasGroupSizeGap) {
       const minimumGroupSize = decision.stockingGuidance?.recommendedMin;
       return {

@@ -220,6 +220,65 @@ const groupMinimumMet = evaluateCompatibility({
 assert.equal(groupMinimumMet.status, 'compatible');
 assert.ok(!groupMinimumMet.ruleCodes.includes('minimum_group_not_met'));
 
+const finNippingGroupPressure = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [],
+  candidateSpecies: { ...base, id: 'reviewed-fin-nipper', minimumGroupSize: 8, socialMode: 'group', finNippingRisk: 'medium' },
+  candidateQuantity: 4,
+});
+assert.equal(finNippingGroupPressure.status, 'caution');
+assert.ok(finNippingGroupPressure.ruleCodes.includes('minimum_group_not_met'));
+assert.ok(finNippingGroupPressure.ruleCodes.includes('fin_nipping_group_pressure'));
+
+const finNippingGroupManaged = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [],
+  candidateSpecies: { ...base, id: 'reviewed-fin-nipper-managed', minimumGroupSize: 8, socialMode: 'group', finNippingRisk: 'medium' },
+  candidateQuantity: 8,
+});
+assert.equal(finNippingGroupManaged.status, 'compatible');
+assert.ok(!finNippingGroupManaged.ruleCodes.includes('fin_nipping_group_pressure'));
+
+const existingFinNippingGroupPressure = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'existing-fin-nipper', minimumGroupSize: 8, socialMode: 'group', finNippingRisk: 'high' }],
+  existingQuantities: { 'existing-fin-nipper': 4 },
+  candidateSpecies: { ...base, id: 'calm-candidate' },
+  candidateQuantity: 1,
+});
+assert.equal(existingFinNippingGroupPressure.status, 'caution');
+assert.ok(existingFinNippingGroupPressure.ruleCodes.includes('fin_nipping_group_pressure'));
+
+const unknownExistingFinNippingQuantityDoesNotInventOne = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'existing-fin-nipper-unknown', minimumGroupSize: 8, socialMode: 'group', finNippingRisk: 'high' }],
+  candidateSpecies: { ...base, id: 'calm-candidate-2' },
+  candidateQuantity: 1,
+});
+assert.ok(!unknownExistingFinNippingQuantityDoesNotInventOne.ruleCodes.includes('fin_nipping_group_pressure'));
+
+const structuredTerritoriality = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'territorial-structured-a', territoriality: 'medium' }],
+  candidateSpecies: { ...base, id: 'territorial-structured-b', territoriality: 'high' },
+});
+assert.equal(structuredTerritoriality.status, 'caution');
+assert.ok(structuredTerritoriality.ruleCodes.includes('territorial_conflict'));
+
+const structuredPredation = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'structured-predator', size: 'Large', predationRisk: 'high' }],
+  candidateSpecies: { ...base, id: 'structured-prey', size: 'Small' },
+});
+assert.equal(structuredPredation.status, 'not_recommended');
+assert.ok(structuredPredation.ruleCodes.includes('predation_risk'));
+
 const miniParrot = {
   ...base,
   id: 'sp_0021',

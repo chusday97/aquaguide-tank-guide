@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { buildCompatibilityVisualResult, buildDiagnosisVisualResult, mapFitStatus } from '../src/components/visual-results/visual-result.adapters';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { buildBeginnerCompatibilityAction } from '../src/services/compatibility/compatibility-action.service';
@@ -107,6 +108,22 @@ const softCapacityAction = buildBeginnerCompatibilityAction(actionDecision(
 assert.equal(softCapacityAction.headline, '可以尝试，但别一次加太多');
 assert.ok(softCapacityAction.immediateAction.includes('不要只因为低于一个参考水体值就立刻换缸'));
 assert.ok(softCapacityAction.observeAfterAction?.includes('3–7 天'));
+
+const finNippingGroupAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['minimum_group_not_met', 'fin_nipping_group_pressure'],
+  { warningRules: [makeRule('fin_nipping_group_pressure', '群体不足会放大追鳍压力。')] },
+));
+assert.equal(finNippingGroupAction.headline, '先把群体数量补够，再混养');
+assert.ok(finNippingGroupAction.immediateAction.includes('不是“少养几条更安全”'));
+assert.ok(finNippingGroupAction.observeAfterAction?.includes('破鳍'));
+
+const compatibilityCalculatorSource = readFileSync('src/components/CompatibilityRiskCalculator.tsx', 'utf8');
+assert.equal(
+  /currentAction\s*:\s*getResultNextAction/.test(compatibilityCalculatorSource),
+  false,
+  'Compatibility page must not overwrite the Beginner Action Layer with a generic status action',
+);
 
 const groupSizeAction = buildBeginnerCompatibilityAction({
   ...actionDecision(

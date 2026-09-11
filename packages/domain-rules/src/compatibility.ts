@@ -6,6 +6,7 @@ export type CompatibilityIntent = 'record_existing' | 'planned_addition';
 export type CompatibilityDecisionReadiness = 'reviewed' | 'partial' | 'unknown';
 export type ObservedCoexistenceStatus = 'stable' | 'observe' | 'intervene' | 'emergency';
 export type CompatibilityRequiredFact = 'water' | 'temperature' | 'ph' | 'adult_size' | 'tank_size' | 'social_behavior' | 'territoriality' | 'predation' | 'breeding_behavior';
+export type BehaviorRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
 
 export type CompatibilityIndividualContext = {
   lifeStage: 'unknown' | 'juvenile' | 'adult' | 'fry' | 'subadult';
@@ -57,6 +58,9 @@ export type DomainSpeciesFact = {
   evidenceIds?: string[];
   loadMultiplier?: number;
   behaviorTraits?: string[];
+  territoriality?: BehaviorRiskLevel;
+  finNippingRisk?: BehaviorRiskLevel;
+  predationRisk?: BehaviorRiskLevel;
   size?: 'Small' | 'Medium' | 'Large' | string;
 };
 
@@ -94,7 +98,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v2-soft-capacity';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v3-contextual-behavior';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -200,9 +204,9 @@ export const evaluateCompatibility = ({
         raise('not_recommended', 'water_type_conflict');
       }
       if (!existing.reviewed || !candidateSpecies.reviewed) raise('insufficient_data', 'species_evidence_unreviewed');
-      const predator = existing.behaviorTraits?.includes('predatory')
+      const predator = existing.behaviorTraits?.includes('predatory') || existing.predationRisk === 'high'
         ? existing
-        : candidateSpecies.behaviorTraits?.includes('predatory') ? candidateSpecies : null;
+        : candidateSpecies.behaviorTraits?.includes('predatory') || candidateSpecies.predationRisk === 'high' ? candidateSpecies : null;
       const preyIsCandidate = predator?.id !== candidateSpecies.id;
       if (predator && (preyIsCandidate ? candidateSpecies.size : existing.size) === 'Small') {
         const preyContext = preyIsCandidate
@@ -217,7 +221,13 @@ export const evaluateCompatibility = ({
           && preyContext.averageLengthCm < predator.adultLengthMaxCm * 0.4;
         raise(currentSizeClearlyBelowAdultRisk ? 'caution' : 'not_recommended', currentSizeClearlyBelowAdultRisk ? 'juvenile_predation_risk' : 'predation_risk');
       }
-      if (existing.behaviorTraits?.includes('territorial') && candidateSpecies.behaviorTraits?.includes('territorial')) {
+      const existingTerritorial = existing.behaviorTraits?.includes('territorial')
+        || existing.territoriality === 'medium'
+        || existing.territoriality === 'high';
+      const candidateTerritorial = candidateSpecies.behaviorTraits?.includes('territorial')
+        || candidateSpecies.territoriality === 'medium'
+        || candidateSpecies.territoriality === 'high';
+      if (existingTerritorial && candidateTerritorial) {
         raise('caution', 'territorial_conflict');
       }
       if (existing.behaviorTraits?.includes('solitary_required') || candidateSpecies.behaviorTraits?.includes('solitary_required')) {
@@ -286,6 +296,30 @@ export const evaluateCompatibility = ({
     if (plannedTotal < candidateSpecies.minimumGroupSize) {
       raise('caution', 'minimum_group_not_met');
     }
+  }
+
+  const plannedQuantityFor = (species: DomainSpeciesFact) => {
+    const existingQuantity = existingQuantities?.[species.id];
+    if (candidateSpecies?.id === species.id) return (existingQuantity ?? 0) + (candidateQuantity || 1);
+    return existingQuantity ?? null;
+  };
+  const hasManagedFinNippingRisk = (species: DomainSpeciesFact) => (
+    species.behaviorTraits?.includes('fin_nipping')
+    || species.finNippingRisk === 'medium'
+    || species.finNippingRisk === 'high'
+  );
+  const behaviorGroupSpecies = [
+    ...existingSpecies,
+    ...(candidateSpecies && !existingSpecies.some(species => species.id === candidateSpecies.id) ? [candidateSpecies] : []),
+  ];
+  if (behaviorGroupSpecies.some(species => (
+    hasManagedFinNippingRisk(species)
+    && species.minimumGroupSize != null
+    && species.minimumGroupSize > 1
+    && plannedQuantityFor(species) != null
+    && plannedQuantityFor(species)! < species.minimumGroupSize
+  ))) {
+    raise('caution', 'fin_nipping_group_pressure');
   }
 
   if (explicitPairStatus) raise(explicitPairStatus, 'reviewed_pair_rule');

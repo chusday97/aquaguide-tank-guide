@@ -56,7 +56,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish(),
       });
       return result.metadata.catalogVersion === 'local-fish-data-v1'
-        && result.metadata.ruleVersion === 'compatibility-domain-v2-soft-capacity'
+        && result.metadata.ruleVersion === 'compatibility-domain-v3-contextual-behavior'
         && result.metadata.domainRuleCodes.length > 0
         && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
     },
@@ -341,6 +341,48 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         && result.stockingGuidance?.recommendedMin === 8
         && result.warningRules.some(rule => rule.code === 'group_requirement_gap' && rule.evidence.includes('8'))
         && result.metadata.domainRuleCodes.includes('minimum_group_not_met');
+    },
+  },
+  {
+    name: 'tiger barb under-grouped plan surfaces fin-nipping group pressure without hard block',
+    run: () => {
+      const tigerBarb = makeFish({
+        id: 'sp_0439',
+        name: '虎皮鱼',
+        scientificName: 'Puntigrus tetrazona',
+        tankSize: '至少 72 升',
+        size: 'Small',
+      });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' } }),
+        candidateSpecies: tigerBarb,
+        candidateQuantity: 4,
+      });
+      return result.status === 'caution'
+        && result.metadata.domainRuleCodes.includes('fin_nipping_group_pressure')
+        && result.metadata.domainRuleCodes.includes('minimum_group_not_met')
+        && result.warningRules.some(rule => rule.code === 'fin_nipping_group_pressure')
+        && result.blockingRules.every(rule => rule.code !== 'fin_nipping_group_pressure');
+    },
+  },
+  {
+    name: 'tiger barb reviewed group size removes fin-nipping group-pressure warning',
+    run: () => {
+      const tigerBarb = makeFish({
+        id: 'sp_0439',
+        name: '虎皮鱼',
+        scientificName: 'Puntigrus tetrazona',
+        tankSize: '至少 72 升',
+        size: 'Small',
+      });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' } }),
+        candidateSpecies: tigerBarb,
+        candidateQuantity: 8,
+      });
+      return result.status !== 'not_recommended'
+        && !result.metadata.domainRuleCodes.includes('fin_nipping_group_pressure')
+        && result.warningRules.every(rule => rule.code !== 'fin_nipping_group_pressure');
     },
   },
   {

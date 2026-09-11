@@ -7,7 +7,7 @@ Draft PR: #149
 
 ## Branch authority
 - `product-recovery-20260911` is the only active Aqua product recovery branch for this effort.
-- Latest measured relation to `main` before this status commit: ahead 19 / behind 0.
+- Latest measured relation to `main` before this status commit: ahead 24 / behind 0.
 - Merge base is exactly the current main base commit above.
 - `feature/admin-content-v0` remains reference-only. Do not merge/rebase it wholesale.
 
@@ -32,6 +32,9 @@ Draft PR: #149
 - Stability context cannot override water-type, temperature, predation, single-housing or observed emergency hard blocks.
 - Compatibility calculator now exposes one optional beginner question for real tank stability; confirmation is scoped per tank and is not persisted back into the aquarium record.
 - Selecting “stable” only supplies the guarded stability context used by soft capacity/load screening; “not sure” leaves the original tank facts untouched.
+- Compatibility rule authority advanced to `compatibility-domain-v3-contextual-behavior`; reviewed territoriality, fin-nipping and predation risk can now flow from Species V2 into Domain Rules while old behavior traits remain fallback-only.
+- Under-grouped reviewed fin-nippers now raise `fin_nipping_group_pressure` as a caution, not a hard block; the beginner action explicitly says to fix the same-species group before adding other fish.
+- CompatibilityRiskCalculator no longer overwrites the Beginner Action Layer with a generic status action; the specialized immediate action is the user-facing source of truth.
 
 ### P1 — Species Knowledge V2 contract checkpoint
 - Added field-level evidence contract.
@@ -49,6 +52,8 @@ Draft PR: #149
 - Species Detail space labels now use reviewed V2 space authority when available, preventing old `fish.tankSize` copy from disagreeing with the compatibility engine.
 - Reviewed reproduction and social/group blocks now render as additional disclosures inside the existing Species Detail hierarchy; unreviewed species get no fabricated empty sections.
 - Reproduction/social disclosures carry the same traceable reviewed-source links as sex-identification claims.
+- Second reviewed schooling cohort added: `sp_0434` 白云金丝, `sp_0435` 斑马鱼, `sp_0439` 虎皮鱼, including sexing, reproduction, social structure and reviewed space authority.
+- White-cloud V2 minimum group size 10 overrides the old 5-fish compatibility fallback; zebrafish now has independent reviewed compatibility authority rather than relying only on the Oscar pair rule.
 
 ## Validation status
 - Main Convergence foundation workflow on the latest pre-golden-case checkpoint: PASS through project truth, catalog, domain compatibility, legacy compatibility, lint, API and production build.
@@ -63,12 +68,15 @@ Draft PR: #149
 - Species Detail reproduction/social disclosure checkpoint: species-knowledge assertions PASS, TypeScript PASS, production build PASS.
 - Browser Golden Path contract + GP001/GP002/GP003/GP004: PASS on production preview after aligning the shoaling fixture to the reviewed 8-fish minimum. Re-ran all four UI paths after reviewed space authority wiring: PASS.
 - GP002 now asserts the real recordable action instead of brittle status copy and persists 8 cardinal tetras; existing 6 neon tetras remain unchanged.
+- Contextual behavior regression suite PASS: structured territoriality/predation, tiger-barb 4-vs-8 group behavior, unknown existing quantity non-inference, domain/facade/visual action/lint/build all PASS.
+- Product-action audit PASS after removing the generic `currentAction` override.
+- GP001/GP002/GP003/GP004 re-run after contextual behavior + Beginner Action wiring: all PASS.
 - Local preview verified HTTP 200 at `http://127.0.0.1:4320/`; production preview verified at `http://127.0.0.1:4173/`.
 - Do not merge until the latest current-head workflows are green.
 
 ## Next execution order
-1. Run browser-level golden paths against the recovery head and fix regressions before widening scope.
-2. Expand the reviewed cohort incrementally; do not mass-fill unknown fields.
-3. Add reviewed adult-size / space fields for the next cohort and wire them through the same V2-first authority path.
-4. Add browser-level coverage for the optional stability confirmation and minimum-group-size action.
-5. Continue browser-level golden-path validation before any merge to main.
+1. Add focused browser coverage for the Beginner Action Layer so group-pressure and stability-context actions are asserted in rendered UI, not only service tests.
+2. Model target vulnerability (for example long fins / slow-moving targets) before allowing fin-nipping evidence to create pair-specific warnings; do not infer vulnerability from names.
+3. Expand the reviewed cohort incrementally with high-frequency species; keep V2 data + compatibility authority in the same checkpoint.
+4. Continue replacing coarse capacity heuristics with reviewed adult size, tank length, activity and later filtration/flow facts; keep volume guidance soft unless it is a true physical constraint.
+5. Continue full Golden Path validation before any merge to main.

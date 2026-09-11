@@ -227,14 +227,6 @@ const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reaso
   return isEn ? 'Compatible for co-habitation; keep observing after stocking.' : '可以尝试混养，入缸后继续观察。';
 };
 
-const getResultNextAction = (level: CompatibilityRiskLevel) => {
-  const isEn = Boolean(i18n.language?.startsWith('en'));
-    if (level === 'not_recommended') return isEn ? 'Remove red-flagged species below and recalculate.' : '先移除下方红色对象，再重新计算组合。';
-  if (level === 'insufficient_data') return isEn ? 'Save this mix to your wishlist and revisit when the review is complete.' : '先加入种草清单，资料完善后再回来判断。';
-  if (level === 'caution') return isEn ? 'Review the warnings. Record only after the livestock is actually in the tank.' : '先确认风险；只有生物实际入缸后再记录。';
-  if (level === 'compatible') return isEn ? 'The plan is compatible. Record it only after the livestock is actually in the tank.' : '规划判断通过；只有生物实际入缸后再记录。';
-  return isEn ? 'Select at least 2 species first.' : '先选择至少 2 种生物。';
-};
 
 const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
@@ -691,14 +683,11 @@ export function CompatibilityRiskCalculator({
   }, [result.ruleResult]);
   const visualResultModel = useMemo(() => {
     if (!result.decision) return null;
-    return {
-      ...buildCompatibilityVisualResult({
-        decision: result.decision,
-        species: selectedSpecies,
-        primaryActionLabel: getPrimaryResultButtonLabel(result.level),
-      }),
-      currentAction: getResultNextAction(result.level),
-    };
+    return buildCompatibilityVisualResult({
+      decision: result.decision,
+      species: selectedSpecies,
+      primaryActionLabel: getPrimaryResultButtonLabel(result.level),
+    });
   }, [result.decision, result.level, selectedSpecies]);
   const compatibilityPresentation = useMemo(
     () => result.decision ? getCompatibilityPresentation(result.decision) : null,
