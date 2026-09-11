@@ -142,6 +142,7 @@ const speciesDto = (record: AdminSpeciesRecord, input: SpeciesAdminInput, assets
   waterChangeCycleDays: input.waterChangeCycleDays, description: input.description, diet: input.diet,
   tankSizeText: input.tankSizeText, minTankLiters: input.minTankLiters, temperament: input.temperament,
   sizeClass: input.sizeClass, housingMode: input.housingMode, housingReason: input.housingReason,
+  waterType: 'unknown', completeness: 'unknown', evidence: [],
   assets, updatedAt: now(), localization,
 });
 

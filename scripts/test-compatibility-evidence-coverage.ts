@@ -89,6 +89,19 @@ assert.ok(tetraPair, 'reviewed 红绿灯 → 宝莲灯 pair must exist in the ca
 assert.equal(tetraPair.status, 'caution', 'explicitly reviewed 红绿灯 → 宝莲灯 pair must stay caution, not absolute compatible or blocked');
 assert.equal(tetraPair.blockingRules.some(item => item.code === 'predation_risk'), false, 'peaceful small tetra pair must not regress into a predation block');
 
+const neonWithoutWater = { ...commonSpecies.find(fish => fish.id === 'sp_0431')!, waterType: 'unknown' as const };
+const cardinalWithoutWater = { ...commonSpecies.find(fish => fish.id === 'sp_0432')!, waterType: 'unknown' as const };
+const unknownWaterPair = evaluateCompatibilityDecision({
+  tank,
+  items: [
+    { species: neonWithoutWater, quantity: 6, origin: 'existing' },
+    { species: cardinalWithoutWater, quantity: 6, origin: 'candidate' },
+  ],
+}).pairResults[0];
+assert.ok(unknownWaterPair, 'the reviewed pair must still be testable when explicit water facts are removed');
+assert.equal(unknownWaterPair.status, 'insufficient_data', 'missing explicit water type must remain fail-closed even for a reviewed pair');
+assert.ok(unknownWaterPair.rawResult.missingData.some(item => item.code === 'water_type_unknown' || item.code === 'candidate_water_type_missing'), 'missing explicit water type must be visible in evidence');
+
 const guppyNeon = rows.find(row => row.existingId === 'sp_0436' && row.candidateId === 'sp_0431');
 assert.ok(guppyNeon, 'reviewed guppy and neon profiles must be present in the priority matrix');
 assert.equal(guppyNeon.status, 'insufficient_data', 'reviewed species profiles without a reviewed pair rule must not become recordable by absence-of-risk inference');

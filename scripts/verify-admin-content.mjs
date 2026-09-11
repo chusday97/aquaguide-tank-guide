@@ -90,7 +90,13 @@ const createCompatibilityBootstrap = () => ({
   profiles: compatibilityAudit.reviewedProfiles.map(profile => ({
     catalogKey: profile.speciesId, behaviorTraits: [...profile.behaviorTraits], minimumGroupSize: profile.minimumGroupSize,
     predationTargets: [...profile.predationTargets], confidence: profile.confidence, reviewStatus: 'reviewed',
-    citations: profile.citations.map(toRuntimeCitation), version: 1,
+    citations: profile.citations.map(toRuntimeCitation), requiredFacts: [...(profile.requiredFacts || [])],
+    ...(profile.stockingGuidance ? { stockingGuidance: { ...profile.stockingGuidance, constraints: [...profile.stockingGuidance.constraints], evidenceIds: [...profile.stockingGuidance.evidenceIds] } } : {}),
+    stageRiskRules: compatibilityAudit.reviewedStageRiskProfiles.filter(rule => rule.speciesId === profile.speciesId).map(rule => ({
+      ruleKey: `${rule.speciesId}:${rule.riskType}`, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages],
+      verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation], basis: rule.basis,
+      confidence: rule.confidence, reviewStatus: 'reviewed', citations: rule.citations.map(toRuntimeCitation),
+    })), version: 1,
   })),
   pairRules: compatibilityAudit.reviewedPairRules.map(rule => ({
     catalogKeys: [...rule.speciesIds].sort(), verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason,
@@ -139,7 +145,7 @@ try {
       const body = request.postDataJSON();
       if (method === 'POST' && url.pathname.endsWith('/submit')) {
         const current = compatibilityRevisions[0];
-        compatibilityRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'profile', baselineVersion: 1, changedFields: ['behavior_traits', 'minimum_group_size'], changes: [] }, impactCheckedAt: new Date().toISOString(), evidenceResolution: current.citationSnapshots.map(source => ({ sourceKey: source.sourceKey, sourceId: sourceIdFor(source.sourceKey), version: 1 })), regressionReport: { kind: 'profile', targetKey: current.species.catalogKey, baselineVersion: 1, authoritySequence, evaluatedScenarios: 18, changedScenarios: 1, generatedAt: new Date().toISOString(), changes: [{ scenario: 'species_only', species: [current.species.catalogKey, 'sp_0021'], before: { status: 'caution', riskLevel: 'medium', blocking: [], warning: ['before'], missing: [] }, after: { status: 'not_recommended', riskLevel: 'high', blocking: ['after'], warning: [], missing: [] } }] } }];
+        compatibilityRevisions = [{ ...current, status: 'pending_review', version: current.version + 1, impactReport: { kind: 'profile', baselineVersion: 1, changedFields: ['behavior_traits', 'minimum_group_size'], changes: [] }, impactCheckedAt: new Date().toISOString(), evidenceResolution: current.citationSnapshots.map(source => ({ sourceKey: source.sourceKey, sourceId: sourceIdFor(source.sourceKey), version: 1 })), stageRiskEvidenceResolution: Object.fromEntries((current.stageRiskRules || []).map(rule => [rule.ruleKey, rule.citations.map(source => ({ sourceKey: source.sourceKey, sourceId: sourceIdFor(source.sourceKey), version: 1 }))])), regressionReport: { kind: 'profile', targetKey: current.species.catalogKey, baselineVersion: 1, authoritySequence, evaluatedScenarios: 19, changedScenarios: 1, generatedAt: new Date().toISOString(), changes: [{ scenario: 'species_only', species: [current.species.catalogKey, 'sp_0021'], before: { status: 'caution', riskLevel: 'medium', blocking: [], warning: ['before'], missing: [] }, after: { status: 'not_recommended', riskLevel: 'high', blocking: ['after'], warning: [], missing: [] } }] } }];
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-submit' }) });
         return;
       }
@@ -157,7 +163,10 @@ try {
           ...compatibilityBootstrap,
           profiles: compatibilityBootstrap.profiles.map(profile => profile.catalogKey === current.species.catalogKey ? {
             ...profile, behaviorTraits: [...current.behaviorTraits], minimumGroupSize: current.minimumGroupSize,
-            predationTargets: [...current.predationTargets], confidence: current.confidence, version: profile.version + 1,
+            predationTargets: [...current.predationTargets], confidence: current.confidence, requiredFacts: [...current.requiredFacts],
+            ...(current.stockingGuidance ? { stockingGuidance: { ...current.stockingGuidance } } : { stockingGuidance: undefined }),
+            stageRiskRules: (current.stageRiskRules || []).map(rule => ({ ...rule, reviewStatus: 'reviewed', citations: rule.citations.map(source => ({ id: source.sourceKey, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: 'reviewed', version: 1 })) })),
+            version: profile.version + 1,
           } : profile),
         };
         await route.fulfill({ status: 200, contentType: 'application/json', body: JSON.stringify({ data: compatibilityRevisions[0], requestId: 'test-compat-publish' }) });
@@ -165,7 +174,7 @@ try {
       }
       if (method === 'POST') {
         const fish = fishDataForTest(body.catalogKey);
-        const created = { id: 'de1732a3-27d0-4820-986c-2e932990f573', speciesId: 'fe1732a3-27d0-4820-986c-2e932990f574', revisionNumber: 1, baseProfileVersion: 1, behaviorTraits: body.behaviorTraits, minimumGroupSize: body.minimumGroupSize, predationTargets: body.predationTargets, confidence: body.confidence, status: 'draft', citationSnapshots: body.citations, version: 1, species: fish };
+        const created = { id: 'de1732a3-27d0-4820-986c-2e932990f573', speciesId: 'fe1732a3-27d0-4820-986c-2e932990f574', revisionNumber: 1, baseProfileVersion: 1, behaviorTraits: body.behaviorTraits, minimumGroupSize: body.minimumGroupSize, predationTargets: body.predationTargets, confidence: body.confidence, requiredFacts: body.requiredFacts, stockingGuidance: body.stockingGuidance, stageRiskRules: body.stageRiskRules || [], stageRiskEvidenceResolution: {}, status: 'draft', citationSnapshots: body.citations, version: 1, species: fish };
         compatibilityRevisions = [created];
         await route.fulfill({ status: 201, contentType: 'application/json', body: JSON.stringify({ data: created, requestId: 'test-compat-create' }) });
         return;
@@ -458,7 +467,7 @@ try {
     await draftEditor.getByTestId('profile-impact-report').waitFor();
     assert.match(await draftEditor.getByTestId('profile-impact-report').innerText(), /behavior_traits[\s\S]*minimum_group_size/);
     await draftEditor.getByTestId('profile-regression-report').waitFor();
-    assert.match(await draftEditor.getByTestId('profile-regression-report').innerText(), /18 个场景[\s\S]*结果变化 1 个[\s\S]*caution → not_recommended/);
+    assert.match(await draftEditor.getByTestId('profile-regression-report').innerText(), /19 个场景[\s\S]*结果变化 1 个[\s\S]*caution → not_recommended/);
     await draftEditor.getByRole('button', { name: '批准 revision（不发布）' }).click();
     await page.getByText('Profile revision 已批准；尚未发布', { exact: true }).waitFor();
     await draftEditor.getByText('已批准', { exact: true }).waitFor();

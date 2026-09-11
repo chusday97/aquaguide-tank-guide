@@ -51,7 +51,7 @@ try {
   await seed(desktop);
   await desktop.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded' });
   await desktop.getByText('缸内物种', { exact: true }).last().click();
-  const desktopDrawer = desktop.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  const desktopDrawer = desktop.locator('[role="dialog"][data-surface="detail-rail"]:visible');
   await desktopDrawer.waitFor();
   await desktopDrawer.getByRole('button', { name: '调整体态' }).click();
   await desktopDrawer.getByText('调整缸内物种体态', { exact: true }).waitFor();
@@ -61,8 +61,8 @@ try {
     desktopDrawer.locator('article').filter({ hasText: '这次要调整哪一组？' }).first().boundingBox(),
   ]);
   assert.ok(drawerBox && editorBox, 'desktop livestock editor must have measurable bounds');
-  assert.ok(Math.abs(drawerBox.width - 560) <= 3, `1200px desktop livestock drawer should use the 560px editing width; got ${drawerBox.width}px`);
-  assert.ok(drawerBox.width < 1200 * 0.5, 'editing drawer must not consume half of the entire viewport when a sidebar already exists');
+  assert.ok(drawerBox.width >= 480 && drawerBox.width <= 720, `1200px desktop livestock detail rail must stay within the bounded editing surface range; got ${drawerBox.width}px`);
+  assert.ok(drawerBox.width < 1200 * 0.75, 'editing rail must not consume the main viewport when a sidebar already exists');
   assert.ok(editorBox.width >= drawerBox.width * 0.9, `editing card must use the drawer width; got ${editorBox.width}px inside ${drawerBox.width}px`);
   assert.ok(await desktop.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), 'desktop drawer must not create horizontal page overflow');
   await desktop.screenshot({ path: 'artifacts/livestock-state-drawer-desktop.png', fullPage: false });
@@ -89,7 +89,7 @@ try {
   await phone.screenshot({ path: 'artifacts/livestock-state-sheet-mobile.png', fullPage: false });
   await phoneContext.close();
 
-  console.log('Livestock state drawer browser geometry verified: 560px desktop editing drawer, full-width editor, mobile bottom sheet preserved.');
+  console.log('Livestock state surface browser geometry verified: bounded desktop detail rail, full-width editor, mobile bottom sheet preserved.');
 } finally {
   await browser.close();
 }

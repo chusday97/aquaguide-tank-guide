@@ -1,69 +1,510 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { AlertTriangle, CheckCircle2, ChevronRight, Info, Loader2, Search, Sparkles, X } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ChevronDown, ChevronRight, Loader2, Search, X } from 'lucide-react';
 import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import type { Aquarium, Fish } from '../types';
 import { fishData } from '../data/fishData';
 import i18n from '../i18n';
-import { englishTranslations } from '../i18n/localizeData';
+import { getLocalizedAquariumName, englishTranslations } from '../i18n/localizeData';
 import { autoTranslations } from '../i18n/localizeDataAuto';
+
+const getSpeciesNameLocalized = (species: any, isEn = false): string => {
+  if (!species) return '';
+  if (!isEn) return species.name || '';
+  if (species.scientificName) return species.scientificName;
+  const id = species.id || '';
+  if (autoTranslations[id]?.name) return autoTranslations[id].name;
+  if (englishTranslations[id]?.name) return englishTranslations[id].name;
+  return species.name || '';
+};
+
+const getSubstrateLocalized = (val: string | undefined, isEn = false): string => {
+  if (!val) return isEn ? 'None' : '无';
+  if (!isEn) return val;
+  const map: Record<string, string> = {
+    '河沙': 'River Sand',
+    '溪流砂': 'Stream Sand',
+    '化妆砂': 'Cosmetic Sand',
+    '水草泥': 'Aqua Soil',
+    '黑金沙': 'Black Quartz Sand',
+    '陶粒': 'Ceramsite Substrate',
+    '碎石': 'Gravel Pebbles',
+    '鹅卵石': 'Smooth Cobblestone',
+    '珊瑚砂': 'Coral Sand',
+    '无': 'None',
+  };
+  return map[val] || val;
+};
+
+const getFilterLocalized = (val: string | undefined, isEn = false): string => {
+  if (!val) return isEn ? 'None' : '无';
+  if (!isEn) return val;
+  const map: Record<string, string> = {
+    '瀑布过滤': 'Hang-on-Back Filter',
+    '桶滤': 'Canister Filter',
+    '上滤': 'Top Filter',
+    '海绵过滤': 'Sponge Filter',
+    '无': 'None',
+  };
+  return map[val] || val;
+};
+
+const getLightLocalized = (val: string | undefined, isEn = false): string => {
+  if (!val) return isEn ? 'None' : '无';
+  if (!isEn) return val;
+  const map: Record<string, string> = {
+    '普通灯': 'Standard LED Light',
+    '水草灯': 'Planted Spectrum Light',
+    '海水灯': 'Reef Coral Light',
+    '无': 'None',
+  };
+  return map[val] || val;
+};
+
+const getTemperamentLocalized = (val: string | undefined, isEn = false): string => {
+  if (!val) return isEn ? 'Peaceful' : '温和';
+  if (!isEn) return val;
+  const map: Record<string, string> = {
+    '温和': 'Peaceful',
+    '有领地意识': 'Territorial',
+    '具攻击性': 'Aggressive',
+    '谨慎': 'Cautious',
+  };
+  return map[val] || val;
+};
+
+const getHousingModeLocalized = (val: string | undefined, isEn = false): string => {
+  if (!val) return isEn ? 'Compatible' : '适合混养';
+  if (!isEn) return val;
+  const map: Record<string, string> = {
+    '适合混养': 'Compatible',
+    '谨慎混养': 'Caution Mix',
+    '建议单养': 'Single Specimen',
+  };
+  return map[val] || val;
+};
+
+const getCareLevelLocalized = (val: string | undefined, isEn = false): string => {
+  if (!val) return isEn ? 'Easy' : '简单';
+  if (!isEn) return val;
+  const map: Record<string, string> = {
+    '简单': 'Easy',
+    '中等': 'Moderate',
+    '困难': 'Advanced',
+  };
+  return map[val] || val;
+};
+
+import type { Aquarium, Fish } from '../types';
 import { getCareTaxonomyPath, getLifeType } from '../modules/species/species.service';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { getAquariumVolumeLiters, getCurrentLivestockForAquarium } from '../lib/speciesFitEngine';
+import { getTankCompatibilityAddPolicy, type TankCompatibilityResult, type TankCompatibilityStatus } from '../lib/tankCompatibilityEngine';
 import { evaluateCompatibilityDecision, type CompatibilityItem } from '../modules/knowledge/compatibilityKnowledge';
-import type { PairCompatibilityResult } from '../modules/knowledge/knowledge.types';
-import type { TankCompatibilityStatus } from '../lib/tankCompatibilityEngine';
-import { generateRiskExplanation, type RiskExplanationData } from '../lib/aiClient';
-import { getAquariumAiReadiness } from '../services/aquarium/aquarium-setup.service';
+import type { CompatibilityDecision } from '../modules/knowledge/knowledge.types';
+import { VisualResultCard } from './visual-results/VisualResultCard';
+import { buildCompatibilityVisualResult } from './visual-results/visual-result.adapters';
 import { recordTankCompatibility } from '../services/compatibility/compatibility-records.service';
 import { trackSessionEvent } from '../services/analytics/session-events.service';
+import { getCompatibilityPreviewSpecies } from '../services/compatibility/compatibility-preview.service';
+import { addSpeciesFavorite } from '../services/favorites/favorites.service';
+import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 
-const getSpeciesName = (species: Fish, isEn: boolean) => {
-  if (!isEn) return species.name;
-  if (species.scientificName) return species.scientificName;
-  return autoTranslations[species.id]?.name || englishTranslations[species.id]?.name || species.name;
+const getDisplayImage = getSpeciesDisplayImage;
+
+const isCompatibilityLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
+
+type CompatibilityRiskLevel = 'empty' | TankCompatibilityStatus;
+type ResultModal = null | 'adjustment';
+type SelectedCompatibilityItem = { species: Fish; quantity: number };
+type MainConflict = {
+  key: string;
+  pair: string;
+  reason: string;
+  reasons: string[];
+};
+type SpeciesActionGroup = {
+  keep: Fish[];
+  remove: Fish[];
+  existing: Fish[];
 };
 
-const isLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
-
-const statusRank: Record<TankCompatibilityStatus, number> = {
-  compatible: 0,
-  caution: 1,
-  insufficient_data: 2,
-  not_recommended: 3,
+const parseNumericRange = (value: string) => {
+  const normalized = value.replace(/－/g, '-').replace(/~|～|至|到/g, '-');
+  const matches = normalized.match(/\d+(?:\.\d+)?/g);
+  if (!matches || matches.length === 0) return null;
+  const numbers = matches.map(Number);
+  if (numbers.length === 1) return { min: numbers[0], max: numbers[0] };
+  return { min: Math.min(numbers[0], numbers[1]), max: Math.max(numbers[0], numbers[1]) };
 };
 
-const statusMeta = (status: TankCompatibilityStatus, isEn: boolean) => {
-  if (status === 'not_recommended') return {
-    label: isEn ? 'Not recommended' : '不建议混养',
-    description: isEn ? 'This combination has a clear conflict and is not recommended.' : '存在明确冲突，不建议一起养。',
-    box: 'border-red-200 bg-red-50',
-    text: 'text-red-800',
-    icon: <AlertTriangle className="h-5 w-5" />,
-  };
-  if (status === 'caution') return {
-    label: isEn ? 'Conditional' : '有条件可尝试',
-    description: isEn ? 'This combination may work if the conditions below are met.' : '可以尝试，但需要满足以下条件。',
-    box: 'border-amber-200 bg-amber-50',
-    text: 'text-amber-800',
-    icon: <AlertTriangle className="h-5 w-5" />,
-  };
-  if (status === 'insufficient_data') return {
-    label: isEn ? 'More tank data needed' : '需要补充鱼缸信息',
-    description: isEn ? 'Complete the tank details before deciding whether these species can live together.' : '先补充鱼缸参数，再判断是否适合混养。',
-    box: 'border-sky-200 bg-sky-50',
-    text: 'text-sky-800',
-    icon: <Info className="h-5 w-5" />,
-  };
+const rangesOverlap = (a: ReturnType<typeof parseNumericRange>, b: ReturnType<typeof parseNumericRange>) => {
+  if (!a || !b) return true;
+  return Math.max(a.min, b.min) <= Math.min(a.max, b.max);
+};
+
+const getCompatibilityWaterType = (fish: Fish) => {
+  const taxonomy = getCareTaxonomyPath(fish);
+  const text = `${fish.category} ${taxonomy.waterType} ${taxonomy.variety}`;
+  if (text.includes('海水') || text.includes('珊瑚') || text.includes('海葵')) return 'Saltwater';
+  return 'Freshwater';
+};
+
+const getRiskMeta = (level: CompatibilityRiskLevel) => {
+  switch (level) {
+    case 'not_recommended':
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Avoid' : '不建议加入', tone: 'border-red-200 bg-red-50 text-red-600', iconTone: 'bg-red-500 text-white' };
+    case 'caution':
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Caution' : '谨慎尝试', tone: 'border-amber-200 bg-amber-50 text-amber-700', iconTone: 'bg-amber-500 text-white' };
+    case 'insufficient_data':
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Confirmed Factors' : '当前可确认', tone: 'border-sky-200 bg-sky-50 text-sky-700', iconTone: 'bg-sky-500 text-white' };
+    case 'compatible':
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Compatible' : '适合', tone: 'border-emerald-200 bg-emerald-50 text-emerald-700', iconTone: 'bg-emerald-500 text-white' };
+    default:
+      return { label: Boolean(i18n.language?.startsWith('en')) ? 'Pending' : '待添加', tone: 'border-border bg-white text-ink/55', iconTone: 'bg-bg text-ink/45' };
+  }
+};
+
+const mapRulesToText = (rules: TankCompatibilityResult['blockingRules']) => rules.map(rule => rule.evidence || rule.title);
+
+const getQuantity = (value?: number) => {
+  const parsed = Number(value);
+  return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 1;
+};
+
+const calculateRisk = (items: SelectedCompatibilityItem[], tank?: Aquarium | null) => {
+  if (items.length === 0) {
+    return {
+      level: 'empty' as CompatibilityRiskLevel,
+      reasons: [],
+      nextSteps: [],
+      ruleResult: null as TankCompatibilityResult | null,
+      decision: null as CompatibilityDecision | null,
+    };
+  }
+
+  if (items.length === 1) {
+    return {
+      level: 'empty' as CompatibilityRiskLevel,
+      reasons: [],
+      nextSteps: [],
+      ruleResult: null as TankCompatibilityResult | null,
+      decision: null as CompatibilityDecision | null,
+    };
+  }
+
+  const decision = evaluateCompatibilityDecision({
+    tank,
+    items: items.map<CompatibilityItem>(item => ({
+      species: item.species,
+      quantity: item.quantity,
+      origin: 'candidate',
+    })),
+  });
+  const ruleResult = decision.aggregateResult;
+  const level: CompatibilityRiskLevel = ruleResult.status;
+  const reasons = [
+    ...mapRulesToText(ruleResult.blockingRules),
+    ...mapRulesToText(ruleResult.warningRules),
+    ...mapRulesToText(ruleResult.missingData),
+  ];
+
   return {
-    label: isEn ? 'Compatible' : '当前可混养',
-    description: isEn ? 'No obvious conflict was found. Add gradually and observe.' : '目前没有发现明显冲突，建议少量加入并观察。',
-    box: 'border-emerald-200 bg-emerald-50',
-    text: 'text-emerald-800',
-    icon: <CheckCircle2 className="h-5 w-5" />,
+    level,
+    reasons: level === 'compatible' ? [(Boolean(i18n.language?.startsWith('en')) ? 'No water quality, size or temperament conflicts found.' : '当前组合未发现明显水质、体型或性情冲突。')] : reasons.slice(0, 5),
+    nextSteps: ruleResult.suggestions,
+    ruleResult,
+    decision,
   };
 };
+
+const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reasons: string[]) => {
+  if (species.length < 2) return '';
+  const isEn = Boolean(i18n.language?.startsWith('en'));
+    if (level === 'not_recommended') return isEn ? 'Not recommended under current conditions; remove risks first.' : '当前条件下不建议加入，先移除阻断风险。';
+  if (level === 'insufficient_data') return isEn ? 'Some conditions are confirmed. Save this mix and revisit after more review.' : '当前可以确认部分条件，先加入种草清单，之后再回来判断。';
+  if (level === 'caution') return isEn ? 'Can attempt, but environment adjustments and close observation needed.' : '可以尝试，但需要调整环境并观察。';
+  return isEn ? 'Compatible for co-habitation; keep observing after stocking.' : '可以尝试混养，入缸后继续观察。';
+};
+
+const getResultNextAction = (level: CompatibilityRiskLevel) => {
+  const isEn = Boolean(i18n.language?.startsWith('en'));
+    if (level === 'not_recommended') return isEn ? 'Remove red-flagged species below and recalculate.' : '先移除下方红色对象，再重新计算组合。';
+  if (level === 'insufficient_data') return isEn ? 'Save this mix to your wishlist and revisit when the review is complete.' : '先加入种草清单，资料完善后再回来判断。';
+  if (level === 'caution') return isEn ? 'Review the warnings. Record only after the livestock is actually in the tank.' : '先确认风险；只有生物实际入缸后再记录。';
+  if (level === 'compatible') return isEn ? 'The plan is compatible. Record it only after the livestock is actually in the tank.' : '规划判断通过；只有生物实际入缸后再记录。';
+  return isEn ? 'Select at least 2 species first.' : '先选择至少 2 种生物。';
+};
+
+const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
+  const isEn = Boolean(i18n.language?.startsWith('en'));
+    if (level === 'not_recommended') return isEn ? 'Handle Red Flags First' : '先处理阻断对象';
+  if (level === 'insufficient_data') return isEn ? 'Review Confirmed Factors' : '查看当前可确认条件';
+  if (level === 'caution') return isEn ? 'Review Before Stocking' : '入缸前确认风险';
+  if (level === 'compatible') return isEn ? 'Plan Confirmed' : '规划判断完成';
+  return isEn ? 'Select Species First' : '先选择生物';
+};
+
+const getPrimaryResultButtonLabel = (level: CompatibilityRiskLevel) => {
+  const isEn = Boolean(i18n.language?.startsWith('en'));
+    if (level === 'compatible') return isEn ? 'Already stocked? Record now' : '已经实际入缸，记录下来';
+  if (level === 'not_recommended') return isEn ? 'Reselect Stocking Mix' : '重新选择组合';
+  if (level === 'insufficient_data') return isEn ? 'Save to Wishlist' : '加入种草清单';
+  if (level === 'caution') return isEn ? 'Review risks before recording' : '确认风险后再记录';
+  return isEn ? 'Continue Selecting' : '继续选择';
+};
+
+const getConflictTags = (species: Fish[], reasons: string[]) => {
+  if (species.length < 2) return [];
+  const tags = new Set<string>();
+  const isEn = Boolean(i18n.language?.startsWith('en'));
+  if (species.some(item => item.housingMode === '建议单养')) tags.add(isEn ? 'Single Species Recommended' : '建议单养');
+  if (new Set(species.map(getCompatibilityWaterType)).size > 1) tags.add(isEn ? 'Incompatible Water Type' : '水体不兼容');
+  reasons.forEach(reason => {
+    if (reason.includes('水温')) tags.add(isEn ? 'Water Temp' : '水温');
+    if (reason.includes('pH')) tags.add('pH');
+    if (reason.includes('体型') || reason.includes('大型') || reason.includes('小型')) tags.add(isEn ? 'Size' : '体型');
+    if (reason.includes('性情') || reason.includes('攻击') || reason.includes('领地')) tags.add(isEn ? 'Temperament' : '性情');
+    if (reason.includes('吞食') || reason.includes('捕食')) tags.add(isEn ? 'Predation Risk' : '捕食风险');
+    if (reason.includes('空间') || reason.includes('躲避')) tags.add(isEn ? 'Space Demand' : '空间需求');
+  });
+  return Array.from(tags).slice(0, 6);
+};
+
+const getMainConflicts = (result: ReturnType<typeof calculateRisk>, species: Fish[]): MainConflict[] => {
+  if (species.length < 2 || !result.ruleResult) return [];
+  if (result.decision?.pairResults.length) {
+    const grouped = new Map<string, MainConflict>();
+    const aggregateRules = [
+      ...result.ruleResult.blockingRules,
+      ...result.ruleResult.warningRules,
+      ...result.ruleResult.missingData,
+    ];
+    const aggregatePair = species.map(item => item.name).join(' × ');
+    aggregateRules.forEach((rule, index) => {
+      const reason = rule.evidence || rule.title;
+      const item = grouped.get(aggregatePair) || {
+        key: `aggregate-${index}`,
+        pair: aggregatePair,
+        reason,
+        reasons: [],
+      };
+      if (!item.reasons.includes(reason)) item.reasons.push(reason);
+      item.reason = item.reasons[0] || reason;
+      grouped.set(aggregatePair, item);
+    });
+    result.decision.pairResults
+      .filter(pair => pair.primaryReason || pair.secondaryReasons.length > 0)
+      .forEach((pair, index) => {
+        const pairName = `${pair.speciesA.name} × ${pair.speciesB.name}`;
+        const reasons = [
+          pair.primaryReason?.evidence,
+          ...pair.secondaryReasons.map(reason => reason.evidence),
+        ].filter((item): item is string => Boolean(item));
+        const item = grouped.get(pairName) || {
+          key: pair.pairId || `pair-${index}`,
+          pair: pairName,
+          reason: reasons[0] || '该组合需要进一步观察。',
+          reasons: [],
+        };
+        reasons.forEach(reason => {
+          if (!item.reasons.includes(reason)) item.reasons.push(reason);
+        });
+        item.reason = item.reasons[0] || item.reason;
+        grouped.set(pairName, item);
+      });
+
+    return Array.from(grouped.values())
+      .map(item => ({ ...item, reasons: item.reasons.slice(0, 3) }))
+      .slice(0, 3);
+  }
+  const ruleItems = [
+    ...result.ruleResult.blockingRules,
+    ...result.ruleResult.warningRules,
+    ...result.ruleResult.missingData,
+  ];
+  const pair = species.map(item => item.name).join(' × ');
+  const grouped = new Map<string, { key: string; pair: string; reason: string; reasons: string[] }>();
+
+  ruleItems.forEach((rule, index) => {
+    const reason = rule.evidence || rule.title;
+    const item = grouped.get(pair) || {
+      key: `conflict-${index}`,
+      pair,
+      reason,
+      reasons: [],
+    };
+    if (!item.reasons.includes(reason)) item.reasons.push(reason);
+    item.reason = item.reasons[0] || reason;
+    grouped.set(pair, item);
+  });
+
+  return Array.from(grouped.values()).slice(0, 3);
+};
+
+const getActionHints = (result: ReturnType<typeof calculateRisk>, species: Fish[]) => {
+  const level = result.level;
+  if (result.ruleResult?.suggestions.length) return result.ruleResult.suggestions.slice(0, 3);
+  if (level === 'not_recommended') {
+    const single = species.find(item => item.housingMode === '建议单养');
+    const aggressive = species.find(item => item.temperament === 'Aggressive');
+    const removeName = single?.name || aggressive?.name || species[species.length - 1]?.name;
+    return [
+      removeName ? `优先移除 ${removeName}，重新计算组合。` : '先移除高风险对象，重新计算组合。',
+      '建议把单养或攻击性强的生物单独开缸。',
+      '新生物入缸前隔离观察 7 天。',
+    ];
+  }
+  if (level === 'caution' || level === 'insufficient_data') {
+    return [
+      '增加水草、沉木或石缝，降低追逐压力。',
+      '确认水温和 pH 有交集后再入缸。',
+      '前 48 小时观察追咬、拒食和抢食。',
+    ];
+  }
+  return [
+    '先少量加入，观察 3-7 天。',
+    '保持稳定换水和过滤，不要一次加入过多生物。',
+  ];
+};
+
+const getSpeciesActionGroups = (
+  result: ReturnType<typeof calculateRisk>,
+  species: Fish[],
+  currentQuantityBySpeciesId: Record<string, number>
+): SpeciesActionGroup => {
+  const existing = species.filter(item => currentQuantityBySpeciesId[item.id]);
+  const candidateSpecies = species.filter(item => !currentQuantityBySpeciesId[item.id]);
+
+  if (result.level === 'insufficient_data') {
+    return {
+      keep: [],
+      remove: [],
+      existing,
+    };
+  }
+
+  if (result.level !== 'not_recommended') {
+    return {
+      keep: candidateSpecies,
+      remove: [],
+      existing,
+    };
+  }
+
+  const candidateIds = new Set(candidateSpecies.map(item => item.id));
+  const removeIdsFromBlockedPairs = new Set<string>();
+  result.decision?.pairResults
+    .filter(pair => pair.status === 'not_recommended')
+    .forEach(pair => {
+      const pairCandidates = [pair.speciesA, pair.speciesB].filter(item => candidateIds.has(item.id));
+      if (pairCandidates.length === 1) {
+        removeIdsFromBlockedPairs.add(pairCandidates[0].id);
+        return;
+      }
+      if (pairCandidates.length === 2) {
+        removeIdsFromBlockedPairs.add(pair.speciesB.id);
+      }
+    });
+  const remove = candidateSpecies.filter(item => removeIdsFromBlockedPairs.has(item.id));
+
+  return {
+    keep: [],
+    remove,
+    existing,
+  };
+};
+
+const getRiskExplanation = (tags: string[], reasons: string[]) => {
+  if (reasons.length === 0) return '当前组合未发现明显冲突，但仍建议先少量加入并观察。';
+  const tagText = tags.length > 0 ? tags.slice(0, 4).join('、') : '水质、空间或性情';
+  return `当前组合主要涉及${tagText}等因素。系统会综合水温、pH、体型、性情、入缸顺序和躲避空间判断风险。`;
+};
+
+function CompatibilityBottomSheet({
+  activeModal,
+  onClose,
+  result,
+  meta,
+  riskConclusion,
+  conflictTags,
+  actionHints,
+  acceptLabel,
+  isEn,
+  onAccept,
+  onEdit,
+}: {
+  activeModal: ResultModal;
+  onClose: () => void;
+  result: ReturnType<typeof calculateRisk>;
+  meta: ReturnType<typeof getRiskMeta>;
+  riskConclusion: string;
+  conflictTags: string[];
+  actionHints: string[];
+  acceptLabel?: string;
+  isEn: boolean;
+  onAccept: () => void;
+  onEdit: () => void;
+}) {
+  if (!activeModal) return null;
+  const resolvedAcceptLabel = acceptLabel ?? (isEn ? 'Got it' : '我知道了');
+
+  const sheetTitle = isEn ? 'Adjustment Recommendations' : '调整建议';
+
+  return (
+    <Dialog open={Boolean(activeModal)} onOpenChange={open => !open && onClose()}>
+      <DialogContent data-surface="task-flow" showCloseButton={false} className="overflow-hidden border-border bg-bg p-0">
+        <div className="shrink-0 border-b border-white bg-white px-4 pb-3 pt-2">
+          <div className="mx-auto mb-2 h-1.5 w-10 rounded-full bg-ink/12" />
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h3 id="compatibility-sheet-title" className="text-[18px] font-black text-ink">{sheetTitle}</h3>
+              <p className="mt-0.5 text-[11px] font-bold text-ink/45">{isEn ? 'Focus on the next safe actions.' : '只看现在能做什么。'}</p>
+            </div>
+            <button type="button" onClick={onClose} className="flex h-11 w-11 items-center justify-center rounded-full bg-bg text-ink/55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400" aria-label={isEn ? 'Close' : '关闭'}>
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="app-scrollbar-hidden min-h-0 flex-1 overflow-y-auto overflow-x-hidden px-4 py-3 pb-6">
+            <div className="grid gap-3">
+              <section className={`rounded-[18px] border p-3 ${meta.tone}`}>
+                <div className="text-[10px] font-black opacity-65">{isEn ? 'Current Assessment' : '当前结论'}</div>
+                <div className="mt-1 text-[15px] font-black">{meta.label}：{riskConclusion}</div>
+                <p className="mt-2 text-[12px] font-medium leading-relaxed opacity-70">{getRiskExplanation(conflictTags, result.reasons)}</p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {conflictTags.length > 0 ? conflictTags.map(tag => (
+                    <span key={tag} className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-black text-amber-700">{tag}</span>
+                  )) : <span className="rounded-full bg-emerald-50 px-2 py-1 text-[10px] font-black text-emerald-700">{isEn ? 'Basic Compatibility' : '基础匹配'}</span>}
+                </div>
+              </section>
+              <section className="rounded-[18px] bg-white p-3 shadow-sm">
+                <div className="text-[13px] font-black text-ink">{isEn ? 'Action Plan' : '现在怎么做'}</div>
+                <div className="mt-2 grid gap-2">
+                  {actionHints.slice(0, 3).map((step, stepIndex) => (
+                    <div key={step} className="flex gap-2 rounded-[14px] bg-emerald-50 px-3 py-2 text-[12px] font-bold leading-relaxed text-emerald-900">
+                      <span className="shrink-0">{stepIndex + 1}.</span>
+                      <span>{step}</span>
+                    </div>
+                  ))}
+                </div>
+              </section>
+            </div>
+
+        </div>
+
+        <div className="modalFooter grid shrink-0 grid-cols-2 gap-2 border-t border-white bg-white/95 backdrop-blur">
+          <button type="button" onClick={onAccept} className="min-h-11 rounded-full bg-emerald-700 px-3 text-[13px] font-black text-white">
+            {resolvedAcceptLabel}
+          </button>
+          <button type="button" onClick={onEdit} className="min-h-11 rounded-full border border-border bg-white px-3 text-[13px] font-black text-ink/62">
+            返回修改组合
+          </button>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 type CompatibilityRiskCalculatorProps = {
   speciesIds?: string[];
@@ -71,6 +512,7 @@ type CompatibilityRiskCalculatorProps = {
   onBrowseAtlas?: () => void;
   onAddToAquarium?: (items: { fishId: string; quantity: number }[]) => void | Promise<{ message?: string } | void>;
   onRequestTankInfo?: (missingRuleCodes: string[]) => void;
+  onSaveToWishlist?: (speciesIds: string[]) => void | Promise<void>;
   onViewAquarium?: () => void;
   preferredSpeciesIds?: string[];
   aquariums?: Aquarium[];
@@ -78,39 +520,33 @@ type CompatibilityRiskCalculatorProps = {
   onEvaluationRecorded?: () => void;
 };
 
-type ConflictAction = {
-  id: string;
-  title: string;
-  detail: string;
-  removeSpeciesId?: string;
-  tone: 'danger' | 'warning' | 'info';
+const commonPreviewNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼'];
+
+const getCommonPreviewSpecies = () => (
+  commonPreviewNames
+    .map(name => fishData.find(fish => fish.name === name) || fishData.find(fish => fish.name.includes(name)))
+    .filter((fish): fish is Fish => Boolean(fish))
+);
+
+const getAquariumLabel = (aquarium?: Aquarium | null, isEn = false) => {
+  if (!aquarium) return isEn ? 'No Tank Selected' : '未选择鱼缸';
+  const volume = getAquariumVolumeLiters(aquarium);
+  const name = getLocalizedAquariumName(aquarium.name, isEn);
+  const typeLabel = aquarium.waterType === 'Saltwater'
+    ? (isEn ? 'Marine' : '海水')
+    : aquarium.waterType === 'Freshwater'
+      ? (isEn ? 'Freshwater' : '淡水')
+      : (isEn ? 'Water type pending' : '水体待补充');
+  const capLabel = volume ? `${volume}L` : (isEn ? 'Pending Capacity' : '容量待补充');
+  return `${name} · ${capLabel} · ${typeLabel}`;
 };
-
-const unique = <T,>(items: T[]) => Array.from(new Set(items));
-
-const getConflictActionLabel = (action: ConflictAction, isEn: boolean) => {
-  if (!action.removeSpeciesId) return isEn ? 'Review current tank' : '查看当前鱼缸';
-  const species = fishData.find(item => item.id === action.removeSpeciesId);
-  const name = species ? getSpeciesName(species, isEn) : (isEn ? 'this species' : '该生物');
-  const isSkip = action.title.startsWith(isEn ? 'Do not add ' : '不要加入 ');
-  return isSkip
-    ? (isEn ? 'Do not add ' + name : '不加入 ' + name)
-    : (isEn ? 'Remove ' + name : '移除 ' + name);
-};
-
-const getPairReasons = (pair: PairCompatibilityResult) => unique([
-  pair.primaryReason?.evidence,
-  ...pair.secondaryReasons.map(item => item.evidence),
-].filter((item): item is string => Boolean(item))).slice(0, 3);
-
-const commonNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼'];
 
 export function CompatibilityRiskCalculator({
   speciesIds,
   onSpeciesIdsChange,
   onBrowseAtlas,
   onAddToAquarium,
-  onRequestTankInfo,
+  onSaveToWishlist,
   onViewAquarium,
   preferredSpeciesIds = [],
   aquariums = [],
@@ -118,614 +554,804 @@ export function CompatibilityRiskCalculator({
   onEvaluationRecorded,
 }: CompatibilityRiskCalculatorProps = {}) {
   const isEn = Boolean(i18n.language?.startsWith('en'));
-  const [internalSpeciesIds, setInternalSpeciesIds] = useState<string[]>([]);
-  const activeSpeciesIds = speciesIds ?? internalSpeciesIds;
-  const [selectedAquariumId, setSelectedAquariumId] = useState(activeAquariumId || aquariums[0]?.id || '');
   const [searchTerm, setSearchTerm] = useState('');
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
-  const [feedback, setFeedback] = useState('');
+  const [internalSpeciesIds, setInternalSpeciesIds] = useState<string[]>([]);
+  const [resultFeedback, setResultFeedback] = useState('');
   const [recordError, setRecordError] = useState('');
-  const [isRecording, setIsRecording] = useState(false);
-  const [cautionConfirmed, setCautionConfirmed] = useState(false);
-  const [aiOpen, setAiOpen] = useState(false);
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiResult, setAiResult] = useState<RiskExplanationData | null>(null);
-  const recordedKeyRef = useRef('');
-
-  useEffect(() => {
-    if (activeAquariumId) setSelectedAquariumId(activeAquariumId);
-  }, [activeAquariumId]);
-
-  const updateSpeciesIds = (next: string[] | ((current: string[]) => string[])) => {
-    const resolved = typeof next === 'function' ? next(activeSpeciesIds) : next;
-    if (onSpeciesIdsChange) onSpeciesIdsChange(resolved);
-    else setInternalSpeciesIds(resolved);
-    setCautionConfirmed(false);
-    setFeedback('');
-    setRecordError('');
-    setAiResult(null);
-  };
-
+  const [activeModal, setActiveModal] = useState<ResultModal>(null);
+  const [selectedAquariumId, setSelectedAquariumId] = useState(activeAquariumId || aquariums[0]?.id || '');
+  const activeSpeciesIds = speciesIds ?? internalSpeciesIds;
+  const [selectedQuantitiesById, setSelectedQuantitiesById] = useState<Record<string, number>>({});
+  const [selectedAddableSpeciesIds, setSelectedAddableSpeciesIds] = useState<string[]>([]);
+  const [addedSpeciesIds, setAddedSpeciesIds] = useState<string[]>([]);
+  const [isAddingToAquarium, setIsAddingToAquarium] = useState(false);
+  const [confirmingCautionAdd, setConfirmingCautionAdd] = useState(false);
+  const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
   const selectedAquarium = useMemo(() => (
-    aquariums.find(item => item.id === selectedAquariumId)
-    || aquariums.find(item => item.id === activeAquariumId)
+    aquariums.find(aquarium => aquarium.id === (selectedAquariumId || activeAquariumId))
+    || aquariums.find(aquarium => aquarium.id === activeAquariumId)
     || aquariums[0]
     || null
   ), [activeAquariumId, aquariums, selectedAquariumId]);
-
-  const existingLivestock = useMemo(() => (
+  const currentLivestock = useMemo(() => (
     getCurrentLivestockForAquarium(selectedAquarium, fishData)
-      .filter(item => item.species && isLivestock(item.species))
+      .filter(item => isCompatibilityLivestock(item.species))
   ), [selectedAquarium]);
-
-  const existingIds = useMemo(() => new Set(existingLivestock.map(item => item.species.id)), [existingLivestock]);
-  const existingQuantity = useMemo(() => existingLivestock.reduce<Record<string, number>>((result, item) => {
-    result[item.species.id] = Math.max(1, Number(item.record?.quantity || 1));
-    return result;
-  }, {}), [existingLivestock]);
-
-  const selectedSpecies = useMemo(() => activeSpeciesIds
-    .map(id => fishData.find(fish => fish.id === id))
-    .filter((fish): fish is Fish => Boolean(fish && isLivestock(fish))), [activeSpeciesIds]);
-
-  const candidateSpecies = useMemo(() => selectedSpecies.filter(fish => !existingIds.has(fish.id)), [existingIds, selectedSpecies]);
-  const compareExistingOnly = selectedSpecies.length >= 2 && candidateSpecies.length === 0;
-
-  const evaluationItems = useMemo<CompatibilityItem[]>(() => {
-    if (candidateSpecies.length > 0 && selectedAquarium) {
-      const baseline = existingLivestock.map(item => ({
-        species: item.species,
-        quantity: existingQuantity[item.species.id] || 1,
-        origin: 'existing' as const,
-      }));
-      const candidates = candidateSpecies.map(species => ({
-        species,
-        quantity: Math.max(1, quantities[species.id] || 1),
-        origin: 'candidate' as const,
-      }));
-      const seen = new Set<string>();
-      return [...baseline, ...candidates].filter(item => {
-        if (seen.has(item.species.id)) return false;
-        seen.add(item.species.id);
-        return true;
-      });
-    }
-    return selectedSpecies.map(species => ({
-      species,
-      quantity: Math.max(1, quantities[species.id] || existingQuantity[species.id] || 1),
-      origin: existingIds.has(species.id) ? 'existing' as const : 'candidate' as const,
-    }));
-  }, [candidateSpecies, existingIds, existingLivestock, existingQuantity, quantities, selectedAquarium, selectedSpecies]);
-
-  const decision = useMemo(() => (
-    evaluationItems.length >= 2
-      ? evaluateCompatibilityDecision({ tank: selectedAquarium, items: evaluationItems })
-      : null
-  ), [evaluationItems, selectedAquarium]);
-
-  const relevantPairs = useMemo(() => {
-    if (!decision) return [];
-    if (candidateSpecies.length === 0) return decision.pairResults;
-    const candidateIds = new Set(candidateSpecies.map(item => item.id));
-    return decision.pairResults.filter(pair => candidateIds.has(pair.speciesA.id) || candidateIds.has(pair.speciesB.id));
-  }, [candidateSpecies, decision]);
-
-  const resultStatus = useMemo<TankCompatibilityStatus | null>(() => {
-    if (relevantPairs.length === 0) return null;
-    return relevantPairs.reduce<TankCompatibilityStatus>((current, pair) => (
-      statusRank[pair.status] > statusRank[current] ? pair.status : current
-    ), 'compatible');
-  }, [relevantPairs]);
-
-  const blockingPairs = useMemo(() => relevantPairs.filter(pair => pair.status === 'not_recommended'), [relevantPairs]);
-  const cautionPairs = useMemo(() => relevantPairs.filter(pair => pair.status === 'caution'), [relevantPairs]);
-  const missingPairs = useMemo(() => relevantPairs.filter(pair => pair.status === 'insufficient_data'), [relevantPairs]);
-  const meta = resultStatus ? statusMeta(resultStatus, isEn) : null;
-
-  const readiness = useMemo(() => selectedAquarium ? getAquariumAiReadiness(selectedAquarium) : null, [selectedAquarium]);
-  const aiReady = Boolean(selectedAquarium && readiness?.ready && resultStatus);
-
-  const searchResults = useMemo(() => {
-    const term = searchTerm.trim().toLowerCase();
-    if (!term) return [];
-    return fishData
-      .filter(isLivestock)
-      .filter(fish => !activeSpeciesIds.includes(fish.id))
-      .filter(fish => `${fish.name} ${fish.scientificName} ${fish.category}`.toLowerCase().includes(term))
-      .slice(0, 10);
-  }, [activeSpeciesIds, searchTerm]);
-
-  const commonSpecies = useMemo(() => {
-    const preferred = preferredSpeciesIds
-      .map(id => fishData.find(fish => fish.id === id))
-      .filter((fish): fish is Fish => Boolean(fish && isLivestock(fish)));
-    const common = commonNames
-      .map(name => fishData.find(fish => fish.name === name) || fishData.find(fish => fish.name.includes(name)))
-      .filter((fish): fish is Fish => Boolean(fish && isLivestock(fish)));
-    const seen = new Set<string>();
-    return [...preferred, ...common].filter(fish => {
-      if (seen.has(fish.id) || activeSpeciesIds.includes(fish.id)) return false;
-      seen.add(fish.id);
-      return true;
-    }).slice(0, 8);
-  }, [activeSpeciesIds, preferredSpeciesIds]);
-
-  const addSpecies = (fish: Fish) => {
-    updateSpeciesIds(current => current.includes(fish.id) ? current : [...current, fish.id]);
-    setSearchTerm('');
+  const isRecording = isAddingToAquarium || currentLivestock.length === 0;
+  const currentQuantityBySpeciesId = useMemo(() => currentLivestock.reduce<Record<string, number>>((next, item) => {
+    if (item.species?.id) next[item.species.id] = getQuantity(item.record?.quantity);
+    return next;
+  }, {}), [currentLivestock]);
+  const missingLivestockCount = useMemo(() => {
+    if (!selectedAquarium?.fishes?.length) return 0;
+    return selectedAquarium.fishes.filter(item => !fishData.some(fish => fish.id === item.fishId)).length;
+  }, [selectedAquarium]);
+  const updateSpeciesIds = (updater: string[] | ((prev: string[]) => string[])) => {
+    const next = typeof updater === 'function' ? updater(activeSpeciesIds) : updater;
+    if (onSpeciesIdsChange) onSpeciesIdsChange(next);
+    else setInternalSpeciesIds(next);
   };
 
-  const removeSpecies = (fishId: string) => {
-    const fish = fishData.find(item => item.id === fishId);
-    updateSpeciesIds(current => current.filter(id => id !== fishId));
-    setQuantities(current => {
-      const next = { ...current };
-      delete next[fishId];
+  // Keep the real tank baseline in checkout whenever a planning candidate has
+  // been selected. This prevents a candidate-only calculation from silently
+  // dropping existing livestock, while leaving empty tanks as an explicit
+  // planning flow with no generated species.
+  useEffect(() => {
+    if (!selectedAquarium || currentLivestock.length === 0 || activeSpeciesIds.length === 0) return;
+    const existingIds = currentLivestock
+      .map(item => item.species?.id)
+      .filter(Boolean) as string[];
+    const missingIds = existingIds.filter(id => !activeSpeciesIds.includes(id));
+    if (missingIds.length === 0) return;
+    updateSpeciesIds(prev => Array.from(new Set([...prev, ...missingIds])));
+    setSelectedQuantitiesById(prev => {
+      const next = { ...prev };
+      currentLivestock.forEach(item => {
+        if (item.species?.id && !next[item.species.id]) next[item.species.id] = getQuantity(item.record?.quantity);
+      });
       return next;
     });
-    if (fish) setFeedback(isEn ? `${getSpeciesName(fish, true)} removed from this plan.` : `已从本次方案中移除 ${fish.name}。`);
-  };
+  }, [activeSpeciesIds, currentLivestock, selectedAquarium]);
 
-  const conflictActions = useMemo<ConflictAction[]>(() => {
-    const actions: ConflictAction[] = [];
-    blockingPairs.forEach(pair => {
-      const aExisting = existingIds.has(pair.speciesA.id);
-      const bExisting = existingIds.has(pair.speciesB.id);
-      const aCandidate = candidateSpecies.some(item => item.id === pair.speciesA.id);
-      const bCandidate = candidateSpecies.some(item => item.id === pair.speciesB.id);
-      const reason = getPairReasons(pair)[0] || pair.rawResult.summary;
-
-      if (aCandidate && bExisting) {
-        actions.push({
-          id: `${pair.pairId}-skip-a`,
-          title: isEn ? `Do not add ${getSpeciesName(pair.speciesA, true)}` : `不要加入 ${pair.speciesA.name}`,
-          detail: isEn ? `It is not suitable with ${getSpeciesName(pair.speciesB, true)}: ${reason}` : `它与 ${pair.speciesB.name} 不适合一起养：${reason}`,
-          removeSpeciesId: pair.speciesA.id,
-          tone: 'danger',
-        });
-        return;
-      }
-      if (bCandidate && aExisting) {
-        actions.push({
-          id: `${pair.pairId}-skip-b`,
-          title: isEn ? `Do not add ${getSpeciesName(pair.speciesB, true)}` : `不要加入 ${pair.speciesB.name}`,
-          detail: isEn ? `It is not suitable with ${getSpeciesName(pair.speciesA, true)}: ${reason}` : `它与 ${pair.speciesA.name} 不适合一起养：${reason}`,
-          removeSpeciesId: pair.speciesB.id,
-          tone: 'danger',
-        });
-        return;
-      }
-      if (aCandidate && bCandidate) {
-        actions.push({
-          id: `${pair.pairId}-choose-a`,
-          title: isEn ? `Keep ${getSpeciesName(pair.speciesA, true)}, replace ${getSpeciesName(pair.speciesB, true)}` : `保留 ${pair.speciesA.name}，移除 ${pair.speciesB.name}`,
-          detail: reason,
-          removeSpeciesId: pair.speciesB.id,
-          tone: 'danger',
-        });
-        actions.push({
-          id: `${pair.pairId}-choose-b`,
-          title: isEn ? `Keep ${getSpeciesName(pair.speciesB, true)}, replace ${getSpeciesName(pair.speciesA, true)}` : `保留 ${pair.speciesB.name}，移除 ${pair.speciesA.name}`,
-          detail: reason,
-          removeSpeciesId: pair.speciesA.id,
-          tone: 'danger',
-        });
-        return;
-      }
-      if (aExisting && bExisting) {
-        actions.push({
-          id: `${pair.pairId}-existing`,
-          title: isEn ? 'Existing tank conflict detected' : '当前缸内已有组合存在风险',
-          detail: isEn ? `This conflict already exists in the current tank. Adjust the current stocking first. ${reason}` : `这个风险已经存在于当前鱼缸，请先调整缸内组合。${reason}`,
-          tone: 'warning',
-        });
-      }
-    });
-    const seen = new Set<string>();
-    return actions.filter(action => {
-      const key = `${action.title}-${action.removeSpeciesId || ''}`;
-      if (seen.has(key)) return false;
-      seen.add(key);
-      return true;
-    }).slice(0, 6);
-  }, [blockingPairs, candidateSpecies, existingIds, isEn]);
-
+  const selectedSpecies = useMemo(
+    () => activeSpeciesIds.map(id => fishData.find(fish => fish.id === id)).filter(Boolean) as Fish[],
+    [activeSpeciesIds]
+  );
+  const selectedItems = useMemo(() => selectedSpecies.map(species => ({
+    species,
+    quantity: selectedQuantitiesById[species.id] || currentQuantityBySpeciesId[species.id] || 1,
+  })), [currentQuantityBySpeciesId, selectedQuantitiesById, selectedSpecies]);
+  const result = useMemo(() => calculateRisk(selectedItems, selectedAquarium), [selectedAquarium, selectedItems]);
+  const recordedEvaluationKeyRef = useRef('');
   useEffect(() => {
-    if (!selectedAquarium || !resultStatus || relevantPairs.length === 0) return;
-    const ids = candidateSpecies.length > 0 ? candidateSpecies.map(item => item.id) : selectedSpecies.map(item => item.id);
-    const key = `${selectedAquarium.id}:${ids.sort().join('|')}:${resultStatus}`;
-    if (recordedKeyRef.current === key) return;
-    recordedKeyRef.current = key;
-    recordTankCompatibility({ aquariumId: selectedAquarium.id, speciesIds: ids, status: resultStatus });
+    if (!selectedAquarium || selectedItems.length < 2 || !result.ruleResult || result.level === 'empty') return;
+    const pairSignature = (result.decision?.pairResults || [])
+      .map(pair => {
+        const canonicalPairId = [pair.speciesA.id, pair.speciesB.id].sort().join('__');
+        const ruleCodes = [
+          pair.primaryReason?.sourceRule.code,
+          ...pair.secondaryReasons.map(reason => reason.sourceRule.code),
+          ...pair.rawResult.passedRules.map(rule => rule.code),
+          ...pair.rawResult.blockingRules.map(rule => rule.code),
+          ...pair.rawResult.warningRules.map(rule => rule.code),
+          ...pair.rawResult.missingData.map(rule => rule.code),
+        ].filter(Boolean).sort().join(',');
+        return `${canonicalPairId}:${pair.status}:${pair.quantityA}:${pair.quantityB}:${ruleCodes}`;
+      })
+      .sort()
+      .join('|');
+    const key = `${selectedAquarium.id}:${selectedItems.map(item => `${item.species.id}:${item.quantity}`).sort().join('|')}:${result.level}:${pairSignature}`;
+    if (recordedEvaluationKeyRef.current === key) return;
+    recordedEvaluationKeyRef.current = key;
     trackSessionEvent('compatibility_started', {
       action: 'calculate',
-      status: resultStatus,
-      entry: 'compatibility_v2',
+      status: result.level,
+      entry: 'full_compatibility',
       source: 'rules',
-      candidateCount: ids.length,
+      candidateCount: selectedItems.length,
     });
-    relevantPairs.forEach(pair => {
+    result.decision?.pairResults.forEach(pair => {
       trackSessionEvent('compatibility_pair_evaluated', {
         action: 'evaluate_pair',
         status: pair.status,
-        entry: 'compatibility_v2',
+        entry: 'full_compatibility',
         source: 'rules',
         pairKey: `${pair.speciesA.id}__${pair.speciesB.id}`,
       });
     });
+    recordTankCompatibility({ aquariumId: selectedAquarium.id, speciesIds: selectedItems.map(item => item.species.id), status: result.level });
     onEvaluationRecorded?.();
-  }, [candidateSpecies, onEvaluationRecorded, relevantPairs, resultStatus, selectedAquarium, selectedSpecies]);
-
-  const requestMissingTankInfo = () => {
-    if (!readiness || readiness.ready) return;
-    const codes = readiness.missing.map(item => (
-      item.key === 'dimensions' ? 'tank_size' : item.key === 'filter' ? 'equipment_filter' : item.key
-    ));
-    onRequestTankInfo?.(codes);
-  };
-
-  const openAiAdvice = async () => {
-    if (!resultStatus || relevantPairs.length === 0) return;
-    if (!selectedAquarium || !readiness?.ready) {
-      requestMissingTankInfo();
-      return;
-    }
-    setAiOpen(true);
-    setAiLoading(true);
-    setAiResult(null);
-    const context = {
-      finalStatus: resultStatus,
-      taskGoal: 'Explain the compatibility result and give concrete adjustment options. Do not override or weaken deterministic blocking rules.',
-      tank: {
-        id: selectedAquarium.id,
-        name: selectedAquarium.name,
-        waterType: selectedAquarium.waterType,
-        dimensions: selectedAquarium.dimensions,
-        targetTemperature: selectedAquarium.targetTemperature,
-        equipment: selectedAquarium.equipment,
-      },
-      existingLivestock: existingLivestock.map(item => ({
-        speciesId: item.species.id,
-        name: item.species.name,
-        quantity: existingQuantity[item.species.id] || 1,
-      })),
-      plannedAdditions: candidateSpecies.map(item => ({
-        speciesId: item.id,
-        name: item.name,
-        quantity: quantities[item.id] || 1,
-      })),
-      comparedSpecies: compareExistingOnly ? selectedSpecies.map(item => ({ speciesId: item.id, name: item.name })) : [],
-      conflicts: relevantPairs.map(pair => ({
-        pair: [pair.speciesA.name, pair.speciesB.name],
-        status: pair.status,
-        reasons: getPairReasons(pair),
-        ruleSuggestions: pair.actions,
-      })),
-      ruleResult: {
-        status: resultStatus,
-        blockingRules: relevantPairs.flatMap(pair => pair.rawResult.blockingRules),
-        warningRules: relevantPairs.flatMap(pair => pair.rawResult.warningRules),
-        missingData: relevantPairs.flatMap(pair => pair.rawResult.missingData),
-        suggestions: unique(relevantPairs.flatMap(pair => pair.rawResult.suggestions)).slice(0, 6),
-      },
+  }, [onEvaluationRecorded, result.level, result.ruleResult, selectedAquarium, selectedItems]);
+  const meta = getRiskMeta(result.level);
+  const riskConclusion = getRiskConclusion(result.level, selectedSpecies, result.reasons);
+  const conflictTags = getConflictTags(selectedSpecies, result.reasons);
+  const mainConflicts = useMemo(() => getMainConflicts(result, selectedSpecies), [result, selectedSpecies]);
+  const actionHints = useMemo(() => getActionHints(result, selectedSpecies), [result, selectedSpecies]);
+  const resultEvidenceSources = useMemo(() => {
+    const rules = result.ruleResult
+      ? [
+          ...result.ruleResult.blockingRules,
+          ...result.ruleResult.warningRules,
+          ...result.ruleResult.missingData,
+          ...result.ruleResult.passedRules,
+        ]
+      : [];
+    return Array.from(new Map(
+      rules.flatMap(rule => rule.citations).map(source => [source.id, source]),
+    ).values());
+  }, [result.ruleResult]);
+  const visualResultModel = useMemo(() => {
+    if (!result.decision) return null;
+    return {
+      ...buildCompatibilityVisualResult({
+        decision: result.decision,
+        species: selectedSpecies,
+        primaryActionLabel: getPrimaryResultButtonLabel(result.level),
+      }),
+      currentAction: getResultNextAction(result.level),
     };
-    const result = await generateRiskExplanation(context);
-    setAiResult(result);
-    setAiLoading(false);
-  };
+  }, [result.decision, result.level, selectedSpecies]);
+  const compatibilityPresentation = useMemo(
+    () => result.decision ? getCompatibilityPresentation(result.decision) : null,
+    [result.decision],
+  );
+  const speciesActionGroups = useMemo(
+    () => getSpeciesActionGroups(result, selectedSpecies, currentQuantityBySpeciesId),
+    [currentQuantityBySpeciesId, result, selectedSpecies]
+  );
+  const resultAddPolicy = result.level === 'empty' ? null : getTankCompatibilityAddPolicy(result.level);
+  const addableSpecies = useMemo(() => (
+    resultAddPolicy === 'block' || resultAddPolicy === 'complete_information'
+      ? []
+      : speciesActionGroups.keep
+  ), [resultAddPolicy, speciesActionGroups.keep]);
+  const addableSpeciesIds = useMemo(() => addableSpecies.map(fish => fish.id), [addableSpecies]);
+  const addableSpeciesKey = addableSpeciesIds.join('|');
+  const addedSpeciesKey = addedSpeciesIds.join('|');
+  const pendingAddableSpecies = useMemo(() => addableSpecies.filter(fish => (
+    selectedAddableSpeciesIds.includes(fish.id) && !addedSpeciesIds.includes(fish.id)
+  )), [addableSpecies, addedSpeciesIds, selectedAddableSpeciesIds]);
+  const selectedAddableCount = pendingAddableSpecies.length;
+  useEffect(() => {
+    setSelectedAddableSpeciesIds(prev => {
+      const stillValid = prev.filter(id => addableSpeciesIds.includes(id) && !addedSpeciesIds.includes(id));
+      const defaultSelected = addableSpeciesIds.filter(id => !addedSpeciesIds.includes(id));
+      return Array.from(new Set([...stillValid, ...defaultSelected]));
+    });
+  }, [addableSpeciesKey, addedSpeciesKey]);
+  useEffect(() => {
+    setAddedSpeciesIds(prev => prev.filter(id => activeSpeciesIds.includes(id)));
+  }, [activeSpeciesIds]);
+  const commonPreviewSpecies = useMemo(() => {
+    const fallbackSpecies = getCommonPreviewSpecies().filter(isCompatibilityLivestock);
+    return getCompatibilityPreviewSpecies({
+      selectedAquarium,
+      currentLivestock: currentLivestock.map(item => ({ species: item.species, record: { quantity: item.record.quantity } })),
+      activeSpeciesIds,
+      preferredSpeciesIds: preferredSpeciesIds.filter(id => fishData.some(fish => fish.id === id && isCompatibilityLivestock(fish))),
+      candidateSpecies: fishData.filter(isCompatibilityLivestock),
+      fallbackSpecies,
+    });
+  }, [activeSpeciesIds, currentLivestock, preferredSpeciesIds, selectedAquarium]);
+  const selectedCount = selectedSpecies.length;
+  const statusLabel = selectedCount === 0
+    ? (isEn ? 'Not Started' : '未开始')
+    : selectedCount === 1
+      ? (isEn ? 'Pending Addition' : '待添加')
+      : compatibilityPresentation?.mode === 'confirmed_facts'
+        ? (isEn ? 'Confirmed factors' : '当前可确认')
+        : compatibilityPresentation?.mode === 'unavailable'
+          ? (isEn ? 'Not yet available' : '暂未开放')
+          : meta.label;
+  const selectedTitle = selectedCount < 2
+    ? (isEn ? `Selected ${selectedCount}/2` : `已选生物 ${selectedCount}/2`)
+    : (isEn ? `Selected ${selectedCount} species` : `已选生物 ${selectedCount} 种`);
+  const selectedHint = selectedCount === 0
+    ? (isEn ? 'No species added yet.' : '还没有添加生物。')
+    : selectedCount === 1
+      ? (isEn ? '1 more species required.' : '还需 1 种生物。')
+      : (isEn ? 'Ready for calculation.' : '已满足计算条件。');
+  const searchResults = useMemo(() => {
+    const keyword = searchTerm.trim().toLowerCase();
+    if (!keyword) return [];
+    return fishData
+      .filter(isCompatibilityLivestock)
+      .filter(fish => !activeSpeciesIds.includes(fish.id))
+      .filter(fish => (
+        fish.name.toLowerCase().includes(keyword)
+        || fish.scientificName.toLowerCase().includes(keyword)
+        || fish.category.toLowerCase().includes(keyword)
+      ))
+      .slice(0, 6);
+  }, [searchTerm, activeSpeciesIds]);
 
-  const recordActualStocking = async () => {
-    if (!onAddToAquarium || candidateSpecies.length === 0 || !resultStatus || isRecording) return;
-    if (resultStatus === 'not_recommended' || resultStatus === 'insufficient_data') return;
-    if (resultStatus === 'caution' && !cautionConfirmed) {
-      setCautionConfirmed(true);
+  const addSpecies = (fish: Fish) => {
+    if (!isCompatibilityLivestock(fish)) {
+      setResultFeedback('水草和硬景不作为混养风险计算对象。');
       return;
     }
-    setIsRecording(true);
+    updateSpeciesIds(prev => prev.includes(fish.id) ? prev : [...prev, fish.id]);
+    setSelectedQuantitiesById(prev => prev[fish.id] ? prev : { ...prev, [fish.id]: 1 });
+    setSearchTerm('');
+  };
+  const importAquariumLivestock = () => {
+    const livestockIds = currentLivestock.map(item => item.species?.id).filter(Boolean) as string[];
+    updateSpeciesIds(prev => Array.from(new Set([...prev, ...livestockIds])));
+    setSelectedQuantitiesById(prev => {
+      const next = { ...prev };
+      currentLivestock.forEach(item => {
+        if (item.species?.id) next[item.species.id] = getQuantity(item.record?.quantity);
+      });
+      return next;
+    });
+    setResultFeedback(livestockIds.length > 0
+      ? (isEn ? `Imported ${livestockIds.length} species from ${getAquariumLabel(selectedAquarium, isEn)}.` : `已导入 ${getAquariumLabel(selectedAquarium)} 的 ${livestockIds.length} 种活体。`)
+      : (isEn ? 'No species available to import from active tank.' : '当前鱼缸暂无可导入的活体生物。'));
+  };
+  const performAddToAquarium = async () => {
+    if (isAddingToAquarium) return;
+    if (!selectedAquarium) {
+      setResultFeedback('请先选择一个鱼缸，再添加生物。');
+      return;
+    }
+    if (!onAddToAquarium) {
+      setResultFeedback('当前页面还没有接入鱼缸添加功能。');
+      return;
+    }
+    if (pendingAddableSpecies.length === 0) {
+      setResultFeedback('没有可加入的新增生物，或已全部加入。');
+      return;
+    }
+
+    const items = pendingAddableSpecies.map(fish => ({
+      fishId: fish.id,
+      quantity: Math.max(1, selectedQuantitiesById[fish.id] || 1),
+    }));
+
+    setIsAddingToAquarium(true);
     setRecordError('');
     try {
-      const response = await onAddToAquarium(candidateSpecies.map(fish => ({
-        fishId: fish.id,
-        quantity: Math.max(1, quantities[fish.id] || 1),
-      })));
-      const feedbackMessage = response && typeof response === 'object' ? response.message : undefined;
-      setFeedback(feedbackMessage || (isEn ? 'Recorded in the aquarium.' : '已记录到鱼缸。'));
+      const response = await onAddToAquarium(items);
+      const addedIds = pendingAddableSpecies.map(fish => fish.id);
+      const names = pendingAddableSpecies.map(fish => fish.name).join('、');
+      setAddedSpeciesIds(prev => Array.from(new Set([...prev, ...addedIds])));
+      setSelectedAddableSpeciesIds(prev => prev.filter(id => !addedIds.includes(id)));
+      setResultFeedback((response && 'message' in response && response.message) || `已记录 ${pendingAddableSpecies.length} 种实际入缸生物：${names}。`);
     } catch {
       setRecordError(isEn ? 'Could not save the livestock record. Try again.' : '入缸记录没有保存成功，请重试。');
+      setResultFeedback(isEn ? 'Could not save the livestock record. Try again.' : '入缸记录没有保存成功，请重试。');
     } finally {
-      setIsRecording(false);
+      setIsAddingToAquarium(false);
+      setConfirmingCautionAdd(false);
+      setActiveModal(null);
     }
   };
-
-  const canEvaluate = evaluationItems.length >= 2 && relevantPairs.length > 0;
-  const aquariumVolume = selectedAquarium ? getAquariumVolumeLiters(selectedAquarium) : null;
-  const contextLabel = selectedAquarium
-    ? [
-      selectedAquarium.name,
-      aquariumVolume ? `${aquariumVolume}L` : '',
-      `${existingLivestock.length} ${isEn ? 'existing species' : '种已有生物'}`,
-    ].filter(Boolean).join(' · ')
-    : (isEn ? 'No tank selected · comparison only' : '未选择鱼缸 · 仅比较所选组合');
+  const handlePrimaryResultAction = () => {
+    if (resultAddPolicy === 'block') {
+      setIsClearConfirmOpen(true);
+      return;
+    }
+    if (resultAddPolicy === 'complete_information') {
+      const save = async () => {
+        try {
+          if (onSaveToWishlist) await onSaveToWishlist(selectedSpecies.map(species => species.id));
+          else selectedSpecies.forEach(species => addSpeciesFavorite(species.id));
+          setResultFeedback(isEn ? 'Saved to your wishlist. Revisit this mix after more review.' : '已加入种草清单，资料完善后可以再回来判断。');
+          setRecordError('');
+        } catch {
+          setRecordError(isEn ? 'Could not save to wishlist. Try again.' : '种草清单保存失败，请重试。');
+        }
+      };
+      void save();
+      return;
+    }
+    if (resultAddPolicy === 'confirm') {
+      setConfirmingCautionAdd(true);
+      setActiveModal('adjustment');
+      return;
+    }
+    if (resultAddPolicy === 'allow') void performAddToAquarium();
+  };
+  const clearSelectedSpecies = () => {
+    updateSpeciesIds([]);
+    setSelectedQuantitiesById({});
+    setSelectedAddableSpeciesIds([]);
+    setAddedSpeciesIds([]);
+    setIsClearConfirmOpen(false);
+    setResultFeedback(`已清空 ${selectedCount} 种生物，可以重新选择组合。`);
+  };
 
   return (
-    <div data-surface="compatibility-checkout-drawer" className="fixed bottom-0 right-0 top-0 z-[80] grid h-[100dvh] w-full content-start gap-4 overflow-y-auto rounded-none border-l border-emerald-100 bg-white p-4 shadow-[-24px_0_60px_rgba(15,23,42,0.18)] animate-in slide-in-from-right-full duration-200 sm:min-w-0 sm:rounded-l-[24px] md:p-5">
-      {onBrowseAtlas && (
-        <button
-          type="button"
-          onClick={onBrowseAtlas}
-          className="absolute right-4 top-4 z-10 flex h-10 w-10 items-center justify-center rounded-full border border-border bg-white text-ink/50 shadow-sm transition-colors hover:border-emerald-200 hover:text-emerald-700"
-          aria-label={isEn ? 'Close compatibility plan' : '关闭混养方案'}
-        >
-          <X className="h-4 w-4" />
-        </button>
-      )}
-      <header className="flex flex-wrap items-start justify-between gap-3 pr-12">
-        <div>
-          <h2 className="mt-1 text-[22px] font-black text-ink">{isEn ? 'Can these species live together?' : '这些生物能不能一起养？'}</h2>
-          <p className="mt-1 max-w-[680px] text-[12px] font-semibold leading-5 text-ink/52">
-            {isEn
-              ? 'Existing livestock is treated as the baseline. Select only what you plan to add; AquaGuide will tell you which pair conflicts and what to change.'
-              : '选择准备加入的生物，查看是否适合当前鱼缸。'}
-          </p>
+    <>
+    <section data-surface="compatibility-checkout-drawer" className="page-frame overflow-hidden rounded-[18px] border border-border bg-white shadow-sm">
+      <span className="sr-only">当前鱼缸</span>
+      <span className="sr-only">混养结果</span>
+      <div className={`border-b px-4 py-4 ${meta.tone}`}>
+        <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-2">
+          <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${meta.iconTone}`}>
+            {result.level === 'compatible' ? <CheckCircle2 className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
+          </span>
+          <div className="min-w-0">
+            <h2 className="truncate text-[14px] font-black text-ink">{isEn ? 'Tank Housing Compatibility' : '混养风险计算'}</h2>
+            <p className="text-[10px] font-medium text-ink/50">{isEn ? 'Add 2+ species to evaluate co-housing compatibility.' : '添加 2 种以上生物，系统会判断是否适合同缸。'}</p>
+          </div>
         </div>
-        {aquariums.length > 1 && (
-          <select
-            value={selectedAquarium?.id || ''}
-            onChange={event => setSelectedAquariumId(event.target.value)}
-            className="min-h-11 rounded-full border border-border bg-white px-3 text-xs font-black text-ink/65"
-          >
-            {aquariums.map(item => <option key={item.id} value={item.id}>{item.name}</option>)}
-          </select>
-        )}
-      </header>
+        <span className="shrink-0 rounded-full border border-current/20 bg-white/70 px-2.5 py-1 text-[11px] font-black">
+          {statusLabel}
+        </span>
+        </div>
+      </div>
 
-      <section className="rounded-[18px] bg-bg/65 p-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-[12px] font-black text-ink">{isEn ? 'Evaluation baseline' : '当前鱼缸'}</div>
-          {selectedAquarium && onViewAquarium && (
-            <button type="button" onClick={onViewAquarium} className="text-[10px] font-black text-emerald-700">{isEn ? 'View tank' : '查看鱼缸'}</button>
-          )}
-        </div>
-        <div className="mt-1 text-[11px] font-bold text-ink/50">{contextLabel}</div>
-        {selectedAquarium && existingLivestock.length > 0 && (
-          <div className="mt-2 flex flex-wrap gap-1.5">
-            {existingLivestock.slice(0, 8).map(item => (
-              <span key={item.species.id} className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-ink/58">
-                {getSpeciesName(item.species, isEn)} × {existingQuantity[item.species.id] || 1}
+      <div className="grid gap-3 p-3 pb-8 lg:grid-cols-[minmax(0,1fr)_minmax(320px,0.82fr)] lg:items-start">
+        <section className="rounded-[16px] bg-white/75 p-3 lg:col-start-1">
+          <div className="mb-3 rounded-[16px] border border-emerald-100 bg-emerald-50/45 p-3">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <div className="text-[12px] font-black text-ink">{isEn ? 'Calculate by Tank' : '按鱼缸计算'}</div>
+                <div className="mt-0.5 text-[10px] font-bold text-ink/45">{isEn ? 'Import current tank livestock without modifying tank state.' : '导入真实缸内活体，不会修改鱼缸数据。'}</div>
+              </div>
+              <span className="shrink-0 rounded-full bg-white px-2 py-1 text-[10px] font-black text-emerald-700">
+                {currentLivestock.length} 种活体
               </span>
-            ))}
-            {existingLivestock.length > 8 && <span className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-ink/40">+{existingLivestock.length - 8}</span>}
-          </div>
-        )}
-      </section>
-
-      <section className="grid gap-3 rounded-[18px] border border-border/70 p-3">
-        <div>
-          <div className="text-[13px] font-black text-ink">{selectedAquarium && existingLivestock.length > 0 ? (isEn ? 'What do you want to add?' : '你准备加入什么？') : (isEn ? 'Select species to compare' : '选择要比较的生物')}</div>
-          <div className="mt-1 text-[10px] font-bold text-ink/42">
-            {selectedAquarium && existingLivestock.length > 0
-              ? (isEn ? 'Existing livestock is included automatically.' : '已有生物会自动纳入判断')
-              : (isEn ? 'Select at least two species.' : '未选择已有鱼缸时，需要至少选择 2 种。')}
-          </div>
-        </div>
-
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/35" />
-          <Input value={searchTerm} onChange={event => setSearchTerm(event.target.value)} placeholder={isEn ? 'Search fish, shrimp or snails…' : '搜索鱼、虾、螺等生物'} className="h-11 rounded-[14px] bg-bg pl-9 text-sm font-bold" />
-        </div>
-
-        {(searchResults.length > 0 ? searchResults : commonSpecies).length > 0 && (
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-            {(searchResults.length > 0 ? searchResults : commonSpecies).map(fish => {
-              const taxonomy = getCareTaxonomyPath(fish);
-              return (
-                <button key={fish.id} type="button" onClick={() => addSpecies(fish)} className="grid grid-cols-[48px_1fr_auto] items-center gap-2 rounded-[15px] border border-border/70 bg-white p-2 text-left hover:border-emerald-300">
-                  <span className={`flex h-12 w-12 items-center justify-center rounded-[12px] ${getSpeciesImageSurfaceClass(fish)}`}>
-                    <img src={getSpeciesDisplayImage(fish)} alt={fish.name} className={`max-h-11 max-w-11 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block truncate text-[11px] font-black text-ink">{getSpeciesName(fish, isEn)}</span>
-                    <span className="mt-0.5 block truncate text-[9px] font-bold text-ink/40">{taxonomy.size} · {fish.housingMode || '待评估'}</span>
-                  </span>
-                  <ChevronRight className="h-4 w-4 text-emerald-600" />
-                </button>
-              );
-            })}
-          </div>
-        )}
-
-        <div className="flex flex-wrap gap-2">
-          {selectedSpecies.map(fish => {
-            const existing = existingIds.has(fish.id);
-            const quantity = Math.max(1, quantities[fish.id] || existingQuantity[fish.id] || 1);
-            return (
-              <div key={fish.id} className={`flex items-center gap-2 rounded-full border py-1 pl-1.5 pr-1.5 ${existing ? 'border-slate-200 bg-slate-50' : 'border-emerald-200 bg-emerald-50'}`}>
-                <img src={getSpeciesDisplayImage(fish)} alt={fish.name} className={`h-8 w-9 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
-                <div>
-                  <div className="max-w-[120px] truncate text-[10px] font-black text-ink">{getSpeciesName(fish, isEn)}</div>
-                  <div className="text-[8px] font-bold text-ink/40">{existing ? (isEn ? 'already in tank' : '缸内已有') : (isEn ? 'planned' : '准备加入')} · ×{quantity}</div>
-                </div>
-                {!existing && (
-                  <div className="flex items-center rounded-full bg-white">
-                    <button type="button" onClick={() => setQuantities(current => ({ ...current, [fish.id]: Math.max(1, quantity - 1) }))} className="h-8 w-8 rounded-full text-sm font-black text-ink/45">−</button>
-                    <button type="button" onClick={() => setQuantities(current => ({ ...current, [fish.id]: quantity + 1 }))} className="h-8 w-8 rounded-full text-sm font-black text-emerald-700">+</button>
-                  </div>
-                )}
-                <button type="button" onClick={() => removeSpecies(fish.id)} className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink/40 hover:text-red-600" aria-label={isEn ? 'Remove from comparison' : '从本次比较移除'}><X className="h-3.5 w-3.5" /></button>
-              </div>
-            );
-          })}
-        </div>
-
-        <button type="button" onClick={onBrowseAtlas} className="w-fit text-[11px] font-black text-emerald-700">{isEn ? 'Browse all species →' : '从完整图鉴继续选择 →'}</button>
-      </section>
-
-      <section className="grid gap-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-[13px] font-black text-ink">{isEn ? 'Compatibility result' : '混养结果'}</div>
-        </div>
-
-        {!canEvaluate || !resultStatus || !meta ? (
-          <div className="rounded-[18px] border border-dashed border-border bg-bg/60 px-4 py-8 text-center">
-            <div className="text-sm font-black text-ink/60">
-              {selectedAquarium && existingLivestock.length > 0
-                ? (isEn ? 'Select at least one species you plan to add.' : '选择至少 1 种准备加入的生物后，这里会直接给出结论。')
-                : (isEn ? 'Select at least two species.' : '选择至少 2 种生物后，这里会直接给出结论。')}
             </div>
-          </div>
-        ) : (
-          <>
-            <div className={`rounded-[20px] border p-4 ${meta.box}`}>
-              <div className={`flex items-start gap-3 ${meta.text}`}>
-                <span className="mt-0.5">{meta.icon}</span>
-                <div>
-                  <div className={`font-black ${resultStatus === 'not_recommended' ? 'text-[26px] leading-tight' : 'text-[20px]'}`}>{meta.label}</div>
-                  <p className="mt-1 text-[12px] font-bold leading-5 opacity-85">{meta.description}</p>
-                </div>
-              </div>
-            </div>
-
-            {blockingPairs.length > 0 && (
-              <section className="grid gap-2">
-                <div className="text-[12px] font-black text-red-700">{isEn ? 'Conflicting pairs' : '不适合的组合'}</div>
-                {blockingPairs.slice(0, 4).map(pair => (
-                  <article key={pair.pairId} className="rounded-[18px] border-2 border-red-200 bg-white p-4">
-                    <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="text-[16px] font-black text-red-800">{getSpeciesName(pair.speciesA, isEn)} × {getSpeciesName(pair.speciesB, isEn)}</div>
-                      <span className="rounded-full bg-red-100 px-2.5 py-1 text-[10px] font-black text-red-700">{isEn ? 'Cannot recommend together' : '当前不建议同缸'}</span>
-                    </div>
-                    <div className="mt-3 grid gap-2">
-                      {getPairReasons(pair).map(reason => (
-                        <div key={reason} className="rounded-[13px] bg-red-50 px-3 py-2 text-[13px] font-bold leading-6 text-red-900">{reason}</div>
-                      ))}
-                    </div>
-                  </article>
+            {aquariums.length > 1 ? (
+              <label className="mt-2 flex h-10 items-center gap-2 rounded-[13px] bg-white px-3 text-[11px] font-black text-ink/70">
+                <span className="shrink-0 text-ink/42">{isEn ? 'Aquarium' : '鱼缸'}</span>
+                <select
+                  value={selectedAquarium?.id || ''}
+                  onChange={(event) => setSelectedAquariumId(event.target.value)}
+                  className="min-w-0 flex-1 bg-transparent text-[12px] font-black outline-none"
+                >
+                  {aquariums.map(aquarium => (
+                    <option key={aquarium.id} value={aquarium.id}>{getAquariumLabel(aquarium, isEn)}</option>
+                  ))}
+                </select>
+                <ChevronDown className="h-3.5 w-3.5 text-ink/35" />
+              </label>
+            ) : (
+              <div className="mt-2 rounded-[13px] bg-white px-3 py-2 text-[11px] font-bold text-ink/58">{getAquariumLabel(selectedAquarium, isEn)}</div>
+            )}
+            {currentLivestock.length > 0 ? (
+              <div className="mt-2 flex flex-wrap gap-1.5">
+                {currentLivestock.slice(0, 6).map(item => (
+                  <span key={item.species?.id || item.record?.fishId || item.species?.name} className="rounded-full bg-white px-2 py-1 text-[10px] font-black text-ink/62">
+                    {item.species?.name || '未知生物'} × {item.record?.quantity || 1}
+                  </span>
                 ))}
-              </section>
+                {currentLivestock.length > 6 && <span className="rounded-full bg-white px-2 py-1 text-[10px] font-black text-ink/42">+{currentLivestock.length - 6}</span>}
+              </div>
+            ) : (
+              <div className="mt-2 rounded-[13px] bg-white px-3 py-2 text-[11px] font-bold text-ink/45">
+                {isEn ? 'Current tank has no livestock. Search and add planning candidates explicitly; no species will be generated from the tank.' : '当前鱼缸暂无活体，请通过搜索主动加入规划物种；系统不会从空缸生成缸内物种。'}
+              </div>
             )}
-
-            {cautionPairs.length > 0 && resultStatus !== 'not_recommended' && (
-              <section className="rounded-[18px] border border-amber-200 bg-amber-50/70 p-3">
-                <div className="text-[12px] font-black text-amber-800">{isEn ? 'Conditions to watch' : '需要满足的条件'}</div>
-                <div className="mt-2 grid gap-2">
-                  {unique(cautionPairs.flatMap(pair => [...getPairReasons(pair), ...pair.actions])).slice(0, 5).map(item => (
-                    <div key={item} className="rounded-[12px] bg-white px-3 py-2 text-[11px] font-bold leading-5 text-amber-900">{item}</div>
-                  ))}
-                </div>
-              </section>
+            {missingLivestockCount > 0 && (
+              <div className="mt-2 text-[10px] font-bold text-amber-700">
+                有 {missingLivestockCount} 条旧记录缺少图鉴数据，已跳过。
+              </div>
             )}
+            <button
+              type="button"
+              onClick={importAquariumLivestock}
+              disabled={isRecording}
+              className="mt-3 h-10 w-full rounded-full bg-emerald-700 text-[12px] font-black text-white disabled:bg-ink/10 disabled:text-ink/35"
+            >
+              {isEn ? 'Import Livestock & Calculate' : '导入该鱼缸生物计算'}
+            </button>
+          </div>
+          <div className="mb-2 text-[12px] font-black text-ink">{isEn ? 'Add Species' : '添加生物'}</div>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink/45" />
+            <Input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder={isEn ? 'Search and add species to evaluate' : '搜索并加入要混养的生物'}
+              className="h-10 rounded-[14px] border-amber-200 bg-white pl-8 text-[12px] font-medium text-ink placeholder:text-ink/40"
+            />
+          </div>
 
-            {missingPairs.length > 0 && (
-              <section className="rounded-[18px] border border-sky-200 bg-sky-50 p-3">
-                <div className="text-[12px] font-black text-sky-800">{isEn ? 'Complete these details' : '补充这些信息'}</div>
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {unique(missingPairs.flatMap(pair => pair.rawResult.missingData.map(item => item.evidence || item.title))).slice(0, 5).map(item => (
-                    <span key={item} className="rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-sky-800">{item}</span>
-                  ))}
-                </div>
-                {onRequestTankInfo && <Button type="button" onClick={requestMissingTankInfo} className="mt-3 h-10 rounded-full bg-sky-700 px-4 text-xs font-black text-white">{isEn ? 'Complete tank settings' : '去完善鱼缸参数'}</Button>}
-              </section>
-            )}
+          {searchResults.length > 0 && (
+            <div className="mt-2 grid grid-cols-1 gap-1.5">
+              {searchResults.map(fish => {
+                const taxonomy = getCareTaxonomyPath(fish);
+                return (
+                  <button
+                    key={fish.id}
+                    type="button"
+                    onClick={() => addSpecies(fish)}
+                    className="grid min-h-[54px] grid-cols-[44px_1fr_auto] items-center gap-2 rounded-[14px] border border-amber-100 bg-white px-2 py-1.5 text-left transition-colors hover:border-amber-300"
+                  >
+                    <span className="flex h-10 w-10 items-center justify-center overflow-visible rounded-full">
+                      <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-9 max-w-10 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
+                      <span className="block truncate text-[10px] font-medium text-ink/45">
+                        {taxonomy.temperatureBand} · {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Observe' : '混养待评估')}
+                      </span>
+                    </span>
+                    <span className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-black text-amber-700">{isEn ? 'Add' : '加入'}</span>
+                  </button>
+                );
+              })}
+            </div>
+          )}
 
-            {resultStatus === 'not_recommended' && (
-              <section className="rounded-[20px] border border-slate-200 bg-slate-50 p-4">
-                <div className="text-[13px] font-black text-ink">{isEn ? 'How to adjust?' : '怎么调整？'}</div>
-                <div className="mt-3 grid gap-2 md:grid-cols-2">
-                  {conflictActions.map(action => (
-                    <div key={action.id} className="rounded-[16px] border border-white bg-white p-3 shadow-sm">
-                      <div className={`text-[12px] font-black ${action.tone === 'danger' ? 'text-red-700' : action.tone === 'warning' ? 'text-amber-700' : 'text-sky-700'}`}>{action.title}</div>
-                      <p className="mt-1 text-[10px] font-semibold leading-5 text-ink/50">{action.detail}</p>
-                      {action.removeSpeciesId && (
-                        <Button type="button" variant="outline" onClick={() => removeSpecies(action.removeSpeciesId!)} className="mt-2 h-9 rounded-full border-red-200 px-3 text-[10px] font-black text-red-700">{getConflictActionLabel(action, isEn)}</Button>
-                      )}
-                      {!action.removeSpeciesId && onViewAquarium && (
-                        <Button type="button" variant="outline" onClick={onViewAquarium} className="mt-2 h-9 rounded-full px-3 text-[10px] font-black">{isEn ? 'Review current tank' : '查看当前鱼缸'}</Button>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </section>
-            )}
+          <div className="mt-3">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <div>
+                <div className="text-[12px] font-black text-ink">{isEn ? 'Recommended Candidates' : '推荐候选'}</div>
+                <div className="mt-0.5 text-[10px] font-bold text-ink/42">{isEn ? 'Filtered for your tank. Tap card to calculate.' : '根据当前鱼缸和缸内生物筛选，点卡片加入计算。'}</div>
+              </div>
+            </div>
+            <div className="relative -mx-3 min-w-0 max-w-[calc(100vw-32px)] overflow-hidden">
+              <div className="pointer-events-none absolute bottom-0 right-0 top-0 z-10 w-8 bg-gradient-to-l from-white/75 to-transparent" />
+              <div className="app-scrollbar-hidden flex w-full min-w-0 snap-x snap-mandatory gap-2 overflow-x-scroll overflow-y-hidden overscroll-x-contain px-3 pb-1 pr-10 touch-pan-x [-webkit-overflow-scrolling:touch] lg:grid lg:grid-cols-[repeat(auto-fit,minmax(82px,1fr))] lg:overflow-visible lg:pr-3">
+              {commonPreviewSpecies.map(fish => {
+                const taxonomy = getCareTaxonomyPath(fish);
+                return (
+                  <button
+                    key={fish.id}
+                    type="button"
+                    onClick={() => addSpecies(fish)}
+                    className="grid w-[82px] shrink-0 snap-start gap-1 rounded-[14px] border border-transparent bg-transparent p-1 text-left transition-colors hover:border-emerald-100 hover:bg-emerald-50/40"
+                    aria-label={isEn ? `Add ${fish.name} to calculation` : `加入${fish.name}到混养计算`}
+                  >
+                    <span className={`flex h-[58px] w-full items-center justify-center overflow-visible rounded-[13px] ${getSpeciesImageSurfaceClass(fish)}`}>
+                      <img
+                        src={getDisplayImage(fish)}
+                        alt={fish.name}
+                        className={`max-h-[54px] max-w-[78px] object-contain ${getSpeciesImageClass(fish)}`}
+                        referrerPolicy="no-referrer"
+                      />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
+                      <span className="mt-0.5 block truncate text-[9px] font-bold text-ink/42">
+                        {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Assessable' : '可评估')}
+                      </span>
+                    </span>
+                  </button>
+                );
+              })}
+              <button
+                type="button"
+                onClick={onBrowseAtlas}
+                className="flex w-[82px] shrink-0 snap-start flex-col items-center justify-center gap-1.5 rounded-[14px] border border-dashed border-emerald-200 bg-emerald-50/65 p-2 text-center text-emerald-800 shadow-sm"
+                aria-label={isEn ? 'Browse more species' : '浏览更多图鉴'}
+              >
+                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white/75 text-emerald-700 shadow-sm">
+                  <ChevronRight className="h-5 w-5" />
+                </span>
+                <span className="text-[12px] font-black leading-tight">{isEn ? 'More' : '更多'}</span>
+                <span className="text-[9px] font-bold leading-tight text-emerald-900/58">{isEn ? 'Browse Species' : '浏览图鉴'}</span>
+              </button>
+              </div>
+            </div>
+          </div>
+        </section>
 
-            <div className="grid gap-2 sm:grid-cols-2">
-              <Button type="button" onClick={() => void openAiAdvice()} disabled={aiLoading || !resultStatus} className="h-11 rounded-full bg-violet-700 text-sm font-black text-white hover:bg-violet-800">
-                {aiLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Sparkles className="mr-2 h-4 w-4" />}
-                {!selectedAquarium || !readiness?.ready ? (isEn ? 'Complete data before AI' : '完善参数后使用 AI') : (isEn ? 'Ask AI to explain & adjust' : 'AI 建议')}
-              </Button>
-              {candidateSpecies.length > 0 && resultStatus !== 'not_recommended' && resultStatus !== 'insufficient_data' && onAddToAquarium && (
-                <Button type="button" onClick={() => void recordActualStocking()} disabled={isRecording} className={`h-11 rounded-full text-sm font-black text-white ${resultStatus === 'caution' ? 'bg-amber-600 hover:bg-amber-700' : 'bg-emerald-700 hover:bg-emerald-800'}`}>
-                  {isRecording && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {resultStatus === 'caution' && !cautionConfirmed ? (isEn ? 'Review risk before recording' : '确认风险后再记录') : (isEn ? 'Already stocked · record now' : '已经实际入缸，记录下来')}
-                </Button>
+        <section className="rounded-[16px] bg-white/75 p-3 lg:col-start-2 lg:row-start-1">
+            <div className="mb-2 flex items-center justify-between gap-2">
+              <div>
+                <div className="text-[12px] font-black text-ink">{selectedTitle}</div>
+                <div className={`mt-0.5 text-[10px] font-bold ${selectedCount >= 2 ? 'text-emerald-700' : 'text-ink/42'}`}>{selectedHint}</div>
+              </div>
+              {selectedSpecies.length > 0 && (
+                <button type="button" onClick={() => setIsClearConfirmOpen(true)} className="text-[10px] font-bold text-ink/45 hover:text-ink">
+                  清空
+                </button>
               )}
             </div>
-
-            {!aiReady && selectedAquarium && readiness && !readiness.ready && (
-              <div className="rounded-[14px] bg-violet-50 px-3 py-2 text-[10px] font-bold leading-5 text-violet-800">
-                {isEn ? 'AI uses verified tank data only. Missing: ' : '还缺：'}{readiness.missing.map(item => item.label).join(isEn ? ', ' : '、')}
+            {selectedSpecies.length === 0 ? (
+              <div className="rounded-[14px] bg-bg px-3 py-4 text-center">
+                <div className="text-[12px] font-black text-ink/55">{isEn ? 'No species added yet.' : '还没有添加生物。'}</div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-2">
+                {selectedSpecies.map(fish => (
+                  <div key={fish.id} className="relative flex min-w-0 max-w-full items-center gap-2 rounded-full border border-emerald-100 bg-emerald-50/40 py-1 pl-1.5 pr-12">
+                    <button
+                      type="button"
+                      aria-label={`移除${fish.name}`}
+                      onClick={() => {
+                        updateSpeciesIds(prev => prev.filter(id => id !== fish.id));
+                        setSelectedQuantitiesById(prev => {
+                          const next = { ...prev };
+                          delete next[fish.id];
+                          return next;
+                        });
+                      }}
+                      className="absolute right-0.5 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-ink/40 shadow-sm hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300"
+                    >
+                      <X className="h-3 w-3" />
+                    </button>
+                    <div className="flex h-9 w-10 shrink-0 items-center justify-center overflow-visible">
+                      <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-8 max-w-10 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                    </div>
+                    <div className="grid min-w-0 truncate text-[11px] font-black text-ink/72">
+                      <span className="truncate">{getSpeciesNameLocalized(fish, isEn)}</span>
+                      <span className="text-[9px] font-bold text-ink/45">×{Math.max(1, selectedQuantitiesById[fish.id] || currentQuantityBySpeciesId[fish.id] || 1)}</span>
+                    </div>
+                    <button
+                      type="button"
+                      aria-label="+"
+                      onClick={() => setSelectedQuantitiesById(prev => ({
+                        ...prev,
+                        [fish.id]: Math.max(1, prev[fish.id] || currentQuantityBySpeciesId[fish.id] || 1) + 1,
+                      }))}
+                      className="absolute right-11 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white text-sm font-black text-emerald-700 shadow-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300"
+                    >
+                      +
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
+        </section>
 
-            {feedback && <div className="rounded-[14px] bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-800">{feedback}</div>}
-            {recordError && <div role="alert" className="rounded-[14px] border border-red-200 bg-red-50 px-3 py-2 text-[11px] font-black text-red-800">{recordError}</div>}
-          </>
-        )}
-      </section>
-
-      <Dialog open={aiOpen} onOpenChange={setAiOpen}>
-        <DialogContent className="w-[92vw] max-w-[560px] rounded-[24px] border-violet-100 bg-white p-0">
-          <DialogHeader className="border-b border-violet-100 bg-violet-50/70 px-5 py-4 text-left">
-            <div className="inline-flex w-fit items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-violet-700"><Sparkles className="h-3.5 w-3.5" />{isEn ? 'AI INTERPRETATION' : 'AI 建议'}</div>
-            <DialogTitle className="mt-2 text-[20px] font-black text-ink">{isEn ? 'Why this result, and what can I change?' : '为什么会这样？我具体可以怎么改？'}</DialogTitle>
-          </DialogHeader>
-          <div className="max-h-[62dvh] overflow-y-auto px-5 py-4">
-            {aiLoading && <div className="flex min-h-[180px] items-center justify-center gap-2 text-sm font-black text-violet-700"><Loader2 className="h-5 w-5 animate-spin" />{isEn ? 'Generating suggestions…' : '正在生成建议…'}</div>}
-            {!aiLoading && aiResult && (
-              <div className="grid gap-3">
-                <div className={`rounded-[16px] px-3 py-2 text-[11px] font-black ${aiResult.source === 'model' ? 'bg-emerald-50 text-emerald-800' : 'bg-amber-50 text-amber-800'}`}>
-                  {aiResult.source === 'model' ? (isEn ? 'AI generated' : 'AI 已生成') : (isEn ? 'AI unavailable. Please try again later.' : 'AI 暂不可用，请稍后再试')}
-                </div>
-                <div className="rounded-[16px] bg-violet-50 p-3">
-                  <div className="text-[11px] font-black text-violet-800">{isEn ? 'Overview' : '建议概览'}</div>
-                  <p className="mt-1 text-[13px] font-bold leading-6 text-ink">{aiResult.summary}</p>
-                </div>
-                {aiResult.reasons.length > 0 && (
-                  <section>
-                    <div className="text-[12px] font-black text-ink">{isEn ? 'Why' : '为什么'}</div>
-                    <div className="mt-2 grid gap-2">
-                      {aiResult.reasons.slice(0, 4).map((item, index) => (
-                        <div key={`${item.title}-${index}`} className="rounded-[14px] border border-border bg-white p-3">
-                          <div className="text-[11px] font-black text-ink">{item.title}</div>
-                          <p className="mt-1 text-[11px] font-semibold leading-5 text-ink/58">{item.detail}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-                {aiResult.suggestions.length > 0 && (
-                  <section>
-                    <div className="text-[12px] font-black text-ink">{isEn ? 'Adjustment options' : '调整建议'}</div>
-                    <div className="mt-2 grid gap-2">
-                      {aiResult.suggestions.slice(0, 4).map((item, index) => (
-                        <div key={`${item.title}-${index}`} className="rounded-[14px] bg-emerald-50 px-3 py-2">
-                          <div className="text-[11px] font-black text-emerald-800">{item.title}</div>
-                          <p className="mt-1 text-[11px] font-semibold leading-5 text-emerald-950/70">{item.detail}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                )}
-                <div className="rounded-[14px] bg-slate-50 px-3 py-2 text-[10px] font-bold leading-5 text-ink/45">{isEn ? 'Check the advice against actual water conditions and livestock behavior.' : '请结合实际水质和生物状态判断。'}</div>
-              </div>
-            )}
+        <section className={selectedCount >= 2 ? `rounded-[16px] border p-3 lg:col-span-2 ${meta.tone}` : 'rounded-[16px] bg-bg px-3 py-3 lg:col-span-2'}>
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <span className="text-[12px] font-black">{isEn ? 'Compatibility Results' : '计算结果'}</span>
+            <span className="text-[10px] font-bold opacity-70">{selectedCount} 种生物</span>
           </div>
-          <DialogFooter className="border-t border-border px-5 py-4">
-            <Button type="button" variant="outline" onClick={() => setAiOpen(false)} className="h-11 w-full rounded-full text-sm font-black">{isEn ? 'Close' : '关闭'}</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </div>
+          {selectedCount < 2 ? (
+            <div className="text-[11px] font-bold text-ink/45">
+              {isEn ? 'Add 2+ species to display risk assessment.' : '添加 2 种以上生物后显示风险结果。'}
+              <span className="sr-only">选择至少 1 种准备加入的生物后，这里会直接给出结论。</span>
+            </div>
+          ) : (
+            <>
+              {visualResultModel?.presentationMode === 'unavailable' ? (
+                <section className="mb-3 rounded-[18px] border border-sky-100 bg-sky-50/75 p-3" data-visual-result-presentation="unavailable">
+                  <div className="text-[15px] font-black text-ink">{visualResultModel.title}</div>
+                  <p className="mt-1 text-[12px] font-bold leading-relaxed text-ink/65">{visualResultModel.conclusion}</p>
+                  <div className="mt-3 flex flex-wrap gap-2">
+                    <button type="button" onClick={handlePrimaryResultAction} className="min-h-11 rounded-full bg-accent px-4 text-[11px] font-black text-white">加入种草清单</button>
+                    {onBrowseAtlas && <button type="button" onClick={onBrowseAtlas} className="min-h-11 rounded-full border border-emerald-200 bg-white px-4 text-[11px] font-black text-emerald-800">查看物种养护</button>}
+                  </div>
+                </section>
+              ) : visualResultModel && (
+                <VisualResultCard
+                  model={visualResultModel}
+                  onPrimaryAction={handlePrimaryResultAction}
+                  actionPending={isAddingToAquarium}
+                  className="mb-3"
+                />
+              )}
+
+              {resultFeedback && (
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-2 rounded-[12px] border border-emerald-100 bg-emerald-50 px-3 py-2 text-[11px] font-black text-emerald-700">
+                  <span>{resultFeedback}</span>
+                  {addedSpeciesIds.length > 0 && onViewAquarium && (
+                    <button
+                      type="button"
+                      onClick={onViewAquarium}
+                      className="shrink-0 rounded-full bg-white px-3 py-1.5 text-[10px] font-black text-emerald-800 shadow-sm"
+                    >
+                      {isEn ? 'View My Aquarium' : '查看我的鱼缸'}
+                    </button>
+                  )}
+                </div>
+              )}
+              {recordError && (
+                <div role="alert" className="mb-3 rounded-[12px] border border-red-100 bg-red-50 px-3 py-2 text-[11px] font-black text-red-700">
+                  {recordError}
+                </div>
+              )}
+
+              <div className="mb-3 rounded-[16px] bg-white/78 p-3">
+                <div className="mb-2 flex items-center justify-between gap-2">
+                  <div>
+                    <div className="text-[12px] font-black text-ink">{getDecisionStepTitle(result.level)}</div>
+                    <div className="text-[10px] font-bold text-ink/42">{isEn ? 'Check items to include. Delete only affects current calculation.' : '勾选要加入的对象；删除键只移出本次计算，不会删除鱼缸数据。'}</div>
+                  </div>
+                  {conflictTags.length > 0 && (
+                    <div className="flex max-w-[52%] flex-wrap justify-end gap-1">
+                      {conflictTags.slice(0, 3).map(item => (
+                        <span key={item} className="rounded-full bg-amber-50 px-2 py-1 text-[9px] font-black text-amber-700">
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {speciesActionGroups.remove.length > 0 && (
+                  <div className="mb-2 rounded-[14px] border border-red-100 bg-red-50/80 p-2.5">
+                    <div className="mb-2 text-[10px] font-black text-red-600">{isEn ? 'Recommended to Remove / Replace' : '建议先移除 / 更换'}</div>
+                    <div className="flex flex-wrap gap-2">
+                      {speciesActionGroups.remove.map(fish => (
+                        <div key={fish.id} className="flex items-center gap-2 rounded-full bg-white py-1 pl-1.5 pr-2 shadow-sm">
+                          <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-red-50">
+                            <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                          </span>
+                          <span className="max-w-[92px] truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
+                          <button
+                            type="button"
+                            aria-label={`从混养计算移除${fish.name}`}
+                            onClick={() => {
+                              updateSpeciesIds(prev => prev.filter(id => id !== fish.id));
+                              setSelectedQuantitiesById(prev => {
+                                const next = { ...prev };
+                                delete next[fish.id];
+                                return next;
+                              });
+                              setResultFeedback(`已从组合中移除 ${fish.name}。`);
+                            }}
+                            className="flex h-11 w-11 items-center justify-center rounded-full bg-red-600 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2"
+                          >
+                            <X className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {result.level === 'not_recommended' && speciesActionGroups.remove.length === 0 && (
+                  <div className="mb-2 rounded-[14px] border border-red-100 bg-red-50/80 px-3 py-3 text-[11px] font-bold leading-relaxed text-red-700">
+                    {isEn ? 'Rules cannot safely determine which species to remove. Please modify selection.' : '当前规则无法安全确定应移除哪一个对象，请返回重新选择组合，不会自动猜测删除物种。'}
+                  </div>
+                )}
+
+                {speciesActionGroups.keep.length > 0 && (
+                  <div className="mb-2 rounded-[14px] border border-emerald-100 bg-emerald-50/80 p-2.5">
+                    <div className="mb-2 flex items-center justify-between gap-2">
+                      <div className="text-[10px] font-black text-emerald-700">{isEn ? 'Compatible New Additions' : '可加入的新生物'}</div>
+                      <div className="text-[9px] font-bold text-emerald-700/70">
+                        {selectedAddableCount > 0 ? `已选 ${selectedAddableCount} 个` : '未选择'}
+                      </div>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
+                      {speciesActionGroups.keep.map(fish => {
+                        const alreadyAdded = addedSpeciesIds.includes(fish.id);
+                        const selectedForAdd = selectedAddableSpeciesIds.includes(fish.id) && !alreadyAdded;
+                        const quantity = Math.max(1, selectedQuantitiesById[fish.id] || 1);
+                        return (
+                        <button
+                          type="button"
+                          key={fish.id}
+                          disabled={alreadyAdded || result.level === 'insufficient_data'}
+                          onClick={() => {
+                            setSelectedAddableSpeciesIds(prev => (
+                              prev.includes(fish.id)
+                                ? prev.filter(id => id !== fish.id)
+                                : [...prev, fish.id]
+                            ));
+                          }}
+                          className={`flex items-center gap-2 rounded-full py-1 pl-1.5 pr-3 text-left shadow-sm transition ${
+                            alreadyAdded
+                              ? 'bg-emerald-100 text-emerald-700'
+                              : selectedForAdd
+                                ? 'bg-white ring-2 ring-emerald-400'
+                                : 'bg-white/65 opacity-70'
+                          }`}
+                        >
+                          <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-emerald-50">
+                            <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                          </span>
+                          <span className="grid min-w-0">
+                            <span className="max-w-[108px] truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
+                            <span className="text-[9px] font-bold text-ink/45">{alreadyAdded ? '已加入' : `x${quantity}`}</span>
+                          </span>
+                          {!alreadyAdded && (
+                            <span className={`ml-0.5 h-3.5 w-3.5 rounded-full border ${selectedForAdd ? 'border-emerald-600 bg-emerald-600' : 'border-ink/20 bg-white'}`} />
+                          )}
+                        </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {speciesActionGroups.existing.length > 0 && (
+                  <div className="rounded-[14px] border border-border/70 bg-bg/70 p-2.5">
+                    <div className="mb-2 text-[10px] font-black text-ink/45">{isEn ? 'Existing Tank Species' : '缸内原有物种'}</div>
+                    <div className="flex flex-wrap gap-2">
+                      {speciesActionGroups.existing.map(fish => (
+                        <div key={fish.id} className="flex items-center gap-2 rounded-full bg-white/85 py-1 pl-1.5 pr-3">
+                          <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-bg">
+                            <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                          </span>
+                          <span className="max-w-[108px] truncate text-[11px] font-black text-ink/62">{getSpeciesNameLocalized(fish, isEn)}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {actionHints.length > 0 && (
+                  <div className="mt-3 rounded-[12px] bg-white/70 px-3 py-2 text-[11px] font-bold leading-relaxed text-ink/62">
+                    {actionHints[0]}
+                  </div>
+                )}
+
+                <div className="mt-3 rounded-[12px] border border-border/70 bg-white/75 px-3 py-2.5">
+                  <div className="text-[10px] font-black text-ink/55">
+                    {isEn ? 'Evidence status' : '依据状态'}
+                  </div>
+                  <div className="mt-1 text-[10px] font-bold leading-relaxed text-ink/48">
+                    {resultEvidenceSources.length > 0
+                      ? (isEn ? 'Reviewed sources support the behavior conclusion.' : '行为结论使用已审核来源；没有直接配对研究时会明确标注为规则推断。')
+                      : (isEn ? 'Behavior evidence is not reviewed. The result cannot be treated as safe to add.' : '行为资料尚未审核，当前结果不能作为“安全可加入”的依据。')}
+                  </div>
+                  {resultEvidenceSources.length > 0 && (
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {resultEvidenceSources.map(source => (
+                        <a
+                          key={source.id}
+                          href={source.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex min-h-11 items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-2 text-[10px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                        >
+                          {source.publisher}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+
+            </>
+          )}
+        </section>
+      </div>
+    </section>
+    <CompatibilityBottomSheet
+      isEn={isEn}
+      activeModal={activeModal}
+      onClose={() => {
+        setConfirmingCautionAdd(false);
+        setActiveModal(null);
+      }}
+      result={result}
+      meta={meta}
+      riskConclusion={riskConclusion}
+      conflictTags={conflictTags}
+      actionHints={actionHints}
+      acceptLabel={confirmingCautionAdd ? (isEn ? 'Actually stocked, record now' : '已经实际入缸，记录下来') : (isEn ? 'Got it' : '我知道了')}
+      onAccept={() => {
+        if (confirmingCautionAdd) {
+          void performAddToAquarium();
+          return;
+        }
+        setActiveModal(null);
+        setResultFeedback('已确认混养提醒，可以继续调整组合。');
+      }}
+      onEdit={() => {
+        setActiveModal(null);
+        setResultFeedback('已返回组合编辑，可以继续移除或添加生物。');
+      }}
+    />
+    <Dialog open={isClearConfirmOpen} onOpenChange={setIsClearConfirmOpen}>
+      <DialogContent showCloseButton={false} className="w-[min(420px,calc(100vw-32px))] overflow-hidden rounded-[24px] border-border bg-white p-0">
+        <DialogHeader className="border-b border-border/70 px-6 py-5 text-left">
+          <DialogTitle className="text-[18px] font-black text-ink">{isEn ? 'Clear current species selection?' : '清空当前混养组合？'}</DialogTitle>
+          <DialogDescription className="mt-1 text-[12px] font-bold leading-relaxed text-ink/55">
+            将移除当前已选的 {selectedCount} 种生物和数量设置，此操作不会删除鱼缸里的真实生物。
+          </DialogDescription>
+        </DialogHeader>
+        <DialogFooter className="grid grid-cols-2 gap-2 border-t border-border/70 bg-white px-6 pb-[calc(22px+env(safe-area-inset-bottom))] pt-4">
+          <button
+            type="button"
+            onClick={() => setIsClearConfirmOpen(false)}
+            className="h-11 rounded-full border border-border bg-white text-[13px] font-black text-ink/60 hover:border-ink/20 hover:text-ink"
+          >
+            {isEn ? 'Keep Selection' : '保留组合'}
+          </button>
+          <button
+            type="button"
+            onClick={clearSelectedSpecies}
+            className="h-11 rounded-full bg-red-600 text-[13px] font-black text-white hover:bg-red-700"
+          >
+            {isEn ? 'Confirm Clear' : '确认清空'}
+          </button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+    </>
   );
 }
-
-export default CompatibilityRiskCalculator;

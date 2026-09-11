@@ -39,6 +39,7 @@ const waitForServer = async () => {
 const profile = {
   id: 'rev-profile-1', speciesId: 'species-db-1', revisionNumber: 2, baseProfileVersion: 1,
   behaviorTraits: ['schooling'], minimumGroupSize: 6, predationTargets: [], confidence: 'medium', status: 'pending_review',
+  requiredFacts: ['water', 'temperature', 'social_behavior'], stageRiskRules: [], stageRiskEvidenceResolution: {},
   citationSnapshots: [{ sourceKey: 'fixture-source', title: 'Fixture Evidence', publisher: 'Fixture', url: 'https://example.test/evidence', sourceType: 'reference', reviewStatus: 'reviewed' }],
   evidenceResolution: [{ sourceKey: 'fixture-source', sourceId: 'fixture-evidence-id', version: 1 }],
   impactReport: { kind: 'profile', baselineVersion: 1, changedFields: ['confidence'], changes: [{ field: 'confidence', before: 'low', after: 'medium' }] },

@@ -1,20 +1,22 @@
 import playwright from 'playwright';
 
+const baseUrl = process.env.PREVIEW_URL || process.env.AQUAGUIDE_URL || 'http://127.0.0.1:4317';
+
 const browser = await playwright.chromium.launch({ headless: true });
 const context = await browser.newContext({
   viewport: { width: 390, height: 844 },
   acceptDownloads: true,
 });
-await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: 'http://localhost:3003' });
+await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: baseUrl });
 const page = await context.newPage();
 
 const readPageText = async (path) => {
-  await page.goto(`http://localhost:3003${path}`, { waitUntil: 'networkidle', timeout: 15000 });
+  await page.goto(`${baseUrl}${path}`, { waitUntil: 'networkidle', timeout: 15000 });
   return page.locator('body').innerText({ timeout: 5000 });
 };
 
 try {
-  await page.goto('http://localhost:3003/encyclopedia', { waitUntil: 'networkidle', timeout: 15000 });
+  await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'networkidle', timeout: 15000 });
   const searchEncyclopedia = async (term) => {
     await page.getByPlaceholder('搜索鱼、虾、螺、水草或用途').fill(term);
     await page.getByRole('button', { name: '搜索' }).click();
@@ -38,7 +40,7 @@ try {
   await page.waitForTimeout(250);
   const clearedSearchCards = await page.locator('[data-species-card]').count();
 
-  await page.goto('http://localhost:3003/encyclopedia', { waitUntil: 'networkidle', timeout: 15000 });
+  await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'networkidle', timeout: 15000 });
   await page.getByPlaceholder('搜索鱼、虾、螺、水草或用途').fill('公子小丑');
   await page.getByRole('button', { name: '搜索' }).click();
   const encyclopediaText = await page.locator('body').innerText({ timeout: 5000 });
@@ -49,7 +51,7 @@ try {
   const speciesPreviewOpen = await page.getByRole('dialog', { name: /图片预览|公子小丑/ }).count().catch(() => 0);
   await page.keyboard.press('Escape');
   await page.keyboard.press('Escape');
-  await page.goto('http://localhost:3003/encyclopedia', { waitUntil: 'networkidle', timeout: 15000 });
+  await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'networkidle', timeout: 15000 });
   await page.getByRole('button', { name: /混养计算/ }).click();
   await page.getByPlaceholder('搜索并加入要混养的生物').fill('红白水晶虾');
   await page.locator('button').filter({ hasText: '红白水晶虾' }).first().click();
@@ -62,7 +64,7 @@ try {
   const conflictSheetOpen = (await page.locator('body').innerText({ timeout: 5000 })).includes('冲突详情');
   await page.getByRole('button', { name: '关闭弹窗' }).click();
 
-  await page.goto('http://localhost:3003/care', { waitUntil: 'networkidle', timeout: 15000 });
+  await page.goto(`${baseUrl}/care?mode=browse`, { waitUntil: 'networkidle', timeout: 15000 });
   await page.getByRole('button', { name: /我的收藏/ }).click();
   const careText = await page.locator('body').innerText({ timeout: 5000 });
   await page.keyboard.press('Escape');

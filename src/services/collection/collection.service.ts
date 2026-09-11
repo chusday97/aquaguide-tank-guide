@@ -6,7 +6,7 @@ import type {
   CollectionCounts,
   MemorialItem,
 } from '../../modules/collection/collection.types';
-import { evaluateTankCompatibility } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility } from '../compatibility/compatibility.service';
 import {
   getCareFavorites,
   getSpeciesFavoriteIds,
@@ -151,7 +151,7 @@ export const evaluateAchievements = (
     createProgress({ id: 'water_change_routine', title: '换水有序', description: '在三个不同日期记录换水', current: waterChangeDays.length, target: 3, nextAction: { label: '记录本次换水', route: taskRoutes.aquarium.waterChange } }),
     createProgress({ id: 'wishlist_collector', title: '有备而来', description: '种草五种想进一步了解的生物', current: wishlistCount, target: 5, nextAction: { label: '浏览图鉴', route: '/encyclopedia' } }),
     createProgress({ id: 'care_learner', title: '求知有方', description: '收藏三篇常用养护内容', current: careFavoriteCount, target: 3, nextAction: { label: '查养护百科', route: '/care' } }),
-    createProgress({ id: 'compatible_community', title: '和谐共生', description: '同缸两种以上生物均通过完整混养判断', current: compatibleCommunity ? 1 : 0, target: 1, nextAction: { label: '检查混养组合', route: taskRoutes.encyclopedia.compatibility } }),
+    createProgress({ id: 'compatible_community', title: '和谐共生', description: '同缸两种以上生物均通过完整混养判断', current: compatibleCommunity ? 1 : 0, target: 1, nextAction: { label: '检查混养组合', route: taskRoutes.compatibility.home } }),
     createProgress({ id: 'life_reflection', title: '认真复盘', description: '为一条生命纪念补充原因记录', current: reflectionCount, target: 1, nextAction: { label: '查看生命纪念', route: '/collection/memorial' } }),
   ];
 };

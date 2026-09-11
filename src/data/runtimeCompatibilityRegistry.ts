@@ -1,8 +1,13 @@
-import type { ReviewedCompatibilityPairRuleDto, ReviewedCompatibilityProfileDto } from '../../packages/contracts/src';
+import type {
+  ReviewedCompatibilityPairRuleDto,
+  ReviewedCompatibilityProfileDto,
+  ReviewedCompatibilityStageRiskRuleDto,
+} from '../../packages/contracts/src';
 import {
   getCompatibilityEvidenceAudit,
   type ReviewedCompatibilityProfile,
   type ReviewedPairRule,
+  type ReviewedStageRiskProfile,
 } from './compatibilityEvidence';
 
 export type CompatibilityBootstrapResponse = {
@@ -16,17 +21,25 @@ export type RuntimeCompatibilityStatus = {
   source: 'reviewed-db' | 'static-fallback';
   profiles: number;
   pairRules: number;
+  stageRiskRules: number;
   authorityVersion: string;
   fallbackReason?: string;
 };
 
 const pairKey = (left: string, right: string) => [left, right].sort().join('__');
 const cloneCitation = <T extends object>(source: T): T => ({ ...source });
+const cloneStockingGuidance = (guidance: ReviewedCompatibilityProfile['stockingGuidance']) => guidance ? ({
+  ...guidance,
+  constraints: [...guidance.constraints],
+  evidenceIds: [...guidance.evidenceIds],
+}) : undefined;
 const cloneProfile = (profile: ReviewedCompatibilityProfile): ReviewedCompatibilityProfile => ({
   ...profile,
   behaviorTraits: [...profile.behaviorTraits],
   predationTargets: [...profile.predationTargets],
   citations: profile.citations.map(source => cloneCitation(source)),
+  ...(profile.requiredFacts ? { requiredFacts: [...profile.requiredFacts] } : {}),
+  ...(profile.stockingGuidance ? { stockingGuidance: cloneStockingGuidance(profile.stockingGuidance) } : {}),
 });
 const clonePairRule = (rule: ReviewedPairRule): ReviewedPairRule => ({
   ...rule,
@@ -35,11 +48,19 @@ const clonePairRule = (rule: ReviewedPairRule): ReviewedPairRule => ({
   affectedSpeciesIds: [...rule.affectedSpeciesIds],
   citations: rule.citations.map(source => cloneCitation(source)),
 });
+const cloneStageRisk = (rule: ReviewedStageRiskProfile): ReviewedStageRiskProfile => ({
+  ...rule,
+  youngerStages: [...rule.youngerStages],
+  olderStages: [...rule.olderStages],
+  mitigation: [...rule.mitigation],
+  affectedSpeciesIds: [...rule.affectedSpeciesIds],
+  citations: rule.citations.map(source => cloneCitation(source)),
+});
 
 const staticAudit = getCompatibilityEvidenceAudit();
 const staticProfileKeys = new Set(staticAudit.reviewedProfiles.map(profile => profile.speciesId));
 const staticPairKeys = new Set(staticAudit.reviewedPairRules.map(rule => pairKey(...rule.speciesIds)));
-const STATIC_AUTHORITY_VERSION = 'tank-compatibility-v2-reviewed-evidence';
+const STATIC_AUTHORITY_VERSION = 'tank-compatibility-v3-reviewed-evidence';
 
 const hashAuthorityVersion = (value: string) => {
   let hash = 0x811c9dc5;
@@ -49,35 +70,64 @@ const hashAuthorityVersion = (value: string) => {
   }
   return (hash >>> 0).toString(16).padStart(8, '0');
 };
-
+const stageRiskSignature = (rule: ReviewedCompatibilityStageRiskRuleDto) => {
+  const citations = rule.citations.map(source => `${source.id}@${source.version}`).sort().join(',');
+  return [
+    rule.ruleKey,
+    [...rule.youngerStages].sort().join(','),
+    [...rule.olderStages].sort().join(','),
+    rule.verdict,
+    rule.riskType,
+    rule.reason,
+    [...rule.mitigation].sort().join(','),
+    rule.basis,
+    rule.confidence,
+    citations,
+  ].join('~');
+};
 const reviewedDbAuthorityVersion = (payload: CompatibilityBootstrapResponse) => {
   const profileVersions = payload.profiles.map(profile => {
     const citations = profile.citations.map(source => `${source.id}@${source.version}`).sort().join(',');
-    return `profile:${profile.catalogKey}@${profile.version}[${citations}]`;
+    const requiredFacts = [...profile.requiredFacts].sort().join(',');
+    const stocking = profile.stockingGuidance ? JSON.stringify(profile.stockingGuidance) : '';
+    const stageRisks = [...profile.stageRiskRules].sort((a, b) => a.ruleKey.localeCompare(b.ruleKey)).map(stageRiskSignature).join(';');
+    return `profile:${profile.catalogKey}@${profile.version}[${citations}]<${requiredFacts}><${stocking}><${stageRisks}>`;
   }).sort();
   const pairVersions = payload.pairRules.map(rule => {
     const citations = rule.citations.map(source => `${source.id}@${source.version}`).sort().join(',');
     return `pair:${pairKey(...rule.catalogKeys)}@${rule.version}[${citations}]`;
   }).sort();
-  return `tank-compatibility-v2-reviewed-db-${hashAuthorityVersion([...profileVersions, ...pairVersions].join('|'))}`;
+  return `tank-compatibility-v3-reviewed-db-${hashAuthorityVersion([...profileVersions, ...pairVersions].join('|'))}`;
 };
 
 let runtimeProfiles = new Map<string, ReviewedCompatibilityProfile>();
 let runtimePairRules = new Map<string, ReviewedPairRule>();
+let runtimeStageRisks = new Map<string, ReviewedStageRiskProfile[]>();
 let runtimeStatus: RuntimeCompatibilityStatus = {
   source: 'static-fallback',
   profiles: staticAudit.reviewedProfiles.length,
   pairRules: staticAudit.reviewedPairRules.length,
+  stageRiskRules: staticAudit.reviewedStageRiskProfiles.length,
   authorityVersion: STATIC_AUTHORITY_VERSION,
+};
+
+const buildStaticStageRiskMap = () => {
+  const map = new Map<string, ReviewedStageRiskProfile[]>();
+  for (const rule of staticAudit.reviewedStageRiskProfiles) {
+    map.set(rule.speciesId, [...(map.get(rule.speciesId) || []), cloneStageRisk(rule)]);
+  }
+  return map;
 };
 
 export const resetRuntimeCompatibilityEvidence = (reason?: string) => {
   runtimeProfiles = new Map(staticAudit.reviewedProfiles.map(profile => [profile.speciesId, cloneProfile(profile)]));
   runtimePairRules = new Map(staticAudit.reviewedPairRules.map(rule => [pairKey(...rule.speciesIds), clonePairRule(rule)]));
+  runtimeStageRisks = buildStaticStageRiskMap();
   runtimeStatus = {
     source: 'static-fallback',
     profiles: runtimeProfiles.size,
     pairRules: runtimePairRules.size,
+    stageRiskRules: Array.from(runtimeStageRisks.values()).reduce((sum, rules) => sum + rules.length, 0),
     authorityVersion: STATIC_AUTHORITY_VERSION,
     ...(reason ? { fallbackReason: reason } : {}),
   };
@@ -91,7 +141,13 @@ const exactBaselineCoverage = (payload: CompatibilityBootstrapResponse) => {
   if (new Set(profileKeys).size !== profileKeys.length || new Set(pairKeys).size !== pairKeys.length) return false;
   if (profileKeys.length !== staticProfileKeys.size || pairKeys.length !== staticPairKeys.size) return false;
   if (!profileKeys.every(key => staticProfileKeys.has(key)) || !pairKeys.every(key => staticPairKeys.has(key))) return false;
-  if (!payload.profiles.every(profile => profile.reviewStatus === 'reviewed' && reviewedCitations(profile.citations))) return false;
+  if (!payload.profiles.every(profile => (
+    profile.reviewStatus === 'reviewed'
+    && reviewedCitations(profile.citations)
+    && Array.isArray(profile.requiredFacts)
+    && Array.isArray(profile.stageRiskRules)
+    && profile.stageRiskRules.every(rule => rule.reviewStatus === 'reviewed' && reviewedCitations(rule.citations))
+  ))) return false;
   return payload.pairRules.every(rule => rule.reviewStatus === 'reviewed' && reviewedCitations(rule.citations));
 };
 
@@ -103,8 +159,27 @@ const toRuntimeProfile = (profile: ReviewedCompatibilityProfileDto): ReviewedCom
   confidence: profile.confidence,
   reviewStatus: profile.reviewStatus,
   citations: profile.citations.map(source => ({ ...source })),
+  requiredFacts: [...profile.requiredFacts],
+  ...(profile.stockingGuidance ? { stockingGuidance: {
+    ...profile.stockingGuidance,
+    constraints: [...profile.stockingGuidance.constraints],
+    evidenceIds: [...profile.stockingGuidance.evidenceIds],
+  } } : {}),
 });
-
+const toRuntimeStageRisk = (catalogKey: string, rule: ReviewedCompatibilityStageRiskRuleDto): ReviewedStageRiskProfile => ({
+  speciesId: catalogKey,
+  youngerStages: [...rule.youngerStages],
+  olderStages: [...rule.olderStages],
+  verdict: rule.verdict,
+  riskType: rule.riskType as ReviewedStageRiskProfile['riskType'],
+  reason: rule.reason,
+  mitigation: [...rule.mitigation],
+  basis: rule.basis,
+  confidence: rule.confidence,
+  reviewStatus: rule.reviewStatus,
+  affectedSpeciesIds: [catalogKey],
+  citations: rule.citations.map(source => ({ ...source })),
+});
 const toRuntimePairRule = (rule: ReviewedCompatibilityPairRuleDto): ReviewedPairRule => ({
   speciesIds: [...rule.catalogKeys] as [string, string],
   verdict: rule.verdict,
@@ -125,20 +200,27 @@ export const applyReviewedCompatibilityBootstrap = (payload: CompatibilityBootst
   }
   runtimeProfiles = new Map(payload.profiles.map(profile => [profile.catalogKey, toRuntimeProfile(profile)]));
   runtimePairRules = new Map(payload.pairRules.map(rule => [pairKey(...rule.catalogKeys), toRuntimePairRule(rule)]));
+  runtimeStageRisks = new Map(payload.profiles.map(profile => [
+    profile.catalogKey,
+    profile.stageRiskRules.map(rule => toRuntimeStageRisk(profile.catalogKey, rule)),
+  ]));
   runtimeStatus = {
     source: 'reviewed-db',
     profiles: runtimeProfiles.size,
     pairRules: runtimePairRules.size,
+    stageRiskRules: Array.from(runtimeStageRisks.values()).reduce((sum, rules) => sum + rules.length, 0),
     authorityVersion: reviewedDbAuthorityVersion(payload),
   };
   return getRuntimeCompatibilityStatus();
 };
 
 export const getRuntimeReviewedCompatibilityProfile = (speciesId: string) => runtimeProfiles.get(speciesId);
+export const getRuntimeReviewedCompatibilityStageRisks = (speciesId: string) => (runtimeStageRisks.get(speciesId) || []).map(cloneStageRisk);
 export const getRuntimeReviewedPairRule = (leftId: string, rightId: string) => runtimePairRules.get(pairKey(leftId, rightId));
 export const getRuntimeCompatibilityStatus = () => ({ ...runtimeStatus });
 export const getRuntimeCompatibilityEvidenceAudit = () => ({
   reviewedProfiles: Array.from(runtimeProfiles.values()).map(cloneProfile),
+  reviewedStageRiskProfiles: Array.from(runtimeStageRisks.values()).flat().map(cloneStageRisk),
   reviewedPairRules: Array.from(runtimePairRules.values()).map(clonePairRule),
   reviewedSpeciesIds: Array.from(runtimeProfiles.keys()),
   status: getRuntimeCompatibilityStatus(),

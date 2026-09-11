@@ -18,6 +18,16 @@ const citation = (source: (typeof audit.reviewedProfiles)[number]['citations'][n
   reviewStatus: 'reviewed' as const,
   version: 1,
 });
+const stageRiskRulesFor = (catalogKey: string) => audit.reviewedStageRiskProfiles
+  .filter(rule => rule.speciesId === catalogKey)
+  .map(rule => ({
+    ruleKey: `${rule.speciesId}:${rule.riskType}`,
+    youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages],
+    verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation],
+    basis: rule.basis, confidence: rule.confidence, reviewStatus: 'reviewed' as const,
+    citations: rule.citations.map(citation),
+  }));
+
 
 const authority: ReviewedCompatibilityAuthority = {
   authority: 'reviewed-db',
@@ -30,6 +40,9 @@ const authority: ReviewedCompatibilityAuthority = {
     confidence: profile.confidence,
     reviewStatus: 'reviewed' as const,
     citations: profile.citations.map(citation),
+    requiredFacts: [...(profile.requiredFacts || [])],
+    ...(profile.stockingGuidance ? { stockingGuidance: { ...profile.stockingGuidance, constraints: [...profile.stockingGuidance.constraints], evidenceIds: [...profile.stockingGuidance.evidenceIds] } } : {}),
+    stageRiskRules: stageRiskRulesFor(profile.speciesId),
     version: 1,
   })),
   pairRules: audit.reviewedPairRules.map(rule => ({
@@ -61,11 +74,12 @@ const profileReport = buildProfileRevisionRegression({
   minimumGroupSize: predatorProfile.minimumGroupSize,
   predationTargets: [],
   confidence: predatorProfile.confidence,
+  requiredFacts: [...predatorProfile.requiredFacts], stockingGuidance: predatorProfile.stockingGuidance, stageRiskRules: predatorProfile.stageRiskRules.map(rule => ({ ...rule, citations: rule.citations.map(source => ({ sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus })) })),
   sourceKeys: predatorProfile.citations.map(source => source.id),
 });
 assert.equal(profileReport.authoritySequence, 7);
 assert.equal(profileReport.baselineVersion, 1);
-assert.equal(profileReport.evaluatedScenarios, (cohort.length - 1) * 3);
+assert.equal(profileReport.evaluatedScenarios, (cohort.length - 1) * 3 + 1, 'Profile regression must include one explicit same-species adult-to-fry scenario');
 assert.ok(profileReport.changedScenarios > 0, 'removing reviewed predatory evidence must change at least one engine scenario');
 
 const sameProfileReport = buildProfileRevisionRegression({
@@ -78,16 +92,37 @@ const sameProfileReport = buildProfileRevisionRegression({
   minimumGroupSize: predatorProfile.minimumGroupSize,
   predationTargets: [],
   confidence: predatorProfile.confidence,
+  requiredFacts: [...predatorProfile.requiredFacts], stockingGuidance: predatorProfile.stockingGuidance, stageRiskRules: predatorProfile.stageRiskRules.map(rule => ({ ...rule, citations: rule.citations.map(source => ({ sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus })) })),
   sourceKeys: predatorProfile.citations.map(source => source.id),
 });
 assert.equal(isCompatibilityRegressionReportFresh(profileReport, sameProfileReport), true, 'same authority/product/engine context must reproduce the regression digest');
 const newerSequenceReport = { ...sameProfileReport, authoritySequence: 8 };
 assert.equal(isCompatibilityRegressionReportFresh(profileReport, newerSequenceReport), false, 'authority sequence changes must stale the report');
+
+const guppyProfile = authority.profiles.find(profile => profile.catalogKey === 'sp_0436');
+assert.ok(guppyProfile, 'guppy profile baseline must exist for stage-risk regression');
+assert.ok(guppyProfile.stageRiskRules.length > 0, 'guppy baseline must retain reviewed adult-to-fry stage risk');
+const stageRiskReport = buildProfileRevisionRegression({
+  authority,
+  fish: fishData,
+  authoritySequence: 7,
+  catalogKey: guppyProfile.catalogKey,
+  baselineVersion: guppyProfile.version,
+  behaviorTraits: [...guppyProfile.behaviorTraits],
+  minimumGroupSize: guppyProfile.minimumGroupSize,
+  predationTargets: [...guppyProfile.predationTargets],
+  confidence: guppyProfile.confidence,
+  requiredFacts: [...guppyProfile.requiredFacts],
+  stockingGuidance: guppyProfile.stockingGuidance,
+  stageRiskRules: [],
+  sourceKeys: guppyProfile.citations.map(source => source.id),
+});
+assert.ok(stageRiskReport.changes.some(change => change.scenario === 'same_species_adult_to_fry'), 'removing reviewed Stage Risk must change the dedicated adult-to-fry regression scenario');
 const changedCatalog = cohort.map(item => item.id === 'sp_0431' ? { ...item, description: `${item.description} changed` } : item);
 const changedCatalogReport = buildProfileRevisionRegression({
   authority, fish: changedCatalog, authoritySequence: 7, catalogKey: predatorProfile.catalogKey, baselineVersion: 1,
   behaviorTraits: predatorProfile.behaviorTraits.filter(trait => trait !== 'predatory'), minimumGroupSize: predatorProfile.minimumGroupSize,
-  predationTargets: [], confidence: predatorProfile.confidence, sourceKeys: predatorProfile.citations.map(source => source.id),
+  predationTargets: [], confidence: predatorProfile.confidence, requiredFacts: [...predatorProfile.requiredFacts], stockingGuidance: predatorProfile.stockingGuidance, stageRiskRules: predatorProfile.stageRiskRules.map(rule => ({ ...rule, citations: rule.citations.map(source => ({ sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus })) })), sourceKeys: predatorProfile.citations.map(source => source.id),
 });
 assert.equal(isCompatibilityRegressionReportFresh(profileReport, changedCatalogReport), false, 'Product catalog changes must stale the report');
 

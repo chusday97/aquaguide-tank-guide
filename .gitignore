@@ -17,3 +17,5 @@ evaluation/reports/*.md
 
 supabase/.temp/
 .local/aqua-admin/
+.artifacts/readiness/
+artifacts/visual-layout/*.png

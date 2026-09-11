@@ -4,6 +4,7 @@ import type { CompatibilityDecision, CompatibilityRiskType, PairCompatibilityRes
 import { getSpeciesDisplayImage } from '../../lib/speciesVisual';
 import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
 import type { VisualResultStatus, VisualResultSubject, VisualResultViewModel } from './visual-result.types';
+import { getCompatibilityPresentation } from '../../services/compatibility/compatibility-presentation.service';
 
 const riskTypeLabels: Record<CompatibilityRiskType, string> = {
   water_type: '水体冲突',
@@ -23,7 +24,7 @@ const compatibilityStatusLabels: Record<TankCompatibilityStatus, string> = {
   compatible: '暂未发现冲突',
   caution: '需要观察',
   not_recommended: '存在阻断风险',
-  insufficient_data: '资料不足',
+  insufficient_data: '当前可确认',
 };
 
 const riskKeywords: Array<{ pattern: RegExp; label: string }> = [
@@ -71,6 +72,7 @@ export function buildCompatibilityVisualResult({
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
   focusSpeciesId?: string;
 }): VisualResultViewModel {
+  const presentation = getCompatibilityPresentation(decision);
   const primaryPair = decision.primaryConflict || decision.pairResults[0];
   const focus = species.find(item => item.id === focusSpeciesId)
     || primaryPair?.speciesB
@@ -104,23 +106,33 @@ export function buildCompatibilityVisualResult({
   const riskRules = [...decision.blockingRules, ...decision.warningRules];
   const detailSections = [
     { id: 'risks', title: '风险与阻断', items: riskRules.map(rule => rule.evidence || rule.title) },
-    { id: 'missing', title: '缺失信息', items: decision.missingData.map(rule => rule.evidence || rule.title) },
+    { id: 'scope', title: '本次判断范围', items: presentation.coverageLabel ? [presentation.coverageLabel] : [] },
     { id: 'passed', title: '已通过规则', items: decision.passedRules.map(rule => rule.title) },
   ].filter(section => section.items.length > 0);
 
   return {
     status: decision.status,
-    title: '混养判断',
-    conclusion: focusReason || decision.summary,
-    emphasis: getVisualEmphasis(focusReason || decision.summary),
+    presentationMode: presentation.mode,
+    statusLabel: presentation.mode === 'confirmed_facts' ? '当前可确认' : presentation.mode === 'unavailable' ? '暂未开放' : compatibilityStatusLabels[decision.status],
+    coverageLabel: presentation.coverageLabel,
+    title: presentation.headline,
+    conclusion: presentation.mode === 'confirmed_facts'
+      ? (presentation.confirmedFindings[0] || '已确认部分环境条件，可先加入种草清单。')
+      : presentation.mode === 'unavailable'
+        ? '你仍可以先查看养护信息或加入种草清单，之后再回来判断。'
+        : focusReason || decision.summary,
+    emphasis: getVisualEmphasis(presentation.mode === 'confirmed_facts' ? presentation.confirmedFindings.join(' ') : focusReason || decision.summary),
     subjects,
-    currentAction: decision.suggestions[0] || (
-      decision.status === 'not_recommended' ? '先移除阻断对象，再重新计算组合。'
-        : decision.status === 'insufficient_data' ? '先补充鱼缸信息，再决定是否加入。'
-          : decision.status === 'caution' ? '少量加入，并持续观察追咬和进食。'
-            : '可以少量加入，入缸后继续观察。'
-    ),
-    primaryAction: { label: primaryActionLabel, actionType: primaryActionType },
+    currentAction: presentation.mode === 'confirmed_facts'
+      ? '先加入种草清单；资料完善后再做完整判断。'
+      : presentation.mode === 'unavailable'
+        ? '先查看物种养护，或把这组组合加入种草清单。'
+        : decision.suggestions[0] || (
+          decision.status === 'not_recommended' ? '先移除阻断对象，再重新计算组合。'
+            : decision.status === 'caution' ? '少量加入，并持续观察追咬和进食。'
+              : '可以少量加入，入缸后继续观察。'
+        ),
+    primaryAction: { label: presentation.primaryAction === 'save_to_wishlist' ? '加入种草清单' : primaryActionLabel, actionType: primaryActionType },
     detailSections,
   };
 }

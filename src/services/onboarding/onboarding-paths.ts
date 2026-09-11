@@ -62,7 +62,7 @@ export const buildOnboardingTaskProgress = (state: LocalAppState): OnboardingTas
 
 const beginnerSpeciesRoute = taskRoutes.encyclopedia.browseWith({ difficulty: 'Easy', source: 'onboarding' });
 const setupAquariumRoute = taskRoutes.aquarium.setup('onboarding');
-const compatibilityRoute = taskRoutes.encyclopedia.compatibilityWith('onboarding');
+const compatibilityRoute = taskRoutes.compatibility.with({ source: 'onboarding' });
 const dailyCheckRoute = taskRoutes.aquarium.dailyCheckFrom('onboarding');
 
 export const getOnboardingTasks = (goal: OnboardingGoal | undefined, progress: OnboardingTaskProgress): OnboardingTask[] => {

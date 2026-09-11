@@ -1,6 +1,7 @@
 import { createHash } from 'node:crypto';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import type {
+  CompatibilityStageRiskRuleInput,
   ReviewedCompatibilityPairRuleDto,
   ReviewedCompatibilityProfileDto,
   RuntimeEvidenceSourceDto,
@@ -8,9 +9,9 @@ import type {
 } from '../../../packages/contracts/src';
 import type { Fish } from '../../../src/types';
 import { fishData as seedFishData } from '../../../src/data/fishData';
-import type { CompatibilityEvidenceProvider, TankCompatibilityResult } from '../../../src/lib/tankCompatibilityEngine';
-import { evaluateTankCompatibility } from '../../../src/lib/tankCompatibilityEngine';
-import { getCompatibilityEvidenceAudit, type ReviewedCompatibilityProfile, type ReviewedPairRule } from '../../../src/data/compatibilityEvidence';
+import type { CompatibilityEvidenceProvider, TankCompatibilityResult } from '../../../src/services/compatibility/compatibility.service';
+import { evaluateTankCompatibility } from '../../../src/services/compatibility/compatibility.service';
+import { getCompatibilityEvidenceAudit, type ReviewedCompatibilityProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../../../src/data/compatibilityEvidence';
 import { mapSpeciesDetail } from './content-mappers';
 import { type PublicationSnapshotPayload, speciesPublicationSelect } from './content-publications';
 import { ApiError } from './http';
@@ -26,6 +27,7 @@ const pairKey = (left: string, right: string) => [left, right].sort().join('__')
 const staticAudit = getCompatibilityEvidenceAudit();
 const expectedProfileKeys = new Set(staticAudit.reviewedProfiles.map(profile => profile.speciesId));
 const expectedPairKeys = new Set(staticAudit.reviewedPairRules.map(rule => pairKey(...rule.speciesIds)));
+const expectedStageRiskKeys = new Set(staticAudit.reviewedStageRiskProfiles.map(rule => `${rule.speciesId}:${rule.riskType}`));
 export const COMPATIBILITY_REGRESSION_ENGINE_VERSION = 'compatibility-regression-v1';
 const stableHash = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex').slice(0, 24);
 const catalogFingerprint = (fish: Fish[]) => stableHash([...fish].sort((left, right) => left.id.localeCompare(right.id)));
@@ -44,10 +46,29 @@ const reviewedSources = (links: any[] = []) => links
   .filter(source => source?.review_status === 'reviewed' && !source?.deleted_at)
   .map(mapEvidence);
 
+const reviewedStageRisks = (rows: any[] = []) => rows.flatMap(row => {
+  if (row?.review_status !== 'reviewed' || row?.deleted_at) return [];
+  const citations = reviewedSources(row.species_compatibility_profile_stage_risk_sources as any[]);
+  if (!citations.length) return [];
+  return [{
+    ruleKey: row.rule_key,
+    youngerStages: row.younger_stages || [],
+    olderStages: row.older_stages || [],
+    verdict: row.verdict,
+    riskType: row.risk_type,
+    reason: row.reason,
+    mitigation: row.mitigation || [],
+    basis: row.basis,
+    confidence: row.confidence,
+    reviewStatus: 'reviewed' as const,
+    citations,
+  }];
+});
+
 export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient): Promise<ReviewedCompatibilityAuthority> => {
   const [profileResult, pairResult] = await Promise.all([
     client.from('species_compatibility_profiles')
-      .select('species_id,behavior_traits,minimum_group_size,predation_targets,confidence,review_status,version,species_compatibility_profile_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at))')
+      .select('species_id,behavior_traits,minimum_group_size,predation_targets,required_facts,stocking_guidance,confidence,review_status,version,species_compatibility_profile_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at)),species_compatibility_profile_stage_risks(rule_key,younger_stages,older_stages,verdict,risk_type,reason,mitigation,basis,confidence,review_status,deleted_at,species_compatibility_profile_stage_risk_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at)))')
       .eq('review_status', 'reviewed').is('deleted_at', null),
     client.from('species_pair_compatibility_rules')
       .select('species_a_id,species_b_id,verdict,risk_type,reason,mitigation,basis,confidence,review_status,version,species_pair_compatibility_rule_sources(evidence_sources(id,source_key,title,publisher,url,source_type,review_status,version,deleted_at))')
@@ -63,7 +84,8 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
   const profiles: ReviewedCompatibilityProfileDto[] = (profileResult.data || []).flatMap(row => {
     const catalogKey = keyBySpeciesId.get(row.species_id);
     const citations = reviewedSources(row.species_compatibility_profile_sources as any[]);
-    return catalogKey && citations.length ? [{
+    if (!catalogKey || !citations.length || !Array.isArray(row.required_facts) || row.required_facts.length === 0) return [];
+    return [{
       catalogKey,
       behaviorTraits: row.behavior_traits || [],
       minimumGroupSize: row.minimum_group_size ?? undefined,
@@ -71,8 +93,11 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
       confidence: row.confidence,
       reviewStatus: 'reviewed' as const,
       citations,
+      requiredFacts: [...row.required_facts],
+      ...(row.stocking_guidance ? { stockingGuidance: row.stocking_guidance } : {}),
+      stageRiskRules: reviewedStageRisks(row.species_compatibility_profile_stage_risks as any[]),
       version: row.version,
-    }] : [];
+    }];
   }).sort((left, right) => left.catalogKey.localeCompare(right.catalogKey));
   const pairRules: ReviewedCompatibilityPairRuleDto[] = (pairResult.data || []).flatMap(row => {
     const left = keyBySpeciesId.get(row.species_a_id);
@@ -95,10 +120,13 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
 
   const profileKeys = new Set(profiles.map(profile => profile.catalogKey));
   const pairKeys = new Set(pairRules.map(rule => pairKey(...rule.catalogKeys)));
+  const stageRiskKeys = new Set(profiles.flatMap(profile => profile.stageRiskRules.map(rule => rule.ruleKey)));
   const exactCoverage = profileKeys.size === expectedProfileKeys.size && pairKeys.size === expectedPairKeys.size
+    && stageRiskKeys.size === expectedStageRiskKeys.size
     && [...expectedProfileKeys].every(key => profileKeys.has(key))
-    && [...expectedPairKeys].every(key => pairKeys.has(key));
-  if (!exactCoverage) throw new ApiError(409, 'MIGRATION_REJECTED', 'Reviewed Compatibility DB baseline 尚未完成 7 Profiles / 4 Pair Rules 全量对齐。');
+    && [...expectedPairKeys].every(key => pairKeys.has(key))
+    && [...expectedStageRiskKeys].every(key => stageRiskKeys.has(key));
+  if (!exactCoverage) throw new ApiError(409, 'MIGRATION_REJECTED', 'Reviewed Compatibility DB baseline 尚未完成 7 Profiles / 4 Pair Rules / canonical Stage Risk 全量对齐。');
   return { profiles, pairRules, authority: 'reviewed-db', counts: { profiles: profiles.length, pairRules: pairRules.length } };
 };
 const speciesDetailToFish = (detail: SpeciesDetailDto): Fish => ({
@@ -155,6 +183,16 @@ const toProfile = (profile: ReviewedCompatibilityProfileDto): ReviewedCompatibil
   confidence: profile.confidence,
   reviewStatus: 'reviewed',
   citations: profile.citations.map(source => ({ ...source })),
+  requiredFacts: [...profile.requiredFacts],
+  ...(profile.stockingGuidance ? { stockingGuidance: {
+    ...profile.stockingGuidance, constraints: [...profile.stockingGuidance.constraints], evidenceIds: [...profile.stockingGuidance.evidenceIds],
+  } } : {}),
+});
+const toStageRisk = (catalogKey: string, rule: ReviewedCompatibilityProfileDto['stageRiskRules'][number]): ReviewedStageRiskProfile => ({
+  speciesId: catalogKey, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages],
+  verdict: rule.verdict, riskType: rule.riskType as ReviewedStageRiskProfile['riskType'], reason: rule.reason,
+  mitigation: [...rule.mitigation], basis: rule.basis, confidence: rule.confidence, reviewStatus: rule.reviewStatus,
+  affectedSpeciesIds: [catalogKey], citations: rule.citations.map(source => ({ ...source })),
 });
 const toPairRule = (rule: ReviewedCompatibilityPairRuleDto): ReviewedPairRule => ({
   speciesIds: [...rule.catalogKeys] as [string, string],
@@ -175,15 +213,21 @@ export const createAuthorityEvidenceProvider = (
 ): CompatibilityEvidenceProvider => {
   const profiles = new Map(authority.profiles.map(profile => [profile.catalogKey, toProfile(profile)]));
   const pairRules = new Map(authority.pairRules.map(rule => [pairKey(...rule.catalogKeys), toPairRule(rule)]));
+  const stageRisks = new Map(authority.profiles.map(profile => [profile.catalogKey, profile.stageRiskRules.map(rule => toStageRisk(profile.catalogKey, rule))]));
   return {
     getProfile: speciesId => profiles.get(speciesId),
     getPairRule: (leftId, rightId) => pairRules.get(pairKey(leftId, rightId)),
+    getStageRisks: speciesId => stageRisks.get(speciesId) || [],
     authorityVersion,
   };
 };
 
 const citationsForSourceKeys = (authority: ReviewedCompatibilityAuthority, sourceKeys: string[]) => {
-  const sourceByKey = new Map([...authority.profiles.flatMap(profile => profile.citations), ...authority.pairRules.flatMap(rule => rule.citations)].map(source => [source.id, source]));
+  const sourceByKey = new Map([
+    ...authority.profiles.flatMap(profile => profile.citations),
+    ...authority.profiles.flatMap(profile => profile.stageRiskRules.flatMap(rule => rule.citations)),
+    ...authority.pairRules.flatMap(rule => rule.citations),
+  ].map(source => [source.id, source]));
   const citations = sourceKeys.map(key => sourceByKey.get(key)).filter((source): source is RuntimeEvidenceSourceDto => Boolean(source));
   if (citations.length !== sourceKeys.length) throw new ApiError(409, 'MIGRATION_REJECTED', 'Regression 无法解析 Draft 使用的 canonical Evidence。');
   return citations;
@@ -244,6 +288,7 @@ const runRegression = (
   pairs: Array<[Fish, Fish]>,
   beforeProvider: CompatibilityEvidenceProvider,
   afterProvider: CompatibilityEvidenceProvider,
+  stageRiskSpecies: Fish[] = [],
 ): CompatibilityRegressionReport => {
   const changes: CompatibilityRegressionReport['changes'] = [];
   const regressionRows: unknown[] = [];
@@ -260,6 +305,17 @@ const runRegression = (
       regressionRows.push([scenario, left.id, right.id, before, after]);
       if (!decisionsEqual(before, after)) changes.push({ scenario, species: [left.id, right.id], before, after });
     }
+  }
+  for (const species of stageRiskSpecies) {
+    const existing = [{ species, record: { quantity: 1, batches: [{ id: 'regression-adult', quantity: 1, entryDate: '2026-01-01', lifeStage: 'adult' as const, reproductiveState: 'unknown' as const, stateUpdatedAt: '2026-01-01T00:00:00.000Z' }] } }];
+    const beforeResult = evaluateTankCompatibility({ scope: 'species_only', existingSpecies: existing, candidateSpecies: species, candidateLifeStage: 'fry', evidenceProvider: beforeProvider });
+    const afterResult = evaluateTankCompatibility({ scope: 'species_only', existingSpecies: existing, candidateSpecies: species, candidateLifeStage: 'fry', evidenceProvider: afterProvider });
+    const before = decisionSignature(beforeResult);
+    const after = decisionSignature(afterResult);
+    const scenario = 'same_species_adult_to_fry';
+    evaluatedScenarios += 1;
+    regressionRows.push([scenario, species.id, species.id, before, after]);
+    if (!decisionsEqual(before, after)) changes.push({ scenario, species: [species.id, species.id], before, after });
   }
   return {
     kind,
@@ -286,11 +342,19 @@ export const buildProfileRevisionRegression = (input: {
   minimumGroupSize?: number | null;
   predationTargets: string[];
   confidence: ReviewedCompatibilityProfileDto['confidence'];
+  requiredFacts: ReviewedCompatibilityProfileDto['requiredFacts'];
+  stockingGuidance?: ReviewedCompatibilityProfileDto['stockingGuidance'];
+  stageRiskRules: CompatibilityStageRiskRuleInput[];
   sourceKeys: string[];
 }) => {
   const current = input.authority.profiles.find(profile => profile.catalogKey === input.catalogKey);
   if (!current) throw new ApiError(409, 'MIGRATION_REJECTED', 'Regression 找不到 reviewed Profile baseline。');
   const citations = citationsForSourceKeys(input.authority, input.sourceKeys);
+  const stageRiskRules = input.stageRiskRules.map(rule => ({
+    ruleKey: rule.ruleKey, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages], verdict: rule.verdict,
+    riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation], basis: rule.basis, confidence: rule.confidence,
+    reviewStatus: 'reviewed' as const, citations: citationsForSourceKeys(input.authority, rule.citations.map(source => source.sourceKey)),
+  }));
   const afterAuthority: ReviewedCompatibilityAuthority = {
     ...input.authority,
     profiles: input.authority.profiles.map(profile => profile.catalogKey === input.catalogKey ? {
@@ -300,6 +364,9 @@ export const buildProfileRevisionRegression = (input: {
       predationTargets: [...input.predationTargets],
       confidence: input.confidence,
       citations,
+      requiredFacts: [...input.requiredFacts],
+      ...(input.stockingGuidance ? { stockingGuidance: { ...input.stockingGuidance, constraints: [...input.stockingGuidance.constraints], evidenceIds: [...input.stockingGuidance.evidenceIds] } } : { stockingGuidance: undefined }),
+      stageRiskRules,
       version: profile.version + 1,
     } : profile),
   };
@@ -308,7 +375,8 @@ export const buildProfileRevisionRegression = (input: {
   const pairs = input.fish.filter(item => item.id !== target.id).map(item => [target, item] as [Fish, Fish]);
   return runRegression('profile', input.catalogKey, input.baselineVersion, input.authoritySequence, catalogFingerprint(input.fish), pairs,
     createAuthorityEvidenceProvider(input.authority, `reviewed-db-seq-${input.authoritySequence}`),
-    createAuthorityEvidenceProvider(afterAuthority, `draft-profile-seq-${input.authoritySequence}`));
+    createAuthorityEvidenceProvider(afterAuthority, `draft-profile-seq-${input.authoritySequence}`),
+    [target]);
 };
 export const buildPairRuleRevisionRegression = (input: {
   authority: ReviewedCompatibilityAuthority;

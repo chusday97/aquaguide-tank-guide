@@ -71,7 +71,7 @@ try {
     await page.getByRole('button', { name: '提交审核' }).click();
     await page.waitForSelector('[data-testid="profile-regression-report"]');
     const profileRegression = await page.getByTestId('profile-regression-report').innerText();
-    assert.match(profileRegression, /已评估 1455 个场景/);
+    assert.match(profileRegression, /已评估 1456 个场景/);
     assert.match(await page.locator('body').innerText(), /Canonical Evidence：1\/1/);
 
     const profileRevisionId = new URL(page.url()).searchParams.get('revision');
@@ -128,6 +128,38 @@ try {
 
     await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+
+    const guppyCard = page.getByTestId('compatibility-profile-sp_0436');
+    await guppyCard.getByRole('button', { name: '创建 Profile Draft' }).click();
+    const guppyV3 = page.getByTestId('profile-v3-authority');
+    await guppyV3.waitFor();
+    assert.match(await guppyV3.innerText(), /Required Facts[\s\S]*Stage Risk · conspecific_fry_predation[\s\S]*Oecologia[\s\S]*Aquacultural Engineering/);
+    const guppyStageRisk = page.getByTestId('profile-stage-risk-rule');
+    await guppyStageRisk.getByRole('combobox', { name: 'Verdict' }).selectOption('caution');
+    await page.getByRole('button', { name: '保存 Draft' }).click();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+    await page.getByTestId('compatibility-profile-sp_0436').getByRole('button', { name: '打开 Draft' }).click();
+    assert.equal(await page.getByTestId('profile-stage-risk-rule').getByRole('combobox', { name: 'Verdict' }).inputValue(), 'caution');
+    await page.getByRole('button', { name: '提交审核' }).click();
+    await page.getByTestId('profile-regression-report').waitFor();
+    assert.match(await page.getByTestId('profile-stage-risk-rule').innerText(), /Evidence 2\/2/);
+    assert.equal(await page.getByTestId('profile-stage-risk-rule').getByRole('combobox', { name: 'Verdict' }).isDisabled(), true, 'Stage Risk fields must lock after submit.');
+    const guppyRegression = await page.evaluate(key => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      return state.profileRevisions.find(item => item.species?.catalogKey === 'sp_0436' && item.status === 'pending_review')?.regressionReport || null;
+    }, compatibilityKey);
+    assert.ok(guppyRegression, 'Guppy pending-review revision must retain a regression report.');
+    assert.ok(guppyRegression.changes.some(change => change.scenario === 'same_species_adult_to_fry'), 'Editing guppy Stage Risk must change the dedicated adult-to-fry regression scenario.');
+    await page.getByRole('button', { name: '批准 revision（不发布）' }).click();
+    await page.getByRole('button', { name: '发布 reviewed version' }).click();
+    await page.waitForFunction(() => document.body.innerText.includes('Profile reviewed version 已发布'));
+    const guppyReviewedVerdict = await page.evaluate(key => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      return state.reviewedProfiles.find(item => item.catalogKey === 'sp_0436')?.stageRiskRules?.[0]?.verdict || null;
+    }, compatibilityKey);
+    assert.equal(guppyReviewedVerdict, 'caution', 'Published guppy Stage Risk must become the Local reviewed runtime authority.');
+
     await page.getByRole('button', { name: '创建 Pair Draft' }).first().click();
     const pairEditor = page.getByTestId('compatibility-pair-draft-editor');
     await pairEditor.locator('select').first().selectOption('caution');

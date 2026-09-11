@@ -33,6 +33,15 @@ try {
   page.setDefaultTimeout(8_000);
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
+  await page.addInitScript(() => {
+    const originalFetch = window.fetch.bind(window);
+    window.__aquaguideObservedFetches = [];
+    window.fetch = (...args) => {
+      const input = args[0];
+      window.__aquaguideObservedFetches.push(typeof input === 'string' ? input : input instanceof Request ? input.url : String(input));
+      return originalFetch(...args);
+    };
+  });
 
   await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await page.evaluate(state => {
@@ -61,17 +70,29 @@ try {
   await page.goto(`${baseUrl}/aquarium?action=plan-species`, { waitUntil: 'domcontentloaded' });
   const planningDialog = page.getByRole('dialog');
   await planningDialog.getByText('规划想养的生物', { exact: true }).waitFor();
-  await planningDialog.locator('section').first().getByRole('button').first().click();
+  await planningDialog.getByRole('button', { name: /鱼类/ }).click();
+  await planningDialog.getByRole('button', { name: /黑裙鱼/ }).click();
   await planningDialog.getByRole('button', { name: '查看规划判断' }).click();
   assert.equal((await readState(page)).aquariums[0].fishes.length, 0, 'planning assessment must not write livestock');
   console.log('✓ planning assessment left real livestock unchanged');
 
-  await planningDialog.getByRole('button', { name: '已经在缸里了，记录实际情况' }).click();
+  await planningDialog.getByRole('button', { name: '加入种草清单' }).click();
+  await page.waitForFunction(() => JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}').wishlist?.includes('sp_0010'));
+  const wishlistOnlyState = await readState(page);
+  assert.deepEqual(wishlistOnlyState.aquariums[0].fishes, [], 'wishlist-only planning must keep the tank empty');
+  const observedFetches = await page.evaluate(() => window.__aquaguideObservedFetches || []);
+  assert.equal(observedFetches.some(url => /livestock|add-species|species-add/i.test(url)), false, `wishlist-only planning must not call livestock API: ${observedFetches.join(', ')}`);
+  console.log('✓ incomplete planning was saved to wishlist without livestock write');
+
+  await page.goto(`${baseUrl}/aquarium?action=record-existing&species=sp_0010`, { waitUntil: 'domcontentloaded' });
+  const recordingDialog = page.getByRole('dialog');
+  await recordingDialog.getByText('记录已有生物', { exact: true }).waitFor();
+  await recordingDialog.getByRole('button', { name: '保存到鱼缸' }).click();
   await page.waitForFunction(() => JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}').aquariums?.[0]?.fishes?.length === 1);
-  assert.ok(await planningDialog.getByText('已记录', { exact: true }).isVisible(), 'recording reality must show an explicit saved state');
+  assert.ok(await page.getByText('已记录', { exact: true }).isVisible(), 'recording reality must show an explicit saved state');
   console.log('✓ explicit reality confirmation persisted livestock');
 
-  await planningDialog.getByRole('button', { name: '继续记录其他生物' }).click();
+  await page.getByRole('button', { name: '继续记录其他生物' }).click();
   await page.goto(`${baseUrl}/aquarium?action=add-species`, { waitUntil: 'domcontentloaded' });
   const legacyPlanTitle = page.getByRole('dialog').getByText('规划想养的生物', { exact: true });
   await legacyPlanTitle.waitFor();

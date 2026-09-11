@@ -74,7 +74,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className="page-frame mx-auto w-full max-w-[1180px] pb-24">
+    <div className="workspace--content page-frame mx-auto w-full max-w-[1180px] pb-24">
       <header className="flex items-start gap-3 border-b border-slate-200/80 px-1 pb-5">
         <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px] bg-emerald-800 text-white"><Settings2 className="h-5 w-5" /></span>
         <div className="min-w-0">

@@ -211,7 +211,7 @@ export default function MemorialDetail() {
 
   if (!record) {
     return (
-      <main className="page-frame mx-auto w-full max-w-[980px] pb-24">
+      <main className="workspace--content page-frame mx-auto w-full max-w-[980px] pb-24">
         <button type="button" onClick={() => navigateToRoute('/collection/memorial')} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-black text-emerald-800 hover:bg-emerald-50">
           <ArrowLeft className="h-4 w-4" />{isEn ? 'Back to Memorials' : '返回生命纪念'}
         </button>
@@ -226,7 +226,7 @@ export default function MemorialDetail() {
 
   return (
     <>
-    <main className="page-frame mx-auto w-full max-w-[1080px] pb-24">
+      <main className="workspace--content page-frame mx-auto w-full max-w-[1080px] pb-24">
       <button type="button" onClick={() => navigateToRoute('/collection/memorial')} className="inline-flex min-h-11 items-center gap-2 rounded-full px-3 text-sm font-black text-emerald-800 hover:bg-emerald-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500">
         <ArrowLeft className="h-4 w-4" />{isEn ? 'Back to Memorials' : '返回生命纪念'}
       </button>

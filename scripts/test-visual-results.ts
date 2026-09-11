@@ -9,6 +9,7 @@ const makeFish = (overrides: Partial<Fish> & Pick<Fish, 'id' | 'name'>): Fish =>
   name: overrides.name,
   scientificName: `${overrides.name} scientific`,
   category: '小型观赏鱼',
+  waterType: 'freshwater',
   image: '/test.png',
   difficulty: 'Easy',
   waterTemperature: '22-26°C',
@@ -50,10 +51,10 @@ const compatibilityModel = buildCompatibilityVisualResult({
   primaryActionLabel: '调整组合',
 });
 
-assert.equal(compatibilityModel.status, 'not_recommended');
+assert.equal(compatibilityModel.status, 'insufficient_data');
 assert.equal(compatibilityModel.subjects[0]?.id, focus.id, '明确指定的关注物种必须保持为视觉中心');
 assert.equal(compatibilityModel.subjects.length, species.length, '关联对象不能被适配器丢失');
-assert.ok(compatibilityModel.subjects.some(item => item.id === predator.id && item.status === 'not_recommended'));
+assert.ok(compatibilityModel.subjects.some(item => item.id === predator.id && item.status === 'insufficient_data'));
 assert.ok(compatibilityModel.detailSections.length > 0, '完整依据应进入折叠层');
 assert.equal(JSON.stringify(decision), originalDecision, '展示适配不能修改规则结果');
 

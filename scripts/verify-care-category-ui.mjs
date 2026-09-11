@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
+const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4319';
 const browser = await chromium.launch({ headless: true });
 
 const seed = async (page, locale) => {
@@ -44,9 +44,9 @@ const inspectNewStock = async (locale, buttonName) => {
 
   const firstArticle = page.locator('#care-results button[id^="care-article-"]').first();
   await firstArticle.click();
-  await page.locator('[data-surface="centered-dialog"]').waitFor();
+  await page.locator('[data-surface="detail-rail"]').waitFor();
   await page.keyboard.press('Escape');
-  await page.locator('[data-surface="centered-dialog"]').waitFor({ state: 'detached' });
+  await page.locator('[data-surface="detail-rail"]').waitFor({ state: 'hidden' });
   assert.equal(Number(await page.locator('#care-results').getAttribute('data-care-result-count')), resultCount, 'closing an article must restore the category result set');
   assert.deepEqual(errors, [], `${locale} care page should not throw: ${errors.join('; ')}`);
   await page.close();

@@ -1,5 +1,5 @@
 import { fishData } from '../../data/fishData';
-import { evaluateSpeciesCombination, type TankCompatibilityResult } from '../../lib/tankCompatibilityEngine';
+import { evaluateSpeciesCombination, type TankCompatibilityResult } from '../compatibility/compatibility.service';
 import { getLifeType } from '../../modules/species/species.service';
 import type { Fish } from '../../types';
 import type { SpeciesAdminInput } from './content-admin.service';

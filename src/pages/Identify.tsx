@@ -321,7 +321,7 @@ export default function Identify() {
     const ids = Array.from(new Set([...aquarium.fishes.map(item => item.fishId), selectedFish.id]));
     setCompatibilitySelection(ids);
     trackSessionEvent('compatibility_from_identify_started', { action: 'open', status: 'tank_context', entry: 'identify' });
-    requestNavigation(`${taskRoutes.encyclopedia.compatibility}&source=identify`);
+    requestNavigation(taskRoutes.compatibility.with({ source: 'identify' }));
   };
 
   const requestDiagnosis = async (nextAnswers = answers, nextAsked = askedQuestionIds, lockAcquired = false) => {
@@ -489,7 +489,7 @@ export default function Identify() {
   };
 
   return (
-    <main ref={pageRef} className="page-frame-wide min-w-0 pb-24 pt-4 md:pb-8" data-identify-stage={stage}>
+    <main ref={pageRef} className="workspace--content page-frame-wide min-w-0 pb-24 pt-4 md:pb-8" data-identify-stage={stage}>
       <header className="mb-5 flex items-center justify-between gap-3">
         <div className="min-w-0">
           <button type="button" onClick={() => requestNavigation('/encyclopedia')} className="mb-2 inline-flex min-h-10 items-center gap-1 rounded-full px-2 text-xs font-black text-emerald-800 hover:bg-emerald-50">
@@ -684,7 +684,7 @@ export default function Identify() {
         )}
       </div>
 
-      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.encyclopedia.compatibility); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
+      <SpeciesDetailDialog fish={detailFish} open={Boolean(detailFish)} source="atlas" aquariumContext={aquarium} imageSrc={detailFish ? getSpeciesDisplayImage(detailFish) : ''} owned={Boolean(detailFish && aquarium?.fishes.some(item => item.fishId === detailFish.id))} inCalculator={false} inWishlist={Boolean(detailFish && getSpeciesFavoriteIds().includes(detailFish.id))} onOpenChange={open => !open && setDetailFish(null)} onSelectSpecies={setDetailFish} onAddToTank={fish => requestNavigation(taskRoutes.aquarium.addSpecies(fish.id))} onAddToCalculator={fish => { setCompatibilitySelection([fish.id]); requestNavigation(taskRoutes.compatibility.with({ speciesIds: [fish.id], source: 'identify' })); }} onToggleWishlist={toggleWishlist} onGoCalculator={() => { if (detailFish) setCompatibilitySelection([detailFish.id]); requestNavigation(taskRoutes.compatibility.with({ speciesIds: detailFish ? [detailFish.id] : undefined, source: 'identify' })); }} onViewInTank={() => requestNavigation(taskRoutes.aquarium.livestock)} onOpenTankSettings={(panel) => requestNavigation(taskRoutes.aquarium.settings(panel))} />
       <ConfirmDialog
         open={Boolean(pendingNavigationPath)}
         title={t('identify.leaveTitle')}

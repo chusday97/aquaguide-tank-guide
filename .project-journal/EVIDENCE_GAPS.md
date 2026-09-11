@@ -8,6 +8,7 @@
 | GAP-CLAIM-002 | 已发布可访问的生产预览 | verified | Vercel production READY，根页与 `/aquarium` 返回 200 并加载当前构建；不等于已验证线上稳定性 |
 | GAP-CLAIM-003 | 个人独立完成全部设计开发 | missing_evidence | 个人职责边界尚未由用户确认 |
 | GAP-CLAIM-004 | 登录云端数量移出与反馈已可生产发布 | missing_evidence | 尚无真实 Supabase migration、RLS、并发、回滚和反馈写入证据；Docker registry 拉取 PostgreSQL 镜像连续 EOF |
+| GAP-CLAIM-005 | 首批30种物种已完成字段级审核 | missing_evidence | 当前仅有 Draft 字段记录，尚无逐字段可靠引用、冲突处理和用户整批确认 |
 
 ## 缺失证据与补充计划
 
@@ -29,6 +30,8 @@
 | GAP-014 | 核心事实新增的 Supabase 生产等价验证 | `add_aquarium_livestock` migration、RLS、双账号隔离、并发和响应丢失重放 | 在隔离 Supabase 项目执行迁移、失败注入和双用户 API smoke；与本地 PostgreSQL16 结果对比 | 待确认 | open |
 
 ## 当前最需要补充的三项证据
+
+- 首批30种字段级物种证据：30种×10字段的已审核值、同物种已审核引用、冲突说明和用户整批确认；当前状态为 open。
 
 1. 真实目标用户完成每日巡检、查看收藏和添加生物的可用性测试。
 2. 生产预览真实网络下的错误率、首屏与 3D 性能。

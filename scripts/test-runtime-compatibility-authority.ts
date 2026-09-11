@@ -18,6 +18,16 @@ const toCitation = (source: (typeof audit.reviewedProfiles)[number]['citations']
   reviewStatus: 'reviewed' as const,
   version: 1,
 });
+const stageRiskRulesFor = (catalogKey: string) => audit.reviewedStageRiskProfiles
+  .filter(rule => rule.speciesId === catalogKey)
+  .map(rule => ({
+    ruleKey: `${rule.speciesId}:${rule.riskType}`,
+    youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages],
+    verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation],
+    basis: rule.basis, confidence: rule.confidence, reviewStatus: 'reviewed' as const,
+    citations: rule.citations.map(toCitation),
+  }));
+
 const bootstrap = {
   authority: 'reviewed-db' as const,
   counts: { profiles: audit.reviewedProfiles.length, pairRules: audit.reviewedPairRules.length },
@@ -29,6 +39,9 @@ const bootstrap = {
     confidence: profile.confidence,
     reviewStatus: 'reviewed' as const,
     citations: profile.citations.map(toCitation),
+    requiredFacts: [...(profile.requiredFacts || [])],
+    ...(profile.stockingGuidance ? { stockingGuidance: { ...profile.stockingGuidance, constraints: [...profile.stockingGuidance.constraints], evidenceIds: [...profile.stockingGuidance.evidenceIds] } } : {}),
+    stageRiskRules: stageRiskRulesFor(profile.speciesId),
     version: 1,
   })),
   pairRules: audit.reviewedPairRules.map(rule => ({
@@ -56,6 +69,7 @@ const signature = () => {
     warning: decision.warningRules.map(rule => rule.code).sort(),
     missing: decision.missingData.map(rule => rule.code).sort(),
     ruleVersion: decision.metadata.ruleVersion,
+    authorityVersion: decision.metadata.authorityVersion,
   };
 };
 
@@ -63,7 +77,8 @@ resetRuntimeCompatibilityEvidenceForTest();
 const staticSignature = signature();
 assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback');
 assert.equal(staticSignature.status, 'caution');
-assert.equal(staticSignature.ruleVersion, 'tank-compatibility-v2-reviewed-evidence');
+assert.equal(staticSignature.ruleVersion, 'compatibility-domain-v1');
+assert.equal(staticSignature.authorityVersion, 'tank-compatibility-v3-reviewed-evidence');
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: bootstrap.profiles.slice(0, -1),
@@ -80,12 +95,13 @@ const changedPairRules = bootstrap.pairRules.map(rule => (
 applyReviewedCompatibilityBootstrap({ ...bootstrap, pairRules: changedPairRules });
 const dbStatus = getRuntimeCompatibilityStatus();
 assert.equal(dbStatus.source, 'reviewed-db');
-assert.match(dbStatus.authorityVersion, /^tank-compatibility-v2-reviewed-db-[0-9a-f]{8}$/);
+assert.match(dbStatus.authorityVersion, /^tank-compatibility-v3-reviewed-db-[0-9a-f]{8}$/);
 const dbDecision = evaluateSpeciesCombination(pair as any);
 assert.equal(dbDecision.status, 'not_recommended', 'complete reviewed DB authority must be consumable by the existing engine');
 assert.ok(dbDecision.blockingRules.some(rule => rule.code.includes('controlled_runtime_override')));
-assert.equal(dbDecision.metadata.ruleVersion, dbStatus.authorityVersion);
-assert.notEqual(dbDecision.metadata.ruleVersion, staticSignature.ruleVersion);
+assert.equal(dbDecision.metadata.ruleVersion, 'compatibility-domain-v1');
+assert.equal(dbDecision.metadata.authorityVersion, dbStatus.authorityVersion);
+assert.notEqual(dbDecision.metadata.authorityVersion, staticSignature.authorityVersion);
 const firstProfile = bootstrap.profiles[0];
 const evidenceVersionPayload = {
   ...bootstrap,

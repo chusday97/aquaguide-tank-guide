@@ -81,8 +81,8 @@ const blockedReality = await recordExistingLivestock({
   speciesCatalog: [freshwater, saltwater],
   operationId: 'record-blocked-reality',
 });
-assert.equal(blockedReality.assessment?.status, 'not_recommended');
-assert.equal(blockedReality.policy, 'save_with_urgent_warning');
+assert.equal(blockedReality.assessment?.status, 'insufficient_data');
+assert.equal(blockedReality.policy, 'save_with_unknown');
 assert.ok(blockedReality.aquarium.fishes.some(item => item.fishId === saltwater.id), 'blocked reality must still persist');
 
 const replay = await recordExistingLivestock({

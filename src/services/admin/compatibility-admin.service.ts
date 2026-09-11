@@ -46,6 +46,10 @@ export type AdminCompatibilityProfileRevision = {
   minimumGroupSize?: number | null;
   predationTargets: string[];
   confidence: CompatibilityProfileRevisionInput['confidence'];
+  requiredFacts: CompatibilityProfileRevisionInput['requiredFacts'];
+  stockingGuidance?: CompatibilityProfileRevisionInput['stockingGuidance'];
+  stageRiskRules: CompatibilityProfileRevisionInput['stageRiskRules'];
+  stageRiskEvidenceResolution?: Record<string, Array<{ sourceKey: string; sourceId: string; version: number }>>;
   status: CompatibilityProfileRevisionStatus;
   citationSnapshots: CompatibilityCitationSnapshot[];
   evidenceResolution?: Array<{ sourceKey: string; sourceId: string; version: number }>;

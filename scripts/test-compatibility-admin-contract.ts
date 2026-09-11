@@ -17,6 +17,14 @@ for (const profile of audit.reviewedProfiles) {
   assert.ok(profile.behaviorTraits.length > 0, `profile needs reviewed behavior traits: ${profile.speciesId}`);
   assert.ok(profile.citations.length > 0, `profile needs evidence: ${profile.speciesId}`);
   assert.ok(profile.citations.every(source => source.reviewStatus === 'reviewed'));
+  assert.ok((profile.requiredFacts || []).length > 0, `v3 profile needs required facts: ${profile.speciesId}`);
+}
+
+assert.ok(audit.reviewedStageRiskProfiles.length > 0, 'Compatibility v3 must keep explicit reviewed Stage Risk evidence');
+for (const rule of audit.reviewedStageRiskProfiles) {
+  assert.equal(rule.reviewStatus, 'reviewed');
+  assert.ok(rule.citations.length > 0, `Stage Risk needs dedicated evidence: ${rule.speciesId}`);
+  assert.ok(rule.citations.every(source => source.reviewStatus === 'reviewed'));
 }
 
 for (const rule of audit.reviewedPairRules) {
@@ -37,6 +45,14 @@ for (const profile of audit.reviewedProfiles) {
     predationTargets: profile.predationTargets,
     confidence: profile.confidence,
     citations: profile.citations.map(source => ({ sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus })),
+    requiredFacts: [...(profile.requiredFacts || [])],
+    ...(profile.stockingGuidance ? { stockingGuidance: profile.stockingGuidance } : {}),
+    stageRiskRules: audit.reviewedStageRiskProfiles.filter(rule => rule.speciesId === profile.speciesId).map(rule => ({
+      ruleKey: `${rule.speciesId}:${rule.riskType}`, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages],
+      verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation], basis: rule.basis,
+      confidence: rule.confidence,
+      citations: rule.citations.map(source => ({ sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus })),
+    })),
   });
   assert.equal(parsed.success, true, `reviewed profile must be clonable into a safe revision: ${profile.speciesId}`);
 }
@@ -111,6 +127,12 @@ assert.match(compatibilityUi, /pair-regression-report[^>]*border-slate-200 bg-sl
 assert.match(compatibilityUi, /profile-publish-gate-recheck[\s\S]*重新检查发布资格/, 'Approved Profile with a runtime alignment blocker must expose an executable publish-gate recheck.');
 assert.match(compatibilityUi, /pair-publish-gate-recheck[\s\S]*重新检查发布资格/, 'Approved Pair with a runtime alignment blocker must expose an executable publish-gate recheck.');
 assert.match(compatibilityUi, /recheckRuntimePublishGate[\s\S]*refreshReviewedAuthority/, 'Publish-gate recheck must refresh the reviewed runtime authority instead of mutating the revision.');
+assert.match(compatibilityUi, /data-testid="profile-v3-authority"/, 'Profile editor must expose the Compatibility v3 authority being reviewed.');
+assert.match(compatibilityUi, /data-testid="profile-stage-risk-rule"/, 'Profile editor must show Profile-owned Stage Risk rules instead of hiding them in transport state.');
+assert.match(compatibilityUi, /Required Facts/, 'Profile editor must expose required decision facts to the human reviewer.');
+assert.match(compatibilityUi, /独立 Stage Risk Evidence/, 'Stage Risk evidence must remain visibly separate from ordinary Profile evidence.');
+assert.match(compatibilityUi, /stageRiskRules: draftForm\.stageRiskRules/, 'Saving a Profile Draft must persist the visible Stage Risk edits.');
+assert.match(compatibilityUi, /requiredFacts: draftForm\.requiredFacts/, 'Saving a Profile Draft must persist required-fact edits.');
 assert.match(compatibilityUi, /data-testid="profile-review-check-repair"/, 'Incomplete Profile review artifacts must expose one explicit repair action.');
 assert.match(compatibilityUi, /data-testid="pair-review-check-repair"/, 'Incomplete Pair review artifacts must expose one explicit repair action.');
 assert.match(compatibilityUi, /profileReviewArtifactsReady/, 'Profile approval and publish UI must share the full Impact\/Regression\/Evidence readiness gate.');
@@ -131,14 +153,14 @@ assert.match(routeSource, /profile-revisions\/:id\/repair-checks/, 'Profile revi
 assert.match(routeSource, /pair-rule-revisions\/:id\/repair-checks/, 'Pair revisions with missing review artifacts need an explicit repair route.');
 assert.match(routeSource, /reviewed_by: null[\s\S]{0,120}reviewed_at: null[\s\S]{0,120}review_note: null/, 'Repairing review artifacts must revoke any stale approval before re-review.');
 assert.match(routeSource, /Compatibility regression 尚未完成，不能发布/, 'Publish API must fail closed when Regression is missing.');
-assert.match(routeSource, /Canonical Evidence 尚未解析完成，不能发布/, 'Publish API must fail closed when Canonical Evidence is missing.');
+assert.match(routeSource, /Canonical Profile \/ Stage Risk Evidence 尚未解析完成，不能发布/, 'Publish API must fail closed when Profile or Stage Risk canonical evidence is missing.');
 assert.match(routeSource, /buildImpactReport\('profile'/);
 assert.match(routeSource, /buildImpactReport\('pair_rule'/);
 assert.match(routeSource, /缺少有效 impact report/);
 assert.match(routeSource, /resolveReviewedEvidenceSnapshots/);
 assert.match(routeSource, /source_key/);
 assert.match(routeSource, /evidence_resolution/);
-assert.match(routeSource, /Canonical Evidence 尚未解析完成/);
+assert.match(routeSource, /Canonical Profile \/ Stage Risk Evidence 尚未解析完成/);
 assert.match(routeSource, /buildProfileRevisionRegression/);
 assert.match(routeSource, /buildPairRuleRevisionRegression/);
 assert.match(routeSource, /regression_report/);
@@ -162,6 +184,20 @@ assert.match(publishMigration, /compatibility_pair_rules_bump_authority/);
 assert.match(publishMigration, /enable row level security/);
 assert.match(publishMigration, /evidence_resolution_missing/);
 assert.match(publishMigration, /VERSION_CONFLICT: baseline/);
+
+const v3Migration = readFileSync('supabase/migrations/202609110001_compatibility_v3_profile_authority.sql', 'utf8');
+assert.match(v3Migration, /required_facts text\[\]/, 'v3 Profile authority must persist required facts.');
+assert.match(v3Migration, /stocking_guidance jsonb/, 'v3 Profile authority must persist stocking guidance.');
+assert.match(v3Migration, /species_compatibility_profile_stage_risks/, 'Stage Risk must be Profile-owned reviewed authority.');
+assert.match(v3Migration, /species_compatibility_profile_stage_risk_sources/, 'Stage Risk evidence must use an independent canonical link table.');
+assert.match(v3Migration, /stage_risk_evidence_resolution jsonb/, 'Stage Risk revision evidence must be independently resolved.');
+assert.match(v3Migration, /status=case when status='approved' then 'pending_review'/, 'v3 migration must revoke stale approvals before re-review.');
+assert.match(v3Migration, /guppy-cannibalism-refuge-study/);
+assert.match(v3Migration, /guppy-fry-yield-cannibalism-study/);
+assert.match(v3Migration, /stage_risk_evidence_resolution_missing/);
+assert.match(v3Migration, /VERSION_CONFLICT: stage_risk_evidence/);
+assert.match(v3Migration, /delete from public\.species_compatibility_profile_stage_risks where profile_id=v_baseline\.id/);
+assert.match(v3Migration, /publish_compatibility_profile_revision/);
 assert.match(publishMigration, /VERSION_CONFLICT: evidence/);
 assert.match(publishMigration, /for update/);
 assert.match(publishMigration, /status='published'/);

@@ -24,7 +24,7 @@ import { isLocalAdminFileMode, persistLocalAdminPartition } from './local-file-p
 const STORAGE_KEY = 'aquaguide-local-compatibility-admin-v1';
 const now = () => new Date().toISOString();
 type LocalCompatibilityState = {
-  schemaVersion: 1;
+  schemaVersion: 2;
   profileRevisions: AdminCompatibilityProfileRevision[];
   pairRevisions: AdminCompatibilityPairRuleRevision[];
   reviewedProfiles: ReviewedCompatibilityProfileDto[];
@@ -44,14 +44,47 @@ const runtimeCitation = (source: (typeof staticAudit.reviewedProfiles)[number]['
   sourceType: source.sourceType, reviewStatus: 'reviewed' as const, version: 1,
 });
 
+const profileV3FieldsFor = (catalogKey: string): Pick<ReviewedCompatibilityProfileDto, 'requiredFacts' | 'stockingGuidance' | 'stageRiskRules'> => {
+  const profile = staticAudit.reviewedProfiles.find(item => item.speciesId === catalogKey);
+  if (!profile?.requiredFacts) throw new Error(`missing canonical Compatibility v3 profile fields for ${catalogKey}`);
+  const stageRiskRules = staticAudit.reviewedStageRiskProfiles
+    .filter(rule => rule.speciesId === catalogKey)
+    .map(rule => ({
+      ruleKey: `${rule.speciesId}:${rule.riskType}`, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages],
+      verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation],
+      basis: rule.basis, confidence: rule.confidence, reviewStatus: 'reviewed' as const, citations: rule.citations.map(runtimeCitation),
+    }));
+  return {
+    requiredFacts: [...profile.requiredFacts],
+    ...(profile.stockingGuidance ? { stockingGuidance: {
+      ...profile.stockingGuidance, constraints: [...profile.stockingGuidance.constraints], evidenceIds: [...profile.stockingGuidance.evidenceIds],
+    } } : {}),
+    stageRiskRules,
+  };
+};
+
+const revisionV3FieldsFromProfile = (profile: ReviewedCompatibilityProfileDto) => ({
+  requiredFacts: [...profile.requiredFacts],
+  ...(profile.stockingGuidance ? { stockingGuidance: clone(profile.stockingGuidance) } : {}),
+  stageRiskRules: profile.stageRiskRules.map(rule => ({
+    ruleKey: rule.ruleKey, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages], verdict: rule.verdict,
+    riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation], basis: rule.basis, confidence: rule.confidence,
+    citations: rule.citations.map(source => ({ sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus })),
+  })),
+});
+
+const resolveStageRiskEvidence = (rules: AdminCompatibilityProfileRevision['stageRiskRules']) => Object.fromEntries(
+  rules.map(rule => [rule.ruleKey, resolveEvidence(rule.citations)]),
+);
+
 const buildSeedState = (): LocalCompatibilityState => ({
-  schemaVersion: 1,
+  schemaVersion: 2,
   profileRevisions: [], pairRevisions: [], authoritySequence: 1, releaseEvents: [], updatedAt: now(),
   reviewedProfiles: staticAudit.reviewedProfiles.map(profile => ({
     catalogKey: profile.speciesId,
     behaviorTraits: [...profile.behaviorTraits], minimumGroupSize: profile.minimumGroupSize,
     predationTargets: [...profile.predationTargets], confidence: profile.confidence,
-    reviewStatus: 'reviewed', citations: profile.citations.map(runtimeCitation), version: 1,
+    reviewStatus: 'reviewed', citations: profile.citations.map(runtimeCitation), ...profileV3FieldsFor(profile.speciesId), version: 1,
   })),
   reviewedPairRules: staticAudit.reviewedPairRules.map(rule => ({
     catalogKeys: [...rule.speciesIds].sort() as [string, string], verdict: rule.verdict,
@@ -59,6 +92,34 @@ const buildSeedState = (): LocalCompatibilityState => ({
     confidence: rule.confidence, reviewStatus: 'reviewed', citations: rule.citations.map(runtimeCitation), version: 1,
   })),
 });
+
+const migrateState = (raw: any): LocalCompatibilityState => {
+  if (!raw || !Array.isArray(raw.reviewedProfiles) || !Array.isArray(raw.reviewedPairRules)) throw new Error('invalid local compatibility store');
+  if (raw.schemaVersion === 2) {
+    if (!raw.reviewedProfiles.every((profile: any) => Array.isArray(profile.requiredFacts) && Array.isArray(profile.stageRiskRules))
+      || !(raw.profileRevisions || []).every((revision: any) => Array.isArray(revision.requiredFacts) && Array.isArray(revision.stageRiskRules))) {
+      throw new Error('invalid local compatibility v2 authority');
+    }
+    raw.releaseEvents = Array.isArray(raw.releaseEvents) ? raw.releaseEvents : [];
+    return raw as LocalCompatibilityState;
+  }
+  if (raw.schemaVersion !== 1) throw new Error('unsupported local compatibility schema');
+  const reviewedProfiles: ReviewedCompatibilityProfileDto[] = raw.reviewedProfiles.map((profile: any) => ({ ...profile, ...profileV3FieldsFor(profile.catalogKey) }));
+  const reviewedByKey = new Map(reviewedProfiles.map(profile => [profile.catalogKey, profile]));
+  const migrated: LocalCompatibilityState = {
+    ...raw,
+    schemaVersion: 2,
+    reviewedProfiles,
+    profileRevisions: (raw.profileRevisions || []).map((revision: any) => {
+      const baseline = reviewedByKey.get(revision?.species?.catalogKey);
+      if (!baseline) throw new Error(`missing v3 baseline for Profile revision ${revision?.id || 'unknown'}`);
+      return { ...revision, ...revisionV3FieldsFromProfile(baseline) };
+    }),
+    releaseEvents: Array.isArray(raw.releaseEvents) ? raw.releaseEvents : [],
+    updatedAt: now(),
+  };
+  return migrated;
+};
 
 const readState = (): LocalCompatibilityState => {
   if (typeof window === 'undefined') return buildSeedState();
@@ -69,9 +130,9 @@ const readState = (): LocalCompatibilityState => {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(seeded));
       return seeded;
     }
-    const parsed = JSON.parse(raw) as LocalCompatibilityState;
-    if (parsed?.schemaVersion !== 1 || !Array.isArray(parsed.reviewedProfiles) || !Array.isArray(parsed.reviewedPairRules)) throw new Error('invalid local compatibility store');
-    parsed.releaseEvents = Array.isArray(parsed.releaseEvents) ? parsed.releaseEvents : [];
+    const rawState = JSON.parse(raw);
+    const parsed = migrateState(rawState);
+    if (rawState.schemaVersion === 1) window.localStorage.setItem(STORAGE_KEY, JSON.stringify(parsed));
     return parsed;
   } catch (error) {
     if (isLocalAdminFileMode) {
@@ -138,7 +199,8 @@ const profileRegressionFor = async (state: LocalCompatibilityState, revision: Ad
     authoritySequence: state.authoritySequence, catalogKey: revision.species.catalogKey,
     baselineVersion: baseline.version, behaviorTraits: revision.behaviorTraits,
     minimumGroupSize: revision.minimumGroupSize, predationTargets: revision.predationTargets,
-    confidence: revision.confidence, sourceKeys: revision.citationSnapshots.map(source => source.sourceKey),
+    confidence: revision.confidence, requiredFacts: [...revision.requiredFacts], stockingGuidance: revision.stockingGuidance ? { ...revision.stockingGuidance, recommendedMin: revision.stockingGuidance.recommendedMin ?? null, recommendedMax: revision.stockingGuidance.recommendedMax ?? null, constraints: [...revision.stockingGuidance.constraints], evidenceIds: [...revision.stockingGuidance.evidenceIds] } : undefined, stageRiskRules: clone(revision.stageRiskRules),
+    sourceKeys: revision.citationSnapshots.map(source => source.sourceKey),
   });
 };
 
@@ -168,6 +230,12 @@ const assertReviewArtifacts = (revision: AdminCompatibilityProfileRevision | Adm
   if (!revision.citationSnapshots.length || (revision.evidenceResolution?.length || 0) !== revision.citationSnapshots.length) {
     throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 Compatibility Evidence 尚未完整解析。');
   }
+  if ('species' in revision) {
+    const resolved = revision.stageRiskEvidenceResolution || {};
+    if (revision.stageRiskRules.some(rule => (resolved[rule.ruleKey]?.length || 0) !== rule.citations.length)) {
+      throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 Stage Risk Evidence 尚未完整解析。');
+    }
+  }
 };
 
 const assertRegressionFresh = async (state: LocalCompatibilityState, revision: AdminCompatibilityProfileRevision | AdminCompatibilityPairRuleRevision) => {
@@ -184,6 +252,21 @@ const runtimeCitations = (revision: AdminCompatibilityProfileRevision | AdminCom
   reviewStatus: 'reviewed' as const,
   version: revision.evidenceResolution?.find(item => item.sourceKey === source.sourceKey)?.version || 1,
 }));
+
+const runtimeStageRiskRules = (revision: AdminCompatibilityProfileRevision) => revision.stageRiskRules.map(rule => ({
+  ruleKey: rule.ruleKey, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages], verdict: rule.verdict,
+  riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation], basis: rule.basis, confidence: rule.confidence,
+  reviewStatus: 'reviewed' as const,
+  citations: rule.citations.map(source => ({
+    id: source.sourceKey, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType,
+    reviewStatus: 'reviewed' as const,
+    version: revision.stageRiskEvidenceResolution?.[rule.ruleKey]?.find(item => item.sourceKey === source.sourceKey)?.version || 1,
+  })),
+}));
+
+const assertReviewedStageRiskCitations = (rules: AdminCompatibilityProfileRevision['stageRiskRules']) => {
+  for (const rule of rules) assertReviewedCitations(rule.citations);
+};
 
 const assertReviewedCitations = (citations: Array<{ reviewStatus: string }>) => {
   if (!citations.length || citations.some(source => source.reviewStatus !== 'reviewed')) {
@@ -216,8 +299,11 @@ export const localCompatibilityAdminStore = {
     const revision: AdminCompatibilityProfileRevision = {
       id: makeId(), speciesId: input.catalogKey, revisionNumber, baseProfileVersion: baseline.version,
       behaviorTraits: [...input.behaviorTraits], minimumGroupSize: input.minimumGroupSize ?? null,
-      predationTargets: [...input.predationTargets], confidence: input.confidence, status: 'draft',
-      citationSnapshots: clone(input.citations), version: 1, species,
+      predationTargets: [...input.predationTargets], confidence: input.confidence,
+      requiredFacts: [...input.requiredFacts],
+      ...(input.stockingGuidance ? { stockingGuidance: clone(input.stockingGuidance) } : {}),
+      stageRiskRules: clone(input.stageRiskRules),
+      status: 'draft', citationSnapshots: clone(input.citations), version: 1, species,
     };
     state.profileRevisions.unshift(revision); await writeState(state); return clone(revision);
   },
@@ -232,11 +318,15 @@ export const localCompatibilityAdminStore = {
     const parsed = compatibilityProfileRevisionInputSchema.parse({
       catalogKey: current.species.catalogKey, behaviorTraits: current.behaviorTraits,
       minimumGroupSize: current.minimumGroupSize, predationTargets: current.predationTargets,
-      confidence: current.confidence, citations: current.citationSnapshots, ...input,
+      confidence: current.confidence, citations: current.citationSnapshots, requiredFacts: current.requiredFacts,
+      stockingGuidance: current.stockingGuidance, stageRiskRules: current.stageRiskRules, ...input,
     });
     const next: AdminCompatibilityProfileRevision = {
       ...current, behaviorTraits: [...parsed.behaviorTraits], minimumGroupSize: parsed.minimumGroupSize ?? null,
       predationTargets: [...parsed.predationTargets], confidence: parsed.confidence, citationSnapshots: clone(parsed.citations),
+      requiredFacts: [...parsed.requiredFacts],
+      ...(parsed.stockingGuidance ? { stockingGuidance: clone(parsed.stockingGuidance) } : { stockingGuidance: undefined }),
+      stageRiskRules: clone(parsed.stageRiskRules),
       impactReport: undefined, regressionReport: undefined, evidenceResolution: undefined, impactCheckedAt: undefined,
       version: current.version + 1,
     };
@@ -251,17 +341,18 @@ export const localCompatibilityAdminStore = {
     assertVersion(current.version, version);
     if (current.status !== 'draft') throw new AquaGuideApiError(409, 'VERSION_CONFLICT', '只有 Draft Profile revision 可以提交审核。');
     assertReviewedCitations(current.citationSnapshots);
+    assertReviewedStageRiskCitations(current.stageRiskRules);
     const baseline = state.reviewedProfiles.find(item => item.catalogKey === current.species.catalogKey);
     if (!baseline) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed Profile baseline 不存在。');
     const report = impactReport('profile', baseline.version,
-      { behavior_traits: current.behaviorTraits, minimum_group_size: current.minimumGroupSize, predation_targets: current.predationTargets, confidence: current.confidence },
-      { behavior_traits: baseline.behaviorTraits, minimum_group_size: baseline.minimumGroupSize ?? null, predation_targets: baseline.predationTargets, confidence: baseline.confidence },
-      ['behavior_traits', 'minimum_group_size', 'predation_targets', 'confidence']);
+      { behavior_traits: current.behaviorTraits, minimum_group_size: current.minimumGroupSize, predation_targets: current.predationTargets, confidence: current.confidence, required_facts: current.requiredFacts, stocking_guidance: current.stockingGuidance ?? null, stage_risk_rules: current.stageRiskRules },
+      { behavior_traits: baseline.behaviorTraits, minimum_group_size: baseline.minimumGroupSize ?? null, predation_targets: baseline.predationTargets, confidence: baseline.confidence, required_facts: baseline.requiredFacts, stocking_guidance: baseline.stockingGuidance ?? null, stage_risk_rules: revisionV3FieldsFromProfile(baseline).stageRiskRules },
+      ['behavior_traits', 'minimum_group_size', 'predation_targets', 'confidence', 'required_facts', 'stocking_guidance', 'stage_risk_rules']);
     if (!report.changedFields.length) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '没有实际 Profile 变更，不能提交审核。');
     const regressionReport = await profileRegressionFor(state, current);
     const next: AdminCompatibilityProfileRevision = {
       ...current, status: 'pending_review', impactReport: report, regressionReport,
-      evidenceResolution: resolveEvidence(current.citationSnapshots), impactCheckedAt: now(), version: current.version + 1,
+      evidenceResolution: resolveEvidence(current.citationSnapshots), stageRiskEvidenceResolution: resolveStageRiskEvidence(current.stageRiskRules), impactCheckedAt: now(), version: current.version + 1,
     };
     state.profileRevisions[index] = next;
     appendReleaseEvent(state, { id: `local-compat-profile-submit:${next.id}:${next.version}:${Date.now()}`, authority: 'compatibility', domain: 'compatibility_profile', eventType: 'profile_revision', status: next.status, title: 'Compatibility Profile 已提交审核', detail: `${next.species.name} · revision #${next.revisionNumber}`, resourceKey: next.species.catalogKey, version: next.version, occurredAt: now(), sourceRef: `local:compat-profile:${next.id}:${next.version}`, metadata: { revisionNumber: next.revisionNumber, baseVersion: next.baseProfileVersion, local: true } });
@@ -276,17 +367,18 @@ export const localCompatibilityAdminStore = {
     assertVersion(current.version, version);
     if (!['pending_review', 'approved'].includes(current.status)) throw new AquaGuideApiError(409, 'VERSION_CONFLICT', '只有待审核或已批准 Profile revision 可以重新生成发布前检查。');
     assertReviewedCitations(current.citationSnapshots);
+    assertReviewedStageRiskCitations(current.stageRiskRules);
     const baseline = state.reviewedProfiles.find(item => item.catalogKey === current.species.catalogKey);
     if (!baseline) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '本地 reviewed Profile baseline 不存在。');
     const report = impactReport('profile', baseline.version,
-      { behavior_traits: current.behaviorTraits, minimum_group_size: current.minimumGroupSize, predation_targets: current.predationTargets, confidence: current.confidence },
-      { behavior_traits: baseline.behaviorTraits, minimum_group_size: baseline.minimumGroupSize ?? null, predation_targets: baseline.predationTargets, confidence: baseline.confidence },
-      ['behavior_traits', 'minimum_group_size', 'predation_targets', 'confidence']);
+      { behavior_traits: current.behaviorTraits, minimum_group_size: current.minimumGroupSize, predation_targets: current.predationTargets, confidence: current.confidence, required_facts: current.requiredFacts, stocking_guidance: current.stockingGuidance ?? null, stage_risk_rules: current.stageRiskRules },
+      { behavior_traits: baseline.behaviorTraits, minimum_group_size: baseline.minimumGroupSize ?? null, predation_targets: baseline.predationTargets, confidence: baseline.confidence, required_facts: baseline.requiredFacts, stocking_guidance: baseline.stockingGuidance ?? null, stage_risk_rules: revisionV3FieldsFromProfile(baseline).stageRiskRules },
+      ['behavior_traits', 'minimum_group_size', 'predation_targets', 'confidence', 'required_facts', 'stocking_guidance', 'stage_risk_rules']);
     if (!report.changedFields.length) throw new AquaGuideApiError(409, 'MIGRATION_REJECTED', '没有实际 Profile 变更，不能重新生成发布前检查。');
     const regressionReport = await profileRegressionFor(state, current);
     const next: AdminCompatibilityProfileRevision = {
       ...current, status: 'pending_review', impactReport: report, regressionReport,
-      evidenceResolution: resolveEvidence(current.citationSnapshots), impactCheckedAt: now(), reviewNote: null, version: current.version + 1,
+      evidenceResolution: resolveEvidence(current.citationSnapshots), stageRiskEvidenceResolution: resolveStageRiskEvidence(current.stageRiskRules), impactCheckedAt: now(), reviewNote: null, version: current.version + 1,
     };
     state.profileRevisions[index] = next;
     await writeState(state);
@@ -327,7 +419,11 @@ export const localCompatibilityAdminStore = {
     state.reviewedProfiles[baselineIndex] = {
       catalogKey: current.species.catalogKey, behaviorTraits: [...current.behaviorTraits],
       minimumGroupSize: current.minimumGroupSize ?? undefined, predationTargets: [...current.predationTargets],
-      confidence: current.confidence, reviewStatus: 'reviewed', citations: runtimeCitations(current), version: baseline.version + 1,
+      confidence: current.confidence, reviewStatus: 'reviewed', citations: runtimeCitations(current),
+      requiredFacts: [...current.requiredFacts],
+      ...(current.stockingGuidance ? { stockingGuidance: { ...current.stockingGuidance, recommendedMin: current.stockingGuidance.recommendedMin ?? null, recommendedMax: current.stockingGuidance.recommendedMax ?? null, constraints: [...current.stockingGuidance.constraints], evidenceIds: [...current.stockingGuidance.evidenceIds] } } : {}),
+      stageRiskRules: runtimeStageRiskRules(current),
+      version: baseline.version + 1,
     };
     state.profileRevisions = state.profileRevisions.map(item => item.id !== current.id && item.species.catalogKey === current.species.catalogKey && item.status === 'published'
       ? { ...item, status: 'superseded' as const, version: item.version + 1 } : item);

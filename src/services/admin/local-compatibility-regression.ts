@@ -1,6 +1,6 @@
-import type { ReviewedCompatibilityPairRuleDto, ReviewedCompatibilityProfileDto } from '../../../packages/contracts/src';
+import type { CompatibilityStageRiskRuleInput, CompatibilityStockingGuidance, ReviewedCompatibilityPairRuleDto, ReviewedCompatibilityProfileDto } from '../../../packages/contracts/src';
 import type { Fish } from '../../types';
-import { evaluateTankCompatibility, type CompatibilityEvidenceProvider, type TankCompatibilityResult } from '../../lib/tankCompatibilityEngine';
+import { evaluateTankCompatibility, type CompatibilityEvidenceProvider, type TankCompatibilityResult } from '../compatibility/compatibility.service';
 import type { CompatibilityBootstrapResponse } from '../../data/runtimeCompatibilityRegistry';
 import type { CompatibilityRegressionReport } from './compatibility-admin.service';
 
@@ -34,8 +34,16 @@ const toProvider = (authority: CompatibilityBootstrapResponse, authorityVersion:
         speciesId, behaviorTraits: [...profile.behaviorTraits], minimumGroupSize: profile.minimumGroupSize,
         predationTargets: [...profile.predationTargets], confidence: profile.confidence,
         reviewStatus: 'reviewed', citations: profile.citations.map(source => ({ ...source })),
+        requiredFacts: [...profile.requiredFacts],
+        ...(profile.stockingGuidance ? { stockingGuidance: { ...profile.stockingGuidance, constraints: [...profile.stockingGuidance.constraints], evidenceIds: [...profile.stockingGuidance.evidenceIds] } } : {}),
       } : undefined;
     },
+    getStageRisks: speciesId => (profiles.get(speciesId)?.stageRiskRules || []).map(rule => ({
+      speciesId, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages], verdict: rule.verdict,
+      riskType: rule.riskType as 'conspecific_fry_predation', reason: rule.reason, mitigation: [...rule.mitigation],
+      basis: rule.basis, confidence: rule.confidence, reviewStatus: rule.reviewStatus, affectedSpeciesIds: [speciesId],
+      citations: rule.citations.map(source => ({ ...source })),
+    })),
     getPairRule: (leftId, rightId) => {
       const rule = pairs.get(pairKey(leftId, rightId));
       return rule ? {
@@ -71,7 +79,7 @@ const evaluatePairScenarios = (left: Fish, right: Fish, provider: CompatibilityE
 ] as const);
 
 const runRegression = (kind: CompatibilityRegressionReport['kind'], targetKey: string, baselineVersion: number, authoritySequence: number,
-  fish: Fish[], pairs: Array<[Fish, Fish]>, before: CompatibilityBootstrapResponse, after: CompatibilityBootstrapResponse): CompatibilityRegressionReport => {
+  fish: Fish[], pairs: Array<[Fish, Fish]>, before: CompatibilityBootstrapResponse, after: CompatibilityBootstrapResponse, stageRiskSpecies: Fish[] = []): CompatibilityRegressionReport => {
   const changes: CompatibilityRegressionReport['changes'] = [];
   const rows: unknown[] = [];
   let evaluatedScenarios = 0;
@@ -92,6 +100,17 @@ const runRegression = (kind: CompatibilityRegressionReport['kind'], targetKey: s
       }
     }
   }
+  for (const species of stageRiskSpecies) {
+    const existing = [{ species, record: { quantity: 1, batches: [{ id: 'regression-adult', quantity: 1, entryDate: '2026-01-01', lifeStage: 'adult' as const, reproductiveState: 'unknown' as const, stateUpdatedAt: '2026-01-01T00:00:00.000Z' }] } }];
+    const beforeResult = evaluateTankCompatibility({ scope: 'species_only', existingSpecies: existing, candidateSpecies: species, candidateLifeStage: 'fry', evidenceProvider: beforeProvider });
+    const afterResult = evaluateTankCompatibility({ scope: 'species_only', existingSpecies: existing, candidateSpecies: species, candidateLifeStage: 'fry', evidenceProvider: afterProvider });
+    const beforeDecision = decisionSignature(beforeResult);
+    const afterDecision = decisionSignature(afterResult);
+    const scenario = 'same_species_adult_to_fry';
+    evaluatedScenarios += 1;
+    rows.push([scenario, species.id, species.id, beforeDecision, afterDecision]);
+    if (!decisionsEqual(beforeDecision, afterDecision)) changes.push({ scenario, species: [species.id, species.id], before: beforeDecision, after: afterDecision });
+  }
   return {
     kind, targetKey, baselineVersion, authoritySequence,
     engineVersion: 'local-compatibility-regression-v1',
@@ -101,7 +120,7 @@ const runRegression = (kind: CompatibilityRegressionReport['kind'], targetKey: s
   };
 };
 const runtimeCitationIds = (authority: CompatibilityBootstrapResponse) => new Map(
-  [...authority.profiles.flatMap(item => item.citations), ...authority.pairRules.flatMap(item => item.citations)].map(source => [source.id, source]),
+  [...authority.profiles.flatMap(item => item.citations), ...authority.profiles.flatMap(item => item.stageRiskRules.flatMap(rule => rule.citations)), ...authority.pairRules.flatMap(item => item.citations)].map(source => [source.id, source]),
 );
 
 export const buildLocalProfileRegression = (input: {
@@ -114,6 +133,9 @@ export const buildLocalProfileRegression = (input: {
   minimumGroupSize?: number | null;
   predationTargets: string[];
   confidence: ReviewedCompatibilityProfileDto['confidence'];
+  requiredFacts: ReviewedCompatibilityProfileDto['requiredFacts'];
+  stockingGuidance?: ReviewedCompatibilityProfileDto['stockingGuidance'];
+  stageRiskRules: CompatibilityStageRiskRuleInput[];
   sourceKeys: string[];
 }) => {
   const current = input.authority.profiles.find(item => item.catalogKey === input.catalogKey);
@@ -121,19 +143,30 @@ export const buildLocalProfileRegression = (input: {
   const sourceById = runtimeCitationIds(input.authority);
   const citations = input.sourceKeys.map(key => sourceById.get(key)).filter(Boolean);
   if (citations.length !== input.sourceKeys.length) throw new Error('Local regression 无法解析 canonical Evidence。');
+  const stageRiskRules = input.stageRiskRules.map(rule => ({
+    ruleKey: rule.ruleKey, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages], verdict: rule.verdict,
+    riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation], basis: rule.basis, confidence: rule.confidence,
+    reviewStatus: 'reviewed' as const, citations: rule.citations.map(source => {
+      const resolved = sourceById.get(source.sourceKey);
+      if (!resolved) throw new Error(`Local regression 无法解析 Stage Risk Evidence ${source.sourceKey}。`);
+      return { ...resolved };
+    }),
+  }));
   const after: CompatibilityBootstrapResponse = {
     ...input.authority,
     profiles: input.authority.profiles.map(profile => profile.catalogKey === input.catalogKey ? {
       ...profile,
       behaviorTraits: [...input.behaviorTraits], minimumGroupSize: input.minimumGroupSize ?? undefined,
       predationTargets: [...input.predationTargets], confidence: input.confidence,
-      citations: citations.map(source => ({ ...source! })), version: profile.version + 1,
+      citations: citations.map(source => ({ ...source! })), requiredFacts: [...input.requiredFacts],
+      ...(input.stockingGuidance ? { stockingGuidance: { ...input.stockingGuidance, constraints: [...input.stockingGuidance.constraints], evidenceIds: [...input.stockingGuidance.evidenceIds] } } : { stockingGuidance: undefined }),
+      stageRiskRules, version: profile.version + 1,
     } : profile),
   };
   const target = input.fish.find(item => item.id === input.catalogKey);
   if (!target) throw new Error('Local regression 找不到 Published Product species。');
   const pairs = input.fish.filter(item => item.id !== target.id).map(item => [target, item] as [Fish, Fish]);
-  return runRegression('profile', input.catalogKey, input.baselineVersion, input.authoritySequence, input.fish, pairs, input.authority, after);
+  return runRegression('profile', input.catalogKey, input.baselineVersion, input.authoritySequence, input.fish, pairs, input.authority, after, [target]);
 };
 
 export const buildLocalPairRegression = (input: {

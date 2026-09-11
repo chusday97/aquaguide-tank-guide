@@ -73,7 +73,7 @@ const open = async (path, width = 1200, locale = 'zh-CN') => {
 
 try {
   const taskCases = [
-    ['/aquarium?action=add-species', '添加生物'],
+    ['/aquarium?action=add-species', '规划想养的生物'],
     ['/aquarium?action=daily-check', '一次完成今天检查'],
     ['/aquarium?action=livestock', '缸内物种'],
     ['/aquarium?action=water-change', '换水记录'],
@@ -85,8 +85,11 @@ try {
     await target.waitFor();
     if (path.includes('add-species')) {
       const dialog = page.getByRole('dialog');
-      const selectionSection = dialog.locator('section').filter({ hasText: '第 1 步：选择生物' });
-      await selectionSection.locator('button').filter({ hasText: '选择' }).first().click();
+      const search = dialog.locator('input').first();
+      await search.fill('红绿灯');
+      const selectionButton = dialog.getByRole('button', { name: /红绿灯.*选择/ }).first();
+      await selectionButton.waitFor();
+      await selectionButton.click();
       const entryDateField = dialog.getByText('入缸日期', { exact: true }).last().locator('..');
       await entryDateField.getByRole('button').click();
       for (const label of ['上个月', '下个月']) {
@@ -208,7 +211,7 @@ try {
   }
 
   {
-    const { page, errors } = await open('/encyclopedia', 390);
+    const { page, errors } = await open('/encyclopedia?mode=browse', 390);
     const groupCard = page.locator('[data-species-group-card]').first();
     await groupCard.waitFor();
     await groupCard.locator('button[aria-label^="查看"]').first().click();

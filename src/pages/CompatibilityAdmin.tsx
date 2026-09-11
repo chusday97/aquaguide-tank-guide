@@ -3,7 +3,7 @@ import { ArrowLeft, BookOpenCheck, Loader2, Save, Send, ShieldCheck } from 'luci
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useToast } from '../components/common/ToastProvider';
 import { fishData } from '../data/fishData';
-import { type ReviewedCompatibilityProfile, type ReviewedPairRule } from '../data/compatibilityEvidence';
+import { type ReviewedCompatibilityProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import { getRuntimeCompatibilityEvidenceAudit, hydrateReviewedCompatibilityEvidence } from '../data/runtimeCompatibilityEvidence';
 import { AquaGuideApiError } from '../services/api/api-client';
 import { isLocalBusinessAdminMode } from '../services/admin/local-business-admin.store';
@@ -35,14 +35,35 @@ const verdictClass = {
 } as const;
 
 type RevisionCapability = 'loading' | 'ready' | 'unavailable';
-type DraftForm = { behaviorTraits: string; minimumGroupSize: string; predationTargets: string; confidence: 'high' | 'medium' | 'low' | 'unknown' };
+type RequiredFact = AdminCompatibilityProfileRevision['requiredFacts'][number];
+type StageRiskDraft = AdminCompatibilityProfileRevision['stageRiskRules'][number];
+type DraftForm = {
+  behaviorTraits: string;
+  minimumGroupSize: string;
+  predationTargets: string;
+  confidence: 'high' | 'medium' | 'low' | 'unknown';
+  requiredFacts: RequiredFact[];
+  stageRiskRules: StageRiskDraft[];
+};
 type PairDraftForm = { verdict: 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data'; riskType: string; reason: string; mitigation: string; basis: 'species_trait' | 'pair_rule' | 'tank_condition' | 'rule_inference'; confidence: 'high' | 'medium' | 'low' | 'unknown' };
+
+const requiredFactOptions: Array<{ value: RequiredFact; label: string }> = [
+  { value: 'water', label: '水体' }, { value: 'temperature', label: '温度' }, { value: 'ph', label: 'pH' },
+  { value: 'adult_size', label: '成体尺寸' }, { value: 'tank_size', label: '缸体' }, { value: 'social_behavior', label: '社会行为' },
+  { value: 'territoriality', label: '领地性' }, { value: 'predation', label: '捕食' }, { value: 'breeding_behavior', label: '繁殖行为' },
+];
+const lifeStageOptions: Array<{ value: StageRiskDraft['youngerStages'][number]; label: string }> = [
+  { value: 'fry', label: '鱼苗' }, { value: 'juvenile', label: '幼体' }, { value: 'subadult', label: '亚成体' }, { value: 'adult', label: '成体' }, { value: 'unknown', label: '未知' },
+];
+const toggleListValue = <T extends string>(items: T[], value: T) => items.includes(value) ? items.filter(item => item !== value) : [...items, value];
 
 const draftFormFromRevision = (revision: AdminCompatibilityProfileRevision): DraftForm => ({
   behaviorTraits: revision.behaviorTraits.join('\n'),
   minimumGroupSize: revision.minimumGroupSize ? String(revision.minimumGroupSize) : '',
   predationTargets: revision.predationTargets.join('\n'),
   confidence: revision.confidence,
+  requiredFacts: [...revision.requiredFacts],
+  stageRiskRules: revision.stageRiskRules.map(rule => ({ ...rule, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages], mitigation: [...rule.mitigation], citations: rule.citations.map(source => ({ ...source })) })),
 });
 
 const pairDraftFormFromRevision = (revision: AdminCompatibilityPairRuleRevision): PairDraftForm => ({
@@ -63,6 +84,7 @@ const reviewArtifactGaps = (revision: AdminCompatibilityProfileRevision | AdminC
   if (!revision.impactReport?.changedFields?.length) gaps.push('Impact Check');
   if (!revision.regressionReport?.evaluatedScenarios) gaps.push('Regression');
   if (!revision.citationSnapshots.length || (revision.evidenceResolution?.length || 0) < revision.citationSnapshots.length) gaps.push('Canonical Evidence');
+  if ('species' in revision && revision.stageRiskRules.some(rule => (revision.stageRiskEvidenceResolution?.[rule.ruleKey]?.length || 0) < rule.citations.length)) gaps.push('Stage Risk Evidence');
   return gaps;
 };
 
@@ -73,6 +95,10 @@ const citationSnapshotsFromProfile = (profile: ReviewedCompatibilityProfile) => 
   url: source.url,
   sourceType: source.sourceType,
   reviewStatus: source.reviewStatus,
+}));
+
+const citationSnapshotsFromStageRisk = (rule: ReviewedStageRiskProfile) => rule.citations.map(source => ({
+  sourceKey: source.id, title: source.title, publisher: source.publisher, url: source.url, sourceType: source.sourceType, reviewStatus: source.reviewStatus,
 }));
 
 const citationSnapshotsFromPairRule = (rule: ReviewedPairRule) => rule.citations.map(source => ({
@@ -237,6 +263,13 @@ export default function CompatibilityAdmin() {
         predationTargets: profile.predationTargets,
         confidence: profile.confidence,
         citations: citationSnapshotsFromProfile(profile),
+        requiredFacts: [...(profile.requiredFacts || [])],
+        ...(profile.stockingGuidance ? { stockingGuidance: { ...profile.stockingGuidance, constraints: [...profile.stockingGuidance.constraints], evidenceIds: [...profile.stockingGuidance.evidenceIds] } } : {}),
+        stageRiskRules: audit.reviewedStageRiskProfiles.filter(rule => rule.speciesId === profile.speciesId).map(rule => ({
+          ruleKey: `${rule.speciesId}:${rule.riskType}`, youngerStages: [...rule.youngerStages], olderStages: [...rule.olderStages],
+          verdict: rule.verdict, riskType: rule.riskType, reason: rule.reason, mitigation: [...rule.mitigation], basis: rule.basis, confidence: rule.confidence,
+          citations: citationSnapshotsFromStageRisk(rule),
+        })),
       });
       setRevisions(items => [created, ...items.filter(item => item.id !== created.id)]);
       selectRevision(created);
@@ -265,6 +298,9 @@ export default function CompatibilityAdmin() {
         minimumGroupSize,
         predationTargets: lines(draftForm.predationTargets),
         confidence: draftForm.confidence,
+        requiredFacts: draftForm.requiredFacts,
+        ...(selectedRevision.stockingGuidance ? { stockingGuidance: selectedRevision.stockingGuidance } : {}),
+        stageRiskRules: draftForm.stageRiskRules,
       });
       setRevisions(items => items.map(item => item.id === updated.id ? updated : item));
       selectRevision(updated);
@@ -509,6 +545,43 @@ export default function CompatibilityAdmin() {
             <label className="grid gap-1.5 text-xs font-black text-ink/60"><span>最低群体数量</span><input disabled={selectedRevision.status !== 'draft'} inputMode="numeric" value={draftForm.minimumGroupSize} onChange={event => setDraftForm(value => value ? { ...value, minimumGroupSize: event.target.value } : value)} className="h-11 rounded-[14px] border border-border bg-bg px-3 text-sm font-bold disabled:opacity-60" placeholder="留空表示未设置" /></label>
             <label className="grid gap-1.5 text-xs font-black text-ink/60"><span>Confidence</span><select disabled={selectedRevision.status !== 'draft'} value={draftForm.confidence} onChange={event => setDraftForm(value => value ? { ...value, confidence: event.target.value as DraftForm['confidence'] } : value)} className="h-11 rounded-[14px] border border-border bg-bg px-3 text-sm font-bold disabled:opacity-60"><option value="high">高</option><option value="medium">中</option><option value="low">低</option><option value="unknown">未知</option></select></label>
           </div>
+          <section data-testid="profile-v3-authority" className="mt-4 border-t border-slate-200 pt-4">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div><div className="text-xs font-black uppercase tracking-[0.12em] text-ink/50">Compatibility v3 authority</div><p className="mt-1 max-w-3xl text-xs font-bold leading-5 text-ink/50">Required Facts 与同种生命阶段风险属于同一个 Profile revision。Draft 可编辑；提交后锁定，人工审核看到的就是最终发布内容。</p></div>
+              <span className="text-[10px] font-black text-ink/35">Profile-owned · versioned</span>
+            </div>
+            <div className="mt-3 rounded-[14px] border border-slate-200 bg-slate-50 p-3">
+              <div className="text-xs font-black text-ink/65">Required Facts</div>
+              <div className="mt-2 flex flex-wrap gap-2">{requiredFactOptions.map(option => {
+                const checked = draftForm.requiredFacts.includes(option.value);
+                const lockedLast = checked && draftForm.requiredFacts.length === 1;
+                return <label key={option.value} className={`flex items-center gap-1.5 rounded-full border px-2.5 py-1.5 text-[11px] font-black ${checked ? 'border-slate-400 bg-white text-ink' : 'border-slate-200 bg-slate-100 text-ink/45'}`}>
+                  <input type="checkbox" disabled={selectedRevision.status !== 'draft' || lockedLast} checked={checked} onChange={() => setDraftForm(value => value ? { ...value, requiredFacts: toggleListValue(value.requiredFacts, option.value) } : value)} />{option.label}
+                </label>;
+              })}</div>
+            </div>
+            <div className="mt-3 rounded-[14px] border border-slate-200 bg-white p-3 text-xs font-bold leading-5 text-ink/55">
+              <div className="font-black text-ink/65">Stocking Guidance</div>
+              {selectedRevision.stockingGuidance ? <div className="mt-1">{selectedRevision.stockingGuidance.kind} · 建议数量 {selectedRevision.stockingGuidance.recommendedMin ?? '—'}–{selectedRevision.stockingGuidance.recommendedMax ?? '—'} · {selectedRevision.stockingGuidance.constraints.join('；') || '无额外约束'}</div> : <div className="mt-1">当前 reviewed baseline 未定义显式 stocking guidance；不会凭空生成安全数量。</div>}
+            </div>
+            <div className="mt-3 grid gap-3">
+              {draftForm.stageRiskRules.length ? draftForm.stageRiskRules.map((rule, ruleIndex) => {
+                const resolved = selectedRevision.stageRiskEvidenceResolution?.[rule.ruleKey]?.length || 0;
+                return <article key={rule.ruleKey} data-testid="profile-stage-risk-rule" className="border border-slate-200 bg-white p-3">
+                  <div className="flex flex-wrap items-start justify-between gap-2"><div><div className="text-xs font-black text-ink/70">Stage Risk · {rule.riskType}</div><div className="mt-0.5 text-[10px] font-bold text-ink/35">{rule.ruleKey} · {rule.basis}</div></div><span className="text-[10px] font-black text-ink/40">Evidence {resolved}/{rule.citations.length}</span></div>
+                  <div className="mt-3 grid gap-3 md:grid-cols-2">
+                    <div><div className="text-[11px] font-black text-ink/50">Younger stages</div><div className="mt-1.5 flex flex-wrap gap-1.5">{lifeStageOptions.map(stage => { const checked = rule.youngerStages.includes(stage.value); const lockedLast = checked && rule.youngerStages.length === 1; return <label key={`young-${stage.value}`} className="flex items-center gap-1 text-[11px] font-bold"><input type="checkbox" disabled={selectedRevision.status !== 'draft' || lockedLast} checked={checked} onChange={() => setDraftForm(value => value ? { ...value, stageRiskRules: value.stageRiskRules.map((item, index) => index === ruleIndex ? { ...item, youngerStages: toggleListValue(item.youngerStages, stage.value) } : item) } : value)} />{stage.label}</label>; })}</div></div>
+                    <div><div className="text-[11px] font-black text-ink/50">Older stages</div><div className="mt-1.5 flex flex-wrap gap-1.5">{lifeStageOptions.map(stage => { const checked = rule.olderStages.includes(stage.value); const lockedLast = checked && rule.olderStages.length === 1; return <label key={`older-${stage.value}`} className="flex items-center gap-1 text-[11px] font-bold"><input type="checkbox" disabled={selectedRevision.status !== 'draft' || lockedLast} checked={checked} onChange={() => setDraftForm(value => value ? { ...value, stageRiskRules: value.stageRiskRules.map((item, index) => index === ruleIndex ? { ...item, olderStages: toggleListValue(item.olderStages, stage.value) } : item) } : value)} />{stage.label}</label>; })}</div></div>
+                    <label className="grid gap-1 text-[11px] font-black text-ink/55"><span>Verdict</span><select disabled={selectedRevision.status !== 'draft'} value={rule.verdict} onChange={event => setDraftForm(value => value ? { ...value, stageRiskRules: value.stageRiskRules.map((item, index) => index === ruleIndex ? { ...item, verdict: event.target.value as StageRiskDraft['verdict'] } : item) } : value)} className="h-9 border border-border bg-bg px-2 text-xs font-bold disabled:opacity-60"><option value="caution">谨慎混养</option><option value="not_recommended">不建议</option></select></label>
+                    <label className="grid gap-1 text-[11px] font-black text-ink/55"><span>Confidence</span><select disabled={selectedRevision.status !== 'draft'} value={rule.confidence} onChange={event => setDraftForm(value => value ? { ...value, stageRiskRules: value.stageRiskRules.map((item, index) => index === ruleIndex ? { ...item, confidence: event.target.value as StageRiskDraft['confidence'] } : item) } : value)} className="h-9 border border-border bg-bg px-2 text-xs font-bold disabled:opacity-60"><option value="high">高</option><option value="medium">中</option><option value="low">低</option><option value="unknown">未知</option></select></label>
+                    <label className="grid gap-1 text-[11px] font-black text-ink/55 md:col-span-2"><span>Reason</span><textarea disabled={selectedRevision.status !== 'draft'} value={rule.reason} onChange={event => setDraftForm(value => value ? { ...value, stageRiskRules: value.stageRiskRules.map((item, index) => index === ruleIndex ? { ...item, reason: event.target.value } : item) } : value)} className="min-h-[88px] border border-border bg-bg px-2 py-2 text-xs font-bold leading-5 disabled:opacity-60" /></label>
+                    <label className="grid gap-1 text-[11px] font-black text-ink/55 md:col-span-2"><span>Mitigation（每行一项）</span><textarea disabled={selectedRevision.status !== 'draft'} value={rule.mitigation.join('\n')} onChange={event => setDraftForm(value => value ? { ...value, stageRiskRules: value.stageRiskRules.map((item, index) => index === ruleIndex ? { ...item, mitigation: lines(event.target.value) } : item) } : value)} className="min-h-[72px] border border-border bg-bg px-2 py-2 text-xs font-bold leading-5 disabled:opacity-60" /></label>
+                  </div>
+                  <div className="mt-3 border-t border-slate-100 pt-2 text-[11px] font-bold leading-5 text-ink/45">独立 Stage Risk Evidence：{rule.citations.map(source => `${source.publisher} · ${source.sourceKey}`).join('；')}</div>
+                </article>;
+              }) : <div data-testid="profile-stage-risk-empty" className="border border-slate-200 bg-slate-50 px-3 py-3 text-xs font-bold text-ink/45">当前 Profile 没有 reviewed Stage Risk rule。</div>}
+            </div>
+          </section>
           <div className="mt-4 rounded-[14px] bg-bg px-3 py-3 text-xs font-bold leading-5 text-ink/55">继承 reviewed evidence：{selectedRevision.citationSnapshots.map(source => source.publisher).join(' · ')}。Canonical Evidence：{selectedRevision.evidenceResolution?.length || 0}/{selectedRevision.citationSnapshots.length}。</div>
           {selectedRevision.impactReport?.changedFields?.length ? <div data-testid="profile-impact-report" className="mt-3 rounded-[14px] border border-amber-200 bg-amber-50 px-3 py-3 text-xs font-bold leading-5 text-amber-950">{impactLabel}：baseline v{selectedRevision.impactReport.baselineVersion} → 变更 {selectedRevision.impactReport.changedFields.join('、')}。批准只改变 revision 审核状态，不会发布到 Compatibility runtime。</div> : null}
           {selectedRevision.regressionReport ? <div data-testid="profile-regression-report" className="mt-3 rounded-[14px] border border-slate-200 bg-slate-50 px-3 py-3 text-xs font-bold leading-5 text-ink/65"><div>Compatibility Regression：authority seq {selectedRevision.regressionReport.authoritySequence} · 已评估 {selectedRevision.regressionReport.evaluatedScenarios} 个场景 · 结果变化 {selectedRevision.regressionReport.changedScenarios} 个。</div>{selectedRevision.regressionReport.changes.slice(0, 5).map(change => <div key={`${change.scenario}-${change.species.join('-')}`} className="mt-1 text-[11px] text-ink/50">{change.species.map(id => speciesById.get(id)?.name || id).join(' × ')} · {change.scenario}: {change.before.status} → {change.after.status}</div>)}</div> : null}
@@ -560,7 +633,7 @@ export default function CompatibilityAdmin() {
             <div className="mt-4 grid gap-3">{profiles.map(profile => {
               const species = speciesById.get(profile.speciesId);
               const activeRevision = activeRevisionByCatalogKey.get(profile.speciesId);
-              return <article key={profile.speciesId} className="min-w-0 rounded-[18px] border border-border bg-bg/50 p-3">
+              return <article key={profile.speciesId} data-testid={`compatibility-profile-${profile.speciesId}`} className="min-w-0 rounded-[18px] border border-border bg-bg/50 p-3">
                 <div className="flex min-w-0 flex-wrap items-start justify-between gap-2"><div className="min-w-0"><div className="truncate text-sm font-black">{species?.name || profile.speciesId}</div><div className="mt-0.5 truncate text-[11px] font-bold italic text-ink/45">{species?.scientificName || profile.speciesId}</div></div><span className="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-black text-ink/60">置信度 {confidenceLabel[profile.confidence]}</span></div>
                 <div className="mt-3 flex flex-wrap gap-1.5">{profile.behaviorTraits.map(trait => <span key={trait} className="rounded-full border border-slate-200 bg-white px-2 py-1 text-[10px] font-black text-slate-700">{trait}</span>)}</div>
                 <div className="mt-3 grid gap-2 sm:grid-cols-2"><div className="rounded-[12px] bg-white px-3 py-2 text-xs font-bold"><span className="text-ink/40">最低群体：</span>{profile.minimumGroupSize || '未设置'}</div><div className="rounded-[12px] bg-white px-3 py-2 text-xs font-bold"><span className="text-ink/40">捕食目标：</span>{profile.predationTargets.length ? profile.predationTargets.join('、') : '无已审核目标'}</div></div>

@@ -119,7 +119,7 @@ export function VisualResultCard({
   };
 
   return (
-    <section className={`visual-result-card overflow-hidden rounded-[22px] border bg-white shadow-sm ${className}`} data-visual-result-status={model.status}>
+    <section className={`visual-result-card overflow-hidden rounded-[22px] border bg-white shadow-sm ${className}`} data-visual-result-status={model.status} data-visual-result-presentation={model.presentationMode || 'verdict'}>
       <div className="px-3.5 pb-3 pt-3.5 min-[500px]:px-4">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
@@ -127,12 +127,13 @@ export function VisualResultCard({
           </div>
           <span className={`inline-flex shrink-0 items-center gap-1 rounded-full border px-2.5 py-1.5 text-[10px] font-black ${meta.tone}`}>
             <Icon className="h-3.5 w-3.5" aria-hidden="true" />
-            {t(`visualResult.status.${model.status}`)}
+            {model.statusLabel || t(`visualResult.status.${model.status}`)}
           </span>
         </div>
         <p className={`mt-2 line-clamp-2 text-[14px] font-bold leading-relaxed ${model.status === 'urgent' || model.status === 'not_recommended' ? 'text-red-800' : 'text-ink'}`} aria-live="polite">
           <HighlightedText text={conclusion} emphasis={emphasis} />
         </p>
+        {model.coverageLabel && <p className="mt-1 text-[10px] font-bold text-ink/45">{model.coverageLabel}</p>}
       </div>
 
       <div className="visual-result-stage mx-3.5 mb-3 rounded-[20px] border border-emerald-100 bg-[#F3F7F4] min-[500px]:mx-4">
