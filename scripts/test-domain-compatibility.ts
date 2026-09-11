@@ -158,7 +158,45 @@ const aggressionIsNotBioload = evaluateCompatibility({
   candidateSpecies: { ...base, id: 'candidate', size: 'Medium', loadMultiplier: 9 },
 });
 assert.equal(aggressionIsNotBioload.status, 'compatible');
+
 assert.ok(!aggressionIsNotBioload.ruleCodes.some(code => code.startsWith('bioload_screening_')));
+
+const stableContext = {
+  establishedDays: 180,
+  stableCoexistenceDays: 120,
+  maintenanceConsistent: true,
+  recentWaterQualityIncident: false,
+};
+const stableElevatedScreening = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 10, targetTemperatureC: 24, stabilityContext: stableContext },
+  existingSpecies: [{ ...base, id: 'stable-a', size: 'Small', minTankLiters: 5 }],
+  existingQuantities: { 'stable-a': 4 },
+  candidateSpecies: { ...base, id: 'stable-b', size: 'Small', minTankLiters: 5 },
+  candidateQuantity: 1,
+});
+assert.equal(stableElevatedScreening.status, 'compatible');
+assert.ok(stableElevatedScreening.ruleCodes.includes('bioload_screening_elevated_stable_context'));
+
+const stableHighScreening = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 10, targetTemperatureC: 24, stabilityContext: stableContext },
+  existingSpecies: [{ ...base, id: 'stable-high-a', size: 'Small', minTankLiters: 5 }],
+  existingQuantities: { 'stable-high-a': 5 },
+  candidateSpecies: { ...base, id: 'stable-high-b', size: 'Small', minTankLiters: 5 },
+  candidateQuantity: 1,
+});
+assert.equal(stableHighScreening.status, 'caution');
+assert.ok(stableHighScreening.ruleCodes.includes('bioload_screening_high_stable_context'));
+
+const stabilityCannotOverrideHardBlock = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 24, stabilityContext: stableContext },
+  existingSpecies: [{ ...base, id: 'stable-freshwater' }],
+  candidateSpecies: { ...base, id: 'stable-saltwater', waterType: 'saltwater' },
+});
+assert.equal(stabilityCannotOverrideHardBlock.status, 'not_recommended');
+assert.ok(stabilityCannotOverrideHardBlock.ruleCodes.includes('candidate_tank_water_type_conflict'));
 
 const miniParrot = {
   ...base,

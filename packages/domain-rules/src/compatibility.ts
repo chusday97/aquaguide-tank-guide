@@ -31,6 +31,13 @@ export type ObservedCoexistenceSignals = {
   multipleDeaths?: boolean;
 };
 
+export type TankStabilityContext = {
+  establishedDays?: number | null;
+  stableCoexistenceDays?: number | null;
+  maintenanceConsistent?: boolean | null;
+  recentWaterQualityIncident?: boolean | null;
+};
+
 export type DomainSpeciesFact = {
   id: string;
   waterType: 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
@@ -59,6 +66,7 @@ export type DomainTankFact = {
   lengthCm?: number | null;
   targetTemperatureC?: number | null;
   observedSignals?: ObservedCoexistenceSignals;
+  stabilityContext?: TankStabilityContext;
 };
 
 export type DomainCompatibilityInput = {
@@ -102,6 +110,16 @@ const observedStatusOf = (signals?: ObservedCoexistenceSignals): ObservedCoexist
   if (signals.respiratoryDistress || signals.multipleDeaths || signals.injuries) return 'emergency';
   if (signals.repeatedChasing || signals.feedingExclusion) return 'intervene';
   return 'stable';
+};
+
+const hasTrustedStableContext = (tank?: DomainTankFact | null) => {
+  const context = tank?.stabilityContext;
+  if (!context) return false;
+  return (context.establishedDays ?? 0) >= 90
+    && (context.stableCoexistenceDays ?? 0) >= 60
+    && context.maintenanceConsistent === true
+    && context.recentWaterQualityIncident !== true
+    && observedStatusOf(tank?.observedSignals) === 'stable';
 };
 
 const stockingGuidanceOf = (species?: DomainSpeciesFact | null, quantity?: number | null): StockingGuidance => {
@@ -277,8 +295,13 @@ export const evaluateCompatibility = ({
     // broad body-size buckets and does not know filtration turnover, mature
     // biomass, oxygen, maintenance history or measured nitrogen waste. It may
     // raise a caution, but it must never be the sole reason to block stocking.
-    if (screening.pressure === 'high') raise('caution', 'bioload_screening_high');
-    else if (screening.pressure === 'elevated') raise('caution', 'bioload_screening_elevated');
+    const trustedStableContext = hasTrustedStableContext(tank);
+    if (screening.pressure === 'high') {
+      raise('caution', trustedStableContext ? 'bioload_screening_high_stable_context' : 'bioload_screening_high');
+    } else if (screening.pressure === 'elevated') {
+      if (trustedStableContext) ruleCodes.push('bioload_screening_elevated_stable_context');
+      else raise('caution', 'bioload_screening_elevated');
+    }
   }
 
   if (ruleCodes.length === 0 && status === 'compatible') ruleCodes.push('compatibility_clear');

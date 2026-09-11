@@ -27,6 +27,9 @@ Draft PR: #149
 - Visual result now puts the beginner decision and immediate action first; professional evidence remains in detail sections.
 - Compatibility page copy now explicitly tells users that the first result is the conclusion/action, with evidence available afterward.
 - Beginner golden actions now cover compatible / soft-capacity caution / hard block / missing information.
+- Tank Stability Context added: established duration, stable coexistence duration, maintenance consistency and recent water-quality incident.
+- Trusted stability can downgrade only an elevated coarse-load screening to informational context; high screening remains caution.
+- Stability context cannot override water-type, temperature, predation, single-housing or observed emergency hard blocks.
 
 ### P1 — Species Knowledge V2 contract checkpoint
 - Added field-level evidence contract.
@@ -37,12 +40,14 @@ Draft PR: #149
 - Main Convergence foundation workflow on the latest pre-golden-case checkpoint: PASS through project truth, catalog, domain compatibility, legacy compatibility, lint, API and production build.
 - Domain compatibility regression: PASS after soft-capacity change.
 - Legacy compatibility facade regression: PASS after canonical adapter/test alignment.
-- Product Golden Path for the latest golden-action head is still running through build/browser checks at the time of this status write.
+- Main Convergence foundation workflow passed through project truth, catalog, compatibility, lint, API and build on the recovery line.
+- Local recovery validation after Tank Stability Context: domain compatibility PASS, legacy compatibility PASS, TypeScript lint PASS, production build PASS.
+- Local preview verified HTTP 200 at `http://127.0.0.1:4320/`.
 - Do not merge until the latest current-head workflows are green.
 
 ## Next execution order
-1. Complete current-head CI and fix any failure.
-2. Add Tank Stability Context contract for soft-risk adjustment (no hard biological override).
-3. Populate the first reviewed Species Knowledge V2 cohort; do not mass-fill unknown fields.
-4. Connect verified Species V2 fields to compatibility traits and action explanations.
+1. Push Tank Stability Context checkpoint and complete current-head CI.
+2. Populate the first reviewed Species Knowledge V2 cohort; do not mass-fill unknown fields.
+3. Connect verified Species V2 fields to compatibility traits and action explanations.
+4. Add user-facing stability evidence capture only after the domain contract is stable.
 5. Only after contracts and golden cases are stable, adjust Species detail presentation and compatibility result polish.

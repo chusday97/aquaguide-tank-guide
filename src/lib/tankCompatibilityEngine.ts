@@ -674,6 +674,7 @@ const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
   volumeLiters: getAquariumVolumeLiters(tank) || null,
   lengthCm: tank.dimensions ? Number(tank.dimensions.length) || null : null,
   targetTemperatureC: tank.targetTemperature ? Number(tank.targetTemperature) : null,
+  stabilityContext: tank.stabilityContext,
 });
 
 /**

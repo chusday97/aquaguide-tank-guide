@@ -15,6 +15,12 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   bioload_screening_elevated: {
     code: 'bioload_screening_elevated', title: '负荷筛查需要留意', evidence: '按当前粗粒度体型与数量筛查，负荷有所升高；这不是硬性上限，建议结合鱼缸运行稳定性继续观察。', severity: 'medium', basis: 'tank_condition', confidence: 'low', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  bioload_screening_high_stable_context: {
+    code: 'bioload_screening_high_stable_context', title: '稳定鱼缸下仍需留意负荷', evidence: '当前鱼缸已有较长稳定运行与规律维护记录，但加入后粗粒度负荷筛查仍偏高；稳定历史可以降低误报概率，不能证明新增后一定安全。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
+  bioload_screening_elevated_stable_context: {
+    code: 'bioload_screening_elevated_stable_context', title: '稳定运行背景已纳入判断', evidence: '当前鱼缸已有较长稳定运行与规律维护记录，粗粒度负荷仅轻度偏高，因此保留为背景提示，不单独升级为风险结论。', severity: 'info', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   candidate_missing: {
     code: 'candidate_missing', title: '缺少候选生物', evidence: '请先选择要评估的生物。', severity: 'high', basis: 'rule_inference', confidence: 'unknown', reviewStatus: 'draft', affectedSpeciesIds: [], citations: [],
   },
@@ -115,10 +121,12 @@ export const applyCanonicalCompatibilityDecision = (
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
   const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'single_housing_required', 'observed_emergency']);
-  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated']);
+  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
-  const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code));
+  const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context']);
+  const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code) && !informationalCodes.has(rule.code));
+  const domainInformationalRules = domainRules.filter(rule => informationalCodes.has(rule.code));
 
   // The legacy engine is presentation/evidence input only. Old coarse load
   // thresholds are explicitly reclassified as warnings so they cannot leak
@@ -182,6 +190,7 @@ export const applyCanonicalCompatibilityDecision = (
     summary,
     blockingRules,
     warningRules,
+    passedRules: uniqueRules([...result.passedRules, ...domainInformationalRules]),
     missingData,
     stockingGuidance: decision.stockingGuidance,
     observedStatus: decision.observedStatus,
