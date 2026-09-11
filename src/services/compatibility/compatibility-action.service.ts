@@ -58,6 +58,7 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   const hasGroupSizeGap = codes.has('minimum_group_not_met') || codes.has('group_requirement_gap');
   const hasFinNippingGroupPressure = codes.has('fin_nipping_group_pressure');
   const hasFinNippingTargetVulnerability = codes.has('fin_nipping_target_vulnerability');
+  const hasPredationVulnerability = codes.has('predation_vulnerability_context');
 
   if (decision.status === 'not_recommended') {
     return {
@@ -84,6 +85,16 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   }
 
   if (decision.status === 'caution') {
+    if (hasPredationVulnerability) {
+      return {
+        verdict: 'add_with_conditions',
+        headline: '先确认鱼不会把虾当食物',
+        immediateAction: '不要直接按“性情温和”判断安全；先确认成体体型、口裂和实际追食行为，并给虾保留密集躲避与可分隔方案。',
+        primaryReason: firstText(decision.warningRules.filter(rule => rule.code === 'predation_vulnerability_context'), '组合中存在对鱼类捕食较脆弱的无脊椎动物。'),
+        observeAfterAction: '重点看持续追逐、啄咬、虾长期躲藏不出和数量异常减少；出现任一情况就分隔。',
+        detailsLabel: '为什么要先确认？',
+      };
+    }
     if (hasFinNippingTargetVulnerability) {
       return {
         verdict: 'add_with_conditions',

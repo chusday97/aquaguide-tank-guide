@@ -292,6 +292,80 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
 };
 
 const reviewedKnowledgeByBaseSpeciesKey: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+
+  'Neocaridina davidi': {
+    sexIdentification: {
+      title: '成体公母可结合体型与腹部形态判断',
+      summary: '几何形态研究显示，成体母虾整体更大，第二腹节侧板更宽更延长；但公虾体型与幼年母虾存在重叠，幼体阶段不宜只凭外形下结论。',
+      points: ['成体母虾：通常更大，腹部第二节侧板更宽、更延长。', '公虾通常更小，但外形会与尚未成熟的母虾重叠。'],
+      confidence: 'verified',
+      source: { type: 'species_data', label: 'Zootaxa', confidence: 'verified' },
+      reliableFromLifeStage: 'adult',
+      maleTraits: ['成体通常体型较小'],
+      femaleTraits: ['成体整体更大', '第二腹节侧板更宽、更延长'],
+      limitations: ['幼年母虾与公虾外形可重叠，未成熟个体不宜仅凭体型定性。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['zootaxa-neocaridina-sexual-dimorphism'], reviewedAt: '2026-09-11' },
+    },
+    reproduction: {
+      mode: 'other',
+      plainLanguageLabel: '抱卵孵化',
+      summary: 'Neocaridina davidi 可在完整淡水生命周期中繁殖；母虾完成卵巢成熟、抱卵和幼体孵化，成熟生物膜可为幼虾提供持续食物来源。',
+      parentalCare: 'carrying',
+      breedingAggression: 'none',
+      fryCare: ['成熟生物膜和细密表面有助于幼虾取食与存活', '过滤进水口应避免吸入幼虾'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquaculture-research-neocaridina-life-cycle'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'group', minimumGroupSize: 6, recommendedGroupSize: { min: 6, max: 10 }, swimmingZone: 'bottom', territoriality: 'none', finNipping: 'none', swimmingPace: 'slow', predationVulnerability: 'high',
+      summary: '该种属于高度群居、和平的淡水米虾。最低群体数量来自水族养护共识而非福利实验硬阈值，因此用于规划提醒，不作为差 1 只就失败的硬边界。',
+      evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['aquariumhq-neocaridina-davidi', 'zootaxa-neocaridina-sexual-dimorphism'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 3, measurement: 'unknown' }, minVolumeLiters: 20, minTankLengthCm: 30, activityLevel: 'low', swimmingZone: 'bottom', needsCover: true, needsHidingPlaces: true,
+      spaceNotes: ['成熟生物膜、植物和躲避结构比单纯追求更大的升数更重要。'],
+      evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['aquariumhq-neocaridina-davidi'], reviewedAt: '2026-09-11' },
+    },
+  },
+  'Caridina cantonensis': {
+    sexIdentification: {
+      title: '本轮不提供外观公母硬判断',
+      summary: '当前纳入审核的来源足以支持群体和空间规划，但不足以把外观公母特征作为稳定的用户判断规则。',
+      points: ['如需要繁殖配组，优先使用可靠繁育来源或成熟个体长期观察。'],
+      confidence: 'unknown',
+      source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+      reliableFromLifeStage: 'unknown',
+    },
+    socialBehavior: {
+      mode: 'group', minimumGroupSize: 10, recommendedGroupSize: { min: 10 }, swimmingZone: 'bottom', territoriality: 'none', finNipping: 'none', swimmingPace: 'slow', predationVulnerability: 'high',
+      summary: '水晶虾属于和平、群居的淡水米虾；更重要的限制通常是软酸水、稳定温度与成熟环境，而不是与同类争斗。',
+      evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['aquendium-caridina-cantonensis'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 3, measurement: 'unknown' }, minVolumeLiters: 19, activityLevel: 'low', swimmingZone: 'bottom', needsCover: true, needsHidingPlaces: true,
+      spaceNotes: ['优先保证稳定、成熟的软酸水环境和生物膜；参考水体不是单一硬阈值。'],
+      evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['aquendium-caridina-cantonensis'], reviewedAt: '2026-09-11' },
+    },
+  },
+  'Neritina natalensis': {
+    sexIdentification: {
+      title: '外观公母不适合日常快速判断',
+      summary: '斑马螺雌雄分开，但日常外观辨别并不稳定；当前不把颜色或壳纹当作性别依据。',
+      points: ['如果不是繁殖目的，无需为了日常饲养强行判断公母。'],
+      confidence: 'unknown',
+      source: { type: 'unknown', label: '外观性别判断不作为当前产品规则', confidence: 'unknown' },
+      reliableFromLifeStage: 'unknown',
+    },
+    socialBehavior: {
+      mode: 'variable', swimmingZone: 'all', territoriality: 'none', finNipping: 'none', swimmingPace: 'slow',
+      summary: '可单独或多只饲养，不设置最低群体数量；主要约束是成熟藻膜、硬度和足够的刮食表面。',
+      evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['aquariumhq-neritina-natalensis'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 3, measurement: 'unknown' }, minVolumeLiters: 20, minTankLengthCm: 30, activityLevel: 'low', swimmingZone: 'all',
+      spaceNotes: ['可用刮食面积和藻膜供给比“每只固定多少升”更重要。'],
+      evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['aquariumhq-neritina-natalensis'], reviewedAt: '2026-09-11' },
+    },
+  },
   'Betta splendens': {
     sexIdentification: {
       title: '成体公母通常较容易区分',

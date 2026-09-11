@@ -76,6 +76,7 @@ export type SpeciesSocialKnowledge = {
   finNipVulnerability?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
   swimmingPace?: 'slow' | 'moderate' | 'fast' | 'unknown';
   predationRisk?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
+  predationVulnerability?: 'none' | 'low' | 'medium' | 'high' | 'unknown';
   summary: string;
   evidence: KnowledgeFieldEvidence;
 };

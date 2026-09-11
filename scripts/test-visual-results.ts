@@ -109,6 +109,15 @@ assert.equal(softCapacityAction.headline, '可以尝试，但别一次加太多'
 assert.ok(softCapacityAction.immediateAction.includes('不要只因为低于一个参考水体值就立刻换缸'));
 assert.ok(softCapacityAction.observeAfterAction?.includes('3–7 天'));
 
+const predationVulnerabilityAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['predation_vulnerability_context'],
+  { warningRules: [makeRule('predation_vulnerability_context', '组合中一方是鱼类，另一方对捕食较脆弱。', 'medium')] },
+));
+assert.equal(predationVulnerabilityAction.verdict, 'add_with_conditions');
+assert.equal(predationVulnerabilityAction.headline, '先确认鱼不会把虾当食物');
+assert.match(predationVulnerabilityAction.immediateAction, /性情温和/);
+
 const finNippingTargetAction = buildBeginnerCompatibilityAction(actionDecision(
   'caution',
   ['fin_nipping_target_vulnerability'],

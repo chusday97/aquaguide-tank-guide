@@ -300,6 +300,34 @@ const structuredPredation = evaluateCompatibility({
 assert.equal(structuredPredation.status, 'not_recommended');
 assert.ok(structuredPredation.ruleCodes.includes('predation_risk'));
 
+const ordinaryFishWithVulnerableShrimp = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'ordinary-fish', lifeType: 'fish', predationRisk: 'low' }],
+  candidateSpecies: { ...base, id: 'vulnerable-shrimp', lifeType: 'invertebrate', predationVulnerability: 'high' },
+});
+assert.equal(ordinaryFishWithVulnerableShrimp.status, 'caution');
+assert.ok(ordinaryFishWithVulnerableShrimp.ruleCodes.includes('predation_vulnerability_context'));
+assert.ok(!ordinaryFishWithVulnerableShrimp.ruleCodes.includes('predation_risk'));
+
+const predatorFishWithVulnerableShrimp = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'predator-fish', lifeType: 'fish', size: 'Large', predationRisk: 'high' }],
+  candidateSpecies: { ...base, id: 'vulnerable-small-shrimp', lifeType: 'invertebrate', size: 'Small', predationVulnerability: 'high' },
+});
+assert.equal(predatorFishWithVulnerableShrimp.status, 'not_recommended');
+assert.ok(predatorFishWithVulnerableShrimp.ruleCodes.includes('predation_risk'));
+
+const vulnerableShrimpPair = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'shrimp-a', lifeType: 'invertebrate', predationVulnerability: 'high' }],
+  candidateSpecies: { ...base, id: 'shrimp-b', lifeType: 'invertebrate', predationVulnerability: 'high' },
+});
+assert.equal(vulnerableShrimpPair.status, 'compatible');
+assert.ok(!vulnerableShrimpPair.ruleCodes.includes('predation_vulnerability_context'));
+
 const miniParrot = {
   ...base,
   id: 'sp_0021',

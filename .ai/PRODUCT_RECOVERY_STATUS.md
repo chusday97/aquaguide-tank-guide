@@ -173,3 +173,18 @@ Draft PR: #149
 - Species Detail browser E2E: PASS.
 - Compatibility beginner-action browser E2E: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Predation-vulnerability + common-invertebrate checkpoint
+- Compatibility authority advances to `compatibility-domain-v5-predation-vulnerability`.
+- Active predation (`predationRisk`) and prey-side vulnerability (`predationVulnerability`) are separate reviewed facts.
+- Reviewed fish + highly vulnerable shrimp produces caution (`predation_vulnerability_context`); a reviewed high-predation fish + small vulnerable prey still produces the existing hard `predation_risk` block.
+- Invertebrate + invertebrate does not receive an automatic prey-vulnerability warning.
+- Added inheritance-aware reviewed authority for `Neocaridina davidi` (including cherry/wild morphs), `Caridina cantonensis`, and `Neritina natalensis`; direct-ID audit remains separate from inherited runtime authority.
+- Beginner Action now surfaces `先确认鱼不会把虾当食物` before lower-priority group/capacity cautions when this boundary applies.
+- Priority catalogue-direction audit currently reports 110/132 recordable directions: 108 caution, 2 compatible, 22 not recommended. This is not a safety percentage and includes duplicate catalogue records/variants; the next metric cleanup must also report canonical biological-taxon coverage.
+
+#### Validation
+- Species Knowledge / Domain / Compatibility / Visual Action / evidence coverage / TypeScript / production build: PASS.
+- Fish-shrimp Beginner Action browser E2E: PASS.
+- Species Detail browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.

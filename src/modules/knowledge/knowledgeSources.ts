@@ -1,6 +1,46 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'aquariumhq-neocaridina-davidi': {
+    id: 'aquariumhq-neocaridina-davidi',
+    title: 'Cherry shrimp (Neocaridina davidi) care and compatibility',
+    publisher: 'AquariumHQ',
+    url: 'https://aquariumhq.app/invertebrates/cherry-shrimp',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'zootaxa-neocaridina-sexual-dimorphism': {
+    id: 'zootaxa-neocaridina-sexual-dimorphism',
+    title: 'Sexual dimorphism in a freshwater atyid shrimp with direct development',
+    publisher: 'Zootaxa',
+    url: 'https://pubmed.ncbi.nlm.nih.gov/27988685/',
+    sourceType: 'peer_reviewed',
+    reviewStatus: 'reviewed',
+  },
+  'aquaculture-research-neocaridina-life-cycle': {
+    id: 'aquaculture-research-neocaridina-life-cycle',
+    title: 'Breeding and life cycle of the ornamental freshwater shrimp Neocaridina davidi in a biofilm-based culture system',
+    publisher: 'Aquaculture Research',
+    url: 'https://doi.org/10.1111/are.14733',
+    sourceType: 'peer_reviewed',
+    reviewStatus: 'reviewed',
+  },
+  'aquendium-caridina-cantonensis': {
+    id: 'aquendium-caridina-cantonensis',
+    title: 'Crystal Red Shrimp (Caridina cantonensis) care guide',
+    publisher: 'Aquendium',
+    url: 'https://aquendium.com/species/crystal-red-shrimp/',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'aquariumhq-neritina-natalensis': {
+    id: 'aquariumhq-neritina-natalensis',
+    title: 'Nerite snail (Neritina natalensis) care and compatibility',
+    publisher: 'AquariumHQ',
+    url: 'https://aquariumhq.app/invertebrates/nerite-snail',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-poecilia-reticulata': {
     id: 'seriouslyfish-poecilia-reticulata',
     title: 'Poecilia reticulata (Guppy)',

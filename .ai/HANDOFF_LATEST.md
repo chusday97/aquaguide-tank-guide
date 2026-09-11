@@ -80,3 +80,11 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Species Detail browser E2E: PASS.
 - Compatibility beginner-action browser E2E: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — V5 predation vulnerability + common invertebrates
+- Added reviewed base-species authority for `Neocaridina davidi`, `Caridina cantonensis`, and `Neritina natalensis`; exact-ID audit remains distinct from inherited runtime authority.
+- Domain V5 separates active predator risk from prey vulnerability and adds `lifeType` so shrimp-vulnerability caution applies to fish/shrimp, not shrimp/shrimp.
+- Beginner Action for reviewed fish + vulnerable shrimp is `先确认鱼不会把虾当食物`; explicit reviewed predators retain the stronger hard block.
+- Coverage audit now requires every recordable fish/high-vulnerability-invertebrate direction to expose either prey-vulnerability caution or a stronger predation block.
+- Priority raw catalogue matrix: 132 directions; recordable=110 (108 caution, 2 compatible), not_recommended=22. This raw metric contains duplicate catalogue taxa and must not be described as overall safety/coverage.
+- Verified: Domain PASS, Compatibility PASS, Species Knowledge PASS, Visual Actions PASS, evidence coverage PASS, TypeScript PASS, production build PASS, Compatibility beginner-action browser E2E PASS, Species Detail E2E PASS, GP001–GP004 PASS.

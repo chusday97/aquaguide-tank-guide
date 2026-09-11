@@ -57,7 +57,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish(),
       });
       return result.metadata.catalogVersion === 'local-fish-data-v1'
-        && result.metadata.ruleVersion === 'compatibility-domain-v4-target-vulnerability'
+        && result.metadata.ruleVersion === 'compatibility-domain-v5-predation-vulnerability'
         && result.metadata.domainRuleCodes.length > 0
         && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
     },

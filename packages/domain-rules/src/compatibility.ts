@@ -63,6 +63,8 @@ export type DomainSpeciesFact = {
   finNipVulnerability?: BehaviorRiskLevel;
   swimmingPace?: 'slow' | 'moderate' | 'fast' | 'unknown';
   predationRisk?: BehaviorRiskLevel;
+  predationVulnerability?: BehaviorRiskLevel;
+  lifeType?: 'fish' | 'invertebrate' | 'reptile' | 'coral' | 'plant' | 'hardscape' | 'unknown';
   size?: 'Small' | 'Medium' | 'Large' | string;
 };
 
@@ -100,7 +102,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v4-target-vulnerability';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v5-predation-vulnerability';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -222,6 +224,15 @@ export const evaluateCompatibility = ({
           && predator.adultLengthMaxCm != null
           && preyContext.averageLengthCm < predator.adultLengthMaxCm * 0.4;
         raise(currentSizeClearlyBelowAdultRisk ? 'caution' : 'not_recommended', currentSizeClearlyBelowAdultRisk ? 'juvenile_predation_risk' : 'predation_risk');
+      }
+      const isPredationVulnerable = (species: DomainSpeciesFact) => (
+        species.predationVulnerability === 'medium'
+        || species.predationVulnerability === 'high'
+      );
+      const fishTargetsVulnerableExisting = candidateSpecies.lifeType === 'fish' && isPredationVulnerable(existing);
+      const existingFishTargetsVulnerableCandidate = existing.lifeType === 'fish' && isPredationVulnerable(candidateSpecies);
+      if (!predator && existing.id !== candidateSpecies.id && (fishTargetsVulnerableExisting || existingFishTargetsVulnerableCandidate)) {
+        raise('caution', 'predation_vulnerability_context');
       }
       const existingTerritorial = existing.behaviorTraits?.includes('territorial')
         || existing.territoriality === 'medium'

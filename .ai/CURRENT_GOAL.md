@@ -54,3 +54,10 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - Shared reviewed housing authority now drives Species Detail, Compatibility, Encyclopedia, and Aquarium.
 - Exact reviewed species facts win, then base-species inheritance, then legacy fallback.
 - Next focus: increase reviewed common-species coverage; do not reopen broad UI redesign.
+
+### Current checkpoint — V5 prey vulnerability
+- `predationRisk` means active predation; `predationVulnerability` means prey-side susceptibility. These facts must never be substituted for each other.
+- Common reviewed shrimp authority now uses base-species inheritance where appropriate; nerite snails do not receive a fabricated minimum group size or prey-vulnerability level.
+- Fish + highly vulnerable shrimp is caution unless stronger reviewed predator evidence already hard-blocks the pair.
+- Current priority catalogue-direction coverage is 110/132 recordable, overwhelmingly caution. Do not present this as overall species coverage or a safety rate.
+- Next: canonicalize the coverage metric by biological taxon so duplicate catalogue IDs/variants do not inflate progress, then continue reviewed common-species expansion.

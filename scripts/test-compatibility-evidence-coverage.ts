@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
-import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../src/data/compatibilityEvidence';
+import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish, getReviewedPairRule } from '../src/data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
 import type { Aquarium } from '../src/types';
 
@@ -160,20 +161,35 @@ const recordable = rows.filter(row => row.status === 'compatible' || row.status 
 assert.ok(recordable.length >= 2, 'reviewed trait inference should expand recordable directions beyond only bespoke pair rules.');
 
 for (const row of recordable) {
-  assert.ok(
-    getReviewedCompatibilityProfile(row.existingId),
-    `recordable pair ${row.existingName} → ${row.candidateName} is missing reviewed existing-species evidence`,
-  );
-  assert.ok(
-    getReviewedCompatibilityProfile(row.candidateId),
-    `recordable pair ${row.existingName} → ${row.candidateName} is missing reviewed candidate-species evidence`,
-  );
+  const existingFish = commonSpecies.find(fish => fish.id === row.existingId);
+  const candidateFish = commonSpecies.find(fish => fish.id === row.candidateId);
+  assert.ok(existingFish && getReviewedCompatibilityProfileForFish(existingFish),
+    `recordable pair ${row.existingName} → ${row.candidateName} is missing reviewed existing-species runtime authority`);
+  assert.ok(candidateFish && getReviewedCompatibilityProfileForFish(candidateFish),
+    `recordable pair ${row.existingName} → ${row.candidateName} is missing reviewed candidate-species runtime authority`);
   const hasDirectPairRule = Boolean(getReviewedPairRule(row.existingId, row.candidateId));
   const hasReviewedTraitInference = row.passedRules.some(item => item.code === 'pair_trait_inference');
   assert.ok(
     hasDirectPairRule || hasReviewedTraitInference,
     `recordable pair ${row.existingName} → ${row.candidateName} must expose direct pair evidence or reviewed trait-inference provenance`,
   );
+  if (existingFish && candidateFish) {
+    const existingVulnerability = getReviewedSpeciesKnowledgeForFish(existingFish)?.socialBehavior?.predationVulnerability;
+    const candidateVulnerability = getReviewedSpeciesKnowledgeForFish(candidateFish)?.socialBehavior?.predationVulnerability;
+    const isFishToVulnerablePair = (
+      (getLifeType(existingFish) === 'fish' && ['medium', 'high'].includes(candidateVulnerability || ''))
+      || (getLifeType(candidateFish) === 'fish' && ['medium', 'high'].includes(existingVulnerability || ''))
+    );
+    if (isFishToVulnerablePair) {
+      const exposesPredationBoundary = row.warningRules.some(item => item.code === 'predation_vulnerability_context')
+        || row.blockingRules.some(item => item.code === 'predation_risk');
+      assert.ok(
+        exposesPredationBoundary,
+        `recordable fish/invertebrate pair ${row.existingName} → ${row.candidateName} must expose predation vulnerability or a stronger predation block`,
+      );
+    }
+  }
+
   const blockingMissing = row.missingRules.filter(item => item.severity === 'high' || item.severity === 'medium');
   assert.equal(
     blockingMissing.length,

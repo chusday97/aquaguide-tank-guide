@@ -1,5 +1,5 @@
 import type { Aquarium, AquariumSpeciesBatch, CompatibilityLifeStage, Fish } from '../types';
-import { isSaltwaterSpecies } from '../modules/species/species.service';
+import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish, getReviewedPairRule, getReviewedStageRiskProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
@@ -693,6 +693,8 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     finNipVulnerability: reviewedSocial?.finNipVulnerability,
     swimmingPace: reviewedSocial?.swimmingPace,
     predationRisk: reviewedSocial?.predationRisk,
+    predationVulnerability: reviewedSocial?.predationVulnerability,
+    lifeType: getLifeType(fish),
     size: fish.size,
   };
 };

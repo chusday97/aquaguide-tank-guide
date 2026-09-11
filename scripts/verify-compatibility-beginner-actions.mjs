@@ -108,7 +108,19 @@ try {
     await page.close();
   }
 
-  console.log('Compatibility beginner-action E2E passed: fin-nipping group pressure + stable soft-load downgrade + tiger-barb/guppy reviewed block.');
+  {
+    const state = makeState({ id: 'tank-fish-shrimp', name: '鱼虾捕食脆弱性测试缸', fishId: 'sp_0434', quantity: 10, temperature: '21' });
+    const { page, calculator } = await openCompatibility({ state, candidateId: 'sp_0001' });
+    await calculator.getByText('白云金丝', { exact: true }).first().waitFor();
+    await setQuantity(calculator, '极火虾', 6);
+    await calculator.getByRole('heading', { name: '先确认鱼不会把虾当食物', exact: true }).waitFor();
+    const fishShrimpText = (await calculator.textContent()) || '';
+    assert.match(fishShrimpText, /不要直接按“性情温和”判断安全/);
+    assert.doesNotMatch(fishShrimpText, /可以混养/);
+    await page.close();
+  }
+
+  console.log('Compatibility beginner-action E2E passed: fin-nipping group pressure + stable soft-load downgrade + tiger-barb/guppy reviewed block + fish/shrimp predation vulnerability.');
 } finally {
   await browser.close();
 }

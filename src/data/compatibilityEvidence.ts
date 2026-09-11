@@ -33,6 +33,43 @@ export type ReviewedStageRiskProfile = CompatibilityEvidenceDto & {
   mitigation: string[];
 };
 
+
+const neocaridinaHusbandrySource: EvidenceSourceDto = {
+  id: 'aquariumhq-neocaridina-davidi',
+  title: 'Cherry shrimp (Neocaridina davidi) care and compatibility',
+  publisher: 'AquariumHQ',
+  url: 'https://aquariumhq.app/invertebrates/cherry-shrimp',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const neocaridinaSocialStudy: EvidenceSourceDto = {
+  id: 'neocaridina-social-environment-study',
+  title: 'Effect of social environment on sexual differentiation in the highly gregarious red cherry shrimp (Neocaridina davidi)',
+  publisher: 'Canadian Journal of Zoology',
+  url: 'https://doi.org/10.1139/cjz-2018-0284',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const caridinaHusbandrySource: EvidenceSourceDto = {
+  id: 'aquendium-caridina-cantonensis',
+  title: 'Crystal Red Shrimp (Caridina cantonensis) care guide',
+  publisher: 'Aquendium',
+  url: 'https://aquendium.com/species/crystal-red-shrimp/',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const neriteHusbandrySource: EvidenceSourceDto = {
+  id: 'aquariumhq-neritina-natalensis',
+  title: 'Nerite snail (Neritina natalensis) care and compatibility',
+  publisher: 'AquariumHQ',
+  url: 'https://aquariumhq.app/invertebrates/nerite-snail',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const tigerBarbStudy: EvidenceSourceDto = {
   id: 'tiger-barb-group-size-study',
   title: 'The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria',
@@ -363,6 +400,39 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
 };
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
+
+  'Neocaridina davidi': {
+    speciesId: 'base:Neocaridina davidi',
+    waterType: 'freshwater',
+    behaviorTraits: ['group_living', 'bottom_dwelling'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [neocaridinaHusbandrySource, neocaridinaSocialStudy],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
+  },
+  'Caridina cantonensis': {
+    speciesId: 'base:Caridina cantonensis',
+    waterType: 'freshwater',
+    behaviorTraits: ['group_living', 'bottom_dwelling'],
+    minimumGroupSize: 10,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [caridinaHusbandrySource],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  'Neritina natalensis': {
+    speciesId: 'base:Neritina natalensis',
+    waterType: 'freshwater',
+    behaviorTraits: ['algae_grazer'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [neriteHusbandrySource],
+    requiredFacts: ['water', 'temperature', 'adult_size'],
+  },
   'Betta splendens': {
     speciesId: 'base:Betta splendens',
     waterType: 'freshwater',

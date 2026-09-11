@@ -118,6 +118,19 @@ assert.equal(inheritedBettaKnowledge.knowledge.reproduction?.mode, 'bubble_neste
 assert.ok(inheritedBettaKnowledge.knowledge.socialBehavior?.evidence.sourceIds.includes('seriouslyfish-betta-splendens'));
 assert.equal(getReviewedSpeciesKnowledgeForFish(inheritedBetta)?.socialBehavior?.territoriality, 'high');
 
+const cherryShrimpKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0001', name: '极火虾', scientificName: 'Neocaridina davidi var. Red', category: '虾螺蟹' });
+assert.equal(cherryShrimpKnowledge.knowledge.socialBehavior?.predationVulnerability, 'high');
+assert.equal(cherryShrimpKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+const wildShrimpKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0459', name: '黑壳虾', scientificName: 'Neocaridina davidi wild type', category: '虾螺蟹' });
+assert.equal(wildShrimpKnowledge.knowledge.socialBehavior?.predationVulnerability, 'high');
+assert.equal(wildShrimpKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+const crystalShrimpKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0002', name: '水晶虾', scientificName: 'Caridina cantonensis var.', category: '虾螺蟹' });
+assert.equal(crystalShrimpKnowledge.knowledge.socialBehavior?.predationVulnerability, 'high');
+assert.equal(crystalShrimpKnowledge.knowledge.socialBehavior?.minimumGroupSize, 10);
+const reviewedNeriteKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0428', name: '斑马螺', scientificName: 'Neritina natalensis', category: '虾螺蟹' });
+assert.equal(reviewedNeriteKnowledge.knowledge.socialBehavior?.minimumGroupSize, undefined);
+assert.equal(reviewedNeriteKnowledge.knowledge.socialBehavior?.predationVulnerability, undefined);
+
 const angelfishKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0446', name: '天使鱼（神仙鱼）', scientificName: 'Pterophyllum scalare' });
 assert.equal(angelfishKnowledge.knowledge.socialBehavior?.finNipVulnerability, 'high');
 assert.equal(angelfishKnowledge.knowledge.socialBehavior?.predationRisk, 'medium');
@@ -125,6 +138,33 @@ assert.equal(angelfishKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 200);
 assert.equal(angelfishKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 100);
 const angelfishSources = resolveKnowledgeSources(angelfishKnowledge.knowledge.socialBehavior?.evidence.sourceIds || []);
 assert.equal(angelfishSources.length, 2);
+
+
+const cherryShrimpFish: Fish = { ...baseFish, id: 'sp_0001', name: '极火虾', scientificName: 'Neocaridina davidi var. Red', category: '虾螺蟹', housingMode: '谨慎混养' };
+const wildNeocaridinaFish: Fish = { ...baseFish, id: 'sp_0459', name: '黑壳虾', scientificName: 'Neocaridina davidi wild type', category: '虾螺蟹', housingMode: '谨慎混养' };
+const cherryKnowledge = buildSpeciesKnowledgeProfile(cherryShrimpFish);
+const wildNeocaridinaKnowledge = buildSpeciesKnowledgeProfile(wildNeocaridinaFish);
+assert.equal(cherryKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.equal(wildNeocaridinaKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.equal(cherryKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 20);
+assert.equal(cherryKnowledge.knowledge.sexIdentification.confidence, 'verified');
+assert.equal(getSpeciesHousingAuthority(cherryShrimpFish).label, '群体 6+');
+assert.equal(getSpeciesHousingAuthority(wildNeocaridinaFish).source, 'reviewed');
+
+const crystalShrimpFish: Fish = { ...baseFish, id: 'sp_0002', name: '水晶虾', scientificName: 'Caridina cantonensis var.', category: '虾螺蟹', difficulty: 'Hard', housingMode: '谨慎混养' };
+const crystalKnowledge = buildSpeciesKnowledgeProfile(crystalShrimpFish);
+assert.equal(crystalKnowledge.knowledge.socialBehavior?.minimumGroupSize, 10);
+assert.equal(crystalKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 19);
+assert.equal(crystalKnowledge.knowledge.sexIdentification.confidence, 'unknown');
+assert.equal(getSpeciesHousingAuthority(crystalShrimpFish).label, '群体 10+');
+
+const neriteFish: Fish = { ...baseFish, id: 'sp_0428', name: '斑马螺', scientificName: 'Neritina natalensis', category: '虾螺蟹', housingMode: '谨慎混养' };
+const neriteKnowledge = buildSpeciesKnowledgeProfile(neriteFish);
+assert.equal(neriteKnowledge.knowledge.socialBehavior?.mode, 'variable');
+assert.equal(neriteKnowledge.knowledge.socialBehavior?.minimumGroupSize, undefined);
+assert.equal(neriteKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 20);
+assert.equal(getSpeciesHousingAuthority(neriteFish).source, 'reviewed');
+assert.equal(getSpeciesHousingAuthority(neriteFish).minimumGroupSize, undefined);
 
 const unknownKnowledge = buildSpeciesKnowledgeProfile(baseFish);
 assert.equal(unknownKnowledge.knowledge.sexIdentification.confidence, 'unknown');
