@@ -1,5 +1,15 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — reconciliation candidate migration safety (2026-09-11)
+- [x] Reconciliation candidate contains live main + feature without moving main.
+- [x] Compatibility v3 authority integration and operator UI accepted locally.
+- [x] Preserve historical revision audit semantics during v3 backfill.
+- [x] Enforce requiredFacts / Stage Risk DB shape, visibility and publish-RPC fail-closed gates.
+- [x] Re-run Compatibility contract/browser/authority/regression + full build.
+- [ ] Execute v3 migration against a controlled local/Postgres or explicitly authorized Staging environment; Docker-local execution is currently blocked by an unresponsive daemon.
+- [ ] Main promotion remains separately gated.
+
+
 
 ## ACTIVE OVERRIDE — reconciliation candidate complete locally (2026-09-11)
 - [x] Build isolated reconciliation candidate without modifying main.

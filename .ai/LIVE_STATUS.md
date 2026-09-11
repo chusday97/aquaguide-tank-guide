@@ -1,5 +1,13 @@
 # Live Status
 
+## CURRENT OVERRIDE — reconciliation candidate + migration safety PASS (2026-09-11)
+- Candidate HEAD: `0a938a12` on `reconcile/admin-content-main-20260911`.
+- Live refs remain `origin/main=d3c70dee`, `origin/feature/admin-content-v0=e9c63560`; candidate relation is main `0/325`, feature `0/340`.
+- Compatibility v3 migration is hardened for historical-audit preservation, DB shape constraints, Stage Risk RLS and publish-RPC fail-closed validation.
+- Local/runtime regressions and full build remain PASS.
+- Docker daemon was unresponsive, therefore migration SQL was not executed against local Postgres. No Staging/Production/indexing mutation occurred.
+
+
 
 ## CURRENT OVERRIDE — isolated reconciliation candidate PASS (2026-09-11)
 - Candidate HEAD: `80aded34` on `reconcile/admin-content-main-20260911`.

@@ -1,5 +1,15 @@
 # Branch Status
 
+## CURRENT OVERRIDE — reconciliation candidate hardened (2026-09-11)
+- Candidate branch: `reconcile/admin-content-main-20260911`; latest functional HEAD `0a938a12`.
+- Merge checkpoint remains `80aded34` with parents feature `1a032743` + live main `d3c70dee`.
+- Explicit refs: main `d3c70dee`, remote feature `e9c63560`.
+- `origin/main...candidate = 0 / 325`; `origin/feature/admin-content-v0...candidate = 0 / 340`.
+- Main pointer has not moved; no push/force-push/rebase/cherry-pick to main.
+- Migration is code-only/unapplied; Docker-local SQL execution was unavailable because the daemon did not respond.
+- Full static/browser/build validation remains PASS.
+
+
 
 ## CURRENT OVERRIDE — reconciliation candidate contains main + feature (2026-09-11)
 - Candidate branch: `reconcile/admin-content-main-20260911`.

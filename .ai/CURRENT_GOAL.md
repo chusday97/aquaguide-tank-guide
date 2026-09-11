@@ -1,5 +1,17 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-11 reconciliation candidate migration hardened
+Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional checkpoint: `0a938a12 fix(admin): harden compatibility v3 migration`.
+
+- Candidate still contains all live main and remote feature history: `origin/main...HEAD = 0 / 325`; `origin/feature/admin-content-v0...HEAD = 0 / 340`.
+- Compatibility v3 migration now preserves historical rejected/published/superseded revisions instead of backfilling modern Stage Risk snapshots into old audit records.
+- DB constraints enforce reviewed Profile `requiredFacts`, non-empty/enum-bounded Stage Risk life stages, non-blank rule identity/reason, and published-parent visibility for Stage Risk source links.
+- Profile publish RPC now rejects invalid required facts, malformed Stage Risk rules, duplicate rule keys and duplicate/blank Stage Risk citation keys even if an admin bypasses the normal API.
+- Validation PASS: Compatibility contract, Local Compatibility browser, authority gate, regression gate, API/root TypeScript, full build and diff hygiene.
+- Local SQL runtime apply was **not** executed because the Docker daemon was unresponsive. Supabase Staging/Production remain untouched.
+- NEXT: keep candidate isolated; if cloud validation is explicitly resumed, first run a controlled local/Staging migration execution check before any promotion.
+
+
 
 ## CURRENT OVERRIDE — 2026-09-11 isolated reconciliation candidate PASS
 The active objective is **validate and preserve the isolated reconciliation candidate; do not move main or apply cloud migrations without explicit authorization**. Candidate merge checkpoint: `80aded34` on `reconcile/admin-content-main-20260911`, with parents feature `1a032743` and live main `d3c70dee`.

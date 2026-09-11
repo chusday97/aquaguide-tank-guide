@@ -1,5 +1,16 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — reconciliation candidate migration hardening complete (2026-09-11)
+- Latest functional checkpoint: `0a938a12 fix(admin): harden compatibility v3 migration` on `reconcile/admin-content-main-20260911`.
+- Candidate contains all live main (`0 / 325`) and all remote feature (`0 / 340`) histories; main itself has not moved and nothing was pushed.
+- Migration `202609110001_compatibility_v3_profile_authority.sql` no longer rewrites historical rejected/published/superseded revisions with present-day v3 snapshots; only active Draft/pending/approved revisions are upgraded.
+- Reviewed Profile requiredFacts and Stage Risk life-stage shape are enforced at the DB boundary. Stage Risk source-link RLS now inherits reviewed Profile + published Species visibility.
+- Publish RPC fail-closes on missing/invalid requiredFacts, malformed Stage Risk rules, duplicate ruleKey and duplicate/blank citation sourceKey, so direct admin-table mutation cannot bypass v3 authority shape.
+- PASS: Compatibility contract, Local Compatibility browser, authority gate, regression gate, API/root TypeScript, full build, diff hygiene.
+- Docker daemon was unresponsive, so no local Postgres/Supabase migration execution was claimed. Staging/Production/indexing remain untouched.
+- NEXT: no speculative feature work; next cloud step, if explicitly authorized, is controlled migration execution validation before any main/Production promotion.
+
+
 
 ## CURRENT OVERRIDE — isolated reconciliation candidate accepted locally (2026-09-11)
 - Candidate branch/worktree: `reconcile/admin-content-main-20260911` at `/private/tmp/aqua-admin-reconcile-20260911`.

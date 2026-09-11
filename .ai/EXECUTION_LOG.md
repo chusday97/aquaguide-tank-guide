@@ -1389,3 +1389,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS: main Compatibility/domain/service/launch tests; runtime authority/regression/admin contract; Local Profile/Pair/Stage Risk browser publish; Operations desktop/mobile; Publish Center; Admin authority UI; Compatibility authority gate; API/root TypeScript; full build; diff hygiene.
 - Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both (`main...candidate 0/323`, `feature...candidate 0/338`). No push/main/Production/Supabase Staging/indexing mutation.
 - NEXT: keep candidate isolated until explicit authorization for Staging migration validation or main promotion.
+
+## 2026-09-11 — Compatibility v3 migration safety hardening
+- Committed `0a938a12 fix(admin): harden compatibility v3 migration` on isolated reconciliation branch.
+- Historical rejected/published/superseded Profile revisions are no longer backfilled with present-day v3 Stage Risk snapshots; only active draft/pending/approved revisions are upgraded.
+- Added DB constraints for reviewed Profile requiredFacts, non-empty Compatibility life stages, non-blank Stage Risk identity/reason, and stricter Stage Risk source-link visibility.
+- Profile publish RPC now fail-closes on invalid requiredFacts, malformed Stage Risk shape, duplicate ruleKey and duplicate/blank Stage Risk citation keys.
+- PASS: Compatibility admin contract, Local Compatibility browser, Compatibility authority gate, Stage Risk regression gate, API/root TypeScript, full build and diff hygiene.
+- Docker daemon did not respond, so no local Postgres migration execution was performed or claimed. No Supabase Staging/Production/indexing mutation.
+- Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both histories at main `0/325`, feature `0/340`.
