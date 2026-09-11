@@ -121,6 +121,14 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'peer_reviewed',
     reviewStatus: 'reviewed',
   },
+  'small-snakehead-fws-assessment': {
+    id: 'small-snakehead-fws-assessment',
+    title: 'Ecological Risk Screening Summary: Small Snakehead (Channa asiatica)',
+    publisher: 'U.S. Fish and Wildlife Service',
+    url: 'https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Small-Snakehead.pdf',
+    sourceType: 'government',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-betta-splendens': {
     id: 'seriouslyfish-betta-splendens',
     title: 'Betta splendens (Siamese Fighting Fish)',

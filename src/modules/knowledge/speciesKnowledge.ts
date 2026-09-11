@@ -386,6 +386,25 @@ const reviewedKnowledgeByBaseSpeciesKey: Partial<Record<string, SpeciesKnowledge
       evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['convict-cichlid-territory-study'], reviewedAt: '2026-09-12' },
     },
   },
+  'Channa asiatica': {
+    sexIdentification: {
+      title: '本轮不提供外观公母硬判断',
+      summary: '当前已审核资料足以支持捕食、单养和领地风险判断，但不足以把外观性别特征作为稳定的用户规则。',
+      points: ['如果需要繁殖配对，优先使用有明确繁育记录的成熟个体来源，不凭颜色或头型猜测。'],
+      confidence: 'unknown',
+      source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+      reliableFromLifeStage: 'unknown',
+    },
+    socialBehavior: {
+      mode: 'solitary',
+      territoriality: 'unknown',
+      finNipping: 'unknown',
+      swimmingPace: 'unknown',
+      predationRisk: 'high',
+      summary: '已审核 Compatibility authority 将其视为捕食性、需要单养且有领地行为的鱼；小型鱼属于明确捕食目标，因此不能用短期未追逐来推断长期安全。',
+      evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['small-snakehead-fws-assessment'], reviewedAt: '2026-09-12' },
+    },
+  },
   'Betta splendens': {
     sexIdentification: {
       title: '成体公母通常较容易区分',

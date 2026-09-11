@@ -476,6 +476,29 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'Channa albino variant inherits reviewed predator and solitary authority',
+    run: () => {
+      const variant = makeFish({
+        id: 'sp_0223',
+        name: '红眼白子雷龙',
+        scientificName: 'Channa asiatica var. Albino',
+        temperament: 'Aggressive',
+        size: 'Large',
+      });
+      const reviewed = getReviewedCompatibilityProfileForFish(variant);
+      if (reviewed?.speciesId !== 'base:Channa asiatica' || !reviewed.behaviorTraits.includes('predatory') || !reviewed.behaviorTraits.includes('solitary_required')) return false;
+      const result = evaluateCompatibilityDecision({
+        tank: makeTank({ dimensions: { length: '120', width: '50', height: '50' } }),
+        items: [
+          { species: variant, quantity: 1 },
+          { species: makeFish({ id: 'small-reviewed-target', size: 'Small' }), quantity: 1 },
+        ],
+      });
+      return result.status === 'not_recommended'
+        && result.blockingRules.some(rule => rule.code === 'predation_risk');
+    },
+  },
+  {
     name: 'betta ornamental variant inherits reviewed base-species authority without faking direct audit',
     run: () => {
       const halfmoon = makeFish({

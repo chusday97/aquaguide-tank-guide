@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import { buildSpeciesCarePresentation } from '../src/modules/knowledge/speciesCarePresentation';
 import { buildSpeciesKnowledgeProfile, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
+import { getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
+import { fishData } from '../src/data/fishData';
 import { getSpeciesHousingAuthority } from '../src/modules/knowledge/speciesHousingAuthority';
 import { getSpeciesFilterTags, getSpeciesPositioning, getSpeciesRoleLabel } from '../src/modules/species/species.service';
 import type { Fish } from '../src/types';
@@ -124,6 +126,22 @@ assert.equal(miniParrotSources[0]?.publisher, 'Integrative and Comparative Biolo
 const inheritedMiniParrot = { ...baseFish, id: 'sp_0147', name: '蓝宝鹦鹉鱼', scientificName: 'Amatitlania nigrofasciata var. Blue', temperament: 'Aggressive' as const };
 assert.equal(getReviewedSpeciesKnowledgeForFish(inheritedMiniParrot)?.socialBehavior?.territoriality, 'high');
 
+const pearlSnakehead = { ...baseFish, id: 'sp_0049', name: '珍珠赤雷龙', scientificName: 'Channa asiatica', temperament: 'Aggressive' as const };
+const pearlSnakeheadKnowledge = buildSpeciesKnowledgeProfile(pearlSnakehead);
+assert.equal(pearlSnakeheadKnowledge.knowledge.sexIdentification.confidence, 'unknown');
+assert.equal(pearlSnakeheadKnowledge.knowledge.socialBehavior?.mode, 'solitary');
+assert.equal(pearlSnakeheadKnowledge.knowledge.socialBehavior?.predationRisk, 'high');
+assert.equal(pearlSnakeheadKnowledge.knowledge.socialBehavior?.territoriality, 'unknown');
+assert.equal(pearlSnakeheadKnowledge.knowledge.reproduction, undefined);
+assert.equal(pearlSnakeheadKnowledge.knowledge.spaceAndGrowth, undefined);
+const pearlSnakeheadSources = resolveKnowledgeSources(pearlSnakeheadKnowledge.knowledge.socialBehavior?.evidence.sourceIds || []);
+assert.equal(pearlSnakeheadSources.length, 1);
+assert.equal(pearlSnakeheadSources[0]?.publisher, 'U.S. Fish and Wildlife Service');
+
+const inheritedAlbinoSnakehead = { ...baseFish, id: 'sp_0223', name: '红眼白子雷龙', scientificName: 'Channa asiatica var. Albino', temperament: 'Aggressive' as const };
+assert.equal(getReviewedSpeciesKnowledgeForFish(inheritedAlbinoSnakehead)?.socialBehavior?.mode, 'solitary');
+assert.equal(getReviewedSpeciesKnowledgeForFish(inheritedAlbinoSnakehead)?.socialBehavior?.predationRisk, 'high');
+
 const inheritedBetta = { ...baseFish, id: 'sp_0259', name: '半月斗鱼 (蓝蝴蝶)', scientificName: 'Betta splendens var. Halfmoon' };
 const inheritedBettaKnowledge = buildSpeciesKnowledgeProfile(inheritedBetta);
 assert.equal(inheritedBettaKnowledge.knowledge.socialBehavior?.mode, 'solitary');
@@ -197,6 +215,11 @@ assert.equal(sexSourceRefs.length, 1);
 assert.equal(sexSourceRefs[0]?.publisher, 'Seriously Fish');
 assert.ok(sexSourceRefs[0]?.url.includes('paracheirodon-innesi'));
 assert.deepEqual(resolveKnowledgeSources(['unknown-source']), []);
+
+const reviewedAuthorityGaps = fishData
+  .filter(fish => getReviewedCompatibilityProfileForFish(fish) && !getReviewedSpeciesKnowledgeForFish(fish))
+  .map(fish => ({ id: fish.id, name: fish.name, scientificName: fish.scientificName }));
+assert.deepEqual(reviewedAuthorityGaps, [], 'every Compatibility-reviewed catalog fish must resolve to Species Knowledge V2 authority');
 
 
 

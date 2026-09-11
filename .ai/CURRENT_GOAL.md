@@ -18,7 +18,7 @@ Continue Aqua Product Recovery P1 Species Knowledge V2 coverage expansion withou
 Domain compatibility, legacy facade, evidence coverage, visual actions, TypeScript, build, Compatibility beginner-action browser E2E, and GP001-GP004 must pass before checkpoint push.
 
 ## Next
-Close the remaining reviewed-authority gap for `Channa asiatica` only with facts supported by its existing reviewed source, then reassess canonical high-frequency coverage. Do not mass-fill unknown fields or redesign frozen UI.
+The Compatibility-reviewed → Species Knowledge V2 authority gap is now zero for catalog fish. Reassess the next canonical high-frequency cohort using reviewed external evidence; add a new taxon only when it improves decision quality, and keep unsupported fields unknown/absent.
 
 ## Base-species inheritance checkpoint
 - Runtime reviewed authority now resolves exact species ID first, then an explicit base-species key derived from scientific name.
@@ -74,3 +74,10 @@ Close the remaining reviewed-authority gap for `Channa asiatica` only with facts
 - `Amatitlania nigrofasciata var.*` ornamental forms inherit the reviewed base-species behavior authority; direct-ID review counts remain unchanged.
 - Canonical priority coverage expands from 8 taxa / 56 ordered directions to 9 taxa / 72 ordered directions: 56 caution and 16 not_recommended, with 0 unconditional compatible in the audit setup.
 - Next authority gap: `Channa asiatica`; preserve the same partial-review discipline.
+
+### Current checkpoint — Channa partial Species Knowledge V2
+- Added evidence-backed base-species Knowledge V2 for `Channa asiatica` using the existing U.S. Fish and Wildlife Service assessment.
+- Migrated only reviewed predator / solitary authority into Knowledge V2; sex remains explicit unknown and reproduction / space remain absent.
+- `Channa asiatica var.*` now inherits the same reviewed biological authority, including the existing hard small-fish predation boundary.
+- Added a regression audit requiring every Compatibility-reviewed catalog fish to resolve to Species Knowledge V2 authority; current gap count is zero.
+- Next work must select a genuinely new canonical high-frequency taxon rather than duplicate a variant.

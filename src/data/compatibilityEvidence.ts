@@ -444,6 +444,16 @@ const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [convictCichlidTerritoryStudy],
     requiredFacts: ['water', 'temperature', 'territoriality', 'breeding_behavior'],
   },
+  'Channa asiatica': {
+    speciesId: 'base:Channa asiatica',
+    waterType: 'freshwater',
+    behaviorTraits: ['predatory', 'solitary_required', 'territorial'],
+    predationTargets: ['small_fish'],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [smallSnakeheadAssessment],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'predation', 'territoriality'],
+  },
   'Betta splendens': {
     speciesId: 'base:Betta splendens',
     waterType: 'freshwater',

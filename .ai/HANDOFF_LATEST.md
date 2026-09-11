@@ -104,3 +104,11 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Canonical priority matrix now includes 迷你鹦鹉鱼: 9 taxa / 72 ordered directions, 56 caution + 16 not_recommended, 0 unconditional compatible.
 - Verified: Species Knowledge, Compatibility, Domain, Visual Actions, canonical evidence coverage, TypeScript, production build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 all PASS.
 - Next: close `Channa asiatica` partial V2 only to the extent supported by its reviewed USFWS assessment; do not infer sex/reproduction/space facts beyond evidence.
+
+### P1 — Channa partial knowledge convergence
+- Closed the final Compatibility-reviewed → Species Knowledge V2 gap for `Channa asiatica`.
+- Added only source-supported predator / solitary behavior; sex remains unknown and reproduction / space are intentionally absent.
+- `Channa asiatica var. Albino` inherits reviewed base-species authority and still produces the hard `predation_risk` block against a small fish.
+- Added an authority-gap regression: any catalog fish with reviewed Compatibility authority but no Species Knowledge V2 authority now fails the Species Knowledge test. Current gap count: 0.
+- Verified: Species Knowledge, Compatibility, Domain, Visual Results, canonical evidence coverage, TypeScript, production build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 all PASS.
+- Next: choose the next new canonical high-frequency species from reviewed external evidence; do not add ornamental duplicates or fabricate missing fields.

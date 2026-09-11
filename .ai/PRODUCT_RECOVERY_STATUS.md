@@ -206,3 +206,13 @@ Draft PR: #149
 #### Validation
 - Species Knowledge / Compatibility / Domain / Visual Results / evidence coverage / TypeScript / production build: PASS.
 - Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Channa partial knowledge convergence checkpoint
+- Added base-species Knowledge V2 authority for `Channa asiatica` from the existing reviewed U.S. Fish and Wildlife Service source.
+- Preserved partial-review discipline: predator / solitary behavior is reviewed; sex is unknown; reproduction and space remain absent.
+- Albino ornamental forms inherit the reviewed base-species authority and cannot bypass the hard small-fish predation rule.
+- Added a zero-gap invariant between reviewed Compatibility authority and Species Knowledge V2 for catalog fish.
+
+#### Validation
+- Species Knowledge / Compatibility / Domain / Visual Results / evidence coverage / TypeScript / production build: PASS.
+- Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.
