@@ -31,3 +31,8 @@ After this checkpoint, expand target-vulnerability traits only for reviewed spec
 - Aggressive/Territorial temperament must never multiply waste/bioload screening. Behavior risk and carrying-capacity screening are separate dimensions.
 - Raw livestock count must not create a generic density warning; capacity remains based on reviewed species facts plus coarse body-size screening until filtration/flow/water-quality facts are added.
 - No replacement hard limit is introduced here. This checkpoint removes false precision rather than inventing a new universal stocking formula.
+
+## Bottom-zone ecology checkpoint
+- Compatibility now carries reviewed swimming-zone context without turning shared zones into automatic incompatibility.
+- `shared_bottom_zone_context` is informational only: it explains shared substrate/feeding pressure while preserving the underlying verdict.
+- First bottom-dweller cohort: `sp_0014` Corydoras aeneus and `sp_0443` Corydoras panda with reviewed group size, adult size, tank footprint guidance and bottom-zone authority.

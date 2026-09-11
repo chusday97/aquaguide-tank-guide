@@ -273,6 +273,15 @@ assert.equal(finNippingTargetVulnerability.status, 'caution');
 assert.equal(finNippingTargetVulnerability.addPolicy, 'confirm');
 assert.ok(finNippingTargetVulnerability.ruleCodes.includes('fin_nipping_target_vulnerability'));
 
+const sharedBottomZoneContext = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 100, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'bottom-a', swimmingZone: 'bottom' }],
+  candidateSpecies: { ...base, id: 'bottom-b', swimmingZone: 'bottom' },
+});
+assert.equal(sharedBottomZoneContext.status, 'compatible');
+assert.ok(sharedBottomZoneContext.ruleCodes.includes('shared_bottom_zone_context'));
+
 const structuredTerritoriality = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },

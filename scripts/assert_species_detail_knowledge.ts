@@ -84,6 +84,18 @@ assert.equal(cardinalKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 3.5
 assert.equal(cardinalKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
 
 
+const bronzeCoryKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0014', name: '咖啡鼠', scientificName: 'Corydoras aeneus' });
+assert.equal(bronzeCoryKnowledge.knowledge.socialBehavior?.minimumGroupSize, 4);
+assert.equal(bronzeCoryKnowledge.knowledge.socialBehavior?.swimmingZone, 'bottom');
+assert.equal(bronzeCoryKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 80);
+assert.equal(bronzeCoryKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 7.5);
+
+const pandaCoryKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0443', name: '熊猫鼠', scientificName: 'Corydoras panda' });
+assert.equal(pandaCoryKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.equal(pandaCoryKnowledge.knowledge.socialBehavior?.swimmingZone, 'bottom');
+assert.equal(pandaCoryKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 45);
+assert.equal(pandaCoryKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 41);
+
 const whiteCloudKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0434', name: '白云金丝', scientificName: 'Tanichthys albonubes' });
 assert.equal(whiteCloudKnowledge.knowledge.socialBehavior?.minimumGroupSize, 10);
 assert.equal(whiteCloudKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);

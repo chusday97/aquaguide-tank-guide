@@ -40,3 +40,11 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Retired Species Fit `density_high`, which treated raw animal count as comparable regardless of adult size/species needs.
 - Added regressions proving temperament cannot change load screening for the same species/size/quantity and raw count alone cannot produce `density_high`.
 - Verified: Domain PASS, Compatibility PASS, TypeScript PASS, production build PASS, Compatibility beginner-action E2E PASS, GP001–GP004 PASS.
+
+## Latest checkpoint — bottom-zone ecology
+- Added reviewed Species V2 profiles for 咖啡鼠 (`sp_0014`) and 熊猫鼠 (`sp_0443`).
+- Corrected catalog scientific name `Corydoras pandas` → `Corydoras panda`.
+- Added `swimmingZone` to Domain species facts and wired reviewed social/space knowledge into compatibility.
+- Added informational `shared_bottom_zone_context`; two bottom dwellers no longer disappear into generic compatibility, but the shared zone does not itself raise caution.
+- Evidence coverage remains fail-closed: 132 priority directions, 12 reviewed recordable directions, 98 insufficient, 22 not recommended, 12 caution.
+- Verified: Species Knowledge PASS, Domain PASS, Compatibility PASS, evidence coverage PASS, TypeScript PASS, production build PASS, Compatibility beginner-action E2E PASS, GP001–GP004 PASS.

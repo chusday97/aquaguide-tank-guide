@@ -142,6 +142,48 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
       evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-paracheirodon-axelrodi'], reviewedAt: '2026-09-11' },
     },
   },
+  sp_0014: {
+    sexIdentification: {
+      title: '成熟后可通过体型辅助判断',
+      summary: '成熟母鱼通常更大、腹部更圆更宽；公鱼相对纤细。',
+      points: ['母鱼：成熟后通常更大、更圆宽。', '公鱼：通常相对更纤细。'],
+      confidence: 'verified',
+      source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+      reliableFromLifeStage: 'adult',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-aeneus'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'shoal', minimumGroupSize: 4, recommendedGroupSize: { min: 6 }, swimmingZone: 'bottom', territoriality: 'none', finNipping: 'none', predationRisk: 'low',
+      summary: '温和平和、明显群居，长期建议至少 4–6 条；主要在底层觅食，不应被当作“只吃残饵的清洁工具”。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-aeneus'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 7.5, measurement: 'SL' }, minVolumeLiters: 72, minTankLengthCm: 80, activityLevel: 'medium', swimmingZone: 'bottom', needsCover: true,
+      spaceNotes: ['长期饲养优先按至少 80 × 30 cm 缸底规划，底床以细砂或保持洁净的圆润底材更合适。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-aeneus'], reviewedAt: '2026-09-11' },
+    },
+  },
+  sp_0443: {
+    sexIdentification: {
+      title: '成熟后可从俯视体型辅助判断',
+      summary: '成熟母鱼通常腹部更圆、体型略大；俯视时差异更容易观察。',
+      points: ['母鱼：通常更圆、更宽，体型略大。', '公鱼：通常相对纤细。'],
+      confidence: 'verified',
+      source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+      reliableFromLifeStage: 'adult',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-panda'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'shoal', minimumGroupSize: 6, recommendedGroupSize: { min: 6 }, swimmingZone: 'bottom', territoriality: 'none', finNipping: 'none', predationRisk: 'low',
+      summary: '非常温和的底栖群居鱼，建议至少 6 条；不要和明显大型或攻击性强的鱼搭配。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-panda'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 5, measurement: 'SL' }, minVolumeLiters: 41, minTankLengthCm: 45, activityLevel: 'medium', swimmingZone: 'bottom', needsCover: true,
+      spaceNotes: ['小群可按至少 45 × 30 cm 缸底规划；细砂底床更符合其长期底栖觅食方式。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-panda'], reviewedAt: '2026-09-11' },
+    },
+  },
   sp_0434: {
     sexIdentification: {
       title: '成熟后可通过体型和颜色辅助判断',

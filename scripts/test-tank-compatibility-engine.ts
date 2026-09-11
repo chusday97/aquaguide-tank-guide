@@ -532,6 +532,23 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed corydoras share bottom-zone context without automatic incompatibility',
+    run: () => {
+      const bronze = makeFish({ id: 'sp_0014', name: '咖啡鼠', scientificName: 'Corydoras aeneus', waterTemperature: '21-27°C', tankSize: '至少 72 升' });
+      const panda = makeFish({ id: 'sp_0443', name: '熊猫鼠', scientificName: 'Corydoras panda', waterTemperature: '22-25°C', tankSize: '至少 41 升' });
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' }, targetTemperature: '24' }),
+        existingSpecies: [{ species: bronze, record: { quantity: 6 } }],
+        candidateSpecies: panda,
+        candidateQuantity: 6,
+      });
+      return result.status !== 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('shared_bottom_zone_context')
+        && result.passedRules.some(rule => rule.code === 'shared_bottom_zone_context')
+        && result.stockingGuidance?.recommendedMin === 6;
+    },
+  },
+  {
     name: 'mini parrot juvenile record is allowed without inventing a safe maximum',
     run: () => {
       const miniParrot = makeFish({

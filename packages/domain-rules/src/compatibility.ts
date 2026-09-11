@@ -53,6 +53,7 @@ export type DomainSpeciesFact = {
   adultLengthMinCm?: number | null;
   adultLengthMaxCm?: number | null;
   socialMode?: 'solitary' | 'pair' | 'harem' | 'shoal' | 'school' | 'group' | 'colony' | 'variable' | 'unknown';
+  swimmingZone?: 'surface' | 'upper' | 'middle' | 'bottom' | 'all' | 'unknown';
   minimumGroupSize?: number | null;
   stockingGuidance?: StockingGuidance;
   evidenceIds?: string[];
@@ -246,6 +247,13 @@ export const evaluateCompatibility = ({
         || (hasFinNippingPressure(candidateSpecies) && isFinNipVulnerable(existing))
       )) {
         raise('caution', 'fin_nipping_target_vulnerability');
+      }
+      if (existing.id !== candidateSpecies.id
+        && existing.reviewed
+        && candidateSpecies.reviewed
+        && existing.swimmingZone === 'bottom'
+        && candidateSpecies.swimmingZone === 'bottom') {
+        ruleCodes.push('shared_bottom_zone_context');
       }
       if (existing.behaviorTraits?.includes('solitary_required') || candidateSpecies.behaviorTraits?.includes('solitary_required')) {
         raise('not_recommended', 'single_housing_required');

@@ -102,6 +102,9 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   fin_nipping_target_vulnerability: {
     code: 'fin_nipping_target_vulnerability', title: '追鳍鱼与脆弱鳍型不匹配', evidence: '组合中一方有已审核的追鳍倾向，另一方有已审核的追鳍脆弱特征或慢游特征；不要把这类组合当作普通兼容关系。', severity: 'medium', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  shared_bottom_zone_context: {
+    code: 'shared_bottom_zone_context', title: '共享底层活动区', evidence: '两种已审核物种都主要使用底层空间；这只是空间与投喂背景提示，不单独代表不兼容。规划时应留意底床可用面积、躲避位和沉底饵料是否都能被吃到。', severity: 'info', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   observed_intervention: {
     code: 'observed_intervention', title: '现实观察需要干预', evidence: '已记录持续追逐或进食排除，建议先暂停新增并调整环境或分隔观察。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
@@ -133,7 +136,7 @@ export const applyCanonicalCompatibilityDecision = (
   const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
-  const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context']);
+  const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context']);
   const domainMissingRules = domainRules.filter(rule => !blockingCodes.has(rule.code) && !warningCodes.has(rule.code) && !informationalCodes.has(rule.code));
   const domainInformationalRules = domainRules.filter(rule => informationalCodes.has(rule.code));
 

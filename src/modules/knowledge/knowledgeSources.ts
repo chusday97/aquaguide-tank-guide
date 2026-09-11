@@ -49,6 +49,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-corydoras-aeneus': {
+    id: 'seriouslyfish-corydoras-aeneus',
+    title: 'Corydoras aeneus (Bronze Cory)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/corydoras-aeneus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'seriouslyfish-corydoras-panda': {
+    id: 'seriouslyfish-corydoras-panda',
+    title: 'Corydoras panda (Panda Cory)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/corydoras-panda',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-puntigrus-tetrazona': {
     id: 'seriouslyfish-puntigrus-tetrazona',
     title: 'Puntigrus tetrazona (Tiger Barb)',

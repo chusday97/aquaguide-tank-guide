@@ -141,3 +141,20 @@ Draft PR: #149
 - Production build: PASS.
 - Compatibility beginner-action browser E2E: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Bottom-zone ecology checkpoint
+- Added reviewed `Corydoras aeneus` and `Corydoras panda` knowledge/compatibility authority.
+- Added `swimmingZone` as a structured compatibility fact.
+- Added informational `shared_bottom_zone_context` for two reviewed bottom-dwelling species.
+- Shared ecological zone is context, not a universal risk score; it does not change a compatible result by itself.
+- Corrected the panda cory scientific-name typo in the catalog.
+
+#### Validation
+- Species Knowledge: PASS.
+- Domain compatibility: PASS.
+- Legacy/canonical compatibility: PASS.
+- Evidence coverage: PASS; recordable reviewed directions increased from 6 to 12 without new hard-block relaxation.
+- TypeScript: PASS.
+- Production build: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.

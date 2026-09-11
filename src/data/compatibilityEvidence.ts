@@ -124,6 +124,24 @@ const guppySeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const bronzeCorySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-corydoras-aeneus',
+  title: 'Corydoras aeneus (Bronze Cory)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/corydoras-aeneus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pandaCorySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-corydoras-panda',
+  title: 'Corydoras panda (Panda Cory)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/corydoras-panda',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const tigerBarbSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-puntigrus-tetrazona',
   title: 'Puntigrus tetrazona (Tiger Barb)',
@@ -224,6 +242,28 @@ const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
 };
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0014: {
+    speciesId: 'sp_0014',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'bottom_dwelling'],
+    minimumGroupSize: 4,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [bronzeCorySeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
+  },
+  sp_0443: {
+    speciesId: 'sp_0443',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'bottom_dwelling'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [pandaCorySeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
+  },
   sp_0439: {
     speciesId: 'sp_0439',
     waterType: 'freshwater',

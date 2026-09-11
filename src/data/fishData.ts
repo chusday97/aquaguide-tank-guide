@@ -17578,7 +17578,7 @@ export const fishData: Fish[] = [
   {
     "id": "sp_0443",
     "name": "熊猫鼠",
-    "scientificName": "Corydoras pandas",
+    "scientificName": "Corydoras panda",
     "category": "鲶鱼/异型",
     "image": "/species-transparent/batch_001_species_sheet_09_熊猫鼠_Corydoras_panda.png?v=cutfix5_20260601",
     "difficulty": "Easy",
