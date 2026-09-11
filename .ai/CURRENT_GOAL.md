@@ -19,3 +19,10 @@ Domain compatibility, legacy facade, evidence coverage, visual actions, TypeScri
 
 ## Next
 After this checkpoint, expand target-vulnerability traits only for reviewed species with direct husbandry evidence; then continue the next high-frequency Species V2 cohort. Do not redesign frozen UI.
+
+## Base-species inheritance checkpoint
+- Runtime reviewed authority now resolves exact species ID first, then an explicit base-species key derived from scientific name.
+- Variant inheritance is allowed only for shared base-species biology; direct-ID audit counts remain unchanged so inherited authority is never presented as a separately reviewed variant.
+- `Betta splendens var.*` can inherit the reviewed `Betta splendens` baseline; variant-specific exceptions remain eligible for exact-ID overrides.
+- `Pterophyllum scalare` is reviewed directly and now contributes structured fin-nip vulnerability instead of name-regex inference.
+- Acceptance remains: inherited authority may improve runtime decisions, but must not inflate direct review coverage or override explicit pair/hard-risk evidence.

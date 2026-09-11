@@ -2,8 +2,8 @@ import type { Aquarium, Fish } from '../types';
 import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
 import { estimateWaterProfile } from './waterProfileEstimate';
-import { getReviewedCompatibilityProfile } from '../data/compatibilityEvidence';
-import { getReviewedSpeciesKnowledge } from '../modules/knowledge/speciesKnowledge';
+import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -84,7 +84,7 @@ const getSpeciesMinLengthCm = (species: Fish) => {
 };
 
 const getSpeciesWaterType = (species: Fish): SpeciesWaterType => {
-  const reviewedWaterType = getReviewedCompatibilityProfile(species.id)?.waterType;
+  const reviewedWaterType = getReviewedCompatibilityProfileForFish(species)?.waterType;
   if (reviewedWaterType) return reviewedWaterType;
   const text = textOf(species);
   if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
@@ -126,14 +126,14 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
   if (validLivestock.length === 0) return null;
   const speciesText = textOf(species);
   const selectedIsSmall = species.size === 'Small';
-  const reviewedTargetSocial = getReviewedSpeciesKnowledge(species.id)?.socialBehavior;
+  const reviewedTargetSocial = getReviewedSpeciesKnowledgeForFish(species)?.socialBehavior;
   const selectedIsFinNipVulnerable = reviewedTargetSocial?.evidence.reviewStatus === 'reviewed'
     ? reviewedTargetSocial.finNipVulnerability === 'medium'
       || reviewedTargetSocial.finNipVulnerability === 'high'
       || reviewedTargetSocial.swimmingPace === 'slow'
     : /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
   const predator = validLivestock.find(item => {
-    const reviewed = getReviewedCompatibilityProfile(item.species.id);
+    const reviewed = getReviewedCompatibilityProfileForFish(item.species);
     if (reviewed) return reviewed.behaviorTraits.includes('predatory');
     const predatorIdentity = `${item.species.name} ${item.species.category} ${item.species.description}`;
     return /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
@@ -148,7 +148,7 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
   }
 
   const nipper = validLivestock.find(item => {
-    const reviewed = getReviewedCompatibilityProfile(item.species.id);
+    const reviewed = getReviewedCompatibilityProfileForFish(item.species);
     return reviewed ? reviewed.behaviorTraits.includes('fin_nipping') : /虎皮|黑裙|红十字|彩裙|玫瑰鲫|啄鳍|追咬/i.test(textOf(item.species));
   });
   if (nipper && selectedIsFinNipVulnerable) {
@@ -341,7 +341,7 @@ export const evaluateSpeciesForAquarium = (
     score -= 10;
   }
   if (species.temperament === 'Peaceful') score += 5;
-  const reviewedHousing = getReviewedCompatibilityProfile(species.id);
+  const reviewedHousing = getReviewedCompatibilityProfileForFish(species);
   const solitaryRequired = reviewedHousing
     ? reviewedHousing.behaviorTraits.includes('solitary_required')
     : species.housingMode === '建议单养';

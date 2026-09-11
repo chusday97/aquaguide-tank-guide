@@ -57,6 +57,30 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-betta-splendens': {
+    id: 'seriouslyfish-betta-splendens',
+    title: 'Betta splendens (Siamese Fighting Fish)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/betta-splendens',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'seriouslyfish-pterophyllum-scalare': {
+    id: 'seriouslyfish-pterophyllum-scalare',
+    title: 'Pterophyllum scalare (Angelfish)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/pterophyllum-scalare',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'tamu-pterophyllum-scalare-reproduction': {
+    id: 'tamu-pterophyllum-scalare-reproduction',
+    title: 'Reproduction of Angelfish (Pterophyllum scalare)',
+    publisher: 'Texas A&M AgriLife Extension',
+    url: 'https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf',
+    sourceType: 'government',
+    reviewStatus: 'reviewed',
+  },
 };
 export const getKnowledgeSource = (sourceId: string) => knowledgeSources[sourceId];
 

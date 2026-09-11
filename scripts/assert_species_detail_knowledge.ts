@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { buildSpeciesCarePresentation } from '../src/modules/knowledge/speciesCarePresentation';
-import { buildSpeciesKnowledgeProfile } from '../src/modules/knowledge/speciesKnowledge';
+import { buildSpeciesKnowledgeProfile, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import type { Fish } from '../src/types';
 
@@ -95,6 +95,22 @@ const tigerKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0439'
 assert.equal(tigerKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
 assert.equal(tigerKnowledge.knowledge.socialBehavior?.finNipping, 'medium');
 assert.equal(tigerKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 72);
+
+const inheritedBetta = { ...baseFish, id: 'sp_0259', name: '半月斗鱼 (蓝蝴蝶)', scientificName: 'Betta splendens var. Halfmoon' };
+const inheritedBettaKnowledge = buildSpeciesKnowledgeProfile(inheritedBetta);
+assert.equal(inheritedBettaKnowledge.knowledge.socialBehavior?.mode, 'solitary');
+assert.equal(inheritedBettaKnowledge.knowledge.socialBehavior?.finNipVulnerability, 'high');
+assert.equal(inheritedBettaKnowledge.knowledge.reproduction?.mode, 'bubble_nester');
+assert.ok(inheritedBettaKnowledge.knowledge.socialBehavior?.evidence.sourceIds.includes('seriouslyfish-betta-splendens'));
+assert.equal(getReviewedSpeciesKnowledgeForFish(inheritedBetta)?.socialBehavior?.territoriality, 'high');
+
+const angelfishKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0446', name: '天使鱼（神仙鱼）', scientificName: 'Pterophyllum scalare' });
+assert.equal(angelfishKnowledge.knowledge.socialBehavior?.finNipVulnerability, 'high');
+assert.equal(angelfishKnowledge.knowledge.socialBehavior?.predationRisk, 'medium');
+assert.equal(angelfishKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 200);
+assert.equal(angelfishKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 100);
+const angelfishSources = resolveKnowledgeSources(angelfishKnowledge.knowledge.socialBehavior?.evidence.sourceIds || []);
+assert.equal(angelfishSources.length, 2);
 
 const unknownKnowledge = buildSpeciesKnowledgeProfile(baseFish);
 assert.equal(unknownKnowledge.knowledge.sexIdentification.confidence, 'unknown');

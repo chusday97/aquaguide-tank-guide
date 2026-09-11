@@ -1,10 +1,10 @@
 import type { Aquarium, AquariumSpeciesBatch, CompatibilityLifeStage, Fish } from '../types';
 import { isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
-import { getReviewedCompatibilityProfile, getReviewedPairRule, getReviewedStageRiskProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
+import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish, getReviewedPairRule, getReviewedStageRiskProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
-import { getReviewedSpeciesKnowledge } from '../modules/knowledge/speciesKnowledge';
+import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 import {
   COMPATIBILITY_RULE_VERSION,
   evaluateCompatibility,
@@ -92,8 +92,11 @@ const asRule = (
   citations: evidenceMeta.citations || [],
 });
 
-const evidenceFromProfile = (speciesId: string): CompatibilityEvidenceDto => {
-  const profile = getReviewedCompatibilityProfile(speciesId);
+const evidenceFromProfile = (species: Fish | string): CompatibilityEvidenceDto => {
+  const speciesId = typeof species === 'string' ? species : species.id;
+  const profile = typeof species === 'string'
+    ? getReviewedCompatibilityProfile(species)
+    : getReviewedCompatibilityProfileForFish(species);
   return profile ? {
     basis: 'species_trait',
     confidence: profile.confidence,
@@ -297,8 +300,8 @@ const evaluateLegacyTankCompatibility = ({
     currentSpecies.forEach(existing => {
       const pairName = `${existing.name} 与 ${candidateSpecies.name}`;
       const reviewedPairRule = getReviewedPairRule(existing.id, candidateSpecies.id);
-      const existingProfile = getReviewedCompatibilityProfile(existing.id);
-      const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
+      const existingProfile = getReviewedCompatibilityProfileForFish(existing);
+      const candidateProfile = getReviewedCompatibilityProfileForFish(candidateSpecies);
       if (isSaltwaterSpecies(existing) !== isSaltwaterSpecies(candidateSpecies)) {
         blockingRules.push(asRule('species_water_type_conflict', '水体类型冲突', `${pairName} 分属淡水与海水环境，不能混养。`, 'high', reviewedRuleEvidence));
       } else {
@@ -326,11 +329,11 @@ const evaluateLegacyTankCompatibility = ({
       }
 
       const predator = [existing, candidateSpecies].find(item => (
-        getReviewedCompatibilityProfile(item.id)?.behaviorTraits.includes('predatory')
+        getReviewedCompatibilityProfileForFish(item)?.behaviorTraits.includes('predatory')
       ));
       const smaller = predator?.id === existing.id ? candidateSpecies : existing;
       if (predator && smaller.size === 'Small' && predator.id !== smaller.id) {
-        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食特征，可能捕食或吞食 ${smaller.name}。`, 'high', evidenceFromProfile(predator.id)));
+        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食特征，可能捕食或吞食 ${smaller.name}。`, 'high', evidenceFromProfile(predator)));
       }
 
       if (reviewedPairRule) {
@@ -490,8 +493,8 @@ const evaluateLegacyTankCompatibility = ({
     }
 
     const pairRule = getReviewedPairRule(existing.id, candidateSpecies.id);
-    const existingProfile = getReviewedCompatibilityProfile(existing.id);
-    const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
+    const existingProfile = getReviewedCompatibilityProfileForFish(existing);
+    const candidateProfile = getReviewedCompatibilityProfileForFish(candidateSpecies);
     if (pairRule) {
       const target = pairRule.verdict === 'not_recommended'
         ? blockingRules
@@ -521,7 +524,7 @@ const evaluateLegacyTankCompatibility = ({
   });
 
   const hasPredator = currentSpecies.find(item => (
-    getReviewedCompatibilityProfile(item.id)?.behaviorTraits.includes('predatory')
+    getReviewedCompatibilityProfileForFish(item)?.behaviorTraits.includes('predatory')
   ));
   if (hasPredator && candidateSpecies.size === 'Small') {
     blockingRules.push(asRule(
@@ -529,16 +532,16 @@ const evaluateLegacyTankCompatibility = ({
       '捕食或吞食风险',
       `当前已有 ${hasPredator.name}，不建议加入明显更小的 ${candidateSpecies.name}。`,
       'high',
-      evidenceFromProfile(hasPredator.id),
+      evidenceFromProfile(hasPredator),
     ));
   }
 
   const territorialConflict = currentSpecies.find(item => (
-    getReviewedCompatibilityProfile(item.id)?.behaviorTraits.includes('territorial')
+    getReviewedCompatibilityProfileForFish(item)?.behaviorTraits.includes('territorial')
   ));
-  if (territorialConflict && getReviewedCompatibilityProfile(candidateSpecies.id)?.behaviorTraits.includes('territorial')) {
-    const existingProfile = getReviewedCompatibilityProfile(territorialConflict.id)!;
-    const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id)!;
+  if (territorialConflict && getReviewedCompatibilityProfileForFish(candidateSpecies)?.behaviorTraits.includes('territorial')) {
+    const existingProfile = getReviewedCompatibilityProfileForFish(territorialConflict)!;
+    const candidateProfile = getReviewedCompatibilityProfileForFish(candidateSpecies)!;
     blockingRules.push(asRule(
       'territorial_conflict',
       '领地冲突',
@@ -571,8 +574,8 @@ const evaluateLegacyTankCompatibility = ({
     .filter(item => item.species.id === candidateSpecies.id)
     .reduce((sum, item) => sum + item.quantity, 0);
   const totalCandidateSpeciesQuantity = sameSpeciesExistingQuantity + getQuantity(candidateQuantity);
-  const candidateProfile = getReviewedCompatibilityProfile(candidateSpecies.id);
-  const candidateKnowledge = getReviewedSpeciesKnowledge(candidateSpecies.id);
+  const candidateProfile = getReviewedCompatibilityProfileForFish(candidateSpecies);
+  const candidateKnowledge = getReviewedSpeciesKnowledgeForFish(candidateSpecies);
   const reviewedKnowledgeGroupSize = candidateKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
     ? candidateKnowledge.socialBehavior.minimumGroupSize
     : undefined;
@@ -583,7 +586,7 @@ const evaluateLegacyTankCompatibility = ({
       '群体数量未达到已审核建议',
       `${candidateSpecies.name} 当前模拟合计 ${totalCandidateSpeciesQuantity} 只/条，已审核 minimumGroupSize 为 ${reviewedMinimumGroupSize}。`,
       'medium',
-      evidenceFromProfile(candidateSpecies.id),
+      evidenceFromProfile(candidateSpecies),
     ));
   }
 
@@ -593,7 +596,7 @@ const evaluateLegacyTankCompatibility = ({
       '更适合单养',
       `${candidateSpecies.name} 的已审核资料支持单养要求，不应作为普通混养候选。`,
       'high',
-      evidenceFromProfile(candidateSpecies.id),
+      evidenceFromProfile(candidateSpecies),
     ));
   }
 
@@ -652,8 +655,8 @@ const evaluateLegacyTankCompatibility = ({
 
 const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
   const profile = speciesProfileFromFish(fish);
-  const reviewed = getReviewedCompatibilityProfile(fish.id);
-  const reviewedKnowledge = getReviewedSpeciesKnowledge(fish.id);
+  const reviewed = getReviewedCompatibilityProfileForFish(fish);
+  const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
   const reviewedSocial = reviewedKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
     ? reviewedKnowledge.socialBehavior
     : undefined;

@@ -109,3 +109,20 @@ Draft PR: #149
 - Domain compatibility / legacy facade / visual actions / TypeScript / production build: PASS.
 - Compatibility beginner-action browser E2E covers group pressure, stable-load downgrade, and tiger-barb × guppy reviewed block: PASS.
 - GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Base-species inheritance checkpoint
+- Added inheritance-aware runtime authority: exact ID review first, then explicit base species by scientific name.
+- Direct review audit remains ID-based, preventing inherited ornamental variants from being counted as separately reviewed evidence.
+- `Betta splendens` baseline review can now serve `Betta splendens var.*` variants; exact variant review can override it later.
+- Added reviewed `Pterophyllum scalare` behavior/space knowledge and structured fin-nip vulnerability.
+- Compatibility/Species Fit/UI housing labels now share the same inheritance-aware authority path.
+- Regression contracts prove: Betta variant inheritance works without fake direct review coverage; tiger barb × angelfish produces fin-nip caution without stale single-housing or fabricated predation hard blocks.
+
+#### Validation
+- Species Knowledge assertions: PASS.
+- Domain compatibility: PASS.
+- Legacy/canonical compatibility: PASS.
+- TypeScript: PASS.
+- Production build: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.

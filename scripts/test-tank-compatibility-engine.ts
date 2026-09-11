@@ -6,6 +6,7 @@ import { executeSpeciesAddition, reviewSpeciesAdditions } from '../src/services/
 import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';
 import { getCompatibilityPreviewSpecies } from '../src/services/compatibility/compatibility-preview.service';
 import { applyCompatibilityStabilityConfirmation } from '../src/services/compatibility/compatibility-stability.service';
+import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 
 const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   id: 'peaceful-small-fish',
@@ -457,6 +458,77 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         && result.metadata.decisionReadiness === 'reviewed'
         && result.stockingGuidance?.recommendedMin === 8
         && result.missingData.every(rule => rule.code !== 'species_evidence_unreviewed');
+    },
+  },
+  {
+    name: 'betta ornamental variant inherits reviewed base-species authority without faking direct audit',
+    run: () => {
+      const halfmoon = makeFish({
+        id: 'sp_0259',
+        name: '半月斗鱼 (蓝蝴蝶)',
+        scientificName: 'Betta splendens var. Halfmoon',
+        waterTemperature: '24-30°C',
+        tankSize: '至少 56 升',
+        temperament: 'Aggressive',
+        housingMode: '建议单养',
+      });
+      const neon = makeFish({
+        id: 'sp_0431',
+        name: '红绿灯',
+        scientificName: 'Paracheirodon innesi',
+        waterTemperature: '20-26°C',
+        tankSize: '至少 54 升',
+      });
+      const directAudit = getReviewedCompatibilityProfile(halfmoon.id);
+      const inherited = getReviewedCompatibilityProfileForFish(halfmoon);
+      const result = evaluateCompatibilityDecision({
+        tank: makeTank({ dimensions: { length: '80', width: '40', height: '35' }, targetTemperature: '25' }),
+        items: [
+          { species: neon, quantity: 8, origin: 'existing' },
+          { species: halfmoon, quantity: 1, origin: 'candidate' },
+        ],
+      });
+      return !directAudit
+        && inherited?.speciesId === 'base:Betta splendens'
+        && inherited.reviewStatus === 'reviewed'
+        && result.status === 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('single_housing_required')
+        && result.missingData.every(rule => rule.code !== 'species_evidence_unreviewed');
+    },
+  },
+  {
+    name: 'angelfish reviewed target vulnerability creates fin-nipping caution without stale single-housing block',
+    run: () => {
+      const tigerBarb = makeFish({
+        id: 'sp_0439',
+        name: '虎皮鱼',
+        scientificName: 'Puntigrus tetrazona',
+        waterTemperature: '20-28°C',
+        tankSize: '至少 72 升',
+        size: 'Small',
+      });
+      const angelfish = makeFish({
+        id: 'sp_0446',
+        name: '天使鱼（神仙鱼）',
+        scientificName: 'Pterophyllum scalare',
+        waterTemperature: '24-30°C',
+        tankSize: '至少 120 升',
+        size: 'Medium',
+        temperament: 'Territorial',
+        housingMode: '建议单养',
+      });
+      const result = evaluateCompatibilityDecision({
+        tank: makeTank({ dimensions: { length: '100', width: '50', height: '50' }, targetTemperature: '25' }),
+        items: [
+          { species: tigerBarb, quantity: 8, origin: 'existing' },
+          { species: angelfish, quantity: 1, origin: 'candidate' },
+        ],
+      });
+      return result.status === 'caution'
+        && result.metadata.domainRuleCodes.includes('fin_nipping_target_vulnerability')
+        && result.blockingRules.every(rule => rule.code !== 'single_housing_required')
+        && result.blockingRules.every(rule => rule.code !== 'predation_risk')
+        && result.warningRules.some(rule => rule.code === 'fin_nipping_target_vulnerability');
     },
   },
   {

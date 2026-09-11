@@ -109,23 +109,23 @@ import { getCompatibilityPreviewSpecies } from '../services/compatibility/compat
 import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
-import { getReviewedCompatibilityProfile } from '../data/compatibilityEvidence';
-import { getReviewedSpeciesKnowledge } from '../modules/knowledge/speciesKnowledge';
+import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
 const isCompatibilityLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
 
 const isReviewedSolitaryRequirement = (fish: Fish) => {
-  const profile = getReviewedCompatibilityProfile(fish.id);
-  const social = getReviewedSpeciesKnowledge(fish.id)?.socialBehavior;
+  const profile = getReviewedCompatibilityProfileForFish(fish);
+  const social = getReviewedSpeciesKnowledgeForFish(fish)?.socialBehavior;
   if (profile?.behaviorTraits.includes('solitary_required')) return true;
   if (social?.evidence.reviewStatus === 'reviewed') return social.mode === 'solitary';
   return !profile && fish.housingMode === '建议单养';
 };
 
 const getEffectiveHousingLabel = (fish: Fish, isEn = false) => {
-  const social = getReviewedSpeciesKnowledge(fish.id)?.socialBehavior;
+  const social = getReviewedSpeciesKnowledgeForFish(fish)?.socialBehavior;
   if (social?.evidence.reviewStatus === 'reviewed') {
     if (social.mode === 'solitary') return isEn ? 'Single housing' : '建议单养';
     if (['shoal', 'school', 'group', 'colony'].includes(social.mode)) {

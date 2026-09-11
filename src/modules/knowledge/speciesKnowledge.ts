@@ -225,6 +225,64 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
 
+  sp_0446: {
+    sexIdentification: {
+      title: '平时很难可靠分公母',
+      summary: '普通体态差异不可靠；进入繁殖状态后，可结合生殖乳突和配对行为辅助判断。',
+      points: ['繁殖期公鱼生殖乳突通常更小、更尖。', '非繁殖期不要只凭额头、体型或鳍形下结论。'],
+      confidence: 'verified',
+      source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+      reliableFromLifeStage: 'adult',
+      limitations: ['生殖乳突通常只有在繁殖时更容易观察，行为只能作为辅助。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-pterophyllum-scalare'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'group', territoriality: 'medium', finNipping: 'low', finNipVulnerability: 'high', swimmingPace: 'moderate', predationRisk: 'medium',
+      summary: '总体可做社区鱼，但成年后会有同类争斗和繁殖领地行为；长鳍使其不适合与习惯追鳍的鱼同缸，同时可能捕食很小的鱼。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-pterophyllum-scalare', 'tamu-pterophyllum-scalare-reproduction'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 15, measurement: 'SL' }, minVolumeLiters: 200, minTankLengthCm: 100, activityLevel: 'medium', needsCover: true,
+      spaceNotes: ['成体按约 100 × 40 × 50 cm 以上规划；除了缸长，还要保留足够高度让背鳍和臀鳍舒展。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-pterophyllum-scalare'], reviewedAt: '2026-09-11' },
+    },
+  },
+};
+
+const reviewedKnowledgeByBaseSpeciesKey: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  'Betta splendens': {
+    sexIdentification: {
+      title: '成体公母通常较容易区分',
+      summary: '成体公鱼通常颜色更强、鳍更延长；母鱼鳍通常较短。观赏品系差异很大，应结合多个特征判断。',
+      points: ['公鱼：通常颜色更强，非成对鳍更延长。', '母鱼：通常鳍较短，体色表现相对收敛。'],
+      confidence: 'verified',
+      source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+      reliableFromLifeStage: 'adult',
+      limitations: ['短鳍品系会削弱“公鱼鳍更长”这一特征，不能只看鳍长。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-betta-splendens'], reviewedAt: '2026-09-11' },
+    },
+    reproduction: {
+      mode: 'bubble_nester', plainLanguageLabel: '泡巢繁殖', summary: '公鱼会建立泡巢并在繁殖过程中照护巢区；繁殖配对需要单独管理和大量躲避。',
+      fertilization: 'external', parentalCare: 'egg_guarding', breedingAggression: 'high',
+      breedingBehavior: ['公鱼筑泡巢并守巢', '繁殖前后需要给母鱼足够躲避空间'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-betta-splendens'], reviewedAt: '2026-09-11' },
+    },
+    socialBehavior: {
+      mode: 'solitary', territoriality: 'high', finNipping: 'medium', finNipVulnerability: 'high', swimmingPace: 'unknown', predationRisk: 'low',
+      summary: '观赏斗鱼通常不适合作为普通社区鱼；同类和外形相似、长鳍对象都可能触发争斗，而自身延长鳍也容易成为追鳍目标。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-betta-splendens'], reviewedAt: '2026-09-11' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 7, measurement: 'SL' }, minTankLengthCm: 45, activityLevel: 'low', needsCover: true,
+      spaceNotes: ['至少按 45 × 30 cm 缸底作为基础空间参考，并优先使用缓流、带遮蔽的环境。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-betta-splendens'], reviewedAt: '2026-09-11' },
+    },
+  },
+};
+
+const baseSpeciesKey = (scientificName?: string | null) => {
+  const match = scientificName?.trim().match(/^([A-Z][A-Za-z-]+)\s+([a-z][A-Za-z-]+)/);
+  return match ? `${match[1]} ${match[2]}` : null;
 };
 
 const parseRange = (value?: string) => {
@@ -250,6 +308,13 @@ const getWaterType = (fish: Fish): SpeciesKnowledgeProfile['facts']['waterType']
 
 export const getReviewedSpeciesKnowledge = (speciesId: string) => reviewedKnowledgeBySpeciesId[speciesId];
 
+export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
+  const direct = reviewedKnowledgeBySpeciesId[fish.id];
+  if (direct) return direct;
+  const baseKey = baseSpeciesKey(fish.scientificName);
+  return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+};
+
 export const buildSpeciesKnowledgeProfile = (fish: Fish): SpeciesKnowledgeProfile => {
   const topTags = [
     fish.category,
@@ -272,7 +337,7 @@ export const buildSpeciesKnowledgeProfile = (fish: Fish): SpeciesKnowledgeProfil
       housingMode: fish.housingMode || 'unknown',
       difficulty: fish.difficulty || 'unknown',
     },
-    knowledge: reviewedKnowledgeBySpeciesId[fish.id] || {
+    knowledge: getReviewedSpeciesKnowledgeForFish(fish) || {
       sexIdentification: {
         title: '暂无可靠的公母辨别资料',
         summary: '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。',

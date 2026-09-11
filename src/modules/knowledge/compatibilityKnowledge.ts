@@ -1,7 +1,7 @@
 import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 import type { CompatibilityDecisionReadiness } from '../../../packages/domain-rules/src';
-import { getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
+import { getReviewedCompatibilityProfileForFish, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
 
 export type CompatibilityItem = {
@@ -146,8 +146,8 @@ const annotatePairInference = (
     return result;
   }
 
-  const profileA = getReviewedCompatibilityProfile(itemA.species.id);
-  const profileB = getReviewedCompatibilityProfile(itemB.species.id);
+  const profileA = getReviewedCompatibilityProfileForFish(itemA.species);
+  const profileB = getReviewedCompatibilityProfileForFish(itemB.species);
   if (!profileA || !profileB) return result;
 
   const pairInferenceRule: TankCompatibilityRule = {

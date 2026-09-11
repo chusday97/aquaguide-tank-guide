@@ -1,6 +1,6 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
 import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
-import type { CompatibilityLifeStage } from '../types';
+import type { CompatibilityLifeStage, Fish } from '../types';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -130,6 +130,33 @@ const tigerBarbSeriouslyFish: EvidenceSourceDto = {
   publisher: 'Seriously Fish',
   url: 'https://www.seriouslyfish.com/species/puntigrus-tetrazona',
   sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const bettaSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-betta-splendens',
+  title: 'Betta splendens (Siamese Fighting Fish)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/betta-splendens',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const angelfishSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-pterophyllum-scalare',
+  title: 'Pterophyllum scalare (Angelfish)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/pterophyllum-scalare',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const angelfishExtensionGuide: EvidenceSourceDto = {
+  id: 'tamu-pterophyllum-scalare-reproduction',
+  title: 'Reproduction of Angelfish (Pterophyllum scalare)',
+  publisher: 'Texas A&M AgriLife Extension',
+  url: 'https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf',
+  sourceType: 'government',
   reviewStatus: 'reviewed',
 };
 
@@ -283,6 +310,34 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [guppyFishBase, guppyShoalingStudy],
     requiredFacts: ['water', 'temperature', 'social_behavior', 'breeding_behavior'],
   },
+  sp_0446: {
+    speciesId: 'sp_0446',
+    waterType: 'freshwater',
+    behaviorTraits: ['territorial', 'small_fish_predation'],
+    predationTargets: ['very_small_fish'],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [angelfishSeriouslyFish, angelfishExtensionGuide],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior', 'territoriality', 'predation'],
+  },
+};
+
+const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
+  'Betta splendens': {
+    speciesId: 'base:Betta splendens',
+    waterType: 'freshwater',
+    behaviorTraits: ['territorial', 'solitary_required', 'long_fin_vulnerable'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [bettaSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'territoriality'],
+  },
+};
+
+const baseSpeciesKey = (scientificName?: string | null) => {
+  const match = scientificName?.trim().match(/^([A-Z][A-Za-z-]+)\s+([a-z][A-Za-z-]+)/);
+  return match ? `${match[1]} ${match[2]}` : null;
 };
 
 const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
@@ -366,6 +421,10 @@ const pairRules: ReviewedPairRule[] = [
 ];
 
 export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
+
+export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => (
+  profiles[fish.id] || (baseSpeciesKey(fish.scientificName) ? baseSpeciesProfiles[baseSpeciesKey(fish.scientificName)!] : undefined)
+);
 
 export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];
 
