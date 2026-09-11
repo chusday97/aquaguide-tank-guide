@@ -1,5 +1,13 @@
 # Branch Status
 
+## CURRENT OVERRIDE — reconciliation candidate locally migration-validated (2026-09-11)
+- Candidate branch: `reconcile/admin-content-main-20260911`. HEAD before this docs checkpoint: `d8bfd30e`.
+- Live refs: `origin/main=d3c70dee`, `origin/feature/admin-content-v0=e9c63560`. Relations: main `0 / 331`, feature `0 / 346`; candidate contains both histories.
+- Compatibility v3 migration has executed on real local PostgreSQL 17 in both empty-authority and populated `sp_0436` validation paths.
+- Stale approval rejection and fresh atomic publish both verified at the database RPC boundary.
+- Main pointer was not moved; no push/rebase/force-push; Staging/Production/indexing untouched.
+
+
 ## CURRENT OVERRIDE — reconciliation candidate DB-invariant hardened (2026-09-11)
 - Candidate branch `reconcile/admin-content-main-20260911`; latest functional HEAD `b8703fec`.
 - Merge checkpoint remains `80aded34` with parents feature `1a032743` + live main `d3c70dee`.

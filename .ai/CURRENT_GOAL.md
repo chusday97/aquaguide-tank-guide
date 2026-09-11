@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-11 populated Compatibility v3 migration execution PASS
+Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional code checkpoint remains `b8703fec`; latest docs checkpoint before this update was `d8bfd30e`.
+
+- Real PostgreSQL 17 execution is now verified, not only parsed: the local Supabase database accepted the pending migration chain through `202609110001_compatibility_v3_profile_authority.sql`.
+- A populated pre-v3 `sp_0436` fixture verified Profile version `1→2`, canonical `requiredFacts`, Stage Risk + dedicated Evidence backfill, approved revision invalidation to `pending_review`, `base_profile_version 1→2`, and review report/evidence reset.
+- Publish fail-closed probe PASS: the migrated pending revision was rejected with `PUBLISH_GATE_REJECTED: revision_not_approved`.
+- Re-review + atomic publish probe PASS: valid v3 Impact/Regression/Profile Evidence/Stage Risk Evidence published successfully; Profile version advanced to 3, revision became `published`, active revisions became 0, authority state matched RPC result at 20, and Profile/Stage Risk evidence remained isolated.
+- Temporary migration-test containers/volume were removed after validation; original local Supabase volume was preserved. Supabase Staging/Production/indexing and main remain untouched.
+- NEXT: candidate is locally migration-validated; any Staging migration or main promotion remains an explicit separate gate.
+
+
 ## CURRENT OVERRIDE — 2026-09-11 reconciliation migration invariants complete
 Active candidate remains isolated on `reconcile/admin-content-main-20260911`. Latest functional checkpoint: `b8703fec fix(admin): enforce compatibility evidence sets`.
 

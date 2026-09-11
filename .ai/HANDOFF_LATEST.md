@@ -1,5 +1,15 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — populated v3 migration + atomic publish verified (2026-09-11)
+- Candidate: `reconcile/admin-content-main-20260911`; local code checkpoint `b8703fec`, prior docs checkpoint `d8bfd30e`.
+- Compatibility v3 migration has now executed successfully on real local Supabase PostgreSQL 17. The pending migration chain reached `202609110001` with `Local database is up to date`.
+- Populated pre-v3 guppy fixture PASS: reviewed Profile version 1 + approved revision base version 1 migrated to Profile version 2, v3 requiredFacts, Profile-owned adult→fry Stage Risk, two dedicated Stage Risk Evidence links, revision `pending_review`, base version 2, and stale Impact/Regression/Evidence cleared.
+- Direct publish after migration correctly failed closed with `revision_not_approved`. After fresh review payloads were supplied, `publish_compatibility_profile_revision` atomically succeeded (`baselineVersion=3`, `authorityVersion=20`).
+- Post-publish assertions PASS: Profile sources contain only FishBase + schooling evidence; Stage Risk sources contain only the two fry-predation studies; revision is `published`; active revision count is 0.
+- Temporary Docker test resources were deleted; original `supabase_db_aquaguide-admin-supabase-local` volume remains. No Staging/Production/indexing/main mutation.
+- NEXT: local reconciliation is technically ready for an explicit cloud/main promotion decision; do not promote implicitly.
+
+
 ## CURRENT OVERRIDE — reconciliation migration invariants complete (2026-09-11)
 - Latest functional checkpoint: `b8703fec fix(admin): enforce compatibility evidence sets`; preceding safety checkpoints: `f849b6c6`, `92ba6c50`, `8ab60adb`.
 - Candidate branch remains `reconcile/admin-content-main-20260911`; main itself has not moved and nothing has been pushed.

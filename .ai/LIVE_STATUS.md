@@ -1,5 +1,13 @@
 # Live Status
 
+## CURRENT OVERRIDE — local migration execution gate PASS (2026-09-11)
+- Candidate HEAD before this docs update: `d8bfd30e`; live main `d3c70dee`; remote feature `e9c63560`. Candidate relation: main `0/331`, feature `0/346`.
+- Real local PostgreSQL 17 migration execution through `202609110001` PASS.
+- Populated `sp_0436` migration/backfill, fail-closed stale approval, and fresh atomic publish probes all PASS.
+- Final post-publish state: Profile v3 reviewed, revision published, zero active revisions, normal Profile Evidence and Stage Risk Evidence remain isolated, authority sequence consistent at 20.
+- No Supabase Staging/Production/indexing mutation; main pointer unchanged; no push.
+
+
 ## CURRENT OVERRIDE — reconciliation candidate DB invariants PASS (2026-09-11)
 - Candidate HEAD: `b8703fec` on `reconcile/admin-content-main-20260911`.
 - Live refs: `origin/main=d3c70dee`, `origin/feature/admin-content-v0=e9c63560`; candidate relation is main `0/330`, feature `0/345`.

@@ -1,5 +1,16 @@
 # Execution Log
 
+## 2026-09-11 — populated Compatibility v3 migration execution PASS
+- Restored Docker Desktop backend after stale IPC/dead-daemon state; local registry downloads remained unreliable, so validation reused cached Supabase PostgreSQL 17.6.1.159 images and isolated Docker test resources.
+- Confirmed the project is not linked to a remote Supabase project before local database work.
+- Real local migration execution accepted the pending migration chain through `202609110001_compatibility_v3_profile_authority.sql`; DB objects/constraints/functions were queried afterward.
+- Built an isolated pre-v3 `sp_0436` fixture: reviewed Profile v1, two normal Profile Evidence sources, approved revision base v1 with old Impact/Regression/Evidence state.
+- Executed the unmodified v3 migration. Results: Profile v2 with `{water,temperature,social_behavior,breeding_behavior}`; revision `pending_review`, base v2, revision v3; canonical adult→fry Stage Risk + two dedicated Evidence links; stale review artifacts cleared; authority sequence 4→8.
+- Fail-closed RPC probe PASS: direct publish rejected with `PUBLISH_GATE_REJECTED: revision_not_approved`.
+- Recreated valid v3 review data and approved revision; atomic publish PASS with `baselineVersion=3`, `authorityVersion=20`. Post-publish Profile v3 contains review change, revision v5 is `published`, active revisions=0, Profile evidence is `{fishbase-poecilia-reticulata,guppy-schooling-learning-study}`, Stage Risk evidence is `{guppy-cannibalism-refuge-study,guppy-fry-yield-cannibalism-study}`.
+- Removed temporary test containers/volume and preserved original local Supabase volume. No cloud/main mutation.
+
+
 ## 2026-09-09 — Local Product/Care asset persistence checkpoint
 - Functional commit `2d26b1ca feat(admin): add local asset persistence`.
 - Product/Care main-image Blob data now persists in browser IndexedDB; Local Business records keep lightweight version/current metadata only. Large image data is not stored in localStorage.

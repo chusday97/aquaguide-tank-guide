@@ -1,5 +1,16 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — populated migration gate closed (2026-09-11)
+- [x] Execute Compatibility v3 migration on real local Supabase PostgreSQL 17.
+- [x] Verify populated pre-v3 Profile/approved revision backfill.
+- [x] Verify requiredFacts, Stage Risk, independent Stage Risk Evidence and base-version rebase.
+- [x] Verify migrated stale approval cannot publish.
+- [x] Verify fresh re-review can atomically publish and keep Profile/Stage Risk evidence isolated.
+- [x] Remove temporary migration-test Docker resources while preserving original local Supabase volume.
+- [ ] Supabase Staging migration remains separately gated and unapplied.
+- [ ] Candidate→main promotion remains separately gated and unperformed.
+
+
 ## ACTIVE OVERRIDE — reconciliation migration invariants closed locally (2026-09-11)
 - [x] Reconciliation candidate contains live main + feature without moving main.
 - [x] Add transactional migration + actionable requiredFacts preflight.
