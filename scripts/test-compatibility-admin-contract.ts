@@ -189,6 +189,8 @@ const v3Migration = readFileSync('supabase/migrations/202609110001_compatibility
 assert.match(v3Migration, /^-- Compatibility v3 Profile authority extension\.[\s\S]*?\nbegin;/, 'v3 migration must run inside an explicit transaction boundary.');
 assert.match(v3Migration, /commit;\s*$/, 'v3 migration must commit only after all schema, backfill and RPC changes succeed.');
 assert.match(v3Migration, /required_facts text\[\]/, 'v3 Profile authority must persist required facts.');
+assert.match(v3Migration, /is_valid_compatibility_stocking_guidance/, 'v3 migration must validate the complete stocking guidance shape at the database boundary.');
+assert.match(v3Migration, /PUBLISH_GATE_REJECTED: stocking_guidance_invalid/, 'DB publish must reject malformed stocking guidance even if the Admin API is bypassed.');
 assert.match(v3Migration, /stocking_guidance jsonb/, 'v3 Profile authority must persist stocking guidance.');
 assert.match(v3Migration, /species_compatibility_profile_stage_risks/, 'Stage Risk must be Profile-owned reviewed authority.');
 assert.match(v3Migration, /species_compatibility_profile_stage_risk_sources/, 'Stage Risk evidence must use an independent canonical link table.');

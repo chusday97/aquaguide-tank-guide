@@ -13,6 +13,51 @@ alter table public.species_compatibility_profile_revisions
   add column if not exists stage_risk_rules jsonb not null default '[]'::jsonb,
   add column if not exists stage_risk_evidence_resolution jsonb not null default '{}'::jsonb;
 
+create or replace function public.is_valid_compatibility_stocking_guidance(p_value jsonb)
+returns boolean
+language sql
+immutable
+set search_path=public
+as $$
+  select p_value is null or (
+    jsonb_typeof(p_value)='object'
+    and p_value ?& ARRAY['kind','recommendedMin','recommendedMax','constraints','confidence','evidenceIds']::text[]
+    and p_value->>'kind' in ('reviewed_range','minimum_group_only','screening_only','unknown')
+    and p_value->>'confidence' in ('high','medium','low','unknown')
+    and case jsonb_typeof(p_value->'recommendedMin')
+      when 'null' then true
+      when 'number' then (p_value->>'recommendedMin')::numeric > 0
+        and (p_value->>'recommendedMin')::numeric = trunc((p_value->>'recommendedMin')::numeric)
+      else false
+    end
+    and case jsonb_typeof(p_value->'recommendedMax')
+      when 'null' then true
+      when 'number' then (p_value->>'recommendedMax')::numeric > 0
+        and (p_value->>'recommendedMax')::numeric = trunc((p_value->>'recommendedMax')::numeric)
+      else false
+    end
+    and case when jsonb_typeof(p_value->'constraints')='array' then
+      jsonb_array_length(p_value->'constraints') <= 30
+      and not exists (
+        select 1 from jsonb_array_elements(p_value->'constraints') item
+        where jsonb_typeof(item)<>'string' or nullif(btrim(item#>>'{}'),'') is null
+      )
+      else false
+    end
+    and case when jsonb_typeof(p_value->'evidenceIds')='array' then
+      jsonb_array_length(p_value->'evidenceIds') <= 30
+      and not exists (
+        select 1 from jsonb_array_elements(p_value->'evidenceIds') item
+        where jsonb_typeof(item)<>'string' or nullif(btrim(item#>>'{}'),'') is null
+      )
+      else false
+    end
+  );
+$$;
+
+comment on function public.is_valid_compatibility_stocking_guidance(jsonb) is
+  'Pure validator for Compatibility v3 stocking guidance persisted in reviewed Profile authority.';
+
 alter table public.species_compatibility_profile_revisions
   add constraint compatibility_profile_revision_stage_risk_rules_array_check
     check (jsonb_typeof(stage_risk_rules) = 'array'),
@@ -222,16 +267,16 @@ alter table public.species_compatibility_profiles
     check (review_status<>'reviewed' or (
       cardinality(required_facts)>0 and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
     )),
-  add constraint compatibility_profiles_stocking_guidance_object_check
-    check (stocking_guidance is null or jsonb_typeof(stocking_guidance)='object');
+  add constraint compatibility_profiles_stocking_guidance_v3_check
+    check (public.is_valid_compatibility_stocking_guidance(stocking_guidance));
 
 alter table public.species_compatibility_profile_revisions
   add constraint compatibility_profile_revisions_required_facts_v3_check
     check (status in ('rejected','published','superseded') or (
       cardinality(required_facts)>0 and required_facts <@ ARRAY['water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior']::text[]
     )),
-  add constraint compatibility_profile_revisions_stocking_guidance_object_check
-    check (stocking_guidance is null or jsonb_typeof(stocking_guidance)='object');
+  add constraint compatibility_profile_revisions_stocking_guidance_v3_check
+    check (public.is_valid_compatibility_stocking_guidance(stocking_guidance));
 
 update public.species_compatibility_profile_revisions
 set status=case when status='approved' then 'pending_review' else status end,
@@ -269,6 +314,7 @@ begin
     select 1 from unnest(v_revision.required_facts) fact
     where fact not in ('water','temperature','ph','adult_size','tank_size','social_behavior','territoriality','predation','breeding_behavior')
   ) then raise exception 'PUBLISH_GATE_REJECTED: required_facts_invalid'; end if;
+  if not public.is_valid_compatibility_stocking_guidance(v_revision.stocking_guidance) then raise exception 'PUBLISH_GATE_REJECTED: stocking_guidance_invalid'; end if;
   if exists (
     select 1 from jsonb_array_elements(v_revision.stage_risk_rules) rule
     where nullif(btrim(rule->>'ruleKey'),'') is null
