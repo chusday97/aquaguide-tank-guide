@@ -9,6 +9,7 @@ import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/tankCompatibilityEngine';
 import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
+import { resolveKnowledgeSources } from '../modules/knowledge/knowledgeSources';
 import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
 import type { PairCompatibilityResult } from '../modules/knowledge/knowledge.types';
@@ -200,10 +201,6 @@ const toRuleFitStatus = (status: FitStatus): RuleFitStatus => {
 
 const getSpeciesRole = (fish: Fish, isEn = false) => {
   return getSpeciesRoleLabel(fish, isEn);
-};
-
-const getSexIdentificationGuide = (fish: Fish) => {
-  return buildSpeciesKnowledgeProfile(fish).knowledge.sexIdentification;
 };
 
 const getSecondaryCareType = (fish: Fish) => {
@@ -519,7 +516,11 @@ export function SpeciesDetailDialog({
     ].filter(Boolean) as Array<FitDimension & { icon: typeof Waves }>;
   }, [displayFit]);
 
-  const sexIdentificationGuide = useMemo(() => fish ? getSexIdentificationGuide(fish) : null, [fish]);
+  const speciesKnowledge = useMemo(() => fish ? buildSpeciesKnowledgeProfile(fish) : null, [fish]);
+  const sexIdentificationGuide = speciesKnowledge?.knowledge.sexIdentification || null;
+  const sexIdentificationSources = useMemo(() => resolveKnowledgeSources(
+    sexIdentificationGuide?.evidence?.sourceIds || [],
+  ), [sexIdentificationGuide]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
   const compatibilityPairs = useMemo(() => {
     if (!fish || !aquariumContext) return [];
@@ -1042,6 +1043,24 @@ export function SpeciesDetailDialog({
                         <p className="mt-2 text-[11px] font-bold leading-relaxed text-ink/58">
                           {sexIdentificationGuide.summary === '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。' ? t('encyclopedia.sexSummaryPlaceholder') : sexIdentificationGuide.summary}
                         </p>
+                        {sexIdentificationSources.length > 0 && (
+                          <div className="mt-3 border-t border-emerald-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {sexIdentificationSources.map(sourceItem => (
+                                <a
+                                  key={sourceItem.id}
+                                  href={sourceItem.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="rounded-full border border-emerald-100 bg-white px-2 py-1 text-[9px] font-black text-emerald-800 underline-offset-2 hover:underline"
+                                >
+                                  {sourceItem.publisher}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </details>
                     )}
                   </div>

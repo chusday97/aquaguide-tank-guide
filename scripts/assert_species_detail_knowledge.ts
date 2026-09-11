@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { buildSpeciesCarePresentation } from '../src/modules/knowledge/speciesCarePresentation';
 import { buildSpeciesKnowledgeProfile } from '../src/modules/knowledge/speciesKnowledge';
+import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import type { Fish } from '../src/types';
 
 const baseFish: Fish = {
@@ -80,5 +81,18 @@ const unknownKnowledge = buildSpeciesKnowledgeProfile(baseFish);
 assert.equal(unknownKnowledge.knowledge.sexIdentification.confidence, 'unknown');
 assert.equal(unknownKnowledge.knowledge.reproduction, undefined);
 
+
+const reviewedKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0431',
+  name: '红绿灯',
+  scientificName: 'Paracheirodon innesi',
+});
+assert.equal(reviewedKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
+const sexSourceRefs = resolveKnowledgeSources(reviewedKnowledge.knowledge.sexIdentification.evidence?.sourceIds || []);
+assert.equal(sexSourceRefs.length, 1);
+assert.equal(sexSourceRefs[0]?.publisher, 'Seriously Fish');
+assert.ok(sexSourceRefs[0]?.url.includes('paracheirodon-innesi'));
+assert.deepEqual(resolveKnowledgeSources(['unknown-source']), []);
 
 console.log('species detail knowledge assertions passed');

@@ -41,6 +41,8 @@ Draft PR: #149
 - Minimum group-size planning is now a canonical caution rule (`minimum_group_not_met`); reviewed V2 values override older profile minima (for example neon/cardinal tetra 8 rather than the older 5 fallback).
 - Beginner Action Layer has a dedicated group-size result: `可以养，但数量要够`, with the reviewed minimum shown when available.
 - `insufficient_data` results now expose missing evidence in the expandable `为什么这样判断` layer instead of hiding the reason.
+- Knowledge Source Registry added for reviewed Species V2 claims; source IDs now resolve to publisher/title/URL instead of remaining opaque strings.
+- Existing sex-identification disclosure now shows traceable reviewed-source links without changing the surrounding Species Detail layout.
 
 ## Validation status
 - Main Convergence foundation workflow on the latest pre-golden-case checkpoint: PASS through project truth, catalog, domain compatibility, legacy compatibility, lint, API and production build.
@@ -50,12 +52,13 @@ Draft PR: #149
 - Local recovery validation after Tank Stability Context: domain compatibility PASS, legacy compatibility PASS, TypeScript lint PASS, production build PASS.
 - Species Knowledge V2 first-cohort assertions PASS; TypeScript lint PASS after reviewed cohort wiring.
 - Species V2 → compatibility wiring: domain compatibility PASS, legacy facade PASS, beginner visual/action regression PASS, species knowledge PASS, TypeScript PASS, production build PASS.
+- Knowledge Source Registry checkpoint: source-resolution assertions PASS, TypeScript PASS, full compatibility regressions PASS, production build PASS.
 - Local preview verified HTTP 200 at `http://127.0.0.1:4320/`.
 - Do not merge until the latest current-head workflows are green.
 
 ## Next execution order
-1. Add source-registry presentation so reviewed claims can expose traceable references in the product.
-2. Add user-facing stability evidence capture only after the domain contract is stable.
-3. Expand the reviewed cohort incrementally; do not mass-fill unknown fields.
-4. Add reviewed adult-size / space fields for the next cohort and wire them through the same V2-first authority path.
-5. Only after contracts and golden cases are stable, adjust Species detail presentation and compatibility result polish.
+1. Add user-facing stability evidence capture with progressive disclosure; do not require advanced inputs for beginners.
+2. Expand the reviewed cohort incrementally; do not mass-fill unknown fields.
+3. Add reviewed adult-size / space fields for the next cohort and wire them through the same V2-first authority path.
+4. Present reviewed reproduction/social blocks inside the existing Species Detail hierarchy without a layout rewrite.
+5. Continue browser-level golden-path validation before any merge to main.
