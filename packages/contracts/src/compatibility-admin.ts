@@ -26,6 +26,10 @@ export const compatibilityCitationSnapshotSchema = z.object({
   sourceType: z.enum(['government', 'peer_reviewed', 'university', 'professional_association', 'curated_husbandry']),
   reviewStatus: z.enum(['draft', 'reviewed', 'rejected']),
 });
+const compatibilityCitationSnapshotSetSchema = z.array(compatibilityCitationSnapshotSchema).min(1).max(30)
+  .refine(values => new Set(values.map(value => value.sourceKey)).size === values.length, 'Compatibility citation sourceKey 不能重复。');
+const compatibilityEvidenceIdSetSchema = z.array(z.string().trim().min(1).max(200)).max(30).default([])
+  .refine(values => new Set(values).size === values.length, 'Compatibility evidenceIds 不能重复。');
 
 export const compatibilityStockingGuidanceSchema = z.object({
   kind: z.enum(['reviewed_range', 'minimum_group_only', 'screening_only', 'unknown']),
@@ -33,7 +37,7 @@ export const compatibilityStockingGuidanceSchema = z.object({
   recommendedMax: z.number().int().positive().nullable(),
   constraints: z.array(z.string().trim().min(1).max(1200)).max(30).default([]),
   confidence: compatibilityConfidenceSchema,
-  evidenceIds: z.array(z.string().trim().min(1).max(200)).max(30).default([]),
+  evidenceIds: compatibilityEvidenceIdSetSchema,
 });
 
 export const compatibilityStageRiskRuleInputSchema = z.object({
@@ -46,7 +50,7 @@ export const compatibilityStageRiskRuleInputSchema = z.object({
   mitigation: z.array(z.string().trim().min(1).max(1200)).max(30).default([]),
   basis: compatibilityRuleBasisSchema.default('species_trait'),
   confidence: compatibilityConfidenceSchema,
-  citations: z.array(compatibilityCitationSnapshotSchema).min(1).max(30),
+  citations: compatibilityCitationSnapshotSetSchema,
 });
 
 export const compatibilityProfileRevisionInputSchema = z.object({
@@ -55,7 +59,7 @@ export const compatibilityProfileRevisionInputSchema = z.object({
   minimumGroupSize: z.number().int().positive().max(10000).nullable().optional(),
   predationTargets: z.array(z.string().trim().min(1).max(120)).max(40).default([]),
   confidence: compatibilityConfidenceSchema,
-  citations: z.array(compatibilityCitationSnapshotSchema).min(1).max(30),
+  citations: compatibilityCitationSnapshotSetSchema,
   requiredFacts: compatibilityRequiredFactSetSchema,
   stockingGuidance: compatibilityStockingGuidanceSchema.optional(),
   stageRiskRules: z.array(compatibilityStageRiskRuleInputSchema).max(20).default([]),
@@ -69,7 +73,7 @@ export const compatibilityProfileRevisionUpdateSchema = z.object({
   minimumGroupSize: z.number().int().positive().max(10000).nullable().optional(),
   predationTargets: z.array(z.string().trim().min(1).max(120)).max(40).optional(),
   confidence: compatibilityConfidenceSchema.optional(),
-  citations: z.array(compatibilityCitationSnapshotSchema).min(1).max(30).optional(),
+  citations: compatibilityCitationSnapshotSetSchema.optional(),
   requiredFacts: compatibilityRequiredFactSetSchema.optional(),
   stockingGuidance: compatibilityStockingGuidanceSchema.optional(),
   stageRiskRules: z.array(compatibilityStageRiskRuleInputSchema).max(20).optional(),
@@ -100,7 +104,7 @@ const compatibilityPairRuleRevisionBaseSchema = z.object({
   mitigation: z.array(z.string().trim().min(1).max(1200)).max(30).default([]),
   basis: compatibilityRuleBasisSchema,
   confidence: compatibilityConfidenceSchema,
-  citations: z.array(compatibilityCitationSnapshotSchema).min(1).max(30),
+  citations: compatibilityCitationSnapshotSetSchema,
 });
 
 export const compatibilityPairRuleRevisionInputSchema = compatibilityPairRuleRevisionBaseSchema

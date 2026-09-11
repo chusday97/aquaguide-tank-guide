@@ -69,6 +69,10 @@ assert.equal(compatibilityProfileRevisionInputSchema.safeParse({
   requiredFacts: ['water', 'water'], stageRiskRules: [],
 }).success, false, 'CREATE must reject duplicate requiredFacts.');
 assert.equal(compatibilityProfileRevisionUpdateSchema.safeParse({ version: 1, requiredFacts: ['water', 'water'] }).success, false, 'PATCH must reject duplicate requiredFacts.');
+const profileCitation = duplicateFactsProfile.citations[0];
+assert.ok(profileCitation, 'Profile uniqueness fixture needs evidence');
+const duplicateCitation = { sourceKey: profileCitation.id, title: profileCitation.title, publisher: profileCitation.publisher, url: profileCitation.url, sourceType: profileCitation.sourceType, reviewStatus: profileCitation.reviewStatus };
+assert.equal(compatibilityProfileRevisionUpdateSchema.safeParse({ version: 1, citations: [duplicateCitation, duplicateCitation] }).success, false, 'PATCH must reject duplicate Profile citation source keys.');
 const stageRiskSample = audit.reviewedStageRiskProfiles[0];
 assert.ok(stageRiskSample, 'one reviewed Stage Risk fixture is required for v3 uniqueness checks');
 const stageRiskCitation = stageRiskSample.citations[0];
@@ -217,6 +221,7 @@ assert.match(v3Migration, /commit;\s*$/, 'v3 migration must commit only after al
 assert.match(v3Migration, /required_facts text\[\]/, 'v3 Profile authority must persist required facts.');
 assert.match(v3Migration, /is_valid_compatibility_stocking_guidance/, 'v3 migration must validate the complete stocking guidance shape at the database boundary.');
 assert.match(v3Migration, /PUBLISH_GATE_REJECTED: stocking_guidance_invalid/, 'DB publish must reject malformed stocking guidance even if the Admin API is bypassed.');
+assert.match(v3Migration, /profile_citation_duplicate/, 'DB publish must reject duplicate Profile citation source keys explicitly.');
 assert.match(v3Migration, /stocking_guidance jsonb/, 'v3 Profile authority must persist stocking guidance.');
 assert.match(v3Migration, /species_compatibility_profile_stage_risks/, 'Stage Risk must be Profile-owned reviewed authority.');
 assert.match(v3Migration, /species_compatibility_profile_stage_risk_sources/, 'Stage Risk evidence must use an independent canonical link table.');

@@ -50,6 +50,9 @@ as $$
         select 1 from jsonb_array_elements(p_value->'evidenceIds') item
         where jsonb_typeof(item)<>'string' or nullif(btrim(item#>>'{}'),'') is null
       )
+      and jsonb_array_length(p_value->'evidenceIds') = (
+        select count(distinct item#>>'{}') from jsonb_array_elements(p_value->'evidenceIds') item
+      )
       else false
     end
   );
@@ -365,6 +368,14 @@ begin
       ) duplicate_source
     )
   ) then raise exception 'PUBLISH_GATE_REJECTED: stage_risk_citation_duplicate'; end if;
+  if exists (
+    select 1 from (
+      select citation->>'sourceKey' as source_key, count(*)
+      from jsonb_array_elements(v_revision.citation_snapshots) citation
+      group by citation->>'sourceKey'
+      having nullif(btrim(citation->>'sourceKey'),'') is null or count(*)>1
+    ) duplicate_source
+  ) then raise exception 'PUBLISH_GATE_REJECTED: profile_citation_duplicate'; end if;
   if jsonb_array_length(v_revision.evidence_resolution)=0
      or jsonb_array_length(v_revision.evidence_resolution)<>jsonb_array_length(v_revision.citation_snapshots)
   then raise exception 'PUBLISH_GATE_REJECTED: evidence_resolution_missing'; end if;
