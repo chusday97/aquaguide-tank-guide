@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Fixed: 2026-09-12 公开 Species 收藏改为本地收藏服务，避免 Public Shell 为收藏操作读取应用 Repository、登录或鱼缸状态；应用页面行为保持不变，提交 `acfadea1`。
 - Verified: 2026-09-12 内置 Chrome 实际复核首页公开入口、品牌 Hero、已批准物种图片、单一 H1、价值区和能力卡；证据为 `EVD-20260912-037`，未改变索引策略。
 - Verified: 2026-09-12 内置 Chrome 实际复核分类页与宝莲灯页；分类物种入口、宝莲灯行为/环境内容、图片回退和公开 Header 可读，证据为 `EVD-20260912-038`。
 - Fixed: 2026-09-12 黄金米虾页面将继承 FAQ 按当前品系名称呈现，避免基础物种名称错位；共享来源和 fingerprint 不变，提交 `fbd499bf`。

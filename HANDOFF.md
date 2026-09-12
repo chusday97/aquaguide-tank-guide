@@ -2,6 +2,8 @@
 
 更新时间：2026-09-12
 
+当前代码快照：`acfadea1`（公开 Species 收藏边界修复）；应用页面、生产环境与索引策略未改变。
+
 ## 当前目标
 
 持续收口公开 SEO 系统：统一中文公开页面的视觉与交互，维护物种内容证据、素材 fingerprint 和 Base/Variant 继承，在浏览器回归、可读独立 Critic、Figma Canonical 与发布门禁全部通过前保持 `noindex,follow`。

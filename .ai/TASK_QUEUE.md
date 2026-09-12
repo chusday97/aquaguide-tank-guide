@@ -2,6 +2,7 @@
 
 ## 2026-09-12 — Public SEO continuation
 
+- [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
 - [x] 收口 Species `日常怎么养` 的用户文案，移除内部说明式表达（`0c3f217c`）。
 - [x] 公开文案、结构、lint、build 和 diff-check 复验通过。
 

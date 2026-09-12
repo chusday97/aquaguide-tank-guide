@@ -1,6 +1,6 @@
 # AquaGuide Species SEO 当前交接
 
-> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `f8cd8b79`。
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `acfadea1`。
 
 ## 当前有效结论
 
@@ -9,6 +9,7 @@
 - 当前物种公开表达已用 FishBase、UF/IFAS 与 USGS NAS 逐条复核，未发现来源范围越界，证据为 `EVD-20260912-010`。
 - 系统 Chrome 自动化仍受 macOS MachPort/SIGABRT 阻塞；独立 Critic 最新复验返回空正文；Figma Canonical 仍等待 Starter 配额。
 - 用户未提交的三个文件保持原样，不能覆盖或代提交。
+- 公开 Species 收藏已改为仅使用本地 `toggleSpeciesFavorite`；不再通过应用 Repository 读取登录、鱼缸或 Supabase 状态，应用页面行为不变，证据为 `EVD-20260912-043`。
 
 ## 最新静态验证
 

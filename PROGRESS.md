@@ -1,3 +1,9 @@
+## 2026-09-12 Public Species 收藏边界收口（`acfadea1`）
+
+- [x] 公开 Species 页移除应用 Repository 依赖，收藏改用本地 `toggleSpeciesFavorite`；不触发登录、鱼缸或 Supabase 读取，应用页行为保持不变。
+- [x] `test:public-seo-structure`、`test:public-seo-contract`、`test:public-seo-copy`、lint、build 和 diff-check 通过；证据为 `EVD-20260912-043`。
+- [ ] 系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 品系 FAQ 回归保护
 
 - [x] 公开文案测试同时锁定 FAQ 问题和答案使用当前可见物种名称，防止继承内容适配函数被遗漏；提交 `f8cd8b79`。
