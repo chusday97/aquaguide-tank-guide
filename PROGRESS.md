@@ -1528,3 +1528,7 @@
 - [x] 修复 Critic 指出的边界：公开 Species 不再导入通用收藏服务，改用独立 `public-species-favorites.service.ts`，只访问 `wishlistFishIds`，不读取应用鱼缸状态；证据为 `EVD-20260913-092`。
 - [x] 公开结构、契约、lint、build 和 diff-check 通过；应用内收藏逻辑保持不变。
 - [ ] 同一 Critic 对当前版本复验仍返回空正文，证据为 `EVD-20260913-093`；不计为独立审查通过。
+## 2026-09-13 公开收藏运行时反馈
+
+- [x] 内置浏览器点击 `/species/sp_0001` 的“收藏”后显示“已加入收藏”，控件变为“已收藏”并保持焦点，证据为 `EVD-20260913-094`。
+- [ ] 该证据只覆盖交互反馈，不替代 localStorage 隔离专项、系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或独立 Critic。
