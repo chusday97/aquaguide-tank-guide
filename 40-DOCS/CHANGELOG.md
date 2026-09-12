@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Blocked: 2026-09-13 内置 Chrome 隔离页面不提供 `window.resizeTo`，无法从当前标签页获取 600px 真实视口；未改变页面状态，证据为 `EVD-20260913-121`。
 - Blocked: 2026-09-13 同一只读 Critic 已完成最新 HEAD `b2de6ab0` 的复验，但仍返回空 `items`、无可读六维正文；不计为独立审查通过，证据为 `EVD-20260913-120`。
 - In progress: 2026-09-13 已将最新 HEAD `b2de6ab0` 交回同一只读 Critic 做六维复验；当前线程仍在运行，尚无可读正文，证据为 `EVD-20260913-119`。
 - Verified: 2026-09-13 结构化加载态修复后的 Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-118`。
