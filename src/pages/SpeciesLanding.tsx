@@ -85,9 +85,30 @@ export function SpeciesLanding() {
   const [favoriteSaving, setFavoriteSaving] = useState(false);
   const [actionFeedback, setActionFeedback] = useState('');
   const [heroImageFailed, setHeroImageFailed] = useState(false);
+  const [activeChapter, setActiveChapter] = useState('overview');
 
   useEffect(() => subscribeToFavorites(() => setFavoriteIds(getSpeciesFavoriteIds())), []);
   useEffect(() => { setHeroImageFailed(false); setActionFeedback(''); }, [fish?.id]);
+  useEffect(() => {
+    if (!profile) return;
+    const ids = [
+      'overview',
+      ...(profile.lifeProfile ? ['behavior'] : []),
+      ...(profile.editorial?.habitat ? ['habitat'] : []),
+      ...((profile.editorial?.feeding || profile.editorial?.maintenance) ? ['care'] : []),
+      ...(profile.variants.length > 1 ? ['variants'] : []),
+      ...(profile.faq.length > 0 ? ['faq'] : []),
+    ];
+    setActiveChapter('overview');
+    if (typeof IntersectionObserver === 'undefined') return;
+    const sections = ids.map(id => document.getElementById(id)).filter((section): section is HTMLElement => Boolean(section));
+    const observer = new IntersectionObserver(entries => {
+      const visible = entries.filter(entry => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+      if (visible[0]?.target instanceof HTMLElement) setActiveChapter(visible[0].target.id);
+    }, { rootMargin: '-18% 0px -65% 0px', threshold: 0 });
+    sections.forEach(section => observer.observe(section));
+    return () => observer.disconnect();
+  }, [fish?.id, profile]);
   useEffect(() => {
     if (!fish || !profile) return;
     document.documentElement.lang = 'zh-CN';
@@ -157,7 +178,7 @@ export function SpeciesLanding() {
 
   return <SeoPageShell>
     <SeoBreadcrumbs ariaLabel="面包屑" items={[{ label: labels.back, href: '/' }, { label: breadcrumbCategory, ...(baseSpecies.category === '虾螺蟹' ? { href: '/category/shrimp-snails-crabs' } : {}) }, ...(baseSpecies.id !== fish.id ? [{ label: baseSpecies.name, href: `/species/${baseSpecies.id}` }] : []), { label: fish.name }]} />
-    <nav aria-label={labels.chapters} className="mt-4 -mx-1 flex min-w-0 gap-1 overflow-x-auto px-1 pb-1 text-xs font-bold text-ink/48 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{navItems.map(item => <a key={item.id} href={`#${item.id}`} className="seo-focus inline-flex min-h-11 shrink-0 items-center rounded-full border border-transparent px-3 hover:border-emerald-100 hover:bg-white hover:text-accent">{item.label}</a>)}</nav>
+    <nav aria-label={labels.chapters} className="mt-4 -mx-1 flex min-w-0 gap-1 overflow-x-auto px-1 pb-1 text-xs font-bold text-ink/48 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">{navItems.map(item => <a key={item.id} href={`#${item.id}`} onClick={() => setActiveChapter(item.id)} aria-current={activeChapter === item.id ? 'location' : undefined} className={`seo-focus inline-flex min-h-11 shrink-0 items-center rounded-full border px-3 transition-colors ${activeChapter === item.id ? 'border-emerald-200 bg-emerald-50 text-accent' : 'border-transparent hover:border-emerald-100 hover:bg-white hover:text-accent'}`}>{item.label}</a>)}</nav>
 
     <SeoHero id="overview"><div className="seo-hero__media order-2 min-w-0 lg:order-1"><MediaFrame asset={heroAsset} label={heroImageFailed ? labels.imageFailed : labels.imageUnavailable} alt={imageAlt} failed={heroImageFailed} onFallback={() => setHeroImageFailed(true)} className="min-h-[280px] md:min-h-[470px]" /></div><div className="seo-hero__content order-1 min-w-0 lg:order-2"><p className="seo-eyebrow">{categoryText} · {waterTypeText}</p><p className="seo-meta mt-5 font-bold text-accent/75">{labels.identity}</p><h1 className="seo-hero__title break-words">{fish.name}</h1><p className="seo-hero__scientific break-words">{fish.scientificName}</p><p className="seo-lead mt-6">{heroSignature}</p><div className="mt-6 flex flex-wrap gap-2"><span className="rounded-full border border-emerald-100 bg-emerald-50 px-3 py-1.5 text-[13px] font-bold text-emerald-900">{localizeDifficulty(fish)}</span><span className="rounded-full border border-sky-100 bg-sky-50 px-3 py-1.5 text-[13px] font-bold text-sky-900">{waterTypeText}</span><span className="rounded-full border border-border bg-white px-3 py-1.5 text-[13px] font-bold text-ink/62">{localizeTemperament(fish)}</span></div>{actionFeedback && <p className="seo-meta mt-4 font-bold text-accent" role="status" aria-live="polite">{actionFeedback}</p>}<div className="mt-7 flex flex-wrap gap-3"><button type="button" onClick={() => void toggleFavorite()} disabled={favoriteSaving} aria-pressed={isFavorite} className="seo-action seo-focus border border-border bg-white text-ink/70 hover:border-rose-200 hover:text-rose-700 disabled:cursor-wait disabled:opacity-60">{favoriteSaving ? <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" /> : <Heart className={isFavorite ? 'h-4 w-4 fill-current text-rose-600' : 'h-4 w-4'} aria-hidden="true" />}{isFavorite ? labels.saved : labels.favorite}</button></div></div></SeoHero>
 
