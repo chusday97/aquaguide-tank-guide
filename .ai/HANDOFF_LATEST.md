@@ -1,5 +1,12 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-13 最新代码收口
+
+- `a496d159` 将公开 SEO 加载骨架的装饰性节点标记为 `aria-hidden="true"`，保留状态提示的辅助技术语义；结构测试、lint 和 diff-check 通过，证据为 `EVD-20260913-123`。
+- 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 保持原样。
+- 页面继续 `noindex,follow`；600px 真实视口、可读 Critic、Figma Canonical 和发布门禁仍未完成。
+
+
 ## 2026-09-13 当前权威快照（`53780fa0`）
 
 - 当前分支：`codex/species-seo-preview-v1`。

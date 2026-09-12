@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "project_id": "PRJ-aquaguide",
-  "updated_at": "2026-09-13T22:30:00+08:00",
+  "updated_at": "2026-09-13T22:45:00+08:00",
   "evidence_items": [
     {"id":"EVD-20260715-001","type":"commit","locator":"917b80a","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"今日行动、水族册独立地址与生命纪念回流"},
     {"id":"EVD-20260715-002","type":"test","locator":"npm run lint; npm run build; 1280/390 browser regression","date":"2026-07-15","version":"917b80a","accessible":true,"sensitive":false,"notes":"类型、构建和直达行为验证"},
@@ -409,6 +409,7 @@
     {"id":"EVD-20260913-119","type":"independent-critic-latest-version-in-progress","locator":"Codex Critic thread 01a05275-2b85-76f2-9e84-98bbb04617d5; latest turn 01a096b1-5fac-7f33-b11e-27eb488bb3ce; wait_threads cursor f357247b-f654-4374-a28e-3376dbb402b3:15","date":"2026-09-13","version":"b2de6ab0","accessible":true,"sensitive":false,"notes":"既有只读Critic已收到最新HEAD b2de6ab0的复验请求，明确要求六维可读报告并排除三个用户未提交文件；记录时线程仍为inProgress，尚未产生正文。"},
     {"id":"EVD-20260913-120","type":"independent-critic-latest-version-empty-output","locator":"Codex Critic thread 01a05275-2b85-76f2-9e84-98bbb04617d5; latest turn 01a096b1-5fac-7f33-b11e-27eb488bb3ce; read_thread","date":"2026-09-13","version":"b2de6ab0","accessible":true,"sensitive":false,"notes":"同一只读Critic在完成最新HEAD b2de6ab0复验后返回items为空且没有可读assistant正文。该结果只能记录为独立审查基础设施阻塞，不能计为六维审查通过；不创建重复线程、不解除noindex。"},
     {"id":"EVD-20260913-121","type":"local-browser-viewport-control-blocker","locator":"Codex内置Chrome tab 415682722; http://127.0.0.1:3000/species/sp_0001; tab.playwright.evaluate(window.resizeTo)","date":"2026-09-13","version":"c91d3d27","accessible":true,"sensitive":false,"notes":"尝试在当前内置Chrome标签页通过页面脚本获取600px真实视口时，浏览器隔离上下文中的window.resizeTo不存在并抛出TypeError；页面随后仍保持原桌面视口并正常读取，未修改页面状态。该结果说明当前内置标签页不能用脚本调整视口，不计为600px验收通过，也不代表页面响应式失败。"},
-    {"id":"EVD-20260913-122","type":"local-species-asset-preview-review","locator":"Codex内置浏览器 tab 1; http://127.0.0.1:3000/species/sp_0432?assetPreview=1; Hero media screenshot","date":"2026-09-13","version":"c91d3d27","accessible":true,"sensitive":false,"notes":"宝莲灯本地审核预览实际显示项目内透明物种图；移动端Hero容器稳定，鱼体主体可见且未被裁切，图片与中文页面结构正常。普通公开访问仍受asset binding门禁限制并显示回退；本证据只确认渲染预览，不代表Hero或variant-card用途已批准，不进入Published聚合。"}
+    {"id":"EVD-20260913-122","type":"local-species-asset-preview-review","locator":"Codex内置浏览器 tab 1; http://127.0.0.1:3000/species/sp_0432?assetPreview=1; Hero media screenshot","date":"2026-09-13","version":"c91d3d27","accessible":true,"sensitive":false,"notes":"宝莲灯本地审核预览实际显示项目内透明物种图；移动端Hero容器稳定，鱼体主体可见且未被裁切，图片与中文页面结构正常。普通公开访问仍受asset binding门禁限制并显示回退；本证据只确认渲染预览，不代表Hero或variant-card用途已批准，不进入Published聚合。"},
+    {"id":"EVD-20260913-123","type":"public-seo-loading-a11y-fix","locator":"src/components/seo/PublicSeoShell.tsx; scripts/test-public-seo-structure.mjs; npm run test:public-seo-structure; npm run lint; git diff --check","date":"2026-09-13","version":"a496d159","accessible":true,"sensitive":false,"notes":"公开SEO加载骨架的装饰性面包屑、媒体框和文字轮廓均标记为aria-hidden=true；role=status、aria-live、aria-busy和可见准备提示仍保留。结构测试、TypeScript/lint和diff-check通过；未改变路由、数据、metadata、JSON-LD或noindex，用户的三个未提交文件未触碰。"}
   ]
 }

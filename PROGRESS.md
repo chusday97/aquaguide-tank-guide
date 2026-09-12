@@ -1665,3 +1665,8 @@
 
 - [x] 1451px 本地桌面视口真实加载 Species：Hero 图片、双列身份区、章节导航和中文内容正常；`h1=1`、`scrollWidth=1443`、公开 Shell 存在、robots 为 `noindex,follow`，证据为 `EVD-20260913-116`。
 - [ ] 600px 平板独立视口仍待可复核的浏览器能力；不把桌面证据扩大为平板通过。
+## 2026-09-13 加载态无障碍收口（`a496d159`）
+
+- [x] 公开 SEO 加载骨架的装饰性面包屑、媒体框和文字轮廓均标记为 `aria-hidden="true"`；`role="status"`、`aria-busy` 和可见准备提示仍保留给辅助技术，避免重复朗读装饰内容。
+- [x] `test:public-seo-structure`、lint 和 diff-check 通过；未改变路由、数据、metadata、JSON-LD 或 `noindex,follow`，证据为 `EVD-20260913-123`。
+- [ ] 600px 独立运行时、可读独立 Critic、Figma Canonical 和索引发布门禁仍未完成。

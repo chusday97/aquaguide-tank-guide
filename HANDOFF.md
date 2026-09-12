@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 加载态无障碍修复（`a496d159`）
+
+- 公开 SEO 加载骨架的装饰性形状现在对辅助技术隐藏；状态提示仍通过 `role=status`、`aria-live` 和 `aria-busy` 保持可感知。
+- 结构测试、TypeScript/lint 和 diff-check 已通过，证据为 `EVD-20260913-123`。
+- 用户的三个未提交文件未触碰、未暂存、未提交；页面继续 `noindex,follow`。
+
 ## 2026-09-13 Critic 最新复验状态
 
 - 既有 Critic 线程已针对最新 HEAD `b2de6ab0` 收到只读六维复验请求，证据为 `EVD-20260913-119`。
