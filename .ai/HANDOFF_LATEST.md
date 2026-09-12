@@ -12,6 +12,7 @@
 - 公开 Species 收藏已改为仅使用本地 `toggleSpeciesFavorite`；不再通过应用 Repository 读取登录、鱼缸或 Supabase 状态，应用页面行为不变，证据为 `EVD-20260912-043`。
 - 内置 Chrome 实际复核分类 → Species → 返回链路：返回后 URL 和标题恢复为 `/category/shrimp-snails-crabs` 与“虾螺蟹｜AquaGuide 物种分类”，证据为 `EVD-20260912-044`。
 - 同一只读 Critic 已针对当前 `d4b84d15` 完成复验，但仍返回空 `items`、无可读正文；按门禁不能计为六维审查通过，记录为 `EVD-20260912-045`，不创建重复线程。
+- 内置 Chrome 实际复核黄金米虾品系 → 兼容工具 → 返回链路：品系继承内容、黄色差异、18–28°C 参数、物种 ID/来源参数和返回后的 URL/标题均正确，证据为 `EVD-20260912-046`。
 
 ## 最新静态验证
 
