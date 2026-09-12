@@ -463,6 +463,29 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed ember-tetra aliases share authority and override legacy temperature plus group context',
+    run: () => {
+      const ember = fishData.find(item => item.id === 'sp_0114');
+      const emberAlias = fishData.find(item => item.id === 'sp_0469');
+      if (!ember || !emberAlias) return false;
+      const underGrouped = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '45', width: '30', height: '31' }, targetTemperature: '22' }),
+        candidateSpecies: ember,
+        candidateQuantity: 4,
+      });
+      const fullGroup = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '45', width: '30', height: '31' }, targetTemperature: '22' }),
+        candidateSpecies: emberAlias,
+        candidateQuantity: 8,
+      });
+      return underGrouped.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underGrouped.blockingRules.every(rule => rule.code !== 'tank_temperature_conflict')
+        && fullGroup.warningRules.every(rule => rule.code !== 'minimum_group_not_met')
+        && fullGroup.metadata.domainStatus !== 'insufficient_data'
+        && fullGroup.evidenceIds?.includes('seriouslyfish-hyphessobrycon-amandae');
+    },
+  },
+  {
     name: 'reviewed cherry-barb authority overrides legacy 40L catalog and enforces six-fish group context',
     run: () => {
       const cherryBarb = fishData.find(item => item.id === 'sp_0012');

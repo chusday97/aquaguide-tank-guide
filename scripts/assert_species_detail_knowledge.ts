@@ -181,6 +181,31 @@ assert.equal(cherryBarbSources.length, 2);
 assert.ok(cherryBarbSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(cherryBarbSources.some(source => source.publisher === 'FishBase'));
 
+const emberKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0114',
+  name: '红莲灯',
+  scientificName: 'Hyphessobrycon amandae',
+  waterTemperature: '24-29°C',
+  phLevel: '5.0-7.0',
+  tankSize: '至少 30 升',
+});
+assert.deepEqual(emberKnowledge.facts.temperatureRange, { min: 20, max: 28 });
+assert.deepEqual(emberKnowledge.facts.phRange, { min: 5, max: 7 });
+assert.deepEqual(emberKnowledge.knowledge.environment?.hardnessDgh, { min: 1, max: 10 });
+assert.equal(emberKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
+assert.deepEqual(emberKnowledge.knowledge.socialBehavior?.recommendedGroupSize, { min: 8, max: 10 });
+assert.equal(emberKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 2);
+assert.equal(emberKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 41);
+assert.equal(emberKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 45);
+assert.equal(emberKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
+const emberAliasKnowledge = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0469', scientificName: 'Hyphessobrycon amandae' });
+assert.equal(emberAliasKnowledge, getReviewedSpeciesKnowledgeForFish({ id: 'sp_0114', scientificName: 'Hyphessobrycon amandae' }), 'duplicate Ember-tetra catalog aliases must share one reviewed biological knowledge object');
+const emberSources = resolveKnowledgeSources(emberKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(emberSources.length, 2);
+assert.ok(emberSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(emberSources.some(source => source.publisher === 'FishBase'));
+
 const harlequinKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0468',

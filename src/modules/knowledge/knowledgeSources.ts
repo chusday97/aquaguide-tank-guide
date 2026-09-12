@@ -1,6 +1,22 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-hyphessobrycon-amandae': {
+    id: 'seriouslyfish-hyphessobrycon-amandae',
+    title: 'Hyphessobrycon amandae (Ember Tetra)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/hyphessobrycon-amandae',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-hyphessobrycon-amandae': {
+    id: 'fishbase-hyphessobrycon-amandae',
+    title: 'Hyphessobrycon amandae (Ember tetra) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Hyphessobrycon-amandae.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'aquariumhq-neocaridina-davidi': {
     id: 'aquariumhq-neocaridina-davidi',
     title: 'Cherry shrimp (Neocaridina davidi) care and compatibility',

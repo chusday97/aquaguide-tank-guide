@@ -4,7 +4,60 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const emberTetraKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成熟后可通过体色与腹部轮廓辅助判断',
+    summary: '成熟公鱼通常颜色更强，尤其繁殖状态更明显；母鱼腹部通常更圆。',
+    points: ['公鱼：成熟后体色通常更强。', '母鱼：成熟后腹部通常更圆。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    maleTraits: ['成熟后体色通常更强'],
+    femaleTraits: ['成熟后腹部通常更圆'],
+    limitations: ['仅作为成熟个体辅助特征，幼鱼或状态变化时不要据此做确定判断。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-hyphessobrycon-amandae'], reviewedAt: '2026-09-13' },
+  },
+  reproduction: {
+    mode: 'egg_scatterer',
+    plainLanguageLabel: '散卵型',
+    summary: '散卵繁殖且没有亲代照护；繁殖布置通常用网格、细叶植物或产卵拖把让鱼卵与成鱼分离。',
+    fertilization: 'external',
+    parentalCare: 'none',
+    parentFryRisk: ['没有亲代照护，繁殖时应让鱼卵尽快与成鱼分离。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-hyphessobrycon-amandae'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 20, max: 28 },
+    phRange: { min: 5.0, max: 7.0 },
+    hardnessDgh: { min: 1, max: 10 },
+    notes: ['Reviewed 水质范围优先于旧 catalog 的 24–29°C；长期保持稳定、偏软到中等硬度的淡水环境。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-hyphessobrycon-amandae', 'fishbase-hyphessobrycon-amandae'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 8,
+    recommendedGroupSize: { min: 8, max: 10 },
+    territoriality: 'none',
+    finNipping: 'none',
+    predationRisk: 'low',
+    summary: '非常温和的小型群游鱼；建议至少 8–10 条，数量足够时更不胆怯、群游表现也更自然。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-hyphessobrycon-amandae'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 2, measurement: 'SL' },
+    minVolumeLiters: 41,
+    minTankLengthCm: 45,
+    activityLevel: 'medium',
+    needsCover: true,
+    spaceNotes: ['长期群养按至少 45 × 30 cm 缸底、约 41 L 规划；这是空间规划参考，不是硬阈值。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-hyphessobrycon-amandae', 'fishbase-hyphessobrycon-amandae'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0114: emberTetraKnowledge,
+  sp_0469: emberTetraKnowledge,
   sp_0011: {
     sexIdentification: {
       title: '成体公鱼可通过交接器识别',

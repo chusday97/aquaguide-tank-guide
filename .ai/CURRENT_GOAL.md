@@ -1,4 +1,11 @@
 # Current Goal
+## Ember tetra reviewed-authority checkpoint — 2026-09-13
+- Added one canonical biological taxon `Hyphessobrycon amandae` across two exact catalog aliases: `sp_0114` 红莲灯 and `sp_0469` 喷火灯.
+- Both aliases share one Species Knowledge V2 object and identical reviewed Compatibility facts; canonical coverage counts them once, while runtime/Admin keeps two exact-ID Profiles for auditability.
+- Canonical priority coverage: 16 taxa / 240 ordered directions = 208 caution, 30 not_recommended, 2 compatible; no new unconditional green-light direction.
+- Runtime/Admin reviewed baseline: 19 Profiles / 5 Pair Rules. Additive migration `202609120005_compatibility_ember_tetra_baseline.sql` is repository authority only and is not applied to Staging/Production.
+- Full Product/Admin/runtime/build/browser validation is green through GP001–GP004.
+
 ## Main follow-up absorbed — Local File asset-pair rollback (2026-09-13)
 - Latest main commits `f2087f26` / `9a6855da` close Local File asset blob+metadata transaction gaps: failed metadata writes restore/remove the blob; failed metadata deletes restore the prior blob.
 - Main docs checkpoint `af03864d` records this DEV-only reliability closure.
@@ -38,7 +45,7 @@ Continue Aqua Product Recovery P1 Species Knowledge V2 coverage expansion withou
 Domain compatibility, legacy facade, evidence coverage, visual actions, TypeScript, build, Compatibility beginner-action browser E2E, and GP001-GP004 must pass before checkpoint push.
 
 ## Next
-Continue canonical high-frequency Species Knowledge V2 expansion after the Harlequin checkpoint. Prefer a genuinely new taxon with reliable environment/space/social evidence; keep runtime/Admin/Git authority in lockstep and add only additive migrations. Do not widen ranges or invent unsupported biology.
+Continue distinct canonical taxon expansion only after the Ember-tetra checkpoint is pushed and current remote main / PR #149 are revalidated. Prefer evidence-complete standard species; duplicate catalog aliases must share biological facts without inflating canonical coverage. Keep runtime/Admin/Git authority in lockstep and use additive migrations only.
 
 ## Base-species inheritance checkpoint
 - Runtime reviewed authority now resolves exact species ID first, then an explicit base-species key derived from scientific name.

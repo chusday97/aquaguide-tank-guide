@@ -134,6 +134,24 @@ const cherryBarbFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const emberTetraSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-hyphessobrycon-amandae',
+  title: 'Hyphessobrycon amandae (Ember Tetra)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/hyphessobrycon-amandae',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const emberTetraFishBase: EvidenceSourceDto = {
+  id: 'fishbase-hyphessobrycon-amandae',
+  title: 'Hyphessobrycon amandae (Ember tetra) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Hyphessobrycon-amandae.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const harlequinSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-trigonostigma-heteromorpha',
   title: 'Trigonostigma heteromorpha (Harlequin)',
@@ -378,7 +396,21 @@ const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile => ({
+  speciesId,
+  waterType: 'freshwater',
+  behaviorTraits: ['shoaling', 'peaceful'],
+  minimumGroupSize: 8,
+  predationTargets: [],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [emberTetraSeriouslyFish, emberTetraFishBase],
+  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+});
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0114: makeEmberTetraProfile('sp_0114'),
+  sp_0469: makeEmberTetraProfile('sp_0469'),
   sp_0012: {
     speciesId: 'sp_0012',
     waterType: 'freshwater',

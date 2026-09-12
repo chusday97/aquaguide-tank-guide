@@ -14,6 +14,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',
   '202609120004_compatibility_cherry_barb_baseline.sql',
+  '202609120005_compatibility_ember_tetra_baseline.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [

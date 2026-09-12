@@ -1,9 +1,16 @@
 # Aqua Product Recovery Status
 
-Updated: 2026-09-11
+Updated: 2026-09-13
 Active branch: `product-recovery-20260911`
-Base: `main` @ `d3c70dee633ed4e24bbca161d138a832012b1d40`
+Base: current aligned `main` @ `af03864d13a920442a736326aac9ceb084f3c435`
 Draft PR: #149
+
+## Current reviewed-authority checkpoint — 2026-09-13
+- Pre-checkpoint Git relation: main-only 0 / recovery-only 51; recovery already contains current main.
+- Canonical Compatibility progress: 16 biological taxa / 240 ordered directions = 208 caution, 30 not_recommended, 2 compatible.
+- Runtime/Admin exact-ID baseline: 19 reviewed Profiles / 5 reviewed Pair Rules. Duplicate catalog aliases are not counted as extra taxa.
+- Latest additive authority migration: `202609120005_compatibility_ember_tetra_baseline.sql`; no Product Recovery migration is authorized for Staging/Production yet.
+- Full build and GP001–GP004 are green on the checkpoint candidate.
 
 ## Branch authority
 - `product-recovery-20260911` is the only active Aqua product recovery branch for this effort.

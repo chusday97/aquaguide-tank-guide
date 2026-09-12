@@ -1,4 +1,11 @@
 # Handoff Latest
+## Ember tetra reviewed-authority checkpoint — 2026-09-13
+- Added `Hyphessobrycon amandae` as the 16th canonical priority taxon. Catalog aliases `sp_0114` / `sp_0469` share one biological Species Knowledge authority but retain two identical exact-ID runtime Profiles.
+- Canonical coverage: 16 taxa / 240 ordered directions = 208 caution, 30 not_recommended, 2 compatible.
+- Runtime/Admin baseline: 19 Profiles / 5 Pair Rules; Git runtime snapshot matches.
+- New additive migration: `202609120005_compatibility_ember_tetra_baseline.sql`; not applied to Staging/Production.
+- Full build, Species Detail, Compatibility Beginner Action, GP001–GP004, Admin contract, Git/DB runtime, Staging preflight and Local File Admin all PASS.
+
 ## Main follow-up absorbed — Local File asset-pair transaction closure (2026-09-13)
 - Absorbed `f2087f26`, `9a6855da`, and `af03864d` from main. Local asset blob + metadata writes/deletes now roll back cleanly on the second-half failure path.
 - Product Recovery remains the active authority in this worktree; canonical Admin main remains `/Users/chuchu/aquaguide-main`.

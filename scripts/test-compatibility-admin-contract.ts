@@ -188,7 +188,25 @@ for (const source of cherryBarbProfile.citations) assert.equal(cherryBarbMigrati
 assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile drift:/g) || []).length, 1);
 assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile evidence drift:/g) || []).length, 1);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012']);
+const emberTetraMigration = readFileSync('supabase/migrations/202609120005_compatibility_ember_tetra_baseline.sql', 'utf8');
+assert.match(emberTetraMigration, /Compatibility ember-tetra baseline is partial or not fully published/, 'ember-tetra baseline must fail closed on partial published alias coverage.');
+const emberTetraProfileKeys = ['sp_0114','sp_0469'];
+const emberTetraProfiles = audit.reviewedProfiles.filter(profile => emberTetraProfileKeys.includes(profile.speciesId));
+assert.equal(emberTetraProfiles.length, 2, '120005 must own both exact Ember-tetra catalog aliases.');
+for (const profile of emberTetraProfiles) {
+  assert.equal(emberTetraMigration.includes(profile.speciesId), true, `ember-tetra migration must include Profile ${profile.speciesId}`);
+  for (const source of profile.citations) assert.equal(emberTetraMigration.includes(source.id), true, `ember-tetra migration must include source ${source.id}`);
+}
+const normalizeEmberProfile = (profile: (typeof emberTetraProfiles)[number]) => ({
+  behaviorTraits: profile.behaviorTraits, minimumGroupSize: profile.minimumGroupSize, predationTargets: profile.predationTargets,
+  confidence: profile.confidence, reviewStatus: profile.reviewStatus, requiredFacts: profile.requiredFacts,
+  citationIds: profile.citations.map(source => source.id).sort(),
+});
+assert.deepEqual(normalizeEmberProfile(emberTetraProfiles[0]), normalizeEmberProfile(emberTetraProfiles[1]), 'duplicate Ember-tetra catalog aliases must expose identical reviewed Compatibility facts.');
+assert.equal((emberTetraMigration.match(/Compatibility ember-tetra profile drift:/g) || []).length, 2);
+assert.equal((emberTetraMigration.match(/Compatibility ember-tetra profile evidence drift:/g) || []).length, 2);
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 
