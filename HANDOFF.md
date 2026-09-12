@@ -1346,3 +1346,8 @@
 - 当前本地公开契约、收藏隔离、证据指纹、结构、lint、build、diff-check 均通过，证据为 `EVD-20260913-100`。
 - 远端跟踪分支仍为 `93f199c1`，本地领先 205 个提交；因此托管 Preview 仍是旧版本，不能用于当前验收。未再次推送，未修改 Production。
 - 下一步：网络/远端状态可确认后，先完成远端与部署 SHA parity；在此之前继续使用本地/内置浏览器证据，不宣称 Preview 或最终验收通过。
+## 2026-09-13 Preview 分支已同步
+
+- GitHub 提交历史确认 `codex/species-seo-preview-v1` 最新提交为 `915bb0e7`，与本地最新已提交 HEAD 一致，证据为 `EVD-20260913-101`。
+- 这是非生产 Preview 分支；未修改 `main`、Production Supabase 或生产部署。用户的三个未提交文件未纳入推送。
+- 下一步：等待 Vercel 为 `915bb0e7` 生成部署并核对部署 SHA；只有 SHA 一致后，才使用托管 Preview 做六条公开路由的真实验收。

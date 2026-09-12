@@ -1558,3 +1558,8 @@
 - [x] 当前 HEAD 重跑公开契约、收藏隔离、证据指纹、公开结构、TypeScript/lint、build 和 diff-check 均通过；build 仅有既有 chunk/font 体积警告，证据为 `EVD-20260913-100`。
 - [ ] 仍未完成：当前 HEAD 的托管 Preview parity、系统 Chrome 多视口、可读独立 Critic、Figma Canonical 和索引发布门禁；页面继续 `noindex,follow`。
 - [ ] 用户未提交的三个脚本/数据文件保持未暂存、未提交，未触碰。
+## 2026-09-13 Preview 分支同步完成（`915bb0e7`）
+
+- [x] 非生产分支 `codex/species-seo-preview-v1` 已推送；GitHub 提交历史确认远端最新提交为 `915bb0e7`，与本地已提交 HEAD 一致，证据为 `EVD-20260913-101`。
+- [ ] Vercel 尚未核对到同一 SHA 的新部署；托管页面验收、可读独立 Critic、Figma Canonical 和索引发布门禁仍未完成。
+- [ ] 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 继续保持未暂存、未提交。

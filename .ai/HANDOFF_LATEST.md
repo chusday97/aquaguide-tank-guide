@@ -328,3 +328,7 @@
 - 当前 HEAD `b0bffe59` 的公开契约、收藏隔离、证据指纹、结构、lint、build 和 diff-check 已通过，证据为 `EVD-20260913-100`。
 - 远端 `origin/codex/species-seo-preview-v1` 仍指向 `93f199c1`，本地领先 205 个提交；托管 Preview 版本不匹配，继续保持发布阻塞。
 - 不重复推送或启动已知受 MachPort 阻塞的系统浏览器；下一步先读取远端/部署 SHA，再决定非生产 Preview 同步动作。
+## 2026-09-13 Preview 同步结果
+
+- GitHub 已确认远端 `codex/species-seo-preview-v1` 指向 `915bb0e7`，与本地已提交 HEAD 一致，证据为 `EVD-20260913-101`。
+- 下一步只核对 Vercel 部署是否为同一 SHA；未确认部署前不把托管页面当作当前实现，不解除 `noindex,follow`。
