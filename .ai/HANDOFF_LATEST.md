@@ -1,5 +1,18 @@
 # AquaGuide Species SEO 当前交接
 
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `5aab183c`。
+
+## 当前有效结论
+
+- 内置浏览器已完成首页、分类、未发布 Guide 和三条 Species 路径的 390/600/1440px 结构复核；公开文档滚动问题已修复。
+- Evidence、Public Contract、Responsive Contract、lint、build 和 diff-check 已通过；页面继续 `noindex,follow`。
+- 系统 Chrome 自动化仍受 macOS MachPort/SIGABRT 阻塞；独立 Critic 最新复验返回空正文；Figma Canonical 仍等待 Starter 配额。
+- 用户未提交的三个文件保持原样，不能覆盖或代提交。
+
+## 当前下一步
+
+只在 Critic 可返回正文后做一次当前 SHA 只读复验；系统 Chrome 恢复后只补一次自动化回归；Figma 配额恢复后批量完成 Canonical 模板。全部完成前不解除索引、不部署生产。
+
 更新时间：2026-09-10
 
 ## 当前目标

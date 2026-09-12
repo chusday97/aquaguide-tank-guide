@@ -1,3 +1,38 @@
+# AquaGuide Species SEO 当前有效快照
+
+更新时间：2026-09-12
+
+## 当前目标
+
+持续收口公开 SEO 系统：统一中文公开页面的视觉与交互，维护物种内容证据、素材 fingerprint 和 Base/Variant 继承，在浏览器回归、可读独立 Critic、Figma Canonical 与发布门禁全部通过前保持 `noindex,follow`。
+
+## 当前已验证
+
+- 公开滚动根因已修复；首页、分类、Species 三条路径和未发布 Guide 已由内置浏览器在 390/600/1440px 复核。
+- 公开页面无横向溢出、单一 H1、参数带 2/3/6 列、公开 Header 存在、应用侧栏/底栏不存在，且保持 `noindex,follow`。
+- 分类 → Species → 品系 → 返回链路已实测；JSON-LD 与 Guide fail-closed 门禁已复核。
+- Evidence、Public Contract、Responsive Contract、Editorial、lint、build 和 diff-check 已通过；最新文档证据提交为 `5c435f65`，authority 校准提交为 `5aab183c`。
+
+## 当前阻塞与边界
+
+- 系统 Chrome 自动化仍受 macOS MachPort/SIGABRT 阻塞；内置浏览器证据不等同于系统 Chrome 通过。
+- 独立 Critic 最新复验返回空正文，不能认定六维审查通过；不创建重复 Critic。
+- Figma Canonical 模板尚未完成，Starter 配额恢复前不调用 Figwright。
+- reduced-motion、性能指标和完整失败状态仍未形成完整门禁证据。
+- 不修改 `main`、Production Supabase 或生产部署；不解除 `noindex`。
+
+## 工作树注意
+
+- 当前分支：`codex/species-seo-preview-v1`；HEAD：`5aab183c`。
+- 以下用户未提交文件保持原样，未暂存、未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+
+## 下一步
+
+1. 等 Critic 输出能力恢复后，对当前 SHA 做一次只读六维复验。
+2. 系统 Chrome 权限恢复后只补一次自动化回归，不重复启动已知失败通道。
+3. Figma 配额恢复后集中完成四类公开 SEO Desktop/Mobile Canonical 模板。
+4. 最后进行关键词归属、Canonical、结构化数据、Sitemap 和用户批准的非生产索引候选。
+
 ## 2026-09-09 Species SEO 干净 Preview 候选
 
 - 远端状态：Draft PR #147 的稳定提交为 `01d71f12`；`foundation`、`validate`、Vercel、Cloudflare 和 GP-001…GP-005 全部通过，PR 保持 Draft，未合并。
