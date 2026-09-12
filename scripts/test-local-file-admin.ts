@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import type { AddressInfo } from 'node:net';
@@ -115,6 +115,23 @@ try {
   const backups = await requestJson(started.base, '/backups');
   assert.equal(backups.response.status, 200);
   assert.equal(backups.payload.data.backups[0].id, backupId);
+
+  // A mid-copy filesystem failure must not leave a hidden partial backup directory.
+  const blobPath = path.join(root, 'assets', `${assetId}.blob`);
+  const backupEntriesBeforeFailure = (await readdir(path.join(root, 'backups'))).sort();
+  let failedBackup: Awaited<ReturnType<typeof requestJson>>;
+  await chmod(blobPath, 0o000);
+  try {
+    failedBackup = await requestJson(started.base, '/backups', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'forced-copy-failure' }),
+    });
+  } finally {
+    await chmod(blobPath, 0o600);
+  }
+  assert.equal(failedBackup.response.status, 500);
+  assert.equal(failedBackup.payload.error.code, 'INTERNAL_ERROR');
+  assert.deepEqual((await readdir(path.join(root, 'backups'))).sort(), backupEntriesBeforeFailure,
+    'Failed backup must remove its partial backup directory.');
 
   const changedState = { ...businessState, species: [{ id: 'changed-after-backup' }], updatedAt: 'changed' };
   assert.equal((await putState(started.base, 'business', changedState)).response.status, 200);
