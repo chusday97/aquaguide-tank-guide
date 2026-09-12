@@ -1,3 +1,8 @@
+## 2026-09-12 图片终态修复后完整回归
+
+- [x] Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、Typography、lint、build 和 diff-check 全部通过；证据为 `EVD-20260912-049`。
+- [ ] 系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 图片失败终态收口（`929dc011`）
 
 - [x] `ResilientImage` 增加普通图片的终态失败状态：原图、重试地址和占位图均失败时显示“图片暂不可用”，避免空白或继续失败；透明场景行为保持不变。
