@@ -59,6 +59,7 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
   const hasFinNippingGroupPressure = codes.has('fin_nipping_group_pressure');
   const hasFinNippingTargetVulnerability = codes.has('fin_nipping_target_vulnerability');
   const hasPredationVulnerability = codes.has('predation_vulnerability_context');
+  const hasTerritorialPressure = codes.has('territorial_pressure_context');
 
   if (decision.status === 'not_recommended') {
     return {
@@ -93,6 +94,16 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
         primaryReason: firstText(decision.warningRules.filter(rule => rule.code === 'predation_vulnerability_context'), '组合中存在对鱼类捕食较脆弱的无脊椎动物。'),
         observeAfterAction: '重点看持续追逐、啄咬、虾长期躲藏不出和数量异常减少；出现任一情况就分隔。',
         detailsLabel: '为什么要先确认？',
+      };
+    }
+    if (hasTerritorialPressure) {
+      return {
+        verdict: 'add_with_conditions',
+        headline: '先处理领地压迫风险',
+        immediateAction: '先保证有足够的可用空间、遮挡和退让路线，并准备可立即分隔的方案；不要因为暂时没有追逐就直接判定长期安全。',
+        primaryReason: firstText(decision.warningRules.filter(rule => rule.code === 'territorial_pressure_context'), '一方有明显领地行为，另一方是低领地或非领地型物种。'),
+        observeAfterAction: '重点看持续追逐、堵在角落、进食受阻和长期躲藏；出现持续异常就分隔。',
+        detailsLabel: '为什么要先处理领地风险？',
       };
     }
     if (hasFinNippingTargetVulnerability) {

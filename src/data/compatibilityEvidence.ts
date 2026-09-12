@@ -98,6 +98,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const platySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-xiphophorus-maculatus',
+  title: 'Xiphophorus maculatus (Platy)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/xiphophorus-maculatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const platyFishBase: EvidenceSourceDto = {
+  id: 'fishbase-xiphophorus-maculatus',
+  title: 'Xiphophorus maculatus (Southern platyfish) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Xiphophorus_maculatus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const neonTetraFishBase: EvidenceSourceDto = {
   id: 'fishbase-paracheirodon-innesi',
   title: 'Paracheirodon innesi (Neon tetra) species summary',
@@ -280,6 +298,16 @@ const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
 };
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0011: {
+    speciesId: 'sp_0011',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [platySeriouslyFish, platyFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
   sp_0014: {
     speciesId: 'sp_0014',
     waterType: 'freshwater',

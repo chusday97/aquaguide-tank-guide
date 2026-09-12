@@ -419,6 +419,49 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed territorial fish creates caution for reviewed peaceful platy',
+    run: () => {
+      const territorial = makeFish({
+        id: 'sp_0021', name: '迷你鹦鹉鱼', scientificName: 'Amatitlania nigrofasciata var.',
+        temperament: 'Aggressive', size: 'Medium',
+      });
+      const platy = makeFish({
+        id: 'sp_0011', name: '月光鱼', scientificName: 'Xiphophorus maculatus',
+        waterTemperature: '20-28°C', phLevel: '7.0-8.5', tankSize: '至少 48 升',
+        temperament: 'Peaceful', size: 'Small',
+      });
+      const result = evaluateCompatibilityDecision({
+        tank: makeTank({ targetTemperature: '24', dimensions: { length: '80', width: '40', height: '40' } }),
+        items: [{ species: territorial, quantity: 1 }, { species: platy, quantity: 2, origin: 'candidate' }],
+      });
+      return result.status === 'caution'
+        && result.warningRules.some(rule => rule.code === 'territorial_pressure_context')
+        && result.blockingRules.every(rule => rule.code !== 'territorial_pressure_context');
+    },
+  },
+  {
+    name: 'reviewed platy environment overrides broader legacy catalog temperature',
+    run: () => {
+      const platy = makeFish({
+        id: 'sp_0011',
+        name: '月光鱼',
+        scientificName: 'Xiphophorus maculatus',
+        waterTemperature: '20-28°C',
+        phLevel: '7.0-8.5',
+        tankSize: '至少 48 升',
+        temperament: 'Peaceful',
+        size: 'Small',
+      });
+      const result = evaluateCompatibilityDecision({
+        tank: makeTank({ targetTemperature: '27', dimensions: { length: '60', width: '30', height: '30' } }),
+        items: [{ species: platy, quantity: 2, origin: 'candidate' }],
+      });
+      return result.status === 'not_recommended'
+        && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && result.evidenceIds?.includes('seriouslyfish-xiphophorus-maculatus');
+    },
+  },
+  {
     name: 'white cloud reviewed V2 group size overrides legacy five-fish fallback',
     run: () => {
       const whiteCloud = makeFish({

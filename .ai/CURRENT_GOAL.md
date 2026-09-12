@@ -18,7 +18,7 @@ Continue Aqua Product Recovery P1 Species Knowledge V2 coverage expansion withou
 Domain compatibility, legacy facade, evidence coverage, visual actions, TypeScript, build, Compatibility beginner-action browser E2E, and GP001-GP004 must pass before checkpoint push.
 
 ## Next
-The Compatibility-reviewed → Species Knowledge V2 authority gap is now zero for catalog fish. Reassess the next canonical high-frequency cohort using reviewed external evidence; add a new taxon only when it improves decision quality, and keep unsupported fields unknown/absent.
+Continue canonical high-frequency Species Knowledge V2 expansion using the reviewed environment authority path. Prefer a genuinely new taxon with reliable water/space/behavior evidence; do not widen catalog ranges when reviewed evidence is narrower, and keep unsupported fields unknown/absent.
 
 ## Base-species inheritance checkpoint
 - Runtime reviewed authority now resolves exact species ID first, then an explicit base-species key derived from scientific name.
@@ -81,3 +81,10 @@ The Compatibility-reviewed → Species Knowledge V2 authority gap is now zero fo
 - `Channa asiatica var.*` now inherits the same reviewed biological authority, including the existing hard small-fish predation boundary.
 - Added a regression audit requiring every Compatibility-reviewed catalog fish to resolve to Species Knowledge V2 authority; current gap count is zero.
 - Next work must select a genuinely new canonical high-frequency taxon rather than duplicate a variant.
+
+### Current checkpoint — reviewed environment authority + Xiphophorus maculatus
+- Species Knowledge V2 now has an optional reviewed `environment` block for water type, temperature, pH and hardness evidence.
+- Compatibility prefers reviewed temperature / pH / water authority over broader legacy catalog strings when the reviewed block exists.
+- Added reviewed `Xiphophorus maculatus` (月光鱼) authority from Seriously Fish + FishBase: 20–26°C, pH 7.0–8.2, 10–30 dGH, 60 cm planning length, up to 6 cm TL, internal livebearing with 24–30 day gestation.
+- Added soft `territorial_pressure_context`: a territorial species paired with a reviewed low/non-territorial species is caution rather than an automatic green light. Hard predation / single-housing rules still outrank it.
+- Canonical priority matrix is now 10 taxa / 90 ordered directions: 70 caution, 18 not_recommended, 2 compatible. The remaining compatible pair is Xiphophorus maculatus ↔ Neritina natalensis in the audit setup.

@@ -81,6 +81,15 @@ export type SpeciesSocialKnowledge = {
   evidence: KnowledgeFieldEvidence;
 };
 
+export type SpeciesEnvironmentKnowledge = {
+  waterType?: 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+  temperatureRangeC?: { min: number; max: number };
+  phRange?: { min: number; max: number };
+  hardnessDgh?: { min: number; max: number };
+  notes?: string[];
+  evidence: KnowledgeFieldEvidence;
+};
+
 export type SpeciesSpaceKnowledge = {
   adultLengthCm?: { min?: number; max?: number; measurement?: 'SL' | 'TL' | 'unknown' };
   minVolumeLiters?: number;
@@ -113,6 +122,7 @@ export type SpeciesKnowledgeProfile = {
     sexIdentification: SpeciesSexIdentificationKnowledge;
     /** V2 blocks are optional during staged migration; absence means unknown, never inferred. */
     reproduction?: SpeciesReproductionKnowledge;
+    environment?: SpeciesEnvironmentKnowledge;
     socialBehavior?: SpeciesSocialKnowledge;
     spaceAndGrowth?: SpeciesSpaceKnowledge;
   };

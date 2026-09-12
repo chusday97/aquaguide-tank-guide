@@ -74,6 +74,28 @@ assert.ok(guppyKnowledge.knowledge.sexIdentification.maleTraits?.some(item => it
 assert.equal(guppyKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 45);
 assert.equal(guppyKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 6);
 
+const platyKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0011',
+  name: '月光鱼',
+  scientificName: 'Xiphophorus maculatus',
+  waterTemperature: '20-28°C',
+  phLevel: '7.0-8.5',
+  tankSize: '至少 48 升',
+});
+assert.deepEqual(platyKnowledge.facts.temperatureRange, { min: 20, max: 26 });
+assert.deepEqual(platyKnowledge.facts.phRange, { min: 7, max: 8.2 });
+assert.equal(platyKnowledge.knowledge.sexIdentification.confidence, 'verified');
+assert.equal(platyKnowledge.knowledge.reproduction?.mode, 'livebearer');
+assert.equal(platyKnowledge.knowledge.reproduction?.gestationOrIncubation?.minDays, 24);
+assert.equal(platyKnowledge.knowledge.environment?.hardnessDgh?.min, 10);
+assert.equal(platyKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 6);
+assert.equal(platyKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
+const platySources = resolveKnowledgeSources(platyKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(platySources.length, 2);
+assert.ok(platySources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(platySources.some(source => source.publisher === 'FishBase'));
+
 const neonKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi' });
 assert.equal(neonKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
 assert.equal(neonKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');

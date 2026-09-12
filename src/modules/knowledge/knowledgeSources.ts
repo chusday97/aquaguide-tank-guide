@@ -41,6 +41,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-xiphophorus-maculatus': {
+    id: 'seriouslyfish-xiphophorus-maculatus',
+    title: 'Xiphophorus maculatus (Platy)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/xiphophorus-maculatus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-xiphophorus-maculatus': {
+    id: 'fishbase-xiphophorus-maculatus',
+    title: 'Xiphophorus maculatus (Southern platyfish) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Xiphophorus_maculatus.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-poecilia-reticulata': {
     id: 'seriouslyfish-poecilia-reticulata',
     title: 'Poecilia reticulata (Guppy)',

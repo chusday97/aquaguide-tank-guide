@@ -216,3 +216,14 @@ Draft PR: #149
 #### Validation
 - Species Knowledge / Compatibility / Domain / Visual Results / evidence coverage / TypeScript / production build: PASS.
 - Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Reviewed environment authority + platy checkpoint
+- Added field-level reviewed environment authority (`waterType`, temperature, pH, hardness) to Species Knowledge V2.
+- Domain compatibility now prefers reviewed environment ranges over broader legacy catalog strings while leaving unreviewed species on the existing fallback path.
+- Added reviewed `Xiphophorus maculatus` knowledge/compatibility authority from Seriously Fish and FishBase.
+- Added soft one-sided territorial-pressure caution; this prevents territorial species + reviewed peaceful species from becoming false unconditional compatible results.
+- Priority canonical matrix: 10 taxa / 90 ordered directions; 70 caution, 18 not_recommended, 2 compatible.
+
+#### Validation
+- Domain / Compatibility / Species Knowledge / Visual Results / evidence coverage / TypeScript / production build: PASS.
+- Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.

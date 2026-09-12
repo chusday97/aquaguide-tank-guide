@@ -118,6 +118,16 @@ assert.equal(predationVulnerabilityAction.verdict, 'add_with_conditions');
 assert.equal(predationVulnerabilityAction.headline, '先确认鱼不会把虾当食物');
 assert.match(predationVulnerabilityAction.immediateAction, /性情温和/);
 
+const territorialPressureAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['territorial_pressure_context'],
+  { warningRules: [makeRule('territorial_pressure_context', '一方有明显领地行为，另一方是低领地或非领地型物种。')] },
+));
+assert.equal(territorialPressureAction.verdict, 'add_with_conditions');
+assert.equal(territorialPressureAction.headline, '先处理领地压迫风险');
+assert.ok(territorialPressureAction.immediateAction.includes('退让路线'));
+assert.ok(territorialPressureAction.observeAfterAction?.includes('进食受阻'));
+
 const finNippingTargetAction = buildBeginnerCompatibilityAction(actionDecision(
   'caution',
   ['fin_nipping_target_vulnerability'],

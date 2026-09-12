@@ -5,6 +5,52 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0011: {
+    sexIdentification: {
+      title: '成体公鱼可通过交接器识别',
+      summary: 'FishBase 记录公鱼具有由臀鳍特化形成的交接器；雌鱼成体体型可更大。',
+      points: ['公鱼：臀鳍特化形成交接器。', '母鱼：不具有公鱼的交接器，成体体型可更大。'],
+      confidence: 'verified',
+      source: { type: 'species_data', label: 'FishBase', confidence: 'verified' },
+      reliableFromLifeStage: 'adult',
+      maleTraits: ['臀鳍特化形成交接器'],
+      femaleTraits: ['不具有公鱼的交接器', '成体体型可更大'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['fishbase-xiphophorus-maculatus'], reviewedAt: '2026-09-12' },
+    },
+    reproduction: {
+      mode: 'livebearer',
+      plainLanguageLabel: '胎生型 / 直接产仔',
+      summary: 'FishBase 将其记录为体内受精的胎生型鱼类，常见妊娠期约 24–30 天，随后直接产下幼鱼。',
+      fertilization: 'internal',
+      parentalCare: 'unknown',
+      gestationOrIncubation: { minDays: 24, maxDays: 30, label: '常见妊娠期约 24–30 天' },
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['fishbase-xiphophorus-maculatus'], reviewedAt: '2026-09-12' },
+    },
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 20, max: 26 },
+      phRange: { min: 7.0, max: 8.2 },
+      hardnessDgh: { min: 10, max: 30 },
+      notes: ['偏好中等硬度或更硬的水；不要把旧 catalog 的更宽范围当作 reviewed 结论。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-xiphophorus-maculatus', 'fishbase-xiphophorus-maculatus'], reviewedAt: '2026-09-12' },
+    },
+    socialBehavior: {
+      mode: 'variable',
+      territoriality: 'none',
+      finNipping: 'unknown',
+      predationRisk: 'unknown',
+      summary: '总体非常温和，适合多数和平社区鱼；Seriously Fish 明确记录公鱼之间也能互相容忍，因此不设置虚构的最低群体数量。',
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-xiphophorus-maculatus'], reviewedAt: '2026-09-12' },
+    },
+    spaceAndGrowth: {
+      adultLengthCm: { max: 6, measurement: 'TL' },
+      minVolumeLiters: 54,
+      minTankLengthCm: 60,
+      activityLevel: 'medium',
+      spaceNotes: ['长期规划按至少 60 × 30 cm 缸底；约 54 L 仅作为规划参考，不做差 1 L 即失败的硬阈值。'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-xiphophorus-maculatus', 'fishbase-xiphophorus-maculatus'], reviewedAt: '2026-09-12' },
+    },
+  },
   sp_0436: {
     sexIdentification: {
       title: '成体公母较容易区分',
@@ -466,6 +512,10 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
 };
 
 export const buildSpeciesKnowledgeProfile = (fish: Fish): SpeciesKnowledgeProfile => {
+  const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
+  const reviewedEnvironment = reviewedKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.environment
+    : undefined;
   const topTags = [
     fish.category,
     fish.housingMode,
@@ -479,15 +529,15 @@ export const buildSpeciesKnowledgeProfile = (fish: Fish): SpeciesKnowledgeProfil
     category: fish.category,
     topTags,
     facts: {
-      waterType: getWaterType(fish),
-      temperatureRange: parseRange(fish.waterTemperature),
-      phRange: parseRange(fish.phLevel),
+      waterType: reviewedEnvironment?.waterType ?? getWaterType(fish),
+      temperatureRange: reviewedEnvironment?.temperatureRangeC ?? parseRange(fish.waterTemperature),
+      phRange: reviewedEnvironment?.phRange ?? parseRange(fish.phLevel),
       minVolumeLiters: parseMinLiters(fish.tankSize),
       temperament: fish.temperament || 'unknown',
       housingMode: fish.housingMode || 'unknown',
       difficulty: fish.difficulty || 'unknown',
     },
-    knowledge: getReviewedSpeciesKnowledgeForFish(fish) || {
+    knowledge: reviewedKnowledge || {
       sexIdentification: {
         title: '暂无可靠的公母辨别资料',
         summary: '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。',

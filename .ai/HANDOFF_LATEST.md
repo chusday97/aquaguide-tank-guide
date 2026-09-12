@@ -112,3 +112,11 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Added an authority-gap regression: any catalog fish with reviewed Compatibility authority but no Species Knowledge V2 authority now fails the Species Knowledge test. Current gap count: 0.
 - Verified: Species Knowledge, Compatibility, Domain, Visual Results, canonical evidence coverage, TypeScript, production build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 all PASS.
 - Next: choose the next new canonical high-frequency species from reviewed external evidence; do not add ornamental duplicates or fabricate missing fields.
+
+### P1 — Reviewed environment authority + platy checkpoint
+- Added optional Species Knowledge V2 environment authority and wired it into Domain compatibility before legacy catalog temperature/pH values.
+- `Xiphophorus maculatus` now uses reviewed Seriously Fish + FishBase evidence for environment, sexing, livebearing reproduction, social behavior and planning space.
+- Regression proves a 27°C tank is blocked for the reviewed 20–26°C platy range even though the old catalog string said 20–28°C.
+- Added `territorial_pressure_context` so one-sided territorial pressure on a reviewed peaceful fish produces caution; this fixed a false compatible result for 迷你鹦鹉鱼 ↔ 月光鱼.
+- Canonical priority coverage: 10 taxa / 90 directions = 70 caution, 18 not_recommended, 2 compatible; the compatible pair is platy ↔ nerite snail in both directions.
+- Verified: Domain, Compatibility, Species Knowledge, Visual Actions, evidence coverage, TypeScript, production build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 PASS.

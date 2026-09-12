@@ -114,6 +114,16 @@ assert.equal(territorialCaution.status, 'caution');
 assert.equal(territorialCaution.addPolicy, 'confirm');
 assert.ok(territorialCaution.ruleCodes.includes('territorial_conflict'));
 
+const oneSidedTerritorialPressure = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 25 },
+  existingSpecies: [{ ...base, id: 'territorial-source', behaviorTraits: ['territorial'], territoriality: 'high' }],
+  candidateSpecies: { ...base, id: 'peaceful-target', reviewed: true, territoriality: 'none' },
+});
+assert.equal(oneSidedTerritorialPressure.status, 'caution');
+assert.ok(oneSidedTerritorialPressure.ruleCodes.includes('territorial_pressure_context'));
+assert.ok(!oneSidedTerritorialPressure.ruleCodes.includes('territorial_conflict'));
+
 const optionalPhMissing = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 24 },

@@ -243,6 +243,21 @@ export const evaluateCompatibility = ({
       if (existingTerritorial && candidateTerritorial) {
         raise('caution', 'territorial_conflict');
       }
+      const hasTerritorialPressure = (species: DomainSpeciesFact) => (
+        species.behaviorTraits?.includes('territorial')
+        || species.territoriality === 'medium'
+        || species.territoriality === 'high'
+      );
+      const isReviewedLowTerritoryTarget = (species: DomainSpeciesFact) => (
+        species.reviewed
+        && (species.territoriality === 'none' || species.territoriality === 'low')
+      );
+      if (existing.id !== candidateSpecies.id && (
+        (hasTerritorialPressure(existing) && isReviewedLowTerritoryTarget(candidateSpecies))
+        || (hasTerritorialPressure(candidateSpecies) && isReviewedLowTerritoryTarget(existing))
+      )) {
+        raise('caution', 'territorial_pressure_context');
+      }
       const hasFinNippingPressure = (species: DomainSpeciesFact) => (
         species.behaviorTraits?.includes('fin_nipping')
         || species.finNippingRisk === 'medium'

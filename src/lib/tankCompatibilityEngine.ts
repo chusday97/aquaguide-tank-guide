@@ -656,6 +656,9 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
   const profile = speciesProfileFromFish(fish);
   const reviewed = getReviewedCompatibilityProfileForFish(fish);
   const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
+  const reviewedEnvironment = reviewedKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.environment
+    : undefined;
   const reviewedSocial = reviewedKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
     ? reviewedKnowledge.socialBehavior
     : undefined;
@@ -663,6 +666,7 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
     ? reviewedKnowledge.spaceAndGrowth
     : undefined;
   const knowledgeEvidenceIds = [
+    ...(reviewedEnvironment?.evidence.sourceIds || []),
     ...(reviewedSocial?.evidence.sourceIds || []),
     ...(reviewedSpace?.evidence.sourceIds || []),
     ...(reviewedKnowledge?.reproduction?.evidence.reviewStatus === 'reviewed'
@@ -671,11 +675,11 @@ const toDomainSpeciesFact = (fish: Fish): DomainSpeciesFact => {
   ];
   return {
     id: profile.catalogKey,
-    waterType: reviewed?.waterType ?? profile.waterType,
-    temperatureMinC: profile.waterTemperatureMinC,
-    temperatureMaxC: profile.waterTemperatureMaxC,
-    phMin: profile.phMin,
-    phMax: profile.phMax,
+    waterType: reviewedEnvironment?.waterType ?? reviewed?.waterType ?? profile.waterType,
+    temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
+    temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
+    phMin: reviewedEnvironment?.phRange?.min ?? profile.phMin,
+    phMax: reviewedEnvironment?.phRange?.max ?? profile.phMax,
     minTankLiters: reviewedSpace?.minVolumeLiters ?? profile.minTankLiters,
     minTankLengthCm: reviewedSpace?.minTankLengthCm ?? null,
     reviewed: Boolean(reviewed),
