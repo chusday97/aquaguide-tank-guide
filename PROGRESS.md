@@ -1625,3 +1625,7 @@
 - [x] 章节间距改为响应式压缩范围，减少大屏与平板的空白断层；环境视觉区增加不含生物事实的“水体/空间/稳定”结构标签，避免被误认为缺失图片。
 - [x] `test:public-seo-responsive-contract`、`test:public-seo-structure`、`test:public-seo-contract`、lint、build 和 diff-check 通过。
 - [ ] 仍未完成系统 Chrome 三档、性能/reduced-motion、可读独立 Critic、Figma Canonical 和发布门禁；页面继续 `noindex,follow`。
+## 2026-09-13 本地内置浏览器复核收口后页面
+
+- [x] 本地 `390px` 页面实际读取确认：Hero 图片、章节导航、参数带、生活习性、环境面板、日常、品系、FAQ、AquaGuide 入口和资料来源均存在；章节没有真实重复，长截图拼接重复属于截图层伪影，证据为 `EVD-20260913-115`。
+- [ ] 仍需用可复核的多视口截图替代长截图拼接证据；系统 Chrome/MachPort 与独立 Critic 空输出仍不重复触发。
