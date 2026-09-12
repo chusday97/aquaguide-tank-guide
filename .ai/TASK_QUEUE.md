@@ -1,5 +1,14 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — canonical continuation path repair (2026-09-12)
+- [x] Reproduce stale cross-session entry routing to old `feature/admin-content-v0` / historical worktree.
+- [x] Verify current main and GitHub main are synchronized before filesystem change.
+- [x] Move canonical main worktree from temporary `/private/tmp/...` to durable `/Users/chuchu/aquaguide-main` without changing Git history.
+- [x] Rewrite `CROSS_SESSION_START.md` current routing to main and add path/branch/remote guards.
+- [x] Preserve all historical worktrees; do not reset/delete them.
+- [ ] Continue only from a new reproducible operator/runtime/data-reliability badcase or explicit Staging/indexing work.
+
+
 ## ACTIVE OVERRIDE — post-release concrete badcase closure (2026-09-12)
 - [x] Re-run Operations/Product-Care/Compatibility/Publish Center acceptance; no operator blocker reproduced.
 - [x] Reproduce failed atomic Local File rename leaving `.tmp-*` residue.

@@ -1469,3 +1469,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Post-release Vercel runtime-error query found no current clusters.
 - No Supabase Staging/Production migration or indexing unlock. Care SEO remains `hold_noindex`.
 - NEXT: release closed; only respond to concrete runtime/operator regressions or separately authorized Staging/indexing work.
+
+## 2026-09-12 — canonical cross-session worktree repair
+- Reproduced a real continuation-authority badcase: `.ai/CROSS_SESSION_START.md` still directed new sessions to `/Users/chuchu/aquaguide-admin-content-v0` / `feature/admin-content-v0`; this session initially entered a stale reconciliation worktree before the mismatch was caught.
+- Verified canonical local `main` and GitHub `main` were both `e871aee0` with a clean worktree before changing paths.
+- Moved the canonical main worktree with `git worktree move` from `/private/tmp/aqua-main-promoted-20260912` to durable `/Users/chuchu/aquaguide-main`; branch identity, HEAD and tracked content were unchanged.
+- Rewrote `CROSS_SESSION_START.md` current routing: exact canonical path + `branch=main` + status review + live `HEAD` vs `git ls-remote origin refs/heads/main` comparison are now mandatory before edits.
+- Preserved all historical feature/reconcile/product-recovery/preview worktrees; none were reset or deleted.
+- No runtime code, Vercel Production, Supabase or indexing state changed.
+- NEXT: continue only from concrete operator/runtime/data-reliability badcases or an explicit Staging/indexing decision.

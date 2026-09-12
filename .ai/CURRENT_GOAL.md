@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-12 canonical cross-session entry repaired
+A reproduced operational badcase is closed: the one-file recovery entry still pointed new sessions to the old `feature/admin-content-v0` worktree, which can cause valid main work to continue on stale history.
+
+- Canonical `main` worktree moved from temporary `/private/tmp/aqua-main-promoted-20260912` to durable `/Users/chuchu/aquaguide-main`.
+- Git identity remained unchanged during the move; local and GitHub main were equal before the recovery-doc edit.
+- `CROSS_SESSION_START.md` now fail-closes on wrong path/branch and requires live HEAD vs GitHub main comparison before any code edit.
+- Old worktrees are preserved for history but explicitly excluded from default Admin continuation.
+- NEXT: continue only from concrete operator/runtime/data-reliability badcases.
+
+
 ## CURRENT OVERRIDE — 2026-09-12 Local File failed-write cleanup closed
 A concrete post-release Local File reliability badcase is closed on main at `0b662155 fix(admin): clean failed atomic temp writes`.
 

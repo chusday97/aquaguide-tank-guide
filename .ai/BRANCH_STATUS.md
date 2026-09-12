@@ -1,5 +1,12 @@
 # Branch Status
 
+## CURRENT OVERRIDE — canonical main worktree moved to durable path (2026-09-12)
+- Canonical Admin worktree is now `/Users/chuchu/aquaguide-main` on branch `main`; it replaced the temporary `/private/tmp/aqua-main-promoted-20260912` path via `git worktree move`.
+- Move preserved HEAD and branch identity; no commit history, remote ref, or working-tree content changed.
+- Historical feature/reconcile/product-recovery/preview worktrees remain intact and are not default continuation targets.
+- `.ai/CROSS_SESSION_START.md` now requires path + branch + HEAD/remote/status guards before edits, preventing stale historical worktrees from becoming accidental authority.
+
+
 ## CURRENT OVERRIDE — main post-release maintenance checkpoint `0b662155` (2026-09-12)
 - Local and GitHub main functional checkpoint: `0b662155d54984a9c80a80db04c0e914d2194b08`.
 - Change is DEV-only Local File temp cleanup; it does not alter the Production Business API graph.

@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — canonical main recovery path hardened (2026-09-12)
+- Reproduced a real cross-session authority failure: `.ai/CROSS_SESSION_START.md` still routed new sessions to `/Users/chuchu/aquaguide-admin-content-v0` / `feature/admin-content-v0`; this session initially entered an old reconciliation worktree before the mismatch was detected.
+- Canonical `main` worktree is now durable at `/Users/chuchu/aquaguide-main` (moved from `/private/tmp/aqua-main-promoted-20260912` without changing HEAD/history/content).
+- New recovery protocol requires exact canonical path, `branch=main`, status review, and live `HEAD` vs `git ls-remote origin refs/heads/main` comparison before edits.
+- Historical feature/reconcile/product-recovery/preview worktrees remain intact but are no longer valid default continuation paths.
+- No product runtime, Production deployment, Supabase or indexing state changed in this recovery-path repair.
+
+
 ## CURRENT OVERRIDE — Local File temp cleanup reliability fix (2026-09-12)
 - Main functional checkpoint: `0b662155 fix(admin): clean failed atomic temp writes`.
 - Failure injection proved generic atomic Local File writes could leave `.tmp-*` files when final rename failed. Previous authority stayed intact, but the workspace could become dirty.
