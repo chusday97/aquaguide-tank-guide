@@ -3,7 +3,7 @@
 ## [Unreleased]
 - Changed: 2026-09-12 Species 缺图回退显示物种名称并收紧桌面/移动高度，减少素材待审核时的空白感；提交 `0ab0cca9`，仍保持 fail-closed，证据为 `EVD-20260912-062`。
 - Changed: 2026-09-12 Category 与 Guide 统一使用 `seo-page-intro` 首段间距，Guide 不再叠加 Species 章节顶距；证据为 `EVD-20260912-063`。
-- Added: 2026-09-12 新增 `SeoAssetFallback`，统一首页、分类页和 Species 页的缺图身份回退；不改变素材与发布门禁，证据为 `EVD-20260912-064`。
+- Added: 2026-09-12 新增 `SeoAssetFallback`，统一首页、分类页和 Species 页的缺图身份回退；提交 `b4006374`，不改变素材与发布门禁，证据为 `EVD-20260912-064`。
 - Blocked: 2026-09-12 同一只读 Critic 针对当前 HEAD `6732344c` 完成复验但返回空 `items`、无可读六维正文；不计为审查通过，不创建重复线程，证据为 `EVD-20260912-061`。
 - Verified: 2026-09-12 环境章节锚点滚动后标题未被 Header 遮挡，视觉卡和正文可读；证据为 `EVD-20260912-060`。
 - Verified: 2026-09-12 内置浏览器确认 Species “先记住这一点”结论卡真实呈现，证据为 `EVD-20260912-059`。
