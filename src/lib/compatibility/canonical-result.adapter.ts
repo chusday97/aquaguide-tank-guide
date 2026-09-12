@@ -3,6 +3,7 @@ import type {
   TankCompatibilityResult,
   TankCompatibilityRiskLevel,
   TankCompatibilityRule,
+  TankCompatibilityStatus,
 } from '../tankCompatibilityEngine';
 
 const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
@@ -130,6 +131,7 @@ const uniqueRules = (rules: TankCompatibilityRule[]) => {
 };
 
 const LEGACY_SOFT_CAPACITY_CODES = new Set(['bioload_over_limit', 'bioload_near_limit']);
+const CANONICAL_REVIEWED_STAGE_HARD_BLOCK_CODES = new Set(['conspecific_fry_predation']);
 
 export const applyCanonicalCompatibilityDecision = (
   result: TankCompatibilityResult,
@@ -161,6 +163,15 @@ export const applyCanonicalCompatibilityDecision = (
   }));
   const legacyHardBlocks = result.blockingRules.filter(rule => !LEGACY_SOFT_CAPACITY_CODES.has(rule.code));
   const legacyWarnings = result.warningRules.filter(rule => !LEGACY_SOFT_CAPACITY_CODES.has(rule.code));
+  const reviewedStageHardBlocks = legacyHardBlocks.filter(rule => (
+    rule.reviewStatus === 'reviewed' && CANONICAL_REVIEWED_STAGE_HARD_BLOCK_CODES.has(rule.code)
+  ));
+  // Life-stage risk is reviewed authority that is not yet represented in the
+  // Domain input contract. Preserve only this explicit reviewed bridge here;
+  // all other legacy hard blocks remain subordinate to Domain status.
+  const effectiveStatus: TankCompatibilityStatus = reviewedStageHardBlocks.length > 0
+    ? 'not_recommended'
+    : decision.status;
 
   const reviewedPairBlocking = decision.status === 'not_recommended' && decision.ruleCodes.includes('reviewed_pair_rule')
     ? domainRules.filter(rule => rule.code === 'reviewed_pair_rule')
@@ -178,32 +189,36 @@ export const applyCanonicalCompatibilityDecision = (
   const orderedDomainBlockingRules = [...domainBlockingWithoutGenericPair].sort(
     (left, right) => (domainBlockingPriority[left.code] ?? 99) - (domainBlockingPriority[right.code] ?? 99),
   );
-  const blockingRules = decision.status === 'not_recommended'
-    ? uniqueRules([...orderedDomainBlockingRules, ...legacyHardBlocks, ...reviewedPairBlocking])
+  const blockingRules = effectiveStatus === 'not_recommended'
+    ? uniqueRules([
+      ...orderedDomainBlockingRules,
+      ...(decision.status === 'not_recommended' ? legacyHardBlocks : reviewedStageHardBlocks),
+      ...reviewedPairBlocking,
+    ])
     : [];
-  const missingData = decision.status === 'insufficient_data'
+  const missingData = effectiveStatus === 'insufficient_data'
     ? uniqueRules([...domainMissingRules, ...result.missingData])
     : [];
-  const warningRules = decision.status === 'caution' || decision.status === 'insufficient_data' || decision.status === 'not_recommended'
+  const warningRules = effectiveStatus === 'caution' || effectiveStatus === 'insufficient_data' || effectiveStatus === 'not_recommended'
     ? uniqueRules([...domainWarningRules, ...legacySoftCapacityWarnings, ...legacyWarnings])
     : [];
-  const riskLevel: TankCompatibilityRiskLevel = decision.status === 'not_recommended'
+  const riskLevel: TankCompatibilityRiskLevel = effectiveStatus === 'not_recommended'
     ? 'high'
-    : decision.status === 'insufficient_data'
+    : effectiveStatus === 'insufficient_data'
       ? 'unknown'
-      : decision.status === 'caution'
+      : effectiveStatus === 'caution'
         ? 'medium'
         : 'none';
-  const summary = decision.status === 'not_recommended'
+  const summary = effectiveStatus === 'not_recommended'
     ? blockingRules[0]?.evidence || result.summary
-    : decision.status === 'insufficient_data'
+    : effectiveStatus === 'insufficient_data'
       ? missingData[0]?.evidence || '关键资料不足，暂时无法可靠判断。'
-      : decision.status === 'caution'
+      : effectiveStatus === 'caution'
         ? warningRules[0]?.evidence || result.summary
         : result.summary;
   return {
     ...result,
-    status: decision.status,
+    status: effectiveStatus,
     riskLevel,
     summary,
     blockingRules,

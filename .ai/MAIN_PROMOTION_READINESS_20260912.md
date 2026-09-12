@@ -1,9 +1,12 @@
 # Aqua Admin Main Promotion Readiness — 2026-09-12
 
 ## Verdict
-**READY FOR EXPLICIT MAIN PROMOTION; NOT PROMOTED.**
+**FULFILLED — MAIN PROMOTED, REMOTE RELEASED, PRODUCTION VERIFIED.**
 
-The isolated candidate `reconcile/admin-content-main-20260911` is a strict fast-forward descendant of `origin/main=d3c70dee633e`. A disposable worktree promotion rehearsal from real `origin/main` to candidate `72ad26932f96` completed with `git merge --ff-only`, produced the exact candidate tree, and was removed afterwards. Real `main` was not moved and nothing was pushed.
+At readiness time, the isolated candidate `reconcile/admin-content-main-20260911` was a strict fast-forward descendant of `origin/main=d3c70dee633e`. A disposable worktree promotion rehearsal from real `origin/main` to candidate `72ad26932f96` completed with `git merge --ff-only`, produced the exact candidate tree, and was removed afterwards. That pre-promotion condition is preserved below as historical evidence; the fulfillment section records the later main/Production release.
+
+## Fulfillment / release closeout
+The readiness gate was fulfilled on 2026-09-12. GitHub main runtime checkpoint `5fa915d3` passed Product Golden Path; Vercel Production `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` is healthy and public alias `aqua-tank-guide.vercel.app` points to it. Release hardening additionally removed DEV-only Local Admin from the Production API trace and introduced a 1.49 MB generated Business API ESM bundle after real Vercel size/Node-ESM failures were found. Public smoke verifies Business Health 200, Local Admin 404, Compatibility Git authority 7/4, SEO Admin noindex and Product/Care static fallback. Git rollback `d3c70dee633e` and old stable Vercel deployment `dpl_9b9QBEpKCskSZLefuLTJm5cZxWH5` remain available. No Supabase Staging/Production migration or indexing unlock occurred.
 
 ## Promotion blocker found and closed
 The committed `public/runtime-authority.json` intentionally contains reviewed Compatibility but zero Product/Care rows. Before `72ad2693`, any generated Git snapshot with `generatedAt` activated Product/Care Git authority even when both arrays were empty, which could suppress `/content-bootstrap` and hide cloud-published Product/Care behind static seed data.

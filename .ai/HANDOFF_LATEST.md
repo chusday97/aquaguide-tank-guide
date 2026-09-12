@@ -1,4 +1,8 @@
 # Handoff Latest
+## Main release context absorbed — 2026-09-12
+- After the first recovery merge commit `45940c85`, remote main advanced by two commits: `5fa915d3` (Vercel Business API ESM bundle) and `162bbc1f` (Production release closeout docs).
+- The recovery branch must retain main's `build:business-api`/esbuild packaging and router changes. The active Product Recovery authority remains V6 + Species Knowledge V2 + 14/5 reviewed Compatibility; no Staging/Production migration or index unlock is implied.
+- Revalidate root build, API typecheck, runtime authority, Browser Compatibility/Species Detail and GP001–GP004 after the second controlled merge; only then push and re-read PR #149 mergeability/CI.
 
 Updated: 2026-09-11
 Branch: `product-recovery-20260911`
@@ -144,3 +148,10 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Added `supabase/migrations/202609120001_compatibility_recovery_baseline.sql` as an additive recovery-baseline migration; SQL parses successfully and has not been applied to Staging/Production in this recovery flow.
 - Verified after convergence: TypeScript, API typecheck, full build, Domain/Compatibility/Species Knowledge/Visual/evidence coverage, runtime authority, Git runtime, Compatibility Admin/regression, Local File Admin + browser E2E, published-content isolation, staging seed safety, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 all PASS.
 - Pending only Git closeout: stage resolved merge, diff audit, merge commit/push, divergence verification, PR #149 current-head CI.
+
+## Latest checkpoint — second main convergence / Vercel bundle alignment (2026-09-12)
+- Remote main advanced after the first convergence; the recovery line now absorbs `5fa915d3` (`fix(api): bundle vercel business runtime`) and `162bbc1f` (Production release closeout) through a second controlled merge.
+- `package.json` keeps Product Recovery browser/runtime tests and main's `build:business-api`; esbuild remains the Vercel Business API bundling dependency.
+- A merged regression exposed that reviewed guppy adult→fry `conspecific_fry_predation` was being dropped by canonical result adaptation. The adapter now preserves this reviewed life-stage hard block narrowly; coarse legacy blocks remain subordinate to Domain V6.
+- Validation PASS: TypeScript, API typecheck, Compatibility engine, Compatibility regression gate, runtime/Git authority, Published Content isolation, Admin Content and Business API contracts, full build (including 1.57 MB Business API bundle), Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+- Merge is ready for Git closeout. After push, force-refresh real `origin/main`; PR #149 must report current-head alignment before merge/promotion.

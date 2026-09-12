@@ -1,4 +1,8 @@
 # Current Goal
+## Main production context inherited — 2026-09-12
+- Current remote `main` includes `5fa915d3 fix(api): bundle vercel business runtime` and release-closeout docs at `162bbc1f`. The Business API production path depends on `build:business-api` and the generated ESM bundle; Product Recovery must preserve that build boundary.
+- Main release smoke recorded `/api/v1/business-health` 200, DEV-only `/api/v1/local-admin/status` 404, and no Supabase Production migration/index unlock. Product Recovery remains a separate Draft PR and does not treat that Production release as authorization to deploy the 14/5 Compatibility baseline.
+- Second convergence target is only to absorb these two main commits, keep `origin/main` fully contained, and rerun build/runtime gates before updating PR #149.
 
 Updated: 2026-09-12
 Active branch: `product-recovery-20260911`
@@ -113,3 +117,10 @@ Continue canonical high-frequency Species Knowledge V2 expansion using the revie
 - Added additive migration `202609120001_compatibility_recovery_baseline.sql` for the 7 recovery Profiles + tiger-barb/guppy Pair Rule and their evidence. Historical migrations remain immutable; partial published baseline fails closed.
 - Convergence validation passed across Product Domain/Compatibility/Knowledge/Visual, runtime authority, regression gate, Local File Admin, Git runtime, published-content isolation, staging seed contract, API typecheck, full build, Species Detail E2E, Compatibility Beginner Action E2E, and GP001–GP004.
 - Next: create and push the merge commit, verify `origin/main...product-recovery-20260911` has main-only 0, then inspect PR #149 current-head CI before any main promotion.
+
+## Current checkpoint — second main convergence / Production bundle alignment (2026-09-12)
+- Absorbed remote main through `162bbc1f`, including the Vercel Business API esbuild bundle boundary and Production release-closeout context, while Product Recovery remains the active development authority on `product-recovery-20260911`.
+- Root `npm run build` now includes `build:business-api`; the generated Business API bundle is ~1.57 MB and builds successfully before Web/Admin/static artifacts.
+- Fixed a canonicalization gap found by the merged Admin regression gate: reviewed `conspecific_fry_predation` Stage Risk must survive Domain canonicalization as `not_recommended` until life-stage risk becomes a native Domain rule. No other legacy hard block regains decision authority.
+- Verified after this fix: root/API TypeScript, Compatibility + regression gate, runtime/Git authority, Published Content isolation, Admin Content/Business API contracts, full build, Species Detail E2E, Compatibility Beginner Action E2E, and GP001–GP004.
+- Next: complete the merge commit/push, force-refresh `origin/main`, require main-only 0, then re-check PR #149 mergeability and current-head CI before any main promotion.

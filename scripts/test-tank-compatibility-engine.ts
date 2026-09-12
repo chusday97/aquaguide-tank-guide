@@ -1,4 +1,5 @@
 import type { Aquarium, Fish } from '../src/types';
+import { fishData } from '../src/data/fishData';
 import { evaluateTankCompatibility as evaluateLegacyTankCompatibility } from '../src/lib/tankCompatibilityEngine';
 import { getTankCompatibilityAddPolicy } from '../src/services/compatibility/compatibility.service';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
@@ -743,6 +744,30 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateQuantity: 1,
       });
       return [...result.warningRules, ...result.blockingRules].every(rule => rule.code !== 'density_high');
+    },
+  },
+  {
+    name: 'reviewed guppy adult-to-fry stage risk survives canonicalization',
+    run: () => {
+      const guppy = fishData.find(item => item.id === 'sp_0436');
+      if (!guppy) return false;
+      const result = evaluateLegacyTankCompatibility({
+        scope: 'species_only',
+        existingSpecies: [{
+          species: guppy,
+          record: {
+            quantity: 1,
+            batches: [{
+              id: 'guppy-adult-stage-risk', quantity: 1, entryDate: '2026-01-01',
+              lifeStage: 'adult', reproductiveState: 'unknown', stateUpdatedAt: '2026-01-01T00:00:00.000Z',
+            }],
+          },
+        }],
+        candidateSpecies: guppy,
+        candidateLifeStage: 'fry',
+      });
+      return result.status === 'not_recommended'
+        && result.blockingRules.some(rule => rule.code === 'conspecific_fry_predation' && rule.reviewStatus === 'reviewed');
     },
   },
   {

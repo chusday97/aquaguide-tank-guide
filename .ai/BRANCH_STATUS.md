@@ -1,13 +1,22 @@
 # Branch Status
 
-## CURRENT OVERRIDE — local main now contains accepted candidate (2026-09-12)
+## CURRENT OVERRIDE — remote main released; Production runtime checkpoint `5fa915d3` (2026-09-12)
+- Local `main` and GitHub `refs/heads/main` runtime checkpoint: `5fa915d31ebb6aa0915cc39b34016a1ffa933a66` before this docs-only sync.
+- Git rollback branch: `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633ed4e24bbca161d138a832012b1d40`.
+- Vercel Production runtime for the same code: `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`; public alias `aqua-tank-guide.vercel.app` resolves to it.
+- Previous stable Vercel rollback remains `dpl_9b9QBEpKCskSZLefuLTJm5cZxWH5` / `ed0cf380`.
+- Reconciliation candidate `reconcile/admin-content-main-20260911` is historical/accepted; its work is already integrated into main and must not be re-promoted.
+- This repository has a narrow nonstandard fetch refspec, so a stale local `origin/main` is not authoritative. Use `git ls-remote origin refs/heads/main` (or an explicit fetch ref) for live remote-main checks.
+- No force-push/rebase occurred. No Supabase Staging/Production migration or indexing unlock occurred.
+
+## HISTORICAL OVERRIDE — local main now contains accepted candidate (2026-09-12, superseded)
 - Local branch `main` was created from `origin/main=d3c70dee633e` and fast-forwarded to candidate `83f8fd7a`.
 - Rollback branch: `rollback/main-pre-aqua-admin-20260912` at `d3c70dee633e`.
 - No merge commit, rebase or force update; post-promotion tree matched candidate exactly.
 - Remote main has not moved and nothing has been pushed.
 
 
-## CURRENT OVERRIDE — candidate ready for explicit ff-only main promotion (2026-09-12)
+## HISTORICAL OVERRIDE — candidate ready for explicit ff-only main promotion (2026-09-12, fulfilled)
 - Candidate branch: `reconcile/admin-content-main-20260911`; functional checkpoint `72ad2693`.
 - `origin/main=d3c70dee633e` is a strict ancestor; disposable `git merge --ff-only` rehearsal PASS and exact tree equality verified.
 - Runtime promotion blocker from empty Product/Care Git snapshot is fixed and regression-covered.

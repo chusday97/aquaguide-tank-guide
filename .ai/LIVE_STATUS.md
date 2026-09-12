@@ -1,13 +1,22 @@
 # Live Status
 
-## CURRENT OVERRIDE — local main promotion PASS (2026-09-12)
+## CURRENT OVERRIDE — Production release healthy on `5fa915d3` (2026-09-12)
+- GitHub main runtime code: `5fa915d31ebb6aa0915cc39b34016a1ffa933a66`; Product Golden Path PASS.
+- Vercel Production: `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`, commit `5fa915d3`, public alias `https://aqua-tank-guide.vercel.app`.
+- Business API packaging: generated ESM bundle 1.49 MB; `/api/v1/router` package 41.08 MB. Production Business Health 200 with database configured; Local Admin 404.
+- Production authority smoke: `/runtime-authority.json` = reviewed Git Compatibility 7 Profiles / 4 Pair Rules. `/api/v1/content-bootstrap` currently has Product/Care 0/0; real public Encyclopedia/Care browser checks confirm static fallback remains usable with zero page errors.
+- SEO Admin is reachable and still noindex. Care SEO index decision remains `hold_noindex`.
+- Rollback: Git `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e`; Vercel `dpl_9b9QBEpKCskSZLefuLTJm5cZxWH5` (`ed0cf380`).
+- No Supabase Staging/Production migration or indexing mutation occurred. Release repair is closed unless a concrete regression appears.
+
+## HISTORICAL OVERRIDE — local main promotion PASS (2026-09-12, superseded)
 - Local `main` fast-forwarded from `d3c70dee` to accepted candidate `83f8fd7a`; rollback ref `rollback/main-pre-aqua-admin-20260912` preserves the pre-promotion state.
 - Post-promotion main smoke PASS for Git runtime authority/fallback, Published Content isolation, Compatibility authority, Local Admin mode, root/API TypeScript.
 - Local main worktree is clean.
 - Remote `origin/main` remains `d3c70dee`; no push/deploy and no Supabase Staging/Production/indexing mutation.
 
 
-## CURRENT OVERRIDE — main promotion rehearsal PASS (2026-09-12)
+## HISTORICAL OVERRIDE — main promotion rehearsal PASS (2026-09-12, fulfilled)
 - Candidate functional HEAD: `72ad2693`; real `origin/main` remains `d3c70dee633e` and is an ancestor of candidate.
 - P0 runtime authority shadowing is closed: Product/Care Git authority requires at least one Git-published Product/Care record; otherwise runtime continues to Published API.
 - Disposable fast-forward rehearsal from real main reached the exact candidate tree; temporary branch/worktree were deleted.
