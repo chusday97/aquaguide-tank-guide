@@ -11,6 +11,11 @@
 - [x] 内置 Chrome 实际回读 `/species/sp_0001`，确认新的日常照料引导已呈现，页面可滚动，生活习性、参数、品系、FAQ、来源和 `noindex` 仍可见；证据为 `EVD-20260912-031`。
 - [ ] 本次为当前桌面可读性树证据，不替代系统 Chrome 三档自动化、性能、reduced-motion、Figma Canonical 或独立 Critic。
 
+## 2026-09-12 文案回退门禁（`d245bb8a`）
+
+- [x] 公开文案测试新增 Species 日常照料引导断言：旧内部说明不可回归，新中文引导必须存在。
+- [x] `npm run test:public-seo-copy` 与 `git diff --check` 通过。
+
 - [x] 公开结构测试现在要求 Marketing、Category、Species、Guide 全部调用共享 `setSeoDocument`，防止页面级 metadata 写入器重新分叉。
 - [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过。
 - [ ] 真实路由切换仍待 Mac 解锁后复验；Figma Canonical、可读独立 Critic 和索引放行仍未完成。
