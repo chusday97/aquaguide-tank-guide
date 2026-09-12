@@ -1,6 +1,6 @@
 # AquaGuide Species SEO 当前交接
 
-> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `1c7c41fa`。
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `68231405`。
 
 ## 当前有效结论
 

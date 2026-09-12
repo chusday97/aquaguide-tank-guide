@@ -1,4 +1,4 @@
-## 2026-09-12 当前状态快照（待提交）
+## 2026-09-12 当前状态快照（`68231405`）
 
 - [x] 首页 Marketing Hero 也接入共享 `SeoAssetFallback`；结构回归现在同时保护 Marketing、Category、Species 三类公开入口的缺图一致性，证据为 `EVD-20260912-065`。
 - [ ] 本轮仅完成共享回退与静态回归；未改变素材批准状态、内容来源、路由、metadata、JSON-LD、`noindex,follow` 或用户未提交文件。
