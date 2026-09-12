@@ -82,6 +82,11 @@
 - 章节当前态提交后，Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Asset、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-034`。
 - 仍保持 `noindex,follow`；上述结果不替代系统 Chrome 三档、性能、reduced-motion、Figma Canonical 或独立 Critic。
 
+## 2026-09-12 首屏章节当前态视觉复核
+
+- 内置 Chrome 截图确认首屏“ 一眼了解 ”导航项已绿色高亮，Hero、物种身份、参数入口和导航构图可见，证据为 `EVD-20260912-035`。
+- 仅覆盖当前桌面首屏；滚动后的章节切换、三档自动化和性能仍待验证。
+
 ## 2026-09-09 Species SEO 干净 Preview 候选
 
 - 远端状态：Draft PR #147 的稳定提交为 `01d71f12`；`foundation`、`validate`、Vercel、Cloudflare 和 GP-001…GP-005 全部通过，PR 保持 Draft，未合并。

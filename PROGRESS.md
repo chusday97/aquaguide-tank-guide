@@ -27,6 +27,11 @@
 - [x] 章节当前态提交后的 Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Asset、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-034`。
 - [ ] 这些是静态/构建门禁；系统 Chrome 三档、性能、reduced-motion、Figma Canonical 和独立 Critic 仍未完成。
 
+## 2026-09-12 首屏章节当前态视觉复核
+
+- [x] 内置 Chrome 截图确认 Species 首屏“ 一眼了解 ”导航项有绿色当前态，Hero、物种身份、参数入口和导航构图可见；证据为 `EVD-20260912-035`。
+- [ ] 本证据只覆盖当前桌面首屏，不证明滚动后的章节切换、三档自动化或性能门禁。
+
 - [x] 公开结构测试现在要求 Marketing、Category、Species、Guide 全部调用共享 `setSeoDocument`，防止页面级 metadata 写入器重新分叉。
 - [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过。
 - [ ] 真实路由切换仍待 Mac 解锁后复验；Figma Canonical、可读独立 Critic 和索引放行仍未完成。
