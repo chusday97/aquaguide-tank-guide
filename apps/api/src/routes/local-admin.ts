@@ -465,19 +465,24 @@ const createBackup = async (reason: string, requireHealthy: boolean) => {
     id = `backup-${stamp}`;
   }
   const destination = backupDirectory(root, id);
-  await copyActiveData(root, destination);
-  const manifest: BackupManifest = {
-    backupFormatVersion,
-    localFileFormatVersion,
-    id,
-    createdAt: new Date().toISOString(),
-    reason,
-    healthyAtBackup: integrity.healthy,
-    errorCount: integrity.issues.filter(issue => issue.severity === 'error').length,
-    warningCount: integrity.issues.filter(issue => issue.severity === 'warning').length,
-  };
-  await atomicJsonWrite(path.join(destination, 'manifest.json'), manifest);
-  return manifest;
+  try {
+    await copyActiveData(root, destination);
+    const manifest: BackupManifest = {
+      backupFormatVersion,
+      localFileFormatVersion,
+      id,
+      createdAt: new Date().toISOString(),
+      reason,
+      healthyAtBackup: integrity.healthy,
+      errorCount: integrity.issues.filter(issue => issue.severity === 'error').length,
+      warningCount: integrity.issues.filter(issue => issue.severity === 'warning').length,
+    };
+    await atomicJsonWrite(path.join(destination, 'manifest.json'), manifest);
+    return manifest;
+  } catch (error) {
+    await rm(destination, { recursive: true, force: true }).catch(() => undefined);
+    throw error;
+  }
 };
 const listBackups = async () => {
   const root = localRoot();
