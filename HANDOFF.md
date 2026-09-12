@@ -1366,3 +1366,20 @@
 
 - Vercel 部署侧已确认三条 Species 路径均为 HTTP 200 且 `x-robots-tag:noindex`，证据为 `EVD-20260913-105`。
 - 这只证明路由和 robots 响应正常；浏览器连接异常仍阻塞托管视觉、交互和性能验收。
+## 2026-09-13 最新 Preview 状态
+
+- 最新已提交 HEAD 为 `102626b9`，远端分支已同步；Vercel Preview 已 `READY`。
+- 同一部署的 `/species/sp_0001`、`/species/sp_0432` 和 `/species/sp_0001?variant=sp_0030` 均 HTTP 200，`x-robots-tag: noindex`，证据为 `EVD-20260913-106`。
+- 这证明部署侧路由和 noindex 响应正常，不等于浏览器 DOM、截图、性能或交互验收通过。
+
+## 当前下一步
+
+1. 只对同一 READY deployment 尝试一次内置浏览器访问；若仍 `ERR_CONNECTION_CLOSED`，保留为环境阻塞，不创建新部署。
+2. 在浏览器可用时完成三 Species 路径的 390/600/1440 截图与交互回归。
+3. 浏览器门禁稳定后，在既有 Critic 线程进行一次当前 SHA 只读复验；空正文不算通过。
+4. Figma Starter 配额恢复后集中补 Canonical 模板；此前不调用 Figma。
+## 2026-09-13 托管浏览器访问结果
+
+- 同一 READY Preview 的部署侧路由与 `noindex` 已通过（`EVD-20260913-106`）。
+- 内置浏览器访问时被 Vercel 登录保护重定向到登录页，未读取 Species DOM；记录为托管访问权限阻塞（`EVD-20260913-107`）。
+- 不绕过鉴权、不把登录页当作视觉验收、不创建新部署。

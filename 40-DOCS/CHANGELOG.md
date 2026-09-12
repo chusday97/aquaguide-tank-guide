@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-13 最新非生产 Preview 已 READY；三条 Species 路由部署侧 HTTP 200 且 `x-robots-tag:noindex`，证据为 `EVD-20260913-106`。浏览器 DOM/截图、性能、Critic 和 Figma Canonical 仍未完成。
 - Blocked: 2026-09-13 本地 HEAD `e8e3029b` 与远端跟踪引用 `93f199c1` 相差 204 个提交，实时远端查询受 GitHub DNS 阻塞；托管Preview不能作为当前版本证据，证据为 `EVD-20260913-099`。
 - Blocked: 2026-09-13 托管 Species Preview 可访问但仍为旧结构/错误 SHA，面包屑与相关链接指向 `/encyclopedia`，缺少当前公开章节；证据为 `EVD-20260913-098`。
 - Verified: 2026-09-13 内置浏览器重新确认黄金米虾 Base/Variant 继承、黄色图片 Alt、18–28°C 参数、FAQ和工具物种上下文；证据为 `EVD-20260913-097`。
@@ -774,3 +775,4 @@
 
 - Verified: 2026-09-13 当前 HEAD `b0bffe59` 的公开契约、收藏隔离、证据指纹、公开结构、lint、build 和 diff-check 全部通过；build 仅保留既有 chunk/font 体积警告，证据为 `EVD-20260913-100`。
 - Blocked: 远端跟踪分支仍为 `93f199c1`，本地领先 205 个提交；托管 Preview 不能作为当前实现证据，未再次推送或修改 Production，证据为 `EVD-20260913-100`。
+- Blocked: 2026-09-13 最新 READY Preview 在内置浏览器中被 Vercel 登录保护拦截，未取得页面 DOM/截图；部署侧 HTTP 200 与 noindex 已通过，证据为 `EVD-20260913-107`。

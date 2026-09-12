@@ -345,3 +345,17 @@
 ## 2026-09-13 Preview 路由响应
 
 - 部署侧只读请求确认三条 Species 路径 HTTP 200 + `x-robots-tag:noindex`，证据为 `EVD-20260913-105`；浏览器 DOM/截图仍因连接异常缺失。
+## 2026-09-13 Preview 最新状态
+
+- HEAD `102626b9` 已推送到 `codex/species-seo-preview-v1`，对应最新 Vercel Preview 已 `READY`。
+- 三条 Species 部署侧 HEAD 请求均 HTTP 200 且 `x-robots-tag: noindex`，证据为 `EVD-20260913-106`。
+- 内置浏览器 DOM/截图尚未在该最新部署复核；不把部署侧响应当作浏览器验收。
+
+## 下一步
+
+- 同一部署只尝试一次内置浏览器访问；失败则保持环境阻塞。
+- 继续保持 noindex、Figma 暂停和用户三个未提交文件不变。
+## 2026-09-13 托管访问阻塞
+
+- 最新 READY Preview 的 HTTP 响应正常，但内置浏览器被 Vercel 登录保护重定向，无法进入页面 DOM；证据 `EVD-20260913-107`。
+- 下一步需使用已授权 Preview 会话或继续本地/内置浏览器验证；不绕过登录、不创建重复部署、不解除 noindex。

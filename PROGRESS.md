@@ -1579,3 +1579,14 @@
 
 - [x] 通过 Vercel 部署侧只读请求检查极火虾、宝莲灯和黄金米虾三条 Species 路径：均返回 HTTP 200，并带 `x-robots-tag: noindex`，证据为 `EVD-20260913-105`。
 - [ ] 浏览器仍对同一域名返回 `ERR_CONNECTION_CLOSED`；因此三档视觉/交互/性能和托管 DOM 证据仍未完成。
+## 2026-09-13 Preview 构建与部署侧路由复核（`102626b9`）
+
+- [x] 最新非生产 Preview 已变为 `READY`，部署 URL 为 `https://aquaguide-pfzfkqtgt-chusday97s-projects.vercel.app`，分支别名包含 `codex-species-seo-preview-v1`。
+- [x] 三条 Species 路由部署侧均返回 HTTP 200，并返回 `x-robots-tag: noindex`；证据为 `EVD-20260913-106`。
+- [ ] 内置浏览器访问该最新部署仍需确认；系统 Chrome 三档、性能/reduced-motion、可读独立 Critic、Figma Canonical 和索引门禁仍未完成。
+- [ ] 本地工作树继续保留用户的三个未提交文件，不触碰、不暂存、不提交。
+## 2026-09-13 最新 Preview 浏览器访问复核
+
+- [x] 最新 Preview 部署状态为 `READY`，三条 Species 路由部署侧 HTTP 200 / `x-robots-tag: noindex`，证据为 `EVD-20260913-106`。
+- [x] 内置浏览器访问同一部署时被 Vercel 登录保护重定向，未进入页面 DOM；证据为 `EVD-20260913-107`。
+- [ ] 托管 Preview 的真实 DOM、截图、性能和交互仍未完成；不把登录页当作页面验收，不创建新部署。
