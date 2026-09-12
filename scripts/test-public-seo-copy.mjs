@@ -50,4 +50,12 @@ for (const phrase of ['先看核心结论', '再看分步操作', '最后做后�
   if (!guideSource.includes(phrase)) throw new Error(`Guide preparation state is missing: ${phrase}`);
 }
 
+const speciesSource = fs.readFileSync(path.join(root, 'src/pages/SpeciesLanding.tsx'), 'utf8');
+if (speciesSource.includes('把每天最重要的照料动作放在前面')) {
+  throw new Error('Species care section must not expose the former internal guidance copy');
+}
+if (!speciesSource.includes('从它如何寻找食物开始，认识日常照料重点。')) {
+  throw new Error('Species care section is missing the user-facing guidance copy');
+}
+
 console.log('Public SEO copy checks passed: user-facing language is clean and Guide preparation state has distinct next steps.');
