@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-12 内置 Chrome 实际复核首页公开入口、品牌 Hero、已批准物种图片、单一 H1、价值区和能力卡；证据为 `EVD-20260912-037`，未改变索引策略。
 
 - Changed: 2026-09-12 将 Species“日常怎么养”副标题改为用户可理解的中文，移除内部说明式口吻；提交 `0c3f217c`。
 - Verified: 2026-09-12 公开文案、结构、lint、build 和 diff-check 通过；Product Truth、证据、路由和索引策略不变。

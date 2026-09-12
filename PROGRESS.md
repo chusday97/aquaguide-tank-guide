@@ -1,3 +1,9 @@
+## 2026-09-12 首页公开体验复核
+
+- [x] 内置 Chrome 实际读取首页，确认公开 Header、品牌 Hero、已批准极火虾图片、单一 H1、产品价值区、鱼缸能力入口和相关链接均可读；证据为 `EVD-20260912-037`。
+- [x] 本次未发现需要修改代码的首页首屏问题；未改变 Product Truth、路由、metadata、JSON-LD 或 `noindex,follow`。
+- [ ] 仍未替代系统 Chrome 三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic。
+
 ## 2026-09-10 公开页面 metadata 统一门禁
 
 ## 2026-09-12 Species 日常照料文案收口（`0c3f217c`）

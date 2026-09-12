@@ -1,6 +1,6 @@
 # AquaGuide Species SEO 当前交接
 
-> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `0c3f217c`。
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `52c16657`。
 
 ## 当前有效结论
 
@@ -19,6 +19,7 @@
 
 - 当前 Chrome 用户标签实际读取主页：图片、公开Header、滚动、canonical、robots 和 44px 可见链接均正常，证据为 `EVD-20260912-013`。
 - 性能资源读取受浏览器隔离环境限制，未计为性能通过；当前目标继续保持 active。
+- 当前提交 `52c16657` 的首页首屏在内置Chrome中实际加载完成；公开Header、品牌Hero、已批准极火虾图片、单一H1、价值区、能力卡和相关入口可读，证据为 `EVD-20260912-037`。未发现首页首屏异常，但不替代系统Chrome三档、性能、reduced-motion、Figma或Critic门禁。
 
 ## 中文公开体验复核
 
