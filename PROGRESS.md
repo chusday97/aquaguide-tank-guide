@@ -1121,6 +1121,11 @@
 - [x] 公开中文文案、页面结构和字体系统门禁全部通过，证据为 `EVD-20260912-014`。
 - [x] 未出现后台术语、结构分叉或字体角色回归；Guide 条件内容仍保持 fail-closed。
 - [ ] 当前仍缺系统 Chrome、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。
+
+## 2026-09-12 分类到 Species 真实跳转
+
+- [x] Chrome 用户标签实际点击分类页极火虾入口并进入 `/species/sp_0001`；图片、章节、单一 H1、robots 和无横向溢出均正常，证据为 `EVD-20260912-015`。
+- [ ] 当前仍缺系统 Chrome、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。
 ## 2026-09-12 独立 Critic 当前 SHA 复验
 
 - [x] 已将当前 HEAD `159a095b` 交回既有 Critic 任务做只读六维复验。

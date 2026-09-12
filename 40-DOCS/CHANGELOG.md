@@ -629,3 +629,4 @@
 - 复跑当前 HEAD 静态发布门禁：Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；记录为 `EVD-20260912-012`，未改变页面、素材、索引或用户未提交文件。
 - Chrome 用户标签补充主页运行时证据：图片、公开 Header、滚动、canonical、robots 和 44px 可见链接可读；性能资源读取受浏览器隔离环境限制，记录为 `EVD-20260912-013`。
 - 复跑公开中文文案、页面结构和共享字体系统门禁，全部通过；记录为 `EVD-20260912-014`。
+- Chrome 用户标签补充分类到 Species 的真实点击证据：极火虾入口、图片、章节、H1、robots 和无横向溢出正常，记录为 `EVD-20260912-015`。
