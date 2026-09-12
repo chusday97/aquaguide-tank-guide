@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Droplets, Heart, Loader2, Ruler, Thermometer, Waves } from 'lucide-react';
+import { Droplets, Heart, Loader2, Ruler, Thermometer } from 'lucide-react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ResilientImage } from '../components/common/ResilientImage';
+import { SeoAssetFallback } from '../components/seo/SeoAssetFallback';
 import { getPublishedSpeciesProfile } from '../data/publishedSpeciesProfile';
 import { getSpeciesLandingPilotRecord, type SpeciesLandingAssetUse } from '../data/speciesLandingPilot';
 import { getCareTaxonomyPath, getDifficultyLabel, getSizeLabel, getTemperamentLabel } from '../modules/species/species.service';
@@ -59,7 +60,7 @@ function SectionHeading({ number, eyebrow, title, description, id }: { number: s
 }
 
 function MediaFrame({ asset, label, alt, fallbackTitle, failed, onFallback, className = '' }: { asset?: PublishedSpeciesAsset; label: string; alt: string; fallbackTitle?: string; failed?: boolean; onFallback?: () => void; className?: string }) {
-  if (!asset || failed) return <div className={`seo-media-fallback flex items-center justify-center rounded-[28px] border border-dashed border-emerald-200 bg-[radial-gradient(circle_at_50%_35%,rgba(175,220,202,.34),transparent_48%),#F3F8F3] p-8 text-center ${className}`} role="img" aria-label={label}><div><Waves className="mx-auto h-8 w-8 text-accent/45" aria-hidden="true" />{fallbackTitle && <p className="mt-4 font-serif text-2xl font-bold text-ink/75">{fallbackTitle}</p>}<p className={`${fallbackTitle ? 'mt-2' : 'mt-4'} text-sm font-black text-accent/75`}>{label}</p></div></div>;
+  if (!asset || failed) return <SeoAssetFallback label={label} title={fallbackTitle} className={`seo-media-fallback rounded-[28px] border border-dashed border-emerald-200 bg-[radial-gradient(circle_at_50%_35%,rgba(175,220,202,.34),transparent_48%),#F3F8F3] p-8 text-center ${className}`} />;
   return <div className={`flex min-h-[260px] items-center justify-center overflow-hidden rounded-[28px] border border-white/80 bg-white p-6 shadow-[0_18px_60px_rgba(27,77,62,0.08)] ${className}`}><ResilientImage src={asset.src} alt={alt} loading="eager" onFallback={onFallback} className="h-full w-full object-contain p-[8%]" /></div>;
 }
 

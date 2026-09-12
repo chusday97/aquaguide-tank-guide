@@ -1,5 +1,8 @@
 ## 2026-09-12 当前状态快照（`0ab0cca9`）
 
+- [x] 首页/分类页/Species 页统一使用 `SeoAssetFallback` 作为缺图身份回退；分类入口不再显示无样式的孤立“图片暂不可用”，证据为 `EVD-20260912-064`。
+- [ ] 继续补三档视口的空状态和缺图回归；未改变素材状态、内容来源或 `noindex,follow`。
+
 - [x] 公开分类页与指南页统一使用 `seo-page-intro` 首段间距；移除指南页额外叠加的 `seo-section` 顶部间距，内置 Chrome 对照显示两页标题起始位置一致，证据为 `EVD-20260912-063`。
 - [ ] 继续检查三档视口下的页面 Intro、缺图和内容准备态；系统 Chrome、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成。
 

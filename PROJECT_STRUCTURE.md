@@ -42,6 +42,7 @@
 - `src/pages/Encyclopedia.tsx`：图鉴与完整混养计算。
 - `src/pages/SpeciesLanding.tsx`：用户端自然志风格物种 SEO 详情页；本地优先预览，展示 Product Truth、已审核习性、Base/Variant 与后置 AquaGuide 工具入口。
 - `src/components/seo/`：公开 SEO 页面共享壳层、面包屑、Hero、章节标题、数据带、能力卡、相关链接和来源脚注组件；面包屑链接统一保持 44×44 点击目标。
+- `src/components/seo/SeoAssetFallback.tsx`：公开 SEO 图片缺失时的统一物种身份回退卡，不改变素材审核与 Published 门禁。
 - `src/components/seo/SeoDisclosure.tsx`：公开 SEO 章节与 FAQ 的键盘可操作、ARIA 状态和可测量展开组件。
 - `src/components/seo/PublicSeoShell.tsx`：公开 SEO Header 与产品能力入口，不读取应用状态。
 - `src/styles/seo-system.css`：公开 SEO 页面唯一视觉/字体令牌与响应式类型角色。

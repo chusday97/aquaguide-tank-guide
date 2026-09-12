@@ -22,6 +22,10 @@
 
 - Category 与 Guide 共享 `seo-page-intro` 首段间距；Guide 不再额外使用 Species 的 `seo-section` 顶部间距。内置 Chrome 对照确认两页的标题、首卡和阅读路径更一致，证据为 `EVD-20260912-063`。
 
+## 2026-09-12 公开缺图回退组件统一
+
+- 新增 `SeoAssetFallback`，首页/分类页/Species 页的缺图状态使用同一套物种身份卡；仍按素材 binding fail-closed，不把待审核图片带入公开聚合，证据为 `EVD-20260912-064`。
+
 ## 2026-09-12 宝莲灯素材预览补充
 
 - 本地 `assetPreview=1` 已在内置浏览器真实显示宝莲灯项目图片及中文 Alt；普通公开路由仍保持图片回退，证据为 `EVD-20260912-051`。

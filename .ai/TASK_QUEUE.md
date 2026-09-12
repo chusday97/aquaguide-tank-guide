@@ -16,6 +16,11 @@
 - [x] Category/Guide 使用同一 `seo-page-intro` 令牌，Guide 去除额外章节顶距。
 - [ ] 继续补三档视口的视觉证据；不改变内容、图片或索引门禁。
 
+## 2026-09-12 缺图回退组件
+
+- [x] 首页/分类页/Species 页复用 `SeoAssetFallback`，缺图状态的身份、图标和文案结构统一。
+- [ ] 继续检查 390/600/1440 的回退尺寸和可点击区域。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
