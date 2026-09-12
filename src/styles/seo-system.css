@@ -380,6 +380,13 @@ body:has(.public-seo-root)::-webkit-scrollbar {
   transform: none;
 }
 
+.seo-life-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 900px;
+}
+
 .seo-reveal--visible .seo-stagger > * {
   animation: seo-reveal-in var(--seo-motion-section) var(--seo-motion-ease) both;
 }
@@ -620,6 +627,10 @@ body:has(.public-seo-root)::-webkit-scrollbar {
 
   .seo-hero__media {
     min-height: 280px;
+  }
+
+  .seo-life-grid {
+    grid-template-columns: 1fr;
   }
 
   .seo-hero__title {
