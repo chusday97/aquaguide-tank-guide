@@ -1127,6 +1127,12 @@
 - [x] 当前本地 Chrome 实际验证极火虾 → 黄金米虾 → 浏览器返回；H1、图片 Alt、共享生活习性和 `noindex` 均正确，证据为 `EVD-20260912-016`。
 - [ ] 当前仍缺完整多视口性能/reduced-motion、失败状态、Figma Canonical 和可读独立 Critic。
 
+## 2026-09-12 Species 到鱼缸工具跳转
+
+- [x] Species 页“检查我的鱼缸”真实进入 `/compatibility?species=sp_0001&source=species-profile`，并可返回百科，证据为 `EVD-20260912-017`。
+- [x] 物种 ID、应用工具内容、返回后的 H1 与 `noindex` 均正确；未修改代码或产品数据。
+- [ ] 当前仍缺系统 Chrome 三档、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。
+
 ## 2026-09-12 分类到 Species 真实跳转
 
 - [x] Chrome 用户标签实际点击分类页极火虾入口并进入 `/species/sp_0001`；图片、章节、单一 H1、robots 和无横向溢出均正常，证据为 `EVD-20260912-015`。
