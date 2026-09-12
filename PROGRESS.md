@@ -1500,3 +1500,8 @@
 
 - [x] 首页“进入我的鱼缸”通过 Tab + Enter 进入 `/welcome` onboarding，未绕过新手引导，公开导航消失，证据为 `EVD-20260912-081`。
 - [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
+## 2026-09-13 Species章节导航锚点收口（`b54b4557`）
+
+- [x] 修复“一眼了解”章节导航误指向Hero的问题：`#overview`现在落到参数带所在章节；新增结构回归断言，证据为 `EVD-20260913-086`。
+- [x] `test:public-seo-structure`、响应式契约、lint、build 和 diff-check 通过。
+- [ ] 真实浏览器hash滚动、系统Chrome三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成；页面继续 `noindex,follow`。

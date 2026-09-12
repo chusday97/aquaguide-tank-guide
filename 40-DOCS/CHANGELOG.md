@@ -725,3 +725,13 @@
 
 - 内置浏览器实际打开宝莲灯本地审核预览，图片、Alt、参数、环境、活动水层、群游和觅食内容可读；普通公开路由仍保持图片回退。
 - Hero 与品系卡用途尚未分别批准，页面继续 `noindex,follow`。
+## [Unreleased] Species chapter anchor — 2026-09-13
+
+### Fixed
+
+- 将Species“一眼了解”章节导航的 `#overview` 锚点对齐实际参数带章节，避免点击后仍停留在Hero。
+
+### Verification
+
+- 结构、响应式、lint、build和diff-check通过；证据为 `EVD-20260913-086`。
+- 真实多视口、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成；页面继续 `noindex,follow`。

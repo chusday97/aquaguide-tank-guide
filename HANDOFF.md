@@ -1286,3 +1286,9 @@
 - 当前本地预览 `http://127.0.0.1:3000/species/sp_0432?assetPreview=1` 已实际显示宝莲灯项目图片，Alt 为“侧视的宝莲灯”。
 - 预览同时显示鱼类参数、环境、中层活动、群游数量和觅食内容；普通路由仍显示图片回退，证明待确认素材没有泄漏到公开聚合。
 - 下一步需要项目负责人分别确认 Hero 和品系卡用途的主体、清晰度、边缘完整性、构图和 Alt；未确认前保持 `blocked`、`noindex,follow`。
+## 2026-09-13 当前交接：Species章节锚点
+
+- 最新代码提交：`b54b4557 fix: align species overview chapter anchor`。
+- “一眼了解”现在定位到参数带的实际章节，不再与Hero共用 `#overview`；结构、响应式、lint、build和diff-check通过，证据为 `EVD-20260913-086`。
+- 尚未完成真实浏览器hash滚动复核、系统Chrome多视口、性能/reduced-motion、Figma Canonical和可读独立Critic；继续保持 `noindex,follow`。
+- 用户未提交的三个文件仍未触碰、未暂存、未提交。

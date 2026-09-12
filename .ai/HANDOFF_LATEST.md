@@ -274,3 +274,8 @@
 - 当前本地 `assetPreview=1` 已在内置浏览器真实显示宝莲灯图片及其中文 Alt；普通公开路由仍保持图片回退。
 - 该预览只证明素材能加载和页面构图可读，不代表 Hero/品系卡已批准；两种用途仍需分别确认。
 - 当前目标继续保持 `noindex,follow`，不修改 Production、main 或 Figma。
+## 2026-09-13 最新运行时/代码状态
+
+- `b54b4557` 修正Species章节导航：`#overview`现在对应参数带所在章节，Hero不再占用该锚点；静态结构、响应式、lint、build和diff-check通过，证据为 `EVD-20260913-086`。
+- 下一次浏览器可用时，优先复核 `/species/sp_0001#overview` 是否直接落在“一眼了解”参数区；不重复启动已知受MachPort阻塞的系统Chrome。
+- 页面仍为 `noindex,follow`；Figma Canonical与可读独立Critic仍未通过；用户未提交文件保持原样。
