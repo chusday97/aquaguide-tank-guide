@@ -284,3 +284,8 @@
 - `2fd4fba3` 将Species章节观察器扩展到 `tool` 和 `related`，能力区/继续探索区纳入当前章节反馈；结构、响应式、lint、build和diff-check通过，证据为 `EVD-20260913-087`。
 - 浏览器可用后优先验证滚动进入两个区域时 `aria-current="location"` 是否更新；继续不重复启动已知受MachPort阻塞的系统Chrome。
 - 页面仍为 `noindex,follow`；Figma Canonical与可读独立Critic仍未通过。
+## 2026-09-13 当前续接点
+
+- `c1975c39` 之后，内置浏览器验证 Species 章节导航的两个末端锚点：`#tool` 与 `#related` 均可通过点击到达，证据为 `EVD-20260913-088`。
+- 不能将该证据扩大解释为完整多视口、`aria-current` 精确读回、性能/reduced-motion、Figma Canonical 或独立审查通过。
+- 继续顺序：浏览器多视口 → 只读 Critic 复验；保持 noindex，保留系统 Chrome MachPort、Figma Starter 配额与 Critic 空正文阻塞记录。

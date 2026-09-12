@@ -1298,3 +1298,8 @@
 - Species章节观察器新增 `tool` 和 `related`，导航当前态不再在滚动到能力区或继续探索区时停留在上一章；证据为 `EVD-20260913-087`。
 - 静态结构、响应式、lint、build和diff-check通过；真实浏览器滚动后的 `aria-current` 仍待复核。
 - 页面继续 `noindex,follow`；用户未提交的三个文件未触碰、未暂存、未提交。
+## 2026-09-13 最新交接：能力区与继续探索锚点
+
+- 内置浏览器已验证 `/species/sp_0001#overview` 的章节导航：点击“AquaGuide”后 URL 变为 `#tool`，目标能力区存在；再点击“继续探索”后 URL 变为 `#related`，目标区域存在，证据为 `EVD-20260913-088`。
+- 该证据只证明两个锚点可达，不代表完整 `aria-current`、三档多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic 已通过。
+- 下一步：补做可复核的三档浏览器回归，再启动既有只读 Critic；不创建重复 Critic，不解除 `noindex`。

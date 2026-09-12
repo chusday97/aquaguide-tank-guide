@@ -1510,3 +1510,7 @@
 - [x] 章节观察器现在包含“AquaGuide”能力区和“继续探索”区；滚动进入这两个区域时，章节导航可同步更新当前态，证据为 `EVD-20260913-087`。
 - [x] 结构、响应式、lint、build 和 diff-check 通过；已知构建仅保留大字体/大 chunk 警告。
 - [ ] 尚未获得真实浏览器中的 `aria-current` 滚动证据；系统 Chrome、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。
+## 2026-09-13 Species章节锚点真实浏览器复核（`c1975c39`）
+
+- [x] 内置浏览器从 `/species/sp_0001#overview` 点击“AquaGuide”后真实进入 `#tool`，再点击“继续探索”后真实进入 `#related`；两个目标区域均存在，证据为 `EVD-20260913-088`。
+- [ ] 本证据只覆盖两个章节锚点可达，不扩张为 `aria-current`、390/600/1440、性能、reduced-motion、Figma Canonical 或独立 Critic 通过；页面继续 `noindex,follow`。
