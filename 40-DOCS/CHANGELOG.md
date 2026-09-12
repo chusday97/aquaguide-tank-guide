@@ -6,6 +6,7 @@
 - Verified: 2026-09-12 公开文案、结构、lint、build 和 diff-check 通过；Product Truth、证据、路由和索引策略不变。
 - Verified: 2026-09-12 内置 Chrome 实际回读 Species 页面，确认文案收口已呈现且页面可滚动；该桌面证据不替代三档自动化、性能或独立 Critic。
 - Added: 2026-09-12 公开文案回退断言，禁止 Species 日常照料章节恢复内部说明式文案；提交 `d245bb8a`。
+- Added: 2026-09-12 Species 章节导航当前态：滚动时同步 `aria-current="location"` 与视觉高亮，点击锚点时立即反馈；提交 `26f7d05d`。
 
 - Fixed: 2026-09-12 Species“它如何生活”内容网格按实际数量收拢，桌面/平板使用两列、窄屏使用单列，减少稀疏内容造成的空白；提交 `822871b7`。
 - Verified: 2026-09-12 内置 Chrome 长截图确认 Species 页面仍可滚动，生活习性卡、Hero、品系图片和能力入口可见；公开结构、响应式、文案、Editorial、Evidence、lint、build 和 diff-check 通过。

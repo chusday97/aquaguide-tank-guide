@@ -16,6 +16,12 @@
 - [x] 公开文案测试新增 Species 日常照料引导断言：旧内部说明不可回归，新中文引导必须存在。
 - [x] `npm run test:public-seo-copy` 与 `git diff --check` 通过。
 
+## 2026-09-12 Species 章节当前态（`26f7d05d`）
+
+- [x] 章节导航新增当前章节状态：滚动进入章节时同步 `aria-current="location"` 和视觉高亮，点击锚点时立即反馈。
+- [x] 无 `IntersectionObserver` 时不影响页面内容和导航可用性；公开结构、响应式、文案、lint 和 build 通过。
+- [ ] 当前只获得内置 Chrome 桌面可读性树回读；系统 Chrome 三档自动化、性能、reduced-motion、Figma Canonical 和独立 Critic仍未完成。
+
 - [x] 公开结构测试现在要求 Marketing、Category、Species、Guide 全部调用共享 `setSeoDocument`，防止页面级 metadata 写入器重新分叉。
 - [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过。
 - [ ] 真实路由切换仍待 Mac 解锁后复验；Figma Canonical、可读独立 Critic 和索引放行仍未完成。

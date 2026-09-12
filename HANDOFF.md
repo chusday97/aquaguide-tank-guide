@@ -72,6 +72,11 @@
 
 - `test-public-seo-copy` 已新增断言，保护 Species 日常照料章节不回退到内部说明式文案；提交 `d245bb8a`，测试通过。
 
+## 2026-09-12 Species 章节当前态
+
+- 章节导航已加入当前章节状态：滚动进入章节时同步 `aria-current="location"` 和视觉高亮，点击锚点时立即反馈，提交 `26f7d05d`。
+- 公开结构、响应式、文案、lint 和 build 通过；仍不能替代系统 Chrome 三档自动化、性能、Figma Canonical 或可读独立 Critic。
+
 ## 2026-09-09 Species SEO 干净 Preview 候选
 
 - 远端状态：Draft PR #147 的稳定提交为 `01d71f12`；`foundation`、`validate`、Vercel、Cloudflare 和 GP-001…GP-005 全部通过，PR 保持 Draft，未合并。
