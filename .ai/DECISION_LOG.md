@@ -37,3 +37,8 @@
 - **状态：** 已记录（2026-09-12）
 - **内容：** 公开 Species 页的收藏只使用本地收藏服务，不通过应用 Repository 读取登录、鱼缸或 Supabase 状态；应用内页面继续保留原有 Repository 行为。
 - **影响：** 只影响 Public Shell 的收藏实现与结构回归，不改变 Product Truth、内容证据、路由或索引策略。
+## D-AQUA-007 — 公开分类名与参数标题统一
+
+- **状态：** 已记录（2026-09-12，提交 `31c8e5fc`）
+- **内容：** Public Shell 的面包屑只显示可到达的公开分类名称，不直接暴露内部照料 taxonomy；Species 参数区与其余章节统一复用 `SeoSectionHeading`。
+- **影响：** 只改变公开导航标签和标题结构，不改变 Product Truth、证据绑定、路由、metadata、JSON-LD 或索引策略。

@@ -672,3 +672,15 @@
 - Species 缺图回退状态改为紧凑稳定媒体框，减少鱼类公开页无图时的空白感；已批准图片布局不变。
 - 新增公开响应式契约断言，防止缺图回退恢复为过高 Hero。
 - 内置 Chrome 复核普通宝莲灯页面可滚动且后续内容可见；系统 Chromium 与独立 Critic 仍分别受 MachPort/空正文阻塞。
+## [Unreleased] Public SEO visual consistency — 2026-09-12
+
+### Changed
+
+- 统一 Species 公开面包屑与分类页的公开分类名称，避免内部照料分类泄漏到用户导航。
+- 统一 Species 参数区与其他内容章节的编号标题组件。
+- 将首页、分类页和未发布指南的状态说明改为用户可理解的内容整理提示；索引策略仍由 metadata 保持 `noindex,follow`。
+
+### Verification
+
+- 公开 SEO 文案、结构、响应式、证据、素材、字体、lint、build 和 diff-check 已通过；内置浏览器已回读极火虾页面。
+- 系统 Chrome 三档、性能/reduced-motion、Figma Canonical、完整图片故障注入和可读独立 Critic仍未通过。

@@ -1161,3 +1161,11 @@
 - 内置 Chrome 复核 `/species/sp_0001` 和 `/species/sp_0001?variant=sp_0030`：极火虾已批准图片与内容正常；黄金米虾显示黄色 Hero、自身参数和黄色差异，并共享基础物种生活习性。
 - 未产生 `sp_0030` 独立生活习性 evidence；页面和来源区正常，继续 `noindex,follow`。
 - 证据：`EVD-20260912-029`。
+## 2026-09-12 当前交接：公开 SEO 视觉一致性
+
+- 最新代码提交：`31c8e5fc fix: unify public SEO section language`。
+- Species 面包屑统一使用公开分类名称，避免把内部照料分类显示给用户；参数区统一复用共享章节标题组件。
+- 首页、分类页和指南页底部状态改为用户语言，不暴露“暂不进入搜索索引”等发布流程表达；robots 仍由 metadata 服务保持 `noindex,follow`。
+- 公开文案/结构/响应式/证据/素材/字体/TypeScript/build/diff-check 门禁通过；内置浏览器实际确认极火虾面包屑与“一眼了解”标题层级。
+- 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 仍未触碰、未暂存、未提交。
+- 剩余门禁：系统 Chrome 三档、性能/reduced-motion、完整图片故障注入、宝莲灯图片用途级确认、Figma Canonical、可读独立 Critic；未全部通过前不解除 `noindex`。

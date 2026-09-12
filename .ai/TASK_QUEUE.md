@@ -115,3 +115,8 @@
 
 - [x] 内置 Chrome 确认宝莲灯公开资料区只显示一条 FishBase 来源。
 - [ ] 继续完成三档浏览器证据和独立 Critic 可读报告。
+## 2026-09-12 视觉一致性收口
+
+- [x] 统一公开 Species 面包屑、参数标题组件和公开状态文案，提交 `31c8e5fc`。
+- [x] 运行公开 SEO 静态门禁、证据/素材门禁、lint、build 和 diff-check，并在内置浏览器回读极火虾页面。
+- [ ] 不把用户语言收口误认为发布完成；系统 Chrome、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍是后续门禁。

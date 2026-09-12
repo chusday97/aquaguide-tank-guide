@@ -1325,3 +1325,10 @@
 - [x] 内置 Chrome 复核极火虾基础页：已批准 Hero、中文 Alt、确认内容、FAQ、品系卡和工具入口可见。
 - [x] 复核黄金米虾品系页：黄色 Hero、18–28°C 参数、黄色差异和极火虾基础物种生活习性继承正确；未生成重复生活习性 evidence。
 - [x] 证据记录为 `EVD-20260912-029`；页面继续 `noindex,follow`。
+## 2026-09-12 公开 SEO 视觉一致性收口
+
+- [x] 修复 Species 面包屑使用内部照料分类“除藻生物”而与公开分类页不一致的问题；现在公开路径统一显示基础公开分类名称“虾螺蟹”。
+- [x] 将 Species 的“一眼了解”参数区改用共享 `SeoSectionHeading`，与行为、环境、日常怎么养和品系章节使用同一标题标准。
+- [x] 将首页、分类页和未发布指南底部的“公开预览 · 暂不进入搜索索引”改为用户可理解的“内容会持续整理和补充”；代码提交 `31c8e5fc`。
+- [x] 相关公开文案、结构、响应式、Editorial、Evidence、Asset、Typography、lint、build 和 diff-check 通过；内置浏览器已复核极火虾面包屑与参数标题。
+- [ ] 系统 Chrome 三档、性能/reduced-motion、完整图片故障注入、宝莲灯图片用途确认、Figma Canonical 和可读独立 Critic仍未完成；继续保持 `noindex,follow`。
