@@ -22,6 +22,7 @@ for (const [relativeFile, requiredPieces] of publicPages) {
 }
 
 const species = read('src/pages/SpeciesLanding.tsx');
+const publicFavorites = read('src/services/favorites/public-species-favorites.service.ts');
 const app = read('src/App.tsx');
 assert.match(app, /function PublicSeoRoutes\(\)[\s\S]*?window\.scrollTo\(\{ top: 0, left: 0, behavior: 'auto' \}\)/, 'Public routes must reset scroll position on route changes');
 assert.match(app, /document\.getElementById\(sectionId\)\?\.scrollIntoView/, 'Public routes must restore direct chapter hash navigation');
@@ -37,7 +38,11 @@ assert.match(resilientImage, /fallbackFailed/, 'ResilientImage must keep a termi
 assert.match(resilientImage, /resilient-image-terminal-fallback/, 'ResilientImage must render a readable terminal fallback');
 assert.match(globalStyles, /\.resilient-image-terminal-fallback/, 'Terminal image fallback must have stable layout styling');
 assert.doesNotMatch(species, /getCurrentAquaGuideRepository|repository-provider/, 'Public Species must not read the app repository for favorites or aquarium state');
-assert.match(species, /toggleSpeciesFavorite/, 'Public Species must use local favorites without auth or Supabase reads');
+assert.match(species, /togglePublicSpeciesFavorite/, 'Public Species must use isolated local favorites without auth or Supabase reads');
+assert.doesNotMatch(species, /toggleSpeciesFavorite/, 'Public Species must not use the app-wide favorites service');
+assert.match(species, /getPublicSpeciesFavoriteIds|subscribeToPublicSpeciesFavorites/, 'Public Species must read only the isolated favorites key');
+assert.match(species, /public-species-favorites\.service/, 'Public Species must import the isolated favorites service');
+assert.doesNotMatch(publicFavorites, /loadAppStateFromStorage|patchLocalAppState|aquarium_app_state_v1|repository-provider/, 'Public favorites must not depend on app state or repository services');
 assert.match(species, /import \{ setSeoDocument \} from ['"]\.\.\/services\/seo\/seo-document\.service['"]/, 'Species must use the shared SEO document service');
 assert.doesNotMatch(species, /const setMeta|const setCanonical/, 'Species must not keep a second metadata writer');
 assert.match(species, /profile\.editorial\?\.(overview|habitat|feeding|maintenance)/, 'Species must render published editorial conditionally');

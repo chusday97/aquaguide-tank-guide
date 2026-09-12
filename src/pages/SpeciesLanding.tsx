@@ -7,7 +7,7 @@ import { getPublishedSpeciesProfile } from '../data/publishedSpeciesProfile';
 import { getSpeciesLandingPilotRecord, type SpeciesLandingAssetUse } from '../data/speciesLandingPilot';
 import { getCareTaxonomyPath, getDifficultyLabel, getSizeLabel, getTemperamentLabel } from '../modules/species/species.service';
 import { taskRoutes } from '../services/navigation/task-routes';
-import { getSpeciesFavoriteIds, subscribeToFavorites, toggleSpeciesFavorite } from '../services/favorites/favorites.service';
+import { getPublicSpeciesFavoriteIds, subscribeToPublicSpeciesFavorites, togglePublicSpeciesFavorite } from '../services/favorites/public-species-favorites.service';
 import { getSpeciesLandingSelection } from '../services/species/species-landing.service';
 import { SeoBreadcrumbs } from '../components/seo/SeoBreadcrumbs';
 import { SeoCapabilityCard } from '../components/seo/SeoCapabilityCard';
@@ -85,13 +85,13 @@ export function SpeciesLanding() {
   const baseSpecies = selection?.baseSpecies || null;
   const profile = useMemo(() => selection ? getPublishedSpeciesProfile(selection, 'zh-CN') : null, [selection]);
   const assetPreviewEnabled = canPreviewPendingAssets(searchParams);
-  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => getSpeciesFavoriteIds());
+  const [favoriteIds, setFavoriteIds] = useState<string[]>(() => getPublicSpeciesFavoriteIds());
   const [favoriteSaving, setFavoriteSaving] = useState(false);
   const [actionFeedback, setActionFeedback] = useState('');
   const [heroImageFailed, setHeroImageFailed] = useState(false);
   const [activeChapter, setActiveChapter] = useState('overview');
 
-  useEffect(() => subscribeToFavorites(() => setFavoriteIds(getSpeciesFavoriteIds())), []);
+  useEffect(() => subscribeToPublicSpeciesFavorites(() => setFavoriteIds(getPublicSpeciesFavoriteIds())), []);
   useEffect(() => { setHeroImageFailed(false); setActionFeedback(''); }, [fish?.id]);
   useEffect(() => {
     if (!profile) return;
@@ -145,8 +145,8 @@ export function SpeciesLanding() {
     if (favoriteSaving) return;
     setFavoriteSaving(true);
     try {
-      const nextFavorite = toggleSpeciesFavorite(fish.id);
-      setFavoriteIds(getSpeciesFavoriteIds());
+      const nextFavorite = togglePublicSpeciesFavorite(fish.id);
+      setFavoriteIds(getPublicSpeciesFavoriteIds());
       setActionFeedback(nextFavorite ? '已加入收藏。' : '已取消收藏。');
     } catch {
       setActionFeedback('收藏未完成，请稍后重试。');
