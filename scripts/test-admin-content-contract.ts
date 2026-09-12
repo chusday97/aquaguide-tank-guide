@@ -66,6 +66,7 @@ assert.match(contentRoute, /contentRouter\.get\('\/content-bootstrap'/);
 assert.match(vercelConfig, /\"source\": \"\/api\/v1\/:path\*\"/);
 assert.match(vercelConfig, /\"destination\": \"\/api\/v1\/router\"/);
 assert.match(vercelV1Router, /createBusinessApiApp/);
+assert.match(vercelV1Router, /from '\.\.\/\.\.\/apps\/api\/src\/business-app\.js'/, 'Vercel ESM wrapper must use an explicit .js extension so Node can resolve the compiled Business API module.');
 assert.match(runtimeCatalog, /hydratePublishedContentCatalog/);
 assert.match(runtimeCatalog, /runtimeFishData/);
 assert.match(runtimeCatalog, /runtimeCareTopicsData/);
