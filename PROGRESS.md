@@ -1523,3 +1523,8 @@
 
 - [x] 显式指定 `PLAYWRIGHT_CHANNEL=chrome` 后仍在 Chrome 启动阶段 SIGABRT，未进入页面断言；证据为 `EVD-20260913-091`。
 - [ ] 不再重复启动系统浏览器；转用内置浏览器或托管 Preview 完成可复核多视口证据。页面继续 `noindex,follow`。
+## 2026-09-13 Public Species收藏隔离修复（`b42d1049`）
+
+- [x] 修复 Critic 指出的边界：公开 Species 不再导入通用收藏服务，改用独立 `public-species-favorites.service.ts`，只访问 `wishlistFishIds`，不读取应用鱼缸状态；证据为 `EVD-20260913-092`。
+- [x] 公开结构、契约、lint、build 和 diff-check 通过；应用内收藏逻辑保持不变。
+- [ ] 同一 Critic 对当前版本复验仍返回空正文，证据为 `EVD-20260913-093`；不计为独立审查通过。

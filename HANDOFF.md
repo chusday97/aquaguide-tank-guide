@@ -1312,3 +1312,8 @@
 
 - `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing` 已执行；显式使用 `/Applications/Google Chrome.app` 仍在启动阶段 SIGABRT，未进入页面断言，证据为 `EVD-20260913-091`。
 - 该结果确认阻塞属于系统浏览器自动化环境，不是 bundled Chromium 单一版本问题。下一轮不重复启动，改用内置浏览器或托管 Preview。
+## 2026-09-13 收藏边界修复与审查状态
+
+- Critic 旧版可读报告发现：公开 Species 使用通用收藏服务，会间接读取包含鱼缸数据的 `aquarium_app_state_v1`。
+- 已在 `b42d1049` 将公开页改为独立收藏服务；结构测试明确禁止公开页接回应用收藏服务或应用状态依赖，相关静态回归通过，证据为 `EVD-20260913-092`。
+- 同一 Critic 对当前版本复验完成但仍返回空 `items`，不能计为独立审查通过，证据为 `EVD-20260913-093`。

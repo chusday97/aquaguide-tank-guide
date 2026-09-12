@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+- Fixed: 2026-09-13 Public Species 收藏改用独立本地存储服务，不再间接读取包含鱼缸数据的应用状态；应用内收藏逻辑保持不变，提交 `b42d1049`，证据为 `EVD-20260913-092`。
+- Blocked: 2026-09-13 同一只读 Critic 对当前版本复验仍返回空正文，不能计为独立审查通过；证据为 `EVD-20260913-093`。
 - Blocked: 2026-09-13 显式指定系统 Google Chrome 后仍在启动阶段 SIGABRT，未进入 Species 页面断言；证据为 `EVD-20260913-091`。后续转用内置浏览器或托管 Preview，不重复启动。
 - Blocked: 2026-09-13 系统 Playwright Chromium 仍在启动阶段触发 macOS `MachPortRendezvousServer: Permission denied (1100)`，未进入页面断言；证据为 `EVD-20260913-089`。
 - Verified: 2026-09-13 公开契约、结构、响应式、证据绑定、编辑证据、lint、build 和 diff-check 全部通过；证据为 `EVD-20260913-090`。
