@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { cp, mkdir, readFile, readdir, rename, rm, stat, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -83,7 +83,7 @@ const backupDirectory = (root: string, backupId: string) => path.join(backupsDir
 
 const atomicJsonWrite = async (filePath: string, value: unknown) => {
   await mkdir(path.dirname(filePath), { recursive: true });
-  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}-${randomUUID()}`;
   try {
     await writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
     await rename(temp, filePath);
@@ -93,7 +93,7 @@ const atomicJsonWrite = async (filePath: string, value: unknown) => {
 };
 const atomicBufferWrite = async (filePath: string, value: Buffer) => {
   await mkdir(path.dirname(filePath), { recursive: true });
-  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}-${randomUUID()}`;
   try {
     await writeFile(temp, value);
     await rename(temp, filePath);
@@ -343,7 +343,7 @@ const exportGitRuntimeAuthority = async () => {
   const publishedSpeciesAssets = asRecord(business.publishedSpeciesAssets) || {};
   const publishedCareAssets = asRecord(business.publishedCareAssets) || {};
   const publishedCareMeta = asRecord(business.publishedCareMeta) || {};
-  const tempAssets = `${runtimeAssetsDirectory()}.tmp-${process.pid}-${Date.now()}`;
+  const tempAssets = `${runtimeAssetsDirectory()}.tmp-${process.pid}-${Date.now()}-${randomUUID()}`;
   const createdRuntimeAssets: string[] = [];
   let snapshotCommitted = false;
   await rm(tempAssets, { recursive: true, force: true });

@@ -245,6 +245,13 @@ try {
   assert.deepEqual(runtimeSnapshot.payload.data.counts, { species: 1, care: 1, profiles: 7, pairRules: 4 });
   assert.equal(runtimeSnapshot.payload.data.gitCommitRequired, true);
   assert.equal(runtimeSnapshot.payload.data.deploymentTriggered, false);
+  // Concurrent runtime exports must use isolated staging directories and all succeed.
+  const concurrentExports = await Promise.all(Array.from({ length: 32 }, () => requestJson(started.base, '/runtime-snapshot', { method: 'POST' })));
+  assert.equal(concurrentExports.every(result => result.response.status === 201), true,
+    'Concurrent runtime snapshot exports must not collide on staging directories.');
+  assert.equal((await readdir(path.join(root, 'public'))).some(name => name.startsWith('runtime-assets.tmp-')), false,
+    'Concurrent runtime exports must clean all staging directories.');
+
   const exported = JSON.parse(await readFile(path.join(root, 'public/runtime-authority.json'), 'utf8'));
   assert.equal(exported.authority, 'local-file-git');
   assert.equal(exported.productCare.species.length, 1);
