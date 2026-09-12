@@ -1161,3 +1161,9 @@
 - [x] 本地 `assetPreview=1` 页面实际显示项目内宝莲灯图片，主体、比例和 Hero 构图正常；环境、活动水层、群游和觅食内容均可见。
 - [x] 普通 `/species/sp_0432` 仍显示图片回退，确认缺图原因是素材用途 binding 为 `blocked`，不是路由或文件加载故障。
 - [ ] 仍需由项目负责人确认宝莲灯 Hero 与品系卡用途后分别更新状态；批准前不进入 Published 聚合。
+
+## 2026-09-12 公开资料来源去重
+
+- [x] 公开 Species 聚合按“来源标题 + 发布方 + 链接”去重，避免同一 AquaGuide 目录记录因多个绑定重复出现；提交 `90a53625`。
+- [x] Editorial、Evidence、Public Contract、Copy、lint、build 和 diff-check 复跑通过；证据内容、来源 ID、fingerprint 和发布门禁未改变。
+- [ ] 宝莲灯图片用途级确认、三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。

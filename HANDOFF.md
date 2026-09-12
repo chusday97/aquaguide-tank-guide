@@ -1068,3 +1068,9 @@
 - `http://127.0.0.1:3000/species/sp_0432?assetPreview=1` 实际显示项目内宝莲灯图片，主体和构图正常；该模式仅用于本地审核预览。
 - 普通路由仍显示稳定图片回退，因为 Hero 和品系卡用途绑定当前为 `blocked`；这不是图片不存在或路由失效。
 - 下一步需要项目负责人分别确认 Hero 和品系卡用途；确认前保持 fail-closed、`noindex,follow`。
+
+## 2026-09-12 资料来源展示去重
+
+- 公开来源列表已按展示身份去重，防止同一 AquaGuide 目录来源重复出现；不同标题、发布方或外部链接仍分别保留。
+- 提交：`90a53625 fix: deduplicate public species sources`。
+- 相关证据和 Product Truth 未改变；页面继续 `noindex,follow`。
