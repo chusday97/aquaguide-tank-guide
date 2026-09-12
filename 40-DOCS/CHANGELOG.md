@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-13 结构化加载态修复后的 Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-118`。
 - Fixed: 2026-09-13 公开 SEO 懒加载改为结构化骨架，提前保留面包屑、Hero 媒体框和内容轮廓，避免整页空白误导用户；支持 aria-busy/status 和 reduced-motion，提交 `b8c705a9`，证据为 `EVD-20260913-117`。
 - Verified: 2026-09-13 最新非生产 Preview 已 READY；三条 Species 路由部署侧 HTTP 200 且 `x-robots-tag:noindex`，证据为 `EVD-20260913-106`。浏览器 DOM/截图、性能、Critic 和 Figma Canonical 仍未完成。
 - Blocked: 2026-09-13 本地 HEAD `e8e3029b` 与远端跟踪引用 `93f199c1` 相差 204 个提交，实时远端查询受 GitHub DNS 阻塞；托管Preview不能作为当前版本证据，证据为 `EVD-20260913-099`。

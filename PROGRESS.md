@@ -1,3 +1,8 @@
+## 2026-09-13 公开 SEO 完整静态回归（`b8c705a9`）
+
+- [x] 结构化加载态修复后，Editorial evidence、Evidence bindings、Public contract、中文文案、结构、响应式、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-118`。
+- [ ] 600px 独立运行时证据、系统 Chrome MachPort、可读独立 Critic、Figma Canonical 和索引发布门禁仍未完成。
+
 ## 2026-09-13 公开 SEO 加载态收口（`b8c705a9`）
 
 - [x] 公开路由懒加载不再显示应用通用整页空白态，改为包含面包屑、Hero 媒体框、标题/正文轮廓和准备提示的结构化加载骨架；内容加载完成后替换为真实页面。

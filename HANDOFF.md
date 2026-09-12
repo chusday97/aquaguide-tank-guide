@@ -1,5 +1,10 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 静态回归补充
+
+- 结构化加载态修复后，Editorial、Evidence bindings、Public contract、中文文案、结构、响应式、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-118`。
+- Build 仍只有既有的大 chunk 与动态/静态导入提示；本轮没有修改数据契约、Product Truth、索引策略或生产环境。
+
 ## 2026-09-13 公开加载态修复
 
 - 公开 SEO 路由懒加载已改用 `PublicSeoLoading` 结构化骨架，避免用户先看到应用通用整页空白；骨架包含面包屑、Hero 媒体框、标题/正文轮廓和“正在准备 AquaGuide 页面…”提示。
