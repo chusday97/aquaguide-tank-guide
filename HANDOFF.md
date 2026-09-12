@@ -1324,3 +1324,7 @@
 ## 2026-09-13 收藏失败反馈
 
 - `1415bcf3` 让公开收藏 localStorage 写入失败重新抛出，由 Species 页面现有错误处理显示“收藏未完成，请稍后重试”；不再把失败写入反馈为成功，证据为 `EVD-20260913-095`。
+## 2026-09-13 公开收藏隔离专项测试
+
+- `89d977da` 新增 `test:public-favorites-isolation`，在模拟 `wishlistFishIds` 与 `aquarium_app_state_v1` 同时存在时，确认公开收藏只访问独立 key；证据为 `EVD-20260913-096`。
+- 该专项补强了源码边界证据，但仍不替代系统浏览器、性能、Figma 或独立 Critic 门禁。
