@@ -627,3 +627,4 @@
 - 补充本地内置浏览器复核：预览服务恢复后宝莲灯页面可实际滚动到“继续探索/资料来源”，Tab 可进入公开页面交互控件；该证据不替代系统 Chrome 多视口、性能或独立 Critic 门禁。
 - 记录系统 Chrome 单次复验：进程在进入页面断言前 SIGABRT 退出，未产生截图或通过证据；不重复启动同一失败通道。
 - 复跑当前 HEAD 静态发布门禁：Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；记录为 `EVD-20260912-012`，未改变页面、素材、索引或用户未提交文件。
+- Chrome 用户标签补充主页运行时证据：图片、公开 Header、滚动、canonical、robots 和 44px 可见链接可读；性能资源读取受浏览器隔离环境限制，记录为 `EVD-20260912-013`。

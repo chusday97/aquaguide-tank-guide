@@ -33,6 +33,11 @@
 - 当前 HEAD `ff2f2ff1` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-012`。
 - 本轮仅同步证据与状态文档；未修改代码、Figma、生产环境或索引策略。
 
+## 2026-09-12 本地主页运行时复核
+
+- Chrome 用户标签实际读取主页，公开 Header、已批准极火虾图片、滚动、canonical、robots 和 44px 可见链接均正常，证据为 `EVD-20260912-013`。
+- 性能资源读取受浏览器隔离环境限制，未计为性能通过；完整三档性能、Critic、Figma 和索引门禁仍未完成。
+
 ## 下一步
 
 1. 等 Critic 输出能力恢复后，对当前 SHA 做一次只读六维复验。
