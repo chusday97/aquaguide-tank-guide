@@ -121,6 +121,36 @@ try {
   }
   assert.equal((await requestJson(started.base, `/assets/${concurrentAssetId}`, { method: 'DELETE' })).response.status, 200);
 
+  // Concurrent reads of one asset id must never combine metadata from one version with blob bytes from another.
+  const readRaceAssetId = 'local-asset-concurrent-read';
+  const readRacePng = Buffer.alloc(192 * 1024 + 7, 0x31);
+  const readRaceWebp = Buffer.alloc(640 * 1024 + 19, 0x32);
+  assert.equal((await requestJson(started.base, `/assets/${readRaceAssetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: readRacePng,
+  })).response.status, 201);
+  const readRaceWriter = (async () => {
+    for (let index = 0; index < 48; index += 1) {
+      const useWebp = index % 2 === 0;
+      const result = await requestJson(started.base, `/assets/${readRaceAssetId}`, {
+        method: 'PUT', headers: { 'Content-Type': useWebp ? 'image/webp' : 'image/png' }, body: useWebp ? readRaceWebp : readRacePng,
+      });
+      assert.equal(result.response.status, 201);
+    }
+  })();
+  const readRaceReader = (async () => {
+    for (let index = 0; index < 240; index += 1) {
+      const response = await fetch(`${started.base}/assets/${readRaceAssetId}`);
+      assert.equal(response.status, 200);
+      const body = Buffer.from(await response.arrayBuffer());
+      const mimeType = response.headers.get('content-type')?.split(';')[0] || '';
+      const isPngRead = mimeType === 'image/png' && body.equals(readRacePng);
+      const isWebpRead = mimeType === 'image/webp' && body.equals(readRaceWebp);
+      assert.equal(isPngRead || isWebpRead, true, 'Concurrent asset GET must return one complete blob/metadata version.');
+    }
+  })();
+  await Promise.all([readRaceWriter, readRaceReader]);
+  assert.equal((await requestJson(started.base, `/assets/${readRaceAssetId}`, { method: 'DELETE' })).response.status, 200);
+
   // If metadata commit fails after the blob was written, the new blob must be removed/restored.
   const pairFailureId = 'local-asset-pair-failure';
   const pairFailureMeta = path.join(root, 'assets', `${pairFailureId}.json`);

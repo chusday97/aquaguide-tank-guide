@@ -51,18 +51,18 @@ const withAuthorityTransaction = async <T>(operation: () => Promise<T>): Promise
   try { return await operation(); }
   finally { release(); }
 };
-const assetMutationTails = new Map<string, Promise<void>>();
-const withAssetMutationLock = async <T>(assetId: string, operation: () => Promise<T>): Promise<T> => {
-  const previous = assetMutationTails.get(assetId) || Promise.resolve();
+const assetPairTails = new Map<string, Promise<void>>();
+const withAssetPairLock = async <T>(assetId: string, operation: () => Promise<T>): Promise<T> => {
+  const previous = assetPairTails.get(assetId) || Promise.resolve();
   let release!: () => void;
   const gate = new Promise<void>(resolve => { release = resolve; });
   const tail = previous.catch(() => undefined).then(() => gate);
-  assetMutationTails.set(assetId, tail);
+  assetPairTails.set(assetId, tail);
   await previous.catch(() => undefined);
   try { return await operation(); }
   finally {
     release();
-    if (assetMutationTails.get(assetId) === tail) assetMutationTails.delete(assetId);
+    if (assetPairTails.get(assetId) === tail) assetPairTails.delete(assetId);
   }
 };
 
@@ -641,7 +641,7 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    return withAuthorityTransaction(() => withAssetMutationLock(assetId, async () => {
+    return withAuthorityTransaction(() => withAssetPairLock(assetId, async () => {
       const root = localRoot();
       const blobPath = assetFile(root, assetId);
       const metadataPath = assetMetaFile(root, assetId);
@@ -665,22 +665,24 @@ localAdminFileRouter.put(
 localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  const metadata = await readJsonOrNull(assetMetaFile(localRoot(), assetId)) as { mimeType?: string } | null;
-  if (!metadata) throw new ApiError(404, 'NOT_FOUND', 'Local asset metadata was not found.');
-  try {
-    const body = await readFile(assetFile(localRoot(), assetId));
-    response.setHeader('Content-Type', metadata.mimeType || 'application/octet-stream');
-    response.setHeader('Cache-Control', 'no-store');
-    return response.status(200).send(body);
-  } catch (error) {
-    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') throw new ApiError(404, 'NOT_FOUND', 'Local asset was not found.');
-    throw error;
-  }
+  return withAssetPairLock(assetId, async () => {
+    const metadata = await readJsonOrNull(assetMetaFile(localRoot(), assetId)) as { mimeType?: string } | null;
+    if (!metadata) throw new ApiError(404, 'NOT_FOUND', 'Local asset metadata was not found.');
+    try {
+      const body = await readFile(assetFile(localRoot(), assetId));
+      response.setHeader('Content-Type', metadata.mimeType || 'application/octet-stream');
+      response.setHeader('Cache-Control', 'no-store');
+      return response.status(200).send(body);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') throw new ApiError(404, 'NOT_FOUND', 'Local asset was not found.');
+      throw error;
+    }
+  });
 }));
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  return withAuthorityTransaction(() => withAssetMutationLock(assetId, async () => {
+  return withAuthorityTransaction(() => withAssetPairLock(assetId, async () => {
     const root = localRoot();
     const blobPath = assetFile(root, assetId);
     const metadataPath = assetMetaFile(root, assetId);
