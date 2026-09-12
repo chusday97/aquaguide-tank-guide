@@ -53,6 +53,11 @@
 - [x] 应用工具返回按钮恢复宝莲灯公开页状态。
 - [ ] 继续完成系统 Chrome 多视口、性能/reduced-motion、Figma Canonical和独立 Critic。
 
+## 2026-09-12 宝莲灯公开面包屑边界
+
+- [x] 首页面包屑返回品牌首页已验证。
+- [ ] 鱼类分类公开页未建立前，保持“灯科鱼”为不可点击分类文字，不创建伪链接。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
