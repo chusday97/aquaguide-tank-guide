@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+- Blocked: 2026-09-13 本地 HEAD `e8e3029b` 与远端跟踪引用 `93f199c1` 相差 204 个提交，实时远端查询受 GitHub DNS 阻塞；托管Preview不能作为当前版本证据，证据为 `EVD-20260913-099`。
+- Blocked: 2026-09-13 托管 Species Preview 可访问但仍为旧结构/错误 SHA，面包屑与相关链接指向 `/encyclopedia`，缺少当前公开章节；证据为 `EVD-20260913-098`。
 - Verified: 2026-09-13 内置浏览器重新确认黄金米虾 Base/Variant 继承、黄色图片 Alt、18–28°C 参数、FAQ和工具物种上下文；证据为 `EVD-20260913-097`。
 - Added: 2026-09-13 `test:public-favorites-isolation`，验证公开 Species 收藏只读写独立 `wishlistFishIds`，不触碰鱼缸应用状态；提交 `89d977da`，证据为 `EVD-20260913-096`。
 - Fixed: 2026-09-13 公开收藏 localStorage 写入失败时进入用户可见的失败提示，不再误报成功；提交 `1415bcf3`，证据为 `EVD-20260913-095`。

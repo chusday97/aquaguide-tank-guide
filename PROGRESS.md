@@ -1544,3 +1544,11 @@
 
 - [x] 内置浏览器重新验证黄金米虾品系：URL、H1、黄色图片 Alt、18–28°C 参数、基础物种行为/觅食继承、FAQ名称和工具物种参数均正确，证据为 `EVD-20260913-097`。
 - [ ] 该证据仍不替代系统 Chrome 三档、性能/reduced-motion、Figma Canonical 或独立 Critic。
+## 2026-09-13 托管 Preview 版本一致性复核
+
+- [x] 已登录 Chrome 可打开托管宝莲灯页面，但页面仍是旧结构：面包屑/相关链接指向 `/encyclopedia`，缺少当前的日常、品系和 FAQ 章节；证据为 `EVD-20260913-098`。
+- [ ] 托管 Preview 不能作为当前版本验收证据；下一步必须先完成本地、远端分支、Draft PR 和部署 SHA parity，不修改 Production。
+## 2026-09-13 Preview SHA parity 检查
+
+- [x] 本地 HEAD 为 `e8e3029b`，本地远端跟踪引用为 `93f199c1`，本地领先 204 个提交；`git ls-remote` 因 DNS 无法解析 GitHub 失败，证据为 `EVD-20260913-099`。
+- [ ] 当前托管 Preview 不能证明对应本地版本；网络恢复后先核对远端和部署 SHA，再决定是否创建非生产 Preview。不推送、不修改 Production。
