@@ -1,5 +1,17 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 Local asset pair transaction failures closed
+Two concrete Durable Local File asset-pair corruption paths are closed on main.
+
+- `f2087f26 fix(admin): rollback failed asset pair writes`: fail-before-fix proved blob commit could succeed while metadata replacement failed, leaving new blob + old metadata. PUT now restores the previous blob, or removes a newly-created blob, before rethrowing.
+- `9a6855da fix(admin): rollback failed asset pair deletes`: fail-before-fix proved DELETE could remove the blob while metadata unlink failed. DELETE is now sequential and restores the previous blob when metadata deletion fails.
+- Permanent cross-platform regressions cover both new-asset write failure, overwrite write failure, and delete failure.
+- PASS: Local File API/UI, Local Admin mode contract, API/root TypeScript, full build; GitHub Product Golden Path PASS for both checkpoints; both Vercel branch deployments READY.
+- Restore rollback was re-audited read-only; no reproducible product-grade failure was found without introducing artificial test hooks, so restore code was intentionally left unchanged.
+- Production remains unchanged because Local File API is DEV-only and excluded from the Business API bundle.
+- NEXT: continue only from another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-12 failed backup residue closed
 A second concrete Local File reliability badcase is closed on main at `0c8cd464 fix(admin): clean failed backup snapshots`.
 

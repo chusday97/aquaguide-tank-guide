@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-13 — current main asset reliability checkpoints
+- Canonical local branch: `main` at `/Users/chuchu/aquaguide-main`.
+- Functional checkpoints pushed to GitHub main: `f2087f26 fix(admin): rollback failed asset pair writes` then `9a6855da fix(admin): rollback failed asset pair deletes`.
+- Both checkpoints passed GitHub Product Golden Path and have READY Vercel branch deployments.
+- Production was intentionally not promoted; these changes affect DEV-only Local File routes excluded from the Production Business API graph.
+- Historical feature/reconcile/product-recovery worktrees remain non-canonical and were not modified.
+
+
 ## CURRENT OVERRIDE — Local File backup cleanup checkpoint (2026-09-12)
 - Canonical local/GitHub main functional checkpoint: `0c8cd4641afe0c1bc53c8bf804d4d1abdaddd9f7` before this docs sync.
 - Product Golden Path PASS; Vercel branch deployment `dpl_7iffveTP316qn6sC4ztATKdpcPqV` READY.

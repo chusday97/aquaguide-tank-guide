@@ -1493,3 +1493,12 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Promoted the probe into `scripts/test-local-file-admin.ts`; permanent assertion requires the backup directory set to remain unchanged after forced mid-copy failure.
 - PASS: Local File API, Local Admin contract, Local File browser backup/restore/restart, API/root TypeScript, full build, GitHub Product Golden Path and Vercel branch deployment.
 - No Production promotion; Local File router remains DEV-only.
+
+## 2026-09-13 — Local asset pair PUT/DELETE failure-path closure
+- Fail-before-fix PUT: forced metadata replacement failure after blob commit returned 500 but left new blob + old metadata. Closed by `f2087f26`; failed writes now restore prior blob or remove newly-created blob.
+- Added cross-platform regression for both new-asset and overwrite paths.
+- Fail-before-fix DELETE: forced metadata unlink failure returned 500 after blob had already been removed. Closed by `9a6855da`; delete is sequential and restores prior blob when the metadata step fails.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `check:api`, root TypeScript, full build, diff hygiene.
+- GitHub Product Golden Path PASS for both functional checkpoints; Vercel branch deployments READY.
+- Restore rollback inspected again; no reproducible product-grade blocker without artificial hooks, so no speculative change.
+- Production/Supabase/indexing unchanged.

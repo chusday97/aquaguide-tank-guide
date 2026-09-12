@@ -1,5 +1,15 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — Local asset pair write/delete transaction closure
+- Canonical worktree: `/Users/chuchu/aquaguide-main`, branch `main`.
+- `f2087f26` closes failed asset PUT corruption: when blob write succeeds but metadata replacement fails, previous blob is restored (or new blob removed) before the error escapes.
+- `9a6855da` closes failed asset DELETE corruption: blob deletion is now sequenced before metadata deletion, with blob restoration if metadata unlink fails.
+- Fail-before-fix was reproduced on real macOS filesystem flags; permanent regressions are cross-platform and do not require OS-specific flags.
+- PASS locally: Local File API/UI, Local Admin mode contract, API/root TypeScript, full build. GitHub Product Golden Path PASS and Vercel branch deployment READY for both commits.
+- Restore rollback was inspected again; no stable product-grade failure was reproducible without artificial hooks, so it remains unchanged.
+- Production deployment/alias, Supabase Staging, live DB and indexing were not changed.
+
+
 ## CURRENT OVERRIDE — failed Local File backups no longer leave hidden partial directories (2026-09-12)
 - Functional checkpoint: `0c8cd464 fix(admin): clean failed backup snapshots`.
 - Reproduced before fix: chmod a valid asset blob unreadable after integrity passed; POST backup returned `500 INTERNAL_ERROR` and left a new manifest-less `backup-*` directory that listBackups intentionally hid.
