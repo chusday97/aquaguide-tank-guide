@@ -778,3 +778,4 @@
 - Blocked: 2026-09-13 最新 READY Preview 在内置浏览器中被 Vercel 登录保护拦截，未取得页面 DOM/截图；部署侧 HTTP 200 与 noindex 已通过，证据为 `EVD-20260913-107`。
 - Verified: 2026-09-13 本地内置浏览器复核极火虾长页面和 `#behavior` 锚点；完整章节结构可读，但不替代三档浏览器、性能、托管 DOM、Critic 或 Figma 门禁，证据为 `EVD-20260913-108`。
 - Verified: 2026-09-13 本地内置浏览器复核宝莲灯审核章节与黄金米虾 Base/Variant 继承边界；证据为 `EVD-20260913-109`。
+- Verified: 2026-09-13 本地复核宝莲灯 Species → 兼容工具 → 返回 Species 链路；证据为 `EVD-20260913-110`。
