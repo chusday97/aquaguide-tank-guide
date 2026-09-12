@@ -1,6 +1,6 @@
 # AquaGuide Species SEO 当前交接
 
-> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `fbd499bf`。
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `f8cd8b79`。
 
 ## 当前有效结论
 
@@ -45,6 +45,7 @@
 - 黄金米虾页的继承 FAQ 已按当前品系名称呈现；仍使用基础物种的来源与 fingerprint，没有新增品系事实证据，证据为 `EVD-20260912-039`。
 - FAQ 修复后的公开 SEO 全套静态回归已通过，证据为 `EVD-20260912-040`；用户原有的三个未提交文件仍未触碰。
 - 当前提交下三条 Species 路径已在内置 Chrome 复读，内容继承、图片/回退、FAQ 和 Product Truth 均正常，证据为 `EVD-20260912-041`。
+- 公开文案回归现同时保护 FAQ 问题和答案的品系名称适配，提交 `f8cd8b79`，证据为 `EVD-20260912-042`。
 
 ## 当前下一步
 

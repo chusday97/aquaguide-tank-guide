@@ -6,6 +6,7 @@
 - Fixed: 2026-09-12 黄金米虾页面将继承 FAQ 按当前品系名称呈现，避免基础物种名称错位；共享来源和 fingerprint 不变，提交 `fbd499bf`。
 - Verified: 2026-09-12 FAQ 修复后的公开 SEO 全套静态与构建回归通过，证据为 `EVD-20260912-040`；页面继续 `noindex,follow`。
 - Verified: 2026-09-12 当前提交下内置 Chrome 复读三条 Species 路径，内容继承、图片/回退、FAQ 和 Product Truth 正常；证据为 `EVD-20260912-041`。
+- Added: 2026-09-12 公开文案回归同时保护继承 FAQ 的问题和答案使用当前品系名称，提交 `f8cd8b79`。
 
 - Changed: 2026-09-12 将 Species“日常怎么养”副标题改为用户可理解的中文，移除内部说明式口吻；提交 `0c3f217c`。
 - Verified: 2026-09-12 公开文案、结构、lint、build 和 diff-check 通过；Product Truth、证据、路由和索引策略不变。
