@@ -58,6 +58,8 @@ assert.match(species, /to=\{variantPath\(variant\.id\)\}/, 'Species variant card
 assert.match(species, /taskRoutes\.encyclopedia\.compatibilitySpecies\(fish\.id, 'species-profile'\)/, 'Species capability card must preserve the species tool target');
 assert.match(species, /\{ label: labels\.back, href: '\/' \}/, 'Species breadcrumb must stay inside the public shell');
 assert.doesNotMatch(species, /label: labels\.back, href: '\/encyclopedia'/, 'Species breadcrumb must not point to the app encyclopedia');
+assert.match(species, /const breadcrumbCategory = baseSpecies\.category/, 'Species public breadcrumb must use the published category name');
+assert.match(species, /<SectionHeading id="stats-title" number=\{sectionNumber\('overview'\)\} eyebrow=\{labels\.overview\} title=\{labels\.overview\}/, 'Species data rail must use the shared section heading');
 
 const publishedProfile = read('src/data/publishedSpeciesProfile.ts');
 assert.match(publishedProfile, /categoryHrefFor\(species\.category\) \?/, 'Species related category links must be conditional on a public route');

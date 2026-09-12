@@ -22,6 +22,6 @@ export default function CategoryLanding() {
       <div className={`seo-stagger mt-8 grid gap-4 ${page.featuredBaseSpecies.length > 1 ? 'md:grid-cols-2' : ''} ${page.featuredBaseSpecies.length === 1 ? 'max-w-[760px]' : ''}`}>{page.featuredBaseSpecies.map(species => <Link key={species.id} to={species.href} className="seo-card seo-focus group grid min-h-[180px] grid-cols-[112px_minmax(0,1fr)_20px] items-center gap-5 p-4 hover:border-accent"><div className="seo-category-card__media">{species.image ? <ResilientImage src={species.image.src} alt={species.image.altZh} loading="lazy" className="h-full w-full object-contain p-2" /> : <span role="img" aria-label="物种图片暂不可用">图片暂不可用</span>}</div><div><p className="seo-eyebrow">基础物种</p><h2 className="mt-3 font-serif text-3xl font-bold">{species.name}</h2><p className="seo-meta mt-2 italic">{species.scientificName}</p></div><ChevronRight className="h-5 w-5 text-accent transition-transform group-hover:translate-x-1" aria-hidden="true" /></Link>)}</div>
     </section>
     <section className="seo-section"><SeoCapabilityCard title="想知道它是否适合你的缸？" description="浏览百科后，可以把物种带入 AquaGuide 的鱼缸工具完成下一步比较。" href="/aquarium" actionLabel="检查我的鱼缸" /></section>
-    <SeoSourceFooter title="资料说明" text="这里先展示分类与物种入口；具体的习性和饲养信息，请进入对应物种档案查看。" status="公开预览 · 暂不进入搜索索引" />
+    <SeoSourceFooter title="资料说明" text="这里先展示分类与物种入口；具体的习性和饲养信息，请进入对应物种档案查看。" status="内容会持续整理和补充" />
   </SeoPageShell>;
 }

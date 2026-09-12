@@ -32,6 +32,6 @@ export default function CareGuideLanding() {
         ))}
       </div>
     </section>
-    <SeoSourceFooter title="资料状态" text="这篇指南目前还在准备中，完成后会在这里显示公开内容。" status="公开预览 · 暂不进入搜索索引" />
+    <SeoSourceFooter title="资料状态" text="这篇指南目前还在准备中，完成后会在这里显示公开内容。" status="内容会持续整理和补充" />
   </SeoPageShell>;
 }

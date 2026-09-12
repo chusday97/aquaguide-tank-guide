@@ -39,6 +39,6 @@ export default function MarketingLanding() {
     </section>
     <section className="seo-section"><SeoCapabilityCard title="你的鱼缸，才是最后的答案" description="公开百科先帮你建立理解；进入 AquaGuide 后，再使用真实鱼缸数据完成适配与混养判断。" href="/aquarium" actionLabel="进入我的鱼缸" /></section>
     <SeoRelatedLinks title="继续探索" links={[{ id: 'category', label: '浏览虾螺蟹分类', href: '/category/shrimp-snails-crabs' }, { id: 'care', label: '进入养护中心', href: '/care' }]} />
-    <SeoSourceFooter title="资料说明" text="本页是 AquaGuide 的公开入口：先认识物种，再按需要进入鱼缸工具。" status="公开预览 · 暂不进入搜索索引" />
+    <SeoSourceFooter title="资料说明" text="本页是 AquaGuide 的公开入口：先认识物种，再按需要进入鱼缸工具。" status="内容会持续整理和补充" />
   </SeoPageShell>;
 }
