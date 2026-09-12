@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 Critic 最新复验状态
+
+- 既有 Critic 线程已针对最新 HEAD `b2de6ab0` 收到只读六维复验请求，证据为 `EVD-20260913-119`。
+- 当前状态仍为 `inProgress`，尚无可读正文；旧报告基于历史提交，不能直接代表当前版本。
+- 在正文返回前，不宣称独立审查通过，也不解除 `noindex,follow`。
+
 ## 2026-09-13 静态回归补充
 
 - 结构化加载态修复后，Editorial、Evidence bindings、Public contract、中文文案、结构、响应式、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-118`。
