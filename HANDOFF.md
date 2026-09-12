@@ -1409,3 +1409,8 @@
 - 代码实现、静态门禁、本地内置浏览器运行链路和部署侧 HTTP 200/noindex 已有证据；托管浏览器仍受 Vercel 登录保护，系统 Chrome 仍受 MachPort 阻塞。
 - 下一步：不重复创建 Critic，不调用 Figma；继续维护可验证的 Web 体验/内容继承边界，或等待 Critic 返回可读报告后按清单复验。
 - 用户未提交文件保持原样，未暂存、未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+## 2026-09-13 最新 Web UX 收口
+
+- Species 章节间距使用响应式压缩范围，环境区从单纯渐变改为带“水体/空间/稳定”标签的结构化观察面板；没有新增生物事实或绕过图片门禁。提交：`4a7d39e8`，证据：`EVD-20260913-114`。
+- 相关静态响应式、结构、契约、lint、build 和 diff-check 已通过；这不是完整三档浏览器验收。
+- 未提交用户文件仍保持原样；Critic、Figma Canonical、性能和发布门禁仍开放。

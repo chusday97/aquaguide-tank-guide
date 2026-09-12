@@ -1620,3 +1620,8 @@
 - [x] 既有只读 Critic 已完成本轮复验，但返回 `items: []`，没有可读六维正文；按发布门禁仍不能视为通过，证据为 `EVD-20260913-113`。
 - [ ] 不创建重复 Critic；继续保持页面 `noindex,follow`。下一闭环优先处理可验证的 Web/UX 问题或等待审查基础设施恢复，不修改 Figma、main、Production Supabase 或生产部署。
 - [x] 工作树仍只保留三个用户原有未提交文件：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+## 2026-09-13 公开 Species 节奏收口（`4a7d39e8`）
+
+- [x] 章节间距改为响应式压缩范围，减少大屏与平板的空白断层；环境视觉区增加不含生物事实的“水体/空间/稳定”结构标签，避免被误认为缺失图片。
+- [x] `test:public-seo-responsive-contract`、`test:public-seo-structure`、`test:public-seo-contract`、lint、build 和 diff-check 通过。
+- [ ] 仍未完成系统 Chrome 三档、性能/reduced-motion、可读独立 Critic、Figma Canonical 和发布门禁；页面继续 `noindex,follow`。

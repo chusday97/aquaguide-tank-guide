@@ -42,3 +42,8 @@
 - **状态：** 已记录（2026-09-12，提交 `31c8e5fc`）
 - **内容：** Public Shell 的面包屑只显示可到达的公开分类名称，不直接暴露内部照料 taxonomy；Species 参数区与其余章节统一复用 `SeoSectionHeading`。
 - **影响：** 只改变公开导航标签和标题结构，不改变 Product Truth、证据绑定、路由、metadata、JSON-LD 或索引策略。
+## D-AQUA-008 — 公开 Species 章节使用响应式密度与结构化环境面板
+
+- **状态：** 已记录（2026-09-13，提交 `4a7d39e8`）
+- **内容：** 公开章节保留既定宽松编辑感，但使用 `clamp` 收紧不同视口的章节间距；环境视觉区用中性“水体/空间/稳定”标签说明构图，不伪造生态照片或新增生物事实。
+- **影响：** 只影响 Public Species 页面视觉密度和环境区信息表达；不改变 Product Truth、证据、素材批准状态、路由、metadata、JSON-LD 或 `noindex,follow`。
