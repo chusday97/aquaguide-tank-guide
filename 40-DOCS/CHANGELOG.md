@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-12 同一只读 Critic 已对当前 SHA 复验，但仍无可读正文；按门禁不计为独立审查通过，证据为 `EVD-20260912-045`。
 - Verified: 2026-09-12 内置 Chrome 实际复核分类 → Species → 返回链路，返回后 URL 和分类页标题正确恢复；证据为 `EVD-20260912-044`。
 - Fixed: 2026-09-12 公开 Species 收藏改为本地收藏服务，避免 Public Shell 为收藏操作读取应用 Repository、登录或鱼缸状态；应用页面行为保持不变，提交 `acfadea1`。
 - Verified: 2026-09-12 内置 Chrome 实际复核首页公开入口、品牌 Hero、已批准物种图片、单一 H1、价值区和能力卡；证据为 `EVD-20260912-037`，未改变索引策略。
