@@ -1096,6 +1096,13 @@
 - 鱼类“继续探索”不再生成不存在的公开分类入口；真实 Chrome 页面确认宝莲灯可从首页面包屑继续浏览，来源、内容和 `noindex` 不变。
 - 代码尚未单独提交前的变更已通过静态门禁；当前用户未提交文件仍未触碰。
 
+## 2026-09-12 当前交接：公开来源规范化
+
+- 最新代码提交：`93a3edb7 fix: normalize duplicate public fishbase sources`。
+- 公开展示层现在按 FishBase 规范化路径去重同一物种的 URL 变体；证据绑定、来源 ID、fingerprint 与 Product Truth 不变。
+- 宝莲灯契约测试确认 FishBase 公开来源只展示一条；Editorial、Evidence、lint、build、diff-check通过。
+- 用户未提交的三个文件仍保持未暂存；不涉及内容、路由、Figma、Production 或索引策略。
+
 ## 2026-09-12 当前交接：缺图回退版式
 
 - 最新代码提交：`ea8a96a6 fix: compact missing species hero fallback`。

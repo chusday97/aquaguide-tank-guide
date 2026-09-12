@@ -264,3 +264,9 @@
 - 动作：新增 `.seo-hero__media:has(> [role="img"])` 回退规则，将外层与回退内容稳定到 320px；新增响应式契约断言。
 - 验证：内置 Chrome 普通宝莲灯页面可滚动且回退提示、正文、工具入口和资料来源均可见；响应式契约、lint、build、diff-check通过。
 - 限制：系统 Chromium MachPort、Critic 可读正文、Figma Canonical 和完整三档性能证据仍缺失。
+
+## 2026-09-12 公开 FishBase 来源归并
+
+- 观察：宝莲灯公开资料区的两条 FishBase 记录实际指向同一物种页面，仅域名、路径和标题来源不同。
+- 动作：公开展示键对 FishBase URL 路径做小写化、下划线转连字符和尾斜杠规范化；不合并证据绑定。
+- 验证：宝莲灯公开契约测试断言 FishBase 仅一条，Editorial、Evidence、lint、build、diff-check通过。

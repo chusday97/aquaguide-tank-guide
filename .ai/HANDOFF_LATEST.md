@@ -151,6 +151,12 @@
 - 不涉及 Product Truth、Editorial、路由、metadata、JSON-LD、索引策略或用户未提交文件。
 - 未完成：系统 Chrome 三档自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。保持 `noindex,follow`。
 
+## 2026-09-12 公开来源规范化
+
+- 已提交 `93a3edb7`：FishBase 同物种 URL 变体在公开资料区归并为一条，底层 evidence 仍按 source ID 保留。
+- `test:public-seo-contract`、Editorial、Evidence、lint、build、diff-check通过。
+- 仍未完成三档系统浏览器、Critic 可读报告、Figma Canonical 和索引发布门禁。
+
 ## 2026-09-12 缺图回退版式收口
 
 - 已提交 `ea8a96a6`：blocked Species 图片的 Hero 回退媒体高度收紧为 320px，已批准图片不受影响。

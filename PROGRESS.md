@@ -1196,3 +1196,10 @@
 - [x] 内置 Chrome 复核宝莲灯普通路由：回退提示可见，页面可滚动，参数、生活习性、环境、能力入口、继续探索和资料来源仍可见。
 - [x] `lint`、`build`、响应式契约和 `git diff --check` 通过；系统 Chromium 仍在启动阶段被 macOS MachPort 权限阻断。
 - [ ] 可读独立 Critic、系统 Chrome 三档自动化、Figma Canonical 和索引门禁仍未完成；页面继续 `noindex,follow`。
+
+## 2026-09-12 公开资料来源规范化
+
+- [x] 将同一 FishBase 物种的域名、路径和下划线差异归并为一个公开来源展示；底层证据绑定不变。
+- [x] 新增公开契约断言，宝莲灯 FishBase 来源展示数量固定为 1；提交 `93a3edb7`。
+- [x] Editorial、Evidence、Public Contract、lint、build 和 diff-check 通过；页面继续 `noindex,follow`。
+- [ ] 三档浏览器自动化、可读独立 Critic、Figma Canonical 和发布索引门禁仍未完成。
