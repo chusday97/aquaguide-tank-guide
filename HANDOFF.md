@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 最新构建复核（`e644e95e`）
+
+- `npm run build` 和 `git diff --check` 通过，构建只报告既有 chunk 体积及动态/静态导入提示，证据为 `EVD-20260913-126`。
+- 本轮没有改变公开内容、路由、数据契约、metadata、JSON-LD 或 `noindex,follow`。
+
+
 ## 2026-09-13 加载骨架语义回归保护（`e644e95e`）
 
 - `test:public-seo-structure` 现在同时锁定面包屑、媒体框和文字轮廓均为 `aria-hidden="true"`；测试、TypeScript/lint 和 diff-check 通过，证据为 `EVD-20260913-125`。

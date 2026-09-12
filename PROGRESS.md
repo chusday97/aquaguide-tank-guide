@@ -1679,3 +1679,7 @@
 
 - [x] 结构测试同时保护面包屑、媒体框和文字轮廓的 `aria-hidden="true"`，防止后续改动只隐藏部分装饰节点；测试、lint 和 diff-check 通过，证据为 `EVD-20260913-125`。
 - [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
+## 2026-09-13 最新提交构建复核（`e644e95e`）
+
+- [x] `npm run build` 与 `git diff --check` 在加载语义回归提交上通过；仅保留既有 chunk 体积及动态/静态导入提示，证据为 `EVD-20260913-126`。
+- [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。

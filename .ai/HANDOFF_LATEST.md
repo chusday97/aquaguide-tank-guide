@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-13 最新构建复核
+
+- `e644e95e` 的 `npm run build` 与 `git diff --check` 已通过，既有 chunk/导入提示未新增为错误；证据为 `EVD-20260913-126`。
+- 用户三个未提交文件保持原样；页面继续 `noindex,follow`。
+
+
 ## 2026-09-13 加载骨架回归保护
 
 - `e644e95e` 为加载骨架的面包屑、媒体框和文字轮廓补充 `aria-hidden` 回归断言；结构测试、lint 和 diff-check 通过，证据为 `EVD-20260913-125`。

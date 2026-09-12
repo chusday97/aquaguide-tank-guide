@@ -10,6 +10,7 @@
 
 - 在 `a496d159` 上复跑公开 SEO 静态门禁：Editorial、Evidence、Contract、Copy、Responsive、Typography、lint 和 diff-check 全部通过。
 - 为加载骨架的媒体框和文字轮廓补充 `aria-hidden` 回归断言，防止装饰语义回退（`e644e95e`）。
+- 验证加载语义回归提交可完成生产构建；仅保留既有构建警告（`e644e95e`）。
 
 - Verified: 2026-09-13 宝莲灯本地审核预览显示项目透明图，移动端 Hero 主体完整且未裁切；普通公开访问继续显示回退，证据为 `EVD-20260913-122`。
 - Blocked: 2026-09-13 内置 Chrome 隔离页面不提供 `window.resizeTo`，无法从当前标签页获取 600px 真实视口；未改变页面状态，证据为 `EVD-20260913-121`。
