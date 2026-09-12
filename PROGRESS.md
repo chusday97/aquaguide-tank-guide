@@ -1675,3 +1675,7 @@
 - [x] Editorial evidence、Evidence bindings、Public contract、中文文案、响应式契约、Typography、lint 和 diff-check 在当前代码提交上全部通过，证据为 `EVD-20260913-124`。
 - [x] 本轮只验证加载态无障碍修复的静态回归；未改变路由、Product Truth、素材/证据状态、metadata、JSON-LD 或 `noindex,follow`。
 - [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
+## 2026-09-13 加载骨架语义回归保护（`e644e95e`）
+
+- [x] 结构测试同时保护面包屑、媒体框和文字轮廓的 `aria-hidden="true"`，防止后续改动只隐藏部分装饰节点；测试、lint 和 diff-check 通过，证据为 `EVD-20260913-125`。
+- [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。

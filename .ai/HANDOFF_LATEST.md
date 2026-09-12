@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-13 加载骨架回归保护
+
+- `e644e95e` 为加载骨架的面包屑、媒体框和文字轮廓补充 `aria-hidden` 回归断言；结构测试、lint 和 diff-check 通过，证据为 `EVD-20260913-125`。
+- 页面继续 `noindex,follow`；用户三个未提交文件保持原样。600px 真实视口、Critic、Figma Canonical 和发布门禁仍未完成。
+
+
 ## 2026-09-13 当前 SHA 静态复核
 
 - `a496d159` 的 Editorial evidence、Evidence bindings、Public contract、中文文案、Responsive contract、Typography、lint 和 diff-check 全部通过，证据为 `EVD-20260913-124`。

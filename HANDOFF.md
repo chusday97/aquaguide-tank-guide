@@ -1,5 +1,10 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 加载骨架语义回归保护（`e644e95e`）
+
+- `test:public-seo-structure` 现在同时锁定面包屑、媒体框和文字轮廓均为 `aria-hidden="true"`；测试、TypeScript/lint 和 diff-check 通过，证据为 `EVD-20260913-125`。
+- 该测试只保护加载态可访问性，不改变公开内容、路由、metadata、JSON-LD 或 `noindex,follow`。
+
 ## 2026-09-13 当前 SHA 静态门禁复核（`a496d159`）
 
 - Editorial evidence、Evidence bindings、Public contract、中文文案、响应式契约、Typography、lint 和 diff-check 全部通过，证据为 `EVD-20260913-124`。
