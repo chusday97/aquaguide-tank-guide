@@ -1095,3 +1095,12 @@
 - Species 面包屑已从应用内 `/encyclopedia` 改为公开首页；虾螺蟹使用现有公开分类链接，鱼类没有公开分类页时保留文本分类但不生成错误链接。
 - 鱼类“继续探索”不再生成不存在的公开分类入口；真实 Chrome 页面确认宝莲灯可从首页面包屑继续浏览，来源、内容和 `noindex` 不变。
 - 代码尚未单独提交前的变更已通过静态门禁；当前用户未提交文件仍未触碰。
+
+## 2026-09-12 当前交接：缺图回退版式
+
+- 最新代码提交：`ea8a96a6 fix: compact missing species hero fallback`。
+- 变更范围：仅收紧 `blocked` 图片对应的 Hero 回退媒体到 320px，并加入静态响应式回归断言；不改变 Product Truth、Editorial、素材审核、路由、metadata、JSON-LD 或 `noindex,follow`。
+- 内置 Chrome 复核宝莲灯普通页面：回退状态清晰、页面可滚动、后续章节与资料来源可见；项目内图片仍仅在 `assetPreview=1` 显示。
+- 验证：响应式契约、lint、build、diff-check 通过；系统 Chromium 仍因 macOS MachPort 权限无法启动。
+- 仍阻塞：既有 Critic 完成但返回空正文；不创建重复 Critic。还缺系统 Chrome 三档、性能/reduced-motion、宝莲灯用途级批准、Figma Canonical。
+- 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 保持未暂存。

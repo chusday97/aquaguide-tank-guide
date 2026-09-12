@@ -150,3 +150,11 @@
 - 内置 Chrome 长截图实际确认页面可滚动、内容和图片可见；静态结构、响应式、文案、证据、lint、build、diff-check 通过。
 - 不涉及 Product Truth、Editorial、路由、metadata、JSON-LD、索引策略或用户未提交文件。
 - 未完成：系统 Chrome 三档自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。保持 `noindex,follow`。
+
+## 2026-09-12 缺图回退版式收口
+
+- 已提交 `ea8a96a6`：blocked Species 图片的 Hero 回退媒体高度收紧为 320px，已批准图片不受影响。
+- 内置 Chrome 真实复核通过：宝莲灯普通页面回退清晰、可滚动，后续内容仍可见。
+- 静态响应式契约、lint、build、diff-check 通过；系统 Chromium 仍受 MachPort 权限阻断。
+- 独立 Critic 最新复验仍为空正文，不能计为通过；不创建重复任务。
+- 继续保持 `noindex,follow`、不调用 Figma、不修改 main/Production Supabase/生产部署；保留用户未提交文件。

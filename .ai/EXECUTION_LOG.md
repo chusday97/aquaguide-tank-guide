@@ -257,3 +257,10 @@
 - 动作：重新打开 Species 本地页面并导出完整截图，检查来源展示。
 - 结果：重复 AquaGuide 目录记录已消失，专业来源与品系归组来源仍显示。
 - 限制：仅覆盖当前 Chrome 桌面视口；三档自动化、性能和独立 Critic仍未完成。
+
+## 2026-09-12 Species 缺图回退版式
+
+- 根因：blocked 图片仍沿用有图 Hero 的大媒体框，造成用户看到大面积空白。
+- 动作：新增 `.seo-hero__media:has(> [role="img"])` 回退规则，将外层与回退内容稳定到 320px；新增响应式契约断言。
+- 验证：内置 Chrome 普通宝莲灯页面可滚动且回退提示、正文、工具入口和资料来源均可见；响应式契约、lint、build、diff-check通过。
+- 限制：系统 Chromium MachPort、Critic 可读正文、Figma Canonical 和完整三档性能证据仍缺失。
