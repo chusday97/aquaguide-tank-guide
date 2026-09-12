@@ -1,6 +1,19 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
-## CURRENT OVERRIDE — local main promotion PASS; remote push still gated (2026-09-12)
+## CURRENT OVERRIDE — remote release closed with Vercel Business API bundle (2026-09-12)
+- GitHub `main` runtime checkpoint is `5fa915d31ebb6aa0915cc39b34016a1ffa933a66` (`fix(api): bundle vercel business runtime`); Product Golden Path `34667970125` completed successfully.
+- Remote rollback branch remains `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e`.
+- First release attempt exposed a real Vercel trace bug: DEV-only Local Admin pulled `public/` into `/api/v1/router`, producing 266.91 MB > 250 MB. `86fc0525` removed Local Admin from the production router and reduced the function to ~43 MB.
+- The next attempt exposed Node 24 ESM resolution failure across the raw API source graph. Production was immediately rolled back to stable `dpl_9b9QBEpKCskSZLefuLTJm5cZxWH5` / `ed0cf380` while the fix was developed.
+- Final fix `5fa915d3` bundles only the Business API local import graph with esbuild and keeps npm packages external. Cloud build generated `api/v1/business-app.bundle.mjs` at 1.49 MB; final `/api/v1/router` package is 41.08 MB. Bundle has no relative imports and no Local Admin references.
+- Verified branch deployment `dpl_2uvAopBMqKfnr5xJdvn68dfNNZfa` before promotion: Business Health 200, Local Admin 404, Git runtime authority readable.
+- Verified production deployment `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` before public alias switch: Business Health 200 with Production DB configured, Local Admin 404, root healthy. Public alias `aqua-tank-guide.vercel.app` was then explicitly reassigned to this exact deployment without another code change.
+- Public Production smoke PASS: `/` 200; `/api/v1/business-health` 200; `/api/v1/content-bootstrap` 200; `/api/v1/local-admin/status` 404; `/runtime-authority.json` 200 with Compatibility 7/4; `/admin/seo/` 200 and noindex. Public Playwright fallback also found static `极火虾` and `新鱼入缸` with zero page errors while Product/Care cloud publications are 0/0.
+- Vercel runtime error query after closeout returned no error clusters.
+- No Supabase Staging/Production migration or indexing unlock occurred. Do not reintroduce Supabase Staging as a prerequisite for the accepted Durable Local File + Git operating path.
+- NEXT: release is closed. Continue only from a concrete operator/runtime badcase or an explicitly authorized separate Staging/indexing decision.
+
+## HISTORICAL OVERRIDE — local main promotion PASS; remote push still gated (2026-09-12, superseded)
 - Local `main` was created from `origin/main=d3c70dee633e` and fast-forwarded to accepted candidate `83f8fd7a`; no merge commit or conflict was introduced.
 - Rollback ref preserved before promotion: `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e`.
 - Post-promotion main smoke PASS: Git runtime Product/Care fallback, Published Content isolation, Compatibility runtime authority, Local Admin DEV-only contract, Compatibility authority scan, root TypeScript and API TypeScript.
@@ -9,7 +22,7 @@
 - NEXT: treat `main push` as an explicit release action. Refresh origin and re-run ancestry/smoke checks immediately before any push.
 
 
-## CURRENT OVERRIDE — candidate is main-ready after promotion rehearsal (2026-09-12)
+## HISTORICAL OVERRIDE — candidate is main-ready after promotion rehearsal (2026-09-12, fulfilled)
 - Functional checkpoint `72ad2693 fix(runtime): preserve published api under empty git snapshot`; promotion-readiness record: `.ai/MAIN_PROMOTION_READINESS_20260912.md`.
 - P0 closed: the committed Git snapshot has Compatibility 7/4 but Product/Care 0/0; empty Product/Care no longer suppresses `/content-bootstrap`. Non-empty Git Product/Care still wins, while Compatibility can independently remain `reviewed-git`.
 - Current Published Content browser contract was repaired to the real Encyclopedia search and Care `传统浏览 / Browse guides` flow; zh-CN + EN PASS.

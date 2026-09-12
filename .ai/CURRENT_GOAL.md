@@ -1,6 +1,18 @@
 # Current Goal
 
-## CURRENT OVERRIDE — 2026-09-12 local main promoted, remote release gated
+## CURRENT OVERRIDE — 2026-09-12 remote main + Production release closed
+The accepted Aqua Operations Studio reconciliation is now released through GitHub main and the AquaGuide Vercel production deployment. Stop release-repair iteration unless a new reproducible blocker appears.
+
+- Runtime code checkpoint on `main`: `5fa915d3 fix(api): bundle vercel business runtime`; GitHub Product Golden Path run `34667970125` PASS.
+- Vercel production deployment: `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` for `5fa915d3`; public alias `https://aqua-tank-guide.vercel.app` resolves to this deployment.
+- Vercel Business API uses a generated 1.49 MB ESM bundle; `/api/v1/router` serverless package is 41.08 MB. Production `/api/v1/business-health` = 200 with `databaseConfigured=true`; DEV-only `/api/v1/local-admin/status` = 404.
+- `runtime-authority.json` is readable in Production with reviewed Git Compatibility 7 Profiles / 4 Pair Rules. Product/Care Git + Published API are currently 0/0, and real public browser smoke proves Encyclopedia/Care correctly fall back to static Product/Care without page errors.
+- Species SEO Admin remains reachable and `noindex,nofollow,noarchive`; Care SEO release decision remains `hold_noindex`.
+- Rollback anchors remain available: Git `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e`; Vercel stable rollback deployment `dpl_9b9QBEpKCskSZLefuLTJm5cZxWH5` / `ed0cf380`.
+- No Supabase Staging migration, Production DB migration, or indexing unlock was performed in this release. Existing Production environment configuration was only read through runtime health.
+- NEXT: operational observation only. Fix concrete regressions if reproduced. Supabase Staging and any index unlock remain separate optional/explicit gates, not implicit next work.
+
+## HISTORICAL OVERRIDE — 2026-09-12 local main promoted, remote release gated (superseded by release closeout)
 The reconciliation phase is locally complete. Local `main` now contains the accepted Aqua Operations Studio candidate; remote `origin/main` and deployment remain unchanged.
 
 - Local main HEAD before this docs checkpoint: `83f8fd7a`; rollback anchor: `d3c70dee633e`.
@@ -9,7 +21,7 @@ The reconciliation phase is locally complete. Local `main` now contains the acce
 - NEXT: no new feature work. The only release step is an explicit push/deploy decision after a final origin refresh.
 
 
-## CURRENT OVERRIDE — 2026-09-12 candidate main-promotion ready
+## HISTORICAL OVERRIDE — 2026-09-12 candidate main-promotion ready (fulfilled)
 The active objective is now **hold the validated candidate at the explicit main-promotion boundary; do not add speculative Admin features**. Functional checkpoint: `72ad2693`.
 
 - Promotion P0 fixed: an empty Product/Care Git snapshot can no longer shadow Published API data.

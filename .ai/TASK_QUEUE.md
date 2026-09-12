@@ -1,6 +1,22 @@
 # Task Queue
 
-## ACTIVE OVERRIDE — local main promotion closed (2026-09-12)
+## ACTIVE OVERRIDE — remote main + Production release closeout (2026-09-12)
+- [x] Push accepted local main to GitHub main using compare-and-push guards.
+- [x] Preserve remote Git rollback branch at pre-Aqua main `d3c70dee633e`.
+- [x] Diagnose and fix Vercel `/api/v1/router` 266.91 MB serverless package overflow.
+- [x] Keep DEV-only Local Admin outside the Production Business API graph; Production route returns 404.
+- [x] Diagnose Node 24 ESM raw-source import failures and replace the raw graph with a generated 1.49 MB Business API bundle.
+- [x] Pass local contract/type/build gates with the bundle absent before lint and generated during build.
+- [x] GitHub Product Golden Path PASS for runtime checkpoint `5fa915d3`.
+- [x] Vercel branch deployment PASS: Business Health 200, Local Admin 404, runtime authority readable.
+- [x] Production deployment PASS before traffic switch: Business Health 200 with DB configured, Local Admin 404.
+- [x] Reassign public `aqua-tank-guide.vercel.app` alias to validated Production deployment `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`.
+- [x] Public Production smoke PASS, including Encyclopedia/Care static fallback when Product/Care Published API is 0/0.
+- [x] Post-release Vercel runtime error check reports no current error clusters.
+- [ ] Supabase Staging migration remains separately gated and unapplied.
+- [ ] Care SEO indexing remains `hold_noindex`; any index unlock requires a separate explicit release decision.
+
+## HISTORICAL OVERRIDE — local main promotion closed (2026-09-12, superseded)
 - [x] Refresh origin and verify no new main commits.
 - [x] Preserve pre-promotion main as `rollback/main-pre-aqua-admin-20260912`.
 - [x] Create local main from origin/main and fast-forward only to accepted candidate.
@@ -10,7 +26,7 @@
 - [ ] Production deployment/indexing remains untriggered.
 
 
-## ACTIVE OVERRIDE — main promotion readiness closed (2026-09-12)
+## HISTORICAL OVERRIDE — main promotion readiness closed (2026-09-12, fulfilled)
 - [x] Re-fetch origin and prove no new main commits are missing from candidate.
 - [x] Audit committed Git runtime snapshot before promotion.
 - [x] Fix empty Product/Care Git snapshot suppressing Published API.

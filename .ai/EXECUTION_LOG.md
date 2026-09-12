@@ -1448,3 +1448,15 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Created local `main` from `origin/main` and fast-forwarded it to accepted candidate `83f8fd7a`; tree equality PASS.
 - Post-promotion main smoke PASS: Git runtime fallback, Published Content isolation, Compatibility authority, Local Admin mode, root/API TypeScript.
 - No push, deployment, Supabase Staging/Production migration or indexing mutation.
+
+## 2026-09-12 — Remote main + Vercel Production release closeout
+- Pushed accepted Aqua Operations Studio main with compare-and-push guards and preserved remote rollback `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e`.
+- Initial Vercel release failed because `/api/v1/router` traced DEV-only Local Admin filesystem paths and reached 266.91 MB > 250 MB. Moved Local Admin out of the Production router; function dropped to ~43 MB.
+- Next release exposed Node 24 ESM raw-source resolution failures. Production was immediately rolled back to stable `dpl_9b9QBEpKCskSZLefuLTJm5cZxWH5` / `ed0cf380` before continuing.
+- Final runtime fix `5fa915d3 fix(api): bundle vercel business runtime` adds a generated esbuild ESM Business API bundle. Local and cloud bundle size: 1.49 MB; final `/api/v1/router` package: 41.08 MB; bundle contains no relative imports and no Local Admin references.
+- PASS before promotion: lint with generated bundle absent, Admin/Local Admin contracts, API TypeScript, full build, direct Node Business Health 200/Local Admin 404, GitHub Product Golden Path, Vercel branch Business Health 200/Local Admin 404.
+- Production `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` was validated directly with `databaseConfigured=true`, then public alias `aqua-tank-guide.vercel.app` was explicitly reassigned to it.
+- Public smoke PASS: root 200; Business Health 200; content-bootstrap 200; Local Admin 404; runtime authority 7 Profiles/4 Pair Rules; SEO Admin 200 + noindex; real Encyclopedia `极火虾` and Care `新鱼入缸` fallback UI visible with zero page errors while cloud Product/Care publications are 0/0.
+- Post-release Vercel runtime-error query found no current clusters.
+- No Supabase Staging/Production migration or indexing unlock. Care SEO remains `hold_noindex`.
+- NEXT: release closed; only respond to concrete runtime/operator regressions or separately authorized Staging/indexing work.
