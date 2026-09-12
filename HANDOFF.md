@@ -1,5 +1,10 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 Critic 任务终态核对
+
+- 既有只读 Critic 已确认 `idle`，最新 turn 完成但无 `latestAssistantMessage`；因此独立审查仍是无正文阻塞，不创建重复线程，证据为 `EVD-20260913-128`。
+
+
 ## 2026-09-13 Public Shell 侧栏边界核对
 
 - 内置 Chrome DOM 检查确认 `open-side-panel` / `thunderbit-crx-side-bar` 来自浏览器扩展注入，不属于 AquaGuide 页面；页面自身按钮不含该控件，证据为 `EVD-20260913-127`。

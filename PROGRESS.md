@@ -1688,3 +1688,7 @@
 - [x] 内置 Chrome 运行时检查确认 `open-side-panel` 与 `thunderbit-crx-side-bar` 是浏览器扩展注入到 `body` 的节点，不属于 AquaGuide Public Shell；页面自身按钮列表不含该控件，证据为 `EVD-20260913-127`。
 - [x] 未修改代码或页面以绕过第三方扩展；公开页面的应用侧栏隔离规则保持不变。
 - [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
+## 2026-09-13 Critic 任务终态核对
+
+- [x] 既有只读 Critic 任务已确认 `idle`，最新 turn 已完成但没有 `latestAssistantMessage`；不是等待中的任务，仍不能计为可读六维审查通过，证据为 `EVD-20260913-128`。
+- [ ] 不创建重复 Critic；600px 独立真实视口、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。

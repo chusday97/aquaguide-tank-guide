@@ -1,5 +1,10 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-13 Critic 终态
+
+- 既有 Critic 线程当前为 `idle`，最新 turn 已完成但没有 assistant 正文；不能计为六维审查通过，证据为 `EVD-20260913-128`。
+
+
 ## 2026-09-13 运行时侧栏边界
 
 - 内置 Chrome 检查确认页面末尾的 `open-side-panel` 和 `thunderbit-crx-side-bar` 是第三方扩展注入节点，AquaGuide 自身按钮列表不包含它；证据为 `EVD-20260913-127`。
