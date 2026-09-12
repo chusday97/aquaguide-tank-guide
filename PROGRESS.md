@@ -1575,3 +1575,7 @@
 
 - [x] 内置浏览器实际读取黄金米虾品系页：公开面包屑、基础物种继承、黄色外观差异、自身参数、FAQ、图片 Alt、工具物种参数和资料来源均可读，证据为 `EVD-20260913-104`。
 - [ ] 托管 Preview 仍因 `ERR_CONNECTION_CLOSED` 未完成三档截图；独立 Critic、Figma Canonical 和索引门禁仍未完成。
+## 2026-09-13 Preview 部署侧路由检查
+
+- [x] 通过 Vercel 部署侧只读请求检查极火虾、宝莲灯和黄金米虾三条 Species 路径：均返回 HTTP 200，并带 `x-robots-tag: noindex`，证据为 `EVD-20260913-105`。
+- [ ] 浏览器仍对同一域名返回 `ERR_CONNECTION_CLOSED`；因此三档视觉/交互/性能和托管 DOM 证据仍未完成。
