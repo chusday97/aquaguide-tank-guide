@@ -1098,3 +1098,8 @@
 - [x] 首页、虾螺蟹分类页、新鱼入缸 Guide 在 390/600/1440 共九次真实加载均通过；无横向溢出、单一 H1、Public Header、无应用侧栏/底部导航、无后台术语，robots 均为 `noindex,follow`，证据为 `EVD-20260912-009`。
 - [x] 首页/分类的 JSON-LD 与页面类型一致；未发布 Guide 没有 Article/HowTo/FAQ JSON-LD。
 - [ ] 仍缺系统 Chrome 自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和当前版本可读独立 Critic。
+## 2026-09-12 权威物种内容复核
+
+- [x] 使用 FishBase、UF/IFAS 与 USGS NAS 逐条复核当前宝莲灯和极火虾公开表达；中层活动、群游、取食蠕虫和小型甲壳类、底部叶屑/生物膜刮食均有直接来源支持。
+- [x] 确认本轮不新增无来源行为、不改变 Product Truth、fingerprint 或发布状态；证据为 `EVD-20260912-010`。
+- [ ] 当前仍缺可读独立 Critic、系统 Chrome 自动化、Figma Canonical、性能/reduced-motion 和最终发布门禁。

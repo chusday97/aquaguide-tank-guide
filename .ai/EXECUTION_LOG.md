@@ -7,6 +7,11 @@
 - 校准公开 SEO authority 文件；未触碰三个用户未提交文件。
 - 下一步：等待可读 Critic 输出后做当前 SHA 只读复验，Figma 配额恢复后集中补 Canonical 模板。
 
+## 2026-09-12 — Species authority audit
+
+- 使用 FishBase、UF/IFAS 和 USGS NAS 复核当前宝莲灯与极火虾公开表达；只记录来源支持范围，不扩写页面事实。
+- 结论：现有中层活动、群游、取食蠕虫和小型甲壳类、底部叶屑/生物膜刮食表达均有直接支持；证据 `EVD-20260912-010`。
+
 ## 2026-09-08 — Action contract browser gate alignment
 
 - Updated only regression scripts: browse-mode filter URL, current add-species task title/search selection, current species-detail safe states, and temperature mismatch presentation.
