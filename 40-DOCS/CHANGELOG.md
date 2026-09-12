@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-13 内置浏览器重新确认黄金米虾 Base/Variant 继承、黄色图片 Alt、18–28°C 参数、FAQ和工具物种上下文；证据为 `EVD-20260913-097`。
 - Added: 2026-09-13 `test:public-favorites-isolation`，验证公开 Species 收藏只读写独立 `wishlistFishIds`，不触碰鱼缸应用状态；提交 `89d977da`，证据为 `EVD-20260913-096`。
 - Fixed: 2026-09-13 公开收藏 localStorage 写入失败时进入用户可见的失败提示，不再误报成功；提交 `1415bcf3`，证据为 `EVD-20260913-095`。
 - Verified: 2026-09-13 内置浏览器确认公开 Species 收藏点击后显示“已加入收藏”、控件变为“已收藏”且焦点保持；证据为 `EVD-20260913-094`。

@@ -1540,3 +1540,7 @@
 
 - [x] 新增 `test:public-favorites-isolation`：模拟同时存在收藏和鱼缸应用状态，验证公开收藏只读写 `wishlistFishIds`，证据为 `EVD-20260913-096`。
 - [x] 测试、公开结构、lint 和 diff-check通过；应用内收藏逻辑未改变。
+## 2026-09-13 黄金米虾继承运行时复核
+
+- [x] 内置浏览器重新验证黄金米虾品系：URL、H1、黄色图片 Alt、18–28°C 参数、基础物种行为/觅食继承、FAQ名称和工具物种参数均正确，证据为 `EVD-20260913-097`。
+- [ ] 该证据仍不替代系统 Chrome 三档、性能/reduced-motion、Figma Canonical 或独立 Critic。
