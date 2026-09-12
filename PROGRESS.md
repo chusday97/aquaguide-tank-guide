@@ -1357,3 +1357,7 @@
 - [x] 黄金米虾真实显示黄色差异、自身 Product Truth 参数，并继承基础物种活动/觅食内容；未产生独立品系习性证据，证据为 `EVD-20260912-054`。
 - [x] 返回极火虾基础页后名称、红色图片 Alt 和参数恢复正确；两页继续 `noindex,follow`。
 - [ ] 宝莲灯 Hero/品系卡用途、系统 Chrome 三档、性能/reduced-motion、可读独立 Critic 和 Figma Canonical仍未完成。
+## 2026-09-12 FAQ 运行时复核
+
+- [x] 内置浏览器激活极火虾 FAQ 后，按钮状态变为 `expanded` 并显示对应答案，其他问题保持收起；证据为 `EVD-20260912-055`。
+- [ ] 系统 Chrome 键盘/reduced-motion/性能、宝莲灯图片用途、独立 Critic 和 Figma Canonical仍未完成。
