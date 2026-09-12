@@ -22,6 +22,11 @@
 - [x] 无 `IntersectionObserver` 时不影响页面内容和导航可用性；公开结构、响应式、文案、lint 和 build 通过。
 - [ ] 当前只获得内置 Chrome 桌面可读性树回读；系统 Chrome 三档自动化、性能、reduced-motion、Figma Canonical 和独立 Critic仍未完成。
 
+## 2026-09-12 章节当前态回归
+
+- [x] 章节当前态提交后的 Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Asset、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-034`。
+- [ ] 这些是静态/构建门禁；系统 Chrome 三档、性能、reduced-motion、Figma Canonical 和独立 Critic 仍未完成。
+
 - [x] 公开结构测试现在要求 Marketing、Category、Species、Guide 全部调用共享 `setSeoDocument`，防止页面级 metadata 写入器重新分叉。
 - [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过。
 - [ ] 真实路由切换仍待 Mac 解锁后复验；Figma Canonical、可读独立 Critic 和索引放行仍未完成。
