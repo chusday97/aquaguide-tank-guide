@@ -759,6 +759,8 @@
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
 [Unreleased]
 
+- Verified: 2026-09-13 内置浏览器复核黄金米虾品系页的公开导航、基础物种继承、黄色差异、参数、FAQ、图片 Alt、工具参数和资料来源，证据为 `EVD-20260913-104`。
+
 - Blocked: 2026-09-13 最新 Vercel Preview 已 Ready，但内置 Chrome 访问同一部署返回 `ERR_CONNECTION_CLOSED`；未将 Ready 状态计为真实浏览器验收，证据为 `EVD-20260913-103`。
 
 - Verified: 2026-09-13 最新 Vercel Preview `aquaguide-bh6j5jb88-chusday97s-projects.vercel.app` 为 Ready；内置 Chrome 已读到当前公开 Shell、面包屑、完整章节和最新中文 Species 文案，证据为 `EVD-20260913-102`。

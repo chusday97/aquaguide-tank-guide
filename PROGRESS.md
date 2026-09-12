@@ -1571,3 +1571,7 @@
 
 - [x] Vercel 部署 `https://aquaguide-2zggjwzmd-chusday97s-projects.vercel.app` 已从 `Building` 变为 `Ready`。
 - [ ] 内置 Chrome 访问同一部署返回 `ERR_CONNECTION_CLOSED`，因此尚未取得该部署的真实页面 DOM、三档截图或网络请求证据；记录为托管访问环境阻塞，证据为 `EVD-20260913-103`。
+## 2026-09-13 本地品系页面复核
+
+- [x] 内置浏览器实际读取黄金米虾品系页：公开面包屑、基础物种继承、黄色外观差异、自身参数、FAQ、图片 Alt、工具物种参数和资料来源均可读，证据为 `EVD-20260913-104`。
+- [ ] 托管 Preview 仍因 `ERR_CONNECTION_CLOSED` 未完成三档截图；独立 Critic、Figma Canonical 和索引门禁仍未完成。
