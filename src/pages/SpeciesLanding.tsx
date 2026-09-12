@@ -6,8 +6,7 @@ import { getPublishedSpeciesProfile } from '../data/publishedSpeciesProfile';
 import { getSpeciesLandingPilotRecord, type SpeciesLandingAssetUse } from '../data/speciesLandingPilot';
 import { getCareTaxonomyPath, getDifficultyLabel, getSecondaryCategory, getSizeLabel, getTemperamentLabel } from '../modules/species/species.service';
 import { taskRoutes } from '../services/navigation/task-routes';
-import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
-import { getSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
+import { getSpeciesFavoriteIds, subscribeToFavorites, toggleSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getSpeciesLandingSelection } from '../services/species/species-landing.service';
 import { SeoBreadcrumbs } from '../components/seo/SeoBreadcrumbs';
 import { SeoCapabilityCard } from '../components/seo/SeoCapabilityCard';
@@ -137,14 +136,13 @@ export function SpeciesLanding() {
   const heroSignature = groupVariants.find(variant => variant.id === fish.id)?.difference || profile.editorial?.signature || fish.description || labels.intro;
   const variantPath = (id: string) => id === baseSpecies.id ? `/species/${baseSpecies.id}` : `/species/${baseSpecies.id}?variant=${encodeURIComponent(id)}`;
 
-  const toggleFavorite = async () => {
+  const toggleFavorite = () => {
     if (favoriteSaving) return;
     setFavoriteSaving(true);
     try {
-      const repository = await getCurrentAquaGuideRepository();
-      await repository.updateFavorite({ type: 'species', catalogKey: fish.id, favorite: !isFavorite });
+      const nextFavorite = toggleSpeciesFavorite(fish.id);
       setFavoriteIds(getSpeciesFavoriteIds());
-      setActionFeedback(isFavorite ? '已取消收藏。' : '已加入收藏。');
+      setActionFeedback(nextFavorite ? '已加入收藏。' : '已取消收藏。');
     } catch {
       setActionFeedback('收藏未完成，请稍后重试。');
     } finally {

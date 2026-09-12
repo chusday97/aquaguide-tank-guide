@@ -22,6 +22,8 @@ for (const [relativeFile, requiredPieces] of publicPages) {
 }
 
 const species = read('src/pages/SpeciesLanding.tsx');
+assert.doesNotMatch(species, /getCurrentAquaGuideRepository|repository-provider/, 'Public Species must not read the app repository for favorites or aquarium state');
+assert.match(species, /toggleSpeciesFavorite/, 'Public Species must use local favorites without auth or Supabase reads');
 assert.match(species, /import \{ setSeoDocument \} from ['"]\.\.\/services\/seo\/seo-document\.service['"]/, 'Species must use the shared SEO document service');
 assert.doesNotMatch(species, /const setMeta|const setCanonical/, 'Species must not keep a second metadata writer');
 assert.match(species, /profile\.editorial\?\.(overview|habitat|feeding|maintenance)/, 'Species must render published editorial conditionally');
