@@ -1514,3 +1514,8 @@
 
 - [x] 内置浏览器从 `/species/sp_0001#overview` 点击“AquaGuide”后真实进入 `#tool`，再点击“继续探索”后真实进入 `#related`；两个目标区域均存在，证据为 `EVD-20260913-088`。
 - [ ] 本证据只覆盖两个章节锚点可达，不扩张为 `aria-current`、390/600/1440、性能、reduced-motion、Figma Canonical 或独立 Critic 通过；页面继续 `noindex,follow`。
+## 2026-09-13 浏览器环境复核与静态回归（当前工作树）
+
+- [x] 重新执行 `npm run test:species-landing`；系统 Chromium 仍在启动阶段因 `MachPortRendezvousServer: Permission denied (1100)` 退出，未进入页面断言，证据为 `EVD-20260913-089`。
+- [x] 公开契约、结构、响应式、证据绑定、编辑证据、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-090`。
+- [ ] 真实三档页面、性能/reduced-motion、可读独立 Critic、Figma Canonical 和发布门禁仍未完成；不解除 `noindex,follow`。

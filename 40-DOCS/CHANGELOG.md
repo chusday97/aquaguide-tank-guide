@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+- Blocked: 2026-09-13 系统 Playwright Chromium 仍在启动阶段触发 macOS `MachPortRendezvousServer: Permission denied (1100)`，未进入页面断言；证据为 `EVD-20260913-089`。
+- Verified: 2026-09-13 公开契约、结构、响应式、证据绑定、编辑证据、lint、build 和 diff-check 全部通过；证据为 `EVD-20260913-090`。
 - Verified: 2026-09-13 内置浏览器点击 Species 章节导航中的“AquaGuide”和“继续探索”后，分别到达 `#tool` 与 `#related`，目标区域存在；证据为 `EVD-20260913-088`。该项不替代完整多视口、aria-current、性能/reduced-motion、Figma Canonical 或独立 Critic。
 - Verified: 2026-09-12 内置浏览器刷新可访问性树后执行 Species 页面滚动成功，截图显示底部“资料来源”与专业来源链接；证据为 `EVD-20260912-074`。
 - Verified: 2026-09-12 内置浏览器通过 Tab + Space 展开第一条 FAQ，答案出现且焦点保持在按钮；证据为 `EVD-20260912-075`。

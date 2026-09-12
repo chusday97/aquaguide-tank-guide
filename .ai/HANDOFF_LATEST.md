@@ -289,3 +289,8 @@
 - `c1975c39` 之后，内置浏览器验证 Species 章节导航的两个末端锚点：`#tool` 与 `#related` 均可通过点击到达，证据为 `EVD-20260913-088`。
 - 不能将该证据扩大解释为完整多视口、`aria-current` 精确读回、性能/reduced-motion、Figma Canonical 或独立审查通过。
 - 继续顺序：浏览器多视口 → 只读 Critic 复验；保持 noindex，保留系统 Chrome MachPort、Figma Starter 配额与 Critic 空正文阻塞记录。
+## 2026-09-13 浏览器回归状态更新
+
+- 系统 `npm run test:species-landing` 已再次执行，但 Chromium 在启动阶段收到 `MachPortRendezvousServer: Permission denied (1100)`，没有进入页面断言；证据 `EVD-20260913-089`。
+- 静态公开 SEO 测试、证据测试、lint、build、diff-check 通过；证据 `EVD-20260913-090`。
+- 该状态仍为 `IN_PROGRESS`：真实三档、性能/reduced-motion、可读独立 Critic、Figma Canonical 和发布门禁未完成。

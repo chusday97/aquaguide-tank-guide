@@ -1303,3 +1303,8 @@
 - 内置浏览器已验证 `/species/sp_0001#overview` 的章节导航：点击“AquaGuide”后 URL 变为 `#tool`，目标能力区存在；再点击“继续探索”后 URL 变为 `#related`，目标区域存在，证据为 `EVD-20260913-088`。
 - 该证据只证明两个锚点可达，不代表完整 `aria-current`、三档多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic 已通过。
 - 下一步：补做可复核的三档浏览器回归，再启动既有只读 Critic；不创建重复 Critic，不解除 `noindex`。
+## 2026-09-13 当前阻塞与已验证回归
+
+- 系统 Playwright/Chromium 已重新尝试，但在浏览器启动阶段因 macOS `MachPortRendezvousServer: Permission denied (1100)` 退出，未进入页面断言；证据为 `EVD-20260913-089`。不再重复重启该进程。
+- 当前静态公开 SEO 契约、结构、响应式、证据绑定、编辑证据、TypeScript、build 和 diff-check 全部通过，证据为 `EVD-20260913-090`。
+- 下一步仍是：在浏览器环境恢复或有合规托管 Preview 后完成 390/600/1440 回归；随后只读 Critic 复验。Figma 配额恢复前不调用 Figwright。
