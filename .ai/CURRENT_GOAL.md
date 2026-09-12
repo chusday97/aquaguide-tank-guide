@@ -1,4 +1,9 @@
 # Current Goal
+## Main follow-up absorbed — Local File asset-pair rollback (2026-09-13)
+- Latest main commits `f2087f26` / `9a6855da` close Local File asset blob+metadata transaction gaps: failed metadata writes restore/remove the blob; failed metadata deletes restore the prior blob.
+- Main docs checkpoint `af03864d` records this DEV-only reliability closure.
+- This does not change Product Recovery Compatibility/Species authority or apply any database migration.
+
 ## Main Local File backup cleanup absorbed — 2026-09-12
 - Main checkpoint `0c8cd464` removes partial `backup-*` directories when Local File backup copy/manifest creation fails.
 - Product Recovery has absorbed the functional fix and its regression; this remains DEV-only Local File maintenance and does not change Product Compatibility authority or Production runtime.

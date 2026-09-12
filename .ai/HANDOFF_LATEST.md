@@ -1,4 +1,8 @@
 # Handoff Latest
+## Main follow-up absorbed — Local File asset-pair transaction closure (2026-09-13)
+- Absorbed `f2087f26`, `9a6855da`, and `af03864d` from main. Local asset blob + metadata writes/deletes now roll back cleanly on the second-half failure path.
+- Product Recovery remains the active authority in this worktree; canonical Admin main remains `/Users/chuchu/aquaguide-main`.
+
 
 ## Cherry barb reviewed-authority checkpoint — 2026-09-13
 - Added standard `Puntius titteya` (`sp_0012`) as the 15th canonical priority taxon; no commercial/variant inheritance is needed or granted.

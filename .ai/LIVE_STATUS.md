@@ -1,5 +1,13 @@
 # Live Status
 
+## 2026-09-13 — asset pair failure safety
+- Main now includes `f2087f26` (PUT rollback) and `9a6855da` (DELETE rollback).
+- Local asset blob/metadata pairs no longer remain split when the second filesystem operation fails in the reproduced write/delete paths.
+- Local File API/UI, Local Admin contract, TypeScript and full build pass; GitHub Product Golden Path passes for both functional checkpoints.
+- Vercel branch deployments for both commits are READY; Production remains the existing validated deployment because Local File routes are DEV-only.
+- Restore rollback was re-audited with no new reproducible blocker; no restore implementation change made.
+
+
 ## CURRENT OVERRIDE — Local File backup failure cleanup verified (2026-09-12)
 - GitHub main functional checkpoint `0c8cd464` closes manifest-less partial backup residue after filesystem copy failure.
 - GitHub Product Golden Path PASS; Vercel branch deployment `dpl_7iffveTP316qn6sC4ztATKdpcPqV` READY.

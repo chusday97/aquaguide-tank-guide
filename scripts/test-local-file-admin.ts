@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { chmod, mkdir, mkdtemp, readFile, readdir, rename, rm, writeFile } from 'node:fs/promises';
+import { chmod, mkdir, mkdtemp, readFile, readdir, rename, rm, stat, writeFile } from 'node:fs/promises';
 import os from 'node:os';
 import path from 'node:path';
 import type { AddressInfo } from 'node:net';
@@ -104,6 +104,32 @@ try {
   });
   assert.equal(invalidMime.response.status, 400);
 
+  // If metadata commit fails after the blob was written, the new blob must be removed/restored.
+  const pairFailureId = 'local-asset-pair-failure';
+  const pairFailureMeta = path.join(root, 'assets', `${pairFailureId}.json`);
+  const pairFailureBlob = path.join(root, 'assets', `${pairFailureId}.blob`);
+  await mkdir(pairFailureMeta);
+  const pairFailure = await requestJson(started.base, `/assets/${pairFailureId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: imageBytes,
+  });
+  assert.equal(pairFailure.response.status, 500);
+  await assert.rejects(stat(pairFailureBlob), (error: NodeJS.ErrnoException) => error.code === 'ENOENT',
+    'Failed asset metadata commit must not leave a newly written blob behind.');
+  await rm(pairFailureMeta, { recursive: true, force: true });
+
+  // The same failure while overwriting an existing asset must restore its previous blob.
+  const originalAssetMeta = await readFile(path.join(root, 'assets', `${assetId}.json`));
+  await rm(path.join(root, 'assets', `${assetId}.json`));
+  await mkdir(path.join(root, 'assets', `${assetId}.json`));
+  const overwriteFailure = await requestJson(started.base, `/assets/${assetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/webp' }, body: Buffer.concat([imageBytes, Buffer.from('new')]),
+  });
+  assert.equal(overwriteFailure.response.status, 500);
+  assert.deepEqual(await readFile(path.join(root, 'assets', `${assetId}.blob`)), imageBytes,
+    'Failed asset metadata commit must restore the previous blob when overwriting an asset.');
+  await rm(path.join(root, 'assets', `${assetId}.json`), { recursive: true, force: true });
+  await writeFile(path.join(root, 'assets', `${assetId}.json`), originalAssetMeta);
+
   const integrity = await requestJson(started.base, '/integrity');
   assert.equal(integrity.response.status, 200);
   assert.equal(integrity.payload.data.healthy, true);
@@ -140,6 +166,20 @@ try {
 
   const changedState = { ...businessState, species: [{ id: 'changed-after-backup' }], updatedAt: 'changed' };
   assert.equal((await putState(started.base, 'business', changedState)).response.status, 200);
+
+  // If metadata deletion fails after blob deletion, the previous blob must be restored.
+  const deleteMetaPath = path.join(root, 'assets', `${assetId}.json`);
+  const deleteBlobPath = path.join(root, 'assets', `${assetId}.blob`);
+  const deleteMetaBytes = await readFile(deleteMetaPath);
+  await rm(deleteMetaPath);
+  await mkdir(deleteMetaPath);
+  const deleteFailure = await requestJson(started.base, `/assets/${assetId}`, { method: 'DELETE' });
+  assert.equal(deleteFailure.response.status, 500);
+  assert.deepEqual(await readFile(deleteBlobPath), imageBytes,
+    'Failed asset metadata deletion must restore the previous blob.');
+  await rm(deleteMetaPath, { recursive: true, force: true });
+  await writeFile(deleteMetaPath, deleteMetaBytes);
+
   assert.equal((await requestJson(started.base, `/assets/${assetId}`, { method: 'DELETE' })).response.status, 200);
   assert.equal((await fetch(`${started.base}/assets/${assetId}`)).status, 404);
 

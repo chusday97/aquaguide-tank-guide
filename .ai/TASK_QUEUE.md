@@ -1,5 +1,18 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — Local asset pair transaction closure (2026-09-13)
+- [x] Reproduce PUT failure where blob commits but metadata replacement fails.
+- [x] Roll back the previous blob, or remove a newly-created blob, when metadata commit fails.
+- [x] Add cross-platform regressions for new asset and overwrite failure.
+- [x] Reproduce DELETE failure where blob is removed but metadata unlink fails.
+- [x] Make DELETE sequential and restore the previous blob on metadata failure.
+- [x] Re-run Local File API/UI, Local Admin contract, TypeScript and full build.
+- [x] GitHub Product Golden Path PASS and Vercel branch deployments READY for `f2087f26` and `9a6855da`.
+- [x] Re-audit restore rollback read-only; no reproducible blocker found, so no speculative restore changes.
+- [x] Keep Production unchanged; Local File routes are DEV-only.
+- [ ] Continue only from a new reproducible operator/runtime/data-reliability badcase.
+
+
 ## ACTIVE OVERRIDE — failed backup residue closure (2026-09-12)
 - [x] Reproduce a mid-copy backup failure using an unreadable but integrity-stat-valid asset blob.
 - [x] Prove pre-fix failure leaves an extra manifest-less `backup-*` directory.
