@@ -253,3 +253,12 @@ Draft PR: #149
 - TypeScript / Species Knowledge / Compatibility / coverage scorecard / canonical evidence coverage: PASS.
 - Compatibility Admin / Git runtime / runtime authority / Staging preflight / Local File Admin / SQL parse: PASS.
 - Full build / Species Detail browser E2E / Compatibility beginner-action E2E / GP001–GP004: PASS.
+
+### P1 — Black Skirt Tetra reviewed-authority checkpoint
+- Added standard `Gymnocorymbus ternetzi` (`sp_0010`) as a direct reviewed taxon.
+- Corrected user-facing decision authority away from stale `Territorial`: reviewed social authority is schooling, non-territorial, with medium fin-nipping context and minimum group 12.
+- Reviewed water/space authority is 20–26°C, pH 6.0–7.0, 5–20 dGH, 75 cm / ~68 L planning space.
+- No automatic authority inheritance to long-fin, balloon, albino or color morphs.
+- Canonical priority coverage: 14 taxa / 182 directions; 154 caution, 26 not_recommended, 2 compatible.
+- Runtime/Admin Compatibility baseline: 16 Profiles / 5 Pair Rules; additive migration `202609120003_compatibility_black_skirt_baseline.sql` is tracked but unapplied.
+- Validation: Product + Admin/runtime + build + browser Golden Paths all PASS.

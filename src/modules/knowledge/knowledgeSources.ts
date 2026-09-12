@@ -41,6 +41,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-gymnocorymbus-ternetzi': {
+    id: 'seriouslyfish-gymnocorymbus-ternetzi',
+    title: 'Gymnocorymbus ternetzi (Black Widow Tetra)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-gymnocorymbus-ternetzi': {
+    id: 'fishbase-gymnocorymbus-ternetzi',
+    title: 'Gymnocorymbus ternetzi (Black tetra) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Gymnocorymbus-ternetzi',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-trigonostigma-heteromorpha': {
     id: 'seriouslyfish-trigonostigma-heteromorpha',
     title: 'Trigonostigma heteromorpha (Harlequin)',

@@ -163,19 +163,33 @@ assert.equal((recoveryMigration.match(/Compatibility recovery pair evidence drif
 
 const harlequinMigration = readFileSync('supabase/migrations/202609120002_compatibility_harlequin_baseline.sql', 'utf8');
 assert.match(harlequinMigration, /Compatibility harlequin baseline is partial or not fully published/, 'harlequin baseline must fail closed on partial published catalog coverage.');
-const postRecoveryV1Profiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId));
-const postRecoveryV1Pairs = audit.reviewedPairRules.filter(rule => {
-  const key = [...rule.speciesIds].sort().join('__');
-  return !historicalPairKeys.includes(key) && !recoveryV1PairKeys.includes(key);
-});
-assert.deepEqual(postRecoveryV1Profiles.map(profile => profile.speciesId).sort(), ['sp_0468'], 'current expansion migration must own only the reviewed harlequin profile.');
-assert.equal(postRecoveryV1Pairs.length, 0, 'harlequin expansion must not invent a pair override.');
-for (const profile of postRecoveryV1Profiles) {
+const harlequinProfiles = audit.reviewedProfiles.filter(profile => profile.speciesId === 'sp_0468');
+assert.equal(harlequinProfiles.length, 1, '202609120002 must own exactly the reviewed harlequin Profile.');
+for (const profile of harlequinProfiles) {
   assert.equal(harlequinMigration.includes(profile.speciesId), true, `harlequin migration must include Profile ${profile.speciesId}`);
   for (const source of profile.citations) assert.equal(harlequinMigration.includes(source.id), true, `harlequin migration must include Profile source ${source.id}`);
 }
-assert.equal((harlequinMigration.match(/Compatibility harlequin profile drift:/g) || []).length, postRecoveryV1Profiles.length, 'harlequin Profile needs one exact drift guard.');
-assert.equal((harlequinMigration.match(/Compatibility harlequin profile evidence drift:/g) || []).length, postRecoveryV1Profiles.length, 'harlequin Profile needs one evidence drift guard.');
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile drift:/g) || []).length, 1, 'harlequin Profile needs one exact drift guard.');
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile evidence drift:/g) || []).length, 1, 'harlequin Profile needs one evidence drift guard.');
+
+const blackSkirtMigration = readFileSync('supabase/migrations/202609120003_compatibility_black_skirt_baseline.sql', 'utf8');
+assert.match(blackSkirtMigration, /Compatibility black-skirt baseline is partial or not fully published/, 'black-skirt baseline must fail closed on partial published catalog coverage.');
+const blackSkirtProfiles = audit.reviewedProfiles.filter(profile => profile.speciesId === 'sp_0010');
+assert.equal(blackSkirtProfiles.length, 1, '202609120003 must own exactly the reviewed black-skirt Profile.');
+for (const profile of blackSkirtProfiles) {
+  assert.equal(blackSkirtMigration.includes(profile.speciesId), true, `black-skirt migration must include Profile ${profile.speciesId}`);
+  for (const source of profile.citations) assert.equal(blackSkirtMigration.includes(source.id), true, `black-skirt migration must include Profile source ${source.id}`);
+}
+assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile drift:/g) || []).length, 1, 'black-skirt Profile needs one exact drift guard.');
+assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile evidence drift:/g) || []).length, 1, 'black-skirt Profile needs one evidence drift guard.');
+const expansionOwnedProfileKeys = new Set([...recoveryV1ProfileKeys, 'sp_0468', 'sp_0010']);
+const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !expansionOwnedProfileKeys.has(profile.speciesId));
+assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-baseline reviewed Profile must have an explicit additive migration owner.');
+const unexpectedExpansionPairs = audit.reviewedPairRules.filter(rule => {
+  const key = [...rule.speciesIds].sort().join('__');
+  return !historicalPairKeys.includes(key) && !recoveryV1PairKeys.includes(key);
+});
+assert.equal(unexpectedExpansionPairs.length, 0, 'no unowned post-baseline Pair Rule may appear without an additive migration.');
 
 const compatibilityUi = readFileSync('src/pages/CompatibilityAdmin.tsx', 'utf8');
 assert.doesNotMatch(compatibilityUi, /(?:indigo|violet|sky)-/, 'Compatibility Admin must not split Profile/Pair into separate blue/purple visual authorities.');

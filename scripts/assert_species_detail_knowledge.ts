@@ -136,6 +136,27 @@ assert.equal(swordtailKnowledge.knowledge.reproduction?.gestationOrIncubation?.m
 assert.ok(swordtailKnowledge.knowledge.sexIdentification.maleTraits?.some(item => item.includes('交接器')));
 assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0236', scientificName: 'Xiphophorus hellerii var. Albino Red' }), undefined, 'commercial swordtail variants must not inherit standard-species authority automatically');
 
+const blackSkirtKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0010',
+  name: '黑裙鱼',
+  scientificName: 'Gymnocorymbus ternetzi',
+  waterTemperature: '20-28°C',
+  phLevel: '6.0-8.5',
+  tankSize: '至少 48 升',
+  temperament: 'Territorial',
+});
+assert.deepEqual(blackSkirtKnowledge.facts.temperatureRange, { min: 20, max: 26 });
+assert.deepEqual(blackSkirtKnowledge.facts.phRange, { min: 6, max: 7 });
+assert.deepEqual(blackSkirtKnowledge.knowledge.environment?.hardnessDgh, { min: 5, max: 20 });
+assert.equal(blackSkirtKnowledge.knowledge.socialBehavior?.minimumGroupSize, 12);
+assert.equal(blackSkirtKnowledge.knowledge.socialBehavior?.territoriality, 'none');
+assert.equal(blackSkirtKnowledge.knowledge.socialBehavior?.finNipping, 'medium');
+assert.equal(blackSkirtKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 68);
+assert.equal(blackSkirtKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 75);
+assert.equal(blackSkirtKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0227', scientificName: 'Gymnocorymbus ternetzi var. Longfin' }), undefined, 'black-skirt ornamental variants must not inherit standard-species authority automatically');
+
 const harlequinKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0468',

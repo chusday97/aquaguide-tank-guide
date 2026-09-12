@@ -149,3 +149,13 @@ Continue canonical high-frequency Species Knowledge V2 expansion after the Harle
 - Added additive migration `202609120002_compatibility_harlequin_baseline.sql`; prior migrations remain immutable and no database environment was mutated.
 - Coverage scorecard now accepts reviewed base-species inheritance instead of falsely requiring duplicate direct-ID profiles.
 - Validation PASS: TypeScript, Species Knowledge, Compatibility, coverage scorecard, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+
+## Current checkpoint — Black Skirt Tetra reviewed authority (2026-09-12)
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Gymnocorymbus ternetzi` (`sp_0010`) from Seriously Fish + FishBase.
+- Reviewed authority replaces stale legacy `Territorial` semantics with schooling behavior, no territoriality, medium fin-nipping risk, and a reviewed minimum group of 12.
+- Reviewed environment/space authority: 20–26°C, pH 6.0–7.0, 5–20 dGH, 75 cm planning length / ~68 L, conservative adult-size upper bound 7.5 cm SL across reviewed sources.
+- Ornamental long-fin/balloon/albino/color variants do not inherit the standard profile automatically; variant morphology may materially change fin vulnerability/body form.
+- Canonical priority matrix: 14 taxa / 182 ordered directions = 154 caution, 26 not_recommended, 2 compatible. No new unconditional compatible direction was introduced.
+- Admin/Git runtime baseline is now 16 direct Profiles / 5 Pair Rules. New additive migration: `202609120003_compatibility_black_skirt_baseline.sql`; do not apply it to Staging/Production in this recovery checkpoint.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+- Next: continue only with another distinct canonical taxon whose environment/space/social evidence is strong enough; do not widen inheritance merely to raise counts.

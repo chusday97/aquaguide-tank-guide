@@ -463,6 +463,33 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed black-skirt authority replaces stale territorial label and enforces 12-fish group context',
+    run: () => {
+      const blackSkirt = fishData.find(item => item.id === 'sp_0010');
+      if (!blackSkirt) return false;
+      const underGrouped = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '80', width: '30', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: blackSkirt,
+        candidateQuantity: 6,
+      });
+      const fullGroup = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '80', width: '30', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: blackSkirt,
+        candidateQuantity: 12,
+      });
+      const hotTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '80', width: '30', height: '30' }, targetTemperature: '27' }),
+        candidateSpecies: blackSkirt,
+        candidateQuantity: 12,
+      });
+      return underGrouped.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && fullGroup.warningRules.every(rule => rule.code !== 'minimum_group_not_met')
+        && fullGroup.blockingRules.every(rule => rule.code !== 'single_housing_required')
+        && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && underGrouped.metadata.domainStatus !== 'insufficient_data';
+    },
+  },
+  {
     name: 'reviewed harlequin authority overrides legacy catalog and enforces group plus space context',
     run: () => {
       const harlequin = fishData.find(item => item.id === 'sp_0468');

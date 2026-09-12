@@ -12,6 +12,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609110001_compatibility_v3_profile_authority.sql',
   '202609120001_compatibility_recovery_baseline.sql',
   '202609120002_compatibility_harlequin_baseline.sql',
+  '202609120003_compatibility_black_skirt_baseline.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [

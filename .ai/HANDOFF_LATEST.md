@@ -1,4 +1,12 @@
 # Handoff Latest
+## Black Skirt Tetra reviewed-authority checkpoint — 2026-09-12
+- Current Product Recovery line adds standard `Gymnocorymbus ternetzi` (`sp_0010`) with reviewed water/space/social/reproduction evidence; no ornamental variant inheritance.
+- Runtime/Admin reviewed baseline is 16 Profiles / 5 Pair Rules and Git snapshot matches it.
+- New additive migration `202609120003_compatibility_black_skirt_baseline.sql` is part of the repository migration chain but has not been applied to Staging/Production.
+- Canonical priority matrix is 14 taxa / 182 directions: 154 caution, 26 not_recommended, 2 compatible.
+- Full Product/Admin/runtime/build/browser validation is green through GP001–GP004.
+- After push: force-refresh real `origin/main`, require main-only 0, then verify PR #149 current-head CI before selecting the next taxon.
+
 ## Main failed-backup cleanup checkpoint absorbed — 2026-09-12
 - `0c8cd464 fix(admin): clean failed backup snapshots` is contained in Product Recovery.
 - Failed backup creation now removes its newly allocated partial directory before rethrowing; regression verifies the backup directory set is unchanged after a forced mid-copy failure.
