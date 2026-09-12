@@ -45,8 +45,10 @@ assert.match(localApiApp, /import \{ localAdminFileRouter \} from '\.\/routes\/l
   'Local File API must be mounted only by the local Node server.');
 assert.doesNotMatch(productionV1Router, /local-admin|localAdminFileRouter/,
   'Production v1 router must not import the DEV-only Local File router or its filesystem trace.');
-assert.match(localFileRouter, /atomicJsonWrite[\s\S]*rename\(temp, filePath\)/,
-  'Local partition JSON must use atomic temp-file replacement.');
+assert.match(localFileRouter, /atomicJsonWrite[\s\S]*rename\(temp, filePath\)[\s\S]*rm\(temp, \{ force: true \}\)/,
+  'Local partition JSON must atomically replace the target and clean temporary files after success or failure.');
+assert.match(localFileRouter, /atomicBufferWrite[\s\S]*rename\(temp, filePath\)[\s\S]*rm\(temp, \{ force: true \}\)/,
+  'Local binary writes must also clean temporary files after success or failure.');
 assert.match(localDevScript, /ADMIN_LOCAL_FILE_MODE = 'true'[\s\S]*VITE_ADMIN_LOCAL_FILE_MODE = 'true'/,
   'The dedicated local-admin dev entrypoint must enable both server and browser Durable File guards.');
 assert.match(localDevScript, /START_SEO_ADMIN = 'true'[\s\S]*VITE_SEO_ADMIN_PORT/,

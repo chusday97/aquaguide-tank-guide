@@ -213,6 +213,8 @@ try {
   assert.equal((await putState(started.base, 'business', failedBusinessState)).response.status, 200);
   const failedRuntimeSnapshot = await requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
   assert.equal(failedRuntimeSnapshot.response.status, 500);
+  assert.equal((await readdir(path.join(root, 'public'))).some(name => name.startsWith('runtime-authority.json.tmp-')), false,
+    'Failed atomic manifest replacement must clean its temporary JSON file.');
   assert.deepEqual((await readdir(path.join(root, 'public/runtime-assets'))).sort(), [exportedAssetFile]);
   assert.deepEqual(Buffer.from(await readFile(path.join(root, 'public/runtime-assets', exportedAssetFile))), imageBytes);
   await rm(manifestPath, { recursive: true, force: true });
