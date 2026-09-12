@@ -1071,3 +1071,7 @@
 - [x] Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、production build 与 diff-check 全部通过，证据为 `EVD-20260912-003`。
 - [x] 构建仅保留既有动态/静态导入、大字体和大 chunk 警告；未新增代码修改，用户既有三份未提交文件保持原样。
 - [ ] 系统 Chrome 单次重试仍在页面断言前 SIGABRT；系统多视口、reduced-motion、性能、完整失败状态、Figma Canonical 和当前版本独立 Critic 复验仍未完成。
+## 2026-09-12 内置浏览器运行内容复核
+
+- [x] 内置浏览器重新打开 `/species/sp_0001` 并等待加载完成；公开 Header、面包屑、章节导航、Hero、参数、生活习性、环境、品系、FAQ、能力入口和资料来源均在可访问树中可读，证据为 `EVD-20260912-004`。
+- [ ] 该证据确认页面内容真实存在，但不能替代可调 390/600/1440 系统浏览器、reduced-motion、性能和完整失败状态验收。

@@ -964,3 +964,7 @@
 - 系统 Chrome 已按约定只重试一次，仍在页面断言前 SIGABRT/进程权限错误；这属于环境阻塞，不是页面断言失败。
 - 用户既有未提交文件仍为 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`，未触碰、未暂存。
 - 下一步仍是：浏览器环境恢复后补真实多视口与性能/reduced-motion证据，再针对当前版本取得可读独立Critic复验；Figma配额恢复后集中补Canonical模板。保持 `noindex,follow`。
+## 2026-09-12 内置浏览器运行内容复核
+
+- 内置浏览器新标签已成功打开并加载 `/species/sp_0001`；可读到公开 Header、面包屑、章节导航、Hero、参数、生活习性、环境、品系、FAQ、能力入口和资料来源，证据为 `EVD-20260912-004`。
+- 该证据证明本地页面不是停留在加载态，但不代表系统 Chrome 的三档 viewport、reduced-motion、性能或完整失败状态门禁已通过。

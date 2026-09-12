@@ -3,6 +3,7 @@
 ## [Unreleased]
 
 - Verified: 2026-09-12 公开SEO Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、build 与 diff-check 全部通过；系统 Chrome 仍在页面断言前 SIGABRT，未冒充多视口浏览器验收。
+- Verified: 2026-09-12 内置浏览器重新加载 `/species/sp_0001`，公开导航、Hero、参数、生活习性、品系、FAQ、能力入口和资料来源均可读；记录为运行内容证据，不替代系统 Chrome 三档验收。
 
 - Fixed: Species `assetPreview=1` 品系卡预览调用改为传入公开品系摘要所需的最小字段，恢复 TypeScript 类型检查；Published 与普通公开访问边界不变。
 - Verified: 2026-09-10 本地预览在 `3001` 恢复后，内置浏览器确认长页面内容和章节锚点实际可达；Evidence、Editorial、Public Contract、Responsive Contract、lint、build、diff-check 通过。

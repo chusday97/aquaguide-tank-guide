@@ -78,3 +78,7 @@
 - 当前代码的 Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、build 与 diff-check 全部通过，证据为 `EVD-20260912-003`。
 - 系统 Chrome 单次启动仍在页面断言前 SIGABRT；不将其计为浏览器通过，也不重复启动同一失败通道。
 - 继续保持 `noindex,follow`，Figma调用暂停；系统多视口、reduced-motion、性能、完整失败状态、独立Critic复验和Figma Canonical仍是未完成门禁。
+## 2026-09-12 内置浏览器加载复核
+
+- `/species/sp_0001` 在内置浏览器新标签完成加载，主要公开区块和导航均可读，证据为 `EVD-20260912-004`。
+- 继续保持 `noindex,follow`；这只是运行内容证据，不替代三档系统浏览器与独立审查。
