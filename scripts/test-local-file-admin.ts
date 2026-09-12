@@ -168,6 +168,37 @@ try {
   assert.equal(new Set(concurrentBackupIds).size, concurrentBackupIds.length,
     'Every successful concurrent backup must receive a unique backup id.');
 
+  // Backup must snapshot one complete authority state even while the same asset is being rewritten.
+  const backupRaceAssetId = 'local-asset-backup-race';
+  const backupRacePng = Buffer.alloc(256 * 1024 + 17, 0x41);
+  const backupRaceWebp = Buffer.alloc(768 * 1024 + 31, 0x42);
+  assert.equal((await requestJson(started.base, `/assets/${backupRaceAssetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: backupRacePng,
+  })).response.status, 201);
+  for (let round = 0; round < 8; round += 1) {
+    const backupPromise = requestJson(started.base, '/backups', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: `asset-race-${round}` }),
+    });
+    const rewritePromise = (async () => {
+      for (let index = 0; index < 6; index += 1) {
+        const useWebp = index % 2 === 0;
+        const result = await requestJson(started.base, `/assets/${backupRaceAssetId}`, {
+          method: 'PUT', headers: { 'Content-Type': useWebp ? 'image/webp' : 'image/png' }, body: useWebp ? backupRaceWebp : backupRacePng,
+        });
+        assert.equal(result.response.status, 201);
+      }
+    })();
+    const [raceBackup] = await Promise.all([backupPromise, rewritePromise]);
+    assert.equal(raceBackup.response.status, 201, 'Backup must not fail while asset writes are queued.');
+    const raceBackupId = String(raceBackup.payload.data.id);
+    const raceMeta = JSON.parse(await readFile(path.join(root, 'backups', raceBackupId, 'assets', `${backupRaceAssetId}.json`), 'utf8'));
+    const raceBlob = await readFile(path.join(root, 'backups', raceBackupId, 'assets', `${backupRaceAssetId}.blob`));
+    const isPngBackup = raceMeta.mimeType === 'image/png' && raceMeta.byteSize === backupRacePng.length && raceBlob.equals(backupRacePng);
+    const isWebpBackup = raceMeta.mimeType === 'image/webp' && raceMeta.byteSize === backupRaceWebp.length && raceBlob.equals(backupRaceWebp);
+    assert.equal(isPngBackup || isWebpBackup, true, 'Concurrent backup must contain one complete asset version.');
+  }
+  assert.equal((await requestJson(started.base, `/assets/${backupRaceAssetId}`, { method: 'DELETE' })).response.status, 200);
+
   // A mid-copy filesystem failure must not leave a hidden partial backup directory.
   const blobPath = path.join(root, 'assets', `${assetId}.blob`);
   const backupEntriesBeforeFailure = (await readdir(path.join(root, 'backups'))).sort();
@@ -309,6 +340,34 @@ try {
   assert.deepEqual(Buffer.from(await readFile(path.join(root, 'public/runtime-assets', exportedAssetFile))), imageBytes);
   await rm(manifestPath, { recursive: true, force: true });
   await rename(savedManifestPath, manifestPath);
+
+  // Runtime export must read one complete published asset version while asset rewrites are queued.
+  const runtimeRacePng = Buffer.alloc(128 * 1024 + 13, 0x51);
+  const runtimeRaceWebp = Buffer.alloc(512 * 1024 + 29, 0x52);
+  assert.equal((await requestJson(started.base, `/assets/${assetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: runtimeRacePng,
+  })).response.status, 201);
+  assert.equal((await putState(started.base, 'business', exportBusinessState)).response.status, 200);
+  for (let round = 0; round < 8; round += 1) {
+    const exportPromise = requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
+    const rewritePromise = (async () => {
+      for (let index = 0; index < 6; index += 1) {
+        const useWebp = index % 2 === 0;
+        const result = await requestJson(started.base, `/assets/${assetId}`, {
+          method: 'PUT', headers: { 'Content-Type': useWebp ? 'image/webp' : 'image/png' }, body: useWebp ? runtimeRaceWebp : runtimeRacePng,
+        });
+        assert.equal(result.response.status, 201);
+      }
+    })();
+    const [raceExport] = await Promise.all([exportPromise, rewritePromise]);
+    assert.equal(raceExport.response.status, 201, 'Runtime snapshot must not fail while published asset writes are queued.');
+    const raceManifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+    const raceAsset = raceManifest.productCare.species[0].assets[0];
+    const raceAssetBody = await readFile(path.join(root, 'public', raceAsset.url));
+    const isPngRuntime = raceAsset.mimeType === 'image/png' && raceAsset.byteSize === runtimeRacePng.length && raceAsset.url.endsWith('.png') && raceAssetBody.equals(runtimeRacePng);
+    const isWebpRuntime = raceAsset.mimeType === 'image/webp' && raceAsset.byteSize === runtimeRaceWebp.length && raceAsset.url.endsWith('.webp') && raceAssetBody.equals(runtimeRaceWebp);
+    assert.equal(isPngRuntime || isWebpRuntime, true, 'Concurrent runtime snapshot must contain one complete published asset version.');
+  }
 
   process.env.ADMIN_LOCAL_FILE_MODE = 'false';
   const disabled = await requestJson(started.base, '/status');

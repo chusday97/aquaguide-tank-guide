@@ -16,6 +16,16 @@ const localFileFormatVersion = 1;
 const backupFormatVersion = 1;
 const supportedMime = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const maxAssetBytes = 20 * 1024 * 1024;
+let authorityTransactionTail: Promise<void> = Promise.resolve();
+const withAuthorityTransaction = async <T>(operation: () => Promise<T>): Promise<T> => {
+  const previous = authorityTransactionTail.catch(() => undefined);
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  authorityTransactionTail = previous.then(() => gate);
+  await previous;
+  try { return await operation(); }
+  finally { release(); }
+};
 const assetMutationTails = new Map<string, Promise<void>>();
 const withAssetMutationLock = async <T>(assetId: string, operation: () => Promise<T>): Promise<T> => {
   const previous = assetMutationTails.get(assetId) || Promise.resolve();
@@ -565,7 +575,8 @@ localAdminFileRouter.get('/integrity', asyncRoute(async (request, response) => {
 }));
 localAdminFileRouter.post('/runtime-snapshot', asyncRoute(async (request, response) => {
   requireEnabled();
-  return sendData(request, response, await exportGitRuntimeAuthority(), 201);
+  const result = await withAuthorityTransaction(() => exportGitRuntimeAuthority());
+  return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
   requireEnabled();
@@ -574,11 +585,13 @@ localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
 localAdminFileRouter.post('/backups', asyncRoute(async (request, response) => {
   requireEnabled();
   const reason = typeof request.body?.reason === 'string' && request.body.reason.trim() ? request.body.reason.trim().slice(0, 120) : 'manual';
-  return sendData(request, response, await createBackup(reason, true), 201);
+  const result = await withAuthorityTransaction(() => createBackup(reason, true));
+  return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.post('/backups/:backupId/restore', asyncRoute(async (request, response) => {
   requireEnabled();
-  return sendData(request, response, await restoreBackup(request.params.backupId));
+  const result = await withAuthorityTransaction(() => restoreBackup(request.params.backupId));
+  return sendData(request, response, result);
 }));
 
 localAdminFileRouter.get('/state/:partition', asyncRoute(async (request, response) => {
@@ -591,7 +604,7 @@ localAdminFileRouter.get('/state/:partition', asyncRoute(async (request, respons
 localAdminFileRouter.put('/state/:partition', asyncRoute(async (request, response) => {
   requireEnabled();
   const partition = safePartition(request.params.partition);
-  await writePartitionState(localRoot(), partition, request.body);
+  await withAuthorityTransaction(() => writePartitionState(localRoot(), partition, request.body));
   return sendData(request, response, { partition, persisted: true, localFileFormatVersion });
 }));
 
@@ -605,7 +618,7 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    return withAssetMutationLock(assetId, async () => {
+    return withAuthorityTransaction(() => withAssetMutationLock(assetId, async () => {
       const root = localRoot();
       const blobPath = assetFile(root, assetId);
       const metadataPath = assetMetaFile(root, assetId);
@@ -623,7 +636,7 @@ localAdminFileRouter.put(
         throw error;
       }
       return sendData(request, response, { assetId, persisted: true, mimeType, byteSize: request.body.length }, 201);
-    });
+    }));
   }),
 );
 localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response) => {
@@ -644,7 +657,7 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  return withAssetMutationLock(assetId, async () => {
+  return withAuthorityTransaction(() => withAssetMutationLock(assetId, async () => {
     const root = localRoot();
     const blobPath = assetFile(root, assetId);
     const metadataPath = assetMetaFile(root, assetId);
@@ -667,5 +680,5 @@ localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, respo
       throw error;
     }
     return sendData(request, response, { assetId, removed: true });
-  });
+  }));
 }));
