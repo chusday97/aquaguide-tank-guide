@@ -11,6 +11,11 @@
 - [x] 缺图 Hero/品系卡显示物种名称并收紧回退高度，不改变素材审核状态或 Published 聚合。
 - [ ] 继续检查三档视口与其他公开页面的空状态一致性。
 
+## 2026-09-12 公开页面 Intro 间距
+
+- [x] Category/Guide 使用同一 `seo-page-intro` 令牌，Guide 去除额外章节顶距。
+- [ ] 继续补三档视口的视觉证据；不改变内容、图片或索引门禁。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。

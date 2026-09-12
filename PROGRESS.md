@@ -1,5 +1,8 @@
 ## 2026-09-12 当前状态快照（`0ab0cca9`）
 
+- [x] 公开分类页与指南页统一使用 `seo-page-intro` 首段间距；移除指南页额外叠加的 `seo-section` 顶部间距，内置 Chrome 对照显示两页标题起始位置一致，证据为 `EVD-20260912-063`。
+- [ ] 继续检查三档视口下的页面 Intro、缺图和内容准备态；系统 Chrome、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成。
+
 - [x] 缺图回退版式收口：Species Hero/品系卡的回退现在显示物种名称，并在桌面端收紧高度，避免素材被门禁拦截时形成大片空白；仍不绕过 `needs_review/blocked`，证据为 `EVD-20260912-062`。
 - [x] 结构、文案、响应式、证据、lint、build 和 diff-check 通过；代码提交为 `0ab0cca9`。
 
