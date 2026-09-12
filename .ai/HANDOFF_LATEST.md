@@ -10,6 +10,10 @@
 - 系统 Chrome 自动化仍受 macOS MachPort/SIGABRT 阻塞；独立 Critic 最新复验返回空正文；Figma Canonical 仍等待 Starter 配额。
 - 用户未提交的三个文件保持原样，不能覆盖或代提交。
 
+## 当前 Critic 状态
+
+- 当前 SHA `159a095b` 的既有 Critic 复验已完成但没有可读正文，证据为 `EVD-20260912-011`；不能计为独立审查通过。
+
 ## 当前下一步
 
 只在 Critic 可返回正文后做一次当前 SHA 只读复验；系统 Chrome 恢复后只补一次自动化回归；Figma 配额恢复后批量完成 Canonical 模板。全部完成前不解除索引、不部署生产。

@@ -16,6 +16,7 @@
 
 ## 当前阻塞与边界
 
+- 当前 SHA `159a095b` 的 Critic 复验已完成但没有可读正文，记录为 `EVD-20260912-011`；不能宣称独立审查通过。
 - 系统 Chrome 自动化仍受 macOS MachPort/SIGABRT 阻塞；内置浏览器证据不等同于系统 Chrome 通过。
 - 独立 Critic 最新复验返回空正文，不能认定六维审查通过；不创建重复 Critic。
 - Figma Canonical 模板尚未完成，Starter 配额恢复前不调用 Figwright。
