@@ -16,6 +16,8 @@ const publicShell = read('src/components/seo/PublicSeoShell.tsx');
 assert.match(publicShell, /PublicSeoLoading/, 'Public Shell must provide a dedicated loading skeleton');
 assert.match(publicShell, /aria-busy="true"/, 'Public loading state must expose busy status');
 assert.match(read('src/styles/seo-system.css'), /seo-public-loading__media/, 'Public loading skeleton must have a stable media frame');
+const publicRoutesApp = read('src/App.tsx');
+assert.match(publicRoutesApp, /<Suspense fallback=\{<PublicSeoLoading \/>\}>/, 'Public routes must use the SEO loading skeleton');
 
 for (const [relativeFile, requiredPieces] of publicPages) {
   const source = read(relativeFile);
