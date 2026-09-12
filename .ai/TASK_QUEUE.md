@@ -43,6 +43,11 @@
 - [x] 宝莲灯、分类页和新鱼入缸指南已在内置浏览器复核。
 - [ ] 继续补三档真实视口、系统 Chrome、性能/reduced-motion和独立 Critic门禁。
 
+## 2026-09-12 宝莲灯工具入口回归
+
+- [x] Species 能力卡真实进入兼容工具，并保留物种 ID 与来源参数。
+- [ ] 继续验证返回链路和三档真实视口；不解除 `noindex`。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
