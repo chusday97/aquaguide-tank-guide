@@ -1,3 +1,8 @@
+## 2026-09-13 Critic 最新复验结果
+
+- [x] 同一只读 Critic 已完成对最新 HEAD `b2de6ab0` 的复验，但 `read_thread` 返回 `items: []`，没有可读六维正文，证据为 `EVD-20260913-120`。
+- [ ] 独立审查仍是基础设施阻塞；不创建重复线程、不宣称通过。600px 独立运行时、系统 Chrome MachPort、Figma Canonical 和索引发布门禁仍未完成。
+
 ## 2026-09-13 最新 Critic 复验已交回
 
 - [x] 既有只读 Critic 已收到最新 HEAD `b2de6ab0` 的六维复验请求，明确要求检查结构化加载态、Public/App Shell、Base/Variant、Product Truth、noindex 和用户未提交文件边界，证据为 `EVD-20260913-119`。

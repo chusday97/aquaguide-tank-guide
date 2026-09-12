@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Blocked: 2026-09-13 同一只读 Critic 已完成最新 HEAD `b2de6ab0` 的复验，但仍返回空 `items`、无可读六维正文；不计为独立审查通过，证据为 `EVD-20260913-120`。
 - In progress: 2026-09-13 已将最新 HEAD `b2de6ab0` 交回同一只读 Critic 做六维复验；当前线程仍在运行，尚无可读正文，证据为 `EVD-20260913-119`。
 - Verified: 2026-09-13 结构化加载态修复后的 Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Typography、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-118`。
 - Fixed: 2026-09-13 公开 SEO 懒加载改为结构化骨架，提前保留面包屑、Hero 媒体框和内容轮廓，避免整页空白误导用户；支持 aria-busy/status 和 reduced-motion，提交 `b8c705a9`，证据为 `EVD-20260913-117`。
