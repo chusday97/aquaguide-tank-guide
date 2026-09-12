@@ -16,6 +16,20 @@ const localFileFormatVersion = 1;
 const backupFormatVersion = 1;
 const supportedMime = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const maxAssetBytes = 20 * 1024 * 1024;
+const assetMutationTails = new Map<string, Promise<void>>();
+const withAssetMutationLock = async <T>(assetId: string, operation: () => Promise<T>): Promise<T> => {
+  const previous = assetMutationTails.get(assetId) || Promise.resolve();
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const tail = previous.catch(() => undefined).then(() => gate);
+  assetMutationTails.set(assetId, tail);
+  await previous.catch(() => undefined);
+  try { return await operation(); }
+  finally {
+    release();
+    if (assetMutationTails.get(assetId) === tail) assetMutationTails.delete(assetId);
+  }
+};
 
 type JsonRecord = Record<string, unknown>;
 type LocalFileEnvelope = {
@@ -591,23 +605,25 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    const root = localRoot();
-    const blobPath = assetFile(root, assetId);
-    const metadataPath = assetMetaFile(root, assetId);
-    const previousBlob = await readBufferOrNull(blobPath);
-    let blobCommitted = false;
-    try {
-      await atomicBufferWrite(blobPath, request.body);
-      blobCommitted = true;
-      await atomicJsonWrite(metadataPath, { mimeType, byteSize: request.body.length, updatedAt: new Date().toISOString() });
-    } catch (error) {
-      if (blobCommitted) {
-        try { await restoreBufferOrRemove(blobPath, previousBlob); }
-        catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 写入失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+    return withAssetMutationLock(assetId, async () => {
+      const root = localRoot();
+      const blobPath = assetFile(root, assetId);
+      const metadataPath = assetMetaFile(root, assetId);
+      const previousBlob = await readBufferOrNull(blobPath);
+      let blobCommitted = false;
+      try {
+        await atomicBufferWrite(blobPath, request.body);
+        blobCommitted = true;
+        await atomicJsonWrite(metadataPath, { mimeType, byteSize: request.body.length, updatedAt: new Date().toISOString() });
+      } catch (error) {
+        if (blobCommitted) {
+          try { await restoreBufferOrRemove(blobPath, previousBlob); }
+          catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 写入失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+        }
+        throw error;
       }
-      throw error;
-    }
-    return sendData(request, response, { assetId, persisted: true, mimeType, byteSize: request.body.length }, 201);
+      return sendData(request, response, { assetId, persisted: true, mimeType, byteSize: request.body.length }, 201);
+    });
   }),
 );
 localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response) => {
@@ -628,26 +644,28 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  const root = localRoot();
-  const blobPath = assetFile(root, assetId);
-  const metadataPath = assetMetaFile(root, assetId);
-  const previousBlob = await readBufferOrNull(blobPath);
-  let blobRemoved = false;
-  try {
+  return withAssetMutationLock(assetId, async () => {
+    const root = localRoot();
+    const blobPath = assetFile(root, assetId);
+    const metadataPath = assetMetaFile(root, assetId);
+    const previousBlob = await readBufferOrNull(blobPath);
+    let blobRemoved = false;
     try {
-      await unlink(blobPath);
-      blobRemoved = true;
+      try {
+        await unlink(blobPath);
+        blobRemoved = true;
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error;
+      }
+      try { await unlink(metadataPath); }
+      catch (error) { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; }
     } catch (error) {
-      if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error;
+      if (blobRemoved && previousBlob) {
+        try { await atomicBufferWrite(blobPath, previousBlob); }
+        catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 删除失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+      }
+      throw error;
     }
-    try { await unlink(metadataPath); }
-    catch (error) { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; }
-  } catch (error) {
-    if (blobRemoved && previousBlob) {
-      try { await atomicBufferWrite(blobPath, previousBlob); }
-      catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 删除失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
-    }
-    throw error;
-  }
-  return sendData(request, response, { assetId, removed: true });
+    return sendData(request, response, { assetId, removed: true });
+  });
 }));

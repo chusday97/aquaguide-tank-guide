@@ -99,6 +99,23 @@ try {
   });
   assert.equal(invalidMime.response.status, 400);
 
+  const concurrentAssetId = 'local-asset-concurrent-put';
+  for (let round = 0; round < 24; round += 1) {
+    const pngBytes = Buffer.alloc(97 + round, 0x41);
+    const webpBytes = Buffer.alloc(211 + round, 0x42);
+    const concurrentWrites = await Promise.all([
+      requestJson(started.base, `/assets/${concurrentAssetId}`, { method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: pngBytes }),
+      requestJson(started.base, `/assets/${concurrentAssetId}`, { method: 'PUT', headers: { 'Content-Type': 'image/webp' }, body: webpBytes }),
+    ]);
+    assert.equal(concurrentWrites.every(result => result.response.status === 201), true);
+    const storedBlob = await readFile(path.join(root, 'assets', `${concurrentAssetId}.blob`));
+    const storedMeta = JSON.parse(await readFile(path.join(root, 'assets', `${concurrentAssetId}.json`), 'utf8'));
+    const isPngPair = storedMeta.mimeType === 'image/png' && storedMeta.byteSize === pngBytes.length && storedBlob.equals(pngBytes);
+    const isWebpPair = storedMeta.mimeType === 'image/webp' && storedMeta.byteSize === webpBytes.length && storedBlob.equals(webpBytes);
+    assert.equal(isPngPair || isWebpPair, true, 'Concurrent writes to one asset id must leave one complete blob/metadata pair.');
+  }
+  assert.equal((await requestJson(started.base, `/assets/${concurrentAssetId}`, { method: 'DELETE' })).response.status, 200);
+
   // If metadata commit fails after the blob was written, the new blob must be removed/restored.
   const pairFailureId = 'local-asset-pair-failure';
   const pairFailureMeta = path.join(root, 'assets', `${pairFailureId}.json`);
