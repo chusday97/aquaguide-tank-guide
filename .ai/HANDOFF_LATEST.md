@@ -193,7 +193,7 @@
 - 证据：`EVD-20260912-029`；未改变 `noindex,follow`。
 ## 2026-09-12 最新执行补充
 
-- 当前 HEAD：`31c8e5fc`。
+- 当前 HEAD：`f17ebbf3`（实现提交 `31c8e5fc`，本次为文档与证据同步）。
 - 本轮完成公开 SEO 视觉一致性收口：Species 面包屑改用公开分类名，参数区改用共享章节标题，首页/分类/Guide 的状态说明改成用户可理解的内容整理提示。
 - 相关静态门禁与构建通过，内置浏览器已回读极火虾页面；没有改变 Product Truth、Editorial、素材 fingerprint、路由、metadata、JSON-LD 或 `noindex,follow`。
 - 用户未提交的三个文件保持原样。剩余浏览器、性能、Figma 和独立 Critic 门禁仍未完成。
