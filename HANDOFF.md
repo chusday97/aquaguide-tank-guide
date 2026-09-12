@@ -1355,3 +1355,7 @@
 
 - 最新 Ready Preview：`https://aquaguide-bh6j5jb88-chusday97s-projects.vercel.app`；内置 Chrome 实际读到当前 Public Shell 和最新 Species 章节，证据为 `EVD-20260913-102`。
 - 当前 Preview 与旧版相比已恢复公开面包屑和完整章节，但 Vercel inspect 尚未提供 commit SHA；在 SHA 明确前只能作为候选视觉证据，不计为最终 Preview parity。
+## 2026-09-13 最新部署访问阻塞
+
+- 最新 Vercel deployment 已 Ready，但内置 Chrome 打开同一 URL 返回 `ERR_CONNECTION_CLOSED`，证据为 `EVD-20260913-103`。
+- 不把 Ready 状态当作浏览器验收；待托管访问恢复后继续三条 Species 路径的 390/600/1440 验收。

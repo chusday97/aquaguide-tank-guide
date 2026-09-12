@@ -336,3 +336,6 @@
 
 - Vercel Preview 已 Ready，内置 Chrome 实际显示当前 Public Shell、公开面包屑和完整 Species 章节，证据为 `EVD-20260913-102`。
 - 部署 commit SHA 尚未从 Vercel CLI 得到；继续保持 Preview parity 和发布门禁未完成，不解除 `noindex,follow`。
+## 2026-09-13 部署访问状态
+
+- 最新 Vercel Preview 已 Ready，但内置 Chrome 返回 `ERR_CONNECTION_CLOSED`，暂不能取得托管 DOM/截图证据；保持浏览器验收和发布门禁未完成。

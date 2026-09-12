@@ -1567,3 +1567,7 @@
 
 - [x] Vercel 生成新的非生产 Preview：`https://aquaguide-bh6j5jb88-chusday97s-projects.vercel.app`，状态 `Ready`；内置 Chrome 实际读取极火虾页，已呈现当前公开首页/分类面包屑、完整章节和最新中文文案，证据为 `EVD-20260913-102`。
 - [ ] Vercel CLI 当前未返回部署 commit SHA，仍需补做部署 SHA parity；390/600/1440 托管回归、可读独立 Critic、Figma Canonical 和索引门禁未完成。
+## 2026-09-13 最新 Preview 访问状态
+
+- [x] Vercel 部署 `https://aquaguide-2zggjwzmd-chusday97s-projects.vercel.app` 已从 `Building` 变为 `Ready`。
+- [ ] 内置 Chrome 访问同一部署返回 `ERR_CONNECTION_CLOSED`，因此尚未取得该部署的真实页面 DOM、三档截图或网络请求证据；记录为托管访问环境阻塞，证据为 `EVD-20260913-103`。
