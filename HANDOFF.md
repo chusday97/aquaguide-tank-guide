@@ -1,5 +1,12 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 当前 SHA 静态门禁复核（`a496d159`）
+
+- Editorial evidence、Evidence bindings、Public contract、中文文案、响应式契约、Typography、lint 和 diff-check 全部通过，证据为 `EVD-20260913-124`。
+- 本轮没有改变公开内容、数据契约、路由、metadata、JSON-LD 或 `noindex,follow`。
+- 600px 独立视口、可读 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍保持未完成。
+
+
 ## 2026-09-13 加载态无障碍修复（`a496d159`）
 
 - 公开 SEO 加载骨架的装饰性形状现在对辅助技术隐藏；状态提示仍通过 `role=status`、`aria-live` 和 `aria-busy` 保持可感知。

@@ -1670,3 +1670,8 @@
 - [x] 公开 SEO 加载骨架的装饰性面包屑、媒体框和文字轮廓均标记为 `aria-hidden="true"`；`role="status"`、`aria-busy` 和可见准备提示仍保留给辅助技术，避免重复朗读装饰内容。
 - [x] `test:public-seo-structure`、lint 和 diff-check 通过；未改变路由、数据、metadata、JSON-LD 或 `noindex,follow`，证据为 `EVD-20260913-123`。
 - [ ] 600px 独立运行时、可读独立 Critic、Figma Canonical 和索引发布门禁仍未完成。
+## 2026-09-13 当前 SHA 静态发布门禁复核（`a496d159`）
+
+- [x] Editorial evidence、Evidence bindings、Public contract、中文文案、响应式契约、Typography、lint 和 diff-check 在当前代码提交上全部通过，证据为 `EVD-20260913-124`。
+- [x] 本轮只验证加载态无障碍修复的静态回归；未改变路由、Product Truth、素材/证据状态、metadata、JSON-LD 或 `noindex,follow`。
+- [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
