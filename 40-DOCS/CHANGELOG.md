@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-12 环境章节锚点滚动后标题未被 Header 遮挡，视觉卡和正文可读；证据为 `EVD-20260912-060`。
 - Verified: 2026-09-12 内置浏览器确认 Species “先记住这一点”结论卡真实呈现，证据为 `EVD-20260912-059`。
 - Changed: 2026-09-12 Species 参数后的概览摘要统一为“先记住这一点”结论卡；保留原始证据与内容边界，证据为 `EVD-20260912-058`。
 - Blocked: 2026-09-12 Figma Desktop 目标文件加载失败，显示 `ERR_CONNECTION_CLOSED (-100)`；未执行 Figwright 写入，证据为 `EVD-20260912-057`。

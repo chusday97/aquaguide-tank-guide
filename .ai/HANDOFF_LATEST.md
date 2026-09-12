@@ -55,6 +55,10 @@
 
 - 内置浏览器回读极火虾页面确认结论卡标签、摘要、Hero、参数和章节顺序可见；证据为 `EVD-20260912-059`。
 
+## 2026-09-12 环境章节锚点补充
+
+- 内置浏览器点击环境章节后，标题、编号03、环境观察卡和正文进入视口且未被 Header 遮挡；证据为 `EVD-20260912-060`。
+
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。
