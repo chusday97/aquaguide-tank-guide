@@ -25,6 +25,11 @@ assert.equal(baseProfile.sources.some(source => source.id === 'uf-ifas-neocaridi
 assert.equal(baseProfile.sources.some(source => source.url?.startsWith('src/')), false, 'project paths must not become public links');
 assert.equal(baseProfile.sources.some(source => /Product Truth|source-row map/i.test(source.title)), false, 'internal source labels must not reach public copy');
 
+const fishSelection = getSpeciesLandingSelection('sp_0432', null);
+assert.ok(fishSelection, 'known fish species should resolve');
+const fishProfile = getPublishedSpeciesProfile(fishSelection, 'zh-CN');
+assert.equal(fishProfile.sources.filter(source => source.publisher === 'FishBase').length, 1, 'duplicate FishBase URL variants should render as one public source');
+
 const englishProfile = getPublishedSpeciesProfile(baseSelection, 'en');
 assert.equal(englishProfile.editorial, undefined, 'Chinese confirmed editorial must not leak into English Draft');
 assert.equal(englishProfile.faq.length, 0, 'Chinese confirmed FAQ must not leak into English Draft');

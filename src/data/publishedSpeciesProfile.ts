@@ -117,7 +117,18 @@ const publishedSourcesFor = (baseId: string, speciesId: string, visibleVariantId
       kind: sourceKind(source.sourceType),
     })),
   ];
-  return [...new Map(references.map(source => [`${source.title}|${source.publisher}|${source.url ?? ''}`, source])).values()];
+  const publicSourceKey = (source: PublishedSourceReference): string => {
+    if (source.publisher === 'FishBase' && source.url) {
+      try {
+        const url = new URL(source.url);
+        return `${source.publisher}|${url.pathname.toLowerCase().replaceAll('_', '-').replace(/\/$/, '')}`;
+      } catch {
+        return `${source.title}|${source.publisher}|${source.url}`;
+      }
+    }
+    return `${source.title}|${source.publisher}|${source.url ?? ''}`;
+  };
+  return [...new Map(references.map(source => [publicSourceKey(source), source])).values()];
 };
 
 const categoryHrefFor = (category: string): string | undefined => {
