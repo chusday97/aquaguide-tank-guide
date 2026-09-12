@@ -1,5 +1,11 @@
 # Branch Status
 
+## CURRENT OVERRIDE — Local File backup cleanup checkpoint (2026-09-12)
+- Canonical local/GitHub main functional checkpoint: `0c8cd4641afe0c1bc53c8bf804d4d1abdaddd9f7` before this docs sync.
+- Product Golden Path PASS; Vercel branch deployment `dpl_7iffveTP316qn6sC4ztATKdpcPqV` READY.
+- Production remains intentionally unchanged because the modified Local File route is not in the Production Business API graph.
+
+
 ## CURRENT OVERRIDE — canonical worktree path + environment (2026-09-12)
 - Canonical local worktree: `/Users/chuchu/aquaguide-main`; branch `main`.
 - Historical worktrees remain preserved but are not the default continuation path.

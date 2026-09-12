@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — failed Local File backups no longer leave hidden partial directories (2026-09-12)
+- Functional checkpoint: `0c8cd464 fix(admin): clean failed backup snapshots`.
+- Reproduced before fix: chmod a valid asset blob unreadable after integrity passed; POST backup returned `500 INTERNAL_ERROR` and left a new manifest-less `backup-*` directory that listBackups intentionally hid.
+- Fix wraps backup copy + manifest write so any failure recursively removes that newly-created destination before rethrowing.
+- Behavioral regression now requires backup directory contents to remain byte-for-byte/list-equivalent after forced mid-copy failure.
+- Local File API/UI, Local Admin contract, TypeScript, full build, GitHub CI and Vercel branch deployment all PASS. Production was not promoted because this router remains DEV-only.
+
+
 ## CURRENT OVERRIDE — canonical main no longer depends on historical worktree dependencies (2026-09-12)
 - Canonical worktree remains `/Users/chuchu/aquaguide-main` on `main`.
 - Found a real continuation hazard: its `node_modules` was a symlink into historical `/Users/chuchu/aquaguide-admin-content-v0/node_modules`. The symlink was removed and canonical main received its own `npm ci` install from the repository lockfile.

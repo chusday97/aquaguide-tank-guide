@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-12 failed backup residue closed
+A second concrete Local File reliability badcase is closed on main at `0c8cd464 fix(admin): clean failed backup snapshots`.
+
+- Fail-before-fix made a healthy-looking asset blob unreadable; backup returned 500 and left a hidden manifest-less `backup-*` directory on disk.
+- `createBackup` now removes the newly allocated destination on any copy/manifest failure before rethrowing.
+- Permanent regression asserts the backup directory set is unchanged after forced mid-copy failure.
+- PASS: Local File API, Local Admin mode, Local File browser backup/restore/restart, API/root TypeScript, full build; GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- Production remains unchanged because Local File API is DEV-only and excluded from the Business API bundle.
+- NEXT: continue only from another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-12 canonical main environment independent
 The canonical worktree `/Users/chuchu/aquaguide-main` is now self-contained for development; do not link its dependencies to a historical Aqua worktree.
 

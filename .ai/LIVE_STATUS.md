@@ -1,5 +1,11 @@
 # Live Status
 
+## CURRENT OVERRIDE — Local File backup failure cleanup verified (2026-09-12)
+- GitHub main functional checkpoint `0c8cd464` closes manifest-less partial backup residue after filesystem copy failure.
+- GitHub Product Golden Path PASS; Vercel branch deployment `dpl_7iffveTP316qn6sC4ztATKdpcPqV` READY.
+- Production remains on validated `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`; no Production promotion is required for DEV-only Local File maintenance.
+
+
 ## CURRENT OVERRIDE — canonical local environment independent (2026-09-12)
 - `/Users/chuchu/aquaguide-main` is the canonical `main` worktree and now has its own real `node_modules` directory installed via `npm ci`; it no longer depends on historical worktree files.
 - Canonical-only tests/typechecks/full build and `dev:local-admin` HTTP smoke PASS.

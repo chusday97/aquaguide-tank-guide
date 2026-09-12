@@ -1485,3 +1485,11 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - PASS from canonical main: Local File API, Local Admin mode contract, Operations work items, API/root TypeScript, full build, dependency listing, and real `dev:local-admin` HTTP smoke (API 200, main Vite 200, SEO Admin Vite 200).
 - Audited known Aqua worktrees and root overrides: no `.local/aqua-admin` persisted authority and no non-test `ADMIN_LOCAL_FILE_ROOT` override exist, so no local data migration is needed.
 - Git and Production runtime remain unchanged; this is machine-local continuation hardening plus authority documentation only.
+
+## 2026-09-12 — failed backup partial-directory cleanup
+- Built a one-off fail-before-fix probe against the real Local File API: a chmod-000 asset blob still passed integrity stat checks, then failed during backup copy with `500 INTERNAL_ERROR`.
+- Pre-fix result left a new manifest-less `backup-*` directory; listBackups hid it, so disk residue accumulated invisibly.
+- Implemented `0c8cd464 fix(admin): clean failed backup snapshots`: createBackup now removes its newly-created destination on any copy/manifest failure and rethrows the original error.
+- Promoted the probe into `scripts/test-local-file-admin.ts`; permanent assertion requires the backup directory set to remain unchanged after forced mid-copy failure.
+- PASS: Local File API, Local Admin contract, Local File browser backup/restore/restart, API/root TypeScript, full build, GitHub Product Golden Path and Vercel branch deployment.
+- No Production promotion; Local File router remains DEV-only.
