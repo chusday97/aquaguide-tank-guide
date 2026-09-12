@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — Local File concurrency hardening closed
+- Runtime export collision reproduced at 100-way concurrency: 35 success / 65 failure. Fixed with UUID-isolated atomic/staging temp paths (`275587ea`).
+- Backup ID race reproduced: 32 success responses collapsed into 16 real backups. Fixed with atomic directory reservation (`6cd1d5d8`).
+- Same-asset concurrent PUT race reproduced: both requests returned 201 but blob/metadata could come from different requests. Fixed by serializing same-ID PUT/DELETE mutations (`25ea430b`).
+- Stress evidence: runtime export 100/100 success with zero temp residue; backup 100/100 unique IDs/directories; asset overwrite 80 rounds with zero torn pairs.
+- Local File API/UI, contracts, TypeScript, full build, GitHub Product Golden Path and Vercel branch deployments all PASS/READY for the functional checkpoints.
+- No Production promotion, Supabase Staging, Production DB migration or indexing change.
+
 ## 2026-09-13 — Local asset pair write/delete transaction closure
 - Canonical worktree: `/Users/chuchu/aquaguide-main`, branch `main`.
 - `f2087f26` closes failed asset PUT corruption: when blob write succeeds but metadata replacement fails, previous blob is restored (or new blob removed) before the error escapes.

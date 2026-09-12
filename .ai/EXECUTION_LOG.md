@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-13 — concurrency failure-path closure
+- Reproduced runtime snapshot same-millisecond temp collision: 100 requests => 35 success / 65 failure. Fixed unique temp paths; 100/100 stress PASS.
+- Reproduced backup allocation TOCTOU: 32 success responses => 16 unique backups. Fixed atomic directory reservation; 100/100 unique stress PASS.
+- Reproduced same-ID asset mutation race: dual 201 responses could leave blob/metadata from different requests. Added keyed mutation queue; 80-round stress PASS with zero mismatches.
+- Functional commits: `275587ea`, `6cd1d5d8`, `25ea430b`.
+- Full Local Admin/UI/API/type/build validation PASS; Product Golden Path PASS and Vercel branch deployment READY for each.
+- Production intentionally unchanged; no staging/database/indexing gate touched.
+
 ## 2026-09-12 — Local File failed atomic-write cleanup
 - Re-ran durable Local File, Operations, Product/Care, Compatibility and Publish Center acceptance; all PASS.
 - Added fail-before-fix assertion around the existing forced runtime-manifest rename failure. It failed as expected because `runtime-authority.json.tmp-*` remained in `public/`.

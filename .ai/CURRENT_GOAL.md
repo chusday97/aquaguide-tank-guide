@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 Local File concurrency closure
+Three concrete concurrent-operation badcases are closed on main.
+
+- `275587ea fix(admin): isolate concurrent runtime exports`: fail-before-fix 100 simultaneous runtime snapshot requests produced 35×201 / 65×500 because staging and atomic temp names could collide; atomic JSON/buffer writes and runtime staging now use `randomUUID`. Formal 32-way regression PASS; stress 100/100 = 201 with zero temp residue.
+- `6cd1d5d8 fix(admin): reserve concurrent backup ids`: fail-before-fix 32 backup requests all returned 201 but produced only 16 unique IDs/directories. Backup IDs are now reserved atomically with non-recursive `mkdir` + `EEXIST` retry. Formal 24-way regression PASS; stress 100/100 unique IDs and directories.
+- `25ea430b fix(admin): serialize asset pair mutations`: fail-before-fix concurrent PUTs to one asset both returned 201 but produced a torn pair (WebP blob + PNG metadata) by round 14. Same-ID PUT/DELETE mutations now use an in-process keyed queue. Formal 24-round regression PASS; stress 80 rounds = 0 mismatches.
+- PASS throughout: Local File API/UI, Local Admin mode contract, API/root TypeScript, full composite build. Product Golden Path and Vercel branch deployment are green for all three functional commits.
+- Production remains unchanged because Local File API is DEV-only and excluded from the Production Business API graph.
+- NEXT: continue only from another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 Local asset pair transaction failures closed
 Two concrete Durable Local File asset-pair corruption paths are closed on main.
 

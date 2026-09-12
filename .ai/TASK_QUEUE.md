@@ -1,5 +1,20 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — Local File concurrency closure (2026-09-13)
+- [x] Reproduce concurrent runtime snapshot collision (100 requests: 35×201 / 65×500).
+- [x] Make atomic JSON/buffer temp paths and runtime staging paths uniquely namespaced with `randomUUID`.
+- [x] Add 32-way runtime export regression; stress 100/100 success with zero temp residue.
+- [x] Reproduce concurrent backup ID race (32×201 but only 16 unique backups).
+- [x] Reserve backup directories atomically with `mkdir` / `EEXIST` retry.
+- [x] Add 24-way backup regression; stress 100/100 unique IDs/directories.
+- [x] Reproduce same-asset concurrent PUT torn pair despite both requests returning 201.
+- [x] Serialize same-ID PUT/DELETE mutations with keyed in-process queue.
+- [x] Add 24-round asset concurrency regression; stress 80 rounds with zero mismatch.
+- [x] Re-run Local File UI, Local Admin contract, API/root TypeScript and full build.
+- [x] Product Golden Path PASS and Vercel branch deployments READY for `275587ea`, `6cd1d5d8`, `25ea430b`.
+- [x] Keep Production unchanged; Local File route is DEV-only.
+- [ ] Continue only from another reproducible operator/runtime/data-reliability badcase.
+
 ## ACTIVE OVERRIDE — Local asset pair transaction closure (2026-09-13)
 - [x] Reproduce PUT failure where blob commits but metadata replacement fails.
 - [x] Roll back the previous blob, or remove a newly-created blob, when metadata commit fails.
