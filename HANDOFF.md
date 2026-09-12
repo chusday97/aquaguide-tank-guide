@@ -1048,3 +1048,11 @@
 
 - 内置浏览器已完成首页、分类和未发布 Guide 的 390/600/1440 共九次真实加载；公共壳层、H1、滚动、无溢出、robots 和 JSON-LD 门禁通过，证据为 `EVD-20260912-009`。
 - Guide 仍是用户可理解的准备态，不产生未审核 Article/HowTo/FAQ 数据；所有页面继续 `noindex,follow`。
+
+## 2026-09-12 Species 稀疏内容布局修复
+
+- 真实长截图发现桌面“它如何生活”只有两张卡却使用三列，右侧空白过大；已在 `SpeciesLanding.tsx` 使用 `seo-life-grid`，并在 `seo-system.css` 统一两列/窄屏单列规则。
+- 代码提交：`822871b7 fix: tighten sparse species behavior layout`。
+- 内置 Chrome 复核确认页面可滚动、生活习性卡并列、Hero/品系图片/工具入口仍可见；静态门禁通过。
+- 用户文件 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 仍未触碰、未暂存。
+- 未完成门禁：系统 Chrome 三档自动化、性能/reduced-motion、完整失败状态、Figma Canonical、可读独立 Critic；保持 `noindex,follow`。

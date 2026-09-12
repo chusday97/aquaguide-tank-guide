@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fixed: 2026-09-12 Species“它如何生活”内容网格按实际数量收拢，桌面/平板使用两列、窄屏使用单列，减少稀疏内容造成的空白；提交 `822871b7`。
+- Verified: 2026-09-12 内置 Chrome 长截图确认 Species 页面仍可滚动，生活习性卡、Hero、品系图片和能力入口可见；公开结构、响应式、文案、Editorial、Evidence、lint、build 和 diff-check 通过。
+
 - Verified: 2026-09-12 公开SEO Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、build 与 diff-check 全部通过；系统 Chrome 仍在页面断言前 SIGABRT，未冒充多视口浏览器验收。
 - Verified: 2026-09-12 内置浏览器重新加载 `/species/sp_0001`，公开导航、Hero、参数、生活习性、品系、FAQ、能力入口和资料来源均可读；记录为运行内容证据，不替代系统 Chrome 三档验收。
 - Blocked: 2026-09-12 既有 Critic 针对 HEAD `32a7470b` 的复验任务已完成但返回空 turn items；不将空输出视为通过，也不创建重复审查任务。

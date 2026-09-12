@@ -1142,3 +1142,10 @@
 - [x] 已将当前 HEAD `159a095b` 交回既有 Critic 任务做只读六维复验。
 - [x] 任务已完成，但没有 `latestAssistantMessage` 或可读正文；证据为 `EVD-20260912-011`，不能计为通过。
 - [ ] 保持独立审查阻塞，不创建重复任务，不解除 `noindex`。
+
+## 2026-09-12 Species 稀疏行为布局收口
+
+- [x] 将“它如何生活”从固定三列改为按内容收拢的两列桌面/平板、单列窄屏布局，代码提交为 `822871b7`。
+- [x] 内置 Chrome 长截图复核：极火虾两张生活习性卡并列且阅读宽度合理，页面可滚动，Hero、品系图片和工具入口仍可见。
+- [x] 结构、响应式、文案、Editorial、Evidence、lint、build 和 `git diff --check` 全部通过。
+- [ ] 当前仍缺系统 Chrome 三档自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic；页面继续 `noindex,follow`。

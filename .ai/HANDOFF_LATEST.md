@@ -143,3 +143,10 @@
 
 - 首页、分类和 Guide 的三档真实 viewport 结构与 JSON-LD 门禁已复核，证据为 `EVD-20260912-009`。
 - 系统 Chrome、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成；不解除 `noindex,follow`。
+
+## 2026-09-12 当前最新变更
+
+- 视觉收口提交 `822871b7`：Species“它如何生活”改用共享 `seo-life-grid`，两张内容在桌面/平板按两列收拢，559px 以下单列，避免固定三列造成空白。
+- 内置 Chrome 长截图实际确认页面可滚动、内容和图片可见；静态结构、响应式、文案、证据、lint、build、diff-check 通过。
+- 不涉及 Product Truth、Editorial、路由、metadata、JSON-LD、索引策略或用户未提交文件。
+- 未完成：系统 Chrome 三档自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。保持 `noindex,follow`。
