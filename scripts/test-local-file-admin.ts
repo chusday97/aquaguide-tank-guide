@@ -161,6 +161,20 @@ try {
 
   const changedState = { ...businessState, species: [{ id: 'changed-after-backup' }], updatedAt: 'changed' };
   assert.equal((await putState(started.base, 'business', changedState)).response.status, 200);
+
+  // If metadata deletion fails after blob deletion, the previous blob must be restored.
+  const deleteMetaPath = path.join(root, 'assets', `${assetId}.json`);
+  const deleteBlobPath = path.join(root, 'assets', `${assetId}.blob`);
+  const deleteMetaBytes = await readFile(deleteMetaPath);
+  await rm(deleteMetaPath);
+  await mkdir(deleteMetaPath);
+  const deleteFailure = await requestJson(started.base, `/assets/${assetId}`, { method: 'DELETE' });
+  assert.equal(deleteFailure.response.status, 500);
+  assert.deepEqual(await readFile(deleteBlobPath), imageBytes,
+    'Failed asset metadata deletion must restore the previous blob.');
+  await rm(deleteMetaPath, { recursive: true, force: true });
+  await writeFile(deleteMetaPath, deleteMetaBytes);
+
   assert.equal((await requestJson(started.base, `/assets/${assetId}`, { method: 'DELETE' })).response.status, 200);
   assert.equal((await fetch(`${started.base}/assets/${assetId}`)).status, 404);
 

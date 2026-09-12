@@ -620,9 +620,26 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  await Promise.all([
-    unlink(assetFile(localRoot(), assetId)).catch(error => { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; }),
-    unlink(assetMetaFile(localRoot(), assetId)).catch(error => { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; }),
-  ]);
+  const root = localRoot();
+  const blobPath = assetFile(root, assetId);
+  const metadataPath = assetMetaFile(root, assetId);
+  const previousBlob = await readBufferOrNull(blobPath);
+  let blobRemoved = false;
+  try {
+    try {
+      await unlink(blobPath);
+      blobRemoved = true;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error;
+    }
+    try { await unlink(metadataPath); }
+    catch (error) { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; }
+  } catch (error) {
+    if (blobRemoved && previousBlob) {
+      try { await atomicBufferWrite(blobPath, previousBlob); }
+      catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 删除失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+    }
+    throw error;
+  }
   return sendData(request, response, { assetId, removed: true });
 }));
