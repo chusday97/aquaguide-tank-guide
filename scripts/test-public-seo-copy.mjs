@@ -60,5 +60,11 @@ if (!speciesSource.includes('从它如何寻找食物开始，认识日常照料
 if (!speciesSource.includes('const personalizeFaq')) {
   throw new Error('Species FAQ must adapt inherited copy to the visible species name');
 }
+if (!speciesSource.includes('label={personalizeFaq(item.question, baseSpecies.name, fish.name)}')) {
+  throw new Error('Species FAQ question must use the visible species name');
+}
+if (!speciesSource.includes('personalizeFaq(item.answer, baseSpecies.name, fish.name)')) {
+  throw new Error('Species FAQ answer must use the visible species name');
+}
 
 console.log('Public SEO copy checks passed: user-facing language is clean and Guide preparation state has distinct next steps.');
