@@ -1465,3 +1465,8 @@
 
 - [x] Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-078`。
 - [ ] 系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。
+
+## 2026-09-12 Guide 准备态键盘入口（`ddef4eca`）
+
+- [x] 未发布指南保持“内容准备中”、无操作正文；Tab + Enter 可进入 `/care`，应用内入口可见，证据为 `EVD-20260912-079`。
+- [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。

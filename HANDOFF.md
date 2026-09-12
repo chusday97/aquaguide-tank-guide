@@ -8,6 +8,7 @@
 - 通过 Tab + Enter 实际切换黄金米虾品系，URL、H1、Alt、参数和黄色差异正确，证据为 `EVD-20260912-076`。
 - 通过 Tab + Enter 从虾螺蟹分类进入极火虾，公开 Header 和唯一 H1 正常，证据为 `EVD-20260912-077`；robots 继续以静态 metadata 门禁为准。
 - 当前 HEAD 的 Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、lint、build 和 diff-check 已重新通过，证据为 `EVD-20260912-078`。
+- 内置浏览器通过 Tab + Enter 从 Guide 准备态进入 `/care`；未审核操作正文未泄漏，应用入口可达，证据为 `EVD-20260912-079`。
 
 更新时间：2026-09-12
 
