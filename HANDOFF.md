@@ -1194,6 +1194,12 @@
 - 鱼类“继续探索”不再生成不存在的公开分类入口；真实 Chrome 页面确认宝莲灯可从首页面包屑继续浏览，来源、内容和 `noindex` 不变。
 - 代码尚未单独提交前的变更已通过静态门禁；当前用户未提交文件仍未触碰。
 
+## 2026-09-12 当前交接：公开缺图回退统一（待提交）
+
+- 首页 Marketing Hero 已改用与 Category/Species 相同的 `SeoAssetFallback`，避免三个公开入口在素材不可用时出现不同的空状态。
+- `test:public-seo-structure` 新增共享组件、可读图片角色和三类页面接入断言；结构、文案、响应式、证据、lint、build、diff-check 已通过。
+- 本轮不批准或发布任何新素材；页面继续 `noindex,follow`。用户未提交的三个文件保持不动。
+
 ## 2026-09-12 当前交接：公开来源规范化
 
 - 最新代码提交：`93a3edb7 fix: normalize duplicate public fishbase sources`。

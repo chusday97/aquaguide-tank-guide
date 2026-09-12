@@ -1,3 +1,8 @@
+## 2026-09-12 当前状态快照（待提交）
+
+- [x] 首页 Marketing Hero 也接入共享 `SeoAssetFallback`；结构回归现在同时保护 Marketing、Category、Species 三类公开入口的缺图一致性，证据为 `EVD-20260912-065`。
+- [ ] 本轮仅完成共享回退与静态回归；未改变素材批准状态、内容来源、路由、metadata、JSON-LD、`noindex,follow` 或用户未提交文件。
+
 ## 2026-09-12 当前状态快照（`b4006374`）
 
 - [x] 首页/分类页/Species 页统一使用 `SeoAssetFallback` 作为缺图身份回退；分类入口不再显示无样式的孤立“图片暂不可用”，提交 `b4006374`，证据为 `EVD-20260912-064`。

@@ -21,6 +21,12 @@
 - [x] 首页/分类页/Species 页复用 `SeoAssetFallback`，缺图状态的身份、图标和文案结构统一。
 - [ ] 继续检查 390/600/1440 的回退尺寸和可点击区域。
 
+## 2026-09-12 公开缺图回退统一补充
+
+- [x] Marketing Hero 接入共享 `SeoAssetFallback`，与 Category/Species 缺图状态保持同一身份、图标和可读标签。
+- [x] 结构回归新增三类页面接入断言，并通过结构、文案、响应式、证据、lint、build、diff-check。
+- [ ] 仍需真实三档截图、性能/reduced-motion、Figma Canonical 和可读独立 Critic；不解除 `noindex`。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。

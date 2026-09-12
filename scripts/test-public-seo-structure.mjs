@@ -22,6 +22,12 @@ for (const [relativeFile, requiredPieces] of publicPages) {
 }
 
 const species = read('src/pages/SpeciesLanding.tsx');
+const assetFallback = read('src/components/seo/SeoAssetFallback.tsx');
+for (const relativeFile of ['src/pages/MarketingLanding.tsx', 'src/pages/CategoryLanding.tsx', 'src/pages/SpeciesLanding.tsx']) {
+  assert.match(read(relativeFile), /SeoAssetFallback/, `${relativeFile} must use the shared public asset fallback`);
+}
+assert.match(assetFallback, /role="img"/, 'Shared asset fallback must expose a meaningful image role');
+assert.match(assetFallback, /图片暂不可用|label/, 'Shared asset fallback must expose a readable label');
 const resilientImage = read('src/components/common/ResilientImage.tsx');
 const globalStyles = read('src/index.css');
 assert.match(resilientImage, /fallbackFailed/, 'ResilientImage must keep a terminal fallback state after the fallback asset fails');
