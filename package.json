@@ -13,7 +13,7 @@
     "dev:web": "vite --port=3000 --host=0.0.0.0",
     "dev:api": "tsx apps/api/src/index.ts",
     "check:api": "tsc --noEmit -p apps/api/tsconfig.json",
-    "build": "npm run build:web && npm run build:seo-admin && npm run build:species-pages && npm run build:care-pages",
+    "build": "npm run build:business-api && npm run build:web && npm run build:seo-admin && npm run build:species-pages && npm run build:care-pages",
     "preview": "vite preview",
     "clean": "rm -rf dist",
     "lint": "tsc --noEmit",
@@ -208,7 +208,8 @@
     "test:aquarium-stage-layout": "node --import tsx scripts/test-aquarium-stage-layout-contract.ts",
     "test:three-stage-framing": "node --import tsx scripts/test-three-stage-framing.ts",
     "test:desktop-layout": "node scripts/test-desktop-layout-contract.mjs",
-    "test:git-runtime-authority": "tsx scripts/test-git-runtime-authority.ts"
+    "test:git-runtime-authority": "tsx scripts/test-git-runtime-authority.ts",
+    "build:business-api": "node scripts/build-vercel-business-api.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
@@ -244,6 +245,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
+    "esbuild": "^0.27.7",
     "playwright": "^1.60.0",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
