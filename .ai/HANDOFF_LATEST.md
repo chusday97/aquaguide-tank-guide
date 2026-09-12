@@ -1,5 +1,14 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-13 当前权威快照（`53780fa0`）
+
+- 当前分支：`codex/species-seo-preview-v1`。
+- 最新已提交闭环：公开 SEO 懒加载改为结构化骨架，完整静态回归通过；证据为 `EVD-20260913-117`、`EVD-20260913-118`。
+- 最新 Critic 复验已完成，但同一只读线程仍返回 `items: []`、没有可读六维正文；证据为 `EVD-20260913-120`。该结果不计为审查通过。
+- 公开页面继续 `noindex,follow`；不修改 `main`、Production Supabase、生产部署或 Figma。
+- 600px 独立运行时、系统 Chrome MachPort、Figma Canonical、性能/reduced-motion 和最终发布门禁仍未完成。
+- 用户未提交文件仍保持未提交、未暂存：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+
 ## 2026-09-12 最新运行时证据
 
 - 内置浏览器确认极火虾公开长页面和 `#faq` 章节锚点可达，证据为 `EVD-20260912-073`；系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成。
