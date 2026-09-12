@@ -1460,3 +1460,8 @@
 
 - [x] 内置浏览器通过 Tab + Enter 从虾螺蟹分类进入极火虾，目标页公开 Header 和唯一 H1 正常，证据为 `EVD-20260912-077`。
 - [ ] robots 不从辅助树推断，仍以 metadata 静态门禁为准；系统 Chrome 多视口和完整键盘回归仍未完成。
+
+## 2026-09-12 当前 HEAD 静态门禁复跑（`e0fcd76f`）
+
+- [x] Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-078`。
+- [ ] 系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。
