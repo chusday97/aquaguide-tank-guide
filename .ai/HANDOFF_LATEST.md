@@ -9,6 +9,12 @@
 - 600px 独立运行时、系统 Chrome MachPort、Figma Canonical、性能/reduced-motion 和最终发布门禁仍未完成。
 - 用户未提交文件仍保持未提交、未暂存：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
 
+## 2026-09-13 后续环境结论
+
+- 同一只读 Critic 对 `b2de6ab0` 的最新复验已完成但返回空 `items`，没有可读六维正文；证据为 `EVD-20260913-120`。
+- 内置 Chrome 页面脚本不支持 `window.resizeTo`，当前标签页无法获得可控 600px 视口；证据为 `EVD-20260913-121`。这不是页面断言失败，也不计为 600px 通过。
+- CSS 已明确包含 560–767px 的平板双列 Hero、三列参数带和独立间距规则；仍需真实 600px 运行时证据。
+
 ## 2026-09-12 最新运行时证据
 
 - 内置浏览器确认极火虾公开长页面和 `#faq` 章节锚点可达，证据为 `EVD-20260912-073`；系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成。
