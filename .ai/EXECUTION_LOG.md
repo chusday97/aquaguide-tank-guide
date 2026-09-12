@@ -1,5 +1,14 @@
 # Execution Log
 
+## 2026-09-12 — Local File failed atomic-write cleanup
+- Re-ran durable Local File, Operations, Product/Care, Compatibility and Publish Center acceptance; all PASS.
+- Added fail-before-fix assertion around the existing forced runtime-manifest rename failure. It failed as expected because `runtime-authority.json.tmp-*` remained in `public/`.
+- Fixed `atomicJsonWrite` and `atomicBufferWrite` to clean temp files in `finally` after successful or failed rename. Previous authority semantics are unchanged.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:git-runtime-authority`, `test:local-file-admin-ui`, `check:api`, root TypeScript, full build, diff hygiene.
+- Committed/pushed `0b662155 fix(admin): clean failed atomic temp writes`; Product Golden Path PASS; Vercel branch deployment `dpl_BAmT1TrjkUTE8Wz3Vvk1WUcU8kzB` READY.
+- Production not promoted because the changed router is DEV-only and excluded from the Production Business API bundle.
+
+
 ## 2026-09-11 — populated Compatibility v3 migration execution PASS
 - Restored Docker Desktop backend after stale IPC/dead-daemon state; local registry downloads remained unreliable, so validation reused cached Supabase PostgreSQL 17.6.1.159 images and isolated Docker test resources.
 - Confirmed the project is not linked to a remote Supabase project before local database work.

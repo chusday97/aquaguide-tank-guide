@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-12 Local File failed-write cleanup closed
+A concrete post-release Local File reliability badcase is closed on main at `0b662155 fix(admin): clean failed atomic temp writes`.
+
+- Fail-before-fix proved a forced final `rename` failure left `runtime-authority.json.tmp-*` behind.
+- `atomicJsonWrite` and `atomicBufferWrite` now remove temp files in `finally` after success or failure without changing the previous committed target.
+- PASS: failure-injection Local File regression, Local Admin mode contract, Git runtime authority, full Local File browser restart/backup/restore, API/root TypeScript and full build.
+- GitHub Product Golden Path for `0b662155` PASS; Vercel branch deployment `dpl_BAmT1TrjkUTE8Wz3Vvk1WUcU8kzB` READY.
+- This code path is DEV-only and excluded from the Production Business API graph, so Production deployment `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` remains unchanged intentionally.
+- NEXT: continue only from concrete operator/runtime badcases; do not promote Production for DEV-only Local File maintenance.
+
+
 ## CURRENT OVERRIDE — 2026-09-12 remote main + Production release closed
 The accepted Aqua Operations Studio reconciliation is now released through GitHub main and the AquaGuide Vercel production deployment. Stop release-repair iteration unless a new reproducible blocker appears.
 

@@ -1,5 +1,16 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — post-release concrete badcase closure (2026-09-12)
+- [x] Re-run Operations/Product-Care/Compatibility/Publish Center acceptance; no operator blocker reproduced.
+- [x] Reproduce failed atomic Local File rename leaving `.tmp-*` residue.
+- [x] Clean JSON/binary atomic temp files on both success and failure.
+- [x] Add fail-before-fix regression for runtime manifest temp cleanup.
+- [x] Re-run Local File API/UI, Git runtime authority, TypeScript and full build.
+- [x] Push `0b662155`; Product Golden Path PASS; Vercel branch deployment READY.
+- [x] Keep Production unchanged because Local File API is DEV-only and excluded from the Production Business API bundle.
+- [ ] Continue only from a new reproducible operator/runtime badcase or separately authorized Staging/indexing work.
+
+
 ## ACTIVE OVERRIDE — remote main + Production release closeout (2026-09-12)
 - [x] Push accepted local main to GitHub main using compare-and-push guards.
 - [x] Preserve remote Git rollback branch at pre-Aqua main `d3c70dee633e`.

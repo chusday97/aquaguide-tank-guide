@@ -1,5 +1,13 @@
 # Branch Status
 
+## CURRENT OVERRIDE — main post-release maintenance checkpoint `0b662155` (2026-09-12)
+- Local and GitHub main functional checkpoint: `0b662155d54984a9c80a80db04c0e914d2194b08`.
+- Change is DEV-only Local File temp cleanup; it does not alter the Production Business API graph.
+- Product Golden Path PASS; Vercel branch deployment `dpl_BAmT1TrjkUTE8Wz3Vvk1WUcU8kzB` READY.
+- Production alias remains on validated `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` intentionally.
+- Rollback ref `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e` remains untouched.
+
+
 ## CURRENT OVERRIDE — remote main released; Production runtime checkpoint `5fa915d3` (2026-09-12)
 - Local `main` and GitHub `refs/heads/main` runtime checkpoint: `5fa915d31ebb6aa0915cc39b34016a1ffa933a66` before this docs-only sync.
 - Git rollback branch: `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633ed4e24bbca161d138a832012b1d40`.

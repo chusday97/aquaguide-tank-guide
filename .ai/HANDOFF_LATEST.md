@@ -1,5 +1,14 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — Local File temp cleanup reliability fix (2026-09-12)
+- Main functional checkpoint: `0b662155 fix(admin): clean failed atomic temp writes`.
+- Failure injection proved generic atomic Local File writes could leave `.tmp-*` files when final rename failed. Previous authority stayed intact, but the workspace could become dirty.
+- JSON and binary atomic helpers now always clean their temp path in `finally`; manifest failure regression explicitly asserts no `runtime-authority.json.tmp-*` remains.
+- PASS: Local File API + mode contract, Git runtime authority, durable Local Admin browser restart/backup/restore, API/root TypeScript, full build. Product Golden Path PASS.
+- Vercel branch deployment `dpl_BAmT1TrjkUTE8Wz3Vvk1WUcU8kzB` is READY. The fix is DEV-only and not part of Production `/api/v1/router`, so current Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` by design.
+- NEXT: fix only newly reproduced badcases; no speculative UI/authority expansion.
+
+
 ## CURRENT OVERRIDE — remote release closed with Vercel Business API bundle (2026-09-12)
 - GitHub `main` runtime checkpoint is `5fa915d31ebb6aa0915cc39b34016a1ffa933a66` (`fix(api): bundle vercel business runtime`); Product Golden Path `34667970125` completed successfully.
 - Remote rollback branch remains `rollback/main-pre-aqua-admin-20260912 -> d3c70dee633e`.
