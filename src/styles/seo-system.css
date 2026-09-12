@@ -177,6 +177,14 @@ body:has(.public-seo-root)::-webkit-scrollbar {
   margin-inline: auto;
 }
 
+.seo-hero__media:has(> [role="img"]) {
+  min-height: 320px;
+}
+
+.seo-hero__media:has(> [role="img"]) > [role="img"] {
+  min-height: 320px;
+}
+
 .seo-hero__content {
   display: flex;
   min-width: 0;
