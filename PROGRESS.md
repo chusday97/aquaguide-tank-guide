@@ -1441,3 +1441,7 @@
 
 - [x] 内置浏览器实际加载极火虾完整公开页面；点击“常见问题”后 URL 进入 `#faq`，章节锚点可达，证据为 `EVD-20260912-073`。
 - [ ] 该证据不替代系统 Chrome 三档、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
+## 2026-09-12 Species 长页面滚动运行时复核（`d46745c2`）
+
+- [x] 内置浏览器刷新可访问性树后成功滚动到 Species 页面底部，截图显示“资料来源”和专业来源链接，证据为 `EVD-20260912-074`。
+- [ ] 该证据仍不替代系统 Chrome 三档、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
