@@ -32,6 +32,11 @@
 - [x] 内置浏览器确认宝莲灯公开页的“首页”面包屑可回到品牌首页；“灯科鱼”目前是未建立公开分类页的文字层级，不伪造不可用链接，证据为 `EVD-20260912-071`。
 - [ ] 后续若补充鱼类分类公开页，再将该文字层级升级为真实链接；当前不扩大本轮范围。
 
+## 2026-09-12 当前静态发布门禁基线
+
+- [x] 当前提交的 Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、Typography、TypeScript、build 和 diff-check 全部通过，证据为 `EVD-20260912-072`。
+- [ ] 系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。
+
 ## 2026-09-12 当前状态快照（`b4006374`）
 
 - [x] 首页/分类页/Species 页统一使用 `SeoAssetFallback` 作为缺图身份回退；分类入口不再显示无样式的孤立“图片暂不可用”，提交 `b4006374`，证据为 `EVD-20260912-064`。

@@ -58,6 +58,11 @@
 - [x] 首页面包屑返回品牌首页已验证。
 - [ ] 鱼类分类公开页未建立前，保持“灯科鱼”为不可点击分类文字，不创建伪链接。
 
+## 2026-09-12 静态发布门禁基线
+
+- [x] Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、Typography、lint、build、diff-check通过。
+- [ ] 继续完成真实多视口、性能/reduced-motion、Figma Canonical和可读独立 Critic。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
