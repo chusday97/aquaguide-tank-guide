@@ -1361,3 +1361,8 @@
 
 - [x] 内置浏览器激活极火虾 FAQ 后，按钮状态变为 `expanded` 并显示对应答案，其他问题保持收起；证据为 `EVD-20260912-055`。
 - [ ] 系统 Chrome 键盘/reduced-motion/性能、宝莲灯图片用途、独立 Critic 和 Figma Canonical仍未完成。
+## 2026-09-12 Figwright连接复核
+
+- [x] 工具清单已出现 Figwright；一次只读 ping 返回 `ok:true`，server/leader 均为 `0.5.0` 且 buildId 一致。
+- [ ] `hop=server-only`、`plugin=null`，并有 `plugin request timeout`；Figma Desktop 插件仍未在线，未执行写入或重复 Ping，证据为 `EVD-20260912-056`。
+- [ ] Web、素材用途确认、浏览器环境、独立 Critic 和发布门禁继续按原计划推进。

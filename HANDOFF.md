@@ -30,6 +30,10 @@
 
 - 内置浏览器激活极火虾 FAQ 后，辅助树显示 `expanded` 并出现对应答案，其他 FAQ 保持收起；证据为 `EVD-20260912-055`。
 
+## 2026-09-12 Figwright连接补充
+
+- Figwright 版本已统一为 server/leader `0.5.0`，但 ping 仍为 `server-only`，`plugin=null` 且插件请求超时；本轮未写入 Figma，证据为 `EVD-20260912-056`。
+
 ## 当前已验证
 
 - 当前公开物种表达已用 FishBase、UF/IFAS 与 USGS NAS 做来源范围复核；宝莲灯中层/群游/取食和极火虾底部刮食表达均未发现越界，证据为 `EVD-20260912-010`。

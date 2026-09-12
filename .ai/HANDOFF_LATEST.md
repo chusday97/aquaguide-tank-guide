@@ -39,6 +39,10 @@
 
 - 内置浏览器激活极火虾 FAQ 后，辅助树显示 `expanded` 并出现对应答案，其他 FAQ 保持收起；证据为 `EVD-20260912-055`。
 
+## 2026-09-12 Figwright连接补充
+
+- Figwright 版本已统一为 server/leader `0.5.0`，但 ping 仍为 `server-only`，`plugin=null` 且插件请求超时；本轮未写入 Figma，证据为 `EVD-20260912-056`。
+
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。
