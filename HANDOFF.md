@@ -958,3 +958,9 @@
 
 - 只执行一次 `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing`；Chrome 在页面断言前 SIGABRT 退出。
 - 未生成多视口截图，不计为浏览器通过；证据为 `EVD-20260912-002`。
+## 2026-09-12 静态门禁复跑结果
+
+- 当前工作树的 Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、build 与 diff-check 全部通过，证据为 `EVD-20260912-003`。
+- 系统 Chrome 已按约定只重试一次，仍在页面断言前 SIGABRT/进程权限错误；这属于环境阻塞，不是页面断言失败。
+- 用户既有未提交文件仍为 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`，未触碰、未暂存。
+- 下一步仍是：浏览器环境恢复后补真实多视口与性能/reduced-motion证据，再针对当前版本取得可读独立Critic复验；Figma配额恢复后集中补Canonical模板。保持 `noindex,follow`。

@@ -73,3 +73,8 @@
 
 - 仅执行一次系统 Chrome Species 脚本；进程在页面断言前以 SIGABRT 退出，属于环境阻塞。
 - 内置浏览器证据 `EVD-20260912-001` 仍有效，不重复启动同一失败通道；本轮证据为 `EVD-20260912-002`。
+## 2026-09-12 静态回归更新
+
+- 当前代码的 Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、build 与 diff-check 全部通过，证据为 `EVD-20260912-003`。
+- 系统 Chrome 单次启动仍在页面断言前 SIGABRT；不将其计为浏览器通过，也不重复启动同一失败通道。
+- 继续保持 `noindex,follow`，Figma调用暂停；系统多视口、reduced-motion、性能、完整失败状态、独立Critic复验和Figma Canonical仍是未完成门禁。

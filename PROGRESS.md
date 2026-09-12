@@ -1066,3 +1066,8 @@
 - [x] 本地预览保持运行时，只执行一次 `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing`。
 - [x] Chrome 在进入页面断言前以 SIGABRT/进程权限错误退出，没有生成截图或通过证据。
 - [ ] 系统 Chrome 多视口仍为环境阻塞；不重复启动同一失败通道。
+## 2026-09-12 当前静态门禁复跑
+
+- [x] Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、production build 与 diff-check 全部通过，证据为 `EVD-20260912-003`。
+- [x] 构建仅保留既有动态/静态导入、大字体和大 chunk 警告；未新增代码修改，用户既有三份未提交文件保持原样。
+- [ ] 系统 Chrome 单次重试仍在页面断言前 SIGABRT；系统多视口、reduced-motion、性能、完整失败状态、Figma Canonical 和当前版本独立 Critic 复验仍未完成。
