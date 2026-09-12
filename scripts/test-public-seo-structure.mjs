@@ -46,6 +46,8 @@ assert.match(species, /profile\.faq\.length > 0/, 'Species must keep FAQ fail-cl
 assert.match(species, /lifeAnswers\.map/, 'Species must render life answers from published evidence');
 assert.match(species, /new IntersectionObserver/, 'Species chapter navigation must track the visible section');
 assert.match(species, /aria-current=\{activeChapter === item\.id \? 'location'/, 'Species chapter navigation must expose the active section');
+assert.match(species, /<section id="overview" className="seo-section"/, 'Species overview chapter must target the data rail section');
+assert.doesNotMatch(species, /<SeoHero id="overview">/, 'Species Hero must not claim the overview chapter anchor');
 
 const guide = read('src/pages/CareGuideLanding.tsx');
 for (const phrase of ['先看核心结论', '再看分步操作', '最后做后续观察', '资料状态']) {
