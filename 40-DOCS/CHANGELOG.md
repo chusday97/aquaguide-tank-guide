@@ -759,6 +759,9 @@
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
 [Unreleased]
 
+- Verified: 2026-09-13 最新 Vercel Preview `aquaguide-bh6j5jb88-chusday97s-projects.vercel.app` 为 Ready；内置 Chrome 已读到当前公开 Shell、面包屑、完整章节和最新中文 Species 文案，证据为 `EVD-20260913-102`。
+- Blocked: Vercel inspect 尚未返回部署 commit SHA，托管 Preview 的精确 parity、三档回归和发布门禁仍未完成。
+
 - Verified: 2026-09-13 非生产 `codex/species-seo-preview-v1` 已推送，GitHub 提交历史确认远端与本地已提交 HEAD 同为 `915bb0e7`；用户未提交文件未纳入，证据为 `EVD-20260913-101`。
 - Blocked: Vercel 部署 SHA 尚未核对，托管页面暂不能用于当前版本验收；未修改 `main` 或 Production。
 

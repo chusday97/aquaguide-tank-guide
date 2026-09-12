@@ -332,3 +332,7 @@
 
 - GitHub 已确认远端 `codex/species-seo-preview-v1` 指向 `915bb0e7`，与本地已提交 HEAD 一致，证据为 `EVD-20260913-101`。
 - 下一步只核对 Vercel 部署是否为同一 SHA；未确认部署前不把托管页面当作当前实现，不解除 `noindex,follow`。
+## 2026-09-13 最新 Preview
+
+- Vercel Preview 已 Ready，内置 Chrome 实际显示当前 Public Shell、公开面包屑和完整 Species 章节，证据为 `EVD-20260913-102`。
+- 部署 commit SHA 尚未从 Vercel CLI 得到；继续保持 Preview parity 和发布门禁未完成，不解除 `noindex,follow`。

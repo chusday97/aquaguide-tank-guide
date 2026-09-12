@@ -1563,3 +1563,7 @@
 - [x] 非生产分支 `codex/species-seo-preview-v1` 已推送；GitHub 提交历史确认远端最新提交为 `915bb0e7`，与本地已提交 HEAD 一致，证据为 `EVD-20260913-101`。
 - [ ] Vercel 尚未核对到同一 SHA 的新部署；托管页面验收、可读独立 Critic、Figma Canonical 和索引发布门禁仍未完成。
 - [ ] 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 继续保持未暂存、未提交。
+## 2026-09-13 最新 Preview 已 Ready
+
+- [x] Vercel 生成新的非生产 Preview：`https://aquaguide-bh6j5jb88-chusday97s-projects.vercel.app`，状态 `Ready`；内置 Chrome 实际读取极火虾页，已呈现当前公开首页/分类面包屑、完整章节和最新中文文案，证据为 `EVD-20260913-102`。
+- [ ] Vercel CLI 当前未返回部署 commit SHA，仍需补做部署 SHA parity；390/600/1440 托管回归、可读独立 Critic、Figma Canonical 和索引门禁未完成。

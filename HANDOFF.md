@@ -1351,3 +1351,7 @@
 - GitHub 提交历史确认 `codex/species-seo-preview-v1` 最新提交为 `915bb0e7`，与本地最新已提交 HEAD 一致，证据为 `EVD-20260913-101`。
 - 这是非生产 Preview 分支；未修改 `main`、Production Supabase 或生产部署。用户的三个未提交文件未纳入推送。
 - 下一步：等待 Vercel 为 `915bb0e7` 生成部署并核对部署 SHA；只有 SHA 一致后，才使用托管 Preview 做六条公开路由的真实验收。
+## 2026-09-13 最新 Preview 运行状态
+
+- 最新 Ready Preview：`https://aquaguide-bh6j5jb88-chusday97s-projects.vercel.app`；内置 Chrome 实际读到当前 Public Shell 和最新 Species 章节，证据为 `EVD-20260913-102`。
+- 当前 Preview 与旧版相比已恢复公开面包屑和完整章节，但 Vercel inspect 尚未提供 commit SHA；在 SHA 明确前只能作为候选视觉证据，不计为最终 Preview parity。
