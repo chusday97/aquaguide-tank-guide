@@ -1683,3 +1683,8 @@
 
 - [x] `npm run build` 与 `git diff --check` 在加载语义回归提交上通过；仅保留既有 chunk 体积及动态/静态导入提示，证据为 `EVD-20260913-126`。
 - [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
+## 2026-09-13 Public Shell 侧栏边界核对
+
+- [x] 内置 Chrome 运行时检查确认 `open-side-panel` 与 `thunderbit-crx-side-bar` 是浏览器扩展注入到 `body` 的节点，不属于 AquaGuide Public Shell；页面自身按钮列表不含该控件，证据为 `EVD-20260913-127`。
+- [x] 未修改代码或页面以绕过第三方扩展；公开页面的应用侧栏隔离规则保持不变。
+- [ ] 600px 独立真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。

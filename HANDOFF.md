@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 Public Shell 侧栏边界核对
+
+- 内置 Chrome DOM 检查确认 `open-side-panel` / `thunderbit-crx-side-bar` 来自浏览器扩展注入，不属于 AquaGuide 页面；页面自身按钮不含该控件，证据为 `EVD-20260913-127`。
+- 因此没有对 Public Shell 做误修；公开页面仍不渲染应用侧栏。
+
+
 ## 2026-09-13 最新构建复核（`e644e95e`）
 
 - `npm run build` 和 `git diff --check` 通过，构建只报告既有 chunk 体积及动态/静态导入提示，证据为 `EVD-20260913-126`。
