@@ -1075,6 +1075,11 @@
 - 提交：`90a53625 fix: deduplicate public species sources`。
 - 相关证据和 Product Truth 未改变；页面继续 `noindex,follow`。
 
+## 2026-09-12 导航回归测试
+
+- `test-public-seo-structure` 已加入公开导航边界断言：根面包屑必须是公开首页，未公开的鱼类分类不得生成应用内分类链接。
+- 测试通过；该保护只约束路由目标，不改变页面内容或数据契约。
+
 ## 2026-09-12 来源区运行时复核
 
 - 内置 Chrome 长截图确认极火虾资料区只显示一条 AquaGuide 目录记录；专业来源和品系归组来源仍可见。

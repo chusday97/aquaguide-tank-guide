@@ -1179,3 +1179,7 @@
 - [x] 无公开分类页的鱼类不再生成伪分类相关链接；公开继续探索区保持可用入口。
 - [x] 公开契约、结构、文案、Evidence、lint、build 和 diff-check 通过；页面继续 `noindex,follow`。
 - [ ] 系统 Chrome 三档自动化、性能/reduced-motion、宝莲灯图片用途确认、Figma Canonical 和可读独立 Critic仍未完成。
+
+## 2026-09-12 公开导航回归保护
+
+- [x] `test-public-seo-structure` 新增公开面包屑与分类入口断言，阻止公开 Species 回退到应用内 `/encyclopedia`；测试通过，代码提交待记录。

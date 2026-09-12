@@ -8,6 +8,7 @@
 - Fixed: 2026-09-12 公开 Species 资料来源按标题、发布方和链接去重，消除重复目录记录；提交 `90a53625`，不改变证据绑定或索引策略。
 - Verified: 2026-09-12 内置 Chrome 长截图确认公开资料区去重结果已实际呈现，专业来源和品系归组记录仍保留。
 - Fixed: 2026-09-12 Species 公开面包屑与分类入口不再误跳应用内图鉴；仅为已有公开分类生成链接，鱼类页面避免伪分类入口。
+- Added: 2026-09-12 公开结构回归测试保护 Species 面包屑和分类入口不回退到应用内 `/encyclopedia`。
 
 - Verified: 2026-09-12 公开SEO Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive Contract、lint、build 与 diff-check 全部通过；系统 Chrome 仍在页面断言前 SIGABRT，未冒充多视口浏览器验收。
 - Verified: 2026-09-12 内置浏览器重新加载 `/species/sp_0001`，公开导航、Hero、参数、生活习性、品系、FAQ、能力入口和资料来源均可读；记录为运行内容证据，不替代系统 Chrome 三档验收。

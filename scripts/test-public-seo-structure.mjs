@@ -45,5 +45,11 @@ assert.match(category, /href="\/aquarium"/, 'Category must link to the aquarium 
 
 assert.match(species, /to=\{variantPath\(variant\.id\)\}/, 'Species variant cards must use the variant route');
 assert.match(species, /taskRoutes\.encyclopedia\.compatibilitySpecies\(fish\.id, 'species-profile'\)/, 'Species capability card must preserve the species tool target');
+assert.match(species, /\{ label: labels\.back, href: '\/' \}/, 'Species breadcrumb must stay inside the public shell');
+assert.doesNotMatch(species, /label: labels\.back, href: '\/encyclopedia'/, 'Species breadcrumb must not point to the app encyclopedia');
+
+const publishedProfile = read('src/data/publishedSpeciesProfile.ts');
+assert.match(publishedProfile, /categoryHrefFor\(species\.category\) \?/, 'Species related category links must be conditional on a public route');
+assert.doesNotMatch(publishedProfile, /return `\/encyclopedia\?category=/, 'Published Species data must not create an app-only category link');
 
 console.log('Public SEO structure checks passed: all page types have a stable content skeleton and conditional content gates.');

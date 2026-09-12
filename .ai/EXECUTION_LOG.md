@@ -241,6 +241,11 @@
 - 结果：公开首页作为根面包屑；仅虾螺蟹使用公开分类链接；鱼类继续探索不生成伪分类入口。
 - 验证：公开契约、结构、文案、Evidence、lint、build 和 diff-check 通过；内置 Chrome 真实页面可见首页面包屑。
 
+## 2026-09-12 导航回归测试
+
+- 动作：为公开结构测试增加面包屑与分类链接边界断言。
+- 验证：`test:public-seo-structure`、`test:public-seo-contract`、lint、diff-check通过。
+
 ## 2026-09-12 来源区运行时复核
 
 - 动作：重新打开 Species 本地页面并导出完整截图，检查来源展示。
