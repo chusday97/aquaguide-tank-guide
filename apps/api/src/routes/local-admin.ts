@@ -571,7 +571,8 @@ localAdminFileRouter.get('/status', asyncRoute(async (request, response) => {
 }));
 localAdminFileRouter.get('/integrity', asyncRoute(async (request, response) => {
   requireEnabled();
-  return sendData(request, response, await inspectRoot(localRoot()));
+  const result = await withAuthorityTransaction(() => inspectRoot(localRoot()));
+  return sendData(request, response, result);
 }));
 localAdminFileRouter.post('/runtime-snapshot', asyncRoute(async (request, response) => {
   requireEnabled();

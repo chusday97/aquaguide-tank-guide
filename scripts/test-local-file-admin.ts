@@ -146,6 +146,33 @@ try {
   await Promise.all([readRaceWriter, readRaceReader]);
   assert.equal((await requestJson(started.base, `/assets/${readRaceAssetId}`, { method: 'DELETE' })).response.status, 200);
 
+  // Integrity is a cross-file snapshot and must not report false asset errors during a queued rewrite.
+  const integrityRaceAssetId = 'local-asset-integrity-race';
+  const integrityRacePng = Buffer.alloc(128 * 1024 + 3, 0x61);
+  const integrityRaceWebp = Buffer.alloc(448 * 1024 + 29, 0x62);
+  assert.equal((await requestJson(started.base, `/assets/${integrityRaceAssetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: integrityRacePng,
+  })).response.status, 201);
+  const integrityRaceWriter = (async () => {
+    for (let index = 0; index < 24; index += 1) {
+      const useWebp = index % 2 === 0;
+      const result = await requestJson(started.base, `/assets/${integrityRaceAssetId}`, {
+        method: 'PUT', headers: { 'Content-Type': useWebp ? 'image/webp' : 'image/png' }, body: useWebp ? integrityRaceWebp : integrityRacePng,
+      });
+      assert.equal(result.response.status, 201);
+    }
+  })();
+  const integrityRaceReader = (async () => {
+    for (let index = 0; index < 80; index += 1) {
+      const result = await requestJson(started.base, '/integrity');
+      assert.equal(result.response.status, 200);
+      assert.equal(result.payload.data.healthy, true, 'Integrity snapshot must wait for an in-flight asset pair write.');
+      assert.equal(result.payload.data.issues.some((issue: any) => issue.code === 'ASSET_SIZE_MISMATCH' || issue.code === 'ASSET_PAIR_MISSING'), false);
+    }
+  })();
+  await Promise.all([integrityRaceWriter, integrityRaceReader]);
+  assert.equal((await requestJson(started.base, `/assets/${integrityRaceAssetId}`, { method: 'DELETE' })).response.status, 200);
+
   // If metadata commit fails after the blob was written, the new blob must be removed/restored.
   const pairFailureId = 'local-asset-pair-failure';
   const pairFailureMeta = path.join(root, 'assets', `${pairFailureId}.json`);
