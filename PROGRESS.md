@@ -1203,3 +1203,9 @@
 - [x] 新增公开契约断言，宝莲灯 FishBase 来源展示数量固定为 1；提交 `93a3edb7`。
 - [x] Editorial、Evidence、Public Contract、lint、build 和 diff-check 通过；页面继续 `noindex,follow`。
 - [ ] 三档浏览器自动化、可读独立 Critic、Figma Canonical 和发布索引门禁仍未完成。
+
+## 2026-09-12 公开来源运行时复核
+
+- [x] 内置 Chrome 实际复核宝莲灯页面，资料来源区只显示一条 FishBase 记录。
+- [x] 面包屑、生活习性、环境、工具入口、继续探索和 `noindex` 仍正常；页面可滚动。
+- [x] 证据记录为 `EVD-20260912-028`；该结果不替代三档自动化、Critic、Figma 或性能验收。

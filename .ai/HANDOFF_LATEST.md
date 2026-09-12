@@ -164,3 +164,8 @@
 - 静态响应式契约、lint、build、diff-check 通过；系统 Chromium 仍受 MachPort 权限阻断。
 - 独立 Critic 最新复验仍为空正文，不能计为通过；不创建重复任务。
 - 继续保持 `noindex,follow`、不调用 Figma、不修改 main/Production Supabase/生产部署；保留用户未提交文件。
+
+## 2026-09-12 运行时来源复核
+
+- 内置 Chrome 复核 `/species/sp_0432`：公开资料区只显示一条 FishBase 来源，页面滚动和公开内容正常。
+- 记录：`EVD-20260912-028`；不改变 `noindex,follow` 或任何发布门禁。

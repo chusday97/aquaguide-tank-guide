@@ -1111,3 +1111,9 @@
 - 验证：响应式契约、lint、build、diff-check 通过；系统 Chromium 仍因 macOS MachPort 权限无法启动。
 - 仍阻塞：既有 Critic 完成但返回空正文；不创建重复 Critic。还缺系统 Chrome 三档、性能/reduced-motion、宝莲灯用途级批准、Figma Canonical。
 - 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 保持未暂存。
+
+## 2026-09-12 运行时复核：来源区
+
+- 内置 Chrome 打开 `/species/sp_0432` 并等待页面稳定后复核：同一 FishBase 物种来源实际只显示一条。
+- 页面可滚动，公开导航、内容章节、工具入口和 `noindex` 保持正常。
+- 证据：`EVD-20260912-028`；仍不能替代 390/600/1440 自动化、性能、Figma 或 Critic。
