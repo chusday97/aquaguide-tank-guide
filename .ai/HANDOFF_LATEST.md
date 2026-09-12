@@ -10,6 +10,7 @@
 - 系统 Chrome 自动化仍受 macOS MachPort/SIGABRT 阻塞；独立 Critic 最新复验返回空正文；Figma Canonical 仍等待 Starter 配额。
 - 用户未提交的三个文件保持原样，不能覆盖或代提交。
 - 公开 Species 收藏已改为仅使用本地 `toggleSpeciesFavorite`；不再通过应用 Repository 读取登录、鱼缸或 Supabase 状态，应用页面行为不变，证据为 `EVD-20260912-043`。
+- 内置 Chrome 实际复核分类 → Species → 返回链路：返回后 URL 和标题恢复为 `/category/shrimp-snails-crabs` 与“虾螺蟹｜AquaGuide 物种分类”，证据为 `EVD-20260912-044`。
 
 ## 最新静态验证
 

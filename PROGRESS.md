@@ -1,3 +1,8 @@
+## 2026-09-12 公开导航返回链路复核
+
+- [x] 内置 Chrome 实际完成分类 → 极火虾 → 浏览器返回；返回后的 URL 和标题恢复正确，证据为 `EVD-20260912-044`。
+- [ ] 系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 Public Species 收藏边界收口（`acfadea1`）
 
 - [x] 公开 Species 页移除应用 Repository 依赖，收藏改用本地 `toggleSpeciesFavorite`；不触发登录、鱼缸或 Supabase 读取，应用页行为保持不变。
