@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 替代浏览器探测
+
+- Playwright WebKit 与 Firefox 均未能启动到页面：WebKit 页面立即关闭，Firefox 进程启动失败；未取得 600px 断言，证据为 `EVD-20260913-129`。
+- 这不是页面失败，600px 真实视口继续保持未验证。
+
+
 ## 2026-09-13 Critic 任务终态核对
 
 - 既有只读 Critic 已确认 `idle`，最新 turn 完成但无 `latestAssistantMessage`；因此独立审查仍是无正文阻塞，不创建重复线程，证据为 `EVD-20260913-128`。

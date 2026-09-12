@@ -1,5 +1,10 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-13 替代浏览器探测
+
+- Playwright WebKit/Firefox 均无法启动到页面，未取得 600px 运行时证据；该结果记录为环境缺口，不代表响应式断言失败，证据为 `EVD-20260913-129`。
+
+
 ## 2026-09-13 Critic 终态
 
 - 既有 Critic 线程当前为 `idle`，最新 turn 已完成但没有 assistant 正文；不能计为六维审查通过，证据为 `EVD-20260913-128`。

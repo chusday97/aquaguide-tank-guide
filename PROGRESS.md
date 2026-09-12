@@ -1692,3 +1692,7 @@
 
 - [x] 既有只读 Critic 任务已确认 `idle`，最新 turn 已完成但没有 `latestAssistantMessage`；不是等待中的任务，仍不能计为可读六维审查通过，证据为 `EVD-20260913-128`。
 - [ ] 不创建重复 Critic；600px 独立真实视口、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
+## 2026-09-13 替代浏览器 600px 探测
+
+- [x] 尝试使用本机 Playwright WebKit 与 Firefox 以 600px 视口打开 Species；WebKit 页面立即关闭，Firefox 浏览器进程启动失败，均未进入页面断言，证据为 `EVD-20260913-129`。
+- [ ] 该结果只说明替代浏览器不可用，不代表页面响应式失败；600px 独立真实视口仍未验证。
