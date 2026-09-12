@@ -946,3 +946,11 @@
 - 本轮只修复本地 `assetPreview=1`：待审核物种素材现在会同时出现在 Hero 和品系卡，便于用途级人工确认。
 - 普通公开访问不会显示 pending 素材；Published 聚合、审核 fingerprint、metadata、JSON-LD 和 `noindex,follow` 未改变。
 - `npm run lint`、`npm run build`、`git diff --check` 通过；用户保留的三份未提交文件未修改。
+
+## 2026-09-12 本地预览滚动与键盘复核
+
+- 本地 Vite 预览已恢复，内置浏览器新标签成功打开 `/species/sp_0432`。
+- 实际向下滚动后可见“继续探索”和“资料来源”；Tab 从公开 Header 进入面包屑、章节导航并到达“收藏”。
+- 普通宝莲灯路由按 `needs_review` 显示图片回退，正文和 `noindex,follow` 正常。
+- 证据：`EVD-20260912-001`。范围仅为内置浏览器当前视口，不代表系统 Chrome 多视口或最终交付通过。
+- 下一步：补充可调整视口/系统浏览器证据，再按 Critic 修复清单补失败状态和完整键盘路径。
