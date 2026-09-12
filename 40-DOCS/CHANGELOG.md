@@ -11,6 +11,7 @@
 - Verified: 2026-09-12 内置浏览器通过 Tab + Enter 从品牌首页“进入我的鱼缸”进入 `/welcome` onboarding，未绕过新手引导；证据为 `EVD-20260912-081`。
 - Verified: 2026-09-12 内置浏览器通过 Tab + Enter 从 `/welcome` 的“先跳过，直接进入我的鱼缸”进入 `/aquarium`，应用空状态和控制正常；证据为 `EVD-20260912-082`。
 - Verified: 2026-09-12 内置浏览器通过 Tab + Enter 从 Species 进入兼容工具，物种 ID、来源参数、已选极火虾和未选择鱼缸状态正确；证据为 `EVD-20260912-083`。
+- Verified: 2026-09-12 内置浏览器通过 Tab + Enter 从兼容工具返回 Species，极火虾 H1、公开 Header、面包屑和章节导航恢复；证据为 `EVD-20260912-084`。
 - Verified: 2026-09-12 内置浏览器确认极火虾公开长页面可读，点击“常见问题”后真实进入 `#faq` 锚点；证据为 `EVD-20260912-073`，不替代系统 Chrome 三档验收。
 - Added: 2026-09-12 Marketing Hero 接入共享 `SeoAssetFallback`，与 Category/Species 公开缺图状态统一；结构回归新增三类页面接入和可读图片角色断言，证据为 `EVD-20260912-065`。
 - Fixed: 2026-09-12 Public Shell 路由切换滚动位置：普通路径回到顶部，hash 深链接定位到目标章节；证据为 `EVD-20260912-066`。

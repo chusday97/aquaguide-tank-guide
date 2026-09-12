@@ -1481,6 +1481,11 @@
 - [x] Species 通过 Tab + Enter 进入兼容工具，保留物种 ID、来源参数、已选极火虾和未选择鱼缸状态，证据为 `EVD-20260912-083`。
 - [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
 
+## 2026-09-12 兼容工具 → Species 键盘回归（`b03bf8e6`）
+
+- [x] 兼容工具通过 Tab + Enter 返回 `/species/sp_0001#tool`，极火虾 H1、公开 Header、面包屑和章节导航恢复，证据为 `EVD-20260912-084`。
+- [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
+
 ## 2026-09-12 Marketing → Category 键盘回归（`8ba96fbb`）
 
 - [x] 内置浏览器通过 Tab + Enter 从品牌首页“开始认识物种”进入虾螺蟹分类，公开 Header 和唯一 H1 正常，证据为 `EVD-20260912-080`。
