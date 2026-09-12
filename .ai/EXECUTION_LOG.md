@@ -246,6 +246,12 @@
 - 动作：为公开结构测试增加面包屑与分类链接边界断言。
 - 验证：`test:public-seo-structure`、`test:public-seo-contract`、lint、diff-check通过。
 
+## 2026-09-12 Critic 复验输出阻塞
+
+- 动作：将最新公开导航修复交回既有 Critic 任务并等待其完成。
+- 结果：任务完成但 `read_thread` 返回空 `items`，没有可读六维正文；空输出不计为通过。
+- 处理：不创建重复 Critic，保持独立审查和索引门禁阻塞。
+
 ## 2026-09-12 来源区运行时复核
 
 - 动作：重新打开 Species 本地页面并导出完整截图，检查来源展示。
