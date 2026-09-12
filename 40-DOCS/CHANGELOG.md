@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-12 内置浏览器点击宝莲灯“它如何生活”后真实滚动到 `#behavior`，三个问题卡可读；证据为 `EVD-20260912-053`。
 - Verified: 2026-09-12 公开 SEO 静态门禁、build、lint 和 diff-check 复跑通过；内置浏览器宝莲灯审核预览证据为 `EVD-20260912-051`。
 - Blocked: `test:seo-motion`、`test:species-landing`、`test:public-seo-routes` 在 Chromium 启动阶段受 macOS MachPort 权限错误阻塞；未将其计为浏览器验收通过。
 - Verified: 2026-09-12 图片终态修复后的证据、素材、公开契约、中文文案、响应式、字体、lint、build 和 diff-check 全部通过；证据为 `EVD-20260912-049`。

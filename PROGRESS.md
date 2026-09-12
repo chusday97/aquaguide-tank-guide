@@ -1348,3 +1348,7 @@
 - [x] 内置浏览器仍可读宝莲灯 `assetPreview=1` 页面；图片、Alt、参数、环境、活动水层、群游和取食内容均可见，证据为 `EVD-20260912-051`。
 - [ ] `test:seo-motion`、`test:species-landing`、`test:public-seo-routes` 在 Chromium 启动阶段因 macOS MachPort 权限错误退出；不是页面断言失败，保持系统浏览器环境缺口，不重复重启。
 - [ ] Hero 与品系卡用途仍需项目负责人分别确认；可读独立 Critic、Figma Canonical、性能指标和最终发布门禁仍未完成。
+## 2026-09-12 章节导航与滚动运行时复核
+
+- [x] 内置浏览器点击宝莲灯页面“它如何生活”后，URL 更新为 `#behavior`，行为章节真实进入视口，三个问题卡可读；证据为 `EVD-20260912-053`。
+- [ ] 该证据补充内置浏览器运行时验证，但不替代系统 Chrome 三档、性能、reduced-motion、Figma Canonical 或可读独立 Critic。

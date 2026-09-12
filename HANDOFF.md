@@ -18,6 +18,10 @@
 - 静态证据、公开契约、文案、结构、响应式、lint、build 和 diff-check 通过。
 - `test:seo-motion`、`test:species-landing`、`test:public-seo-routes` 均在 Chromium 启动阶段触发同一 macOS MachPort 权限错误，不能计为浏览器通过，也不是页面断言失败；不重复重启。
 
+## 2026-09-12 章节导航运行时补充
+
+- 内置浏览器点击宝莲灯页面“它如何生活”后 URL 更新为 `#behavior`，行为章节进入视口，三个问题卡可读；证据为 `EVD-20260912-053`。
+
 ## 当前已验证
 
 - 当前公开物种表达已用 FishBase、UF/IFAS 与 USGS NAS 做来源范围复核；宝莲灯中层/群游/取食和极火虾底部刮食表达均未发现越界，证据为 `EVD-20260912-010`。

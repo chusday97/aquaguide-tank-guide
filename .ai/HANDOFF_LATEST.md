@@ -27,6 +27,10 @@
 - 静态证据、公开契约、文案、结构、响应式、lint、build 和 diff-check 通过。
 - `test:seo-motion`、`test:species-landing`、`test:public-seo-routes` 均在 Chromium 启动阶段触发同一 macOS MachPort 权限错误，不能计为浏览器通过，也不是页面断言失败；不重复重启。
 
+## 2026-09-12 章节导航运行时补充
+
+- 内置浏览器点击宝莲灯页面“它如何生活”后 URL 更新为 `#behavior`，行为章节进入视口，三个问题卡可读；证据为 `EVD-20260912-053`。
+
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。
