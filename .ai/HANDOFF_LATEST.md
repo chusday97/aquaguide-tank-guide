@@ -128,3 +128,10 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Species Detail now exposes a reviewed water-conditions disclosure; browser E2E verifies the molly values and source.
 - Commercial `Poecilia sphenops var.*` records do not inherit this authority automatically due documented hybridisation with `P. latipinna`.
 - Validation: Domain / Compatibility / Visual / Species Knowledge / evidence coverage / TypeScript / build / Species Detail E2E / Compatibility E2E / GP001–GP004 PASS.
+
+### P1 — V6 space symmetry + standard swordtail
+- Fixed a directionality bug: reviewed min tank volume/length is checked for existing species as well as the candidate, keeping planned-addition advice consistent when pair order changes.
+- Added direct reviewed `Xiphophorus hellerii` (`sp_0438`) knowledge/compatibility authority from Seriously Fish + FishBase.
+- Social authority records male dominance/intraspecific competition without mislabeling the species as universally territorial toward all community fish.
+- No automatic inheritance for `X. hellerii var.*` commercial morphs because many ornamental swordtails have hybrid ancestry.
+- Validation: Domain / Compatibility / Species Knowledge / Visual / evidence coverage / TypeScript / build / Species Detail E2E / Compatibility E2E / GP001–GP004 PASS.

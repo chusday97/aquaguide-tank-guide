@@ -251,6 +251,16 @@ const finNippingGroupManaged = evaluateCompatibility({
 assert.equal(finNippingGroupManaged.status, 'compatible');
 assert.ok(!finNippingGroupManaged.ruleCodes.includes('fin_nipping_group_pressure'));
 
+const existingSpeciesSpaceRequirement = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 100, lengthCm: 100, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'existing-large-space', minTankLiters: 108, minTankLengthCm: 120 }],
+  candidateSpecies: { ...base, id: 'small-candidate' },
+});
+assert.equal(existingSpeciesSpaceRequirement.status, 'caution');
+assert.ok(existingSpeciesSpaceRequirement.ruleCodes.includes('tank_volume_below_species_minimum'));
+assert.ok(existingSpeciesSpaceRequirement.ruleCodes.includes('tank_length_below_species_minimum'));
+
 const existingFinNippingGroupPressure = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },

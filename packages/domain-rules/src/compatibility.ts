@@ -102,7 +102,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v5-predation-vulnerability';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v6-tank-requirements-symmetry';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -339,6 +339,12 @@ export const evaluateCompatibility = ({
         existing.temperatureMaxC,
       );
       if (existingTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
+      if (existing.minTankLiters != null && tank.volumeLiters != null && tank.volumeLiters < existing.minTankLiters) {
+        raise('caution', 'tank_volume_below_species_minimum');
+      }
+      if (existing.minTankLengthCm != null && tank.lengthCm != null && tank.lengthCm < existing.minTankLengthCm) {
+        raise('caution', 'tank_length_below_species_minimum');
+      }
     }
   }
   if (candidateSpecies?.minimumGroupSize != null && candidateSpecies.minimumGroupSize > 1) {

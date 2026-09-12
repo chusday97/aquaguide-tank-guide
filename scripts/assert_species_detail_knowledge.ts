@@ -117,6 +117,25 @@ const mollySources = resolveKnowledgeSources(mollyKnowledge.knowledge.environmen
 assert.equal(mollySources.length, 1);
 assert.equal(mollySources[0]?.publisher, 'Seriously Fish');
 
+const swordtailKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0438',
+  name: '红剑鱼',
+  scientificName: 'Xiphophorus hellerii',
+  waterTemperature: '20-28°C',
+  phLevel: '7.0-8.5',
+  tankSize: '至少 96 升',
+});
+assert.deepEqual(swordtailKnowledge.facts.temperatureRange, { min: 16, max: 28 });
+assert.deepEqual(swordtailKnowledge.facts.phRange, { min: 7, max: 8 });
+assert.equal(swordtailKnowledge.knowledge.environment?.hardnessDgh?.min, 10);
+assert.equal(swordtailKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 14);
+assert.equal(swordtailKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 108);
+assert.equal(swordtailKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
+assert.equal(swordtailKnowledge.knowledge.reproduction?.gestationOrIncubation?.minDays, 24);
+assert.ok(swordtailKnowledge.knowledge.sexIdentification.maleTraits?.some(item => item.includes('交接器')));
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0236', scientificName: 'Xiphophorus hellerii var. Albino Red' }), undefined, 'commercial swordtail variants must not inherit standard-species authority automatically');
+
 const neonKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi' });
 assert.equal(neonKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
 assert.equal(neonKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');

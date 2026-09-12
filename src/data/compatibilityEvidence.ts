@@ -125,6 +125,24 @@ const mollySeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const swordtailSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-xiphophorus-hellerii',
+  title: 'Xiphophorus hellerii (Green Swordtail)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/xiphophorus-hellerii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const swordtailFishBase: EvidenceSourceDto = {
+  id: 'fishbase-xiphophorus-hellerii',
+  title: 'Xiphophorus hellerii (Green swordtail) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.org/Summary/Xiphophorus-hellerii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const neonTetraFishBase: EvidenceSourceDto = {
   id: 'fishbase-paracheirodon-innesi',
   title: 'Paracheirodon innesi (Neon tetra) species summary',
@@ -325,6 +343,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'high',
     reviewStatus: 'reviewed',
     citations: [mollySeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0438: {
+    speciesId: 'sp_0438',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'male_dominance'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [swordtailSeriouslyFish, swordtailFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
   },
   sp_0014: {

@@ -234,3 +234,10 @@ Draft PR: #149
 - Standard molly reviewed space (90 cm / ~81 L) overrides the legacy 48 L catalog minimum as a soft planning caution, not a hard threshold.
 - No base inheritance is granted to commercial molly variants because some ornamental stocks are interspecific hybrids.
 - Canonical priority matrix expands to 11 taxa / 110 directions: 88 caution, 20 not_recommended, 2 compatible.
+
+### P1 — V6 tank-requirements symmetry checkpoint
+- Rule version: `compatibility-domain-v6-tank-requirements-symmetry`.
+- Existing reviewed livestock can no longer hide unmet volume/length planning cautions simply because another organism is selected as the candidate.
+- Standard `Xiphophorus hellerii` is the first 120 cm planning-length regression for this symmetry.
+- Canonical priority matrix expands to 12 taxa / 132 directions: 108 caution, 22 not_recommended, 2 compatible.
+- Ornamental swordtail variants remain outside inherited authority until variant/hybrid identity is reviewed.

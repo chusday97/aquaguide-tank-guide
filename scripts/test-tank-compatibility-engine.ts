@@ -57,7 +57,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish(),
       });
       return result.metadata.catalogVersion === 'local-fish-data-v1'
-        && result.metadata.ruleVersion === 'compatibility-domain-v5-predation-vulnerability'
+        && result.metadata.ruleVersion === 'compatibility-domain-v6-tank-requirements-symmetry'
         && result.metadata.domainRuleCodes.length > 0
         && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
     },
@@ -482,6 +482,28 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         && result.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
         && result.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
         && result.evidenceIds?.includes('seriouslyfish-poecilia-sphenops');
+    },
+  },
+  {
+    name: 'reviewed swordtail space caution is independent of candidate direction',
+    run: () => {
+      const swordtail = makeFish({
+        id: 'sp_0438', name: '红剑鱼', scientificName: 'Xiphophorus hellerii',
+        waterTemperature: '20-28°C', phLevel: '7.0-8.5', tankSize: '至少 96 升', temperament: 'Territorial', size: 'Medium',
+      });
+      const platy = makeFish({
+        id: 'sp_0011', name: '月光鱼', scientificName: 'Xiphophorus maculatus',
+        waterTemperature: '20-28°C', phLevel: '7.0-8.5', tankSize: '至少 48 升', temperament: 'Peaceful', size: 'Small',
+      });
+      const tank = makeTank({ targetTemperature: '24', dimensions: { length: '100', width: '34', height: '30' } });
+      const forward = evaluateCompatibilityDecision({ tank, items: [{ species: platy, quantity: 2, origin: 'existing' }, { species: swordtail, quantity: 1, origin: 'candidate' }] });
+      const reverse = evaluateCompatibilityDecision({ tank, items: [{ species: swordtail, quantity: 1, origin: 'existing' }, { species: platy, quantity: 2, origin: 'candidate' }] });
+      return forward.status === 'caution'
+        && reverse.status === 'caution'
+        && forward.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && reverse.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && forward.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && reverse.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum');
     },
   },
   {

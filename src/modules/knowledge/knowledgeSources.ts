@@ -65,6 +65,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-xiphophorus-hellerii': {
+    id: 'seriouslyfish-xiphophorus-hellerii',
+    title: 'Xiphophorus hellerii (Green Swordtail)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/xiphophorus-hellerii',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-xiphophorus-hellerii': {
+    id: 'fishbase-xiphophorus-hellerii',
+    title: 'Xiphophorus hellerii (Green swordtail) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.org/Summary/Xiphophorus-hellerii',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-poecilia-reticulata': {
     id: 'seriouslyfish-poecilia-reticulata',
     title: 'Poecilia reticulata (Guppy)',
