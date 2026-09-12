@@ -87,6 +87,7 @@
     "test:public-seo-structure": "node scripts/test-public-seo-structure.mjs",
     "test:public-seo-responsive-contract": "node scripts/test-public-seo-responsive-contract.mjs",
     "test:seo-evidence-bindings": "node --import tsx scripts/test-seo-evidence-bindings.ts",
+    "test:public-favorites-isolation": "node --import tsx scripts/test-public-favorites-isolation.ts",
     "test:seo-editorial-evidence": "node --import tsx scripts/test-seo-editorial-evidence.ts",
     "test:seo-asset-candidates": "node --import tsx scripts/test-seo-asset-candidates.ts",
     "test:species-asset-preview": "node scripts/verify-species-asset-preview.mjs",
