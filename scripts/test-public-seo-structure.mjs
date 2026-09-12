@@ -48,6 +48,8 @@ assert.match(species, /new IntersectionObserver/, 'Species chapter navigation mu
 assert.match(species, /aria-current=\{activeChapter === item\.id \? 'location'/, 'Species chapter navigation must expose the active section');
 assert.match(species, /<section id="overview" className="seo-section"/, 'Species overview chapter must target the data rail section');
 assert.doesNotMatch(species, /<SeoHero id="overview">/, 'Species Hero must not claim the overview chapter anchor');
+assert.ok(species.includes("...(profile.variants.length > 1 ? ['variants'] : []),\n      'tool',"), 'Species chapter observer must include the AquaGuide capability section');
+assert.ok(species.includes("...(profile.faq.length > 0 ? ['faq'] : []),\n      'related',"), 'Species chapter observer must include the related-links section');
 
 const guide = read('src/pages/CareGuideLanding.tsx');
 for (const phrase of ['先看核心结论', '再看分步操作', '最后做后续观察', '资料状态']) {

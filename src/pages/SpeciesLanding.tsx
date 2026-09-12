@@ -101,7 +101,9 @@ export function SpeciesLanding() {
       ...(profile.editorial?.habitat ? ['habitat'] : []),
       ...((profile.editorial?.feeding || profile.editorial?.maintenance) ? ['care'] : []),
       ...(profile.variants.length > 1 ? ['variants'] : []),
+      'tool',
       ...(profile.faq.length > 0 ? ['faq'] : []),
+      'related',
     ];
     setActiveChapter('overview');
     if (typeof IntersectionObserver === 'undefined') return;
