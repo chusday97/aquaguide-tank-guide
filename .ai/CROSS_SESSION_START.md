@@ -14,6 +14,7 @@ Before reading or changing code, run these guards from `/Users/chuchu/aquaguide-
 3. `git status --short` must be reviewed before any edit.
 4. `git rev-parse HEAD` and `git ls-remote origin refs/heads/main` must be compared; reconcile any mismatch before editing.
 5. Historical worktrees (`feature/admin-content-v0`, `reconcile/admin-content-main-20260911`, `product-recovery-20260911`, preview/RC worktrees) are not the default Admin continuation path.
+6. `node_modules` in canonical main must be its own directory from `npm ci`; do not symlink dependencies from a historical worktree.
 
 ## Canonical read order
 1. `.ai/HANDOFF_LATEST.md`

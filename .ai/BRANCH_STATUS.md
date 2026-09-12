@@ -1,5 +1,12 @@
 # Branch Status
 
+## CURRENT OVERRIDE — canonical worktree path + environment (2026-09-12)
+- Canonical local worktree: `/Users/chuchu/aquaguide-main`; branch `main`.
+- Historical worktrees remain preserved but are not the default continuation path.
+- Canonical `node_modules` is now a real local install, not a symlink into `feature/admin-content-v0`.
+- This environment hardening changes no Git branch relationship and no Production deployment.
+
+
 ## CURRENT OVERRIDE — canonical main worktree moved to durable path (2026-09-12)
 - Canonical Admin worktree is now `/Users/chuchu/aquaguide-main` on branch `main`; it replaced the temporary `/private/tmp/aqua-main-promoted-20260912` path via `git worktree move`.
 - Move preserved HEAD and branch identity; no commit history, remote ref, or working-tree content changed.

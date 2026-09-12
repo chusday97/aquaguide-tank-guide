@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## CURRENT OVERRIDE — canonical main no longer depends on historical worktree dependencies (2026-09-12)
+- Canonical worktree remains `/Users/chuchu/aquaguide-main` on `main`.
+- Found a real continuation hazard: its `node_modules` was a symlink into historical `/Users/chuchu/aquaguide-admin-content-v0/node_modules`. The symlink was removed and canonical main received its own `npm ci` install from the repository lockfile.
+- Canonical-only validation PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:operations-work-items`, `check:api`, root TypeScript, full build, and direct `dev:local-admin` HTTP smoke.
+- Checked all known Aqua worktrees plus root override references: no persistent `.local/aqua-admin` authority exists and no non-test `ADMIN_LOCAL_FILE_ROOT` override exists, so moving the canonical worktree did not strand Local File data.
+- Do not recreate dependency symlinks from canonical main into feature/reconcile/product-recovery worktrees.
+
+
 ## CURRENT OVERRIDE — canonical main recovery path hardened (2026-09-12)
 - Reproduced a real cross-session authority failure: `.ai/CROSS_SESSION_START.md` still routed new sessions to `/Users/chuchu/aquaguide-admin-content-v0` / `feature/admin-content-v0`; this session initially entered an old reconciliation worktree before the mismatch was detected.
 - Canonical `main` worktree is now durable at `/Users/chuchu/aquaguide-main` (moved from `/private/tmp/aqua-main-promoted-20260912` without changing HEAD/history/content).

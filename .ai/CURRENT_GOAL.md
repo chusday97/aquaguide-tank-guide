@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-12 canonical main environment independent
+The canonical worktree `/Users/chuchu/aquaguide-main` is now self-contained for development; do not link its dependencies to a historical Aqua worktree.
+
+- Removed the `node_modules` symlink that pointed to `/Users/chuchu/aquaguide-admin-content-v0/node_modules`; ran lockfile-driven `npm ci` in canonical main.
+- PASS from canonical main only: Local File API, Local Admin mode contract, Operations work items, API/root TypeScript, full composite build and `npm ls --depth=0`.
+- Real `dev:local-admin` smoke PASS on isolated ports: Local Admin status 200, main Vite 200, SEO Admin Vite 200.
+- No Durable Local File authority data existed in any known Aqua worktree and no `ADMIN_LOCAL_FILE_ROOT` override exists outside tests, so no data migration was required.
+- NEXT: continue only from a new reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-12 canonical cross-session entry repaired
 A reproduced operational badcase is closed: the one-file recovery entry still pointed new sessions to the old `feature/admin-content-v0` worktree, which can cause valid main work to continue on stale history.
 

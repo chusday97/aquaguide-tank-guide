@@ -1478,3 +1478,10 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Preserved all historical feature/reconcile/product-recovery/preview worktrees; none were reset or deleted.
 - No runtime code, Vercel Production, Supabase or indexing state changed.
 - NEXT: continue only from concrete operator/runtime/data-reliability badcases or an explicit Staging/indexing decision.
+
+## 2026-09-12 — canonical main dependency independence
+- Found canonical `/Users/chuchu/aquaguide-main/node_modules` symlinked to historical `/Users/chuchu/aquaguide-admin-content-v0/node_modules`, leaving the new canonical entry dependent on an old worktree.
+- Removed only the symlink and ran `npm ci --prefer-offline --no-audit --no-fund` in canonical main; historical worktree was not modified or deleted.
+- PASS from canonical main: Local File API, Local Admin mode contract, Operations work items, API/root TypeScript, full build, dependency listing, and real `dev:local-admin` HTTP smoke (API 200, main Vite 200, SEO Admin Vite 200).
+- Audited known Aqua worktrees and root overrides: no `.local/aqua-admin` persisted authority and no non-test `ADMIN_LOCAL_FILE_ROOT` override exist, so no local data migration is needed.
+- Git and Production runtime remain unchanged; this is machine-local continuation hardening plus authority documentation only.
