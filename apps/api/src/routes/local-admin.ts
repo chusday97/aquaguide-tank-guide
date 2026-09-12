@@ -109,14 +109,22 @@ const backupDirectory = (root: string, backupId: string) => path.join(backupsDir
 const atomicJsonWrite = async (filePath: string, value: unknown) => {
   await mkdir(path.dirname(filePath), { recursive: true });
   const temp = `${filePath}.tmp-${process.pid}-${Date.now()}`;
-  await writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
-  await rename(temp, filePath);
+  try {
+    await writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
+    await rename(temp, filePath);
+  } finally {
+    await rm(temp, { force: true }).catch(() => undefined);
+  }
 };
 const atomicBufferWrite = async (filePath: string, value: Buffer) => {
   await mkdir(path.dirname(filePath), { recursive: true });
   const temp = `${filePath}.tmp-${process.pid}-${Date.now()}`;
-  await writeFile(temp, value);
-  await rename(temp, filePath);
+  try {
+    await writeFile(temp, value);
+    await rename(temp, filePath);
+  } finally {
+    await rm(temp, { force: true }).catch(() => undefined);
+  }
 };
 const readJsonOrNull = async (filePath: string) => {
   try { return JSON.parse(await readFile(filePath, 'utf8')) as unknown; }

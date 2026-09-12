@@ -1,5 +1,13 @@
 # Live Status
 
+## CURRENT OVERRIDE — main `0b662155`, Production intentionally unchanged (2026-09-12)
+- GitHub main includes `0b662155 fix(admin): clean failed atomic temp writes`; Product Golden Path PASS.
+- Vercel branch deployment for the commit is READY: `dpl_BAmT1TrjkUTE8Wz3Vvk1WUcU8kzB`.
+- DEV-only Local File atomic JSON/binary writes now clean `.tmp-*` files even when rename fails; forced manifest failure regression PASS.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime code `5fa915d3` intentionally because Local Admin is excluded from Production `/api/v1/router`.
+- Production public health/authority state from the prior release remains the current runtime baseline; no Supabase/indexing change.
+
+
 ## CURRENT OVERRIDE — Production release healthy on `5fa915d3` (2026-09-12)
 - GitHub main runtime code: `5fa915d31ebb6aa0915cc39b34016a1ffa933a66`; Product Golden Path PASS.
 - Vercel Production: `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`, commit `5fa915d3`, public alias `https://aqua-tank-guide.vercel.app`.

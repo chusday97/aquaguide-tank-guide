@@ -9,9 +9,12 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609050002_compatibility_versioned_publish.sql',
   '202609050003_content_publication_audit_history.sql',
   '202609050004_care_seo_editorial_revisions.sql',
+  '202609110001_compatibility_v3_profile_authority.sql',
+  '202609120001_compatibility_recovery_baseline.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
+  '202608270001_catalog_releases_and_species_water_type.sql',
   '202608280001_species_seo_admin.sql',
   '202608280002_species_seo_group_inheritance.sql',
   '202608280003_species_seo_localized_name.sql',

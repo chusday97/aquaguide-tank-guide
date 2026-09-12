@@ -124,3 +124,8 @@ Continue canonical high-frequency Species Knowledge V2 expansion using the revie
 - Fixed a canonicalization gap found by the merged Admin regression gate: reviewed `conspecific_fry_predation` Stage Risk must survive Domain canonicalization as `not_recommended` until life-stage risk becomes a native Domain rule. No other legacy hard block regains decision authority.
 - Verified after this fix: root/API TypeScript, Compatibility + regression gate, runtime/Git authority, Published Content isolation, Admin Content/Business API contracts, full build, Species Detail E2E, Compatibility Beginner Action E2E, and GP001–GP004.
 - Next: complete the merge commit/push, force-refresh `origin/main`, require main-only 0, then re-check PR #149 mergeability and current-head CI before any main promotion.
+
+## Main follow-up absorbed — local file atomic temp cleanup (2026-09-12)
+- Latest main cleanup `0b662155` / `e871aee0` is absorbed into Product Recovery.
+- Failed atomic Local File writes now clean temporary files instead of leaving stale temp artifacts.
+- This does not change Product Recovery authority, Compatibility V6, or reviewed baseline semantics.

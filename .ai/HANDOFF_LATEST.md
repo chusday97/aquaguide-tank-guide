@@ -155,3 +155,7 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - A merged regression exposed that reviewed guppy adult→fry `conspecific_fry_predation` was being dropped by canonical result adaptation. The adapter now preserves this reviewed life-stage hard block narrowly; coarse legacy blocks remain subordinate to Domain V6.
 - Validation PASS: TypeScript, API typecheck, Compatibility engine, Compatibility regression gate, runtime/Git authority, Published Content isolation, Admin Content and Business API contracts, full build (including 1.57 MB Business API bundle), Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
 - Merge is ready for Git closeout. After push, force-refresh real `origin/main`; PR #149 must report current-head alignment before merge/promotion.
+
+## Latest main follow-up absorbed — Local File temp cleanup
+- Main commits `0b662155` and `e871aee0` are included in the recovery line.
+- Local Admin failed atomic writes clean temporary files; existing canonical Local File integrity and runtime publication gates remain unchanged.
