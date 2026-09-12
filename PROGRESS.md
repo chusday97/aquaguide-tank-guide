@@ -1470,3 +1470,8 @@
 
 - [x] 未发布指南保持“内容准备中”、无操作正文；Tab + Enter 可进入 `/care`，应用内入口可见，证据为 `EVD-20260912-079`。
 - [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
+
+## 2026-09-12 Marketing → Category 键盘回归（`8ba96fbb`）
+
+- [x] 内置浏览器通过 Tab + Enter 从品牌首页“开始认识物种”进入虾螺蟹分类，公开 Header 和唯一 H1 正常，证据为 `EVD-20260912-080`。
+- [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。

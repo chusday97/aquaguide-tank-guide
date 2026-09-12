@@ -9,6 +9,7 @@
 - 通过 Tab + Enter 从虾螺蟹分类进入极火虾，公开 Header 和唯一 H1 正常，证据为 `EVD-20260912-077`；robots 未从辅助树推断，仍以静态 metadata 门禁为准。
 - 当前 HEAD 静态发布门禁已重新通过，证据为 `EVD-20260912-078`；系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成。
 - 内置浏览器通过 Tab + Enter 从 Guide 准备态进入 `/care`，未审核操作正文未泄漏，证据为 `EVD-20260912-079`；完整多视口回归仍未完成。
+- 内置浏览器通过 Tab + Enter 从品牌首页“开始认识物种”进入虾螺蟹分类，公开 Header 和唯一 H1 正常，证据为 `EVD-20260912-080`；完整多视口回归仍未完成。
 
 > 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `68231405`。
 

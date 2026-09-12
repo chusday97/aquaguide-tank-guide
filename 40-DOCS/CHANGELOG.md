@@ -7,6 +7,7 @@
 - Verified: 2026-09-12 内置浏览器通过 Tab + Enter 从虾螺蟹分类进入极火虾，目标页公开 Header 和唯一 H1 正常；证据为 `EVD-20260912-077`。
 - Verified: 2026-09-12 当前 HEAD 重新通过 Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、lint、build 和 diff-check；证据为 `EVD-20260912-078`。
 - Verified: 2026-09-12 内置浏览器通过 Tab + Enter 从未发布指南准备态进入 `/care`，准备态未泄漏操作正文，应用入口可达；证据为 `EVD-20260912-079`。
+- Verified: 2026-09-12 内置浏览器通过 Tab + Enter 从品牌首页“开始认识物种”进入虾螺蟹分类，公开 Header 和唯一 H1 正常；证据为 `EVD-20260912-080`。
 - Verified: 2026-09-12 内置浏览器确认极火虾公开长页面可读，点击“常见问题”后真实进入 `#faq` 锚点；证据为 `EVD-20260912-073`，不替代系统 Chrome 三档验收。
 - Added: 2026-09-12 Marketing Hero 接入共享 `SeoAssetFallback`，与 Category/Species 公开缺图状态统一；结构回归新增三类页面接入和可读图片角色断言，证据为 `EVD-20260912-065`。
 - Fixed: 2026-09-12 Public Shell 路由切换滚动位置：普通路径回到顶部，hash 深链接定位到目标章节；证据为 `EVD-20260912-066`。
