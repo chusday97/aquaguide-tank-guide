@@ -1,5 +1,11 @@
 ## 2026-09-10 公开页面 metadata 统一门禁
 
+## 2026-09-12 Species 日常照料文案收口（`0c3f217c`）
+
+- [x] 将 `日常怎么养` 下方偏内部说明式的副标题改为用户可理解的“从它如何寻找食物开始，认识日常照料重点。”；未改变任何物种事实、证据绑定、路由或索引策略。
+- [x] `test:public-seo-copy`、`test:public-seo-structure`、`lint`、`build` 和 `git diff --check` 通过。
+- [ ] 系统 Chrome 三档自动化、可读独立 Critic、Figma Canonical、性能/reduced-motion 和最终发布门禁仍未完成。
+
 - [x] 公开结构测试现在要求 Marketing、Category、Species、Guide 全部调用共享 `setSeoDocument`，防止页面级 metadata 写入器重新分叉。
 - [x] 公开结构、公开契约、公开文案、TypeScript 与 diff-check 通过。
 - [ ] 真实路由切换仍待 Mac 解锁后复验；Figma Canonical、可读独立 Critic 和索引放行仍未完成。

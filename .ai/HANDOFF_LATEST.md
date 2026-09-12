@@ -1,6 +1,6 @@
 # AquaGuide Species SEO 当前交接
 
-> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `ff2f2ff1`。
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `0c3f217c`。
 
 ## 当前有效结论
 
@@ -12,7 +12,7 @@
 
 ## 最新静态验证
 
-- 当前 HEAD `ff2f2ff1` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-012`。
+- 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。
 - 本轮仅更新证据与状态文档；三个用户未提交文件未触碰、未暂存。
 
 ## 本地主页运行时证据

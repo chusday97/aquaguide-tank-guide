@@ -25,7 +25,7 @@
 
 ## 工作树注意
 
-- 当前分支：`codex/species-seo-preview-v1`；HEAD：`5aab183c`。
+- 当前分支：`codex/species-seo-preview-v1`；HEAD：`0c3f217c`。
 - 以下用户未提交文件保持原样，未暂存、未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
 
 ## 最新静态验证
@@ -52,10 +52,16 @@
 
 ## 下一步
 
-1. 等 Critic 输出能力恢复后，对当前 SHA 做一次只读六维复验。
-2. 系统 Chrome 权限恢复后只补一次自动化回归，不重复启动已知失败通道。
-3. Figma 配额恢复后集中完成四类公开 SEO Desktop/Mobile Canonical 模板。
-4. 最后进行关键词归属、Canonical、结构化数据、Sitemap 和用户批准的非生产索引候选。
+1. 继续以当前 SHA 做内置浏览器可复核的用户体验检查；不重复启动已知受 MachPort 阻塞的系统 Chrome。
+2. Critic 恢复可读输出后，只对当前 SHA 做一次只读六维复验。
+3. Figma Starter 配额恢复后，集中完成 Canonical 模板。
+4. 所有发布门禁通过并获得用户批准前保持 `noindex,follow`。
+
+## 2026-09-12 用户文案收口
+
+- `日常怎么养` 的章节引导已改为面向用户的中文，提交 `0c3f217c`。
+- 相关静态门禁、lint、build 和 diff-check 已通过。
+- 用户未提交的三个文件仍保持未暂存、未提交。
 
 ## 2026-09-09 Species SEO 干净 Preview 候选
 

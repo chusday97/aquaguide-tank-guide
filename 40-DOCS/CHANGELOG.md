@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Changed: 2026-09-12 将 Species“日常怎么养”副标题改为用户可理解的中文，移除内部说明式口吻；提交 `0c3f217c`。
+- Verified: 2026-09-12 公开文案、结构、lint、build 和 diff-check 通过；Product Truth、证据、路由和索引策略不变。
+
 - Fixed: 2026-09-12 Species“它如何生活”内容网格按实际数量收拢，桌面/平板使用两列、窄屏使用单列，减少稀疏内容造成的空白；提交 `822871b7`。
 - Verified: 2026-09-12 内置 Chrome 长截图确认 Species 页面仍可滚动，生活习性卡、Hero、品系图片和能力入口可见；公开结构、响应式、文案、Editorial、Evidence、lint、build 和 diff-check 通过。
 - Verified: 2026-09-12 宝莲灯 `assetPreview=1` 实际显示项目内图片；普通公开路由继续显示回退，确认缺图来自用途 binding `blocked` 而非加载故障，未绕过 Published 门禁。

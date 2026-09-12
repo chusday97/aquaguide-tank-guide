@@ -2,6 +2,9 @@
 
 ## 2026-09-12 — Public SEO continuation
 
+- [x] 收口 Species `日常怎么养` 的用户文案，移除内部说明式表达（`0c3f217c`）。
+- [x] 公开文案、结构、lint、build 和 diff-check 复验通过。
+
 - [x] 记录首页、分类页、Guide 和三条 Species 路径在 390/600/1440px 的内置浏览器证据（EVD-20260912-008/009）。
 - [x] 修复公开 SEO 文档滚动高度受应用壳 `html height:100%` 约束的问题（EVD-20260912-007）。
 - [ ] 获取当前 SHA 的可读独立 Critic 六维复验；空输出不计为通过。

@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-09-12 — Species copy clarity fix
+
+- 读取当前工作树、最新提交和 authority，确认用户未提交的三个文件未暂存。
+- 将 Species `日常怎么养` 的内部说明式引导改为用户可理解的中文；未改变 Product Truth、证据、路由、metadata、JSON-LD 或 noindex。
+- 通过 `test:public-seo-copy`、`test:public-seo-structure`、`lint`、`build` 和 `git diff --check`；代码提交为 `0c3f217c`。
+- 后续仍需可读 Critic、系统 Chrome/多视口、Figma Canonical 与最终发布门禁。
+
 ## 2026-09-12 — Public SEO continuation
 
 - 读取 Git 状态、最近提交与现有 authority，确认分支为 `codex/species-seo-preview-v1`，HEAD 为 `5c435f65`。
