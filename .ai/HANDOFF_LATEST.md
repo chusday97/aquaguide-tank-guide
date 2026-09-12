@@ -98,3 +98,7 @@
 
 - 内置浏览器九次真实加载已通过基本结构、滚动、列数、H1、公开Header、中文术语和robots检查，证据为 `EVD-20260912-008`。
 - 系统Chrome、性能/reduced-motion、Figma Canonical和可读Critic仍未完成；继续保持 `noindex,follow`。
+## 2026-09-12 公共 SEO 多页面回归
+
+- 首页、分类和 Guide 的三档真实 viewport 结构与 JSON-LD 门禁已复核，证据为 `EVD-20260912-009`。
+- 系统 Chrome、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成；不解除 `noindex,follow`。

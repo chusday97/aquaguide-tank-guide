@@ -1093,3 +1093,8 @@
 - [x] 极火虾、宝莲灯、黄金米虾三条路径在 390/600/1440 共九次真实加载均通过；参数带为 2/3/6 列，documentWidth 不超过 viewport，页面可滚动，单一 H1、公开 Header、中文术语和 `noindex,follow` 均通过，证据为 `EVD-20260912-008`。
 - [x] 宝莲灯环境/生活习性内容、黄金米虾 H1/品系状态及基础物种生活习性继承均在三档路径中可见。
 - [ ] 证据来自内置浏览器；系统 Chrome 自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic仍未完成。
+## 2026-09-12 公共 SEO 三档真实 viewport 回归
+
+- [x] 首页、虾螺蟹分类页、新鱼入缸 Guide 在 390/600/1440 共九次真实加载均通过；无横向溢出、单一 H1、Public Header、无应用侧栏/底部导航、无后台术语，robots 均为 `noindex,follow`，证据为 `EVD-20260912-009`。
+- [x] 首页/分类的 JSON-LD 与页面类型一致；未发布 Guide 没有 Article/HowTo/FAQ JSON-LD。
+- [ ] 仍缺系统 Chrome 自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和当前版本可读独立 Critic。
