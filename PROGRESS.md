@@ -1,3 +1,9 @@
+## 2026-09-12 品系 FAQ 修复后全套回归
+
+- [x] FAQ 显示修复后的 Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Asset、Typography、lint、build 和 diff-check 全部通过；证据为 `EVD-20260912-040`。
+- [x] Product Truth、证据绑定、路由、metadata、JSON-LD 和 `noindex,follow` 未改变。
+- [ ] 系统 Chrome 三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 品系 FAQ 显示收口
 
 - [x] 黄金米虾页面的继承 FAQ 改为按当前品系名称呈现，避免基础物种名称错位；未新增事实、来源或 `sp_0030` 独立生活习性证据，提交 `fbd499bf`。
