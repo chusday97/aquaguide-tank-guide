@@ -232,7 +232,7 @@ body:has(.public-seo-root)::-webkit-scrollbar {
 
 .seo-section {
   min-width: 0;
-  margin-top: var(--seo-section-gap);
+  margin-top: clamp(64px, 6vw, var(--seo-section-gap));
   scroll-margin-top: 24px;
 }
 
@@ -348,6 +348,28 @@ body:has(.public-seo-root)::-webkit-scrollbar {
   font-size: 28px;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.seo-habitat-visual__facts {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.seo-habitat-visual__fact {
+  min-width: 0;
+  border: 1px solid rgb(27 77 62 / 12%);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 48%);
+  padding: 9px 10px;
+  color: rgb(27 77 62 / 70%);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
 }
 
 .seo-habitat-visual__orb {
@@ -624,6 +646,16 @@ body:has(.public-seo-root)::-webkit-scrollbar {
 
   .seo-habitat-visual {
     min-height: 190px;
+  }
+
+  .seo-habitat-visual__facts {
+    gap: 6px;
+    margin-top: 14px;
+  }
+
+  .seo-habitat-visual__fact {
+    padding-inline: 6px;
+    font-size: 11px;
   }
 
   .seo-category-card__media {
