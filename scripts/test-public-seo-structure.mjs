@@ -44,6 +44,8 @@ assert.match(marketing, /to="\/aquarium"/, 'Marketing must link to the aquarium 
 const category = read('src/pages/CategoryLanding.tsx');
 assert.match(category, /to=\{species\.href\}/, 'Category species cards must use the published species href');
 assert.match(category, /href="\/aquarium"/, 'Category must link to the aquarium app entry');
+assert.match(category, /featuredBaseSpecies\.length > 1 \? 'md:grid-cols-2'/, 'Category must use two columns only when multiple species are published');
+assert.match(category, /featuredBaseSpecies\.length === 1 \? 'max-w-\[760px\]'/, 'Category must compact a single published species card');
 
 assert.match(species, /to=\{variantPath\(variant\.id\)\}/, 'Species variant cards must use the variant route');
 assert.match(species, /taskRoutes\.encyclopedia\.compatibilitySpecies\(fish\.id, 'species-profile'\)/, 'Species capability card must preserve the species tool target');
