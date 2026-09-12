@@ -1115,6 +1115,12 @@
 - [x] Chrome 用户标签实际读取主页：已批准极火虾图片、公开 Header、入口、滚动、canonical、robots 和 44px 可见链接均正常，证据为 `EVD-20260912-013`。
 - [x] 性能资源读取因浏览器隔离环境缺少 `performance` 对象而停止，不把该项误记为性能通过。
 - [ ] 当前仍缺完整性能指标、系统 Chrome、reduced-motion、失败状态、Figma Canonical 和可读独立 Critic。
+
+## 2026-09-12 中文公开体验静态复核
+
+- [x] 公开中文文案、页面结构和字体系统门禁全部通过，证据为 `EVD-20260912-014`。
+- [x] 未出现后台术语、结构分叉或字体角色回归；Guide 条件内容仍保持 fail-closed。
+- [ ] 当前仍缺系统 Chrome、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。
 ## 2026-09-12 独立 Critic 当前 SHA 复验
 
 - [x] 已将当前 HEAD `159a095b` 交回既有 Critic 任务做只读六维复验。
