@@ -1167,3 +1167,8 @@
 - [x] 公开 Species 聚合按“来源标题 + 发布方 + 链接”去重，避免同一 AquaGuide 目录记录因多个绑定重复出现；提交 `90a53625`。
 - [x] Editorial、Evidence、Public Contract、Copy、lint、build 和 diff-check 复跑通过；证据内容、来源 ID、fingerprint 和发布门禁未改变。
 - [ ] 宝莲灯图片用途级确认、三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。
+
+## 2026-09-12 来源区真实页面复核
+
+- [x] 内置 Chrome 长截图确认极火虾公开资料区不再重复显示 AquaGuide 目录记录，外部专业来源和品系归组记录仍保留。
+- [x] 公开页面内容、证据绑定和 `noindex,follow` 未因展示去重改变。

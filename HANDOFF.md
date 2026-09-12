@@ -1074,3 +1074,8 @@
 - 公开来源列表已按展示身份去重，防止同一 AquaGuide 目录来源重复出现；不同标题、发布方或外部链接仍分别保留。
 - 提交：`90a53625 fix: deduplicate public species sources`。
 - 相关证据和 Product Truth 未改变；页面继续 `noindex,follow`。
+
+## 2026-09-12 来源区运行时复核
+
+- 内置 Chrome 长截图确认极火虾资料区只显示一条 AquaGuide 目录记录；专业来源和品系归组来源仍可见。
+- 该复核覆盖当前桌面视口，不替代完整三档自动化、性能、Figma Canonical 或独立 Critic。

@@ -234,3 +234,9 @@
 - 修复：公开聚合按来源标题、发布方和链接去重；证据绑定仍按 source ID 保留。
 - 验证：Public Contract、Editorial、Evidence、Copy、lint、build、diff-check通过。
 - 提交：`90a53625`。
+
+## 2026-09-12 来源区运行时复核
+
+- 动作：重新打开 Species 本地页面并导出完整截图，检查来源展示。
+- 结果：重复 AquaGuide 目录记录已消失，专业来源与品系归组来源仍显示。
+- 限制：仅覆盖当前 Chrome 桌面视口；三档自动化、性能和独立 Critic仍未完成。
