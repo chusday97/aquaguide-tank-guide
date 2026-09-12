@@ -1,5 +1,14 @@
 # Task Queue
 
+## 2026-09-12 — Public SEO continuation
+
+- [x] 记录首页、分类页、Guide 和三条 Species 路径在 390/600/1440px 的内置浏览器证据（EVD-20260912-008/009）。
+- [x] 修复公开 SEO 文档滚动高度受应用壳 `html height:100%` 约束的问题（EVD-20260912-007）。
+- [ ] 获取当前 SHA 的可读独立 Critic 六维复验；空输出不计为通过。
+- [ ] 等待系统 Chrome 权限恢复后补一次自动化回归；不重复启动已知失败通道。
+- [ ] Figma 配额恢复后集中完成 Public SEO Canonical 模板。
+- [ ] 完成关键词归属、最终发布门禁和用户批准的非生产索引候选。
+
 ## 2026-09-08 — Action contract browser gate alignment
 
 - [x] Align product-action and species-detail browser assertions with current routes, labels and safe states.

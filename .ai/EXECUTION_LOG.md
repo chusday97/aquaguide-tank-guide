@@ -1,5 +1,12 @@
 # AI Execution Log
 
+## 2026-09-12 — Public SEO continuation
+
+- 读取 Git 状态、最近提交与现有 authority，确认分支为 `codex/species-seo-preview-v1`，HEAD 为 `5c435f65`。
+- 内置浏览器多页面三档回归证据已提交；系统 Chrome 与独立 Critic 仍保持阻塞状态。
+- 校准公开 SEO authority 文件；未触碰三个用户未提交文件。
+- 下一步：等待可读 Critic 输出后做当前 SHA 只读复验，Figma 配额恢复后集中补 Canonical 模板。
+
 ## 2026-09-08 — Action contract browser gate alignment
 
 - Updated only regression scripts: browse-mode filter URL, current add-species task title/search selection, current species-detail safe states, and temperature mismatch presentation.

@@ -79,6 +79,7 @@
 - `src/components/common/ResilientImage.tsx`：图片骨架、单次重试与本地占位兜底。
 - `scripts/test-public-seo-copy.mjs`：公开 SEO 文案与 Guide 准备态结构回归门禁。
 - `scripts/test-public-seo-responsive-contract.mjs`：公开 SEO 桌面/平板/手机与 reduced-motion 响应式令牌和布局规则门禁。
+- `.ai/`：公开 SEO worktree 的当前目标、接受基线、锁定区域、产品规则、任务队列与发布门禁。
 - `scripts/test-public-seo-structure.mjs`：公开页面稳定内容骨架与条件内容门禁。
 - `src/services/diagnostics/`：`chunk / render / image / data` 会话级失败分类与脱敏诊断。
 - `public/responsive/`：物种 256/768px 与养护 480/960px WebP 衍生资源；原图继续保留。

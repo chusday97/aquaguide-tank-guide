@@ -1,5 +1,12 @@
 # AI Changelog
 
+## 2026-09-12 — Public SEO authority calibration
+
+- 校准当前公开 SEO worktree 的 `CURRENT_GOAL`，避免沿用旧主线收敛目标。
+- 补齐 `ACCEPTED_BASELINE`、`LOCKED_AREAS`、`PRODUCT_RULES` 和 `RELEASE_CHECKLIST` authority 文件。
+- 保留用户未提交脚本与候选数据文件不变，不纳入提交。
+- 未修改产品代码、`main`、Production Supabase、Figma 或部署。
+
 ## 2026-09-08 — Action foundation verification
 
 ### Fixed
