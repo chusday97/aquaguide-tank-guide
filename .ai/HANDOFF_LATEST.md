@@ -18,6 +18,7 @@
 - 首页 Marketing Hero 当前工作树也已接入 `SeoAssetFallback`；三类公开入口的缺图状态由同一组件和结构回归保护，证据为 `EVD-20260912-065`。
 - Public Shell 当前工作树已加入路由滚动处理：无 hash 的路径切换回顶部，有 hash 的路径在渲染后定位章节；内置浏览器验证通过，证据为 `EVD-20260912-066`。
 - 内置浏览器补充确认极火虾 FAQ 展开和黄金米虾品系继承边界，证据为 `EVD-20260912-067`。
+- 内置浏览器补充确认宝莲灯、分类页和未发布 Guide 的公开入口状态，证据为 `EVD-20260912-068`。
 - 公开 Species 收藏已改为仅使用本地 `toggleSpeciesFavorite`；不再通过应用 Repository 读取登录、鱼缸或 Supabase 状态，应用页面行为不变，证据为 `EVD-20260912-043`。
 - 内置 Chrome 实际复核分类 → Species → 返回链路：返回后 URL 和标题恢复为 `/category/shrimp-snails-crabs` 与“虾螺蟹｜AquaGuide 物种分类”，证据为 `EVD-20260912-044`。
 - 同一只读 Critic 已针对当前 `d4b84d15` 完成复验，但仍返回空 `items`、无可读正文；按门禁不能计为六维审查通过，记录为 `EVD-20260912-045`，不创建重复线程。
