@@ -1505,3 +1505,8 @@
 - [x] 修复“一眼了解”章节导航误指向Hero的问题：`#overview`现在落到参数带所在章节；新增结构回归断言，证据为 `EVD-20260913-086`。
 - [x] `test:public-seo-structure`、响应式契约、lint、build 和 diff-check 通过。
 - [ ] 真实浏览器hash滚动、系统Chrome三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成；页面继续 `noindex,follow`。
+## 2026-09-13 Species章节当前态范围补全（`2fd4fba3`）
+
+- [x] 章节观察器现在包含“AquaGuide”能力区和“继续探索”区；滚动进入这两个区域时，章节导航可同步更新当前态，证据为 `EVD-20260913-087`。
+- [x] 结构、响应式、lint、build 和 diff-check 通过；已知构建仅保留大字体/大 chunk 警告。
+- [ ] 尚未获得真实浏览器中的 `aria-current` 滚动证据；系统 Chrome、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。

@@ -279,3 +279,8 @@
 - `b54b4557` 修正Species章节导航：`#overview`现在对应参数带所在章节，Hero不再占用该锚点；静态结构、响应式、lint、build和diff-check通过，证据为 `EVD-20260913-086`。
 - 下一次浏览器可用时，优先复核 `/species/sp_0001#overview` 是否直接落在“一眼了解”参数区；不重复启动已知受MachPort阻塞的系统Chrome。
 - 页面仍为 `noindex,follow`；Figma Canonical与可读独立Critic仍未通过；用户未提交文件保持原样。
+## 2026-09-13 最新代码状态
+
+- `2fd4fba3` 将Species章节观察器扩展到 `tool` 和 `related`，能力区/继续探索区纳入当前章节反馈；结构、响应式、lint、build和diff-check通过，证据为 `EVD-20260913-087`。
+- 浏览器可用后优先验证滚动进入两个区域时 `aria-current="location"` 是否更新；继续不重复启动已知受MachPort阻塞的系统Chrome。
+- 页面仍为 `noindex,follow`；Figma Canonical与可读独立Critic仍未通过。

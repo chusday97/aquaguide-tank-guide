@@ -735,3 +735,13 @@
 
 - 结构、响应式、lint、build和diff-check通过；证据为 `EVD-20260913-086`。
 - 真实多视口、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成；页面继续 `noindex,follow`。
+## [Unreleased] Species chapter state coverage — 2026-09-13
+
+### Fixed
+
+- 将Species章节当前态观察范围扩展到AquaGuide能力区和继续探索区，避免滚动后导航高亮停留在上一章节。
+
+### Verification
+
+- 结构、响应式、lint、build和diff-check通过；证据为 `EVD-20260913-087`。
+- 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
