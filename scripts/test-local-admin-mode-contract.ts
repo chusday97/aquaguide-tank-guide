@@ -6,6 +6,8 @@ const localStore = read('src/services/admin/local-business-admin.store.ts');
 const localAssetStore = read('src/services/admin/local-asset.store.ts');
 const localFilePersistence = read('src/services/admin/local-file-persistence.ts');
 const localFileRouter = read('apps/api/src/routes/local-admin.ts');
+const localApiApp = read('apps/api/src/app.ts');
+const productionV1Router = read('apps/api/src/routes/index.ts');
 const localDevScript = read('scripts/dev-local-admin.mjs');
 const devWithApiScript = read('scripts/dev-with-api.mjs');
 const seoAdminNavigation = read('src/services/admin/seo-admin-navigation.ts');
@@ -39,6 +41,10 @@ assert.match(localFilePersistence, /apiRequest\(`\/local-admin\/state\/\$\{parti
   'Durable Local File state writes must cross the local API boundary.');
 assert.match(localFileRouter, /process\.env\.ADMIN_LOCAL_FILE_MODE === 'true'[\s\S]*process\.env\.NODE_ENV !== 'production'[\s\S]*!process\.env\.VERCEL/,
   'Local File API must be unavailable in Production and Vercel environments.');
+assert.match(localApiApp, /import \{ localAdminFileRouter \} from '\.\/routes\/local-admin';[\s\S]*legacyApp\.use\('\/api\/v1\/local-admin', requestIdMiddleware, localAdminFileRouter\)/,
+  'Local File API must be mounted only by the local Node server.');
+assert.doesNotMatch(productionV1Router, /local-admin|localAdminFileRouter/,
+  'Production v1 router must not import the DEV-only Local File router or its filesystem trace.');
 assert.match(localFileRouter, /atomicJsonWrite[\s\S]*rename\(temp, filePath\)/,
   'Local partition JSON must use atomic temp-file replacement.');
 assert.match(localDevScript, /ADMIN_LOCAL_FILE_MODE = 'true'[\s\S]*VITE_ADMIN_LOCAL_FILE_MODE = 'true'/,
