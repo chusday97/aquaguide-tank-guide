@@ -51,6 +51,10 @@
 
 - 参数带后的已确认概览摘要已改为统一“先记住这一点”结论卡，相关静态门禁通过；证据为 `EVD-20260912-058`。
 
+## 2026-09-12 结论卡运行时补充
+
+- 内置浏览器回读极火虾页面确认结论卡标签、摘要、Hero、参数和章节顺序可见；证据为 `EVD-20260912-059`。
+
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。

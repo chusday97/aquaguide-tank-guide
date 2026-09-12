@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-12 内置浏览器确认 Species “先记住这一点”结论卡真实呈现，证据为 `EVD-20260912-059`。
 - Changed: 2026-09-12 Species 参数后的概览摘要统一为“先记住这一点”结论卡；保留原始证据与内容边界，证据为 `EVD-20260912-058`。
 - Blocked: 2026-09-12 Figma Desktop 目标文件加载失败，显示 `ERR_CONNECTION_CLOSED (-100)`；未执行 Figwright 写入，证据为 `EVD-20260912-057`。
 - Blocked: 2026-09-12 Figwright server/leader 已统一 `0.5.0`，但 Desktop plugin 为 null 且请求超时；未执行 Figma 写入，证据为 `EVD-20260912-056`。

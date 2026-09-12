@@ -1375,3 +1375,7 @@
 - [x] 参数带后的已确认概览摘要改为统一“先记住这一点”结论卡，避免无标题孤立段落；证据为 `EVD-20260912-058`。
 - [x] 公开文案、结构、响应式、Editorial、Contract、lint、build 和 diff-check 通过；Product Truth、Base/Variant、metadata、JSON-LD 和 `noindex` 未改变。
 - [ ] 系统 Chrome 三档、Figma Canonical、素材用途确认和独立 Critic 仍未完成。
+## 2026-09-12 结论卡运行时复核
+
+- [x] 内置浏览器实际读取极火虾页面，能看到“先记住这一点”和原始概览摘要；Hero、参数带与后续章节顺序保持可读，证据为 `EVD-20260912-059`。
+- [ ] 该证据不替代系统 Chrome 三档、性能/reduced-motion、Figma Canonical 或独立 Critic。
