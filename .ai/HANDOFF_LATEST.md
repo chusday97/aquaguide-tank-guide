@@ -294,3 +294,7 @@
 - 系统 `npm run test:species-landing` 已再次执行，但 Chromium 在启动阶段收到 `MachPortRendezvousServer: Permission denied (1100)`，没有进入页面断言；证据 `EVD-20260913-089`。
 - 静态公开 SEO 测试、证据测试、lint、build、diff-check 通过；证据 `EVD-20260913-090`。
 - 该状态仍为 `IN_PROGRESS`：真实三档、性能/reduced-motion、可读独立 Critic、Figma Canonical 和发布门禁未完成。
+## 2026-09-13 系统 Chrome 通道复核
+
+- 已尝试显式 `PLAYWRIGHT_CHANNEL=chrome`，Chrome 仍在启动阶段 SIGABRT；证据 `EVD-20260913-091`。
+- 系统浏览器自动化暂时不可用；下一步采用内置浏览器/托管 Preview 的真实运行证据，不再重复启动同一环境。

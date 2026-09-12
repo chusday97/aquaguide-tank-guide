@@ -1519,3 +1519,7 @@
 - [x] 重新执行 `npm run test:species-landing`；系统 Chromium 仍在启动阶段因 `MachPortRendezvousServer: Permission denied (1100)` 退出，未进入页面断言，证据为 `EVD-20260913-089`。
 - [x] 公开契约、结构、响应式、证据绑定、编辑证据、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-090`。
 - [ ] 真实三档页面、性能/reduced-motion、可读独立 Critic、Figma Canonical 和发布门禁仍未完成；不解除 `noindex,follow`。
+## 2026-09-13 系统 Chrome 替代通道复核
+
+- [x] 显式指定 `PLAYWRIGHT_CHANNEL=chrome` 后仍在 Chrome 启动阶段 SIGABRT，未进入页面断言；证据为 `EVD-20260913-091`。
+- [ ] 不再重复启动系统浏览器；转用内置浏览器或托管 Preview 完成可复核多视口证据。页面继续 `noindex,follow`。

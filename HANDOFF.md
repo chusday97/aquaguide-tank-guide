@@ -1308,3 +1308,7 @@
 - 系统 Playwright/Chromium 已重新尝试，但在浏览器启动阶段因 macOS `MachPortRendezvousServer: Permission denied (1100)` 退出，未进入页面断言；证据为 `EVD-20260913-089`。不再重复重启该进程。
 - 当前静态公开 SEO 契约、结构、响应式、证据绑定、编辑证据、TypeScript、build 和 diff-check 全部通过，证据为 `EVD-20260913-090`。
 - 下一步仍是：在浏览器环境恢复或有合规托管 Preview 后完成 390/600/1440 回归；随后只读 Critic 复验。Figma 配额恢复前不调用 Figwright。
+## 2026-09-13 系统 Chrome 替代通道结果
+
+- `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing` 已执行；显式使用 `/Applications/Google Chrome.app` 仍在启动阶段 SIGABRT，未进入页面断言，证据为 `EVD-20260913-091`。
+- 该结果确认阻塞属于系统浏览器自动化环境，不是 bundled Chromium 单一版本问题。下一轮不重复启动，改用内置浏览器或托管 Preview。
