@@ -1,3 +1,8 @@
+## 2026-09-12 当前状态快照（`1c7c41fa`）
+
+- [x] 宝莲灯 `assetPreview=1` 本地审核预览已真实显示项目图片、中文 Alt、鱼类参数、环境、中层活动、群游至少 5 条、取食内容和 FishBase 来源；普通公开路由仍保持图片回退，证据为 `EVD-20260912-051`。
+- [ ] Hero 与品系卡用途仍需项目负责人分别确认；系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 图片终态修复后完整回归
 
 - [x] Editorial、Evidence、Asset、Public Contract、Copy、Structure、Responsive、Typography、lint、build 和 diff-check 全部通过；证据为 `EVD-20260912-049`。
