@@ -1402,3 +1402,10 @@
 
 - 既有 Critic 已收到当前 `09fd37d3` 的只读复验请求，当前状态仍为 `active/inProgress`，尚无可读六维正文；证据 `EVD-20260913-112`。
 - 下一次继续轮询同一线程，不创建新线程、不把超时当结论。
+## 2026-09-13 最新交接：Critic 输出仍不可读
+
+- 当前分支：`codex/species-seo-preview-v1`；最新本地文档提交：`e3099680`。
+- 既有只读 Critic 已结束本轮复验，但结果仍为 `items: []`，没有可读六维正文；因此独立审查未通过，不能宣称最终验收或解除 `noindex`。证据：`EVD-20260913-113`。
+- 代码实现、静态门禁、本地内置浏览器运行链路和部署侧 HTTP 200/noindex 已有证据；托管浏览器仍受 Vercel 登录保护，系统 Chrome 仍受 MachPort 阻塞。
+- 下一步：不重复创建 Critic，不调用 Figma；继续维护可验证的 Web 体验/内容继承边界，或等待 Critic 返回可读报告后按清单复验。
+- 用户未提交文件保持原样，未暂存、未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
