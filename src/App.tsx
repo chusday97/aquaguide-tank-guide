@@ -40,7 +40,7 @@ import { SearchAutocomplete } from './components/search/SearchAutocomplete';
 import type { SearchSuggestion } from './services/search/search-suggestions.service';
 import { taskRoutes } from './services/navigation/task-routes';
 import { activateInteractivePreview, isInteractivePreviewActive, isInteractivePreviewSession } from './services/preview/preview-session.service';
-import { PublicSeoShell } from './components/seo/PublicSeoShell';
+import { PublicSeoLoading, PublicSeoShell } from './components/seo/PublicSeoShell';
 
 const loadAquarium = () => import('./pages/Aquarium');
 const loadEncyclopedia = () => import('./pages/Encyclopedia');
@@ -670,7 +670,7 @@ function PublicSeoRoutes() {
   const page = (content: ReactNode, name: string) => <RouteErrorBoundary page={name}>{content}</RouteErrorBoundary>;
   return (
     <PublicSeoShell>
-      <Suspense fallback={<PageLoading />}>
+      <Suspense fallback={<PublicSeoLoading />}>
         <Routes>
           <Route path="/" element={page(<MarketingLandingPage />, 'marketing-landing')} />
           <Route path="/category/:slug" element={page(<CategoryLandingPage />, 'category-landing')} />

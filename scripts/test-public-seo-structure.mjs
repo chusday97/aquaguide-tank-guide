@@ -12,6 +12,11 @@ const publicPages = [
   ['src/pages/CareGuideLanding.tsx', ['SeoPageShell', 'SeoBreadcrumbs', 'SeoSourceFooter']],
 ];
 
+const publicShell = read('src/components/seo/PublicSeoShell.tsx');
+assert.match(publicShell, /PublicSeoLoading/, 'Public Shell must provide a dedicated loading skeleton');
+assert.match(publicShell, /aria-busy="true"/, 'Public loading state must expose busy status');
+assert.match(read('src/styles/seo-system.css'), /seo-public-loading__media/, 'Public loading skeleton must have a stable media frame');
+
 for (const [relativeFile, requiredPieces] of publicPages) {
   const source = read(relativeFile);
   assert.match(source, /<h1\b/, `${relativeFile} must define a visible H1`);

@@ -1,6 +1,25 @@
 import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 
+export function PublicSeoLoading() {
+  return <main className="seo-page-shell" aria-busy="true" aria-live="polite">
+    <div className="seo-public-loading" role="status">
+      <div className="seo-public-loading__crumbs"><span /><span /><span /></div>
+      <div className="seo-public-loading__hero">
+        <div className="seo-public-loading__media" />
+        <div className="seo-public-loading__copy">
+          <span className="seo-public-loading__line seo-public-loading__line--eyebrow" />
+          <span className="seo-public-loading__line seo-public-loading__line--title" />
+          <span className="seo-public-loading__line seo-public-loading__line--wide" />
+          <span className="seo-public-loading__line seo-public-loading__line--body" />
+          <div className="seo-public-loading__pills"><span /><span /><span /></div>
+        </div>
+      </div>
+      <p className="seo-public-loading__label">正在准备 AquaGuide 页面…</p>
+    </div>
+  </main>;
+}
+
 export function PublicSeoShell({ children }: { children: ReactNode }) {
   return <div className="public-seo-root min-h-[100dvh] bg-[#FDFCF8] text-ink">
     <header className="seo-public-header border-b border-ink/10 bg-[#FDFCF8]/95 px-6 py-4 backdrop-blur-md md:px-10">
