@@ -1,5 +1,13 @@
 # Live Status
 
+## 2026-09-13 — Local File concurrency reliability green
+- Functional main checkpoints: `275587ea` runtime export isolation; `6cd1d5d8` atomic backup reservation; `25ea430b` same-asset mutation serialization.
+- Stress evidence: runtime snapshot 100/100 success, backup 100/100 unique, asset PUT 80 rounds / 0 torn pairs.
+- Local File UI/API + Local Admin contract + API/root TypeScript + full build PASS.
+- GitHub Product Golden Path PASS for all three checkpoints.
+- Vercel branch deployments READY for all three checkpoints; target remains preview/null.
+- Production intentionally remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+
 ## 2026-09-13 — asset pair failure safety
 - Main now includes `f2087f26` (PUT rollback) and `9a6855da` (DELETE rollback).
 - Local asset blob/metadata pairs no longer remain split when the second filesystem operation fails in the reproduced write/delete paths.

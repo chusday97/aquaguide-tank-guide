@@ -6,6 +6,10 @@
 - Runtime/Admin reviewed baseline: 19 Profiles / 5 Pair Rules. Additive migration `202609120005_compatibility_ember_tetra_baseline.sql` is repository authority only and is not applied to Staging/Production.
 - Full Product/Admin/runtime/build/browser validation is green through GP001–GP004.
 
+## Main concurrency hardening absorbed — 2026-09-13
+- Absorb main checkpoints `275587ea`, `6cd1d5d8`, `25ea430b`, `01fdca74`: runtime export staging/atomic paths use collision-resistant isolation, backup IDs are atomically reserved, same-asset mutations are serialized, and authority snapshot operations are serialized.
+- These are DEV-only Local File/Admin reliability changes and do not alter Product Recovery Species/Compatibility facts, 19/5 runtime baseline, or authorize any Staging/Production migration.
+
 ## Main follow-up absorbed — Local File asset-pair rollback (2026-09-13)
 - Latest main commits `f2087f26` / `9a6855da` close Local File asset blob+metadata transaction gaps: failed metadata writes restore/remove the blob; failed metadata deletes restore the prior blob.
 - Main docs checkpoint `af03864d` records this DEV-only reliability closure.

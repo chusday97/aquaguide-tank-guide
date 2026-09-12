@@ -6,6 +6,10 @@
 - New additive migration: `202609120005_compatibility_ember_tetra_baseline.sql`; not applied to Staging/Production.
 - Full build, Species Detail, Compatibility Beginner Action, GP001–GP004, Admin contract, Git/DB runtime, Staging preflight and Local File Admin all PASS.
 
+## Main concurrency hardening absorbed — 2026-09-13
+- Recovery now contains main runtime-export isolation, atomic backup-ID reservation, same-asset mutation serialization, and authority snapshot serialization (`275587ea`, `6cd1d5d8`, `25ea430b`, `01fdca74`).
+- Product Recovery remains the authority for Species/Compatibility work in this worktree; canonical Admin main remains `/Users/chuchu/aquaguide-main`.
+
 ## Main follow-up absorbed — Local File asset-pair transaction closure (2026-09-13)
 - Absorbed `f2087f26`, `9a6855da`, and `af03864d` from main. Local asset blob + metadata writes/deletes now roll back cleanly on the second-half failure path.
 - Product Recovery remains the active authority in this worktree; canonical Admin main remains `/Users/chuchu/aquaguide-main`.

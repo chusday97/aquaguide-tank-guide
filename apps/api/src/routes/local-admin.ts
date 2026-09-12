@@ -1,5 +1,5 @@
 import express, { Router } from 'express';
-import { createHash } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 import { cp, mkdir, readFile, readdir, rename, rm, stat, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -40,6 +40,30 @@ const hasExactReviewedCompatibilityBaseline = (compatibility: JsonRecord) => {
     && new Set(pairKeys).size === expectedCompatibilityPairKeys.size
     && profiles.every(value => asRecord(value)?.reviewStatus === 'reviewed')
     && pairs.every(value => asRecord(value)?.reviewStatus === 'reviewed');
+};
+let authorityTransactionTail: Promise<void> = Promise.resolve();
+const withAuthorityTransaction = async <T>(operation: () => Promise<T>): Promise<T> => {
+  const previous = authorityTransactionTail.catch(() => undefined);
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  authorityTransactionTail = previous.then(() => gate);
+  await previous;
+  try { return await operation(); }
+  finally { release(); }
+};
+const assetMutationTails = new Map<string, Promise<void>>();
+const withAssetMutationLock = async <T>(assetId: string, operation: () => Promise<T>): Promise<T> => {
+  const previous = assetMutationTails.get(assetId) || Promise.resolve();
+  let release!: () => void;
+  const gate = new Promise<void>(resolve => { release = resolve; });
+  const tail = previous.catch(() => undefined).then(() => gate);
+  assetMutationTails.set(assetId, tail);
+  await previous.catch(() => undefined);
+  try { return await operation(); }
+  finally {
+    release();
+    if (assetMutationTails.get(assetId) === tail) assetMutationTails.delete(assetId);
+  }
 };
 
 type JsonRecord = Record<string, unknown>;
@@ -108,7 +132,7 @@ const backupDirectory = (root: string, backupId: string) => path.join(backupsDir
 
 const atomicJsonWrite = async (filePath: string, value: unknown) => {
   await mkdir(path.dirname(filePath), { recursive: true });
-  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}-${randomUUID()}`;
   try {
     await writeFile(temp, `${JSON.stringify(value, null, 2)}\n`, 'utf8');
     await rename(temp, filePath);
@@ -118,7 +142,7 @@ const atomicJsonWrite = async (filePath: string, value: unknown) => {
 };
 const atomicBufferWrite = async (filePath: string, value: Buffer) => {
   await mkdir(path.dirname(filePath), { recursive: true });
-  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}`;
+  const temp = `${filePath}.tmp-${process.pid}-${Date.now()}-${randomUUID()}`;
   try {
     await writeFile(temp, value);
     await rename(temp, filePath);
@@ -366,7 +390,7 @@ const exportGitRuntimeAuthority = async () => {
   const publishedSpeciesAssets = asRecord(business.publishedSpeciesAssets) || {};
   const publishedCareAssets = asRecord(business.publishedCareAssets) || {};
   const publishedCareMeta = asRecord(business.publishedCareMeta) || {};
-  const tempAssets = `${runtimeAssetsDirectory()}.tmp-${process.pid}-${Date.now()}`;
+  const tempAssets = `${runtimeAssetsDirectory()}.tmp-${process.pid}-${Date.now()}-${randomUUID()}`;
   const createdRuntimeAssets: string[] = [];
   let snapshotCommitted = false;
   await rm(tempAssets, { recursive: true, force: true });
@@ -469,13 +493,21 @@ const createBackup = async (reason: string, requireHealthy: boolean) => {
   if (requireHealthy && !integrity.healthy) {
     throw new ApiError(409, 'MIGRATION_REJECTED', '当前 Local Admin 数据存在完整性错误；请先处理错误，再创建正常备份。');
   }
+  await mkdir(backupsDirectory(root), { recursive: true });
   let stamp = Date.now();
   let id = `backup-${stamp}`;
-  while (await pathExists(backupDirectory(root, id))) {
-    stamp += 1;
-    id = `backup-${stamp}`;
+  let destination = backupDirectory(root, id);
+  while (true) {
+    try {
+      await mkdir(destination);
+      break;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code !== 'EEXIST') throw error;
+      stamp += 1;
+      id = `backup-${stamp}`;
+      destination = backupDirectory(root, id);
+    }
   }
-  const destination = backupDirectory(root, id);
   try {
     await copyActiveData(root, destination);
     const manifest: BackupManifest = {
@@ -566,7 +598,8 @@ localAdminFileRouter.get('/integrity', asyncRoute(async (request, response) => {
 }));
 localAdminFileRouter.post('/runtime-snapshot', asyncRoute(async (request, response) => {
   requireEnabled();
-  return sendData(request, response, await exportGitRuntimeAuthority(), 201);
+  const result = await withAuthorityTransaction(() => exportGitRuntimeAuthority());
+  return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
   requireEnabled();
@@ -575,11 +608,13 @@ localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
 localAdminFileRouter.post('/backups', asyncRoute(async (request, response) => {
   requireEnabled();
   const reason = typeof request.body?.reason === 'string' && request.body.reason.trim() ? request.body.reason.trim().slice(0, 120) : 'manual';
-  return sendData(request, response, await createBackup(reason, true), 201);
+  const result = await withAuthorityTransaction(() => createBackup(reason, true));
+  return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.post('/backups/:backupId/restore', asyncRoute(async (request, response) => {
   requireEnabled();
-  return sendData(request, response, await restoreBackup(request.params.backupId));
+  const result = await withAuthorityTransaction(() => restoreBackup(request.params.backupId));
+  return sendData(request, response, result);
 }));
 
 localAdminFileRouter.get('/state/:partition', asyncRoute(async (request, response) => {
@@ -592,7 +627,7 @@ localAdminFileRouter.get('/state/:partition', asyncRoute(async (request, respons
 localAdminFileRouter.put('/state/:partition', asyncRoute(async (request, response) => {
   requireEnabled();
   const partition = safePartition(request.params.partition);
-  await writePartitionState(localRoot(), partition, request.body);
+  await withAuthorityTransaction(() => writePartitionState(localRoot(), partition, request.body));
   return sendData(request, response, { partition, persisted: true, localFileFormatVersion });
 }));
 
@@ -606,23 +641,25 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    const root = localRoot();
-    const blobPath = assetFile(root, assetId);
-    const metadataPath = assetMetaFile(root, assetId);
-    const previousBlob = await readBufferOrNull(blobPath);
-    let blobCommitted = false;
-    try {
-      await atomicBufferWrite(blobPath, request.body);
-      blobCommitted = true;
-      await atomicJsonWrite(metadataPath, { mimeType, byteSize: request.body.length, updatedAt: new Date().toISOString() });
-    } catch (error) {
-      if (blobCommitted) {
-        try { await restoreBufferOrRemove(blobPath, previousBlob); }
-        catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 写入失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+    return withAuthorityTransaction(() => withAssetMutationLock(assetId, async () => {
+      const root = localRoot();
+      const blobPath = assetFile(root, assetId);
+      const metadataPath = assetMetaFile(root, assetId);
+      const previousBlob = await readBufferOrNull(blobPath);
+      let blobCommitted = false;
+      try {
+        await atomicBufferWrite(blobPath, request.body);
+        blobCommitted = true;
+        await atomicJsonWrite(metadataPath, { mimeType, byteSize: request.body.length, updatedAt: new Date().toISOString() });
+      } catch (error) {
+        if (blobCommitted) {
+          try { await restoreBufferOrRemove(blobPath, previousBlob); }
+          catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 写入失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+        }
+        throw error;
       }
-      throw error;
-    }
-    return sendData(request, response, { assetId, persisted: true, mimeType, byteSize: request.body.length }, 201);
+      return sendData(request, response, { assetId, persisted: true, mimeType, byteSize: request.body.length }, 201);
+    }));
   }),
 );
 localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response) => {
@@ -643,26 +680,28 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  const root = localRoot();
-  const blobPath = assetFile(root, assetId);
-  const metadataPath = assetMetaFile(root, assetId);
-  const previousBlob = await readBufferOrNull(blobPath);
-  let blobRemoved = false;
-  try {
+  return withAuthorityTransaction(() => withAssetMutationLock(assetId, async () => {
+    const root = localRoot();
+    const blobPath = assetFile(root, assetId);
+    const metadataPath = assetMetaFile(root, assetId);
+    const previousBlob = await readBufferOrNull(blobPath);
+    let blobRemoved = false;
     try {
-      await unlink(blobPath);
-      blobRemoved = true;
+      try {
+        await unlink(blobPath);
+        blobRemoved = true;
+      } catch (error) {
+        if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error;
+      }
+      try { await unlink(metadataPath); }
+      catch (error) { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; }
     } catch (error) {
-      if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error;
+      if (blobRemoved && previousBlob) {
+        try { await atomicBufferWrite(blobPath, previousBlob); }
+        catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 删除失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+      }
+      throw error;
     }
-    try { await unlink(metadataPath); }
-    catch (error) { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; }
-  } catch (error) {
-    if (blobRemoved && previousBlob) {
-      try { await atomicBufferWrite(blobPath, previousBlob); }
-      catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 删除失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
-    }
-    throw error;
-  }
-  return sendData(request, response, { assetId, removed: true });
+    return sendData(request, response, { assetId, removed: true });
+  }));
 }));

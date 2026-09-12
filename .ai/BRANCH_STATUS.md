@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-13 — canonical main after concurrency hardening
+- Canonical worktree: `/Users/chuchu/aquaguide-main`
+- Branch: `main`
+- Latest functional checkpoint: `25ea430b66f40ac936ddc66852d682efed970a7d` (`fix(admin): serialize asset pair mutations`)
+- Earlier same-round checkpoints: `275587ea` and `6cd1d5d8`.
+- Local and GitHub main were synchronized and worktree clean immediately after `25ea430b` push.
+- Historical worktrees/branches remain non-canonical and must not be used for default continuation.
+
 ## 2026-09-13 — current main asset reliability checkpoints
 - Canonical local branch: `main` at `/Users/chuchu/aquaguide-main`.
 - Functional checkpoints pushed to GitHub main: `f2087f26 fix(admin): rollback failed asset pair writes` then `9a6855da fix(admin): rollback failed asset pair deletes`.
