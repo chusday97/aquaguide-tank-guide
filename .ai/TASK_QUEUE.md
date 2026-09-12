@@ -150,3 +150,7 @@
 
 - [x] Figma Desktop 已启动并确认目标窗口存在。
 - [ ] AquaGuide Fish Landing Page 因 `ERR_CONNECTION_CLOSED (-100)` 未加载，暂不执行 Figwright 写入；证据 `EVD-20260912-057`。
+## 2026-09-12 Species摘要视觉收口
+
+- [x] 将参数后的孤立概览摘要统一为“先记住这一点”结论卡；证据 `EVD-20260912-058`。
+- [ ] 等系统 Chrome/Figma 恢复后补三档视觉截图，避免仅凭静态门禁宣称最终通过。

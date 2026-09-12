@@ -47,6 +47,10 @@
 
 - Figma Desktop 已启动，但 AquaGuide 文件显示 `ERR_CONNECTION_CLOSED (-100)`，画布未加载；未执行插件或写入，证据为 `EVD-20260912-057`。
 
+## 2026-09-12 Species摘要视觉补充
+
+- 参数带后的已确认概览摘要已改为统一“先记住这一点”结论卡，相关静态门禁通过；证据为 `EVD-20260912-058`。
+
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。

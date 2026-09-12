@@ -1370,3 +1370,8 @@
 
 - [x] Figma Desktop已打开，但 AquaGuide Fish Landing Page 加载失败，显示 `ERR_CONNECTION_CLOSED (-100)`；画布未进入可编辑状态，未运行插件或执行写入，证据为 `EVD-20260912-057`。
 - [ ] Figwright Canonical 写入继续暂停；Web、内容、浏览器替代证据和发布门禁不受影响。
+## 2026-09-12 Species概览摘要视觉收口
+
+- [x] 参数带后的已确认概览摘要改为统一“先记住这一点”结论卡，避免无标题孤立段落；证据为 `EVD-20260912-058`。
+- [x] 公开文案、结构、响应式、Editorial、Contract、lint、build 和 diff-check 通过；Product Truth、Base/Variant、metadata、JSON-LD 和 `noindex` 未改变。
+- [ ] 系统 Chrome 三档、Figma Canonical、素材用途确认和独立 Critic 仍未完成。
