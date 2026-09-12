@@ -8,6 +8,7 @@
 - Verified: 2026-09-12 内置浏览器实际验证分类 → 物种 → 品系 → 返回链路，URL、H1、图片 Alt 和公开 Header 状态一致；证据不替代系统 Chrome 三档回归。
 - Fixed: 2026-09-12 公开 SEO html/body 在公开页面下改为 `height:auto`，修复桌面长页面 document scrollHeight 被应用壳高度约束、导致无法正常文档滚动的问题。
 - Verified: 内置浏览器显式 390/600/1440 viewport 复验 document scrollHeight、2/3/6 参数列、无溢出、单一 H1、44px 目标和中文术语门禁通过；证据为 `EVD-20260912-007`。
+- Verified: 2026-09-12 内置浏览器完成极火虾、宝莲灯、黄金米虾三条路径 × 390/600/1440 共九次真实加载，确认滚动、2/3/6 列、H1、公开 Header、内容继承和 `noindex,follow`；证据为 `EVD-20260912-008`。
 
 - Fixed: Species `assetPreview=1` 品系卡预览调用改为传入公开品系摘要所需的最小字段，恢复 TypeScript 类型检查；Published 与普通公开访问边界不变。
 - Verified: 2026-09-10 本地预览在 `3001` 恢复后，内置浏览器确认长页面内容和章节锚点实际可达；Evidence、Editorial、Public Contract、Responsive Contract、lint、build、diff-check 通过。

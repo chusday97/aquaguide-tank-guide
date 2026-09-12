@@ -94,3 +94,7 @@
 
 - 已修复公开 SEO 页面桌面文档滚动高度被 `html height:100%` 限制的问题；显式 390/600/1440 viewport 复验通过，证据为 `EVD-20260912-007`。
 - 继续保持 `noindex,follow`；系统 Chrome、性能/reduced-motion、Figma Canonical 和 Critic 可读报告仍是未完成门禁。
+## 2026-09-12 三物种多视口复核
+
+- 内置浏览器九次真实加载已通过基本结构、滚动、列数、H1、公开Header、中文术语和robots检查，证据为 `EVD-20260912-008`。
+- 系统Chrome、性能/reduced-motion、Figma Canonical和可读Critic仍未完成；继续保持 `noindex,follow`。

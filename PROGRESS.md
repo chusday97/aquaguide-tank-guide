@@ -1088,3 +1088,8 @@
 - [x] 定位并修复桌面公开 SEO 页面 `html` 继承 `height:100%` 导致文档 `scrollHeight` 被限制为 viewport 高度的问题；公开 `html/body` 现在在公开根存在时使用 `height:auto !important`。
 - [x] 内置浏览器显式三档 viewport 复验通过：390/600/1440 的 document scrollHeight 为 4680/4225/4038，参数带为 2/3/6 列，无页面级横向溢出，单一 H1、44px 目标和中文后台术语门禁通过，证据为 `EVD-20260912-007`。
 - [ ] 系统 Chrome、reduced-motion、性能、完整失败状态、Figma Canonical 和可读独立 Critic仍未完成。
+## 2026-09-12 三物种三档真实 viewport 回归
+
+- [x] 极火虾、宝莲灯、黄金米虾三条路径在 390/600/1440 共九次真实加载均通过；参数带为 2/3/6 列，documentWidth 不超过 viewport，页面可滚动，单一 H1、公开 Header、中文术语和 `noindex,follow` 均通过，证据为 `EVD-20260912-008`。
+- [x] 宝莲灯环境/生活习性内容、黄金米虾 H1/品系状态及基础物种生活习性继承均在三档路径中可见。
+- [ ] 证据来自内置浏览器；系统 Chrome 自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic仍未完成。

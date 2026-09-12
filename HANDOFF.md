@@ -981,3 +981,7 @@
 - 公开页面在 1440px 下的真实根因是全局 `html { height:100% }` 与应用壳规则共同限制文档滚动高度；已在 `.seo-system.css` 的公开 html/body 选择器加入 `height:auto !important`，并增加响应式契约断言。
 - 内置浏览器显式 390/600/1440 viewport 复验后 document scrollHeight 为 4680/4225/4038，参数带为 2/3/6 列且无溢出，证据为 `EVD-20260912-007`。
 - 此修复只影响公开 SEO 文档滚动，不改变应用壳、Product Truth、路由或 `noindex,follow`。
+## 2026-09-12 三物种三档真实 viewport 回归
+
+- 内置浏览器已完成极火虾、宝莲灯、黄金米虾三条路径 × 390/600/1440 共九次加载；2/3/6 参数列、无横向溢出、单一 H1、公开 Header、中文术语和 `noindex,follow` 均通过，证据为 `EVD-20260912-008`。
+- 宝莲灯环境/生活习性章节和黄金米虾基础物种继承在真实路径中可见。该证据仍不替代系统 Chrome 自动化、性能/reduced-motion、完整失败状态或独立 Critic。
