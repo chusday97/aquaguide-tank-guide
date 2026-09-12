@@ -1,4 +1,9 @@
 # Handoff Latest
+## Main failed-backup cleanup checkpoint absorbed — 2026-09-12
+- `0c8cd464 fix(admin): clean failed backup snapshots` is contained in Product Recovery.
+- Failed backup creation now removes its newly allocated partial directory before rethrowing; regression verifies the backup directory set is unchanged after a forced mid-copy failure.
+- This is DEV-only Local File reliability work and does not alter the 15/5 Compatibility authority, Product V6 decisions, or Production deployment state.
+
 ## Main canonical environment context absorbed — 2026-09-12
 - Default Admin continuation is `/Users/chuchu/aquaguide-main` on `main`; Product Recovery remains an isolated worktree for PR #149 only.
 - Canonical main owns its own lockfile-installed dependencies. Do not link its `node_modules` to historical `aquaguide-admin-content-v0` or recovery worktrees.

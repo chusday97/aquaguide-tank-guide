@@ -1,4 +1,9 @@
 # Current Goal
+## Main Local File backup cleanup absorbed — 2026-09-12
+- Main checkpoint `0c8cd464` removes partial `backup-*` directories when Local File backup copy/manifest creation fails.
+- Product Recovery has absorbed the functional fix and its regression; this remains DEV-only Local File maintenance and does not change Product Compatibility authority or Production runtime.
+- Main validation for this fix recorded Local File/API/TypeScript/build/CI/Vercel green; Product Recovery already revalidated Local File Admin, API TypeScript, Git runtime and full build after merge.
+
 ## Main canonical environment context — 2026-09-12
 - Canonical Admin continuation remains `/Users/chuchu/aquaguide-main` on `main`; Product Recovery uses its isolated recovery worktree and must not replace the default Admin entry path.
 - Main is self-contained after removing the historical `node_modules` symlink and running its own lockfile-driven `npm ci`; do not recreate dependency symlinks from canonical main into historical/recovery worktrees.

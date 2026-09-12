@@ -1,5 +1,16 @@
 # Task Queue
 
+## ACTIVE OVERRIDE — failed backup residue closure (2026-09-12)
+- [x] Reproduce a mid-copy backup failure using an unreadable but integrity-stat-valid asset blob.
+- [x] Prove pre-fix failure leaves an extra manifest-less `backup-*` directory.
+- [x] Delete the newly-created backup destination on any createBackup failure.
+- [x] Add permanent behavioral regression requiring no backup directory residue.
+- [x] Re-run Local File API/UI, Local Admin contract, API/root TypeScript and full build.
+- [x] GitHub Product Golden Path PASS and Vercel branch deployment READY for `0c8cd464`.
+- [x] Keep Production unchanged; route is DEV-only.
+- [ ] Continue only from a new reproducible operator/runtime/data-reliability badcase.
+
+
 ## ACTIVE OVERRIDE — canonical environment hardening closed (2026-09-12)
 - [x] Detect canonical main dependency symlink into historical Admin worktree.
 - [x] Replace it with a lockfile-driven local `npm ci` install.
