@@ -117,7 +117,7 @@ const publishedSourcesFor = (baseId: string, speciesId: string, visibleVariantId
       kind: sourceKind(source.sourceType),
     })),
   ];
-  return [...new Map(references.map(source => [source.id, source])).values()];
+  return [...new Map(references.map(source => [`${source.title}|${source.publisher}|${source.url ?? ''}`, source])).values()];
 };
 
 const categoryHrefFor = (category: string): string => {
