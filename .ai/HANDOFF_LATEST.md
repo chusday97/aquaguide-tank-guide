@@ -1,5 +1,9 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-12 最新运行时证据
+
+- 内置浏览器确认极火虾公开长页面和 `#faq` 章节锚点可达，证据为 `EVD-20260912-073`；系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读 Critic 仍未完成。
+
 > 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `68231405`。
 
 ## 当前有效结论

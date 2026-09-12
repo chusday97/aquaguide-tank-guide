@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-12 内置浏览器确认极火虾公开长页面可读，点击“常见问题”后真实进入 `#faq` 锚点；证据为 `EVD-20260912-073`，不替代系统 Chrome 三档验收。
 - Added: 2026-09-12 Marketing Hero 接入共享 `SeoAssetFallback`，与 Category/Species 公开缺图状态统一；结构回归新增三类页面接入和可读图片角色断言，证据为 `EVD-20260912-065`。
 - Fixed: 2026-09-12 Public Shell 路由切换滚动位置：普通路径回到顶部，hash 深链接定位到目标章节；证据为 `EVD-20260912-066`。
 - Verified: 2026-09-12 内置浏览器确认极火虾 FAQ 展开与黄金米虾品系继承边界；未新增品系生活习性 evidence，证据为 `EVD-20260912-067`。

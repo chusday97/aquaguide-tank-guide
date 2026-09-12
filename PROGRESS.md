@@ -1437,3 +1437,7 @@
 
 - [x] 内置浏览器点击“适合怎样的环境”后，标题、编号03、环境观察视觉卡和正文进入视口，未被 Header 遮挡；证据为 `EVD-20260912-060`。
 - [ ] 仍不替代系统 Chrome 三档、键盘/reduced-motion、性能、Figma Canonical 和独立 Critic 门禁。
+## 2026-09-12 公开 Species 锚点运行时复核（`fc423109`）
+
+- [x] 内置浏览器实际加载极火虾完整公开页面；点击“常见问题”后 URL 进入 `#faq`，章节锚点可达，证据为 `EVD-20260912-073`。
+- [ ] 该证据不替代系统 Chrome 三档、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
