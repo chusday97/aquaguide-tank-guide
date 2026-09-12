@@ -57,5 +57,8 @@ if (speciesSource.includes('把每天最重要的照料动作放在前面')) {
 if (!speciesSource.includes('从它如何寻找食物开始，认识日常照料重点。')) {
   throw new Error('Species care section is missing the user-facing guidance copy');
 }
+if (!speciesSource.includes('const personalizeFaq')) {
+  throw new Error('Species FAQ must adapt inherited copy to the visible species name');
+}
 
 console.log('Public SEO copy checks passed: user-facing language is clean and Guide preparation state has distinct next steps.');

@@ -72,6 +72,10 @@ function EditorialSection({ section }: { section: PublishedContentSection }) {
   return <article className="seo-card overflow-hidden p-5"><h3 className="font-bold text-ink">{section.heading}</h3><p className="seo-body mt-3">{section.summary}</p>{section.details && section.details.length > 0 && <SeoDisclosure label={labels.showDetails} openLabel={labels.hideDetails} className="mt-3 border-0 shadow-none"><ul className="grid gap-2 text-sm font-normal leading-7 text-ink/62">{section.details.map(detail => <li key={detail} className="flex gap-2"><span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-accent/55" />{detail}</li>)}</ul></SeoDisclosure>}</article>;
 }
 
+const personalizeFaq = (text: string, baseName: string, speciesName: string) => (
+  speciesName === baseName ? text : text.replaceAll(baseName, speciesName)
+);
+
 export function SpeciesLanding() {
   const { slug = '' } = useParams();
   const [searchParams] = useSearchParams();
@@ -190,7 +194,7 @@ export function SpeciesLanding() {
     {groupVariants.length > 1 && <section id="variants" className="seo-section" aria-labelledby="variants-title"><SectionHeading id="variants-title" number={sectionNumber('variants')} eyebrow={labels.variants} title={labels.variants} /><div className="seo-stagger mt-8 grid min-w-0 grid-cols-2 gap-3 md:grid-cols-4">{groupVariants.map(variant => { const active = variant.id === fish.id; const pilotVariant = getSpeciesLandingPilotRecord({ id: variant.id, name: variant.name, scientificName: variant.scientificName }); const variantAsset = variant.image || (assetPreviewEnabled ? toPreviewAsset(variant, pilotVariant.asset.variantCard) : undefined); return <Link key={variant.id} to={variantPath(variant.id)} aria-current={active ? 'page' : undefined} className={`seo-focus min-w-0 rounded-[20px] border p-3 transition-colors ${active ? 'border-emerald-300 bg-emerald-50' : 'border-border bg-white hover:border-emerald-200'}`}><MediaFrame asset={variantAsset} label={labels.imageUnavailable} alt={variantAsset ? variantAsset.altZh : `${variant.name}（${variant.scientificName}）`} className="min-h-[120px] rounded-[16px] p-0 shadow-none" /><p className="mt-3 truncate text-sm font-bold text-ink">{variant.name}</p><p className="seo-meta mt-1 truncate">{variant.scientificName}</p>{variant.difference && <p className="mt-2 text-xs font-normal leading-5 text-ink/60">{variant.difference}</p>}{active && <span className="mt-2 inline-flex rounded-full bg-white px-2 py-1 text-[10px] font-bold text-accent">{labels.current}</span>}</Link>; })}</div></section>}
 
     <SeoCapabilityCard title={labels.tool} description={labels.toolDetail} href={taskRoutes.encyclopedia.compatibilitySpecies(fish.id, 'species-profile')} actionLabel={labels.openTool} />
-    {profile.faq.length > 0 && <section id="faq" className="seo-section" aria-labelledby="faq-title"><SectionHeading id="faq-title" number={sectionNumber('faq')} eyebrow={labels.faq} title={labels.faq} /><div className="mt-8 grid gap-3">{profile.faq.map(item => <SeoDisclosure key={item.id} label={item.question}><p className="seo-body">{item.answer}</p></SeoDisclosure>)}</div></section>}
+    {profile.faq.length > 0 && <section id="faq" className="seo-section" aria-labelledby="faq-title"><SectionHeading id="faq-title" number={sectionNumber('faq')} eyebrow={labels.faq} title={labels.faq} /><div className="mt-8 grid gap-3">{profile.faq.map(item => <SeoDisclosure key={item.id} label={personalizeFaq(item.question, baseSpecies.name, fish.name)}><p className="seo-body">{personalizeFaq(item.answer, baseSpecies.name, fish.name)}</p></SeoDisclosure>)}</div></section>}
     <SeoRelatedLinks title={labels.related} links={profile.relatedLinks} />
     <SeoSourceFooter title={labels.sources} text={labels.sourceText} sources={profile.sources} />
   </SeoPageShell>;
