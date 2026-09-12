@@ -90,3 +90,7 @@
 
 - 分类 → 物种 → 品系 → 返回的真实点击链路已在内置浏览器通过，证据为 `EVD-20260912-006`。
 - 系统多视口、性能、reduced-motion、Figma Canonical 和可读 Critic 仍未通过；继续保持 `noindex,follow`。
+## 2026-09-12 公开滚动修复
+
+- 已修复公开 SEO 页面桌面文档滚动高度被 `html height:100%` 限制的问题；显式 390/600/1440 viewport 复验通过，证据为 `EVD-20260912-007`。
+- 继续保持 `noindex,follow`；系统 Chrome、性能/reduced-motion、Figma Canonical 和 Critic 可读报告仍是未完成门禁。

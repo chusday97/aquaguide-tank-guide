@@ -1083,3 +1083,8 @@
 
 - [x] 内置浏览器实际验证分类 → 极火虾 → 黄金米虾品系 → 返回；URL、H1、图片 Alt、公开 Header 和返回后的极火虾状态一致，证据为 `EVD-20260912-006`。
 - [ ] 该链路证据仍只覆盖内置浏览器当前视口，不替代系统 Chrome 三档、性能、reduced-motion 和独立 Critic。
+## 2026-09-12 公开页面滚动根因修复
+
+- [x] 定位并修复桌面公开 SEO 页面 `html` 继承 `height:100%` 导致文档 `scrollHeight` 被限制为 viewport 高度的问题；公开 `html/body` 现在在公开根存在时使用 `height:auto !important`。
+- [x] 内置浏览器显式三档 viewport 复验通过：390/600/1440 的 document scrollHeight 为 4680/4225/4038，参数带为 2/3/6 列，无页面级横向溢出，单一 H1、44px 目标和中文后台术语门禁通过，证据为 `EVD-20260912-007`。
+- [ ] 系统 Chrome、reduced-motion、性能、完整失败状态、Figma Canonical 和可读独立 Critic仍未完成。

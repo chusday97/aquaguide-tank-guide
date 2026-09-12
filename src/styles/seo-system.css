@@ -48,6 +48,7 @@
 html:has(.public-seo-root),
 body:has(.public-seo-root) {
   min-height: 100%;
+  height: auto !important;
   overflow-y: auto;
   overscroll-behavior-y: auto;
 }

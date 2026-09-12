@@ -976,3 +976,8 @@
 
 - 内置浏览器已实际点击分类页极火虾卡片、Species 页黄金米虾品系卡，并执行返回；URL、H1、图片 Alt 和公开 Header 均正确，证据为 `EVD-20260912-006`。
 - 仍不能把内置浏览器当前视口证据扩写为系统 Chrome 三档或最终发布验收。
+## 2026-09-12 公开页面滚动根因修复
+
+- 公开页面在 1440px 下的真实根因是全局 `html { height:100% }` 与应用壳规则共同限制文档滚动高度；已在 `.seo-system.css` 的公开 html/body 选择器加入 `height:auto !important`，并增加响应式契约断言。
+- 内置浏览器显式 390/600/1440 viewport 复验后 document scrollHeight 为 4680/4225/4038，参数带为 2/3/6 列且无溢出，证据为 `EVD-20260912-007`。
+- 此修复只影响公开 SEO 文档滚动，不改变应用壳、Product Truth、路由或 `noindex,follow`。
