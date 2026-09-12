@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Added: 2026-09-12 Marketing Hero 接入共享 `SeoAssetFallback`，与 Category/Species 公开缺图状态统一；结构回归新增三类页面接入和可读图片角色断言，证据为 `EVD-20260912-065`。
+- Fixed: 2026-09-12 Public Shell 路由切换滚动位置：普通路径回到顶部，hash 深链接定位到目标章节；证据为 `EVD-20260912-066`。
 - Changed: 2026-09-12 Species 缺图回退显示物种名称并收紧桌面/移动高度，减少素材待审核时的空白感；提交 `0ab0cca9`，仍保持 fail-closed，证据为 `EVD-20260912-062`。
 - Changed: 2026-09-12 Category 与 Guide 统一使用 `seo-page-intro` 首段间距，Guide 不再叠加 Species 章节顶距；证据为 `EVD-20260912-063`。
 - Added: 2026-09-12 新增 `SeoAssetFallback`，统一首页、分类页和 Species 页的缺图身份回退；提交 `b4006374`，不改变素材与发布门禁，证据为 `EVD-20260912-064`。

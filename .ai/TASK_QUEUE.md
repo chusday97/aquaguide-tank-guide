@@ -27,6 +27,12 @@
 - [x] 结构回归新增三类页面接入断言，并通过结构、文案、响应式、证据、lint、build、diff-check。
 - [ ] 仍需真实三档截图、性能/reduced-motion、Figma Canonical 和可读独立 Critic；不解除 `noindex`。
 
+## 2026-09-12 公开路由滚动闭环
+
+- [x] 公开路径切换时回到顶部，直接 hash 深链接定位对应章节。
+- [x] 内置浏览器验证分类页 Header 和宝莲灯 `#behavior` 章节定位；结构、lint、build、diff-check通过。
+- [ ] 继续完成三档真实截图、性能/reduced-motion、Figma Canonical 和可读独立 Critic。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。

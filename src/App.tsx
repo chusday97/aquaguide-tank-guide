@@ -655,6 +655,18 @@ function AppRouter() {
 }
 
 function PublicSeoRoutes() {
+  const location = useLocation();
+  useEffect(() => {
+    if (location.hash) {
+      const sectionId = decodeURIComponent(location.hash.slice(1));
+      const timer = window.setTimeout(() => {
+        document.getElementById(sectionId)?.scrollIntoView({ block: 'start', behavior: 'auto' });
+      }, 0);
+      return () => window.clearTimeout(timer);
+    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname, location.search, location.hash]);
+
   const page = (content: ReactNode, name: string) => <RouteErrorBoundary page={name}>{content}</RouteErrorBoundary>;
   return (
     <PublicSeoShell>

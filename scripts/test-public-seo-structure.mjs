@@ -22,6 +22,9 @@ for (const [relativeFile, requiredPieces] of publicPages) {
 }
 
 const species = read('src/pages/SpeciesLanding.tsx');
+const app = read('src/App.tsx');
+assert.match(app, /function PublicSeoRoutes\(\)[\s\S]*?window\.scrollTo\(\{ top: 0, left: 0, behavior: 'auto' \}\)/, 'Public routes must reset scroll position on route changes');
+assert.match(app, /document\.getElementById\(sectionId\)\?\.scrollIntoView/, 'Public routes must restore direct chapter hash navigation');
 const assetFallback = read('src/components/seo/SeoAssetFallback.tsx');
 for (const relativeFile of ['src/pages/MarketingLanding.tsx', 'src/pages/CategoryLanding.tsx', 'src/pages/SpeciesLanding.tsx']) {
   assert.match(read(relativeFile), /SeoAssetFallback/, `${relativeFile} must use the shared public asset fallback`);

@@ -1200,6 +1200,12 @@
 - `test:public-seo-structure` 新增共享组件、可读图片角色和三类页面接入断言；结构、文案、响应式、证据、lint、build、diff-check 已通过。
 - 本轮不批准或发布任何新素材；页面继续 `noindex,follow`。用户未提交的三个文件保持不动。
 
+## 2026-09-12 当前交接：公开路由滚动闭环（待提交）
+
+- Public Shell 已处理路由滚动：普通公开路径切换回到页面顶部，带 hash 的章节链接定位到目标章节。
+- 内置浏览器已实际确认分类页 Header 不再继承旧滚动位置，并确认 `/species/sp_0432#behavior` 直接进入“它如何生活”；结构、lint、build、diff-check 通过，证据为 `EVD-20260912-066`。
+- 未改变页面内容、素材状态、Product Truth、metadata、JSON-LD、`noindex,follow` 或用户未提交文件。
+
 ## 2026-09-12 当前交接：公开来源规范化
 
 - 最新代码提交：`93a3edb7 fix: normalize duplicate public fishbase sources`。
