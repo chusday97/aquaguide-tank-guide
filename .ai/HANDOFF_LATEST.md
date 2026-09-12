@@ -135,3 +135,12 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Social authority records male dominance/intraspecific competition without mislabeling the species as universally territorial toward all community fish.
 - No automatic inheritance for `X. hellerii var.*` commercial morphs because many ornamental swordtails have hybrid ancestry.
 - Validation: Domain / Compatibility / Species Knowledge / Visual / evidence coverage / TypeScript / build / Species Detail E2E / Compatibility E2E / GP001–GP004 PASS.
+
+## Latest checkpoint — controlled main convergence (2026-09-12)
+- Recovery HEAD before merge: `be6b3ee14134`; merged current main `cc1d4b0bcacc160d71f200784cc0f4874d5cfa8b` with semantic conflict resolution.
+- Preserved main's Git/DB runtime authority and Admin publication infrastructure while retaining Product Recovery V6, Species Knowledge V2, reviewed environment/space/social facts, and base-species inheritance.
+- Runtime Profile exact-ID authority wins for Admin-managed fields; Pair Rule and Stage Risk runtime removals remain effective. Static reviewed `waterType` fills the one field not yet present in the runtime Profile DTO.
+- Canonical Admin/Git baseline now matches Product authority at 14 Profiles / 5 Pair Rules; guards require exact canonical keys and reviewed status.
+- Added `supabase/migrations/202609120001_compatibility_recovery_baseline.sql` as an additive recovery-baseline migration; SQL parses successfully and has not been applied to Staging/Production in this recovery flow.
+- Verified after convergence: TypeScript, API typecheck, full build, Domain/Compatibility/Species Knowledge/Visual/evidence coverage, runtime authority, Git runtime, Compatibility Admin/regression, Local File Admin + browser E2E, published-content isolation, staging seed safety, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 all PASS.
+- Pending only Git closeout: stage resolved merge, diff audit, merge commit/push, divergence verification, PR #149 current-head CI.

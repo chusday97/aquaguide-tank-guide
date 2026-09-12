@@ -1,7 +1,9 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import posthog from 'posthog-js';
-import App from './App.tsx';
+import { hydratePublishedContentCatalog } from './data/runtimeContentCatalog';
+import { hydrateReviewedCompatibilityEvidence } from './data/runtimeCompatibilityEvidence';
+import { hydrateLocalAdminFileStores } from './services/admin/local-file-persistence';
 import './services/navigation/history-navigation-guard.service';
 import './index.css';
 import './styles/aquarium-stage-layout-v4.css';
@@ -35,8 +37,21 @@ if (posthogKey) {
 
 initializeSessionAnalytics();
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-);
+const startApplication = async () => {
+  await hydrateLocalAdminFileStores();
+  await Promise.all([hydratePublishedContentCatalog(), hydrateReviewedCompatibilityEvidence()]);
+  const { default: App } = await import('./App.tsx');
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>,
+  );
+};
+
+void startApplication().catch(error => {
+  const root = document.getElementById('root');
+  if (!root) return;
+  const message = error instanceof Error ? error.message : 'Local Admin 启动失败。';
+  root.innerHTML = `<main style="max-width:720px;margin:80px auto;padding:24px;font-family:system-ui,sans-serif"><h1 style="font-size:24px;margin:0 0 12px">Local Admin 未启动</h1><p style="line-height:1.7">${message.replace(/[<>&"']/g, '')}</p><p style="line-height:1.7;color:#666">请使用 <code>npm run dev:local-admin</code> 启动 Durable Local File Mode；不会自动退回为看似已保存的 browser-only 模式。</p></main>`;
+  console.error('[local-admin-startup]', error);
+});

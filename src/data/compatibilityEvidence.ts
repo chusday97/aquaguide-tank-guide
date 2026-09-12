@@ -635,6 +635,8 @@ export const getReviewedPairRule = (leftId: string, rightId: string) => pairRule
 
 export const getCompatibilityEvidenceAudit = () => ({
   reviewedSpeciesIds: Object.keys(profiles),
+  reviewedProfiles: Object.values(profiles),
   reviewedStageRiskSpeciesIds: Object.keys(stageRiskProfiles),
+  reviewedStageRiskProfiles: Object.values(stageRiskProfiles),
   reviewedPairRules: pairRules,
 });

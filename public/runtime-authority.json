@@ -1,0 +1,717 @@
+{
+  "schemaVersion": 1,
+  "authority": "local-file-git",
+  "generatedAt": "2026-09-12T02:35:11.572Z",
+  "source": {
+    "businessUpdatedAt": null,
+    "compatibilityUpdatedAt": null,
+    "compatibilityAuthoritySequence": 1
+  },
+  "productCare": {
+    "species": [],
+    "careArticles": []
+  },
+  "compatibility": {
+    "authority": "reviewed-git",
+    "profiles": [
+      {
+        "catalogKey": "sp_0011",
+        "behaviorTraits": [
+          "peaceful"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-xiphophorus-maculatus",
+            "title": "Xiphophorus maculatus (Platy)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/xiphophorus-maculatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-xiphophorus-maculatus",
+            "title": "Xiphophorus maculatus (Southern platyfish) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Xiphophorus_maculatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0437",
+        "behaviorTraits": [
+          "peaceful"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-poecilia-sphenops",
+            "title": "Poecilia sphenops (Short-finned Molly/Black Molly)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/poecilia-sphenops",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0438",
+        "behaviorTraits": [
+          "shoaling",
+          "male_dominance"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-xiphophorus-hellerii",
+            "title": "Xiphophorus hellerii (Green Swordtail)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/xiphophorus-hellerii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-xiphophorus-hellerii",
+            "title": "Xiphophorus hellerii (Green swordtail) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/Summary/Xiphophorus-hellerii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0014",
+        "behaviorTraits": [
+          "shoaling",
+          "bottom_dwelling"
+        ],
+        "minimumGroupSize": 4,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-corydoras-aeneus",
+            "title": "Corydoras aeneus (Bronze Cory)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/corydoras-aeneus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0443",
+        "behaviorTraits": [
+          "shoaling",
+          "bottom_dwelling"
+        ],
+        "minimumGroupSize": 6,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-corydoras-panda",
+            "title": "Corydoras panda (Panda Cory)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/corydoras-panda",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0439",
+        "behaviorTraits": [
+          "shoaling",
+          "interspecific_aggression",
+          "fin_nipping"
+        ],
+        "minimumGroupSize": 6,
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "tiger-barb-group-size-study",
+            "title": "The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria",
+            "publisher": "Applied Animal Behaviour Science",
+            "url": "https://www.sciencedirect.com/science/article/pii/S0168159110001292",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "social_behavior",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0021",
+        "behaviorTraits": [
+          "territorial",
+          "breeding_defense",
+          "chasing",
+          "biting"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "convict-cichlid-territory-study",
+            "title": "Sex Differences in How Territory Quality Affects Aggression in Convict Cichlids",
+            "publisher": "Integrative and Comparative Biology",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8522484/",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "territoriality",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0049",
+        "behaviorTraits": [
+          "predatory",
+          "solitary_required",
+          "territorial"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "small-snakehead-fws-assessment",
+            "title": "Ecological Risk Screening Summary: Small Snakehead (Channa asiatica)",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Small-Snakehead.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0431",
+        "behaviorTraits": [
+          "shoaling"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-paracheirodon-innesi",
+            "title": "Paracheirodon innesi (Neon tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/summary/Paracheirodon-innesi.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0432",
+        "behaviorTraits": [
+          "shoaling"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-paracheirodon-axelrodi",
+            "title": "Paracheirodon axelrodi (Cardinal tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/summary/Paracheirodon-axelrodi.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0434",
+        "behaviorTraits": [
+          "shoaling"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-tanichthys-albonubes",
+            "title": "Tanichthys albonubes (White cloud mountain minnow) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Tanichthys-albonubes.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "white-cloud-shoaling-study",
+            "title": "Shoaling in White Cloud Mountain minnows, Tanichthys albonubes: effects of predation risk and prey hunger",
+            "publisher": "Animal Behaviour",
+            "url": "https://www.sciencedirect.com/science/article/pii/S0003347284712917",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0435",
+        "behaviorTraits": [
+          "shoaling"
+        ],
+        "minimumGroupSize": 8,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-danio-rerio",
+            "title": "Brachydanio rerio (Zebra 'Danio')",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/danio-rerio",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "social_behavior",
+          "adult_size"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0436",
+        "behaviorTraits": [
+          "shoaling"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-poecilia-reticulata",
+            "title": "Poecilia reticulata (Guppy) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Poecilia-reticulata.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "guppy-schooling-learning-study",
+            "title": "Schooling and learning: early social environment predicts social learning ability in the guppy, Poecilia reticulata",
+            "publisher": "Animal Behaviour",
+            "url": "https://www.sciencedirect.com/science/article/abs/pii/S0003347208002364",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [
+          {
+            "ruleKey": "sp_0436:conspecific_fry_predation",
+            "youngerStages": [
+              "fry"
+            ],
+            "olderStages": [
+              "adult"
+            ],
+            "verdict": "not_recommended",
+            "riskType": "conspecific_fry_predation",
+            "reason": "孔雀鱼成体捕食同种幼体在水族箱实验与繁育研究中均有记录，且捕食程度会受到幼体体型与躲避结构影响。当前不应把成鱼与新生鱼苗直接同缸视为已证明安全。",
+            "mitigation": [
+              "鱼苗优先使用育苗隔离区或独立育苗缸。",
+              "不要把水草躲避物当作能够消除同类吞食风险的保证。"
+            ],
+            "basis": "species_trait",
+            "confidence": "medium",
+            "reviewStatus": "reviewed",
+            "citations": [
+              {
+                "id": "guppy-cannibalism-refuge-study",
+                "title": "Guppy populations differ in cannibalistic degree and adaptation to structural environments",
+                "publisher": "Oecologia",
+                "url": "https://pubmed.ncbi.nlm.nih.gov/21516310/",
+                "sourceType": "peer_reviewed",
+                "reviewStatus": "reviewed",
+                "version": 1
+              },
+              {
+                "id": "guppy-fry-yield-cannibalism-study",
+                "title": "The effects of illumination and daily number of collections on fry yields in guppy breeding tanks",
+                "publisher": "Aquacultural Engineering",
+                "url": "https://www.sciencedirect.com/science/article/abs/pii/S0144860913000848",
+                "sourceType": "peer_reviewed",
+                "reviewStatus": "reviewed",
+                "version": 1
+              }
+            ]
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0446",
+        "behaviorTraits": [
+          "territorial",
+          "small_fish_predation"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-pterophyllum-scalare",
+            "title": "Pterophyllum scalare (Angelfish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pterophyllum-scalare",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "tamu-pterophyllum-scalare-reproduction",
+            "title": "Reproduction of Angelfish (Pterophyllum scalare)",
+            "publisher": "Texas A&M AgriLife Extension",
+            "url": "https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      }
+    ],
+    "pairRules": [
+      {
+        "catalogKeys": [
+          "sp_0436",
+          "sp_0439"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "fin_nipping_long_fin_conflict",
+        "reason": "孔雀鱼资料明确建议不要与虎皮等追鳍鱼混养；虎皮鱼资料也明确指出其不适合作为长鳍或慢游鱼的同伴。该组合有直接的养护层配对建议，不应仅作为一般性 caution。",
+        "mitigation": [
+          "优先不要长期混养；选择非追鳍同伴，或将两者分缸。",
+          "不要把“虎皮数量够了”理解为已经消除对长鳍鱼的追鳍风险。"
+        ],
+        "basis": "pair_rule",
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-poecilia-reticulata",
+            "title": "Poecilia reticulata (Guppy)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/poecilia-reticulata/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-puntigrus-tetrazona",
+            "title": "Puntigrus tetrazona (Tiger Barb)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/puntigrus-tetrazona",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0021",
+          "sp_0439"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "behavior_and_territory_conflict",
+        "reason": "虎皮鱼有追鳍与种间攻击倾向，迷你鹦鹉鱼会追逐、啃咬并在繁殖期强烈护域；两者同缸容易形成持续追逐和领地冲突。",
+        "mitigation": [
+          "优先分缸饲养；不要把增加躲避物当作消除行为冲突的保证。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "tiger-barb-group-size-study",
+            "title": "The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria",
+            "publisher": "Applied Animal Behaviour Science",
+            "url": "https://www.sciencedirect.com/science/article/pii/S0168159110001292",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "convict-cichlid-territory-study",
+            "title": "Sex Differences in How Territory Quality Affects Aggression in Convict Cichlids",
+            "publisher": "Integrative and Comparative Biology",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC8522484/",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0431",
+          "sp_0432"
+        ],
+        "verdict": "caution",
+        "riskType": "group_size_and_shared_water_window",
+        "reason": "FishBase 将红绿灯与宝莲灯都记录为小型淡水群游/群养鱼；两者温度区间在约 23–26°C、pH 区间在约 5.0–6.0 有共同范围。当前没有直接配对实验，因此只作为有条件可尝试，而不是“已证明安全”。",
+        "mitigation": [
+          "两种鱼都按群体饲养，不以单条长期混养作为目标。",
+          "把温度和 pH 保持在两者共同区间，并避免快速波动。",
+          "分批加入并持续观察摄食、追逐和应激表现。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-paracheirodon-innesi",
+            "title": "Paracheirodon innesi (Neon tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/summary/Paracheirodon-innesi.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-paracheirodon-axelrodi",
+            "title": "Paracheirodon axelrodi (Cardinal tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/summary/Paracheirodon-axelrodi.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0435",
+          "sp_0451"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "多项斑马鱼 predator-response 实验明确把地图鱼 Astronotus ocellatus 作为 Danio rerio 的捕食者刺激；活体地图鱼可诱发稳定回避/恐惧反应，长期视觉暴露研究也将该组合定义为 predator–prey 模型。证据支持存在明确捕食威胁，但这些实验并不是家庭水族箱中的长期同缸吞食试验。",
+        "mitigation": [
+          "不要把地图鱼与斑马鱼作为长期同缸组合；优先物理分缸。",
+          "不要用增加躲避物或“先试试看”替代捕食风险隔离。"
+        ],
+        "basis": "pair_rule",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "oscar-zebrafish-live-predator-study",
+            "title": "Live Predators, Robots, and Computer-Animated Images Elicit Differential Avoidance Responses in Zebrafish",
+            "publisher": "Zebrafish",
+            "url": "https://journals.sagepub.com/doi/10.1089/zeb.2014.1041",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "oscar-zebrafish-development-predator-study",
+            "title": "Modulation of Cortisol Responses to an Acute Stressor in Zebrafish Visually Exposed to Heterospecific Fish During Development",
+            "publisher": "Zebrafish",
+            "url": "https://journals.sagepub.com/doi/10.1089/zeb.2017.1509",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0475"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "2015 年 predator–prey 实验直接使用高体鳑鲏 Rhodeus ocellatus 作为 prey、乌鳢 Channa argus 作为 predator，并记录到猎物倾向远离捕食者；2026 年研究进一步将乌鳢明确描述为高体鳑鲏的 natural predator，并以 20 天持续视觉/化学线索暴露研究非消耗性捕食压力。证据支持明确捕食威胁，但两项实验均采用物理隔离，不是家庭水族箱长期同缸吞食试验。",
+        "mitigation": [
+          "不要把白金雷龙与高体鳑鲏作为长期同缸组合；优先物理分缸。",
+          "不要用躲避物、体型暂时接近或短期未追逐来替代捕食风险隔离。"
+        ],
+        "basis": "pair_rule",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "channa-rhodeus-information-dynamics-study",
+            "title": "Information Dynamics in the Interaction between a Prey and a Predator Fish",
+            "publisher": "Entropy",
+            "url": "https://doi.org/10.3390/e17107230",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "channa-rhodeus-predation-stress-study",
+            "title": "Effects of predation stress and sex on growth, metabolism, personality traits, and reproductive investment in the rosy bitterling (Rhodeus ocellatus)",
+            "publisher": "Comparative Biochemistry and Physiology Part A: Molecular & Integrative Physiology",
+            "url": "https://doi.org/10.1016/j.cbpa.2026.111986",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      }
+    ],
+    "counts": {
+      "profiles": 14,
+      "pairRules": 5
+    }
+  }
+}

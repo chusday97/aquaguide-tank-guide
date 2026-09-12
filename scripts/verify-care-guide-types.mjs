@@ -12,7 +12,7 @@ const cases = [
   },
   {
     topicId: 'guide_water_deteriorate',
-    expected: ['先做快速评测', '开始快速评测'],
+    expected: ['先做快速评测', '开始快速检查'],
     absent: ['现在按顺序做'],
     openAssessmentResult: true,
   },
@@ -47,12 +47,13 @@ try {
     await referenceSection.waitFor({ state: 'visible' });
     assert.ok(await referenceSection.locator('a[href^="https://"]').count(), `${testCase.topicId} 必须显示可访问的外部来源`);
     if (testCase.openAssessmentResult) {
-      await dialog.getByRole('button', { name: '开始快速评测', exact: true }).click();
+      await dialog.getByRole('button', { name: '开始快速检查', exact: true }).click();
       const assessment = dialog.locator('section').filter({ hasText: '快速评测' }).last();
-      const normalOptions = assessment.getByRole('button', { name: '没有', exact: true });
+      const normalOptions = dialog.getByRole('button', { name: '没有', exact: true });
+      assert.equal(await normalOptions.count(), 3, '水质快速评测应显示 3 个可回答的问题');
       for (let index = (await normalOptions.count()) - 1; index >= 0; index -= 1) await normalOptions.nth(index).click();
-      await assessment.getByRole('button', { name: '查看处理方案', exact: true }).click();
-      await assessment.locator('[data-care-assessment-result]').waitFor();
+      await dialog.getByRole('button', { name: '查看处理建议', exact: true }).click();
+      await dialog.locator('[data-care-assessment-result]').waitFor();
     }
     const inlineEvidence = dialog.locator('[data-care-action-evidence]');
     assert.ok(await inlineEvidence.count(), `${testCase.topicId} 必须把来源绑定到具体动作，而不是只放在页尾`);
@@ -119,9 +120,14 @@ try {
   const collectionDialog = collectionPage.getByRole('dialog');
   await collectionDialog.waitFor({ state: 'visible', timeout: 30000 });
   assert.equal(
-    await collectionDialog.getByRole('button', { name: '已收藏在水族册' }).isDisabled(),
-    true,
+    await collectionDialog.getByRole('button', { name: '去水族册查看' }).count(),
+    0,
     '水族册详情不得显示无效的“去水族册查看”操作',
+  );
+  assert.equal(
+    await collectionDialog.getByRole('button', { name: '取消收藏' }).count(),
+    1,
+    '水族册详情应保留明确的取消收藏入口',
   );
   await collectionContext.close();
 

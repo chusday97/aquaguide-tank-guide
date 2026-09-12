@@ -30,7 +30,7 @@ import { buildSpeciesDiagnosisContextAnswers, isSpeciesEligibleForHealthTriage, 
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import { ConfirmDialog } from '../components/common/ConfirmDialog';
 import { getSpeciesBatchContextLabel } from '../services/aquarium/species-batches.service';
-import { careTopicsData } from '../data/careTopicsData';
+import { runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import { SearchAutocomplete } from '../components/search/SearchAutocomplete';
 import {
   getSearchSuggestions,

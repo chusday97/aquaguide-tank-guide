@@ -14,6 +14,7 @@ const readGitValue = (args: string[], fallback: string) => {
 
 export default defineConfig(({mode}) => {
   const env = loadEnv(mode, '.', '');
+  const apiPort = process.env.API_PORT || env.API_PORT || '8787';
   const previewMetadata = {
     branch: env.VITE_PREVIEW_BRANCH || readGitValue(['branch', '--show-current'], 'unknown-branch'),
     sha: env.VITE_GIT_SHA || readGitValue(['rev-parse', 'HEAD'], 'unknown-sha'),
@@ -31,12 +32,18 @@ export default defineConfig(({mode}) => {
       },
     },
     server: {
-      // HMR is disabled in AI Studio via DISABLE_HMR env var.
-      // Do not modifyâfile watching is disabled to prevent flickering during agent edits.
       hmr: process.env.DISABLE_HMR !== 'true',
       proxy: {
         '/api': {
-          target: `http://localhost:${env.API_PORT || '8787'}`,
+          target: `http://localhost:${apiPort}`,
+          changeOrigin: true,
+        },
+      },
+    },
+    preview: {
+      proxy: {
+        '/api': {
+          target: `http://localhost:${apiPort}`,
           changeOrigin: true,
         },
       },

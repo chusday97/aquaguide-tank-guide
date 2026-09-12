@@ -1,0 +1,222 @@
+import assert from 'node:assert/strict';
+import { chromium } from 'playwright';
+import { createServer } from 'vite';
+
+process.env.VITE_ADMIN_LOCAL_MODE = 'true';
+
+const vite = await createServer({
+  root: process.cwd(),
+  server: { host: '127.0.0.1', port: 0 },
+  logLevel: 'silent',
+});
+await vite.listen();
+const address = vite.httpServer?.address();
+assert.ok(address && typeof address === 'object');
+const baseUrl = `http://127.0.0.1:${address.port}`;
+const browser = await chromium.launch({ headless: true });
+const businessKey = 'aquaguide-local-business-admin-v1';
+const compatibilityKey = 'aquaguide-local-compatibility-admin-v1';
+const unavailable = route => route.fulfill({
+  status: 503, contentType: 'application/json',
+  body: JSON.stringify({ error: { code: 'DEPENDENCY_UNAVAILABLE', message: 'cloud disabled in local-mode test' }, requestId: 'local-compat-test' }),
+});
+try {
+  for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
+    const page = await browser.newPage({ viewport });
+    const errors = [];
+    page.on('pageerror', error => errors.push(String(error)));
+    page.on('dialog', dialog => dialog.accept());
+    await page.route('**/api/v1/**', unavailable);
+    await page.route('**/api/admin-content/**', unavailable);
+    await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'domcontentloaded' });
+    await page.evaluate(([business, compatibility]) => {
+      localStorage.removeItem(business);
+      localStorage.removeItem(compatibility);
+    }, [businessKey, compatibilityKey]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+
+    const firstBody = await page.locator('body').innerText();
+    assert.match(firstBody, /Profile \/ Pair Draft 已启用/);
+    assert.match(firstBody, /Local baseline 7\/7/);
+    assert.match(firstBody, /Local baseline 4\/4/);
+    assert.doesNotMatch(firstBody, /DB baseline/);
+    const authoritySummary = page.getByTestId('compatibility-authority-summary');
+    const summaryHeight = await authoritySummary.evaluate(element => element.getBoundingClientRect().height);
+    assert.equal(summaryHeight <= (viewport.width === 390 ? 120 : 100), true, `${viewport.width}px authority summary must stay compact.`);
+    assert.equal(await authoritySummary.evaluate(element => element.scrollWidth - element.clientWidth), 0, `${viewport.width}px authority summary must not overflow internally.`);
+    await page.getByRole('button', { name: '创建 Profile Draft' }).first().click();
+    const profileEditor = page.getByTestId('compatibility-draft-editor');
+    await profileEditor.waitFor();
+    const editorTop = await profileEditor.evaluate(element => element.getBoundingClientRect().top + window.scrollY);
+    if (viewport.width === 390) assert.equal(editorTop < 500, true, '390px Profile editor must appear before the large reviewed lists.');
+    assert.equal(await profileEditor.evaluate(element => element.scrollWidth - element.clientWidth), 0, `${viewport.width}px Profile editor must not overflow internally.`);
+    const minGroup = page.locator('input[placeholder="留空表示未设置"]');
+    await minGroup.fill('7');
+    await page.getByRole('button', { name: '保存 Draft' }).click();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+    await page.getByRole('button', { name: '打开 Draft' }).first().click();
+    assert.equal(await page.locator('input[placeholder="留空表示未设置"]').inputValue(), '7');
+
+    await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'domcontentloaded' });
+    await page.getByTestId('operations-primary-task').waitFor({ state: 'visible', timeout: 10000 });
+    const operationsText = await page.locator('body').innerText();
+    assert.match(operationsText, /虎皮鱼 · Compatibility Profile Draft 未提交审核/);
+    assert.match(await page.getByTestId('operations-source-compatibility').innerText(), /Compatibility[\s\S]*可读取/, 'Ready Compatibility source stays explicit without repeating transport detail.');
+    await page.getByRole('button', { name: /继续这个 Draft/ }).first().click();
+    await page.waitForSelector('[data-testid="compatibility-draft-editor"]');
+    assert.match(page.url(), /kind=profile&revision=/);
+
+    await page.getByRole('button', { name: '提交审核' }).click();
+    await page.waitForSelector('[data-testid="profile-regression-report"]');
+    const profileRegression = await page.getByTestId('profile-regression-report').innerText();
+    assert.match(profileRegression, /已评估 1456 个场景/);
+    assert.match(await page.locator('body').innerText(), /Canonical Evidence：1\/1/);
+
+    const profileRevisionId = new URL(page.url()).searchParams.get('revision');
+    assert.ok(profileRevisionId, 'Profile WorkItem deep-link must retain the selected revision id.');
+    await page.evaluate(([key, revisionId]) => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      const revision = state.profileRevisions.find(item => item.id === revisionId);
+      revision.regressionReport = undefined;
+      revision.evidenceResolution = [];
+      localStorage.setItem(key, JSON.stringify(state));
+    }, [compatibilityKey, profileRevisionId]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    const profileRepair = page.getByTestId('profile-review-check-repair');
+    await profileRepair.waitFor({ state: 'visible' });
+    assert.match(await profileRepair.innerText(), /Regression \/ Canonical Evidence[\s\S]*生成完成后再进入人工审核/);
+    assert.equal(await page.getByRole('button', { name: '批准 revision（不发布）' }).count(), 0, 'Incomplete pending-review checks must hide approval instead of exposing a dead action.');
+    await profileRepair.getByRole('button', { name: '重新生成发布前检查' }).click();
+    await page.getByTestId('profile-regression-report').waitFor();
+    assert.match(await page.locator('body').innerText(), /Canonical Evidence：1\/1/);
+    await page.getByRole('button', { name: '批准 revision（不发布）' }).click();
+
+    await page.evaluate(([key, revisionId]) => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      const revision = state.profileRevisions.find(item => item.id === revisionId);
+      revision.impactReport = undefined;
+      revision.regressionReport = undefined;
+      revision.evidenceResolution = [];
+      localStorage.setItem(key, JSON.stringify(state));
+    }, [compatibilityKey, profileRevisionId]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    const approvedRepair = page.getByTestId('profile-review-check-repair');
+    await approvedRepair.waitFor({ state: 'visible' });
+    assert.match(await approvedRepair.innerText(), /当前旧批准会撤销并回到待审核，必须重新人工批准/);
+    assert.equal(await page.getByRole('button', { name: '发布 reviewed version' }).count(), 0, 'Approved revision with missing checks must not expose publish.');
+    await approvedRepair.getByRole('button', { name: '重新生成发布前检查' }).click();
+    await page.getByTestId('profile-regression-report').waitFor();
+    assert.match(await page.getByTestId('compatibility-draft-editor').innerText(), /待审核/);
+    assert.equal(await page.getByRole('button', { name: '发布 reviewed version' }).count(), 0, 'Repairing an approved revision must revoke the stale approval.');
+    await page.getByRole('button', { name: '批准 revision（不发布）' }).click();
+    await page.getByRole('button', { name: '发布 reviewed version' }).click();
+    await page.waitForFunction(() => document.body.innerText.includes('Profile reviewed version 已发布'));
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+    const profilePublishedText = await page.locator('body').innerText();
+    assert.match(profilePublishedText, /虎皮鱼[\s\S]{0,500}最低群体：7/);
+    assert.match(profilePublishedText, /Local baseline 7\/7/);
+
+    await page.getByRole('button', { name: '返回管理后台' }).click();
+    await page.waitForURL(/\/admin\/content$/);
+    const profileClosureNotice = page.getByTestId('operations-return-context');
+    await profileClosureNotice.waitFor({ state: 'visible', timeout: 10000 });
+    assert.match(await profileClosureNotice.innerText(), /已返回工作台[\s\S]*虎皮鱼 · Compatibility Profile[\s\S]*当前队列未找到这条任务/, 'Publishing the exact Compatibility Profile task must close it out of the refreshed Operations queue.');
+    assert.doesNotMatch(await page.getByTestId('operations-primary-task').innerText(), /虎皮鱼 · Compatibility Profile/, 'Completed Compatibility Profile task must not remain as the current priority after returning.');
+
+    await page.goto(`${baseUrl}/admin/compatibility`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+
+    const guppyCard = page.getByTestId('compatibility-profile-sp_0436');
+    await guppyCard.getByRole('button', { name: '创建 Profile Draft' }).click();
+    const guppyV3 = page.getByTestId('profile-v3-authority');
+    await guppyV3.waitFor();
+    assert.match(await guppyV3.innerText(), /Required Facts[\s\S]*Stage Risk · conspecific_fry_predation[\s\S]*Oecologia[\s\S]*Aquacultural Engineering/);
+    const guppyStageRisk = page.getByTestId('profile-stage-risk-rule');
+    await guppyStageRisk.getByRole('combobox', { name: 'Verdict' }).selectOption('caution');
+    await page.getByRole('button', { name: '保存 Draft' }).click();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+    await page.getByTestId('compatibility-profile-sp_0436').getByRole('button', { name: '打开 Draft' }).click();
+    assert.equal(await page.getByTestId('profile-stage-risk-rule').getByRole('combobox', { name: 'Verdict' }).inputValue(), 'caution');
+    await page.getByRole('button', { name: '提交审核' }).click();
+    await page.getByTestId('profile-regression-report').waitFor();
+    assert.match(await page.getByTestId('profile-stage-risk-rule').innerText(), /Evidence 2\/2/);
+    assert.equal(await page.getByTestId('profile-stage-risk-rule').getByRole('combobox', { name: 'Verdict' }).isDisabled(), true, 'Stage Risk fields must lock after submit.');
+    const guppyRegression = await page.evaluate(key => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      return state.profileRevisions.find(item => item.species?.catalogKey === 'sp_0436' && item.status === 'pending_review')?.regressionReport || null;
+    }, compatibilityKey);
+    assert.ok(guppyRegression, 'Guppy pending-review revision must retain a regression report.');
+    assert.ok(guppyRegression.changes.some(change => change.scenario === 'same_species_adult_to_fry'), 'Editing guppy Stage Risk must change the dedicated adult-to-fry regression scenario.');
+    await page.getByRole('button', { name: '批准 revision（不发布）' }).click();
+    await page.getByRole('button', { name: '发布 reviewed version' }).click();
+    await page.waitForFunction(() => document.body.innerText.includes('Profile reviewed version 已发布'));
+    const guppyReviewedVerdict = await page.evaluate(key => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      return state.reviewedProfiles.find(item => item.catalogKey === 'sp_0436')?.stageRiskRules?.[0]?.verdict || null;
+    }, compatibilityKey);
+    assert.equal(guppyReviewedVerdict, 'caution', 'Published guppy Stage Risk must become the Local reviewed runtime authority.');
+
+    await page.getByRole('button', { name: '创建 Pair Draft' }).first().click();
+    const pairEditor = page.getByTestId('compatibility-pair-draft-editor');
+    await pairEditor.locator('select').first().selectOption('caution');
+    await page.getByRole('button', { name: '保存 Pair Draft' }).click();
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+    await page.getByRole('button', { name: /打开 Pair Draft/ }).first().click();
+    assert.equal(await page.getByTestId('compatibility-pair-draft-editor').locator('select').first().inputValue(), 'caution');
+
+    await page.getByRole('button', { name: '提交 Pair 审核' }).click();
+    await page.waitForSelector('[data-testid="pair-regression-report"]');
+    const pairRegression = await page.getByTestId('pair-regression-report').innerText();
+    assert.match(pairRegression, /已评估 3 个场景/);
+    assert.match(pairRegression, /结果变化 3 个/);
+    assert.match(await page.locator('body').innerText(), /Canonical Evidence：2\/2/);
+    const pairRevisionId = page.getByTestId('compatibility-pair-draft-editor');
+    const pairStateId = await page.evaluate(key => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      return state.pairRevisions.find(item => item.status === 'pending_review')?.id || null;
+    }, compatibilityKey);
+    assert.ok(pairStateId, 'Pair pending-review fixture must expose an active revision.');
+    await page.evaluate(([key, revisionId]) => {
+      const state = JSON.parse(localStorage.getItem(key) || '{}');
+      const revision = state.pairRevisions.find(item => item.id === revisionId);
+      revision.regressionReport = undefined;
+      localStorage.setItem(key, JSON.stringify(state));
+    }, [compatibilityKey, pairStateId]);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('button', { name: /打开 Pair 待审核/ }).first().click();
+    const pairRepair = page.getByTestId('pair-review-check-repair');
+    await pairRepair.waitFor({ state: 'visible' });
+    assert.equal(await page.getByRole('button', { name: '批准 Pair revision（不发布）' }).count(), 0, 'Incomplete Pair checks must hide approval.');
+    await pairRepair.getByRole('button', { name: '重新生成发布前检查' }).click();
+    await pairRevisionId.getByTestId('pair-regression-report').waitFor();
+    await page.getByRole('button', { name: '批准 Pair revision（不发布）' }).click();
+    await page.getByRole('button', { name: '发布 Pair reviewed version' }).click();
+    await page.waitForFunction(() => document.body.innerText.includes('Pair Rule reviewed version 已发布'));
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
+    const pairPublishedText = await page.locator('body').innerText();
+    assert.match(pairPublishedText, /迷你鹦鹉鱼 × 虎皮鱼[\s\S]{0,300}谨慎混养/);
+    assert.match(pairPublishedText, /Local baseline 4\/4/);
+    await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'domcontentloaded' });
+    await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
+    const publishCenterText = await page.locator('body').innerText();
+    for (const label of ['Compatibility Profile 已提交审核', 'Compatibility Profile 已批准', 'Compatibility Profile reviewed authority 已发布', 'Compatibility Pair Rule 已提交审核', 'Compatibility Pair Rule 已批准', 'Compatibility Pair Rule reviewed authority 已发布']) assert.match(publishCenterText, new RegExp(label));
+    assert.match(publishCenterText, /Compatibility Profile reviewed authority 已发布/);
+    assert.match(publishCenterText, /Compatibility Pair Rule reviewed authority 已发布/);
+    assert.match(await page.getByTestId('publish-center-authority-note').getAttribute('title') || '', /DEV Local Mode/);
+
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    assert.equal(overflow, 0, `Local Compatibility must not overflow at ${viewport.width}px.`);
+    assert.deepEqual(errors, []);
+    await page.close();
+  }
+  console.log('PASS local Compatibility Admin: Profile/Pair Draft, review gates, runtime publish, Operations deep-link.');
+} finally {
+  await browser.close();
+  await vite.close();
+}

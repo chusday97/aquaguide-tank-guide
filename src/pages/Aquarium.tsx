@@ -28,7 +28,7 @@ import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceCla
 import { getLifeType, getToolFunctions, isSpeciesCompatibleWithWaterType } from '../modules/species/species.service';
 import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 import type { DiscoveryDeckState, RecommendationCandidate, RecommendationMode, SimulationResult, SmartRecommendationOutput } from '../modules/recommendation/recommendation.schema';
-import { careTopicsData } from '../data/careTopicsData';
+import { runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import { buildDiagnosisResult } from '../modules/diagnosis/diagnosis.rules';
 import {
   diagnosisProblemTypes,

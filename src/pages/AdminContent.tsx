@@ -1,11 +1,18 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { ArrowLeft, FileImage, Loader2, Plus, Save, Send, XCircle } from 'lucide-react';
 import {
   careArticleAdminInputSchema,
   speciesAdminInputSchema,
+  type CareArticleDetailDto,
+  type SpeciesDetailDto,
 } from '../../packages/contracts/src/index';
+import CompatibilityRegressionPreview from '../components/admin/CompatibilityRegressionPreview';
+import CareSeoProjectionPreview from '../components/admin/CareSeoProjectionPreview';
+import ContentImpactPreview from '../components/admin/ContentImpactPreview';
+import ProductBeforeAfterPreview from '../components/admin/ProductBeforeAfterPreview';
 import { useToast } from '../components/common/ToastProvider';
+import { AquaGuideApiError } from '../services/api/api-client';
 import {
   contentAdminService,
   type AdminCareArticleRecord,
@@ -13,6 +20,11 @@ import {
   type CareArticleAdminInput,
   type SpeciesAdminInput,
 } from '../services/admin/content-admin.service';
+import { isLocalBusinessAdminMode } from '../services/admin/local-business-admin.store';
+import { isLocalAdminFileMode } from '../services/admin/local-file-persistence';
+import { buildContentImpact, type ContentImpactResult } from '../services/admin/content-impact.service';
+import { runCompatibilityRegression } from '../services/admin/compatibility-impact.service';
+import type { OperationsTaskReturnContext } from '../services/admin/operations-work-item.service';
 
 type ContentType = 'species' | 'care';
 type StatusAction = 'published' | 'archived';
@@ -29,9 +41,41 @@ const emptyCare = (): CareArticleAdminInput => ({
   steps: [], avoidActions: [], observeItems: [], diagnoseWhen: [], nextStep: '', keywords: [],
 });
 
+const speciesInputFromRecord = (record: AdminSpeciesRecord): SpeciesAdminInput => {
+  const { id: _id, status: _status, version: _version, speciesAssets: _assets, ...input } = record;
+  return speciesAdminInputSchema.parse(input);
+};
+
+const careInputFromRecord = (record: AdminCareArticleRecord): CareArticleAdminInput => {
+  const { id: _id, status: _status, version: _version, careArticleSteps, careArticleAssets: _assets, ...base } = record;
+  return careArticleAdminInputSchema.parse({
+    ...base,
+    steps: (careArticleSteps || []).sort((a, b) => a.position - b.position).map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel, actionTitle: step.actionTitle, actionKind: step.actionKind })),
+  });
+};
+
+const speciesInputFromPublished = (record: SpeciesDetailDto, fallback: SpeciesAdminInput): SpeciesAdminInput => speciesAdminInputSchema.parse({
+  ...fallback,
+  catalogKey: record.catalogKey, name: record.name, scientificName: record.scientificName, category: record.category,
+  difficulty: record.difficulty, waterTemperatureText: record.waterTemperatureText,
+  waterTemperatureMinC: record.waterTemperatureMinC, waterTemperatureMaxC: record.waterTemperatureMaxC,
+  phLevelText: record.phLevelText, phMin: record.phMin, phMax: record.phMax,
+  waterChangeCycleDays: record.waterChangeCycleDays, description: record.description, diet: record.diet,
+  tankSizeText: record.tankSizeText, minTankLiters: record.minTankLiters, temperament: record.temperament,
+  sizeClass: record.sizeClass, housingMode: record.housingMode, housingReason: record.housingReason,
+});
+
+const careInputFromPublished = (record: CareArticleDetailDto, fallback: CareArticleAdminInput): CareArticleAdminInput => careArticleAdminInputSchema.parse({
+  ...fallback,
+  catalogKey: record.catalogKey, title: record.title, category: record.category, urgency: record.urgency,
+  summary: record.summary, symptoms: record.symptoms, avoidActions: record.avoidActions,
+  observeItems: record.observeItems, diagnoseWhen: record.diagnoseWhen, nextStep: record.nextStep, keywords: record.keywords,
+  steps: record.steps.map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel, actionTitle: step.actionTitle, actionKind: step.actionKind })),
+});
+
 const lines = (value: string) => value.split('\n').map(item => item.trim()).filter(Boolean);
 const lineText = (value: string[] | undefined) => (value || []).join('\n');
-const errorMessage = (_error: unknown) => '操作没有完成，请稍后重试。';
+const errorMessage = (error: unknown) => error instanceof AquaGuideApiError ? error.message : '操作没有完成，请稍后重试。';
 
 function Field({ label, required, children }: { label: string; required?: boolean; children: React.ReactNode }) {
   return <label className="grid gap-1.5 text-[12px] font-black text-ink/65"><span>{label}{required ? ' *' : ''}</span>{children}</label>;
@@ -42,8 +86,16 @@ const textareaClass = `${inputClass} min-h-[96px] resize-y py-3 leading-6`;
 
 export default function AdminContent() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const deepLinkParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const operationsReturnContext = (location.state as { operationsReturn?: OperationsTaskReturnContext } | null)?.operationsReturn || null;
+  const requestedType: ContentType = deepLinkParams.get('type') === 'care' ? 'care' : 'species';
+  const requestedId = deepLinkParams.get('id');
+  const requestedSeo = deepLinkParams.get('seo') === '1';
+  const requestedSnapshotRepair = deepLinkParams.get('snapshot') === '1';
+  const requestedLocale = deepLinkParams.get('locale') === 'en' ? 'en' : 'zh-CN';
   const { showToast } = useToast();
-  const [type, setType] = useState<ContentType>('species');
+  const [type, setType] = useState<ContentType>(requestedType);
   const [speciesItems, setSpeciesItems] = useState<AdminSpeciesRecord[]>([]);
   const [careItems, setCareItems] = useState<AdminCareArticleRecord[]>([]);
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -56,11 +108,57 @@ export default function AdminContent() {
   const [formError, setFormError] = useState('');
   const [isDirty, setIsDirty] = useState(false);
   const [pendingStatus, setPendingStatus] = useState<StatusAction | null>(null);
+  const [lastSavedImpact, setLastSavedImpact] = useState<ContentImpactResult | null>(null);
+  const [publishedBaseline, setPublishedBaseline] = useState<SpeciesAdminInput | CareArticleAdminInput | null>(null);
+  const [assetPreviewUrl, setAssetPreviewUrl] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  const baselineRequestRef = useRef(0);
+  const deepLinkAppliedKeyRef = useRef<string | null>(null);
 
   const items = type === 'species' ? speciesItems : careItems;
   const selected = items.find(item => item.id === selectedId);
+  const selectedAssets = selected
+    ? (type === 'species' ? (selected as AdminSpeciesRecord).speciesAssets || [] : (selected as AdminCareArticleRecord).careArticleAssets || [])
+    : [];
+  const currentAsset = selectedAssets.find(asset => asset.isCurrent && (type === 'species' ? asset.variant === 'detail' : asset.variant === 'article_main')) || null;
+  const liveImpact = useMemo(() => {
+    if (!selected) return null;
+    if (type === 'species') {
+      const fallback = speciesInputFromRecord(selected as AdminSpeciesRecord);
+      const baseline = publishedBaseline && 'scientificName' in publishedBaseline ? publishedBaseline : fallback;
+      return buildContentImpact('species', baseline, speciesForm);
+    }
+    const fallback = careInputFromRecord(selected as AdminCareArticleRecord);
+    const baseline = publishedBaseline && 'title' in publishedBaseline ? publishedBaseline : fallback;
+    return buildContentImpact('care', baseline, careForm);
+  }, [careForm, publishedBaseline, selected, speciesForm, type]);
+  const visibleImpact = isDirty ? liveImpact : (lastSavedImpact ?? liveImpact);
+  const savedImpactLabel = publishedBaseline ? '当前草稿相对已发布版本' : '最近一次保存的字段变更';
+  const publishedSpeciesBaseline = publishedBaseline && 'scientificName' in publishedBaseline ? publishedBaseline : null;
+  const compatibilityRegression = useMemo(() => {
+    if (type !== 'species' || isDirty || !publishedSpeciesBaseline || !visibleImpact?.reviewConsumers.includes('compatibility')) return null;
+    return runCompatibilityRegression(publishedSpeciesBaseline, speciesForm);
+  }, [isDirty, publishedSpeciesBaseline, speciesForm, type, visibleImpact]);
+
+  const loadPublishedBaseline = async (item: AdminSpeciesRecord | AdminCareArticleRecord) => {
+    const requestId = ++baselineRequestRef.current;
+    setPublishedBaseline(null);
+    try {
+      if (type === 'species') {
+        const fallback = speciesInputFromRecord(item as AdminSpeciesRecord);
+        const published = await contentAdminService.getPublishedSpecies(fallback.catalogKey);
+        if (requestId === baselineRequestRef.current) setPublishedBaseline(published ? speciesInputFromPublished(published, fallback) : null);
+      } else {
+        const fallback = careInputFromRecord(item as AdminCareArticleRecord);
+        const published = await contentAdminService.getPublishedCareArticle(fallback.catalogKey);
+        if (requestId === baselineRequestRef.current) setPublishedBaseline(published ? careInputFromPublished(published, fallback) : null);
+      }
+    } catch {
+      if (requestId === baselineRequestRef.current) setPublishedBaseline(null);
+    }
+  };
+
 
   const loadItems = async (nextType: ContentType = type, keepSelection = true) => {
     setIsLoading(true);
@@ -76,7 +174,32 @@ export default function AdminContent() {
     }
   };
 
-  useEffect(() => { void loadItems(type, false); }, [type]);
+  useEffect(() => { baselineRequestRef.current += 1; setPublishedBaseline(null); setLastSavedImpact(null); void loadItems(type, Boolean(requestedId && type === requestedType)); }, [type, requestedId, requestedType]);
+  useEffect(() => {
+    let cancelled = false;
+    setAssetPreviewUrl(null);
+    if (!currentAsset) return () => { cancelled = true; };
+    void contentAdminService.getAssetPreviewUrl(currentAsset).then(url => {
+      if (!cancelled) setAssetPreviewUrl(url);
+    });
+    return () => { cancelled = true; };
+  }, [currentAsset?.id]);
+  useEffect(() => {
+    if (isLoading || !requestedId || type !== requestedType) return;
+    const deepLinkKey = `${requestedType}:${requestedId}`;
+    if (deepLinkAppliedKeyRef.current === deepLinkKey && selectedId === requestedId) return;
+    const item = items.find(candidate => candidate.id === requestedId);
+    if (!item) return;
+    deepLinkAppliedKeyRef.current = deepLinkKey;
+    setSelectedId(item.id);
+    setFormError('');
+    setIsDirty(false);
+    setLastSavedImpact(null);
+    setPublishedBaseline(null);
+    if (type === 'species') setSpeciesForm(speciesInputFromRecord(item as AdminSpeciesRecord));
+    else setCareForm(careInputFromRecord(item as AdminCareArticleRecord));
+    void loadPublishedBaseline(item);
+  }, [isLoading, items, requestedId, requestedType, type]);
   useEffect(() => {
     const beforeUnload = (event: BeforeUnloadEvent) => {
       if (!isDirty) return;
@@ -92,28 +215,27 @@ export default function AdminContent() {
     setSelectedId(item.id);
     setFormError('');
     setIsDirty(false);
+    setLastSavedImpact(null);
+    setPublishedBaseline(null);
     if (type === 'species') {
-      const record = item as AdminSpeciesRecord;
-      const { id: _id, status: _status, version: _version, speciesAssets: _assets, ...input } = record;
-      setSpeciesForm(speciesAdminInputSchema.parse(input));
+      setSpeciesForm(speciesInputFromRecord(item as AdminSpeciesRecord));
     } else {
-      const record = item as AdminCareArticleRecord;
-      const { id: _id, status: _status, version: _version, careArticleSteps, careArticleAssets: _assets, ...base } = record;
-      setCareForm(careArticleAdminInputSchema.parse({
-        ...base,
-        steps: (careArticleSteps || []).sort((a, b) => a.position - b.position).map(step => ({ instruction: step.instruction, durationLabel: step.durationLabel })),
-      }));
+      setCareForm(careInputFromRecord(item as AdminCareArticleRecord));
     }
+    void loadPublishedBaseline(item);
     requestAnimationFrame(() => firstFieldRef.current?.focus());
   };
 
   const startNew = () => {
     if (isDirty && !window.confirm('当前修改尚未保存，确定新建内容吗？')) return;
+    baselineRequestRef.current += 1;
     setSelectedId(null);
+    setPublishedBaseline(null);
     setSpeciesForm(emptySpecies());
     setCareForm(emptyCare());
     setFormError('');
     setIsDirty(false);
+    setLastSavedImpact(null);
     requestAnimationFrame(() => firstFieldRef.current?.focus());
   };
 
@@ -128,6 +250,7 @@ export default function AdminContent() {
       firstFieldRef.current?.focus();
       return;
     }
+    const impactToSave = selected && liveImpact?.changes.length ? liveImpact : null;
     setIsSaving(true);
     try {
       if (type === 'species') {
@@ -144,6 +267,7 @@ export default function AdminContent() {
         setSelectedId(saved.id);
       }
       setIsDirty(false);
+      setLastSavedImpact(impactToSave);
       showToast(selected ? '内容已保存' : '草稿已创建', 'success');
       await loadItems(type, true);
     } catch (error) {
@@ -158,9 +282,21 @@ export default function AdminContent() {
     if (!pendingStatus || !selected) return;
     setIsSaving(true);
     try {
+      if (isSnapshotRepair) {
+        await contentAdminService.repairCarePublishedSnapshot(selected.id);
+        showToast('Published Snapshot 已生成', 'success');
+        setPendingStatus(null);
+        const params = new URLSearchParams(location.search);
+        params.delete('snapshot');
+        navigate(`${location.pathname}${params.size ? `?${params.toString()}` : ''}`, { replace: true, state: location.state });
+        return;
+      }
       await contentAdminService.setStatus(type, selected.id, selected.version, pendingStatus);
       showToast(pendingStatus === 'published' ? '内容已发布' : '内容已下线', 'success');
+      const completedStatus = pendingStatus;
       setPendingStatus(null);
+      setLastSavedImpact(null);
+      setPublishedBaseline(completedStatus === 'published' ? (type === 'species' ? speciesForm : careForm) : null);
       await loadItems(type, true);
     } catch (error) {
       showToast(errorMessage(error), 'error');
@@ -189,40 +325,57 @@ export default function AdminContent() {
   };
 
   const statusLabel = useMemo(() => selected?.status === 'published' ? '已发布' : selected?.status === 'archived' ? '已下线' : '草稿', [selected]);
+  const isSnapshotRepair = Boolean(!isLocalBusinessAdminMode && requestedSnapshotRepair && type === 'care' && selected && selected.id === requestedId && selected.status === 'published');
 
   return (
     <div className="workspace--standalone min-h-[100dvh] bg-[#e8efec] p-3 text-ink md:p-6">
       <div className="mx-auto max-w-[1440px]">
         <header className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-[24px] border border-white/80 bg-white px-4 py-3 shadow-sm">
           <div className="flex items-center gap-3">
-            <button type="button" aria-label="返回我的鱼缸" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/aquarium'); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
-            <div><h1 className="text-xl font-black">内容后台</h1><p className="text-xs font-bold text-ink/45">编辑物种与养护资料，发布后才对用户可见。</p></div>
+            <button type="button" aria-label="返回后台首页" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定离开吗？')) navigate('/admin/content', { state: operationsReturnContext ? { returnedOperationsTask: operationsReturnContext } : undefined }); }} className="flex h-11 w-11 items-center justify-center rounded-full border border-border hover:bg-bg focus:outline-none focus:ring-2 focus:ring-emerald-300"><ArrowLeft className="h-5 w-5" /></button>
+            <div><h1 className="text-xl font-black">Product / Care Content</h1><p className="text-xs font-bold text-ink/45">管理 Product Truth 与养护内容；Species SEO 使用独立 SEO 后台。</p></div>
           </div>
-          <div className="flex rounded-full bg-bg p-1">
-            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('species'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种</button>
-            <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('care'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex rounded-full bg-bg p-1">
+              <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('species'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'species' ? 'bg-accent text-white' : 'text-ink/55'}`}>物种产品数据</button>
+              <button type="button" onClick={() => { if (!isDirty || window.confirm('当前修改尚未保存，确定切换栏目吗？')) setType('care'); }} className={`h-10 rounded-full px-4 text-sm font-black ${type === 'care' ? 'bg-accent text-white' : 'text-ink/55'}`}>养护文章</button>
+            </div>
           </div>
         </header>
 
-        <main className="grid min-h-[calc(100dvh-130px)] gap-4 lg:grid-cols-[320px_minmax(0,1fr)]">
-          <section className="rounded-[24px] border border-white/80 bg-white p-3 shadow-sm" aria-label="内容列表">
-            <button type="button" onClick={startNew} className="mb-3 flex h-11 w-full items-center justify-center gap-2 rounded-[16px] bg-accent text-sm font-black text-white hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-emerald-300"><Plus className="h-4 w-4" />新建{type === 'species' ? '物种' : '文章'}</button>
+        <main className="grid min-h-[calc(100dvh-130px)] min-w-0 gap-3 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-4">
+          <div data-testid="content-mobile-navigator" className="flex min-w-0 items-center gap-2 border border-slate-200 bg-white p-2 lg:hidden">
+            <select aria-label={type === 'species' ? '选择物种数据' : '选择养护文章'} className="h-10 min-w-0 flex-1 border border-slate-200 bg-white px-2.5 text-xs font-black text-ink/70" value={selectedId || ''} onChange={(event) => { const item = items.find(candidate => candidate.id === event.target.value); if (item) selectItem(item); }}>
+              <option value="">{type === 'species' ? '选择物种数据…' : '选择养护文章…'}</option>
+              {items.map(item => <option key={item.id} value={item.id}>{'name' in item ? item.name : item.title} · {item.status === 'published' ? '已发布' : item.status === 'archived' ? '已下线' : '草稿'}</option>)}
+            </select>
+            <button type="button" aria-label={type === 'species' ? '新建物种数据' : '新建养护文章'} onClick={startNew} className="flex h-10 w-10 shrink-0 items-center justify-center bg-accent text-white"><Plus className="h-4 w-4" /></button>
+          </div>
+          <section className="hidden rounded-[24px] border border-white/80 bg-white p-3 shadow-sm lg:block" aria-label="内容列表">
+            <button type="button" onClick={startNew} className="mb-3 flex h-11 w-full items-center justify-center gap-2 rounded-[16px] bg-accent text-sm font-black text-white hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-emerald-300"><Plus className="h-4 w-4" />新建{type === 'species' ? '物种数据' : '文章'}</button>
             {isLoading ? <div className="grid gap-2">{[1, 2, 3, 4].map(item => <div key={item} className="h-[72px] animate-pulse rounded-[16px] bg-ink/5" />)}</div>
               : loadError ? <div className="rounded-[18px] bg-red-50 p-4 text-sm font-bold text-red-700"><p>{loadError}</p><button type="button" onClick={() => void loadItems()} className="mt-3 h-10 rounded-full bg-red-700 px-4 text-white">重新加载</button></div>
               : items.length === 0 ? <div className="rounded-[18px] bg-bg p-5 text-center"><FileImage className="mx-auto h-8 w-8 text-ink/25" /><p className="mt-2 text-sm font-black">还没有内容</p><p className="mt-1 text-xs font-bold text-ink/45">先创建第一条草稿。</p></div>
               : <div className="grid max-h-[calc(100dvh-230px)] gap-2 overflow-y-auto pr-1">{items.map(item => <button key={item.id} type="button" onClick={() => selectItem(item)} className={`rounded-[16px] border p-3 text-left focus:outline-none focus:ring-2 focus:ring-emerald-300 ${selectedId === item.id ? 'border-emerald-300 bg-emerald-50' : 'border-border hover:bg-bg'}`}><span className="block truncate text-sm font-black">{'name' in item ? item.name : item.title}</span><span className="mt-1 flex items-center justify-between text-[11px] font-bold text-ink/42"><span>{item.catalogKey}</span><span>{item.status === 'published' ? '已发布' : item.status === 'archived' ? '已下线' : '草稿'}</span></span></button>)}</div>}
           </section>
 
-          <form onSubmit={save} className="rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5">
+          <form onSubmit={save} className="min-w-0 rounded-[24px] border border-white/80 bg-white p-4 shadow-sm md:p-5">
             <div className="mb-5 flex flex-wrap items-start justify-between gap-3 border-b border-border pb-4">
-              <div><div className="text-xs font-black text-emerald-700">{selected ? statusLabel : '新草稿'}</div><h2 className="mt-1 text-lg font-black">{selected ? ('name' in selected ? selected.name : selected.title) : `新建${type === 'species' ? '物种' : '养护文章'}`}</h2></div>
+              <div><div className="text-xs font-black text-emerald-700">{selected ? statusLabel : '新草稿'}</div><h2 className="mt-1 text-lg font-black">{selected ? ('name' in selected ? selected.name : selected.title) : `新建${type === 'species' ? '物种数据' : '养护文章'}`}</h2></div>
               <div className="flex flex-wrap gap-2">
-                {selected && <><button type="button" disabled={isSaving || isDirty} onClick={() => setPendingStatus(selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{selected.status === 'published' ? '下线' : '发布'}</button><label className={`flex h-10 cursor-pointer items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'pointer-events-none opacity-50' : ''}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label></>}
-                <button type="submit" disabled={isSaving || isUploading} className="flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-55">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{isSaving ? '保存中…' : selected ? '保存修改' : '创建草稿'}</button>
+                {selected && <button type="button" disabled={isSaving || (!isSnapshotRepair && isDirty)} onClick={() => setPendingStatus(isSnapshotRepair ? 'published' : selected.status === 'published' ? 'archived' : 'published')} className="h-10 rounded-full border border-border px-4 text-sm font-black disabled:cursor-not-allowed disabled:opacity-45">{isSnapshotRepair ? '生成 Published Snapshot' : isDirty ? '保存后可发布' : selected.status === 'published' ? '下线' : '发布'}</button>}
+                {selected && !isSnapshotRepair && <label title={isLocalBusinessAdminMode ? (isLocalAdminFileMode ? '图片保存在项目 .local/aqua-admin/assets/；显式发布前不会进入 Local Published Snapshot。' : '图片仅保存在当前浏览器 IndexedDB；显式发布前不会进入 Local Published Snapshot。') : undefined} className={`flex h-10 items-center gap-2 rounded-full border border-border px-4 text-sm font-black ${isUploading ? 'cursor-not-allowed opacity-45' : 'cursor-pointer'}`}><FileImage className="h-4 w-4" />{isUploading ? '上传中…' : isLocalBusinessAdminMode ? currentAsset ? '替换本地图片' : '添加本地图片' : '替换图片'}<input ref={fileInputRef} type="file" accept="image/png,image/jpeg,image/webp" className="sr-only" onChange={event => void upload(event.target.files?.[0])} disabled={isUploading} /></label>}
+                {!isSnapshotRepair && <button type="submit" disabled={isSaving || isUploading} className="flex h-10 items-center gap-2 rounded-full bg-accent px-5 text-sm font-black text-white disabled:cursor-not-allowed disabled:opacity-55">{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}{isSaving ? '保存中…' : selected ? '保存修改' : '创建草稿'}</button>}
               </div>
             </div>
 
             {formError && <div role="alert" className="mb-4 rounded-[16px] bg-red-50 px-4 py-3 text-sm font-bold text-red-700">{formError}</div>}
+            {isSnapshotRepair && <section data-testid="published-snapshot-repair" className="mb-4 border border-slate-200 bg-slate-50 px-4 py-3"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/45">当前任务 · Published Snapshot</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/60">当前 Care 已经发布，但仍是旧发布来源。此维护模式只允许读取当前已发布内容并生成 immutable snapshot；内容编辑、图片替换和下游 SEO 操作已锁定，不会修改 Care、Compatibility 或 SEO。</p></section>}
+            {selected && isLocalBusinessAdminMode && currentAsset && <section data-testid="local-asset-preview" className="mb-4 grid gap-3 rounded-[18px] border border-border bg-bg/50 p-3 md:grid-cols-[160px_minmax(0,1fr)]">
+              <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[14px] bg-white">{assetPreviewUrl ? <img src={assetPreviewUrl} alt={`${'name' in selected ? selected.name : selected.title} 本地预览`} className="h-full w-full object-contain" /> : <FileImage className="h-8 w-8 text-ink/25" />}</div>
+              <div className="self-center"><div className="text-xs font-black text-ink/45">{isLocalAdminFileMode ? 'LOCAL IMAGE · DURABLE FILE' : 'LOCAL IMAGE · CURRENT BROWSER ONLY'}</div><div className="mt-1 text-sm font-black">{currentAsset.variant} · v{currentAsset.assetVersion}</div><div className="mt-1 text-xs font-bold text-ink/50">{currentAsset.width && currentAsset.height ? `${currentAsset.width}×${currentAsset.height} · ` : ''}{currentAsset.byteSize ? `${Math.round(currentAsset.byteSize / 1024)} KB · ` : ''}{isLocalAdminFileMode ? '.local/aqua-admin/assets 文件持久化' : 'IndexedDB 持久化'}</div><p className="mt-2 text-xs font-bold leading-5 text-ink/55">替换图片会让当前内容回到 Draft；只有显式发布后，这一版图片才进入 Local Published Snapshot。Production 资产路径不受影响。</p></div>
+            </section>}
+            <fieldset disabled={isSnapshotRepair} data-testid={isSnapshotRepair ? 'snapshot-repair-readonly-fields' : undefined} className="m-0 min-w-0 border-0 p-0">
             {type === 'species' ? (
               <div className="grid gap-4 md:grid-cols-2">
                 <Field label="目录 ID" required><input ref={firstFieldRef} className={inputClass} value={speciesForm.catalogKey} disabled={Boolean(selected)} onChange={e => { setSpeciesForm(v => ({ ...v, catalogKey: e.target.value })); setIsDirty(true); }} /></Field>
@@ -257,11 +410,20 @@ export default function AdminContent() {
                 <div className="md:col-span-2"><Field label="关键词（每行一项）"><textarea className={textareaClass} value={lineText(careForm.keywords)} onChange={e => { setCareForm(v => ({ ...v, keywords: lines(e.target.value) })); setIsDirty(true); }} /></Field></div>
               </div>
             )}
+            </fieldset>
+
+            {selected && !isSnapshotRepair && <div data-testid="content-review-reference" className="mt-6 border-t border-slate-200 pt-5">
+              <div className="mb-3"><div className="text-[11px] font-black uppercase tracking-[0.1em] text-ink/35">保存 / 发布参考</div><p className="mt-1 text-xs font-semibold leading-5 text-ink/45">先完成当前 Product / Care 内容；Impact 与下游 authority 只用于复核，不会替你改写其它业务数据。</p></div>
+              <ContentImpactPreview impact={visibleImpact} saved={!isDirty && Boolean(visibleImpact?.changes.length)} savedLabel={savedImpactLabel} />
+              {type === 'species' && <ProductBeforeAfterPreview before={publishedSpeciesBaseline} after={speciesForm} impact={visibleImpact} />}
+              {type === 'species' && compatibilityRegression && <CompatibilityRegressionPreview result={compatibilityRegression} />}
+              {type === 'care' && <CareSeoProjectionPreview careId={(selected as AdminCareArticleRecord).id} sourceRefreshKey={`${selected.version}:${selected.status}`} initialLocale={requestedLocale} focusOnReady={requestedSeo} />}
+            </div>}
           </form>
         </main>
       </div>
 
-      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[420px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? '发布后普通用户可以立即看到这项内容。' : '下线后普通用户将无法继续打开这项内容。'}</p><div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? '确认发布' : '确认下线'}</button></div></div></div>}
+      {pendingStatus && selected && <div className="fixed inset-0 z-[400] flex items-center justify-center bg-ink/45 p-4" role="dialog" aria-modal="true" aria-labelledby="status-dialog-title"><div className="w-full max-w-[520px] rounded-[24px] bg-white p-5 shadow-2xl"><h2 id="status-dialog-title" className="text-lg font-black">{pendingStatus === 'published' ? isSnapshotRepair ? '确认生成 Published Snapshot' : '确认发布' : '确认下线'}</h2><p className="mt-2 text-sm font-bold leading-6 text-ink/55">{pendingStatus === 'published' ? isSnapshotRepair ? '这会把当前已发布 Care 版本写入 immutable Published Snapshot；不会修改 Care 内容、Compatibility 或 SEO 文案。' : '发布后，直接接入当前 Product/Care authority 的页面会读取新版本；标记为“需单独复核”的 Compatibility、SEO 等独立 authority 不会被自动改写。' : '下线后普通用户将无法继续打开这项内容。'}</p>{pendingStatus === 'published' && !isSnapshotRepair && <ContentImpactPreview impact={visibleImpact} saved savedLabel={savedImpactLabel} compact />}{pendingStatus === 'published' && !isSnapshotRepair && compatibilityRegression && <div className={`mb-4 rounded-[14px] border px-3 py-2.5 text-xs font-bold leading-5 ${compatibilityRegression.changedPairs ? 'border-amber-200 bg-amber-50 text-amber-900' : 'border-emerald-200 bg-emerald-50 text-emerald-900'}`}><span className="font-black">Compatibility 模拟：</span>{compatibilityRegression.changedPairs ? `发现 ${compatibilityRegression.changedPairs} 个组合结果/规则发生变化，其中 ${compatibilityRegression.statusChangedPairs} 个状态变化；发布 Product 不会自动更新 Compatibility 规则。` : `已对比 ${compatibilityRegression.cohortSize} 个组合，未发现物种级 Compatibility 结果变化。`}</div>}<div className="mt-5 flex justify-end gap-2"><button type="button" disabled={isSaving} onClick={() => setPendingStatus(null)} className="h-11 rounded-full border border-border px-5 text-sm font-black">取消</button><button type="button" disabled={isSaving} onClick={() => void updateStatus()} className={`flex h-11 items-center gap-2 rounded-full px-5 text-sm font-black text-white ${pendingStatus === 'archived' ? 'bg-red-700' : isSnapshotRepair ? 'bg-ink' : 'bg-accent'}`}>{isSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : pendingStatus === 'published' ? <Send className="h-4 w-4" /> : <XCircle className="h-4 w-4" />}{isSaving ? '处理中…' : pendingStatus === 'published' ? isSnapshotRepair ? '确认生成 Snapshot' : '确认发布' : '确认下线'}</button></div></div></div>}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import {
   evaluateTankCompatibility as evaluateLegacyTankCompatibility,
   getTankCompatibilityAddPolicy as getLegacyTankCompatibilityAddPolicy,
   getTankCompatibilityStatusLabel as getLegacyTankCompatibilityStatusLabel,
+  type CompatibilityEvidenceProvider,
   type EvaluateTankCompatibilityInput,
   type TankCompatibilityAddPolicy,
   type TankCompatibilityResult,
@@ -75,6 +76,7 @@ const normalizeCanonicalResult = (result: TankCompatibilityResult): TankCompatib
 };
 
 export type {
+  CompatibilityEvidenceProvider,
   EvaluateTankCompatibilityInput,
   TankCompatibilityAddPolicy,
   TankCompatibilityResult,

@@ -1,3 +1,4 @@
+import { COMPATIBILITY_RULE_VERSION } from '../packages/domain-rules/src';
 import assert from 'node:assert/strict';
 import {
   evaluateTankCompatibility,
@@ -47,7 +48,7 @@ assert.equal(reviewedDecision.status, 'caution');
 assert.equal(getCompatibilityDecision(reviewedDecision).addPolicy, 'confirm');
 assert.equal(getCompatibilityDecision(reviewedDecision).decisionReadiness, 'reviewed');
 assert.equal(reviewedDecision.metadata.domainStatus, reviewedDecision.status);
-assert.equal(reviewedDecision.metadata.ruleVersion, 'compatibility-domain-v1');
+assert.equal(reviewedDecision.metadata.ruleVersion, COMPATIBILITY_RULE_VERSION);
 assert.ok(reviewedDecision.warningRules.some(rule => rule.code === 'pair_rule_group_size_and_shared_water_window'));
 
 const domainOnlyWaterConflict = evaluateTankCompatibility({

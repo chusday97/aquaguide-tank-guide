@@ -1,204 +1,1450 @@
-# AI Execution Log
+# Execution Log
 
-## 2026-09-08 — Action contract browser gate alignment
+## 2026-09-11 — populated Compatibility v3 migration execution PASS
+- Restored Docker Desktop backend after stale IPC/dead-daemon state; local registry downloads remained unreliable, so validation reused cached Supabase PostgreSQL 17.6.1.159 images and isolated Docker test resources.
+- Confirmed the project is not linked to a remote Supabase project before local database work.
+- Real local migration execution accepted the pending migration chain through `202609110001_compatibility_v3_profile_authority.sql`; DB objects/constraints/functions were queried afterward.
+- Built an isolated pre-v3 `sp_0436` fixture: reviewed Profile v1, two normal Profile Evidence sources, approved revision base v1 with old Impact/Regression/Evidence state.
+- Executed the unmodified v3 migration. Results: Profile v2 with `{water,temperature,social_behavior,breeding_behavior}`; revision `pending_review`, base v2, revision v3; canonical adult→fry Stage Risk + two dedicated Evidence links; stale review artifacts cleared; authority sequence 4→8.
+- Fail-closed RPC probe PASS: direct publish rejected with `PUBLISH_GATE_REJECTED: revision_not_approved`.
+- Recreated valid v3 review data and approved revision; atomic publish PASS with `baselineVersion=3`, `authorityVersion=20`. Post-publish Profile v3 contains review change, revision v5 is `published`, active revisions=0, Profile evidence is `{fishbase-poecilia-reticulata,guppy-schooling-learning-study}`, Stage Risk evidence is `{guppy-cannibalism-refuge-study,guppy-fry-yield-cannibalism-study}`.
+- Removed temporary test containers/volume and preserved original local Supabase volume. No cloud/main mutation.
 
-- Updated only regression scripts: browse-mode filter URL, current add-species task title/search selection, current species-detail safe states, and temperature mismatch presentation.
-- Authorized evidence: lint, API typecheck, build, task routes, UI action contract, onboarding goals, task entry, product actions, task actions, species detail, Compatibility and 435-pair launch matrix all pass.
-- No Domain, Catalog, Supabase, production or visual-owner files changed; action branch remains unpushed.
 
-## 2026-09-08 — GP-002 compatibility route correction
+## 2026-09-09 — Local Product/Care asset persistence checkpoint
+- Functional commit `2d26b1ca feat(admin): add local asset persistence`.
+- Product/Care main-image Blob data now persists in browser IndexedDB; Local Business records keep lightweight version/current metadata only. Large image data is not stored in localStorage.
+- Upload/replace mirrors the deployed publication boundary: the working record returns to Draft, the previous Local Published image remains unchanged, and only explicit Publish advances the Published asset snapshot. Replacing v1 with v2 keeps v1 public locally until the next publish.
+- Local Published Product/Care DTOs resolve current Published image metadata back to usable `blob:` URLs. Product and Care browser acceptance passes after reload while cloud Admin APIs are forced unavailable.
+- Production asset authority is unchanged: deployed uploads still use `/api/v1/admin/assets`; Local asset routing is DEV-only and covered by contract.
+- PASS: Local Product/Care, Compatibility, Care SEO and asset Heavy regressions; Operations/Publish Center/Care SEO/SEO Registry contracts; root/API TypeScript; full root build; diff/security hygiene.
+- NEXT: decide whether browser localStorage + IndexedDB should be promoted to Repo/local-file persistence for durable single-machine operations. Supabase Staging remains parked.
 
-- Remote Product Golden Path exposed a stale assertion for the retired embedded compatibility drawer. The detail surface now always exposes the explicit compatibility action after risk disclosure, and GP-002 verifies the independent `/compatibility` page before continuing quantity/recording steps.
-- Local GP-002, lint and production build pass; the PR requires a new head check after this fix.
+## 2026-09-09 — Local Care SEO Editorial checkpoint
+- Functional commit `691c4b43 feat(admin): add local care seo editorial`.
+- zh-CN Local Published Care now drives deterministic SEO projection plus Draft→Review→Approved Editorial persistence; index stays noindex.
+- Saving a Care Draft does not drift SEO; publishing a new Care version marks the old Editorial stale and requires an explicit new Draft bound to the new Published source.
+- Local English Published Care and Local AI Assist remain fail-closed; Care SEO health is visible through the read-only SEO Registry/Operations aggregation.
+- Operations attention sorting now keeps active Product/Care and Compatibility work ahead of generic SEO-attention queues while blocker/decision priority is unchanged.
+- Heavy browser regression passes with cloud Admin APIs forced unavailable. Production/main/live DB untouched.
+- NEXT: Product/Care image local-file persistence.
 
-## 2026-08-30 — Readiness candidate synchronized
+## 2026-09-09 — Local Publish Center checkpoint
+- Functional commit `174cf174 feat(admin): add local publish center history`.
+- Product/Care local publish/archive and Compatibility local submit/review/publish events now feed `/admin/publish-center`.
+- Local Publish Center skips Business `/admin/releases`; SEO continues to use its independent Repo Admin read feed.
+- Local Product/Care + Compatibility browser regressions pass with cloud Admin APIs forced unavailable; Production/main/live DB untouched.
+- NEXT: Care SEO Editorial local adapter.
 
-- Pushed the clean candidate `3e1dca89` once to `codex/main-core-foundation-v1`; remote branch and PR #142 now report the same head.
-- Vercel and Cloudflare Preview deployments for the candidate are ready; foundation checks passed and Product Golden Path remains pending on the final browser paths.
-- No production branch setting, Supabase production SQL, Catalog publication or `main` merge was changed.
+## 2026-08-28 — Admin Content V0 baseline
 
-## 2026-08-28 — Local convergence rehearsal after Vercel deferral
+- Isolated branch: `feature/admin-content-v0`.
+- Added standalone `apps/admin-content` Vite app.
+- Verified independent build, Supabase Auth guard, `user_roles` admin check and RLS boundary.
+- Local isolated Supabase test proved Admin Draft save succeeds and non-admin Draft read/write is denied.
+- Remote Vercel `admin-content` project established as read-only Review environment.
+- No `main` merge and no Production Supabase write.
 
-- Added `check:compatibility-authority` and kept legacy compatibility imports explicitly allowlisted as a facade boundary; Domain Rules remains the final status/policy/version source.
-- Updated current Catalog checksum/parity facts and created the production Catalog migration authorization package. No production SQL, Catalog publication, business-data write or main merge was executed.
-- Re-ran local gates: Catalog build/validate, Domain/Service/API, compatibility evidence, core flow, core UI, formal scenes, today action, species detail, responsive routes/detail surface, Supabase 26+1 reset, pgTAP 19/19, schema lint, lint, API typecheck, build, project truth, UI freeze and diff check. All passed.
-- Corrected only stale browser assertions: 600px follows the 768px phone breakpoint; formal compatibility uses `/encyclopedia?mode=compatibility`; AI Tank Copilot emits the existing feature-preview event; evidence disclosure is checked through `aria-expanded`.
-- Remaining: independent Critic re-review, one consolidated GitHub push, and Preview parity for the new head. Vercel remains external and rate-limited.
+## 2026-08-28 — Catalog authority correction
 
-## 2026-08-28 — Candidate push completed
+- Confirmed current public product reads 486 records from `src/data/fishData.ts`; connected Supabase `species` table is currently empty.
+- Admin therefore reads a generated lightweight repository catalog and stores only editorial SEO in `species_seo`.
+- Stable `catalog_key` remains the join key between Product Truth and editorial SEO.
 
-- Independent Critic re-review passed; the consolidated candidate was pushed once. `npm run project:status` now confirms local, remote branch and PR #142 SHA parity.
-- GitHub foundation/validate checks are still settling and AquaGuide Vercel is deploying; `admin-content` remains an unrelated rate-limit failure. Preview exact SHA is not yet accepted.
+## 2026-08-28 — Base Species / Variant milestone
 
-## 2026-08-28 — Candidate head and admin-content isolation
+- Added `generate-species-groups.mjs` and generated `species-groups.generated.json`.
+- Measured 486 records → 276 Base Species groups; 83 multi-member batch groups; 223 explicit variants.
+- Detected 28 exact duplicate records and 5 category-conflict groups for manual review.
+- Added grouped/category navigation, variant checkboxes and same-group batch SEO template editor.
+- Batch templates are Draft-only, Review-safe, Product-Truth isolated, and blocked on category conflicts / Published rows.
+- Added contract assertions so flattening back to the empty Supabase `species` table or unsafe bulk writes fail tests.
 
-- Candidate `codex/main-core-foundation-v1`, remote branch and PR #142 are synchronized at `df3c4e11`; `main` remains unchanged and PR #142 remains Draft.
-- Exact Preview parity was verified at preceding code head `55a37745`; the latest docs-only head is `UNVERIFIED` because Vercel build quota is exhausted.
-- Vercel `admin-content` was configured to use repository-root auto detection and build only on `feature/admin-content-v0`; its new PR status is currently rate-limited for 24 hours, so release readiness remains blocked by an external gate.
-- No production Supabase migration, Catalog publication or main merge was executed.
+## 2026-08-28 grouped UI verification
+- Added root `PROGRESS.md` / `HANDOFF.md` pointers to the `.ai/` execution records.
+- Verified 3011 read-only Review with real headless Chrome/CDP; 276 groups, 293 Variant rows, 5 conflict badges, no Vite overlay.
+- Verified `Neocaridina davidi` two-member bulk template preview and disabled Review save.
+- Verified `Pterophyllum scalare` category-conflict warning blocks bulk save.
+- Verified 1440×900 desktop grid has no document horizontal overflow.
+- Fixed batch checkbox selection to align the single-item editor with the last selected member.
+- Removed runtime timestamp from generated grouping JSON; repeated generation now produces an identical SHA-256 hash.
 
-## 2026-08-28 — Local Supabase replay and RLS verification
+## 2026-08-28 grouping milestone push
+- Functional milestone committed as `746bce0 feat(admin): group species variants for bulk SEO`.
+- Pushed successfully to `origin/feature/admin-content-v0`; `main` remains untouched.
+- Vercel `admin-content` detected commit `746bce0` on the intended branch; deployment is currently queued on Hobby capacity, not yet verified READY.
+- Deployment-side caveat: other repository branches without `apps/admin-content` can fail before Ignore Build runs because the configured Root Directory is absent. This is external deployment noise, not an Admin runtime failure.
 
-- Started Docker Desktop and initialized the repository-local Supabase CLI configuration with production-compatible legacy grants for the existing 26-migration history.
-- Replayed the first 26 migrations from an empty local database. Normalized hashes for columns, constraints, functions, indexes, policies, table grants and triggers exactly matched the read-only production baseline.
-- Hardened the proposed Catalog migration with explicit Data API grants/revokes and moved legacy non-pgTAP SQL fixtures out of `supabase/tests/`.
-- Added a 19-assertion transaction-isolated Catalog/RLS pgTAP suite. Full 27-migration replay, schema lint, Catalog contract/snapshot validation, domain/API/repository tests and UI freeze checks pass locally.
-- Local anonymous REST read returned 200 for published Catalog data; anonymous write returned 401/`42501`. No production migration, Catalog publication, business-data write, GitHub push, PR update or main merge occurred.
-- Local verification/configuration commit: `b9903924` (not pushed).
-- Production read-only recheck confirmed 26 migration versions, 35/35 RLS tables, 89 policies, 56 foreign keys and 86 indexes; 33 trigger objects appear as 35 information_schema event rows because one trigger covers multiple events. Catalog objects remain absent and no production write was attempted.
-- Pushed the consolidated candidate once after the recheck: local/remote/PR #142 SHA `ad858032`; `npm run check:preview-parity` passed with Vercel deployment `6133389265`. Product Golden Path validation is still in progress.
-- Fixed the parity gate false negative by adding a read-only Vercel CLI metadata fallback; the fix is committed as `75dafff3` and has been pushed. The previous `ad858032` Preview record is historical; the new candidate deployment SHA is pending one final read.
-- Final read-only parity: local, remote branch, PR #142 and Vercel Preview all match `1a3d366bd8432eadf20442274ba06dfd90904a98`; `npm run check:preview-parity` returned `EQUIVALENT`, and Product Golden Path validate completed successfully. Production migration/catalog publication/main merge remain separately unauthorized.
+## 2026-08-28 Base Species inheritance milestone
+- Added `species_seo_groups` branch migration with admin-only write RLS and published/admin read policy.
+- Added Base Species shared SEO editor and read-time inheritance resolver.
+- Variant SEO fields are now explicit Overrides; clearing Title Override restores Base inheritance.
+- Batch workflow now creates Draft shells only and previews effective inherited SEO instead of copying template text.
+- Real Chrome Review verification: Base template edits propagate immediately to 极火虾 / 黄金米虾 previews; shared intro propagates; Variant Override remains isolated.
+- Isolated local Supabase verification: admin Draft insert succeeds; non-admin Draft read returns 0 and non-admin insert is rejected by RLS; test rows cleaned up.
 
-## 2026-08-25 — Initialize `.ai/`
+## 2026-08-28 bilingual SEO + review milestone
+- GitHub research: Payload localization informed locale-specific content/status; Tolgee informed context-aware machine/AI suggestions with review before acceptance.
+- Reused AquaGuide's existing OpenAI-compatible / DeepSeek server pattern instead of introducing a new translation SaaS/runtime dependency.
+- Added `zh-CN` / `en` content switching, composite locale keys and `localized_name` editorial field.
+- Added admin-authenticated `/api/translate`, English suggestion review panel and Draft-only acceptance flow.
+- Added token-preservation validation and no-auto-overwrite rule for Published English.
+- Completed source-data review queue with concrete category-conflict and duplicate-set evidence.
+- Applied `202608280003_species_seo_localized_name.sql` only to isolated local Supabase; bilingual rows coexist and non-admin Draft read remains denied.
+- Real Chrome Review verified English workspace, `Pterophyllum scalare` conflict evidence and `Neocaridina davidi` duplicate evidence.
 
-## 2026-08-27 — Main convergence candidate
+## 2026-08-28 — Species route, index strategy and page-effect preview
+- Audited existing `public/problems` + `public/zh/problems` SEO pages and reused their English-default + `/zh/` hreflang pattern.
+- Confirmed there are currently no independent public Species SEO HTML pages; existing `/encyclopedia?species=...` is an application deep link, not the new canonical contract.
+- Added `seoRouteContract.js`, `index_strategy`, `canonical_catalog_key` and derived canonical paths.
+- Extended the lightweight Admin catalog with read-only temperature/pH/tank-size/difficulty/description fields only for page preview.
+- Added `PublicSpeciesPreview` so editors see H1/intro and existing Product Truth in a future public-page layout instead of relying on a generated image.
+- Contract/build/diff checks passed; real Chrome verified URL/canonical/hreflang/noindex and disabled Published state.
+- Recreated a fresh isolated local Supabase at `/tmp/aquaguide-admin-seo-test`; core + Admin migrations 001–004 applied successfully.
+- RLS proof: admin saved canonical strategy; non-admin saw 0 Draft rows and INSERT was rejected; test rows cleaned up.
 
-## 2026-08-27 — Visual recovery started
+## 2026-08-28 — Fail-closed Species generator + revision history milestone
+- Verified prior pushed route milestone `43eec47` on Vercel `admin-content`: deployment READY, HTTP 200, page and response remain noindex.
+- Added `generate-public-species.mjs`: explicit non-production snapshot → deterministic bilingual static HTML + `sitemap-species.xml` + manifest. Production snapshots are rejected and output directory is always explicit.
+- Added runtime generator regression and wired it into `test:contract`; fixture generates 4 pages with 2 self-canonical sitemap candidates and verifies title/meta/H1/robots/canonical/hreflang/x-default/sitemap behavior.
+- First runtime pass caught a real locale defect: English file path rendered Chinese `<html lang>` and labels because locale was not forwarded to `renderPage`; fixed before milestone completion.
+- Added migration 005 `content_revisions`, Base/Variant revision triggers and admin-only rollback RPC. Rollback always forces Draft, clears `published_at`, and records a `rollback` revision with source revision ID.
+- Added Base/Variant History UI with two-click restore confirmation; read-only Vercel Review never queries real revision history.
+- Fresh isolated local Supabase applied core + migrations 001–005. Variant proof: v1 Draft → v2 Published fixture → v3 rollback Draft. Base Species passed the same sequence.
+- Non-admin history query returned 0; non-admin rollback RPC raised `Admin role required`; cleanup ended with 0 SEO/group/revision test rows.
+- Read-only Chrome Review on temporary port 3099 showed both History panels, public Species preview and both disabled Published options with zero page errors. Temporary Vite/Supabase test environments were stopped after validation.
+- `test:contract` and production Admin build pass; only the known >500KB bundle warning remains.
+- Production Supabase and `main` were not modified. Published remains locked pending staging end-to-end publication validation.
 
-- Confirmed a real visual regression: the main-based candidate had removed `/_preview/interactive`, the canonical stage/detail styles, and 919 lines of baseline index styles.
-- Created local recovery branch `codex/main-visual-recovery-v1` from the candidate without changing Domain, Catalog, Service, API or Supabase files.
-- Restored the interactive preview route, preview-only scene components, canonical stage/detail styles and interactive scene styles. Adapted only removed prop signatures to the current `ResilientImage` and `ThreeAquarium` APIs.
-- Verification: `npm run lint` and `npm run build` pass; the preview build contains the restored `InteractivePreview` chunk. Fixed-viewport browser review is still pending because the local browser policy blocked localhost inspection.
-- Remote: not pushed; PR #142 remains unchanged and not release-ready.
+## 2026-08-28 — Generator/history push and staging gate follow-up
+- Re-ran Admin contract/build/diff checks and committed generator + revision history as `cd363b4 feat(admin): add species publishing safety and revision history`.
+- Pushed `cd363b4` to `origin/feature/admin-content-v0`; `main` and Production Supabase remain untouched.
+- Vercel Git Integration did not create a new deployment immediately. Manual Preview deploy from the linked `admin-content` project was rejected by Hobby `api-deployments-free-per-day` (>100/day); no Production deploy was attempted.
+- Supabase project inventory confirmed there is no AquaGuide staging project or development branch. `ice-glide-staging-sg` is unrelated and was not used.
+- Auditing the next staging step found that the generator still defaulted to the Production canonical host when `siteUrl` was omitted; removed that fallback and added a Production-host denial test.
+- Added staging-only Published snapshot export using the Supabase publishable-key client plus explicit staging/Production project-ref guards.
+- Added end-to-end staging verifier: export → generator → local HTTP serving → EN/ZH rendered response + sitemap checks.
+- `verify:staging-publish` intentionally fails non-zero when staging DB/site configuration is absent; there is no local/Production fallback.
 
-## 2026-08-27 — Unified plan execution started
+## 2026-08-28 — Release-gate schema probe hardening
+- Found that content/page verification alone could not prove the staging database had revision/rollback schema applied when using only a publishable client key.
+- Added migration 006 `species_seo_release_gate_status()` as a data-free readiness probe. It reports only schema-version/feature booleans and grants execute to anon/authenticated; it does not expose revisions or SEO content.
+- At the migration-006 milestone, staging snapshot export began refusing schema versions below 6 or any missing feature flag; migration 007 later raised the current minimum to schema version 7.
+- Fresh temporary Supabase applied core + migrations 001–006 from scratch. Publishable anon successfully received all readiness flags=true while direct `content_revisions` SELECT remained `permission denied`.
+- Generator staging mode now also requires an explicit Production public URL deny-list, so direct generator use cannot silently target another Production alias through the staging path.
+- Temporary Supabase stack was stopped and removed after verification; Production remained untouched.
 
-## 2026-08-27 — Final unified line and Supabase audit
+## 2026-08-28 — A+B CI gate implementation
+- Added `.github/workflows/admin-content-ci-gate.yml` scoped to Admin/catalog/SEO migration paths and the isolated feature branch.
+- Pinned immutable action SHAs plus Node 24.14.0 and Supabase CLI 2.115.0; workflow uses Ubuntu 24.04 and repository read-only permissions.
+- Added shared `test:supabase-gate` used by both local macOS and GitHub Actions.
+- First local run exposed missing temporary `migrations/` creation; fixed before push.
+- Second local run exposed that service_role lacked `user_roles UPDATE`; test setup was corrected to use only ephemeral PostgreSQL admin fixture preparation instead of widening service-role privileges.
+- Final local shared gate PASS: migrations 001–006, readiness probe, admin/non-admin RLS, Base/Variant rollback, anonymous Published reads, DB→2 bilingual static pages, canonical/hreflang/sitemap.
+- No Production secret, Production database write, main merge, automatic Git commit or automatic deploy is part of this workflow.
 
-## 2026-08-27 — Stage 2 visual recovery on the canonical candidate
+## 2026-08-28 — First GitHub A-layer clean run
+- Pushed A+B workflow as `2d85a4e ci(admin): add pinned ephemeral Supabase gate`, preserving concurrent Figma handoff commit `bc1fd3f` via safe rebase; no force push.
+- GitHub Actions run `33146619043` started on Ubuntu 24.04 with Node 24.14.0, Supabase CLI 2.115.0 and read-only repository permissions.
+- First clean run failed before database tests at `npm ci`: root `package-lock.json` did not yet contain `@aquaguide/admin-content` workspace metadata.
+- The failure was reproduced/fixed locally by updating lockfile with npm 11.9.0; no dependency upgrade was introduced.
+- Clean local `npm ci --no-audit --no-fund` then passed contract, ephemeral Supabase gate and Admin build.
+- Clean install also removed local node_modules drift: Vite returned from untracked 6.4.3 to lockfile-resolved 6.4.2 with all tests still green.
 
-- Restored the shared desktop `detail-rail` and mobile bounded `bottom-sheet` contract without reintroducing the legacy `right-drawer` assertions.
-- Added transparent loading/failure surfaces to `ResilientImage` and enabled them for formal Encyclopedia and Care scene assets; failures no longer paint opaque white placeholders over the immersive stage.
-- Restored the creature-first Collection hub from the approved visual baseline and removed Aquarium follow-up cards outside the single immersive stage. No Domain, Catalog or Supabase files were changed.
-- Updated responsive/formal/collection browser gates to assert the current visual contract. Lint, build, responsive surface, formal scenes, today action, collection hub, aquarium layout and framing checks pass on the local candidate.
-- Candidate changes are local only; Preview SHA parity, fixed screenshots, independent review, Supabase reconciliation and main merge remain pending.
+## 2026-08-28 — A+B gate proven green
+- Commit `ef2f6ae ci(admin): fix clean workspace install gate` aligned root lockfile workspace metadata without downgrading resolved `date-fns` (still 4.1.0).
+- GitHub Actions run `33147127271` completed SUCCESS on Ubuntu 24.04.
+- Every gate step passed: pinned Node 24.14.0, Supabase CLI 2.115.0, clean npm install, Admin contract, ephemeral Supabase gate, build, generated catalog parity and diff hygiene.
+- A+B is now an executed stability protocol, not a proposal. Paid persistent Supabase staging remains optional.
 
-## 2026-08-27 — Preview identity and fixed-viewport evidence
+## 2026-08-28 — Post A+B planning sync
+- Rebased project planning from infrastructure setup to product completion after GitHub Actions run `33147127271` passed end-to-end.
+- Updated CURRENT_GOAL / TASK_QUEUE / LIVE_STATUS and corrected stale HANDOFF / PROGRESS references that still treated paid dedicated staging as mandatory.
+- Next implementation order is publish-readiness → persisted data-review decisions → controlled Preview Publish → real translation suggestion smoke test.
+- No product code, Production Supabase, Vercel Production or `main` changed in this planning sync.
 
-- Replaced the stale 4317 candidate listener with a detached `37a8d4d1` baseline worktree and started the candidate on the planned 4319 port.
-- Captured both sets at 390×844, 600×900 and 1280×900 for `/_preview/interactive`, Aquarium, Encyclopedia, Care and Collection under `zh-CN`; local artifacts are in `/private/tmp/aquaguide-visual-matrix/`.
-- Formal scene verification now checks the candidate branch and exact checked-out SHA exposed by preview metadata before route interaction tests.
-- Production migration, Catalog publication, remote push and main merge remain blocked by their separate authorization/acceptance gates.
 
-## 2026-08-27 — Independent Critic fixes
+## 2026-08-28 — Publish readiness + actionable Data Review implementation
+- Added branch migration 007 with Base/Variant editorial review state, persisted `species_data_reviews`, admin-only RLS and a minimal public review-resolution RPC.
+- Added `PublishReadinessPanel` and deterministic readiness assessment covering Base/Variant existence, content completeness, editorial approval, bilingual counterpart, index/canonical rules and Data Review decisions.
+- Changed Data Review from evidence-only cards to persisted human decisions for category conflict / duplicate sets; Review mode remains write-disabled.
+- Extended Base editor to all 276 groups so single-member Species can satisfy the same Base publication contract.
+- Added DB trigger invalidation: any content/index change after Approved forces Editing and clears reviewer metadata.
+- Extended rollback RPC through migration 007 so restored rows return Draft + Editing.
+- Extended generator and staging snapshot to require Approved content and consume only safe review resolutions.
+- First DB run found a PostgreSQL trigger bug caused by cross-table OLD-field access; fixed by branching on `TG_TABLE_NAME`.
+- Real Chrome found a runtime `groupMember is not defined` missed by build; fixed and rerun across duplicate/conflict/singleton paths with zero page errors.
+- Fresh B-layer Supabase gate passed schema v7, Data Review RLS, approval invalidation, rollback and DB→EN/ZH generation.
 
-- Critic found that Aquarium `archive`/`discovery` props were accepted but not rendered, so the `aquarium-learn-zone`, Archive and Daily Discovery deep links were restored as one learn zone below the immersive stage.
-- Normalized both legacy database enum spellings (`Freshwater`/`Saltwater`) and Catalog spellings (`freshwater`/`saltwater`) before server-side Domain evaluation; added direct regression assertions.
-- Expanded formal scene structural checks to 600px and 1280px, restored Collection wishlist/care route checks, and removed trailing blank lines from the eight restored production migrations.
-- Rebuilt the candidate and reran lint, API typecheck, build, API semantics and diff-check; remote candidate and PR remain stale until the reviewed local head is pushed.
 
-## 2026-08-27 — Viewport regression fix
+## 2026-08-28 — Controlled Preview Publish milestone
+- Verified `3669146` on GitHub Actions run `33149941551`: clean Ubuntu A-layer passed install, contract, migration 001–007 ephemeral Supabase gate, build, generated catalog parity and diff hygiene.
+- Extended the existing static generator with explicit `release` vs `preview` eligibility without changing release/staging Published semantics.
+- Added `build-controlled-preview.mjs`: requires `environment=preview`, `delivery_mode=controlled_preview`, explicit selected catalog keys and a non-Production host.
+- Preview output is defense-in-depth noindex: page meta `noindex,nofollow`, visible PREVIEW ONLY banner, root `robots.txt` Disallow-all, no release sitemap.
+- Added Preview output-dir deny-list for repository public, Admin public and Admin dist. First test exposed the missing Admin-public deny-list; fixed before completion.
+- Added `buildControlledPreviewSnapshot` + Admin export action; exported snapshot strips `reviewed_by` and Data Review `notes`.
+- Added permanent `test:preview-publish` to `test:contract`.
+- B-layer regression confirms release fixture still generates 2 real indexable pages + sitemap after Preview mode was added.
+- Generated a local Approved-Draft two-language preview and served it on `127.0.0.1:4020`; HTTP root/EN/ZH = 200. Chromium clicked the English page and verified H1, forced noindex, PREVIEW banner and `pageErrors=[]`.
 
-- Independent visual review caught a real narrow-screen regression: the candidate had replaced the shared viewport contract with UA detection, causing a 390px desktop sidebar and overlapping scene controls.
-- Restored `lib/layout-mode.ts` and `LayoutModeProvider` to the 768px viewport contract, updated the stale UA-oriented gate, and verified 390px now renders the phone toolbar/bottom navigation while 600/1280 retain their intended modes.
+## 2026-08-30 — AI Studio visual integration pass 1
+- Located the AI Studio source in separate private repo `chusday97/aqua-fronted-cms` and verified it contains React/Vite components rather than the earlier README-only state.
+- Audited the source and rejected mock business behavior: random preview token generation, fake preview domains, in-memory delete, client-side Data Review resolution and client-side readiness authority.
+- First closed the pre-existing Workflow Overview work as `374db2f feat(admin): add workflow overview filters`; real Chrome verifies 33 pending issues filter to 32 Base groups and clearing restores all 276.
+- Reworked the real Admin into a three-pane desktop workspace while preserving existing callbacks/state: 270px contextual Species navigation, flexible center editor, 460px live frontend preview.
+- Added Base-parent / Variant-child navigation and moved language switching into the editor context instead of duplicating it in the global header.
+- Moved Data Review, readiness details, translation, batch operations, revision history and queue overview behind progressive disclosure.
+- Added `LiveFrontendPreview`: Page / Google / Mobile modes; unsaved Variant H1/title/meta/intro resolve through the existing inheritance logic and update the right pane without saving.
+- Browser validation at 1600×1000 measured 270/870/460 panes, confirmed live H1 updates, Base editor switching, 33→32 issue filtering and zero page errors.
+- Browser validation also found grouped Species had lost image/Product Truth fields. Extended deterministic group projection with image, temperature, pH, tank size, difficulty and product description; preview image now loads and facts render from catalog.
+- Full local Supabase gate remains PASS after UI changes: schema v7, RLS/rollback and DB→2 bilingual indexable static pages unchanged.
 
-- **Action:** 将唯一工作线校正为 `codex/main-core-foundation-v1@5b419e98`；4317 固定视觉基线，4319 作为候选预览；恢复分支降级为历史证据。
-- **Read-only evidence:** Supabase project `AquaGuide` 为 `ACTIVE_HEALTHY`；生产有 26 个 migration、35 张启用 RLS 的 public 表、89 条 policy。
-- **Finding:** 生产缺少候选 Catalog migration (`catalog_releases`、`species.water_type`)，候选缺少 8 个生产 migration，并存在 memorial migration 版本命名漂移；状态为 `MIGRATION_REQUIRED + MIGRATION_HISTORY_CONFLICT`。
-- **Safety:** 未执行 migration、Catalog 上传、RPC mutation、业务数据写入或 `main` 合并。
+## 2026-08-31 — AI Studio visual integration + global language layer
+- Preserved `374db2f` workflow overview filters as a rollback baseline before UI integration.
+- Imported only layout/visual concepts from `chusday97/aqua-fronted-cms`; rejected its mock Preview URLs/tokens, client-side Data Review decisions, deletion flows and Readiness authority.
+- Reworked Admin into Species hierarchy / editor / live frontend preview; unsaved H1 changes update the right page immediately.
+- Added `AppLanguageProvider` with persisted Chinese/English interface locale and independent `contentLocale`.
+- Local browser proof: English Admin UI with Chinese content remained intact after reload, Product Truth image/facts loaded, and `pageErrors=[]`.
+- Initial Product Truth duplication inflated the main bundle to ~921KB; replaced with dynamic catalog loading, returning the main bundle to ~748KB plus a lazy catalog chunk.
 
-- Corrected canonical status to distinguish the active recovery worktree from the PR #142 release candidate.
-- Marked formal Encyclopedia and Care scene entry as `PARTIAL_WITH_FALLBACK`; preview-only scene components are not treated as restored product routes.
-- Updated project-truth verification to require both active worktree and release-candidate metadata.
+## 2026-08-31 — Workflow state colors + Inspector planning sync
+- Added distinct semantic topbar workflow styling: Data Review amber, Awaiting Review blue, Preview-ready green; active filters use matching soft backgrounds/borders.
+- Production Admin build remains green; Chromium computed styles confirm the three states are visually distinct.
+- Synchronized project docs around the next P0 milestone: bidirectional center-editor ↔ right-preview element inspection/highlighting with explicit editable/read-only mappings.
+## 2026-08-31 — Bidirectional Preview Inspector implementation
+- Added six editable mappings plus scientific name / temperature / pH / tank size / difficulty read-only mappings.
+- Chromium proof: center H1 → Page selection; Meta Description → Google selection; right Intro → center highlight; Product Truth temperature → zero editor selections.
+- Base proof: inherited H1 stays Base and highlights the H1 template; Hero Image routes to Current page / Image Alt.
+- Hover element labels, selected outline, source state and edit path all render with `pageErrors=[]`.
+- Admin contract/build and local schema-v7 Supabase gate pass after the interaction change.
+## 2026-08-31 — Variant inheritance UI refinement
+- Replaced always-visible blank inputs for Meta Title / Meta Description / H1 with inherited-value disclosures.
+- Added Override and Use Base value flows while preserving live Preview updates and resolver authority.
+- Browser proof: inherited H1 → Override focus → custom live H1 → Use Base value → inherited H1 restored; Google mode switches on SEO Title Override; `pageErrors=[]`.
+- Contract/build/schema-v7 Supabase gate all pass after the change.
 
-- Created `codex/main-core-foundation-v1` from `origin/main@ed0cf380`.
-- Migrated only accepted P0 compatibility capabilities from `99865414` and `c822bd0e`; resolved the main Dialog prop mismatch with commit `5b0c8ea7`.
-- Verification: `npm run lint` PASS and `npm run test:compatibility` PASS (19 assertions).
-- Not done: catalog release snapshot, Supabase parity, visual baseline migration, release PR.
+## 2026-08-31 — Tool drawer convergence
+- Added `EditorToolDrawer` and moved Data Review, Readiness, Translation, Batch SEO, History and Workflow out of inline disclosures.
+- Added grid-cell-only overlay CSS and semantic launcher rows; Chromium confirms 560px drawer stays inside the 870px editor while the 460px Preview remains visible.
+- Verified Escape / close / backdrop dismissal, Workflow filter handoff, English Translation drawer, and Inspector-to-editor return.
+- Removed Archived from Variant/Base Species status controls; Draft is writable and Published remains locked.
+- Contract/build PASS; local ephemeral Supabase gate PASS at schema_version=7.
 
-- **Read:** 项目 `PROGRESS.md`、`HANDOFF.md`、`PROJECT_STRUCTURE.md`、`40-DOCS/CHANGELOG.md`。
-- **Action:** 创建 `CURRENT_GOAL.md`、`TASK_QUEUE.md`、`CHANGELOG_AI.md`、`EXECUTION_LOG.md`。
-- **Verification:** 文件结构和当前目标均来自现有项目文档；未新增未经确认的产品事实。
-- **Remote:** 未执行 `git push`，未触发 Vercel 部署。
+## 2026-08-31 — Generator-aligned Preview + responsive fallback
+- Extracted shared Species page labels / tank-size localization into `speciesPagePresentation.js`; generator tests remain green.
+- Rebuilt Page Preview to match generator output and removed non-published mock sections.
+- Moved the three-column cutoff to 1180px after Chromium proved 1120/1080 clipped the old 400px Preview column.
+- Added compact Preview state/trigger for narrow layouts and source-aware Inspector handoff between editor and overlay Preview.
+- Chromium responsive/Inspector regression, contract, build and local Supabase gate all PASS.
 
-## 2026-08-25 — Standardize AI project protocol
+## 2026-08-31 — Editor density and Inspector authority milestone
+- Confirmed GitHub A gate `33326654737` for `d79058f` SUCCESS.
+- Collapsed Advanced SEO and inherited Base intro; unified Variant/Base status lines.
+- Browser measured Variant panel ~1032px at 1440px with advanced controls collapsed; all advanced controls remain present after disclosure expansion.
+- Fixed Preview-origin authority routing and verified Current page → Base inherited H1 → Current page image-alt round trip with mapped editor highlights and zero page errors.
+- `npm run test:contract`, production build and local ephemeral Supabase schema-v7 gate all PASS.
 
-- **Read:** `.ai/CURRENT_GOAL.md`、`PROGRESS.md`、`HANDOFF.md`、`PROJECT_STRUCTURE.md`、`40-DOCS/CHANGELOG.md`。
-- **Action:** 新增 `PRODUCT_CONTEXT.md`、`ARCHITECTURE.md`、`DECISION_LOG.md`、`BADCASES.md`、`docs/CONTEXT_ROUTING.md` 和根目录 `AI_PROJECT_PROTOCOL.md`。
-- **Verification:** 新增内容均来自现有项目文档；协议明确要求编码前读取三个核心文件，变更后更新三个执行文件。
-- **Remote:** 仅准备本地提交，不执行 `git push`，不触发 Vercel 部署。
-- **Commit:** `de906c2`（仅文档；未推送）。
-## 2026-08-25 — Progress unification started
+## 2026-08-31 — Primary editor density verification
+- Removed duplicate Variant header status badges in favor of one lifecycle/review summary.
+- Advanced SEO is now the single home for keyword/index/canonical/route controls.
+- Chromium 1440×900 measured ~936px default editor height; Intro Inspector mapping PASS; pageErrors=[]; B gate PASS.
 
-- Created `codex/unified-rc-visual-v1` from `37a8d4d1` after user confirmed the 4317 interactive preview as the correct visual result.
-- Recorded `integration/aquaguide-rc1@895f2f39` as a selective business reference only.
-- Recorded PR #140 as deprecated because its RC-first partial UI migration regressed the approved visual result.
-- Audited RC-only commits and grouped them into domain authority, recommendation, UI, interactive atlas, runtime/API, and workflow integrity categories.
-- Closed PR #140 and opened Draft PR #141 against `integration/aquaguide-rc1`.
-- Confirmed that P0 migration expands `LifeStage`, evidence data and planning semantics; paused code migration pending the required contract confirmation.
-- Added local/CI checks that report canonical branch, SHA, approved visual baseline, RC business reference and Draft PR.
+## 2026-08-31 — Base/Variant status-control regression
+- Base and Variant footer selects now identify review vs content lifecycle explicitly and share the same semantic tones.
+- Browser regression: header summary PASS, Preview remains visible, pageErrors=[]; contract/build/B gate PASS.
 
-## 2026-08-25 — Daily local worktree aligned
+## 2026-08-31 — Three-pane hierarchy convergence verification
+- Added shared selection/read-only CSS tokens and migrated active Base/Variant + Inspector styling onto them.
+- Added read-only Inspector class/state for Product Truth and fixed fact-card CSS specificity so the graphite background remains visible.
+- Added `containsActiveVariant` parent context in Species navigation.
+- Chromium evidence: editable H1 green, temperature graphite read-only, parent Base guide green, issue marks amber, pageErrors=[]. Contract + schema-v7 B gate PASS.
 
-- Switched `/Users/chuchu/Documents/New project/aquaguide_frontend` from legacy `codex/rc1-visual-integration` to `codex/unified-rc-visual-v1`.
-- Verified local `HEAD` and `origin/codex/unified-rc-visual-v1` both resolve to `5b619a08`; `npm run project:status` reports `dirty: false`.
-- The approved 4317 preview remains isolated on the user-approved visual baseline and was not changed.
+## 2026-08-31 — Left workflow-filter semantics
+- Added semantic issue/review/Preview tones to Species quick filters and localized filter labels/punctuation.
+- Chromium verified no English-label overflow and correct zh/en banner text.
+- Filter behavior unchanged: 33 pending issues → 32 Base groups; clear → 276; pageErrors=[]. Contract + B gate PASS.
 
-## 2026-08-25 — Unified branch CI verified
+## 2026-08-31 — Navigation count-unit correction
+- Changed Species `All` from 486 catalog records to 276 Base groups while preserving the separate 486-record catalog summary.
+- Active Data Review banner now reports 32 affected Base groups for 33 pending issues.
+- Added localized unit tooltips; browser zh/en regression PASS; pageErrors=[].
 
-- Added the canonical branch push trigger to `RC Convergence V1`, because a PR-only workflow not present on the default branch does not provide a usable gate for this Draft PR.
-- GitHub Actions run `32846848569` passed: canonical-state check, lint, layout-mode contract, three-stage framing contract, and production build.
+## 2026-08-31 — Unsaved-change regression
+- Added dirty comparison for Base/Variant forms, sticky unsaved indicator, save enablement, guarded editor navigation and `beforeunload`.
+- Fixed conditional Hook ordering discovered during review before browser validation.
+- Fixed no-op navigation masking: current Variant re-selection no longer prompts or clears dirty state.
+- Ran two writable browser gates against local ephemeral Supabase: Variant/save/language/navigation and Base/save/scope/beforeunload all PASS with zero page errors.
+- `npm run test:contract`, production build and `npm run test:supabase-gate` PASS.
 
-## 2026-08-25 — Open PR topology archived
+## 2026-08-31 — Workflow localization regression
+- Removed remaining mixed-language topbar filter labels.
+- Added live `workflowFilterLabel` derivation in Species sidebar.
+- Chromium verified active Data Review / Awaiting Review filters re-render across 中文 ↔ English with `pageErrors=[]`.
+- Contract and local schema-v7 Supabase gate PASS.
 
-- Queried 56 open GitHub PRs and recorded `.ai/OPEN_PR_REGISTRY.md`.
-- Designated #141 as the only active convergence entry; the other 55 PRs remain traceable historical inputs and are not direct merge sources.
-- No historical PR was closed or otherwise modified.
+## 2026-08-31 — Image Inspector regression
+- Changed registry label to `主图 Alt 文本 / Hero image alt text` and marked the asset read-only.
+- Added exact field names to Preview Inspector edit paths.
+- Chromium verified Image Alt selection, source/read-only explanation, Base-owned H1 path and English rendering with `pageErrors=[]`.
+- Contract and local schema-v7 Supabase gate PASS.
 
-## 2026-08-25 — Supabase deployment status corrected
+## 2026-08-31 — SEO handoff + loading audit
+- Confirmed `2a737de` GitHub A gate run `33370177087` SUCCESS.
+- Audited first-load Product Truth behavior under artificial network delay: prior behavior showed four `—` facts and no image before the lazy catalog chunk resolved.
+- Identified an additional stale-data risk during Species switching if the previously resolved Product Truth row is merged before the new `catalog_key` resolves.
+- Local fix is in progress with explicit loading state and key-scoped Product Truth ownership; production build passes, but browser delay regression/contract/B/A gates are still pending.
+- Reframed next project milestone from further CMS styling to a staging frontend SEO vertical slice.
 
-- The user confirmed that the existing Supabase work had already been deployed.
-- Corrected the status distinction: deployed Supabase is a user-confirmed fact; re-validating the exact connected environment, schema revision and RLS behavior from the unified branch remains a separate verification task.
+## 2026-09-01 — Product Truth loading correctness closed locally
+- Cold-load regression with 1.4s delayed Product Truth asset: four facts and hero image show explicit loading; no fake `—` / empty image.
+- Cross-Species regression: switching 64L → 40L Variant produced no frame where the new H1 was paired with the previous 64L facts.
+- Pending-request race: switching Species before the delayed asset returned stayed Loading until the final selected `catalog_key` resolved.
+- Failure/recovery regression: first JSON fetch forced to fail → Unavailable; next Species selection emitted a second fetch and recovered to the correct 40L Product Truth.
+- `npm run test:contract -w @aquaguide/admin-content`, production build, `git diff --check`, and schema-v7 ephemeral Supabase B gate PASS.
 
-## 2026-08-25 — Truth consolidation phase 1 started
+## 2026-09-01 — Admin authority unification
+- Added root `AdminHub`: Species SEO and Product/Care are explicit separate authorities.
+- Moved legacy Product/Care UI route from `/admin/content` to `/admin/product-content`; preserved CRUD, publish/archive, image assets and safe 403 messaging.
+- New Species SEO Admin is named explicitly and built under `/admin/seo/`.
+- Root `npm run build` now runs AquaGuide web build + SEO Admin sub-build into one `dist`.
+- Validation: TypeScript PASS; root Admin UI regression PASS at 1280/390; Product/Care API contract PASS; SEO Admin contract PASS; root build PASS; static `/admin/seo/` + JS/CSS assets return 200.
 
-- Added canonical project, product, visual and deployment documentation routes.
-- Reclassified the dated current-product snapshot as historical evidence; no product code, Supabase configuration or accepted visual baseline changed.
+## 2026-09-01 — Root deployment artifact integration
+- Added `scripts/build-species-seo-artifact.mjs` and wired root `npm run build` to merge generated Species pages only from an explicit snapshot.
+- Added a 3-Species bilingual staging fixture and `scripts/verify-root-species-seo-artifact.mjs`.
+- Added Admin CI coverage for the full root artifact path.
+- Local evidence: root build PASS with 6 generated HTML pages; artifact verifier PASS; Admin contract/generator/Controlled Preview/staging guard PASS; Admin authority browser verification PASS.
+- Safety: no snapshot = safe skip; generator still rejects Production snapshot/host paths.
 
-## 2026-08-25 — Truth consolidation phase 2 started
+## 2026-09-01 — Hosted staging slice preparation
+- Confirmed Vercel deployment for `4ad6472` was READY and `/admin/seo/` served the embedded Admin app, but Species HTML was absent because automatic Git deployment had no snapshot build input.
+- Added branch-scoped Preview input resolution: only `feature/admin-content-v0` + `VERCEL_ENV=preview` receives the committed 3-Species staging fixture and Vercel preview host as canonical base.
+- Added deterministic product CTAs from generated Species pages to `/encyclopedia?mode=compatibility`, `/encyclopedia?mode=browse`, and `/aquarium?action=plan-species`, always carrying `species=<catalog_key>&source=seo-species`.
+- Local verification: Admin generator contracts PASS; simulated Vercel Preview root build emits 6 pages; root artifact verifier PASS; Production simulation safely skips without explicit snapshot; `git diff --check` PASS.
 
-- Added a historical-evidence registry and supersession headers for legacy progress, Handoff, UI audit and cloud-planning records.
-- No historical file was deleted; the change makes their evidence role explicit.
+## 2026-09-01 — Compatibility CTA runtime fix
+- Browser-tested the hosted compatibility deep link and rejected a false PASS: mode/source/species parameters were present, but the target Species was not in the calculator selection.
+- Updated Encyclopedia query handling so compatibility deep links append the requested Species to `calculatorSpeciesIds` and do not open the detail overlay. Browse-mode deep links retain detail behavior.
+- Added isolated Vite + Playwright regression proving `sp_0030` is a planned compatibility candidate with zero page errors.
 
-## 2026-08-25 — Truth consolidation phase 3 started
+## 2026-09-01 — Hosted vertical slice PASS / clean-runner repair
+- Latest hosted Species artifact passed: EN/ZH title, robots, H1, reciprocal hreflang, canonical sibling behavior, noindex behavior, sitemap inclusion/exclusion and SEO-to-product CTA source parameters.
+- Latest hosted runtime handoff passed: compatibility deep link retained `species=sp_0030&source=seo-species`, preselected that Species as planned and produced zero page errors.
+- CI #26 diagnosis: root build and static artifact checks passed; only `verify:seo-species-handoff` failed because GitHub Actions had no downloaded Chromium binary. Added `npx playwright install --with-deps chromium` after `npm ci` so the same browser regression runs on a clean runner.
 
-- Added `docs/05-validation/VISUAL_ACCEPTANCE_MATRIX.md` to connect the user-confirmed 4317 UI baseline to regression commands, routes and human-review status.
-- Verified the local baseline: layout 6/6, framing, UI governance, interactive scenes, persistent detail rail, and page runtime matrix 28/28 all passed.
+## 2026-09-01 — Server-only hosted publication boundary
+- Audited the hosted staging exporter against current Supabase API-key/Data-API defaults.
+- Added migration 008: Published public visibility now also requires Approved; explicit `service_role` SELECT grants cover SEO/Base/Data Review release inputs.
+- Data Review resolution RPC is no longer callable by anon/authenticated; staging exporter reads a sanitized projection with a server-only secret/service-role client.
+- Release readiness probe advanced to schema v8 with `server_export_ready`.
+- Added `build:staging-from-db` to export from a future dedicated hosted staging Supabase and merge Species pages directly into AquaGuide `dist/`.
+- Fresh ephemeral Supabase 001–008 PASS: schema_version=8, draft/unapproved visibility blocked, rollback preserved, bilingual generation PASS.
 
-## 2026-08-25 — Truth consolidation phase 4 started
+## 2026-09-01 — Approved Draft staging release
+- Hosted staging no longer depends on Production `Published`. `staging_release` accepts only explicitly allowlisted Draft rows whose editorial review is Approved and has `reviewed_at`.
+- `STAGING_CATALOG_KEYS` is mandatory, deduplicated and capped at 20 Species; canonical dependencies must be explicitly included when needed.
+- Production-style `release` remains Published-only and ignores Approved Drafts.
+- Staging snapshots omit reviewer identity. Hosted acceptance must verify deployment-level `X-Robots-Tag: noindex`; page source keeps intended robots/canonical values for SEO inspection.
 
-- Added `FEATURE_CATALOG.md` as the single module-status inventory and removed the duplicate capability table from Product Truth.
 
-## 2026-08-25 — Truth consolidation phase 5 audited
+## 2026-09-02 — Latest continuation pointer
+- **Canonical cross-session handoff is now `.ai/HANDOFF_LATEST.md`. Read it first before changing Species SEO Admin.**
+- Latest code HEAD at sync: `fae815f`; GitHub Admin Content CI #43 (`33532055685`) SUCCESS; Vercel Preview `dpl_EeFvNvuqySA6RVpHYsvjPCuCG8Jw` READY.
+- Real hosted human path is proven through Chinese approval for `sp_0001`; zh-CN is Approved/version 6/index. English `sp_0001` remains Editing and still contains acceptance copy, so do not Staging Publish it yet.
+- Data Review now reports 32 pending issues after the 极火虾 duplicate decision. `Pelvicachromis pulcher` (`sp_0214 / sp_0338`) remains an unresolved duplicate example.
+- Duplicate labels are now actionable: `处理重复` opens the current group's review drawer with two decision buttons and a final `确认并保存`; no review-decision dropdown.
+- Status and actions are permanently separated; review actions update only review state. Inheritance UI is centralized under `内容来源 / 管理基础模板`, not repeated `公共内容` explanations.
 
-- Verified non-secret evidence: 18 tracked migrations, the 31-table three-tier contract test, configured Vercel Production Supabase/Postgres variable names, and a Ready unified-branch Preview.
-- Recorded exact deployed schema/RLS/SHA parity as an authorized read-only verification still required; no redeploy or configuration change was attempted.
+## 2026-09-02 — Content hygiene release gate
+- Added shared acceptance/test-copy detection for Species and Base editorial fields.
+- Variant/Base review actions now block dirty content; `sp_0001` browser check exposes the exact H1 marker and supports one-click restore to the clean Base template.
+- Repo review updates and Staging snapshot creation enforce the same rule server-side; static Species generation independently rejects dirty snapshots.
+- Historical staging snapshot verification now fails closed on `sp_0001/zh-CN` (`验收`) and `sp_0001/en` (`Dual-Repo`) instead of regenerating those acceptance H1s.
+- Contract, Repo backend/API, dual-repo routing, full root build, SEO handoff and Admin UI gates PASS locally.
 
-## 2026-08-25 — Truth consolidation phase 6 started
+## 2026-09-02 — Code Preview / Staging publication decoupling
+- Remote AquaGuide Preview on the hygiene-gate commit failed for the correct content reason: normal code deployment was still auto-consuming the historical dirty staging snapshot.
+- Reworked root Species artifact routing so normal code Preview skips staging content; only the server-generated `content(seo): publish staging ...` snapshot-only commit can auto-generate Species pages.
+- Added `test:species-seo-build-routing` and wired it into CI; explicit CI fixture generation remains supported.
+- Simulated code Preview PASS; simulated explicit publish with the dirty historical snapshot FAILS CLOSED on zh `验收` and en `Dual-Repo`.
+- GitHub CI #48 PASS; AquaGuide Vercel `dpl_FfdQmQxKfSYhQS8yBz9F7eVukj2b` READY; admin-content `dpl_8FuNP96AYyUTDhtaqEEXt2gXv8Y4` READY.
 
-- Added PR evidence template, delivery protocol and a deterministic project-truth verifier.
-- Read the RC branch-protection API: the branch is not protected. Recorded the safe prerequisite rather than enabling a check that could block all PRs before it is runnable from the base branch.
+## 2026-09-02 — Global copy-cleanup queue
+- Added per-locale content-hygiene task queues without creating a new review state.
+- Added a conditional full-width sidebar cleanup alert, locale-aware filtering, and direct navigation to the affected Species.
+- Inherited dirty Base content now routes to the Base editor; page Overrides keep one-click Base restore.
+- Local contract/build/UI/deployment-routing gates PASS; GitHub CI #49 PASS.
+- AquaGuide Preview dpl_7wysx8FDcz1CX4oWqNtmmdiLvVzq READY; Admin Preview dpl_F6jSc7U9pece3NaprHUdGbsU8Gyp READY; hosted Admin remains noindex.
 
-## 2026-08-25 — Truth consolidation phase 7 contract drafted
+## 2026-09-02 — Blocked next-action diagnostics
+- Replaced the opaque 458-page Not-ready queue with a nested, mutually-exclusive next-action breakdown while retaining the existing readiness states.
+- Structured blocker codes now classify hygiene, Data Review, current-locale content, bilingual dependency and Index/Canonical policy without parsing display text.
+- Review fixture: 458 blocked = 51 Data Review-first + 407 content-first; Data Review filter maps to 32 Base groups, English content filter to 248 Base groups and switches locale correctly.
+- Local full gates PASS; GitHub CI #50 PASS.
+- AquaGuide dpl_8ZMK57zfuGkTa4sqmh2rrE7cJ8xD READY; Admin dpl_8oPnHbvVE5Sd1op6DLhFDWwpKka7 READY; hosted Admin remains noindex.
 
-- Read the RC domain-rule and evidence source; created a `PROPOSED` contract with exact types, no SQL/API/persistence change and explicit UI exclusions.
-- No P0 product code was migrated. User approval is required before this contract changes implementation or `CONTRACT.md`.
+## 2026-09-02 — Unified top-right action feedback
+- Added a global `AdminNoticeViewport` mounted above App so login and Admin actions share one top-right transient feedback surface.
+- Repo mutations still use `aquaguide-admin-operation`; client-side precondition failures use `aquaguide-admin-notice`. Success/info/warning/error auto-dismiss and can be manually closed.
+- Removed transient inline save/error/status messages from Variant/Base editors, Data Review, Translation, Batch Drafts, CSV import, Revision History, Activity Center and Staging feedback.
+- Changed semantic action blockers from unexplained disabled buttons to clickable actions that immediately explain the exact reason; only in-flight/busy states remain disabled. Persistent content diagnostics and safety banners remain inline because they describe page/system state, not a click result.
+- Browser Review-mode validation: bulk-import and submit-review blockers toast correctly; manual close + timed dismissal pass; old inline transient selector count=0; browser errors=0.
+- Contract, Admin build, build-routing, full root build, SEO handoff, Admin UI and diff gates PASS. Normal root build still skips Species staging content.
+- Remote: functional commit `0f7a32e`; GitHub Admin Content CI #51 (`33606431007`) PASS; AquaGuide Vercel `dpl_8nhb9HoVFBiuafNMrJZtxN5UEsvs` READY; Admin-only `dpl_EQrgN5itFAmSr6T1Eq5bmiy2RMzY` READY. Hosted `/admin/seo/` returns 200 + deployment `X-Robots-Tag: noindex`.
 
-## 2026-08-25 — Truth consolidation phase 8 gate established
+## 2026-09-02 — Strict status vs action visual semantics
+- Replaced sidebar `处理重复` actionable tag with a standalone button and separated it from Species row navigation.
+- Replaced clickable issue-count badge behavior with an explicit `处理数据` button.
+- Restored static count badges to pill-only/non-clickable semantics; action buttons now have visible border, rectangular radius, hover/press affordance and chevron/count treatment.
+- Added regression guards that forbid actionable duplicate-review tags and require explicit button styling.
 
-- Added `RELEASE_READINESS.md`; the unified line is intentionally `NOT_READY` until exact deployment parity, authorized Supabase parity, P0 contract implementation and a separate release acceptance are complete.
+## 2026-09-02 — Bulk duplicate review + template import
+- Added a dedicated bulk duplicate-review workflow with select-all, explicit human conclusion, per-group keep-page verification, and one final confirmation.
+- Added atomic `resolve_species_duplicate_reviews_bulk`; multiple duplicate reviews now create one private-store commit/activity and fail without partial writes if any item is invalid.
+- Promoted CSV workflow to explicit `SEO 模板导入`: download template, fill in Excel/Numbers, upload/validate, import Draft changes.
+- Browser fixture: 28 duplicate sets selected and ready for one batch confirmation; Template Import download/upload actions are both visible; no page errors.
+- Local contract/build/routing/handoff/Admin UI gates PASS; normal code build still skips explicit Staging content publication.
 
-## 2026-08-25 — Accepted P0 compatibility authority migration
+## 2026-09-02 — CSV import diff preview and no-op protection
+- Added a pre-write field-level preview to SEO template import.
+- Marked CSV rows now show the exact fields that will change; cleared Override fields are called out separately.
+- Rows with no actual Draft changes are skipped instead of being upserted and unnecessarily reset to Editing.
+- Final import CTA uses the actual changed-row count.
+- Browser regression: preview rendered successfully with no page errors.
+- Full Admin contract/build/routing/handoff/UI gates PASS; normal code build still skips Staging Species publication.
 
-- **Approval:** 用户明确批准 `docs/decisions/P0_COMPATIBILITY_CONTRACT.md`。
-- **Action:** 迁入本地 `CompatibilityLifeStage` 输入、审核阶段风险证据、纯 tank-state / water-change / bioload 规则和从既有鱼缸、诊断事实派生的服务；共享 `LifeStage` 保持 API/数据库原枚举，未导入 RC 页面、CSS、API、迁移、RLS 或写入逻辑。
-- **Verification:** `lint`、兼容性 16/16、tank-state 11/11、water-change 8/8、three-tier contract、production build 通过；4320 临时 build preview 的 layout、framing、interactive scenes、page runtime matrix 通过。
-- **Remote:** 尚未推送本次产品代码；`main` 未修改，发布仍受 Supabase parity 和单独 release acceptance 阻断。
-- **Independent review:** Critic initially found incomplete structured diagnosis mapping, a legacy bioload threshold regression, a shared lifecycle/API boundary leak, and free-text false positives. The builder restored the legacy multiplier, isolated `CompatibilityLifeStage`, mapped current structured question fields, excluded free text, and added regressions; the same Critic recheck passed.
-# 2026-08-30 — Readiness evidence center
+## 2026-09-02 17:26 +0800 — Overall cross-session sync checkpoint
+- Canonical continuation file remains `.ai/HANDOFF_LATEST.md`; it was normalized so the top-level latest commit/deployment evidence no longer points to older #50-era state.
+- Current branch: `feature/admin-content-v0`; latest functional checkpoint before this docs sync: `2423202 fix(admin): preview bulk import changes`.
+- Current bulk workflow is end-to-end at the Admin layer: atomic duplicate review → explicit SEO CSV template download/upload → field-level import diff/no-op protection → atomic bulk editorial submit/approve/return → explicit Staging Publish.
+- UI contracts now treated as stable: action buttons vs status tags are visually/semantically separate; transient action outcomes/errors use top-right Toasts; persistent inline messages are reserved for page/system diagnostics.
+- Data authority remains dual-repo and fail-closed: Product Truth read-only; private editorial Draft/review authority in `chusday97/aquaguide-seo-content`; public repo contains code plus explicit Staging snapshot only; Species SEO runtime uses no Supabase.
+- Duplicate source audit: 28 duplicate sets total; 3 real human decisions already exist (极火虾 keep `sp_0001`, 白金西非凤凰 keep `sp_0214`, 黑木蕨 keep `sp_0082`); 25 remain for authenticated bulk review.
+- `sp_0001` still requires removal of Chinese/English acceptance-test H1 copy before a new Staging release; hygiene gates continue to block dirty review/Staging/static generation.
+- Next operational proof: resolve remaining Data Review → produce first real 10–20 Species SEO batch → bulk review → one explicit Staging publish → verify generated EN/ZH title/meta/H1/canonical/hreflang/robots/CTA/noindex.
+- GitHub Admin Content CI Gate #55 (`33613630539`) completed SUCCESS for `2423202`; every validation step succeeded.
+- GitHub commit statuses for `2423202` report both `Vercel – admin-content` and `Vercel – aquaguide` SUCCESS. Production remains locked; no `main` merge implied.
+- New-session instruction is now consolidated at the end of `.ai/HANDOFF_LATEST.md` under section 32; future sessions should read that file first, then git status/HEAD and the latest execution-log tail, and continue the first incomplete operational item unless the user supplies a newer concrete bug.
 
-- Added `scripts/readiness-collect.mjs`, `scripts/readiness-serve.mjs` and `scripts/test-readiness-evidence.mjs`.
-- Added npm commands `readiness:collect`, `readiness:serve` and `test:readiness`.
-- Verified report generation at candidate SHA `6d202f9c26581f1e19e70a50b557996fc36ae51e`; 11 local gates PASS, production freeze BLOCKED, 5 remote/environment gates UNVERIFIED, UI freeze USER_ACCEPTANCE_REQUIRED.
-- Sandbox `tsx` IPC `EPERM` and GitHub DNS failure are preserved as evidence limitations, not classified as business failures.
+## 2026-09-03 — Atomic first-batch import foundation
+- Audited the canonical `apps/admin-content` flow while preparing the first 10–20 Species production batch; rejected the standalone `aqua-fronted-cms` as a duplicate runtime and marked it visual-reference-only.
+- Found that CSV import wrote page Drafts but did not ensure required Base rows, which made cross-group bulk production depend on manual one-by-one Base creation.
+- Added `import_species_seo_bulk` as one Repo transaction: create only missing Base defaults + import changed page Drafts + revisions + one Activity. Existing Base templates are never overwritten.
+- Added atomicity/authority regression tests and semantic contract guards.
+- `npm run test:contract -w @aquaguide/admin-content` PASS, including Repo backend/API and dual-repo gates.
+- `npm run build -w @aquaguide/admin-content` PASS.
+- Root `npm run build` PASS; normal code build continues to skip Species staging content without explicit Staging publish input.
+- `npm run verify:seo-species-handoff` PASS.
+- `npm run test:admin-content-ui` PASS: hub routing, Product/Care edit/save, forbidden state and 390/1280px layout.
+- `git diff --check` PASS.
+- Next: prepare low-risk bilingual Draft content batch; no human duplicate decisions or Production publication will be automated.
+
+## 2026-09-03 — Batch-01 operational dry-run
+- `408c7ae` added atomic CSV import with create-if-missing Base templates.
+- Prepared 14 low-risk Species in `~/aquaguide-seo-batches/batch-01/` as bilingual noindex Draft CSVs.
+- Full isolated Repo/session workflow generated 28 bilingual static Species HTML pages with all review gates preserved.
+- Dry-run exposed user-facing `Product Truth` implementation jargon in the generator; fixed it across publication/preview/admin guidance in `348d6a0`.
+- Admin contract, root build, SEO handoff and Admin UI regression all PASS after the copy cleanup.
+- No real private content repo write, no Staging publish and no Production write performed in this dry-run.
+
+## 2026-09-03 — Source identity gate / batch-01 correction
+- Detected malformed source identity `sp_0069 / Cyprinus carpio var.` during real batch QA.
+- Added pre-import, readiness and static-generator fail-closed source identity checks.
+- 35 catalog rows ending in incomplete `var.`-style rank markers are now explicit source-data blockers.
+- Replaced batch-01 `sp_0069` with `sp_0011 月光鱼 / Platy`.
+- Full isolated 14×2 Draft → review → Staging-generation dry-run PASS; 28 HTML remain noindex; no private/Production writes.
+- `npm run test:contract -w @aquaguide/admin-content` PASS; Admin build + full root build + diff hygiene PASS.
+- Functional commit pushed: `43d0cfa`.
+
+## 2026-09-03 — Blank operational template + Preview writeability
+- Reworked SEO template download from 486-row catalog export to a blank operating template with field guidance, format rules, 20 blank rows and 3 examples.
+- Only explicit `import_action=update/更新` rows participate in validation/import; guide/example rows are safe and ignored.
+- Playwright round-trip PASS: download → inspect 26-line CSV → upload unchanged → 0 marked rows, no validation failure.
+- Replaced legacy read-only flag `VITE_ADMIN_REVIEW_MODE` with explicit `VITE_ADMIN_READ_ONLY_DEMO`; normal Vercel Preview is intended to remain authenticated + writable.
+- Renamed read-only UI copy to `只读演示 / Read-only demo` to eliminate Preview/read-only ambiguity.
+- Functional commit `71cecdc`; full local regression PASS; Production/main untouched.
+- Hosted check found standalone `admin-content` Preview is blocked at Repo setup (`content_repo_not_configured`); canonical writable acceptance remains AquaGuide Preview `/admin/seo/`. Documented this to prevent future URL confusion.
+
+## 2026-09-04 — Duplicate review evidence convergence
+- Replaced `catalog_key`-centric duplicate decisions with evidence-based side-by-side candidate cards.
+- Added source identity/facts, real image, bilingual SEO completeness, editorial state and explicit SEO last-edited evidence.
+- Added explainable canonical recommendation priority: source-primary → approved SEO → completeness → recent edit as weak evidence only.
+- Added in-context real-image Preview with zh-CN / EN switching; `暂不处理` leaves the issue pending and performs no write.
+- Found and corrected an intermediate performance regression: synchronous full Catalog import increased Admin JS to ~894 KB. Reused the existing catalog URL loader and lazy-loaded full source evidence only when needed; main Admin JS returned to ~642 KB.
+- Browser acceptance PASS on read-only demo: 28 pending groups, two candidate cards/images in the first real set, Preview locale switch, defer-without-write and zero horizontal overflow.
+- `npm run test:contract -w @aquaguide/admin-content`, Repo/API/dual-repo gates, Admin build, root build, SEO handoff, Admin UI regression and `git diff --check` PASS.
+- Functional commit pushed: `22d9322 feat(admin-content): add duplicate decision evidence`.
+- No real human duplicate decision, private Draft mutation, Staging publication, Production write or `main` merge was performed.
+## 2026-09-04 — duplicate review entry-point convergence
+- Audited `DataReviewPanel` after bulk evidence UI shipped; found single `处理重复` still used legacy system-comparison + catalog-key radio selection.
+- Extracted shared `DuplicateCandidateComparison` and `duplicateReviewEvidence`; both single and bulk review now render the same evidence and recommendation logic.
+- Added explicit single-review defer with no persistence and removed obsolete legacy duplicate-review styles.
+- Browser PASS: single path 2 cards/2 images/Preview/defer; bulk path 28 shared comparisons/56 cards/Preview.
+- Contract + Repo/API + dual-repo gates PASS; Admin build ~640 KB JS; root build, SEO handoff, Admin UI and diff hygiene PASS.
+- Pushed functional commit `e0b40b7`; no Production write and no main merge.
+
+## 2026-09-04 — import preflight + documentation convergence
+- Started from clean `feature/admin-content-v0 @ c4c2601`; read canonical handoff/current goal/task queue/live status before modification.
+- Found Bulk Import surfaced only the first validation issue by Toast and left the write action visually present without a persistent preflight report.
+- Added upload → preflight → field Diff → Create Draft workflow and fail-closed Draft button gating.
+- Browser test: invalid `index_strategy` on row 2 rendered inline issue + disabled Draft; valid CSV rendered actual Diff; read-only demo stayed non-writing.
+- Contract, generator, Repo backend/API, dual-repo routing, root build, SEO handoff, Admin UI and diff hygiene PASS.
+- Functional commit pushed: `8c9ceeb fix(admin-content): add import preflight gate`.
+- Re-read authoritative remote heads rather than stale `origin/main`: live main `64fa58a`, feature `8c9ceeb`, common base `ed0cf38`.
+- Divergence audit: main 269 unique commits / feature 95; 205 vs 108 changed files; 11 overlap; merge-tree shows 7 changed-in-both files and 13 conflict hunks.
+- Rewrote `CURRENT_GOAL.md` and `LIVE_STATUS.md`; created `BRANCH_STATUS.md`; Supabase is no longer presented as current Species SEO runtime/staging authority.
+- No private real Draft write, Staging publish, Production write, merge or rebase performed.
+
+## 2026-09-04 — durable import-batch convergence
+- Identified governance risk: bulk editorial review could select historical eligible Drafts outside the just-imported CSV scope.
+- Added Repo store schema v3 `import_batches` and server-generated durable batch identity/scope.
+- Added server-side batch membership validation for bulk review and exact batch+Canonical-dependency allowlist validation for Staging.
+- Preserved concurrent remote implementation's latest-import default scope, Activity/localStorage recovery, bilingual Approved/clean readiness and Canonical dependency calculation.
+- Concurrent push rejection was handled by fetch + no-force merge; only BulkEditorialReviewPanel conflicted and was manually reconciled.
+- Final converged functional head: `f4805669`.
+- Validation PASS: `test:contract`, Repo backend/API/dual-repo, root build, SEO handoff, Admin authority UI, `git diff --check`.
+- WebCodex invocation returned platform FORBIDDEN; no WebCodex execution result should be attributed to this change.
+- Production/main untouched. Next real proof is authenticated batch-01 zh-CN + en import/review/Staging on AquaGuide Preview.
+
+## 2026-09-04 — Aqua Operations Studio documentation convergence
+- Re-read real local branch/worktree and authoritative remote heads before documentation edits.
+- Confirmed Product/Care/Compatibility/SEO ownership from current code: Product/Care Admin exists, Compatibility runtime exists, SEO Admin is mature as a separate acquisition subsystem.
+- Verified P0 architecture gap: `Encyclopedia.tsx` still imports static `fishData.ts`; `CareEncyclopedia.tsx` still imports generated `careTopicsData.ts`; `/admin/product-content` writes API-backed Product/Care records. Admin Product/Care publish is not yet the single frontend source of truth.
+- Added `.ai/AQUA_OPERATIONS_STUDIO_ARCHITECTURE.md` as the canonical broader architecture/ownership contract.
+- Rewrote `HANDOFF_LATEST`, `CURRENT_GOAL`, `LIVE_STATUS`, `TASK_QUEUE`, `BRANCH_STATUS` around the current Operations Studio roadmap rather than the older SEO-only mental model.
+- Added permanent decision: SEO is downstream acquisition content; Product Data/Care/Compatibility remain separate authorities; personalized results come from shared approved knowledge/rules + user aquarium context.
+- Authoritative remote refs before docs commit: main `64fa58a`, feature `7fb19b28`; divergence 269 main-only / 106 feature-only; merge base `ed0cf38`. Narrow/stale `origin/main` must not be trusted without explicit live-ref verification.
+- No application code, private Draft content, Staging snapshot, Production state or main branch was modified by this documentation pass.
+
+## 2026-09-04 — Product/Care publication isolation checkpoint
+- Recovered exclusively from `CROSS_SESSION_START.md` and the canonical `.ai` read order, then verified clean `feature/admin-content-v0`, local/remote `9f4119c9`, and live main `64fa58a` before changes.
+- Inventoried all direct runtime/build-time `fishData.ts` and `careTopicsData.ts` consumers; recorded the authoritative classification in `.ai/PUBLISHED_CONTENT_AUTHORITY.md`.
+- Found a P0 release-boundary defect: Admin PATCH mutated already-published rows in place, so Save could change fields while public routes still considered the row published.
+- Added immutable Product/Care publication snapshots and service-role-only transactional publish/archive RPCs. First edit of published content preserves the last public snapshot and moves the editable source back to Draft.
+- Public Species/Care APIs now prefer publication snapshots while retaining legacy published-row fallback for safe migration/deployment ordering.
+- Regression protection added to `test:admin-content-contract`; API typecheck, contract, full root build, Admin UI regression, SEO handoff and `git diff --check` PASS.
+- Functional commit: `d6d2b37e feat(content): isolate product care publication`.
+- Migration is committed only; Production was not touched. No main merge/rebase. Next P0 is frontend runtime migration off direct static authority.
+
+
+## 2026-09-04 — Product/Care runtime authority convergence
+- Continued from publication snapshot checkpoint without touching main or Production.
+- Added `/content-bootstrap`, `runtimeContentCatalog`, locale-aware hydration and explicit static fallback.
+- Routed Encyclopedia Product Data plus Care Encyclopedia, Aquarium diagnosis and Identify diagnosis to the published runtime authority.
+- Added dedicated `/api/v1/*` Business API Vercel function routing and local Preview proxy; avoided legacy-app packaging bloat (~257 MB → ~24 MB function bundle in local Vercel build).
+- Added regression guards preventing target consumers from reverting to direct static authority.
+- Validation PASS: root build, TypeScript/API checks, Admin content contract, Product/Care runtime browser injection, Care/Identify search checks, species diagnosis, care guidance/category consistency, Admin UI and SEO handoff. Existing unrelated Identify tests contain older wording assumptions and were not used to alter product behavior.
+- Functional commit: `eff3bba3 feat(content): route published product care runtime`.
+- Next P0: real Admin Product edit and Care edit through Save/Publish into Preview, with Save-invisibility and compatibility/user-state spillover checks.
+
+
+## 2026-09-04 — Product/Care Save→Publish Preview acceptance
+- Built stateful browser contracts for one Product and one Care record using the real Admin UI plus controlled API fixtures.
+- Verified Save changes Admin source to Draft while the user-facing Preview keeps the previous published value; verified Publish advances the intended Encyclopedia/Care consumer on fresh load.
+- Tightened Care runtime acceptance from search-summary matching to exact rendered card-title matching; this exposed a real legacy `displayTitleMap` override that masked published Care titles. Fixed the override so published Care wins and legacy maps only format fallback content.
+- Protected published Product/Care search labels from legacy translation maps.
+- Added runtime isolation test: published Product can change name/temperature/pH/difficulty/temperament in `runtimeFishData` without mutating static `fishData` used by Compatibility; static Care seed also remains unchanged.
+- Added browser assertions that `aquarium_app_state_v1` is byte-identical before/after Admin Save/Publish and user Preview loads.
+- Updated Admin publish confirmation copy so it no longer claims universal immediate visibility and explicitly preserves Compatibility as an independent authority.
+- Validation PASS: full root build, Admin contract/UI, SEO handoff, strict published runtime browser test, runtime isolation, Product publish-preview, Care publish-preview, diff hygiene.
+- Functional commit: `ee2fcc8a test(content): prove admin publish preview boundary`.
+- No Production migration/deploy, main merge/rebase, or real user data mutation occurred. Next unfinished P0 is authenticated bilingual SEO batch-01 operational acceptance.
+
+## 2026-09-04 21:40 +0800 — authenticated SEO batch-01 acceptance + CI tiering
+- User authenticated Aqua SEO Admin locally; no password/cookie/token was copied into chat or committed.
+- Executed corrected batch-01 through official Repo Admin API with fail-closed scope checks.
+- zh-CN batch `batch-20260904132705-deca`: 14/14 Species changed, 14 Base groups, submitted and approved; final batch status `approved`.
+- en batch `batch-20260904132732-9d0d`: same 14 Species/Base scope, submitted and approved; one explicit Staging Publish completed.
+- Staging snapshot commit: `7aaeb44e02ce6b82ba35919b081945bf4d0ce1cd` → `feature/admin-content-v0`; Production remained locked.
+- Vercel deployment `dpl_B86KiBaD75LhGdcHMa6v8zTN6pJM` became READY for the staging commit.
+- Hosted verification PASS 28/28: exact title/meta/H1, Product Truth temperature/pH/tank/difficulty, canonical + EN/zh-CN/x-default hreflang, `noindex,follow`, three AquaGuide CTAs, no acceptance/test/placeholder hygiene markers.
+- English tank-size verification uses the canonical `localizeSpeciesTankSize` presentation rule (`至少 N 升` → `At least N L`), avoiding a false source-string mismatch.
+- CI policy changed without deleting coverage: ordinary runs use lightweight Admin contracts/build + product fast contracts + lint/root build; heavy Golden/Visual/evaluation-history/browser suites run only for manual dispatch, merge queue, or PR labels `run-heavy-ci` / `merge-ready`.
+- Preserved existing `Admin Content CI Gate` and `Product Golden Path` workflow identities and `validate` job key to reduce branch-rule breakage risk.
+- Local validation PASS: YAML parse, `git diff --check`, full light command set, Golden contract, Visual result contract, evaluation report 47/47, Admin UI regression.
+
+## 2026-09-04 — Change Impact Preview first round
+- Added field-level Product/Care impact classification and `发布后直接更新` vs `需单独复核` consumer mapping.
+- Product decision-critical fields flag Aquarium / Compatibility / SEO review where applicable without implying those independent authorities are auto-mutated; Care workflow changes directly flag Care Guide / Aquarium / Identify.
+- Reused public Product/Care detail reads as published baseline, so Draft-vs-Published Diff survives refresh.
+- Added Impact UI to editor and publish confirmation; Product save→reload and Care workflow browser scenarios pass at desktop/mobile widths.
+- Added lightweight `test:admin-content-impact` and fixed Admin CI path coverage for `AdminContent.tsx`, admin components/services and impact test.
+- Validation PASS: diff hygiene, impact logic, Admin UI, Admin contract, Admin build, root lint and root build.
+- Functional commit pushed: `e58c70829b389b6a9a7b23fd9519afd96c802702`. Production/main untouched.
+- Next: full user-facing before/after Preview for decision-critical changes, then Compatibility-result regression simulation.
+
+## 2026-09-04 22:38 +0800 — P1 Change Impact Preview completed
+- Completed decision-critical Encyclopedia Before/After against the published Product baseline, including all editable critical fields and changed raw numeric bounds when present.
+- Added species-only Compatibility regression using the existing `evaluateSpeciesCombination` engine; static living-species cohort is read-only and Compatibility evidence/rules are never mutated.
+- Regression detects both status/risk changes and rule-only changes (for example a new pH-gap rule while overall status remains insufficient-data).
+- Publish confirmation now includes Compatibility simulation counts while preserving the independent-authority boundary.
+- Validation PASS: impact contract, compatibility regression contract, Admin UI 1280/390, Product/Care publish-preview tests, Admin contract/build, root lint/build.
+- Functional commit: `9dc30c48 feat(admin): complete change impact preview`. Production/main untouched.
+- Next unfinished milestone: P1 Compatibility Admin.
+
+22:xx
+- Continued P1 Compatibility Admin from reviewed-baseline audit into safe Behavior Profile revision workflow.
+- Added isolated revision schema/RLS/version trigger, Admin API create/update/submit-review, DB baseline capability gating, Profile Draft editor, and 390/1280 browser acceptance.
+- Reviewed runtime inputs remain 7 Profiles / 4 Pair Rules; no Compatibility publish route and no reviewed authority mutation.
+- Validation PASS: compatibility admin contract, Compatibility impact regression, Admin browser, Business API check, root lint/build, diff hygiene.
+- Functional commit pushed: `dfed5a948982719505cc5d557be2b98ef4e9baea`. Migration not applied to any live database; Production/main untouched.
+Next: Pair Rule revision Draft workflow with evidence/confidence/review status.
+
+23:xx
+- Completed P1 Compatibility Admin Pair Rule Draft workflow on top of the reviewed 4-rule baseline.
+- Added pair revision schema/API/editor with DB-baseline gating, canonical pair ordering, reviewed citation snapshots, versioning, Draft save and submit-review lock.
+- Acceptance exposed and fixed a real Zod runtime crash caused by calling `.omit()` on a refined schema.
+- PASS: pair/profile compatibility admin contract, 1280/390 browser workflow, API TS, root lint/build, Compatibility impact, diff hygiene.
+- Functional commit pushed: `4c9ec12e8f6929712d3780b06f4ef5ca93be3be6`. Migration not applied to live DB/Production; reviewed runtime unchanged.
+Next: explicit human Review/Approve + rule versioning and regression gate before any reviewed Compatibility publish.
+
+23:5x
+- Added server-computed structural impact at Compatibility revision submit and explicit human Approve/Reject for Profile + Pair Rule revisions.
+- No-change revisions cannot enter review; Reject requires a review note; Approved remains non-runtime.
+- Browser 1280/390, compatibility admin contract, API TS, root lint/build and Compatibility impact all PASS.
+- Functional commit `25e3ec0d445a6b8342593313c2783b98dc9b6b86`; online light CI `33893177526` PASS / Heavy skipped.
+- Architecture audit confirmed the next blocker: runtime still consumes code/data reviewed evidence while Admin revisions are DB-backed. No publish endpoint was added.
+Next: converge reviewed Compatibility runtime/publish authority before versioned publish + engine regression gate.
+
+## 2026-09-05 — Compatibility reviewed runtime authority
+- Commit: `1e8a482a91655cc5929fdb635b51232c7c3d0541`.
+- Added public reviewed Compatibility bootstrap, atomic runtime registry, exact-baseline fail-closed activation, and rule/evidence authority fingerprinting.
+- Preserved existing Compatibility algorithms and static fallback behavior; regression suites/build passed.
+- CI light gate now executes runtime authority contract.
+- No live migration/publish/Production/main changes.
+- Next: resolve revision citation source keys to canonical Evidence rows, then implement versioned reviewed publish.
+
+
+## 2026-09-05 — Compatibility versioned reviewed publish completion
+- Functional commit `57c4ef00571c00191248948af8218f978417c949`.
+- Added canonical reviewed Evidence reconciliation (13 Evidence / 7 Profiles / 4 Pair Rules), exact reviewed authority loader, real server-side Compatibility regression, freshness digests/authority sequence, human approval gates and transactional Profile/Pair versioned publish RPCs.
+- Profile regression mirrors Product runtime Published-over-static fallback; current 486 catalog yields 1455 directional scenarios for a full Profile change, benchmarked ~42 ms locally. Pair Rule regression evaluates three explicit-pair scenarios.
+- Product/Compatibility/referenced-Evidence authority changes stale old reports; Approve and Publish recompute freshness before RPC execution.
+- Validation PASS: Admin contract, 16 Compatibility engine cases, runtime authority, structural impact, compatibility-admin contract, server regression gate, 1280/390 Admin browser publish flow, API TS, root lint/build, diff hygiene.
+- Online light CI run `33909317349` PASS including `Compatibility server regression gate`; Heavy skipped.
+- Migrations `202609050001` / `202609050002` remain unapplied to live DB/Production; main untouched.
+Next: P2 Unified Publish Center / release history & audit, beginning with a read-only aggregation contract.
+## 2026-09-05 — P2 Publish Center architecture inventory / docs sync
+- Verified branch `feature/admin-content-v0`, local/remote HEAD `a1242eb04a981f8815f2f1760bb4be833ddd6dc0`, clean worktree, live main `64fa58a16a723b74621ac1db513adb1efb47e282`.
+- Confirmed P1 Compatibility Admin functional checkpoint `57c4ef00`; online light CI run `33909317349` PASS, Heavy skipped.
+- Inventoried release-history authorities: Product/Care + Compatibility use Business API/Supabase; SEO uses separate Repo Admin cookie and `admin-store.json` (`content_revisions`, `activity`, `import_batches`, Staging snapshot).
+- Decision: Publish Center v1 is read-only multi-authority aggregation. It must not create a new write authority or migrate SEO operational history into Supabase.
+- Next: implement normalized `ReleaseEvent` read contract + source readers/availability state + `/admin/publish-center` timeline.
+- Docs-only round; no business code, main, Production, deployment or live migration changes.
+
+## 2026-09-05 — P2 Unified Publish Center read model
+- Added multi-authority read-only ReleaseEvent contract and Business/SEO adapters without moving any write authority.
+- Added `/admin/publish-center` with per-source availability/coverage and unified timeline; SEO auth failure degrades independently.
+- Product/Care is explicitly current-publication-only; Compatibility and SEO expose their existing richer history.
+- PASS: contract, API TS, lint/build, 390/1280 browser, existing Admin/Repo regressions.
+- Functional commit `f1b7adaee86eecbd99f1b6c908acfb45c0bd6de2`; online light CI run `33950528930` started.
+Next: read-only release detail/readiness drill-down; no cross-domain publish writes yet.
+## 2026-09-05 — Publish Center detail/readiness + capability matrix
+- Continued from `f1b7adae`/`7c125112` read-only checkpoint.
+- Added selectable event detail, source readiness summary, filter-safe selection and explicit Product/Care current-only coverage.
+- Added typed release capability matrix across Product/Care, Compatibility and SEO for Diff → Impact → Preview → Review → Staging → Production.
+- Verified SEO auth-required degradation, 390/1280 layout, contract, API TS, lint/build and diff hygiene.
+- Functional commits: `10b90394`, `bd2e8059`. No Production/main/live DB mutation.
+Next: cross-domain orchestration design + roles/audit without moving write authority into Publish Center.
+## 2026-09-05 — Publish Center permission + Product/Care audit history
+- Added read-only permission projection for Business admin and independently authenticated SEO repo-admin; did not alter role/RLS models.
+- Added append-only Product/Care publication audit migration and migration-safe audited RPC fallback.
+- Publish Center upgrades from current-only to revision-history automatically when audit storage is available; 390/1280 browser test covers both states.
+- Product/Care publish-preview regressions, Admin contract, API TS, lint/build pass.
+- Commits: `ec5e9a2b`, `2a1c0594`. Migration not applied live.
+Next: read-only cross-domain coordination design; no centralized writes.
+
+## 2026-09-05 P2 Publish Center — cross-authority coordination closeout
+- `5a549377` adds read-only cross-authority context by explicit catalog key / Pair key / SEO batch catalogKeys only.
+- Related records are contextual evidence, not dependency inference and not a signal that synchronized publish is required.
+- Event detail links back to the original Product/Care, Compatibility or SEO authority; Publish Center still performs no writes.
+- Online lightweight CI run `33951946893` passed for `5a549377`.
+- Product/Care append-only audit migration remains code-only/unapplied; current deployments safely fall back to current-only history.
+- Business role split is deliberately deferred until a real multi-operator requirement exists.
+- First unfinished milestone: Care SEO downstream projection from approved Care Knowledge.
+
+## 2026-09-05 16:31 +0800 — Care SEO projection/static handoff closeout
+- Closed Care SEO downstream foundation across three functional checkpoints: `108a4400` Published projection, `d6d267c3` standalone canonical route, `8104a1b2` deterministic bilingual hreflang/static Staging handoff.
+- Published Care snapshot/version is the only SEO source; Draft Care remains private and protected Care facts/evidence are not editable in SEO projection.
+- Canonical routes now follow Species SEO locale convention: EN `/care/<key>.html`, zh-CN `/zh/care/<key>.html`, x-default→EN. Route locale does not overwrite saved user language preference.
+- SPA canonical fallback remains `noindex,follow`; old `/care?topic=...` Dialog links remain compatible.
+- Added explicit-input-only static Care SEO builder. It rejects missing bilingual pairing, source-version drift, unapproved editorial, Production snapshot, or Production host leakage; normal root builds skip it.
+- Final local verification PASS: full lightweight Admin CI command set, Care projection/artifact contracts, Product/Care runtime, API/root TS, root production build, 390/1280 canonical route, Care guide/assessment/favorites and first-screen regressions.
+- Pushed functional commit `8104a1b2b49a1f35bbcfd3f7626d8b69d7255622`. Online Admin Content CI run `33955509807`: validate success; Heavy skipped.
+- Live main `64fa58a1`; divergence main-only 269 / feature-only 144; merge base unchanged. No main merge/rebase, live migration, index unlock or Production mutation.
+- Next unfinished item: Care SEO Editorial Draft/Review persistence → explicit sanitized Staging snapshot/handoff → hosted bilingual acceptance.
+
+## 2026-09-05 — final progress/docs sync after Care SEO foundation closeout
+- Re-read live refs: main `64fa58a16a723b74621ac1db513adb1efb47e282`, feature `c4b1c1a1a308510029135bbad0f1bb6c552603c7`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Measured divergence before this docs-only sync: main-only 269 / feature-only 145; local HEAD matched remote feature and worktree was clean.
+- Confirmed functional Care SEO checkpoint `8104a1b2` online CI `33955509807` PASS; Heavy gate skipped by policy.
+- Canonical next task remains Care SEO Editorial Draft/Review + sanitized Staging snapshot/handoff + hosted bilingual acceptance; Production/index/live DB remain locked.
+
+## 2026-09-05 — Care SEO Editorial + sanitized Staging handoff
+- Continued from Care SEO static foundation without changing main/Production or applying live migrations.
+- `a2caf575043bc4e36472f57412f469ad168fc652` added downstream Care SEO Editorial revision persistence, Draft → ready_for_review → human Approved transitions, Published Care source binding and source-drift invalidation.
+- `6079b6d44e7e3224822dcf06ae2253427679c632` added explicit approved-only sanitized Staging handoff, immutable `publication-snapshot` requirement, exact Editorial/projection identity matching, bilingual same-version binding, `noindex` retention and Production source/destination denial.
+- Sanitization contract now object-tests protected-field non-leakage: Care title/symptoms/diagnose/evidence and Editorial revision/audit metadata are absent from the handoff.
+- Automatic Care SEO generation occurs only for a snapshot-only `content(care-seo): publish staging ...` commit on the feature Preview branch; normal root build skips Care SEO artifact generation.
+- Local full validation PASS: Care projection/editorial/handoff/build-routing/artifact tests, API TS, root lint, root production build, diff hygiene. Local HTTP hosted acceptance verifier PASS 2/2 bilingual pages for HTTP/title/meta/H1/canonical/hreflang/robots/source-version/hygiene with noindex retained.
+- GitHub Admin Content CI run `33958334178` completed SUCCESS for `validate`; Heavy browser/SEO handoff job skipped by policy.
+- Live refs at checkpoint: feature `6079b6d4`, main `64fa58a1`, merge base `ed0cf38`, divergence main-only 269 / feature-only 148.
+- Supabase inventory rechecked: AquaGuide `ydiygvhuqpogmqlcvgob` ACTIVE_HEALTHY with zero development branches; separate `ice-glide-staging-sg` is unrelated. Therefore real hosted Care SEO acceptance cannot honestly use a non-Production AquaGuide source yet.
+- No Production source was substituted, no branch/project was created, no cost was incurred, no index unlock occurred, and no main merge/rebase was performed. Next step requires an existing non-Production AquaGuide source or explicit approval for a cost-bearing Supabase branch/project.
+
+## 2026-09-05 — Care SEO no-cost hosted Staging acceptance
+- Corrected the earlier false blocker: a persistent paid AquaGuide Supabase Staging project is not required. Used disposable local Supabase as the non-Production source, then destroyed it after snapshot export.
+- Ephemeral flow: core publication + Care SEO Editorial migrations → Published Care `care_water_stability` version 2 → EN/zh-CN SEO Draft → submit review → human Approved → sanitized two-record handoff. Local-only service-role grants were used inside the disposable stack to exercise server-only APIs; no grant/migration was applied live.
+- Real DB run found RFC3339 timestamp mismatch (`+00:00` rejected by Z-only schema); fixed in `5d2542ac68121809f68fd12e038a5d158c319606` with regression coverage. Full Care SEO tests, API TS, lint and root build PASS.
+- Snapshot hygiene PASS: only category/urgency/summary/immediateActions/avoidActions/observeItems/nextStep plus approved SEO fields; no symptoms/diagnosis/evidence/revision/audit/operator metadata.
+- Explicit one-file publish commit `18711afc787dc48c814a63de2551ac56f4a99793`; GitHub CI `33959147061` SUCCESS. Vercel `dpl_5XMFuB4p4VWyKBxyA5ML36ucc6D7` READY; build log confirms 2 Care SEO pages merged into `dist`.
+- Protected hosted acceptance PASS 2/2: HTTP 200, deployment X-Robots noindex, page noindex, title/meta/H1, source version 2, branch-alias canonical, EN/zh-CN/x-default hreflang and hygiene. Temporary Vercel share authentication was used without disabling protection and then removed locally.
+- Production, index, main and live databases remained untouched. Next gate is an explicit Care SEO Index/Production release decision; default remains locked.
+
+## 2026-09-05 Care SEO release-readiness gate closeout
+- `c1f4f35a3d4135f0b1312d655f1bbab258dcc98c` adds a fail-closed release-readiness contract; it performs no Production write and cannot toggle indexability.
+- Closed a bypass found during audit: the Staging static builder now rejects `index` even if `staging-snapshot.json` is hand-edited; Staging sitemap remains non-indexable.
+- `7ba66f9d9d0610d3be3e5ec121f3e157004849d2` is the snapshot-only republish using the new gate. Vercel `dpl_3knobTC9R84wkVfaVsCZrPnnrXrp` is READY; protected hosted acceptance passed 2/2 EN/ZH pages with noindex retained.
+- `cbc4cdd0b2b1f5939dfb93abd9f3c7c28286f9d9` records non-secret `content/care-seo/staging-acceptance.json`, bound to the exact snapshot SHA-256, snapshot Git SHA, deployment ID and canonical base. Evidence-only Vercel deployment was correctly skipped by the ignore-build guard.
+- `npm run check:care-seo-release-readiness` now resolves the accepted snapshot/evidence and returns `readyForProductionIndex: false` with the single blocker `explicit_human_release_decision_required`. No `release-decision.json` was created.
+- Snapshot CI `33961210274` and evidence-only CI `33961337300` both passed all lightweight gates including release-readiness; Heavy skipped. Production, index, main and live DB remain untouched.
+
+## 2026-09-05 — hold_noindex + Care SEO AI advisory closeout
+- User explicitly chose `hold_noindex`; persisted release decision stays bound to accepted snapshot/deployment and cannot unlock Production/index.
+- Added Care SEO AI advisory with Published-Care-only exact version binding, legacy-source rejection, source extraction, conflicts, impact explanation, SEO Draft suggestion, forced noindex and fail-closed provider handling.
+- Admin UI apply is local-only; browser 1280/390 acceptance proves AI generation/application creates no Editorial write before explicit Save Draft.
+- Reused existing Vercel DeepSeek-compatible AI configuration; no new provider/key. Local key absent; no live paid model call made in this round.
+- AI functional `a3f582c2`; two-phase reacceptance test fix `af68d40a`; final snapshot `fd960667`; Vercel `dpl_Fx1NEVe7safjqmte2QPY6zvPQB5D` READY; hosted verifier 2/2 PASS/noindex.
+- Final snapshot SHA-256 `cea5def0bb343747be439deaae8ac6e23bc449483034a260c1f87fa4303c9879`; evidence + hold binding commit `5899d643`.
+- CI PASS: `33962566946`, `33962759009`, `33962809578`, `33962944072`; Heavy skipped by policy.
+- All defined P0/P1/P2/AI functional queue items are closed. Next: dedicated feature ↔ live-main reconciliation audit; no merge/Production/index/live-migration action authorized.
+
+## 2026-09-05 — Return to Species SEO Admin usability
+- Corrected project scope after user reported the prior acceptance URL was the fish-tank frontend rather than SEO Admin.
+- On `feature/admin-content-v0`, `843b9e31` simplifies first-screen controls and adds a queue-driven `当前下一步` CTA.
+- PASS: Admin contract, full root build, 1440/390 no-overflow browser checks, CTA queue routing, read-only no-write check. Online light CI `33970208210` SUCCESS.
+- Added safe localhost/`*.pages.dev` `?demo=1` read-only entry for hosted UI acceptance while Vercel free build quota is rate-limited.
+- Next: push this checkpoint once, verify exact-SHA Cloudflare `/admin/seo/?demo=1`, then hand that SEO-specific URL to the user. Production/index/main/live DB remain untouched.
+
+## 2026-09-05 — SEO Admin hosted acceptance entry verified
+- `ca6dda1c` deployed to Cloudflare Pages and the independent `admin-content` Vercel project; Admin CI `33970948642` PASS.
+- Verified `/admin/seo/?demo=1` on Cloudflare at 1440/390: correct Species SEO Admin title, one current-next-action CTA, zero overflow, queue routing, and zero enabled Save actions.
+- Canonical UI acceptance URL is the stable feature Pages URL; this is intentionally read-only.
+- Found original AquaGuide feature Preview has 12 Admin Repo/GitHub write env keys while independent `admin-content` has only review-mode config. Automated secret transfer was safety-blocked; no values were exposed/copied.
+- Next user-facing step: user reviews the hosted SEO Admin UI and sends screenshots/feedback. Writable Preview credential restoration remains a separate secure configuration task.
+
+## 2026-09-05 — Species SEO Admin information hierarchy V2
+- User reported that key information/buttons/sections lacked hierarchy and critical steps were buried in editing.
+- `1e1414ec` replaces competing first-screen controls with a visible four-stage workflow: Data Review → Content Edit → Human Review → Staging.
+- Added one `现在只做这件事` command, separate current-page `关键操作`, explicit `详细编辑`, and collapsed `更多工具` for batch/history/translation/diagnostics.
+- Mobile changed from hidden horizontal stage scrolling to a fully visible 2×2 stage grid.
+- PASS: Admin contract, Repo auth/write-boundary guards, root production build, 1440/390 hierarchy browser checks, zero horizontal page overflow.
+- Historical `test:admin-content-ui` currently fails in an unrelated Care SEO async assertion (`Published v1` expected before the loading state clears); no Care SEO code was changed in this round.
+- Hosted exact-SHA Cloudflare `94ddb622` PASS for `1e1414ec` at 1440/390: all four stages visible, 390px 2×2 stage grid, page action + detail hierarchy present, advanced tools collapsed, zero overflow.
+- Next: user visual/operator acceptance on the stable feature SEO Admin demo. Production/index/main/live DB remain locked.
+## 2026-09-05 — Species SEO Admin selected-state feedback
+- Re-read `feature/admin-content-v0` at `ccb4ade8`; live main remained `64fa58a1`.
+- Fixed the interaction-model bug where workflow `active` reflected pending counts rather than the operator's clicked stage by splitting `attention` vs `selected`.
+- Added persistent `aria-pressed` state and strong selected styling for workflow stages, quick filters, Base/current-page scope, content locale and selected Species/Base rows.
+- Selected Species/Base rows now expose a ✓ marker; browser interaction switched from 迷你鹦鹉鱼 to 蓝宝鹦鹉鱼 and verified the marker/pressed state moved correctly.
+- PASS: Admin build, Admin contract, full root build, diff hygiene, 1440/390 interaction checks, zero horizontal overflow.
+- Main/Production/Care SEO `hold_noindex`/live migrations untouched; PR #144 remains parked.
+
+## 2026-09-05 — Species selection + editor-scope visual correction
+- User screenshots showed the first selected-state pass broke Species list typography by adding a second green ✓ next to the existing square control.
+- Removed the extra marker and strong row treatment; normal Species selection now uses the existing 16×16 square as a single-select radio. In batch mode only, the same slot becomes a checkbox.
+- Locked control dimensions against global input padding, restored left-aligned Species/subtitle text, and removed conflicting CSS overrides from the first selected-state pass.
+- Added explicit `当前物种页面` vs `基础模板` scope context (`页 / 模`) with different accents and impact copy.
+- Read-only Demo no longer reports `Schema 未应用`; it shows `只读演示 · 不会写入`.
+- PASS: Admin build, Admin contract, root build; browser 1440/390 confirms 16×16 selection controls, left-aligned rows, clear scope contexts, zero row/page overflow. Main/Production/index/live DB untouched.
+
+## 2026-09-05 — SEO Admin focus + palette refinement
+- User reported excessive fixed-header height and an unprofessional green-heavy palette.
+- Implemented editor/Preview-triggered Workspace Focus with explicit restore control; left navigator excluded from auto-collapse.
+- Re-themed primary CMS surfaces to neutral gray/white/graphite + blue accent, keeping semantic status colors scoped.
+- Browser measurements: 1440/1366 +196px workspace height; 390 +312px, editor sticky bar ~140→46px; overflow 0. Admin contract + root build PASS.
+## 2026-09-06 — Species SEO Admin three-color / type hierarchy convergence
+- Reproduced user complaint by scanning computed colors: legacy state classes still leaked amber/green/blue-gray in queue filters, duplicate review, source evidence and template import.
+- Added strict Graphite / White / Blue design tokens, neutralized semantic hue classes, and reserved `#3157D5` for selected/primary interaction. Disabled color-property transitions to avoid temporary intermediate hues.
+- Opened all six advanced tools and repeated 1440×900 + 390×844 runtime scans. Final result: extra saturated hues `0` in every state; horizontal overflow `0`.
+- Established typography scale and measured it in browser; removed superseded 2026-09-05 palette block while preserving Workspace Focus layout.
+- `npm run test:contract -w @aquaguide/admin-content` PASS; full `npm run build` PASS; `git diff --check` PASS.
+
+## 2026-09-06 — SEO Admin preview/scope/accent correction
+- Removed the opaque single-character `页 / 模` scope badge; scope is now explained with plain-language `当前物种页面` / `基础模板`.
+- Preview is hidden by default and opened explicitly from the sticky `效果预览` control as an in-workspace overlay drawer; desktop/mobile page overflow remains zero.
+- Replaced the single Blue interaction accent with one Green `#2F6F4E` accent, preserving the three-color Graphite / White / Green rule across primary buttons, selected states and Preview modes.
+- Browser acceptance at 1440×900 and 390×844: Preview closed→open→close works, all Page/Google/Mobile Preview modes show zero extra saturated hue, and Admin contract/root build pass.
+## 2026-09-06 — permanent compact workflow
+- User rejected expandable workflow chrome. Removed `workspaceFocusMode`, `展开流程 / 专注编辑`, and editor/Preview-triggered density changes.
+- Workflow is fixed at 46px desktop / 64px mobile; stage type is 9px / 8px while editor page titles are 24px / 22px and section titles 18px / 17px.
+- 1440/390 browser checks: workflow height unchanged before/after editor scroll; zero horizontal overflow. Admin contract and root build PASS.
+
+## 2026-09-06 — Publishing Progress Navigation separation
+- User rejected the compact workflow as still reading like ordinary text/boxes and blending into the editor.
+- Rebuilt the top strip as dedicated Progress Navigation: current stage / 4, four clickable stage buttons, completed/current/upcoming semantics and a current-action CTA.
+- System progress uses `aria-current=step`; clicking another queue only changes `aria-pressed` / outlined filter-selection state, so browsing a queue cannot fake workflow progress.
+- Runtime browser checks at 1440×900 and 390×844: current stage is solid Green, workflow surface is neutral with a 2px Graphite divider, editor canvas is White, four stages remain visible and horizontal overflow is 0.
+
+## 2026-09-06 — standalone page review progress
+- Moved Variant/Base publish status, review state, 3-step audit progress and actions out of editor headers/body into shared `PageReviewStatusBar.jsx`.
+- Desktop: sticky full-width review control strip; mobile: normal-flow full strip + compact sticky-toolbar progress indicator to avoid nested sticky collisions.
+- Updated `verify-contract.mjs` to forbid `editor-status-cluster` regression and require the standalone review control layer for both editor scopes.
+- Browser acceptance PASS at 1440/390 with zero horizontal overflow; Admin contract and root build PASS.
+
+
+## 2026-09-06 — promote page review progress to top
+- Re-read canonical Aqua SEO Admin state on `feature/admin-content-v0`; live feature ref matched local start HEAD and main remained untouched.
+- Added `page-review-top-slot` directly after Publish Progress and before `.studio-workspace`; `PageReviewStatusBar` now uses a React portal so review actions keep editor-local save logic without rendering inside editor content.
+- Removed the duplicate mobile `审核 n/3` indicator and compacted the top review surface.
+- Browser acceptance: 1440 and 390 both render Publish → Review → Workspace in order, editor review descendants=0, overlap=0, overflow=0; split Preview remains simultaneous; Base switch updates top review scope correctly.
+- Admin contract and full root build PASS locally.
+
+## 2026-09-06 — Data Review action-first fix
+- Reproduced user complaint in `DataReviewPanel`: default 560px tool drawer placed duplicate comparison/evidence before review choices and left `确认并保存` at the bottom.
+- Refactored `ReviewDecision` so the command surface is first, evidence second and notes optional. Added wide `EditorToolDrawer` size for Data Review and compacted duplicate internal headings.
+- Browser proof: 1440 command y≈344 and fully visible; drawer 900px; after selecting conclusion CTA becomes enabled; after body scroll 700px command remains visible. 390 command fully visible; overflow 0.
+- `npm run test:contract -w @aquaguide/admin-content` PASS; full `npm run build` PASS.
+
+## 2026-09-06 — clean editor canvas rule
+- Content editing is a neutral writing surface, not a status dashboard. Variant/Base editor backgrounds stay white/transparent.
+- Success may appear only as a small green status dot/label at section level; healthy fields must not receive green fills or green card backgrounds.
+- Warning/Error remain visible through a slim semantic edge, input border and compact status label; they must not tint the whole section or field.
+- Removed the permanent red/yellow/green legend above forms. Health is shown contextually where it matters.
+- Editor typography is deliberate and stable: page 24px, content heading 18px, section 15px, field/input 12–13px, helper/meta 10–11px. Legacy 9/9.5/10.5px editor copy is retired.
+
+## 2026-09-06 — task-first content editor
+- User screenshot showed the current-page editor still behaved like a field catalog: duplicated page identity, generic SEO headings, a separate Content Source card, inherited Meta/H1 rows presented like required inputs, and repeated read-only copy.
+- Accepted editor hierarchy is now **one current-page identity → actual page-specific tasks → inherited search appearance (collapsed) → advanced SEO (collapsed)**.
+- Current-page scope explanation card is removed; the toolbar already carries Current Page/Base scope. Base keeps only a compact impact notice because edits can affect multiple pages.
+- Page-specific fields use task questions and guidance instead of CMS jargon. Inherited Meta title/description/H1 are grouped under `搜索展示`, default-collapsed when healthy, with Base Template / This Page source and `单独修改 / 改用模板` preserved inside the disclosure.
+- The separate `内容来源` manager, duplicate `页面内容与 SEO 字段`, `SPECIES SEO · locale`, redundant workspace label, and editor-level read-only notice are retired.
+- Contract protects task-first ordering and forbids those regressions. Production/main/live DB remain untouched.
+## 2026-09-06 — Preview-linked editor alignment
+- User reported that current-page fields and Preview were structurally misaligned, so visible page content could not be edited directly.
+- Preview/editor ownership is now explicit: `sharedIntro` belongs to Base, `variantIntro` belongs to Current Page, and both map to their own editor target instead of sharing one ambiguous `intro` element.
+- Preview H1 / Meta selection no longer forces inherited content into Base. From Current Page it opens the collapsed Search Appearance section, highlights the exact field, and exposes `Base template / Edit this page`.
+- Preview intro is split into separate inspectable Base and current-page regions; inspect mode exposes an `Add page-specific content` target when the current-page addition is empty.
+- Switching Current Page ↔ Base no longer resets Preview. Preview always composes the latest Base layer and current-page layer into one final-page snapshot.
+- Runtime proof: H1 override updates Preview immediately; current-page intro updates only the current-page Preview region; Base intro updates only the Base region; both remain visible across scope switches; Preview clicks route back to the correct owner editor.
+- Contract, repo backend/API/dual-repo gates, full root build and `git diff --check` pass locally. Production/main/live DB remain untouched.
+## 2026-09-06 — explicit submit-review handoff
+- User reported that the editor did not make the path to the next review stage obvious. Root cause: after any edit, the top review CTA was replaced by a generic Save action, so `Submit for review` disappeared exactly when the operator needed it.
+- Editing state now always keeps review progression visible. Clean state shows `提交审核 →`; dirty state shows secondary `仅保存草稿` plus primary `保存并提交审核 →`.
+- Dirty save-and-submit persists the content/template changes and `ready_for_review` in one write; clean submit keeps the existing metadata-only review transition. Current Page and Base Template share the same rule.
+- Desktop top review bar stays compact at ~61px: `下一步：进入待审核 · 2/3` sits inline with the 148px primary CTA. Mobile stays 60px with a 112px `提交审核 →` CTA and zero horizontal overflow.
+- Contract now protects visible submit-review continuity and the atomic dirty save-and-submit path. Admin contract, repo backend/API/dual-repo gates and full root build pass locally. Production/main/live DB remain untouched.
+
+## 2026-09-06 17:52 +08:00 — exact branch / progress sync
+- Working branch: `feature/admin-content-v0` at `03919cb65d0a0d1f85860e83e5176dbfa8d075f4` before this docs-only checkpoint. Remote feature matches that SHA; worktree was clean before documentation sync.
+- Live `main`: `64fa58a16a723b74621ac1db513adb1efb47e282`. Merge base: `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Exact divergence from live main: **269 main-only / 184 feature-only commits**. This is a two-way divergence, not a simple feature-ahead-of-main relationship.
+- A read-only `git merge-tree` probe reports real conflicts across `.ai` state docs, `.gitignore`, `HANDOFF.md`, `PROGRESS.md`, `package.json`, `src/App.tsx`, compatibility files, `src/pages/CareEncyclopedia.tsx`, etc. Therefore do **not** blind merge/rebase this feature into main.
+- Draft reconciliation PR #144 (`codex/reconcile-admin-content-v0-main-20260905` → `main`) remains OPEN / Draft / UNSTABLE and stays PARKED while Species SEO Admin operator acceptance continues.
+- Latest functional SEO Admin checkpoint: `03919cb6 fix(admin): keep review handoff visible`. Review progression is now continuous: clean Editing shows `提交审核 →`; dirty Editing shows `仅保存草稿` + primary `保存并提交审核 →`; desktop also shows `下一步：进入待审核 · 2/3`. Current Page and Base share the same rule.
+- Previous accepted checkpoints immediately beneath it: `798596af` Preview↔Editor 1:1 ownership/alignment; `2e741fac` task-first editor; `dbf29f35` clean neutral editor canvas; `2d0aa1a8` Data Review action-first workspace.
+- Latest GitHub Admin Content CI run `34026353946`: `validate` PASS; heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA deployment for the functional checkpoint is successful; verified Preview: `https://7ff827d1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable branch Preview remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
+- Production, live DB, `main`, Care SEO `hold_noindex`, and public indexing remain untouched.
+- Active next work is still **Species SEO Admin operator acceptance / usability convergence**. Do not resume PR #144 reconciliation until the user explicitly returns to branch convergence.
+
+## 2026-09-06 — Species SEO Admin task-prompt operator fix
+- Restored authority in the required order and re-read real git state: clean `feature/admin-content-v0`, start HEAD/remote `307366c5`, main `64fa58a16a723b74621ac1db513adb1efb47e282`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence 269/185; PR #144 parked.
+- Audited the current Cloudflare hosted Demo at 1440/390. First unfinished operator defect: task questions were visually detached from their inputs because legacy global `label > span` styling still applied a negative top offset/right alignment.
+- Fixed only the task-prompt CSS and added a contract assertion; no review/Preview/data-authority logic changed.
+- Local 1440/390 proof: task question/input left edges match; overflow 0; top review remains outside editor; desktop Preview 742/420 and survives Base↔Current; mobile Preview remains fixed overlay ~374px.
+- PASS: `npm run test:contract -w @aquaguide/admin-content` (includes Repo backend/API/dual-repo gates), Admin build, full root build, `git diff --check`.
+- Pushed functional `01521a8c5c5152b1e7b5438e66c7a454a38f0ffb`. GitHub CI run `34029137779` validate PASS; Heavy skipped by policy. Cloudflare exact-SHA `https://0e0f1106.aquaguide-frontend.pages.dev/admin/seo/?demo=1` deployed successfully.
+- Repeated online 1440/390 checks against that exact SHA: same alignment and zero overflow; Preview/review/Base↔Current behavior preserved.
+- Pre-doc-sync refs: main-only 269 / feature-only 186. No main merge/rebase, PR #144 change, Production deploy, live DB mutation, or index change.
+
+## 2026-09-06 20:38 +08:00 — operator visual hierarchy convergence
+- User reported that the whole Species SEO Admin still felt visually chaotic. The problem was structural rather than one misaligned field: the first screen exposed too many persistent surfaces as peers — topbar, a separate read-only Demo banner, four card-like publish stages, a verbose semantic review strip, sidebar statistics/filters, a second locale switch and the editor toolbar.
+- Functional checkpoint `e584e3f6 fix(admin): simplify operator visual hierarchy` collapses those competing layers without changing content authority or review semantics. The accepted persistent hierarchy is now **Topbar → one linear Publish Progress Navigation → one compact Current Page/Base Review strip → Workspace**.
+- The read-only Demo message is now a compact topbar state (`只读演示 · 不会写入`), not another horizontal banner. Publish stages are connected steps rather than four independent cards; only the current step marker uses the Green accent. Page Review stays white and uses only a slim semantic edge/status marker instead of a full pink/yellow/green fill.
+- The editor-local language switch is removed; the single top workspace language control still switches UI + content locale together. Sidebar search is first, the repeated `486 / duplicate / Base` catalog summary is removed, and `管理基础模板` is shortened to `基础模板`.
+- Hosted exact-SHA acceptance at 1440×900: workflow 50px, review 49px, Workspace starts at y=143 (previous accepted hosted layout was ~187px), horizontal overflow 0. Preview remains 742px editor + 420px Preview and stays open across Base ↔ Current Page; review scope remains synchronized.
+- Hosted 390×844: workflow 69px, review 60px, Workspace starts at y=171 (previous hosted layout ~205px), horizontal overflow 0. Preview remains a ~374px fixed Overlay. No review bar is rendered inside the editor.
+- PASS: Admin contract including Repo backend/API/dual-repo gates, full root build and `git diff --check`. GitHub Admin Content CI `34033618797` validate PASS; Heavy browser/SEO handoff gate correctly SKIPPED by low-cost policy. Cloudflare exact-SHA: `https://9660b6c1.aquaguide-frontend.pages.dev/admin/seo/?demo=1`. Stable acceptance URL remains `https://feature-admin-content-v0.aquaguide-frontend.pages.dev/admin/seo/?demo=1`.
+- Pre-doc-sync refs: feature `e584e3f6fe49159b7896e7a8429bca59a9877f60`, live main `64fa58a16a723b74621ac1db513adb1efb47e282`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence **269 main-only / 188 feature-only**. Draft PR #144 remains PARKED. Production, live DB, Care SEO `hold_noindex` and public indexing remain untouched.
+- Do not reintroduce the removed banner/card/stat/locale layers merely to make status more visible. Future acceptance work should reduce cognition through progressive disclosure, not add another permanent surface.
+
+## 2026-09-06 — SEO Page Registry operator queue checkpoint
+- Functional checkpoint `e554fcc8` (`feat(seo): add registry operator queue summary`).
+- SEO Operations Registry now has the first operator queue summary layer above the read-only page registry: it distinguishes pages requiring attention from unknown/unavailable source states instead of treating unreadable state as healthy.
+- Existing authority boundaries remain unchanged: Species stays Repo Admin authority; Care stays Published Care / Care SEO authority. Registry remains read-only and does not become a new CMS or publication database.
+- Local verification: SEO Page Registry contract PASS (`speciesCandidates=972`, Care candidates verified, unique keys validated), TypeScript check PASS.
+- Current refs after sync: local feature `e554fcc816f9e696163b8184144820b1391f9557`; remote feature currently `3dfa76af8d1493b8a7fb17e950afb7849cfb2eac`; live main `64fa58a16a723b74621ac1db513adb1efb47e282`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`.
+- Measured divergence against live main: `269 main-only / 191 feature-only`. This remains a two-way divergence. Do not merge/rebase or resume PR #144 reconciliation.
+- Production, live DB, Care SEO `hold_noindex`, public indexing and main remain untouched.
+
+## 2026-09-06 — SEO Operations Health Layer V2 start
+- Functional checkpoint `49c136bf` adds the first SEO Operations health layer above the read-only Page Registry.
+- Registry entries now expose derived health severity from existing authoritative signals instead of creating a new content authority. Current checks cover unknown index strategy, unavailable source state and incomplete editorial progression.
+- `/admin/seo-pages` remains read-only: no CMS/database/publication authority was added. Species remains Repo Admin authority; Care remains Published Care / Care SEO authority.
+- Root build PASS after the change. Production/main/live DB/index/Care SEO hold_noindex remain untouched.
+- Next implementation: expand health checks only from real available fields (Meta Title, Meta Description, H1, bilingual completeness, canonical validation, source publication state) and route priority items into existing authority editors.
+
+## 2026-09-08 — SEO Operations Health V2 operator acceptance
+- Restored real `feature/admin-content-v0` authority at pre-change HEAD `46418ac5`; preserved the existing Health V2 uncommitted implementation instead of reverting/reimplementing it.
+- Found local port collision: 8787 was serving the legacy `aquaguide-ui-atlas-care` worktree. Started this worktree API on 8788 and Vite on 3003 with `API_PORT=8788`.
+- Browser acceptance exposed a usability badcase: when both authorities are unreadable, 972 Species rows were all `unknown` and the mobile page expanded to ~27k px. Unknown source state looked like an enormous work queue.
+- Fixed queue semantics: default view now includes only `blocked / attention`; `unknown` has an explicit source-waiting filter and explanatory empty state; search/all-pages still reach the full inventory.
+- Replaced 300-row initial rendering with 50-row progressive disclosure; tightened mobile stats/queue grids and rewrote issue labels as operator actions.
+- Local Playwright 1440/390: priority empty state correct under unavailable sources; unknown toggle/reset PASS; all-pages mode PASS; `sp_0001` search returns 2 locale rows; zero horizontal overflow.
+- PASS: `npm run test:seo-page-registry`, `npm run test:care-seo-editorial`, `npm run check:api`, `npm run lint`, `git diff --check`, full `npm run build`.
+- Committed functional checkpoint `f945e9f86dd0790cbc7e75a57b5968adb08a94e5` (`feat(seo): complete operations health queue`).
+- Fresh refs after fetch: main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `46418ac591a55d73bf6bf5a2ee88a8338b848b9d`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence 275/198 at functional checkpoint. Reconciliation remains parked.
+
+## 2026-09-08 18:20 +08:00 — Species SEO CMS UI Foundation convergence
+- Diagnosed real 3010 CMS computed styles using Design System skill principles + Playwright. Found primary actions collapsed to 8–10px/27–30px and legacy CSS selector duplication (`workflow-stage-card` >100 matches, `primary-button` >20 matches).
+- Added late-loaded `ui-foundation.css` with explicit typography/control/editor tokens and hierarchy guards.
+- Browser acceptance: desktop + mobile no horizontal overflow; mobile workflow overflow repaired; Preview behavior preserved.
+- Secondary-tool audit fixed 11/9px launcher typography and 9.5px Bulk upload control.
+- Validation PASS: Admin contract incl Repo backend/API/dual-repo, Admin build, full root build, `git diff --check`.
+
+## 2026-09-08 18:37 +08:00 — CMS low-noise hierarchy convergence
+- Functional checkpoint: `8a44d1c8d835ff62c3cee07124b9c541cb8f1cdf` (`fix(admin): reduce editor preview visual noise`).
+- User acceptance found the current-page editor + Preview still expressed the same state at too many nested layers. Warning state appeared in task summary, section edge, field edge and input border; Preview mapping also reused Green across tabs, inspect controls, outlines and tags.
+- New rule: **one state is expressed once**. Page-level `2 项待填写` remains the visible warning. Primary section/fields/inputs stay neutral; selected Preview↔Editor mapping uses Graphite rather than Green.
+- Removed redundant editor hierarchy: the repeated `当前页面` eyebrow and duplicate section `待补充` chip are gone; the decorative section-heading dash is removed.
+- Preview top chrome is reduced from Header + readiness row + inspector breadcrumb row to Header + one context row. Exact editor path remains available via tooltip/contract but no longer occupies a persistent visual band.
+- Preview Page/Google/Mobile selection and `点击内容编辑` use Graphite; Green is reserved for primary workflow actions such as `开始处理` / `提交审核`. The real public-page Preview content is not recolored.
+- Browser acceptance: 1788×846 and 390×844 both have zero horizontal overflow; selected editor field is a single Graphite edge, warning inputs are neutral, Preview context row is 36px.
+- PASS: Admin Content contract including Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index/Care `hold_noindex` remain untouched.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 19:13 +08:00 — Preview toggle semantics cleanup
+- Functional checkpoint: `c2f52dc619c262289686be37afd286c983ad2430` (`fix(admin): clarify preview pick edit mode`).
+- `点击内容编辑` was an instructional sentence rendered as a button. It is now the actual mode label `点选编辑` / `Pick to edit`.
+- The control now exposes `aria-pressed`, action-specific `aria-label`, and guidance in `title`; instruction is help text, not button copy.
+- Browser acceptance: 1440×900 + 390×844; toggle true→false→true, zero horizontal overflow; Preview clicks do not select editor fields while off and do select when on.
+- Visible-button audit found no other same-class instruction-as-button badcase on the current CMS screen.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 19:26 +08:00 — CMS action hierarchy convergence
+- Functional checkpoint: `dde46eef0b577b76fc89ed1c912dbde82a75613a` (`fix(admin): clarify action hierarchy`).
+- Workflow queue CTA now tells the truth: `开始处理` → `查看待处理`; it only navigates/filters the queue and is styled as a neutral navigation action, not a Green primary mutation CTA. Edit fallback likewise reads `返回编辑区`.
+- Interface language and Preview mode segmented controls expose explicit `aria-pressed`; active selection uses Graphite, not Green.
+- Preview toggle is action-aware: closed=`效果预览`, open=`关闭预览`, with matching `aria-label`.
+- `单独修改` is now a readable 12px underlined Text Action rather than a 21px Green micro-button; Preview add-supplement affordance is raised to 11px/30px.
+- Current workflow stage, current review step and selected Species use Graphite. Browser color scan at 1440/390 leaves Green on the current screen only for the real primary `提交审核 →` action; zero horizontal overflow.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview: `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 19:31 +08:00 — Page Review hierarchy dedupe
+- Functional checkpoint: `2182bb106a9e76a051cc5fb18ed5dbd1e77315dd` (`fix(admin): dedupe review status hierarchy`).
+- Page Review meta no longer repeats the active review stage. Left meta now carries only distinct information: scope + health + publish status (`当前页面审核 / 需修复 / 草稿`); the 1→2→3 stepper remains the single source for `编辑中 / 待审核 / 已批准预览`.
+- 1440×900 and 390×844 browser acceptance keep zero horizontal overflow.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. No Production/main/live DB/index changes.
+
+## 2026-09-08 19:40 +08:00 — CMS workflow hierarchy simplification
+- Functional checkpoint: `58f6af61af891b16387f03845ed527fedf6f34ea` (`fix(admin): simplify workflow hierarchy`).
+- Removed the duplicate global `workflow-current-action` layer; the four Publish Flow stages are now the single queue navigation authority. Current priority stage derives directly from real Data Review / editorial review / Preview-ready counts.
+- `发布流程` is now only a section label; the redundant `1/4` indicator is removed. Zero-value global stage badges are suppressed while non-zero actionable counts remain.
+- Mobile global workflow height reduced from 88px before convergence / 43px after this round; editor begins at y=368 instead of the earlier y=413 baseline. Desktop/mobile remain zero-overflow.
+- Sidebar quick filters with zero work (`待审核 0`, `预览 0`) are real Disabled controls; actionable `数据问题 33` remains interactive.
+- Page Review severity now treats ordinary incomplete/blocked authoring as Warning (`待处理`), matching `2 项待填写`; Error (`需修复`) is reserved for hygiene/indexing-policy invalidity.
+- PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview: `http://127.0.0.1:3010/?demo=1`.
+- Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `83d7e982dfaf15a8f0c77ae6ef525fa3f0162871`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence at functional checkpoint **275 main-only / 210 feature-only**.
+## 2026-09-08 21:09 +08:00 — Species navigation hierarchy convergence
+- Functional checkpoint: `71b2e7a8c188688d8f7c3d81a688c2e643750fbe` (`fix(admin): prioritize mobile species selection`).
+- Mobile Species navigation now defaults to a 58px current-selection row (`当前选择 / 更换物种`) instead of spending the first 180px on search/filter chrome. Editor begins at y=200 versus y=368 before this round.
+- `更换物种` expands an inline selector to 520px max with a 299px scrollable Species list; selecting a Species automatically collapses back to 58px and updates the current selection. No new persistent hierarchy layer was added.
+- Empty sidebar workflow queues are not rendered. Current demo shows only actionable `基础种 276` and `数据问题 33`; review/Preview shortcuts appear only when count > 0.
+- Sidebar hierarchy is explicit: scientific-name group labels are 12px/600 muted structure; Species rows remain 13px, and only the selected Species rises to 700. Duplicate variant metadata such as `迷你鹦鹉鱼 / 迷你鹦鹉鱼` now falls back to `使用模板`.
+- Removed superseded Foundation rules for 220px/180px mobile sidebar and disabled empty-queue styling instead of stacking more overrides.
+- Browser acceptance: desktop 1440×900 and mobile 390×844 both zero-overflow/no page errors; mobile closed=58px, expanded list=299px, selection auto-collapse PASS.
+- PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Correct local CMS Preview: `http://127.0.0.1:3010/?demo=1`.
+- Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `543cc4c556890846737e4c5e3a522f4025f94a28`, merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`, divergence at functional checkpoint **275 main-only / 212 feature-only**.
+## 2026-09-08 21:14 +08:00 — Dirty-state Species navigation safety
+- Functional checkpoint: `d0f03ff2abfc3d37abafa6308ca96c071f38235e` (`fix(admin): preserve dirty species navigation`).
+- Mobile Species selector auto-collapse now depends on the real `runEditorNavigation()` result. If the operator cancels the unsaved-change confirmation, the selector stays open, the current Species remains unchanged, and dirty edits remain protected.
+- `onSelect` / `onSelectBase` now return the navigation result instead of swallowing it; Sidebar closes only when that result is not `false`.
+- Contract guards protect this return-value chain so future UI simplification cannot bypass the existing dirty-state boundary.
+- PASS: Admin Content contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. Production/main/live DB/index remain untouched.
+- Fresh remote read before docs sync: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`, remote feature `ccf2feac122f288fd0de17665bb9ac3b034032ce`, divergence at functional checkpoint **275 main-only / 214 feature-only**.
+
+## 2026-09-08 22:01 +08:00 — CMS secondary hierarchy convergence
+- Read real branch/HEAD and preserved existing uncommitted work after RDC reconnect.
+- Replaced standalone Search Appearance + Advanced SEO disclosures with one stateful secondary SEO disclosure; preserved Preview inspector deep-link behavior and manual disclosure state.
+- Moved Base template reference into the current task helper; localized indexing/readiness status language; flattened utility tools and removed zero-work bulk review entry.
+- Browser-validated desktop/mobile default/open/reference states with 0 horizontal overflow.
+- Ran Admin contract including Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`: PASS.
+- Created functional checkpoint `5b4be8cb20ff5bb7d0eb2dd124f26e4c2c048e8b`.
+
+## 2026-09-08 22:50 +08:00 — Workflow next-action / human-decision convergence
+- Functional checkpoint: `818b049a0df75b72ab72621e459d5161deeb70b9` (`fix(admin): clarify workflow next actions`).
+- Global 1→4 Publish Flow is now a **next-action navigator**, not a numbered decoration. It shows `当前下一步`, the real queue reason/count, and stage-specific click guidance; detached numeric badges are removed.
+- Current demo: `复核 33 个数据问题`; Data Review says `33 项需人工确认 · 继续复核 →`; Content Editing says `458 页待完成 · 查看队列 →`; later stages explain their entry condition when empty.
+- New visual semantic rule: **Amber = explicit human judgment / second confirmation only**. Data Review queue/filter, group `处理数据`, selected decision choice and final `确认并保存` share Amber. Graphite remains navigation/selection; Green remains publish advancement/success.
+- Preview inspector is now optional `定位字段 / Locate field`, defaults OFF, and changes to `退出定位` only while active. OFF clicks do not move editor selection; ON clicks locate the mapped editor field.
+- Browser acceptance: desktop workflow ~72px, mobile ~94px with only the current-stage helper expanded; 1440×900 and 390×844 horizontal overflow = 0. Data Review → group action → decision → confirm chain uses one Amber grammar.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build and `git diff --check`. No Production/main/live-DB/index/Care release change.
+- Fresh refs at functional checkpoint: live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; remote feature before push `3894442d3a2a6917e22123ce9542e7392055f543`; merge base `ed0cf38025652db901ee81aa697ca55b1c1584b6`; divergence **275 main-only / 218 feature-only**.
+- Correct local CMS Preview remains `http://127.0.0.1:3010/?demo=1`.
+
+## 2026-09-08 — Data Review evidence-first repair
+- Reproduced operator confusion in category-conflict Data Review: evidence was below the decision, both conclusions looked like buttons, and save consequences were implicit.
+- Rebuilt the flow to evidence-first with explicit known/unknown authority boundaries, radio conclusions, result preview and a single confirm action.
+- Compacted full source-record evidence behind disclosure and simplified duplicate candidate Preview/keep controls.
+- Verified category and duplicate outcomes in browser at desktop/mobile; full Admin contract, Repo backend/API/dual-repo gates, root build and `git diff --check` PASS.
+## 2026-09-08 23:57 +0800 — Species editor PM + UI hierarchy convergence
+- Reproduced the current-page editor at 1440×900 and 390×844.
+- Identified one product contradiction: fixed `可以留空` copy did not reflect whether Base shared intro actually existed.
+- Reworked the primary authoring hierarchy and field state copy; lowered Search & Indexing to a secondary disclosure.
+- Verified Preview locator remains functional: opening Preview + enabling `定位字段` + selecting H1 produces one selected `h1` editor target and auto-opens secondary SEO.
+- PASS Admin contract, Repo backend/API/dual-repo gates, Admin/root build, browser acceptance and diff hygiene.
+- Commit `02713144bd4b0ae5d0c106cfd957c29c686ed9bc`.
+
+## 2026-09-09 00:36 +0800 — Desktop Preview default-open
+- Changed `compactPreviewOpen` initialization to desktop-aware (`window.innerWidth >= 900`).
+- Removed forced Preview close on Species/locale changes.
+- Added contract guards for desktop default-open + persistence.
+- Browser PASS: desktop default open/persistent/manual close; mobile default closed; zero overflow.
+- Contract/build/root build/diff hygiene PASS.
+
+## 2026-09-09 00:57 +0800 — Top-level current-task notification
+- Functional checkpoint: `6ae7112eb423235c6297c00093afad277511bfa2` (`fix(admin): surface current task notification`).
+- Current task is now the first operator notification directly below the Topbar; it states the highest-priority problem, why it blocks progress and one real queue action.
+- Current demo surfaces `33 个数据问题需要确认` with Amber emphasis for human confirmation. Blockers use red emphasis; Preview-ready uses Green. The bar itself remains neutral.
+- The 1→4 Publish Flow no longer repeats `当前下一步`; it is stage navigation only. Clicking the notification action applies the real corresponding workflow filter.
+- Browser acceptance: 1440×900 notification 54px, 390×844 notification 80px, zero horizontal overflow/no page errors. Desktop Preview remains default-open; mobile Preview remains default-closed.
+- PASS: Admin contract incl. Repo backend/API/dual-repo gates, Admin build, full root build, `git diff --check`. No Production/main/live DB/index changes.
+- NEXT: continue operator acceptance by moving task-critical capabilities (especially Publish Readiness / task queue) out of low-frequency utility disclosure without adding another permanent hierarchy layer.
+
+
+## 2026-09-09 01:32 +0800 — Aqua Operations Studio Phase 1
+- Re-read canonical authority and clean Git state before changing scope. User explicitly chose to proceed with the broader Aqua Operations Studio.
+- Replaced root AdminHub card launcher with a task-first Operations Home and added a read-only Unified WorkItem aggregator.
+- Current task inputs: Product/Care current Drafts, Compatibility current revisions and SEO Health. Publish Center history is shown only as recent activity.
+- Added explicit source availability isolation and prevented unreadable source state from becoming fake 0 work. Added WorkItem priority and read-only contracts to lightweight Admin CI.
+- Local browser acceptance at 1440×900 / 390×844 reports zero horizontal overflow and no page errors. Current unauthenticated state truthfully shows partial/unavailable sources.
+- PASS: Product/Care Admin, Compatibility Admin, Publish Center, SEO Registry, WorkItem contracts; API/root TypeScript; full root build; diff hygiene.
+- Functional checkpoint `b40011efc60dca0cb77fa37631a2d08a9ca26346`. No Production/main/live DB/index changes.
+- Next: resource-level WorkItems + exact deep-links + task-critical readiness.
+
+
+## 2026-09-09 — Aqua Operations Studio Phase 2
+- Continued from clean Phase 1 docs HEAD and fixed the resource-level WorkItem TypeScript literal-inference failure.
+- Replaced aggregate Product/Care, Compatibility and SEO WorkItems with exact one-resource/one-reason tasks and exact authority deep-links.
+- Added Compatibility `kind + revision` deep-link consumption with one-time application and exact editor scroll; corrected a discovered loop that would otherwise force operators back to the initial revision after manual selection.
+- Capped Operations Home at one primary + eleven queue items, removed primary-task duplication from the queue, and preserved authority workspaces as full-list owners.
+- Updated WorkItem contract to protect exact deep-links, priority ordering, unknown-source exclusion and read-only aggregation.
+- Browser acceptance at 1440×900 / 390×844: zero horizontal overflow; unauthenticated environment still reports source unavailability instead of fake zero work.
+- PASS: WorkItem, Compatibility Admin, Product/Care Admin, SEO Registry, Publish Center, root/API TypeScript, full build and `git diff --check`.
+- Functional commit: `12f6f9b94c35b709b2f64e4c19172fdbf62144fe`. No main/Production/live DB/index action. Next: Phase 3 task-critical readiness / next-decision surfacing.
+
+
+## 2026-09-09 — Aqua Operations Studio Phase 3
+- Reused existing current-state authority data instead of copying Publish Center capability/history into Operations Home. Introduced per-task gate projection only.
+- Added exact `gateLabel / nextStep / verificationNote` fields and rendered them in the primary task + queue.
+- Fixed SEO reason-order bad case: hard blocker now outranks softer `index_strategy_unknown`.
+- Added Compatibility current-gate checks: pending/approved revisions missing structural Impact, evaluated Regression or complete Canonical Evidence become blocker WorkItems. Fully checked approved revisions still require the live authority's runtime baseline/freshness gate.
+- Added UI contract assertions so Task Gate fields cannot silently disappear from Operations Home.
+- Full focused contracts, root/API TS, full build, diff check and 1440/390 unauthenticated browser acceptance PASS.
+- Functional commit `76dfc817cdebf2b6357523e31df08b123d1ed5b3`. Remaining gap: real authenticated populated-state click-through; no credentials were exposed or manually shuttled.
+
+## 2026-09-09 02:55 +0800 — Operations populated-state Heavy browser regression
+- Real Chrome-session automation remained blocked because Apple Events JavaScript is disabled; no credential/profile extraction was attempted.
+- Added `scripts/verify-operations-studio-populated.mjs` using an isolated Vite instance, fake Supabase session and read-only intercepted authority responses.
+- Browser proof PASS on 1440×900 and 390×844: Operations Home → exact Compatibility revision and exact Product Draft; zero overflow/page errors/API 5xx.
+- Added root `test:operations-studio-ui` and wired it to `.github/workflows/admin-content-ci-gate.yml` Heavy browser gate only.
+- Full focused contracts, API/root TypeScript, full build and `git diff --check` PASS.
+- Real authenticated populated-state acceptance remains the next environment gate.
+
+## 2026-09-09 09:13 +0800 — Operations authority access truthfulness
+- Re-read real authority/Git state, then traced Business Admin authentication to `apps/api/src/auth.ts`: 401 `AUTH_REQUIRED` for missing/expired session and 403 `FORBIDDEN` for non-admin role; confirmed root `/login` is not an admin login flow.
+- Updated Operations source classification so Product/Care + Compatibility no longer collapse auth/permission failures into service unavailability. Added explicit `forbidden` state and operator-safe recovery copy using the existing refresh action only.
+- Extended `test:operations-work-items` with empty/ready/partial/401/403/5xx classification assertions.
+- Extended `test:operations-studio-ui` to prove rendered no-session `需要登录` and signed-in 403 `权限不足`, plus existing exact Compatibility revision/Product Draft routing at desktop/mobile sizes.
+- Real local 3003 check: Product/Care and Compatibility correctly remain `暂不可用` because login dependency is not configured; SEO `部分可读`; overflow 0; page errors 0.
+- PASS: Operations browser/contract, Admin Content, Compatibility, SEO Registry, Publish Center, root/API TypeScript, full build, diff hygiene. Functional commit `6ea35173fb92f69cf7eb90b97c3a56e62b713dfa`.
+- No Production/main/live DB/index change; real secure authenticated current-state acceptance remains pending.
+
+## 2026-09-09 10:45 +0800 — Operations source-completeness repair
+- Re-read real branch/authority state from `feature/admin-content-v0`; working tree started clean at `2d21a5e4` and active next remained authenticated current-state acceptance.
+- Inspected live local Operations Home at 1440×900 and 390×844. Found a concrete UX truthfulness badcase: source coverage was incomplete while the UI simultaneously showed `0 个真实任务` / no current task.
+- Added source-recovery primary state, incomplete-source queue count, scoped `当前已读取优先任务`, and direct scroll to source status. Replaced user-facing `authority` jargon in primary copy with business-module/source wording.
+- Preserved visual semantic contract: source recovery uses neutral Graphite/Slate, not Amber.
+- Browser proof: auth-required + forbidden recovery states PASS; populated desktop/mobile exact routing PASS; scoped priority disclosure PASS; real local 390px recovery action scrolls from `0` to `712`, source top ~`16px`, horizontal overflow `0`.
+- PASS: Operations UI/WorkItem, Product/Care, Compatibility, SEO Registry, Publish Center contracts; root/API TypeScript; full root build; diff hygiene.
+- Functional commit: `cab3bc5d6c23e6946dc9ca2017892b90925c3d30`. No Production/main/live DB/index mutation.
+
+## 2026-09-09 13:19 +0800 — Operations authority schema-readiness checkpoint
+- Functional checkpoint: `5d4408347b4ae5ec2f345c52e97ea8ad04c931db` (`fix(admin): expose authority schema readiness`).
+- Read-only live AquaGuide Supabase inventory confirms the current project has migrations only through `20260816160129_atomic_verified_livestock_relocation`; Admin Product/Care publication + Compatibility revision migrations from 2026-09-04/05 are not applied there. The checked `species`, `care_articles`, reviewed compatibility profile and pair-rule tables currently contain 0 rows. No database write or migration was performed.
+- Publish Center now distinguishes `schema_not_ready` from authentication, permission and runtime failure. Missing `content_publications` / Compatibility revision tables no longer collapse the entire Business release feed into generic 503. Product/Care and Compatibility are fail-isolated.
+- Operations Home consumes Publish Center environment readiness. A readable legacy/current list can no longer make an undeployed release authority look ready; `schema_not_ready` displays `尚未启用` and suppresses misleading Product/Care Draft or Compatibility revision WorkItems.
+- Heavy browser regression now proves the schema-not-ready state in both Operations Home and Publish Center, while preserving 401/403 truthfulness and desktop/mobile exact WorkItem deep-links.
+- PASS: Operations WorkItem, Publish Center, Product/Care, Compatibility and SEO Registry contracts; root/API TypeScript; full root build; browser regression; `git diff --check`.
+- Safety boundary unchanged: do NOT apply these parked Admin migrations to Production merely to finish acceptance. main / Production / live DB / indexing remain untouched.
+- NEXT: identify or provision a non-Production Business Admin Staging/Preview data environment with the required Admin schema and representative Product/Care/Compatibility data, bind a secure authorized session server-side, then run real populated operator acceptance. Real authenticated acceptance is not completable against the current empty/unmigrated live Business source.
+
+## 2026-09-09 13:31 +0800 — Business Admin non-Production staging preflight
+- Functional checkpoint: `0dc9c9815c35d46034f690fd0bf1cfe6fdc66f39` (`test(admin): add staging readiness preflight`).
+- Added `npm run check:business-admin-staging`, a read-only preflight for a future non-Production Business Admin Supabase environment. It reuses the existing server-only Supabase key validation and Production project-ref deny-list before any query is allowed.
+- Acceptance now requires both schema readiness and representative data. Required schema covers admin role/idempotency, Product/Care core + immutable publication history, Compatibility reviewed baseline + versioned revision authority + Evidence, and Care SEO editorial persistence.
+- Representative data gate requires at least one admin role, Species row, Care row, reviewed Compatibility Profile, reviewed Pair Rule and reviewed Evidence source. An empty database cannot pass real operator acceptance merely because tables exist.
+- CI runs only the credential-free preflight contract; it also launches the real checker with a synthetic Production identity and asserts hard refusal before network access. Real staging credentials are never stored in CI or browser code.
+- Existing `apps/admin-content/staging-publish.env.example` now documents the preflight command. No project was created, no migration/seed was applied, and no live data was changed.
+- Fresh refs before docs sync: remote feature `4ab9d9293e1194837667cbb1fce74bb75f0b8653`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD is ahead 1 / behind 0 vs feature and divergence vs main is **275 main-only / 242 feature-only**.
+- NEXT: provision or identify a dedicated non-Production AquaGuide Business Admin Supabase project, apply the parked Admin migrations there only, load representative acceptance data + an authorized admin identity, run `check:business-admin-staging` until green, then bind the Business API/Preview to that environment and execute real populated operator acceptance. Production remains explicitly excluded.
+
+## 2026-09-09 13:48 +0800 — Empty-safe Business Admin staging migration plan
+- Functional checkpoint: `10becf15d9d7e2568c273c2402d14ce91e0eda21` (`fix(admin): make staging migrations empty-safe`).
+- Static dependency audit found a real provisioning blocker in `202609050001_compatibility_reviewed_baseline_reconciliation.sql`: its reviewed baseline drift assertions required 11 canonical Published Species and would fail against a fresh/empty non-Production database before operator acceptance could even start.
+- Reconciliation is now fail-closed in three states: 0/11 canonical Species present -> skip only the data-dependent baseline seed/assertions; 11/11 present and Published -> run the existing canonical reconciliation; any partial or unpublished combination -> abort the migration. Evidence canonicalization still runs in every state.
+- All 7 reviewed Profile and 4 reviewed Pair Rule drift assertions are contract-protected to honor only the explicit empty-baseline skip gate; partial baseline drift is never auto-accepted.
+- Business Admin preflight now exposes the canonical 8-migration Admin plan, and CI verifies every migration exists chronologically plus the required pre-Admin prerequisites (`species`, `care_articles`, Evidence/reviewed Compatibility tables, `user_roles`, `idempotency_records`, `is_admin()`, `set_updated_at_and_version()`).
+- PASS: Business Admin staging preflight contract, Compatibility Admin contract, Operations WorkItem contract, Publish Center contract, root/API TypeScript, full root build, and `git diff --check`.
+- Environment discovery: Supabase currently has only `AquaGuide` live and unrelated `ice-glide-staging-sg`; AquaGuide has no development branches. No cloud branch/project was created. Local Supabase CLI exists, but Docker daemon is currently unresponsive and no standalone local PostgreSQL is installed, so a real isolated migration execution was not forced.
+- Fresh refs before docs sync: remote feature `7b67d1ebdef88c5d6a693c6f098b45040869b088`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD is ahead 1 / behind 0 vs feature and divergence vs main is **275 main-only / 244 feature-only**.
+- Safety unchanged: no Production migration, live DB write, cloud branch creation, main merge/rebase, or indexing change. NEXT: when Docker is healthy, run the full migration plan against an isolated local Supabase first; otherwise create a dedicated non-Production Supabase branch/project only after explicit organization/cost confirmation, then run `check:business-admin-staging` and real populated operator acceptance.
+
+## 2026-09-09 13:54 +0800 — Corrected full Staging upgrade plan
+- Functional checkpoint: `ef201b58702e390ed5e8a915f2fbd09c4075ed7f` (`fix(admin): harden staging upgrade plan`).
+- Correction to the prior 8-migration wording: those 8 files are only the Business Admin authority subset. The real AquaGuide live database is at migration baseline `20260816160129`, so a branch cloned from live must apply **all 16 repo migrations after that baseline**: 8 Species SEO prerequisite migrations (`202608280001` through `20260901064408`) followed by the 8 Business Admin authority migrations (`202609040001` through `202609050004`).
+- `check:business-admin-staging` now reports `upgrade_from_migration`, the complete `expected_upgrade_migrations`, and the Business Admin authority subset separately. CI asserts that every repo migration after the live baseline is included, so a prerequisite cannot be silently skipped.
+- Static audit confirms the Species SEO prerequisite migrations are schema/function/trigger changes without empty-Species data assertions. The only data-dependent provisioning blocker found was `202609050001_compatibility_reviewed_baseline_reconciliation.sql`.
+- That migration now distinguishes true empty baseline from partial data: existing canonical Species count 0 -> skip only Compatibility baseline data reconciliation; all 11 exist and are Published -> run canonical reconciliation; any other combination -> fail closed. Evidence source canonicalization always runs.
+- The 11 Profile/Pair drift checks use explicit `IF NOT skip THEN ... END IF` guards; no anonymous-block early return is required.
+- Local environment check: Docker socket itself times out, no standalone PostgreSQL is installed, so no local Supabase migration execution was forced. AquaGuide has no existing Supabase development branch.
+- PASS: staging preflight contract, Compatibility Admin contract, Operations/Publish Center contracts, root/API TypeScript, prior full root build, and diff hygiene.
+- Fresh refs before docs sync: remote feature `4fda478e4d5dc24583a13458b74627de315fb49c`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD ahead 1 / behind 0 vs feature; divergence vs main **275 main-only / 246 feature-only**.
+- Safety unchanged: no Production migration/write, no Supabase project/branch creation, no main merge/rebase, no indexing change. NEXT: execute the 16-migration plan first on isolated local Supabase once Docker is healthy, or create a dedicated non-Production branch/project only after explicit organization/cost confirmation; then load representative acceptance data, run `check:business-admin-staging`, bind Business API/Preview, and perform real populated operator acceptance.
+## 2026-09-09 15:44 +0800 — Safe representative Staging seed
+- Functional checkpoint: `646fe047723b1f83e7068f52228e63ab4682b139` (`feat(admin): add safe staging representative seed`).
+- Added `npm run seed:business-admin-staging`. Default mode is dry-run; `--commit` is refused unless the target passes the existing non-Production project-ref deny-list and `check:business-admin-staging` reports `schema_ready=true`.
+- Species/Care seed reuses the canonical repo catalog: 486 Species + 41 Care as Published metadata only; asset uploads are intentionally skipped.
+- Compatibility seed reuses `getCompatibilityEvidenceAudit()` rather than duplicating rules: 13 reviewed Evidence sources, 7 reviewed Profiles and 4 reviewed Pair Rules. Existing drift or extra evidence links fail closed instead of being overwritten.
+- Staging readiness now checks seed-critical tables plus key columns (`content_publications.snapshot/source_version`, `evidence_sources.source_key`, Compatibility `impact_report/evidence_resolution/regression_report`) so a partially applied migration set cannot masquerade as ready.
+- Seed safety contract protects default dry-run, explicit commit, Production refusal on both wrapper and Compatibility sub-seed, metadata-only import, and the 13/7/4 canonical Compatibility counts. CI paths now include staging seed/preflight scripts.
+- PASS: staging seed/preflight contracts, Compatibility/Operations/Publish Center contracts, root/API TypeScript, Admin build, full root build, and `git diff --check`.
+- Safety unchanged: no Supabase project/branch created, no live DB write, no Production migration, no main merge/rebase, no indexing change.
+- Fresh refs before docs sync: remote feature `a5adbab9bf1f12bdd5f627b151b5f00469668da8`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD ahead 1 / behind 0 vs feature; divergence vs main **275 main-only / 248 feature-only**.
+- NEXT: provision a dedicated non-Production AquaGuide Supabase plus a real authorized Admin identity; run the 16-migration upgrade plan, then `seed:business-admin-staging -- --commit`, `check:business-admin-staging`, bind Business API/Preview, and execute real populated operator acceptance. Admin identity provisioning must remain explicit and non-Production-only.
+## 2026-09-09 15:51 +0800 — Safe non-Production Admin identity provisioning
+- Functional checkpoint: `394088571792ca041b16a48857d6280f0b9fcba5` (`feat(admin): add safe staging admin provisioning`).
+- Existing AquaGuide login already uses Supabase `signInWithPassword`; no second Admin auth system or new login page was introduced.
+- Added `npm run provision:business-admin-staging`. It only promotes an already-existing Staging Supabase Auth user from `user` to `admin`; it never creates users, passwords, invites or Production identities.
+- Provisioning is fail-closed: requires non-Production project validation, exact `STAGING_ADMIN_USER_ID` + expected email match against Supabase Auth, an existing non-deleted `user_roles` row created by the canonical auth trigger, and an explicit `--commit`. Existing admin is idempotent no-op; deleted/missing role rows are not auto-repaired.
+- The real CLI entrypoint has a credential-free Production-refusal contract, so it must abort before any Auth lookup when Staging ref equals Production. CI runs only this safety contract; it never promotes a real account.
+- `user_roles` already has the canonical `set_updated_at_and_version()` trigger, so role promotion preserves audit/version semantics without manual version writes.
+- PASS: staging identity/seed/preflight contracts, Admin content contract, Operations/Publish Center contracts, API TypeScript, Admin build, full root build, and `git diff --check`.
+- Fresh refs before docs sync: remote feature `09c66bb57a6a8c1bfca3b91cdb7014be49d5d9a7`; live main `d3c70dee633ed4e24bbca161d138a832012b1d40`; functional HEAD ahead 1 / behind 0 vs feature; divergence vs main **275 main-only / 250 feature-only**.
+- Safety unchanged: no Staging cloud project created, no live DB write, no Production migration/account change, no main merge/rebase, no indexing change.
+- NEXT: obtain/provision a dedicated non-Production AquaGuide Supabase project, apply the 16-migration upgrade plan, seed canonical representative data, create/sign in one ordinary Staging Auth user through the Staging Auth flow, dry-run then commit `provision:business-admin-staging`, require `check:business-admin-staging` green, bind Business API/Preview, and run real populated operator acceptance.
+
+
+## 2026-09-09 — Local-first Operations authority checkpoint
+- Functional checkpoint `fdfa25fb feat(admin): add local operations authority`.
+- Added DEV-only `VITE_ADMIN_LOCAL_MODE=true` Product/Care + Compatibility adapters; deployed/Production authority remains unchanged.
+- Product/Care browser acceptance proves canonical 486/41 seed, Draft persistence, separate Published Snapshot, precise Operations WorkItem and Care `actionTitle/actionKind` round-trip.
+- Compatibility browser acceptance proves Profile and Pair Draft persistence, structural Impact, real engine Regression, canonical Evidence, human approval and runtime bootstrap publish. Tested Profile regression evaluated 1455 scenarios; Pair regression evaluated 3 scenarios with 3 result changes.
+- Local browser regressions deliberately return 503 for `/api/v1/**` and `/api/admin-content/**` and still pass, proving current Product/Care + Compatibility local flows do not require Supabase/Business Admin API.
+- Added DEV-only contract and Heavy CI browser coverage. Full root/API TypeScript, Admin/Compatibility/Operations/Publish contracts and root build PASS.
+- Product/Care local image writes and Care SEO Editorial local persistence remain open. Supabase Staging is parked. Production/main/live DB/indexing untouched.
+
+## 2026-09-09 23:18 +0800 — Durable Local File Operations checkpoint
+- Re-read real branch/Git/.ai authority first; worktree already contained an unfinished Local File persistence implementation. Preserved and completed that work rather than re-planning from memory.
+- Closed the truncated `scripts/test-local-file-admin.ts` blocker and added `test:local-file-admin` covering atomic JSON state, asset lifecycle, invalid input, disabled guard and server lifecycle persistence.
+- Added DEV-only `/api/v1/local-admin` file routes and `npm run dev:local-admin`; default durable root is `.local/aqua-admin`, which is gitignored.
+- Changed File Mode state semantics to disk-first persistence with localStorage as best-effort cache; a cache failure no longer creates a false failed-save/runtime rollback after disk success.
+- Durable Business/Compatibility/Care SEO corruption now fails closed with `MIGRATION_REJECTED`; browser-only Local Mode keeps its previous seed self-healing behavior.
+- Fixed Vite dev proxy port selection to honor external `API_PORT`, preventing accidental proxying to another local AquaGuide API already bound to 8787. `WEB_PORT` remains overridable with strictPort.
+- Added Product/Care local-file image storage + legacy IndexedDB migration path and Operations Source Status persistence indicator.
+- Added `test:local-file-admin-ui` and Heavy CI coverage. The test starts isolated API/Vite ports, writes Product + image + Compatibility + Care SEO, fully stops the server, restarts it, opens a fresh browser context and proves all durable state + image recovery with zero mobile overflow.
+- Existing browser-only regressions remain PASS: Operations populated UI, Local Product/Care, Local Compatibility, Local Care SEO, IndexedDB assets. Root/API TypeScript, full root build and `git diff --check` PASS.
+- Functional commit: `746d5c66 feat(admin): add durable local file mode`. Live remote feature before this commit was `e9c63560`; live main `d3c70dee`; local vs remote feature = ahead 1 / behind 0; main vs local = 275 / 261. No push, main merge/rebase, Production/live DB/index action.
+- NEXT: Local File backup/restore + schema-version migration/recovery, then resume concrete operator/UI badcases.
+
+## 2026-09-09 — Durable Local backup / recovery checkpoint
+- Functional commit: `f501a69d feat(admin): add local backup recovery`.
+- Added Local File envelope format v1. Existing raw partition v1 JSON migrates in place; future envelope/state schema versions fail closed with `MIGRATION_REJECTED`.
+- Added integrity reporting for partition validity, local image metadata/blob pairing + references/orphans, Compatibility 7/4 reviewed baseline and Care SEO Published Care source-version references.
+- Added timestamped snapshots under `.local/aqua-admin/backups/`; healthy state is required for normal backup.
+- Restore validates target snapshot, creates a pre-restore safety snapshot, restores partitions/assets, revalidates, and rolls back automatically on filesystem/post-restore failure.
+- Operations Source Status now exposes compact integrity/latest-backup plus `备份当前数据` and confirmed `恢复最近备份`; no new content authority or Production path.
+- Real browser E2E: Product + image + Compatibility + Care SEO → backup → mutate Product → restore → reload → stop/restart Local Admin → fresh browser context = PASS.
+- Browser-only Local Product/Care, Compatibility, Care SEO, IndexedDB assets and Operations desktop/mobile regressions remain PASS. Root/API TS, full root build, Local File API contract and `git diff --check` PASS.
+- CI lightweight gate now runs `test:local-file-admin`; Heavy gate retains `test:local-file-admin-ui`.
+- Live refs: remote feature `e9c63560`; live main `d3c70dee`; local vs feature ahead 3/behind 0; main vs local 275/263; merge base `ed0cf380`. No push, main merge/rebase, Production/live DB/indexing action.
+- NEXT: resume operator/UI badcase convergence: Data Review decision basis → edit-page hierarchy → button consolidation → essential-function visibility.
+
+## 2026-09-09 23:58 +0800 — Species SEO Data Review decision convergence
+- Functional checkpoint: `2fcba840 fix(admin): converge data review decisions`.
+- Single-group Data Review is now evidence-first; evidence comparison no longer contains canonical keep controls.
+- Duplicate decisions require a separate explicit final-page radio choice. System recommendation is shown but never auto-selected.
+- Added explicit `最终确认版本` before one final confirmation button; removed the competing single-group defer action. Category conflict preserves Product Data authority boundary.
+- Added self-contained Playwright `test:data-review-ui` and Heavy CI coverage; duplicate + category conflict + 390px responsive drawer PASS.
+- Full Admin Content contract, root TypeScript/build and diff hygiene PASS. Production/main/Supabase/indexing untouched; no push.
+- NEXT: edit-page hierarchy, button consolidation and essential-function visibility.
+
+## 2026-09-10 00:10 +0800 — Species SEO editor action hierarchy
+- Functional checkpoint: `b3ec2d8e fix(admin): simplify seo editor actions`.
+- Current-page and Base save/review actions now live only in the top Review bar; removed duplicate footer save buttons and repeated Draft chips.
+- Core `搜索与收录设置` defaults open while remaining manually collapsible; Preview field selection still reopens it when needed.
+- Browser smoke confirms Search appearance + Index/Canonical visible by default, no editor-body save buttons, no repeated Draft chip, and 390px no overflow.
+- Contract + Data Review/browser + root TypeScript + full build + diff hygiene PASS. No push, Production, Supabase or main change.
+- NEXT: utility/tool hierarchy and current-page/Base ownership clarity.
+
+## 2026-09-09 — SEO Admin page/global tool hierarchy
+- Functional checkpoint: `b6c44a62 fix(admin): separate page and operations tools`.
+- Moved batch SEO, bulk duplicate/content review, SEO template import and global workflow queues out of the current-page footer into one top-level neutral `运营工具` drawer.
+- Current-page footer now exposes only contextual Data Review, readiness, English translation and revision history.
+- Extended Heavy browser regression verifies desktop + 390px Operations access, no horizontal overflow, and that global batch entries cannot regress into current-page tools.
+- PASS: full Species SEO contract, Repo backend/API/routing gates, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
+- NEXT: compress dense top chrome while preserving one current task and the existing review/publish safety boundary.
+
+## 2026-09-09 — SEO Admin compact top workflow chrome
+- Functional checkpoint: `bf85231b fix(admin): compact seo workflow chrome`.
+- Measured the three layers below topbar before change: 178px desktop / 187px mobile.
+- Preserved the current-task notification, converted workflow cards to stage-only navigation, and compacted the current-page review handoff. New measured total: 136px desktop / 137px mobile.
+- Heavy browser hierarchy regression now enforces <=140px on desktop/mobile and keeps the actual current problem title visible on mobile.
+- PASS: SEO Admin contract/browser regression, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
+- NEXT: current-page/Base/Preview ownership clarity.
+
+## 2026-09-09 — SEO Base/current-page/Preview ownership clarity
+- Functional checkpoint: `a9a54bc9 fix(admin): clarify seo ownership preview`.
+- Removed the duplicate Base impact strip because the Base task header already states shared-page scope and impact.
+- Preview header now explicitly states `最终页面 = 基础模板 + 当前页面`, clarifying that Preview is composed output rather than a single editing layer.
+- Browser regression switches Base/current page and verifies one Base ownership explanation plus final-composition Preview copy.
+- PASS: hierarchy browser regression, SEO Admin contract, root TypeScript, full root build and diff hygiene. No push/main/Production/Supabase/index mutation.
+- NEXT: visible editor action audit.
+
+## 2026-09-10 — SEO editor ownership clarity checkpoint
+- Committed `466025f7 fix(admin): clarify editor tool ownership`.
+- Inherited Meta/H1 overrides now use explicit current-page ownership copy (`本页自定义`).
+- Base/current-page utility summaries follow active scope; revision history renders only the active scope authority; readiness copy explicitly targets the final composed page.
+- PASS: Data Review / hierarchy browser regression, Admin content contract, root TypeScript, full root build, diff hygiene. Production/main/Supabase/indexing untouched.
+
+## 2026-09-10 — Visible SEO density checkpoint
+- Committed `6a1f1979 fix(admin): compact visible seo controls`.
+- Inherited Meta/H1 rows remain visible but compact until page customization; Policy keeps keyword/index controls visible in two desktop columns and one mobile column; route/canonical are flat read-only summary.
+- Removed redundant per-policy Production-lock copy because global review/publish gates already own that state.
+- Measured desktop Search 311→242px, Policy 370→220px, full Search & indexing 733→514px. PASS: Heavy browser regression, Admin contracts, root TypeScript, full root build, diff hygiene.
+
+## 2026-09-10 — responsive Preview + editor density acceptance
+- Closed editor ownership checkpoint `466025f7` and visible SEO density checkpoint `6a1f1979`; required SEO controls remain visible while inherited/policy rows are compact.
+- Added responsive Preview contract `d1af2c08`: split only at >=1051px, medium Preview 340–360px, editor >=480px, <=1050px closed-by-default/on-demand overlay.
+- Browser matrix PASS at 1280 / 1080 / 1051 / 1050 plus mobile no-overflow; 1080 editor width improved from 432px to 512px.
+- Admin contract, root TypeScript, full root build and diff hygiene PASS. No push, main merge/rebase, Supabase/Production/indexing mutation.
+
+## 2026-09-10 — medium-width regression + topbar action convergence
+- Hardened responsive browser regression at `c258640b`: editor/panel no horizontal overflow, policy controls >=180px, stable DOM-ready navigation.
+- Moved Activity Center under global Operations at `1ea56f60`; unread badge remains on Operations and 390px topbar drops from 5 actions to 4.
+- Browser hierarchy/Activity flow, full SEO contract, root TypeScript, full root build and diff hygiene PASS. No push or Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Publish Center hierarchy convergence
+- Committed `3cb4a569 fix(admin): simplify publish center hierarchy`.
+- Audit Timeline now precedes Capability/Permission reference; event detail is explicit-on-selection; source/readiness are compact; informational Amber removed.
+- Fixed Publish Center UI regression to use a real 390px Playwright viewport. PASS: Publish Center UI/contract, Operations cross-page states, root TypeScript, full root build, diff hygiene.
+
+## 2026-09-10 — Product/Care editor priority
+- Committed `448bfcd8 fix(admin): prioritize product care editing`.
+- Mobile catalog replaced by compact navigator; fields moved ahead of Impact/downstream review; Care SEO no longer blocks Care editing; dirty publish explains Save-first gate.
+- PASS: Local Business UI, full Admin authority UI including Care SEO/Compatibility, root TypeScript, full build, diff hygiene.
+
+## 2026-09-10 — downstream review visual semantics
+- Committed `340cbfd3 fix(admin): align downstream review visual semantics`.
+- Care SEO moved to Graphite/White/Green visual semantics; violet/indigo/sky parallel product colors are removed. Amber remains only for explicit review/conflict/approval states; Red remains drift/error.
+- Content Impact now uses Amber at container level only when an independent human review is actually required; category chips no longer create blue/purple authority colors.
+- Added contract guards against reintroducing the removed color authorities. PASS: Care SEO projection/editorial/AI, full Admin authority UI, Local Business UI, root TypeScript, full build, diff hygiene.
+- NEXT: Compatibility Admin hierarchy/interaction audit. No push/main/Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Compatibility review hierarchy convergence
+- Committed `89b6863a fix(admin): converge compatibility review hierarchy`.
+- Removed Profile-indigo / Pair-violet split; both revisions now use one neutral authority visual system. Pending human review and approve use Amber; reviewed publish stays Green; reject/error Red; Regression reference Slate.
+- Top baseline explanation is neutral and the three authority stats are compacted into one summary strip.
+- Permanent 390px guards: summary <=120px, Profile editor appears before 500px, no internal overflow. PASS: Compatibility contract, Local Profile/Pair Draft→Regression→Review→Publish, full Admin UI, root TypeScript, full build, diff hygiene.
+- NEXT: Operations Home first-screen density/duplication audit. No push/main/Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Operations Home hierarchy convergence
+- Committed `ee41c214 fix(admin): compact operations home hierarchy`.
+- Task-first coordination remains primary; ready-source details are compact, authority workspaces use a 2×2 mobile grid, and Recent Activity is reduced to one latest-event summary linking to Publish Center instead of duplicating the release timeline.
+- 390px measured page height improved ~1833→1373px; primary task starts ~188→102px; workspace block 442→252px; Recent Activity 162→63px.
+- Browser contract also waits for exact Product/Care deep-link hydration instead of hidden catalog text. PASS: Operations WorkItems, populated auth/forbidden/schema/deep-link matrix, Durable Local File full restart/backup-restore, root TypeScript, full build, diff hygiene.
+- Fetched refs after checkpoint: remote feature `30ff0119`, main `d3c70dee`; local ahead 34/behind 0 vs feature, main-only 275/feature-only 292, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
+- NEXT: cross-workspace task continuity and remaining high-signal interaction/ownership badcases.
+
+## 2026-09-10 — Operations task return continuity
+- Committed `24097c4b fix(admin): preserve operations task return context`.
+- Product/Care and Compatibility exact tasks carry Router return state; returning to Operations restores/highlights the task. If it is no longer present, Operations explains that it may be completed or temporarily unreadable.
+- Standalone Species SEO receives a constrained same-host `/admin/content` return URL contract and shows `返回运营任务` only when launched from Operations; cross-host targets are rejected.
+- PASS: SEO hierarchy browser, Operations desktop/mobile state-return and query-return flows, Product/Care, Compatibility, Admin authority UI, root build.
+
+## 2026-09-10 — Operations repeated-attention queue convergence
+- Committed `35134b0d fix(admin): collapse repeated operations queue items`.
+- Home presentation keeps source WorkItems unchanged but expands at most three low-priority rows per authority/severity/gate; hidden task counts are summarized by authority. Blocker/decision ordering is unchanged.
+- Real Local Business scenario with dozens of SEO Index-strategy attention items now guards the repetition cap; Operations browser matrix and SEO hierarchy remain PASS.
+- Fetched refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 37/behind 0, main-only 275/feature-only 295, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
+- NEXT: exact task completion → return → Operations refresh closure.
+
+## 2026-09-10 — Operations exact-task closure acceptance
+- Committed `fcc86c0d test(admin): prove operations task closure`.
+- Browser-proven Product flow: Operations exact Product Draft → publish → return; returned task is absent from refreshed queue and the next current priority is immediately visible.
+- Browser-proven Compatibility flow: Operations exact Profile Draft → submit → Regression/Evidence → approve → reviewed publish → return; completed Profile task is absent from refreshed queue.
+- Re-fetched refs after acceptance: remote feature `e9c63560`, main `d3c70dee`; local ahead 37/behind 0 vs feature, main-only 275/feature-only 297, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: audit WorkItem action semantics only where action copy could overstate or obscure the exact remaining authority gate.
+
+## 2026-09-10 — Operations closure + exact SEO action targeting
+- `fcc86c0d test(admin): prove operations task closure` browser-proves Product publish and Compatibility Profile reviewed publish both return to refreshed Operations with the completed task removed and the next priority visible.
+- `258a5d0d fix(admin): name exact operations seo actions` replaces generic SEO CTAs with exact gate actions (`补齐 H1`, `设置 Index 策略`, `修正 Canonical`, `开始人工审核`, etc.).
+- `7799d88a fix(admin): focus care seo operations deep links` makes `seo=1` operational: after the final Care SEO workspace hydrates, the target is focused correctly in desktop internal-scroll and 390px document-scroll layouts.
+- `f79802b5 fix(admin): align seo actions with authority targets` strips `seo=1` for `source_not_published`, so `先发布 Care 源内容` opens the Product/Care source editor instead of downstream SEO.
+- PASS: Operations desktop/mobile/auth/forbidden/schema matrix, Care SEO Draft→Review→Approve→Source-drift flow, Admin authority UI, Product/Care + Compatibility closure regressions, root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `e9c63560`, main `d3c70dee`; local ahead 41/behind 0 vs feature, main-only 275/feature-only 301, merge base `ed0cf380`. No push/main/Production/Supabase/indexing mutation.
+- NEXT: audit `source_not_snapshot` repair ownership before changing its action or target.
+
+## 2026-09-10 — Legacy Care publication-snapshot repair
+- Committed `1c78ef14 fix(admin): repair legacy care publication snapshots`.
+- `source_not_snapshot` is now owned by Product/Care, not downstream SEO. Its WorkItem opens the exact published Care record with an explicit snapshot-repair context.
+- Added protected `POST /admin/care-articles/:id/repair-publication-snapshot`, reusing immutable publication snapshot logic without changing Care content, status or version. Missing `content_publications` infrastructure remains fail-closed; Local Mode rejects this legacy-only repair instead of faking success.
+- Fixed Product/Care exact-ID deep-link hydration race: duplicate/late list loads cannot clear the requested record back to a new draft.
+- Stabilized browser suites by replacing Vite `networkidle` assumptions with DOM/target readiness where appropriate.
+- PASS: Operations WorkItems + desktop/mobile matrix, Admin publication contract, non-Local Admin 1280/390 repair flow, Local Business, Care SEO Draft→Review→Approve→drift flow, API/root TypeScript, full root build and diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 45/behind 0 vs feature, main-only 275/feature-only 303. No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: audit only remaining WorkItem actions that still fail to land on an executable authority operation; do not refactor already-correct paths.
+
+## 2026-09-10 — Compatibility review-check repair
+- Committed `298f5810 fix(admin): repair compatibility review checks`.
+- Pending/approved Profile or Pair revisions missing Impact / Regression / Canonical Evidence no longer dead-end behind disabled approval/publish actions.
+- Added Cloud + Local `repair-checks` paths that recompute review artifacts without mutating Profile/Pair business fields.
+- Approved revisions are safely demoted to `pending_review`, clearing the old approval so regenerated evidence requires a fresh human decision before publish.
+- UI now exposes one repair blocker and hides unusable review/publish actions until all three artifacts are ready.
+- PASS: Compatibility contract, Local Profile/Pair repair + publish flow, Operations WorkItems, Admin authority UI, API/root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 47/behind 0 vs feature, main-only 275/feature-only 305. No push/main/Production/Supabase/indexing mutation.
+
+## 2026-09-10 — Bilingual SEO targeting + Compatibility publish-gate recheck
+- Committed `44082ee0 fix(admin): target bilingual seo counterpart`.
+- `missing_bilingual_pair` now targets the actual counterpart locale instead of reopening the already-complete locale; review-ready counterparts route directly to human review. Local Care English remains fail-closed and no longer creates a fake actionable bilingual task while persistence is unavailable.
+- Committed `6d01980a fix(admin): recheck compatibility publish gate`.
+- Approved Compatibility revisions blocked only by reviewed DB/runtime baseline mismatch now expose `重新检查发布资格`; the action refreshes runtime authority only, does not mutate the revision, and publish remains hidden until exact coverage is restored.
+- PASS: SEO registry + WorkItem contracts, standalone Species SEO counterpart browser target, Local Care SEO fail-closed flow, Local/Cloud Compatibility, Operations desktop/mobile matrix, Admin authority UI, API/root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 50/behind 0 vs feature, main-only 275/feature-only 308, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: prove one real SEO WorkItem completion → return → refreshed Operations closure; do not add new authority layers unless a concrete operator dead-end is observed.
+
+## 2026-09-10 — SEO exact-task closure acceptance
+- Committed `393f52f7 test(admin): prove seo task closure`.
+- Browser-proven local Care SEO flow: Operations exact `设置 Index 策略` task → focused Care SEO authority → create Draft → submit review → human approve → return to Operations.
+- On return, refreshed Operations no longer contains the completed `新鱼入缸 · SEO 需要完善` task and exposes the next current priority immediately; no manual refresh is required.
+- Existing source-drift regression still runs after the closure assertion, so task closure does not weaken Published-source drift protection or the Local English/AI fail-closed boundary.
+- PASS: Care SEO browser flow at 1280/390, Operations WorkItems + desktop/mobile matrix, Admin authority UI, root TypeScript, full root build, diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 52/behind 0 vs feature, main-only 275/feature-only 310, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: stop WorkItem-layer expansion unless a concrete reproducible operator dead-end is observed; Staging/main reconciliation stays separately gated.
+
+## 2026-09-10 — Snapshot repair maintenance isolation
+- Committed `f819182a fix(admin): isolate snapshot repair maintenance`.
+- The legacy non-Local `snapshot=1` context is now a strict maintenance surface: Care fields are disabled, content save/image replacement are hidden, and Impact/Care SEO downstream tools are not rendered while repair is active.
+- The only writable operation in that context is the dedicated immutable Published Snapshot repair. After success clears the repair context, normal Published Care actions, save/edit and downstream review return.
+- Local Mode does not expose the legacy-only repair UI even if `snapshot=1` is manually appended.
+- PASS: Admin content contract, non-Local 1280/390 repair browser flow, Local Business, Care SEO, Operations matrix, API/root TypeScript, full root build and diff hygiene.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 54/behind 0, main-only 275/feature-only 312, merge base `ed0cf380`.
+- No push/main merge/rebase, Production/live DB, Supabase Staging or indexing mutation.
+- NEXT: stop WorkItem/maintenance expansion unless another concrete reproducible operator dead-end is observed; Staging/main reconciliation remains separately gated.
+
+## 2026-09-10 — Publish audit deep-links + Local Species SEO workspace
+- Committed `4fd1e280 fix(admin): deep-link release audit resources`: Publish Center detail and cross-authority evidence now share one event→authority target contract. Stable Product/Care resource IDs, Compatibility revision IDs and Species SEO catalog key + locale open exact targets; ambiguous events fall back to authority home.
+- Committed `832537db fix(admin): connect local species seo workspace`: `npm run dev:local-admin` now starts Web + API + standalone Species SEO. Localhost standalone SEO links resolve to the configured SEO port (default 3010); deployed `/admin/seo/` paths are unchanged.
+- Real isolated startup PASS with Web 3103 + API 8893 + SEO 3110; root Publish Center rendered its SEO link to 3110 and the English Species SEO editor loaded there. Durable restart E2E now allocates an isolated SEO port and asserts the SEO app title before proceeding.
+- PASS: local-admin mode contract, Publish Center contract/UI 1280/390, Operations desktop/mobile matrix, Durable Local File full restart/backup/restore, root TypeScript, full root build and diff hygiene.
+- Fresh refs after functional commit: remote feature `30ff0119`, main `d3c70dee`; local ahead 57/behind 0 vs feature, main-only 275/feature-only 315, merge base `ed0cf380`.
+- NEXT: stop navigation/WorkItem expansion unless another concrete operator dead-end is reproduced; Supabase Staging and main reconciliation remain separately gated.
+
+## 2026-09-10 — Local Species SEO workspace finalization
+- `4fd1e280 fix(admin): deep-link release audit resources` makes Publish Center audit detail and cross-authority context return to exact Product/Care records, Compatibility revisions and Species SEO locale pages when stable identity exists.
+- `832537db fix(admin): connect local species seo workspace` makes `npm run dev:local-admin` start Web + API + standalone Species SEO and resolve localhost standalone-SEO links to the configured dev port.
+- `af886726 test(admin): prove local seo operations return` browser-proves standalone SEO → root Operations return with the original task context preserved across ports.
+- `7ec556a3 fix(admin): reuse healthy local seo server` safely reuses an already-running AquaGuide Species SEO server; unrelated services occupying the configured SEO port fail closed.
+- PASS: Durable Local File restart/backup/restore E2E, Local Admin contract, Publish Center 1280/390, Operations desktop/mobile, root TypeScript and full build.
+- Fresh refs: remote feature `30ff0119`, main `d3c70dee`; local ahead 60/behind 0, main-only 275/feature-only 318. No push/main/Production/Supabase/indexing mutation.
+- NEXT: run Final Local Acceptance across Operations → Product/Care → Compatibility → SEO → Publish Center; only fix reproducible operator blockers.
+
+## 2026-09-10 — Final Local Acceptance PASS
+- Final acceptance sequence PASS: Durable Local File full restart/backup/restore; Product/Care Draft→Published isolation; Compatibility Profile/Pair review/publish; Care SEO Draft→Review→Approve→source-drift; Operations auth/forbidden/schema + exact deep-links; Publish Center read/audit/detail; Data Review/SEO hierarchy; non-Local Admin authority UI; Product and Care runtime publish Preview; published-content isolation; Admin/Compatibility contracts; root TypeScript; full root build.
+- No new reproducible operator blocker was found. Local UI/WorkItem expansion is now closed unless a concrete badcase appears.
+- Explicit remote ref refresh: feature `e9c63560`, main `d3c70dee`, merge base `ed0cf380`; local vs feature `0/59`, main vs local `275/319`.
+- NEXT: read-only feature ↔ main reconciliation audit. Do not merge/rebase/cherry-pick main during the audit.
+
+## 2026-09-11 — Read-only feature ↔ main reconciliation audit
+- Final Local Acceptance baseline remains PASS; local accepted feature docs HEAD at audit start: `a7ee4a13`.
+- Live refs re-read: remote feature `e9c63560`, main `d3c70dee`, merge base `ed0cf380`; local vs remote feature ahead 60/behind 0; main vs local 275 main-only / 320 local-feature-only.
+- From merge base, main changed 220 files and local feature 234; only 21 files overlap. Three-way merge-file simulation shows 7 overlap files with zero conflict hunks.
+- Manual product/runtime conflicts are concentrated in API route registry, package scripts, App shell, Compatibility evidence/engine, Care Encyclopedia composition and Vite config.
+- Compatibility is the semantic merge gate: main v3/domain rules include species-specific Stage Risk evidence, while feature runtime reviewed authority currently versions/validates only Profile + Pair. A mechanical merge would create split decision authority.
+- Canonical audit written to `.ai/RECONCILIATION_AUDIT_20260911.md`. No merge/rebase/cherry-pick/main/Production/Supabase/indexing mutation.
+- NEXT: define the Stage Risk authority extension/adapter plan before building any reconciliation candidate.
+
+## 2026-09-11 — Compatibility v3 authority reconciliation design
+- Canonical implementation contract added: `.ai/COMPATIBILITY_V3_AUTHORITY_RECONCILIATION.md`.
+- Decision: main v3/domain-rule engine is the behavioral baseline; feature reviewed runtime authority remains the decision-data authority.
+- Existing Profile authority expands to `requiredFacts`, optional `stockingGuidance`, and Profile-owned Stage Risk rules. Stage Risk keeps dedicated Evidence mapping and publishes atomically with Profile; no third top-level Admin workflow.
+- Compatibility-only life stages retain `fry/subadult` without changing persisted livestock `LifeStage`.
+- Stage Risk evidence must remain separate from ordinary Profile citations because `evidenceFromProfile()` attaches all Profile citations to ordinary species-trait findings.
+- NEXT: build isolated local reconciliation candidate/worktree; low-risk unions first, Compatibility last. Main/Production/Supabase/indexing remain untouched.
+
+## 2026-09-11 — Isolated main reconciliation candidate PASS
+- Created isolated worktree `/private/tmp/aqua-admin-reconcile-20260911` and branch `reconcile/admin-content-main-20260911`; main was never checked out for mutation.
+- Resolved the real feature + live-main merge and committed `80aded34 merge: reconcile admin content with main compatibility v3` with parents `1a032743` + `d3c70dee`.
+- Compatibility semantic merge keeps main v3/domain rules as behavior authority while routing Profile/Pair/Stage Risk evidence through the reviewed runtime provider. Added explicit `authorityVersion` beside domain `ruleVersion`.
+- Profile v3 authority now carries requiredFacts, optional stockingGuidance and Profile-owned Stage Risk with dedicated Evidence resolution. Added same-species adult→fry regression coverage and operator-visible Stage Risk review/edit UI.
+- Added code-only additive migration `202609110001_compatibility_v3_profile_authority.sql`; it seeds canonical guppy Stage Risk evidence, backfills v3 snapshots, invalidates stale approvals, and version-publishes Profile + Stage Risk atomically. Migration was not applied anywhere.
+- Compatibility direct regression/impact/page callers were moved back behind the canonical service boundary; authority gate PASS without widening legacy allowlists.
+- PASS: main Compatibility/domain/service/launch tests; runtime authority/regression/admin contract; Local Profile/Pair/Stage Risk browser publish; Operations desktop/mobile; Publish Center; Admin authority UI; Compatibility authority gate; API/root TypeScript; full build; diff hygiene.
+- Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both (`main...candidate 0/323`, `feature...candidate 0/338`). No push/main/Production/Supabase Staging/indexing mutation.
+- NEXT: keep candidate isolated until explicit authorization for Staging migration validation or main promotion.
+
+## 2026-09-11 — Compatibility v3 migration safety hardening
+- Committed `0a938a12 fix(admin): harden compatibility v3 migration` on isolated reconciliation branch.
+- Historical rejected/published/superseded Profile revisions are no longer backfilled with present-day v3 Stage Risk snapshots; only active draft/pending/approved revisions are upgraded.
+- Added DB constraints for reviewed Profile requiredFacts, non-empty Compatibility life stages, non-blank Stage Risk identity/reason, and stricter Stage Risk source-link visibility.
+- Profile publish RPC now fail-closes on invalid requiredFacts, malformed Stage Risk shape, duplicate ruleKey and duplicate/blank Stage Risk citation keys.
+- PASS: Compatibility admin contract, Local Compatibility browser, Compatibility authority gate, Stage Risk regression gate, API/root TypeScript, full build and diff hygiene.
+- Docker daemon did not respond, so no local Postgres migration execution was performed or claimed. No Supabase Staging/Production/indexing mutation.
+- Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both histories at main `0/325`, feature `0/340`.
+
+## 2026-09-11 — Compatibility v3 migration invariant closure
+- Committed `8ab60adb fix(admin): add migration preflight guards`, `92ba6c50 fix(admin): validate compatibility stocking guidance`, `f849b6c6 fix(admin): preserve compatibility set invariants`, and `b8703fec fix(admin): enforce compatibility evidence sets`.
+- Migration is now explicitly transactional and fails early with catalog/revision diagnostics when requiredFacts backfill is incomplete.
+- Stocking guidance receives a DB immutable shape validator; requiredFacts and Stage Risk life-stage arrays preserve set semantics; Profile/Pair/Stage Risk citations and stocking evidenceIds reject duplicate source keys/IDs.
+- CREATE + PATCH contracts and the DB publish RPC independently enforce reviewed authority invariants. Historical rejected/published/superseded revisions remain unchanged.
+- PASS: Compatibility admin contract, API/root TypeScript, Local Compatibility browser, authority gate, Stage Risk regression, pglast SQL parse (41 statements), full build, diff hygiene.
+- Fresh refs: main `d3c70dee`, remote feature `e9c63560`; candidate contains both at main `0/330`, feature `0/345`.
+- Docker Desktop backend/socket remains unresponsive; no local PostgreSQL apply, Supabase Staging/Production migration, indexing mutation or main promotion occurred.
+- NEXT: controlled PostgreSQL/Supabase migration execution validation; do not expand authority/UI scope absent a concrete failure.
+## 2026-09-12 — Atomic Local File → Git runtime publication closeout
+- Continued from `d93ae6b feat(admin): publish local authority through git snapshot` on the isolated reconciliation worktree only.
+- Found a real crash-consistency gap: runtime-assets were replaced before `runtime-authority.json`, so interruption between those steps could leave the old manifest pointing at removed media.
+- Committed `e7b445c1 fix(admin): make git runtime snapshot atomic`: runtime media now uses asset version + SHA-256-derived filenames, new assets are staged into the live immutable pool first, the manifest switches last, and unreferenced old media is cleaned only after a successful switch.
+- Added failure injection: after changing asset content/version, force the final manifest path to fail; previous published asset remains byte-identical and newly staged media is removed. This proves failure cannot corrupt the prior Git authority.
+- PASS: `test:local-file-admin`, `test:git-runtime-authority`, `test:local-file-admin-ui`, `check:api`, root TypeScript (`lint`), full composite build and `git diff --check`.
+- Candidate relation after functional commit: main `d3c70dee...HEAD = 0/334`; feature `e9c63560...HEAD = 0/349`. No push/main/Production/Supabase Staging/indexing mutation.
+- NEXT: Local File + Git authority is locally usable and safety-closed. Do not reintroduce Supabase Staging as an implicit requirement; cloud validation and main promotion remain explicit separate gates.
+
+## 2026-09-12 — Git snapshot operator boundary correction
+- Found a product-semantics risk after atomic publication hardening: Operations called the action `Git 发布快照`, but the endpoint only writes `public/runtime-authority.json` / runtime assets into the repository worktree; it does not perform Git commit, push or deployment.
+- Committed `65af7dd2 fix(admin): clarify git snapshot publish boundary`. API result now declares `gitCommitRequired=true` and `deploymentTriggered=false`; the Local persistence client types that contract.
+- Operations confirmation now says the action only writes a pending runtime snapshot and will not commit/push/deploy. Success state says `运行时快照已生成 · 尚未提交 Git / 部署`; button label is `生成待提交快照`.
+- Browser regression and API contract were updated together. PASS: Local File API/failure regression, Git runtime authority preference, Local Admin browser, API/root TypeScript and full composite build.
+- Candidate relation after the functional commit: main `d3c70dee...HEAD = 0/336`; feature `e9c63560...HEAD = 0/351`. No push/main/Production/Supabase Staging/indexing mutation.
+## 2026-09-12 — Main promotion readiness + empty Git Product/Care P0 closure
+- Re-fetched origin: `origin/main=d3c70dee633e`, no main-only commits; candidate remains a strict descendant.
+- Found promotion P0: committed Git snapshot has Product/Care 0/0, and the runtime previously treated any generated snapshot as Product/Care authority, suppressing Published API bootstrap.
+- Committed `72ad2693 fix(runtime): preserve published api under empty git snapshot`: empty Product/Care Git authority now falls through to Published API; non-empty Git authority remains preferred.
+- Updated stale browser acceptance to current Encyclopedia search and Care `传统浏览 / Browse guides`; zh-CN and EN Published API values reach frontend consumers.
+- PASS: Git runtime authority, Published runtime, Local File Admin, root/API TypeScript, full build, Compatibility runtime/admin/regression, Published isolation, Local Admin mode and authority scan.
+- Disposable `origin/main → candidate` ff-only rehearsal PASS with exact candidate tree; rehearsal resources removed. Real main/push/Production/Staging untouched.
+
+## 2026-09-12 — local main promotion
+- Refreshed origin; `origin/main` remained `d3c70dee633e`, candidate remained a strict descendant.
+- Created rollback ref `rollback/main-pre-aqua-admin-20260912` at the remote-main anchor.
+- Created local `main` from `origin/main` and fast-forwarded it to accepted candidate `83f8fd7a`; tree equality PASS.
+- Post-promotion main smoke PASS: Git runtime fallback, Published Content isolation, Compatibility authority, Local Admin mode, root/API TypeScript.
+- No push, deployment, Supabase Staging/Production migration or indexing mutation.

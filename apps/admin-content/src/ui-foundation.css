@@ -1,0 +1,1370 @@
+/* Aqua Admin UI Foundation — authoritative visual hierarchy layer.
+   Loaded after legacy styles.css so product-level tokens win over page-local density overrides. */
+.admin-shell {
+  --ui-text-page: 24px;
+  --ui-text-task: 18px;
+  --ui-text-section: 15px;
+  --ui-text-body: 13px;
+  --ui-text-meta: 12px;
+  --ui-text-micro: 11px;
+  --ui-control-primary: 40px;
+  --ui-control-secondary: 36px;
+  --ui-control-compact: 34px;
+  --ui-field-height: 42px;
+  --ui-radius-control: 8px;
+  --ui-editor-width: 720px;
+  --ui-space-field: 22px;
+}
+
+/* Generic actions: visual priority follows task importance, never page-specific magic numbers. */
+.admin-shell .primary-button {
+  min-height: var(--ui-control-primary);
+  padding: 0 16px;
+  border-radius: var(--ui-radius-control);
+  font-size: var(--ui-text-body);
+  font-weight: 760;
+}
+.admin-shell .primary-button.compact { min-height: var(--ui-control-secondary); font-size: var(--ui-text-meta); }
+.admin-shell .secondary-button { min-height: var(--ui-control-secondary); padding: 0 14px; border-radius: var(--ui-radius-control); font-size: var(--ui-text-body); }
+.admin-shell .ghost-button { min-height: var(--ui-control-compact); padding: 0 10px; border-radius: var(--ui-radius-control); font-size: var(--ui-text-meta); }
+.admin-shell input,
+.admin-shell select { min-height: var(--ui-field-height); font-size: var(--ui-text-body); }
+.admin-shell textarea { font-size: var(--ui-text-body); line-height: 1.5; }
+
+/* Current task is a top-level notification. Workflow below it only shows stage position. */
+.admin-shell .current-task-notice {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 12px;
+  border-bottom: 1px solid var(--cms-border);
+  background: #fff;
+}
+.admin-shell .current-task-notice-kicker { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
+.admin-shell .current-task-notice-kicker > span { color: var(--cms-muted); font-size: 10px; font-weight: 760; letter-spacing: .06em; }
+.admin-shell .current-task-notice-kicker > em {
+  min-height: 20px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 7px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 760;
+}
+.admin-shell .current-task-notice-copy { min-width: 0; display: flex; align-items: baseline; gap: 10px; }
+.admin-shell .current-task-notice-copy > strong { font-size: 14px; line-height: 1.25; color: var(--cms-ink); }
+.admin-shell .current-task-notice-copy > small { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--cms-muted); }
+.admin-shell .current-task-notice-action {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--cms-border-strong);
+  border-radius: var(--ui-radius-control);
+  background: #fff;
+  color: var(--cms-ink);
+  font-size: 12px;
+  font-weight: 760;
+}
+.admin-shell .current-task-notice.tone-decision .current-task-notice-kicker > em,
+.admin-shell .current-task-notice.tone-decision .current-task-notice-copy > strong { color: var(--state-warning); }
+.admin-shell .current-task-notice.tone-decision .current-task-notice-kicker > em { border: 1px solid var(--state-warning-line); background: var(--state-warning-bg); }
+.admin-shell .current-task-notice.tone-decision .current-task-notice-action { border-color: var(--state-warning-line); box-shadow: inset 3px 0 0 var(--state-warning); }
+.admin-shell .current-task-notice.tone-warning .current-task-notice-kicker > em,
+.admin-shell .current-task-notice.tone-warning .current-task-notice-copy > strong { color: var(--state-error); }
+.admin-shell .current-task-notice.tone-warning .current-task-notice-kicker > em { border: 1px solid color-mix(in srgb, var(--state-error) 30%, white); background: color-mix(in srgb, var(--state-error) 6%, white); }
+.admin-shell .current-task-notice.tone-warning .current-task-notice-action { border-color: color-mix(in srgb, var(--state-error) 30%, var(--cms-border)); box-shadow: inset 3px 0 0 var(--state-error); }
+.admin-shell .current-task-notice.tone-success .current-task-notice-kicker > em,
+.admin-shell .current-task-notice.tone-success .current-task-notice-copy > strong { color: var(--cms-green); }
+.admin-shell .current-task-notice.tone-success .current-task-notice-kicker > em { border: 1px solid color-mix(in srgb, var(--cms-green) 26%, white); background: color-mix(in srgb, var(--cms-green) 7%, white); }
+.admin-shell .current-task-notice.tone-success .current-task-notice-action { border-color: var(--cms-green); color: var(--cms-green); }
+
+/* Global workflow is stage navigation only; current-task guidance lives above it. */
+.admin-shell.workflow-compact .workflow-command-center {
+  min-height: 44px;
+  grid-template-columns: minmax(560px, 1fr);
+  gap: 0;
+  padding: 3px 12px;
+}
+.admin-shell.workflow-compact .workflow-stage-card {
+  min-height: 38px;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  padding: 3px 7px;
+  border-radius: 9px;
+}
+.admin-shell.workflow-compact .workflow-stage-card > b { width: 20px; height: 20px; font-size: 10px; }
+.admin-shell.workflow-compact .workflow-stage-card > span { min-width: 0; display: grid; gap: 0; }
+.admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 11px !important; line-height: 1.1; }
+.admin-shell.workflow-compact .workflow-stage-card > span small { display: none !important; }
+
+/* Review handoff: the next action must be stronger than supporting status copy. */
+.admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel {
+  min-height: 48px;
+  grid-template-columns: 148px minmax(0, 1fr) auto;
+  gap: 9px;
+  padding: 4px 10px !important;
+}
+.admin-shell .page-review-title-row > strong { font-size: 12px !important; font-weight: 760 !important; }
+.admin-shell .review-health-chip { font-size: var(--ui-text-micro); font-weight: 700; }
+.admin-shell .page-review-meta > span { font-size: var(--ui-text-micro) !important; }
+.admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track { gap: 7px; }
+.admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size: var(--ui-text-micro) !important; }
+.admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span b { width: 18px; height: 18px; font-size: 9px; }
+.admin-shell .page-review-top-slot .review-submit-action.primary-button.compact {
+  min-width: 128px;
+  min-height: var(--ui-control-secondary);
+  padding: 0 12px;
+  font-size: var(--ui-text-body);
+}
+.admin-shell .page-review-top-slot .review-next-action-buttons .ghost-button.compact,
+.admin-shell .page-review-top-slot .review-next-action-buttons .secondary-button.compact {
+  min-height: var(--ui-control-secondary);
+  font-size: var(--ui-text-meta);
+}
+
+/* Sidebar: keep navigation readable while recovering vertical density from rows, not typography. */
+.admin-shell .sidebar-heading h2 { font-size: 18px !important; }
+.admin-shell .review-filters.species-quick-filters button {
+  min-height: var(--ui-control-compact);
+  padding: 0 6px;
+  font-size: var(--ui-text-micro);
+  font-weight: 700;
+}
+.admin-shell .search-input,
+.admin-shell .category-filter { height: var(--ui-field-height); font-size: var(--ui-text-meta); }
+.admin-shell .group-header { min-height: 42px; padding: 6px 4px !important; }
+.admin-shell .group-copy strong { font-size: var(--ui-text-body); }
+.admin-shell .group-copy small { font-size: var(--ui-text-micro); }
+.admin-shell .variant-row > button { min-height: 42px; padding-top: 6px; padding-bottom: 6px; }
+.admin-shell .variant-row strong,
+.admin-shell .single-species-row strong { font-size: var(--ui-text-body); }
+.admin-shell .variant-row small,
+.admin-shell .single-species-row small,
+.admin-shell .variant-row code { font-size: var(--ui-text-micro); }
+
+/* Editor toolbar: scope and Preview are secondary controls, not micro-actions. */
+.admin-shell.workflow-compact .editor-context-bar { min-height: 52px; height: 52px; padding: 0 26px; }
+.admin-shell .editor-scope-switch button { min-height: var(--ui-control-secondary); padding: 0 12px; font-size: var(--ui-text-meta); }
+.admin-shell .compact-preview-toggle { min-height: var(--ui-control-secondary) !important; padding: 0 12px !important; font-size: var(--ui-text-meta) !important; }
+
+/* Authoring surface: reduce whitespace before shrinking text. */
+.admin-shell .editor-panel,
+.admin-shell .base-seo-panel { max-width: var(--ui-editor-width); }
+.admin-shell .editor-panel { padding: 20px 28px 10px; }
+.admin-shell .editor-task-header {
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  gap: 18px;
+}
+.admin-shell .editor-task-header small { margin-bottom: 4px; font-size: var(--ui-text-micro); }
+.admin-shell .editor-task-header h2 { font-size: 22px; line-height: 1.18; }
+.admin-shell .editor-task-header p { margin-top: 4px; font-size: var(--ui-text-meta); }
+.admin-shell .editor-task-summary { min-width: 150px; }
+.admin-shell .editor-task-summary strong { font-size: var(--ui-text-meta); }
+.admin-shell .editor-task-summary span { font-size: var(--ui-text-micro); }
+.admin-shell .section-heading h3 { font-size: var(--ui-text-section); }
+.admin-shell .editor-field-question { font-size: var(--ui-text-body); line-height: 1.35; }
+.admin-shell .editor-field-guidance { margin: 3px 0 6px; font-size: var(--ui-text-meta) !important; line-height: 1.4 !important; }
+.admin-shell .inspector-editor-field { font-size: var(--ui-text-body); }
+.admin-shell .inspector-editor-field textarea { min-height: 84px; height: 84px; padding: 10px 12px; }
+.admin-shell .inspector-editor-field input { height: var(--ui-field-height); }
+.admin-shell .section-card label + label { margin-top: var(--ui-space-field); }
+
+/* Progressive disclosure stays compact, but never drops below readable metadata size. */
+.admin-shell .inheritance-field-heading > span { font-size: var(--ui-text-body); }
+.admin-shell .inheritance-field-source small,
+.admin-shell .inheritance-field-source .inline-source-action { font-size: var(--ui-text-micro) !important; }
+
+/* Inherited search fields stay visible, but read as compact source rows until the operator chooses a page override. */
+.admin-shell .search-settings .secondary-seo-fields { gap: 0; }
+.admin-shell .inheritance-editor-field { border-top: 1px solid var(--cms-border); }
+.admin-shell .inheritance-editor-field:first-child { border-top: 0; }
+.admin-shell .inheritance-editor-field.is-inherited {
+  min-height: 52px;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+}
+.admin-shell .inheritance-editor-field.is-inherited .inheritance-field-heading {
+  min-width: 0;
+  display: grid;
+  justify-content: stretch;
+  gap: 2px;
+  margin-bottom: 0;
+}
+.admin-shell .inheritance-editor-field.is-inherited .inheritance-field-source { justify-content: flex-start; }
+.admin-shell .inheritance-editor-field.is-inherited .compact-source-view {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.admin-shell .inheritance-editor-field.is-inherited .inherited-field-value {
+  min-width: 0;
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-height: 1.35;
+}
+.admin-shell .inheritance-editor-field.is-inherited .compact-source-view .inline-source-action {
+  position: static;
+  white-space: nowrap;
+}
+.admin-shell .inheritance-editor-field.is-editing { padding: 14px 0 16px; }
+@media (max-width: 760px) {
+  .admin-shell .inheritance-editor-field.is-inherited { grid-template-columns: 118px minmax(0, 1fr); gap: 10px; }
+}
+
+/* Utility/header actions remain quieter than the primary task, but still readable. */
+.admin-shell .activity-trigger { min-height: var(--ui-control-compact); padding: 0 10px; font-size: var(--ui-text-meta); }
+.admin-shell .locale-switcher button { min-height: var(--ui-control-compact); padding: 0 9px; font-size: var(--ui-text-meta); }
+.admin-shell .topbar .ghost-button { min-height: var(--ui-control-compact); font-size: var(--ui-text-meta); }
+.admin-shell .topbar-mode-label { font-size: var(--ui-text-micro) !important; }
+
+@media (max-width: 760px) {
+  .admin-shell {
+    --ui-text-page: 22px;
+    --ui-text-task: 17px;
+    --ui-control-primary: 40px;
+    --ui-control-secondary: 36px;
+    --ui-control-compact: 34px;
+  }
+  .admin-shell .current-task-notice {
+    min-height: 46px;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-rows: 1fr;
+    gap: 6px;
+    padding: 4px 8px;
+  }
+  .admin-shell .current-task-notice-kicker { grid-column: 1; grid-row: 1; gap: 4px; }
+  .admin-shell .current-task-notice-kicker > span { display: none; }
+  .admin-shell .current-task-notice-copy { grid-column: 2; grid-row: 1; display: block; min-width: 0; padding-right: 0; }
+  .admin-shell .current-task-notice-copy > strong { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; }
+  .admin-shell .current-task-notice-copy > small { display: none; }
+  .admin-shell .current-task-notice-action { grid-column: 3; grid-row: 1; min-height: 30px; padding: 0 8px; font-size: 10px; }
+  .admin-shell.workflow-compact .workflow-command-center {
+    min-height: 40px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    gap: 0;
+    padding: 3px 8px 4px;
+  }
+  .admin-shell.workflow-compact .workflow-stage-card { min-height: 34px; grid-template-columns: 18px minmax(0, 1fr); gap: 4px; padding: 2px 4px; }
+  .admin-shell.workflow-compact .workflow-stage-card > b { width: 18px; height: 18px; font-size: 8px; }
+  .admin-shell.workflow-compact .workflow-stage-card > span strong { font-size: 10.5px !important; }
+  .admin-shell.workflow-compact .workflow-stage-card > span small { display: none !important; }
+  .admin-shell.workflow-compact .workflow-stage-card.is-current > span small { display: none !important; }
+  .admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel { min-height: 48px; padding: 4px 8px !important; }
+  .admin-shell .page-review-title-row > strong { font-size: 11px !important; }
+  .admin-shell .page-review-top-slot .page-review-status-bar .workflow-stepper-track span { font-size: 9px !important; }
+  .admin-shell .page-review-top-slot .review-submit-action.primary-button.compact { min-width: 104px; min-height: 34px; padding: 0 8px; font-size: 10px; }
+  .admin-shell.workflow-compact .editor-context-bar { min-height: 48px; height: 48px; padding: 0 12px; }
+  .admin-shell .editor-panel { max-width: 100%; padding: 18px 20px 8px; }
+  .admin-shell .editor-task-header { gap: 8px; margin-bottom: 18px; padding-bottom: 14px; }
+  .admin-shell .editor-task-header h2 { font-size: var(--ui-text-page); }
+  .admin-shell .editor-task-summary { min-width: 0; }
+  .admin-shell .inspector-editor-field textarea { min-height: 78px; height: 78px; }
+}
+
+/* Mobile convergence: preserve hierarchy through disclosure, not 7–8px controls. */
+@media (max-width: 760px) {
+  .admin-shell.workflow-compact .workflow-command-center {
+    min-height: 40px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+  .admin-shell.workflow-compact .workflow-stage-grid {
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .admin-shell .page-review-top-slot .page-review-status-bar.page-action-panel {
+    min-height: 48px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 1fr;
+    align-items: center;
+  }
+  .admin-shell .page-review-top-slot .page-review-meta { grid-column: 1; grid-row: 1; flex-wrap: wrap; row-gap: 2px; }
+  .admin-shell .page-review-top-slot .page-review-meta > span { display: inline-flex !important; font-size: 10px !important; }
+  .admin-shell .page-review-top-slot .workflow-status-block { display: none; }
+  .admin-shell .page-review-top-slot .page-review-status-bar .workflow-action-block { grid-column: 2; grid-row: 1; }
+
+  .admin-shell.workflow-compact .editor-scope-switch button {
+    min-height: var(--ui-control-secondary);
+    padding: 0 10px;
+    font-size: var(--ui-text-meta);
+  }
+}
+
+/* Authoring density refinement: the current two tasks should fit before secondary SEO controls. */
+@media (min-width: 761px) {
+  .admin-shell { --ui-editor-width: 700px; }
+  .admin-shell .editor-panel { padding: 18px 26px 8px; }
+  .admin-shell .editor-task-header { align-items: center; margin-bottom: 18px; padding-bottom: 12px; }
+  .admin-shell .editor-task-header small { margin-bottom: 2px; }
+  .admin-shell .editor-task-header p { margin-top: 2px; }
+  .admin-shell .editor-panel .section-heading { margin-bottom: 12px; padding-bottom: 10px; }
+  .admin-shell .section-card label + label { margin-top: 18px; }
+  .admin-shell .inspector-editor-field textarea { min-height: 76px; height: 76px; }
+}
+
+/* Final hierarchy guards for selectors that legacy mobile density rules made more specific. */
+.admin-shell .app-language-switch button {
+  min-height: var(--ui-control-compact);
+  min-width: 42px;
+  padding: 0 9px;
+  font-size: var(--ui-text-meta);
+}
+.admin-shell.workflow-compact .editor-field-question { font-size: var(--ui-text-body); }
+.admin-shell.workflow-compact .editor-field-guidance { font-size: var(--ui-text-meta) !important; }
+
+@media (max-width: 760px) {
+  .admin-shell .editor-task-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .admin-shell .editor-task-header > div:first-child { min-width: 0; }
+  .admin-shell .editor-task-header p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .admin-shell .editor-task-summary {
+    justify-items: end;
+    align-self: center;
+    text-align: right;
+  }
+  .admin-shell .editor-task-summary span { max-width: 110px; line-height: 1.3; }
+}
+
+/* Secondary tools inherit the same hierarchy instead of becoming a micro-UI island. */
+.admin-shell .editor-tool-row strong { font-size: var(--ui-text-body); }
+.admin-shell .editor-tool-row small,
+.admin-shell .editor-tool-row em { font-size: var(--ui-text-micro); }
+.admin-shell .editor-tool-drawer-close { width: 34px; height: 34px; }
+.admin-shell .bulk-upload-button {
+  min-height: var(--ui-control-secondary);
+  padding: 0 14px;
+  border-radius: var(--ui-radius-control);
+  font-size: var(--ui-text-body);
+  font-weight: 700;
+}
+.admin-shell .review-confirm-action {
+  min-height: var(--ui-control-primary) !important;
+  font-size: var(--ui-text-body) !important;
+}
+.admin-shell .review-decision-command-head small,
+.admin-shell .data-review-header > div small { font-size: var(--ui-text-micro); }
+.admin-shell .review-decision-command-head > span,
+.admin-shell .review-decision-command-footer p,
+.admin-shell .review-decision-issue-context,
+.admin-shell .review-decision-issue-context b { font-size: var(--ui-text-micro) !important; }
+
+/* Low-noise semantic hierarchy: one state should be expressed once, not painted on every nested layer. */
+.admin-shell .validation-section.state-error,
+.admin-shell .validation-section.state-warning {
+  padding-left: 0 !important;
+  box-shadow: none !important;
+}
+.admin-shell .inspector-editor-field.state-error,
+.admin-shell .inspector-editor-field.state-warning {
+  padding-left: 0;
+  border-left-color: transparent !important;
+}
+.admin-shell .inspector-editor-field.state-error input,
+.admin-shell .inspector-editor-field.state-error textarea,
+.admin-shell .inspector-editor-field.state-error select,
+.admin-shell .inspector-editor-field.state-warning input,
+.admin-shell .inspector-editor-field.state-warning textarea,
+.admin-shell .inspector-editor-field.state-warning select {
+  border-color: var(--cms-border) !important;
+}
+.admin-shell .validation-state-chip.tone-error,
+.admin-shell .validation-state-chip.tone-warning,
+.admin-shell .validation-state-chip.tone-success { color: var(--cms-muted) !important; }
+.admin-shell .validation-state-chip.tone-error::before { background: var(--state-error); }
+.admin-shell .validation-state-chip.tone-warning::before { background: var(--state-warning); }
+.admin-shell .validation-state-chip.tone-success::before { background: var(--state-success); }
+
+/* Preview/editor mapping uses graphite; green stays reserved for primary workflow actions. */
+.admin-shell .compact-preview-toggle[aria-expanded='true'] {
+  border-color: var(--cms-border-strong) !important;
+  color: var(--cms-ink) !important;
+  background: var(--cms-paper) !important;
+  box-shadow: none !important;
+}
+.admin-shell .live-preview-header .preview-mode-tabs button {
+  min-height: 28px;
+  padding: 0 9px;
+  font-size: var(--ui-text-micro);
+  color: var(--cms-muted);
+  border-radius: 7px;
+}
+.admin-shell .live-preview-header .preview-mode-tabs button.active {
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+}
+.admin-shell .inspect-toggle {
+  min-height: 32px;
+  padding: 0 10px;
+  border-color: var(--cms-border-strong);
+  border-radius: 8px;
+  background: var(--cms-paper);
+  color: var(--cms-ink);
+  font-size: var(--ui-text-micro);
+}
+.admin-shell .inspect-toggle.active {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-panel) !important;
+  color: var(--cms-ink) !important;
+}
+
+.admin-shell .preview-inspector-status {
+  border-bottom-color: var(--cms-border);
+  background: var(--cms-paper) !important;
+  color: var(--cms-muted);
+}
+.admin-shell .preview-inspector-status strong,
+.admin-shell .preview-inspector-path { color: var(--cms-ink) !important; }
+.admin-shell .preview-inspectable.is-hovered {
+  outline-color: var(--cms-border-strong) !important;
+  background: rgba(32,36,44,.025) !important;
+}
+.admin-shell .preview-inspectable.is-selected {
+  outline: 1.5px solid var(--cms-ink) !important;
+  outline-offset: 3px;
+  background: rgba(32,36,44,.035) !important;
+}
+.admin-shell .preview-element-tag {
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+}
+.admin-shell .inspector-editor-field.is-inspector-selected {
+  outline: none !important;
+  box-shadow: inset 2px 0 0 var(--cms-ink) !important;
+  padding-left: 10px;
+  background: transparent !important;
+}
+.admin-shell .inspector-editor-field.is-inspector-selected input,
+.admin-shell .inspector-editor-field.is-inspector-selected textarea {
+  border-color: var(--cms-border-strong) !important;
+  box-shadow: none !important;
+}
+
+/* Remove duplicate hierarchy markers from the primary authoring path. */
+.admin-shell .editor-panel .section-card > .section-heading::before { display: none !important; }
+.admin-shell .editor-panel .section-heading { gap: 0; }
+.admin-shell .editor-task-summary {
+  display: flex;
+  align-items: baseline;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.admin-shell .editor-task-summary span::before {
+  content: '·';
+  margin-right: 8px;
+  color: var(--cms-faint);
+}
+@media (max-width:760px) {
+  .admin-shell .editor-task-summary {
+    display: grid;
+    gap: 2px;
+  }
+  .admin-shell .editor-task-summary span::before { display: none; }
+}
+.admin-shell .inspect-toggle.active { box-shadow: none !important; }
+.admin-shell .inspector-editor-field.is-inspector-selected { border-left-color: transparent !important; }
+
+/* Preview context is one compact band: readiness + current mapped element. */
+.admin-shell .preview-readiness-row {
+  min-height: 36px;
+  padding: 6px 12px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 8px;
+  background: var(--cms-paper) !important;
+  border-bottom-color: var(--cms-border);
+}
+.admin-shell .preview-readiness {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--cms-muted) !important;
+  font-size: var(--ui-text-micro);
+  font-weight: 700;
+  white-space: nowrap;
+}
+.admin-shell .preview-readiness::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 999px;
+  background: var(--cms-faint);
+}
+.admin-shell .preview-readiness.blocked::before { background: var(--state-error); }
+.admin-shell .preview-readiness.review::before { background: var(--state-warning); }
+.admin-shell .preview-readiness.ready::before { background: var(--state-success); }
+
+.admin-shell .preview-readiness-row .preview-inspector-status {
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+  gap: 5px;
+  border: 0;
+  background: transparent !important;
+  color: var(--cms-muted);
+  font-size: var(--ui-text-micro);
+  overflow: hidden;
+}
+.admin-shell .preview-readiness-row .preview-inspector-status strong {
+  flex: none;
+  color: var(--cms-ink) !important;
+  font-size: var(--ui-text-micro);
+}
+.admin-shell .preview-readiness-row .preview-inspector-status span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.admin-shell .preview-readiness-hint {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--cms-muted);
+  font-size: var(--ui-text-micro);
+  text-align: right;
+}
+
+.admin-shell .preview-addition-button {
+  color: var(--cms-muted) !important;
+  border-color: var(--cms-border-strong) !important;
+  background: transparent !important;
+}
+.admin-shell .preview-addition-button:hover,
+.admin-shell .preview-addition-target.is-selected .preview-addition-button {
+  color: var(--cms-ink) !important;
+  border-color: var(--cms-ink) !important;
+  background: transparent !important;
+}
+
+/* Action semantics: selection/navigation controls stay neutral; green is reserved for true primary actions. */
+.admin-shell .app-language-switch button.active {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+  box-shadow: none !important;
+}
+/* Inline overrides are text actions, not miniature primary buttons. */
+.admin-shell .inline-source-action {
+  min-height: 24px;
+  padding: 0;
+  border: 0 !important;
+  background: transparent !important;
+  color: var(--cms-ink) !important;
+  font-size: var(--ui-text-meta) !important;
+  font-weight: 650 !important;
+  text-decoration: underline;
+  text-decoration-color: var(--cms-border-strong);
+  text-underline-offset: 3px;
+}
+.admin-shell .inline-source-action:hover {
+  color: var(--cms-ink) !important;
+  text-decoration-color: var(--cms-ink);
+}
+.admin-shell .preview-addition-button {
+  min-height: 30px;
+  font-size: var(--ui-text-micro) !important;
+}
+/* Current stage/selection is structural, not success. Use Graphite; reserve Green for completion and primary actions. */
+.admin-shell.workflow-compact .workflow-stage-card.is-current > b {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.is-current > em {
+  color: var(--cms-muted) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.filter-selected:not(.is-current) {
+  box-shadow: inset 0 -2px 0 var(--cms-ink) !important;
+}
+.admin-shell .page-review-top-slot .workflow-stepper-track span.current b {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  color: var(--cms-paper) !important;
+}
+.admin-shell .variant-row > input.species-select-box:checked {
+  border-color: var(--cms-ink) !important;
+  background: var(--cms-ink) !important;
+  box-shadow: none !important;
+}
+
+
+/* Mobile Species navigation: current selection first; full discovery is on-demand. */
+.admin-shell .mobile-species-current { display: none; }
+.admin-shell .species-nav-body { display: contents; }
+
+@media (max-width: 760px) {
+  .admin-shell.workflow-compact .species-sidebar {
+    max-height: 58px !important;
+    min-height: 58px;
+    padding: 6px 10px !important;
+    overflow: hidden;
+  }
+  .admin-shell.workflow-compact .species-sidebar.mobile-nav-open {
+    max-height: min(64vh, 520px) !important;
+    min-height: 0;
+  }
+  .admin-shell .species-sidebar .sidebar-heading { display: none !important; }
+  .admin-shell .mobile-species-current {
+    min-height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .admin-shell .mobile-species-current-copy {
+    min-width: 0;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    align-items: baseline;
+    column-gap: 8px;
+    row-gap: 1px;
+  }
+  .admin-shell .mobile-species-current-copy small {
+    grid-column: 1;
+    color: var(--cms-muted);
+    font-size: var(--ui-text-micro);
+  }
+  .admin-shell .mobile-species-current-copy strong {
+    grid-column: 2;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cms-ink);
+    font-size: var(--ui-text-body);
+  }
+  .admin-shell .mobile-species-current-copy em {
+    grid-column: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--cms-muted);
+    font-size: 10px;
+    font-style: normal;
+  }
+  .admin-shell .mobile-species-current > button {
+    flex: 0 0 auto;
+    min-height: 32px;
+    padding: 0 10px;
+    border: 1px solid var(--cms-border-strong);
+    border-radius: var(--ui-radius-control);
+    background: var(--cms-paper);
+    color: var(--cms-ink);
+    font-size: var(--ui-text-micro);
+    font-weight: 700;
+  }
+  .admin-shell .species-nav-body { display: none; }
+  .admin-shell .species-nav-body.is-open {
+    min-height: 0;
+    max-height: calc(min(64vh, 520px) - 52px);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-top: 6px;
+  }
+  .admin-shell .species-nav-body.is-open .search-input,
+  .admin-shell .species-nav-body.is-open .category-filter { flex: 0 0 auto; margin: 0 !important; }
+  .admin-shell .species-nav-body.is-open .species-quick-filters { flex: 0 0 auto; margin: 0; }
+  .admin-shell .species-nav-body.is-open .species-list {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+}
+
+@media (max-width: 760px) {
+  .admin-shell.workflow-compact .species-sidebar.mobile-nav-open {
+    height: min(64vh, 520px);
+  }
+  .admin-shell .species-nav-body.is-open {
+    flex: 1 1 auto;
+    max-height: none;
+  }
+  .admin-shell .species-nav-body.is-open .species-list { min-height: 140px; }
+}
+
+/* Sidebar hierarchy: scientific grouping is structural; Species rows carry the navigation emphasis. */
+.admin-shell .group-header .group-copy strong {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--cms-muted);
+}
+.admin-shell .group-header .group-copy small {
+  font-size: 10px;
+  color: var(--cms-faint);
+}
+.admin-shell .variant-main-button strong {
+  font-size: 13px;
+  font-weight: 640;
+}
+.admin-shell .variant-main-button small {
+  font-size: 10px;
+  color: var(--cms-muted);
+}
+
+/* Override legacy !important label rules: sidebar hierarchy must remain below the editor task. */
+.admin-shell .group-header .group-copy strong {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: var(--cms-muted) !important;
+}
+.admin-shell .group-header.active .group-copy strong {
+  color: var(--cms-ink) !important;
+  font-weight: 650 !important;
+}
+.admin-shell .variant-main-button strong {
+  font-size: 13px !important;
+  font-weight: 600 !important;
+}
+.admin-shell .variant-row.active .variant-main-button strong {
+  color: var(--cms-ink) !important;
+  font-weight: 700 !important;
+}
+
+/* Secondary SEO: one disclosure for Search Appearance + indexing policy. */
+.admin-shell .editor-secondary-seo-disclosure {
+  margin: 4px 0 18px;
+  border-top: 1px solid var(--cms-border);
+  border-bottom: 1px solid var(--cms-border);
+}
+.admin-shell .editor-secondary-seo-disclosure > summary {
+  min-height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 8px 0;
+  list-style: none;
+  cursor: pointer;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary::-webkit-details-marker { display: none; }
+.admin-shell .editor-secondary-seo-disclosure > summary > div { min-width: 0; display: grid; gap: 2px; }
+.admin-shell .editor-secondary-seo-disclosure > summary strong { font-size: var(--ui-text-section); }
+.admin-shell .editor-secondary-seo-disclosure > summary small { color: var(--cms-muted); font-size: var(--ui-text-micro); }
+.admin-shell .editor-secondary-seo-disclosure > summary > span { flex: 0 0 auto; color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 650; }
+.admin-shell .editor-secondary-seo-disclosure.state-warning > summary > span { color: var(--state-warning); }
+.admin-shell .editor-secondary-seo-disclosure.state-error > summary > span { color: var(--state-error); }
+.admin-shell .editor-secondary-seo-disclosure[open] > summary { border-bottom: 1px solid var(--cms-border); }
+.admin-shell .editor-secondary-seo-body { display: grid; gap: 0; }
+.admin-shell .secondary-seo-section { padding: 16px 0 18px; }
+.admin-shell .secondary-seo-section + .secondary-seo-section { border-top: 1px solid var(--cms-border); }
+.admin-shell .secondary-seo-section > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.admin-shell .secondary-seo-section > header > div { min-width: 0; display: grid; gap: 3px; }
+.admin-shell .secondary-seo-section > header strong { font-size: var(--ui-text-body); }
+.admin-shell .secondary-seo-section > header small { color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.4; }
+.admin-shell .secondary-seo-section > header em {
+  flex: 0 0 auto;
+  color: var(--cms-muted);
+  font-size: var(--ui-text-micro);
+  font-style: normal;
+  font-weight: 650;
+}
+.admin-shell .secondary-seo-fields { display: grid; gap: 18px; }
+.admin-shell .secondary-seo-fields.policy-fields { gap: 12px; }
+.admin-shell .policy-primary-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+.admin-shell .policy-primary-fields > label { margin: 0; }
+.admin-shell .policy-settings .route-inline-summary {
+  margin: 0;
+  padding: 9px 0;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 5px 10px;
+  border: 0;
+  border-top: 1px solid var(--cms-border);
+  border-bottom: 1px solid var(--cms-border);
+  border-radius: 0;
+  background: transparent;
+}
+.admin-shell .policy-settings .route-inline-summary span,
+.admin-shell .policy-settings .route-inline-summary code { font-size: var(--ui-text-micro); }
+@media (max-width: 760px) {
+  .admin-shell .editor-secondary-seo-disclosure { margin-bottom: 12px; }
+  .admin-shell .editor-secondary-seo-disclosure > summary {
+    min-height: 48px;
+    gap: 10px;
+    padding: 7px 0;
+  }
+  .admin-shell .editor-secondary-seo-disclosure > summary strong { font-size: var(--ui-text-body); }
+  .admin-shell .editor-secondary-seo-disclosure > summary small,
+  .admin-shell .editor-secondary-seo-disclosure > summary > span { font-size: var(--ui-text-micro); }
+  .admin-shell .secondary-seo-section { padding: 14px 0 16px; }
+  .admin-shell .secondary-seo-section > header { gap: 10px; margin-bottom: 12px; }
+  .admin-shell .secondary-seo-section > header small,
+  .admin-shell .secondary-seo-section > header em { font-size: var(--ui-text-micro); }
+  .admin-shell .secondary-seo-fields { gap: 14px; }
+  .admin-shell .policy-primary-fields { grid-template-columns: 1fr; gap: 12px; }
+  .admin-shell .policy-settings .route-inline-summary { grid-template-columns: 1fr; gap: 2px; }
+}
+
+/* Template reference belongs to the current task helper, not a separate hierarchy row. */
+.admin-shell .section-heading p { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 8px; }
+.admin-shell .section-inline-reference-action {
+  min-height: 24px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--cms-ink);
+  font-size: var(--ui-text-micro);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.admin-shell .inline-template-reference {
+  margin: 0 0 16px;
+  padding: 10px 12px;
+  border-left: 2px solid var(--cms-border-strong);
+  background: var(--cms-panel);
+}
+.admin-shell .inline-template-reference strong { font-size: var(--ui-text-meta); }
+.admin-shell .inline-template-reference p { margin: 4px 0 0; color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.45; }
+
+/* Utility tools are a footer affordance, not a third editor card. */
+.admin-shell .advanced-tools-disclosure {
+  max-width: var(--ui-editor-width);
+  margin: 8px auto 22px;
+  border: 0 !important;
+  border-top: 1px solid var(--cms-border) !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible;
+}
+.admin-shell .advanced-tools-disclosure > summary {
+  min-height: 42px;
+  padding: 7px 0;
+  background: transparent !important;
+}
+.admin-shell .advanced-tools-disclosure > summary strong {
+  color: var(--cms-ink) !important;
+  font-size: var(--ui-text-meta) !important;
+  font-weight: 650;
+}
+.admin-shell .advanced-tools-disclosure > summary small,
+.admin-shell .advanced-tools-disclosure > summary em {
+  color: var(--cms-muted) !important;
+  font-size: var(--ui-text-micro) !important;
+}
+.admin-shell .advanced-tools-disclosure[open] > summary {
+  border-bottom: 1px solid var(--cms-border) !important;
+  background: transparent !important;
+}
+.admin-shell .advanced-tools-disclosure .editor-secondary-tools {
+  padding: 12px 0 14px;
+}
+@media (max-width: 760px) {
+  .admin-shell .advanced-tools-disclosure {
+    max-width: none;
+    margin: 6px 20px 18px;
+  }
+  .admin-shell .advanced-tools-disclosure > summary { min-height: 40px; }
+}
+
+/* Human-decision actions use Amber; navigation stays Graphite and publish actions stay Green. */
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current {
+  border-color: var(--state-warning-line) !important;
+  background: var(--state-warning-bg) !important;
+  box-shadow: inset 0 -2px 0 var(--state-warning) !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current > b {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning) !important;
+  color: #fff !important;
+}
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current > span strong,
+.admin-shell.workflow-compact .workflow-stage-card.needs-human-decision.is-current > span small {
+  color: #6f4900 !important;
+}
+.admin-shell .species-quick-filters .tone-issue {
+  border-color: var(--state-warning-line) !important;
+  background: var(--state-warning-bg) !important;
+  color: #6f4900 !important;
+}
+.admin-shell .species-quick-filters .tone-issue b { color: #6f4900 !important; }
+.admin-shell .species-quick-filters .tone-issue.active {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning) !important;
+  color: #fff !important;
+  box-shadow: none !important;
+}
+.admin-shell .species-quick-filters .tone-issue.active b { color: #fff !important; }
+.admin-shell .group-review-action,
+.admin-shell .variant-review-action {
+  min-height: 32px;
+  border-color: var(--state-warning-line) !important;
+  background: var(--state-warning-bg) !important;
+  color: #6f4900 !important;
+  box-shadow: none !important;
+}
+.admin-shell .group-review-action:hover,
+.admin-shell .variant-review-action:hover { border-color: var(--state-warning) !important; background: #fff3cf !important; }
+.admin-shell .review-choice { border-color: var(--state-warning-line) !important; }
+.admin-shell .review-choice.active {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning-bg) !important;
+  box-shadow: inset 3px 0 0 var(--state-warning) !important;
+}
+.admin-shell .review-confirm-action.primary-button {
+  border-color: var(--state-warning) !important;
+  background: var(--state-warning) !important;
+  color: #fff !important;
+}
+.admin-shell .review-confirm-action.primary-button:hover { filter: brightness(.94); }
+
+/* Preview field locator is optional utility, never a default primary mode. */
+.admin-shell .inspect-toggle {
+  min-height: 30px;
+  padding: 0 9px;
+  border-color: var(--cms-border) !important;
+  background: transparent !important;
+  color: var(--cms-muted) !important;
+  box-shadow: none !important;
+}
+.admin-shell .inspect-toggle.active {
+  border-color: var(--cms-border-strong) !important;
+  background: var(--cms-panel) !important;
+  color: var(--cms-ink) !important;
+}
+
+/* Data Review decision flow: evidence first, one conclusion, one confirmation. */
+.admin-shell .review-decision-box { gap: 12px; }
+.admin-shell .review-evidence-section.review-evidence-first {
+  padding: 4px 0 16px;
+  border: 0;
+  border-bottom: 1px solid var(--cms-border);
+  border-radius: 0;
+  background: transparent;
+}
+.admin-shell .review-evidence-first > header { margin-bottom: 12px; }
+.admin-shell .evidence-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.admin-shell .evidence-summary-grid > div {
+  display: grid;
+  gap: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--cms-border);
+  border-radius: 8px;
+  background: var(--cms-paper);
+}
+.admin-shell .evidence-summary-grid span { color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 700; }
+.admin-shell .evidence-summary-grid strong { color: var(--cms-ink); font-size: var(--ui-text-body); line-height: 1.35; }
+.admin-shell .evidence-summary-grid small { color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.45; }
+.admin-shell .category-compare-table { margin-top: 10px; border-top: 1px solid var(--cms-border); }
+.admin-shell .category-compare-row {
+  display: grid;
+  grid-template-columns: minmax(130px, .8fr) 80px minmax(0, 2fr);
+  gap: 12px;
+  align-items: start;
+  padding: 10px 2px;
+  border-bottom: 1px solid var(--cms-border);
+}
+.admin-shell .category-compare-row > strong { font-size: var(--ui-text-body); color: var(--cms-ink); }
+.admin-shell .category-compare-row > span { font-size: var(--ui-text-micro); color: var(--cms-muted); }
+.admin-shell .category-compare-row > div { display: grid; gap: 2px; }
+.admin-shell .category-compare-row small { font-size: var(--ui-text-micro); color: var(--cms-muted); }
+.admin-shell .review-evidence-guidance {
+  display: grid;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: var(--cms-panel);
+}
+.admin-shell .review-evidence-guidance b { font-size: var(--ui-text-micro); color: var(--cms-ink); }
+.admin-shell .review-evidence-guidance span { font-size: var(--ui-text-micro); color: var(--cms-muted); line-height: 1.5; }
+.admin-shell .review-decision-command {
+  position: relative !important;
+  top: auto !important;
+  padding: 14px 0 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+.admin-shell .review-decision-command-head { margin-bottom: 10px; }
+.admin-shell .review-decision-current {
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  color: var(--cms-muted) !important;
+  font-size: var(--ui-text-micro) !important;
+  font-weight: 700 !important;
+}
+.admin-shell .review-decision-options { gap: 6px !important; }
+.admin-shell .review-choice {
+  min-height: 60px !important;
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  padding: 10px 12px !important;
+  border: 1px solid var(--cms-border) !important;
+  border-radius: 8px !important;
+  background: var(--cms-paper) !important;
+  cursor: pointer;
+  box-shadow: none !important;
+  transform: none !important;
+}
+.admin-shell .review-choice > input {
+  width: 16px;
+  height: 16px;
+  min-height: 0;
+  margin: 2px 0 0;
+  accent-color: var(--state-warning);
+}
+.admin-shell .review-choice > span { display: grid; gap: 3px; }
+.admin-shell .review-choice > span strong { font-size: var(--ui-text-body) !important; color: var(--cms-ink); }
+.admin-shell .review-choice > span small { font-size: var(--ui-text-micro) !important; color: var(--cms-muted); line-height: 1.4; }
+.admin-shell .review-choice.active {
+  border-color: var(--state-warning-line) !important;
+  background: var(--state-warning-bg) !important;
+  box-shadow: inset 3px 0 0 var(--state-warning) !important;
+}
+.admin-shell .review-result-preview {
+  display: grid;
+  gap: 5px;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--state-warning);
+  background: var(--cms-panel);
+}
+.admin-shell .review-result-preview > small { color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 760; letter-spacing: .06em; }
+.admin-shell .review-result-preview > strong { color: var(--cms-ink); font-size: var(--ui-text-body); }
+.admin-shell .review-result-preview ul { margin: 2px 0 0 18px; padding: 0; color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.5; }
+
+@media (max-width: 760px) {
+  .admin-shell .evidence-summary-grid { grid-template-columns: 1fr; }
+  .admin-shell .category-compare-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 10px;
+  }
+  .admin-shell .category-compare-row > div { grid-column: 1 / -1; }
+  .admin-shell .review-evidence-guidance { grid-template-columns: 1fr; gap: 4px; }
+  .admin-shell .review-decision-options { grid-template-columns: 1fr !important; }
+  .admin-shell .review-decision-command-footer { gap: 8px; }
+  .admin-shell .review-decision-primary-actions { align-items: center; }
+}
+.admin-shell .category-source-records { margin-top: 8px; }
+.admin-shell .category-source-records > summary {
+  list-style: none;
+  width: fit-content;
+  color: var(--cms-muted);
+  font-size: var(--ui-text-micro);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.admin-shell .category-source-records > summary::-webkit-details-marker { display: none; }
+.admin-shell .category-source-records > div {
+  display: grid;
+  gap: 4px;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-left: 2px solid var(--cms-border-strong);
+  background: var(--cms-panel);
+}
+.admin-shell .category-source-records small { display: grid; grid-template-columns: minmax(90px, .6fr) minmax(0, 1fr); gap: 8px; color: var(--cms-muted); font-size: var(--ui-text-micro); }
+.admin-shell .category-source-records small b { color: var(--cms-ink); font-weight: 650; }
+.admin-shell .duplicate-preview-action {
+  min-height: 30px;
+  padding: 0 2px;
+  border: 0;
+  background: transparent;
+  color: var(--cms-muted);
+  font-size: var(--ui-text-micro);
+  text-decoration: underline;
+  cursor: pointer;
+}
+.admin-shell .duplicate-preview-action:hover { color: var(--cms-ink); }
+.admin-shell .duplicate-keep-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  color: var(--cms-muted);
+  font-size: var(--ui-text-micro);
+  cursor: pointer;
+}
+.admin-shell .duplicate-keep-choice input {
+  width: 15px;
+  height: 15px;
+  min-height: 0;
+  margin: 0;
+  accent-color: var(--state-warning);
+}
+.admin-shell .duplicate-keep-choice.active { color: var(--state-warning); font-weight: 700; }
+
+/* 2026-09-08 PM + UI review: identity → current task → fields → secondary settings. */
+.admin-shell .editor-panel > .editor-task-header {
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--cms-border);
+}
+.admin-shell .editor-panel > .editor-task-header h2 {
+  font-size: 24px;
+  font-weight: 760;
+  letter-spacing: -.02em;
+}
+.admin-shell .editor-primary-task-section {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+.admin-shell .editor-primary-task-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 16px;
+  margin: 0 0 4px !important;
+  padding: 0 0 12px !important;
+  border: 0 !important;
+}
+.admin-shell .editor-primary-task-title-row {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.admin-shell .editor-primary-task-heading h3 {
+  margin: 0;
+  font-size: 17px !important;
+  line-height: 1.3;
+  font-weight: 760;
+}
+.admin-shell .editor-primary-task-heading p {
+  margin: 5px 0 0;
+  max-width: 560px;
+  color: var(--cms-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+.admin-shell .editor-primary-task-progress {
+  color: var(--cms-ink);
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 720;
+}
+.admin-shell .editor-primary-task-progress.is-complete { color: var(--cms-muted); }
+.admin-shell .editor-primary-task-heading .section-inline-reference-action {
+  align-self: start;
+  margin-top: 1px;
+  color: var(--cms-ink) !important;
+  font-size: 11px !important;
+  font-weight: 650 !important;
+}
+.admin-shell .editor-primary-task-section > label.inspector-editor-field {
+  margin: 0 !important;
+  padding: 16px 0 18px !important;
+  border: 0 !important;
+  border-top: 1px solid var(--cms-border) !important;
+  box-shadow: none !important;
+}
+.admin-shell .editor-field-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+}
+.admin-shell .editor-primary-task-section .editor-field-question {
+  color: var(--cms-ink);
+  font-size: 15px !important;
+  line-height: 1.35;
+  font-weight: 750;
+}
+.admin-shell .editor-field-task-status {
+  flex: none;
+  color: var(--cms-muted);
+  font-size: 11px;
+  line-height: 1.35;
+  font-weight: 650;
+}
+.admin-shell .editor-field-task-status.tone-pending { color: var(--cms-ink); }
+.admin-shell .editor-field-task-status.tone-error { color: var(--state-error); }
+.admin-shell .editor-primary-task-section .editor-field-guidance {
+  margin: 5px 0 9px !important;
+  color: var(--cms-muted) !important;
+  font-size: 12px !important;
+  line-height: 1.45 !important;
+  font-weight: 450 !important;
+}
+.admin-shell .editor-primary-task-section input,
+.admin-shell .editor-primary-task-section textarea {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  border-radius: 8px !important;
+}
+.admin-shell .editor-primary-task-section input::placeholder,
+.admin-shell .editor-primary-task-section textarea::placeholder {
+  color: rgba(32,36,44,.48) !important;
+  font-weight: 400 !important;
+}
+.admin-shell .editor-secondary-seo-disclosure {
+  margin-top: 2px;
+  opacity: 1 !important;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary {
+  min-height: 46px;
+  padding: 7px 0;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary strong {
+  font-size: 13px !important;
+  font-weight: 680 !important;
+}
+.admin-shell .editor-secondary-seo-disclosure > summary small,
+.admin-shell .editor-secondary-seo-disclosure > summary > span {
+  font-size: var(--ui-text-micro) !important;
+}
+@media (max-width: 760px) {
+  .admin-shell .editor-panel > .editor-task-header h2 { font-size: 22px; }
+  .admin-shell .editor-primary-task-heading {
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding-bottom: 10px !important;
+  }
+  .admin-shell .editor-primary-task-heading .section-inline-reference-action {
+    justify-self: start;
+  }
+  .admin-shell .editor-primary-task-section > label.inspector-editor-field {
+    padding: 14px 0 16px !important;
+  }
+  .admin-shell .editor-primary-task-section .editor-field-question { font-size: 14px !important; }
+}
+
+/* Data Review convergence: keep evidence read-only and move canonical choice into its own decision step. */
+.admin-shell .review-canonical-choice {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 12px 0 0;
+  border-top: 1px solid var(--cms-border);
+}
+.admin-shell .review-canonical-choice-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.admin-shell .review-canonical-choice-head > div { display: grid; gap: 3px; }
+.admin-shell .review-canonical-choice-head small { color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 800; letter-spacing: .08em; }
+.admin-shell .review-canonical-choice-head strong { color: var(--cms-ink); font-size: var(--ui-text-body); }
+.admin-shell .review-canonical-choice-head > span { color: var(--cms-muted); font-size: var(--ui-text-micro); font-weight: 700; }
+.admin-shell .review-canonical-choice > p { margin: 0; color: var(--cms-muted); font-size: var(--ui-text-micro); line-height: 1.5; }
+.admin-shell .review-canonical-options { display: grid; gap: 6px; }
+.admin-shell .review-canonical-option {
+  display: grid !important;
+  grid-template-columns: 18px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 9px 11px;
+  border: 1px solid var(--cms-border);
+  border-radius: 8px;
+  background: var(--cms-paper);
+  cursor: pointer;
+}
+.admin-shell .review-canonical-option > input { width: 16px; height: 16px; min-height: 0; margin: 0; accent-color: var(--state-warning); }
+.admin-shell .review-canonical-option > span { min-width: 0; display: grid; gap: 2px; }
+.admin-shell .review-canonical-option > span strong { overflow: hidden; color: var(--cms-ink); font-size: var(--ui-text-body); text-overflow: ellipsis; white-space: nowrap; }
+.admin-shell .review-canonical-option > span small { overflow: hidden; color: var(--cms-muted); font-size: var(--ui-text-micro); text-overflow: ellipsis; white-space: nowrap; }
+.admin-shell .review-canonical-option > em { padding: 3px 6px; border: 1px solid var(--cms-border); border-radius: 999px; color: var(--cms-muted); font-size: var(--ui-text-micro); font-style: normal; font-weight: 750; }
+.admin-shell .review-canonical-option.active { border-color: var(--state-warning-line); background: var(--state-warning-bg); box-shadow: inset 3px 0 0 var(--state-warning); }
+@media (max-width: 760px) {
+  .admin-shell .review-canonical-choice-head { flex-direction: column; gap: 4px; }
+  .admin-shell .review-canonical-option { grid-template-columns: 18px minmax(0, 1fr); }
+  .admin-shell .review-canonical-option > em { grid-column: 2; justify-self: start; }
+}
+
+/* Global operations stay out of the current-page editing hierarchy. */
+.admin-shell .topbar-operations-trigger {
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--cms-border);
+  border-radius: var(--ui-radius-control);
+  background: var(--cms-paper);
+  color: var(--cms-ink-soft);
+  font-size: var(--ui-text-meta);
+  font-weight: 650;
+}
+.admin-shell .topbar-operations-trigger:hover,
+.admin-shell .topbar-operations-trigger.active {
+  border-color: var(--cms-border-strong);
+  background: var(--cms-panel);
+  color: var(--cms-ink);
+}
+.admin-shell .operations-tool-menu {
+  max-width: none;
+  margin: 0;
+  padding: 0;
+}
+@media (max-width: 760px) {
+  .admin-shell .topbar-operations-trigger { padding: 0 8px; }
+}
+
+/* Medium desktop Preview contract: preserve a real editor width instead of squeezing both panes. */
+@media (min-width: 1051px) and (max-width: 1320px) {
+  .admin-shell .workspace.studio-workspace.preview-split-open {
+    grid-template-columns: 220px minmax(480px, 1fr) 8px var(--preview-width, 340px) !important;
+  }
+}
+@media (min-width: 901px) and (max-width: 1050px) {
+  .admin-shell .workspace.studio-workspace.preview-split-open { grid-template-columns: 220px minmax(0, 1fr) !important; }
+  .admin-shell .workspace.studio-workspace.preview-split-open > .preview-resize-handle { display: none !important; }
+  .admin-shell .workspace.studio-workspace.preview-split-open > .live-preview-pane.compact-open {
+    display: flex !important;
+    position: fixed !important;
+    top: 42px !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: auto !important;
+    width: min(460px, 96vw) !important;
+    z-index: 45 !important;
+    box-shadow: -18px 0 44px rgba(32,36,44,.16) !important;
+  }
+}
+
+.admin-shell .topbar-operations-trigger { display:inline-flex; align-items:center; gap:6px; }
+.admin-shell .topbar-operations-trigger > b { min-width:17px; height:17px; display:inline-grid; place-items:center; padding:0 4px; border-radius:999px; background:var(--state-error); color:#fff; font-size:8px; font-weight:800; }

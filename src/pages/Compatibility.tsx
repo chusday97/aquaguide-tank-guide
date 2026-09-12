@@ -11,7 +11,7 @@ import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
 import { reviewSpeciesAdditions } from '../services/aquarium/species-addition.service';
 import { recordExistingLivestock } from '../services/aquarium/livestock-recording.service';
-import { getTankCompatibilityAddPolicy } from '../lib/tankCompatibilityEngine';
+import { getTankCompatibilityAddPolicy } from '../services/compatibility/compatibility.service';
 import { taskRoutes } from '../services/navigation/task-routes';
 
 export default function Compatibility() {

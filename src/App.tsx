@@ -50,7 +50,12 @@ const loadCollectionHub = () => import('./pages/CollectionHub');
 const loadMemorialDetail = () => import('./pages/MemorialDetail');
 const loadInteractivePreview = () => import('./pages/InteractivePreview');
 const loadLogin = () => import('./pages/Login');
+const loadAdminLogin = () => import('./pages/AdminLogin');
+const loadAdminHub = () => import('./pages/AdminHub');
 const loadAdminContent = () => import('./pages/AdminContent');
+const loadCompatibilityAdmin = () => import('./pages/CompatibilityAdmin');
+const loadPublishCenter = () => import('./pages/PublishCenter');
+const loadSeoOperations = () => import('./pages/SeoOperations');
 const loadIdentify = () => import('./pages/Identify');
 const loadSearch = () => import('./pages/Search');
 const loadSettings = () => import('./pages/Settings');
@@ -66,7 +71,12 @@ const CollectionHub = lazyWithRecovery(loadCollectionHub, 'collection-hub');
 const MemorialDetail = lazyWithRecovery(loadMemorialDetail, 'memorial-detail');
 const InteractivePreview = lazyWithRecovery(loadInteractivePreview, 'interactive-preview');
 const Login = lazyWithRecovery(loadLogin, 'login');
-const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-content');
+const AdminLogin = lazyWithRecovery(loadAdminLogin, 'admin-login');
+const AdminHub = lazyWithRecovery(loadAdminHub, 'admin-hub');
+const AdminContent = lazyWithRecovery(loadAdminContent, 'admin-product-content');
+const CompatibilityAdmin = lazyWithRecovery(loadCompatibilityAdmin, 'admin-compatibility');
+const PublishCenter = lazyWithRecovery(loadPublishCenter, 'admin-publish-center');
+const SeoOperations = lazyWithRecovery(loadSeoOperations, 'admin-seo-operations');
 const Identify = lazyWithRecovery(loadIdentify, 'identify');
 const SearchPage = lazyWithRecovery(loadSearch, 'search');
 const SettingsPage = lazyWithRecovery(loadSettings, 'settings');
@@ -86,7 +96,7 @@ const preloadRoute = (path: string) => {
         ? loadSearch
       : path === '/settings'
         ? loadSettings
-      : path === '/care'
+      : path === '/care' || path.startsWith('/care/') || path.startsWith('/zh/care/')
         ? loadCare
         : path === '/collection'
           ? loadCollectionHub
@@ -244,7 +254,9 @@ function BottomNavigation() {
           {mobileNavItems.map((item) => {
             const isActive = item.path === '/collection'
               ? location.pathname.startsWith('/collection')
-              : location.pathname === item.path;
+              : item.path === '/care'
+                ? location.pathname === '/care' || location.pathname.startsWith('/care/') || location.pathname.startsWith('/zh/care/')
+                : location.pathname === item.path;
             const Icon = item.icon;
             return (
               <button
@@ -320,9 +332,8 @@ function DesktopSidebar({
     setSidebarSuggestionsError('');
     void Promise.all([
       import('./services/search/search-suggestions.service'),
-      import('./data/fishData'),
-      import('./data/careTopicsData'),
-    ]).then(([searchModule, speciesModule, careModule]) => {
+      import('./data/runtimeContentCatalog'),
+    ]).then(([searchModule, contentModule]) => {
       if (cancelled) return;
       const currentAquarium = aquariumNavigation.aquariums.find(item => item.id === aquariumNavigation.currentAquariumId)
         || aquariumNavigation.aquariums[0]
@@ -332,8 +343,8 @@ function DesktopSidebar({
         query: searchDraft,
         locale: Boolean(i18n.language?.startsWith('en')) ? 'en' : 'zh-CN',
         scope: 'global',
-        species: speciesModule.fishData,
-        careTopics: careModule.careTopicsData,
+        species: contentModule.runtimeFishData,
+        careTopics: contentModule.runtimeCareTopicsData,
         ownedQuantityBySpeciesId,
       });
       setSidebarSuggestions(result.suggestions);
@@ -643,7 +654,8 @@ function AppShell() {
   const [preferencesReady, setPreferencesReady] = useState(false);
   const isInteractivePreview = location.pathname === '/_preview/interactive';
   const isLogin = location.pathname === '/login';
-  const isAdminContent = location.pathname === '/admin/content';
+  const isAdminLogin = location.pathname === '/admin/login';
+  const isAdminArea = location.pathname.startsWith('/admin/') && !isAdminLogin;
   const isWelcome = location.pathname === '/welcome';
   const isSharedReport = location.pathname.startsWith('/report/');
   const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(() => {
@@ -750,7 +762,7 @@ function AppShell() {
     };
   }, []);
 
-  if (!preferencesReady && !isInteractivePreview && !isLogin && !isAdminContent && !isSharedReport) return <PageLoading />;
+  if (!preferencesReady && !isInteractivePreview && !isLogin && !isAdminLogin && !isAdminArea && !isSharedReport) return <PageLoading />;
 
   if (isSharedReport) {
     return (
@@ -785,11 +797,26 @@ function AppShell() {
     );
   }
 
-  if (isAdminContent) {
+  if (isAdminLogin) {
     return (
       <Suspense fallback={<PageLoading />}>
         <Routes>
-          <Route path="/admin/content" element={<RouteErrorBoundary page="admin-content"><AdminContent /></RouteErrorBoundary>} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="*" element={<Navigate to="/admin/login" replace />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  if (isAdminArea) {
+    return (
+      <Suspense fallback={<PageLoading />}>
+        <Routes>
+          <Route path="/admin/content" element={<RouteErrorBoundary page="admin-hub"><AdminHub /></RouteErrorBoundary>} />
+          <Route path="/admin/product-content" element={<RouteErrorBoundary page="admin-product-content"><AdminContent /></RouteErrorBoundary>} />
+          <Route path="/admin/compatibility" element={<RouteErrorBoundary page="admin-compatibility"><CompatibilityAdmin /></RouteErrorBoundary>} />
+          <Route path="/admin/publish-center" element={<RouteErrorBoundary page="admin-publish-center"><PublishCenter /></RouteErrorBoundary>} />
+          <Route path="/admin/seo-pages" element={<RouteErrorBoundary page="admin-seo-operations"><SeoOperations /></RouteErrorBoundary>} />
           <Route path="*" element={<Navigate to="/admin/content" replace />} />
         </Routes>
       </Suspense>
@@ -888,6 +915,8 @@ function WorkspaceRoutes() {
           <Route path="/settings" element={page(<SettingsPage />, 'settings')} />
           <Route path="/welcome" element={page(<WelcomePage />, 'welcome')} />
           <Route path="/care" element={page(<CareEncyclopedia />, 'care')} />
+          <Route path="/care/:topicId" element={page(<CareEncyclopedia />, 'care-topic-en')} />
+          <Route path="/zh/care/:topicId" element={page(<CareEncyclopedia />, 'care-topic-zh')} />
           <Route path="/collection" element={page(<CollectionEntry />, 'collection')} />
           <Route path="/collection/wishlist" element={page(<Collection module="wishlist" />, 'collection-wishlist')} />
           <Route path="/collection/care" element={page(<Collection module="care" />, 'collection-care')} />
@@ -897,7 +926,11 @@ function WorkspaceRoutes() {
           <Route path="/wishlist" element={<Navigate to="/collection/wishlist" replace />} />
           <Route path="/care-favorites" element={<Navigate to="/collection/care" replace />} />
           <Route path="/aquarium" element={!isPreviewSession && shouldStartOnboarding() ? <Navigate to="/welcome" replace /> : page(<AquariumManager />, 'aquarium')} />
-          <Route path="/admin/content" element={page(<AdminContent />, 'admin-content')} />
+          <Route path="/admin/content" element={page(<AdminHub />, 'admin-hub')} />
+          <Route path="/admin/product-content" element={page(<AdminContent />, 'admin-product-content')} />
+          <Route path="/admin/compatibility" element={page(<CompatibilityAdmin />, 'admin-compatibility')} />
+          <Route path="/admin/publish-center" element={page(<PublishCenter />, 'admin-publish-center')} />
+          <Route path="/admin/seo-pages" element={page(<SeoOperations />, 'admin-seo-operations')} />
           <Route path="*" element={page(<NotFoundPage />, 'not-found')} />
         </Routes>
       </Suspense>
