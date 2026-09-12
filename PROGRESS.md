@@ -1352,3 +1352,8 @@
 
 - [x] 内置浏览器点击宝莲灯页面“它如何生活”后，URL 更新为 `#behavior`，行为章节真实进入视口，三个问题卡可读；证据为 `EVD-20260912-053`。
 - [ ] 该证据补充内置浏览器运行时验证，但不替代系统 Chrome 三档、性能、reduced-motion、Figma Canonical 或可读独立 Critic。
+## 2026-09-12 黄金米虾继承运行时复核
+
+- [x] 黄金米虾真实显示黄色差异、自身 Product Truth 参数，并继承基础物种活动/觅食内容；未产生独立品系习性证据，证据为 `EVD-20260912-054`。
+- [x] 返回极火虾基础页后名称、红色图片 Alt 和参数恢复正确；两页继续 `noindex,follow`。
+- [ ] 宝莲灯 Hero/品系卡用途、系统 Chrome 三档、性能/reduced-motion、可读独立 Critic 和 Figma Canonical仍未完成。
