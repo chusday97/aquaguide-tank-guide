@@ -1149,3 +1149,9 @@
 - [x] 内置 Chrome 长截图复核：极火虾两张生活习性卡并列且阅读宽度合理，页面可滚动，Hero、品系图片和工具入口仍可见。
 - [x] 结构、响应式、文案、Editorial、Evidence、lint、build 和 `git diff --check` 全部通过。
 - [ ] 当前仍缺系统 Chrome 三档自动化、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic；页面继续 `noindex,follow`。
+
+## 2026-09-12 鱼类与品系真实页面复核
+
+- [x] 内置 Chrome 复核宝莲灯：参数、活动水层、群游、觅食、环境章节和鱼类 Product Truth 可见；图片因用途级审核仍显示稳定回退。
+- [x] 内置 Chrome 复核黄金米虾：黄色 Hero、基础物种共享生活习性、自身温度参数和品系差异可见，未生成重复生活习性证据。
+- [ ] 宝莲灯图片用途级批准、系统 Chrome 三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic仍未完成。

@@ -107,3 +107,7 @@
 - Added the canonical Feature Catalog with one status vocabulary for current, deployed-but-unreverified, partial, proposed RC and archived capability.
 - Added a Git delivery protocol, PR template and project-truth verification gate; branch protection remains intentionally pending until the check can run from its base branch.
 - Added the Unified Release Readiness gate, separating local visual acceptance, CI, exact deployed SHA, Supabase parity, P0 migration and release authorization.
+## 2026-09-12
+
+- Species 页面生活习性卡片改为内容感知的两列/单列布局，避免两条内容在桌面出现空列；代码提交 `822871b7`。
+- 内置 Chrome 复核宝莲灯和黄金米虾路径；未改变素材审核、证据继承或 `noindex,follow`。

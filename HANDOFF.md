@@ -1056,3 +1056,9 @@
 - 内置 Chrome 复核确认页面可滚动、生活习性卡并列、Hero/品系图片/工具入口仍可见；静态门禁通过。
 - 用户文件 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 仍未触碰、未暂存。
 - 未完成门禁：系统 Chrome 三档自动化、性能/reduced-motion、完整失败状态、Figma Canonical、可读独立 Critic；保持 `noindex,follow`。
+
+## 2026-09-12 鱼类与品系页面复核
+
+- 宝莲灯真实页面已加载：鱼类 Product Truth、环境章节、中层活动、群游和觅食内容均可见；图片因 `blocked` 用途绑定显示稳定回退，未绕过门禁。
+- 黄金米虾真实页面已加载：黄色 Hero、自己的 18–28°C 参数和黄色外观差异可见，同时继承极火虾基础物种生活习性；没有新增 `sp_0030` 生活习性 evidence。
+- 当前可见 UX：两列生活卡在桌面/平板更紧凑，页面可滚动；仍需补 390/600/1440 专项自动化与独立 Critic 可读报告。

@@ -214,3 +214,9 @@
 - Added npm commands `readiness:collect`, `readiness:serve` and `test:readiness`.
 - Verified report generation at candidate SHA `6d202f9c26581f1e19e70a50b557996fc36ae51e`; 11 local gates PASS, production freeze BLOCKED, 5 remote/environment gates UNVERIFIED, UI freeze USER_ACCEPTANCE_REQUIRED.
 - Sandbox `tsx` IPC `EPERM` and GitHub DNS failure are preserved as evidence limitations, not classified as business failures.
+## 2026-09-12 Species UX 收口
+
+- 动作：读取 Species 长截图，修复生活习性稀疏网格，重载极火虾/宝莲灯/黄金米虾页面复核。
+- 结果：页面可滚动；两张生活卡按两列收拢；宝莲灯图片保持 fail-closed 回退；黄金米虾继承基础物种生活习性。
+- 验证：结构、响应式、文案、Editorial、Evidence、lint、build、diff-check 通过；记录 `EVD-20260912-018`。
+- 未完成：系统 Chrome 三档、性能/reduced-motion、Figma Canonical、可读独立 Critic。

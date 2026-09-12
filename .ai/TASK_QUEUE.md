@@ -77,3 +77,9 @@
 - [x] 建立八文件 `.ai/` 结构、项目协议和 Context Routing。
 - [ ] 每次编码前读取 `CURRENT_GOAL.md`、`PRODUCT_CONTEXT.md`、`DECISION_LOG.md`。
 - [ ] 每次变更后更新 `CHANGELOG_AI.md`、`EXECUTION_LOG.md`、`TASK_QUEUE.md`。
+
+## 2026-09-12 Species SEO 当前任务
+
+- [x] 修复 Species 生活习性区域的稀疏网格：桌面/平板两列，窄屏单列；提交 `822871b7`。
+- [x] 真实浏览器复核宝莲灯和黄金米虾内容继承、图片回退、页面滚动和 Product Truth。
+- [ ] 补齐系统 Chrome 三档证据、可读独立 Critic、Figma Canonical；继续保持 `noindex,follow`。
