@@ -33,6 +33,7 @@ export const setPublicSpeciesFavoriteIds = (ids: Iterable<string>) => {
       window.localStorage.setItem(PUBLIC_SPECIES_FAVORITES_STORAGE_KEY, JSON.stringify(normalized));
     } catch (error) {
       console.warn('AquaGuide public species favorites save failed', error);
+      throw error;
     }
   }
   emitFavoritesChanged();
