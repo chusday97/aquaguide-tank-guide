@@ -1475,3 +1475,8 @@
 
 - [x] 内置浏览器通过 Tab + Enter 从品牌首页“开始认识物种”进入虾螺蟹分类，公开 Header 和唯一 H1 正常，证据为 `EVD-20260912-080`。
 - [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
+
+## 2026-09-12 Public → Onboarding 边界回归（`93ce5725`）
+
+- [x] 首页“进入我的鱼缸”通过 Tab + Enter 进入 `/welcome` onboarding，未绕过新手引导，公开导航消失，证据为 `EVD-20260912-081`。
+- [ ] 该证据仍不替代系统 Chrome 多视口、性能/reduced-motion、Figma Canonical 或可读独立 Critic。
