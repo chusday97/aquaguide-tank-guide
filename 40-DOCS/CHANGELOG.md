@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+- Verified: 2026-09-12 公开 SEO 静态门禁、build、lint 和 diff-check 复跑通过；内置浏览器宝莲灯审核预览证据为 `EVD-20260912-051`。
+- Blocked: `test:seo-motion`、`test:species-landing`、`test:public-seo-routes` 在 Chromium 启动阶段受 macOS MachPort 权限错误阻塞；未将其计为浏览器验收通过。
 - Verified: 2026-09-12 图片终态修复后的证据、素材、公开契约、中文文案、响应式、字体、lint、build 和 diff-check 全部通过；证据为 `EVD-20260912-049`。
 - Fixed: 2026-09-12 图片原图、重试地址和占位图连续失败时进入稳定中文终态，避免公开页面出现空白或无限失败；提交 `929dc011`，证据为 `EVD-20260912-048`。
 - Verified: 2026-09-12 内置 Chrome 实际复核宝莲灯鱼类页进入兼容工具并返回，鱼类内容、物种参数和路由状态正确恢复；证据为 `EVD-20260912-047`。

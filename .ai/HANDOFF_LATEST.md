@@ -22,6 +22,11 @@
 - 本地 `assetPreview=1` 已在内置浏览器真实显示宝莲灯项目图片及中文 Alt；普通公开路由仍保持图片回退，证据为 `EVD-20260912-051`。
 - 鱼类参数、环境、中层活动、群游至少 5 条、取食内容和 FishBase 来源均可读；Hero 与品系卡用途仍需项目负责人分别确认。
 
+## 2026-09-12 公开 SEO 门禁复跑补充
+
+- 静态证据、公开契约、文案、结构、响应式、lint、build 和 diff-check 通过。
+- `test:seo-motion`、`test:species-landing`、`test:public-seo-routes` 均在 Chromium 启动阶段触发同一 macOS MachPort 权限错误，不能计为浏览器通过，也不是页面断言失败；不重复重启。
+
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。

@@ -1342,3 +1342,9 @@
 - [x] 在本地 `assetPreview=1` 预览中实际加载宝莲灯项目图片；图片 Alt、鱼类参数、环境、活动水层、群游和觅食内容均可读，证据为 `EVD-20260912-051`。
 - [x] 普通 `/species/sp_0432` 仍不显示该图片，继续使用稳定回退；未改变 Published 聚合或 `noindex,follow`。
 - [ ] 宝莲灯 Hero 与品系卡仍需项目负责人分别确认；确认前不更新用途级 binding。
+## 2026-09-12 公开 SEO 门禁复跑结果
+
+- [x] `test:seo-editorial-evidence`、`test:seo-evidence-bindings`、`test:seo-asset-candidates`、Public SEO contract/copy/structure/responsive、lint、build 和 diff-check 通过。
+- [x] 内置浏览器仍可读宝莲灯 `assetPreview=1` 页面；图片、Alt、参数、环境、活动水层、群游和取食内容均可见，证据为 `EVD-20260912-051`。
+- [ ] `test:seo-motion`、`test:species-landing`、`test:public-seo-routes` 在 Chromium 启动阶段因 macOS MachPort 权限错误退出；不是页面断言失败，保持系统浏览器环境缺口，不重复重启。
+- [ ] Hero 与品系卡用途仍需项目负责人分别确认；可读独立 Critic、Figma Canonical、性能指标和最终发布门禁仍未完成。
