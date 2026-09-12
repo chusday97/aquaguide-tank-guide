@@ -227,3 +227,10 @@ Draft PR: #149
 #### Validation
 - Domain / Compatibility / Species Knowledge / Visual Results / evidence coverage / TypeScript / production build: PASS.
 - Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Molly + visible reviewed environment checkpoint
+- Standard `Poecilia sphenops` now has direct reviewed Compatibility + Species Knowledge V2 authority.
+- Reviewed environment evidence is visible in Species Detail and is the decision authority when broader legacy catalog values differ.
+- Standard molly reviewed space (90 cm / ~81 L) overrides the legacy 48 L catalog minimum as a soft planning caution, not a hard threshold.
+- No base inheritance is granted to commercial molly variants because some ornamental stocks are interspecific hybrids.
+- Canonical priority matrix expands to 11 taxa / 110 directions: 88 caution, 20 not_recommended, 2 compatible.

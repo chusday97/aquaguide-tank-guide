@@ -572,6 +572,7 @@ export function SpeciesDetailDialog({
   const effectiveHousing = useMemo(() => fish ? getSpeciesHousingAuthority(fish, isEn) : null, [fish, isEn]);
   const sexIdentificationGuide = speciesKnowledge?.knowledge.sexIdentification || null;
   const reproductionKnowledge = speciesKnowledge?.knowledge.reproduction || null;
+  const environmentKnowledge = speciesKnowledge?.knowledge.environment || null;
   const socialKnowledge = speciesKnowledge?.knowledge.socialBehavior || null;
   const spaceKnowledge = speciesKnowledge?.knowledge.spaceAndGrowth || null;
   const sexIdentificationSources = useMemo(() => resolveKnowledgeSources(
@@ -580,6 +581,9 @@ export function SpeciesDetailDialog({
   const reproductionSources = useMemo(() => resolveKnowledgeSources(
     reproductionKnowledge?.evidence.sourceIds || [],
   ), [reproductionKnowledge]);
+  const environmentSources = useMemo(() => resolveKnowledgeSources(
+    environmentKnowledge?.evidence.sourceIds || [],
+  ), [environmentKnowledge]);
   const socialSources = useMemo(() => resolveKnowledgeSources(
     socialKnowledge?.evidence.sourceIds || [],
   ), [socialKnowledge]);
@@ -1122,6 +1126,32 @@ export function SpeciesDetailDialog({
                                   {sourceItem.publisher}
                                 </a>
                               ))}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
+                    {environmentKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="environment" className="rounded-[18px] border border-cyan-100 bg-cyan-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Reviewed water conditions' : '已审核水质环境'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <div className="grid grid-cols-2 gap-1.5 rounded-[12px] bg-white/80 p-2.5">
+                            {environmentKnowledge.temperatureRangeC ? <p><strong className="text-ink/75">{isEn ? 'Temperature: ' : '温度：'}</strong>{environmentKnowledge.temperatureRangeC.min}–{environmentKnowledge.temperatureRangeC.max}°C</p> : null}
+                            {environmentKnowledge.phRange ? <p><strong className="text-ink/75">pH: </strong>{environmentKnowledge.phRange.min}–{environmentKnowledge.phRange.max}</p> : null}
+                            {environmentKnowledge.hardnessDgh ? <p><strong className="text-ink/75">{isEn ? 'Hardness: ' : '硬度：'}</strong>{environmentKnowledge.hardnessDgh.min}–{environmentKnowledge.hardnessDgh.max} dGH</p> : null}
+                          </div>
+                          {environmentKnowledge.notes?.length ? <p>{environmentKnowledge.notes.join('；')}</p> : null}
+                          <p className="text-[10px] text-ink/45">{isEn ? 'Reviewed ranges override broader legacy catalog values when they differ.' : '当已审核范围与旧图鉴字段不一致时，以已审核范围作为兼容性判断依据。'}</p>
+                        </div>
+                        {environmentSources.length > 0 && (
+                          <div className="mt-3 border-t border-cyan-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {environmentSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-cyan-100 bg-white px-2 py-1 text-[9px] font-black text-cyan-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
                             </div>
                           </div>
                         )}

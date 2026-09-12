@@ -77,6 +77,26 @@ try {
   assert.equal(await tigerDialog.getByText('建议单养', { exact: true }).count(), 0, 'stale catalog single-housing label must not leak into reviewed tiger-barb detail');
   await tiger.context.close();
 
+  const mollyState = { ...createState({ withTank: true, owned: false }), wishlist: ['sp_0437'] };
+  const molly = await newSeededPage({ locale: 'zh-CN', state: mollyState });
+  const mollyDialog = await openWishlistDetail(molly.page, 'sp_0437');
+  const mollyEnvironment = mollyDialog.locator('[data-species-knowledge="environment"]');
+  const mollySpace = mollyDialog.locator('[data-species-knowledge="space"]');
+  assert.equal(await mollyEnvironment.count(), 1, 'reviewed molly environment knowledge must be rendered');
+  await mollyEnvironment.locator('summary').click();
+  const mollyEnvironmentText = await mollyEnvironment.innerText();
+  assert.match(mollyEnvironmentText, /已审核水质环境/);
+  assert.match(mollyEnvironmentText, /21–28°C/);
+  assert.match(mollyEnvironmentText, /7–8\.5/);
+  assert.match(mollyEnvironmentText, /15–30 dGH/);
+  assert.match(mollyEnvironmentText, /Seriously Fish/);
+  await mollySpace.locator('summary').click();
+  const mollySpaceText = await mollySpace.innerText();
+  assert.match(mollySpaceText, /8 cm/);
+  assert.match(mollySpaceText, /≥81L/);
+  assert.match(mollySpaceText, /≥90cm/);
+  await molly.context.close();
+
   const noTank = await newSeededPage({ state: createState({ withTank: false }) });
   const noTankDialog = await openWishlistDetail(noTank.page);
   const setupAction = noTankDialog.getByRole('button', { name: 'Go to Tank Settings', exact: true });

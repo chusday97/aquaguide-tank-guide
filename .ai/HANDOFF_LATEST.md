@@ -120,3 +120,11 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Added `territorial_pressure_context` so one-sided territorial pressure on a reviewed peaceful fish produces caution; this fixed a false compatible result for 迷你鹦鹉鱼 ↔ 月光鱼.
 - Canonical priority coverage: 10 taxa / 90 directions = 70 caution, 18 not_recommended, 2 compatible; the compatible pair is platy ↔ nerite snail in both directions.
 - Verified: Domain, Compatibility, Species Knowledge, Visual Actions, evidence coverage, TypeScript, production build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004 PASS.
+
+### P1 — Molly reviewed authority + environment disclosure
+- Added `Poecilia sphenops` (`sp_0437`) as a direct reviewed taxon using Seriously Fish husbandry evidence.
+- Reviewed facts: 21–28°C, pH 7.0–8.5, 15–30 dGH, ~8 cm SL, 90 cm tank length / ~81 L planning volume, gonopodium sexing, livebearing, male pursuit and adult-fry predation context.
+- Gestation timing remains intentionally unset because reviewed sources disagree.
+- Species Detail now exposes a reviewed water-conditions disclosure; browser E2E verifies the molly values and source.
+- Commercial `Poecilia sphenops var.*` records do not inherit this authority automatically due documented hybridisation with `P. latipinna`.
+- Validation: Domain / Compatibility / Visual / Species Knowledge / evidence coverage / TypeScript / build / Species Detail E2E / Compatibility E2E / GP001–GP004 PASS.

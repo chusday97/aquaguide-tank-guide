@@ -96,6 +96,27 @@ assert.equal(platySources.length, 2);
 assert.ok(platySources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(platySources.some(source => source.publisher === 'FishBase'));
 
+const mollyKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0437',
+  name: '玛丽鱼',
+  scientificName: 'Poecilia sphenops',
+  waterTemperature: '22-28°C',
+  phLevel: '7.0-8.5',
+  tankSize: '至少 48 升',
+});
+assert.deepEqual(mollyKnowledge.facts.temperatureRange, { min: 21, max: 28 });
+assert.deepEqual(mollyKnowledge.facts.phRange, { min: 7, max: 8.5 });
+assert.equal(mollyKnowledge.knowledge.environment?.hardnessDgh?.min, 15);
+assert.equal(mollyKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 8);
+assert.equal(mollyKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 81);
+assert.equal(mollyKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 90);
+assert.equal(mollyKnowledge.knowledge.reproduction?.mode, 'livebearer');
+assert.equal(mollyKnowledge.knowledge.reproduction?.gestationOrIncubation, undefined, 'conflicting gestation sources must not be collapsed into one fake exact range');
+const mollySources = resolveKnowledgeSources(mollyKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(mollySources.length, 1);
+assert.equal(mollySources[0]?.publisher, 'Seriously Fish');
+
 const neonKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi' });
 assert.equal(neonKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
 assert.equal(neonKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');

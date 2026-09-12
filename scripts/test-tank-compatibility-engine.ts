@@ -462,6 +462,29 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed molly space authority overrides legacy 48L catalog minimum',
+    run: () => {
+      const molly = makeFish({
+        id: 'sp_0437',
+        name: '玛丽鱼',
+        scientificName: 'Poecilia sphenops',
+        waterTemperature: '22-28°C',
+        phLevel: '7.0-8.5',
+        tankSize: '至少 48 升',
+        temperament: 'Peaceful',
+        size: 'Small',
+      });
+      const result = evaluateCompatibilityDecision({
+        tank: makeTank({ targetTemperature: '25', dimensions: { length: '60', width: '34', height: '30' } }),
+        items: [{ species: molly, quantity: 1, origin: 'candidate' }],
+      });
+      return result.status === 'caution'
+        && result.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && result.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && result.evidenceIds?.includes('seriouslyfish-poecilia-sphenops');
+    },
+  },
+  {
     name: 'white cloud reviewed V2 group size overrides legacy five-fish fallback',
     run: () => {
       const whiteCloud = makeFish({

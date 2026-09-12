@@ -57,6 +57,14 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-poecilia-sphenops': {
+    id: 'seriouslyfish-poecilia-sphenops',
+    title: 'Poecilia sphenops (Short-finned Molly/Black Molly)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/poecilia-sphenops',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-poecilia-reticulata': {
     id: 'seriouslyfish-poecilia-reticulata',
     title: 'Poecilia reticulata (Guppy)',

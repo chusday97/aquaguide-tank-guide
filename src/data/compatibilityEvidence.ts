@@ -116,6 +116,15 @@ const platyFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const mollySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-poecilia-sphenops',
+  title: 'Poecilia sphenops (Short-finned Molly/Black Molly)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/poecilia-sphenops',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const neonTetraFishBase: EvidenceSourceDto = {
   id: 'fishbase-paracheirodon-innesi',
   title: 'Paracheirodon innesi (Neon tetra) species summary',
@@ -307,6 +316,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [platySeriouslyFish, platyFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0437: {
+    speciesId: 'sp_0437',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [mollySeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
   },
   sp_0014: {
     speciesId: 'sp_0014',
