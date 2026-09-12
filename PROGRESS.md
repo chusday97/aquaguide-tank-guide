@@ -1103,6 +1103,12 @@
 - [x] 使用 FishBase、UF/IFAS 与 USGS NAS 逐条复核当前宝莲灯和极火虾公开表达；中层活动、群游、取食蠕虫和小型甲壳类、底部叶屑/生物膜刮食均有直接来源支持。
 - [x] 确认本轮不新增无来源行为、不改变 Product Truth、fingerprint 或发布状态；证据为 `EVD-20260912-010`。
 - [ ] 当前仍缺可读独立 Critic、系统 Chrome 自动化、Figma Canonical、性能/reduced-motion 和最终发布门禁。
+
+## 2026-09-12 当前 HEAD 静态门禁复跑
+
+- [x] `ff2f2ff1` 上 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-012`。
+- [x] 构建警告仍仅为已知的大字体、大 chunk 和动态/静态导入提示；三个用户未提交文件未触碰、未暂存。
+- [ ] 系统 Chrome、reduced-motion、性能、完整失败状态、Figma Canonical 和可读独立 Critic 仍未完成；页面继续 `noindex,follow`。
 ## 2026-09-12 独立 Critic 当前 SHA 复验
 
 - [x] 已将当前 HEAD `159a095b` 交回既有 Critic 任务做只读六维复验。

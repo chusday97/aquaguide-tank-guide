@@ -1,6 +1,6 @@
 # AquaGuide Species SEO 当前交接
 
-> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `5aab183c`。
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `ff2f2ff1`。
 
 ## 当前有效结论
 
@@ -9,6 +9,11 @@
 - 当前物种公开表达已用 FishBase、UF/IFAS 与 USGS NAS 逐条复核，未发现来源范围越界，证据为 `EVD-20260912-010`。
 - 系统 Chrome 自动化仍受 macOS MachPort/SIGABRT 阻塞；独立 Critic 最新复验返回空正文；Figma Canonical 仍等待 Starter 配额。
 - 用户未提交的三个文件保持原样，不能覆盖或代提交。
+
+## 最新静态验证
+
+- 当前 HEAD `ff2f2ff1` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-012`。
+- 本轮仅更新证据与状态文档；三个用户未提交文件未触碰、未暂存。
 
 ## 当前 Critic 状态
 

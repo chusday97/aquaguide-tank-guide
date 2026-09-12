@@ -12,7 +12,7 @@
 - 公开滚动根因已修复；首页、分类、Species 三条路径和未发布 Guide 已由内置浏览器在 390/600/1440px 复核。
 - 公开页面无横向溢出、单一 H1、参数带 2/3/6 列、公开 Header 存在、应用侧栏/底栏不存在，且保持 `noindex,follow`。
 - 分类 → Species → 品系 → 返回链路已实测；JSON-LD 与 Guide fail-closed 门禁已复核。
-- Evidence、Public Contract、Responsive Contract、Editorial、lint、build 和 diff-check 已通过；最新文档证据提交为 `5c435f65`，authority 校准提交为 `5aab183c`。
+- Evidence、Public Contract、Responsive Contract、Editorial、Asset、lint、build 和 diff-check 已通过；最新静态复跑证据为 `EVD-20260912-012`。
 
 ## 当前阻塞与边界
 
@@ -27,6 +27,11 @@
 
 - 当前分支：`codex/species-seo-preview-v1`；HEAD：`5aab183c`。
 - 以下用户未提交文件保持原样，未暂存、未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+
+## 最新静态验证
+
+- 当前 HEAD `ff2f2ff1` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过，证据为 `EVD-20260912-012`。
+- 本轮仅同步证据与状态文档；未修改代码、Figma、生产环境或索引策略。
 
 ## 下一步
 
