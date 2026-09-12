@@ -463,6 +463,28 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed cherry-barb authority overrides legacy 40L catalog and enforces six-fish group context',
+    run: () => {
+      const cherryBarb = fishData.find(item => item.id === 'sp_0012');
+      if (!cherryBarb) return false;
+      const underGrouped = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '30', height: '28' }, targetTemperature: '22' }),
+        candidateSpecies: cherryBarb,
+        candidateQuantity: 4,
+      });
+      const fullGroup = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '30', height: '30' }, targetTemperature: '22' }),
+        candidateSpecies: cherryBarb,
+        candidateQuantity: 6,
+      });
+      return underGrouped.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underGrouped.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && fullGroup.warningRules.every(rule => rule.code !== 'minimum_group_not_met')
+        && fullGroup.metadata.domainStatus !== 'insufficient_data'
+        && fullGroup.evidenceIds?.includes('seriouslyfish-puntius-titteya');
+    },
+  },
+  {
     name: 'reviewed black-skirt authority replaces stale territorial label and enforces 12-fish group context',
     run: () => {
       const blackSkirt = fishData.find(item => item.id === 'sp_0010');

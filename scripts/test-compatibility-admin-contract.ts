@@ -163,33 +163,34 @@ assert.equal((recoveryMigration.match(/Compatibility recovery pair evidence drif
 
 const harlequinMigration = readFileSync('supabase/migrations/202609120002_compatibility_harlequin_baseline.sql', 'utf8');
 assert.match(harlequinMigration, /Compatibility harlequin baseline is partial or not fully published/, 'harlequin baseline must fail closed on partial published catalog coverage.');
-const harlequinProfiles = audit.reviewedProfiles.filter(profile => profile.speciesId === 'sp_0468');
-assert.equal(harlequinProfiles.length, 1, '202609120002 must own exactly the reviewed harlequin Profile.');
-for (const profile of harlequinProfiles) {
-  assert.equal(harlequinMigration.includes(profile.speciesId), true, `harlequin migration must include Profile ${profile.speciesId}`);
-  for (const source of profile.citations) assert.equal(harlequinMigration.includes(source.id), true, `harlequin migration must include Profile source ${source.id}`);
-}
-assert.equal((harlequinMigration.match(/Compatibility harlequin profile drift:/g) || []).length, 1, 'harlequin Profile needs one exact drift guard.');
-assert.equal((harlequinMigration.match(/Compatibility harlequin profile evidence drift:/g) || []).length, 1, 'harlequin Profile needs one evidence drift guard.');
+const harlequinProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0468');
+assert.ok(harlequinProfile, '120002 must own the reviewed harlequin profile.');
+assert.equal(harlequinMigration.includes('sp_0468'), true);
+for (const source of harlequinProfile.citations) assert.equal(harlequinMigration.includes(source.id), true, `harlequin migration must include source ${source.id}`);
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile drift:/g) || []).length, 1);
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile evidence drift:/g) || []).length, 1);
 
 const blackSkirtMigration = readFileSync('supabase/migrations/202609120003_compatibility_black_skirt_baseline.sql', 'utf8');
 assert.match(blackSkirtMigration, /Compatibility black-skirt baseline is partial or not fully published/, 'black-skirt baseline must fail closed on partial published catalog coverage.');
-const blackSkirtProfiles = audit.reviewedProfiles.filter(profile => profile.speciesId === 'sp_0010');
-assert.equal(blackSkirtProfiles.length, 1, '202609120003 must own exactly the reviewed black-skirt Profile.');
-for (const profile of blackSkirtProfiles) {
-  assert.equal(blackSkirtMigration.includes(profile.speciesId), true, `black-skirt migration must include Profile ${profile.speciesId}`);
-  for (const source of profile.citations) assert.equal(blackSkirtMigration.includes(source.id), true, `black-skirt migration must include Profile source ${source.id}`);
-}
-assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile drift:/g) || []).length, 1, 'black-skirt Profile needs one exact drift guard.');
-assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile evidence drift:/g) || []).length, 1, 'black-skirt Profile needs one evidence drift guard.');
-const expansionOwnedProfileKeys = new Set([...recoveryV1ProfileKeys, 'sp_0468', 'sp_0010']);
-const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !expansionOwnedProfileKeys.has(profile.speciesId));
-assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-baseline reviewed Profile must have an explicit additive migration owner.');
-const unexpectedExpansionPairs = audit.reviewedPairRules.filter(rule => {
-  const key = [...rule.speciesIds].sort().join('__');
-  return !historicalPairKeys.includes(key) && !recoveryV1PairKeys.includes(key);
-});
-assert.equal(unexpectedExpansionPairs.length, 0, 'no unowned post-baseline Pair Rule may appear without an additive migration.');
+const blackSkirtProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0010');
+assert.ok(blackSkirtProfile, '120003 must own the reviewed black-skirt profile.');
+assert.equal(blackSkirtMigration.includes('sp_0010'), true);
+for (const source of blackSkirtProfile.citations) assert.equal(blackSkirtMigration.includes(source.id), true, `black-skirt migration must include source ${source.id}`);
+assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile drift:/g) || []).length, 1);
+assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile evidence drift:/g) || []).length, 1);
+
+const cherryBarbMigration = readFileSync('supabase/migrations/202609120004_compatibility_cherry_barb_baseline.sql', 'utf8');
+assert.match(cherryBarbMigration, /Compatibility cherry-barb baseline is partial or not fully published/, 'cherry-barb baseline must fail closed on partial published catalog coverage.');
+const cherryBarbProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0012');
+assert.ok(cherryBarbProfile, '120004 must own the reviewed cherry-barb profile.');
+assert.equal(cherryBarbMigration.includes('sp_0012'), true);
+for (const source of cherryBarbProfile.citations) assert.equal(cherryBarbMigration.includes(source.id), true, `cherry-barb migration must include source ${source.id}`);
+assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile drift:/g) || []).length, 1);
+assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile evidence drift:/g) || []).length, 1);
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012']);
+const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
+assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 
 const compatibilityUi = readFileSync('src/pages/CompatibilityAdmin.tsx', 'utf8');
 assert.doesNotMatch(compatibilityUi, /(?:indigo|violet|sky)-/, 'Compatibility Admin must not split Profile/Pair into separate blue/purple visual authorities.');

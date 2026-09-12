@@ -1,4 +1,11 @@
 # Handoff Latest
+
+## Cherry barb reviewed-authority checkpoint — 2026-09-13
+- Added standard `Puntius titteya` (`sp_0012`) as the 15th canonical priority taxon; no commercial/variant inheritance is needed or granted.
+- Canonical coverage: 15 taxa / 210 ordered directions = 180 caution, 28 not_recommended, 2 compatible; no new green-light direction.
+- Runtime/Admin baseline: 17 Profiles / 5 Pair Rules. New additive migration: `202609120004_compatibility_cherry_barb_baseline.sql`; not applied to Staging/Production.
+- Full Product/Admin/runtime validation is green through build and GP001–GP004.
+
 ## Black Skirt Tetra reviewed-authority checkpoint — 2026-09-12
 - Current Product Recovery line adds standard `Gymnocorymbus ternetzi` (`sp_0010`) with reviewed water/space/social/reproduction evidence; no ornamental variant inheritance.
 - Runtime/Admin reviewed baseline is 16 Profiles / 5 Pair Rules and Git snapshot matches it.

@@ -262,3 +262,10 @@ Draft PR: #149
 - Canonical priority coverage: 14 taxa / 182 directions; 154 caution, 26 not_recommended, 2 compatible.
 - Runtime/Admin Compatibility baseline: 16 Profiles / 5 Pair Rules; additive migration `202609120003_compatibility_black_skirt_baseline.sql` is tracked but unapplied.
 - Validation: Product + Admin/runtime + build + browser Golden Paths all PASS.
+
+### P1 — Cherry barb reviewed-authority checkpoint
+- Added direct reviewed `Puntius titteya` (`sp_0012`) environment/social/space/reproduction authority from Seriously Fish + FishBase.
+- Reviewed space/group guidance overrides legacy 40 L-only planning: 60 cm / ~54 L, group minimum 6; values remain planning cautions rather than cliff thresholds.
+- Canonical priority coverage expands to 15 taxa / 210 directions: 180 caution, 28 not_recommended, 2 compatible.
+- Git/Admin Compatibility baseline expands to 17 direct Profiles / 5 Pair Rules via additive `202609120004_compatibility_cherry_barb_baseline.sql`; no database application in Product Recovery.
+- Validation: Species Knowledge / Compatibility / evidence coverage / runtime-admin contracts / TypeScript / full build / Species Detail E2E / Compatibility E2E / GP001–GP004 PASS.

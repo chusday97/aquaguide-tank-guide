@@ -157,6 +157,30 @@ assert.equal(blackSkirtKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 75);
 assert.equal(blackSkirtKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
 assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0227', scientificName: 'Gymnocorymbus ternetzi var. Longfin' }), undefined, 'black-skirt ornamental variants must not inherit standard-species authority automatically');
 
+const cherryBarbKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0012',
+  name: '樱桃灯',
+  scientificName: 'Puntius titteya',
+  waterTemperature: '23-27°C',
+  phLevel: '6.0-8.0',
+  tankSize: '至少 40 升',
+});
+assert.deepEqual(cherryBarbKnowledge.facts.temperatureRange, { min: 20, max: 27 });
+assert.deepEqual(cherryBarbKnowledge.facts.phRange, { min: 6, max: 8 });
+assert.deepEqual(cherryBarbKnowledge.knowledge.environment?.hardnessDgh, { min: 2, max: 20 });
+assert.equal(cherryBarbKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.deepEqual(cherryBarbKnowledge.knowledge.socialBehavior?.recommendedGroupSize, { min: 6, max: 10 });
+assert.equal(cherryBarbKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 5);
+assert.equal(cherryBarbKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 54);
+assert.equal(cherryBarbKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
+assert.equal(cherryBarbKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
+assert.deepEqual(cherryBarbKnowledge.knowledge.reproduction?.gestationOrIncubation, { minDays: 1, maxDays: 2, label: '鱼卵通常约 24–48 小时孵化' });
+const cherryBarbSources = resolveKnowledgeSources(cherryBarbKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(cherryBarbSources.length, 2);
+assert.ok(cherryBarbSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(cherryBarbSources.some(source => source.publisher === 'FishBase'));
+
 const harlequinKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0468',

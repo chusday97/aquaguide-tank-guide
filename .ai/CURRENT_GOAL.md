@@ -159,3 +159,12 @@ Continue canonical high-frequency Species Knowledge V2 expansion after the Harle
 - Admin/Git runtime baseline is now 16 direct Profiles / 5 Pair Rules. New additive migration: `202609120003_compatibility_black_skirt_baseline.sql`; do not apply it to Staging/Production in this recovery checkpoint.
 - Validation PASS: TypeScript, Species Knowledge, Compatibility, evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
 - Next: continue only with another distinct canonical taxon whose environment/space/social evidence is strong enough; do not widen inheritance merely to raise counts.
+
+## Current checkpoint — Cherry barb reviewed authority (2026-09-13)
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Puntius titteya` / Cherry barb (`sp_0012`) using Seriously Fish + FishBase.
+- Reviewed planning authority: 20–27°C, pH 6.0–8.0, 2–20 dGH, ~5 cm SL, 60 cm / ~54 L, school minimum 6 with 6–10 preferred.
+- Four fish correctly retains `minimum_group_not_met`; six removes the group-size warning. No variant inheritance was introduced.
+- Canonical priority matrix is now 15 taxa / 210 ordered directions: 180 caution, 28 not_recommended, 2 compatible. No new unconditional compatible direction was introduced.
+- Git/Admin reviewed Compatibility baseline is 17 Profiles / 5 Pair Rules. Additive migration `202609120004_compatibility_cherry_barb_baseline.sql` is repo authority only and has not been applied to Staging/Production.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Admin/runtime/Git authority, Staging preflight, Local File Admin, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+- Next: commit/push and verify current-head PR #149; then continue only with another distinct canonical taxon backed by reviewed evidence.

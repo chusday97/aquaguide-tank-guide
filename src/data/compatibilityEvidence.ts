@@ -116,6 +116,24 @@ const blackSkirtFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const cherryBarbSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-puntius-titteya',
+  title: 'Puntius titteya (Cherry Barb)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/puntius-titteya',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const cherryBarbFishBase: EvidenceSourceDto = {
+  id: 'fishbase-puntius-titteya',
+  title: 'Puntius titteya (Cherry barb) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Puntius_titteya.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const harlequinSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-trigonostigma-heteromorpha',
   title: 'Trigonostigma heteromorpha (Harlequin)',
@@ -361,6 +379,18 @@ const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
 };
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0012: {
+    speciesId: 'sp_0012',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [cherryBarbSeriouslyFish, cherryBarbFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+
   sp_0010: {
     speciesId: 'sp_0010',
     waterType: 'freshwater',

@@ -57,6 +57,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-puntius-titteya': {
+    id: 'seriouslyfish-puntius-titteya',
+    title: 'Puntius titteya (Cherry Barb)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/puntius-titteya',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-puntius-titteya': {
+    id: 'fishbase-puntius-titteya',
+    title: 'Puntius titteya (Cherry barb) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Puntius_titteya.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-trigonostigma-heteromorpha': {
     id: 'seriouslyfish-trigonostigma-heteromorpha',
     title: 'Trigonostigma heteromorpha (Harlequin)',
