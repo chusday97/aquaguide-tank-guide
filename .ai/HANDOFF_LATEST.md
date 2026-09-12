@@ -4,6 +4,8 @@
 
 ## 当前有效结论
 
+- 同一只只读 Critic 已重新读取当前 HEAD `6732344c`，但完成 turn 仍无可读正文（`items: []`）。该结果只能记录为审查基础设施阻塞，不能声明六维审查通过，也不创建重复 Critic。
+
 - 内置浏览器已完成首页、分类、未发布 Guide 和三条 Species 路径的 390/600/1440px 结构复核；公开文档滚动问题已修复。
 - Evidence、Public Contract、Responsive Contract、lint、build 和 diff-check 已通过；页面继续 `noindex,follow`。
 - 当前物种公开表达已用 FishBase、UF/IFAS 与 USGS NAS 逐条复核，未发现来源范围越界，证据为 `EVD-20260912-010`。

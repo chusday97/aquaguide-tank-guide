@@ -1,5 +1,11 @@
 # Task Queue
 
+## 2026-09-12 独立审查复验
+
+- [x] 同一只只读 Critic 已完成当前 HEAD 复验请求。
+- [ ] Critic 返回空 `items`、无可读六维正文；保持审查基础设施阻塞，不创建重复线程，不解除 `noindex`。
+- [ ] 下一步：继续内置浏览器可复核的用户体验检查；系统 Chrome/Figma 环境恢复后再补对应门禁。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
