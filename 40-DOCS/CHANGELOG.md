@@ -780,3 +780,4 @@
 - Verified: 2026-09-13 本地内置浏览器复核宝莲灯审核章节与黄金米虾 Base/Variant 继承边界；证据为 `EVD-20260913-109`。
 - Verified: 2026-09-13 本地复核宝莲灯 Species → 兼容工具 → 返回 Species 链路；证据为 `EVD-20260913-110`。
 - Verified: 2026-09-13 当前分支公开 SEO 静态回归、lint、build 和 diff-check 全部通过；宝莲灯素材继续 fail-closed，证据为 `EVD-20260913-111`。
+- In progress: 2026-09-13 已向既有 Critic 派发 `09fd37d3` 的只读六维复验；任务仍 active，尚无报告，证据为 `EVD-20260913-112`。

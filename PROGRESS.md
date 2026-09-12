@@ -1610,3 +1610,8 @@
 - [x] 当前分支重新通过 Evidence bindings、Editorial evidence、Public Contract、Public structure、Responsive Contract、lint、build 和 `git diff --check`，证据为 `EVD-20260913-111`。
 - [x] 宝莲灯 Hero/品系图片 binding 仍为 `blocked`，普通页面继续显示稳定 fallback；未改变素材门禁。
 - [ ] 真实多视口、托管 DOM/性能、可读 Critic、Figma Canonical 和发布门禁仍开放。
+## 2026-09-13 独立 Critic 当前版本复验已派发
+
+- [x] 已将提交 `09fd37d3` 交回既有 Critic 线程 `01a05275-2b85-76f2-9e84-98bbb04617d5`，要求只读六维报告。
+- [ ] Critic 当前仍为 `active/inProgress`，暂未返回正文；超时不视为通过或失败，证据为 `EVD-20260913-112`。
+- [ ] 不创建重复线程；在可读正文返回前不宣称独立审查通过。

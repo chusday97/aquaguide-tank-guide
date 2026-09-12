@@ -1398,3 +1398,7 @@
 
 - Evidence、Editorial、Public Contract、Structure、Responsive、lint、build 和 diff-check 全部退出码 0，证据 `EVD-20260913-111`。
 - 宝莲灯图片继续 fail-closed 为 blocked，普通路由使用 fallback；没有将图片候选误标为 Published。
+## 2026-09-13 Critic 复验状态
+
+- 既有 Critic 已收到当前 `09fd37d3` 的只读复验请求，当前状态仍为 `active/inProgress`，尚无可读六维正文；证据 `EVD-20260913-112`。
+- 下一次继续轮询同一线程，不创建新线程、不把超时当结论。
