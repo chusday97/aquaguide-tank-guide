@@ -1590,3 +1590,8 @@
 - [x] 最新 Preview 部署状态为 `READY`，三条 Species 路由部署侧 HTTP 200 / `x-robots-tag: noindex`，证据为 `EVD-20260913-106`。
 - [x] 内置浏览器访问同一部署时被 Vercel 登录保护重定向，未进入页面 DOM；证据为 `EVD-20260913-107`。
 - [ ] 托管 Preview 的真实 DOM、截图、性能和交互仍未完成；不把登录页当作页面验收，不创建新部署。
+## 2026-09-13 本地 Species 运行复核
+
+- [x] 在本地 Preview worktree 启动 `3001` 服务，极火虾页面完整加载；可见章节包括参数、生活习性、环境、日常、品系、FAQ、AquaGuide 能力、继续探索和资料来源，证据为 `EVD-20260913-108`。
+- [x] 章节导航的 `#behavior` 锚点可达，公开 Header、面包屑、中文内容和来源链接存在。
+- [ ] 本次是内置浏览器单视口运行证据，不替代 390/600/1440 完整回归、性能/reduced-motion、托管 Preview DOM、可读 Critic 或 Figma Canonical。

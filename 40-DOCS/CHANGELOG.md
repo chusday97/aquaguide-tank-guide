@@ -776,3 +776,4 @@
 - Verified: 2026-09-13 当前 HEAD `b0bffe59` 的公开契约、收藏隔离、证据指纹、公开结构、lint、build 和 diff-check 全部通过；build 仅保留既有 chunk/font 体积警告，证据为 `EVD-20260913-100`。
 - Blocked: 远端跟踪分支仍为 `93f199c1`，本地领先 205 个提交；托管 Preview 不能作为当前实现证据，未再次推送或修改 Production，证据为 `EVD-20260913-100`。
 - Blocked: 2026-09-13 最新 READY Preview 在内置浏览器中被 Vercel 登录保护拦截，未取得页面 DOM/截图；部署侧 HTTP 200 与 noindex 已通过，证据为 `EVD-20260913-107`。
+- Verified: 2026-09-13 本地内置浏览器复核极火虾长页面和 `#behavior` 锚点；完整章节结构可读，但不替代三档浏览器、性能、托管 DOM、Critic 或 Figma 门禁，证据为 `EVD-20260913-108`。
