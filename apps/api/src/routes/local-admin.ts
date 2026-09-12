@@ -108,6 +108,17 @@ const readJsonOrNull = async (filePath: string) => {
     throw error;
   }
 };
+const readBufferOrNull = async (filePath: string) => {
+  try { return await readFile(filePath); }
+  catch (error) {
+    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') return null;
+    throw error;
+  }
+};
+const restoreBufferOrRemove = async (filePath: string, previous: Buffer | null) => {
+  if (previous) return atomicBufferWrite(filePath, previous);
+  await rm(filePath, { force: true });
+};
 const validateState = (partition: LocalAdminPartition, value: unknown) => {
   const record = asRecord(value);
   if (!record) throw new ApiError(409, 'MIGRATION_REJECTED', `Local ${partition} state is not a JSON object.`);
@@ -572,8 +583,22 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    await atomicBufferWrite(assetFile(localRoot(), assetId), request.body);
-    await atomicJsonWrite(assetMetaFile(localRoot(), assetId), { mimeType, byteSize: request.body.length, updatedAt: new Date().toISOString() });
+    const root = localRoot();
+    const blobPath = assetFile(root, assetId);
+    const metadataPath = assetMetaFile(root, assetId);
+    const previousBlob = await readBufferOrNull(blobPath);
+    let blobCommitted = false;
+    try {
+      await atomicBufferWrite(blobPath, request.body);
+      blobCommitted = true;
+      await atomicJsonWrite(metadataPath, { mimeType, byteSize: request.body.length, updatedAt: new Date().toISOString() });
+    } catch (error) {
+      if (blobCommitted) {
+        try { await restoreBufferOrRemove(blobPath, previousBlob); }
+        catch { throw new ApiError(500, 'INTERNAL_ERROR', `Local asset ${assetId} 写入失败，且 blob 自动回滚失败；请停止写入并检查本地 assets。`); }
+      }
+      throw error;
+    }
     return sendData(request, response, { assetId, persisted: true, mimeType, byteSize: request.body.length }, 201);
   }),
 );
