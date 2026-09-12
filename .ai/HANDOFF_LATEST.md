@@ -323,3 +323,8 @@
 
 - 本地版本领先远端跟踪分支 204 个提交，实时远端查询受 GitHub DNS 阻塞；托管Preview旧结构不能代表当前HEAD，证据 `EVD-20260913-099`。
 - 下一步先做远端/部署SHA核对，再考虑非生产Preview。
+## 2026-09-13 最新状态
+
+- 当前 HEAD `b0bffe59` 的公开契约、收藏隔离、证据指纹、结构、lint、build 和 diff-check 已通过，证据为 `EVD-20260913-100`。
+- 远端 `origin/codex/species-seo-preview-v1` 仍指向 `93f199c1`，本地领先 205 个提交；托管 Preview 版本不匹配，继续保持发布阻塞。
+- 不重复推送或启动已知受 MachPort 阻塞的系统浏览器；下一步先读取远端/部署 SHA，再决定非生产 Preview 同步动作。

@@ -757,3 +757,7 @@
 
 - 结构、响应式、lint、build和diff-check通过；证据为 `EVD-20260913-087`。
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
+[Unreleased]
+
+- Verified: 2026-09-13 当前 HEAD `b0bffe59` 的公开契约、收藏隔离、证据指纹、公开结构、lint、build 和 diff-check 全部通过；build 仅保留既有 chunk/font 体积警告，证据为 `EVD-20260913-100`。
+- Blocked: 远端跟踪分支仍为 `93f199c1`，本地领先 205 个提交；托管 Preview 不能作为当前实现证据，未再次推送或修改 Production，证据为 `EVD-20260913-100`。

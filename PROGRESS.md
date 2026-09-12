@@ -1552,3 +1552,9 @@
 
 - [x] 本地 HEAD 为 `e8e3029b`，本地远端跟踪引用为 `93f199c1`，本地领先 204 个提交；`git ls-remote` 因 DNS 无法解析 GitHub 失败，证据为 `EVD-20260913-099`。
 - [ ] 当前托管 Preview 不能证明对应本地版本；网络恢复后先核对远端和部署 SHA，再决定是否创建非生产 Preview。不推送、不修改 Production。
+## 2026-09-13 当前有效状态（`b0bffe59`）
+
+- [x] 远端分支复核确认仍停在 `93f199c1`；当前本地 HEAD 为 `b0bffe59`，本地相对远端领先 205 个提交。托管 Preview 不能代表当前实现，证据为 `EVD-20260913-100`。
+- [x] 当前 HEAD 重跑公开契约、收藏隔离、证据指纹、公开结构、TypeScript/lint、build 和 diff-check 均通过；build 仅有既有 chunk/font 体积警告，证据为 `EVD-20260913-100`。
+- [ ] 仍未完成：当前 HEAD 的托管 Preview parity、系统 Chrome 多视口、可读独立 Critic、Figma Canonical 和索引发布门禁；页面继续 `noindex,follow`。
+- [ ] 用户未提交的三个脚本/数据文件保持未暂存、未提交，未触碰。
