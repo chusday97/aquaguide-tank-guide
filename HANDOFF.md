@@ -1206,6 +1206,10 @@
 - 内置浏览器已实际确认分类页 Header 不再继承旧滚动位置，并确认 `/species/sp_0432#behavior` 直接进入“它如何生活”；结构、lint、build、diff-check 通过，证据为 `EVD-20260912-066`。
 - 未改变页面内容、素材状态、Product Truth、metadata、JSON-LD、`noindex,follow` 或用户未提交文件。
 
+## 2026-09-12 当前交接：Species 交互回归
+
+- 内置浏览器已确认极火虾 FAQ 展开和黄金米虾品系切换；品系页继承基础物种生活习性，不产生重复 evidence，证据为 `EVD-20260912-067`。
+
 ## 2026-09-12 当前交接：公开来源规范化
 
 - 最新代码提交：`93a3edb7 fix: normalize duplicate public fishbase sources`。

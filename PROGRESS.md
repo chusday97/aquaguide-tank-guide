@@ -8,6 +8,11 @@
 - [x] Public Shell 在公开路由切换时统一回到顶部；带 `#章节` 的深链接会定位到对应章节，避免继承上一页滚动位置或破坏锚点导航，证据为 `EVD-20260912-066`。
 - [ ] 本轮仍未完成系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic；页面继续 `noindex,follow`。
 
+## 2026-09-12 Species 交互回归补充
+
+- [x] 内置浏览器确认极火虾 FAQ 可展开；黄金米虾品系跳转后 URL、H1、图片 Alt、自身参数和基础物种共享生活习性正确，证据为 `EVD-20260912-067`。
+- [ ] 未完成浏览器三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic。
+
 ## 2026-09-12 当前状态快照（`b4006374`）
 
 - [x] 首页/分类页/Species 页统一使用 `SeoAssetFallback` 作为缺图身份回退；分类入口不再显示无样式的孤立“图片暂不可用”，提交 `b4006374`，证据为 `EVD-20260912-064`。

@@ -33,6 +33,11 @@
 - [x] 内置浏览器验证分类页 Header 和宝莲灯 `#behavior` 章节定位；结构、lint、build、diff-check通过。
 - [ ] 继续完成三档真实截图、性能/reduced-motion、Figma Canonical 和可读独立 Critic。
 
+## 2026-09-12 Species 交互回归补充
+
+- [x] FAQ 展开和黄金米虾品系切换已由内置浏览器复核，继承内容和当前品系信息一致。
+- [ ] 继续补齐三档真实视口、系统 Chrome、性能/reduced-motion和独立 Critic门禁。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
