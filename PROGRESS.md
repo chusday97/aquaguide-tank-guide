@@ -1,3 +1,8 @@
+## 2026-09-12 三物种当前提交运行复核
+
+- [x] 内置 Chrome 实际复读极火虾、黄金米虾和宝莲灯；共享/独立内容、图片/回退、FAQ、参数、来源和 `noindex` 均符合当前契约，证据为 `EVD-20260912-041`。
+- [ ] 系统 Chrome 三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 品系 FAQ 修复后全套回归
 
 - [x] FAQ 显示修复后的 Editorial、Evidence、Public Contract、Copy、Structure、Responsive、Asset、Typography、lint、build 和 diff-check 全部通过；证据为 `EVD-20260912-040`。
