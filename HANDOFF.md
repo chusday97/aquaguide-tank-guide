@@ -954,3 +954,7 @@
 - 普通宝莲灯路由按 `needs_review` 显示图片回退，正文和 `noindex,follow` 正常。
 - 证据：`EVD-20260912-001`。范围仅为内置浏览器当前视口，不代表系统 Chrome 多视口或最终交付通过。
 - 下一步：补充可调整视口/系统浏览器证据，再按 Critic 修复清单补失败状态和完整键盘路径。
+## 2026-09-12 系统 Chrome 复验阻塞
+
+- 只执行一次 `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing`；Chrome 在页面断言前 SIGABRT 退出。
+- 未生成多视口截图，不计为浏览器通过；证据为 `EVD-20260912-002`。

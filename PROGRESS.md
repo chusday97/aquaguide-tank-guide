@@ -1061,3 +1061,8 @@
 - [x] 实际滚动后可见“继续探索”和“资料来源”；Tab 可从公开 Header 进入面包屑、章节导航并到达“收藏”。
 - [x] 普通路由仍显示稳定图片回退，鱼类内容可见，`robots` 继续为 `noindex,follow`。
 - [ ] 仅覆盖内置浏览器当前视口，仍不能替代系统 Chrome 多视口、reduced-motion、性能采样和 Critic 复验；Figma Canonical 未完成。
+## 2026-09-12 系统 Chrome 复验结果
+
+- [x] 本地预览保持运行时，只执行一次 `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing`。
+- [x] Chrome 在进入页面断言前以 SIGABRT/进程权限错误退出，没有生成截图或通过证据。
+- [ ] 系统 Chrome 多视口仍为环境阻塞；不重复启动同一失败通道。
