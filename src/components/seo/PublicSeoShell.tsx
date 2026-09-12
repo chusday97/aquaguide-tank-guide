@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom';
 export function PublicSeoLoading() {
   return <main className="seo-page-shell" aria-busy="true" aria-live="polite">
     <div className="seo-public-loading" role="status">
-      <div className="seo-public-loading__crumbs"><span /><span /><span /></div>
+      <div className="seo-public-loading__crumbs" aria-hidden="true"><span /><span /><span /></div>
       <div className="seo-public-loading__hero">
-        <div className="seo-public-loading__media" />
-        <div className="seo-public-loading__copy">
+        <div className="seo-public-loading__media" aria-hidden="true" />
+        <div className="seo-public-loading__copy" aria-hidden="true">
           <span className="seo-public-loading__line seo-public-loading__line--eyebrow" />
           <span className="seo-public-loading__line seo-public-loading__line--title" />
           <span className="seo-public-loading__line seo-public-loading__line--wide" />
