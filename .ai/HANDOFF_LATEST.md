@@ -1,4 +1,10 @@
 # Handoff Latest
+## Main canonical environment context absorbed — 2026-09-12
+- Default Admin continuation is `/Users/chuchu/aquaguide-main` on `main`; Product Recovery remains an isolated worktree for PR #149 only.
+- Canonical main owns its own lockfile-installed dependencies. Do not link its `node_modules` to historical `aquaguide-admin-content-v0` or recovery worktrees.
+- `CROSS_SESSION_START.md` on main now verifies canonical path/branch and live remote HEAD before edits; preserve that fail-closed operator boundary.
+- No runtime, Production, Supabase, indexing, or Local File data state changed by these docs-only main commits.
+
 ## Harlequin reviewed-authority checkpoint — 2026-09-12
 - Current recovery branch: `product-recovery-20260911`; pre-checkpoint HEAD `2bc2ed70f801`, fully aligned with current main before this data expansion.
 - Added reviewed `Trigonostigma heteromorpha` (`sp_0468`) knowledge/profile authority from Seriously Fish + FishBase; no variant inheritance was introduced.

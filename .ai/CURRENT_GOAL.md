@@ -1,4 +1,10 @@
 # Current Goal
+## Main canonical environment context — 2026-09-12
+- Canonical Admin continuation remains `/Users/chuchu/aquaguide-main` on `main`; Product Recovery uses its isolated recovery worktree and must not replace the default Admin entry path.
+- Main is self-contained after removing the historical `node_modules` symlink and running its own lockfile-driven `npm ci`; do not recreate dependency symlinks from canonical main into historical/recovery worktrees.
+- Main cross-session recovery now fail-closes on wrong path/branch and requires live HEAD vs GitHub main comparison before edits.
+- No Local File authority migration, Production deployment, Supabase change, or indexing change is implied by this documentation convergence.
+
 ## Main / recovery alignment — 2026-09-12
 - `product-recovery-20260911` fully contains current `origin/main`; PR #149 is mergeable/clean and remains Draft.
 - Root Vercel build authority is explicit (`npm run build` → `dist`); both aquaguide and admin-content preview deployments are green on the aligned recovery line.

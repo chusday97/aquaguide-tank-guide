@@ -1469,3 +1469,19 @@ Next: read-only cross-domain coordination design; no centralized writes.
 - Post-release Vercel runtime-error query found no current clusters.
 - No Supabase Staging/Production migration or indexing unlock. Care SEO remains `hold_noindex`.
 - NEXT: release closed; only respond to concrete runtime/operator regressions or separately authorized Staging/indexing work.
+
+## 2026-09-12 — canonical cross-session worktree repair
+- Reproduced a real continuation-authority badcase: `.ai/CROSS_SESSION_START.md` still directed new sessions to `/Users/chuchu/aquaguide-admin-content-v0` / `feature/admin-content-v0`; this session initially entered a stale reconciliation worktree before the mismatch was caught.
+- Verified canonical local `main` and GitHub `main` were both `e871aee0` with a clean worktree before changing paths.
+- Moved the canonical main worktree with `git worktree move` from `/private/tmp/aqua-main-promoted-20260912` to durable `/Users/chuchu/aquaguide-main`; branch identity, HEAD and tracked content were unchanged.
+- Rewrote `CROSS_SESSION_START.md` current routing: exact canonical path + `branch=main` + status review + live `HEAD` vs `git ls-remote origin refs/heads/main` comparison are now mandatory before edits.
+- Preserved all historical feature/reconcile/product-recovery/preview worktrees; none were reset or deleted.
+- No runtime code, Vercel Production, Supabase or indexing state changed.
+- NEXT: continue only from concrete operator/runtime/data-reliability badcases or an explicit Staging/indexing decision.
+
+## 2026-09-12 — canonical main dependency independence
+- Found canonical `/Users/chuchu/aquaguide-main/node_modules` symlinked to historical `/Users/chuchu/aquaguide-admin-content-v0/node_modules`, leaving the new canonical entry dependent on an old worktree.
+- Removed only the symlink and ran `npm ci --prefer-offline --no-audit --no-fund` in canonical main; historical worktree was not modified or deleted.
+- PASS from canonical main: Local File API, Local Admin mode contract, Operations work items, API/root TypeScript, full build, dependency listing, and real `dev:local-admin` HTTP smoke (API 200, main Vite 200, SEO Admin Vite 200).
+- Audited known Aqua worktrees and root overrides: no `.local/aqua-admin` persisted authority and no non-test `ADMIN_LOCAL_FILE_ROOT` override exist, so no local data migration is needed.
+- Git and Production runtime remain unchanged; this is machine-local continuation hardening plus authority documentation only.

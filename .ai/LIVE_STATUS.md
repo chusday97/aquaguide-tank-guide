@@ -1,5 +1,19 @@
 # Live Status
 
+## CURRENT OVERRIDE — canonical local environment independent (2026-09-12)
+- `/Users/chuchu/aquaguide-main` is the canonical `main` worktree and now has its own real `node_modules` directory installed via `npm ci`; it no longer depends on historical worktree files.
+- Canonical-only tests/typechecks/full build and `dev:local-admin` HTTP smoke PASS.
+- No existing `.local/aqua-admin` data or non-test root override was found, so no local authority migration was needed.
+- Git/Production runtime state is unchanged by this machine-local dependency hardening.
+
+
+## CURRENT OVERRIDE — canonical Admin worktree is `/Users/chuchu/aquaguide-main` (2026-09-12)
+- Active local Admin baseline is branch `main` at the durable worktree `/Users/chuchu/aquaguide-main`.
+- The former main path under `/private/tmp/aqua-main-promoted-20260912` was moved, not copied; Git branch identity and history are preserved.
+- Cross-session startup must verify canonical path + `main` + clean/reviewed status + live remote-main equality before edits.
+- Historical AquaGuide worktrees remain available but are not current authority.
+
+
 ## CURRENT OVERRIDE — main `0b662155`, Production intentionally unchanged (2026-09-12)
 - GitHub main includes `0b662155 fix(admin): clean failed atomic temp writes`; Product Golden Path PASS.
 - Vercel branch deployment for the commit is READY: `dpl_BAmT1TrjkUTE8Wz3Vvk1WUcU8kzB`.
