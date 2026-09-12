@@ -146,3 +146,7 @@
 - [x] 只读 ping 确认 server/leader 均为 `0.5.0`。
 - [ ] Desktop 插件仍未在线：`hop=server-only`、`plugin=null`、请求超时；不重复 Ping，不执行写入。
 - [ ] 插件在线后再集中补 Canonical；在此之前 Web 轨道不等待。
+## 2026-09-12 Figma文件加载状态
+
+- [x] Figma Desktop 已启动并确认目标窗口存在。
+- [ ] AquaGuide Fish Landing Page 因 `ERR_CONNECTION_CLOSED (-100)` 未加载，暂不执行 Figwright 写入；证据 `EVD-20260912-057`。

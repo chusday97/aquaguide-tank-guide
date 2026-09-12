@@ -43,6 +43,10 @@
 
 - Figwright 版本已统一为 server/leader `0.5.0`，但 ping 仍为 `server-only`，`plugin=null` 且插件请求超时；本轮未写入 Figma，证据为 `EVD-20260912-056`。
 
+## 2026-09-12 Figma文件连接补充
+
+- Figma Desktop 已启动，但 AquaGuide 文件显示 `ERR_CONNECTION_CLOSED (-100)`，画布未加载；未执行插件或写入，证据为 `EVD-20260912-057`。
+
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口后的公开文案、结构、lint、build 和 diff-check复验见 `0c3f217c`。

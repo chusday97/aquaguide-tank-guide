@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Blocked: 2026-09-12 Figma Desktop 目标文件加载失败，显示 `ERR_CONNECTION_CLOSED (-100)`；未执行 Figwright 写入，证据为 `EVD-20260912-057`。
 - Blocked: 2026-09-12 Figwright server/leader 已统一 `0.5.0`，但 Desktop plugin 为 null 且请求超时；未执行 Figma 写入，证据为 `EVD-20260912-056`。
 - Verified: 2026-09-12 极火虾 FAQ 在内置浏览器中可展开，辅助树状态和答案文本正确；证据为 `EVD-20260912-055`。
 - Verified: 2026-09-12 黄金米虾运行时继承边界通过；黄色差异和自身参数独立，活动/觅食内容继承基础物种且未新增品系证据，证据为 `EVD-20260912-054`。

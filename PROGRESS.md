@@ -1366,3 +1366,7 @@
 - [x] 工具清单已出现 Figwright；一次只读 ping 返回 `ok:true`，server/leader 均为 `0.5.0` 且 buildId 一致。
 - [ ] `hop=server-only`、`plugin=null`，并有 `plugin request timeout`；Figma Desktop 插件仍未在线，未执行写入或重复 Ping，证据为 `EVD-20260912-056`。
 - [ ] Web、素材用途确认、浏览器环境、独立 Critic 和发布门禁继续按原计划推进。
+## 2026-09-12 Figma文件连接复核
+
+- [x] Figma Desktop已打开，但 AquaGuide Fish Landing Page 加载失败，显示 `ERR_CONNECTION_CLOSED (-100)`；画布未进入可编辑状态，未运行插件或执行写入，证据为 `EVD-20260912-057`。
+- [ ] Figwright Canonical 写入继续暂停；Web、内容、浏览器替代证据和发布门禁不受影响。
