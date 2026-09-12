@@ -3,7 +3,7 @@
 - [x] 首页 Marketing Hero 也接入共享 `SeoAssetFallback`；结构回归现在同时保护 Marketing、Category、Species 三类公开入口的缺图一致性，证据为 `EVD-20260912-065`。
 - [ ] 本轮仅完成共享回退与静态回归；未改变素材批准状态、内容来源、路由、metadata、JSON-LD、`noindex,follow` 或用户未提交文件。
 
-## 2026-09-12 公开路由滚动闭环（待提交）
+## 2026-09-12 公开路由滚动闭环（`283cbae5`）
 
 - [x] Public Shell 在公开路由切换时统一回到顶部；带 `#章节` 的深链接会定位到对应章节，避免继承上一页滚动位置或破坏锚点导航，证据为 `EVD-20260912-066`。
 - [ ] 本轮仍未完成系统 Chrome 三档、性能/reduced-motion、Figma Canonical 和可读独立 Critic；页面继续 `noindex,follow`。
