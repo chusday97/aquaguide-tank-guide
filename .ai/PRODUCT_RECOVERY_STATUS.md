@@ -241,3 +241,15 @@ Draft PR: #149
 - Standard `Xiphophorus hellerii` is the first 120 cm planning-length regression for this symmetry.
 - Canonical priority matrix expands to 12 taxa / 132 directions: 108 caution, 22 not_recommended, 2 compatible.
 - Ornamental swordtail variants remain outside inherited authority until variant/hybrid identity is reviewed.
+
+### P1 — Harlequin rasbora reviewed authority checkpoint
+- Added direct reviewed authority for `Trigonostigma heteromorpha` (`sp_0468`) across Species Knowledge V2 and Compatibility.
+- Reviewed group guidance is 8 minimum / 8–10 recommended; reviewed environment is 21–28°C, pH 5.0–7.5, 1–12 dGH; planning space is 60 cm / ~54 L.
+- Canonical priority coverage expands to 13 taxa / 156 directions: 130 caution, 24 not_recommended, 2 compatible; no new false-compatible direction was introduced.
+- Runtime/Admin/Git reviewed baseline advances from 14/5 to 15 Profiles / 5 Pair Rules.
+- Added additive migration `202609120002_compatibility_harlequin_baseline.sql`; historical migrations remain immutable and no environment migration was executed.
+
+#### Validation
+- TypeScript / Species Knowledge / Compatibility / coverage scorecard / canonical evidence coverage: PASS.
+- Compatibility Admin / Git runtime / runtime authority / Staging preflight / Local File Admin / SQL parse: PASS.
+- Full build / Species Detail browser E2E / Compatibility beginner-action E2E / GP001–GP004: PASS.

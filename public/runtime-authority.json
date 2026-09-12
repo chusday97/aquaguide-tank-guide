@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
   "authority": "local-file-git",
-  "generatedAt": "2026-09-12T02:35:11.572Z",
+  "generatedAt": "2026-09-12T14:36:00.141Z",
   "source": {
     "businessUpdatedAt": null,
-    "compatibilityUpdatedAt": null,
+    "compatibilityUpdatedAt": "2026-09-12T14:36:00.141Z",
     "compatibilityAuthoritySequence": 1
   },
   "productCare": {
@@ -14,6 +14,46 @@
   "compatibility": {
     "authority": "reviewed-git",
     "profiles": [
+      {
+        "catalogKey": "sp_0468",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 8,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-trigonostigma-heteromorpha",
+            "title": "Trigonostigma heteromorpha (Harlequin)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/trigonostigma-heteromorpha",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-trigonostigma-heteromorpha",
+            "title": "Trigonostigma heteromorpha (Harlequin rasbora) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Trigonostigma_heteromorpha.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
       {
         "catalogKey": "sp_0011",
         "behaviorTraits": [
@@ -710,7 +750,7 @@
       }
     ],
     "counts": {
-      "profiles": 14,
+      "profiles": 15,
       "pairRules": 5
     }
   }

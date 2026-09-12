@@ -1,8 +1,8 @@
 # Current Goal
-## Main production context inherited — 2026-09-12
-- Current remote `main` includes `5fa915d3 fix(api): bundle vercel business runtime` and release-closeout docs at `162bbc1f`. The Business API production path depends on `build:business-api` and the generated ESM bundle; Product Recovery must preserve that build boundary.
-- Main release smoke recorded `/api/v1/business-health` 200, DEV-only `/api/v1/local-admin/status` 404, and no Supabase Production migration/index unlock. Product Recovery remains a separate Draft PR and does not treat that Production release as authorization to deploy the 14/5 Compatibility baseline.
-- Second convergence target is only to absorb these two main commits, keep `origin/main` fully contained, and rerun build/runtime gates before updating PR #149.
+## Main / recovery alignment — 2026-09-12
+- `product-recovery-20260911` fully contains current `origin/main`; PR #149 is mergeable/clean and remains Draft.
+- Root Vercel build authority is explicit (`npm run build` → `dist`); both aquaguide and admin-content preview deployments are green on the aligned recovery line.
+- No Supabase Staging/Production migration is authorized by Product Recovery. New Compatibility migrations remain repository authority only until an explicit environment promotion task.
 
 Updated: 2026-09-12
 Active branch: `product-recovery-20260911`
@@ -22,7 +22,7 @@ Continue Aqua Product Recovery P1 Species Knowledge V2 coverage expansion withou
 Domain compatibility, legacy facade, evidence coverage, visual actions, TypeScript, build, Compatibility beginner-action browser E2E, and GP001-GP004 must pass before checkpoint push.
 
 ## Next
-Continue canonical high-frequency Species Knowledge V2 expansion using the reviewed environment authority path. Prefer a genuinely new taxon with reliable water/space/behavior evidence; do not widen catalog ranges when reviewed evidence is narrower, and keep unsupported fields unknown/absent.
+Continue canonical high-frequency Species Knowledge V2 expansion after the Harlequin checkpoint. Prefer a genuinely new taxon with reliable environment/space/social evidence; keep runtime/Admin/Git authority in lockstep and add only additive migrations. Do not widen ranges or invent unsupported biology.
 
 ## Base-species inheritance checkpoint
 - Runtime reviewed authority now resolves exact species ID first, then an explicit base-species key derived from scientific name.
@@ -129,3 +129,12 @@ Continue canonical high-frequency Species Knowledge V2 expansion using the revie
 - Latest main cleanup `0b662155` / `e871aee0` is absorbed into Product Recovery.
 - Failed atomic Local File writes now clean temporary files instead of leaving stale temp artifacts.
 - This does not change Product Recovery authority, Compatibility V6, or reviewed baseline semantics.
+
+## Current checkpoint — Harlequin rasbora reviewed authority (2026-09-12)
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for `Trigonostigma heteromorpha` (`sp_0468`, 金三角灯) using Seriously Fish and FishBase.
+- Reviewed facts: freshwater; 21–28°C; pH 5.0–7.5; 1–12 dGH; ~4.5 cm SL; 60 cm / ~54 L planning space; peaceful schooling; minimum group 8, recommended 8–10; adult sexing cues; external leaf-underside egg attachment with no parental care.
+- Canonical priority matrix expands to 13 taxa / 156 ordered directions: 130 caution, 24 not_recommended, 2 compatible. No new unconditional green light was introduced; the remaining compatible directions are still platy ↔ nerite snail.
+- Admin/Git runtime baseline advances to 15 direct Profiles / 5 Pair Rules. `public/runtime-authority.json` is regenerated from the canonical local store.
+- Added additive migration `202609120002_compatibility_harlequin_baseline.sql`; prior migrations remain immutable and no database environment was mutated.
+- Coverage scorecard now accepts reviewed base-species inheritance instead of falsely requiring duplicate direct-ID profiles.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, coverage scorecard, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.

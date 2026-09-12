@@ -41,6 +41,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-trigonostigma-heteromorpha': {
+    id: 'seriouslyfish-trigonostigma-heteromorpha',
+    title: 'Trigonostigma heteromorpha (Harlequin)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/trigonostigma-heteromorpha',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-trigonostigma-heteromorpha': {
+    id: 'fishbase-trigonostigma-heteromorpha',
+    title: 'Trigonostigma heteromorpha (Harlequin rasbora) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Trigonostigma_heteromorpha.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-xiphophorus-maculatus': {
     id: 'seriouslyfish-xiphophorus-maculatus',
     title: 'Xiphophorus maculatus (Platy)',

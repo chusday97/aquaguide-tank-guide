@@ -1,4 +1,13 @@
 # Handoff Latest
+## Harlequin reviewed-authority checkpoint — 2026-09-12
+- Current recovery branch: `product-recovery-20260911`; pre-checkpoint HEAD `2bc2ed70f801`, fully aligned with current main before this data expansion.
+- Added reviewed `Trigonostigma heteromorpha` (`sp_0468`) knowledge/profile authority from Seriously Fish + FishBase; no variant inheritance was introduced.
+- Canonical priority coverage is now 13 taxa / 156 ordered directions: 130 caution, 24 not_recommended, 2 compatible.
+- Git/Admin Compatibility baseline is 15 Profiles / 5 Pair Rules; new additive migration: `202609120002_compatibility_harlequin_baseline.sql`.
+- Do not apply the migration to Staging/Production as part of this checkpoint.
+- Full product/runtime/admin validation is green through build, Species Detail, Compatibility Beginner Action and GP001–GP004.
+- Next: commit/push this checkpoint, verify PR #149 current-head CI, then select the next distinct canonical taxon only if reviewed evidence is strong enough.
+
 ## Main release context absorbed — 2026-09-12
 - After the first recovery merge commit `45940c85`, remote main advanced by two commits: `5fa915d3` (Vercel Business API ESM bundle) and `162bbc1f` (Production release closeout docs).
 - The recovery branch must retain main's `build:business-api`/esbuild packaging and router changes. The active Product Recovery authority remains V6 + Species Knowledge V2 + 14/5 reviewed Compatibility; no Staging/Production migration or index unlock is implied.

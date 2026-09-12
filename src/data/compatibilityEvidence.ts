@@ -98,6 +98,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const harlequinSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-trigonostigma-heteromorpha',
+  title: 'Trigonostigma heteromorpha (Harlequin)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/trigonostigma-heteromorpha',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const harlequinFishBase: EvidenceSourceDto = {
+  id: 'fishbase-trigonostigma-heteromorpha',
+  title: 'Trigonostigma heteromorpha (Harlequin rasbora) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Trigonostigma_heteromorpha.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const platySeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-xiphophorus-maculatus',
   title: 'Xiphophorus maculatus (Platy)',
@@ -325,6 +343,17 @@ const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
 };
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0468: {
+    speciesId: 'sp_0468',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 8,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [harlequinSeriouslyFish, harlequinFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
   sp_0011: {
     speciesId: 'sp_0011',
     waterType: 'freshwater',

@@ -136,6 +136,29 @@ assert.equal(swordtailKnowledge.knowledge.reproduction?.gestationOrIncubation?.m
 assert.ok(swordtailKnowledge.knowledge.sexIdentification.maleTraits?.some(item => item.includes('交接器')));
 assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0236', scientificName: 'Xiphophorus hellerii var. Albino Red' }), undefined, 'commercial swordtail variants must not inherit standard-species authority automatically');
 
+const harlequinKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0468',
+  name: '金三角灯',
+  scientificName: 'Trigonostigma heteromorpha',
+  waterTemperature: '23-28°C',
+  phLevel: '6.0-7.5',
+  tankSize: '至少 40 升',
+});
+assert.deepEqual(harlequinKnowledge.facts.temperatureRange, { min: 21, max: 28 });
+assert.deepEqual(harlequinKnowledge.facts.phRange, { min: 5, max: 7.5 });
+assert.deepEqual(harlequinKnowledge.knowledge.environment?.hardnessDgh, { min: 1, max: 12 });
+assert.equal(harlequinKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
+assert.deepEqual(harlequinKnowledge.knowledge.socialBehavior?.recommendedGroupSize, { min: 8, max: 10 });
+assert.equal(harlequinKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 4.5);
+assert.equal(harlequinKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 54);
+assert.equal(harlequinKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
+assert.equal(harlequinKnowledge.knowledge.reproduction?.mode, 'other');
+const harlequinSources = resolveKnowledgeSources(harlequinKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(harlequinSources.length, 2);
+assert.ok(harlequinSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(harlequinSources.some(source => source.publisher === 'FishBase'));
+
 const neonKnowledge = buildSpeciesKnowledgeProfile({ ...baseFish, id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi' });
 assert.equal(neonKnowledge.knowledge.socialBehavior?.minimumGroupSize, 8);
 assert.equal(neonKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');

@@ -20,7 +20,7 @@ const tank: Aquarium = {
   equipment: { filter: '瀑布过滤', heater: true, oxygen: false, light: '普通灯' },
 };
 
-const commonNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼', '水晶虾', '迷你鹦鹉鱼', '月光鱼', '玛丽鱼', '红剑鱼'];
+const commonNames = ['红绿灯', '宝莲灯', '黑壳虾', '极火虾', '斑马螺', '咖啡鼠', '白云金丝', '孔雀鱼', '水晶虾', '迷你鹦鹉鱼', '月光鱼', '玛丽鱼', '红剑鱼', '金三角灯'];
 const commonSpecies = fishData.filter(fish => commonNames.includes(fish.name) && !['plant', 'hardscape'].includes(getLifeType(fish)));
 
 type RuleAudit = { code: string; severity: string; evidence: string };

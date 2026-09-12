@@ -463,6 +463,29 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed harlequin authority overrides legacy catalog and enforces group plus space context',
+    run: () => {
+      const harlequin = fishData.find(item => item.id === 'sp_0468');
+      if (!harlequin) return false;
+      const underGrouped = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '30', height: '28' }, targetTemperature: '22' }),
+        candidateSpecies: harlequin,
+        candidateQuantity: 4,
+      });
+      const reviewedGroupWarning = underGrouped.warningRules.some(rule => rule.code === 'minimum_group_not_met');
+      const reviewedSpaceWarning = underGrouped.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum');
+      const fullGroup = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '30', height: '30' }, targetTemperature: '22' }),
+        candidateSpecies: harlequin,
+        candidateQuantity: 8,
+      });
+      return reviewedGroupWarning
+        && reviewedSpaceWarning
+        && fullGroup.warningRules.every(rule => rule.code !== 'minimum_group_not_met')
+        && fullGroup.metadata.domainStatus !== 'insufficient_data';
+    },
+  },
+  {
     name: 'reviewed molly space authority overrides legacy 48L catalog minimum',
     run: () => {
       const molly = makeFish({

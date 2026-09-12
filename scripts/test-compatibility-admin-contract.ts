@@ -142,22 +142,40 @@ assert.equal(skippedDriftGuards.length, historicalProfileKeys.length + historica
 
 const recoveryMigration = readFileSync('supabase/migrations/202609120001_compatibility_recovery_baseline.sql', 'utf8');
 assert.match(recoveryMigration, /Compatibility recovery baseline is partial or not fully published/, 'recovery baseline must fail closed on partial published catalog coverage.');
-const recoveryProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId));
-const recoveryPairs = audit.reviewedPairRules.filter(rule => !historicalPairKeys.includes([...rule.speciesIds].sort().join('__')));
-assert.ok(recoveryProfiles.length > 0, 'recovery migration must own at least one additive Profile');
-assert.ok(recoveryPairs.length > 0, 'recovery migration must own at least one additive Pair Rule');
-for (const profile of recoveryProfiles) {
-  assert.equal(recoveryMigration.includes(profile.speciesId), true, `recovery migration must include Profile ${profile.speciesId}`);
-  for (const source of profile.citations) assert.equal(recoveryMigration.includes(source.id), true, `recovery migration must include Profile source ${source.id}`);
+const recoveryV1ProfileKeys = ['sp_0011','sp_0014','sp_0435','sp_0437','sp_0438','sp_0443','sp_0446'];
+const recoveryV1PairKeys = ['sp_0436__sp_0439'];
+const recoveryV1Profiles = audit.reviewedProfiles.filter(profile => recoveryV1ProfileKeys.includes(profile.speciesId));
+const recoveryV1Pairs = audit.reviewedPairRules.filter(rule => recoveryV1PairKeys.includes([...rule.speciesIds].sort().join('__')));
+assert.equal(recoveryV1Profiles.length, recoveryV1ProfileKeys.length, '202609120001 profile ownership is immutable.');
+assert.equal(recoveryV1Pairs.length, recoveryV1PairKeys.length, '202609120001 pair ownership is immutable.');
+for (const profile of recoveryV1Profiles) {
+  assert.equal(recoveryMigration.includes(profile.speciesId), true, `recovery v1 migration must include Profile ${profile.speciesId}`);
+  for (const source of profile.citations) assert.equal(recoveryMigration.includes(source.id), true, `recovery v1 migration must include Profile source ${source.id}`);
 }
-for (const rule of recoveryPairs) {
-  for (const speciesId of rule.speciesIds) assert.equal(recoveryMigration.includes(speciesId), true, `recovery migration must include Pair species ${speciesId}`);
-  for (const source of rule.citations) assert.equal(recoveryMigration.includes(source.id), true, `recovery migration must include Pair source ${source.id}`);
+for (const rule of recoveryV1Pairs) {
+  for (const speciesId of rule.speciesIds) assert.equal(recoveryMigration.includes(speciesId), true, `recovery v1 migration must include Pair species ${speciesId}`);
+  for (const source of rule.citations) assert.equal(recoveryMigration.includes(source.id), true, `recovery v1 migration must include Pair source ${source.id}`);
 }
-assert.equal((recoveryMigration.match(/Compatibility recovery profile drift:/g) || []).length, recoveryProfiles.length, 'each additive Profile needs one exact drift guard.');
-assert.equal((recoveryMigration.match(/Compatibility recovery profile evidence drift:/g) || []).length, recoveryProfiles.length, 'each additive Profile needs one evidence drift guard.');
-assert.equal((recoveryMigration.match(/Compatibility recovery pair rule drift:/g) || []).length, recoveryPairs.length, 'each additive Pair Rule needs one exact drift guard.');
-assert.equal((recoveryMigration.match(/Compatibility recovery pair evidence drift:/g) || []).length, recoveryPairs.length, 'each additive Pair Rule needs one evidence drift guard.');
+assert.equal((recoveryMigration.match(/Compatibility recovery profile drift:/g) || []).length, recoveryV1Profiles.length, 'each recovery v1 Profile needs one exact drift guard.');
+assert.equal((recoveryMigration.match(/Compatibility recovery profile evidence drift:/g) || []).length, recoveryV1Profiles.length, 'each recovery v1 Profile needs one evidence drift guard.');
+assert.equal((recoveryMigration.match(/Compatibility recovery pair rule drift:/g) || []).length, recoveryV1Pairs.length, 'each recovery v1 Pair Rule needs one exact drift guard.');
+assert.equal((recoveryMigration.match(/Compatibility recovery pair evidence drift:/g) || []).length, recoveryV1Pairs.length, 'each recovery v1 Pair Rule needs one evidence drift guard.');
+
+const harlequinMigration = readFileSync('supabase/migrations/202609120002_compatibility_harlequin_baseline.sql', 'utf8');
+assert.match(harlequinMigration, /Compatibility harlequin baseline is partial or not fully published/, 'harlequin baseline must fail closed on partial published catalog coverage.');
+const postRecoveryV1Profiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId));
+const postRecoveryV1Pairs = audit.reviewedPairRules.filter(rule => {
+  const key = [...rule.speciesIds].sort().join('__');
+  return !historicalPairKeys.includes(key) && !recoveryV1PairKeys.includes(key);
+});
+assert.deepEqual(postRecoveryV1Profiles.map(profile => profile.speciesId).sort(), ['sp_0468'], 'current expansion migration must own only the reviewed harlequin profile.');
+assert.equal(postRecoveryV1Pairs.length, 0, 'harlequin expansion must not invent a pair override.');
+for (const profile of postRecoveryV1Profiles) {
+  assert.equal(harlequinMigration.includes(profile.speciesId), true, `harlequin migration must include Profile ${profile.speciesId}`);
+  for (const source of profile.citations) assert.equal(harlequinMigration.includes(source.id), true, `harlequin migration must include Profile source ${source.id}`);
+}
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile drift:/g) || []).length, postRecoveryV1Profiles.length, 'harlequin Profile needs one exact drift guard.');
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile evidence drift:/g) || []).length, postRecoveryV1Profiles.length, 'harlequin Profile needs one evidence drift guard.');
 
 const compatibilityUi = readFileSync('src/pages/CompatibilityAdmin.tsx', 'utf8');
 assert.doesNotMatch(compatibilityUi, /(?:indigo|violet|sky)-/, 'Compatibility Admin must not split Profile/Pair into separate blue/purple visual authorities.');
