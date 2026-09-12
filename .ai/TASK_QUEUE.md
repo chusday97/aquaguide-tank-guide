@@ -48,6 +48,11 @@
 - [x] Species 能力卡真实进入兼容工具，并保留物种 ID 与来源参数。
 - [ ] 继续验证返回链路和三档真实视口；不解除 `noindex`。
 
+## 2026-09-12 宝莲灯工具返回回归
+
+- [x] 应用工具返回按钮恢复宝莲灯公开页状态。
+- [ ] 继续完成系统 Chrome 多视口、性能/reduced-motion、Figma Canonical和独立 Critic。
+
 ## 2026-09-12 — Public SEO continuation
 
 - [x] 修复 Public Species 收藏边界：公开页使用本地收藏，不读取应用 Repository；代码提交 `acfadea1`，证据 `EVD-20260912-043`。
