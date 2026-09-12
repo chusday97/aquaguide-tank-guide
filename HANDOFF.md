@@ -25,12 +25,13 @@
 
 ## 工作树注意
 
-- 当前分支：`codex/species-seo-preview-v1`；HEAD：`0c3f217c`。
+- 当前分支：`codex/species-seo-preview-v1`；HEAD：`35ad130c`。
 - 以下用户未提交文件保持原样，未暂存、未提交：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
 
 ## 最新静态验证
 
 - 当前 HEAD `0c3f217c` 的 Editorial、Evidence、Public Contract、Responsive Contract、Asset、lint、build 和 diff-check 全部通过；文案收口专项证据为 `EVD-20260912-030`。
+- 内置 Chrome 已补充复核首页、分类页和宝莲灯页；证据为 `EVD-20260912-037`、`EVD-20260912-038`。当前未发现公开入口或首屏新增问题。
 - 本轮仅同步证据与状态文档；未修改代码、Figma、生产环境或索引策略。
 
 ## 2026-09-12 本地主页运行时复核

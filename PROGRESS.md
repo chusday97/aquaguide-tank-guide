@@ -1,3 +1,9 @@
+## 2026-09-12 分类与鱼类页面运行时复核
+
+- [x] 内置 Chrome 实际读取分类页与宝莲灯页；分类页的物种入口、能力入口和公开 Header 正常，宝莲灯的稳定图片回退、Product Truth、环境、中层活动、群游、取食和 FishBase 来源均可读；证据为 `EVD-20260912-038`。
+- [x] 未发现公开跳转或页面首屏新增问题；未改变 Product Truth、路由、metadata、JSON-LD 或 `noindex,follow`。
+- [ ] 系统 Chrome 三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 首页公开体验复核
 
 - [x] 内置 Chrome 实际读取首页，确认公开 Header、品牌 Hero、已批准极火虾图片、单一 H1、产品价值区、鱼缸能力入口和相关链接均可读；证据为 `EVD-20260912-037`。
