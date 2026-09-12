@@ -684,3 +684,9 @@
 
 - 公开 SEO 文案、结构、响应式、证据、素材、字体、lint、build 和 diff-check 已通过；内置浏览器已回读极火虾页面。
 - 系统 Chrome 三档、性能/reduced-motion、Figma Canonical、完整图片故障注入和可读独立 Critic仍未通过。
+## [Unreleased] Species asset review preview — 2026-09-12
+
+### Verification
+
+- 内置浏览器实际打开宝莲灯本地审核预览，图片、Alt、参数、环境、活动水层、群游和觅食内容可读；普通公开路由仍保持图片回退。
+- Hero 与品系卡用途尚未分别批准，页面继续 `noindex,follow`。

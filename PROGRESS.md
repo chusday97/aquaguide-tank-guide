@@ -1332,3 +1332,8 @@
 - [x] 将首页、分类页和未发布指南底部的“公开预览 · 暂不进入搜索索引”改为用户可理解的“内容会持续整理和补充”；代码提交 `31c8e5fc`。
 - [x] 相关公开文案、结构、响应式、Editorial、Evidence、Asset、Typography、lint、build 和 diff-check 通过；内置浏览器已复核极火虾面包屑与参数标题。
 - [ ] 系统 Chrome 三档、性能/reduced-motion、完整图片故障注入、宝莲灯图片用途确认、Figma Canonical 和可读独立 Critic仍未完成；继续保持 `noindex,follow`。
+## 2026-09-12 宝莲灯素材本地审核预览
+
+- [x] 在本地 `assetPreview=1` 预览中实际加载宝莲灯项目图片；图片 Alt、鱼类参数、环境、活动水层、群游和觅食内容均可读，证据为 `EVD-20260912-051`。
+- [x] 普通 `/species/sp_0432` 仍不显示该图片，继续使用稳定回退；未改变 Published 聚合或 `noindex,follow`。
+- [ ] 宝莲灯 Hero 与品系卡仍需项目负责人分别确认；确认前不更新用途级 binding。

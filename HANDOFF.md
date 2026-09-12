@@ -1169,3 +1169,8 @@
 - 公开文案/结构/响应式/证据/素材/字体/TypeScript/build/diff-check 门禁通过；内置浏览器实际确认极火虾面包屑与“一眼了解”标题层级。
 - 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 仍未触碰、未暂存、未提交。
 - 剩余门禁：系统 Chrome 三档、性能/reduced-motion、完整图片故障注入、宝莲灯图片用途级确认、Figma Canonical、可读独立 Critic；未全部通过前不解除 `noindex`。
+## 2026-09-12 当前交接：宝莲灯素材预览
+
+- 当前本地预览 `http://127.0.0.1:3000/species/sp_0432?assetPreview=1` 已实际显示宝莲灯项目图片，Alt 为“侧视的宝莲灯”。
+- 预览同时显示鱼类参数、环境、中层活动、群游数量和觅食内容；普通路由仍显示图片回退，证明待确认素材没有泄漏到公开聚合。
+- 下一步需要项目负责人分别确认 Hero 和品系卡用途的主体、清晰度、边缘完整性、构图和 Alt；未确认前保持 `blocked`、`noindex,follow`。

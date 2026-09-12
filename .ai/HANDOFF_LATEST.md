@@ -197,3 +197,8 @@
 - 本轮完成公开 SEO 视觉一致性收口：Species 面包屑改用公开分类名，参数区改用共享章节标题，首页/分类/Guide 的状态说明改成用户可理解的内容整理提示。
 - 相关静态门禁与构建通过，内置浏览器已回读极火虾页面；没有改变 Product Truth、Editorial、素材 fingerprint、路由、metadata、JSON-LD 或 `noindex,follow`。
 - 用户未提交的三个文件保持原样。剩余浏览器、性能、Figma 和独立 Critic 门禁仍未完成。
+## 2026-09-12 宝莲灯素材预览补充
+
+- 当前本地 `assetPreview=1` 已在内置浏览器真实显示宝莲灯图片及其中文 Alt；普通公开路由仍保持图片回退。
+- 该预览只证明素材能加载和页面构图可读，不代表 Hero/品系卡已批准；两种用途仍需分别确认。
+- 当前目标继续保持 `noindex,follow`，不修改 Production、main 或 Figma。
