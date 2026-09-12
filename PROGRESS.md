@@ -1122,6 +1122,11 @@
 - [x] 未出现后台术语、结构分叉或字体角色回归；Guide 条件内容仍保持 fail-closed。
 - [ ] 当前仍缺系统 Chrome、性能/reduced-motion、完整失败状态、Figma Canonical 和可读独立 Critic。
 
+## 2026-09-12 品系切换与返回复核
+
+- [x] 当前本地 Chrome 实际验证极火虾 → 黄金米虾 → 浏览器返回；H1、图片 Alt、共享生活习性和 `noindex` 均正确，证据为 `EVD-20260912-016`。
+- [ ] 当前仍缺完整多视口性能/reduced-motion、失败状态、Figma Canonical 和可读独立 Critic。
+
 ## 2026-09-12 分类到 Species 真实跳转
 
 - [x] Chrome 用户标签实际点击分类页极火虾入口并进入 `/species/sp_0001`；图片、章节、单一 H1、robots 和无横向溢出均正常，证据为 `EVD-20260912-015`。
