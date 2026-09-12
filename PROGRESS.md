@@ -1172,3 +1172,10 @@
 
 - [x] 内置 Chrome 长截图确认极火虾公开资料区不再重复显示 AquaGuide 目录记录，外部专业来源和品系归组记录仍保留。
 - [x] 公开页面内容、证据绑定和 `noindex,follow` 未因展示去重改变。
+
+## 2026-09-12 公开面包屑与分类入口收口
+
+- [x] 物种页面包屑改为公开首页；已有公开分类才提供分类链接，避免鱼类误跳应用内 `/encyclopedia`。
+- [x] 无公开分类页的鱼类不再生成伪分类相关链接；公开继续探索区保持可用入口。
+- [x] 公开契约、结构、文案、Evidence、lint、build 和 diff-check 通过；页面继续 `noindex,follow`。
+- [ ] 系统 Chrome 三档自动化、性能/reduced-motion、宝莲灯图片用途确认、Figma Canonical 和可读独立 Critic仍未完成。

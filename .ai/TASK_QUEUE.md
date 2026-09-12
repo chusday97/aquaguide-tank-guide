@@ -85,3 +85,4 @@
 - [ ] 补齐系统 Chrome 三档证据、可读独立 Critic、Figma Canonical；继续保持 `noindex,follow`。
 - [ ] 宝莲灯 Hero 与品系卡用途级视觉确认；批准前普通公开路由继续使用回退。
 - [x] 去重公开 Species 资料来源展示，保留不同专业来源和归组来源。
+- [x] 收口 Species 公开面包屑与分类入口，避免公开页误跳 App Shell。
