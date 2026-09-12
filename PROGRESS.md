@@ -1,3 +1,10 @@
+## 2026-09-13 公开 SEO 加载态收口（`b8c705a9`）
+
+- [x] 公开路由懒加载不再显示应用通用整页空白态，改为包含面包屑、Hero 媒体框、标题/正文轮廓和准备提示的结构化加载骨架；内容加载完成后替换为真实页面。
+- [x] 加载骨架提供 `aria-busy` / `role="status"`，并在 `prefers-reduced-motion` 下关闭 shimmer；未改变最终内容、路由、Product Truth、metadata、JSON-LD 或 `noindex,follow`。
+- [x] `test:public-seo-structure`、`test:public-seo-responsive-contract`、`test:public-seo-contract`、lint、build 和 diff-check 通过；内置 Chrome 实际捕获骨架后读取到完整极火虾页面，证据为 `EVD-20260913-117`。
+- [ ] 600px 独立运行时证据、系统 Chrome MachPort、可读独立 Critic、Figma Canonical 和索引发布门禁仍未完成。
+
 ## 2026-09-12 当前状态快照（`68231405`）
 
 - [x] 首页 Marketing Hero 也接入共享 `SeoAssetFallback`；结构回归现在同时保护 Marketing、Category、Species 三类公开入口的缺图一致性，证据为 `EVD-20260912-065`。

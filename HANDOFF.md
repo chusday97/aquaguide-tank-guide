@@ -1,5 +1,13 @@
 # AquaGuide Species SEO 当前有效快照
 
+## 2026-09-13 公开加载态修复
+
+- 公开 SEO 路由懒加载已改用 `PublicSeoLoading` 结构化骨架，避免用户先看到应用通用整页空白；骨架包含面包屑、Hero 媒体框、标题/正文轮廓和“正在准备 AquaGuide 页面…”提示。
+- 已提供 `aria-busy="true"`、`aria-live="polite"` 和 `role="status"`；reduced-motion 下不播放 shimmer。内置 Chrome 已捕获加载态，随后真实读取到完整 Species 页面；证据为 `EVD-20260913-117`。
+- 代码提交：`b8c705a9`。未修改用户的三个未提交文件。
+
+当前仍保持：页面 `noindex,follow`；不修改 main、Production Supabase、生产部署或 Figma。
+
 ## 2026-09-12 最新运行时证据
 
 - 内置浏览器实际读取极火虾公开长页面并点击“常见问题”进入 `#faq` 锚点，证据为 `EVD-20260912-073`；不替代系统 Chrome 三档验收。
