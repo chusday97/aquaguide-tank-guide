@@ -1605,3 +1605,8 @@
 - [x] 宝莲灯“检查我的鱼缸”真实进入兼容工具，URL 保留 `species=sp_0432&source=species-profile`，工具页显示已选宝莲灯。
 - [x] 工具返回按钮恢复 `/species/sp_0432` 及公开 Species 页面，证据为 `EVD-20260913-110`。
 - [ ] 仍待多视口、托管 Preview DOM/性能、可读 Critic、Figma Canonical 和发布门禁。
+## 2026-09-13 静态回归复跑
+
+- [x] 当前分支重新通过 Evidence bindings、Editorial evidence、Public Contract、Public structure、Responsive Contract、lint、build 和 `git diff --check`，证据为 `EVD-20260913-111`。
+- [x] 宝莲灯 Hero/品系图片 binding 仍为 `blocked`，普通页面继续显示稳定 fallback；未改变素材门禁。
+- [ ] 真实多视口、托管 DOM/性能、可读 Critic、Figma Canonical 和发布门禁仍开放。
