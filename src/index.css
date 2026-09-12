@@ -1916,6 +1916,21 @@ select {
   transform: translate(-50%, -50%);
 }
 
+.resilient-image-terminal-fallback {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  padding: 12px;
+  color: rgb(26 26 26 / 52%);
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+}
+
 .interactive-tank-creature-label {
   position: absolute;
   bottom: -4px;

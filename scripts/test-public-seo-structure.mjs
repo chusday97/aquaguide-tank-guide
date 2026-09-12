@@ -22,6 +22,11 @@ for (const [relativeFile, requiredPieces] of publicPages) {
 }
 
 const species = read('src/pages/SpeciesLanding.tsx');
+const resilientImage = read('src/components/common/ResilientImage.tsx');
+const globalStyles = read('src/index.css');
+assert.match(resilientImage, /fallbackFailed/, 'ResilientImage must keep a terminal fallback state after the fallback asset fails');
+assert.match(resilientImage, /resilient-image-terminal-fallback/, 'ResilientImage must render a readable terminal fallback');
+assert.match(globalStyles, /\.resilient-image-terminal-fallback/, 'Terminal image fallback must have stable layout styling');
 assert.doesNotMatch(species, /getCurrentAquaGuideRepository|repository-provider/, 'Public Species must not read the app repository for favorites or aquarium state');
 assert.match(species, /toggleSpeciesFavorite/, 'Public Species must use local favorites without auth or Supabase reads');
 assert.match(species, /import \{ setSeoDocument \} from ['"]\.\.\/services\/seo\/seo-document\.service['"]/, 'Species must use the shared SEO document service');

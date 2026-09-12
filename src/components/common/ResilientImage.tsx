@@ -27,21 +27,24 @@ export function ResilientImage({
   const [attempt, setAttempt] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const [fallbackFailed, setFallbackFailed] = useState(false);
   useEffect(() => {
     setAttempt(0);
     setLoaded(false);
     setFailed(false);
+    setFallbackFailed(false);
   }, [src]);
 
   const resolvedSrc = attempt === 0
     ? src
     : attempt === 1 ? withRetryToken(src) : FALLBACK_IMAGE;
   const transparentFailure = loadingSurface === 'transparent' && failed;
+  const terminalFailure = transparentFailure || fallbackFailed;
 
   return (
     <span className={`relative block h-full w-full overflow-hidden ${loadingSurface === 'transparent' ? 'resilient-image-transparent' : ''}`}>
       {!loaded && !transparentFailure && <span className={loadingSurface === 'transparent' ? 'resilient-image-transparent-loader' : 'absolute inset-0 animate-pulse bg-slate-100'} aria-hidden="true" />}
-      {transparentFailure ? <span className="resilient-image-transparent-fallback" role="img" aria-label={alt || '图片暂不可用'}>◌</span> : <img
+      {terminalFailure ? <span className={transparentFailure ? 'resilient-image-transparent-fallback' : 'resilient-image-terminal-fallback'} role="img" aria-label={alt || '图片暂不可用'}>{transparentFailure ? '◌' : '图片暂不可用'}</span> : <img
         {...props}
         src={resolvedSrc}
         alt={alt}
@@ -63,6 +66,7 @@ export function ResilientImage({
             setAttempt(value => value + 1);
           } else {
             onFallback?.();
+            setFallbackFailed(true);
           }
         }}
       />}
