@@ -63,6 +63,11 @@
 - 相关静态门禁、lint、build 和 diff-check 已通过。
 - 用户未提交的三个文件仍保持未暂存、未提交。
 
+## 2026-09-12 文案运行时复核
+
+- 内置 Chrome 回读 `/species/sp_0001`，新的日常照料引导已实际呈现；页面可滚动，生活习性、参数、品系、FAQ、来源和 `noindex` 均可见，证据为 `EVD-20260912-031`。
+- 该证据仅覆盖当前桌面可读性树，不替代系统 Chrome 三档自动化、性能、reduced-motion、Figma Canonical 或可读独立 Critic。
+
 ## 2026-09-09 Species SEO 干净 Preview 候选
 
 - 远端状态：Draft PR #147 的稳定提交为 `01d71f12`；`foundation`、`validate`、Vercel、Cloudflare 和 GP-001…GP-005 全部通过，PR 保持 Draft，未合并。
