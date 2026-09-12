@@ -1,6 +1,6 @@
 # AquaGuide Species SEO 当前交接
 
-> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `52c16657`。
+> 当前有效快照：2026-09-12，分支 `codex/species-seo-preview-v1`，HEAD `fbd499bf`。
 
 ## 当前有效结论
 
@@ -42,6 +42,7 @@
 
 - 首页、分类页和宝莲灯页均已在内置 Chrome 中实际加载完成；分类入口、宝莲灯环境/行为内容、稳定图片回退和公开 Header 可读，证据为 `EVD-20260912-037`、`EVD-20260912-038`。
 - 当前未发现公开跳转或页面首屏的新增问题；系统 Chrome 三档、性能、reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+- 黄金米虾页的继承 FAQ 已按当前品系名称呈现；仍使用基础物种的来源与 fingerprint，没有新增品系事实证据，证据为 `EVD-20260912-039`。
 
 ## 当前下一步
 

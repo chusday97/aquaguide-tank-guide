@@ -1,3 +1,9 @@
+## 2026-09-12 品系 FAQ 显示收口
+
+- [x] 黄金米虾页面的继承 FAQ 改为按当前品系名称呈现，避免基础物种名称错位；未新增事实、来源或 `sp_0030` 独立生活习性证据，提交 `fbd499bf`。
+- [x] 文案、Editorial、Evidence、Public Contract、Structure、lint、build 和 diff-check 通过；内置 Chrome 实际回读结果记录为 `EVD-20260912-039`。
+- [ ] 系统 Chrome 三档自动化、性能/reduced-motion、Figma Canonical 和可读独立 Critic 仍未完成。
+
 ## 2026-09-12 分类与鱼类页面运行时复核
 
 - [x] 内置 Chrome 实际读取分类页与宝莲灯页；分类页的物种入口、能力入口和公开 Header 正常，宝莲灯的稳定图片回退、Product Truth、环境、中层活动、群游、取食和 FishBase 来源均可读；证据为 `EVD-20260912-038`。
