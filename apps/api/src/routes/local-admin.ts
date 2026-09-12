@@ -446,13 +446,21 @@ const createBackup = async (reason: string, requireHealthy: boolean) => {
   if (requireHealthy && !integrity.healthy) {
     throw new ApiError(409, 'MIGRATION_REJECTED', '当前 Local Admin 数据存在完整性错误；请先处理错误，再创建正常备份。');
   }
+  await mkdir(backupsDirectory(root), { recursive: true });
   let stamp = Date.now();
   let id = `backup-${stamp}`;
-  while (await pathExists(backupDirectory(root, id))) {
-    stamp += 1;
-    id = `backup-${stamp}`;
+  let destination = backupDirectory(root, id);
+  while (true) {
+    try {
+      await mkdir(destination);
+      break;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code !== 'EEXIST') throw error;
+      stamp += 1;
+      id = `backup-${stamp}`;
+      destination = backupDirectory(root, id);
+    }
   }
-  const destination = backupDirectory(root, id);
   try {
     await copyActiveData(root, destination);
     const manifest: BackupManifest = {

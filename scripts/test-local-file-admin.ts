@@ -142,6 +142,15 @@ try {
   assert.equal(backups.response.status, 200);
   assert.equal(backups.payload.data.backups[0].id, backupId);
 
+  const concurrentBackups = await Promise.all(Array.from({ length: 24 }, (_, index) => requestJson(started.base, '/backups', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: `concurrent-${index}` }),
+  })));
+  assert.equal(concurrentBackups.every(result => result.response.status === 201), true,
+    'Concurrent backups must all succeed independently.');
+  const concurrentBackupIds = concurrentBackups.map(result => String(result.payload.data.id));
+  assert.equal(new Set(concurrentBackupIds).size, concurrentBackupIds.length,
+    'Every successful concurrent backup must receive a unique backup id.');
+
   // A mid-copy filesystem failure must not leave a hidden partial backup directory.
   const blobPath = path.join(root, 'assets', `${assetId}.blob`);
   const backupEntriesBeforeFailure = (await readdir(path.join(root, 'backups'))).sort();
