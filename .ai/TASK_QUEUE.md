@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after failed restore rollback integrity closure
+- DONE: reproduce restore failure reporting successful automatic rollback while the safety backup had become corrupt.
+- DONE: validate safety backup before immediate rollback apply.
+- DONE: validate active authority after immediate rollback apply.
+- DONE: retain `.restore-transaction.json` and report rollback failure if either integrity gate fails.
+- DONE: permanent real-filesystem race regression.
+- DONE: Local File API/UI / Operations Studio / mode contract / TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 after corrupt backup candidate filtering closure
 - DONE: reproduce a manifest-valid but content-corrupt backup still appearing in `GET /backups`.
 - DONE: filter restorable backup candidates by full backup-root integrity, not manifest validity alone.

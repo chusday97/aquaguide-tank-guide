@@ -1,5 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — failed restore rollback integrity closed
+- Main functional checkpoint: `6eb2e2a565187a239197be2872546f8d282beebb` (`fix(admin): validate failed restore rollback`).
+- Immediate restore rollback now checks safety-backup integrity before apply and active-root integrity after apply; journal/temp cleanup occurs only after both pass.
+- Fail-before-fix proved the API could claim rollback success while active authority was unhealthy and the journal was already deleted.
+- Regression now requires failed rollback integrity => 500 rollback-failure guidance + journal retained.
+- GitHub Product Golden Path `34749810616` PASS; Vercel branch `dpl_BkE6NRr6bDEHLhUKwiqXKdU7mpdd` READY. Production unchanged.
+
 ## 2026-09-13 corrupt backup candidate filtering closure
 - Functional main: `091b3601 fix(admin): hide corrupt backup candidates`.
 - Reproduced: manifest-valid backup with a missing copied asset blob was still returned by `GET /backups`; direct restore rejected it with 409.

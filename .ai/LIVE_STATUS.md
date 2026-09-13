@@ -1,5 +1,11 @@
 # Live Status
 
+## 2026-09-13 — restore immediate rollback integrity
+- CLOSED on main: `6eb2e2a5` validates safety backup before immediate rollback and active root after rollback.
+- Fail-before-fix: rollback was reported successful while active authority was unhealthy and journal had been deleted.
+- Now rollback integrity failure remains fail-closed and preserves the restore journal.
+- CI `34749810616` PASS; Vercel `dpl_BkE6NRr6bDEHLhUKwiqXKdU7mpdd` READY; Production unchanged.
+
 ## 2026-09-13 — corrupt backup candidate filtering closed
 - Main functional checkpoint: `091b3601`.
 - `GET /backups` now means "healthy/restorable candidates", not merely "directories with valid manifests".

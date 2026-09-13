@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 failed restore rollback integrity closed
+A concrete immediate-rollback integrity badcase is closed on main at `6eb2e2a5 fix(admin): validate failed restore rollback`.
+
+- Fail-before-fix: during a restore failure, the pre-restore safety backup was corrupted after creation. The API returned 500 claiming it had automatically rolled back, but active `/integrity` was `healthy=false` with `ASSET_PAIR_MISSING` / `REFERENCED_ASSET_MISSING`, and `.restore-transaction.json` had already been deleted.
+- The immediate rollback path now validates the safety backup with `inspectRoot()` before applying it and validates the rolled-back active root afterward. Only a healthy safety backup + healthy rollback result may clean restore temp data and delete the journal.
+- If either rollback integrity check fails, the API reports automatic rollback failure, keeps the restore journal, and requires operator/crash recovery rather than falsely claiming success.
+- Permanent regression reproduces the real filesystem race with a restore journal, corrupted safety asset pair, and target apply failure.
+- PASS: Local File API, Local Admin mode contract, Local File browser restart/backup/restore, Operations Studio populated UI, API/root TypeScript, full build, GitHub Product Golden Path `34749810616`, Vercel branch `dpl_BkE6NRr6bDEHLhUKwiqXKdU7mpdd` READY. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 corrupt backup candidate filtering closed
 A concrete backup-list/operator badcase is closed on main at `091b3601 fix(admin): hide corrupt backup candidates`.
 
