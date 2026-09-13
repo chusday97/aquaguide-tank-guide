@@ -43,6 +43,8 @@ let active: Server | null = null;
 let leaseChild: ReturnType<typeof spawn> | null = null;
 let recoveryChild: ReturnType<typeof spawn> | null = null;
 let recoveryRoot: string | null = null;
+let corruptRecoveryChild: ReturnType<typeof spawn> | null = null;
+let corruptRecoveryRoot: string | null = null;
 try {
   let started = await startServer();
   active = started.server;
@@ -204,6 +206,54 @@ try {
   recoveryChild = null;
   await rm(recoveryRoot, { recursive: true, force: true });
   recoveryRoot = null;
+
+  // Interrupted-restore recovery must reject a corrupted safety backup and keep the journal for operator recovery.
+  corruptRecoveryRoot = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-local-admin-corrupt-recovery-'));
+  const corruptSafetyBackupId = `backup-${Date.now() + 20_000}`;
+  const corruptSafetyDirectory = path.join(corruptRecoveryRoot, 'backups', corruptSafetyBackupId);
+  await mkdir(path.join(corruptSafetyDirectory, 'assets'), { recursive: true });
+  await writeFile(path.join(corruptSafetyDirectory, 'business.json'), `${JSON.stringify(envelope('business', safetyBusiness))}\n`, 'utf8');
+  await writeFile(path.join(corruptSafetyDirectory, 'manifest.json'), `${JSON.stringify({
+    backupFormatVersion: 1, localFileFormatVersion: 1, id: corruptSafetyBackupId, createdAt: '2026-09-13T00:00:02.000Z',
+    reason: 'pre-restore-safety', healthyAtBackup: true, errorCount: 0, warningCount: 0,
+  })}\n`, 'utf8');
+  await writeFile(path.join(corruptSafetyDirectory, 'assets', 'local-asset-corrupt-recovery.json'), `${JSON.stringify({
+    id: 'local-asset-corrupt-recovery', mimeType: 'image/png', byteSize: 123,
+  })}\n`, 'utf8');
+  await writeFile(path.join(corruptRecoveryRoot, 'business.json'), `${JSON.stringify(envelope('business', partialBusiness))}\n`, 'utf8');
+  const corruptJournalPath = path.join(corruptRecoveryRoot, '.restore-transaction.json');
+  await writeFile(corruptJournalPath, `${JSON.stringify({
+    version: 1, targetBackupId: `backup-${Date.now() + 30_000}`, safetyBackupId: corruptSafetyBackupId, startedAt: '2026-09-13T00:00:03.000Z',
+  })}\n`, 'utf8');
+  corruptRecoveryChild = spawn(process.execPath, ['./node_modules/tsx/dist/cli.mjs', '-e', leaseChildCode], {
+    cwd: process.cwd(),
+    env: { ...process.env, ADMIN_LOCAL_FILE_ROOT: corruptRecoveryRoot, ADMIN_RUNTIME_SNAPSHOT_ROOT: path.join(corruptRecoveryRoot, 'public') },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  const corruptRecoveryPort = await new Promise<number>((resolve, reject) => {
+    let stdout = '';
+    let stderr = '';
+    const timeout = setTimeout(() => reject(new Error(`Timed out starting corrupt restore-recovery process: ${stderr}`)), 10_000);
+    corruptRecoveryChild!.stdout!.on('data', chunk => {
+      stdout += String(chunk);
+      const match = stdout.match(/READY (\d+)/);
+      if (match) { clearTimeout(timeout); resolve(Number(match[1])); }
+    });
+    corruptRecoveryChild!.stderr!.on('data', chunk => { stderr += String(chunk); });
+    corruptRecoveryChild!.once('exit', code => { clearTimeout(timeout); reject(new Error(`Corrupt restore-recovery process exited before READY (${code}): ${stderr}`)); });
+  });
+  const corruptRecovery = await requestJson(`http://127.0.0.1:${corruptRecoveryPort}/api/v1/local-admin`, '/status');
+  assert.equal(corruptRecovery.response.status, 500, 'Startup must fail closed when the recorded safety backup is corrupt.');
+  assert.equal(corruptRecovery.payload.error.code, 'INTERNAL_ERROR');
+  assert.equal(JSON.parse(await readFile(corruptJournalPath, 'utf8')).safetyBackupId, corruptSafetyBackupId,
+    'A failed automatic recovery must keep its journal for operator inspection/retry.');
+  const unchangedPartial = JSON.parse(await readFile(path.join(corruptRecoveryRoot, 'business.json'), 'utf8'));
+  assert.equal(unchangedPartial.state.updatedAt, 'target-b', 'A corrupt safety backup must not overwrite the active root before validation.');
+  corruptRecoveryChild.kill('SIGTERM');
+  await new Promise<void>(resolve => corruptRecoveryChild!.once('exit', () => resolve()));
+  corruptRecoveryChild = null;
+  await rm(corruptRecoveryRoot, { recursive: true, force: true });
+  corruptRecoveryRoot = null;
 
   // Existing Durable Local File installs used raw store JSON. First read must migrate it in place to a versioned envelope.
   const businessState = { schemaVersion: 1, species: [{ id: 'demo' }], care: [], updatedAt: 'test' };
@@ -634,6 +684,8 @@ try {
 
   console.log('local file admin: versioned envelope + legacy migration + integrity + backup/restore + restart + fail-closed future schema PASS');
 } finally {
+  if (corruptRecoveryChild) { corruptRecoveryChild.kill('SIGTERM'); await new Promise<void>(resolve => corruptRecoveryChild!.once('exit', () => resolve())).catch(() => undefined); }
+  if (corruptRecoveryRoot) await rm(corruptRecoveryRoot, { recursive: true, force: true }).catch(() => undefined);
   if (recoveryChild) { recoveryChild.kill('SIGTERM'); await new Promise<void>(resolve => recoveryChild!.once('exit', () => resolve())).catch(() => undefined); }
   if (recoveryRoot) await rm(recoveryRoot, { recursive: true, force: true }).catch(() => undefined);
   if (leaseChild) { leaseChild.kill('SIGTERM'); await new Promise<void>(resolve => leaseChild!.once('exit', () => resolve())).catch(() => undefined); }

@@ -721,7 +721,15 @@ const recoverInterruptedRestoreIfNeeded = async (root: string) => {
   const safetyBackupId = safeBackupId(record.safetyBackupId);
   try {
     await readBackupManifest(root, safetyBackupId);
+    const safetyIntegrity = await inspectRoot(backupDirectory(root, safetyBackupId));
+    if (!safetyIntegrity.healthy) {
+      throw new Error(`Safety backup ${safetyBackupId} failed integrity validation.`);
+    }
     await applyBackupDirectory(backupDirectory(root, safetyBackupId));
+    const recoveredIntegrity = await inspectRoot(root);
+    if (!recoveredIntegrity.healthy) {
+      throw new Error(`Recovered Local Admin root failed integrity validation.`);
+    }
     await cleanupRestoreTempDirectories(root);
     await rm(journalPath, { force: true });
   } catch {
