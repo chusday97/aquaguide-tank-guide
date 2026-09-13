@@ -820,6 +820,8 @@
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
 [Unreleased]
 
+- Verified: 2026-09-14 在 `71ffc8cc` 上重跑公开 SEO 静态回归、lint、build 和 diff-check，全部通过；未触碰三个用户未提交文件。证据为 `EVD-20260914-155`。Critic 可读报告、Figma Canonical、完整性能基线和索引发布仍未完成。
+
 - Blocked: 2026-09-13 尝试使用 Docker Playwright Chromium 恢复自动化浏览器验收；官方镜像因 Docker registry EOF 无法下载，本机已有镜像未包含 Chromium。未修改页面代码、用户未提交文件、Production 或索引策略，证据为 `EVD-20260913-136`。
 
 - Verified: 2026-09-13 Vercel 部署侧只读请求确认极火虾、宝莲灯和黄金米虾三条 Species 路径均 HTTP 200 且带 `x-robots-tag:noindex`，证据为 `EVD-20260913-105`。

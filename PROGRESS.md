@@ -1,5 +1,8 @@
 ## 2026-09-14 浏览器门禁诊断（进行中）
 
+- [x] 在提交 `71ffc8cc` 上重跑公开 SEO 静态回归：Editorial/Evidence/Public Contract/Copy/Structure/Responsive/Variant Card、lint、build 和 diff-check 全部通过；未触碰三个用户未提交文件。证据为 `EVD-20260914-155`。
+- [ ] 当前可推进代码与静态验证已收口；剩余门禁仍为 Critic 可读六维报告、Figma Canonical、完整性能基线和索引发布，不把静态通过误称为最终完成。
+
 - [x] 定位 GitHub Actions Run `34769711811` 失败原因：FAQ 断言将 React `useId()` 含冒号的合法 ID 当作原始 CSS 选择器；已改为属性选择器，未降低任何验收标准。
 - [x] 本地已通过脚本语法、公开契约、中文文案/结构、品系卡片、lint、build 和 diff-check。
 - [x] 本机再次复现 Chromium 启动失败：macOS `MachPortRendezvous` 权限阻止，不能作为页面断言证据。

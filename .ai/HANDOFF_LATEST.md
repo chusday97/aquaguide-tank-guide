@@ -14,6 +14,11 @@
 
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-14 静态回归复核
+
+- [x] 在 `71ffc8cc` 上重跑 Editorial/Evidence/Public Contract/Copy/Structure/Responsive/Variant Card、lint、build 和 diff-check，全部通过；三个用户未提交文件保持原样。
+- [ ] Critic 仍无可读六维正文；Figma Canonical、完整性能基线和索引发布门禁仍未完成。继续保持 `noindex,follow`。
+
 ## 2026-09-14 最新执行状态
 
 - 本机再次运行公开浏览器脚本，确认失败发生在 Chromium 启动阶段：macOS `MachPortRendezvous` 权限阻止，不是页面断言。
