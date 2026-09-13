@@ -122,6 +122,7 @@ type RootLeaseRecord = { version?: number; pid?: number; token?: string; acquire
 let heldRootLease: RootLease | null = null;
 let rootLeaseExitHookInstalled = false;
 const rootLeaseFile = (root: string) => path.join(root, '.aqua-admin-owner.json');
+const restoreJournalFile = (root: string) => path.join(root, '.restore-transaction.json');
 const releaseRootLeaseSync = () => {
   const lease = heldRootLease;
   if (!lease) return;
@@ -182,6 +183,12 @@ const ensureRootLease = async () => {
       if (!rootLeaseExitHookInstalled) {
         process.once('exit', releaseRootLeaseSync);
         rootLeaseExitHookInstalled = true;
+      }
+      try {
+        await recoverInterruptedRestoreIfNeeded(root);
+      } catch (error) {
+        releaseRootLeaseSync();
+        throw error;
       }
       return;
     } catch (error) {
@@ -674,6 +681,44 @@ const applyBackupDirectory = async (source: string) => {
     throw error;
   }
 };
+type RestoreTransactionJournal = {
+  version: 1;
+  targetBackupId: string;
+  safetyBackupId: string;
+  startedAt: string;
+};
+const cleanupRestoreTempDirectories = async (root: string) => {
+  let entries: string[] = [];
+  try { entries = await readdir(root); }
+  catch (error) {
+    if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') return;
+    throw error;
+  }
+  await Promise.all(entries
+    .filter(name => name.startsWith('.restore-assets-'))
+    .map(name => rm(path.join(root, name), { recursive: true, force: true })));
+};
+const recoverInterruptedRestoreIfNeeded = async (root: string) => {
+  const journalPath = restoreJournalFile(root);
+  let raw: unknown;
+  try { raw = await readJsonOrNull(journalPath); }
+  catch { throw new ApiError(500, 'INTERNAL_ERROR', 'Interrupted restore journal cannot be parsed; refusing Local Admin access until it is inspected.'); }
+  if (raw === null) return;
+  const record = asRecord(raw);
+  if (!record || Number(record.version) !== 1 || typeof record.safetyBackupId !== 'string') {
+    throw new ApiError(500, 'INTERNAL_ERROR', 'Interrupted restore journal is invalid; refusing Local Admin access until it is inspected.');
+  }
+  const safetyBackupId = safeBackupId(record.safetyBackupId);
+  try {
+    await readBackupManifest(root, safetyBackupId);
+    await applyBackupDirectory(backupDirectory(root, safetyBackupId));
+    await cleanupRestoreTempDirectories(root);
+    await rm(journalPath, { force: true });
+  } catch {
+    throw new ApiError(500, 'INTERNAL_ERROR', `Interrupted restore recovery from safety backup ${safetyBackupId} failed; stop writing and inspect the Local Admin root.`);
+  }
+};
+
 const restoreBackup = async (backupId: string) => {
   const root = localRoot();
   const id = safeBackupId(backupId);
@@ -682,14 +727,29 @@ const restoreBackup = async (backupId: string) => {
   const targetIntegrity = await inspectRoot(source);
   if (!targetIntegrity.healthy) throw new ApiError(409, 'MIGRATION_REJECTED', `Backup ${id} 未通过完整性校验，拒绝恢复。`);
   const safety = await createBackup('pre-restore-safety', false);
+  const journalPath = restoreJournalFile(root);
+  const journal: RestoreTransactionJournal = {
+    version: 1,
+    targetBackupId: id,
+    safetyBackupId: safety.id,
+    startedAt: new Date().toISOString(),
+  };
+  await atomicJsonWrite(journalPath, journal);
   try {
     await applyBackupDirectory(source);
     const restoredIntegrity = await inspectRoot(root);
     if (!restoredIntegrity.healthy) throw new ApiError(409, 'MIGRATION_REJECTED', '恢复后完整性校验失败。');
+    await cleanupRestoreTempDirectories(root);
+    await rm(journalPath, { force: true });
     return { backupId: id, safetyBackupId: safety.id, integrity: restoredIntegrity };
   } catch (error) {
-    try { await applyBackupDirectory(backupDirectory(root, safety.id)); }
-    catch { throw new ApiError(500, 'INTERNAL_ERROR', `恢复 ${id} 失败，且 safety backup ${safety.id} 自动回滚失败；请停止写入并人工检查本地文件。`); }
+    try {
+      await applyBackupDirectory(backupDirectory(root, safety.id));
+      await cleanupRestoreTempDirectories(root);
+      await rm(journalPath, { force: true });
+    } catch {
+      throw new ApiError(500, 'INTERNAL_ERROR', `恢复 ${id} 失败，且 safety backup ${safety.id} 自动回滚失败；恢复事务日志已保留，请停止写入并人工检查本地文件。`);
+    }
     if (error instanceof ApiError) {
       throw new ApiError(error.status, error.code, `${error.message} 已自动回滚到恢复前 safety backup ${safety.id}。`);
     }

@@ -41,6 +41,8 @@ const putState = (base: string, partition: string, state: unknown) => requestJso
 
 let active: Server | null = null;
 let leaseChild: ReturnType<typeof spawn> | null = null;
+let recoveryChild: ReturnType<typeof spawn> | null = null;
+let recoveryRoot: string | null = null;
 try {
   let started = await startServer();
   active = started.server;
@@ -116,6 +118,63 @@ try {
   await new Promise<void>(resolve => unrelatedProcess.once('exit', () => resolve()));
   assert.rejects(readFile(path.join(pidReuseRoot, '.aqua-admin-owner.json'), 'utf8'));
   await rm(pidReuseRoot, { recursive: true, force: true });
+
+  // A fresh process must roll back an interrupted restore before exposing the mixed active root.
+  recoveryRoot = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-local-admin-restore-recovery-'));
+  const safetyBackupId = `backup-${Date.now()}`;
+  const targetBackupId = `backup-${Date.now() + 10_000}`;
+  const safetyDirectory = path.join(recoveryRoot, 'backups', safetyBackupId);
+  await mkdir(safetyDirectory, { recursive: true });
+  const safetyBusiness = { schemaVersion: 1, species: [{ id: 'safety-a' }], care: [], updatedAt: 'safety-a' };
+  const partialBusiness = { schemaVersion: 1, species: [{ id: 'target-b' }], care: [], updatedAt: 'target-b' };
+  const safetyCare = { schemaVersion: 1, revisions: [], marker: 'safety-a' };
+  const envelope = (partition: string, state: Record<string, unknown>) => ({
+    localFileFormatVersion: 1, partition, stateSchemaVersion: Number(state.schemaVersion), savedAt: '2026-09-13T00:00:00.000Z', state,
+  });
+  await writeFile(path.join(safetyDirectory, 'business.json'), `${JSON.stringify(envelope('business', safetyBusiness))}\n`, 'utf8');
+  await writeFile(path.join(safetyDirectory, 'care-seo.json'), `${JSON.stringify(envelope('care-seo', safetyCare))}\n`, 'utf8');
+  await writeFile(path.join(safetyDirectory, 'manifest.json'), `${JSON.stringify({
+    backupFormatVersion: 1, localFileFormatVersion: 1, id: safetyBackupId, createdAt: '2026-09-13T00:00:00.000Z',
+    reason: 'pre-restore-safety', healthyAtBackup: true, errorCount: 0, warningCount: 0,
+  })}\n`, 'utf8');
+  await writeFile(path.join(recoveryRoot, 'business.json'), `${JSON.stringify(envelope('business', partialBusiness))}\n`, 'utf8');
+  await writeFile(path.join(recoveryRoot, 'care-seo.json'), `${JSON.stringify(envelope('care-seo', safetyCare))}\n`, 'utf8');
+  await writeFile(path.join(recoveryRoot, '.restore-transaction.json'), `${JSON.stringify({
+    version: 1, targetBackupId, safetyBackupId, startedAt: '2026-09-13T00:00:01.000Z',
+  })}\n`, 'utf8');
+  await mkdir(path.join(recoveryRoot, '.restore-assets-crashed-process'), { recursive: true });
+  await writeFile(path.join(recoveryRoot, '.restore-assets-crashed-process', 'partial.blob'), 'partial', 'utf8');
+  recoveryChild = spawn(process.execPath, ['./node_modules/tsx/dist/cli.mjs', '-e', leaseChildCode], {
+    cwd: process.cwd(),
+    env: { ...process.env, ADMIN_LOCAL_FILE_ROOT: recoveryRoot, ADMIN_RUNTIME_SNAPSHOT_ROOT: path.join(recoveryRoot, 'public') },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  const recoveryPort = await new Promise<number>((resolve, reject) => {
+    let stdout = '';
+    let stderr = '';
+    const timeout = setTimeout(() => reject(new Error(`Timed out starting restore-recovery Local Admin process: ${stderr}`)), 10_000);
+    recoveryChild!.stdout!.on('data', chunk => {
+      stdout += String(chunk);
+      const match = stdout.match(/READY (\d+)/);
+      if (match) { clearTimeout(timeout); resolve(Number(match[1])); }
+    });
+    recoveryChild!.stderr!.on('data', chunk => { stderr += String(chunk); });
+    recoveryChild!.once('exit', code => { clearTimeout(timeout); reject(new Error(`Restore-recovery Local Admin process exited before READY (${code}): ${stderr}`)); });
+  });
+  const recoveryBase = `http://127.0.0.1:${recoveryPort}/api/v1/local-admin`;
+  const recoveredStatus = await requestJson(recoveryBase, '/status');
+  assert.equal(recoveredStatus.response.status, 200, 'Startup must recover an interrupted restore before serving Local Admin.');
+  const recoveredBusiness = await requestJson(recoveryBase, '/state/business');
+  const recoveredCare = await requestJson(recoveryBase, '/state/care-seo');
+  assert.equal(recoveredBusiness.payload.data.state.updatedAt, 'safety-a');
+  assert.equal(recoveredCare.payload.data.state.marker, 'safety-a');
+  assert.equal((await readdir(recoveryRoot)).some(name => name.startsWith('.restore-assets-')), false);
+  await assert.rejects(readFile(path.join(recoveryRoot, '.restore-transaction.json'), 'utf8'));
+  recoveryChild.kill('SIGTERM');
+  await new Promise<void>(resolve => recoveryChild!.once('exit', () => resolve()));
+  recoveryChild = null;
+  await rm(recoveryRoot, { recursive: true, force: true });
+  recoveryRoot = null;
 
   // Existing Durable Local File installs used raw store JSON. First read must migrate it in place to a versioned envelope.
   const businessState = { schemaVersion: 1, species: [{ id: 'demo' }], care: [], updatedAt: 'test' };
@@ -546,6 +605,8 @@ try {
 
   console.log('local file admin: versioned envelope + legacy migration + integrity + backup/restore + restart + fail-closed future schema PASS');
 } finally {
+  if (recoveryChild) { recoveryChild.kill('SIGTERM'); await new Promise<void>(resolve => recoveryChild!.once('exit', () => resolve())).catch(() => undefined); }
+  if (recoveryRoot) await rm(recoveryRoot, { recursive: true, force: true }).catch(() => undefined);
   if (leaseChild) { leaseChild.kill('SIGTERM'); await new Promise<void>(resolve => leaseChild!.once('exit', () => resolve())).catch(() => undefined); }
   if (active) await closeServer(active).catch(() => undefined);
   await rm(root, { recursive: true, force: true });
