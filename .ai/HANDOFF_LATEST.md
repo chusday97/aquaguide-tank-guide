@@ -1,5 +1,11 @@
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-13 Docker 浏览器恢复结果
+
+- 已确认当前磁盘空间约 55GiB，`npm run build` 通过；用户三个未提交文件未触碰。
+- 官方 Playwright 镜像 `mcr.microsoft.com/playwright:v1.60.0-noble` 拉取因 Docker registry EOF 失败；本机已有 WebCodex 镜像未发现 Chromium，证据为 `EVD-20260913-136`。
+- 不再重复下载或切换到已占用的 3002；继续使用 3000 内置浏览器做人工检查。Docker 390/600/1440 自动化截图、Critic 可读报告、Figma Canonical 和索引发布门禁仍未完成。
+
 ## 2026-09-13 替代浏览器探测
 
 - Playwright WebKit/Firefox 均无法启动到页面，未取得 600px 运行时证据；该结果记录为环境缺口，不代表响应式断言失败，证据为 `EVD-20260913-129`。

@@ -792,6 +792,8 @@
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
 [Unreleased]
 
+- Blocked: 2026-09-13 尝试使用 Docker Playwright Chromium 恢复自动化浏览器验收；官方镜像因 Docker registry EOF 无法下载，本机已有镜像未包含 Chromium。未修改页面代码、用户未提交文件、Production 或索引策略，证据为 `EVD-20260913-136`。
+
 - Verified: 2026-09-13 Vercel 部署侧只读请求确认极火虾、宝莲灯和黄金米虾三条 Species 路径均 HTTP 200 且带 `x-robots-tag:noindex`，证据为 `EVD-20260913-105`。
 - Blocked: 内置 Chrome 仍无法打开同一 Preview，托管 DOM、三档视觉/交互和性能验收继续缺证据。
 

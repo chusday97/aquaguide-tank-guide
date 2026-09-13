@@ -1,3 +1,9 @@
+## 2026-09-13 Docker 浏览器恢复尝试
+
+- [x] 磁盘可用空间约 55GiB，当前提交 `a70f7caa` 的 production build 通过；用户三个未提交文件保持原样。
+- [x] 尝试拉取 `mcr.microsoft.com/playwright:v1.60.0-noble`，Docker 返回 registry EOF；本机已有 WebCodex 镜像未发现 Chromium 可执行文件，证据为 `EVD-20260913-136`。
+- [ ] Docker 自动化截图未生成；继续使用内置浏览器人工证据，不把人工检查标记为自动化通过。页面保持 `noindex,follow`。
+
 ## 2026-09-13 宝莲灯素材审核预览
 
 - [x] 本地 `assetPreview=1` 实际显示宝莲灯项目透明图；移动端 Hero 容器稳定，主体完整且未裁切，证据为 `EVD-20260913-122`。
