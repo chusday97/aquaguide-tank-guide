@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
-import { mkdir, readFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { chromium } from 'playwright';
 
 const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
 const screenshotDir = process.env.SEO_SCREENSHOT_DIR;
+const diagnosticPath = screenshotDir ? path.join(screenshotDir, 'browser-gate-diagnostic.json') : null;
 const widths = [390, 600, 1440];
 const publicRoutes = [
   { id: 'marketing', path: '/', jsonLd: ['WebSite'] },
@@ -259,6 +260,17 @@ try {
     forbiddenRequests: blocked.length,
     result: 'public SEO GitHub Actions browser gate passed',
   }, null, 2));
+} catch (error) {
+  if (diagnosticPath) {
+    await writeFile(diagnosticPath, `${JSON.stringify({
+      result: 'failed',
+      name: error?.name || 'Error',
+      message: error?.message || String(error),
+      stack: error?.stack || null,
+      requestLog,
+    }, null, 2)}\n`);
+  }
+  throw error;
 } finally {
   await context.close();
   await browser.close();

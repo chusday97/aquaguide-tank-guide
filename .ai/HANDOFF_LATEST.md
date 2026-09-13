@@ -16,6 +16,12 @@
 
 ## 2026-09-14 最新执行状态
 
+- 本机再次运行公开浏览器脚本，确认失败发生在 Chromium 启动阶段：macOS `MachPortRendezvous` 权限阻止，不是页面断言。
+- 为定位 GitHub Actions Run `34769937634` 的第二个未知失败，`scripts/verify-public-seo-github-actions.mjs` 现在会在失败时把错误名称、消息、堆栈和请求日志写入 `SEO_SCREENSHOT_DIR/browser-gate-diagnostic.json`，不改变任何验收标准。
+- 相关静态检查通过；下一步只提交该诊断增强并等待 CI artifact，读取具体断言后做最小修复。用户三个未提交文件保持不变，Figma、Production Supabase、main、生产部署和 noindex 继续锁定。
+
+## 2026-09-14 最新执行状态
+
 - Run `34769711811`（SHA `470ec1de`）失败已定位为 FAQ 自动化断言的 CSS 选择器问题：React `useId()` 生成的 ID 含冒号，测试已改用属性选择器；页面代码未因该失败被判定为有问题。
 - 本地静态验证已通过：公开契约、中文文案/结构、品系卡片、lint、build、diff-check；修复提交待本地提交并推送后触发新 CI。
 - 用户三个未提交文件保持不变；Figma、Production Supabase、main、生产部署和 noindex 继续锁定。
