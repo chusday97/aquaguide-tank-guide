@@ -1,6 +1,22 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-trichopodus-leerii': {
+    id: 'seriouslyfish-trichopodus-leerii',
+    title: 'Trichopodus leerii (Pearl Gourami)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/trichopodus-leerii',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-trichopodus-leerii': {
+    id: 'fishbase-trichopodus-leerii',
+    title: 'Trichopodus leerii (Pearl gourami) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Trichopodus-leerii.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-phenacogrammus-interruptus': {
     id: 'seriouslyfish-phenacogrammus-interruptus',
     title: 'Phenacogrammus interruptus (Congo Tetra)',

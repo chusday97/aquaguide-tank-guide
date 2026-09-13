@@ -514,6 +514,34 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Pearl-gourami breeding defense is contextual instead of permanent territorial pressure',
+    run: () => {
+      const pearl = fishData.find(item => item.id === 'sp_0444');
+      if (!pearl) return false;
+      const normal = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '35', height: '35' }, targetTemperature: '26' }),
+        candidateSpecies: pearl,
+        candidateQuantity: 1,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'normal' },
+      });
+      const breeding = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '35', height: '35' }, targetTemperature: '26' }),
+        candidateSpecies: pearl,
+        candidateQuantity: 1,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'in_labor_or_spawning', guardingEggsOrFry: true },
+      });
+      const shortTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '40' }, targetTemperature: '26' }),
+        candidateSpecies: pearl,
+        candidateQuantity: 1,
+      });
+      return normal.warningRules.every(rule => !['territorial_pressure_context', 'breeding_territory_active'].includes(rule.code))
+        && breeding.warningRules.some(rule => rule.code === 'breeding_territory_active')
+        && shortTank.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && normal.evidenceIds?.includes('seriouslyfish-trichopodus-leerii');
+    },
+  },
+  {
     name: 'reviewed Congo-tetra authority enforces 108L planning, 120cm length, five-fish group and warm-water ceiling',
     run: () => {
       const congo = fishData.find(item => item.id === 'sp_0020');

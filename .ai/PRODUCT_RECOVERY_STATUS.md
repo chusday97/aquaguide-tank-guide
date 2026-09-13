@@ -1,5 +1,13 @@
 # Aqua Product Recovery Status
 
+## 2026-09-13 — Pearl gourami reviewed-authority checkpoint
+- `Trichopodus leerii` (`sp_0444`) is the 19th canonical priority taxon.
+- Canonical matrix: 19 taxa / 342 directions = 304 caution, 36 not_recommended, 2 compatible.
+- Reviewed runtime baseline: 22 Profiles / 5 Pair Rules.
+- Repository migration `202609120008_compatibility_pearl_gourami_baseline.sql` is additive and not applied to Staging/Production.
+- `breeding_defense` remains contextual rather than a permanent territorial label.
+
+
 ## 2026-09-13 — Congo tetra reviewed-authority checkpoint
 - `Phenacogrammus interruptus` (`sp_0020`) is the 18th canonical priority taxon.
 - Canonical matrix: 18 taxa / 306 directions = 270 caution, 34 not_recommended, 2 compatible.

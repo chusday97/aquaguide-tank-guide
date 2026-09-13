@@ -17,6 +17,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609120005_compatibility_ember_tetra_baseline.sql',
   '202609120006_compatibility_denison_barb_baseline.sql',
   '202609120007_compatibility_congo_tetra_baseline.sql',
+  '202609120008_compatibility_pearl_gourami_baseline.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [

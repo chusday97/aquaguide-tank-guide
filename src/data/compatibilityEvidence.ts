@@ -98,6 +98,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const pearlGouramiSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-trichopodus-leerii',
+  title: 'Trichopodus leerii (Pearl Gourami)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/trichopodus-leerii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pearlGouramiFishBase: EvidenceSourceDto = {
+  id: 'fishbase-trichopodus-leerii',
+  title: 'Trichopodus leerii (Pearl gourami) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Trichopodus-leerii.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const congoTetraSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-phenacogrammus-interruptus',
   title: 'Phenacogrammus interruptus (Congo Tetra)',
@@ -445,6 +463,16 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0444: {
+    speciesId: 'sp_0444',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [pearlGouramiSeriouslyFish, pearlGouramiFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
   sp_0020: {
     speciesId: 'sp_0020',
     waterType: 'freshwater',

@@ -147,7 +147,59 @@ const congoTetraKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成体公鱼喉胸更红、背鳍和臀鳍延长',
+    summary: '成熟公鱼通常色彩更强，喉胸呈橙红色，并有更明显的背鳍/臀鳍延长；母鱼颜色更朴素、腹部更丰满。',
+    points: ['公鱼：成熟后喉胸橙红、背鳍和臀鳍延长更明显。', '母鱼：颜色较朴素，成熟时腹部通常更丰满。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    maleTraits: ['喉胸橙红色更明显', '背鳍与臀鳍延长'],
+    femaleTraits: ['颜色较朴素', '成熟时腹部更丰满'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-trichopodus-leerii'], reviewedAt: '2026-09-13' },
+  },
+  reproduction: {
+    mode: 'bubble_nester',
+    plainLanguageLabel: '泡巢型',
+    summary: '公鱼在浮水植物附近筑泡巢并照护鱼卵；繁殖期会追逐母鱼，因此需要足够躲避空间。',
+    fertilization: 'external',
+    parentalCare: 'egg_guarding',
+    breedingBehavior: ['公鱼筑泡巢并护卵', '繁殖期公鱼会追逐母鱼'],
+    breedingAggression: 'medium',
+    parentFryRisk: ['鱼苗自由游动后应结束公鱼护巢阶段，避免继续把繁殖期领地行为视为长期社区状态。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-trichopodus-leerii', 'fishbase-trichopodus-leerii'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 24, max: 30 },
+    phRange: { min: 5.5, max: 8.0 },
+    hardnessDgh: { min: 2, max: 30 },
+    notes: ['Seriously Fish 的详细饲养范围作为环境 authority；FishBase 提供更窄的 24–28°C / pH 6–8 生态记录，未用于扩大范围。', '属于迷鳃鱼，FishBase 记录其为强制空气呼吸鱼类。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-trichopodus-leerii'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'variable',
+    territoriality: 'none',
+    finNipping: 'none',
+    predationRisk: 'low',
+    summary: '总体是非常和平的社区鱼；雄鱼之间及繁殖期会出现同种领地/追逐行为，但不把这一繁殖情境泛化成全年对所有社区鱼的领地压力。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-trichopodus-leerii'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 12, measurement: 'SL' },
+    minVolumeLiters: 81,
+    minTankLengthCm: 120,
+    activityLevel: 'medium',
+    needsCover: true,
+    needsHidingPlaces: true,
+    spaceNotes: ['Seriously Fish 给出 90 × 30 cm / ~81 L；FishBase 的 aquarium reference 给出 120 cm 最小长度，本轮采用更保守的 120 cm 长度规划，同时保留 81 L 作为体积参考。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-trichopodus-leerii', 'fishbase-trichopodus-leerii'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0444: pearlGouramiKnowledge,
   sp_0020: congoTetraKnowledge,
   sp_0440: denisonBarbKnowledge,
   sp_0114: emberTetraKnowledge,

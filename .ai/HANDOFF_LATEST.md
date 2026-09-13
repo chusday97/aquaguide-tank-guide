@@ -1,5 +1,13 @@
 # Handoff Latest
 
+## Pearl gourami reviewed-authority checkpoint — 2026-09-13
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for `Trichopodus leerii` (`sp_0444`); ornamental variants remain unreviewed and do not inherit automatically.
+- Canonical coverage is now 19 taxa / 342 directions: 304 caution, 36 not_recommended, 2 compatible.
+- Runtime/Admin baseline is 22 Profiles / 5 Pair Rules; Git runtime snapshot matches canonical static authority.
+- New additive migration: `202609120008_compatibility_pearl_gourami_baseline.sql`; not applied to Staging/Production.
+- Breeding defense is explicitly contextual: normal community state has no territorial-pressure warning, while spawning/egg-guarding state raises `breeding_territory_active`.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical coverage, Admin/Git/DB runtime, Staging preflight, Local File Admin, full build, Species Detail, Compatibility Beginner Action and GP001–GP004.
+
 ## Congo tetra reviewed-authority checkpoint — 2026-09-13
 - Added direct reviewed Species Knowledge V2 + Compatibility authority for `Phenacogrammus interruptus` (`sp_0020`).
 - Canonical coverage is now 18 taxa / 306 directions: 270 caution, 34 not_recommended, 2 compatible.

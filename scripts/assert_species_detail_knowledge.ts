@@ -230,6 +230,30 @@ assert.equal(denisonSources.length, 2);
 assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(denisonSources.some(source => source.publisher === 'FishBase'));
 
+const pearlGouramiKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0444',
+  name: '珍珠马甲',
+  scientificName: 'Trichopodus leerii',
+  waterTemperature: '24-28°C',
+  phLevel: '6.0-8.0',
+  tankSize: '至少 96 升',
+});
+assert.deepEqual(pearlGouramiKnowledge.facts.temperatureRange, { min: 24, max: 30 });
+assert.deepEqual(pearlGouramiKnowledge.facts.phRange, { min: 5.5, max: 8 });
+assert.deepEqual(pearlGouramiKnowledge.knowledge.environment?.hardnessDgh, { min: 2, max: 30 });
+assert.equal(pearlGouramiKnowledge.knowledge.socialBehavior?.territoriality, 'none');
+assert.equal(pearlGouramiKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 12);
+assert.equal(pearlGouramiKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 81);
+assert.equal(pearlGouramiKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
+assert.equal(pearlGouramiKnowledge.knowledge.reproduction?.mode, 'bubble_nester');
+assert.equal(pearlGouramiKnowledge.knowledge.reproduction?.breedingAggression, 'medium');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0153', scientificName: 'Trichopodus leerii var. Balloon' }), undefined, 'Pearl-gourami ornamental variants must not inherit standard-species authority automatically');
+const pearlGouramiSources = resolveKnowledgeSources(pearlGouramiKnowledge.knowledge.spaceAndGrowth?.evidence.sourceIds || []);
+assert.equal(pearlGouramiSources.length, 2);
+assert.ok(pearlGouramiSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(pearlGouramiSources.some(source => source.publisher === 'FishBase'));
+
 const congoTetraKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0020',

@@ -224,7 +224,16 @@ for (const source of congoTetraProfile.citations) assert.equal(congoTetraMigrati
 assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile drift:/g) || []).length, 1);
 assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile evidence drift:/g) || []).length, 1);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020']);
+const pearlGouramiMigration = readFileSync('supabase/migrations/202609120008_compatibility_pearl_gourami_baseline.sql', 'utf8');
+assert.match(pearlGouramiMigration, /Compatibility pearl-gourami baseline is partial or not fully published/, 'Pearl-gourami baseline must fail closed on partial published catalog coverage.');
+const pearlGouramiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0444');
+assert.ok(pearlGouramiProfile, '120008 must own the reviewed Pearl-gourami profile.');
+assert.equal(pearlGouramiMigration.includes('sp_0444'), true);
+for (const source of pearlGouramiProfile.citations) assert.equal(pearlGouramiMigration.includes(source.id), true, `Pearl-gourami migration must include source ${source.id}`);
+assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile drift:/g) || []).length, 1);
+assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile evidence drift:/g) || []).length, 1);
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

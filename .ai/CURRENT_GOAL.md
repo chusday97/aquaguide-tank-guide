@@ -1,5 +1,13 @@
 # Current Goal
 
+## Pearl gourami reviewed-authority checkpoint — 2026-09-13
+- Added standard `Trichopodus leerii` / 珍珠马甲 (`sp_0444`) as the 19th canonical priority taxon using Seriously Fish + FishBase reviewed evidence; ornamental Balloon/Albino Balloon/Red Head variants do not inherit automatically.
+- Environment authority uses Seriously Fish 24–30°C, pH 5.5–8.0, 2–30 dGH; space uses ~81 L from Seriously Fish and the more conservative 120 cm aquarium-length reference from FishBase.
+- Ordinary community behavior remains peaceful. `breeding_defense` is contextual only: normal state does not produce territorial pressure, while explicit spawning/egg-guarding state produces `breeding_territory_active` caution.
+- Canonical coverage: 19 taxa / 342 ordered directions = 304 caution, 36 not_recommended, 2 compatible; no new unconditional green-light direction.
+- Runtime/Admin reviewed baseline: 22 Profiles / 5 Pair Rules. Additive migration `202609120008_compatibility_pearl_gourami_baseline.sql` is repository authority only and is not applied to Staging/Production.
+- Full Product/Admin/runtime/build/browser validation is green through GP001–GP004.
+
 ## Congo tetra reviewed-authority checkpoint — 2026-09-13
 - Added standard `Phenacogrammus interruptus` / 刚果美人 (`sp_0020`) as the 18th canonical priority taxon using Seriously Fish + FishBase reviewed evidence.
 - Reviewed planning authority: 23–28°C, pH 6.0–7.5, 3–18 dGH, ~8 cm SL, 120 cm tank length, ~108 L planning volume, minimum group 5.
