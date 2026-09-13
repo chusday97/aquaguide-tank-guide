@@ -160,7 +160,17 @@ const processStartIdentity = (pid: number): string | null => {
 const currentProcessStartIdentity = processStartIdentity(process.pid);
 const ensureRootLease = async () => {
   const root = localRoot();
-  if (heldRootLease?.root === root) return;
+  if (heldRootLease?.root === root) {
+    const lease = heldRootLease;
+    try {
+      const current = JSON.parse(await readFile(lease.filePath, 'utf8')) as RootLeaseRecord;
+      if (Number(current.pid) === process.pid && current.token === lease.token) return;
+      heldRootLease = null;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') heldRootLease = null;
+      else throw new ApiError(409, 'VERSION_CONFLICT', 'Local Admin root ownership file changed or is unreadable; refusing access until ownership is re-established.', { root, filePath: lease.filePath });
+    }
+  }
   if (heldRootLease && heldRootLease.root !== root) {
     throw new ApiError(409, 'VERSION_CONFLICT', `Local Admin process already owns a different root: ${heldRootLease.root}`);
   }

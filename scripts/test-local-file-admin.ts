@@ -81,6 +81,35 @@ try {
   await new Promise<void>(resolve => leaseChild!.once('exit', () => resolve()));
   leaseChild = null;
 
+  // If the live owner's lease file is removed externally, the old owner must stop serving once another process acquires the root.
+  await rm(rootLeasePath, { force: true });
+  leaseChild = spawn(process.execPath, ['./node_modules/tsx/dist/cli.mjs', '-e', leaseChildCode], {
+    cwd: process.cwd(), env: { ...process.env }, stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  const replacementOwnerPort = await new Promise<number>((resolve, reject) => {
+    let stdout = '';
+    let stderr = '';
+    const timeout = setTimeout(() => reject(new Error(`Timed out starting replacement Local Admin owner: ${stderr}`)), 10_000);
+    leaseChild!.stdout!.on('data', chunk => {
+      stdout += String(chunk);
+      const match = stdout.match(/READY (\d+)/);
+      if (match) { clearTimeout(timeout); resolve(Number(match[1])); }
+    });
+    leaseChild!.stderr!.on('data', chunk => { stderr += String(chunk); });
+    leaseChild!.once('exit', code => { clearTimeout(timeout); reject(new Error(`Replacement Local Admin owner exited before READY (${code}): ${stderr}`)); });
+  });
+  const replacementOwner = await requestJson(`http://127.0.0.1:${replacementOwnerPort}/api/v1/local-admin`, '/status');
+  assert.equal(replacementOwner.response.status, 200, 'A new process may atomically acquire a root whose lease file was externally removed.');
+  const displacedOwner = await requestJson(started.base, '/status');
+  assert.equal(displacedOwner.response.status, 409, 'The old process must fail closed after its on-disk lease is displaced.');
+  assert.equal(displacedOwner.payload.error.code, 'VERSION_CONFLICT');
+  leaseChild.kill('SIGTERM');
+  await new Promise<void>(resolve => leaseChild!.once('exit', () => resolve()));
+  leaseChild = null;
+  const reacquiredOwner = await requestJson(started.base, '/status');
+  assert.equal(reacquiredOwner.response.status, 200, 'The original process may reacquire the root after the replacement owner exits.');
+  assert.equal(JSON.parse(await readFile(rootLeasePath, 'utf8')).pid, process.pid);
+
   // A stale lease must be reclaimable even when its old PID has been reused by an unrelated live process.
   const pidReuseRoot = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-local-admin-pid-reuse-'));
   const unrelatedProcess = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });
