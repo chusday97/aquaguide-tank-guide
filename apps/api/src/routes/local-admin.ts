@@ -356,6 +356,28 @@ const writePartitionState = async (root: string, partition: LocalAdminPartition,
   const state = validateState(partition, value);
   await atomicJsonWrite(stateFile(root, partition), envelopeFor(partition, state));
 };
+const writePartitionStateWithIntegrityRollback = async (root: string, partition: LocalAdminPartition, value: unknown) => {
+  const filePath = stateFile(root, partition);
+  const previous = await readBufferOrNull(filePath);
+  await writePartitionState(root, partition, value);
+  const integrity = await inspectRoot(root);
+  if (integrity.healthy) return;
+  const errors = integrity.issues.filter(issue => issue.severity === 'error');
+  try {
+    await restoreBufferOrRemove(filePath, previous);
+    const rolledBack = await inspectRoot(root);
+    if (!rolledBack.healthy) {
+      throw new Error(`rollback integrity remained unhealthy (${rolledBack.issues.filter(issue => issue.severity === 'error').length} errors)`);
+    }
+  } catch (error) {
+    throw new ApiError(500, 'INTERNAL_ERROR',
+      `Local ${partition} state failed post-write integrity validation and automatic rollback could not restore a healthy authority; stop writes and inspect the Local File root.`,
+      { root, partition, issues: errors, rollbackError: error instanceof Error ? error.message : 'unknown rollback error' });
+  }
+  throw new ApiError(409, 'INTEGRITY_FAILED',
+    `Local ${partition} state would make the active authority unhealthy; the write was rolled back.`,
+    { root, partition, issues: errors });
+};
 
 const collectReferencedAssets = (value: unknown, result = new Set<string>()) => {
   if (!value || typeof value !== 'object') return result;
@@ -858,7 +880,7 @@ localAdminFileRouter.put('/state/:partition', asyncRoute(async (request, respons
   const partition = safePartition(request.params.partition);
   await withAuthorityWrite(async () => {
     await assertActiveRootHealthyForMutation();
-    await writePartitionState(localRoot(), partition, request.body);
+    await writePartitionStateWithIntegrityRollback(localRoot(), partition, request.body);
   });
   return sendData(request, response, { partition, persisted: true, localFileFormatVersion });
 }));

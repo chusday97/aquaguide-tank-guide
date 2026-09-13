@@ -408,6 +408,20 @@ try {
   await rm(path.join(root, 'assets', `${assetId}.json`), { recursive: true, force: true });
   await writeFile(path.join(root, 'assets', `${assetId}.json`), originalAssetMeta);
 
+  // A state candidate must not be allowed to turn a healthy root into an unhealthy one.
+  const stateBeforeRejectedCandidate = (await requestJson(started.base, '/state/business')).payload.data.state;
+  const rejectedCandidate = await putState(started.base, 'business', {
+    ...businessState,
+    species: [{ id: 'demo', image: { storageBucket: 'local-file', id: 'local-asset-missing-candidate' } }],
+    updatedAt: 'must-rollback',
+  });
+  assert.equal(rejectedCandidate.response.status, 409);
+  assert.equal(rejectedCandidate.payload.error.code, 'INTEGRITY_FAILED');
+  assert.deepEqual((await requestJson(started.base, '/state/business')).payload.data.state, stateBeforeRejectedCandidate,
+    'A state candidate that fails post-write integrity must be rolled back to the previous durable state.');
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true,
+    'Rejected state candidates must leave the active root healthy.');
+
   // Ordinary writes must fail closed if a previously healthy active root becomes corrupt while the API stays live.
   const runtimeCorruptState = {
     ...businessState,
