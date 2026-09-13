@@ -608,6 +608,9 @@ const readBackupManifest = async (root: string, backupId: string) => {
   if (Number(manifest.backupFormatVersion) !== backupFormatVersion) {
     throw new ApiError(409, 'MIGRATION_REJECTED', `Backup ${backupId} uses unsupported backup format v${String(manifest.backupFormatVersion)}.`);
   }
+  if (manifest.id !== backupId) {
+    throw new ApiError(409, 'MIGRATION_REJECTED', `Backup ${backupId} manifest id ${String(manifest.id)} does not match its directory; refusing restore.`);
+  }
   return manifest as unknown as BackupManifest;
 };
 const copyActiveData = async (sourceRoot: string, destinationRoot: string) => {

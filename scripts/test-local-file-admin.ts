@@ -425,6 +425,24 @@ try {
   assert.equal(backups.response.status, 200);
   assert.equal(backups.payload.data.backups[0].id, backupId);
 
+  // A backup manifest must remain bound to its own directory id or the UI can restore a different backup than the one it displays.
+  const mismatchedManifestBackup = await requestJson(started.base, '/backups', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'manifest-id-mismatch' }),
+  });
+  assert.equal(mismatchedManifestBackup.response.status, 201);
+  const mismatchedManifestBackupId = String(mismatchedManifestBackup.payload.data.id);
+  const mismatchedManifestPath = path.join(root, 'backups', mismatchedManifestBackupId, 'manifest.json');
+  const mismatchedManifest = JSON.parse(await readFile(mismatchedManifestPath, 'utf8'));
+  mismatchedManifest.id = backupId;
+  await writeFile(mismatchedManifestPath, `${JSON.stringify(mismatchedManifest)}\n`, 'utf8');
+  const backupsAfterManifestMismatch = await requestJson(started.base, '/backups');
+  assert.equal(backupsAfterManifestMismatch.response.status, 200);
+  assert.equal(backupsAfterManifestMismatch.payload.data.backups.filter((item: any) => item.id === backupId).length, 1,
+    'A mismatched manifest id must not create a duplicate/restorable alias for another backup.');
+  const mismatchedManifestRestore = await requestJson(started.base, `/backups/${mismatchedManifestBackupId}/restore`, { method: 'POST' });
+  assert.equal(mismatchedManifestRestore.response.status, 409, 'Direct restore must reject a backup whose manifest id does not match its directory.');
+  assert.equal(mismatchedManifestRestore.payload.error.code, 'MIGRATION_REJECTED');
+
   // A backup whose manifest is valid but whose copied authority is corrupt must not be offered as restorable.
   const corruptListedBackup = await requestJson(started.base, '/backups', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'corrupt-list-candidate' }),
