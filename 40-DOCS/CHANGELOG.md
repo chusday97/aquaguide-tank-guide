@@ -5,6 +5,7 @@
 - Fixed: 公开 SEO 控件最小高度提高到 45px，避免浏览器浮点布局导致严格 44px 门禁误报；同步响应式契约为数值下限校验。
 - Verified: GitHub Actions Public SEO Browser Gate Run #13（`34772211711`，SHA `bd5356cf`）通过并生成浏览器证据 artifact；章节顺序与破图回退断言已纳入门禁。
 - Blocked: 既有只读 Critic 对当前浏览器通过版本复验完成，但没有返回可读六维正文；不以空输出作为独立审查通过。
+- Observed: 内置浏览器整页截图的滚动拼接出现重复画面，而 AX 结构只有一份 Species 章节；记录为截图工具缺口，不修改页面结构。
 
 ### Changed
 

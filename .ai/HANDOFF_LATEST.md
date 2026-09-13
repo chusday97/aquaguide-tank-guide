@@ -553,6 +553,7 @@
 - CI 通过不等于最终发布通过。可读 Critic、Figma Canonical、完整性能基线、内容/关键词发布门禁和 noindex 放行仍未完成。
 - CI 页面有 Node.js 20 弃用警告，后续独立处理，不在本轮扩大范围。
 - 同一只读 Critic 已完成对 `bd5356cf` 的复验，但仍返回空 assistant 正文；独立六维审查保持 BLOCKED，不创建重复任务。
+- 内置浏览器 `fullPage` 截图出现疑似滚动拼接重复，但 AX 树只有一份各章节；不要把该工具伪影当作 React 重复渲染。需要独立截图工具或 GitHub artifact 做像素级确认。
 ## 2026-09-14 当前提交浏览器门禁结果
 
 - GitHub Actions run `34769155328` 对应提交 `d9bda6f7` 已成功完成，artifact `public-seo-browser-evidence-d9bda6f74291cda5080db161a3c5b79970b7da5f` 已生成，大小 5.86 MB。
