@@ -1,5 +1,7 @@
 ## 2026-09-14 浏览器门禁诊断（进行中）
 
+- [x] 已将当前提交 `2a07878b` 交回既有 Critic 同线程复验；任务完成但 `latestAssistantMessage` 为空，仍没有可读六维正文。证据为 `EVD-20260914-156`；不创建重复 Critic，不解除 `noindex`。
+
 - [x] 在提交 `71ffc8cc` 上重跑公开 SEO 静态回归：Editorial/Evidence/Public Contract/Copy/Structure/Responsive/Variant Card、lint、build 和 diff-check 全部通过；未触碰三个用户未提交文件。证据为 `EVD-20260914-155`。
 - [ ] 当前可推进代码与静态验证已收口；剩余门禁仍为 Critic 可读六维报告、Figma Canonical、完整性能基线和索引发布，不把静态通过误称为最终完成。
 

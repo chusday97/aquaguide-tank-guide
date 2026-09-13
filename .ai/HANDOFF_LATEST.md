@@ -14,6 +14,11 @@
 
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-14 Critic 复验输出阻塞
+
+- [x] 当前提交 `2a07878b` 已交回既有 Critic 同线程；任务完成但没有 assistant 正文，不能计为独立审查通过。证据为 `EVD-20260914-156`。
+- [ ] 保持同一 Critic，不创建重复线程；继续保持 `noindex,follow`。Figma Canonical、完整性能基线和索引发布门禁仍未完成。
+
 ## 2026-09-14 静态回归复核
 
 - [x] 在 `71ffc8cc` 上重跑 Editorial/Evidence/Public Contract/Copy/Structure/Responsive/Variant Card、lint、build 和 diff-check，全部通过；三个用户未提交文件保持原样。
