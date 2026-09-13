@@ -1,3 +1,4 @@
+import { COMPATIBILITY_RULE_VERSION } from '../packages/domain-rules/src';
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
@@ -77,7 +78,7 @@ resetRuntimeCompatibilityEvidenceForTest();
 const staticSignature = signature();
 assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback');
 assert.equal(staticSignature.status, 'caution');
-assert.equal(staticSignature.ruleVersion, 'compatibility-domain-v1');
+assert.equal(staticSignature.ruleVersion, COMPATIBILITY_RULE_VERSION);
 assert.equal(staticSignature.authorityVersion, 'tank-compatibility-v3-reviewed-evidence');
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
@@ -99,7 +100,7 @@ assert.match(dbStatus.authorityVersion, /^tank-compatibility-v3-reviewed-db-[0-9
 const dbDecision = evaluateSpeciesCombination(pair as any);
 assert.equal(dbDecision.status, 'not_recommended', 'complete reviewed DB authority must be consumable by the existing engine');
 assert.ok(dbDecision.blockingRules.some(rule => rule.code.includes('controlled_runtime_override')));
-assert.equal(dbDecision.metadata.ruleVersion, 'compatibility-domain-v1');
+assert.equal(dbDecision.metadata.ruleVersion, COMPATIBILITY_RULE_VERSION);
 assert.equal(dbDecision.metadata.authorityVersion, dbStatus.authorityVersion);
 assert.notEqual(dbDecision.metadata.authorityVersion, staticSignature.authorityVersion);
 const firstProfile = bootstrap.profiles[0];

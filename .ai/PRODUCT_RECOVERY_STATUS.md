@@ -1,0 +1,328 @@
+# Aqua Product Recovery Status
+
+## 2026-09-13 — Agassizii / Compatibility V7 checkpoint
+- Standard `sp_0017` / `Apistogramma agassizii` is now reviewed Product authority with 22–29°C, pH 5–7, 0–10 dGH, 60 cm / ~54 L pair planning, harem/social context and cave-spawning maternal care.
+- `compatibility-domain-v7-ph-edge-overlap` closes a false-green gap where reviewed pH ranges touched at only one boundary value.
+- Canonical priority matrix: 20 taxa / 380 directions = 340 caution, 38 not_recommended, 2 compatible.
+- Runtime/Admin: 23 Profiles / 5 Pair Rules; `202609120009_compatibility_agassizii_baseline.sql` added but not applied to any database.
+- `120008` Pearl-gourami migration was still unapplied and contained a self-contradictory drift assertion; it is corrected and future additive migrations are checked for insert/assertion trait consistency.
+- Full build/browser/Admin/runtime validation green.
+
+## 2026-09-13 — Pearl gourami reviewed-authority checkpoint
+- `Trichopodus leerii` (`sp_0444`) is the 19th canonical priority taxon.
+- Canonical matrix: 19 taxa / 342 directions = 304 caution, 36 not_recommended, 2 compatible.
+- Reviewed runtime baseline: 22 Profiles / 5 Pair Rules.
+- Repository migration `202609120008_compatibility_pearl_gourami_baseline.sql` is additive and not applied to Staging/Production.
+- `breeding_defense` remains contextual rather than a permanent territorial label.
+
+
+## 2026-09-13 — Congo tetra reviewed-authority checkpoint
+- `Phenacogrammus interruptus` (`sp_0020`) is the 18th canonical priority taxon.
+- Canonical matrix: 18 taxa / 306 directions = 270 caution, 34 not_recommended, 2 compatible.
+- Reviewed runtime baseline: 21 Profiles / 5 Pair Rules.
+- Repository migration `202609120007_compatibility_congo_tetra_baseline.sql` is additive and not applied to Staging/Production.
+
+
+## P1 — Denison barb reviewed-authority checkpoint (2026-09-13)
+- Standard `Sahyadria denisonii` (`sp_0440`) is reviewed directly from Seriously Fish + FishBase. Gold/Longfin/Red Line variants are intentionally excluded from automatic inheritance.
+- Species Knowledge V2 reviewed facts: freshwater; 15–25°C; pH 6.5–7.8; 5–25 dGH; ~11 cm SL; 120 cm / ~243 L planning space; peaceful schooling; minimum group 6, preferred 6–10; adult sex identification only as an auxiliary cue.
+- Reproduction remains unknown/absent rather than inferring a generic barb breeding contract.
+- Canonical priority matrix: 17 taxa / 272 ordered directions = 238 caution, 32 not_recommended, 2 compatible.
+- Runtime/Admin reviewed authority: 20 Profiles / 5 Pair Rules; additive migration `202609120006_compatibility_denison_barb_baseline.sql` is repository-only and not applied to Staging/Production.
+
+Updated: 2026-09-13
+Active branch: `product-recovery-20260911`
+Base: current aligned `main` @ `af03864d13a920442a736326aac9ceb084f3c435`
+Draft PR: #149
+
+## Current reviewed-authority checkpoint — 2026-09-13
+- Pre-checkpoint Git relation: main-only 0 / recovery-only 51; recovery already contains current main.
+- Canonical Compatibility progress: 16 biological taxa / 240 ordered directions = 208 caution, 30 not_recommended, 2 compatible.
+- Runtime/Admin exact-ID baseline: 19 reviewed Profiles / 5 reviewed Pair Rules. Duplicate catalog aliases are not counted as extra taxa.
+- Latest additive authority migration: `202609120005_compatibility_ember_tetra_baseline.sql`; no Product Recovery migration is authorized for Staging/Production yet.
+- Full build and GP001–GP004 are green on the checkpoint candidate.
+
+## Branch authority
+- `product-recovery-20260911` is the only active Aqua product recovery branch for this effort.
+- Latest measured relation to `main` before this status commit: ahead 26 / behind 0.
+- Merge base is exactly the current main base commit above.
+- `feature/admin-content-v0` remains reference-only. Do not merge/rebase it wholesale.
+
+## Completed in this recovery line
+### P0
+- Accepted product baseline created.
+- Product scope created.
+- Change boundaries / agent ownership created.
+- Recovery branch created directly from current main.
+
+### P1 — Compatibility / beginner result first checkpoint
+- Coarse body-size/volume bioload screening can no longer be the sole hard block.
+- Aggressive/territorial temperament no longer inflates canonical waste-load screening.
+- Legacy coarse capacity blocks are reclassified as advisory warnings by the canonical adapter.
+- Hard biological constraints remain blocking: water-type incompatibility, severe temperature mismatch, reviewed predation, explicit single-housing, observed emergency.
+- Beginner Action Layer added: can mix / conditional / need information / do not mix.
+- Visual result now puts the beginner decision and immediate action first; professional evidence remains in detail sections.
+- Compatibility page copy now explicitly tells users that the first result is the conclusion/action, with evidence available afterward.
+- Beginner golden actions now cover compatible / soft-capacity caution / hard block / missing information.
+- Tank Stability Context added: established duration, stable coexistence duration, maintenance consistency and recent water-quality incident.
+- Trusted stability can downgrade only an elevated coarse-load screening to informational context; high screening remains caution.
+- Stability context cannot override water-type, temperature, predation, single-housing or observed emergency hard blocks.
+- Compatibility calculator now exposes one optional beginner question for real tank stability; confirmation is scoped per tank and is not persisted back into the aquarium record.
+- Selecting “stable” only supplies the guarded stability context used by soft capacity/load screening; “not sure” leaves the original tank facts untouched.
+- Compatibility rule authority advanced to `compatibility-domain-v3-contextual-behavior`; reviewed territoriality, fin-nipping and predation risk can now flow from Species V2 into Domain Rules while old behavior traits remain fallback-only.
+- Under-grouped reviewed fin-nippers now raise `fin_nipping_group_pressure` as a caution, not a hard block; the beginner action explicitly says to fix the same-species group before adding other fish.
+- CompatibilityRiskCalculator no longer overwrites the Beginner Action Layer with a generic status action; the specialized immediate action is the user-facing source of truth.
+
+### P1 — Species Knowledge V2 contract checkpoint
+- Added field-level evidence contract.
+- Added staged structured contracts for sex identification, reproduction, social behavior, adult size / space and swimming zone.
+- New V2 blocks are optional during migration so existing species do not receive invented facts.
+- First reviewed V2 cohort added: `sp_0436` 孔雀鱼, `sp_0431` 红绿灯, `sp_0432` 宝莲灯.
+- Cohort includes reviewed sex-identification, reproduction and social-behavior facts with field-level source IDs; unknown species continue to return unknown rather than generic invented biology.
+- Reviewed Species V2 social facts now feed the canonical compatibility domain before older compatibility-profile fallbacks.
+- Minimum group-size planning is now a canonical caution rule (`minimum_group_not_met`); reviewed V2 values override older profile minima (for example neon/cardinal tetra 8 rather than the older 5 fallback).
+- Beginner Action Layer has a dedicated group-size result: `可以养，但数量要够`, with the reviewed minimum shown when available.
+- `insufficient_data` results now expose missing evidence in the expandable `为什么这样判断` layer instead of hiding the reason.
+- Knowledge Source Registry added for reviewed Species V2 claims; source IDs now resolve to publisher/title/URL instead of remaining opaque strings.
+- Existing sex-identification disclosure now shows traceable reviewed-source links without changing the surrounding Species Detail layout.
+- First reviewed cohort now includes reviewed adult-size / space authority: guppy 6 cm SL / 45 cm tank length / ~41L; neon tetra 3 cm SL / 60 cm / ~54L; cardinal tetra 3.5 cm SL / 60 cm / ~54L.
+- Species Detail space labels now use reviewed V2 space authority when available, preventing old `fish.tankSize` copy from disagreeing with the compatibility engine.
+- Reviewed reproduction and social/group blocks now render as additional disclosures inside the existing Species Detail hierarchy; unreviewed species get no fabricated empty sections.
+- Reproduction/social disclosures carry the same traceable reviewed-source links as sex-identification claims.
+- Second reviewed schooling cohort added: `sp_0434` 白云金丝, `sp_0435` 斑马鱼, `sp_0439` 虎皮鱼, including sexing, reproduction, social structure and reviewed space authority.
+- White-cloud V2 minimum group size 10 overrides the old 5-fish compatibility fallback; zebrafish now has independent reviewed compatibility authority rather than relying only on the Oscar pair rule.
+
+## Validation status
+- Main Convergence foundation workflow on the latest pre-golden-case checkpoint: PASS through project truth, catalog, domain compatibility, legacy compatibility, lint, API and production build.
+- Domain compatibility regression: PASS after soft-capacity change.
+- Legacy compatibility facade regression: PASS after canonical adapter/test alignment.
+- Main Convergence foundation workflow passed through project truth, catalog, compatibility, lint, API and build on the recovery line.
+- Local recovery validation after Tank Stability Context: domain compatibility PASS, legacy compatibility PASS, TypeScript lint PASS, production build PASS.
+- Species Knowledge V2 first-cohort assertions PASS; TypeScript lint PASS after reviewed cohort wiring.
+- Species V2 → compatibility wiring: domain compatibility PASS, legacy facade PASS, beginner visual/action regression PASS, species knowledge PASS, TypeScript PASS, production build PASS.
+- Knowledge Source Registry checkpoint: source-resolution assertions PASS, TypeScript PASS, full compatibility regressions PASS, production build PASS.
+- User-facing stability confirmation checkpoint: compatibility regression PASS, explicit non-mutating confirmation test PASS, TypeScript PASS, production build PASS.
+- Species Detail reproduction/social disclosure checkpoint: species-knowledge assertions PASS, TypeScript PASS, production build PASS.
+- Browser Golden Path contract + GP001/GP002/GP003/GP004: PASS on production preview after aligning the shoaling fixture to the reviewed 8-fish minimum. Re-ran all four UI paths after reviewed space authority wiring: PASS.
+- GP002 now asserts the real recordable action instead of brittle status copy and persists 8 cardinal tetras; existing 6 neon tetras remain unchanged.
+- Contextual behavior regression suite PASS: structured territoriality/predation, tiger-barb 4-vs-8 group behavior, unknown existing quantity non-inference, domain/facade/visual action/lint/build all PASS.
+- Product-action audit PASS after removing the generic `currentAction` override.
+- GP001/GP002/GP003/GP004 re-run after contextual behavior + Beginner Action wiring: all PASS.
+- Local preview verified HTTP 200 at `http://127.0.0.1:4320/`; production preview verified at `http://127.0.0.1:4173/`.
+- Do not merge until the latest current-head workflows are green.
+
+## Next execution order
+1. Add focused browser coverage for the Beginner Action Layer so group-pressure and stability-context actions are asserted in rendered UI, not only service tests.
+2. Model target vulnerability (for example long fins / slow-moving targets) before allowing fin-nipping evidence to create pair-specific warnings; do not infer vulnerability from names.
+3. Expand the reviewed cohort incrementally with high-frequency species; keep V2 data + compatibility authority in the same checkpoint.
+4. Continue replacing coarse capacity heuristics with reviewed adult size, tank length, activity and later filtration/flow facts; keep volume guidance soft unless it is a true physical constraint.
+5. Continue full Golden Path validation before any merge to main.
+
+### P1 — Trait-inference authority checkpoint
+- Removed the bespoke-pair-study requirement as a universal recordability gate. Reviewed species traits + general rules may now produce compatible/caution outcomes; direct pair rules remain higher-priority overrides.
+- Added `pair_trait_inference` as visible provenance instead of turning absent direct pair research into missing decision-critical data.
+- Reviewed compatibility profiles now carry reviewed water type for the active cohort, filling stale legacy catalog gaps.
+- Species Fit no longer equates `Aggressive` or `Large` with predation when reviewed behavior authority exists.
+- Compatibility UI now prefers reviewed social housing labels over stale legacy `housingMode` values; tiger barb shows group guidance instead of `建议单养`.
+- Browser acceptance added for tiger-barb group-pressure action and stable-tank soft-load downgrade, including visible positive evidence after expanding details.
+- GP001 E2E now clicks the actual settings navigation button, reducing pointer-interception flakes.
+
+#### Validation
+- Evidence coverage PASS: 132 real common-species directions; 6 reviewed recordable directions under the new provenance contract.
+- Domain compatibility, legacy facade, visual results, TypeScript, production build: PASS.
+- Compatibility beginner-action E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Target-vulnerability checkpoint
+- Compatibility authority advanced to `compatibility-domain-v4-target-vulnerability`.
+- Added reviewed target-side behavior facts: `finNipVulnerability` and `swimmingPace`; these are distinct from the aggressor-side `finNippingRisk`.
+- Generic fin-nipping pressure against a reviewed vulnerable/slow target produces caution (`fin_nipping_target_vulnerability`), not a fabricated hard block.
+- Guppy is the first reviewed vulnerable target; Species Fit and Domain use the reviewed field before legacy fish-name heuristics.
+- Added reviewed tiger-barb × guppy pair evidence as a direct `not_recommended` override. Meeting tiger-barb group-size guidance does not erase the pair-level long-fin conflict.
+- Beginner Action renders a dedicated vulnerability warning for generic caution and treats reviewed pair blocks as explicit `不建议混养`.
+
+#### Validation
+- Evidence coverage PASS; reviewed pair-rule floor = 5.
+- Domain compatibility / legacy facade / visual actions / TypeScript / production build: PASS.
+- Compatibility beginner-action browser E2E covers group pressure, stable-load downgrade, and tiger-barb × guppy reviewed block: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Base-species inheritance checkpoint
+- Added inheritance-aware runtime authority: exact ID review first, then explicit base species by scientific name.
+- Direct review audit remains ID-based, preventing inherited ornamental variants from being counted as separately reviewed evidence.
+- `Betta splendens` baseline review can now serve `Betta splendens var.*` variants; exact variant review can override it later.
+- Added reviewed `Pterophyllum scalare` behavior/space knowledge and structured fin-nip vulnerability.
+- Compatibility/Species Fit/UI housing labels now share the same inheritance-aware authority path.
+- Regression contracts prove: Betta variant inheritance works without fake direct review coverage; tiger barb × angelfish produces fin-nip caution without stale single-housing or fabricated predation hard blocks.
+
+#### Validation
+- Species Knowledge assertions: PASS.
+- Domain compatibility: PASS.
+- Legacy/canonical compatibility: PASS.
+- TypeScript: PASS.
+- Production build: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Capacity heuristic cleanup checkpoint
+- Removed the last legacy aggression/territoriality multiplier from bioload calculations.
+- Removed `loadMultiplier` from the domain contract.
+- Removed the generic raw-count `density_high` rule from Species Fit.
+- Behavior risk is now modeled through behavior rules; waste/capacity screening remains independent.
+- No new universal stocking threshold replaces these heuristics.
+
+#### Validation
+- Domain compatibility: PASS.
+- Legacy/canonical compatibility: PASS.
+- TypeScript: PASS.
+- Production build: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Bottom-zone ecology checkpoint
+- Added reviewed `Corydoras aeneus` and `Corydoras panda` knowledge/compatibility authority.
+- Added `swimmingZone` as a structured compatibility fact.
+- Added informational `shared_bottom_zone_context` for two reviewed bottom-dwelling species.
+- Shared ecological zone is context, not a universal risk score; it does not change a compatible result by itself.
+- Corrected the panda cory scientific-name typo in the catalog.
+
+#### Validation
+- Species Knowledge: PASS.
+- Domain compatibility: PASS.
+- Legacy/canonical compatibility: PASS.
+- Evidence coverage: PASS; recordable reviewed directions increased from 6 to 12 without new hard-block relaxation.
+- TypeScript: PASS.
+- Production build: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Species Detail reviewed-knowledge presentation checkpoint
+- Existing reviewed Species V2 space facts are now visible in Species Detail rather than only feeding the compatibility engine.
+- Added human-readable adult size, planning volume, tank length, swimming zone, activity level and reviewed sources.
+- Social disclosure now exposes recommended group range and localized swimming-zone labels.
+- The UI explicitly frames space values as long-term planning references, not one-number hard pass/fail limits.
+- Removed a duplicate Compatibility Calculator action from the unavailable evidence state.
+
+#### Validation
+- Species Knowledge: PASS.
+- TypeScript: PASS.
+- Production build: PASS.
+- Species Detail browser E2E: PASS.
+- Compatibility beginner-action browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Predation-vulnerability + common-invertebrate checkpoint
+- Compatibility authority advances to `compatibility-domain-v5-predation-vulnerability`.
+- Active predation (`predationRisk`) and prey-side vulnerability (`predationVulnerability`) are separate reviewed facts.
+- Reviewed fish + highly vulnerable shrimp produces caution (`predation_vulnerability_context`); a reviewed high-predation fish + small vulnerable prey still produces the existing hard `predation_risk` block.
+- Invertebrate + invertebrate does not receive an automatic prey-vulnerability warning.
+- Added inheritance-aware reviewed authority for `Neocaridina davidi` (including cherry/wild morphs), `Caridina cantonensis`, and `Neritina natalensis`; direct-ID audit remains separate from inherited runtime authority.
+- Beginner Action now surfaces `先确认鱼不会把虾当食物` before lower-priority group/capacity cautions when this boundary applies.
+- Priority catalogue-direction audit currently reports 110/132 recordable directions: 108 caution, 2 compatible, 22 not recommended. This is not a safety percentage and includes duplicate catalogue records/variants; the next metric cleanup must also report canonical biological-taxon coverage.
+
+#### Validation
+- Species Knowledge / Domain / Compatibility / Visual Action / evidence coverage / TypeScript / production build: PASS.
+- Fish-shrimp Beginner Action browser E2E: PASS.
+- Species Detail browser E2E: PASS.
+- GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Canonical coverage metric checkpoint
+- Added shared taxonomy helpers for base-species scientific names and canonical taxon keys; runtime inheritance and coverage accounting now use the same biological identity rule.
+- Priority coverage now reports both raw catalogue rows and canonical biological taxa. Duplicate IDs/morphs are integrity-tested but do not inflate progress.
+- Current priority set: 12 raw catalogue records = 132 ordered raw directions; 8 canonical taxa = 56 ordered biological directions.
+- Canonical result: 42/56 directions are recordable and all 42 are caution; 14/56 are `not_recommended`; there are no unconditional compatible canonical directions in this test setup.
+- The previous raw 110/132 number is retained only as a duplicate-record integrity audit, not as the primary progress metric.
+- Duplicate catalogue records for the same taxon must agree on verdict; the coverage test fails if they diverge.
+
+### P1 — Amatitlania partial knowledge convergence checkpoint
+- Added evidence-backed base-species Knowledge V2 for `Amatitlania nigrofasciata` from the existing reviewed aggression/territory study.
+- Deliberately kept unsupported fields unknown/absent: no fabricated sexing rule, reproduction timing, adult-size threshold, or space minimum.
+- Compatibility base inheritance now matches Species Knowledge base inheritance for ornamental `var.*` forms.
+- Priority canonical coverage: 9 taxa / 72 directions; 56 caution, 16 not_recommended, 0 unconditional compatible.
+
+#### Validation
+- Species Knowledge / Compatibility / Domain / Visual Results / evidence coverage / TypeScript / production build: PASS.
+- Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Channa partial knowledge convergence checkpoint
+- Added base-species Knowledge V2 authority for `Channa asiatica` from the existing reviewed U.S. Fish and Wildlife Service source.
+- Preserved partial-review discipline: predator / solitary behavior is reviewed; sex is unknown; reproduction and space remain absent.
+- Albino ornamental forms inherit the reviewed base-species authority and cannot bypass the hard small-fish predation rule.
+- Added a zero-gap invariant between reviewed Compatibility authority and Species Knowledge V2 for catalog fish.
+
+#### Validation
+- Species Knowledge / Compatibility / Domain / Visual Results / evidence coverage / TypeScript / production build: PASS.
+- Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Reviewed environment authority + platy checkpoint
+- Added field-level reviewed environment authority (`waterType`, temperature, pH, hardness) to Species Knowledge V2.
+- Domain compatibility now prefers reviewed environment ranges over broader legacy catalog strings while leaving unreviewed species on the existing fallback path.
+- Added reviewed `Xiphophorus maculatus` knowledge/compatibility authority from Seriously Fish and FishBase.
+- Added soft one-sided territorial-pressure caution; this prevents territorial species + reviewed peaceful species from becoming false unconditional compatible results.
+- Priority canonical matrix: 10 taxa / 90 ordered directions; 70 caution, 18 not_recommended, 2 compatible.
+
+#### Validation
+- Domain / Compatibility / Species Knowledge / Visual Results / evidence coverage / TypeScript / production build: PASS.
+- Species Detail browser E2E / Compatibility Beginner Action E2E / GP001 / GP002 / GP003 / GP004: PASS.
+
+### P1 — Molly + visible reviewed environment checkpoint
+- Standard `Poecilia sphenops` now has direct reviewed Compatibility + Species Knowledge V2 authority.
+- Reviewed environment evidence is visible in Species Detail and is the decision authority when broader legacy catalog values differ.
+- Standard molly reviewed space (90 cm / ~81 L) overrides the legacy 48 L catalog minimum as a soft planning caution, not a hard threshold.
+- No base inheritance is granted to commercial molly variants because some ornamental stocks are interspecific hybrids.
+- Canonical priority matrix expands to 11 taxa / 110 directions: 88 caution, 20 not_recommended, 2 compatible.
+
+### P1 — V6 tank-requirements symmetry checkpoint
+- Rule version: `compatibility-domain-v6-tank-requirements-symmetry`.
+- Existing reviewed livestock can no longer hide unmet volume/length planning cautions simply because another organism is selected as the candidate.
+- Standard `Xiphophorus hellerii` is the first 120 cm planning-length regression for this symmetry.
+- Canonical priority matrix expands to 12 taxa / 132 directions: 108 caution, 22 not_recommended, 2 compatible.
+- Ornamental swordtail variants remain outside inherited authority until variant/hybrid identity is reviewed.
+
+### P1 — Harlequin rasbora reviewed authority checkpoint
+- Added direct reviewed authority for `Trigonostigma heteromorpha` (`sp_0468`) across Species Knowledge V2 and Compatibility.
+- Reviewed group guidance is 8 minimum / 8–10 recommended; reviewed environment is 21–28°C, pH 5.0–7.5, 1–12 dGH; planning space is 60 cm / ~54 L.
+- Canonical priority coverage expands to 13 taxa / 156 directions: 130 caution, 24 not_recommended, 2 compatible; no new false-compatible direction was introduced.
+- Runtime/Admin/Git reviewed baseline advances from 14/5 to 15 Profiles / 5 Pair Rules.
+- Added additive migration `202609120002_compatibility_harlequin_baseline.sql`; historical migrations remain immutable and no environment migration was executed.
+
+#### Validation
+- TypeScript / Species Knowledge / Compatibility / coverage scorecard / canonical evidence coverage: PASS.
+- Compatibility Admin / Git runtime / runtime authority / Staging preflight / Local File Admin / SQL parse: PASS.
+- Full build / Species Detail browser E2E / Compatibility beginner-action E2E / GP001–GP004: PASS.
+
+### P1 — Black Skirt Tetra reviewed-authority checkpoint
+- Added standard `Gymnocorymbus ternetzi` (`sp_0010`) as a direct reviewed taxon.
+- Corrected user-facing decision authority away from stale `Territorial`: reviewed social authority is schooling, non-territorial, with medium fin-nipping context and minimum group 12.
+- Reviewed water/space authority is 20–26°C, pH 6.0–7.0, 5–20 dGH, 75 cm / ~68 L planning space.
+- No automatic authority inheritance to long-fin, balloon, albino or color morphs.
+- Canonical priority coverage: 14 taxa / 182 directions; 154 caution, 26 not_recommended, 2 compatible.
+- Runtime/Admin Compatibility baseline: 16 Profiles / 5 Pair Rules; additive migration `202609120003_compatibility_black_skirt_baseline.sql` is tracked but unapplied.
+- Validation: Product + Admin/runtime + build + browser Golden Paths all PASS.
+
+### P1 — Cherry barb reviewed-authority checkpoint
+- Added direct reviewed `Puntius titteya` (`sp_0012`) environment/social/space/reproduction authority from Seriously Fish + FishBase.
+- Reviewed space/group guidance overrides legacy 40 L-only planning: 60 cm / ~54 L, group minimum 6; values remain planning cautions rather than cliff thresholds.
+- Canonical priority coverage expands to 15 taxa / 210 directions: 180 caution, 28 not_recommended, 2 compatible.
+- Git/Admin Compatibility baseline expands to 17 direct Profiles / 5 Pair Rules via additive `202609120004_compatibility_cherry_barb_baseline.sql`; no database application in Product Recovery.
+- Validation: Species Knowledge / Compatibility / evidence coverage / runtime-admin contracts / TypeScript / full build / Species Detail E2E / Compatibility E2E / GP001–GP004 PASS.
+### P1 — Ramirezi reviewed-authority checkpoint
+- Added standard `Mikrogeophagus ramirezi` (`sp_0448`) with direct reviewed Species Knowledge V2 + Compatibility authority.
+- Reviewed authority: 27–30°C, pH 4.0–7.0, 1–10 dGH, ~4.2 cm SL, 60 cm / ~54 L pair planning, substrate spawning and biparental brood care.
+- Commercial `M. ramirezi var.*` morphs do not inherit the standard profile automatically. Breeding territoriality is contextual rather than permanent.
+- Canonical priority coverage: 21 taxa / 420 directions; 340 caution, 78 not_recommended, 2 compatible.
+- Git/Admin Compatibility baseline: 24 Profiles / 5 Pair Rules; additive migration `202609120010_compatibility_ramirezi_baseline.sql` tracked but unapplied.
+- Validation: Product + Admin/runtime + build + Species Detail + Compatibility Action + GP001–GP004 all PASS.
+### P1 — Discus partial reviewed-authority checkpoint
+- Added standard `Symphysodon aequifasciatus` (`sp_0447`) with direct reviewed environment/social/space authority.
+- Reviewed planning: 26–30°C, pH 5.0–8.0, 0–12 dGH, ~14 cm SL, 120 cm / ~255 L, school minimum 5; breeding territoriality is contextual only.
+- Sex identification remains unknown and reproduction remains absent rather than fabricated.
+- Canonical priority coverage: 22 taxa / 462 directions; 340 caution, 120 not_recommended, 2 compatible.
+- Git/Admin Compatibility baseline: 25 Profiles / 5 Pair Rules; additive migration `202609120011_compatibility_discus_baseline.sql` tracked but unapplied.
+- Validation: Product + Admin/runtime + build + Species Detail + Compatibility Action + GP001–GP004 all PASS.
+### P1 — Pygmy cory / migration-shape checkpoint
+- Direct reviewed `Corydoras pygmaeus` (`sp_0053`) authority added; no alias or ornamental inheritance is used.
+- Canonical priority coverage is now 23 taxa / 506 ordered directions: 378 caution, 126 not_recommended, 2 compatible.
+- Runtime/Admin reviewed baseline is 26 Profiles / 5 Pair Rules; `202609120012_compatibility_pygmy_cory_baseline.sql` is tracked but unapplied.
+- Unapplied Discus migration `120011` was corrected to assert its inserted minimum group of 5, and additive migration contracts now check behavior traits, minimum group and required facts together.
+- Full Product + Admin/runtime + browser Golden Path validation PASS.

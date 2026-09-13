@@ -7,8 +7,8 @@ import { compatibilityPairRuleRevisionInputSchema, compatibilityProfileRevisionI
 const audit = getCompatibilityEvidenceAudit();
 const speciesIds = new Set(fishData.map(item => item.id));
 
-assert.equal(audit.reviewedProfiles.length, 7, 'current reviewed behavior-profile baseline must remain explicit');
-assert.equal(audit.reviewedPairRules.length, 4, 'current reviewed pair-rule baseline must remain explicit');
+assert.ok(audit.reviewedProfiles.length >= 14, 'reviewed behavior-profile baseline must not regress below the current recovery floor');
+assert.ok(audit.reviewedPairRules.length >= 5, 'reviewed pair-rule baseline must not regress below the current recovery floor');
 assert.deepEqual(new Set(audit.reviewedSpeciesIds), new Set(audit.reviewedProfiles.map(profile => profile.speciesId)));
 
 for (const profile of audit.reviewedProfiles) {
@@ -133,17 +133,168 @@ assert.match(reconciliationMigration, /evidence_resolution jsonb/);
 assert.match(reconciliationMigration, /compatibility_baseline_reconciliation_gate/, 'empty non-Production environments must be able to skip canonical baseline data reconciliation.');
 assert.match(reconciliationMigration, /Compatibility canonical baseline is partial or not fully published/, 'partial or unpublished canonical baseline must fail closed.');
 assert.match(reconciliationMigration, /existing_count = 0/, 'only a truly absent canonical baseline may skip reconciliation.');
-const canonicalBaselineKeys = ['sp_0021','sp_0049','sp_0224','sp_0431','sp_0432','sp_0434','sp_0435','sp_0436','sp_0439','sp_0451','sp_0475'];
-for (const catalogKey of canonicalBaselineKeys) assert.equal(reconciliationMigration.includes(`'${catalogKey}'`), true, `baseline gate must include ${catalogKey}`);
+const historicalProfileKeys = ['sp_0439','sp_0021','sp_0049','sp_0431','sp_0432','sp_0434','sp_0436'];
+const historicalPairKeys = ['sp_0021__sp_0439','sp_0431__sp_0432','sp_0435__sp_0451','sp_0224__sp_0475'];
+const canonicalBaselineKeys = [...new Set([...historicalProfileKeys, ...historicalPairKeys.flatMap(key => key.split('__'))])];
+for (const catalogKey of canonicalBaselineKeys) assert.equal(reconciliationMigration.includes(`'${catalogKey}'`), true, `historical baseline gate must include ${catalogKey}`);
 const skippedDriftGuards = reconciliationMigration.match(/if not exists \(select 1 from pg_temp\.compatibility_baseline_reconciliation_gate where mode='skip'\) then/g) || [];
-assert.equal(skippedDriftGuards.length, audit.reviewedProfiles.length + audit.reviewedPairRules.length, 'every data-dependent drift assertion must honor the empty-baseline skip gate.');
-const reviewedSourceKeys = new Set([
-  ...audit.reviewedProfiles.flatMap(profile => profile.citations.map(source => source.id)),
-  ...audit.reviewedPairRules.flatMap(rule => rule.citations.map(source => source.id)),
-]);
-for (const sourceKey of reviewedSourceKeys) assert.equal(reconciliationMigration.includes(sourceKey), true, `reconciliation migration must include source key: ${sourceKey}`);
-for (const profile of audit.reviewedProfiles) assert.match(reconciliationMigration, new RegExp(profile.speciesId));
-for (const rule of audit.reviewedPairRules) for (const speciesId of rule.speciesIds) assert.equal(reconciliationMigration.includes(speciesId), true, `reconciliation migration must include pair species: ${speciesId}`);
+assert.equal(skippedDriftGuards.length, historicalProfileKeys.length + historicalPairKeys.length, 'historical 7/4 reconciliation migration must remain immutable.');
+
+const recoveryMigration = readFileSync('supabase/migrations/202609120001_compatibility_recovery_baseline.sql', 'utf8');
+assert.match(recoveryMigration, /Compatibility recovery baseline is partial or not fully published/, 'recovery baseline must fail closed on partial published catalog coverage.');
+const recoveryV1ProfileKeys = ['sp_0011','sp_0014','sp_0435','sp_0437','sp_0438','sp_0443','sp_0446'];
+const recoveryV1PairKeys = ['sp_0436__sp_0439'];
+const recoveryV1Profiles = audit.reviewedProfiles.filter(profile => recoveryV1ProfileKeys.includes(profile.speciesId));
+const recoveryV1Pairs = audit.reviewedPairRules.filter(rule => recoveryV1PairKeys.includes([...rule.speciesIds].sort().join('__')));
+assert.equal(recoveryV1Profiles.length, recoveryV1ProfileKeys.length, '202609120001 profile ownership is immutable.');
+assert.equal(recoveryV1Pairs.length, recoveryV1PairKeys.length, '202609120001 pair ownership is immutable.');
+for (const profile of recoveryV1Profiles) {
+  assert.equal(recoveryMigration.includes(profile.speciesId), true, `recovery v1 migration must include Profile ${profile.speciesId}`);
+  for (const source of profile.citations) assert.equal(recoveryMigration.includes(source.id), true, `recovery v1 migration must include Profile source ${source.id}`);
+}
+for (const rule of recoveryV1Pairs) {
+  for (const speciesId of rule.speciesIds) assert.equal(recoveryMigration.includes(speciesId), true, `recovery v1 migration must include Pair species ${speciesId}`);
+  for (const source of rule.citations) assert.equal(recoveryMigration.includes(source.id), true, `recovery v1 migration must include Pair source ${source.id}`);
+}
+assert.equal((recoveryMigration.match(/Compatibility recovery profile drift:/g) || []).length, recoveryV1Profiles.length, 'each recovery v1 Profile needs one exact drift guard.');
+assert.equal((recoveryMigration.match(/Compatibility recovery profile evidence drift:/g) || []).length, recoveryV1Profiles.length, 'each recovery v1 Profile needs one evidence drift guard.');
+assert.equal((recoveryMigration.match(/Compatibility recovery pair rule drift:/g) || []).length, recoveryV1Pairs.length, 'each recovery v1 Pair Rule needs one exact drift guard.');
+assert.equal((recoveryMigration.match(/Compatibility recovery pair evidence drift:/g) || []).length, recoveryV1Pairs.length, 'each recovery v1 Pair Rule needs one evidence drift guard.');
+
+const harlequinMigration = readFileSync('supabase/migrations/202609120002_compatibility_harlequin_baseline.sql', 'utf8');
+assert.match(harlequinMigration, /Compatibility harlequin baseline is partial or not fully published/, 'harlequin baseline must fail closed on partial published catalog coverage.');
+const harlequinProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0468');
+assert.ok(harlequinProfile, '120002 must own the reviewed harlequin profile.');
+assert.equal(harlequinMigration.includes('sp_0468'), true);
+for (const source of harlequinProfile.citations) assert.equal(harlequinMigration.includes(source.id), true, `harlequin migration must include source ${source.id}`);
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile drift:/g) || []).length, 1);
+assert.equal((harlequinMigration.match(/Compatibility harlequin profile evidence drift:/g) || []).length, 1);
+
+const blackSkirtMigration = readFileSync('supabase/migrations/202609120003_compatibility_black_skirt_baseline.sql', 'utf8');
+assert.match(blackSkirtMigration, /Compatibility black-skirt baseline is partial or not fully published/, 'black-skirt baseline must fail closed on partial published catalog coverage.');
+const blackSkirtProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0010');
+assert.ok(blackSkirtProfile, '120003 must own the reviewed black-skirt profile.');
+assert.equal(blackSkirtMigration.includes('sp_0010'), true);
+for (const source of blackSkirtProfile.citations) assert.equal(blackSkirtMigration.includes(source.id), true, `black-skirt migration must include source ${source.id}`);
+assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile drift:/g) || []).length, 1);
+assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile evidence drift:/g) || []).length, 1);
+
+const cherryBarbMigration = readFileSync('supabase/migrations/202609120004_compatibility_cherry_barb_baseline.sql', 'utf8');
+assert.match(cherryBarbMigration, /Compatibility cherry-barb baseline is partial or not fully published/, 'cherry-barb baseline must fail closed on partial published catalog coverage.');
+const cherryBarbProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0012');
+assert.ok(cherryBarbProfile, '120004 must own the reviewed cherry-barb profile.');
+assert.equal(cherryBarbMigration.includes('sp_0012'), true);
+for (const source of cherryBarbProfile.citations) assert.equal(cherryBarbMigration.includes(source.id), true, `cherry-barb migration must include source ${source.id}`);
+assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile drift:/g) || []).length, 1);
+assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile evidence drift:/g) || []).length, 1);
+
+const emberTetraMigration = readFileSync('supabase/migrations/202609120005_compatibility_ember_tetra_baseline.sql', 'utf8');
+assert.match(emberTetraMigration, /Compatibility ember-tetra baseline is partial or not fully published/, 'ember-tetra baseline must fail closed on partial published alias coverage.');
+const emberTetraProfileKeys = ['sp_0114','sp_0469'];
+const emberTetraProfiles = audit.reviewedProfiles.filter(profile => emberTetraProfileKeys.includes(profile.speciesId));
+assert.equal(emberTetraProfiles.length, 2, '120005 must own both exact Ember-tetra catalog aliases.');
+for (const profile of emberTetraProfiles) {
+  assert.equal(emberTetraMigration.includes(profile.speciesId), true, `ember-tetra migration must include Profile ${profile.speciesId}`);
+  for (const source of profile.citations) assert.equal(emberTetraMigration.includes(source.id), true, `ember-tetra migration must include source ${source.id}`);
+}
+const normalizeEmberProfile = (profile: (typeof emberTetraProfiles)[number]) => ({
+  behaviorTraits: profile.behaviorTraits, minimumGroupSize: profile.minimumGroupSize, predationTargets: profile.predationTargets,
+  confidence: profile.confidence, reviewStatus: profile.reviewStatus, requiredFacts: profile.requiredFacts,
+  citationIds: profile.citations.map(source => source.id).sort(),
+});
+assert.deepEqual(normalizeEmberProfile(emberTetraProfiles[0]), normalizeEmberProfile(emberTetraProfiles[1]), 'duplicate Ember-tetra catalog aliases must expose identical reviewed Compatibility facts.');
+assert.equal((emberTetraMigration.match(/Compatibility ember-tetra profile drift:/g) || []).length, 2);
+assert.equal((emberTetraMigration.match(/Compatibility ember-tetra profile evidence drift:/g) || []).length, 2);
+
+const denisonMigration = readFileSync('supabase/migrations/202609120006_compatibility_denison_barb_baseline.sql', 'utf8');
+assert.match(denisonMigration, /Compatibility denison-barb baseline is partial or not fully published/, 'Denison-barb baseline must fail closed on partial published catalog coverage.');
+const denisonProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0440');
+assert.ok(denisonProfile, '120006 must own the reviewed Denison-barb profile.');
+assert.equal(denisonMigration.includes('sp_0440'), true);
+for (const source of denisonProfile.citations) assert.equal(denisonMigration.includes(source.id), true, `Denison-barb migration must include source ${source.id}`);
+assert.equal((denisonMigration.match(/Compatibility denison-barb profile drift:/g) || []).length, 1);
+assert.equal((denisonMigration.match(/Compatibility denison-barb profile evidence drift:/g) || []).length, 1);
+
+const congoTetraMigration = readFileSync('supabase/migrations/202609120007_compatibility_congo_tetra_baseline.sql', 'utf8');
+assert.match(congoTetraMigration, /Compatibility congo-tetra baseline is partial or not fully published/, 'Congo-tetra baseline must fail closed on partial published catalog coverage.');
+const congoTetraProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0020');
+assert.ok(congoTetraProfile, '120007 must own the reviewed Congo-tetra profile.');
+assert.equal(congoTetraMigration.includes('sp_0020'), true);
+for (const source of congoTetraProfile.citations) assert.equal(congoTetraMigration.includes(source.id), true, `Congo-tetra migration must include source ${source.id}`);
+assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile drift:/g) || []).length, 1);
+assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile evidence drift:/g) || []).length, 1);
+
+const pearlGouramiMigration = readFileSync('supabase/migrations/202609120008_compatibility_pearl_gourami_baseline.sql', 'utf8');
+assert.match(pearlGouramiMigration, /Compatibility pearl-gourami baseline is partial or not fully published/, 'Pearl-gourami baseline must fail closed on partial published catalog coverage.');
+const pearlGouramiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0444');
+assert.ok(pearlGouramiProfile, '120008 must own the reviewed Pearl-gourami profile.');
+assert.equal(pearlGouramiMigration.includes('sp_0444'), true);
+for (const source of pearlGouramiProfile.citations) assert.equal(pearlGouramiMigration.includes(source.id), true, `Pearl-gourami migration must include source ${source.id}`);
+assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile drift:/g) || []).length, 1);
+assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile evidence drift:/g) || []).length, 1);
+
+const agassiziiMigration = readFileSync('supabase/migrations/202609120009_compatibility_agassizii_baseline.sql', 'utf8');
+assert.match(agassiziiMigration, /Compatibility agassizii baseline is partial or not fully published/, 'Agassizii baseline must fail closed on partial published catalog coverage.');
+const agassiziiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0017');
+assert.ok(agassiziiProfile, '120009 must own the reviewed Agassizii profile.');
+assert.equal(agassiziiMigration.includes('sp_0017'), true);
+for (const source of agassiziiProfile.citations) assert.equal(agassiziiMigration.includes(source.id), true, `Agassizii migration must include source ${source.id}`);
+assert.equal((agassiziiMigration.match(/Compatibility agassizii profile drift:/g) || []).length, 1);
+assert.equal((agassiziiMigration.match(/Compatibility agassizii profile evidence drift:/g) || []).length, 1);
+
+const ramireziMigration = readFileSync('supabase/migrations/202609120010_compatibility_ramirezi_baseline.sql', 'utf8');
+assert.match(ramireziMigration, /Compatibility ramirezi baseline is partial or not fully published/, 'Ramirezi baseline must fail closed on partial published catalog coverage.');
+const ramireziProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0448');
+assert.ok(ramireziProfile, '120010 must own the reviewed Ramirezi profile.');
+assert.equal(ramireziMigration.includes('sp_0448'), true);
+for (const source of ramireziProfile.citations) assert.equal(ramireziMigration.includes(source.id), true, `Ramirezi migration must include source ${source.id}`);
+assert.equal((ramireziMigration.match(/Compatibility ramirezi profile drift:/g) || []).length, 1);
+assert.equal((ramireziMigration.match(/Compatibility ramirezi profile evidence drift:/g) || []).length, 1);
+
+const discusMigration = readFileSync('supabase/migrations/202609120011_compatibility_discus_baseline.sql', 'utf8');
+assert.match(discusMigration, /Compatibility discus baseline is partial or not fully published/, 'Discus baseline must fail closed on partial published catalog coverage.');
+const discusProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0447');
+assert.ok(discusProfile, '120011 must own the reviewed Discus profile.');
+assert.equal(discusMigration.includes('sp_0447'), true);
+for (const source of discusProfile.citations) assert.equal(discusMigration.includes(source.id), true, `Discus migration must include source ${source.id}`);
+assert.equal((discusMigration.match(/Compatibility discus profile drift:/g) || []).length, 1);
+assert.equal((discusMigration.match(/Compatibility discus profile evidence drift:/g) || []).length, 1);
+
+const pygmyCoryMigration = readFileSync('supabase/migrations/202609120012_compatibility_pygmy_cory_baseline.sql', 'utf8');
+assert.match(pygmyCoryMigration, /Compatibility pygmy cory baseline is partial or not fully published/, 'Pygmy-cory baseline must fail closed on partial published catalog coverage.');
+const pygmyCoryProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0053');
+assert.ok(pygmyCoryProfile, '120012 must own the reviewed Pygmy-cory profile.');
+assert.equal(pygmyCoryMigration.includes('sp_0053'), true);
+for (const source of pygmyCoryProfile.citations) assert.equal(pygmyCoryMigration.includes(source.id), true, `Pygmy-cory migration must include source ${source.id}`);
+assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile drift:/g) || []).length, 1);
+assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile evidence drift:/g) || []).length, 1);
+
+const additiveCompatibilityMigrations = [
+  '202609120002_compatibility_harlequin_baseline.sql',
+  '202609120003_compatibility_black_skirt_baseline.sql',
+  '202609120004_compatibility_cherry_barb_baseline.sql',
+  '202609120005_compatibility_ember_tetra_baseline.sql',
+  '202609120006_compatibility_denison_barb_baseline.sql',
+  '202609120007_compatibility_congo_tetra_baseline.sql',
+  '202609120008_compatibility_pearl_gourami_baseline.sql',
+  '202609120009_compatibility_agassizii_baseline.sql',
+  '202609120010_compatibility_ramirezi_baseline.sql',
+  '202609120011_compatibility_discus_baseline.sql',
+  '202609120012_compatibility_pygmy_cory_baseline.sql',
+];
+for (const migrationName of additiveCompatibilityMigrations) {
+  const migration = readFileSync(`supabase/migrations/${migrationName}`, 'utf8');
+  const insertedShape = migration.match(/select s\.id, ARRAY\[([^\]]*)\]::text\[\],\s*(null|\d+),[\s\S]*?now\(\),\s*ARRAY\[([^\]]*)\]::text\[\]/);
+  const assertedShape = migration.match(/cp\.behavior_traits=ARRAY\[([^\]]*)\]::text\[\]\s+and cp\.minimum_group_size (?:is not distinct from (null|\d+)|is (null))[\s\S]*?cp\.required_facts=ARRAY\[([^\]]*)\]::text\[\]/);
+  assert.ok(insertedShape && assertedShape, `${migrationName} must expose insert and drift Profile shape.`);
+  assert.equal(assertedShape[1], insertedShape[1], `${migrationName} drift assertion must match inserted behavior traits.`);
+  assert.equal(assertedShape[2] ?? assertedShape[3], insertedShape[2], `${migrationName} drift assertion must match inserted minimumGroupSize.`);
+  assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
+}
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053']);
+const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
+assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 
 const compatibilityUi = readFileSync('src/pages/CompatibilityAdmin.tsx', 'utf8');
 assert.doesNotMatch(compatibilityUi, /(?:indigo|violet|sky)-/, 'Compatibility Admin must not split Profile/Pair into separate blue/purple visual authorities.');

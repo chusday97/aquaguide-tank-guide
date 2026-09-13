@@ -108,10 +108,16 @@ import { trackSessionEvent } from '../services/analytics/session-events.service'
 import { getCompatibilityPreviewSpecies } from '../services/compatibility/compatibility-preview.service';
 import { addSpeciesFavorite } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
+import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
+import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
 const getDisplayImage = getSpeciesDisplayImage;
 
 const isCompatibilityLivestock = (fish: Fish) => !['plant', 'hardscape'].includes(getLifeType(fish));
+
+const isReviewedSolitaryRequirement = (fish: Fish) => getSpeciesHousingAuthority(fish).solitaryRequired;
+
+const getEffectiveHousingLabel = (fish: Fish, isEn = false) => getSpeciesHousingAuthority(fish, isEn).label;
 
 type CompatibilityRiskLevel = 'empty' | TankCompatibilityStatus;
 type ResultModal = null | 'adjustment';
@@ -226,14 +232,6 @@ const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reaso
   return isEn ? 'Compatible for co-habitation; keep observing after stocking.' : '可以尝试混养，入缸后继续观察。';
 };
 
-const getResultNextAction = (level: CompatibilityRiskLevel) => {
-  const isEn = Boolean(i18n.language?.startsWith('en'));
-    if (level === 'not_recommended') return isEn ? 'Remove red-flagged species below and recalculate.' : '先移除下方红色对象，再重新计算组合。';
-  if (level === 'insufficient_data') return isEn ? 'Save this mix to your wishlist and revisit when the review is complete.' : '先加入种草清单，资料完善后再回来判断。';
-  if (level === 'caution') return isEn ? 'Review the warnings. Record only after the livestock is actually in the tank.' : '先确认风险；只有生物实际入缸后再记录。';
-  if (level === 'compatible') return isEn ? 'The plan is compatible. Record it only after the livestock is actually in the tank.' : '规划判断通过；只有生物实际入缸后再记录。';
-  return isEn ? 'Select at least 2 species first.' : '先选择至少 2 种生物。';
-};
 
 const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
@@ -257,7 +255,7 @@ const getConflictTags = (species: Fish[], reasons: string[]) => {
   if (species.length < 2) return [];
   const tags = new Set<string>();
   const isEn = Boolean(i18n.language?.startsWith('en'));
-  if (species.some(item => item.housingMode === '建议单养')) tags.add(isEn ? 'Single Species Recommended' : '建议单养');
+  if (species.some(isReviewedSolitaryRequirement)) tags.add(isEn ? 'Single Species Recommended' : '建议单养');
   if (new Set(species.map(getCompatibilityWaterType)).size > 1) tags.add(isEn ? 'Incompatible Water Type' : '水体不兼容');
   reasons.forEach(reason => {
     if (reason.includes('水温')) tags.add(isEn ? 'Water Temp' : '水温');
@@ -345,7 +343,7 @@ const getActionHints = (result: ReturnType<typeof calculateRisk>, species: Fish[
   const level = result.level;
   if (result.ruleResult?.suggestions.length) return result.ruleResult.suggestions.slice(0, 3);
   if (level === 'not_recommended') {
-    const single = species.find(item => item.housingMode === '建议单养');
+    const single = species.find(isReviewedSolitaryRequirement);
     const aggressive = species.find(item => item.temperament === 'Aggressive');
     const removeName = single?.name || aggressive?.name || species[species.length - 1]?.name;
     return [
@@ -567,6 +565,7 @@ export function CompatibilityRiskCalculator({
   const [isAddingToAquarium, setIsAddingToAquarium] = useState(false);
   const [confirmingCautionAdd, setConfirmingCautionAdd] = useState(false);
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
+  const [stabilityConfirmationByAquariumId, setStabilityConfirmationByAquariumId] = useState<Record<string, CompatibilityStabilityConfirmation>>({});
   const selectedAquarium = useMemo(() => (
     aquariums.find(aquarium => aquarium.id === (selectedAquariumId || activeAquariumId))
     || aquariums.find(aquarium => aquarium.id === activeAquariumId)
@@ -621,7 +620,14 @@ export function CompatibilityRiskCalculator({
     species,
     quantity: selectedQuantitiesById[species.id] || currentQuantityBySpeciesId[species.id] || 1,
   })), [currentQuantityBySpeciesId, selectedQuantitiesById, selectedSpecies]);
-  const result = useMemo(() => calculateRisk(selectedItems, selectedAquarium), [selectedAquarium, selectedItems]);
+  const stabilityConfirmation = selectedAquarium
+    ? (stabilityConfirmationByAquariumId[selectedAquarium.id] || 'unknown')
+    : 'unknown';
+  const evaluationAquarium = useMemo(() => applyCompatibilityStabilityConfirmation(
+    selectedAquarium,
+    stabilityConfirmation,
+  ), [selectedAquarium, stabilityConfirmation]);
+  const result = useMemo(() => calculateRisk(selectedItems, evaluationAquarium), [evaluationAquarium, selectedItems]);
   const recordedEvaluationKeyRef = useRef('');
   useEffect(() => {
     if (!selectedAquarium || selectedItems.length < 2 || !result.ruleResult || result.level === 'empty') return;
@@ -682,14 +688,11 @@ export function CompatibilityRiskCalculator({
   }, [result.ruleResult]);
   const visualResultModel = useMemo(() => {
     if (!result.decision) return null;
-    return {
-      ...buildCompatibilityVisualResult({
-        decision: result.decision,
-        species: selectedSpecies,
-        primaryActionLabel: getPrimaryResultButtonLabel(result.level),
-      }),
-      currentAction: getResultNextAction(result.level),
-    };
+    return buildCompatibilityVisualResult({
+      decision: result.decision,
+      species: selectedSpecies,
+      primaryActionLabel: getPrimaryResultButtonLabel(result.level),
+    });
   }, [result.decision, result.level, selectedSpecies]);
   const compatibilityPresentation = useMemo(
     () => result.decision ? getCompatibilityPresentation(result.decision) : null,
@@ -931,6 +934,37 @@ export function CompatibilityRiskCalculator({
                 有 {missingLivestockCount} 条旧记录缺少图鉴数据，已跳过。
               </div>
             )}
+            {selectedAquarium && (
+              <div className="mt-2 rounded-[13px] border border-sky-100 bg-sky-50/65 p-2.5">
+                <div className="text-[10px] font-black text-sky-900">{isEn ? 'Optional: include your real tank experience' : '可选：把你的实际养缸经验算进去'}</div>
+                <p className="mt-1 text-[10px] font-semibold leading-4 text-sky-950/65">
+                  {isEn
+                    ? 'Has this tank run for 3+ months, stayed stable for 2+ months, with regular maintenance and no recent water-quality incident?'
+                    : '这个缸是否已运行 ≥3 个月，最近 ≥2 个月状态稳定、维护规律，且没有近期水质事故？'}
+                </p>
+                <div className="mt-2 grid grid-cols-2 gap-1.5">
+                  <button
+                    type="button"
+                    aria-pressed={stabilityConfirmation === 'stable'}
+                    onClick={() => setStabilityConfirmationByAquariumId(prev => ({ ...prev, [selectedAquarium.id]: 'stable' }))}
+                    className={`min-h-9 rounded-full border px-2 text-[10px] font-black ${stabilityConfirmation === 'stable' ? 'border-sky-300 bg-white text-sky-800' : 'border-sky-100 bg-white/70 text-ink/52'}`}
+                  >
+                    {isEn ? 'Yes, stable' : '是，符合'}
+                  </button>
+                  <button
+                    type="button"
+                    aria-pressed={stabilityConfirmation === 'unknown'}
+                    onClick={() => setStabilityConfirmationByAquariumId(prev => ({ ...prev, [selectedAquarium.id]: 'unknown' }))}
+                    className={`min-h-9 rounded-full border px-2 text-[10px] font-black ${stabilityConfirmation === 'unknown' ? 'border-slate-300 bg-white text-ink/70' : 'border-sky-100 bg-white/70 text-ink/52'}`}
+                  >
+                    {isEn ? 'Not sure' : '不确定'}
+                  </button>
+                </div>
+                <p className="mt-1.5 text-[9px] font-semibold leading-4 text-sky-950/48">
+                  {isEn ? 'This can only soften capacity/load reminders. It never overrides predation, water-type or temperature conflicts.' : '只会修正容量/负荷类软提醒，不会覆盖捕食、水体类型或温度冲突。'}
+                </p>
+              </div>
+            )}
             <button
               type="button"
               onClick={importAquariumLivestock}
@@ -968,7 +1002,7 @@ export function CompatibilityRiskCalculator({
                     <span className="min-w-0">
                       <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
                       <span className="block truncate text-[10px] font-medium text-ink/45">
-                        {taxonomy.temperatureBand} · {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Observe' : '混养待评估')}
+                        {taxonomy.temperatureBand} · {taxonomy.size} · {getEffectiveHousingLabel(fish, isEn)}
                       </span>
                     </span>
                     <span className="rounded-full bg-amber-50 px-2 py-1 text-[10px] font-black text-amber-700">{isEn ? 'Add' : '加入'}</span>
@@ -1009,7 +1043,7 @@ export function CompatibilityRiskCalculator({
                     <span className="min-w-0">
                       <span className="block truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
                       <span className="mt-0.5 block truncate text-[9px] font-bold text-ink/42">
-                        {taxonomy.size} · {fish.housingMode ? getHousingModeLocalized(fish.housingMode, isEn) : (isEn ? 'Assessable' : '可评估')}
+                        {taxonomy.size} · {getEffectiveHousingLabel(fish, isEn)}
                       </span>
                     </span>
                   </button>

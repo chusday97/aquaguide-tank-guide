@@ -2,6 +2,8 @@ import type { Aquarium, Fish } from '../types';
 import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassification';
 import { estimateWaterProfile } from './waterProfileEstimate';
+import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -82,6 +84,8 @@ const getSpeciesMinLengthCm = (species: Fish) => {
 };
 
 const getSpeciesWaterType = (species: Fish): SpeciesWaterType => {
+  const reviewedWaterType = getReviewedCompatibilityProfileForFish(species)?.waterType;
+  if (reviewedWaterType) return reviewedWaterType;
   const text = textOf(species);
   if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
   if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
@@ -122,12 +126,17 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
   if (validLivestock.length === 0) return null;
   const speciesText = textOf(species);
   const selectedIsSmall = species.size === 'Small';
-  const selectedIsLongFin = /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
+  const reviewedTargetSocial = getReviewedSpeciesKnowledgeForFish(species)?.socialBehavior;
+  const selectedIsFinNipVulnerable = reviewedTargetSocial?.evidence.reviewStatus === 'reviewed'
+    ? reviewedTargetSocial.finNipVulnerability === 'medium'
+      || reviewedTargetSocial.finNipVulnerability === 'high'
+      || reviewedTargetSocial.swimmingPace === 'slow'
+    : /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
   const predator = validLivestock.find(item => {
-    const predatorIdentity = `${item.species.name} ${item.species.category}`;
-    return item.species.temperament === 'Aggressive'
-      || item.species.size === 'Large'
-      || /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗/i.test(predatorIdentity);
+    const reviewed = getReviewedCompatibilityProfileForFish(item.species);
+    if (reviewed) return reviewed.behaviorTraits.includes('predatory');
+    const predatorIdentity = `${item.species.name} ${item.species.category} ${item.species.description}`;
+    return /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
   });
   if (predator && selectedIsSmall) {
     return {
@@ -138,8 +147,11 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
     };
   }
 
-  const nipper = validLivestock.find(item => /虎皮|黑裙|红十字|彩裙|玫瑰鲫|啄鳍|追咬/i.test(textOf(item.species)));
-  if (nipper && selectedIsLongFin) {
+  const nipper = validLivestock.find(item => {
+    const reviewed = getReviewedCompatibilityProfileForFish(item.species);
+    return reviewed ? reviewed.behaviorTraits.includes('fin_nipping') : /虎皮|黑裙|红十字|彩裙|玫瑰鲫|啄鳍|追咬/i.test(textOf(item.species));
+  });
+  if (nipper && selectedIsFinNipVulnerable) {
     return {
       type: 'fin_nipping_risk',
       title: '长鳍被啄咬风险',
@@ -317,19 +329,17 @@ export const evaluateSpeciesForAquarium = (
     score += 8;
   }
 
-  const livestockCount = currentLivestock.reduce((sum, item) => sum + (item.record?.quantity || 1), 0);
-  if (volumeLiters && livestockCount > 0 && livestockCount >= Math.max(20, volumeLiters / 3)) {
-    warnings.push({ type: 'density_high', title: '当前密度偏高', detail: `当前已有约 ${livestockCount} 只/条活体，新增前建议先复核密度。`, severity: 'medium' });
-    score -= 14;
-  }
-
   if (species.difficulty === 'Easy') score += 8;
   if (species.difficulty === 'Hard') {
     warnings.push({ type: 'hard_species', title: '养护难度较高', detail: '该物种对经验和稳定性要求更高。', severity: 'low' });
     score -= 10;
   }
   if (species.temperament === 'Peaceful') score += 5;
-  if (species.housingMode === '建议单养' && otherLivestock.length > 0) {
+  const reviewedHousing = getReviewedCompatibilityProfileForFish(species);
+  const solitaryRequired = reviewedHousing
+    ? reviewedHousing.behaviorTraits.includes('solitary_required')
+    : species.housingMode === '建议单养';
+  if (solitaryRequired && otherLivestock.length > 0) {
     warnings.push({ type: 'single_housing', title: '更适合单养', detail: '该物种更适合单独规划缸位。', severity: 'medium' });
     score -= 15;
   }

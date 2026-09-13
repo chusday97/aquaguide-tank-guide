@@ -13,6 +13,10 @@ process.env.ADMIN_RUNTIME_SNAPSHOT_ROOT = path.join(root, 'public');
 process.env.NODE_ENV = 'test';
 delete process.env.VERCEL;
 
+const { localCompatibilityAdminStore } = await import('../src/services/admin/local-compatibility-admin.store');
+const canonicalCompatibilityBootstrap = await localCompatibilityAdminStore.getBootstrap();
+const fixtureProfileCount = canonicalCompatibilityBootstrap.profiles.length;
+const fixturePairRuleCount = canonicalCompatibilityBootstrap.pairRules.length;
 const rootLeasePath = path.join(root, '.aqua-admin-owner.json');
 await writeFile(rootLeasePath, `${JSON.stringify({ version: 1, pid: 99_999_999, token: 'stale-owner', acquiredAt: 'stale' })}\n`, 'utf8');
 
@@ -277,8 +281,8 @@ try {
 
   const compatibilityV2 = {
     schemaVersion: 2,
-    reviewedProfiles: Array.from({ length: 7 }, (_, index) => ({ catalogKey: `sp-test-${index + 1}` })),
-    reviewedPairRules: Array.from({ length: 4 }, (_, index) => ({ catalogKeys: [`sp-test-${index + 1}`, `sp-test-${index + 2}`] })),
+    reviewedProfiles: structuredClone(canonicalCompatibilityBootstrap.profiles),
+    reviewedPairRules: structuredClone(canonicalCompatibilityBootstrap.pairRules),
     profileRevisions: [], pairRevisions: [], authoritySequence: 1, updatedAt: 'test',
   };
   const compatibilityWrite = await putState(started.base, 'compatibility', compatibilityV2);
@@ -590,15 +594,11 @@ try {
     updatedAt: '2026-09-11T00:00:00.000Z',
   };
   assert.equal((await putState(started.base, 'business', exportBusinessState)).response.status, 200);
-  const reviewedCompatibilityV2 = {
-    ...compatibilityV2,
-    reviewedProfiles: compatibilityV2.reviewedProfiles.map((row, index) => ({ ...row, reviewStatus: 'reviewed', behaviorTraits: [], predationTargets: [], confidence: 'medium', citations: [{ id: `profile-evidence-${index}`, title: 'Evidence', publisher: 'Test', url: 'https://example.com', sourceType: 'peer_reviewed', reviewStatus: 'reviewed', version: 1 }], requiredFacts: ['water'], stageRiskRules: [], version: 1 })),
-    reviewedPairRules: compatibilityV2.reviewedPairRules.map((row, index) => ({ ...row, reviewStatus: 'reviewed', verdict: 'caution', riskType: 'test', reason: 'test', mitigation: [], basis: 'pair_rule', confidence: 'medium', citations: [{ id: `pair-evidence-${index}`, title: 'Evidence', publisher: 'Test', url: 'https://example.com', sourceType: 'peer_reviewed', reviewStatus: 'reviewed', version: 1 }], version: 1 })),
-  };
+  const reviewedCompatibilityV2 = compatibilityV2;
   assert.equal((await putState(started.base, 'compatibility', reviewedCompatibilityV2)).response.status, 200);
   const runtimeSnapshot = await requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
   assert.equal(runtimeSnapshot.response.status, 201);
-  assert.deepEqual(runtimeSnapshot.payload.data.counts, { species: 1, care: 1, profiles: 7, pairRules: 4 });
+  assert.deepEqual(runtimeSnapshot.payload.data.counts, { species: 1, care: 1, profiles: fixtureProfileCount, pairRules: fixturePairRuleCount });
   assert.equal(runtimeSnapshot.payload.data.gitCommitRequired, true);
   assert.equal(runtimeSnapshot.payload.data.deploymentTriggered, false);
   // Concurrent runtime exports must use isolated staging directories and all succeed.
@@ -619,8 +619,8 @@ try {
   assert.equal(JSON.stringify(exported).includes('sp-draft-only'), false);
   assert.equal(exported.productCare.careArticles[0].input.catalogKey, 'care-published');
   assert.equal(exported.compatibility.authority, 'reviewed-git');
-  assert.equal(exported.compatibility.profiles.length, 7);
-  assert.equal(exported.compatibility.pairRules.length, 4);
+  assert.equal(exported.compatibility.profiles.length, fixtureProfileCount);
+  assert.equal(exported.compatibility.pairRules.length, fixturePairRuleCount);
 
   const manifestPath = path.join(root, 'public/runtime-authority.json');
   const savedManifestPath = `${manifestPath}.saved`;
@@ -709,6 +709,12 @@ try {
   const restoredVisibilityState = await requestJson(started.base, '/state/business');
   assert.equal(restoredVisibilityState.payload.data.state.species[0].image.id, restoreVisibilityAssetB);
   assert.equal((await fetch(`${started.base}/assets/${restoreVisibilityAssetB}`)).status, 200);
+  assert.equal((await fetch(`${started.base}/assets/${restoreVisibilityAssetA}`)).status, 200,
+    'Restore keeps the superseded asset reachable so a reader holding the pre-restore Business state cannot observe a dangling reference.');
+  const restoreVisibilityIntegrity = await requestJson(started.base, '/integrity');
+  assert.equal(restoreVisibilityIntegrity.response.status, 200);
+  assert(restoreVisibilityIntegrity.payload.data.issues.some((issue: any) => issue.code === 'ORPHAN_ASSET' && issue.message.includes(restoreVisibilityAssetA)),
+    'Superseded restore assets remain visible but must be explicitly reported as integrity-audited orphans.');
 
   // A failed restore may only claim automatic rollback success after validating both the safety backup and rolled-back root.
   const rollbackAssetA = 'local-asset-rollback-validation-a';

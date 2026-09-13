@@ -9,9 +9,23 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609050002_compatibility_versioned_publish.sql',
   '202609050003_content_publication_audit_history.sql',
   '202609050004_care_seo_editorial_revisions.sql',
+  '202609110001_compatibility_v3_profile_authority.sql',
+  '202609120001_compatibility_recovery_baseline.sql',
+  '202609120002_compatibility_harlequin_baseline.sql',
+  '202609120003_compatibility_black_skirt_baseline.sql',
+  '202609120004_compatibility_cherry_barb_baseline.sql',
+  '202609120005_compatibility_ember_tetra_baseline.sql',
+  '202609120006_compatibility_denison_barb_baseline.sql',
+  '202609120007_compatibility_congo_tetra_baseline.sql',
+  '202609120008_compatibility_pearl_gourami_baseline.sql',
+  '202609120009_compatibility_agassizii_baseline.sql',
+  '202609120010_compatibility_ramirezi_baseline.sql',
+  '202609120011_compatibility_discus_baseline.sql',
+  '202609120012_compatibility_pygmy_cory_baseline.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
+  '202608270001_catalog_releases_and_species_water_type.sql',
   '202608280001_species_seo_admin.sql',
   '202608280002_species_seo_group_inheritance.sql',
   '202608280003_species_seo_localized_name.sql',

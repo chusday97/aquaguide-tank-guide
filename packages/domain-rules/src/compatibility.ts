@@ -6,6 +6,7 @@ export type CompatibilityIntent = 'record_existing' | 'planned_addition';
 export type CompatibilityDecisionReadiness = 'reviewed' | 'partial' | 'unknown';
 export type ObservedCoexistenceStatus = 'stable' | 'observe' | 'intervene' | 'emergency';
 export type CompatibilityRequiredFact = 'water' | 'temperature' | 'ph' | 'adult_size' | 'tank_size' | 'social_behavior' | 'territoriality' | 'predation' | 'breeding_behavior';
+export type BehaviorRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
 
 export type CompatibilityIndividualContext = {
   lifeStage: 'unknown' | 'juvenile' | 'adult' | 'fry' | 'subadult';
@@ -31,6 +32,13 @@ export type ObservedCoexistenceSignals = {
   multipleDeaths?: boolean;
 };
 
+export type TankStabilityContext = {
+  establishedDays?: number | null;
+  stableCoexistenceDays?: number | null;
+  maintenanceConsistent?: boolean | null;
+  recentWaterQualityIncident?: boolean | null;
+};
+
 export type DomainSpeciesFact = {
   id: string;
   waterType: 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
@@ -44,12 +52,19 @@ export type DomainSpeciesFact = {
   compatibilityRequiredFacts?: CompatibilityRequiredFact[];
   adultLengthMinCm?: number | null;
   adultLengthMaxCm?: number | null;
-  socialMode?: 'solitary' | 'pair' | 'group' | 'colony' | 'variable' | 'unknown';
+  socialMode?: 'solitary' | 'pair' | 'harem' | 'shoal' | 'school' | 'group' | 'colony' | 'variable' | 'unknown';
+  swimmingZone?: 'surface' | 'upper' | 'middle' | 'bottom' | 'all' | 'unknown';
   minimumGroupSize?: number | null;
   stockingGuidance?: StockingGuidance;
   evidenceIds?: string[];
-  loadMultiplier?: number;
   behaviorTraits?: string[];
+  territoriality?: BehaviorRiskLevel;
+  finNippingRisk?: BehaviorRiskLevel;
+  finNipVulnerability?: BehaviorRiskLevel;
+  swimmingPace?: 'slow' | 'moderate' | 'fast' | 'unknown';
+  predationRisk?: BehaviorRiskLevel;
+  predationVulnerability?: BehaviorRiskLevel;
+  lifeType?: 'fish' | 'invertebrate' | 'reptile' | 'coral' | 'plant' | 'hardscape' | 'unknown';
   size?: 'Small' | 'Medium' | 'Large' | string;
 };
 
@@ -59,6 +74,7 @@ export type DomainTankFact = {
   lengthCm?: number | null;
   targetTemperatureC?: number | null;
   observedSignals?: ObservedCoexistenceSignals;
+  stabilityContext?: TankStabilityContext;
 };
 
 export type DomainCompatibilityInput = {
@@ -86,7 +102,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v1';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v7-ph-edge-overlap';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -101,7 +117,17 @@ const observedStatusOf = (signals?: ObservedCoexistenceSignals): ObservedCoexist
   if (!signals) return 'stable';
   if (signals.respiratoryDistress || signals.multipleDeaths || signals.injuries) return 'emergency';
   if (signals.repeatedChasing || signals.feedingExclusion) return 'intervene';
-  return 'observe';
+  return 'stable';
+};
+
+const hasTrustedStableContext = (tank?: DomainTankFact | null) => {
+  const context = tank?.stabilityContext;
+  if (!context) return false;
+  return (context.establishedDays ?? 0) >= 90
+    && (context.stableCoexistenceDays ?? 0) >= 60
+    && context.maintenanceConsistent === true
+    && context.recentWaterQualityIncident !== true
+    && observedStatusOf(tank?.observedSignals) === 'stable';
 };
 
 const stockingGuidanceOf = (species?: DomainSpeciesFact | null, quantity?: number | null): StockingGuidance => {
@@ -140,6 +166,11 @@ export const getCompatibilityAddPolicy = (
 const rangesOverlap = (leftMin?: number | null, leftMax?: number | null, rightMin?: number | null, rightMax?: number | null) => {
   if (leftMin == null || leftMax == null || rightMin == null || rightMax == null) return null;
   return Math.max(leftMin, rightMin) <= Math.min(leftMax, rightMax);
+};
+
+const rangesOnlyTouchAtBoundary = (leftMin?: number | null, leftMax?: number | null, rightMin?: number | null, rightMax?: number | null) => {
+  if (leftMin == null || leftMax == null || rightMin == null || rightMax == null) return null;
+  return Math.max(leftMin, rightMin) === Math.min(leftMax, rightMax);
 };
 
 const rangeContains = (value: number | null | undefined, min?: number | null, max?: number | null) => {
@@ -182,9 +213,9 @@ export const evaluateCompatibility = ({
         raise('not_recommended', 'water_type_conflict');
       }
       if (!existing.reviewed || !candidateSpecies.reviewed) raise('insufficient_data', 'species_evidence_unreviewed');
-      const predator = existing.behaviorTraits?.includes('predatory')
+      const predator = existing.behaviorTraits?.includes('predatory') || existing.predationRisk === 'high'
         ? existing
-        : candidateSpecies.behaviorTraits?.includes('predatory') ? candidateSpecies : null;
+        : candidateSpecies.behaviorTraits?.includes('predatory') || candidateSpecies.predationRisk === 'high' ? candidateSpecies : null;
       const preyIsCandidate = predator?.id !== candidateSpecies.id;
       if (predator && (preyIsCandidate ? candidateSpecies.size : existing.size) === 'Small') {
         const preyContext = preyIsCandidate
@@ -199,8 +230,61 @@ export const evaluateCompatibility = ({
           && preyContext.averageLengthCm < predator.adultLengthMaxCm * 0.4;
         raise(currentSizeClearlyBelowAdultRisk ? 'caution' : 'not_recommended', currentSizeClearlyBelowAdultRisk ? 'juvenile_predation_risk' : 'predation_risk');
       }
-      if (existing.behaviorTraits?.includes('territorial') && candidateSpecies.behaviorTraits?.includes('territorial')) {
+      const isPredationVulnerable = (species: DomainSpeciesFact) => (
+        species.predationVulnerability === 'medium'
+        || species.predationVulnerability === 'high'
+      );
+      const fishTargetsVulnerableExisting = candidateSpecies.lifeType === 'fish' && isPredationVulnerable(existing);
+      const existingFishTargetsVulnerableCandidate = existing.lifeType === 'fish' && isPredationVulnerable(candidateSpecies);
+      if (!predator && existing.id !== candidateSpecies.id && (fishTargetsVulnerableExisting || existingFishTargetsVulnerableCandidate)) {
+        raise('caution', 'predation_vulnerability_context');
+      }
+      const existingTerritorial = existing.behaviorTraits?.includes('territorial')
+        || existing.territoriality === 'medium'
+        || existing.territoriality === 'high';
+      const candidateTerritorial = candidateSpecies.behaviorTraits?.includes('territorial')
+        || candidateSpecies.territoriality === 'medium'
+        || candidateSpecies.territoriality === 'high';
+      if (existingTerritorial && candidateTerritorial) {
         raise('caution', 'territorial_conflict');
+      }
+      const hasTerritorialPressure = (species: DomainSpeciesFact) => (
+        species.behaviorTraits?.includes('territorial')
+        || species.territoriality === 'medium'
+        || species.territoriality === 'high'
+      );
+      const isReviewedLowTerritoryTarget = (species: DomainSpeciesFact) => (
+        species.reviewed
+        && (species.territoriality === 'none' || species.territoriality === 'low')
+      );
+      if (existing.id !== candidateSpecies.id && (
+        (hasTerritorialPressure(existing) && isReviewedLowTerritoryTarget(candidateSpecies))
+        || (hasTerritorialPressure(candidateSpecies) && isReviewedLowTerritoryTarget(existing))
+      )) {
+        raise('caution', 'territorial_pressure_context');
+      }
+      const hasFinNippingPressure = (species: DomainSpeciesFact) => (
+        species.behaviorTraits?.includes('fin_nipping')
+        || species.finNippingRisk === 'medium'
+        || species.finNippingRisk === 'high'
+      );
+      const isFinNipVulnerable = (species: DomainSpeciesFact) => (
+        species.finNipVulnerability === 'medium'
+        || species.finNipVulnerability === 'high'
+        || species.swimmingPace === 'slow'
+      );
+      if (existing.id !== candidateSpecies.id && (
+        (hasFinNippingPressure(existing) && isFinNipVulnerable(candidateSpecies))
+        || (hasFinNippingPressure(candidateSpecies) && isFinNipVulnerable(existing))
+      )) {
+        raise('caution', 'fin_nipping_target_vulnerability');
+      }
+      if (existing.id !== candidateSpecies.id
+        && existing.reviewed
+        && candidateSpecies.reviewed
+        && existing.swimmingZone === 'bottom'
+        && candidateSpecies.swimmingZone === 'bottom') {
+        ruleCodes.push('shared_bottom_zone_context');
       }
       if (existing.behaviorTraits?.includes('solitary_required') || candidateSpecies.behaviorTraits?.includes('solitary_required')) {
         raise('not_recommended', 'single_housing_required');
@@ -217,6 +301,8 @@ export const evaluateCompatibility = ({
         raise('insufficient_data', 'ph_range_missing');
       } else if (phOverlap === false) {
         raise('caution', 'ph_range_conflict');
+      } else if (phRequired && rangesOnlyTouchAtBoundary(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax)) {
+        raise('caution', 'ph_range_edge_overlap');
       }
     }
   }
@@ -260,8 +346,46 @@ export const evaluateCompatibility = ({
         existing.temperatureMaxC,
       );
       if (existingTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
+      if (existing.minTankLiters != null && tank.volumeLiters != null && tank.volumeLiters < existing.minTankLiters) {
+        raise('caution', 'tank_volume_below_species_minimum');
+      }
+      if (existing.minTankLengthCm != null && tank.lengthCm != null && tank.lengthCm < existing.minTankLengthCm) {
+        raise('caution', 'tank_length_below_species_minimum');
+      }
     }
   }
+  if (candidateSpecies?.minimumGroupSize != null && candidateSpecies.minimumGroupSize > 1) {
+    const existingSameSpecies = existingQuantities?.[candidateSpecies.id] || 0;
+    const plannedTotal = existingSameSpecies + (candidateQuantity || 1);
+    if (plannedTotal < candidateSpecies.minimumGroupSize) {
+      raise('caution', 'minimum_group_not_met');
+    }
+  }
+
+  const plannedQuantityFor = (species: DomainSpeciesFact) => {
+    const existingQuantity = existingQuantities?.[species.id];
+    if (candidateSpecies?.id === species.id) return (existingQuantity ?? 0) + (candidateQuantity || 1);
+    return existingQuantity ?? null;
+  };
+  const hasManagedFinNippingRisk = (species: DomainSpeciesFact) => (
+    species.behaviorTraits?.includes('fin_nipping')
+    || species.finNippingRisk === 'medium'
+    || species.finNippingRisk === 'high'
+  );
+  const behaviorGroupSpecies = [
+    ...existingSpecies,
+    ...(candidateSpecies && !existingSpecies.some(species => species.id === candidateSpecies.id) ? [candidateSpecies] : []),
+  ];
+  if (behaviorGroupSpecies.some(species => (
+    hasManagedFinNippingRisk(species)
+    && species.minimumGroupSize != null
+    && species.minimumGroupSize > 1
+    && plannedQuantityFor(species) != null
+    && plannedQuantityFor(species)! < species.minimumGroupSize
+  ))) {
+    raise('caution', 'fin_nipping_group_pressure');
+  }
+
   if (explicitPairStatus) raise(explicitPairStatus, 'reviewed_pair_rule');
 
   const observedStatus = observedStatusOf(tank?.observedSignals);
@@ -270,18 +394,27 @@ export const evaluateCompatibility = ({
 
   if (candidateSpecies && tank?.volumeLiters && tank.volumeLiters > 0) {
     const screening = assessBioloadScreening([
-      ...existingSpecies.map(species => ({ size: species.size, quantity: (existingQuantities?.[species.id] || 1) * (species.loadMultiplier || 1) })),
-      { size: candidateSpecies.size, quantity: (candidateQuantity || 1) * (candidateSpecies.loadMultiplier || 1) },
+      ...existingSpecies.map(species => ({ size: species.size, quantity: existingQuantities?.[species.id] || 1 })),
+      { size: candidateSpecies.size, quantity: candidateQuantity || 1 },
     ], tank.volumeLiters);
-    if (screening.pressure === 'high') raise('not_recommended', 'bioload_over_limit');
-    else if (screening.pressure === 'elevated') raise('caution', 'bioload_near_limit');
+    // Bioload here is deliberately only a coarse screening signal. It uses
+    // broad body-size buckets and does not know filtration turnover, mature
+    // biomass, oxygen, maintenance history or measured nitrogen waste. It may
+    // raise a caution, but it must never be the sole reason to block stocking.
+    const trustedStableContext = hasTrustedStableContext(tank);
+    if (screening.pressure === 'high') {
+      raise('caution', trustedStableContext ? 'bioload_screening_high_stable_context' : 'bioload_screening_high');
+    } else if (screening.pressure === 'elevated') {
+      if (trustedStableContext) ruleCodes.push('bioload_screening_elevated_stable_context');
+      else raise('caution', 'bioload_screening_elevated');
+    }
   }
 
   if (ruleCodes.length === 0 && status === 'compatible') ruleCodes.push('compatibility_clear');
 
-  // Preserve hard safety blocks (water/temperature/predation/space) even when
-  // evidence is incomplete, but never upgrade an unreviewed combination to a
-  // positive or cautionary planning result.
+  // Preserve hard safety blocks (water/temperature/predation/single-housing)
+  // even when evidence is incomplete, but never upgrade an unreviewed
+  // combination into a positive planning result.
   const finalStatus: CompatibilityDecisionStatus = candidateSpecies && !allSpeciesReviewed && statusRank[status] < statusRank.insufficient_data
     ? 'insufficient_data'
     : status;
@@ -292,8 +425,8 @@ export const evaluateCompatibility = ({
       : 'reviewed';
 
   return {
-    status,
-    addPolicy: getCompatibilityAddPolicy(intent, status),
+    status: finalStatus,
+    addPolicy: getCompatibilityAddPolicy(intent, finalStatus),
     ruleCodes: [...new Set(ruleCodes)],
     catalogVersion,
     ruleVersion: COMPATIBILITY_RULE_VERSION,

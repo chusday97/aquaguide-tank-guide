@@ -1,7 +1,13 @@
 import type { Aquarium, AquariumSpeciesBatch, CompatibilityLifeStage, Fish } from '../types';
-import { isSaltwaterSpecies } from '../modules/species/species.service';
+import { getLifeType, isSaltwaterSpecies } from '../modules/species/species.service';
 import { evaluateSpeciesForAquarium, getAquariumVolumeLiters } from './speciesFitEngine';
-import type { ReviewedCompatibilityProfile, ReviewedPairRule, ReviewedStageRiskProfile } from '../data/compatibilityEvidence';
+import {
+  getReviewedCompatibilityProfile,
+  getReviewedCompatibilityProfileForFish,
+  type ReviewedCompatibilityProfile,
+  type ReviewedPairRule,
+  type ReviewedStageRiskProfile,
+} from '../data/compatibilityEvidence';
 import {
   getRuntimeCompatibilityStatus,
   getRuntimeReviewedCompatibilityProfile,
@@ -10,6 +16,7 @@ import {
 } from '../data/runtimeCompatibilityRegistry';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
+import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 import {
   COMPATIBILITY_RULE_VERSION,
   evaluateCompatibility,
@@ -78,6 +85,22 @@ const runtimeEvidenceProvider = (): CompatibilityEvidenceProvider => ({
   authorityVersion: getRuntimeCompatibilityStatus().authorityVersion,
 });
 
+const resolveReviewedProfileById = (speciesId: string, provider: CompatibilityEvidenceProvider) => (
+  provider.getProfile(speciesId) || getReviewedCompatibilityProfile(speciesId)
+);
+
+const resolveReviewedProfileForFish = (fish: Pick<Fish, 'id' | 'scientificName'>, provider: CompatibilityEvidenceProvider) => (
+  provider.getProfile(fish.id) || getReviewedCompatibilityProfileForFish(fish)
+);
+
+const resolveReviewedPairRule = (leftId: string, rightId: string, provider: CompatibilityEvidenceProvider) => (
+  provider.getPairRule(leftId, rightId)
+);
+
+const resolveReviewedStageRisks = (speciesId: string, provider: CompatibilityEvidenceProvider) => (
+  provider.getStageRisks(speciesId)
+);
+
 export type EvaluateTankCompatibilityInput = {
   tank?: Aquarium | null;
   existingSpecies?: Array<Fish | { species?: Fish | null; record?: { quantity?: number; batches?: AquariumSpeciesBatch[] } | null }>;
@@ -112,8 +135,11 @@ const asRule = (
   citations: evidenceMeta.citations || [],
 });
 
-const evidenceFromProfile = (speciesId: string, provider: CompatibilityEvidenceProvider): CompatibilityEvidenceDto => {
-  const profile = provider.getProfile(speciesId);
+const evidenceFromProfile = (species: Fish | string, provider: CompatibilityEvidenceProvider): CompatibilityEvidenceDto => {
+  const speciesId = typeof species === 'string' ? species : species.id;
+  const profile = typeof species === 'string'
+    ? resolveReviewedProfileById(speciesId, provider)
+    : resolveReviewedProfileForFish(species, provider);
   return profile ? {
     basis: 'species_trait',
     confidence: profile.confidence,
@@ -175,10 +201,9 @@ const getQuantity = (value?: number) => {
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 1;
 };
 
-const estimateBioload = (fish: Fish, quantity = 1) => {
-  const temperament = fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1;
-  return estimateBioloadUnits(fish.size, getQuantity(quantity)) * temperament;
-};
+const estimateBioload = (fish: Fish, quantity = 1) => (
+  estimateBioloadUnits(fish.size, getQuantity(quantity))
+);
 
 const convertFitItem = (
   item: { type: string; title: string; detail: string; severity?: 'low' | 'medium' | 'high' },
@@ -276,7 +301,7 @@ const evaluateLegacyTankCompatibility = ({
       .flatMap(item => item.batches.map(batch => batch.lifeStage))
       .filter(stage => Boolean(stage) && stage !== 'unknown'),
   ));
-  const reviewedStageRisk = provider.getStageRisks(candidateSpecies.id).find(rule => (
+  const reviewedStageRisk = resolveReviewedStageRisks(candidateSpecies.id, provider).find(rule => (
     rule.youngerStages.includes(candidateLifeStage)
     && rule.olderStages.some(stage => existingSameSpeciesStages.includes(stage))
   ));
@@ -317,9 +342,9 @@ const evaluateLegacyTankCompatibility = ({
 
     currentSpecies.forEach(existing => {
       const pairName = `${existing.name} 与 ${candidateSpecies.name}`;
-      const reviewedPairRule = provider.getPairRule(existing.id, candidateSpecies.id);
-      const existingProfile = provider.getProfile(existing.id);
-      const candidateProfile = provider.getProfile(candidateSpecies.id);
+      const reviewedPairRule = resolveReviewedPairRule(existing.id, candidateSpecies.id, provider);
+      const existingProfile = resolveReviewedProfileForFish(existing, provider);
+      const candidateProfile = resolveReviewedProfileForFish(candidateSpecies, provider);
       if (isSaltwaterSpecies(existing) !== isSaltwaterSpecies(candidateSpecies)) {
         blockingRules.push(asRule('species_water_type_conflict', '水体类型冲突', `${pairName} 分属淡水与海水环境，不能混养。`, 'high', reviewedRuleEvidence));
       } else {
@@ -347,11 +372,11 @@ const evaluateLegacyTankCompatibility = ({
       }
 
       const predator = [existing, candidateSpecies].find(item => (
-        provider.getProfile(item.id)?.behaviorTraits.includes('predatory')
+        resolveReviewedProfileForFish(item, provider)?.behaviorTraits.includes('predatory')
       ));
       const smaller = predator?.id === existing.id ? candidateSpecies : existing;
       if (predator && smaller.size === 'Small' && predator.id !== smaller.id) {
-        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食特征，可能捕食或吞食 ${smaller.name}。`, 'high', evidenceFromProfile(predator.id, provider)));
+        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食特征，可能捕食或吞食 ${smaller.name}。`, 'high', evidenceFromProfile(predator, provider)));
       }
 
       if (reviewedPairRule) {
@@ -510,9 +535,9 @@ const evaluateLegacyTankCompatibility = ({
       ));
     }
 
-    const pairRule = provider.getPairRule(existing.id, candidateSpecies.id);
-    const existingProfile = provider.getProfile(existing.id);
-    const candidateProfile = provider.getProfile(candidateSpecies.id);
+    const pairRule = resolveReviewedPairRule(existing.id, candidateSpecies.id, provider);
+    const existingProfile = resolveReviewedProfileForFish(existing, provider);
+    const candidateProfile = resolveReviewedProfileForFish(candidateSpecies, provider);
     if (pairRule) {
       const target = pairRule.verdict === 'not_recommended'
         ? blockingRules
@@ -542,7 +567,7 @@ const evaluateLegacyTankCompatibility = ({
   });
 
   const hasPredator = currentSpecies.find(item => (
-    provider.getProfile(item.id)?.behaviorTraits.includes('predatory')
+    resolveReviewedProfileForFish(item, provider)?.behaviorTraits.includes('predatory')
   ));
   if (hasPredator && candidateSpecies.size === 'Small') {
     blockingRules.push(asRule(
@@ -550,16 +575,16 @@ const evaluateLegacyTankCompatibility = ({
       '捕食或吞食风险',
       `当前已有 ${hasPredator.name}，不建议加入明显更小的 ${candidateSpecies.name}。`,
       'high',
-      evidenceFromProfile(hasPredator.id, provider),
+      evidenceFromProfile(hasPredator, provider),
     ));
   }
 
   const territorialConflict = currentSpecies.find(item => (
-    provider.getProfile(item.id)?.behaviorTraits.includes('territorial')
+    resolveReviewedProfileForFish(item, provider)?.behaviorTraits.includes('territorial')
   ));
-  if (territorialConflict && provider.getProfile(candidateSpecies.id)?.behaviorTraits.includes('territorial')) {
-    const existingProfile = provider.getProfile(territorialConflict.id)!;
-    const candidateProfile = provider.getProfile(candidateSpecies.id)!;
+  if (territorialConflict && resolveReviewedProfileForFish(candidateSpecies, provider)?.behaviorTraits.includes('territorial')) {
+    const existingProfile = resolveReviewedProfileForFish(territorialConflict, provider)!;
+    const candidateProfile = resolveReviewedProfileForFish(candidateSpecies, provider)!;
     blockingRules.push(asRule(
       'territorial_conflict',
       '领地冲突',
@@ -592,15 +617,19 @@ const evaluateLegacyTankCompatibility = ({
     .filter(item => item.species.id === candidateSpecies.id)
     .reduce((sum, item) => sum + item.quantity, 0);
   const totalCandidateSpeciesQuantity = sameSpeciesExistingQuantity + getQuantity(candidateQuantity);
-  const candidateProfile = provider.getProfile(candidateSpecies.id);
-  const reviewedMinimumGroupSize = Number(candidateProfile?.minimumGroupSize);
+  const candidateProfile = resolveReviewedProfileForFish(candidateSpecies, provider);
+  const candidateKnowledge = getReviewedSpeciesKnowledgeForFish(candidateSpecies);
+  const reviewedKnowledgeGroupSize = candidateKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
+    ? candidateKnowledge.socialBehavior.minimumGroupSize
+    : undefined;
+  const reviewedMinimumGroupSize = Number(reviewedKnowledgeGroupSize ?? candidateProfile?.minimumGroupSize);
   if (Number.isFinite(reviewedMinimumGroupSize) && reviewedMinimumGroupSize > 1 && totalCandidateSpeciesQuantity < reviewedMinimumGroupSize) {
     warningRules.push(asRule(
       'group_requirement_gap',
       '群体数量未达到已审核建议',
       `${candidateSpecies.name} 当前模拟合计 ${totalCandidateSpeciesQuantity} 只/条，已审核 minimumGroupSize 为 ${reviewedMinimumGroupSize}。`,
       'medium',
-      evidenceFromProfile(candidateSpecies.id, provider),
+      evidenceFromProfile(candidateSpecies, provider),
     ));
   }
 
@@ -610,15 +639,17 @@ const evaluateLegacyTankCompatibility = ({
       '更适合单养',
       `${candidateSpecies.name} 的已审核资料支持单养要求，不应作为普通混养候选。`,
       'high',
-      evidenceFromProfile(candidateSpecies.id, provider),
+      evidenceFromProfile(candidateSpecies, provider),
     ));
   }
 
   if (blockingRules.length > 0) {
     suggestions.push('先移除阻断风险或更换候选生物。');
   }
-  if (warningRules.length > 0) {
-    suggestions.push('如需尝试，请先补充躲避空间、确认水质，并少量加入观察。');
+  if (warningRules.some(rule => rule.code === 'group_requirement_gap')) {
+    suggestions.push(`群游物种不要只按少量个体试养；先把 ${candidateSpecies.name} 规划到已审核的最低群体数量。`);
+  } else if (warningRules.length > 0) {
+    suggestions.push('如需尝试，请先处理主要风险项，再按计划加入并观察。');
   }
   if (missingData.length > 0) {
     const blockingMissing = missingData.filter(item => item.severity === 'high' || item.severity === 'medium');
@@ -667,26 +698,52 @@ const evaluateLegacyTankCompatibility = ({
 
 const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider): DomainSpeciesFact => {
   const profile = speciesProfileFromFish(fish);
-  const reviewed = provider.getProfile(fish.id);
+  const reviewed = resolveReviewedProfileForFish(fish, provider);
+  const staticReviewed = getReviewedCompatibilityProfileForFish(fish);
+  const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
+  const reviewedEnvironment = reviewedKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.environment
+    : undefined;
+  const reviewedSocial = reviewedKnowledge?.socialBehavior?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.socialBehavior
+    : undefined;
+  const reviewedSpace = reviewedKnowledge?.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.spaceAndGrowth
+    : undefined;
+  const knowledgeEvidenceIds = [
+    ...(reviewedEnvironment?.evidence.sourceIds || []),
+    ...(reviewedSocial?.evidence.sourceIds || []),
+    ...(reviewedSpace?.evidence.sourceIds || []),
+    ...(reviewedKnowledge?.reproduction?.evidence.reviewStatus === 'reviewed'
+      ? reviewedKnowledge.reproduction.evidence.sourceIds
+      : []),
+  ];
   return {
     id: profile.catalogKey,
-    waterType: profile.waterType,
-    temperatureMinC: profile.waterTemperatureMinC,
-    temperatureMaxC: profile.waterTemperatureMaxC,
-    phMin: profile.phMin,
-    phMax: profile.phMax,
-    minTankLiters: profile.minTankLiters,
-    minTankLengthCm: null,
+    waterType: reviewedEnvironment?.waterType ?? staticReviewed?.waterType ?? profile.waterType,
+    temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
+    temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
+    phMin: reviewedEnvironment?.phRange?.min ?? profile.phMin,
+    phMax: reviewedEnvironment?.phRange?.max ?? profile.phMax,
+    minTankLiters: reviewedSpace?.minVolumeLiters ?? profile.minTankLiters,
+    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? null,
     reviewed: Boolean(reviewed),
     compatibilityRequiredFacts: reviewed?.requiredFacts,
-    minimumGroupSize: reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
+    minimumGroupSize: reviewedSocial?.minimumGroupSize ?? reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
     stockingGuidance: reviewed?.stockingGuidance,
-    evidenceIds: reviewed?.citations.map(citation => citation.id) || [],
-    loadMultiplier: fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1,
-    adultLengthMinCm: profile.adultLengthMinCm,
-    adultLengthMaxCm: profile.adultLengthMaxCm,
-    socialMode: profile.socialMode,
+    evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...knowledgeEvidenceIds])),
+    adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
+    adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
+    socialMode: reviewedSocial?.mode ?? profile.socialMode,
+    swimmingZone: reviewedSocial?.swimmingZone ?? reviewedSpace?.swimmingZone ?? 'unknown',
     behaviorTraits: reviewed?.behaviorTraits || [],
+    territoriality: reviewedSocial?.territoriality,
+    finNippingRisk: reviewedSocial?.finNipping,
+    finNipVulnerability: reviewedSocial?.finNipVulnerability,
+    swimmingPace: reviewedSocial?.swimmingPace,
+    predationRisk: reviewedSocial?.predationRisk,
+    predationVulnerability: reviewedSocial?.predationVulnerability,
+    lifeType: getLifeType(fish),
     size: fish.size,
   };
 };
@@ -696,6 +753,7 @@ const toDomainTankFact = (tank: Aquarium): DomainTankFact => ({
   volumeLiters: getAquariumVolumeLiters(tank) || null,
   lengthCm: tank.dimensions ? Number(tank.dimensions.length) || null : null,
   targetTemperatureC: tank.targetTemperature ? Number(tank.targetTemperature) : null,
+  stabilityContext: tank.stabilityContext,
 });
 
 /**

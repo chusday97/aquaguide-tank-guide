@@ -89,7 +89,7 @@ export default function Compatibility() {
           <button type="button" data-action-id="compatibility.back" onClick={() => navigate(-1)} className="quiet-icon-button mb-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-ink/55 hover:text-accent"><ArrowLeft className="h-4 w-4" />{t('common.back', '返回')}</button>
           <p className="editorial-kicker"><Calculator className="h-4 w-4" />{t('encyclopedia.compatibilityCalc')}</p>
           <h1 className="editorial-title">{t('encyclopedia.compatibilityCalc')}</h1>
-          <p className="editorial-lede">选择当前鱼缸与物种，先看证据和调整条件，再决定下一步。</p>
+          <p className="editorial-lede">先看一句话结论和现在该怎么做；需要时再展开专业依据。</p>
           <p className="mt-2 text-xs font-semibold text-ink/42">来源：{source === 'species-detail' ? '物种详情' : source}</p>
         </div>
       </header>

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "authority": "local-file-git",
-  "generatedAt": "2026-09-11T15:36:46.959Z",
+  "generatedAt": "2026-09-13T12:10:36.968Z",
   "source": {
     "businessUpdatedAt": null,
     "compatibilityUpdatedAt": null,
@@ -14,6 +14,655 @@
   "compatibility": {
     "authority": "reviewed-git",
     "profiles": [
+      {
+        "catalogKey": "sp_0447",
+        "behaviorTraits": [
+          "shoaling",
+          "breeding_defense"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-symphysodon-aequifasciatus",
+            "title": "Symphysodon aequifasciatus (Discus)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/symphysodon-aequifasciatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-symphysodon-aequifasciatus",
+            "title": "Symphysodon aequifasciatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/11185",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0448",
+        "behaviorTraits": [
+          "peaceful",
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi (Ram)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/12305",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0017",
+        "behaviorTraits": [
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-apistogramma-agassizii",
+            "title": "Apistogramma agassizii (Agassizi's Dwarf Cichlid)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/apistogramma-agassizii/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-apistogramma-agassizii",
+            "title": "Apistogramma agassizii (Agassiz's dwarf cichlid) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=agassizii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0444",
+        "behaviorTraits": [
+          "peaceful",
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-trichopodus-leerii",
+            "title": "Trichopodus leerii (Pearl Gourami)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/trichopodus-leerii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-trichopodus-leerii",
+            "title": "Trichopodus leerii (Pearl gourami) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Trichopodus-leerii.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0020",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-phenacogrammus-interruptus",
+            "title": "Phenacogrammus interruptus (Congo Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://seriouslyfish.com/species/phenacogrammus-interruptus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-phenacogrammus-interruptus",
+            "title": "Phenacogrammus interruptus (Congo tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Phenacogrammus-interruptus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0440",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 6,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-sahyadria-denisonii",
+            "title": "Sahyadria denisonii (Red-line Torpedo Barb)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/sahyadria-denisonii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-sahyadria-denisonii",
+            "title": "Dawkinsia denisonii (Denison barb) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Sahyadria-denisonii.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0114",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 8,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-hyphessobrycon-amandae",
+            "title": "Hyphessobrycon amandae (Ember Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/hyphessobrycon-amandae",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-hyphessobrycon-amandae",
+            "title": "Hyphessobrycon amandae (Ember tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Hyphessobrycon-amandae.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0469",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 8,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-hyphessobrycon-amandae",
+            "title": "Hyphessobrycon amandae (Ember Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/hyphessobrycon-amandae",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-hyphessobrycon-amandae",
+            "title": "Hyphessobrycon amandae (Ember tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Hyphessobrycon-amandae.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0012",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 6,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-puntius-titteya",
+            "title": "Puntius titteya (Cherry Barb)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/puntius-titteya",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-puntius-titteya",
+            "title": "Puntius titteya (Cherry barb) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Puntius_titteya.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0010",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful",
+          "fin_nipping"
+        ],
+        "minimumGroupSize": 12,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black Widow Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0468",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 8,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-trigonostigma-heteromorpha",
+            "title": "Trigonostigma heteromorpha (Harlequin)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/trigonostigma-heteromorpha",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-trigonostigma-heteromorpha",
+            "title": "Trigonostigma heteromorpha (Harlequin rasbora) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Trigonostigma_heteromorpha.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0011",
+        "behaviorTraits": [
+          "peaceful"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-xiphophorus-maculatus",
+            "title": "Xiphophorus maculatus (Platy)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/xiphophorus-maculatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-xiphophorus-maculatus",
+            "title": "Xiphophorus maculatus (Southern platyfish) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Xiphophorus_maculatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0437",
+        "behaviorTraits": [
+          "peaceful"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-poecilia-sphenops",
+            "title": "Poecilia sphenops (Short-finned Molly/Black Molly)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/poecilia-sphenops",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0438",
+        "behaviorTraits": [
+          "shoaling",
+          "male_dominance"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-xiphophorus-hellerii",
+            "title": "Xiphophorus hellerii (Green Swordtail)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/xiphophorus-hellerii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-xiphophorus-hellerii",
+            "title": "Xiphophorus hellerii (Green swordtail) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/Summary/Xiphophorus-hellerii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0053",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 6,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-corydoras-pygmaeus",
+            "title": "Corydoras pygmaeus (Pygmy Cory)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/corydoras-pygmaeus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-corydoras-pygmaeus",
+            "title": "Gastrodermus pygmaeus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/corydoras-pygmaeus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0014",
+        "behaviorTraits": [
+          "shoaling",
+          "bottom_dwelling"
+        ],
+        "minimumGroupSize": 4,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-corydoras-aeneus",
+            "title": "Corydoras aeneus (Bronze Cory)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/corydoras-aeneus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0443",
+        "behaviorTraits": [
+          "shoaling",
+          "bottom_dwelling"
+        ],
+        "minimumGroupSize": 6,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-corydoras-panda",
+            "title": "Corydoras panda (Panda Cory)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/corydoras-panda",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
       {
         "catalogKey": "sp_0439",
         "behaviorTraits": [
@@ -205,6 +854,35 @@
         "version": 1
       },
       {
+        "catalogKey": "sp_0435",
+        "behaviorTraits": [
+          "shoaling"
+        ],
+        "minimumGroupSize": 8,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-danio-rerio",
+            "title": "Brachydanio rerio (Zebra 'Danio')",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/danio-rerio",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "social_behavior",
+          "adult_size"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
         "catalogKey": "sp_0436",
         "behaviorTraits": [
           "shoaling"
@@ -281,9 +959,88 @@
           }
         ],
         "version": 1
+      },
+      {
+        "catalogKey": "sp_0446",
+        "behaviorTraits": [
+          "territorial",
+          "small_fish_predation"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-pterophyllum-scalare",
+            "title": "Pterophyllum scalare (Angelfish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pterophyllum-scalare",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "tamu-pterophyllum-scalare-reproduction",
+            "title": "Reproduction of Angelfish (Pterophyllum scalare)",
+            "publisher": "Texas A&M AgriLife Extension",
+            "url": "https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
       }
     ],
     "pairRules": [
+      {
+        "catalogKeys": [
+          "sp_0436",
+          "sp_0439"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "fin_nipping_long_fin_conflict",
+        "reason": "孔雀鱼资料明确建议不要与虎皮等追鳍鱼混养；虎皮鱼资料也明确指出其不适合作为长鳍或慢游鱼的同伴。该组合有直接的养护层配对建议，不应仅作为一般性 caution。",
+        "mitigation": [
+          "优先不要长期混养；选择非追鳍同伴，或将两者分缸。",
+          "不要把“虎皮数量够了”理解为已经消除对长鳍鱼的追鳍风险。"
+        ],
+        "basis": "pair_rule",
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-poecilia-reticulata",
+            "title": "Poecilia reticulata (Guppy)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/poecilia-reticulata/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-puntigrus-tetrazona",
+            "title": "Puntigrus tetrazona (Tiger Barb)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/puntigrus-tetrazona",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
       {
         "catalogKeys": [
           "sp_0021",
@@ -434,8 +1191,8 @@
       }
     ],
     "counts": {
-      "profiles": 7,
-      "pairRules": 4
+      "profiles": 26,
+      "pairRules": 5
     }
   }
 }

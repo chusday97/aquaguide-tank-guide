@@ -26,6 +26,7 @@ import {
 import { isAquaticPlantSpecies, isHardscapeSpecies } from '../lib/speciesClassification';
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass, getSpeciesVisualSources } from '../lib/speciesVisual';
 import { getLifeType, getToolFunctions, isSpeciesCompatibleWithWaterType } from '../modules/species/species.service';
+import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 import type { DiscoveryDeckState, RecommendationCandidate, RecommendationMode, SimulationResult, SmartRecommendationOutput } from '../modules/recommendation/recommendation.schema';
 import { runtimeCareTopicsData as careTopicsData } from '../data/runtimeContentCatalog';
 import { buildDiagnosisResult } from '../modules/diagnosis/diagnosis.rules';
@@ -992,15 +993,11 @@ const saveDiscoveryState = (state: DiscoveryDeckState) => {
 
 const getDiscoveryPositioning = (fish: Fish, isEn = false) => {
   const primaryTool = getToolFunctions(fish)[0];
-  if (isEn) {
-    if (primaryTool) return 'Useful tank helper · check the full care profile before adding';
-    if (fish.difficulty === 'Easy') return 'Great for beginners and daily observation';
-    return 'Review its care needs and tank fit before deciding';
-  }
-  if (primaryTool) return `${primaryTool} · ${fish.housingMode || '适合继续观察'}`;
-  if (fish.difficulty === 'Easy') return '适合新手观察和入门搭配';
-  if (fish.housingMode) return fish.housingMode;
-  return '可以先看详情，再决定是否加入鱼缸';
+  const housing = getSpeciesHousingAuthority(fish, isEn);
+  if (primaryTool) return isEn ? `Useful tank helper · ${housing.label}` : `${primaryTool} · ${housing.label}`;
+  if (housing.source === 'reviewed') return housing.label;
+  if (fish.difficulty === 'Easy') return isEn ? 'Great for beginners and daily observation' : '适合新手观察和入门搭配';
+  return housing.label || (isEn ? 'Review its care needs and tank fit before deciding' : '可以先看详情，再决定是否加入鱼缸');
 };
 
 const getBioLoadLiters = (fish: Fish) => {
@@ -1013,9 +1010,7 @@ const getBioLoadLiters = (fish: Fish) => {
   if (lifeType === 'coral') return 8;
   if (lifeType === 'reptile') return 60;
 
-  const base = fish.size === 'Large' ? 35 : fish.size === 'Medium' ? 9 : 2.5;
-  const temperamentMultiplier = fish.temperament === 'Aggressive' || fish.temperament === 'Territorial' ? 1.35 : 1;
-  return base * temperamentMultiplier;
+  return fish.size === 'Large' ? 35 : fish.size === 'Medium' ? 9 : 2.5;
 };
 
 const getArchiveCategory = (fish: Fish) => {
@@ -3728,9 +3723,11 @@ export default function AquariumManager() {
       : '根据当前鱼缸状态评估想养的生物；只有实际入缸后才记录。';
   const getAddFishTags = (fish: Fish) => {
     const tags: string[] = [];
-    if (fish.difficulty === 'Easy') tags.push('新手友好');
-    if (fish.size === 'Small') tags.push('小型温和');
-    if (fish.housingMode === '适合混养') tags.push('后续好搭配');
+    const housing = getSpeciesHousingAuthority(fish, isEn);
+    if (fish.difficulty === 'Easy') tags.push(isEn ? 'Beginner friendly' : '新手友好');
+    if (fish.size === 'Small') tags.push(isEn ? 'Small species' : '小型生物');
+    if (housing.source === 'reviewed') tags.push(housing.label);
+    else if (housing.groupHousing) tags.push(isEn ? 'Flexible community option' : '后续好搭配');
     const toolTags = getToolFunctions(fish);
     tags.push(...toolTags.slice(0, 2));
     if (tags.length === 0) tags.push(fish.category);
@@ -3739,12 +3736,14 @@ export default function AquariumManager() {
   const getAddFishReason = (fish: Fish) => {
     const recommendationReason = recommendationReasonById.get(fish.id);
     if (recommendationReason) return recommendationReason;
-    if (fish.size === 'Small' && fish.housingMode === '适合混养') return '适合作为起步搭配生物，建议先少量加入观察状态。';
-    if (getLifeType(fish) === 'invertebrate') return '适合作为清洁或观察生物，但仍需要稳定水质。';
-    return '建议先少量加入，观察 3-7 天后再决定是否补充数量。';
+    const housing = getSpeciesHousingAuthority(fish, isEn);
+    if (housing.solitaryRequired) return isEn ? 'Plan a separate housing setup before adding.' : '已审核资料建议单独规划缸位，先不要按普通混养鱼加入。';
+    if (housing.minimumGroupSize) return isEn ? `Plan a group of at least ${housing.minimumGroupSize}; adding only one or two is not the safer long-term option.` : `建议按至少 ${housing.minimumGroupSize} 条/只规划群体；只加 1–2 条并不是更保守的长期方案。`;
+    if (getLifeType(fish) === 'invertebrate') return isEn ? 'Useful for cleanup or observation, but still needs stable water.' : '适合作为清洁或观察生物，但仍需要稳定水质。';
+    return isEn ? 'Review the tank fit first, then observe closely after any real addition.' : '先查看当前鱼缸适配，再决定实际加入；入缸后持续观察状态。';
   };
   const recommendationNames = currentFishesDetails.slice(0, 2).map(fish => fish.name).join('、');
-  const singleOnlyFishes = currentFishesDetails.filter(fish => fish.housingMode === '建议单养' || getLifeType(fish) === 'reptile');
+  const singleOnlyFishes = currentFishesDetails.filter(fish => getSpeciesHousingAuthority(fish).solitaryRequired || getLifeType(fish) === 'reptile');
   const tankVolumeLiters = getTankVolumeLiters(activeAquarium);
   const currentBioLoadLiters = activeAquarium.fishes.reduce((sum, aqFish) => {
     const fish = fishData.find(item => item.id === aqFish.fishId);

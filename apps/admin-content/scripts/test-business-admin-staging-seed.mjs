@@ -75,9 +75,9 @@ const compatibilityDryRun = spawnSync(process.execPath, ['--import', 'tsx', 'scr
   },
 });
 assert.equal(compatibilityDryRun.status, 0, compatibilityDryRun.stderr);
-assert.match(compatibilityDryRun.stdout, /"reviewed_evidence": 13/);
-assert.match(compatibilityDryRun.stdout, /"reviewed_profiles": 7/);
-assert.match(compatibilityDryRun.stdout, /"reviewed_pair_rules": 4/);
+assert.match(compatibilityDryRun.stdout, /"reviewed_evidence": (?:2[5-9]|[3-9][0-9]|[1-9][0-9]{2,})/);
+assert.match(compatibilityDryRun.stdout, /"reviewed_profiles": (?:1[4-9]|[2-9][0-9]|[1-9][0-9]{2,})/);
+assert.match(compatibilityDryRun.stdout, /"reviewed_pair_rules": (?:[5-9]|[1-9][0-9]+)/);
 
 const compatibilityProductionRefusal = spawnSync(process.execPath, ['--import', 'tsx', 'scripts/content-import/seed-staging-compatibility.ts', '--commit'], {
   cwd: root, encoding: 'utf8',

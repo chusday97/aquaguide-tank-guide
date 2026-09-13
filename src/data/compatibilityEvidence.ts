@@ -1,9 +1,11 @@
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
 import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
-import type { CompatibilityLifeStage } from '../types';
+import type { CompatibilityLifeStage, Fish } from '../types';
+import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
+  waterType?: 'freshwater' | 'saltwater' | 'brackish';
   behaviorTraits: string[];
   minimumGroupSize?: number;
   predationTargets: string[];
@@ -32,6 +34,43 @@ export type ReviewedStageRiskProfile = CompatibilityEvidenceDto & {
   mitigation: string[];
 };
 
+
+const neocaridinaHusbandrySource: EvidenceSourceDto = {
+  id: 'aquariumhq-neocaridina-davidi',
+  title: 'Cherry shrimp (Neocaridina davidi) care and compatibility',
+  publisher: 'AquariumHQ',
+  url: 'https://aquariumhq.app/invertebrates/cherry-shrimp',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const neocaridinaSocialStudy: EvidenceSourceDto = {
+  id: 'neocaridina-social-environment-study',
+  title: 'Effect of social environment on sexual differentiation in the highly gregarious red cherry shrimp (Neocaridina davidi)',
+  publisher: 'Canadian Journal of Zoology',
+  url: 'https://doi.org/10.1139/cjz-2018-0284',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const caridinaHusbandrySource: EvidenceSourceDto = {
+  id: 'aquendium-caridina-cantonensis',
+  title: 'Crystal Red Shrimp (Caridina cantonensis) care guide',
+  publisher: 'Aquendium',
+  url: 'https://aquendium.com/species/crystal-red-shrimp/',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const neriteHusbandrySource: EvidenceSourceDto = {
+  id: 'aquariumhq-neritina-natalensis',
+  title: 'Nerite snail (Neritina natalensis) care and compatibility',
+  publisher: 'AquariumHQ',
+  url: 'https://aquariumhq.app/invertebrates/nerite-snail',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const tigerBarbStudy: EvidenceSourceDto = {
   id: 'tiger-barb-group-size-study',
   title: 'The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria',
@@ -56,6 +95,231 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   publisher: 'U.S. Fish and Wildlife Service',
   url: 'https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Small-Snakehead.pdf',
   sourceType: 'government',
+  reviewStatus: 'reviewed',
+};
+
+const discusSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-symphysodon-aequifasciatus',
+  title: 'Symphysodon aequifasciatus (Discus)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/symphysodon-aequifasciatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const discusFishBase: EvidenceSourceDto = {
+  id: 'fishbase-symphysodon-aequifasciatus',
+  title: 'Symphysodon aequifasciatus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/11185',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const ramireziSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-mikrogeophagus-ramirezi',
+  title: 'Mikrogeophagus ramirezi (Ram)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const ramireziFishBase: EvidenceSourceDto = {
+  id: 'fishbase-mikrogeophagus-ramirezi',
+  title: 'Mikrogeophagus ramirezi species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/12305',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const agassiziiSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-apistogramma-agassizii',
+  title: "Apistogramma agassizii (Agassizi's Dwarf Cichlid)",
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/apistogramma-agassizii/',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const agassiziiFishBase: EvidenceSourceDto = {
+  id: 'fishbase-apistogramma-agassizii',
+  title: "Apistogramma agassizii (Agassiz's dwarf cichlid) species summary",
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=agassizii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pearlGouramiSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-trichopodus-leerii',
+  title: 'Trichopodus leerii (Pearl Gourami)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/trichopodus-leerii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pearlGouramiFishBase: EvidenceSourceDto = {
+  id: 'fishbase-trichopodus-leerii',
+  title: 'Trichopodus leerii (Pearl gourami) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Trichopodus-leerii.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const congoTetraSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-phenacogrammus-interruptus',
+  title: 'Phenacogrammus interruptus (Congo Tetra)',
+  publisher: 'Seriously Fish',
+  url: 'https://seriouslyfish.com/species/phenacogrammus-interruptus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const congoTetraFishBase: EvidenceSourceDto = {
+  id: 'fishbase-phenacogrammus-interruptus',
+  title: 'Phenacogrammus interruptus (Congo tetra) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Phenacogrammus-interruptus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const blackSkirtSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-gymnocorymbus-ternetzi',
+  title: 'Gymnocorymbus ternetzi (Black Widow Tetra)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const blackSkirtFishBase: EvidenceSourceDto = {
+  id: 'fishbase-gymnocorymbus-ternetzi',
+  title: 'Gymnocorymbus ternetzi (Black tetra) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Gymnocorymbus-ternetzi',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const cherryBarbSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-puntius-titteya',
+  title: 'Puntius titteya (Cherry Barb)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/puntius-titteya',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const cherryBarbFishBase: EvidenceSourceDto = {
+  id: 'fishbase-puntius-titteya',
+  title: 'Puntius titteya (Cherry barb) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Puntius_titteya.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const denisonBarbSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-sahyadria-denisonii',
+  title: 'Sahyadria denisonii (Red-line Torpedo Barb)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/sahyadria-denisonii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const denisonBarbFishBase: EvidenceSourceDto = {
+  id: 'fishbase-sahyadria-denisonii',
+  title: 'Dawkinsia denisonii (Denison barb) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Sahyadria-denisonii.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const emberTetraSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-hyphessobrycon-amandae',
+  title: 'Hyphessobrycon amandae (Ember Tetra)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/hyphessobrycon-amandae',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const emberTetraFishBase: EvidenceSourceDto = {
+  id: 'fishbase-hyphessobrycon-amandae',
+  title: 'Hyphessobrycon amandae (Ember tetra) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Hyphessobrycon-amandae.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const harlequinSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-trigonostigma-heteromorpha',
+  title: 'Trigonostigma heteromorpha (Harlequin)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/trigonostigma-heteromorpha',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const harlequinFishBase: EvidenceSourceDto = {
+  id: 'fishbase-trigonostigma-heteromorpha',
+  title: 'Trigonostigma heteromorpha (Harlequin rasbora) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Trigonostigma_heteromorpha.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const platySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-xiphophorus-maculatus',
+  title: 'Xiphophorus maculatus (Platy)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/xiphophorus-maculatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const platyFishBase: EvidenceSourceDto = {
+  id: 'fishbase-xiphophorus-maculatus',
+  title: 'Xiphophorus maculatus (Southern platyfish) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Xiphophorus_maculatus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const mollySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-poecilia-sphenops',
+  title: 'Poecilia sphenops (Short-finned Molly/Black Molly)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/poecilia-sphenops',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const swordtailSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-xiphophorus-hellerii',
+  title: 'Xiphophorus hellerii (Green Swordtail)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/xiphophorus-hellerii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const swordtailFishBase: EvidenceSourceDto = {
+  id: 'fishbase-xiphophorus-hellerii',
+  title: 'Xiphophorus hellerii (Green swordtail) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.org/Summary/Xiphophorus-hellerii',
+  sourceType: 'curated_husbandry',
   reviewStatus: 'reviewed',
 };
 
@@ -95,12 +359,103 @@ const whiteCloudShoalingStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+
+const zebrafishSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-danio-rerio',
+  title: "Brachydanio rerio (Zebra 'Danio')",
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/danio-rerio',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const guppyFishBase: EvidenceSourceDto = {
   id: 'fishbase-poecilia-reticulata',
   title: 'Poecilia reticulata (Guppy) species summary',
   publisher: 'FishBase',
   url: 'https://www.fishbase.se/summary/Poecilia-reticulata.html',
   sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const guppySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-poecilia-reticulata',
+  title: 'Poecilia reticulata (Guppy)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/poecilia-reticulata/',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pygmyCorySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-corydoras-pygmaeus',
+  title: 'Corydoras pygmaeus (Pygmy Cory)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/corydoras-pygmaeus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pygmyCoryFishBase: EvidenceSourceDto = {
+  id: 'fishbase-corydoras-pygmaeus',
+  title: 'Gastrodermus pygmaeus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/corydoras-pygmaeus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const bronzeCorySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-corydoras-aeneus',
+  title: 'Corydoras aeneus (Bronze Cory)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/corydoras-aeneus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pandaCorySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-corydoras-panda',
+  title: 'Corydoras panda (Panda Cory)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/corydoras-panda',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const tigerBarbSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-puntigrus-tetrazona',
+  title: 'Puntigrus tetrazona (Tiger Barb)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/puntigrus-tetrazona',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const bettaSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-betta-splendens',
+  title: 'Betta splendens (Siamese Fighting Fish)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/betta-splendens',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const angelfishSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-pterophyllum-scalare',
+  title: 'Pterophyllum scalare (Angelfish)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/pterophyllum-scalare',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const angelfishExtensionGuide: EvidenceSourceDto = {
+  id: 'tamu-pterophyllum-scalare-reproduction',
+  title: 'Reproduction of Angelfish (Pterophyllum scalare)',
+  publisher: 'Texas A&M AgriLife Extension',
+  url: 'https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf',
+  sourceType: 'government',
   reviewStatus: 'reviewed',
 };
 
@@ -167,9 +522,184 @@ const channaRhodeusPredationStressStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile => ({
+  speciesId,
+  waterType: 'freshwater',
+  behaviorTraits: ['shoaling', 'peaceful'],
+  minimumGroupSize: 8,
+  predationTargets: [],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [emberTetraSeriouslyFish, emberTetraFishBase],
+  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+});
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0447: {
+    speciesId: 'sp_0447',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'breeding_defense'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [discusSeriouslyFish, discusFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0448: {
+    speciesId: 'sp_0448',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [ramireziSeriouslyFish, ramireziFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0017: {
+    speciesId: 'sp_0017',
+    waterType: 'freshwater',
+    behaviorTraits: ['breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [agassiziiSeriouslyFish, agassiziiFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0444: {
+    speciesId: 'sp_0444',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [pearlGouramiSeriouslyFish, pearlGouramiFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0020: {
+    speciesId: 'sp_0020',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [congoTetraSeriouslyFish, congoTetraFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0440: {
+    speciesId: 'sp_0440',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [denisonBarbSeriouslyFish, denisonBarbFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0114: makeEmberTetraProfile('sp_0114'),
+  sp_0469: makeEmberTetraProfile('sp_0469'),
+  sp_0012: {
+    speciesId: 'sp_0012',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [cherryBarbSeriouslyFish, cherryBarbFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+
+  sp_0010: {
+    speciesId: 'sp_0010',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful', 'fin_nipping'],
+    minimumGroupSize: 12,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [blackSkirtSeriouslyFish, blackSkirtFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0468: {
+    speciesId: 'sp_0468',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 8,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [harlequinSeriouslyFish, harlequinFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0011: {
+    speciesId: 'sp_0011',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [platySeriouslyFish, platyFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0437: {
+    speciesId: 'sp_0437',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [mollySeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0438: {
+    speciesId: 'sp_0438',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'male_dominance'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [swordtailSeriouslyFish, swordtailFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0053: {
+    speciesId: 'sp_0053',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [pygmyCorySeriouslyFish, pygmyCoryFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0014: {
+    speciesId: 'sp_0014',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'bottom_dwelling'],
+    minimumGroupSize: 4,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [bronzeCorySeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
+  },
+  sp_0443: {
+    speciesId: 'sp_0443',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'bottom_dwelling'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [pandaCorySeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
+  },
   sp_0439: {
     speciesId: 'sp_0439',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling', 'interspecific_aggression', 'fin_nipping'],
     minimumGroupSize: 6,
     predationTargets: [],
@@ -180,6 +710,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0021: {
     speciesId: 'sp_0021',
+    waterType: 'freshwater',
     behaviorTraits: ['territorial', 'breeding_defense', 'chasing', 'biting'],
     predationTargets: [],
     confidence: 'high',
@@ -189,6 +720,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0049: {
     speciesId: 'sp_0049',
+    waterType: 'freshwater',
     behaviorTraits: ['predatory', 'solitary_required', 'territorial'],
     predationTargets: ['small_fish'],
     confidence: 'medium',
@@ -198,6 +730,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0431: {
     speciesId: 'sp_0431',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -208,6 +741,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0432: {
     speciesId: 'sp_0432',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -218,6 +752,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
   sp_0434: {
     speciesId: 'sp_0434',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -226,8 +761,20 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [whiteCloudFishBase, whiteCloudShoalingStudy],
     requiredFacts: ['water', 'temperature', 'social_behavior'],
   },
+  sp_0435: {
+    speciesId: 'sp_0435',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling'],
+    minimumGroupSize: 8,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [zebrafishSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'adult_size'],
+  },
   sp_0436: {
     speciesId: 'sp_0436',
+    waterType: 'freshwater',
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -235,6 +782,82 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [guppyFishBase, guppyShoalingStudy],
     requiredFacts: ['water', 'temperature', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0446: {
+    speciesId: 'sp_0446',
+    waterType: 'freshwater',
+    behaviorTraits: ['territorial', 'small_fish_predation'],
+    predationTargets: ['very_small_fish'],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [angelfishSeriouslyFish, angelfishExtensionGuide],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior', 'territoriality', 'predation'],
+  },
+};
+
+const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
+
+  'Neocaridina davidi': {
+    speciesId: 'base:Neocaridina davidi',
+    waterType: 'freshwater',
+    behaviorTraits: ['group_living', 'bottom_dwelling'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [neocaridinaHusbandrySource, neocaridinaSocialStudy],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
+  },
+  'Caridina cantonensis': {
+    speciesId: 'base:Caridina cantonensis',
+    waterType: 'freshwater',
+    behaviorTraits: ['group_living', 'bottom_dwelling'],
+    minimumGroupSize: 10,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [caridinaHusbandrySource],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  'Neritina natalensis': {
+    speciesId: 'base:Neritina natalensis',
+    waterType: 'freshwater',
+    behaviorTraits: ['algae_grazer'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [neriteHusbandrySource],
+    requiredFacts: ['water', 'temperature', 'adult_size'],
+  },
+  'Amatitlania nigrofasciata': {
+    speciesId: 'base:Amatitlania nigrofasciata',
+    waterType: 'freshwater',
+    behaviorTraits: ['territorial', 'breeding_defense', 'chasing', 'biting'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [convictCichlidTerritoryStudy],
+    requiredFacts: ['water', 'temperature', 'territoriality', 'breeding_behavior'],
+  },
+  'Channa asiatica': {
+    speciesId: 'base:Channa asiatica',
+    waterType: 'freshwater',
+    behaviorTraits: ['predatory', 'solitary_required', 'territorial'],
+    predationTargets: ['small_fish'],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [smallSnakeheadAssessment],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'predation', 'territoriality'],
+  },
+  'Betta splendens': {
+    speciesId: 'base:Betta splendens',
+    waterType: 'freshwater',
+    behaviorTraits: ['territorial', 'solitary_required', 'long_fin_vulnerable'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [bettaSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'social_behavior', 'territoriality'],
   },
 };
 
@@ -256,6 +879,18 @@ const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
 };
 
 const pairRules: ReviewedPairRule[] = [
+  {
+    speciesIds: ['sp_0439', 'sp_0436'],
+    verdict: 'not_recommended',
+    riskType: 'fin_nipping_long_fin_conflict',
+    reason: '孔雀鱼资料明确建议不要与虎皮等追鳍鱼混养；虎皮鱼资料也明确指出其不适合作为长鳍或慢游鱼的同伴。该组合有直接的养护层配对建议，不应仅作为一般性 caution。',
+    mitigation: ['优先不要长期混养；选择非追鳍同伴，或将两者分缸。', '不要把“虎皮数量够了”理解为已经消除对长鳍鱼的追鳍风险。'],
+    basis: 'pair_rule',
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0439', 'sp_0436'],
+    citations: [guppySeriouslyFish, tigerBarbSeriouslyFish],
+  },
   {
     speciesIds: ['sp_0021', 'sp_0439'],
     verdict: 'not_recommended',
@@ -307,6 +942,10 @@ const pairRules: ReviewedPairRule[] = [
 ];
 
 export const getReviewedCompatibilityProfile = (speciesId: string) => profiles[speciesId];
+
+export const getReviewedCompatibilityProfileForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => (
+  profiles[fish.id] || (getBaseSpeciesScientificName(fish.scientificName) ? baseSpeciesProfiles[getBaseSpeciesScientificName(fish.scientificName)!] : undefined)
+);
 
 export const getReviewedStageRiskProfile = (speciesId: string) => stageRiskProfiles[speciesId];
 

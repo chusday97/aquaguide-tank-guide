@@ -7,6 +7,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { careArticleAdminInputSchema, speciesAdminInputSchema, type GitRuntimeAuthoritySnapshot, type RuntimeAuthorityAssetDto } from '../../../../packages/contracts/src/index';
 import { ApiError, asyncRoute, sendData } from '../http';
+import { getCompatibilityEvidenceAudit } from '../../../../src/data/compatibilityEvidence';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(currentDir, '../../../..');
@@ -246,6 +247,30 @@ const safeBackupId = (value: string) => {
 const asRecord = (value: unknown): JsonRecord | null => (
   value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : null
 );
+const canonicalCompatibilityBaseline = getCompatibilityEvidenceAudit();
+const expectedCompatibilityProfileCount = canonicalCompatibilityBaseline.reviewedProfiles.length;
+const expectedCompatibilityPairRuleCount = canonicalCompatibilityBaseline.reviewedPairRules.length;
+const expectedCompatibilityProfileKeys = new Set(canonicalCompatibilityBaseline.reviewedProfiles.map(profile => profile.speciesId));
+const expectedCompatibilityPairKeys = new Set(canonicalCompatibilityBaseline.reviewedPairRules.map(rule => [...rule.speciesIds].sort().join('__')));
+const compatibilityPairKeyFromRecord = (value: unknown) => {
+  const record = asRecord(value);
+  const keys = Array.isArray(record?.catalogKeys) ? record.catalogKeys.map(String).filter(Boolean) : [];
+  return keys.length === 2 ? keys.sort().join('__') : '';
+};
+const hasExactReviewedCompatibilityBaseline = (compatibility: JsonRecord) => {
+  const profiles = Array.isArray(compatibility.reviewedProfiles) ? compatibility.reviewedProfiles : [];
+  const pairs = Array.isArray(compatibility.reviewedPairRules) ? compatibility.reviewedPairRules : [];
+  const profileKeys = profiles.map(value => String(asRecord(value)?.catalogKey || ''));
+  const pairKeys = pairs.map(compatibilityPairKeyFromRecord);
+  return profiles.length === expectedCompatibilityProfileCount
+    && pairs.length === expectedCompatibilityPairRuleCount
+    && profileKeys.every(key => expectedCompatibilityProfileKeys.has(key))
+    && new Set(profileKeys).size === expectedCompatibilityProfileKeys.size
+    && pairKeys.every(key => expectedCompatibilityPairKeys.has(key))
+    && new Set(pairKeys).size === expectedCompatibilityPairKeys.size
+    && profiles.every(value => asRecord(value)?.reviewStatus === 'reviewed')
+    && pairs.every(value => asRecord(value)?.reviewStatus === 'reviewed');
+};
 const pathExists = async (filePath: string) => {
   try { await stat(filePath); return true; } catch (error) {
     if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') return false;
@@ -418,10 +443,10 @@ const inspectRoot = async (root: string): Promise<IntegrityReport> => {
   for (const id of orphaned) issues.push({ severity: 'warning', code: 'ORPHAN_ASSET', message: `${id} 存在于磁盘，但当前 Business state 未引用。` });
 
   const compatibility = states.compatibility;
-  if (compatibility) {
+  if (compatibility && !hasExactReviewedCompatibilityBaseline(compatibility)) {
     const profiles = Array.isArray(compatibility.reviewedProfiles) ? compatibility.reviewedProfiles.length : -1;
     const pairs = Array.isArray(compatibility.reviewedPairRules) ? compatibility.reviewedPairRules.length : -1;
-    if (profiles !== 7 || pairs !== 4) issues.push({ severity: 'error', code: 'COMPATIBILITY_BASELINE_INCOMPLETE', message: `Compatibility reviewed baseline 应为 7 Profiles / 4 Pair Rules，当前为 ${profiles}/${pairs}。` });
+    issues.push({ severity: 'error', code: 'COMPATIBILITY_BASELINE_INCOMPLETE', message: `Compatibility reviewed baseline 必须与 canonical ${expectedCompatibilityProfileCount} Profiles / ${expectedCompatibilityPairRuleCount} Pair Rules 完全一致，当前为 ${profiles}/${pairs}。` });
   }
 
   const careSeo = states['care-seo'];
@@ -510,10 +535,8 @@ const exportGitRuntimeAuthority = async () => {
 
   const reviewedProfiles = Array.isArray(compatibility.reviewedProfiles) ? compatibility.reviewedProfiles : [];
   const reviewedPairRules = Array.isArray(compatibility.reviewedPairRules) ? compatibility.reviewedPairRules : [];
-  if (reviewedProfiles.length !== 7 || reviewedPairRules.length !== 4
-    || reviewedProfiles.some(value => asRecord(value)?.reviewStatus !== 'reviewed')
-    || reviewedPairRules.some(value => asRecord(value)?.reviewStatus !== 'reviewed')) {
-    throw new ApiError(409, 'MIGRATION_REJECTED', 'Compatibility Git publication requires the exact reviewed 7 Profile / 4 Pair authority.');
+  if (!hasExactReviewedCompatibilityBaseline(compatibility)) {
+    throw new ApiError(409, 'MIGRATION_REJECTED', `Compatibility Git publication requires the exact canonical reviewed ${expectedCompatibilityProfileCount} Profile / ${expectedCompatibilityPairRuleCount} Pair authority.`);
   }
 
   const publishedSpecies = asRecord(business.publishedSpecies) || {};
@@ -691,8 +714,19 @@ const applyBackupDirectory = async (source: string) => {
       if (await pathExists(sourceFile)) await atomicBufferWrite(targetFile, await readFile(sourceFile));
       else await unlink(targetFile).catch(error => { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; });
     }
-    await rm(assetDirectory(root), { recursive: true, force: true });
-    if (await pathExists(tempAssets)) await rename(tempAssets, assetDirectory(root));
+    // Overlay restored assets instead of replacing the whole directory. A client may
+    // have read the pre-restore Business state immediately before this write lock
+    // was acquired and then request its referenced asset after the restore commits.
+    // Keeping superseded assets as integrity-audited orphans preserves that
+    // cross-request referential visibility without weakening the restored state.
+    if (await pathExists(tempAssets)) {
+      await mkdir(assetDirectory(root), { recursive: true });
+      for (const entry of await readdir(tempAssets, { withFileTypes: true })) {
+        if (!entry.isFile()) continue;
+        await rename(path.join(tempAssets, entry.name), path.join(assetDirectory(root), entry.name));
+      }
+      await rm(tempAssets, { recursive: true, force: true });
+    }
   } catch (error) {
     await rm(tempAssets, { recursive: true, force: true });
     throw error;

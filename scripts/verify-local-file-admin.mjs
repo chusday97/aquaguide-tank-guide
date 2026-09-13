@@ -149,10 +149,11 @@ try {
   await page.getByTestId('operations-publish-runtime-snapshot').click();
   await page.waitForFunction(() => document.querySelector('[data-testid="operations-local-safety"]')?.textContent?.includes('运行时快照已生成 · 尚未提交 Git / 部署'));
   const runtimeSnapshot = JSON.parse(await readFile(path.join(root, 'public/runtime-authority.json'), 'utf8'));
+  const compatibilityState = await readState('compatibility');
   assert.equal(runtimeSnapshot.authority, 'local-file-git');
   assert.equal(runtimeSnapshot.compatibility.authority, 'reviewed-git');
-  assert.equal(runtimeSnapshot.compatibility.profiles.length, 7);
-  assert.equal(runtimeSnapshot.compatibility.pairRules.length, 4);
+  assert.equal(runtimeSnapshot.compatibility.profiles.length, compatibilityState.reviewedProfiles.length);
+  assert.equal(runtimeSnapshot.compatibility.pairRules.length, compatibilityState.reviewedPairRules.length);
   assert.equal(JSON.stringify(runtimeSnapshot).includes(marker), false, 'Unpublished Product Draft must not leak into Git runtime snapshot.');
   await page.getByTestId('operations-create-backup').click();
   await page.waitForFunction(() => {
