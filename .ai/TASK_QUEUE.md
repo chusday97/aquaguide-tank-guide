@@ -1,5 +1,11 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after restore visibility closure
+- DONE: restore intermediate state can no longer leak through state/asset/status/integrity reads (`deb5b085`).
+- VERIFIED: shared reads remain concurrent and a waiting restore writer is not starved under sustained GET load.
+- NEXT: only another concrete reproducible operator/runtime/data-reliability badcase. Do not expand locking or restore behavior speculatively.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 after cross-operation consistency closure
 - DONE: authority snapshot/write serialization (`01fdca74`).
 - DONE: same-asset read/write pair serialization (`0df8a63d`).

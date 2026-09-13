@@ -1,5 +1,12 @@
 # Execution Log
 
+## 2026-09-13 — Restore visibility transaction
+- Reproduced: two healthy authority versions, restore B exposed Business B before assets B; read 6 saw referenced asset B return 404 while restore later returned 200.
+- Implemented fair Local authority reader/writer lock: restore and mutations take write; consistent reads/snapshots take shared read. Commit `deb5b085`.
+- Formal restore visibility regression PASS. Repeated Local File regression/UI/mode/type/build PASS. Fairness probe under 8 continuous readers: restore 200 in 19ms, 36 reads, 0 errors.
+- GitHub Product Golden Path PASS; Vercel `dpl_9BqvXujSc6Ey7hWWLT8VvAWewU7s` READY / target null. Production/Supabase/indexing unchanged.
+
+
 ## 2026-09-13 — Cross-operation Local File consistency
 - Reproduced backup×asset race: backup 500 while `cp(assets)` observed an atomic temp file disappear. Added global Local authority transaction boundary; backup×asset 30/30 and runtime-snapshot×Published-asset 30/30 stress = zero failure/torn output. Commit `01fdca74`.
 - Reproduced asset GET×PUT torn response: PNG metadata header with WebP body by read 3. Same-ID GET/PUT/DELETE share pair queue; 1600 stress reads = zero torn response. Commit `0df8a63d`.

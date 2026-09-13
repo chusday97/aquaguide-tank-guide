@@ -1,5 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — Restore visibility is externally atomic
+- `deb5b085 fix(admin): hide in-flight restore states` closes a reproduced read-visibility race: Business B became visible before assets B, causing B's referenced image to return 404 during a restore that later succeeded.
+- Local authority coordination is now a fair reader/writer lock. Mutations/restore are exclusive; state/asset/status/integrity reads and snapshot-style operations share read access.
+- Formal two-authority restore regression PASS. Fairness probe with 8 continuous readers: restore 200 in 19ms, 36 reads, 0 errors, no timeout/starvation.
+- Local API/UI, mode contract, TypeScript and full build PASS; GitHub Product Golden Path PASS; Vercel deployment `dpl_9BqvXujSc6Ey7hWWLT8VvAWewU7s` READY / target null. Production/Supabase/indexing unchanged.
+
+
 ## 2026-09-13 — Cross-operation Local File consistency closure
 - `01fdca74`: Local authority mutation/snapshot operations now serialize; reproduced backup×asset race had returned 500 from disappearing atomic temp files. 30/30 backup×asset and 30/30 runtime-snapshot×Published-asset stress runs completed with zero torn output.
 - `0df8a63d`: same asset GET/PUT/DELETE now share a pair queue; fail-before-fix GET mixed PNG metadata with WebP body. 1600 concurrent reads produced zero torn responses after the fix.

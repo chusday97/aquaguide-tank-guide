@@ -1,5 +1,11 @@
 # Branch Status
 
+## CURRENT OVERRIDE — 2026-09-13 main after restore visibility hardening
+- Canonical worktree `/Users/chuchu/aquaguide-main`, branch `main`.
+- Functional HEAD before this docs checkpoint: `deb5b085cd3520b03ab1c2d1fb5127b7955bdf2f`; local and GitHub main were equal after push.
+- Latest Local File hardening adds fair reader/writer authority visibility; historical product-recovery/reconcile/feature worktrees remain separate.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 main after cross-operation Local File hardening
 - Canonical worktree: `/Users/chuchu/aquaguide-main`.
 - Canonical branch: `main`.

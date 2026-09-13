@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 restore visibility transaction closed
+A real restore visibility badcase is closed on main at `deb5b085 fix(admin): hide in-flight restore states`.
+
+- Fail-before-fix: restore switched Business partition before replacing assets; by read 6 the API exposed Business state B while B's referenced asset still returned 404, even though restore ultimately returned 200.
+- The former exclusive authority queue is now a fair reader/writer lock: restore/state+asset mutations take the write side; state/asset/status/integrity reads plus backup/runtime snapshot take the shared read side. Multiple reads remain concurrent, while in-flight restore is externally atomic.
+- Permanent regression uses two healthy authority versions with distinct image references and a large Care partition; every visible Business state must resolve its referenced asset immediately.
+- Fairness probe: 8 continuous readers were active before restore; restore completed 200 in 19ms with 36 reads / 0 errors / no timeout, proving waiting writers are not starved.
+- PASS: Local File API twice, Local Admin UI restart/backup/restore, Local Admin mode contract, API/root TypeScript, full build, GitHub Product Golden Path, Vercel branch deployment READY.
+- Production remains unchanged because Local File API is DEV-only. NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 cross-operation Local File read/snapshot consistency closed
 Three additional reproducible cross-operation consistency badcases are closed on main.
 
