@@ -481,7 +481,17 @@ const assertActiveRootHealthyForMutation = async (
 ) => {
   const root = localRoot();
   const integrity = await inspectRoot(root);
-  if (integrity.healthy) return;
+  if (integrity.healthy) {
+    if (repairMode === 'delete' && repairAssetId) {
+      const business = await readPartitionState(root, 'business', false);
+      if (collectReferencedAssets(business).has(repairAssetId)) {
+        throw new ApiError(409, 'INTEGRITY_FAILED',
+          `Local asset ${repairAssetId} is still referenced by Business state; deleting it would make the active authority unhealthy.`,
+          { root, assetId: repairAssetId });
+      }
+    }
+    return;
+  }
   const errors = integrity.issues.filter(issue => issue.severity === 'error');
   const repairableAssetCodes = new Set(['ASSET_PAIR_MISSING', 'ASSET_META_INVALID', 'ASSET_SIZE_MISMATCH', 'ASSET_READ_FAILED', 'REFERENCED_ASSET_MISSING']);
   const onlyTargetAssetErrors = Boolean(repairAssetId)

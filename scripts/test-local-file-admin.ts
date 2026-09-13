@@ -430,6 +430,12 @@ try {
   };
   assert.equal((await putState(started.base, 'business', runtimeCorruptState)).response.status, 200);
   assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+  const referencedDelete = await requestJson(started.base, `/assets/${assetId}`, { method: 'DELETE' });
+  assert.equal(referencedDelete.response.status, 409, 'Deleting an asset that is still referenced by a healthy Business state must fail closed.');
+  assert.equal(referencedDelete.payload.error.code, 'INTEGRITY_FAILED');
+  assert.equal((await fetch(`${started.base}/assets/${assetId}`)).status, 200, 'Rejected referenced-asset DELETE must leave the asset intact.');
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true,
+    'Rejected referenced-asset DELETE must leave the active root healthy.');
   await rm(path.join(root, 'assets', `${assetId}.blob`));
   const runtimeCorruptIntegrity = await requestJson(started.base, '/integrity');
   assert.equal(runtimeCorruptIntegrity.payload.data.healthy, false);
