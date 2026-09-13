@@ -1,5 +1,14 @@
 # Live Status
 
+## 2026-09-13 — root lease PID-reuse hardening
+- main functional checkpoint: `8105f032` (`fix(admin): disambiguate reused lease pids`).
+- Reproduced false lock: stale owner PID reused by unrelated live process => pre-fix `409 VERSION_CONFLICT`.
+- Lease v2 uses PID + process-start identity; mismatched live PID is reclaimable, genuine owner remains exclusive.
+- Legacy/no-identity lease behavior remains conservative/fail-closed.
+- Local/API/UI/TypeScript/build + GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- Production intentionally unchanged.
+
+
 ## 2026-09-13 — Local File cross-process ownership status
 - Durable Local File authority is single-process-owned per root.
 - Current functional checkpoint: `32a5bb6c`.

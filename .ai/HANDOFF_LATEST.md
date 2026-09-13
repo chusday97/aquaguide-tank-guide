@@ -1,5 +1,14 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — reused PID no longer permanently false-locks Local File root
+- Functional checkpoint: `8105f032 fix(admin): disambiguate reused lease pids`.
+- Fail-before-fix used a real unrelated live process PID in a stale ownership record; Local Admin incorrectly returned `409 VERSION_CONFLICT` because PID liveness alone was treated as owner identity.
+- Lease v2 now records process-start identity. Linux compares `/proc/<pid>/stat` start ticks; macOS compares `ps` start time + stable command identity.
+- A reused PID with a different start identity is reclaimed; a true live owner remains rejected; missing/unreadable identity remains fail-closed.
+- Permanent regression covers stale dead PID, true second process, and reused live PID. Local File API/UI, contracts, TypeScript and full build PASS. GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion, Supabase Staging, Production DB migration or indexing change.
+
+
 ## 2026-09-13 — Cross-process Local File ownership closed
 - Functional checkpoint: `32a5bb6c fix(admin): enforce single local authority owner`.
 - Fail-before-fix used two real API processes on one root; same-asset concurrent writes produced a torn PNG-metadata/WebP-blob pair at round 37.

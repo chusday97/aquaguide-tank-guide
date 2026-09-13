@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after PID-reuse lease closure
+- DONE: reproduce stale lease false-lock with a real unrelated live process reusing the recorded PID (`409 VERSION_CONFLICT`).
+- DONE: upgrade root lease identity from PID-only to PID + process-start identity.
+- DONE: preserve conservative fail-closed behavior for legacy/no-identity leases and unreadable process identity.
+- DONE: formal recovery regression + full Local File/UI/contract/TypeScript/build gates.
+- DONE: GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase. Do not expand Local File semantics speculatively.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 after root ownership closure
 - DONE: reproduce cross-process same-root torn asset pair.
 - DONE: enforce atomic single-owner root lease with live-PID conflict rejection and stale-PID recovery.

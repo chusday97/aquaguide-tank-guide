@@ -1,5 +1,18 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 reused-PID lease false lock closed
+A concrete stale-lease false-lock path is closed on main at `8105f032 fix(admin): disambiguate reused lease pids`.
+
+- Fail-before-fix: a stale Local Admin lease whose old PID had been reused by an unrelated live process returned `409 VERSION_CONFLICT` forever because ownership was identified by PID alone.
+- Root lease format is now v2 and records `processStartIdentity` in addition to PID/token. Linux uses `/proc/<pid>/stat` start ticks; macOS uses `ps` start time + stable command identity.
+- A live PID blocks acquisition only when its current start identity still matches the lease. A mismatched identity is treated as PID reuse and the stale lease is reclaimed.
+- Legacy/no-identity leases and platforms where identity cannot be read remain fail-closed rather than being stolen speculatively.
+- Permanent regressions cover dead-PID recovery, true second-owner rejection, and live-unrelated-PID reuse recovery.
+- PASS: Local File API/UI, Local Admin mode contract, API/root TypeScript, full build, GitHub Product Golden Path; Vercel branch deployment READY.
+- Production remains unchanged because Local File API is DEV-only.
+- NEXT: continue only from another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 single-owner Local File root closure
 A concrete cross-process corruption path is closed on main at `32a5bb6c fix(admin): enforce single local authority owner`.
 
