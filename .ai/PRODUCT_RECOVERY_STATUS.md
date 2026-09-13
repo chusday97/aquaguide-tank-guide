@@ -1,5 +1,14 @@
 # Aqua Product Recovery Status
 
+## 2026-09-13 — Red Rainbowfish reviewed-authority checkpoint
+- `Glossolepis incisus` (`sp_0133`, 红苹果美人 / Red Rainbowfish) is now reviewed Species Knowledge V2 + Compatibility authority.
+- Reviewed husbandry authority: 22–25°C, pH 7.0–8.0, 10–20 dGH; group minimum 6; long-term planning uses 120 cm / ~108 L and high-activity middle-water swimming.
+- Canonical compatibility progress: 26 taxa / 650 ordered directions = 504 caution, 144 not_recommended, 2 compatible.
+- Runtime/Admin reviewed authority: 29 Profiles / 5 Pair Rules.
+- Additive repository migration `202609120015_compatibility_red_rainbowfish_baseline.sql` was added but is not applied to Staging/Production.
+- Focused Species Knowledge / Compatibility / evidence coverage / Admin runtime authority checks, TypeScript and full production build are green.
+
+
 ## 2026-09-13 — Agassizii / Compatibility V7 checkpoint
 - Standard `sp_0017` / `Apistogramma agassizii` is now reviewed Product authority with 22–29°C, pH 5–7, 0–10 dGH, 60 cm / ~54 L pair planning, harem/social context and cave-spawning maternal care.
 - `compatibility-domain-v7-ph-edge-overlap` closes a false-green gap where reviewed pH ranges touched at only one boundary value.

@@ -4,6 +4,57 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const redRainbowfishKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成熟后公鱼体型更高、红色更强',
+    summary: '成熟公鱼背部更高并发展出典型红色；成熟母鱼体型相对低、颜色更朴素。',
+    points: ['公鱼：成熟后背部更高，典型红色更明显。', '母鱼：体型相对低，颜色更朴素。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-glossolepis-incisus'], reviewedAt: '2026-09-13' },
+  },
+  reproduction: {
+    mode: 'egg_scatterer',
+    plainLanguageLabel: '持续散卵型',
+    summary: '可持续数周分批产卵，鱼卵以细丝附着在植物或产卵拖把上；没有稳定亲代照护。',
+    fertilization: 'external',
+    parentalCare: 'none',
+    gestationOrIncubation: { minDays: 7, maxDays: 8, label: '鱼卵通常约 7–8 天孵化' },
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-glossolepis-incisus'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 22, max: 25 },
+    phRange: { min: 7.0, max: 8.0 },
+    hardnessDgh: { min: 10, max: 20 },
+    notes: ['长期更适合中硬到硬、接近中性到偏碱性的淡水；Seriously Fish 的日常养护范围作为本轮 authority。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-glossolepis-incisus', 'fishbase-glossolepis-incisa'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'shoal',
+    minimumGroupSize: 6,
+    recommendedGroupSize: { min: 6, max: 8 },
+    swimmingZone: 'middle',
+    territoriality: 'none',
+    finNipping: 'none',
+    swimmingPace: 'fast',
+    predationRisk: 'low',
+    summary: '非常和平但游速快、体型较大；至少 6–8 条群养，避免用活跃体型去压迫特别小或慢游的同缸鱼。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-glossolepis-incisus', 'fishbase-glossolepis-incisa'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 15, measurement: 'SL' },
+    minVolumeLiters: 108,
+    minTankLengthCm: 120,
+    activityLevel: 'high',
+    swimmingZone: 'middle',
+    needsCover: true,
+    spaceNotes: ['长期群养按至少 120 × 30 cm 缸底、约 108 L 规划；FishBase 的 100 cm / 5+ 作为交叉支持，不用于降低 Seriously Fish 的长期群游空间建议。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-glossolepis-incisus', 'fishbase-glossolepis-incisa'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const clownLoachKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '本轮不提供稳定的外观公母硬判断',
@@ -474,6 +525,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0133: redRainbowfishKnowledge,
   sp_0126: clownLoachKnowledge,
   sp_0045: hillstreamLoachKnowledge,
   sp_0053: pygmyCoryKnowledge,

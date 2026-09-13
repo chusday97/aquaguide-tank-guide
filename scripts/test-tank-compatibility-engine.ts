@@ -514,6 +514,34 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed red-rainbowfish authority enforces hard-water group, long-tank planning and 25C ceiling',
+    run: () => {
+      const rainbow = fishData.find(item => item.id === 'sp_0133');
+      if (!rainbow) return false;
+      const underPlanned = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '90', width: '30', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: rainbow,
+        candidateQuantity: 4,
+      });
+      const fullPlan = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '35', height: '35' }, targetTemperature: '24' }),
+        candidateSpecies: rainbow,
+        candidateQuantity: 6,
+      });
+      const hotTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '35', height: '35' }, targetTemperature: '26' }),
+        candidateSpecies: rainbow,
+        candidateQuantity: 6,
+      });
+      return underPlanned.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && fullPlan.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_pressure_context'].includes(rule.code))
+        && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && fullPlan.evidenceIds?.includes('seriouslyfish-glossolepis-incisus');
+    },
+  },
+  {
     name: 'reviewed clown-loach authority enforces adult group and giant-space planning without stale permanent territorial pressure',
     run: () => {
       const clown = fishData.find(item => item.id === 'sp_0126');

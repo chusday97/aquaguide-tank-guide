@@ -1,5 +1,15 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after Red Rainbowfish reviewed-authority checkpoint
+- DONE: add reviewed `Glossolepis incisus` Species Knowledge V2 environment / social / reproduction / space authority with Seriously Fish + FishBase evidence.
+- DONE: add reviewed Compatibility profile and canonical coverage inclusion for `sp_0133`.
+- DONE: add additive migration `202609120015_compatibility_red_rainbowfish_baseline.sql`; repository-only, not applied to Staging/Production.
+- DONE: focused Species Knowledge / Compatibility / evidence coverage / Admin runtime authority checks PASS.
+- DONE: TypeScript and full production build PASS.
+- CURRENT METRIC: 26 canonical taxa / 650 ordered directions; 29 reviewed Profiles / 5 reviewed Pair Rules.
+- NEXT: continue only with another reviewed high-frequency species or a reproducible product/runtime badcase; keep database deployment separately authorized.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 after runtime corrupt-root mutation guard
 - DONE: reproduce live-process external blob deletion followed by successful ordinary state write.
 - DONE: fail closed ordinary state/asset mutation under active-root integrity errors.

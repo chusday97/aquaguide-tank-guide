@@ -289,6 +289,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-glossolepis-incisus': {
+    id: 'seriouslyfish-glossolepis-incisus',
+    title: 'Glossolepis incisus (Red Rainbowfish)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/glossolepis-incisus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-glossolepis-incisa': {
+    id: 'fishbase-glossolepis-incisa',
+    title: 'Glossolepis incisa species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/10477',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-chromobotia-macracanthus': {
     id: 'seriouslyfish-chromobotia-macracanthus',
     title: 'Chromobotia macracanthus (Clown Loach)',

@@ -253,6 +253,30 @@ assert.equal(pygmyCorySources.length, 2);
 assert.ok(pygmyCorySources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(pygmyCorySources.some(source => source.publisher === 'FishBase'));
 
+const redRainbowfishKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0133',
+  name: '红苹果美人',
+  scientificName: 'Glossolepis incisus',
+  waterTemperature: '22-26°C',
+  phLevel: '7.0-8.0',
+  tankSize: '至少 96 升',
+});
+assert.deepEqual(redRainbowfishKnowledge.facts.temperatureRange, { min: 22, max: 25 });
+assert.deepEqual(redRainbowfishKnowledge.facts.phRange, { min: 7, max: 8 });
+assert.deepEqual(redRainbowfishKnowledge.knowledge.environment?.hardnessDgh, { min: 10, max: 20 });
+assert.equal(redRainbowfishKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.deepEqual(redRainbowfishKnowledge.knowledge.socialBehavior?.recommendedGroupSize, { min: 6, max: 8 });
+assert.equal(redRainbowfishKnowledge.knowledge.socialBehavior?.territoriality, 'none');
+assert.equal(redRainbowfishKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 15);
+assert.equal(redRainbowfishKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 108);
+assert.equal(redRainbowfishKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
+assert.equal(redRainbowfishKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
+const redRainbowfishSources = resolveKnowledgeSources(redRainbowfishKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(redRainbowfishSources.length, 2);
+assert.ok(redRainbowfishSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(redRainbowfishSources.some(source => source.publisher === 'FishBase'));
+
 const clownLoachKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0126',

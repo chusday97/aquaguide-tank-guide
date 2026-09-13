@@ -387,6 +387,24 @@ const guppySeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const redRainbowfishSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-glossolepis-incisus',
+  title: 'Glossolepis incisus (Red Rainbowfish)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/glossolepis-incisus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const redRainbowfishFishBase: EvidenceSourceDto = {
+  id: 'fishbase-glossolepis-incisa',
+  title: 'Glossolepis incisa species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/10477',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const clownLoachSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-chromobotia-macracanthus',
   title: 'Chromobotia macracanthus (Clown Loach)',
@@ -562,6 +580,17 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0133: {
+    speciesId: 'sp_0133',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [redRainbowfishSeriouslyFish, redRainbowfishFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
   sp_0126: {
     speciesId: 'sp_0126',
     waterType: 'freshwater',
