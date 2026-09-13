@@ -1,5 +1,12 @@
 # Current Goal
 
+## Congo tetra reviewed-authority checkpoint — 2026-09-13
+- Added standard `Phenacogrammus interruptus` / 刚果美人 (`sp_0020`) as the 18th canonical priority taxon using Seriously Fish + FishBase reviewed evidence.
+- Reviewed planning authority: 23–28°C, pH 6.0–7.5, 3–18 dGH, ~8 cm SL, 120 cm tank length, ~108 L planning volume, minimum group 5.
+- Canonical coverage: 18 taxa / 306 ordered directions = 270 caution, 34 not_recommended, 2 compatible; no new unconditional green-light direction.
+- Runtime/Admin baseline: 21 Profiles / 5 Pair Rules. Additive migration `202609120007_compatibility_congo_tetra_baseline.sql` is repository authority only and is not applied to Staging/Production.
+- Full Product/Admin/runtime/build/browser validation is green through GP001–GP004.
+
 ## Main root-ownership / PID-reuse lease hardening absorbed — 2026-09-13
 - Absorbed main checkpoints `32a5bb6c`, `a307b36c`, `8105f032`, and `f6820e69`: Local File authority root now has one live process owner, stale leases can be reclaimed, and PID reuse is disambiguated with process-start identity.
 - Recovery keeps the dynamic canonical Compatibility exact-baseline guard at 20 Profiles / 5 Pair Rules; this DEV-only ownership lease does not change Product Species/Compatibility authority or authorize Staging/Production writes.

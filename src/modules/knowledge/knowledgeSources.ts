@@ -1,6 +1,22 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-phenacogrammus-interruptus': {
+    id: 'seriouslyfish-phenacogrammus-interruptus',
+    title: 'Phenacogrammus interruptus (Congo Tetra)',
+    publisher: 'Seriously Fish',
+    url: 'https://seriouslyfish.com/species/phenacogrammus-interruptus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-phenacogrammus-interruptus': {
+    id: 'fishbase-phenacogrammus-interruptus',
+    title: 'Phenacogrammus interruptus (Congo tetra) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Phenacogrammus-interruptus.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-sahyadria-denisonii': {
     id: 'seriouslyfish-sahyadria-denisonii',
     title: 'Sahyadria denisonii (Red-line Torpedo Barb)',

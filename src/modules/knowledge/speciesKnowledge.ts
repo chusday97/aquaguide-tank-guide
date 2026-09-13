@@ -97,7 +97,58 @@ const denisonBarbKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+const congoTetraKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成体公鱼体型更大、鳍条延长且颜色更强',
+    summary: '成熟公鱼通常更大、更鲜艳，并发展出明显延长的背鳍与尾鳍鳍条；母鱼体型较小、鳍形更朴素。',
+    points: ['公鱼：成熟后体型更大、色彩更强，背鳍和尾鳍可出现明显延长鳍条。', '母鱼：通常更小，缺少公鱼夸张的延长鳍条。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    maleTraits: ['成熟后体型更大、色彩更强', '背鳍与尾鳍鳍条明显延长'],
+    femaleTraits: ['通常体型更小', '缺少公鱼夸张的延长鳍条'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-phenacogrammus-interruptus'], reviewedAt: '2026-09-13' },
+  },
+  reproduction: {
+    mode: 'egg_scatterer',
+    plainLanguageLabel: '散卵型',
+    summary: '散卵繁殖，没有亲代照护；鱼卵通常约 6 天孵化，繁殖缸用网格或植物让鱼卵与成鱼分离。',
+    fertilization: 'external',
+    parentalCare: 'none',
+    gestationOrIncubation: { minDays: 6, maxDays: 6, label: '鱼卵通常约 6 天孵化' },
+    parentFryRisk: ['没有亲代照护，繁殖时应让鱼卵与成鱼分离以减少吞卵风险。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-phenacogrammus-interruptus'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 23, max: 28 },
+    phRange: { min: 6.0, max: 7.5 },
+    hardnessDgh: { min: 3, max: 18 },
+    notes: ['对水质较敏感，长期饲养需要稳定、清洁且有良好循环的淡水环境。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-phenacogrammus-interruptus', 'fishbase-phenacogrammus-interruptus'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 5,
+    territoriality: 'none',
+    finNipping: 'none',
+    predationRisk: 'low',
+    summary: '和平但活跃的群游鱼，单独或数量太少时更容易受惊；FishBase 明确建议至少 5 条群养。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-phenacogrammus-interruptus', 'fishbase-phenacogrammus-interruptus'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 8, measurement: 'SL' },
+    minVolumeLiters: 108,
+    minTankLengthCm: 120,
+    activityLevel: 'high',
+    needsCover: true,
+    spaceNotes: ['成鱼群长期规划按至少 120 × 30 cm 缸底、约 108 L；长度用于提供持续游动空间。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-phenacogrammus-interruptus', 'fishbase-phenacogrammus-interruptus'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0020: congoTetraKnowledge,
   sp_0440: denisonBarbKnowledge,
   sp_0114: emberTetraKnowledge,
   sp_0469: emberTetraKnowledge,

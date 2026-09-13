@@ -230,6 +230,29 @@ assert.equal(denisonSources.length, 2);
 assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(denisonSources.some(source => source.publisher === 'FishBase'));
 
+const congoTetraKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0020',
+  name: '刚果美人',
+  scientificName: 'Phenacogrammus interruptus',
+  waterTemperature: '23-28°C',
+  phLevel: '6.0-7.5',
+  tankSize: '至少 80 升',
+});
+assert.deepEqual(congoTetraKnowledge.facts.temperatureRange, { min: 23, max: 28 });
+assert.deepEqual(congoTetraKnowledge.facts.phRange, { min: 6, max: 7.5 });
+assert.deepEqual(congoTetraKnowledge.knowledge.environment?.hardnessDgh, { min: 3, max: 18 });
+assert.equal(congoTetraKnowledge.knowledge.socialBehavior?.minimumGroupSize, 5);
+assert.equal(congoTetraKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 8);
+assert.equal(congoTetraKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 108);
+assert.equal(congoTetraKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
+assert.equal(congoTetraKnowledge.knowledge.reproduction?.mode, 'egg_scatterer');
+assert.deepEqual(congoTetraKnowledge.knowledge.reproduction?.gestationOrIncubation, { minDays: 6, maxDays: 6, label: '鱼卵通常约 6 天孵化' });
+const congoTetraSources = resolveKnowledgeSources(congoTetraKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(congoTetraSources.length, 2);
+assert.ok(congoTetraSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(congoTetraSources.some(source => source.publisher === 'FishBase'));
+
 const harlequinKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0468',

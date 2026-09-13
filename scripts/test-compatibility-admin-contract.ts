@@ -215,7 +215,16 @@ for (const source of denisonProfile.citations) assert.equal(denisonMigration.inc
 assert.equal((denisonMigration.match(/Compatibility denison-barb profile drift:/g) || []).length, 1);
 assert.equal((denisonMigration.match(/Compatibility denison-barb profile evidence drift:/g) || []).length, 1);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440']);
+const congoTetraMigration = readFileSync('supabase/migrations/202609120007_compatibility_congo_tetra_baseline.sql', 'utf8');
+assert.match(congoTetraMigration, /Compatibility congo-tetra baseline is partial or not fully published/, 'Congo-tetra baseline must fail closed on partial published catalog coverage.');
+const congoTetraProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0020');
+assert.ok(congoTetraProfile, '120007 must own the reviewed Congo-tetra profile.');
+assert.equal(congoTetraMigration.includes('sp_0020'), true);
+for (const source of congoTetraProfile.citations) assert.equal(congoTetraMigration.includes(source.id), true, `Congo-tetra migration must include source ${source.id}`);
+assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile drift:/g) || []).length, 1);
+assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile evidence drift:/g) || []).length, 1);
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

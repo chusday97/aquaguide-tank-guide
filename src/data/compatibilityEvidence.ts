@@ -98,6 +98,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const congoTetraSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-phenacogrammus-interruptus',
+  title: 'Phenacogrammus interruptus (Congo Tetra)',
+  publisher: 'Seriously Fish',
+  url: 'https://seriouslyfish.com/species/phenacogrammus-interruptus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const congoTetraFishBase: EvidenceSourceDto = {
+  id: 'fishbase-phenacogrammus-interruptus',
+  title: 'Phenacogrammus interruptus (Congo tetra) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Phenacogrammus-interruptus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const blackSkirtSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-gymnocorymbus-ternetzi',
   title: 'Gymnocorymbus ternetzi (Black Widow Tetra)',
@@ -427,6 +445,17 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0020: {
+    speciesId: 'sp_0020',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [congoTetraSeriouslyFish, congoTetraFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
   sp_0440: {
     speciesId: 'sp_0440',
     waterType: 'freshwater',

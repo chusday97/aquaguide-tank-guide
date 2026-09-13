@@ -514,6 +514,34 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Congo-tetra authority enforces 108L planning, 120cm length, five-fish group and warm-water ceiling',
+    run: () => {
+      const congo = fishData.find(item => item.id === 'sp_0020');
+      if (!congo) return false;
+      const underPlanned = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '30', height: '30' }, targetTemperature: '25' }),
+        candidateSpecies: congo,
+        candidateQuantity: 4,
+      });
+      const fullPlan = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '35', height: '35' }, targetTemperature: '25' }),
+        candidateSpecies: congo,
+        candidateQuantity: 5,
+      });
+      const hotTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '35', height: '35' }, targetTemperature: '29' }),
+        candidateSpecies: congo,
+        candidateQuantity: 5,
+      });
+      return underPlanned.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && fullPlan.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum'].includes(rule.code))
+        && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && fullPlan.evidenceIds?.includes('seriouslyfish-phenacogrammus-interruptus');
+    },
+  },
+  {
     name: 'reviewed cherry-barb authority overrides legacy 40L catalog and enforces six-fish group context',
     run: () => {
       const cherryBarb = fishData.find(item => item.id === 'sp_0012');

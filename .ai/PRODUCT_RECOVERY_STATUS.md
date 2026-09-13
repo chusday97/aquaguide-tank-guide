@@ -1,5 +1,12 @@
 # Aqua Product Recovery Status
 
+## 2026-09-13 — Congo tetra reviewed-authority checkpoint
+- `Phenacogrammus interruptus` (`sp_0020`) is the 18th canonical priority taxon.
+- Canonical matrix: 18 taxa / 306 directions = 270 caution, 34 not_recommended, 2 compatible.
+- Reviewed runtime baseline: 21 Profiles / 5 Pair Rules.
+- Repository migration `202609120007_compatibility_congo_tetra_baseline.sql` is additive and not applied to Staging/Production.
+
+
 ## P1 — Denison barb reviewed-authority checkpoint (2026-09-13)
 - Standard `Sahyadria denisonii` (`sp_0440`) is reviewed directly from Seriously Fish + FishBase. Gold/Longfin/Red Line variants are intentionally excluded from automatic inheritance.
 - Species Knowledge V2 reviewed facts: freshwater; 15–25°C; pH 6.5–7.8; 5–25 dGH; ~11 cm SL; 120 cm / ~243 L planning space; peaceful schooling; minimum group 6, preferred 6–10; adult sex identification only as an auxiliary cue.

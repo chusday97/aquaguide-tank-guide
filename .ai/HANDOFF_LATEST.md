@@ -1,5 +1,12 @@
 # Handoff Latest
 
+## Congo tetra reviewed-authority checkpoint — 2026-09-13
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for `Phenacogrammus interruptus` (`sp_0020`).
+- Canonical coverage is now 18 taxa / 306 directions: 270 caution, 34 not_recommended, 2 compatible.
+- Runtime/Admin baseline is 21 Profiles / 5 Pair Rules; Git runtime snapshot matches canonical static authority.
+- New additive migration: `202609120007_compatibility_congo_tetra_baseline.sql`; not applied to Staging/Production.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical coverage, Admin/Git/DB runtime, Staging preflight, Local File Admin, full build, Species Detail, Compatibility Beginner Action and GP001–GP004.
+
 ## Main Local File root-ownership hardening absorbed — 2026-09-13
 - Recovery now contains main single-root ownership lease and PID-reuse protection through `f6820e69`; concurrent Local Admin processes cannot share one Durable Local File root.
 - Product Recovery remains the active authority in this worktree; the 20/5 Compatibility baseline and 17-taxon Product checkpoint are unchanged.
