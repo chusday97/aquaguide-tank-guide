@@ -8,7 +8,7 @@
 
 ### Verified
 
-- GitHub Actions run `34754020520` 在 `9fde0973` 全绿，Ubuntu Chromium 完成公开/应用路由和三档响应式验收，并上传 12 张 Species 原始截图、4 张对照图和 preview 日志；证据 `EVD-20260913-138`。Critic 仍待可读复验，页面继续 noindex。
+- GitHub Actions run `34754292331` 在 `d7a3fd53` 全绿，Ubuntu Chromium 完成公开/应用路由和三档响应式验收，并额外验证 FAQ 键盘展开、章节锚点和 Species → 工具参数；上传 12 张 Species 原始截图、4 张对照图和 preview 日志，证据 `EVD-20260913-139`。Critic 仍待可读复验，页面继续 noindex。
 
 ### Verified
 

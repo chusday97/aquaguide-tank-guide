@@ -4,7 +4,7 @@
 - [x] 新增 `.github/workflows/public-seo-browser.yml`：仅监听 `codex/species-seo-preview-v1` 与对应 PR，使用 Node 22、Playwright 1.60、4173 production preview，并上传 12 张 Species 截图和 4 张对照图（保留 7 天）。
 - [x] 未触碰三个用户未提交文件；Figma、Product Truth、生产 Supabase、main、页面样式和索引策略均未改变。
 - [x] 静态 Editorial/Evidence/Public Contract/Copy/Structure/Responsive/Asset、lint、build、diff-check 全部通过。
-- [x] GitHub Actions run `34754020520` 在 SHA `9fde0973c348edb6f79aa832ba43a753f2eae681` 全绿，成功上传 12 张原始截图、4 张对照图和 preview 日志；证据为 `EVD-20260913-138`。
+- [x] GitHub Actions run `34754292331` 在 SHA `d7a3fd539835936321e9ca45945a966edd71001d` 全绿，补充 FAQ 键盘展开、章节锚点和能力入口参数断言后，成功上传 12 张原始截图、4 张对照图和 preview 日志；证据为 `EVD-20260913-139`。
 - [ ] 同一 SHA 的 Critic 复验正在运行；Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
 
 ## 2026-09-13 Docker 浏览器恢复尝试
