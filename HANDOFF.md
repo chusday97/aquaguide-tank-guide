@@ -1505,6 +1505,6 @@
 # 2026-09-13 当前有效交接：孔雀鱼内容门禁
 
 - 孔雀鱼 `/species/sp_0436` 在无已确认 Editorial 时仅显示中文身份引导、Product Truth 参数和图片 fallback；不再读取 `fish.description` 作为公开 Hero 特征文案。
-- 代码提交待本次文档提交确认；测试与内置浏览器复核证据为 `EVD-20260913-133`。
+- 代码提交为 `5bc61b1b`；测试与内置浏览器复核证据为 `EVD-20260913-133`。
 - 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 未修改、未暂存。
 - 下一步：恢复可控浏览器后验证三档；Critic 输出可读正文后复验；Figma 继续暂停；所有页面保持 `noindex,follow`。
