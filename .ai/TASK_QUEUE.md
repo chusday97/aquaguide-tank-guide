@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after Local owner conflict guidance closure
+- DONE: reproduce the startup UX loss of the same-root `VERSION_CONFLICT` reason.
+- DONE: preserve the actionable Local File API message through startup hydration.
+- DONE: add explicit same-root old-process recovery guidance to the fail-closed startup screen.
+- DONE: real two-process browser verification confirms both owner reason and recovery instruction are visible.
+- DONE: audit Operations Home safety actions; they already preserve `cause.message`.
+- DONE: Local File UI / mode contract / TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 after interrupted restore recovery closure
 - DONE: protect restore with a durable transaction journal tied to the pre-restore safety backup.
 - DONE: recover an interrupted/mixed active root before serving any Local Admin request on the next process start.

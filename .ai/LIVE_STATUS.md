@@ -1,5 +1,11 @@
 # Live Status
 
+## 2026-09-13 Local owner conflict operator guidance
+- Functional main: `ac5959e6`
+- Same-root owner conflicts remain fail-closed, but the startup page now preserves the exact API reason and gives the operator a concrete recovery action.
+- Two-process browser probe PASS; Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion.
+
 ## 2026-09-13 interrupted restore recovery
 - Functional main: `bac95f66`
 - Crash-interrupted restore is now durable: startup replays the pre-restore safety backup before serving Local Admin.

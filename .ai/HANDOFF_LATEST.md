@@ -1,5 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 Local owner conflict operator guidance closed
+- New main checkpoint: `ac5959e6 fix(admin): preserve local owner conflict guidance`.
+- Startup hydration no longer collapses root-ownership `VERSION_CONFLICT` into a generic Local File unavailable message; the original API reason is retained.
+- `main.tsx` fail-closed startup screen now also says to close the old Local Admin process when it owns the same Local File root.
+- Real browser verification with two API processes sharing one root confirms both messages render. Operations Home safety actions already preserve error messages and were left unchanged.
+- GitHub Product Golden Path PASS; Vercel `dpl_9fDzEiUYioVy2GKG2wPWYEHKhuQf` READY. Production unchanged.
+
 ## 2026-09-13 interrupted restore recovery closed
 - New main checkpoint: `bac95f66 fix(admin): recover interrupted restores`.
 - Restore writes `.restore-transaction.json` before mutating authority. If the process dies mid-restore, the next Local Admin process acquires the root lease, rolls back from the recorded safety backup, removes `.restore-assets-*` residue, deletes the journal, and only then serves requests.

@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 Local owner conflict operator guidance closed
+A concrete fail-closed operator UX badcase is closed on main at `ac5959e6 fix(admin): preserve local owner conflict guidance`.
+
+- Fail-before-fix: the Local File API returned the actionable `VERSION_CONFLICT` reason when another process owned the same root, but `hydrateLocalAdminFileStores()` replaced it with a generic startup failure, hiding the required operator action.
+- Startup hydration now preserves the underlying API message while still stopping the app fail-closed. The startup page also tells operators to close the old Local Admin process when the same Local File root is already owned.
+- Real browser verification used two Local Admin API processes against one root and confirmed the page contains both `Local Admin root is already owned by process ...` and the explicit recovery instruction.
+- Operations Home backup/restore/runtime-snapshot error paths were audited and already surface `cause.message`; no speculative changes were made there.
+- PASS: Local Admin mode contract, Local File browser restart/backup/restore regression, root TypeScript, full build, GitHub Product Golden Path, Vercel branch deployment READY.
+- Production remains unchanged. NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 interrupted restore recovery closed
 A concrete crash-interrupted restore badcase is closed on main at `bac95f66 fix(admin): recover interrupted restores`.
 

@@ -1,5 +1,12 @@
 # Branch Status
 
+## 2026-09-13 — Local owner conflict guidance checkpoint
+- main functional checkpoint: `ac5959e6 fix(admin): preserve local owner conflict guidance`
+- GitHub Product Golden Path: PASS (`34744235122`).
+- Vercel main branch deployment: `dpl_9fDzEiUYioVy2GKG2wPWYEHKhuQf` READY, target null.
+- Real browser same-root conflict probe: owner reason visible + explicit close-old-process instruction visible.
+- Production not promoted.
+
 ## 2026-09-13 — interrupted restore recovery checkpoint
 - main functional checkpoint: `bac95f66 fix(admin): recover interrupted restores`
 - local/GitHub main were verified equal and clean after the checkpoint.

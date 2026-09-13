@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-13 — Local owner conflict guidance closure
+- Re-read real main and first synced the previously unrecorded `bac95f66` interrupted-restore recovery checkpoint.
+- Audited Local File client error propagation and reproduced an operator UX defect: startup hydration discarded the explicit same-root owner conflict reason.
+- Patched startup hydration to preserve `error.message` and added explicit old-process recovery guidance in the fail-closed startup page.
+- Real browser probe: two Local Admin APIs sharing one root -> rendered owner PID conflict + close-old-process instruction.
+- PASS: Local Admin mode contract, Local File UI restart/backup/restore, TypeScript, full build, GitHub Product Golden Path `34744235122`, Vercel `dpl_9fDzEiUYioVy2GKG2wPWYEHKhuQf` READY.
+- Operations Home safety action errors already preserve `cause.message`; no further changes.
+
 ## 2026-09-13 — interrupted restore recovery closure
 - Observed main advanced to `bac95f66 fix(admin): recover interrupted restores` while `.ai` had not yet recorded the change.
 - Audited the implementation: durable restore journal + startup safety-backup recovery + temp cleanup + fail-closed invalid journal handling.
