@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — Cross-operation Local File consistency closure
+- `01fdca74`: Local authority mutation/snapshot operations now serialize; reproduced backup×asset race had returned 500 from disappearing atomic temp files. 30/30 backup×asset and 30/30 runtime-snapshot×Published-asset stress runs completed with zero torn output.
+- `0df8a63d`: same asset GET/PUT/DELETE now share a pair queue; fail-before-fix GET mixed PNG metadata with WebP body. 1600 concurrent reads produced zero torn responses after the fix.
+- `f83c08fd`: integrity reads now enter the authority transaction; fail-before-fix produced a false `ASSET_SIZE_MISMATCH` during save. 900 stress checks produced zero false errors.
+- Restore×asset GET probe (70 assets, 20 restores, 4400 reads) found zero blocker, so restore behavior was intentionally not broadened.
+- All three functional checkpoints: Local File API/UI + mode contract + TypeScript + full build PASS; GitHub Product Golden Path PASS; Vercel branch deployments READY. No Production promotion, Supabase Staging, live DB or indexing change.
+
+
 ## 2026-09-13 — Local File concurrency hardening closed
 - Runtime export collision reproduced at 100-way concurrency: 35 success / 65 failure. Fixed with UUID-isolated atomic/staging temp paths (`275587ea`).
 - Backup ID race reproduced: 32 success responses collapsed into 16 real backups. Fixed with atomic directory reservation (`6cd1d5d8`).

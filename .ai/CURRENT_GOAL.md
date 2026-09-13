@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 cross-operation Local File read/snapshot consistency closed
+Three additional reproducible cross-operation consistency badcases are closed on main.
+
+- `01fdca74 fix(admin): serialize authority snapshot operations`: backup racing asset writes previously returned 500 while `cp(assets)` observed disappearing atomic temp files; snapshot/state mutation/backup/restore operations now share one Local authority transaction queue. Stress: backup×asset 30/30 success, runtime-snapshot×Published-asset 30/30 success, zero torn snapshots.
+- `0df8a63d fix(admin): serialize asset pair reads`: fail-before-fix asset GET returned PNG metadata with WebP body by the third read during overwrite. Same-ID GET/PUT/DELETE now share a pair queue. Stress: 1600 concurrent reads, zero torn responses.
+- `f83c08fd fix(admin): serialize integrity snapshots`: fail-before-fix integrity returned false `ASSET_SIZE_MISMATCH` by the fourth check during a healthy asset save. Integrity now reads inside the authority transaction boundary. Stress: 900 checks, zero false errors.
+- Restore×asset GET was separately stress-tested with 70 assets / 20 restores / 4400 reads and produced zero bad responses; restore read behavior was therefore not widened speculatively.
+- Local File API/UI, Local Admin mode contract, API/root TypeScript, full build, GitHub Product Golden Path and Vercel branch deployments are PASS/READY for all three functional commits. Production remains unchanged because Local File API is DEV-only.
+- NEXT: continue only from another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 Local File concurrency closure
 Three concrete concurrent-operation badcases are closed on main.
 

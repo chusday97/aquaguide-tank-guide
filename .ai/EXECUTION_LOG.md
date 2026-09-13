@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-13 — Cross-operation Local File consistency
+- Reproduced backup×asset race: backup 500 while `cp(assets)` observed an atomic temp file disappear. Added global Local authority transaction boundary; backup×asset 30/30 and runtime-snapshot×Published-asset 30/30 stress = zero failure/torn output. Commit `01fdca74`.
+- Reproduced asset GET×PUT torn response: PNG metadata header with WebP body by read 3. Same-ID GET/PUT/DELETE share pair queue; 1600 stress reads = zero torn response. Commit `0df8a63d`.
+- Reproduced integrity×PUT false red state: `ASSET_SIZE_MISMATCH` by check 4 on ultimately healthy disk. Integrity now enters authority transaction; 900 stress checks = zero false error. Commit `f83c08fd`.
+- Restore×asset GET stress: 70 assets, 20 restores, 4400 reads, zero bad response; no speculative restore change.
+- All local gates PASS; GitHub Product Golden Path PASS and Vercel branch deployments READY for all three commits. Production/Supabase/indexing unchanged.
+
+
 ## 2026-09-13 — concurrency failure-path closure
 - Reproduced runtime snapshot same-millisecond temp collision: 100 requests => 35 success / 65 failure. Fixed unique temp paths; 100/100 stress PASS.
 - Reproduced backup allocation TOCTOU: 32 success responses => 16 unique backups. Fixed atomic directory reservation; 100/100 unique stress PASS.
