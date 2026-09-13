@@ -490,3 +490,11 @@
 - 通过 `test:public-seo-copy`、`test:public-seo-structure`、`test:public-seo-responsive-contract`、lint、build 和 diff-check。
 - `test:species-variant-card` 通过；本地 `test:species-landing` / `test:seo-motion` 仍在 Chromium 启动阶段触发既知 macOS MachPort 权限错误，不能计为浏览器失败或通过。
 - 下一步：在 GitHub Actions 或内置浏览器上复核当前内容减法的三档视觉；不改变 Product Truth、证据状态、Figma、索引策略或三个用户未提交文件。
+## 2026-09-14 Species 页面第二轮内容减法（进行中）
+
+- 用户反馈页面仍有与物种无关的说明性文字；本轮继续收紧 Species 页面，不改变 Product Truth、Editorial 证据或路由。
+- 能力卡说明改为“比较它与我的鱼缸是否匹配”，资料区说明缩短为“信息来源”。行为章节统一为“生活方式 / 它如何生活”，取食章节统一为“日常 / 取食方式”。
+- 鱼类只有一个相关链接时不再单独渲染相关内容区；资料来源组件在无补充说明时只显示来源列表，减少模板性空段。
+- `npm run test:public-seo-copy`、`npm run test:public-seo-structure`、`npm run test:public-seo-contract`、`npm run lint`、`npm run build`、`git diff --check` 已通过。
+- 仍未完成：当前版本新的 GitHub Actions 截图、可读独立 Critic、Figma Canonical、完整性能基线和索引发布门禁。页面继续 `noindex,follow`。
+- 三个用户未提交文件仍保持原样：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
