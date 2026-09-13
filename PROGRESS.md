@@ -3,7 +3,8 @@
 - [x] 定位 GitHub Actions Run `34769711811` 失败原因：FAQ 断言将 React `useId()` 含冒号的合法 ID 当作原始 CSS 选择器；已改为属性选择器，未降低任何验收标准。
 - [x] 本地已通过脚本语法、公开契约、中文文案/结构、品系卡片、lint、build 和 diff-check。
 - [x] 本机再次复现 Chromium 启动失败：macOS `MachPortRendezvous` 权限阻止，不能作为页面断言证据。
-- [ ] Run `34769937634` 仍在浏览器专项步骤以退出码 1 失败，GitHub UI 未提供第二个断言正文；已在浏览器脚本加入失败诊断 JSON，下一次 CI artifact 将记录错误名称、消息、堆栈和请求日志。不能计为浏览器门禁通过。Critic 可读六维报告、Figma Canonical、性能完整基线和索引门禁仍未完成。
+- [x] Run `34770641762`（提交 `b5548afe`）已完成但仍在浏览器专项步骤以退出码 1 失败；artifact `public-seo-browser-evidence-b5548afe...` 已生成，大小 1.29 KB，包含失败诊断文件。GitHub UI 未直接显示压缩包内正文，具体断言仍待读取；不能计为浏览器门禁通过。
+- [ ] 读取 Run #9 artifact 中的诊断 JSON，定位第二个失败断言后做最小修复。Critic 可读六维报告、Figma Canonical、性能完整基线和索引门禁仍未完成。
 
 ## 2026-09-13 剩余门禁收口（进行中）
 

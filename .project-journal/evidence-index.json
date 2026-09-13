@@ -4,6 +4,16 @@
   "updated_at": "2026-09-14T00:30:00+08:00",
   "evidence_items": [
     {
+      "id": "EVD-20260914-152",
+      "type": "hosted-browser-verification-failed",
+      "locator": "https://github.com/chusday97/aquaguide-tank-guide/actions/runs/34770641762; artifact public-seo-browser-evidence-b5548afe20aabd7fc912b1b1cc33e71e6e47f412",
+      "date": "2026-09-14",
+      "version": "b5548afe20aabd7fc912b1b1cc33e71e6e47f412",
+      "accessible": true,
+      "sensitive": false,
+      "notes": "GitHub Actions Ubuntu Chromium运行完成但Public SEO browser gate在步骤9以退出码1失败；artifact大小1.29 KB，包含新增browser-gate-diagnostic.json。GitHub UI可确认失败步骤、SHA和artifact，但当前界面未直接提供压缩包内诊断正文，因此第二个失败断言保持未知，不计为浏览器门禁通过。"
+    },
+    {
       "id": "EVD-20260914-151",
       "type": "browser-gate-diagnostic-hardening",
       "locator": "scripts/verify-public-seo-github-actions.mjs; npm run test:public-seo-contract; npm run test:public-seo-copy; npm run lint; git diff --check",
