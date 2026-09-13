@@ -1,5 +1,17 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 runtime corrupt-root write guard closed
+A concrete live-runtime corruption/write-through badcase is closed on main at `0060d200 fix(admin): block writes on corrupt active authority`.
+
+- Fail-before-fix API probe: after a healthy Business state referenced a local asset, deleting the asset blob made `/integrity` report `ASSET_PAIR_MISSING` + `REFERENCED_ASSET_MISSING`; a subsequent ordinary `PUT /state/business` still returned 200 and persisted the new state.
+- Local Admin ordinary mutations now preflight active-root integrity under the authority write lock. `state PUT` and unrelated asset writes/deletes fail closed with `409 INTEGRITY_FAILED` while the root has integrity errors.
+- Targeted asset repair remains available: re-PUT of the one corrupt asset is allowed when all errors belong to that asset; DELETE repair is allowed only when that asset is no longer referenced by Business state.
+- `INTEGRITY_FAILED` is now part of the shared API error contract.
+- Permanent regression covers blocked state write, blocked unrelated asset PUT, blocked referenced-asset DELETE, successful same-asset repair PUT, and resumption of ordinary writes after integrity returns healthy.
+- PASS: Local File API, Local Admin mode contract, Local File browser regression, Operations Studio populated UI, API/root TypeScript, full build, GitHub Product Golden Path `34758190657`. Vercel Git auto-preview was not created; no manual Preview was triggered because the behavior is DEV-only. Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 corrupt active authority startup recovery closed
 A concrete active-root corruption/operator badcase is closed on main at `ed3789e7 fix(admin): fail closed on corrupt active authority`.
 

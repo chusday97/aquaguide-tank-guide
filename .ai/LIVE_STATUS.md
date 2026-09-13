@@ -1,5 +1,12 @@
 # Live Status
 
+## 2026-09-13 — runtime corrupt-root mutation guard
+- CLOSED on main: `0060d200` blocks ordinary Local File mutations when the already-live active root becomes unhealthy.
+- `state PUT` and unrelated asset writes/deletes now return `409 INTEGRITY_FAILED`; targeted same-asset repair remains possible.
+- Shared API error contract now includes `INTEGRITY_FAILED`.
+- CI `34758190657` PASS; no Vercel auto-preview; Production unchanged.
+
+
 ## 2026-09-13 — corrupt active authority startup recovery closed
 - CLOSED on main: `ed3789e7` blocks ordinary Admin hydration when the active Durable Local File root already has integrity errors.
 - Fail-before-fix browser evidence: missing active asset blob produced integrity errors but Operations Studio still loaded and normal workspaces remained available.

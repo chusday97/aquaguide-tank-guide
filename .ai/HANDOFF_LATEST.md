@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — runtime corrupt-root writes now fail closed
+- Main functional checkpoint: `0060d200ed056345aba0ac96e52e8a1810925886` (`fix(admin): block writes on corrupt active authority`).
+- Fail-before-fix: after external blob deletion made the active root unhealthy, ordinary Business state PUT still returned 200 and persisted new data while the process stayed live.
+- Fixed at the API mutation boundary: state writes and unrelated asset mutations reject with `409 INTEGRITY_FAILED` until the root is healthy again.
+- Same-asset PUT repair is still allowed when all errors are local to that asset; DELETE repair is only allowed for an unreferenced target asset.
+- Full Local File/UI/Operations/type/build gates PASS; GitHub Product Golden Path `34758190657` PASS. No auto Vercel Preview; Production remains on `5fa915d3`.
+
+
 ## 2026-09-13 — corrupt active authority startup recovery closed
 - Main functional checkpoint: `ed3789e7105354d04f099bfb85290c27150d0e3a` (`fix(admin): fail closed on corrupt active authority`).
 - Reproduced in a real browser: deleting the current local asset blob left `/integrity` unhealthy but the app still entered Operations Studio and exposed normal workspaces.

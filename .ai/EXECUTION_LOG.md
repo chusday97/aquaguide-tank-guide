@@ -1,5 +1,15 @@
 # Execution Log
 
+## 2026-09-13 — runtime corrupt-root mutation guard closure
+- Reproduced a live-process badcase: healthy asset + Business reference -> external blob deletion -> `/integrity` unhealthy -> ordinary `PUT /state/business` still returned 200 and persisted a new marker.
+- Added `assertActiveRootHealthyForMutation()` under the authority write lock for state/asset mutations.
+- Unhealthy roots now block ordinary state writes and unrelated asset mutations with `409 INTEGRITY_FAILED`.
+- Preserved narrow repair semantics: same corrupt asset PUT may repair its own pair; delete repair is allowed only for an unreferenced target asset. Existing asset PUT/DELETE rollback regressions remain PASS.
+- Added `INTEGRITY_FAILED` to the shared API contract.
+- PASS: Local File API, Local Admin mode contract, Local File browser UI, Operations Studio UI, API/root TypeScript, full build, diff check.
+- Pushed `0060d200ed056345aba0ac96e52e8a1810925886`; Product Golden Path `34758190657` PASS. No Vercel auto-preview; Production unchanged.
+
+
 ## 2026-09-13 — corrupt active authority startup recovery closure
 - Real browser fail-before-fix: generated Durable Local File authority, deleted its current local asset blob, restarted the same root, and observed `ASSET_PAIR_MISSING` + `REFERENCED_ASSET_MISSING` while `/admin/content` still loaded Operations Studio with normal workspace entry points.
 - Added `/integrity` preflight to `hydrateLocalAdminFileStores()` and frontend `INTEGRITY_FAILED` handling.
