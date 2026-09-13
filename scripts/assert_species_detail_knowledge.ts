@@ -253,6 +253,28 @@ assert.equal(pygmyCorySources.length, 2);
 assert.ok(pygmyCorySources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(pygmyCorySources.some(source => source.publisher === 'FishBase'));
 
+const hillstreamLoachKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0045',
+  name: '越南爬岩鳅',
+  scientificName: 'Sewellia lineolata',
+  waterTemperature: '18-24°C',
+  phLevel: '6.5-7.5',
+  tankSize: '至少 48 升',
+});
+assert.deepEqual(hillstreamLoachKnowledge.facts.temperatureRange, { min: 20, max: 24 });
+assert.deepEqual(hillstreamLoachKnowledge.facts.phRange, { min: 6, max: 7.5 });
+assert.deepEqual(hillstreamLoachKnowledge.knowledge.environment?.hardnessDgh, { min: 1, max: 10 });
+assert.equal(hillstreamLoachKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.equal(hillstreamLoachKnowledge.knowledge.socialBehavior?.territoriality, 'low');
+assert.equal(hillstreamLoachKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 6.5);
+assert.equal(hillstreamLoachKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 68);
+assert.equal(hillstreamLoachKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 75);
+assert.equal(hillstreamLoachKnowledge.knowledge.reproduction, undefined, 'Hillstream-loach reproduction stays absent until a dedicated reviewed reproduction rule is needed');
+const hillstreamLoachSources = resolveKnowledgeSources(hillstreamLoachKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(hillstreamLoachSources.length, 1);
+assert.equal(hillstreamLoachSources[0]?.publisher, 'Seriously Fish');
+
 const discusKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0447',

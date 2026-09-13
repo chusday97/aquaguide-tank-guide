@@ -269,6 +269,15 @@ for (const source of pygmyCoryProfile.citations) assert.equal(pygmyCoryMigration
 assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile drift:/g) || []).length, 1);
 assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile evidence drift:/g) || []).length, 1);
 
+const hillstreamMigration = readFileSync('supabase/migrations/202609120013_compatibility_sewellia_baseline.sql', 'utf8');
+assert.match(hillstreamMigration, /Compatibility hillstream loach baseline is partial or not fully published/, 'Hillstream-loach baseline must fail closed on partial published catalog coverage.');
+const hillstreamProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0045');
+assert.ok(hillstreamProfile, '120013 must own the reviewed hillstream-loach profile.');
+assert.equal(hillstreamMigration.includes('sp_0045'), true);
+for (const source of hillstreamProfile.citations) assert.equal(hillstreamMigration.includes(source.id), true, `Hillstream-loach migration must include source ${source.id}`);
+assert.equal((hillstreamMigration.match(/Compatibility hillstream loach profile drift:/g) || []).length, 1);
+assert.equal((hillstreamMigration.match(/Compatibility hillstream loach profile evidence drift:/g) || []).length, 1);
+
 const additiveCompatibilityMigrations = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',
@@ -281,6 +290,7 @@ const additiveCompatibilityMigrations = [
   '202609120010_compatibility_ramirezi_baseline.sql',
   '202609120011_compatibility_discus_baseline.sql',
   '202609120012_compatibility_pygmy_cory_baseline.sql',
+  '202609120013_compatibility_sewellia_baseline.sql',
 ];
 for (const migrationName of additiveCompatibilityMigrations) {
   const migration = readFileSync(`supabase/migrations/${migrationName}`, 'utf8');
@@ -292,7 +302,7 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053']);
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

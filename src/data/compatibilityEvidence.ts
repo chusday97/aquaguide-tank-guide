@@ -387,6 +387,15 @@ const guppySeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const hillstreamLoachSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-sewellia-lineolata',
+  title: 'Sewellia lineolata (Tiger Hillstream Loach)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/sewellia-lineolata',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const pygmyCorySeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-corydoras-pygmaeus',
   title: 'Corydoras pygmaeus (Pygmy Cory)',
@@ -663,6 +672,17 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [swordtailSeriouslyFish, swordtailFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0045: {
+    speciesId: 'sp_0045',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'bottom_dwelling'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [hillstreamLoachSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'territoriality'],
   },
   sp_0053: {
     speciesId: 'sp_0053',

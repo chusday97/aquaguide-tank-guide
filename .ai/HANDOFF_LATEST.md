@@ -290,3 +290,9 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 ## Main convergence checkpoint — backup manifest binding and corrupt authority fail-closed
 - Current main Local File hardening is absorbed: backup manifests are directory-bound and corrupt active authority now fails closed with recovery guidance.
 - Product Recovery authority, Compatibility V7, 26/5 runtime baseline, and the 23-taxon reviewed matrix are unchanged.
+
+## P1 — Sewellia lineolata reviewed-authority checkpoint
+- Standard `Sewellia lineolata` (`sp_0045`) now has direct reviewed environment/social/space authority: 20–24°C, pH 6.0–7.5, 1–10 dGH, ~6.5 cm SL, 75 cm / ~68 L, minimum group 6.
+- Bottom-resource competition stays `territoriality: low`; no permanent community-wide territorial warning is introduced. High-flow/high-oxygen requirements remain husbandry guidance, not a fabricated equipment rule.
+- Canonical matrix: 24 taxa / 552 directions = 418 caution, 132 not_recommended, 2 compatible. Runtime/Admin baseline: 27 Profiles / 5 Pair Rules.
+- Added unapplied additive migration `202609120013_compatibility_sewellia_baseline.sql`. Product, runtime/Admin, build and GP001–GP004 gates all PASS.

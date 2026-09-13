@@ -4,6 +4,50 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const hillstreamLoachKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成熟后可从俯视体型和胸鳍结构辅助判断',
+    summary: '成熟母鱼体型更宽、吻部轮廓更连续；成熟公鱼更纤细、吻部更方，并可在胸鳍前部和头部出现软质突起。',
+    points: ['母鱼：俯视通常更宽，吻部与胸鳍轮廓更连续。', '公鱼：通常更纤细、吻部更方，成熟后胸鳍与头部可见软质突起。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sewellia-lineolata'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 20, max: 24 },
+    phRange: { min: 6.0, max: 7.5 },
+    hardnessDgh: { min: 1, max: 10 },
+    notes: ['需要成熟、洁净、富氧并有明显水流的水体；高流/高氧需求当前作为 reviewed husbandry evidence 展示，不把气泵开关误当作溶氧的唯一代理。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sewellia-lineolata'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'shoal',
+    minimumGroupSize: 6,
+    recommendedGroupSize: { min: 6 },
+    swimmingZone: 'bottom',
+    territoriality: 'low',
+    finNipping: 'none',
+    swimmingPace: 'slow',
+    predationRisk: 'low',
+    summary: '野外常成群出现，建议至少 6 条；同种个体会围绕优质觅食位发生支配与领地争夺，但通常不会把这种同形底栖竞争扩大成对异形社区鱼的普遍攻击。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sewellia-lineolata'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 6.5, measurement: 'SL' },
+    minVolumeLiters: 68,
+    minTankLengthCm: 75,
+    activityLevel: 'medium',
+    swimmingZone: 'bottom',
+    needsCover: true,
+    needsHidingPlaces: true,
+    substrateNotes: ['优先提供岩石、圆润砾石与可形成生物膜的硬表面，并保留开放的高流通区域。'],
+    spaceNotes: ['长期群养按至少 75 × 30 cm 缸底、约 68 L 规划；空间不足会放大同形底栖鱼之间的觅食位竞争。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sewellia-lineolata'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const pygmyCoryKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '成熟后可从俯视体型辅助判断',
@@ -388,6 +432,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0045: hillstreamLoachKnowledge,
   sp_0053: pygmyCoryKnowledge,
   sp_0447: discusKnowledge,
   sp_0448: ramireziKnowledge,

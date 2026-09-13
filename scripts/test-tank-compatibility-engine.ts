@@ -514,6 +514,42 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed hillstream-loach authority enforces cool-water group and space without global territorial pressure',
+    run: () => {
+      const hillstream = fishData.find(item => item.id === 'sp_0045');
+      const platy = fishData.find(item => item.id === 'sp_0011');
+      if (!hillstream || !platy) return false;
+      const underPlanned = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '30', height: '30' }, targetTemperature: '22' }),
+        candidateSpecies: hillstream,
+        candidateQuantity: 4,
+      });
+      const fullPlan = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '80', width: '35', height: '35' }, targetTemperature: '22' }),
+        candidateSpecies: hillstream,
+        candidateQuantity: 6,
+      });
+      const hotTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '80', width: '35', height: '35' }, targetTemperature: '25' }),
+        candidateSpecies: hillstream,
+        candidateQuantity: 6,
+      });
+      const withPlaty = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '90', width: '40', height: '40' }, targetTemperature: '22' }),
+        existingSpecies: [{ species: platy, record: { quantity: 2 } }],
+        candidateSpecies: hillstream,
+        candidateQuantity: 6,
+      });
+      return underPlanned.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && fullPlan.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum'].includes(rule.code))
+        && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && withPlaty.warningRules.every(rule => rule.code !== 'territorial_pressure_context')
+        && fullPlan.evidenceIds?.includes('seriouslyfish-sewellia-lineolata');
+    },
+  },
+  {
     name: 'reviewed Pygmy-cory authority enforces group, space and prey-vulnerability context',
     run: () => {
       const pygmy = fishData.find(item => item.id === 'sp_0053');

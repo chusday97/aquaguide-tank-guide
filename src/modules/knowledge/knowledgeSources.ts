@@ -289,6 +289,14 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-sewellia-lineolata': {
+    id: 'seriouslyfish-sewellia-lineolata',
+    title: 'Sewellia lineolata (Tiger Hillstream Loach)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/sewellia-lineolata',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-corydoras-pygmaeus': {
     id: 'seriouslyfish-corydoras-pygmaeus',
     title: 'Corydoras pygmaeus (Pygmy Cory)',

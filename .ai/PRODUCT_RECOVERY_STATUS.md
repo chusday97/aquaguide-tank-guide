@@ -326,3 +326,9 @@ Draft PR: #149
 - Runtime/Admin reviewed baseline is 26 Profiles / 5 Pair Rules; `202609120012_compatibility_pygmy_cory_baseline.sql` is tracked but unapplied.
 - Unapplied Discus migration `120011` was corrected to assert its inserted minimum group of 5, and additive migration contracts now check behavior traits, minimum group and required facts together.
 - Full Product + Admin/runtime + browser Golden Path validation PASS.
+
+### P1 — Sewellia lineolata reviewed-authority checkpoint
+- Direct reviewed `Sewellia lineolata` (`sp_0045`) authority added; cool-water group and space planning are now decision-active.
+- Canonical priority coverage is now 24 taxa / 552 ordered directions: 418 caution, 132 not_recommended, 2 compatible.
+- Runtime/Admin reviewed baseline is 27 Profiles / 5 Pair Rules; `202609120013_compatibility_sewellia_baseline.sql` is tracked but unapplied.
+- High-flow/high-oxygen husbandry is documented without pretending the current oxygen boolean can model flow. Full Product + Admin/runtime + browser Golden Path validation PASS.
