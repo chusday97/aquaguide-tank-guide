@@ -1,5 +1,14 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-14 — post-write state integrity rollback closed
+- Functional main checkpoint: `5c8f6a63853d3bfd98634e726e780b0fafae076c` (`fix(admin): rollback invalid state writes`).
+- Reproduced: healthy active root + Business state candidate referencing a missing Local File asset returned 200, persisted the bad reference, then made `/integrity` unhealthy.
+- Fixed: state PUT now preserves the previous durable file, writes the candidate, validates full active-root integrity, and automatically restores the previous file if the candidate introduces an error.
+- Rollback must itself restore a healthy root; otherwise request fails 500 with stop-write guidance. Successful rollback returns 409 `INTEGRITY_FAILED` and leaves the root healthy.
+- Regression + Local File/UI/Operations/mode/type/build gates PASS; GitHub Product Golden Path `34769296960` PASS.
+- No Vercel Preview was auto-created for this DEV-only change; Production unchanged on `5fa915d3`.
+
+
 ## 2026-09-13 — runtime corrupt-root writes now fail closed
 - Main functional checkpoint: `0060d200ed056345aba0ac96e52e8a1810925886` (`fix(admin): block writes on corrupt active authority`).
 - Fail-before-fix: after external blob deletion made the active root unhealthy, ordinary Business state PUT still returned 200 and persisted new data while the process stayed live.

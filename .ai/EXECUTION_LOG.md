@@ -1,5 +1,14 @@
 # Execution Log
 
+## 2026-09-14 — post-write state integrity rollback closure
+- Fail-before-fix probe: healthy root -> `PUT /state/business` referencing missing `local-asset-does-not-exist` -> HTTP 200 -> bad reference persisted -> `/integrity` `healthy=false / REFERENCED_ASSET_MISSING`.
+- Added `writePartitionStateWithIntegrityRollback()`: preserve previous file, write candidate, inspect full root, restore previous file on failure, verify rollback health.
+- Post-fix probe: same candidate -> 409 `INTEGRITY_FAILED`; `/integrity` remains healthy; bad reference absent from disk.
+- Added permanent regression proving previous durable state is unchanged and active root remains healthy after rejection.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `test:operations-studio-ui`, `check:api`, root TypeScript, full build, diff check.
+- Functional commit `5c8f6a63`; GitHub Product Golden Path `34769296960` PASS. No Vercel auto-preview; Production unchanged.
+
+
 ## 2026-09-13 — runtime corrupt-root mutation guard closure
 - Reproduced a live-process badcase: healthy asset + Business reference -> external blob deletion -> `/integrity` unhealthy -> ordinary `PUT /state/business` still returned 200 and persisted a new marker.
 - Added `assertActiveRootHealthyForMutation()` under the authority write lock for state/asset mutations.

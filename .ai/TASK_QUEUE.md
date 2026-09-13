@@ -1,5 +1,15 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 after post-write integrity rollback closure
+- DONE: reproduce a healthy active root accepting and persisting a Business state that referenced a nonexistent Local File asset.
+- DONE: make state PUT transactional with previous-file preservation, post-write full integrity validation, automatic rollback, and rollback integrity verification.
+- DONE: return `409 INTEGRITY_FAILED` after successful rollback; return 500 + stop-write guidance if rollback cannot restore a healthy root.
+- DONE: permanent regression proving rejected candidate leaves previous state and `healthy=true`.
+- DONE: Local File API/UI, Operations Studio, mode contract, API/root TypeScript, full build, diff check, GitHub Product Golden Path PASS.
+- NOTE: no Vercel Git auto-preview was created for this DEV-only push; no manual Preview triggered. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 after runtime corrupt-root mutation guard
 - DONE: reproduce live-process external blob deletion followed by successful ordinary state write.
 - DONE: fail closed ordinary state/asset mutation under active-root integrity errors.

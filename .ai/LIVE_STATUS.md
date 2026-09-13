@@ -1,5 +1,12 @@
 # Live Status
 
+## 2026-09-14 — post-write integrity rollback closed
+- CLOSED on main: `5c8f6a63` makes Local File state PUT transactional against full post-write integrity.
+- Bad state candidates no longer get HTTP 200 and remain on disk; they are rolled back and return `409 INTEGRITY_FAILED`.
+- Automatic rollback is integrity-checked; rollback failure escalates to 500 and stop-write guidance.
+- CI `34769296960` PASS; no auto Vercel Preview for the DEV-only main push; Production unchanged.
+
+
 ## 2026-09-13 — runtime corrupt-root mutation guard
 - CLOSED on main: `0060d200` blocks ordinary Local File mutations when the already-live active root becomes unhealthy.
 - `state PUT` and unrelated asset writes/deletes now return `409 INTEGRITY_FAILED`; targeted same-asset repair remains possible.

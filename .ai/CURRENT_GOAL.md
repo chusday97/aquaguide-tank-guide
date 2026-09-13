@@ -1,5 +1,17 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-14 post-write integrity rollback closed
+A concrete state-candidate corruption badcase is closed on main at `5c8f6a63 fix(admin): rollback invalid state writes`.
+
+- Fail-before-fix: a healthy root accepted `PUT /state/business` that referenced a nonexistent Local File asset; the API returned 200, persisted the bad reference, and `/integrity` immediately became `healthy=false / REFERENCED_ASSET_MISSING`.
+- State PUT is now transactional inside the authority write lock: preserve previous durable file -> write candidate -> inspect active root -> if unhealthy, atomically restore/remove the previous file -> re-check rollback integrity.
+- A candidate that would make the root unhealthy now returns `409 INTEGRITY_FAILED`; rollback failure escalates to `500 INTERNAL_ERROR` with explicit stop-write guidance instead of claiming recovery.
+- Permanent regression requires rejected candidate => 409, previous state unchanged, active root still healthy. Existing runtime corruption guard and targeted asset repair tests remain PASS.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio populated UI, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34769296960`.
+- Vercel Git auto-preview was not created for this DEV-only main push; no manual Preview triggered. Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 runtime corrupt-root write guard closed
 A concrete live-runtime corruption/write-through badcase is closed on main at `0060d200 fix(admin): block writes on corrupt active authority`.
 
