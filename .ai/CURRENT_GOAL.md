@@ -227,3 +227,7 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 - Git/Admin reviewed Compatibility baseline is 17 Profiles / 5 Pair Rules. Additive migration `202609120004_compatibility_cherry_barb_baseline.sql` is repo authority only and has not been applied to Staging/Production.
 - Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Admin/runtime/Git authority, Staging preflight, Local File Admin, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
 - Next: commit/push and verify current-head PR #149; then continue only with another distinct canonical taxon backed by reviewed evidence.
+
+## Main convergence checkpoint — Local File startup recovery guidance
+- Absorbed current main startup recovery guidance for Durable Local File Mode: owner conflicts, unreadable owner lease, interrupted restore journals, newer local authority versions, and local API unavailability now render cause-specific fail-closed recovery instructions.
+- This does not change Product Recovery authority, Compatibility V7, or the 23 Profile / 5 Pair runtime baseline.

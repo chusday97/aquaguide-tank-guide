@@ -199,7 +199,7 @@ const ensureRootLease = async () => {
     }
     let owner: RootLeaseRecord | null = null;
     try { owner = JSON.parse(await readFile(filePath, 'utf8')) as RootLeaseRecord; }
-    catch { throw new ApiError(409, 'VERSION_CONFLICT', 'Local Admin root ownership file is unreadable; refusing concurrent access.'); }
+    catch { throw new ApiError(409, 'VERSION_CONFLICT', 'Local Admin root ownership file is unreadable; refusing concurrent access.', { root, filePath }); }
     const ownerPid = Number(owner.pid);
     if (pidIsAlive(ownerPid)) {
       const liveStartIdentity = processStartIdentity(ownerPid);
@@ -725,11 +725,11 @@ const recoverInterruptedRestoreIfNeeded = async (root: string) => {
   const journalPath = restoreJournalFile(root);
   let raw: unknown;
   try { raw = await readJsonOrNull(journalPath); }
-  catch { throw new ApiError(500, 'INTERNAL_ERROR', 'Interrupted restore journal cannot be parsed; refusing Local Admin access until it is inspected.'); }
+  catch { throw new ApiError(500, 'INTERNAL_ERROR', 'Interrupted restore journal cannot be parsed; refusing Local Admin access until it is inspected.', { root, journalPath }); }
   if (raw === null) return;
   const record = asRecord(raw);
   if (!record || Number(record.version) !== 1 || typeof record.safetyBackupId !== 'string') {
-    throw new ApiError(500, 'INTERNAL_ERROR', 'Interrupted restore journal is invalid; refusing Local Admin access until it is inspected.');
+    throw new ApiError(500, 'INTERNAL_ERROR', 'Interrupted restore journal is invalid; refusing Local Admin access until it is inspected.', { root, journalPath });
   }
   const safetyBackupId = safeBackupId(record.safetyBackupId);
   try {
@@ -738,7 +738,7 @@ const recoverInterruptedRestoreIfNeeded = async (root: string) => {
     await cleanupRestoreTempDirectories(root);
     await rm(journalPath, { force: true });
   } catch {
-    throw new ApiError(500, 'INTERNAL_ERROR', `Interrupted restore recovery from safety backup ${safetyBackupId} failed; stop writing and inspect the Local Admin root.`);
+    throw new ApiError(500, 'INTERNAL_ERROR', `Interrupted restore recovery from safety backup ${safetyBackupId} failed; stop writing and inspect the Local Admin root.`, { root, journalPath, safetyBackupId });
   }
 };
 

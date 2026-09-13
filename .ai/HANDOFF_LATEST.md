@@ -250,3 +250,7 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 ## Latest main follow-up absorbed — Local File temp cleanup
 - Main commits `0b662155` and `e871aee0` are included in the recovery line.
 - Local Admin failed atomic writes clean temporary files; existing canonical Local File integrity and runtime publication gates remain unchanged.
+
+## Main convergence checkpoint — Local File startup recovery guidance
+- Current main fail-closed startup UX is absorbed: operators now receive distinct recovery guidance for Local File owner conflicts, unreadable owner lease files, interrupted restore journals, newer unsupported authority formats, and unavailable local API service.
+- Product Recovery remains the active authority; Compatibility V7 and the 23/5 runtime baseline are unchanged.

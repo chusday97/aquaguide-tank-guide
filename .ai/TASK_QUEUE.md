@@ -1,5 +1,31 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after fail-closed startup guidance closure
+- DONE: reproduce misleading fixed startup guidance for invalid restore journal, unreadable root lease, and future Local File schema.
+- DONE: map Local Admin startup failures to cause-specific operator actions.
+- DONE: expose exact lease/journal recovery paths through DEV-only Local Admin API error details.
+- DONE: deterministic same-root owner browser probe still shows owner reason + close-old-process action.
+- DONE: real browser verification for owner conflict / invalid journal / invalid lease / future schema.
+- DONE: Local File API/UI / mode contract / API+root TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase. Do not add recovery buttons or mutate authority speculatively.
+
+## CURRENT OVERRIDE — 2026-09-13 after Local owner conflict guidance closure
+- DONE: reproduce the startup UX loss of the same-root `VERSION_CONFLICT` reason.
+- DONE: preserve the actionable Local File API message through startup hydration.
+- DONE: add explicit same-root old-process recovery guidance to the fail-closed startup screen.
+- DONE: real two-process browser verification confirms both owner reason and recovery instruction are visible.
+- DONE: audit Operations Home safety actions; they already preserve `cause.message`.
+- DONE: Local File UI / mode contract / TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+## CURRENT OVERRIDE — 2026-09-13 after interrupted restore recovery closure
+- DONE: protect restore with a durable transaction journal tied to the pre-restore safety backup.
+- DONE: recover an interrupted/mixed active root before serving any Local Admin request on the next process start.
+- DONE: clean stale `.restore-assets-*` directories and delete the journal only after successful rollback recovery.
+- DONE: fail closed for invalid journals or failed safety recovery.
+- DONE: formal fresh-process recovery regression + GitHub Product Golden Path PASS + Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 after PID-reuse lease closure
 - DONE: reproduce stale lease false-lock with a real unrelated live process reusing the recorded PID (`409 VERSION_CONFLICT`).
 - DONE: upgrade root lease identity from PID-only to PID + process-start identity.

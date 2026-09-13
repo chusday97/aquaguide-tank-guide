@@ -39,6 +39,18 @@ assert.match(localFilePersistence, /runtimeEnv\?\.DEV === true[\s\S]*VITE_ADMIN_
   'Durable Local File Mode must require DEV + Local Mode + explicit Local File flag.');
 assert.match(localFilePersistence, /apiRequest\(`\/local-admin\/state\/\$\{partition\}`[\s\S]*method: 'PUT'/,
   'Durable Local File state writes must cross the local API boundary.');
+assert.match(localFilePersistence, /getLocalAdminStartupRecoveryGuidance[\s\S]*already owned by process[\s\S]*ownership file is unreadable[\s\S]*restore journal[\s\S]*newer than this app supports/,
+  'Local File startup failures must map distinct fail-closed causes to distinct operator recovery guidance.');
+assert.match(read('src/main.tsx'), /getLocalAdminStartupRecoveryGuidance[\s\S]*Durable Local File Mode 已 fail-closed[\s\S]*<strong>处理：<\/strong>/,
+  'The fail-closed startup screen must render cause-specific recovery guidance instead of one fixed root-owner instruction.');
+assert.match(localFilePersistence, /具体原因：\$\{error\.message\}/,
+  'Local File startup failures must preserve the actionable API reason instead of collapsing into a generic unavailable message.');
+assert.match(localFilePersistence, /关闭占用同一 Local File root 的旧 Local Admin 进程后重试/,
+  'Same-root owner conflicts must keep an explicit operator recovery instruction.');
+assert.match(localFileRouter, /ownership file is unreadable[\s\S]*\{ root, filePath \}/,
+  'Unreadable root ownership failures must expose the exact local lease path for operator recovery.');
+assert.match(localFileRouter, /restore journal cannot be parsed[\s\S]*\{ root, journalPath \}/,
+  'Interrupted restore journal failures must expose the exact journal path for operator recovery.');
 assert.match(localFileRouter, /process\.env\.ADMIN_LOCAL_FILE_MODE === 'true'[\s\S]*process\.env\.NODE_ENV !== 'production'[\s\S]*!process\.env\.VERCEL/,
   'Local File API must be unavailable in Production and Vercel environments.');
 assert.match(localApiApp, /import \{ localAdminFileRouter \} from '\.\/routes\/local-admin';[\s\S]*legacyApp\.use\('\/api\/v1\/local-admin', requestIdMiddleware, localAdminFileRouter\)/,

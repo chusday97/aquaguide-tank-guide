@@ -65,6 +65,38 @@ let rootPath = '';
 
 export const getLocalAdminPersistenceStatus = () => ({ mode: status, root: rootPath });
 
+const asStartupDetails = (value: unknown): Record<string, unknown> | null => (
+  value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : null
+);
+
+export const getLocalAdminStartupRecoveryGuidance = (error: unknown) => {
+  if (!(error instanceof AquaGuideApiError)) {
+    return '请检查本地开发服务日志；问题确认前不要修改或覆盖 Local File authority。';
+  }
+  const details = asStartupDetails(error.details);
+  if (error.code === 'VERSION_CONFLICT' && error.message.includes('already owned by process')) {
+    return '关闭占用同一 Local File root 的旧 Local Admin 进程后重试。';
+  }
+  if (error.code === 'VERSION_CONFLICT' && error.message.includes('ownership file is unreadable')) {
+    const filePath = typeof details?.filePath === 'string' ? details.filePath : '.aqua-admin-owner.json';
+    return `先确认没有其它 Local Admin 进程正在使用该 root，再检查 owner lease 文件 ${filePath}；不要删除或覆盖业务 authority 数据。`;
+  }
+  if (error.code === 'INTERNAL_ERROR' && error.message.includes('restore journal')) {
+    const journalPath = typeof details?.journalPath === 'string' ? details.journalPath : '.restore-transaction.json';
+    return `不要继续写入。检查 restore transaction journal ${journalPath} 和对应 safety backup；确认恢复前状态后再启动。`;
+  }
+  if (error.code === 'MIGRATION_REJECTED' && error.message.includes('newer than this app supports')) {
+    return '当前代码版本落后于本地 authority 格式。不要覆盖或降级这些文件；切换到支持该版本的更新代码后再启动。';
+  }
+  if (error.code === 'MIGRATION_REJECTED') {
+    return '本地 authority 未通过迁移/格式校验。不要用 seed 或空数据覆盖；先检查对应 Local File JSON 或从已验证 backup 恢复。';
+  }
+  if (error.code === 'DEPENDENCY_UNAVAILABLE') {
+    return '确认 npm run dev:local-admin 仍在运行，API/Vite 端口没有被其它项目占用，然后重试。';
+  }
+  return '根据上方具体原因处理后再重试；问题解决前不要修改或覆盖 Local File authority。';
+};
+
 export const getLocalAdminSafetySnapshot = async (): Promise<LocalAdminSafetySnapshot | null> => {
   if (!isLocalAdminFileMode) return null;
   const [integrity, backups] = await Promise.all([
@@ -143,7 +175,7 @@ export const hydrateLocalAdminFileStores = async () => {
     status = 'unavailable';
     if (error instanceof AquaGuideApiError) {
       throw new AquaGuideApiError(error.status, error.code,
-        '已启用 Local File Mode，但本地文件服务或旧图片迁移不可用；为避免误以为内容已持久保存，应用已停止启动。',
+        `已启用 Local File Mode，但 Durable Local File authority 未能安全启动；为避免误以为内容已持久保存，应用已停止启动。具体原因：${error.message}`,
         error.requestId, error.details);
     }
     throw error;
