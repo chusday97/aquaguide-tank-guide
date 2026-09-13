@@ -483,3 +483,10 @@
 
 - `2b7adc28` 的 evidence、public contract、品系卡片、lint、build、diff-check 已通过，证据为 `EVD-20260913-135`。
 - 继续保持 `noindex,follow`；浏览器三档、可读 Critic、Figma Canonical、性能和索引门禁未完成。
+## 2026-09-14 Species 页面内容减法收口（进行中）
+
+- 用户反馈公开 Species 页存在与物种无关的通用话术、装饰占位和产品入口混入百科章节。
+- 已删除无已确认摘要时的 Hero 兜底介绍；章节导航不再展示 `AquaGuide` 和“继续探索”；环境区不再使用“环境观察 / 水体 · 空间 · 稳定”装饰文案；喂食单独显示为“已确认的取食方式”。
+- 通过 `test:public-seo-copy`、`test:public-seo-structure`、`test:public-seo-responsive-contract`、lint、build 和 diff-check。
+- `test:species-variant-card` 通过；本地 `test:species-landing` / `test:seo-motion` 仍在 Chromium 启动阶段触发既知 macOS MachPort 权限错误，不能计为浏览器失败或通过。
+- 下一步：在 GitHub Actions 或内置浏览器上复核当前内容减法的三档视觉；不改变 Product Truth、证据状态、Figma、索引策略或三个用户未提交文件。

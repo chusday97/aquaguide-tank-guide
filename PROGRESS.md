@@ -1739,3 +1739,12 @@
 
 - [x] Editorial evidence、Evidence bindings、Public contract、Species variant card、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-135`。
 - [ ] 系统 Chrome 三档真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
+## 2026-09-14 Species 页面内容减法收口（进行中）
+
+- [x] 删除无已确认摘要时的通用 Hero 话术；没有物种事实就不显示泛化介绍。
+- [x] 从章节导航移除 `AquaGuide` 产品入口和“继续探索”，避免把产品动作伪装成百科章节。
+- [x] 移除环境章节的“环境观察 / 水体 · 空间 · 稳定”装饰占位，只保留已确认的环境结论。
+- [x] 核心参数改为“核心参数 / 一眼了解”；有喂食证据但没有维护证据时，章节改为“已确认的取食方式”。
+- [x] 文案、结构、响应式契约、品系卡片、lint 和 build 通过；本地 Playwright 仍受既知 macOS MachPort 权限阻塞。
+- [ ] 需要用 GitHub Actions 或内置浏览器重新生成当前改版的三档截图，并复核宝莲灯、极火虾和黄金米虾的页面节奏。
+- [ ] Critic 可读报告、Figma Canonical、交互延迟基线和索引发布门禁仍未完成。

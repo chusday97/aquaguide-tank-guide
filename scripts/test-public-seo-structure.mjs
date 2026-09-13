@@ -87,7 +87,9 @@ assert.match(species, /taskRoutes\.encyclopedia\.compatibilitySpecies\(fish\.id,
 assert.match(species, /\{ label: labels\.back, href: '\/' \}/, 'Species breadcrumb must stay inside the public shell');
 assert.doesNotMatch(species, /label: labels\.back, href: '\/encyclopedia'/, 'Species breadcrumb must not point to the app encyclopedia');
 assert.match(species, /const breadcrumbCategory = baseSpecies\.category/, 'Species public breadcrumb must use the published category name');
-assert.match(species, /<SectionHeading id="stats-title" number=\{sectionNumber\('overview'\)\} eyebrow=\{labels\.overview\} title=\{labels\.overview\}/, 'Species data rail must use the shared section heading');
+assert.match(species, /<SectionHeading id="stats-title" number=\{sectionNumber\('overview'\)\} eyebrow="核心参数" title=\{labels\.overview\}/, 'Species data rail must use the shared section heading');
+assert.doesNotMatch(species, /\{ id: 'tool', label: 'AquaGuide' \}/, 'Species chapter navigation must not treat the product tool as an editorial chapter');
+assert.doesNotMatch(species, /环境观察|水体 · 空间 · 稳定/, 'Species habitat section must not use decorative placeholder copy');
 
 const publishedProfile = read('src/data/publishedSpeciesProfile.ts');
 assert.match(publishedProfile, /categoryHrefFor\(species\.category\) \?/, 'Species related category links must be conditional on a public route');

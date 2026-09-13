@@ -54,8 +54,11 @@ const speciesSource = fs.readFileSync(path.join(root, 'src/pages/SpeciesLanding.
 if (speciesSource.includes('把每天最重要的照料动作放在前面')) {
   throw new Error('Species care section must not expose the former internal guidance copy');
 }
-if (!speciesSource.includes('从它如何寻找食物开始，认识日常照料重点。')) {
-  throw new Error('Species care section is missing the user-facing guidance copy');
+if (speciesSource.includes('从它如何寻找食物开始，认识日常照料重点。')) {
+  throw new Error('Species care section must not expose generic guidance copy');
+}
+if (!speciesSource.includes("'已确认的取食方式'")) {
+  throw new Error('Species care section is missing the specific feeding heading');
 }
 if (!speciesSource.includes('const personalizeFaq')) {
   throw new Error('Species FAQ must adapt inherited copy to the visible species name');
