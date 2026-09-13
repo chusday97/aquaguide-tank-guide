@@ -263,15 +263,27 @@ try {
 
   const blocked = requestLog.filter(url => prohibitedRequest.test(url));
   assert.deepEqual(blocked, [], `Public/App browser gate observed forbidden data request(s): ${blocked.join(', ')}`);
-  const final = captured.get('sp_0436')?.at(-1);
+  const performanceSamples = [...captured.entries()].flatMap(([routeId, results]) => results.map((result, index) => ({
+    routeId,
+    width: widths[index],
+    lcpMs: result.vitals?.lcp || null,
+    cls: result.vitals?.cls || null,
+    interactionMs: result.vitals?.inp || null,
+  })));
+  const finiteValues = (key) => performanceSamples.map(sample => sample[key]).filter(value => typeof value === 'number' && Number.isFinite(value));
+  const maxOrNull = (key) => {
+    const values = finiteValues(key);
+    return values.length > 0 ? Math.max(...values) : null;
+  };
   console.log(JSON.stringify({
     routes: publicRoutes.length + appRoutes.length,
     speciesRoutes: 4,
     widths,
     screenshots: screenshotDir ? '12 raw + 4 comparison' : 'disabled',
-    lcpMs: final?.vitals?.lcp || null,
-    cls: final?.vitals?.cls || null,
-    interactionMs: final?.vitals?.inp || null,
+    performanceSamples,
+    maxLcpMs: maxOrNull('lcpMs'),
+    maxCls: maxOrNull('cls'),
+    maxInteractionMs: maxOrNull('interactionMs'),
     forbiddenRequests: blocked.length,
     result: 'public SEO GitHub Actions browser gate passed',
   }, null, 2));

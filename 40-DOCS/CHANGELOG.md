@@ -6,6 +6,7 @@
 - Verified: GitHub Actions Public SEO Browser Gate Run #13（`34772211711`，SHA `bd5356cf`）通过并生成浏览器证据 artifact；章节顺序与破图回退断言已纳入门禁。
 - Blocked: 既有只读 Critic 对当前浏览器通过版本复验完成，但没有返回可读六维正文；不以空输出作为独立审查通过。
 - Observed: 内置浏览器整页截图的滚动拼接出现重复画面，而 AX 结构只有一份 Species 章节；记录为截图工具缺口，不修改页面结构。
+- Changed: 浏览器门禁改为输出全部公开路由与 390/600/1440 三档的 LCP、CLS、交互采样，便于后续性能基线审计；本轮不改变通过标准。
 
 ### Changed
 
