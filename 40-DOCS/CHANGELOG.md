@@ -23,6 +23,7 @@
 
 ### Verified
 
+- GitHub Actions Run `34770927457` 在提交 `14ffac3b` 通过公开 SEO 浏览器门禁并生成 5.88 MB artifact；覆盖四条 Species、公开/应用路由、390/600/1440、滚动/返回/锚点、FAQ 键盘、reduced-motion、44px、noindex 和禁止数据请求。
 - 最新版本的独立 Critic 复验已结束但返回空正文，记录为审查基础设施阻塞；不宣称独立审查通过。
 - 当前提交 `d9bda6f7` 的 GitHub Actions `34769155328` 成功完成公开 SEO 浏览器验收并生成 5.86 MB artifact；Node.js 20 弃用警告记录为后续 workflow 维护项。
 

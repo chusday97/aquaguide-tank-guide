@@ -19,6 +19,7 @@
 - 本机再次运行公开浏览器脚本，确认失败发生在 Chromium 启动阶段：macOS `MachPortRendezvous` 权限阻止，不是页面断言。
 - 为定位 GitHub Actions Run `34769937634` 的第二个未知失败，`scripts/verify-public-seo-github-actions.mjs` 现在会在失败时把错误名称、消息、堆栈和请求日志写入 `SEO_SCREENSHOT_DIR/browser-gate-diagnostic.json`，不改变任何验收标准。
 - Run `34770641762`（提交 `b5548afe`）已完成但浏览器专项仍失败；artifact 大小 1.29 KB，已确认包含失败诊断输出，但当前浏览器界面不能直接读取压缩包正文。下一步是取得该 JSON 的可读内容后做最小修复；不猜测、不降低断言。用户三个未提交文件保持不变，Figma、Production Supabase、main、生产部署和 noindex 继续锁定。
+- 随后的 Run `34770927457`（提交 `14ffac3b`）已通过，artifact 5.88 MB，包含 12 张 Species 原始截图、4 张对照图和 preview 日志；仅有 GitHub Actions Node.js 20 弃用警告。下一步是将该 SHA 交回既有 Critic 同线程复验；未取得可读六维报告前不宣称最终完成。
 
 ## 2026-09-14 最新执行状态
 

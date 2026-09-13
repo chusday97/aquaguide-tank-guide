@@ -4,6 +4,16 @@
   "updated_at": "2026-09-14T00:30:00+08:00",
   "evidence_items": [
     {
+      "id": "EVD-20260914-153",
+      "type": "hosted-browser-verification",
+      "locator": "https://github.com/chusday97/aquaguide-tank-guide/actions/runs/34770927457; artifact public-seo-browser-evidence-14ffac3b0b91cd54d8aedd4f2ea6cf8a01f5a884",
+      "date": "2026-09-14",
+      "version": "14ffac3b0b91cd54d8aedd4f2ea6cf8a01f5a884",
+      "accessible": true,
+      "sensitive": false,
+      "notes": "GitHub Actions Ubuntu Chromium浏览器门禁通过：静态SEO契约、build、公开/应用路由、Species三档视口、滚动/返回/锚点、FAQ键盘、reduced-motion、44px、noindex、Public/App Shell边界和禁止Supabase/登录/鱼缸请求均通过；artifact大小5.88 MB，digest sha256:6ce56962813b44504fd280344f9d01d88cbeef3220884ef1f2f1d327a3a0bede。仅有GitHub Actions Node.js 20弃用警告，不影响本次门禁。"
+    },
+    {
       "id": "EVD-20260914-152",
       "type": "hosted-browser-verification-failed",
       "locator": "https://github.com/chusday97/aquaguide-tank-guide/actions/runs/34770641762; artifact public-seo-browser-evidence-b5548afe20aabd7fc912b1b1cc33e71e6e47f412",

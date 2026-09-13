@@ -4,7 +4,8 @@
 - [x] 本地已通过脚本语法、公开契约、中文文案/结构、品系卡片、lint、build 和 diff-check。
 - [x] 本机再次复现 Chromium 启动失败：macOS `MachPortRendezvous` 权限阻止，不能作为页面断言证据。
 - [x] Run `34770641762`（提交 `b5548afe`）已完成但仍在浏览器专项步骤以退出码 1 失败；artifact `public-seo-browser-evidence-b5548afe...` 已生成，大小 1.29 KB，包含失败诊断文件。GitHub UI 未直接显示压缩包内正文，具体断言仍待读取；不能计为浏览器门禁通过。
-- [ ] 读取 Run #9 artifact 中的诊断 JSON，定位第二个失败断言后做最小修复。Critic 可读六维报告、Figma Canonical、性能完整基线和索引门禁仍未完成。
+- [x] Run `34770927457`（提交 `14ffac3b`）通过：Ubuntu Chromium 完成静态门禁、build、公开/应用路由、390/600/1440、滚动/返回/锚点、FAQ 键盘、reduced-motion、44px、noindex、Shell边界和禁止数据请求；artifact 5.88 MB，digest `sha256:6ce56962813b44504fd280344f9d01d88cbeef3220884ef1f2f1d327a3a0bede`。
+- [ ] 视觉证据与浏览器门禁已具备，但 Critic 可读六维报告、Figma Canonical、完整性能基线和索引门禁仍未完成；下一步把 `14ffac3b` 交回既有 Critic 同线程复验。
 
 ## 2026-09-13 剩余门禁收口（进行中）
 
