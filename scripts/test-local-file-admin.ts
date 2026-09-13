@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import type { AddressInfo } from 'node:net';
 import type { Server } from 'node:http';
+import { spawn } from 'node:child_process';
 
 const root = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-local-admin-'));
 process.env.ADMIN_LOCAL_FILE_MODE = 'true';
@@ -11,6 +12,9 @@ process.env.ADMIN_LOCAL_FILE_ROOT = root;
 process.env.ADMIN_RUNTIME_SNAPSHOT_ROOT = path.join(root, 'public');
 process.env.NODE_ENV = 'test';
 delete process.env.VERCEL;
+
+const rootLeasePath = path.join(root, '.aqua-admin-owner.json');
+await writeFile(rootLeasePath, `${JSON.stringify({ version: 1, pid: 99_999_999, token: 'stale-owner', acquiredAt: 'stale' })}\n`, 'utf8');
 
 const { createApiApp } = await import('../apps/api/src/app');
 const app = createApiApp();
@@ -36,6 +40,7 @@ const putState = (base: string, partition: string, state: unknown) => requestJso
 });
 
 let active: Server | null = null;
+let leaseChild: ReturnType<typeof spawn> | null = null;
 try {
   let started = await startServer();
   active = started.server;
@@ -45,6 +50,32 @@ try {
   assert.equal(status.payload.data.root, root);
   assert.equal(status.payload.data.localFileFormatVersion, 1);
   assert.deepEqual(status.payload.data.partitions, { business: false, compatibility: false, 'care-seo': false });
+  const recoveredLease = JSON.parse(await readFile(rootLeasePath, 'utf8'));
+  assert.equal(recoveredLease.pid, process.pid, 'A stale Local Admin root lease must be reclaimed by the live process.');
+  assert.notEqual(recoveredLease.token, 'stale-owner');
+
+  const leaseChildCode = `(async()=>{const {createApiApp}=await import('./apps/api/src/app');const server=createApiApp().listen(0,'127.0.0.1',()=>console.log('READY '+server.address().port));process.on('SIGTERM',()=>server.close(()=>process.exit(0)));})()`;
+  leaseChild = spawn(process.execPath, ['./node_modules/tsx/dist/cli.mjs', '-e', leaseChildCode], {
+    cwd: process.cwd(), env: { ...process.env }, stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  const leaseChildPort = await new Promise<number>((resolve, reject) => {
+    let stdout = '';
+    let stderr = '';
+    const timeout = setTimeout(() => reject(new Error(`Timed out starting second Local Admin process: ${stderr}`)), 10_000);
+    leaseChild!.stdout!.on('data', chunk => {
+      stdout += String(chunk);
+      const match = stdout.match(/READY (\d+)/);
+      if (match) { clearTimeout(timeout); resolve(Number(match[1])); }
+    });
+    leaseChild!.stderr!.on('data', chunk => { stderr += String(chunk); });
+    leaseChild!.once('exit', code => { clearTimeout(timeout); reject(new Error(`Second Local Admin process exited before READY (${code}): ${stderr}`)); });
+  });
+  const secondOwner = await requestJson(`http://127.0.0.1:${leaseChildPort}/api/v1/local-admin`, '/status');
+  assert.equal(secondOwner.response.status, 409, 'A second process must not share one Durable Local File root.');
+  assert.equal(secondOwner.payload.error.code, 'VERSION_CONFLICT');
+  leaseChild.kill('SIGTERM');
+  await new Promise<void>(resolve => leaseChild!.once('exit', () => resolve()));
+  leaseChild = null;
 
   // Existing Durable Local File installs used raw store JSON. First read must migrate it in place to a versioned envelope.
   const businessState = { schemaVersion: 1, species: [{ id: 'demo' }], care: [], updatedAt: 'test' };
@@ -475,6 +506,7 @@ try {
 
   console.log('local file admin: versioned envelope + legacy migration + integrity + backup/restore + restart + fail-closed future schema PASS');
 } finally {
+  if (leaseChild) { leaseChild.kill('SIGTERM'); await new Promise<void>(resolve => leaseChild!.once('exit', () => resolve())).catch(() => undefined); }
   if (active) await closeServer(active).catch(() => undefined);
   await rm(root, { recursive: true, force: true });
 }

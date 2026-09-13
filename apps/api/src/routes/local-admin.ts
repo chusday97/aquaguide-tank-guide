@@ -1,6 +1,7 @@
 import express, { Router } from 'express';
 import { createHash, randomUUID } from 'node:crypto';
-import { cp, mkdir, readFile, readdir, rename, rm, stat, unlink, writeFile } from 'node:fs/promises';
+import { cp, link, mkdir, readFile, readdir, rename, rm, stat, unlink, writeFile } from 'node:fs/promises';
+import { readFileSync, unlinkSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { careArticleAdminInputSchema, speciesAdminInputSchema, type GitRuntimeAuthoritySnapshot, type RuntimeAuthorityAssetDto } from '../../../../packages/contracts/src/index';
@@ -115,8 +116,69 @@ const isEnabled = () => (
   && !process.env.VERCEL
 );
 const localRoot = () => path.resolve(process.env.ADMIN_LOCAL_FILE_ROOT || path.join(repoRoot, '.local/aqua-admin'));
-const requireEnabled = () => {
+type RootLease = { root: string; filePath: string; token: string };
+let heldRootLease: RootLease | null = null;
+let rootLeaseExitHookInstalled = false;
+const rootLeaseFile = (root: string) => path.join(root, '.aqua-admin-owner.json');
+const releaseRootLeaseSync = () => {
+  const lease = heldRootLease;
+  if (!lease) return;
+  try {
+    const current = JSON.parse(readFileSync(lease.filePath, 'utf8')) as { token?: string };
+    if (current.token === lease.token) unlinkSync(lease.filePath);
+  } catch { /* stale/missing lease is recovered on the next acquisition */ }
+  heldRootLease = null;
+};
+const pidIsAlive = (pid: number) => {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try { process.kill(pid, 0); return true; }
+  catch (error) { return (error as NodeJS.ErrnoException)?.code !== 'ESRCH'; }
+};
+const ensureRootLease = async () => {
+  const root = localRoot();
+  if (heldRootLease?.root === root) return;
+  if (heldRootLease && heldRootLease.root !== root) {
+    throw new ApiError(409, 'VERSION_CONFLICT', `Local Admin process already owns a different root: ${heldRootLease.root}`);
+  }
+  await mkdir(root, { recursive: true });
+  const filePath = rootLeaseFile(root);
+  const token = randomUUID();
+  const payload = JSON.stringify({ version: 1, pid: process.pid, token, acquiredAt: new Date().toISOString() });
+  for (let attempt = 0; attempt < 4; attempt += 1) {
+    const candidate = `${filePath}.candidate-${process.pid}-${randomUUID()}`;
+    await writeFile(candidate, `${payload}\n`, { flag: 'wx' });
+    try {
+      await link(candidate, filePath);
+      heldRootLease = { root, filePath, token };
+      if (!rootLeaseExitHookInstalled) {
+        process.once('exit', releaseRootLeaseSync);
+        rootLeaseExitHookInstalled = true;
+      }
+      return;
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code !== 'EEXIST') throw error;
+    } finally {
+      await rm(candidate, { force: true }).catch(() => undefined);
+    }
+    let owner: { pid?: number; token?: string } | null = null;
+    try { owner = JSON.parse(await readFile(filePath, 'utf8')) as { pid?: number; token?: string }; }
+    catch { throw new ApiError(409, 'VERSION_CONFLICT', 'Local Admin root ownership file is unreadable; refusing concurrent access.'); }
+    if (pidIsAlive(Number(owner.pid))) {
+      throw new ApiError(409, 'VERSION_CONFLICT', `Local Admin root is already owned by process ${String(owner.pid)}. Close the other Local Admin process before continuing.`);
+    }
+    const stalePath = `${filePath}.stale-${randomUUID()}`;
+    try {
+      await rename(filePath, stalePath);
+      await rm(stalePath, { force: true });
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error;
+    }
+  }
+  throw new ApiError(409, 'VERSION_CONFLICT', 'Unable to acquire the Local Admin root ownership lease.');
+};
+const requireEnabled = async () => {
   if (!isEnabled()) throw new ApiError(404, 'NOT_FOUND', 'Local Admin file persistence is not enabled.');
+  await ensureRootLease();
 };
 const safePartition = (value: string): LocalAdminPartition => {
   if (!partitions.has(value)) throw new ApiError(400, 'VALIDATION_ERROR', 'Unknown Local Admin partition.');
@@ -604,7 +666,7 @@ const restoreBackup = async (backupId: string) => {
 export const localAdminFileRouter = Router();
 
 localAdminFileRouter.get('/status', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const root = localRoot();
   const present: Record<LocalAdminPartition, boolean> = { business: false, compatibility: false, 'care-seo': false };
   return sendData(request, response, await withAuthorityRead(async () => {
@@ -613,40 +675,40 @@ localAdminFileRouter.get('/status', asyncRoute(async (request, response) => {
   }));
 }));
 localAdminFileRouter.get('/integrity', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const result = await withAuthorityRead(() => inspectRoot(localRoot()));
   return sendData(request, response, result);
 }));
 localAdminFileRouter.post('/runtime-snapshot', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const result = await withAuthorityRead(() => exportGitRuntimeAuthority());
   return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   return sendData(request, response, { backups: await listBackups() });
 }));
 localAdminFileRouter.post('/backups', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const reason = typeof request.body?.reason === 'string' && request.body.reason.trim() ? request.body.reason.trim().slice(0, 120) : 'manual';
   const result = await withAuthorityRead(() => createBackup(reason, true));
   return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.post('/backups/:backupId/restore', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const result = await withAuthorityWrite(() => restoreBackup(request.params.backupId));
   return sendData(request, response, result);
 }));
 
 localAdminFileRouter.get('/state/:partition', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const partition = safePartition(request.params.partition);
   const value = await withAuthorityRead(() => readPartitionState(localRoot(), partition, true));
   if (value === null) throw new ApiError(404, 'NOT_FOUND', `Local Admin partition ${partition} has not been initialized.`);
   return sendData(request, response, { partition, state: value, localFileFormatVersion });
 }));
 localAdminFileRouter.put('/state/:partition', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const partition = safePartition(request.params.partition);
   await withAuthorityWrite(() => writePartitionState(localRoot(), partition, request.body));
   return sendData(request, response, { partition, persisted: true, localFileFormatVersion });
@@ -656,7 +718,7 @@ localAdminFileRouter.put(
   '/assets/:assetId',
   express.raw({ type: ['image/png', 'image/jpeg', 'image/webp'], limit: '20mb' }),
   asyncRoute(async (request, response) => {
-    requireEnabled();
+    await requireEnabled();
     const assetId = safeAssetId(request.params.assetId);
     const mimeType = request.header('content-type')?.split(';')[0].trim() || '';
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
@@ -684,7 +746,7 @@ localAdminFileRouter.put(
   }),
 );
 localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
   return withAuthorityRead(() => withAssetPairLock(assetId, async () => {
     const metadata = await readJsonOrNull(assetMetaFile(localRoot(), assetId)) as { mimeType?: string } | null;
@@ -701,7 +763,7 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
   }));
 }));
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
-  requireEnabled();
+  await requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
   return withAuthorityWrite(() => withAssetPairLock(assetId, async () => {
     const root = localRoot();
