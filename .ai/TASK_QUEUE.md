@@ -1,5 +1,15 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after corrupt active authority startup recovery closure
+- DONE: reproduce a corrupt active root still entering Operations Studio with normal workspaces available.
+- DONE: add startup integrity preflight before Durable Local File partition hydration.
+- DONE: fail closed with `INTEGRITY_FAILED` instead of loading ordinary Admin when active authority is unhealthy.
+- DONE: preserve a recovery-only path that lists healthy backups and restores the latest healthy backup without opening normal workspaces.
+- DONE: permanent Playwright regression covers corrupt blob -> blocked startup -> one-click healthy backup restore -> reload -> healthy root.
+- DONE: Local File API/UI / Operations Studio / mode contract / API+root TypeScript / full build / GitHub Product Golden Path PASS.
+- NOTE: no Vercel Git auto-preview was created; no manual Preview because this is DEV-only. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 after backup manifest-directory binding closure
 - DONE: reproduce newest backup metadata aliasing an older backup id and restoring the wrong directory with HTTP 200.
 - DONE: require `manifest.id === backup directory id` in the canonical backup reader.

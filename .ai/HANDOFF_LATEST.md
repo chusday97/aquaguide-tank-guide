@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — corrupt active authority startup recovery closed
+- Main functional checkpoint: `ed3789e7105354d04f099bfb85290c27150d0e3a` (`fix(admin): fail closed on corrupt active authority`).
+- Reproduced in a real browser: deleting the current local asset blob left `/integrity` unhealthy but the app still entered Operations Studio and exposed normal workspaces.
+- Fixed: Local File hydration runs integrity preflight first; unhealthy active authority stops ordinary Admin with `INTEGRITY_FAILED`.
+- Recovery remains available on the fail-closed page: only healthy backups are offered; restoring the latest healthy backup reloads the app and normal Admin resumes after integrity is healthy.
+- Permanent Playwright cycle PASS plus Local File API/mode/Operations/type/build gates; GitHub Product Golden Path `34756774041` PASS.
+- No Vercel Git auto-preview was created; no manual Preview. Production remains on `5fa915d3`.
+
 ## 2026-09-13 — backup manifest-directory binding closed
 - Main functional checkpoint: `57985b5aed38c48dd4a72d4cd0ccb0e323c0c7c9` (`fix(admin): bind backup manifests to directories`).
 - Reproduced: newest backup row could carry an older `manifest.id`, so Operations Studio displayed newest metadata but restored the older directory and returned 200.

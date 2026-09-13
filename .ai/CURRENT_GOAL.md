@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 corrupt active authority startup recovery closed
+A concrete active-root corruption/operator badcase is closed on main at `ed3789e7 fix(admin): fail closed on corrupt active authority`.
+
+- Fail-before-fix browser probe: after deleting the current local asset blob, `/integrity` reported `healthy=false` with `ASSET_PAIR_MISSING` + `REFERENCED_ASSET_MISSING`, yet `/admin/content` still loaded Operations Studio and reported disk persistence while normal workspaces remained usable.
+- Durable Local File hydration now checks `/local-admin/integrity` before loading partition state. Existing integrity errors raise `INTEGRITY_FAILED` and ordinary Admin hydration stops.
+- The fail-closed startup page keeps recovery available: it loads only healthy backup candidates and, when one exists, exposes `恢复最近健康备份`; successful restore reloads the page and normal Admin resumes only after the active root is healthy again.
+- Permanent Playwright regression performs the full cycle: healthy authority -> delete active blob -> startup blocked -> restore latest healthy backup -> reload -> `/integrity` healthy=true.
+- PASS: Local File API, Local Admin mode contract, Local File browser regression, Operations Studio populated UI, API/root TypeScript, full build, GitHub Product Golden Path `34756774041`.
+- Vercel Git auto-preview was not created for this main push; no manual Preview was triggered because the behavior is DEV-only. Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 backup manifest-directory binding closed
 A concrete backup identity/audit badcase is closed on main at `57985b5a fix(admin): bind backup manifests to directories`.
 
