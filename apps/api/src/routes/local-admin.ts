@@ -711,8 +711,19 @@ const applyBackupDirectory = async (source: string) => {
       if (await pathExists(sourceFile)) await atomicBufferWrite(targetFile, await readFile(sourceFile));
       else await unlink(targetFile).catch(error => { if ((error as NodeJS.ErrnoException)?.code !== 'ENOENT') throw error; });
     }
-    await rm(assetDirectory(root), { recursive: true, force: true });
-    if (await pathExists(tempAssets)) await rename(tempAssets, assetDirectory(root));
+    // Overlay restored assets instead of replacing the whole directory. A client may
+    // have read the pre-restore Business state immediately before this write lock
+    // was acquired and then request its referenced asset after the restore commits.
+    // Keeping superseded assets as integrity-audited orphans preserves that
+    // cross-request referential visibility without weakening the restored state.
+    if (await pathExists(tempAssets)) {
+      await mkdir(assetDirectory(root), { recursive: true });
+      for (const entry of await readdir(tempAssets, { withFileTypes: true })) {
+        if (!entry.isFile()) continue;
+        await rename(path.join(tempAssets, entry.name), path.join(assetDirectory(root), entry.name));
+      }
+      await rm(tempAssets, { recursive: true, force: true });
+    }
   } catch (error) {
     await rm(tempAssets, { recursive: true, force: true });
     throw error;

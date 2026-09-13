@@ -275,3 +275,8 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 ## Main follow-up absorbed — failed restore rollback integrity
 - Current main rollback-integrity validation is included; failed restore rollback must re-pass Local File integrity before authority becomes available again.
 - Product Recovery authority and the 25 Profile / 5 Pair runtime baseline are unchanged.
+
+## Local File restore visibility fix
+- Fixed the GitHub-runner race where a reader could fetch pre-restore Business state and then receive 404 for its asset after restore committed.
+- Restore overlays backup assets and retains superseded assets as auditable orphans so visible state never points at an immediately hidden asset.
+- Local File test passed repeatedly and full build passed before push.

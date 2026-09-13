@@ -691,6 +691,12 @@ try {
   const restoredVisibilityState = await requestJson(started.base, '/state/business');
   assert.equal(restoredVisibilityState.payload.data.state.species[0].image.id, restoreVisibilityAssetB);
   assert.equal((await fetch(`${started.base}/assets/${restoreVisibilityAssetB}`)).status, 200);
+  assert.equal((await fetch(`${started.base}/assets/${restoreVisibilityAssetA}`)).status, 200,
+    'Restore keeps the superseded asset reachable so a reader holding the pre-restore Business state cannot observe a dangling reference.');
+  const restoreVisibilityIntegrity = await requestJson(started.base, '/integrity');
+  assert.equal(restoreVisibilityIntegrity.response.status, 200);
+  assert(restoreVisibilityIntegrity.payload.data.issues.some((issue: any) => issue.code === 'ORPHAN_ASSET' && issue.message.includes(restoreVisibilityAssetA)),
+    'Superseded restore assets remain visible but must be explicitly reported as integrity-audited orphans.');
 
   // A failed restore may only claim automatic rollback success after validating both the safety backup and rolled-back root.
   const rollbackAssetA = 'local-asset-rollback-validation-a';

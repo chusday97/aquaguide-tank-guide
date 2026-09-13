@@ -255,3 +255,8 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 ## Main follow-up absorbed — failed restore rollback integrity
 - Absorbed current main Local File hardening that re-validates authority integrity after a failed restore rollback before normal access resumes.
 - Product Recovery remains the active authority; Compatibility V7, 25/5 runtime baseline, and the 22-taxon reviewed matrix are unchanged.
+
+## Local File restore visibility fix
+- Restore now overlays backup assets instead of deleting the entire live asset directory before replacement. This preserves assets referenced by a Business state that a client read immediately before the restore write lock was acquired.
+- Superseded assets remain readable as integrity-audited ORPHAN_ASSET warnings; current authority references remain exact and healthy.
+- Added regression coverage for the cross-request state→asset visibility window.
