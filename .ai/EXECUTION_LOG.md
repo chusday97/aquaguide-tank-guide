@@ -1,5 +1,24 @@
 # Execution Log
 
+## 2026-09-13 — reused-PID lease false lock
+- Reproduced: wrote a stale ownership lease using the PID of a real unrelated live process; pre-fix `/status` returned `409 VERSION_CONFLICT`.
+- Patched root lease format to v2 with `processStartIdentity`; Linux reads `/proc/<pid>/stat` start ticks and macOS reads `ps` start time + stable command identity.
+- Post-fix identical scenario returned 200 and reclaimed the root; exit cleanup removed the lease.
+- Permanent test retains true second-owner 409 while proving a mismatched live PID can be reclaimed.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `check:api`, root `lint`, full `build`, `git diff --check`.
+- GitHub Product Golden Path PASS; Vercel branch deployment READY.
+
+
+## 2026-09-13 — Cross-process root ownership hardening
+- Reproduced two independent Local Admin API processes sharing one root; simultaneous same-asset writes tore final disk pair at round 37 (PNG metadata / WebP blob).
+- Implemented atomic root ownership lease using candidate file + hard link, PID + random owner token, live-owner `409 VERSION_CONFLICT`, dead-PID stale lease quarantine/reclaim, owner-token-checked exit cleanup.
+- Added permanent regression for stale lease recovery and real second-process rejection.
+- Stress: 8 independent API processes contended simultaneously => exactly 1 owner / 7 conflicts; after shutdown no `.aqua-admin-owner*` residue.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `check:api`, root TypeScript, full build.
+- GitHub Product Golden Path for `32a5bb6c` PASS; Vercel `dpl_D2WyFqC3Axy89HwHFXfCHVxuHWn5` READY.
+- No Production promotion or Supabase/indexing mutation.
+
+
 ## 2026-09-13 — Restore visibility transaction
 - Reproduced: two healthy authority versions, restore B exposed Business B before assets B; read 6 saw referenced asset B return 404 while restore later returned 200.
 - Implemented fair Local authority reader/writer lock: restore and mutations take write; consistent reads/snapshots take shared read. Commit `deb5b085`.

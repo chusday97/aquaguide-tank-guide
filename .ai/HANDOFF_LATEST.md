@@ -1,5 +1,9 @@
 # Handoff Latest
 
+## Main Local File root-ownership hardening absorbed — 2026-09-13
+- Recovery now contains main single-root ownership lease and PID-reuse protection through `f6820e69`; concurrent Local Admin processes cannot share one Durable Local File root.
+- Product Recovery remains the active authority in this worktree; the 20/5 Compatibility baseline and 17-taxon Product checkpoint are unchanged.
+
 ## Denison barb reviewed-authority checkpoint — 2026-09-13
 - Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Sahyadria denisonii` (`sp_0440`); ornamental variants remain unreviewed and do not inherit automatically.
 - Canonical coverage is now 17 taxa / 272 directions: 238 caution, 32 not_recommended, 2 compatible.

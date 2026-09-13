@@ -1,5 +1,9 @@
 # Current Goal
 
+## Main root-ownership / PID-reuse lease hardening absorbed — 2026-09-13
+- Absorbed main checkpoints `32a5bb6c`, `a307b36c`, `8105f032`, and `f6820e69`: Local File authority root now has one live process owner, stale leases can be reclaimed, and PID reuse is disambiguated with process-start identity.
+- Recovery keeps the dynamic canonical Compatibility exact-baseline guard at 20 Profiles / 5 Pair Rules; this DEV-only ownership lease does not change Product Species/Compatibility authority or authorize Staging/Production writes.
+
 ## Denison barb reviewed-authority checkpoint — 2026-09-13
 - Added standard `Sahyadria denisonii` / 一眉道人 (`sp_0440`) as the 17th canonical priority taxon using Seriously Fish + FishBase reviewed evidence.
 - Reviewed planning authority: 15–25°C, pH 6.5–7.8, 5–25 dGH, ~11 cm SL, 120 cm tank length, ~243 L planning volume, school minimum 6 with 6–10 preferred.
