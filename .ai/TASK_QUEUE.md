@@ -1,5 +1,15 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after root ownership closure
+- DONE: reproduce cross-process same-root torn asset pair.
+- DONE: enforce atomic single-owner root lease with live-PID conflict rejection and stale-PID recovery.
+- DONE: formal second-process + stale-lease regression.
+- DONE: 8-process contention stress (1 owner / 7 conflicts / zero residue).
+- DONE: full Local File/UI/contract/TypeScript/build gates; GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- DO NOT: add distributed/multi-process Local File semantics. One root = one live Local Admin API process is the accepted invariant.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 after restore visibility closure
 - DONE: restore intermediate state can no longer leak through state/asset/status/integrity reads (`deb5b085`).
 - VERIFIED: shared reads remain concurrent and a waiting restore writer is not starved under sustained GET load.

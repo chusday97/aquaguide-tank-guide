@@ -1,5 +1,18 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 single-owner Local File root closure
+A concrete cross-process corruption path is closed on main at `32a5bb6c fix(admin): enforce single local authority owner`.
+
+- Fail-before-fix: two independent Local Admin API processes sharing one `ADMIN_LOCAL_FILE_ROOT` both returned 201 for same-asset writes; by round 37 the final disk state was PNG metadata + WebP blob.
+- Local File root ownership is now fail-closed: the first live process atomically acquires `.aqua-admin-owner.json`; a second process receives `409 VERSION_CONFLICT` before touching authority data.
+- The lease records PID + owner token. A stale lease is reclaimed only when its owner PID no longer exists; normal owner exit removes the lease when possible.
+- Atomic candidate + hard-link acquisition prevents a partially-written ownership record from becoming the live lease.
+- Formal regression covers stale-PID recovery and second-process rejection. Stress: 8 independent API processes contended for one root => exactly 1×200 owner / 7×409 conflicts / zero ownership-candidate residue after exit.
+- PASS: Local File API/UI, mode contract, API/root TypeScript, full build, GitHub Product Golden Path; Vercel branch deployment READY.
+- Production remains unchanged because Local File API is DEV-only.
+- NEXT: treat one Durable Local File root = one live Local Admin API process as an authority invariant; continue only from another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 restore visibility transaction closed
 A real restore visibility badcase is closed on main at `deb5b085 fix(admin): hide in-flight restore states`.
 

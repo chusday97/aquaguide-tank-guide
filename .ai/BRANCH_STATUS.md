@@ -1,5 +1,14 @@
 # Branch Status
 
+## 2026-09-13 — Single-owner Local File root checkpoint
+- `main` functional checkpoint: `32a5bb6c fix(admin): enforce single local authority owner`.
+- Cross-process torn asset pair reproduced before fix at round 37 with two independent API processes sharing one root.
+- Root lease now atomically admits one live owner; second process fails `409 VERSION_CONFLICT`; dead-PID stale lease recovery is covered.
+- 8-process contention stress: 1 owner / 7 conflicts / 0 lease residue.
+- GitHub Product Golden Path PASS; Vercel branch deployment `dpl_D2WyFqC3Axy89HwHFXfCHVxuHWn5` READY.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 main after restore visibility hardening
 - Canonical worktree `/Users/chuchu/aquaguide-main`, branch `main`.
 - Functional HEAD before this docs checkpoint: `deb5b085cd3520b03ab1c2d1fb5127b7955bdf2f`; local and GitHub main were equal after push.

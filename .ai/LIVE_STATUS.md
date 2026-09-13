@@ -1,5 +1,14 @@
 # Live Status
 
+## 2026-09-13 — Local File cross-process ownership status
+- Durable Local File authority is single-process-owned per root.
+- Current functional checkpoint: `32a5bb6c`.
+- Second live API process on the same root is rejected with `409 VERSION_CONFLICT`; stale dead-PID owner lease is recoverable.
+- 8-process stress verified exactly one owner and no shutdown residue.
+- GitHub CI PASS; branch deployment READY.
+- Production/Supabase/indexing unchanged.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 restore visibility transaction
 - Main functional HEAD before this docs checkpoint: `deb5b085cd3520b03ab1c2d1fb5127b7955bdf2f`.
 - GitHub Product Golden Path PASS. Vercel branch deployment `dpl_9BqvXujSc6Ey7hWWLT8VvAWewU7s` READY with `target=null`.

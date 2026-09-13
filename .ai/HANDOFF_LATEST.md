@@ -1,5 +1,15 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — Cross-process Local File ownership closed
+- Functional checkpoint: `32a5bb6c fix(admin): enforce single local authority owner`.
+- Fail-before-fix used two real API processes on one root; same-asset concurrent writes produced a torn PNG-metadata/WebP-blob pair at round 37.
+- Root ownership now uses an atomic hard-link lease with PID + token. A live second owner gets `409 VERSION_CONFLICT`; dead-PID stale leases are reclaimed safely.
+- Regression covers stale lease recovery and real second-process rejection. 8-process stress: exactly one owner, seven conflicts, zero lease/candidate residue after shutdown.
+- Local File API/UI, contracts, TypeScript, full build, GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- Operational invariant: do not run two Local Admin API processes against the same Durable Local File root.
+- No Production promotion, Supabase Staging, Production DB migration or indexing change.
+
+
 ## 2026-09-13 — Restore visibility is externally atomic
 - `deb5b085 fix(admin): hide in-flight restore states` closes a reproduced read-visibility race: Business B became visible before assets B, causing B's referenced image to return 404 during a restore that later succeeded.
 - Local authority coordination is now a fair reader/writer lock. Mutations/restore are exclusive; state/asset/status/integrity reads and snapshot-style operations share read access.
