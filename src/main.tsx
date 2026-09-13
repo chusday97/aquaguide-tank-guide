@@ -52,6 +52,6 @@ void startApplication().catch(error => {
   const root = document.getElementById('root');
   if (!root) return;
   const message = error instanceof Error ? error.message : 'Local Admin 启动失败。';
-  root.innerHTML = `<main style="max-width:720px;margin:80px auto;padding:24px;font-family:system-ui,sans-serif"><h1 style="font-size:24px;margin:0 0 12px">Local Admin 未启动</h1><p style="line-height:1.7">${message.replace(/[<>&"']/g, '')}</p><p style="line-height:1.7;color:#666">请使用 <code>npm run dev:local-admin</code> 启动 Durable Local File Mode；不会自动退回为看似已保存的 browser-only 模式。</p></main>`;
+  root.innerHTML = `<main style="max-width:720px;margin:80px auto;padding:24px;font-family:system-ui,sans-serif"><h1 style="font-size:24px;margin:0 0 12px">Local Admin 未启动</h1><p style="line-height:1.7">${message.replace(/[<>&"']/g, '')}</p><p style="line-height:1.7;color:#666">请使用 <code>npm run dev:local-admin</code> 启动 Durable Local File Mode；不会自动退回为看似已保存的 browser-only 模式。如果已经使用该命令启动，请关闭占用同一 Local File root 的旧 Local Admin 进程后重试。</p></main>`;
   console.error('[local-admin-startup]', error);
 });

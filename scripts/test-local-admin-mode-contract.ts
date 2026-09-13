@@ -39,6 +39,10 @@ assert.match(localFilePersistence, /runtimeEnv\?\.DEV === true[\s\S]*VITE_ADMIN_
   'Durable Local File Mode must require DEV + Local Mode + explicit Local File flag.');
 assert.match(localFilePersistence, /apiRequest\(`\/local-admin\/state\/\$\{partition\}`[\s\S]*method: 'PUT'/,
   'Durable Local File state writes must cross the local API boundary.');
+assert.match(localFilePersistence, /具体原因：\$\{error\.message\}/,
+  'Local File startup failures must preserve the actionable API reason instead of collapsing into a generic unavailable message.');
+assert.match(read('src/main.tsx'), /关闭占用同一 Local File root 的旧 Local Admin 进程后重试/,
+  'The fail-closed startup screen must tell operators how to recover from a same-root owner conflict.');
 assert.match(localFileRouter, /process\.env\.ADMIN_LOCAL_FILE_MODE === 'true'[\s\S]*process\.env\.NODE_ENV !== 'production'[\s\S]*!process\.env\.VERCEL/,
   'Local File API must be unavailable in Production and Vercel environments.');
 assert.match(localApiApp, /import \{ localAdminFileRouter \} from '\.\/routes\/local-admin';[\s\S]*legacyApp\.use\('\/api\/v1\/local-admin', requestIdMiddleware, localAdminFileRouter\)/,

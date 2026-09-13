@@ -143,7 +143,7 @@ export const hydrateLocalAdminFileStores = async () => {
     status = 'unavailable';
     if (error instanceof AquaGuideApiError) {
       throw new AquaGuideApiError(error.status, error.code,
-        '已启用 Local File Mode，但本地文件服务或旧图片迁移不可用；为避免误以为内容已持久保存，应用已停止启动。',
+        `已启用 Local File Mode，但 Durable Local File authority 未能安全启动；为避免误以为内容已持久保存，应用已停止启动。具体原因：${error.message}`,
         error.requestId, error.details);
     }
     throw error;
