@@ -4,6 +4,56 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const agassiziiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成熟后公母体型和鳍形差异明显',
+    summary: '成熟公鱼通常更大、颜色更强并发展出更延长的鳍；母鱼体型更小。',
+    points: ['公鱼：成熟后通常更大、更鲜艳，鳍条更延长。', '母鱼：成熟后体型通常更小。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    maleTraits: ['成熟后通常更大、更鲜艳', '鳍条更延长'],
+    femaleTraits: ['成熟后体型通常更小'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-apistogramma-agassizii'], reviewedAt: '2026-09-13' },
+  },
+  reproduction: {
+    mode: 'cave_spawner',
+    plainLanguageLabel: '洞穴产卵型',
+    summary: '通常在洞穴或缝隙顶部产卵，由母鱼负责护卵和照顾鱼苗；繁殖期需要避免把护域行为当成日常社区行为。',
+    fertilization: 'external',
+    parentalCare: 'fry_guarding',
+    breedingBehavior: ['在洞穴或缝隙内产卵', '母鱼负责护卵和鱼苗'],
+    breedingAggression: 'medium',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-apistogramma-agassizii', 'fishbase-apistogramma-agassizii'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 22, max: 29 },
+    phRange: { min: 5.0, max: 7.0 },
+    hardnessDgh: { min: 0, max: 10 },
+    notes: ['一般饲养采用 FishBase 的 pH 5–7 作为 reviewed 范围；部分野生繁殖群体可能需要更低 pH，不把该极端繁殖条件当成普通长期目标。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-apistogramma-agassizii', 'fishbase-apistogramma-agassizii'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'harem',
+    territoriality: 'low',
+    finNipping: 'none',
+    predationRisk: 'low',
+    summary: '人工繁育个体可作为有条件的社区鱼；FishBase 记录可按一雄多雌管理。野生个体更适合单独或与小型伴游鱼谨慎搭配。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-apistogramma-agassizii', 'fishbase-apistogramma-agassizii'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 7.5, measurement: 'SL' },
+    minVolumeLiters: 54,
+    minTankLengthCm: 60,
+    activityLevel: 'medium',
+    needsCover: true,
+    needsHidingPlaces: true,
+    spaceNotes: ['单对至少按 60 × 30 cm 缸底、约 54 L 规划；多鱼组合需要更大空间和更多洞穴/遮挡。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-apistogramma-agassizii', 'fishbase-apistogramma-agassizii'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const emberTetraKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '成熟后可通过体色与腹部轮廓辅助判断',
@@ -199,6 +249,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0017: agassiziiKnowledge,
   sp_0444: pearlGouramiKnowledge,
   sp_0020: congoTetraKnowledge,
   sp_0440: denisonBarbKnowledge,

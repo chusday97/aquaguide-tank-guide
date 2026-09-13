@@ -58,7 +58,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish(),
       });
       return result.metadata.catalogVersion === 'local-fish-data-v1'
-        && result.metadata.ruleVersion === 'compatibility-domain-v6-tank-requirements-symmetry'
+        && result.metadata.ruleVersion === 'compatibility-domain-v7-ph-edge-overlap'
         && result.metadata.domainRuleCodes.length > 0
         && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
     },
@@ -511,6 +511,40 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         && fullPlan.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum'].includes(rule.code))
         && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
         && fullPlan.evidenceIds?.includes('seriouslyfish-sahyadria-denisonii');
+    },
+  },
+  {
+    name: 'reviewed Agassizii authority keeps breeding defense contextual and overrides legacy tank planning',
+    run: () => {
+      const agassizii = fishData.find(item => item.id === 'sp_0017');
+      if (!agassizii) return false;
+      const normal = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '35', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: agassizii,
+        candidateQuantity: 1,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'normal' },
+      });
+      const breeding = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '35', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: agassizii,
+        candidateQuantity: 1,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'in_labor_or_spawning', guardingEggsOrFry: true },
+      });
+      const shortTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '45', width: '30', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: agassizii,
+        candidateQuantity: 1,
+      });
+      const hotTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '35', height: '30' }, targetTemperature: '30' }),
+        candidateSpecies: agassizii,
+        candidateQuantity: 1,
+      });
+      return normal.warningRules.every(rule => !['territorial_pressure_context', 'breeding_territory_active'].includes(rule.code))
+        && breeding.warningRules.some(rule => rule.code === 'breeding_territory_active')
+        && shortTank.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && normal.evidenceIds?.includes('seriouslyfish-apistogramma-agassizii');
     },
   },
   {

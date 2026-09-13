@@ -1,5 +1,15 @@
 # Current Goal
 
+## Agassizii + V7 pH-edge checkpoint — 2026-09-13
+- Added standard `Apistogramma agassizii` / 阿卡西短鲷 (`sp_0017`) as the 20th canonical priority taxon using Seriously Fish + FishBase reviewed evidence; Fire Red ornamental variants do not inherit automatically.
+- Reviewed planning authority: 22–29°C, pH 5.0–7.0, 0–10 dGH, ~7.5 cm SL, 60 cm tank length, ~54 L single-pair planning, cave spawning with maternal egg/fry care.
+- Breeding defense is contextual: normal community state does not emit permanent territorial pressure; spawning/guarding state emits `breeding_territory_active`.
+- Domain Rules advanced to `compatibility-domain-v7-ph-edge-overlap`: reviewed pH ranges that only touch at a single boundary now produce caution instead of a false compatible result.
+- Canonical coverage: 20 taxa / 380 ordered directions = 340 caution, 38 not_recommended, 2 compatible; the two compatible directions remain the pre-existing platy ↔ nerite pair.
+- Runtime/Admin reviewed baseline: 23 Profiles / 5 Pair Rules. Additive migration `202609120009_compatibility_agassizii_baseline.sql` is repository authority only and is not applied to Staging/Production.
+- Fixed unapplied `202609120008_compatibility_pearl_gourami_baseline.sql` drift assertion so its inserted and asserted behavior traits agree; Admin contract now audits insert-vs-drift trait self-consistency across additive migrations.
+- Full Product/Admin/runtime/build/browser validation is green through GP001–GP004.
+
 ## Pearl gourami reviewed-authority checkpoint — 2026-09-13
 - Added standard `Trichopodus leerii` / 珍珠马甲 (`sp_0444`) as the 19th canonical priority taxon using Seriously Fish + FishBase reviewed evidence; ornamental Balloon/Albino Balloon/Red Head variants do not inherit automatically.
 - Environment authority uses Seriously Fish 24–30°C, pH 5.5–8.0, 2–30 dGH; space uses ~81 L from Seriously Fish and the more conservative 120 cm aquarium-length reference from FishBase.

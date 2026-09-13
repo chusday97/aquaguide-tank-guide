@@ -83,6 +83,24 @@ assert.equal(phConflict.status, 'caution');
 assert.equal(phConflict.addPolicy, 'confirm');
 assert.ok(phConflict.ruleCodes.includes('ph_range_conflict'));
 
+const phEdgeOverlap = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
+  existingSpecies: [{ ...base, id: 'acid-edge', phMin: 5, phMax: 7, compatibilityRequiredFacts: ['ph'] }],
+  candidateSpecies: { ...base, id: 'alkaline-edge', phMin: 7, phMax: 8.2, compatibilityRequiredFacts: ['ph'] },
+});
+assert.equal(phEdgeOverlap.status, 'caution');
+assert.equal(phEdgeOverlap.addPolicy, 'confirm');
+assert.ok(phEdgeOverlap.ruleCodes.includes('ph_range_edge_overlap'));
+
+const phMeaningfulOverlap = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
+  existingSpecies: [{ ...base, id: 'wide-a', phMin: 6, phMax: 7.5, compatibilityRequiredFacts: ['ph'] }],
+  candidateSpecies: { ...base, id: 'wide-b', phMin: 7, phMax: 8, compatibilityRequiredFacts: ['ph'] },
+});
+assert.equal(phMeaningfulOverlap.ruleCodes.includes('ph_range_edge_overlap'), false);
+
 const unknownCandidateWater = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },

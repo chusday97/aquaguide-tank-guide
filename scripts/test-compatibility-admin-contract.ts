@@ -233,7 +233,34 @@ for (const source of pearlGouramiProfile.citations) assert.equal(pearlGouramiMig
 assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile drift:/g) || []).length, 1);
 assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile evidence drift:/g) || []).length, 1);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444']);
+const agassiziiMigration = readFileSync('supabase/migrations/202609120009_compatibility_agassizii_baseline.sql', 'utf8');
+assert.match(agassiziiMigration, /Compatibility agassizii baseline is partial or not fully published/, 'Agassizii baseline must fail closed on partial published catalog coverage.');
+const agassiziiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0017');
+assert.ok(agassiziiProfile, '120009 must own the reviewed Agassizii profile.');
+assert.equal(agassiziiMigration.includes('sp_0017'), true);
+for (const source of agassiziiProfile.citations) assert.equal(agassiziiMigration.includes(source.id), true, `Agassizii migration must include source ${source.id}`);
+assert.equal((agassiziiMigration.match(/Compatibility agassizii profile drift:/g) || []).length, 1);
+assert.equal((agassiziiMigration.match(/Compatibility agassizii profile evidence drift:/g) || []).length, 1);
+
+const additiveCompatibilityMigrations = [
+  '202609120002_compatibility_harlequin_baseline.sql',
+  '202609120003_compatibility_black_skirt_baseline.sql',
+  '202609120004_compatibility_cherry_barb_baseline.sql',
+  '202609120005_compatibility_ember_tetra_baseline.sql',
+  '202609120006_compatibility_denison_barb_baseline.sql',
+  '202609120007_compatibility_congo_tetra_baseline.sql',
+  '202609120008_compatibility_pearl_gourami_baseline.sql',
+  '202609120009_compatibility_agassizii_baseline.sql',
+];
+for (const migrationName of additiveCompatibilityMigrations) {
+  const migration = readFileSync(`supabase/migrations/${migrationName}`, 'utf8');
+  const insertedTraits = migration.match(/select s\.id, ARRAY\[([^\]]*)\]::text\[\]/)?.[1];
+  const assertedTraits = migration.match(/cp\.behavior_traits=ARRAY\[([^\]]*)\]::text\[\]/)?.[1];
+  assert.ok(insertedTraits && assertedTraits, `${migrationName} must expose insert and drift behavior traits.`);
+  assert.equal(assertedTraits, insertedTraits, `${migrationName} drift assertion must match its inserted behavior traits.`);
+}
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

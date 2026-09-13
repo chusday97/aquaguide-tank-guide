@@ -230,6 +230,31 @@ assert.equal(denisonSources.length, 2);
 assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(denisonSources.some(source => source.publisher === 'FishBase'));
 
+const agassiziiKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0017',
+  name: '阿卡西短鲷',
+  scientificName: 'Apistogramma agassizii',
+  waterTemperature: '24-28°C',
+  phLevel: '5.0-7.0',
+  tankSize: '至少 64 升',
+});
+assert.deepEqual(agassiziiKnowledge.facts.temperatureRange, { min: 22, max: 29 });
+assert.deepEqual(agassiziiKnowledge.facts.phRange, { min: 5, max: 7 });
+assert.deepEqual(agassiziiKnowledge.knowledge.environment?.hardnessDgh, { min: 0, max: 10 });
+assert.equal(agassiziiKnowledge.knowledge.socialBehavior?.mode, 'harem');
+assert.equal(agassiziiKnowledge.knowledge.socialBehavior?.territoriality, 'low');
+assert.equal(agassiziiKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 7.5);
+assert.equal(agassiziiKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 54);
+assert.equal(agassiziiKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
+assert.equal(agassiziiKnowledge.knowledge.reproduction?.mode, 'cave_spawner');
+assert.equal(agassiziiKnowledge.knowledge.reproduction?.parentalCare, 'fry_guarding');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0221', scientificName: 'Apistogramma agassizii var. Fire Red' }), undefined, 'Agassizii ornamental variants must not inherit standard-species authority automatically');
+const agassiziiSources = resolveKnowledgeSources(agassiziiKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(agassiziiSources.length, 2);
+assert.ok(agassiziiSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(agassiziiSources.some(source => source.publisher === 'FishBase'));
+
 const pearlGouramiKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0444',

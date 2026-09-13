@@ -56,7 +56,7 @@ do $$ begin
   if exists (select 1 from pg_temp.compatibility_pearl_gourami_baseline_gate where mode='run') then
     if not exists (
       select 1 from public.species_compatibility_profiles cp join public.species s on s.id=cp.species_id
-      where s.catalog_key='sp_0444' and cp.behavior_traits=ARRAY['shoaling','peaceful']::text[] and cp.minimum_group_size is null
+      where s.catalog_key='sp_0444' and cp.behavior_traits=ARRAY['peaceful','breeding_defense']::text[] and cp.minimum_group_size is null
         and cp.predation_targets=ARRAY[]::text[] and cp.confidence='high' and cp.review_status='reviewed'
         and cp.required_facts=ARRAY['water','temperature','ph','adult_size','social_behavior','breeding_behavior']::text[] and cp.deleted_at is null and s.status='published'
     ) then raise exception 'Compatibility pearl-gourami profile drift: sp_0444'; end if;

@@ -102,7 +102,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v6-tank-requirements-symmetry';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v7-ph-edge-overlap';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -166,6 +166,11 @@ export const getCompatibilityAddPolicy = (
 const rangesOverlap = (leftMin?: number | null, leftMax?: number | null, rightMin?: number | null, rightMax?: number | null) => {
   if (leftMin == null || leftMax == null || rightMin == null || rightMax == null) return null;
   return Math.max(leftMin, rightMin) <= Math.min(leftMax, rightMax);
+};
+
+const rangesOnlyTouchAtBoundary = (leftMin?: number | null, leftMax?: number | null, rightMin?: number | null, rightMax?: number | null) => {
+  if (leftMin == null || leftMax == null || rightMin == null || rightMax == null) return null;
+  return Math.max(leftMin, rightMin) === Math.min(leftMax, rightMax);
 };
 
 const rangeContains = (value: number | null | undefined, min?: number | null, max?: number | null) => {
@@ -296,6 +301,8 @@ export const evaluateCompatibility = ({
         raise('insufficient_data', 'ph_range_missing');
       } else if (phOverlap === false) {
         raise('caution', 'ph_range_conflict');
+      } else if (phRequired && rangesOnlyTouchAtBoundary(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax)) {
+        raise('caution', 'ph_range_edge_overlap');
       }
     }
   }

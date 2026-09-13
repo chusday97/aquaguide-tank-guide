@@ -1,5 +1,13 @@
 # Aqua Product Recovery Status
 
+## 2026-09-13 — Agassizii / Compatibility V7 checkpoint
+- Standard `sp_0017` / `Apistogramma agassizii` is now reviewed Product authority with 22–29°C, pH 5–7, 0–10 dGH, 60 cm / ~54 L pair planning, harem/social context and cave-spawning maternal care.
+- `compatibility-domain-v7-ph-edge-overlap` closes a false-green gap where reviewed pH ranges touched at only one boundary value.
+- Canonical priority matrix: 20 taxa / 380 directions = 340 caution, 38 not_recommended, 2 compatible.
+- Runtime/Admin: 23 Profiles / 5 Pair Rules; `202609120009_compatibility_agassizii_baseline.sql` added but not applied to any database.
+- `120008` Pearl-gourami migration was still unapplied and contained a self-contradictory drift assertion; it is corrected and future additive migrations are checked for insert/assertion trait consistency.
+- Full build/browser/Admin/runtime validation green.
+
 ## 2026-09-13 — Pearl gourami reviewed-authority checkpoint
 - `Trichopodus leerii` (`sp_0444`) is the 19th canonical priority taxon.
 - Canonical matrix: 19 taxa / 342 directions = 304 caution, 36 not_recommended, 2 compatible.

@@ -91,6 +91,9 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   ph_range_conflict: {
     code: 'ph_range_conflict', title: 'pH 区间差异较大', evidence: '组合中的物种没有明确的共同 pH 区间，需先确认实际水质和物种敏感度。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  ph_range_edge_overlap: {
+    code: 'ph_range_edge_overlap', title: 'pH 适宜区间只在边界相接', evidence: '两个物种的已审核 pH 区间只在单一边界值相交，长期共同水质几乎没有调整余量，应先确认实际稳定水质再决定。', severity: 'medium', basis: 'tank_condition', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   tank_temperature_conflict: {
     code: 'tank_temperature_conflict', title: '鱼缸温度不匹配', evidence: '当前鱼缸目标温度不在候选物种的已审核适宜范围内。', severity: 'high', basis: 'tank_condition', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
@@ -141,7 +144,7 @@ export const applyCanonicalCompatibilityDecision = (
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
   const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'single_housing_required', 'observed_emergency']);
-  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
+  const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'ph_range_edge_overlap', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
   const informationalCodes = new Set(['compatibility_clear', 'bioload_screening_elevated_stable_context', 'shared_bottom_zone_context']);

@@ -1,6 +1,22 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-apistogramma-agassizii': {
+    id: 'seriouslyfish-apistogramma-agassizii',
+    title: "Apistogramma agassizii (Agassizi's Dwarf Cichlid)",
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/apistogramma-agassizii/',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-apistogramma-agassizii': {
+    id: 'fishbase-apistogramma-agassizii',
+    title: "Apistogramma agassizii (Agassiz's dwarf cichlid) species summary",
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=agassizii',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-trichopodus-leerii': {
     id: 'seriouslyfish-trichopodus-leerii',
     title: 'Trichopodus leerii (Pearl Gourami)',

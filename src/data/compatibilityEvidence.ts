@@ -98,6 +98,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const agassiziiSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-apistogramma-agassizii',
+  title: "Apistogramma agassizii (Agassizi's Dwarf Cichlid)",
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/apistogramma-agassizii/',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const agassiziiFishBase: EvidenceSourceDto = {
+  id: 'fishbase-apistogramma-agassizii',
+  title: "Apistogramma agassizii (Agassiz's dwarf cichlid) species summary",
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=agassizii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const pearlGouramiSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-trichopodus-leerii',
   title: 'Trichopodus leerii (Pearl Gourami)',
@@ -463,6 +481,16 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0017: {
+    speciesId: 'sp_0017',
+    waterType: 'freshwater',
+    behaviorTraits: ['breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [agassiziiSeriouslyFish, agassiziiFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
   sp_0444: {
     speciesId: 'sp_0444',
     waterType: 'freshwater',

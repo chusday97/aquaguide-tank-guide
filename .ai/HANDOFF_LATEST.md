@@ -1,5 +1,14 @@
 # Handoff Latest
 
+## Agassizii + V7 pH-edge checkpoint — 2026-09-13
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Apistogramma agassizii` (`sp_0017`); ornamental Fire Red variants remain unreviewed and do not inherit automatically.
+- Canonical coverage is now 20 taxa / 380 directions: 340 caution, 38 not_recommended, 2 compatible.
+- Domain Rules version is now `compatibility-domain-v7-ph-edge-overlap`; single-point reviewed pH overlap becomes caution rather than a false green light.
+- Runtime/Admin baseline is 23 Profiles / 5 Pair Rules; Git runtime snapshot matches canonical static authority.
+- New additive migration: `202609120009_compatibility_agassizii_baseline.sql`; not applied to Staging/Production.
+- Corrected the still-unapplied Pearl-gourami `120008` migration's internal behavior-trait drift assertion and added contract coverage preventing future insert/assertion mismatches.
+- Validation PASS: TypeScript, Domain, Species Knowledge, Compatibility, canonical coverage, Admin/Git/DB runtime, Staging preflight, Local File Admin, full build, Species Detail, Compatibility Beginner Action and GP001–GP004.
+
 ## Pearl gourami reviewed-authority checkpoint — 2026-09-13
 - Added direct reviewed Species Knowledge V2 + Compatibility authority for `Trichopodus leerii` (`sp_0444`); ornamental variants remain unreviewed and do not inherit automatically.
 - Canonical coverage is now 19 taxa / 342 directions: 304 caution, 36 not_recommended, 2 compatible.
