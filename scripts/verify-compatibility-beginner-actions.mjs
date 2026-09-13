@@ -66,6 +66,7 @@ try {
     const underGroupedText = (await resultPanel.textContent()) || '';
     assert.match(underGroupedText, /当前不是“少养几条更安全”/);
     assert.doesNotMatch(underGroupedText, /建议单养/);
+    assert.equal(await calculator.locator('[data-ui-block="compatibility-decision-workspace"]').count(), 0, 'single-candidate caution should not render a duplicate decision workspace');
 
     const tigerChip = calculator.getByText('虎皮鱼', { exact: true }).first()
       .locator('xpath=ancestor::div[contains(@class,"rounded-full")][1]');
@@ -105,6 +106,9 @@ try {
     assert.match(resultText, /先不要把这组生物放在一起/);
     assert.match(resultText, /长鳍|追鳍/);
     assert.doesNotMatch(resultText, /可以尝试，但别一次加太多/);
+    const decisionWorkspace = calculator.locator('[data-ui-block="compatibility-decision-workspace"]');
+    await decisionWorkspace.waitFor();
+    assert.match((await decisionWorkspace.textContent()) || '', /先处理不适合加入的对象/);
     await page.close();
   }
 

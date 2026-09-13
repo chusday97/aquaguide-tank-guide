@@ -1,5 +1,15 @@
 # Aqua Product Recovery Status
 
+## 2026-09-14 — Product Closure Checkpoint 1
+- Compatibility result hierarchy is reduced to one beginner-facing verdict/action surface for the common single-candidate flow; secondary selection/removal controls appear only when the user has multiple addable candidates or an explicit removable blocked candidate.
+- Compatibility page entry copy is de-duplicated; implementation/source metadata is removed from the primary task surface.
+- Care diagnosis terminology is unified on “快速检查 / Quick Check” across UI and browser contracts.
+- Aquarium stage headline now follows the same canonical Today Action task as the status rail, so completing Daily Check advances both surfaces together instead of leaving stale guidance.
+- Species Detail compatibility preview now reuses the canonical Compatibility decision + Beginner Action visual adapter when tank context exists; no-tank detail remains fail-safe/unavailable rather than fabricating a verdict.
+- Browser gates green: Compatibility beginner actions, GP-002, GP-003, GP-004, Species Detail, Care Guide Types, Task Action closure. TypeScript and full production build are green.
+- Collection/Care action hierarchy audit found no additional evidence-backed change required in this checkpoint; knowledge-guide saved state does not render a redundant footer CTA.
+- Production unchanged. No Staging/Production migration was applied.
+
 ## 2026-09-13 — Red Rainbowfish reviewed-authority checkpoint
 - `Glossolepis incisus` (`sp_0133`, 红苹果美人 / Red Rainbowfish) is now reviewed Species Knowledge V2 + Compatibility authority.
 - Reviewed husbandry authority: 22–25°C, pH 7.0–8.0, 10–20 dGH; group minimum 6; long-term planning uses 120 cm / ~108 L and high-activity middle-water swimming.

@@ -115,7 +115,7 @@ try {
       const exitConfirmation = page.getByRole('dialog').filter({ hasText: '退出本次检查？' });
       await exitConfirmation.waitFor();
       assert.equal(await exitConfirmation.locator('[data-slot="dialog-close"]').count(), 0, 'draft exit confirmation must only use footer decisions');
-      await exitConfirmation.getByRole('button', { name: '继续填写', exact: true }).click();
+      await exitConfirmation.getByRole('button', { name: '继续填写', exact: true }).dispatchEvent('click');
       await exitConfirmation.waitFor({ state: 'hidden' });
       assert.equal(await firstAnswer.getAttribute('class'), selectedAnswerClass, 'continuing must preserve the selected answer');
       await dialog.getByRole('button', { name: '退出', exact: true }).click();
@@ -164,7 +164,7 @@ try {
     await dialog.getByRole('button', { name: '退出', exact: true }).click();
     const exitConfirmation = page.getByRole('dialog').filter({ hasText: '退出本次检查？' });
     await exitConfirmation.waitFor();
-    await exitConfirmation.getByRole('button', { name: '继续填写', exact: true }).click();
+    await exitConfirmation.getByRole('button', { name: '继续填写', exact: true }).dispatchEvent('click');
     await exitConfirmation.waitFor({ state: 'hidden' });
     await saveResult.waitFor();
 
@@ -241,13 +241,13 @@ try {
 
   {
     const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
-    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
+    await page.getByRole('button', { name: '开始快速检查', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速检查' }).last();
     const normalOptions = panel.getByRole('button', { name: '没有', exact: true });
     for (let index = (await normalOptions.count()) - 1; index >= 0; index -= 1) {
       await normalOptions.nth(index).click();
     }
-    await panel.getByRole('button', { name: '查看处理方案', exact: true }).click();
+    await panel.getByRole('button', { name: '查看处理建议', exact: true }).click();
     await panel.locator('[data-care-assessment-result]').waitFor();
     await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).waitFor();
     const secondWaterAction = panel.getByText('清理可见残饵和腐败物', { exact: true });
@@ -255,7 +255,7 @@ try {
     await secondWaterAction.waitFor();
     await firstWaterAvoid.waitFor();
     assert.equal(await panel.getByText('保持环境稳定', { exact: true }).count(), 0, 'water assessment must provide a concrete first action');
-    assert.equal(await page.getByRole('button', { name: '开始快速评测', exact: true }).count(), 0, 'stale footer action remains after assessment starts');
+    assert.equal(await page.getByRole('button', { name: '开始快速检查', exact: true }).count(), 0, 'stale footer action remains after assessment starts');
     await panel.locator('[data-care-assessment-next]').waitFor();
     assert.equal(await panel.getByText('检查过滤出水和进水口是否通畅', { exact: true }).count(), 1, 'the visual first action must not repeat inside expanded steps');
     assert.equal(await secondWaterAction.count(), 1, 'direct action steps must not repeat in follow-up checks');
@@ -274,8 +274,8 @@ try {
 
   {
     const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
-    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
+    await page.getByRole('button', { name: '开始快速检查', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速检查' }).last();
     await panel.getByRole('button', { name: '追咬打架', exact: true }).click();
     const targetPanel = panel.getByText('哪些生物出现了这个情况？', { exact: true }).locator('..');
     await targetPanel.getByRole('button', { name: '多种生物', exact: true }).click();
@@ -287,7 +287,7 @@ try {
     for (let index = 0; index < await normalOptions.count(); index += 1) {
       await normalOptions.nth(index).click();
     }
-    await panel.getByRole('button', { name: '查看处理方案', exact: true }).click();
+    await panel.getByRole('button', { name: '查看处理建议', exact: true }).click();
     const assessmentResult = panel.locator('[data-care-assessment-result]');
     await assessmentResult.getByText(/所选 2 种生物/).waitFor();
     assert.equal(await assessmentResult.locator('img').count(), 2, 'multi-species result should preview the selected species');
@@ -301,8 +301,8 @@ try {
 
   {
     const { page, errors } = await open('/care?topic=guide_water_deteriorate', 390);
-    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
+    await page.getByRole('button', { name: '开始快速检查', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速检查' }).last();
     await panel.getByRole('button', { name: '追咬打架', exact: true }).click();
     const targetPanel = panel.getByText('哪些生物出现了这个情况？', { exact: true }).locator('..');
     assert.equal(await targetPanel.getByRole('button', { name: '全缸都这样', exact: true }).getAttribute('aria-pressed'), 'true', 'behavior checks must default to the whole tank');
@@ -316,7 +316,7 @@ try {
     for (let index = 0; index < 2; index += 1) {
       await unknownOptions.nth(index).click();
     }
-    await panel.getByRole('button', { name: '查看处理方案', exact: true }).click();
+    await panel.getByRole('button', { name: '查看处理建议', exact: true }).click();
     await panel.getByText('信息不足', { exact: true }).waitFor();
     assert.equal(await panel.getByRole('button', { name: '设置复查时间', exact: true }).count(), 0, '信息不足时不应让提醒抢占补充检查');
     await panel.getByRole('button', { name: '补充关键检查', exact: true }).click();

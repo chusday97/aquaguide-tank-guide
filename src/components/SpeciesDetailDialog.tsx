@@ -13,20 +13,18 @@ import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingA
 import { resolveKnowledgeSources } from '../modules/knowledge/knowledgeSources';
 import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
-import type { PairCompatibilityResult } from '../modules/knowledge/knowledge.types';
 import type { PreviewImage } from './common/ImagePreviewModal';
 import { AdaptiveDetailContent } from './common/AdaptiveDetailContent';
 import { SurfaceHeader } from './common/SurfaceHeader';
 import { ResilientImage } from './common/ResilientImage';
 import { VisualResultCard } from './visual-results/VisualResultCard';
-import { getVisualEmphasis, mapFitStatus } from './visual-results/visual-result.adapters';
+import { buildCompatibilityVisualResult, mapFitStatus } from './visual-results/visual-result.adapters';
 import type { VisualResultViewModel } from './visual-results/visual-result.types';
 import { markSpeciesViewed } from '../services/onboarding/onboarding.service';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
 import { deriveSpeciesGroups, findGroupForSpecies, getVariantLabel } from '../lib/speciesGrouping';
 import { QuickDatePicker } from './forms/QuickDatePicker';
 import { MemorialCauseSelector } from './memorial/MemorialCauseSelector';
-import { getCompatibilityPresentationForStatus } from '../services/compatibility/compatibility-presentation.service';
 
 const ImagePreviewModal = lazy(() => import('./common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const Interactive3DFishWrapper = lazy(() => import('./Interactive3DFishWrapper'));
@@ -591,20 +589,22 @@ export function SpeciesDetailDialog({
     spaceKnowledge?.evidence.sourceIds || [],
   ), [spaceKnowledge]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
-  const compatibilityPairs = useMemo(() => {
-    if (!fish || !aquariumContext) return [];
+  const compatibilityDecision = useMemo(() => {
+    if (!fish || !aquariumContext) return null;
     const selectedQuantity = aquariumContext.fishes.find(item => item.fishId === fish.id)?.quantity || 1;
-    return getExistingLivestock(aquariumContext)
+    const fishAlreadyInTank = aquariumContext.fishes.some(record => record.fishId === fish.id);
+    const existingItems = getExistingLivestock(aquariumContext)
       .filter(item => item.fish.id !== fish.id)
-      .map(item => evaluateCompatibilityDecision({
-        tank: aquariumContext,
-        items: [
-          { species: fish, quantity: selectedQuantity, origin: aquariumContext.fishes.some(record => record.fishId === fish.id) ? 'existing' : 'candidate' },
-          { species: item.fish, quantity: item.aqFish.quantity, origin: 'existing' },
-        ],
-      }).pairResults[0])
-      .filter((pair): pair is PairCompatibilityResult => Boolean(pair));
+      .map(item => ({ species: item.fish, quantity: item.aqFish.quantity, origin: 'existing' as const }));
+    return evaluateCompatibilityDecision({
+      tank: aquariumContext,
+      items: [
+        { species: fish, quantity: selectedQuantity, origin: fishAlreadyInTank ? 'existing' : 'candidate' },
+        ...existingItems,
+      ],
+    });
   }, [fish, aquariumContext]);
+  const compatibilityPairs = compatibilityDecision?.pairResults || [];
 
   const mainActionLabel = useMemo(() => {
     if (!displayFit || !aquariumContext) return t('encyclopedia.btnGoSetTank');
@@ -630,63 +630,18 @@ export function SpeciesDetailDialog({
       .slice(0, 3);
   }, [aquariumContext, displayFit]);
   const compatibilityVisualModel = useMemo<VisualResultViewModel | null>(() => {
-    if (!fish) return null;
-    const statusRank = { compatible: 0, caution: 1, insufficient_data: 2, not_recommended: 3 } as const;
-    const status = compatibilityPairs.length === 0
-      ? 'insufficient_data'
-      : compatibilityPairs.reduce<PairCompatibilityResult['status']>((current, pair) => (
-        statusRank[pair.status] > statusRank[current] ? pair.status : current
-      ), 'compatible');
-    const primaryPair = [...compatibilityPairs].sort((a, b) => statusRank[b.status] - statusRank[a.status])[0];
-    const hasConfirmedFacts = compatibilityPairs.some(pair => (
-      pair.rawResult.passedRules.length > 0 || pair.rawResult.warningRules.length > 0 || pair.rawResult.blockingRules.length > 0
-    ));
-    const presentation = getCompatibilityPresentationForStatus({ status, hasConfirmedFacts });
-    const conclusion = status === 'insufficient_data'
-      ? (hasConfirmedFacts ? '当前可确认部分条件，先加入种草清单。' : '暂未开放这组混养建议，可先查看物种养护。')
-      : primaryPair?.primaryReason?.evidence || primaryPair?.rawResult.summary || t('encyclopedia.conclusionNoPairs');
-    return {
-      status,
-      presentationMode: presentation.mode,
-      statusLabel: presentation.mode === 'confirmed_facts' ? (isEn ? 'Confirmed factors' : '当前可确认') : presentation.mode === 'unavailable' ? (isEn ? 'Not yet available' : '暂未开放') : undefined,
-      coverageLabel: presentation.coverageLabel,
-      title: t('encyclopedia.compatibilityCalc'),
-      conclusion,
-      emphasis: getVisualEmphasis(conclusion),
-      subjects: [{
-        id: fish.id,
-        name: fish.name,
-        image: getSpeciesDisplayImage(fish),
-        role: 'focus',
-        status,
-        shortReason: conclusion,
-        badgeLabel: t('encyclopedia.currentSpec'),
-      }, ...compatibilityPairs.map(pair => {
-        const other = pair.speciesA.id === fish.id ? pair.speciesB : pair.speciesA;
-        const reason = pair.primaryReason?.evidence || pair.rawResult.summary;
-        return {
-          id: other.id,
-          name: other.name,
-          image: getSpeciesDisplayImage(other),
-          role: 'related' as const,
-          status: pair.status,
-          shortReason: reason,
-          badgeLabel: pair.primaryReason?.title || (pair.status === 'compatible' ? t('encyclopedia.housingBehaviorMatch') : pair.status === 'caution' ? t('encyclopedia.fitCaution') : pair.status === 'not_recommended' ? t('encyclopedia.fitNotRecommended') : (isEn ? 'Confirmed factors' : '当前可确认')),
-          emphasis: getVisualEmphasis(reason),
-        };
-      })],
-      currentAction: status === 'insufficient_data' ? '先加入种草清单，资料完善后再回来判断。' : primaryPair?.actions[0] || t('encyclopedia.actionNoPairs'),
-      primaryAction: { label: t('encyclopedia.compatibilityCalc'), actionType: 'route' },
-      detailSections: compatibilityPairs.map(pair => {
-        const other = pair.speciesA.id === fish.id ? pair.speciesB : pair.speciesA;
-        return {
-          id: pair.pairId,
-          title: t('encyclopedia.withSpecies', { name: other.name }),
-          items: [pair.primaryReason?.evidence, ...pair.secondaryReasons.map(item => item.evidence)].filter((item): item is string => Boolean(item)),
-        };
-      }).filter(section => section.items.length > 0),
-    };
-  }, [compatibilityPairs, fish, t]);
+    if (!fish || !compatibilityDecision) return null;
+    const relatedSpecies = getExistingLivestock(aquariumContext)
+      .map(item => item.fish)
+      .filter(item => item.id !== fish.id);
+    return buildCompatibilityVisualResult({
+      decision: compatibilityDecision,
+      species: [fish, ...relatedSpecies],
+      focusSpeciesId: fish.id,
+      primaryActionLabel: t('encyclopedia.compatibilityCalc'),
+      primaryActionType: 'route',
+    });
+  }, [aquariumContext, compatibilityDecision, fish, t]);
 
   const getMetricSettingsPanel = (metric: FitDimension) => {
     if (metric.type === 'space') return 'size' as const;
@@ -1082,7 +1037,7 @@ export function SpeciesDetailDialog({
                       </button>
                       {expandedSection === 'compatibility' && (
                         <div className="grid gap-3 border-t border-border/70 p-3">
-                          {compatibilityVisualModel?.presentationMode === 'unavailable' ? (
+                          {!aquariumContext || compatibilityVisualModel?.presentationMode === 'unavailable' ? (
                             <section className="rounded-[18px] border border-sky-100 bg-sky-50/70 p-3" data-visual-result-presentation="unavailable">
                               <div className="text-[13px] font-black text-ink">暂未开放这组混养建议</div>
                               <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">{isEn ? 'Review species care first, then use the compatibility calculator when you want to evaluate a planned combination.' : '先查看物种养护；需要评估计划组合时，再使用下方混养计算器。'}</p>

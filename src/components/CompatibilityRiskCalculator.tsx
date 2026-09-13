@@ -233,15 +233,6 @@ const getRiskConclusion = (level: CompatibilityRiskLevel, species: Fish[], reaso
 };
 
 
-const getDecisionStepTitle = (level: CompatibilityRiskLevel) => {
-  const isEn = Boolean(i18n.language?.startsWith('en'));
-    if (level === 'not_recommended') return isEn ? 'Handle Red Flags First' : '先处理阻断对象';
-  if (level === 'insufficient_data') return isEn ? 'Review Confirmed Factors' : '查看当前可确认条件';
-  if (level === 'caution') return isEn ? 'Review Before Stocking' : '入缸前确认风险';
-  if (level === 'compatible') return isEn ? 'Plan Confirmed' : '规划判断完成';
-  return isEn ? 'Select Species First' : '先选择生物';
-};
-
 const getPrimaryResultButtonLabel = (level: CompatibilityRiskLevel) => {
   const isEn = Boolean(i18n.language?.startsWith('en'));
     if (level === 'compatible') return isEn ? 'Already stocked? Record now' : '已经实际入缸，记录下来';
@@ -715,6 +706,9 @@ export function CompatibilityRiskCalculator({
     selectedAddableSpeciesIds.includes(fish.id) && !addedSpeciesIds.includes(fish.id)
   )), [addableSpecies, addedSpeciesIds, selectedAddableSpeciesIds]);
   const selectedAddableCount = pendingAddableSpecies.length;
+  const showAddSelection = addableSpecies.length > 1;
+  const showRemovalSuggestions = speciesActionGroups.remove.length > 0;
+  const showDecisionWorkspace = showAddSelection || showRemovalSuggestions;
   useEffect(() => {
     setSelectedAddableSpeciesIds(prev => {
       const stillValid = prev.filter(id => addableSpeciesIds.includes(id) && !addedSpeciesIds.includes(id));
@@ -876,8 +870,8 @@ export function CompatibilityRiskCalculator({
             {result.level === 'compatible' ? <CheckCircle2 className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
           </span>
           <div className="min-w-0">
-            <h2 className="truncate text-[14px] font-black text-ink">{isEn ? 'Tank Housing Compatibility' : '混养风险计算'}</h2>
-            <p className="text-[10px] font-medium text-ink/50">{isEn ? 'Add 2+ species to evaluate co-housing compatibility.' : '添加 2 种以上生物，系统会判断是否适合同缸。'}</p>
+            <h2 className="truncate text-[14px] font-black text-ink">{isEn ? 'Can these species live together?' : '这组能一起养吗？'}</h2>
+            <p className="text-[10px] font-medium text-ink/50">{isEn ? 'Choose species, read the decision first, then record only what you actually stocked.' : '选好生物后先看结论，再决定是否记录实际入缸。'}</p>
           </div>
         </div>
         <span className="shrink-0 rounded-full border border-current/20 bg-white/70 px-2.5 py-1 text-[11px] font-black">
@@ -1175,158 +1169,129 @@ export function CompatibilityRiskCalculator({
                 </div>
               )}
 
-              <div className="mb-3 rounded-[16px] bg-white/78 p-3">
-                <div className="mb-2 flex items-center justify-between gap-2">
-                  <div>
-                    <div className="text-[12px] font-black text-ink">{getDecisionStepTitle(result.level)}</div>
-                    <div className="text-[10px] font-bold text-ink/42">{isEn ? 'Check items to include. Delete only affects current calculation.' : '勾选要加入的对象；删除键只移出本次计算，不会删除鱼缸数据。'}</div>
-                  </div>
-                  {conflictTags.length > 0 && (
-                    <div className="flex max-w-[52%] flex-wrap justify-end gap-1">
-                      {conflictTags.slice(0, 3).map(item => (
-                        <span key={item} className="rounded-full bg-amber-50 px-2 py-1 text-[9px] font-black text-amber-700">
-                          {item}
-                        </span>
-                      ))}
+              {showDecisionWorkspace && (
+                <div className="mb-3 rounded-[16px] bg-white/78 p-3" data-ui-block="compatibility-decision-workspace">
+                  <div className="mb-2">
+                    <div className="text-[12px] font-black text-ink">
+                      {showRemovalSuggestions
+                        ? (isEn ? 'Fix the blocked candidate first' : '先处理不适合加入的对象')
+                        : (isEn ? 'Choose what to record' : '选择这次要记录的新增生物')}
                     </div>
-                  )}
-                </div>
-
-                {speciesActionGroups.remove.length > 0 && (
-                  <div className="mb-2 rounded-[14px] border border-red-100 bg-red-50/80 p-2.5">
-                    <div className="mb-2 text-[10px] font-black text-red-600">{isEn ? 'Recommended to Remove / Replace' : '建议先移除 / 更换'}</div>
-                    <div className="flex flex-wrap gap-2">
-                      {speciesActionGroups.remove.map(fish => (
-                        <div key={fish.id} className="flex items-center gap-2 rounded-full bg-white py-1 pl-1.5 pr-2 shadow-sm">
-                          <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-red-50">
-                            <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
-                          </span>
-                          <span className="max-w-[92px] truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
-                          <button
-                            type="button"
-                            aria-label={`从混养计算移除${fish.name}`}
-                            onClick={() => {
-                              updateSpeciesIds(prev => prev.filter(id => id !== fish.id));
-                              setSelectedQuantitiesById(prev => {
-                                const next = { ...prev };
-                                delete next[fish.id];
-                                return next;
-                              });
-                              setResultFeedback(`已从组合中移除 ${fish.name}。`);
-                            }}
-                            className="flex h-11 w-11 items-center justify-center rounded-full bg-red-600 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2"
-                          >
-                            <X className="h-3.5 w-3.5" />
-                          </button>
-                        </div>
-                      ))}
+                    <div className="text-[10px] font-bold text-ink/42">
+                      {showRemovalSuggestions
+                        ? (isEn ? 'Removing here only changes this calculation; it never deletes livestock already in the tank.' : '这里只调整本次计算，不会删除鱼缸里已经存在的生物。')
+                        : (isEn ? 'Multiple new candidates are available. Keep only the ones you actually stocked.' : '这次有多个可加入候选，只保留你实际已经入缸的对象。')}
                     </div>
                   </div>
-                )}
 
-                {result.level === 'not_recommended' && speciesActionGroups.remove.length === 0 && (
-                  <div className="mb-2 rounded-[14px] border border-red-100 bg-red-50/80 px-3 py-3 text-[11px] font-bold leading-relaxed text-red-700">
-                    {isEn ? 'Rules cannot safely determine which species to remove. Please modify selection.' : '当前规则无法安全确定应移除哪一个对象，请返回重新选择组合，不会自动猜测删除物种。'}
-                  </div>
-                )}
-
-                {speciesActionGroups.keep.length > 0 && (
-                  <div className="mb-2 rounded-[14px] border border-emerald-100 bg-emerald-50/80 p-2.5">
-                    <div className="mb-2 flex items-center justify-between gap-2">
-                      <div className="text-[10px] font-black text-emerald-700">{isEn ? 'Compatible New Additions' : '可加入的新生物'}</div>
-                      <div className="text-[9px] font-bold text-emerald-700/70">
-                        {selectedAddableCount > 0 ? `已选 ${selectedAddableCount} 个` : '未选择'}
+                  {showRemovalSuggestions && (
+                    <div className="rounded-[14px] border border-red-100 bg-red-50/80 p-2.5">
+                      <div className="mb-2 text-[10px] font-black text-red-600">{isEn ? 'Recommended to Remove / Replace' : '建议先移除 / 更换'}</div>
+                      <div className="flex flex-wrap gap-2">
+                        {speciesActionGroups.remove.map(fish => (
+                          <div key={fish.id} className="flex items-center gap-2 rounded-full bg-white py-1 pl-1.5 pr-2 shadow-sm">
+                            <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-red-50">
+                              <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                            </span>
+                            <span className="max-w-[92px] truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
+                            <button
+                              type="button"
+                              aria-label={`从混养计算移除${fish.name}`}
+                              onClick={() => {
+                                updateSpeciesIds(prev => prev.filter(id => id !== fish.id));
+                                setSelectedQuantitiesById(prev => {
+                                  const next = { ...prev };
+                                  delete next[fish.id];
+                                  return next;
+                                });
+                                setResultFeedback(`已从组合中移除 ${fish.name}。`);
+                              }}
+                              className="flex h-11 w-11 items-center justify-center rounded-full bg-red-600 text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-300 focus-visible:ring-offset-2"
+                            >
+                              <X className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
+                        ))}
                       </div>
                     </div>
-                    <div className="flex flex-wrap gap-2">
-                      {speciesActionGroups.keep.map(fish => {
-                        const alreadyAdded = addedSpeciesIds.includes(fish.id);
-                        const selectedForAdd = selectedAddableSpeciesIds.includes(fish.id) && !alreadyAdded;
-                        const quantity = Math.max(1, selectedQuantitiesById[fish.id] || 1);
-                        return (
-                        <button
-                          type="button"
-                          key={fish.id}
-                          disabled={alreadyAdded || result.level === 'insufficient_data'}
-                          onClick={() => {
-                            setSelectedAddableSpeciesIds(prev => (
-                              prev.includes(fish.id)
-                                ? prev.filter(id => id !== fish.id)
-                                : [...prev, fish.id]
-                            ));
-                          }}
-                          className={`flex items-center gap-2 rounded-full py-1 pl-1.5 pr-3 text-left shadow-sm transition ${
-                            alreadyAdded
-                              ? 'bg-emerald-100 text-emerald-700'
-                              : selectedForAdd
-                                ? 'bg-white ring-2 ring-emerald-400'
-                                : 'bg-white/65 opacity-70'
-                          }`}
-                        >
-                          <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-emerald-50">
-                            <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
-                          </span>
-                          <span className="grid min-w-0">
-                            <span className="max-w-[108px] truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
-                            <span className="text-[9px] font-bold text-ink/45">{alreadyAdded ? '已加入' : `x${quantity}`}</span>
-                          </span>
-                          {!alreadyAdded && (
-                            <span className={`ml-0.5 h-3.5 w-3.5 rounded-full border ${selectedForAdd ? 'border-emerald-600 bg-emerald-600' : 'border-ink/20 bg-white'}`} />
-                          )}
-                        </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-                )}
+                  )}
 
-                {speciesActionGroups.existing.length > 0 && (
-                  <div className="rounded-[14px] border border-border/70 bg-bg/70 p-2.5">
-                    <div className="mb-2 text-[10px] font-black text-ink/45">{isEn ? 'Existing Tank Species' : '缸内原有物种'}</div>
-                    <div className="flex flex-wrap gap-2">
-                      {speciesActionGroups.existing.map(fish => (
-                        <div key={fish.id} className="flex items-center gap-2 rounded-full bg-white/85 py-1 pl-1.5 pr-3">
-                          <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-bg">
-                            <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
-                          </span>
-                          <span className="max-w-[108px] truncate text-[11px] font-black text-ink/62">{getSpeciesNameLocalized(fish, isEn)}</span>
+                  {showAddSelection && (
+                    <div className={`${showRemovalSuggestions ? 'mt-2' : ''} rounded-[14px] border border-emerald-100 bg-emerald-50/80 p-2.5`}>
+                      <div className="mb-2 flex items-center justify-between gap-2">
+                        <div className="text-[10px] font-black text-emerald-700">{isEn ? 'New livestock to record' : '这次要记录的新增生物'}</div>
+                        <div className="text-[9px] font-bold text-emerald-700/70">
+                          {selectedAddableCount > 0 ? `已选 ${selectedAddableCount} 个` : '未选择'}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {actionHints.length > 0 && (
-                  <div className="mt-3 rounded-[12px] bg-white/70 px-3 py-2 text-[11px] font-bold leading-relaxed text-ink/62">
-                    {actionHints[0]}
-                  </div>
-                )}
-
-                <div className="mt-3 rounded-[12px] border border-border/70 bg-white/75 px-3 py-2.5">
-                  <div className="text-[10px] font-black text-ink/55">
-                    {isEn ? 'Evidence status' : '依据状态'}
-                  </div>
-                  <div className="mt-1 text-[10px] font-bold leading-relaxed text-ink/48">
-                    {resultEvidenceSources.length > 0
-                      ? (isEn ? 'Reviewed sources support the behavior conclusion.' : '行为结论使用已审核来源；没有直接配对研究时会明确标注为规则推断。')
-                      : (isEn ? 'Behavior evidence is not reviewed. The result cannot be treated as safe to add.' : '行为资料尚未审核，当前结果不能作为“安全可加入”的依据。')}
-                  </div>
-                  {resultEvidenceSources.length > 0 && (
-                    <div className="mt-2 flex flex-wrap gap-2">
-                      {resultEvidenceSources.map(source => (
-                        <a
-                          key={source.id}
-                          href={source.url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex min-h-11 items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-2 text-[10px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
-                        >
-                          {source.publisher}
-                        </a>
-                      ))}
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {speciesActionGroups.keep.map(fish => {
+                          const alreadyAdded = addedSpeciesIds.includes(fish.id);
+                          const selectedForAdd = selectedAddableSpeciesIds.includes(fish.id) && !alreadyAdded;
+                          const quantity = Math.max(1, selectedQuantitiesById[fish.id] || 1);
+                          return (
+                          <button
+                            type="button"
+                            key={fish.id}
+                            disabled={alreadyAdded || result.level === 'insufficient_data'}
+                            onClick={() => {
+                              setSelectedAddableSpeciesIds(prev => (
+                                prev.includes(fish.id)
+                                  ? prev.filter(id => id !== fish.id)
+                                  : [...prev, fish.id]
+                              ));
+                            }}
+                            className={`flex items-center gap-2 rounded-full py-1 pl-1.5 pr-3 text-left shadow-sm transition ${
+                              alreadyAdded
+                                ? 'bg-emerald-100 text-emerald-700'
+                                : selectedForAdd
+                                  ? 'bg-white ring-2 ring-emerald-400'
+                                  : 'bg-white/65 opacity-70'
+                            }`}
+                          >
+                            <span className="flex h-8 w-8 items-center justify-center overflow-visible rounded-full bg-emerald-50">
+                              <img src={getDisplayImage(fish)} alt={fish.name} className={`max-h-7 max-w-8 object-contain ${getSpeciesImageClass(fish)}`} referrerPolicy="no-referrer" />
+                            </span>
+                            <span className="grid min-w-0">
+                              <span className="max-w-[108px] truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(fish, isEn)}</span>
+                              <span className="text-[9px] font-bold text-ink/45">{alreadyAdded ? '已加入' : `x${quantity}`}</span>
+                            </span>
+                            {!alreadyAdded && (
+                              <span className={`ml-0.5 h-3.5 w-3.5 rounded-full border ${selectedForAdd ? 'border-emerald-600 bg-emerald-600' : 'border-ink/20 bg-white'}`} />
+                            )}
+                          </button>
+                          );
+                        })}
+                      </div>
                     </div>
                   )}
                 </div>
+              )}
+
+              <div className="mb-3 rounded-[12px] border border-border/70 bg-white/75 px-3 py-2.5">
+                <div className="text-[10px] font-black text-ink/55">
+                  {isEn ? 'Evidence status' : '依据状态'}
+                </div>
+                <div className="mt-1 text-[10px] font-bold leading-relaxed text-ink/48">
+                  {resultEvidenceSources.length > 0
+                    ? (isEn ? 'Reviewed sources support this result. Open the details above for the reasoning.' : '当前结论有已审核来源支持；判断原因请直接展开上方“为什么这样判断”。')
+                    : (isEn ? 'Behavior evidence is not reviewed. The result cannot be treated as safe to add.' : '行为资料尚未审核，当前结果不能作为“安全可加入”的依据。')}
+                </div>
+                {resultEvidenceSources.length > 0 && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {resultEvidenceSources.map(source => (
+                      <a
+                        key={source.id}
+                        href={source.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex min-h-11 items-center rounded-full border border-emerald-100 bg-emerald-50 px-3 py-2 text-[10px] font-black text-emerald-800 hover:bg-emerald-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+                      >
+                        {source.publisher}
+                      </a>
+                    ))}
+                  </div>
+                )}
               </div>
 
             </>

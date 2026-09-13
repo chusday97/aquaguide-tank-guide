@@ -5342,15 +5342,11 @@ export default function AquariumManager() {
           <span className="block text-[10px] font-black uppercase tracking-[0.18em] text-emerald-950/62">
             {isEn ? `My Aquarium · ${format(new Date(), 'MMM d')}` : `我的鱼缸 · ${format(new Date(), 'M 月 d 日')}`}
           </span>
-          <h1 className="mt-2 font-serif text-[clamp(25px,3.1vw,48px)] font-semibold leading-[1.02] tracking-[-0.04em] text-emerald-950 drop-shadow-[0_1px_0_rgba(255,255,255,0.28)]">
-            {dailyActionViewModel.level === 'urgent'
-              ? dailyActionViewModel.task.title
-              : (isEn ? 'Start with one calm observation' : '今天先完成一次观察')}
+          <h1 className="mt-2 font-serif text-[clamp(25px,3.1vw,48px)] font-semibold leading-[1.02] tracking-[-0.04em] text-emerald-950 drop-shadow-[0_1px_0_rgba(255,255,255,0.28)]" data-aquarium-next-action-title>
+            {dailyActionViewModel.task.title}
           </h1>
-          <p className="mt-2 max-w-[43ch] text-[11px] font-bold leading-5 text-emerald-950/64 md:text-[12px]">
-            {dailyActionViewModel.level === 'urgent'
-              ? dailyActionViewModel.task.reason
-              : (isEn ? 'A quick check helps you notice changes before they become a problem.' : '先看看呼吸、水面和活动状态；没有异常，就不需要额外操作。')}
+          <p className="mt-2 max-w-[43ch] text-[11px] font-bold leading-5 text-emerald-950/64 md:text-[12px]" data-aquarium-next-action-reason>
+            {dailyActionViewModel.task.reason}
           </p>
           <div className="mt-4 flex flex-wrap gap-2 text-[10px] font-black text-emerald-900">
             <span className="rounded-full bg-white/78 px-3 py-2 shadow-sm backdrop-blur-sm">

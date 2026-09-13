@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 after Product Closure Checkpoint 1
+- DONE: collapse common Compatibility result flow to one verdict/action hierarchy while preserving explicit multi-candidate/removal controls.
+- DONE: align Aquarium stage headline with canonical Today Action truth and protect the post-Daily-Check advance path.
+- DONE: reuse canonical Compatibility decision/presentation in Species Detail with no-tank fail-safe.
+- DONE: unify Care diagnosis language on Quick Check and stabilize the task-action browser regression.
+- DONE: targeted browser gates + TypeScript + full production build PASS.
+- AUDIT: Collection/Care saved-guide action hierarchy has no proven duplicate primary action requiring code change.
+- NEXT: responsive/mobile + desktop product consistency and full Golden Path/release-gate audit; do not expand product scope.
+
 ## CURRENT OVERRIDE — 2026-09-13 after Red Rainbowfish reviewed-authority checkpoint
 - DONE: add reviewed `Glossolepis incisus` Species Knowledge V2 environment / social / reproduction / space authority with Seriously Fish + FishBase evidence.
 - DONE: add reviewed Compatibility profile and canonical coverage inclusion for `sp_0133`.
