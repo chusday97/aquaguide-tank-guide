@@ -1,5 +1,11 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 held root lease displacement closed
+- New main checkpoint: `988f6e4c fix(admin): revalidate held root leases`.
+- A running Local Admin no longer trusts an in-memory root lease after the on-disk owner file is removed/replaced. Each request verifies the disk PID + token; missing lease triggers atomic reacquisition, while a replacement live owner forces the displaced process to 409.
+- Fail-before-fix was dual 200 owners after deleting the lease file. Regression now requires replacement owner 200 + displaced owner 409 + safe reacquire after replacement exits.
+- 20-cycle stress PASS; GitHub Product Golden Path PASS; Vercel `dpl_79GvoJ2iAM2F2yaf9MFDuGToJ3LF` READY. Production unchanged.
+
 ## 2026-09-13 fail-closed startup guidance closed
 - New main checkpoint: `5845c79b fix(admin): tailor fail-closed startup guidance`.
 - The Local Admin startup screen no longer gives the same root-owner instruction for unrelated fail-closed causes. Guidance is now mapped by API error/code.

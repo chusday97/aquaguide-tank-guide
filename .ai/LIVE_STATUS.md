@@ -1,5 +1,11 @@
 # Live Status
 
+## 2026-09-13 held root lease displacement
+- Functional main: `988f6e4c`
+- Live Local Admin processes now continuously revalidate their root lease against the on-disk PID/token and fail closed if another process has displaced ownership.
+- 20-cycle displacement stress PASS; Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion.
+
 ## 2026-09-13 fail-closed startup guidance
 - Functional main: `5845c79b`
 - Four startup failure domains now render distinct operator recovery guidance instead of one fixed owner-conflict footer.

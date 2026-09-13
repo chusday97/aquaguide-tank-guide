@@ -1,5 +1,13 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after held root lease displacement closure
+- DONE: reproduce dual-live-owner state after externally deleting the active `.aqua-admin-owner.json`.
+- DONE: revalidate in-memory lease ownership against on-disk PID + token on every Local Admin request.
+- DONE: missing lease forces atomic reacquisition; displaced owner fails closed instead of continuing to serve.
+- DONE: formal regression + 20-cycle displacement/reacquisition stress.
+- DONE: Local File API/UI / mode contract / API+root TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase. Do not expand multi-owner semantics.
+
 ## CURRENT OVERRIDE — 2026-09-13 after fail-closed startup guidance closure
 - DONE: reproduce misleading fixed startup guidance for invalid restore journal, unreadable root lease, and future Local File schema.
 - DONE: map Local Admin startup failures to cause-specific operator actions.

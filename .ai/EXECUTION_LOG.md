@@ -1,5 +1,11 @@
 # Execution Log
 
+## 2026-09-13 — held root lease displacement closure
+- Reproduced a dual-owner corruption path: remove the active owner lease, start a replacement process (200), then the original process still served 200 from its stale in-memory claim.
+- Patched `ensureRootLease()` to verify the on-disk PID/token before trusting a held lease; missing lease forces atomic reacquisition and displaced ownership fails closed.
+- Added a permanent cross-process regression and ran 20 displacement/reacquisition cycles: 20/20 displaced owners returned 409; 20/20 safe reacquisitions returned 200 after replacement exit.
+- PASS: Local File API/UI, mode contract, API/root TypeScript, full build, GitHub Product Golden Path `34746075147`; Vercel `dpl_79GvoJ2iAM2F2yaf9MFDuGToJ3LF` READY.
+
 ## 2026-09-13 — fail-closed startup guidance closure
 - Re-read canonical main (`c1acdfe2`) and reproduced three misleading startup paths in real browser: invalid restore journal, invalid root lease, and future schema all incorrectly showed the same close-old-process instruction.
 - Added cause-specific `getLocalAdminStartupRecoveryGuidance()` and changed the fail-closed startup page to render a dedicated recovery action.

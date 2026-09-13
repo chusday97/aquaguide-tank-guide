@@ -1,5 +1,14 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 held root lease displacement closed
+A concrete live-owner displacement corruption path is closed on main at `988f6e4c fix(admin): revalidate held root leases`.
+
+- Fail-before-fix: after the live owner acquired a root, externally deleting `.aqua-admin-owner.json` let a second API process acquire the same root; the original process still returned 200 because it trusted only its in-memory lease.
+- Every Local Admin request now revalidates the held lease against disk PID + token. Missing lease clears the in-memory claim and forces atomic reacquisition; a displaced/other live owner makes the old process fail closed with 409. Unreadable/tampered lease remains fail-closed.
+- Permanent regression covers external lease deletion -> replacement owner 200 -> displaced owner 409 -> safe reacquire after replacement exit. Stress: 20/20 displacement cycles produced 409 for the displaced owner and 20/20 safe reacquisitions.
+- PASS: Local File API/UI, mode contract, API/root TypeScript, full build, GitHub Product Golden Path `34746075147`, Vercel branch `dpl_79GvoJ2iAM2F2yaf9MFDuGToJ3LF` READY. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 fail-closed startup guidance closed
 A reproducible operator-guidance badcase is closed on main at `5845c79b fix(admin): tailor fail-closed startup guidance`.
 
