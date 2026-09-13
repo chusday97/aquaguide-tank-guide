@@ -1799,6 +1799,13 @@
 - [ ] 内置浏览器整页截图出现重复拼接，但同一时刻可访问性树确认各 Species 章节各仅一份；暂记录为截图工具证据缺口，不据此修改页面结构。
 - [x] CI 性能输出已改为汇总全部公开路由与 390/600/1440 三档采样，静态检查、lint、build 和 diff-check 通过；本轮只增强证据记录，不增加性能硬阈值。
 - [ ] 性能采样改进已本地提交 `fe426bd6`，当前因 GitHub DNS 无法解析尚未推送；不影响已通过的 `bd5356cf` 浏览器门禁证据。
+
+## 2026-09-14 Species 页面章节命名统一（进行中）
+
+- [x] 行为、环境和日常章节移除重复的小标题，避免“它如何生活 / 生活方式”“适合怎样的环境 / 环境”两层重复。
+- [x] 日常章节统一使用“日常怎么养”，不再根据内容类型切换为“取食方式”；具体内容仍通过卡片标题表达“喂养方法”。
+- [x] `test:public-seo-copy`、`test:public-seo-structure`、`test:public-seo-responsive-contract`、`test:species-variant-card`、lint、build 和 diff-check 通过。
+- [ ] 仍需在三档截图中复核页面节奏；Critic 可读六维报告、Figma Canonical、推送和索引发布门禁仍未完成。
 - [x] 内置浏览器读取四个物种运行态：极火虾与黄金米虾继承内容和品系差异正确，宝莲灯显示鱼类环境/活动/群游/取食内容，孔雀鱼仅显示身份、参数和图片回退；记录 `EVD-20260914-146`。
 - [ ] GitHub 状态 API 与远端读取本轮因 DNS 不可用，未把 CI 状态或最新截图误记为通过。
 - [x] GitHub Actions run `34769155328` 已在当前提交 `d9bda6f7` 成功完成，生成 `public-seo-browser-evidence-d9bda6f74291cda5080db161a3c5b79970b7da5f`（5.86 MB）；记录 `EVD-20260914-147`。
