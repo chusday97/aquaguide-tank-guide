@@ -19,7 +19,8 @@
 - Run `34769711811`（SHA `470ec1de`）失败已定位为 FAQ 自动化断言的 CSS 选择器问题：React `useId()` 生成的 ID 含冒号，测试已改用属性选择器；页面代码未因该失败被判定为有问题。
 - 本地静态验证已通过：公开契约、中文文案/结构、品系卡片、lint、build、diff-check；修复提交待本地提交并推送后触发新 CI。
 - 用户三个未提交文件保持不变；Figma、Production Supabase、main、生产部署和 noindex 继续锁定。
-- 下一步：推送测试修复，确认新 Actions run 结果；若通过，再更新证据并将同一 Critic 线程复验最新 SHA。
+- Run `34769937634`（SHA `4bb4817a`）已完成但失败在浏览器专项步骤；GitHub 未登录页面只显示退出码 1 和 artifact `public-seo-browser-evidence-4bb4817a...`，没有可读失败日志，因此不能推断具体页面缺陷或宣称通过。
+- 下一步：取得可读的 CI 失败日志或等效失败诊断，定位第二个实际失败断言；之后只做最小修复并重新运行。Critic 暂不复验失败版本。
 
 ## 2026-09-13 Docker 浏览器恢复结果
 
