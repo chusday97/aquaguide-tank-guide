@@ -313,3 +313,10 @@ Draft PR: #149
 - Canonical priority coverage: 21 taxa / 420 directions; 340 caution, 78 not_recommended, 2 compatible.
 - Git/Admin Compatibility baseline: 24 Profiles / 5 Pair Rules; additive migration `202609120010_compatibility_ramirezi_baseline.sql` tracked but unapplied.
 - Validation: Product + Admin/runtime + build + Species Detail + Compatibility Action + GP001–GP004 all PASS.
+### P1 — Discus partial reviewed-authority checkpoint
+- Added standard `Symphysodon aequifasciatus` (`sp_0447`) with direct reviewed environment/social/space authority.
+- Reviewed planning: 26–30°C, pH 5.0–8.0, 0–12 dGH, ~14 cm SL, 120 cm / ~255 L, school minimum 5; breeding territoriality is contextual only.
+- Sex identification remains unknown and reproduction remains absent rather than fabricated.
+- Canonical priority coverage: 22 taxa / 462 directions; 340 caution, 120 not_recommended, 2 compatible.
+- Git/Admin Compatibility baseline: 25 Profiles / 5 Pair Rules; additive migration `202609120011_compatibility_discus_baseline.sql` tracked but unapplied.
+- Validation: Product + Admin/runtime + build + Species Detail + Compatibility Action + GP001–GP004 all PASS.

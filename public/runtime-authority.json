@@ -15,6 +15,47 @@
     "authority": "reviewed-git",
     "profiles": [
       {
+        "catalogKey": "sp_0447",
+        "behaviorTraits": [
+          "shoaling",
+          "breeding_defense"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-symphysodon-aequifasciatus",
+            "title": "Symphysodon aequifasciatus (Discus)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/symphysodon-aequifasciatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-symphysodon-aequifasciatus",
+            "title": "Symphysodon aequifasciatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/11185",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
         "catalogKey": "sp_0448",
         "behaviorTraits": [
           "peaceful",
@@ -1110,7 +1151,7 @@
       }
     ],
     "counts": {
-      "profiles": 24,
+      "profiles": 25,
       "pairRules": 5
     }
   }

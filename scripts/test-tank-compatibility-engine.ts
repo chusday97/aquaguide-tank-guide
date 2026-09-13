@@ -514,6 +514,43 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Discus authority enforces warm-water school and contextual breeding defense',
+    run: () => {
+      const discus = fishData.find(item => item.id === 'sp_0447');
+      if (!discus) return false;
+      const underPlanned = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '45', height: '45' }, targetTemperature: '28' }),
+        candidateSpecies: discus,
+        candidateQuantity: 4,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'normal' },
+      });
+      const fullPlan = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '50' }, targetTemperature: '28' }),
+        candidateSpecies: discus,
+        candidateQuantity: 5,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'normal' },
+      });
+      const breeding = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '50' }, targetTemperature: '28' }),
+        candidateSpecies: discus,
+        candidateQuantity: 5,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'in_labor_or_spawning', guardingEggsOrFry: true },
+      });
+      const coolTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '50' }, targetTemperature: '25' }),
+        candidateSpecies: discus,
+        candidateQuantity: 5,
+      });
+      return underPlanned.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && fullPlan.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_pressure_context', 'breeding_territory_active'].includes(rule.code))
+        && breeding.warningRules.some(rule => rule.code === 'breeding_territory_active')
+        && coolTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && fullPlan.evidenceIds?.includes('fishbase-symphysodon-aequifasciatus');
+    },
+  },
+  {
     name: 'reviewed Ramirezi authority enforces warm-water planning and contextual breeding defense',
     run: () => {
       const ram = fishData.find(item => item.id === 'sp_0448');

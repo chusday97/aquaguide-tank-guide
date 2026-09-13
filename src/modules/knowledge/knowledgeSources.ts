@@ -1,6 +1,22 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-symphysodon-aequifasciatus': {
+    id: 'seriouslyfish-symphysodon-aequifasciatus',
+    title: 'Symphysodon aequifasciatus (Discus)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/symphysodon-aequifasciatus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-symphysodon-aequifasciatus': {
+    id: 'fishbase-symphysodon-aequifasciatus',
+    title: 'Symphysodon aequifasciatus species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/11185',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-mikrogeophagus-ramirezi': {
     id: 'seriouslyfish-mikrogeophagus-ramirezi',
     title: 'Mikrogeophagus ramirezi (Ram)',

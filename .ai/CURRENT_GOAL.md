@@ -244,3 +244,10 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 ## Main convergence checkpoint — Local File lease/restore/backup hardening
 - Absorbed current main Local File reliability fixes: held root leases are revalidated before continued use, interrupted-restore recovery is integrity-checked before serving, and corrupt backup candidates are filtered from operator choices.
 - These changes do not alter Product Recovery authority, Compatibility V7, the 24 Profile / 5 Pair runtime baseline, or the 21-taxon canonical matrix.
+## Current checkpoint — Discus partial reviewed authority (2026-09-13)
+- Added direct reviewed partial Species Knowledge V2 + Compatibility authority for standard `Symphysodon aequifasciatus` (`sp_0447`, 七彩神仙鱼) from Seriously Fish + FishBase.
+- Reviewed authority: freshwater; 26–30°C; pH 5.0–8.0; 0–12 dGH; ~14 cm SL; 120 cm / ~255 L planning space; school minimum 5; breeding-season territoriality modeled only through `breeding_defense`.
+- Sex identification stays explicit unknown and reproduction remains absent because the reviewed source set is not strong enough for stable user-facing rules.
+- Canonical priority matrix: 22 taxa / 462 ordered directions = 340 caution, 120 not_recommended, 2 compatible. The high hard-block count reflects the reviewed 26°C lower temperature bound in the 24°C audit tank rather than missing evidence.
+- Admin/Git runtime baseline advances to 25 Profiles / 5 Pair Rules. Additive migration `202609120011_compatibility_discus_baseline.sql` is repository authority only and has not been applied to Staging/Production.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.

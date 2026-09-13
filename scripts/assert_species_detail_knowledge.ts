@@ -230,6 +230,30 @@ assert.equal(denisonSources.length, 2);
 assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(denisonSources.some(source => source.publisher === 'FishBase'));
 
+const discusKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0447',
+  name: '七彩神仙鱼（七彩鱼）',
+  scientificName: 'Symphysodon aequifasciatus',
+  waterTemperature: '28-32°C',
+  phLevel: '5.0-6.5',
+  tankSize: '至少 160 升',
+});
+assert.deepEqual(discusKnowledge.facts.temperatureRange, { min: 26, max: 30 });
+assert.deepEqual(discusKnowledge.facts.phRange, { min: 5, max: 8 });
+assert.deepEqual(discusKnowledge.knowledge.environment?.hardnessDgh, { min: 0, max: 12 });
+assert.equal(discusKnowledge.knowledge.sexIdentification.confidence, 'unknown');
+assert.equal(discusKnowledge.knowledge.reproduction, undefined, 'Discus reproduction stays absent until a stronger dedicated reviewed source is added');
+assert.equal(discusKnowledge.knowledge.socialBehavior?.minimumGroupSize, 5);
+assert.equal(discusKnowledge.knowledge.socialBehavior?.territoriality, 'none');
+assert.equal(discusKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 14);
+assert.equal(discusKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 255);
+assert.equal(discusKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
+const discusSources = resolveKnowledgeSources(discusKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(discusSources.length, 2);
+assert.ok(discusSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(discusSources.some(source => source.publisher === 'FishBase'));
+
 const ramireziKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0448',

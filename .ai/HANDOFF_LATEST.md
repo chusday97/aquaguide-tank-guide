@@ -265,3 +265,9 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 ## Main convergence checkpoint — Local File lease/restore/backup hardening
 - Absorbed current main Local File reliability fixes: held root leases are revalidated before continued use, interrupted-restore recovery is integrity-checked before serving, and corrupt backup candidates are filtered from operator choices.
 - These changes do not alter Product Recovery authority, Compatibility V7, the 24 Profile / 5 Pair runtime baseline, or the 21-taxon canonical matrix.
+## P1 — Discus partial reviewed-authority checkpoint
+- Standard `Symphysodon aequifasciatus` (`sp_0447`) now has direct reviewed environment/social/space Compatibility authority.
+- Reviewed values: 26–30°C, pH 5.0–8.0, 0–12 dGH, ~14 cm SL, 120 cm / ~255 L planning, minimum group 5. Breeding-season territory is contextual via `breeding_defense`; normal social authority remains schooling.
+- Sex remains explicit unknown and reproduction is intentionally absent.
+- Canonical matrix: 22 taxa / 462 directions = 340 caution, 120 not_recommended, 2 compatible. Runtime/Admin baseline: 25 Profiles / 5 Pair Rules.
+- Added unapplied additive migration `202609120011_compatibility_discus_baseline.sql`. Product, runtime/Admin, build and GP001–GP004 gates all PASS.

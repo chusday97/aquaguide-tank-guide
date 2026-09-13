@@ -4,6 +4,46 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const discusKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供外观公母硬判断',
+    summary: '当前 reviewed 来源足以支持水质、群体和繁殖期行为，但不足以把外观性别差异作为稳定的用户判断规则。',
+    points: ['若需要繁殖配对，优先依据已形成配对的成熟个体与可靠繁育记录，不凭单一外观特征猜测。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 26, max: 30 },
+    phRange: { min: 5.0, max: 8.0 },
+    hardnessDgh: { min: 0, max: 12 },
+    notes: ['Reviewed FishBase 范围优先于旧 catalog 的 28–32°C / pH 5.0–6.5；长期仍应保持稳定、洁净的高温淡水环境。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-symphysodon-aequifasciatus', 'fishbase-symphysodon-aequifasciatus'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 5,
+    territoriality: 'none',
+    finNipping: 'none',
+    predationRisk: 'low',
+    swimmingPace: 'moderate',
+    summary: '平时以群体活动为主，FishBase 建议至少 5 条；繁殖时形成配对并出现领地行为，因此不能把繁殖期冲突泛化成全年社区攻击性。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-symphysodon-aequifasciatus', 'fishbase-symphysodon-aequifasciatus'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 14, measurement: 'SL' },
+    minVolumeLiters: 255,
+    minTankLengthCm: 120,
+    activityLevel: 'medium',
+    swimmingZone: 'middle',
+    needsCover: true,
+    needsHidingPlaces: true,
+    spaceNotes: ['Seriously Fish 建议约 120 × 45 × 45 cm / 255 L 用于少量幼鱼或一对繁殖成鱼；FishBase 同样给出 120 cm 最小缸长。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-symphysodon-aequifasciatus', 'fishbase-symphysodon-aequifasciatus'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const ramireziKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '成体可用体型、鳍形和腹部颜色辅助判断',
@@ -304,6 +344,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0447: discusKnowledge,
   sp_0448: ramireziKnowledge,
   sp_0017: agassiziiKnowledge,
   sp_0444: pearlGouramiKnowledge,

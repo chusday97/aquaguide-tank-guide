@@ -98,6 +98,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const discusSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-symphysodon-aequifasciatus',
+  title: 'Symphysodon aequifasciatus (Discus)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/symphysodon-aequifasciatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const discusFishBase: EvidenceSourceDto = {
+  id: 'fishbase-symphysodon-aequifasciatus',
+  title: 'Symphysodon aequifasciatus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/11185',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const ramireziSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-mikrogeophagus-ramirezi',
   title: 'Mikrogeophagus ramirezi (Ram)',
@@ -499,6 +517,17 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0447: {
+    speciesId: 'sp_0447',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'breeding_defense'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [discusSeriouslyFish, discusFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
   sp_0448: {
     speciesId: 'sp_0448',
     waterType: 'freshwater',
