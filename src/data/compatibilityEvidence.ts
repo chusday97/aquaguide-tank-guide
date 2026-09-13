@@ -98,6 +98,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const ramireziSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-mikrogeophagus-ramirezi',
+  title: 'Mikrogeophagus ramirezi (Ram)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const ramireziFishBase: EvidenceSourceDto = {
+  id: 'fishbase-mikrogeophagus-ramirezi',
+  title: 'Mikrogeophagus ramirezi species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/12305',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const agassiziiSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-apistogramma-agassizii',
   title: "Apistogramma agassizii (Agassizi's Dwarf Cichlid)",
@@ -481,6 +499,16 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0448: {
+    speciesId: 'sp_0448',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [ramireziSeriouslyFish, ramireziFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
   sp_0017: {
     speciesId: 'sp_0017',
     waterType: 'freshwater',

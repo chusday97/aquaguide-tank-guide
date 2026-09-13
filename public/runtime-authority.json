@@ -15,6 +15,46 @@
     "authority": "reviewed-git",
     "profiles": [
       {
+        "catalogKey": "sp_0448",
+        "behaviorTraits": [
+          "peaceful",
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi (Ram)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/12305",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
         "catalogKey": "sp_0017",
         "behaviorTraits": [
           "breeding_defense"
@@ -1070,7 +1110,7 @@
       }
     ],
     "counts": {
-      "profiles": 23,
+      "profiles": 24,
       "pairRules": 5
     }
   }

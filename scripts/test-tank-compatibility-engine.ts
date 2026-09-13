@@ -514,6 +514,40 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Ramirezi authority enforces warm-water planning and contextual breeding defense',
+    run: () => {
+      const ram = fishData.find(item => item.id === 'sp_0448');
+      if (!ram) return false;
+      const normal = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '35', height: '30' }, targetTemperature: '28' }),
+        candidateSpecies: ram,
+        candidateQuantity: 2,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'normal' },
+      });
+      const breeding = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '35', height: '30' }, targetTemperature: '28' }),
+        candidateSpecies: ram,
+        candidateQuantity: 2,
+        candidateContext: { lifeStage: 'adult', reproductiveState: 'in_labor_or_spawning', guardingEggsOrFry: true },
+      });
+      const coolTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '35', height: '30' }, targetTemperature: '26' }),
+        candidateSpecies: ram,
+        candidateQuantity: 2,
+      });
+      const shortTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '45', width: '30', height: '30' }, targetTemperature: '28' }),
+        candidateSpecies: ram,
+        candidateQuantity: 2,
+      });
+      return normal.warningRules.every(rule => !['territorial_pressure_context', 'breeding_territory_active'].includes(rule.code))
+        && breeding.warningRules.some(rule => rule.code === 'breeding_territory_active')
+        && coolTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && shortTank.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && normal.evidenceIds?.includes('seriouslyfish-mikrogeophagus-ramirezi');
+    },
+  },
+  {
     name: 'reviewed Agassizii authority keeps breeding defense contextual and overrides legacy tank planning',
     run: () => {
       const agassizii = fishData.find(item => item.id === 'sp_0017');

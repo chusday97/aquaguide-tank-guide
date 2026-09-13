@@ -306,3 +306,10 @@ Draft PR: #149
 - Canonical priority coverage expands to 15 taxa / 210 directions: 180 caution, 28 not_recommended, 2 compatible.
 - Git/Admin Compatibility baseline expands to 17 direct Profiles / 5 Pair Rules via additive `202609120004_compatibility_cherry_barb_baseline.sql`; no database application in Product Recovery.
 - Validation: Species Knowledge / Compatibility / evidence coverage / runtime-admin contracts / TypeScript / full build / Species Detail E2E / Compatibility E2E / GP001–GP004 PASS.
+### P1 — Ramirezi reviewed-authority checkpoint
+- Added standard `Mikrogeophagus ramirezi` (`sp_0448`) with direct reviewed Species Knowledge V2 + Compatibility authority.
+- Reviewed authority: 27–30°C, pH 4.0–7.0, 1–10 dGH, ~4.2 cm SL, 60 cm / ~54 L pair planning, substrate spawning and biparental brood care.
+- Commercial `M. ramirezi var.*` morphs do not inherit the standard profile automatically. Breeding territoriality is contextual rather than permanent.
+- Canonical priority coverage: 21 taxa / 420 directions; 340 caution, 78 not_recommended, 2 compatible.
+- Git/Admin Compatibility baseline: 24 Profiles / 5 Pair Rules; additive migration `202609120010_compatibility_ramirezi_baseline.sql` tracked but unapplied.
+- Validation: Product + Admin/runtime + build + Species Detail + Compatibility Action + GP001–GP004 all PASS.

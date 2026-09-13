@@ -1,6 +1,22 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-mikrogeophagus-ramirezi': {
+    id: 'seriouslyfish-mikrogeophagus-ramirezi',
+    title: 'Mikrogeophagus ramirezi (Ram)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-mikrogeophagus-ramirezi': {
+    id: 'fishbase-mikrogeophagus-ramirezi',
+    title: 'Mikrogeophagus ramirezi species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/12305',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-apistogramma-agassizii': {
     id: 'seriouslyfish-apistogramma-agassizii',
     title: "Apistogramma agassizii (Agassizi's Dwarf Cichlid)",

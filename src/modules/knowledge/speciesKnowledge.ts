@@ -4,6 +4,61 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const ramireziKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成体可用体型、鳍形和腹部颜色辅助判断',
+    summary: '成熟公鱼通常体型更大、鳍条更延长且颜色更强；多数母鱼腹部可见粉红色区域，但观赏品系可能弱化这一特征。',
+    points: ['公鱼：成熟后通常更大，鳍条更延长、体色更强。', '母鱼：多数成体腹部可见粉红色区域。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    maleTraits: ['成熟后通常更大', '鳍条更延长', '体色更强'],
+    femaleTraits: ['多数成体腹部可见粉红色区域'],
+    limitations: ['商业观赏品系可能削弱腹部颜色等性别特征，不应只凭单一外观判断。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-mikrogeophagus-ramirezi'], reviewedAt: '2026-09-13' },
+  },
+  reproduction: {
+    mode: 'substrate_spawner',
+    plainLanguageLabel: '基质产卵型',
+    summary: '成熟后形成配对，在平石、沉木、宽叶或其他硬质表面产卵；双亲共同护卵护幼。',
+    fertilization: 'external',
+    parentalCare: 'fry_guarding',
+    gestationOrIncubation: { minDays: 2, maxDays: 3, label: '鱼卵通常约 2–3 天孵化' },
+    breedingBehavior: ['成熟后形成配对并建立繁殖领地', '在硬质表面产卵', '双亲共同护卵护幼'],
+    breedingAggression: 'medium',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-mikrogeophagus-ramirezi', 'fishbase-mikrogeophagus-ramirezi'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 27, max: 30 },
+    phRange: { min: 4.0, max: 7.0 },
+    hardnessDgh: { min: 1, max: 10 },
+    notes: ['需要成熟、洁净且稳定的高温淡水环境；不应把旧 catalog 的 26°C 下限当作 reviewed 结论。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-mikrogeophagus-ramirezi', 'fishbase-mikrogeophagus-ramirezi'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'pair',
+    territoriality: 'none',
+    finNipping: 'none',
+    predationRisk: 'low',
+    swimmingPace: 'moderate',
+    summary: '成熟后以配对为主；日常不把它视为永久领地鱼，但繁殖时配对会建立领地并可能追逐其它鱼。与和平、能适应高温且不抢食的伴游鱼更合适。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-mikrogeophagus-ramirezi', 'fishbase-mikrogeophagus-ramirezi'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 4.2, measurement: 'SL' },
+    minVolumeLiters: 54,
+    minTankLengthCm: 60,
+    activityLevel: 'medium',
+    swimmingZone: 'bottom',
+    needsCover: true,
+    needsHidingPlaces: true,
+    substrateNotes: ['偏好柔软沙质底床，便于底栖筛食。'],
+    spaceNotes: ['单对长期规划按至少 60 × 30 cm 缸底、约 54 L；社区环境还要为底层觅食和繁殖领地留空间。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-mikrogeophagus-ramirezi', 'fishbase-mikrogeophagus-ramirezi'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const agassiziiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '成熟后公母体型和鳍形差异明显',
@@ -249,6 +304,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0448: ramireziKnowledge,
   sp_0017: agassiziiKnowledge,
   sp_0444: pearlGouramiKnowledge,
   sp_0020: congoTetraKnowledge,

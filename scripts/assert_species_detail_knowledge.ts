@@ -230,6 +230,31 @@ assert.equal(denisonSources.length, 2);
 assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(denisonSources.some(source => source.publisher === 'FishBase'));
 
+const ramireziKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0448',
+  name: '荷兰凤凰',
+  scientificName: 'Mikrogeophagus ramirezi',
+  waterTemperature: '26-30°C',
+  phLevel: '5.0-6.5',
+  tankSize: '至少 48 升',
+});
+assert.deepEqual(ramireziKnowledge.facts.temperatureRange, { min: 27, max: 30 });
+assert.deepEqual(ramireziKnowledge.facts.phRange, { min: 4, max: 7 });
+assert.deepEqual(ramireziKnowledge.knowledge.environment?.hardnessDgh, { min: 1, max: 10 });
+assert.equal(ramireziKnowledge.knowledge.socialBehavior?.mode, 'pair');
+assert.equal(ramireziKnowledge.knowledge.socialBehavior?.territoriality, 'none');
+assert.equal(ramireziKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 4.2);
+assert.equal(ramireziKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 54);
+assert.equal(ramireziKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
+assert.equal(ramireziKnowledge.knowledge.reproduction?.mode, 'substrate_spawner');
+assert.equal(ramireziKnowledge.knowledge.reproduction?.parentalCare, 'fry_guarding');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0157', scientificName: 'Mikrogeophagus ramirezi var. Blue' }), undefined, 'Ramirezi ornamental variants must not inherit standard-species authority automatically');
+const ramireziSources = resolveKnowledgeSources(ramireziKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(ramireziSources.length, 2);
+assert.ok(ramireziSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(ramireziSources.some(source => source.publisher === 'FishBase'));
+
 const agassiziiKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0017',

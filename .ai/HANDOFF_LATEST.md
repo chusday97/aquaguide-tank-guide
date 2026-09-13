@@ -254,3 +254,10 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 ## Main convergence checkpoint — Local File startup recovery guidance
 - Current main fail-closed startup UX is absorbed: operators now receive distinct recovery guidance for Local File owner conflicts, unreadable owner lease files, interrupted restore journals, newer unsupported authority formats, and unavailable local API service.
 - Product Recovery remains the active authority; Compatibility V7 and the 23/5 runtime baseline are unchanged.
+## P1 — Ramirezi reviewed-authority checkpoint
+- Standard `Mikrogeophagus ramirezi` (`sp_0448`) now has direct reviewed environment/social/space/reproduction authority; commercial color/fin/balloon variants remain outside automatic inheritance.
+- Reviewed values: 27–30°C, pH 4.0–7.0, 1–10 dGH, ~4.2 cm SL, 60 cm / ~54 L pair planning. Mature fish form pairs; substrate spawning uses biparental brood care.
+- `breeding_defense` is contextual only: normal state does not create permanent territorial pressure, while spawning/guarding triggers `breeding_territory_active`.
+- Canonical matrix: 21 taxa / 420 directions = 340 caution, 78 not_recommended, 2 compatible. Runtime/Admin baseline: 24 Profiles / 5 Pair Rules.
+- Added unapplied additive migration `202609120010_compatibility_ramirezi_baseline.sql`.
+- Product, runtime/Admin, build and GP001–GP004 gates all PASS.

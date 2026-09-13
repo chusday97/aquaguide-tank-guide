@@ -231,3 +231,12 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 ## Main convergence checkpoint — Local File startup recovery guidance
 - Absorbed current main startup recovery guidance for Durable Local File Mode: owner conflicts, unreadable owner lease, interrupted restore journals, newer local authority versions, and local API unavailability now render cause-specific fail-closed recovery instructions.
 - This does not change Product Recovery authority, Compatibility V7, or the 23 Profile / 5 Pair runtime baseline.
+## Current checkpoint — Ramirezi reviewed authority (2026-09-13)
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Mikrogeophagus ramirezi` (`sp_0448`, 荷兰凤凰) from Seriously Fish + FishBase.
+- Reviewed planning authority: freshwater; 27–30°C; pH 4.0–7.0; 1–10 dGH; ~4.2 cm SL; 60 cm / ~54 L for a pair; pair-forming social mode; substrate spawning with biparental brood care.
+- Daily social authority is not permanently territorial. `breeding_defense` produces `breeding_territory_active` only when spawning/guarding context is explicit.
+- Gold/Blue/Platinum/Balloon and other `Mikrogeophagus ramirezi var.*` records do not inherit the standard profile automatically.
+- Canonical priority matrix is 21 taxa / 420 ordered directions: 340 caution, 78 not_recommended, 2 compatible. No new unconditional green light was introduced; the high not_recommended count reflects the reviewed 27°C lower temperature bound in the 24°C audit tank.
+- Admin/Git runtime baseline advances to 24 Profiles / 5 Pair Rules. Additive migration `202609120010_compatibility_ramirezi_baseline.sql` is repository authority only and has not been applied to Staging/Production.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+- Next: push this checkpoint, refresh real `origin/main`, and continue only with another distinct canonical taxon backed by reviewed evidence.
