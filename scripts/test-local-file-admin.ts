@@ -692,6 +692,65 @@ try {
   assert.equal(restoredVisibilityState.payload.data.state.species[0].image.id, restoreVisibilityAssetB);
   assert.equal((await fetch(`${started.base}/assets/${restoreVisibilityAssetB}`)).status, 200);
 
+  // A failed restore may only claim automatic rollback success after validating both the safety backup and rolled-back root.
+  const rollbackAssetA = 'local-asset-rollback-validation-a';
+  const rollbackAssetB = 'local-asset-rollback-validation-b';
+  const rollbackBusiness = (assetId: string) => ({
+    schemaVersion: 1, species: [{ id: `species-${assetId}`, image: { storageBucket: 'local-file', id: assetId } }], care: [], updatedAt: assetId,
+  });
+  assert.equal((await requestJson(started.base, `/assets/${rollbackAssetA}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.alloc(1024, 0x41),
+  })).response.status, 201);
+  assert.equal((await putState(started.base, 'business', rollbackBusiness(rollbackAssetA))).response.status, 200);
+  assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], marker: 'rollback-a' })).response.status, 200);
+  assert.equal((await requestJson(started.base, `/assets/${rollbackAssetB}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.alloc(2048, 0x42),
+  })).response.status, 201);
+  assert.equal((await putState(started.base, 'business', rollbackBusiness(rollbackAssetB))).response.status, 200);
+  assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], marker: 'rollback-b' })).response.status, 200);
+  const rollbackTarget = await requestJson(started.base, '/backups', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'rollback-integrity-target' }),
+  });
+  assert.equal(rollbackTarget.response.status, 201);
+  const rollbackTargetId = String(rollbackTarget.payload.data.id);
+  const rollbackTargetDirectory = path.join(root, 'backups', rollbackTargetId);
+  const rollbackHugeOrphan = 'local-asset-rollback-window';
+  await writeFile(path.join(rollbackTargetDirectory, 'assets', `${rollbackHugeOrphan}.blob`), Buffer.alloc(32 * 1024 * 1024, 0x5a));
+  await writeFile(path.join(rollbackTargetDirectory, 'assets', `${rollbackHugeOrphan}.json`), `${JSON.stringify({
+    id: rollbackHugeOrphan, mimeType: 'image/png', byteSize: 32 * 1024 * 1024,
+  })}\n`, 'utf8');
+  assert.equal((await requestJson(started.base, `/assets/${rollbackAssetA}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.alloc(1024, 0x41),
+  })).response.status, 201);
+  assert.equal((await putState(started.base, 'business', rollbackBusiness(rollbackAssetA))).response.status, 200);
+  assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], marker: 'rollback-a' })).response.status, 200);
+  assert.equal((await requestJson(started.base, `/assets/${rollbackAssetB}`, { method: 'DELETE' })).response.status, 200);
+  const rollbackJournalPath = path.join(root, '.restore-transaction.json');
+  let rollbackSafetyId = '';
+  const rollbackSabotage = (async () => {
+    const deadline = Date.now() + 10_000;
+    while (Date.now() < deadline) {
+      try {
+        const journal = JSON.parse(await readFile(rollbackJournalPath, 'utf8'));
+        rollbackSafetyId = String(journal.safetyBackupId);
+        await rm(path.join(root, 'backups', rollbackSafetyId, 'assets', `${rollbackAssetA}.blob`), { force: true });
+        await chmod(path.join(rollbackTargetDirectory, 'care-seo.json'), 0o000);
+        return;
+      } catch {
+        await new Promise(resolve => setTimeout(resolve, 1));
+      }
+    }
+    throw new Error('Timed out waiting for restore journal in rollback-integrity regression.');
+  })();
+  const failedRollbackRestore = requestJson(started.base, `/backups/${rollbackTargetId}/restore`, { method: 'POST' });
+  const [failedRollbackResult] = await Promise.all([failedRollbackRestore, rollbackSabotage]);
+  await chmod(path.join(rollbackTargetDirectory, 'care-seo.json'), 0o600).catch(() => undefined);
+  assert.equal(failedRollbackResult.response.status, 500);
+  assert.match(String(failedRollbackResult.payload.error.message), /自动回滚失败/);
+  assert.equal(typeof JSON.parse(await readFile(rollbackJournalPath, 'utf8')).safetyBackupId, 'string',
+    'A failed rollback integrity check must retain the restore journal for crash recovery/operator inspection.');
+  assert.equal(rollbackSafetyId.length > 0, true);
+
   process.env.ADMIN_LOCAL_FILE_MODE = 'false';
   const disabled = await requestJson(started.base, '/status');
   assert.equal(disabled.response.status, 404);
