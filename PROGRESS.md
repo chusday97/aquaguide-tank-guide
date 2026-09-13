@@ -1739,7 +1739,7 @@
 
 - [x] Editorial evidence、Evidence bindings、Public contract、Species variant card、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-135`。
 - [ ] 系统 Chrome 三档真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。
-## 2026-09-14 Species 页面内容减法收口（进行中）
+## 2026-09-14 Species 页面内容减法收口（已提交 `8be26a7f`，进行中）
 
 - [x] 删除无已确认摘要时的通用 Hero 话术；没有物种事实就不显示泛化介绍。
 - [x] 从章节导航移除 `AquaGuide` 产品入口和“继续探索”，避免把产品动作伪装成百科章节。
