@@ -10,11 +10,12 @@ const requiredTokens = [
   '--seo-max-width: 1280px',
   '--seo-gutter: 80px',
   '--seo-section-gap: 96px',
-  '--seo-control-min: 44px',
 ];
 for (const token of requiredTokens) {
   assert.ok(css.includes(token), `SEO system is missing ${token}`);
 }
+const controlMin = Number(css.match(/--seo-control-min:\s*(\d+(?:\.\d+)?)px/)?.[1]);
+assert.ok(Number.isFinite(controlMin) && controlMin >= 44, `SEO control minimum must be at least 44px, received ${controlMin}px`);
 
 const responsiveRules = [
   [/@media \(max-width: 1023px\)[\s\S]*?--seo-gutter: 32px[\s\S]*?\.seo-data-rail[\s\S]*?repeat\(3, minmax\(0, 1fr\)\)/, 'tablet data rail contract'],

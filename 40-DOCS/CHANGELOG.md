@@ -820,6 +820,10 @@
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
 [Unreleased]
 
+- Changed: 响应式契约测试改为数值校验公开控件最小高度 `>=44px`，与45px视觉安全余量和浏览器浮点门禁保持一致。
+
+- Fixed: 公开 SEO 操作控件最小高度从 44px 调整为 45px，修复严格浮点测量下收藏按钮 `43.999969px` 的可访问性门禁失败。证据为 `EVD-20260914-159`。
+
 - Fixed-in-progress: GitHub Actions 已发现孔雀鱼页面的真实 44px 交互目标缺口；浏览器门禁诊断现会输出具体元素和浮点尺寸，等待下一次运行后实施最小修复。证据为 `EVD-20260914-158`。
 
 - Changed: 强化 `verify-public-seo-github-actions.mjs`，为四条 Species 路由增加章节相对顺序和破图回退断言；本地静态检查通过，等待 GitHub Actions 在新 SHA 上复验。证据为 `EVD-20260914-157`。
