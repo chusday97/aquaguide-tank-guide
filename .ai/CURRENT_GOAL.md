@@ -1,5 +1,14 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 interrupted restore integrity closed
+A concrete crash-recovery integrity badcase is closed on main at `73276ee8 fix(admin): validate interrupted restore recovery`.
+
+- Fail-before-fix: a valid-looking safety-backup manifest with a broken asset pair was accepted by startup recovery. The API served `/status` 200, the restored root was `healthy=false / ASSET_PAIR_MISSING`, and `.restore-transaction.json` had already been deleted.
+- Automatic recovery now runs `inspectRoot()` against the recorded safety backup before applying it, then runs `inspectRoot()` again against the recovered active root. Only a healthy backup + healthy recovered root may clean restore temp data and delete the journal.
+- If either check fails, startup remains fail-closed, the recovery journal stays on disk, and a corrupt safety backup is not allowed to overwrite the active root.
+- PASS: Local File API regression, mode contract, browser restart/backup/restore regression, API/root TypeScript, full build, GitHub Product Golden Path, Vercel branch deployment READY.
+- Production remains unchanged. NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 held root lease displacement closed
 A concrete live-owner displacement corruption path is closed on main at `988f6e4c fix(admin): revalidate held root leases`.
 

@@ -1,5 +1,12 @@
 # Execution Log
 
+## 2026-09-13 — interrupted restore integrity closure
+- Audited fresh-process restore recovery versus normal restore and found recovery skipped both pre-apply and post-apply integrity validation.
+- Reproduced with a safety backup containing metadata without its blob: startup `/status` returned 200, subsequent `/integrity` reported `ASSET_PAIR_MISSING`, and the recovery journal was missing.
+- Added safety-backup preflight `inspectRoot()` plus recovered-root `inspectRoot()` before journal cleanup.
+- Permanent regression proves corrupt safety backup => startup 500 fail-closed + journal retained + active root unchanged, while valid recovery still succeeds.
+- PASS: Local File API/UI, mode contract, TypeScript, full build, Product Golden Path `34747163120`, Vercel `dpl_9ctCqTd71u3rTWfa2tHVeMHcpPaa` READY.
+
 ## 2026-09-13 — held root lease displacement closure
 - Reproduced a dual-owner corruption path: remove the active owner lease, start a replacement process (200), then the original process still served 200 from its stale in-memory claim.
 - Patched `ensureRootLease()` to verify the on-disk PID/token before trusting a held lease; missing lease forces atomic reacquisition and displaced ownership fails closed.

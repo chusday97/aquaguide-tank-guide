@@ -1,5 +1,11 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 interrupted restore integrity closed
+- New main checkpoint: `73276ee8 fix(admin): validate interrupted restore recovery`.
+- Fresh-process recovery no longer trusts a backup manifest alone. It validates the safety backup before applying it and validates the recovered active root before deleting `.restore-transaction.json`.
+- Corrupt safety backup regression: startup is 500 fail-closed, journal remains available for inspection/retry, and the active root is not overwritten. Valid interrupted-restore recovery remains PASS.
+- GitHub Product Golden Path PASS; Vercel `dpl_9ctCqTd71u3rTWfa2tHVeMHcpPaa` READY. Production unchanged.
+
 ## 2026-09-13 held root lease displacement closed
 - New main checkpoint: `988f6e4c fix(admin): revalidate held root leases`.
 - A running Local Admin no longer trusts an in-memory root lease after the on-disk owner file is removed/replaced. Each request verifies the disk PID + token; missing lease triggers atomic reacquisition, while a replacement live owner forces the displaced process to 409.

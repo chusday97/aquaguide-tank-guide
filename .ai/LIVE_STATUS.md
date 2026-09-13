@@ -1,5 +1,12 @@
 # Live Status
 
+## 2026-09-13 interrupted restore integrity
+- Functional main: `73276ee8`.
+- Automatic interrupted-restore recovery now requires a healthy safety backup and a healthy recovered active root before cleanup/journal deletion.
+- Corrupt safety backup fails closed and preserves the journal; valid recovery continues to pass.
+- Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion.
+
 ## 2026-09-13 held root lease displacement
 - Functional main: `988f6e4c`
 - Live Local Admin processes now continuously revalidate their root lease against the on-disk PID/token and fail closed if another process has displaced ownership.

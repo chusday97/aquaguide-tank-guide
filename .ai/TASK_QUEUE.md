@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after interrupted restore integrity closure
+- DONE: reproduce startup recovery accepting a corrupt safety backup and deleting its journal.
+- DONE: validate the safety backup before apply.
+- DONE: validate the recovered active root before temp/journal cleanup.
+- DONE: permanent regression requires corrupt safety backup => startup 500 + journal retained + active root unchanged.
+- DONE: valid interrupted-restore recovery remains PASS.
+- DONE: Local File API/UI / mode contract / TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 after held root lease displacement closure
 - DONE: reproduce dual-live-owner state after externally deleting the active `.aqua-admin-owner.json`.
 - DONE: revalidate in-memory lease ownership against on-disk PID + token on every Local Admin request.

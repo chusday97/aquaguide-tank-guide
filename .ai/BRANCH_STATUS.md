@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-13 — interrupted restore integrity checkpoint
+- main functional checkpoint: `73276ee8 fix(admin): validate interrupted restore recovery`.
+- Fail-before-fix: a corrupted pre-restore safety backup could be applied during fresh-process recovery; `/status` returned 200, `/integrity` was unhealthy, and the recovery journal was deleted.
+- Recovery now validates the safety backup before apply and validates the active root after apply; the journal is removed only after both checks pass.
+- GitHub Product Golden Path PASS (`34747163120`).
+- Vercel main branch deployment `dpl_9ctCqTd71u3rTWfa2tHVeMHcpPaa` READY, target null.
+- Production not promoted.
+
 ## 2026-09-13 — held root lease displacement checkpoint
 - main functional checkpoint: `988f6e4c fix(admin): revalidate held root leases`
 - GitHub Product Golden Path: PASS (`34746075147`).
