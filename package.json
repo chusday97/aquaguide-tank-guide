@@ -82,6 +82,7 @@
     "test:product-evaluation": "node scripts/test-product-evaluation.mjs",
     "test:responsive-detail-surface": "node scripts/test-responsive-detail-surface.mjs",
     "test:species-landing": "node scripts/verify-species-landing.mjs",
+    "test:species-variant-card": "node scripts/test-species-variant-card-contract.mjs",
     "test:public-seo-contract": "node --import tsx scripts/test-public-seo-contract.ts",
     "test:public-seo-copy": "node scripts/test-public-seo-copy.mjs",
     "test:public-seo-structure": "node scripts/test-public-seo-structure.mjs",
