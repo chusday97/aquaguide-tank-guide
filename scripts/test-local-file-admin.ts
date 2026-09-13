@@ -52,6 +52,8 @@ try {
   assert.deepEqual(status.payload.data.partitions, { business: false, compatibility: false, 'care-seo': false });
   const recoveredLease = JSON.parse(await readFile(rootLeasePath, 'utf8'));
   assert.equal(recoveredLease.pid, process.pid, 'A stale Local Admin root lease must be reclaimed by the live process.');
+  assert.equal(recoveredLease.version, 2);
+  assert.equal(typeof recoveredLease.processStartIdentity, 'string');
   assert.notEqual(recoveredLease.token, 'stale-owner');
 
   const leaseChildCode = `(async()=>{const {createApiApp}=await import('./apps/api/src/app');const server=createApiApp().listen(0,'127.0.0.1',()=>console.log('READY '+server.address().port));process.on('SIGTERM',()=>server.close(()=>process.exit(0)));})()`;
@@ -76,6 +78,44 @@ try {
   leaseChild.kill('SIGTERM');
   await new Promise<void>(resolve => leaseChild!.once('exit', () => resolve()));
   leaseChild = null;
+
+  // A stale lease must be reclaimable even when its old PID has been reused by an unrelated live process.
+  const pidReuseRoot = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-local-admin-pid-reuse-'));
+  const unrelatedProcess = spawn(process.execPath, ['-e', 'setInterval(() => {}, 1000)'], { stdio: 'ignore' });
+  await new Promise<void>((resolve, reject) => {
+    unrelatedProcess.once('spawn', resolve);
+    unrelatedProcess.once('error', reject);
+  });
+  assert.equal(typeof unrelatedProcess.pid, 'number');
+  await writeFile(path.join(pidReuseRoot, '.aqua-admin-owner.json'), `${JSON.stringify({
+    version: 2, pid: unrelatedProcess.pid, token: 'dead-reused-pid-owner', acquiredAt: '2000-01-01T00:00:00.000Z',
+    processStartIdentity: 'stale-process-start-identity',
+  })}\n`, 'utf8');
+  const pidReuseAdmin = spawn(process.execPath, ['./node_modules/tsx/dist/cli.mjs', '-e', leaseChildCode], {
+    cwd: process.cwd(),
+    env: { ...process.env, ADMIN_LOCAL_FILE_ROOT: pidReuseRoot, ADMIN_RUNTIME_SNAPSHOT_ROOT: path.join(pidReuseRoot, 'public') },
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+  const pidReusePort = await new Promise<number>((resolve, reject) => {
+    let stdout = '';
+    let stderr = '';
+    const timeout = setTimeout(() => reject(new Error(`Timed out starting PID-reuse Local Admin process: ${stderr}`)), 10_000);
+    pidReuseAdmin.stdout!.on('data', chunk => {
+      stdout += String(chunk);
+      const match = stdout.match(/READY (\d+)/);
+      if (match) { clearTimeout(timeout); resolve(Number(match[1])); }
+    });
+    pidReuseAdmin.stderr!.on('data', chunk => { stderr += String(chunk); });
+    pidReuseAdmin.once('exit', code => { clearTimeout(timeout); reject(new Error(`PID-reuse Local Admin process exited before READY (${code}): ${stderr}`)); });
+  });
+  const pidReuseStatus = await requestJson(`http://127.0.0.1:${pidReusePort}/api/v1/local-admin`, '/status');
+  assert.equal(pidReuseStatus.response.status, 200, 'A reused live PID with a different process-start identity must not permanently lock the root.');
+  pidReuseAdmin.kill('SIGTERM');
+  await new Promise<void>(resolve => pidReuseAdmin.once('exit', () => resolve()));
+  unrelatedProcess.kill('SIGTERM');
+  await new Promise<void>(resolve => unrelatedProcess.once('exit', () => resolve()));
+  assert.rejects(readFile(path.join(pidReuseRoot, '.aqua-admin-owner.json'), 'utf8'));
+  await rm(pidReuseRoot, { recursive: true, force: true });
 
   // Existing Durable Local File installs used raw store JSON. First read must migrate it in place to a versioned envelope.
   const businessState = { schemaVersion: 1, species: [{ id: 'demo' }], care: [], updatedAt: 'test' };

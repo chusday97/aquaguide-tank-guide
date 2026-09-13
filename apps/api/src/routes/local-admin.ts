@@ -2,6 +2,7 @@ import express, { Router } from 'express';
 import { createHash, randomUUID } from 'node:crypto';
 import { cp, link, mkdir, readFile, readdir, rename, rm, stat, unlink, writeFile } from 'node:fs/promises';
 import { readFileSync, unlinkSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { careArticleAdminInputSchema, speciesAdminInputSchema, type GitRuntimeAuthoritySnapshot, type RuntimeAuthorityAssetDto } from '../../../../packages/contracts/src/index';
@@ -117,6 +118,7 @@ const isEnabled = () => (
 );
 const localRoot = () => path.resolve(process.env.ADMIN_LOCAL_FILE_ROOT || path.join(repoRoot, '.local/aqua-admin'));
 type RootLease = { root: string; filePath: string; token: string };
+type RootLeaseRecord = { version?: number; pid?: number; token?: string; acquiredAt?: string; processStartIdentity?: string };
 let heldRootLease: RootLease | null = null;
 let rootLeaseExitHookInstalled = false;
 const rootLeaseFile = (root: string) => path.join(root, '.aqua-admin-owner.json');
@@ -134,6 +136,27 @@ const pidIsAlive = (pid: number) => {
   try { process.kill(pid, 0); return true; }
   catch (error) { return (error as NodeJS.ErrnoException)?.code !== 'ESRCH'; }
 };
+const processStartIdentity = (pid: number): string | null => {
+  if (!Number.isInteger(pid) || pid <= 0) return null;
+  if (process.platform === 'linux') {
+    try {
+      const raw = readFileSync(`/proc/${pid}/stat`, 'utf8').trim();
+      const closeParen = raw.lastIndexOf(')');
+      if (closeParen < 0) return null;
+      const fields = raw.slice(closeParen + 2).trim().split(/\s+/);
+      const startTicks = fields[19];
+      return startTicks ? `linux:${startTicks}` : null;
+    } catch { return null; }
+  }
+  if (process.platform === 'darwin') {
+    try {
+      const value = execFileSync('ps', ['-o', 'lstart=', '-o', 'comm=', '-p', String(pid)], { encoding: 'utf8' }).trim();
+      return value ? `darwin:${value}` : null;
+    } catch { return null; }
+  }
+  return null;
+};
+const currentProcessStartIdentity = processStartIdentity(process.pid);
 const ensureRootLease = async () => {
   const root = localRoot();
   if (heldRootLease?.root === root) return;
@@ -143,7 +166,13 @@ const ensureRootLease = async () => {
   await mkdir(root, { recursive: true });
   const filePath = rootLeaseFile(root);
   const token = randomUUID();
-  const payload = JSON.stringify({ version: 1, pid: process.pid, token, acquiredAt: new Date().toISOString() });
+  const payload = JSON.stringify({
+    version: 2,
+    pid: process.pid,
+    token,
+    acquiredAt: new Date().toISOString(),
+    ...(currentProcessStartIdentity ? { processStartIdentity: currentProcessStartIdentity } : {}),
+  });
   for (let attempt = 0; attempt < 4; attempt += 1) {
     const candidate = `${filePath}.candidate-${process.pid}-${randomUUID()}`;
     await writeFile(candidate, `${payload}\n`, { flag: 'wx' });
@@ -160,11 +189,16 @@ const ensureRootLease = async () => {
     } finally {
       await rm(candidate, { force: true }).catch(() => undefined);
     }
-    let owner: { pid?: number; token?: string } | null = null;
-    try { owner = JSON.parse(await readFile(filePath, 'utf8')) as { pid?: number; token?: string }; }
+    let owner: RootLeaseRecord | null = null;
+    try { owner = JSON.parse(await readFile(filePath, 'utf8')) as RootLeaseRecord; }
     catch { throw new ApiError(409, 'VERSION_CONFLICT', 'Local Admin root ownership file is unreadable; refusing concurrent access.'); }
-    if (pidIsAlive(Number(owner.pid))) {
-      throw new ApiError(409, 'VERSION_CONFLICT', `Local Admin root is already owned by process ${String(owner.pid)}. Close the other Local Admin process before continuing.`);
+    const ownerPid = Number(owner.pid);
+    if (pidIsAlive(ownerPid)) {
+      const liveStartIdentity = processStartIdentity(ownerPid);
+      const recordedStartIdentity = typeof owner.processStartIdentity === 'string' ? owner.processStartIdentity : null;
+      if (!recordedStartIdentity || !liveStartIdentity || liveStartIdentity === recordedStartIdentity) {
+        throw new ApiError(409, 'VERSION_CONFLICT', `Local Admin root is already owned by process ${String(owner.pid)}. Close the other Local Admin process before continuing.`);
+      }
     }
     const stalePath = `${filePath}.stale-${randomUUID()}`;
     try {
