@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-13 — runtime corrupt-root mutation guard checkpoint
+- Functional main checkpoint: `0060d200ed056345aba0ac96e52e8a1810925886` — `fix(admin): block writes on corrupt active authority`.
+- GitHub Product Golden Path `34758190657` PASS.
+- Vercel Git auto-preview was not created for this main push; no manual Preview triggered because Local Admin remains DEV-only.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`; no promotion.
+- Local/GitHub main were equal at push; no force push.
+
+
 ## 2026-09-13 — corrupt active authority startup recovery checkpoint
 - Functional main checkpoint: `ed3789e7105354d04f099bfb85290c27150d0e3a` — `fix(admin): fail closed on corrupt active authority`.
 - GitHub Product Golden Path `34756774041` PASS.

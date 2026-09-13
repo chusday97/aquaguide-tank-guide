@@ -1,5 +1,16 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after runtime corrupt-root mutation guard
+- DONE: reproduce live-process external blob deletion followed by successful ordinary state write.
+- DONE: fail closed ordinary state/asset mutation under active-root integrity errors.
+- DONE: preserve same-asset repair PUT and safe delete repair for unreferenced target assets.
+- DONE: add `INTEGRITY_FAILED` to shared API contract.
+- DONE: permanent regression + Local File/UI/Operations/mode/TypeScript/full-build gates.
+- DONE: GitHub Product Golden Path `34758190657` PASS.
+- NOTE: Vercel Git auto-preview was not created; no manual Preview triggered for DEV-only Local Admin. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 after corrupt active authority startup recovery closure
 - DONE: reproduce a corrupt active root still entering Operations Studio with normal workspaces available.
 - DONE: add startup integrity preflight before Durable Local File partition hydration.

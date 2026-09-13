@@ -280,3 +280,7 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 - Canonical priority matrix: 24 taxa / 552 ordered directions = 418 caution, 132 not_recommended, 2 compatible. No new unconditional green light was introduced.
 - Admin/Git runtime baseline advances to 27 Profiles / 5 Pair Rules. Additive migration `202609120013_compatibility_sewellia_baseline.sql` is repository authority only and has not been applied to Staging/Production.
 - Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+
+## Main convergence checkpoint — corrupt active authority write guard
+- Absorbed current main Local File hardening that blocks durable writes when the active authority fails integrity validation.
+- Product Recovery remains the active authority; Compatibility V7, the 27 Profile / 5 Pair runtime baseline, and the 24-taxon canonical matrix are unchanged.

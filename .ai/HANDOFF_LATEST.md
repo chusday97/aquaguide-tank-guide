@@ -296,3 +296,7 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Bottom-resource competition stays `territoriality: low`; no permanent community-wide territorial warning is introduced. High-flow/high-oxygen requirements remain husbandry guidance, not a fabricated equipment rule.
 - Canonical matrix: 24 taxa / 552 directions = 418 caution, 132 not_recommended, 2 compatible. Runtime/Admin baseline: 27 Profiles / 5 Pair Rules.
 - Added unapplied additive migration `202609120013_compatibility_sewellia_baseline.sql`. Product, runtime/Admin, build and GP001–GP004 gates all PASS.
+
+## Main convergence checkpoint — corrupt active authority write guard
+- Current main now fails closed for both reads and writes when durable active authority is corrupt.
+- Product Recovery authority, Compatibility V7, 27/5 runtime baseline, and the 24-taxon reviewed matrix remain unchanged.
