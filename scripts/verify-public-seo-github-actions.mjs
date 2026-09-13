@@ -125,7 +125,9 @@ const inspect = async (route, width) => {
     assert.equal(await page.evaluate(() => document.activeElement?.matches('#faq button[aria-expanded]')), true, `${route.path} FAQ should retain focus after expansion`);
     const answerId = await faqButton.getAttribute('aria-controls');
     assert.ok(answerId, `${route.path} FAQ should identify its answer panel`);
-    const answer = page.locator(`#${answerId}`);
+    // React useId() values contain colons, so use an attribute selector rather
+    // than treating the generated value as a raw CSS id selector.
+    const answer = page.locator(`[id="${answerId}"]`);
     assert.equal(await answer.getAttribute('aria-hidden'), 'false', `${route.path} FAQ answer should become visible`);
     assert.ok(await answer.isVisible(), `${route.path} FAQ answer content should be visible`);
   }

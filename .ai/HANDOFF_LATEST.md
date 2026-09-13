@@ -14,6 +14,13 @@
 
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-14 最新执行状态
+
+- Run `34769711811`（SHA `470ec1de`）失败已定位为 FAQ 自动化断言的 CSS 选择器问题：React `useId()` 生成的 ID 含冒号，测试已改用属性选择器；页面代码未因该失败被判定为有问题。
+- 本地静态验证已通过：公开契约、中文文案/结构、品系卡片、lint、build、diff-check；修复提交待本地提交并推送后触发新 CI。
+- 用户三个未提交文件保持不变；Figma、Production Supabase、main、生产部署和 noindex 继续锁定。
+- 下一步：推送测试修复，确认新 Actions run 结果；若通过，再更新证据并将同一 Critic 线程复验最新 SHA。
+
 ## 2026-09-13 Docker 浏览器恢复结果
 
 - 已确认当前磁盘空间约 55GiB，`npm run build` 通过；用户三个未提交文件未触碰。
