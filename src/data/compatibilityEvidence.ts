@@ -387,6 +387,24 @@ const guppySeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const pygmyCorySeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-corydoras-pygmaeus',
+  title: 'Corydoras pygmaeus (Pygmy Cory)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/corydoras-pygmaeus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const pygmyCoryFishBase: EvidenceSourceDto = {
+  id: 'fishbase-corydoras-pygmaeus',
+  title: 'Gastrodermus pygmaeus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/corydoras-pygmaeus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const bronzeCorySeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-corydoras-aeneus',
   title: 'Corydoras aeneus (Bronze Cory)',
@@ -645,6 +663,17 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [swordtailSeriouslyFish, swordtailFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0053: {
+    speciesId: 'sp_0053',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [pygmyCorySeriouslyFish, pygmyCoryFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
   },
   sp_0014: {
     speciesId: 'sp_0014',

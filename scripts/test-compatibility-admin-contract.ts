@@ -260,6 +260,15 @@ for (const source of discusProfile.citations) assert.equal(discusMigration.inclu
 assert.equal((discusMigration.match(/Compatibility discus profile drift:/g) || []).length, 1);
 assert.equal((discusMigration.match(/Compatibility discus profile evidence drift:/g) || []).length, 1);
 
+const pygmyCoryMigration = readFileSync('supabase/migrations/202609120012_compatibility_pygmy_cory_baseline.sql', 'utf8');
+assert.match(pygmyCoryMigration, /Compatibility pygmy cory baseline is partial or not fully published/, 'Pygmy-cory baseline must fail closed on partial published catalog coverage.');
+const pygmyCoryProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0053');
+assert.ok(pygmyCoryProfile, '120012 must own the reviewed Pygmy-cory profile.');
+assert.equal(pygmyCoryMigration.includes('sp_0053'), true);
+for (const source of pygmyCoryProfile.citations) assert.equal(pygmyCoryMigration.includes(source.id), true, `Pygmy-cory migration must include source ${source.id}`);
+assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile drift:/g) || []).length, 1);
+assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile evidence drift:/g) || []).length, 1);
+
 const additiveCompatibilityMigrations = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',
@@ -271,16 +280,19 @@ const additiveCompatibilityMigrations = [
   '202609120009_compatibility_agassizii_baseline.sql',
   '202609120010_compatibility_ramirezi_baseline.sql',
   '202609120011_compatibility_discus_baseline.sql',
+  '202609120012_compatibility_pygmy_cory_baseline.sql',
 ];
 for (const migrationName of additiveCompatibilityMigrations) {
   const migration = readFileSync(`supabase/migrations/${migrationName}`, 'utf8');
-  const insertedTraits = migration.match(/select s\.id, ARRAY\[([^\]]*)\]::text\[\]/)?.[1];
-  const assertedTraits = migration.match(/cp\.behavior_traits=ARRAY\[([^\]]*)\]::text\[\]/)?.[1];
-  assert.ok(insertedTraits && assertedTraits, `${migrationName} must expose insert and drift behavior traits.`);
-  assert.equal(assertedTraits, insertedTraits, `${migrationName} drift assertion must match its inserted behavior traits.`);
+  const insertedShape = migration.match(/select s\.id, ARRAY\[([^\]]*)\]::text\[\],\s*(null|\d+),[\s\S]*?now\(\),\s*ARRAY\[([^\]]*)\]::text\[\]/);
+  const assertedShape = migration.match(/cp\.behavior_traits=ARRAY\[([^\]]*)\]::text\[\]\s+and cp\.minimum_group_size (?:is not distinct from (null|\d+)|is (null))[\s\S]*?cp\.required_facts=ARRAY\[([^\]]*)\]::text\[\]/);
+  assert.ok(insertedShape && assertedShape, `${migrationName} must expose insert and drift Profile shape.`);
+  assert.equal(assertedShape[1], insertedShape[1], `${migrationName} drift assertion must match inserted behavior traits.`);
+  assert.equal(assertedShape[2] ?? assertedShape[3], insertedShape[2], `${migrationName} drift assertion must match inserted minimumGroupSize.`);
+  assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447']);
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

@@ -320,3 +320,9 @@ Draft PR: #149
 - Canonical priority coverage: 22 taxa / 462 directions; 340 caution, 120 not_recommended, 2 compatible.
 - Git/Admin Compatibility baseline: 25 Profiles / 5 Pair Rules; additive migration `202609120011_compatibility_discus_baseline.sql` tracked but unapplied.
 - Validation: Product + Admin/runtime + build + Species Detail + Compatibility Action + GP001–GP004 all PASS.
+### P1 — Pygmy cory / migration-shape checkpoint
+- Direct reviewed `Corydoras pygmaeus` (`sp_0053`) authority added; no alias or ornamental inheritance is used.
+- Canonical priority coverage is now 23 taxa / 506 ordered directions: 378 caution, 126 not_recommended, 2 compatible.
+- Runtime/Admin reviewed baseline is 26 Profiles / 5 Pair Rules; `202609120012_compatibility_pygmy_cory_baseline.sql` is tracked but unapplied.
+- Unapplied Discus migration `120011` was corrected to assert its inserted minimum group of 5, and additive migration contracts now check behavior traits, minimum group and required facts together.
+- Full Product + Admin/runtime + browser Golden Path validation PASS.

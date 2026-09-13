@@ -280,3 +280,9 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Fixed the GitHub-runner race where a reader could fetch pre-restore Business state and then receive 404 for its asset after restore committed.
 - Restore overlays backup assets and retains superseded assets as auditable orphans so visible state never points at an immediately hidden asset.
 - Local File test passed repeatedly and full build passed before push.
+## P1 — Pygmy cory reviewed-authority checkpoint
+- Standard `Corydoras pygmaeus` (`sp_0053`) now has direct reviewed environment/social/space authority: 22–26°C, pH 6.4–7.4, 0–8 dGH, ~2.1 cm SL, 45 cm / ~41 L, minimum group 6.
+- Reviewed small-body vulnerability is represented as `predationVulnerability: high`; ordinary fish create caution context while explicit reviewed predators retain hard blocks.
+- Canonical matrix: 23 taxa / 506 directions = 378 caution, 126 not_recommended, 2 compatible. Runtime/Admin baseline: 26 Profiles / 5 Pair Rules.
+- Added unapplied additive migration `202609120012_compatibility_pygmy_cory_baseline.sql`. Corrected the also-unapplied Discus `120011` minimum-group drift assertion and extended migration self-consistency tests to minimumGroupSize + requiredFacts.
+- Product, runtime/Admin, build and GP001–GP004 gates all PASS.

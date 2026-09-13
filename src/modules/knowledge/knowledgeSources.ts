@@ -289,6 +289,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-corydoras-pygmaeus': {
+    id: 'seriouslyfish-corydoras-pygmaeus',
+    title: 'Corydoras pygmaeus (Pygmy Cory)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/corydoras-pygmaeus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-corydoras-pygmaeus': {
+    id: 'fishbase-corydoras-pygmaeus',
+    title: 'Gastrodermus pygmaeus species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/corydoras-pygmaeus.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-corydoras-aeneus': {
     id: 'seriouslyfish-corydoras-aeneus',
     title: 'Corydoras aeneus (Bronze Cory)',

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "authority": "local-file-git",
-  "generatedAt": "2026-09-13T07:04:33.707Z",
+  "generatedAt": "2026-09-13T12:10:36.968Z",
   "source": {
     "businessUpdatedAt": null,
     "compatibilityUpdatedAt": null,
@@ -559,6 +559,46 @@
           "adult_size",
           "social_behavior",
           "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0053",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 6,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-corydoras-pygmaeus",
+            "title": "Corydoras pygmaeus (Pygmy Cory)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/corydoras-pygmaeus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-corydoras-pygmaeus",
+            "title": "Gastrodermus pygmaeus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/corydoras-pygmaeus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -1151,7 +1191,7 @@
       }
     ],
     "counts": {
-      "profiles": 25,
+      "profiles": 26,
       "pairRules": 5
     }
   }

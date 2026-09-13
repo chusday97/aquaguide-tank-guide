@@ -230,6 +230,29 @@ assert.equal(denisonSources.length, 2);
 assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(denisonSources.some(source => source.publisher === 'FishBase'));
 
+const pygmyCoryKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0053',
+  name: '精灵鼠',
+  scientificName: 'Corydoras pygmaeus',
+  waterTemperature: '22-26°C',
+  phLevel: '6.0-7.5',
+  tankSize: '至少 30 升',
+});
+assert.deepEqual(pygmyCoryKnowledge.facts.temperatureRange, { min: 22, max: 26 });
+assert.deepEqual(pygmyCoryKnowledge.facts.phRange, { min: 6.4, max: 7.4 });
+assert.deepEqual(pygmyCoryKnowledge.knowledge.environment?.hardnessDgh, { min: 0, max: 8 });
+assert.equal(pygmyCoryKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.deepEqual(pygmyCoryKnowledge.knowledge.socialBehavior?.recommendedGroupSize, { min: 10 });
+assert.equal(pygmyCoryKnowledge.knowledge.socialBehavior?.predationVulnerability, 'high');
+assert.equal(pygmyCoryKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 3);
+assert.equal(pygmyCoryKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 41);
+assert.equal(pygmyCoryKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 45);
+const pygmyCorySources = resolveKnowledgeSources(pygmyCoryKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(pygmyCorySources.length, 2);
+assert.ok(pygmyCorySources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(pygmyCorySources.some(source => source.publisher === 'FishBase'));
+
 const discusKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0447',

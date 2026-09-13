@@ -21,6 +21,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609120009_compatibility_agassizii_baseline.sql',
   '202609120010_compatibility_ramirezi_baseline.sql',
   '202609120011_compatibility_discus_baseline.sql',
+  '202609120012_compatibility_pygmy_cory_baseline.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [

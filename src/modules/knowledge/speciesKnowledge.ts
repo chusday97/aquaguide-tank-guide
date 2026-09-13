@@ -4,6 +4,50 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const pygmyCoryKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成熟后可从俯视体型辅助判断',
+    summary: '成熟母鱼通常更圆、更宽并略大；公鱼相对纤细。',
+    points: ['母鱼：成熟后通常更圆、更宽，体型略大。', '公鱼：通常相对纤细。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-pygmaeus'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 22, max: 26 },
+    phRange: { min: 6.4, max: 7.4 },
+    hardnessDgh: { min: 0, max: 8 },
+    notes: ['采用 Seriously Fish 较保守的长期养护范围；FishBase 提供更宽的 pH/硬度生态范围，不作为本轮日常养护上限。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-pygmaeus', 'fishbase-corydoras-pygmaeus'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'shoal',
+    minimumGroupSize: 6,
+    recommendedGroupSize: { min: 10 },
+    swimmingZone: 'middle',
+    territoriality: 'none',
+    finNipping: 'none',
+    swimmingPace: 'moderate',
+    predationRisk: 'low',
+    predationVulnerability: 'high',
+    summary: '非常和平且明显群居，至少 6 条、最好 10 条以上；体型极小，容易被大型鱼压制、抢食或直接捕食。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-pygmaeus', 'fishbase-corydoras-pygmaeus'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 3, measurement: 'SL' },
+    minVolumeLiters: 41,
+    minTankLengthCm: 45,
+    activityLevel: 'medium',
+    swimmingZone: 'middle',
+    needsCover: true,
+    substrateNotes: ['底床优先使用细砂或保持洁净的圆润底材。'],
+    spaceNotes: ['群养按至少 45 × 30 cm 缸底、约 41 L 规划；不要因为体型小就忽略群体空间和抢食压力。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-corydoras-pygmaeus', 'fishbase-corydoras-pygmaeus'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const discusKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '本轮不提供外观公母硬判断',
@@ -344,6 +388,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0053: pygmyCoryKnowledge,
   sp_0447: discusKnowledge,
   sp_0448: ramireziKnowledge,
   sp_0017: agassiziiKnowledge,

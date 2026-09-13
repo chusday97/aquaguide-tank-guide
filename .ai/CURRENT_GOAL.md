@@ -260,3 +260,11 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 - Restore now overlays backup assets instead of deleting the entire live asset directory before replacement. This preserves assets referenced by a Business state that a client read immediately before the restore write lock was acquired.
 - Superseded assets remain readable as integrity-audited ORPHAN_ASSET warnings; current authority references remain exact and healthy.
 - Added regression coverage for the cross-request state→asset visibility window.
+## Current checkpoint — Pygmy cory reviewed authority (2026-09-13)
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Corydoras pygmaeus` (`sp_0053`, 精灵鼠) from Seriously Fish + FishBase.
+- Reviewed planning authority: freshwater; 22–26°C; pH 6.4–7.4; 0–8 dGH; ~2.1 cm SL; 45 cm / ~41 L planning space; minimum group 6 with 10+ preferred.
+- `predationVulnerability: high` is evidence-backed for this tiny cory and flows through the existing V5 prey-vulnerability caution; explicit reviewed predators still keep the stronger hard block.
+- Canonical priority matrix: 23 taxa / 506 ordered directions = 378 caution, 126 not_recommended, 2 compatible. No new unconditional green light was introduced.
+- Admin/Git runtime baseline advances to 26 Profiles / 5 Pair Rules. Additive migration `202609120012_compatibility_pygmy_cory_baseline.sql` is repository authority only and has not been applied to Staging/Production.
+- Fixed unapplied `202609120011_compatibility_discus_baseline.sql` so its drift assertion matches inserted `minimum_group_size = 5`; Admin contract now also checks additive-migration minimumGroupSize and requiredFacts self-consistency, not behaviorTraits alone.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.

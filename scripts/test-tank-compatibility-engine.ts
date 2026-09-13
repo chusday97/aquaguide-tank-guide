@@ -514,6 +514,34 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Pygmy-cory authority enforces group, space and prey-vulnerability context',
+    run: () => {
+      const pygmy = fishData.find(item => item.id === 'sp_0053');
+      const angelfish = fishData.find(item => item.id === 'sp_0446');
+      if (!pygmy || !angelfish) return false;
+      const underGrouped = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '45', width: '30', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: pygmy,
+        candidateQuantity: 4,
+      });
+      const fullGroup = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '50', width: '35', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: pygmy,
+        candidateQuantity: 6,
+      });
+      const withAngelfish = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '45', height: '45' }, targetTemperature: '25' }),
+        existingSpecies: [{ species: angelfish, record: { quantity: 1 } }],
+        candidateSpecies: pygmy,
+        candidateQuantity: 6,
+      });
+      return underGrouped.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && fullGroup.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum'].includes(rule.code))
+        && withAngelfish.warningRules.some(rule => rule.code === 'predation_vulnerability_context')
+        && fullGroup.evidenceIds?.includes('seriouslyfish-corydoras-pygmaeus');
+    },
+  },
+  {
     name: 'reviewed Discus authority enforces warm-water school and contextual breeding defense',
     run: () => {
       const discus = fishData.find(item => item.id === 'sp_0447');
