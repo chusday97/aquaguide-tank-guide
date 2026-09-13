@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Changed
+
+- Species 品系卡片统一为固定 4:3 `contain` 媒体区和名称/学名/确认差异说明区；新增孔雀鱼 `sp_0436` 基础物种验证案例与 `test:species-variant-card` 契约测试（`2e8eea82`）。
+
 ### Fixed
 
 - 隐藏公开 SEO 加载骨架的装饰性节点，避免辅助技术重复朗读；保留加载状态语义和可见提示（`a496d159`）。

@@ -444,3 +444,10 @@
 - 既有 Critic 线程已完成最新只读复验，但返回空 `items`，无可读六维正文；状态为审查基础设施阻塞，不计为通过。证据：`EVD-20260913-113`。
 - 当前继续允许 Web 本地验证和小步 UX 修复；Figma、索引解除、Production Supabase、main 和生产部署保持锁定。
 - 不要重复创建 Critic 线程；下一次只有在出现新的实质代码/证据变化或工具恢复可读输出时，才把同一线程用于复验。
+# 2026-09-13 品系卡片修复与孔雀鱼基础案例
+
+- `2e8eea82` 已将 Species 品系卡片收口为固定 4:3 媒体区 + 独立说明区；图片保持 `contain`，名称、学名和已确认差异允许自然换行。
+- 已加入 `test:species-variant-card`；专项、公开契约、lint、build、diff-check 通过，证据 `EVD-20260913-130`。
+- 内置浏览器已实际打开 `/species/sp_0436`，孔雀鱼身份、学名、Product Truth 和 fallback 正常，证据 `EVD-20260913-131`。
+- 未增加孔雀鱼自然史事实或资产批准；Figma、数据库、索引策略和生产环境未触碰。
+- 仍未完成：600px 独立真实运行时、系统 Chrome、可读独立 Critic、Figma Canonical、性能/reduced-motion 与发布门禁。

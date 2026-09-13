@@ -1696,3 +1696,10 @@
 
 - [x] 尝试使用本机 Playwright WebKit 与 Firefox 以 600px 视口打开 Species；WebKit 页面立即关闭，Firefox 浏览器进程启动失败，均未进入页面断言，证据为 `EVD-20260913-129`。
 - [ ] 该结果只说明替代浏览器不可用，不代表页面响应式失败；600px 独立真实视口仍未验证。
+## 2026-09-13 品系卡片与孔雀鱼案例收口（`2e8eea82`）
+
+- [x] 品系卡片改为独立 4:3 媒体区域，透明物种图使用 `contain` 和自然尺寸约束；390px 单列、600px 双列、桌面最多四列，失败回退保持固定比例。
+- [x] 统一卡片说明为中文名、学名和已确认差异；移除名称/学名截断，不显示无依据占位说明。
+- [x] 增加 `test:species-variant-card` 专项契约测试；静态专项、Public Contract、lint、build 和 diff-check 通过，证据为 `EVD-20260913-130`。
+- [x] 内置浏览器实际读取 `/species/sp_0436`，确认孔雀鱼中文名、`Poecilia reticulata`、Product Truth 参数和图片 fallback，证据为 `EVD-20260913-131`。
+- [ ] 系统 Chromium 仍受 MachPort 阻塞；600px 独立真实视口、可读 Critic、Figma Canonical、性能/reduced-motion 和发布门禁仍未完成。

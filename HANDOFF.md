@@ -1495,3 +1495,10 @@
 
 - `assetPreview=1` 本地预览已实际显示宝莲灯透明项目图，移动端 Hero 主体完整、未裁切；证据为 `EVD-20260913-122`。
 - 普通公开页仍按素材门禁显示回退；本轮没有擅自批准 Hero 或 variant-card 用途。
+## 2026-09-13 品系展示与孔雀鱼案例
+
+- `2e8eea82` 修复 Species“外观与品系”：媒体区固定 4:3，图片使用 `contain` 且不再被 `h-full/w-full + padding` 挤压；说明区统一为名称、学名、确认差异，移除 `truncate`。
+- 390px 品系卡单列、600px 双列、桌面最多四列；图片失败仍保持稳定卡片高度。
+- `/species/sp_0436` 已作为基础物种验证案例实际打开：孔雀鱼、`Poecilia reticulata`、目录参数和 fallback 可见；未新增孔雀鱼行为或 Editorial 事实，页面继续 `noindex,follow`。证据：`EVD-20260913-131`。
+- 新增 `npm run test:species-variant-card`，静态契约及公开 SEO、lint、build、diff-check 通过。证据：`EVD-20260913-130`。
+- 用户未提交文件保持原样：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
