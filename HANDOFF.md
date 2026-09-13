@@ -1512,3 +1512,7 @@
 
 - 再次执行 `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing`；Chrome 启动后 SIGABRT/Target page closed，未进入 DOM 断言，证据为 `EVD-20260913-134`。
 - 不再反复启动同一失败引擎；内置浏览器证据继续仅覆盖当前视口，不能替代三档真实截图。
+# 2026-09-13 最新静态回归
+
+- 最新提交 `2b7adc28` 的证据、公开契约、品系卡片专项、lint、build 和 diff-check 均通过，证据为 `EVD-20260913-135`。
+- 该结果不替代系统 Chrome 三档、独立 Critic、Figma Canonical、性能/reduced-motion 或索引门禁。

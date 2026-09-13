@@ -459,3 +459,7 @@
 
 - 当前系统 Chrome 仍在启动层退出，未取得三档真实视口证据；本次结果记录为 `EVD-20260913-134`。
 - 下一步保持代码稳定，等待可用浏览器运行时；不重复启动、不调用 Figma、不解除 noindex。
+# 2026-09-13 最新静态门禁
+
+- `2b7adc28` 的 evidence、public contract、品系卡片、lint、build、diff-check 已通过，证据为 `EVD-20260913-135`。
+- 继续保持 `noindex,follow`；浏览器三档、可读 Critic、Figma Canonical、性能和索引门禁未完成。

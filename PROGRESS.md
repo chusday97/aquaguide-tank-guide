@@ -1712,3 +1712,7 @@
 
 - [x] `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing` 已重新执行；Chrome 进程启动后 SIGABRT 并关闭，未进入页面断言，证据为 `EVD-20260913-134`。
 - [ ] 该结果仍是环境阻塞，不代表页面断言失败；不再重复启动。真实 390/600/1440 截图、可读独立 Critic、Figma Canonical、性能和索引门禁仍未完成。
+## 2026-09-13 最新提交完整静态回归 (`2b7adc28`)
+
+- [x] Editorial evidence、Evidence bindings、Public contract、Species variant card、lint、build 和 diff-check 全部通过，证据为 `EVD-20260913-135`。
+- [ ] 系统 Chrome 三档真实视口、可读独立 Critic、Figma Canonical、性能/reduced-motion 和索引发布门禁仍未完成。

@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Verified
+
+- 当前提交的公开 SEO 证据、契约、品系卡片、lint、build 和 diff-check 全部通过（`EVD-20260913-135`）。
+
 ### Fixed
 
 - 无已确认 Editorial 的孔雀鱼 Species 页面不再使用 catalog 描述作为公开 Hero 特征文案，避免未审核生物事实泄漏；补充对应契约断言和内置浏览器证据。
