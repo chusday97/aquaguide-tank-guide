@@ -1787,6 +1787,14 @@
 - [x] 鱼类只有一个相关链接时不再单独渲染“相关内容”区；资料来源组件在没有补充说明时只显示来源列表，避免重复标题。已提交 `4791e073`。
 - [x] 静态内容、结构、契约、lint、build 和 diff-check 通过；四个物种的 Published 聚合仍保持 noindex，孔雀鱼仍只显示身份、参数和回退状态。
 - [ ] 当前版本尚未取得新的 CI 截图；Critic 可读报告、Figma Canonical、完整性能基线和索引门禁继续未完成。
+
+## 2026-09-14 当前浏览器门禁收口（`bd5356cf`）
+
+- [x] GitHub Actions Run #13 `34772211711` 已成功完成；覆盖公开/应用路由、390/600/1440 响应式、章节顺序、破图回退、交互目标、无横向溢出、noindex 和公开数据边界。
+- [x] 当前提交生成 artifact `public-seo-browser-evidence-bd5356cf5efd21f5c5d00b3cbede0dbf1dc95ced`，大小 5.87 MB，digest `sha256:dbdb54469e35a413131044f08efad11593c1d5a311b3211259efd3d45d26a4a3`。
+- [x] 修复 CI 发现的浮点尺寸问题：公开 SEO 控件最小高度由 44px 提高为 45px；响应式契约改为数值断言 `>=44px`。用户未提交文件未触碰。
+- [ ] CI 仍有 GitHub Actions Node.js 20 弃用警告；不阻塞本轮验收，后续单独升级 workflow action。
+- [ ] 可读独立 Critic、Figma Canonical、完整性能基线、内容/关键词发布门禁和解除 noindex 仍未完成。
 - [x] 内置浏览器读取四个物种运行态：极火虾与黄金米虾继承内容和品系差异正确，宝莲灯显示鱼类环境/活动/群游/取食内容，孔雀鱼仅显示身份、参数和图片回退；记录 `EVD-20260914-146`。
 - [ ] GitHub 状态 API 与远端读取本轮因 DNS 不可用，未把 CI 状态或最新截图误记为通过。
 - [x] GitHub Actions run `34769155328` 已在当前提交 `d9bda6f7` 成功完成，生成 `public-seo-browser-evidence-d9bda6f74291cda5080db161a3c5b79970b7da5f`（5.86 MB）；记录 `EVD-20260914-147`。

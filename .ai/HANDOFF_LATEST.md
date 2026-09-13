@@ -544,6 +544,14 @@
 - 仍未完成：当前版本新的 GitHub Actions 截图、可读独立 Critic、Figma Canonical、完整性能基线和索引发布门禁。页面继续 `noindex,follow`。
 - 内置浏览器已读取四个物种当前运行态并验证继承/缺失边界；这只是桌面运行证据，不替代 390/600/1440 三档截图。GitHub 状态 API 本轮因 DNS 不可用，未宣称 CI 通过。
 - 三个用户未提交文件仍保持原样：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+
+## 2026-09-14 当前浏览器门禁
+
+- GitHub Actions Run #13 `34772211711` 已成功，提交 SHA 为 `bd5356cf5efd21f5c5d00b3cbede0dbf1dc95ced`。
+- artifact：`public-seo-browser-evidence-bd5356cf5efd21f5c5d00b3cbede0dbf1dc95ced`，5.87 MB，digest `sha256:dbdb54469e35a413131044f08efad11593c1d5a311b3211259efd3d45d26a4a3`。
+- 本轮修复：`--seo-control-min` 为 45px，并把响应式静态契约改为检查数值不低于 44px；之前失败原因是收藏按钮浮点高度为 43.999969px。
+- CI 通过不等于最终发布通过。可读 Critic、Figma Canonical、完整性能基线、内容/关键词发布门禁和 noindex 放行仍未完成。
+- CI 页面有 Node.js 20 弃用警告，后续独立处理，不在本轮扩大范围。
 ## 2026-09-14 当前提交浏览器门禁结果
 
 - GitHub Actions run `34769155328` 对应提交 `d9bda6f7` 已成功完成，artifact `public-seo-browser-evidence-d9bda6f74291cda5080db161a3c5b79970b7da5f` 已生成，大小 5.86 MB。

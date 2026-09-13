@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Fixed: 公开 SEO 控件最小高度提高到 45px，避免浏览器浮点布局导致严格 44px 门禁误报；同步响应式契约为数值下限校验。
+- Verified: GitHub Actions Public SEO Browser Gate Run #13（`34772211711`，SHA `bd5356cf`）通过并生成浏览器证据 artifact；章节顺序与破图回退断言已纳入门禁。
+
 ### Changed
 
 - 为 GitHub Actions 浏览器门禁增加失败诊断 artifact：失败时记录错误名称、消息、堆栈和请求日志，便于定位无正文的 CI 失败；不降低断言标准。
