@@ -1765,3 +1765,4 @@
 - [ ] GitHub 状态 API 与远端读取本轮因 DNS 不可用，未把 CI 状态或最新截图误记为通过。
 - [x] GitHub Actions run `34769155328` 已在当前提交 `d9bda6f7` 成功完成，生成 `public-seo-browser-evidence-d9bda6f74291cda5080db161a3c5b79970b7da5f`（5.86 MB）；记录 `EVD-20260914-147`。
 - [ ] 运行页面出现 GitHub Actions Node.js 20 弃用警告；不阻塞本次验收，后续单独升级 workflow action 版本。
+- [ ] 同一 Critic 线程对 `d9bda6f7` 的复验已结束，但返回空 `items`、无可读六维正文；记录 `EVD-20260914-148`，按审查基础设施阻塞处理，不创建重复线程。
