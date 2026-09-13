@@ -514,6 +514,42 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed clown-loach authority enforces adult group and giant-space planning without stale permanent territorial pressure',
+    run: () => {
+      const clown = fishData.find(item => item.id === 'sp_0126');
+      const guppy = fishData.find(item => item.id === 'sp_0436');
+      if (!clown || !guppy) return false;
+      const underPlanned = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '150', width: '50', height: '50' }, targetTemperature: '27' }),
+        candidateSpecies: clown,
+        candidateQuantity: 3,
+      });
+      const fullPlan = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '180', width: '80', height: '60' }, targetTemperature: '27' }),
+        candidateSpecies: clown,
+        candidateQuantity: 5,
+      });
+      const hotTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '180', width: '80', height: '60' }, targetTemperature: '31' }),
+        candidateSpecies: clown,
+        candidateQuantity: 5,
+      });
+      const withGuppy = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '180', width: '80', height: '60' }, targetTemperature: '27' }),
+        existingSpecies: [{ species: guppy, record: { quantity: 5 } }],
+        candidateSpecies: clown,
+        candidateQuantity: 5,
+      });
+      return underPlanned.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && fullPlan.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_pressure_context'].includes(rule.code))
+        && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && withGuppy.warningRules.some(rule => rule.code === 'fin_nipping_target_vulnerability')
+        && fullPlan.evidenceIds?.includes('seriouslyfish-chromobotia-macracanthus');
+    },
+  },
+  {
     name: 'reviewed hillstream-loach authority enforces cool-water group and space without global territorial pressure',
     run: () => {
       const hillstream = fishData.find(item => item.id === 'sp_0045');

@@ -387,6 +387,24 @@ const guppySeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const clownLoachSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-chromobotia-macracanthus',
+  title: 'Chromobotia macracanthus (Clown Loach)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/chromobotia-macracanthus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const clownLoachFishBase: EvidenceSourceDto = {
+  id: 'fishbase-chromobotia-macracanthus',
+  title: 'Chromobotia macracanthus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/10897',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const hillstreamLoachSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-sewellia-lineolata',
   title: 'Sewellia lineolata (Tiger Hillstream Loach)',
@@ -544,6 +562,17 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0126: {
+    speciesId: 'sp_0126',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'bottom_dwelling', 'fin_nipping'],
+    minimumGroupSize: 5,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [clownLoachSeriouslyFish, clownLoachFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
   sp_0447: {
     speciesId: 'sp_0447',
     waterType: 'freshwater',

@@ -253,6 +253,32 @@ assert.equal(pygmyCorySources.length, 2);
 assert.ok(pygmyCorySources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(pygmyCorySources.some(source => source.publisher === 'FishBase'));
 
+const clownLoachKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0126',
+  name: '三间鼠',
+  scientificName: 'Chromobotia macracanthus',
+  waterTemperature: '24-30°C',
+  phLevel: '6.0-7.5',
+  tankSize: '至少 240 升',
+  temperament: 'Territorial',
+});
+assert.deepEqual(clownLoachKnowledge.facts.temperatureRange, { min: 24, max: 30 });
+assert.deepEqual(clownLoachKnowledge.facts.phRange, { min: 5, max: 7 });
+assert.deepEqual(clownLoachKnowledge.knowledge.environment?.hardnessDgh, { min: 1, max: 12 });
+assert.equal(clownLoachKnowledge.knowledge.socialBehavior?.minimumGroupSize, 5);
+assert.deepEqual(clownLoachKnowledge.knowledge.socialBehavior?.recommendedGroupSize, { min: 10 });
+assert.equal(clownLoachKnowledge.knowledge.socialBehavior?.territoriality, 'low');
+assert.equal(clownLoachKnowledge.knowledge.socialBehavior?.finNipping, 'medium');
+assert.equal(clownLoachKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 40);
+assert.equal(clownLoachKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 648);
+assert.equal(clownLoachKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 180);
+assert.equal(clownLoachKnowledge.knowledge.reproduction, undefined, 'Clown-loach reproduction stays absent because normal private-aquarium breeding is not established enough for a user rule');
+const clownLoachSources = resolveKnowledgeSources(clownLoachKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(clownLoachSources.length, 2);
+assert.ok(clownLoachSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(clownLoachSources.some(source => source.publisher === 'FishBase'));
+
 const hillstreamLoachKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0045',

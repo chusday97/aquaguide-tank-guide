@@ -1,5 +1,15 @@
 # Current Goal
 
+## Clown loach reviewed-authority checkpoint — 2026-09-13
+- Added standard `Chromobotia macracanthus` / 三间鼠 (`sp_0126`) as the 25th canonical priority taxon using Seriously Fish + FishBase reviewed evidence.
+- Reviewed planning authority: 24–30°C, pH 5.0–7.0, 1–12 dGH, adult size up to ~40 cm SL, 180 cm tank length, ~648 L long-term group planning, minimum group 5 with 10+ preferred.
+- Legacy `Territorial` is not treated as permanent community aggression. Runtime traits are `shoaling + bottom_dwelling + fin_nipping`; long-fin vulnerability produces caution while reviewed group size removes under-group fin-nipping pressure.
+- Sex identification remains unknown and reproduction remains absent; no unsupported private-aquarium breeding rule was invented.
+- Canonical coverage: 25 taxa / 600 ordered directions = 460 caution, 138 not_recommended, 2 compatible; no new unconditional green-light direction.
+- Runtime/Admin reviewed baseline: 28 Profiles / 5 Pair Rules. Additive migration `202609120014_compatibility_clown_loach_baseline.sql` is repository authority only and is not applied to Staging/Production.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical coverage, Admin/Git/DB runtime, Staging preflight, Local File Admin, full build, Species Detail, Compatibility Beginner Action and GP001–GP004.
+
+
 ## Agassizii + V7 pH-edge checkpoint — 2026-09-13
 - Added standard `Apistogramma agassizii` / 阿卡西短鲷 (`sp_0017`) as the 20th canonical priority taxon using Seriously Fish + FishBase reviewed evidence; Fire Red ornamental variants do not inherit automatically.
 - Reviewed planning authority: 22–29°C, pH 5.0–7.0, 0–10 dGH, ~7.5 cm SL, 60 cm tank length, ~54 L single-pair planning, cave spawning with maternal egg/fry care.

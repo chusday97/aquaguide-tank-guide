@@ -1,5 +1,15 @@
 # Handoff Latest
 
+## Clown loach reviewed-authority checkpoint — 2026-09-13
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Chromobotia macracanthus` (`sp_0126`).
+- Canonical coverage is now 25 taxa / 600 directions: 460 caution, 138 not_recommended, 2 compatible.
+- Runtime/Admin baseline is 28 Profiles / 5 Pair Rules; Git runtime snapshot matches canonical static authority.
+- New additive migration: `202609120014_compatibility_clown_loach_baseline.sql`; not applied to Staging/Production.
+- Reviewed long-term planning uses 24–30°C, pH 5.0–7.0, 1–12 dGH, ~40 cm SL, 180 cm / ~648 L, minimum group 5 with 10+ preferred. Legacy `Territorial` is not promoted into permanent territorial pressure; fin-nipping risk remains a caution dimension for vulnerable long-fin tankmates.
+- Sex identification remains unknown and reproduction remains absent until stronger reviewed authority exists.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical coverage, Admin/Git/DB runtime, Staging preflight, Local File Admin, full build, Species Detail, Compatibility Beginner Action and GP001–GP004.
+
+
 ## Agassizii + V7 pH-edge checkpoint — 2026-09-13
 - Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Apistogramma agassizii` (`sp_0017`); ornamental Fire Red variants remain unreviewed and do not inherit automatically.
 - Canonical coverage is now 20 taxa / 380 directions: 340 caution, 38 not_recommended, 2 compatible.

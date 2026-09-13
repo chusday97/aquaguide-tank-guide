@@ -289,6 +289,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'seriouslyfish-chromobotia-macracanthus': {
+    id: 'seriouslyfish-chromobotia-macracanthus',
+    title: 'Chromobotia macracanthus (Clown Loach)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/chromobotia-macracanthus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-chromobotia-macracanthus': {
+    id: 'fishbase-chromobotia-macracanthus',
+    title: 'Chromobotia macracanthus species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/10897',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-sewellia-lineolata': {
     id: 'seriouslyfish-sewellia-lineolata',
     title: 'Sewellia lineolata (Tiger Hillstream Loach)',

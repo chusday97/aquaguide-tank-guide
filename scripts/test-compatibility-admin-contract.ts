@@ -278,6 +278,15 @@ for (const source of hillstreamProfile.citations) assert.equal(hillstreamMigrati
 assert.equal((hillstreamMigration.match(/Compatibility hillstream loach profile drift:/g) || []).length, 1);
 assert.equal((hillstreamMigration.match(/Compatibility hillstream loach profile evidence drift:/g) || []).length, 1);
 
+const clownLoachMigration = readFileSync('supabase/migrations/202609120014_compatibility_clown_loach_baseline.sql', 'utf8');
+assert.match(clownLoachMigration, /Compatibility clown loach baseline is partial or not fully published/, 'Clown-loach baseline must fail closed on partial published catalog coverage.');
+const clownLoachProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0126');
+assert.ok(clownLoachProfile, '120014 must own the reviewed Clown-loach profile.');
+assert.equal(clownLoachMigration.includes('sp_0126'), true);
+for (const source of clownLoachProfile.citations) assert.equal(clownLoachMigration.includes(source.id), true, `Clown-loach migration must include source ${source.id}`);
+assert.equal((clownLoachMigration.match(/Compatibility clown loach profile drift:/g) || []).length, 1);
+assert.equal((clownLoachMigration.match(/Compatibility clown loach profile evidence drift:/g) || []).length, 1);
+
 const additiveCompatibilityMigrations = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',
@@ -302,7 +311,7 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045']);
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

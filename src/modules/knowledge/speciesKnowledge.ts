@@ -4,6 +4,48 @@ import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 
 
 
+const clownLoachKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供稳定的外观公母硬判断',
+    summary: '当前 reviewed 来源足以支持环境、群体与空间规则，但不足以把外观性别差异作为稳定的用户判断依据。',
+    points: ['若需要繁殖或性别管理，优先依据成熟个体的可靠繁育记录，不凭单一外观猜测。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 24, max: 30 },
+    phRange: { min: 5.0, max: 7.0 },
+    hardnessDgh: { min: 1, max: 12 },
+    notes: ['长期需要成熟、洁净、富氧且有一定水流的水体；Seriously Fish 的长期养护范围优先于旧 catalog 的更窄空间规划。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-chromobotia-macracanthus', 'fishbase-chromobotia-macracanthus'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'shoal',
+    minimumGroupSize: 5,
+    recommendedGroupSize: { min: 10 },
+    swimmingZone: 'bottom',
+    territoriality: 'low',
+    finNipping: 'medium',
+    swimmingPace: 'fast',
+    predationRisk: 'low',
+    summary: '明显群居并形成复杂群体等级；至少 5–6 条，最好 10 条以上。总体并非高攻击鱼，但活跃体型与追鳍倾向使其不适合慢游长鳍鱼。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-chromobotia-macracanthus', 'fishbase-chromobotia-macracanthus'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 40, measurement: 'SL' },
+    minVolumeLiters: 648,
+    minTankLengthCm: 180,
+    activityLevel: 'high',
+    swimmingZone: 'bottom',
+    needsCover: true,
+    needsHidingPlaces: true,
+    spaceNotes: ['长期群养按至少 180 × 60 cm 缸底、约 648 L 规划；幼鱼暂养在小缸不等于成体长期空间足够。FishBase 记录最大约 30.5 cm TL，而 Seriously Fish 记录可达约 40 cm SL，本产品采用更保守的长期规划上界。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-chromobotia-macracanthus', 'fishbase-chromobotia-macracanthus'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const hillstreamLoachKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '成熟后可从俯视体型和胸鳍结构辅助判断',
@@ -432,6 +474,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0126: clownLoachKnowledge,
   sp_0045: hillstreamLoachKnowledge,
   sp_0053: pygmyCoryKnowledge,
   sp_0447: discusKnowledge,
