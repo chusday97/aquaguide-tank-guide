@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Fixed
+
+- 无已确认 Editorial 的孔雀鱼 Species 页面不再使用 catalog 描述作为公开 Hero 特征文案，避免未审核生物事实泄漏；补充对应契约断言和内置浏览器证据。
+
 ### Changed
 
 - Species 品系卡片统一为固定 4:3 `contain` 媒体区和名称/学名/确认差异说明区；新增孔雀鱼 `sp_0436` 基础物种验证案例与 `test:species-variant-card` 契约测试（`2e8eea82`）。

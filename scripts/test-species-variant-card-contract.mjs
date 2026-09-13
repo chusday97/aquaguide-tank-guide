@@ -14,6 +14,7 @@ assert.doesNotMatch(page, /className="mt-3 truncate text-sm font-bold text-ink"/
 assert.doesNotMatch(page, /className="seo-meta mt-1 truncate"/, 'variant scientific names must not be truncated');
 assert.match(styles, /\.seo-variant-card__media,\n\.seo-variant-card__fallback[\s\S]*aspect-ratio: 4 \/ 3;/, 'variant media must keep a stable 4:3 frame');
 assert.match(styles, /\.seo-variant-card__image[\s\S]*width: auto;[\s\S]*height: auto;[\s\S]*max-width: 100%;[\s\S]*max-height: 100%;[\s\S]*object-fit: contain;/, 'variant images must preserve intrinsic proportions');
+assert(!page.includes("profile.editorial?.signature || fish.description"), 'unreviewed catalog descriptions must not become SEO hero copy');
 assert.match(styles, /@media \(max-width: 559px\) \{[\s\S]*\.seo-variant-grid \{[\s\S]*grid-template-columns: 1fr;/, 'mobile variant cards must use a comfortable single column');
 assert.match(styles, /@media \(min-width: 560px\) and \(max-width: 767px\) \{[\s\S]*\.seo-variant-grid \{[\s\S]*grid-template-columns: repeat\(2/, 'tablet variant cards must use two columns');
 assert.match(fishData, /"id": "sp_0436"[\s\S]*"name": "孔雀鱼"[\s\S]*"scientificName": "Poecilia reticulata"/, 'the guppy catalog entry must remain available');

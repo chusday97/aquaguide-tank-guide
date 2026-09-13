@@ -1703,3 +1703,8 @@
 - [x] 增加 `test:species-variant-card` 专项契约测试；静态专项、Public Contract、lint、build 和 diff-check 通过，证据为 `EVD-20260913-130`。
 - [x] 内置浏览器实际读取 `/species/sp_0436`，确认孔雀鱼中文名、`Poecilia reticulata`、Product Truth 参数和图片 fallback，证据为 `EVD-20260913-131`。
 - [ ] 系统 Chromium 仍受 MachPort 阻塞；600px 独立真实视口、可读 Critic、Figma Canonical、性能/reduced-motion 和发布门禁仍未完成。
+## 2026-09-13 孔雀鱼未审核文案门禁收口 (`d3c2c6a0`)
+
+- [x] 无已确认 Editorial 的孔雀鱼不再使用 `fish.description` 作为 Hero 文案，改用用户可理解的通用身份引导；Product Truth、fallback、路由和 noindex 不变。
+- [x] `test:species-variant-card`、`test:public-seo-contract`、lint、build、diff-check 通过；内置浏览器复核孔雀鱼只显示身份、参数和 fallback，证据为 `EVD-20260913-133`。
+- [ ] 系统 Chrome/MachPort、600px 可控视口、可读独立 Critic、Figma Canonical、性能和索引发布门禁仍未完成。

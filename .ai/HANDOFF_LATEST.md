@@ -451,3 +451,7 @@
 - 内置浏览器已实际打开 `/species/sp_0436`，孔雀鱼身份、学名、Product Truth 和 fallback 正常，证据 `EVD-20260913-131`。
 - 未增加孔雀鱼自然史事实或资产批准；Figma、数据库、索引策略和生产环境未触碰。
 - 仍未完成：600px 独立真实运行时、系统 Chrome、可读独立 Critic、Figma Canonical、性能/reduced-motion 与发布门禁。
+# 2026-09-13 孔雀鱼未审核描述门禁
+
+- Species 页面不再把未确认的 catalog `fish.description` 回退为公开 Hero 文案；孔雀鱼实际运行只呈现身份、Product Truth、fallback 和工具入口。
+- 当前静态门禁和内置浏览器证据为 `EVD-20260913-133`；系统 Chrome 三档、600px、可读 Critic、Figma Canonical 和索引门禁仍阻塞。

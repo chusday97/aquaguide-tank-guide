@@ -1502,3 +1502,9 @@
 - `/species/sp_0436` 已作为基础物种验证案例实际打开：孔雀鱼、`Poecilia reticulata`、目录参数和 fallback 可见；未新增孔雀鱼行为或 Editorial 事实，页面继续 `noindex,follow`。证据：`EVD-20260913-131`。
 - 新增 `npm run test:species-variant-card`，静态契约及公开 SEO、lint、build、diff-check 通过。证据：`EVD-20260913-130`。
 - 用户未提交文件保持原样：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+# 2026-09-13 当前有效交接：孔雀鱼内容门禁
+
+- 孔雀鱼 `/species/sp_0436` 在无已确认 Editorial 时仅显示中文身份引导、Product Truth 参数和图片 fallback；不再读取 `fish.description` 作为公开 Hero 特征文案。
+- 代码提交待本次文档提交确认；测试与内置浏览器复核证据为 `EVD-20260913-133`。
+- 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 未修改、未暂存。
+- 下一步：恢复可控浏览器后验证三档；Critic 输出可读正文后复验；Figma 继续暂停；所有页面保持 `noindex,follow`。

@@ -139,7 +139,7 @@ export function SpeciesLanding() {
   const categoryText = fish.category;
   const waterTypeText = getCareTaxonomyPath(fish).waterType === '海水' ? labels.saltwater : labels.freshwater;
   const imageAlt = heroAsset ? heroAsset.altZh : `${fish.name}（${fish.scientificName}）`;
-  const heroSignature = groupVariants.find(variant => variant.id === fish.id)?.difference || profile.editorial?.signature || fish.description || labels.intro;
+  const heroSignature = groupVariants.find(variant => variant.id === fish.id)?.difference || profile.editorial?.signature || labels.intro;
   const variantPath = (id: string) => id === baseSpecies.id ? `/species/${baseSpecies.id}` : `/species/${baseSpecies.id}?variant=${encodeURIComponent(id)}`;
 
   const toggleFavorite = () => {
