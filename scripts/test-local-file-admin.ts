@@ -151,6 +151,33 @@ try {
   await Promise.all([readRaceWriter, readRaceReader]);
   assert.equal((await requestJson(started.base, `/assets/${readRaceAssetId}`, { method: 'DELETE' })).response.status, 200);
 
+  // Integrity is a cross-file snapshot and must not report false asset errors during a queued rewrite.
+  const integrityRaceAssetId = 'local-asset-integrity-race';
+  const integrityRacePng = Buffer.alloc(128 * 1024 + 3, 0x61);
+  const integrityRaceWebp = Buffer.alloc(448 * 1024 + 29, 0x62);
+  assert.equal((await requestJson(started.base, `/assets/${integrityRaceAssetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: integrityRacePng,
+  })).response.status, 201);
+  const integrityRaceWriter = (async () => {
+    for (let index = 0; index < 24; index += 1) {
+      const useWebp = index % 2 === 0;
+      const result = await requestJson(started.base, `/assets/${integrityRaceAssetId}`, {
+        method: 'PUT', headers: { 'Content-Type': useWebp ? 'image/webp' : 'image/png' }, body: useWebp ? integrityRaceWebp : integrityRacePng,
+      });
+      assert.equal(result.response.status, 201);
+    }
+  })();
+  const integrityRaceReader = (async () => {
+    for (let index = 0; index < 80; index += 1) {
+      const result = await requestJson(started.base, '/integrity');
+      assert.equal(result.response.status, 200);
+      assert.equal(result.payload.data.healthy, true, 'Integrity snapshot must wait for an in-flight asset pair write.');
+      assert.equal(result.payload.data.issues.some((issue: any) => issue.code === 'ASSET_SIZE_MISMATCH' || issue.code === 'ASSET_PAIR_MISSING'), false);
+    }
+  })();
+  await Promise.all([integrityRaceWriter, integrityRaceReader]);
+  assert.equal((await requestJson(started.base, `/assets/${integrityRaceAssetId}`, { method: 'DELETE' })).response.status, 200);
+
   // If metadata commit fails after the blob was written, the new blob must be removed/restored.
   const pairFailureId = 'local-asset-pair-failure';
   const pairFailureMeta = path.join(root, 'assets', `${pairFailureId}.json`);
@@ -399,6 +426,48 @@ try {
     const isWebpRuntime = raceAsset.mimeType === 'image/webp' && raceAsset.byteSize === runtimeRaceWebp.length && raceAsset.url.endsWith('.webp') && raceAssetBody.equals(runtimeRaceWebp);
     assert.equal(isPngRuntime || isWebpRuntime, true, 'Concurrent runtime snapshot must contain one complete published asset version.');
   }
+
+  // Restore must not expose a new Business reference before the matching asset set is visible.
+  const restoreVisibilityAssetA = 'local-asset-restore-visibility-a';
+  const restoreVisibilityAssetB = 'local-asset-restore-visibility-b';
+  const restoreVisibilityBytesA = Buffer.alloc(4096, 0x71);
+  const restoreVisibilityBytesB = Buffer.alloc(4097, 0x72);
+  const restoreVisibilityBusiness = (assetId: string) => ({
+    schemaVersion: 1,
+    species: [{ id: 'restore-visibility-species', image: { id: assetId, storageBucket: 'local-file', storagePath: assetId } }],
+    care: [],
+    updatedAt: assetId,
+  });
+  assert.equal((await requestJson(started.base, `/assets/${restoreVisibilityAssetB}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: restoreVisibilityBytesB,
+  })).response.status, 201);
+  assert.equal((await putState(started.base, 'business', restoreVisibilityBusiness(restoreVisibilityAssetB))).response.status, 200);
+  assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], padding: 'x'.repeat(2_600_000) })).response.status, 200);
+  const restoreVisibilityBackup = await requestJson(started.base, '/backups', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'restore-visibility' }),
+  });
+  assert.equal(restoreVisibilityBackup.response.status, 201);
+  const restoreVisibilityBackupId = String(restoreVisibilityBackup.payload.data.id);
+  assert.equal((await requestJson(started.base, `/assets/${restoreVisibilityAssetA}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: restoreVisibilityBytesA,
+  })).response.status, 201);
+  assert.equal((await putState(started.base, 'business', restoreVisibilityBusiness(restoreVisibilityAssetA))).response.status, 200);
+  assert.equal((await requestJson(started.base, `/assets/${restoreVisibilityAssetB}`, { method: 'DELETE' })).response.status, 200);
+  assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], padding: 'a' })).response.status, 200);
+  const visibilityRestore = requestJson(started.base, `/backups/${restoreVisibilityBackupId}/restore`, { method: 'POST' });
+  const visibilityReaders = Promise.all(Array.from({ length: 24 }, async () => {
+    const state = await requestJson(started.base, '/state/business');
+    assert.equal(state.response.status, 200);
+    const referencedAsset = String(state.payload.data.state.species?.[0]?.image?.id || '');
+    assert([restoreVisibilityAssetA, restoreVisibilityAssetB].includes(referencedAsset));
+    const assetResponse = await fetch(`${started.base}/assets/${referencedAsset}`);
+    assert.equal(assetResponse.status, 200, 'A visible Business state must never reference an asset hidden by an in-flight restore.');
+  }));
+  const [restoreVisibilityResult] = await Promise.all([visibilityRestore, visibilityReaders]);
+  assert.equal(restoreVisibilityResult.response.status, 200);
+  const restoredVisibilityState = await requestJson(started.base, '/state/business');
+  assert.equal(restoredVisibilityState.payload.data.state.species[0].image.id, restoreVisibilityAssetB);
+  assert.equal((await fetch(`${started.base}/assets/${restoreVisibilityAssetB}`)).status, 200);
 
   process.env.ADMIN_LOCAL_FILE_MODE = 'false';
   const disabled = await requestJson(started.base, '/status');

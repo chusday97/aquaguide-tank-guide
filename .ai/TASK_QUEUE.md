@@ -1,5 +1,19 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after restore visibility closure
+- DONE: restore intermediate state can no longer leak through state/asset/status/integrity reads (`deb5b085`).
+- VERIFIED: shared reads remain concurrent and a waiting restore writer is not starved under sustained GET load.
+- NEXT: only another concrete reproducible operator/runtime/data-reliability badcase. Do not expand locking or restore behavior speculatively.
+
+
+## CURRENT OVERRIDE — 2026-09-13 after cross-operation consistency closure
+- DONE: authority snapshot/write serialization (`01fdca74`).
+- DONE: same-asset read/write pair serialization (`0df8a63d`).
+- DONE: integrity consistent-read serialization (`f83c08fd`).
+- VERIFIED NO BLOCKER: restore×asset GET stress (70 assets / 20 restores / 4400 reads).
+- NEXT: only another reproducible operator/runtime/data-reliability badcase, or an explicit separately-authorized Staging/indexing decision. Do not expand Local Admin speculatively.
+
+
 ## ACTIVE OVERRIDE — Local File concurrency closure (2026-09-13)
 - [x] Reproduce concurrent runtime snapshot collision (100 requests: 35×201 / 65×500).
 - [x] Make atomic JSON/buffer temp paths and runtime staging paths uniquely namespaced with `randomUUID`.

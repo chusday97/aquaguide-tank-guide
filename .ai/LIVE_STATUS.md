@@ -1,5 +1,18 @@
 # Live Status
 
+## CURRENT OVERRIDE — 2026-09-13 restore visibility transaction
+- Main functional HEAD before this docs checkpoint: `deb5b085cd3520b03ab1c2d1fb5127b7955bdf2f`.
+- GitHub Product Golden Path PASS. Vercel branch deployment `dpl_9BqvXujSc6Ey7hWWLT8VvAWewU7s` READY with `target=null`.
+- No Production promotion; Local File router remains DEV-only. Supabase Staging, Production DB and indexing unchanged.
+
+
+## CURRENT OVERRIDE — 2026-09-13 cross-operation Local File consistency
+- Main functional HEAD before this docs checkpoint: `f83c08fd8303e4c51bce2e04c52dd2342341874b`.
+- `01fdca74`, `0df8a63d`, `f83c08fd` are pushed to GitHub main and all Product Golden Path runs PASS. Their Vercel main-branch deployments are READY with `target=null`; none was promoted.
+- Production remains the existing stable promoted deployment; Local File router remains DEV-only.
+- Supabase Staging, Production DB and indexing remain untouched.
+
+
 ## 2026-09-13 — Local File concurrency reliability green
 - Functional main checkpoints: `275587ea` runtime export isolation; `6cd1d5d8` atomic backup reservation; `25ea430b` same-asset mutation serialization.
 - Stress evidence: runtime snapshot 100/100 success, backup 100/100 unique, asset PUT 80 rounds / 0 torn pairs.

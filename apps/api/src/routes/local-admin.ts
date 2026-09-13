@@ -17,39 +17,56 @@ const localFileFormatVersion = 1;
 const backupFormatVersion = 1;
 const supportedMime = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const maxAssetBytes = 20 * 1024 * 1024;
-const canonicalCompatibilityBaseline = getCompatibilityEvidenceAudit();
-const expectedCompatibilityProfileCount = canonicalCompatibilityBaseline.reviewedProfiles.length;
-const expectedCompatibilityPairRuleCount = canonicalCompatibilityBaseline.reviewedPairRules.length;
-const expectedCompatibilityProfileKeys = new Set(canonicalCompatibilityBaseline.reviewedProfiles.map(profile => profile.speciesId));
-const expectedCompatibilityPairKeys = new Set(canonicalCompatibilityBaseline.reviewedPairRules.map(rule => [...rule.speciesIds].sort().join('__')));
-const compatibilityPairKeyFromRecord = (value: unknown) => {
-  const record = asRecord(value);
-  const keys = Array.isArray(record?.catalogKeys) ? record.catalogKeys.map(String).filter(Boolean) : [];
-  return keys.length === 2 ? keys.sort().join('__') : '';
+type AuthorityLockWaiter = { mode: 'read' | 'write'; resolve: () => void };
+let authorityActiveReaders = 0;
+let authorityWriterActive = false;
+const authorityLockWaiters: AuthorityLockWaiter[] = [];
+const drainAuthorityLock = () => {
+  if (authorityWriterActive || authorityActiveReaders > 0 || authorityLockWaiters.length === 0) return;
+  if (authorityLockWaiters[0].mode === 'write') {
+    authorityWriterActive = true;
+    authorityLockWaiters.shift()!.resolve();
+    return;
+  }
+  while (authorityLockWaiters[0]?.mode === 'read') {
+    authorityActiveReaders += 1;
+    authorityLockWaiters.shift()!.resolve();
+  }
 };
-const hasExactReviewedCompatibilityBaseline = (compatibility: JsonRecord) => {
-  const profiles = Array.isArray(compatibility.reviewedProfiles) ? compatibility.reviewedProfiles : [];
-  const pairs = Array.isArray(compatibility.reviewedPairRules) ? compatibility.reviewedPairRules : [];
-  const profileKeys = profiles.map(value => String(asRecord(value)?.catalogKey || ''));
-  const pairKeys = pairs.map(compatibilityPairKeyFromRecord);
-  return profiles.length === expectedCompatibilityProfileCount
-    && pairs.length === expectedCompatibilityPairRuleCount
-    && profileKeys.every(key => expectedCompatibilityProfileKeys.has(key))
-    && new Set(profileKeys).size === expectedCompatibilityProfileKeys.size
-    && pairKeys.every(key => expectedCompatibilityPairKeys.has(key))
-    && new Set(pairKeys).size === expectedCompatibilityPairKeys.size
-    && profiles.every(value => asRecord(value)?.reviewStatus === 'reviewed')
-    && pairs.every(value => asRecord(value)?.reviewStatus === 'reviewed');
+const acquireAuthorityRead = () => new Promise<void>(resolve => {
+  const writerWaiting = authorityLockWaiters.some(waiter => waiter.mode === 'write');
+  if (!authorityWriterActive && !writerWaiting) {
+    authorityActiveReaders += 1;
+    resolve();
+    return;
+  }
+  authorityLockWaiters.push({ mode: 'read', resolve });
+});
+const releaseAuthorityRead = () => {
+  authorityActiveReaders -= 1;
+  if (authorityActiveReaders === 0) drainAuthorityLock();
 };
-let authorityTransactionTail: Promise<void> = Promise.resolve();
-const withAuthorityTransaction = async <T>(operation: () => Promise<T>): Promise<T> => {
-  const previous = authorityTransactionTail.catch(() => undefined);
-  let release!: () => void;
-  const gate = new Promise<void>(resolve => { release = resolve; });
-  authorityTransactionTail = previous.then(() => gate);
-  await previous;
+const acquireAuthorityWrite = () => new Promise<void>(resolve => {
+  if (!authorityWriterActive && authorityActiveReaders === 0 && authorityLockWaiters.length === 0) {
+    authorityWriterActive = true;
+    resolve();
+    return;
+  }
+  authorityLockWaiters.push({ mode: 'write', resolve });
+});
+const releaseAuthorityWrite = () => {
+  authorityWriterActive = false;
+  drainAuthorityLock();
+};
+const withAuthorityRead = async <T>(operation: () => Promise<T>): Promise<T> => {
+  await acquireAuthorityRead();
   try { return await operation(); }
-  finally { release(); }
+  finally { releaseAuthorityRead(); }
+};
+const withAuthorityWrite = async <T>(operation: () => Promise<T>): Promise<T> => {
+  await acquireAuthorityWrite();
+  try { return await operation(); }
+  finally { releaseAuthorityWrite(); }
 };
 const assetPairTails = new Map<string, Promise<void>>();
 const withAssetPairLock = async <T>(assetId: string, operation: () => Promise<T>): Promise<T> => {
@@ -117,6 +134,30 @@ const safeBackupId = (value: string) => {
 const asRecord = (value: unknown): JsonRecord | null => (
   value && typeof value === 'object' && !Array.isArray(value) ? value as JsonRecord : null
 );
+const canonicalCompatibilityBaseline = getCompatibilityEvidenceAudit();
+const expectedCompatibilityProfileCount = canonicalCompatibilityBaseline.reviewedProfiles.length;
+const expectedCompatibilityPairRuleCount = canonicalCompatibilityBaseline.reviewedPairRules.length;
+const expectedCompatibilityProfileKeys = new Set(canonicalCompatibilityBaseline.reviewedProfiles.map(profile => profile.speciesId));
+const expectedCompatibilityPairKeys = new Set(canonicalCompatibilityBaseline.reviewedPairRules.map(rule => [...rule.speciesIds].sort().join('__')));
+const compatibilityPairKeyFromRecord = (value: unknown) => {
+  const record = asRecord(value);
+  const keys = Array.isArray(record?.catalogKeys) ? record.catalogKeys.map(String).filter(Boolean) : [];
+  return keys.length === 2 ? keys.sort().join('__') : '';
+};
+const hasExactReviewedCompatibilityBaseline = (compatibility: JsonRecord) => {
+  const profiles = Array.isArray(compatibility.reviewedProfiles) ? compatibility.reviewedProfiles : [];
+  const pairs = Array.isArray(compatibility.reviewedPairRules) ? compatibility.reviewedPairRules : [];
+  const profileKeys = profiles.map(value => String(asRecord(value)?.catalogKey || ''));
+  const pairKeys = pairs.map(compatibilityPairKeyFromRecord);
+  return profiles.length === expectedCompatibilityProfileCount
+    && pairs.length === expectedCompatibilityPairRuleCount
+    && profileKeys.every(key => expectedCompatibilityProfileKeys.has(key))
+    && new Set(profileKeys).size === expectedCompatibilityProfileKeys.size
+    && pairKeys.every(key => expectedCompatibilityPairKeys.has(key))
+    && new Set(pairKeys).size === expectedCompatibilityPairKeys.size
+    && profiles.every(value => asRecord(value)?.reviewStatus === 'reviewed')
+    && pairs.every(value => asRecord(value)?.reviewStatus === 'reviewed');
+};
 const pathExists = async (filePath: string) => {
   try { await stat(filePath); return true; } catch (error) {
     if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') return false;
@@ -589,16 +630,19 @@ localAdminFileRouter.get('/status', asyncRoute(async (request, response) => {
   requireEnabled();
   const root = localRoot();
   const present: Record<LocalAdminPartition, boolean> = { business: false, compatibility: false, 'care-seo': false };
-  for (const partition of partitionNames) present[partition] = await pathExists(stateFile(root, partition));
-  return sendData(request, response, { enabled: true, root, localFileFormatVersion, partitions: present });
+  return sendData(request, response, await withAuthorityRead(async () => {
+    for (const partition of partitionNames) present[partition] = await pathExists(stateFile(root, partition));
+    return { enabled: true, root, localFileFormatVersion, partitions: present };
+  }));
 }));
 localAdminFileRouter.get('/integrity', asyncRoute(async (request, response) => {
   requireEnabled();
-  return sendData(request, response, await inspectRoot(localRoot()));
+  const result = await withAuthorityRead(() => inspectRoot(localRoot()));
+  return sendData(request, response, result);
 }));
 localAdminFileRouter.post('/runtime-snapshot', asyncRoute(async (request, response) => {
   requireEnabled();
-  const result = await withAuthorityTransaction(() => exportGitRuntimeAuthority());
+  const result = await withAuthorityRead(() => exportGitRuntimeAuthority());
   return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
@@ -608,26 +652,26 @@ localAdminFileRouter.get('/backups', asyncRoute(async (request, response) => {
 localAdminFileRouter.post('/backups', asyncRoute(async (request, response) => {
   requireEnabled();
   const reason = typeof request.body?.reason === 'string' && request.body.reason.trim() ? request.body.reason.trim().slice(0, 120) : 'manual';
-  const result = await withAuthorityTransaction(() => createBackup(reason, true));
+  const result = await withAuthorityRead(() => createBackup(reason, true));
   return sendData(request, response, result, 201);
 }));
 localAdminFileRouter.post('/backups/:backupId/restore', asyncRoute(async (request, response) => {
   requireEnabled();
-  const result = await withAuthorityTransaction(() => restoreBackup(request.params.backupId));
+  const result = await withAuthorityWrite(() => restoreBackup(request.params.backupId));
   return sendData(request, response, result);
 }));
 
 localAdminFileRouter.get('/state/:partition', asyncRoute(async (request, response) => {
   requireEnabled();
   const partition = safePartition(request.params.partition);
-  const value = await readPartitionState(localRoot(), partition, true);
+  const value = await withAuthorityRead(() => readPartitionState(localRoot(), partition, true));
   if (value === null) throw new ApiError(404, 'NOT_FOUND', `Local Admin partition ${partition} has not been initialized.`);
   return sendData(request, response, { partition, state: value, localFileFormatVersion });
 }));
 localAdminFileRouter.put('/state/:partition', asyncRoute(async (request, response) => {
   requireEnabled();
   const partition = safePartition(request.params.partition);
-  await withAuthorityTransaction(() => writePartitionState(localRoot(), partition, request.body));
+  await withAuthorityWrite(() => writePartitionState(localRoot(), partition, request.body));
   return sendData(request, response, { partition, persisted: true, localFileFormatVersion });
 }));
 
@@ -641,7 +685,7 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    return withAuthorityTransaction(() => withAssetPairLock(assetId, async () => {
+    return withAuthorityWrite(() => withAssetPairLock(assetId, async () => {
       const root = localRoot();
       const blobPath = assetFile(root, assetId);
       const metadataPath = assetMetaFile(root, assetId);
@@ -665,7 +709,7 @@ localAdminFileRouter.put(
 localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  return withAssetPairLock(assetId, async () => {
+  return withAuthorityRead(() => withAssetPairLock(assetId, async () => {
     const metadata = await readJsonOrNull(assetMetaFile(localRoot(), assetId)) as { mimeType?: string } | null;
     if (!metadata) throw new ApiError(404, 'NOT_FOUND', 'Local asset metadata was not found.');
     try {
@@ -677,12 +721,12 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
       if ((error as NodeJS.ErrnoException)?.code === 'ENOENT') throw new ApiError(404, 'NOT_FOUND', 'Local asset was not found.');
       throw error;
     }
-  });
+  }));
 }));
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
   requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  return withAuthorityTransaction(() => withAssetPairLock(assetId, async () => {
+  return withAuthorityWrite(() => withAssetPairLock(assetId, async () => {
     const root = localRoot();
     const blobPath = assetFile(root, assetId);
     const metadataPath = assetMetaFile(root, assetId);

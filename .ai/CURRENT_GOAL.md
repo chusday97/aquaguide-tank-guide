@@ -1,4 +1,10 @@
 # Current Goal
+
+## Main follow-up absorbed — Local File restore visibility / snapshot consistency (2026-09-13)
+- Absorbed main checkpoints `f83c08fd`, `deb5b085`, `fc125aab`, and `b6361522`: integrity/status/state/asset snapshot reads now use the shared authority read side, while restore and mutations use the exclusive write side.
+- Recovery keeps the dynamic canonical Compatibility exact-baseline guard; the Local File concurrency upgrade does not downgrade the current 19 Profiles / 5 Pair Rules authority.
+- Product Recovery remains the active goal in this worktree; Production/Supabase/indexing remain unchanged.
+
 ## Ember tetra reviewed-authority checkpoint — 2026-09-13
 - Added one canonical biological taxon `Hyphessobrycon amandae` across two exact catalog aliases: `sp_0114` 红莲灯 and `sp_0469` 喷火灯.
 - Both aliases share one Species Knowledge V2 object and identical reviewed Compatibility facts; canonical coverage counts them once, while runtime/Admin keeps two exact-ID Profiles for auditability.

@@ -1,4 +1,10 @@
 # Handoff Latest
+
+## Main restore-visibility / cross-operation consistency absorbed — 2026-09-13
+- Absorbed latest main Local File reader/writer authority lock and restore visibility fixes through `b6361522`.
+- Recovery-specific canonical Compatibility publication guard remains dynamic and exact; main’s historical 7/4 constants are not reintroduced.
+- This is DEV-only Admin reliability work and does not change the 16-taxon Product Recovery decision authority.
+
 ## Ember tetra reviewed-authority checkpoint — 2026-09-13
 - Added `Hyphessobrycon amandae` as the 16th canonical priority taxon. Catalog aliases `sp_0114` / `sp_0469` share one biological Species Knowledge authority but retain two identical exact-ID runtime Profiles.
 - Canonical coverage: 16 taxa / 240 ordered directions = 208 caution, 30 not_recommended, 2 compatible.
