@@ -1,5 +1,12 @@
 # Branch Status
 
+## 2026-09-13 — main restore rollback checkpoint
+- Functional main checkpoint: `6eb2e2a565187a239197be2872546f8d282beebb` — `fix(admin): validate failed restore rollback`.
+- GitHub Product Golden Path `34749810616` PASS.
+- Vercel branch deployment `dpl_BkE6NRr6bDEHLhUKwiqXKdU7mpdd` READY / target=null.
+- Local/GitHub main were equal at push; no force push.
+- Production intentionally remains on `5fa915d31ebb6aa0915cc39b34016a1ffa933a66`.
+
 ## 2026-09-13 corrupt backup candidate filtering
 - main functional checkpoint: `091b3601 fix(admin): hide corrupt backup candidates`
 - local/GitHub main synchronized after push.

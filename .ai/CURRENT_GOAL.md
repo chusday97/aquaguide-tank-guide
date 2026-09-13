@@ -251,3 +251,7 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 - Canonical priority matrix: 22 taxa / 462 ordered directions = 340 caution, 120 not_recommended, 2 compatible. The high hard-block count reflects the reviewed 26°C lower temperature bound in the 24°C audit tank rather than missing evidence.
 - Admin/Git runtime baseline advances to 25 Profiles / 5 Pair Rules. Additive migration `202609120011_compatibility_discus_baseline.sql` is repository authority only and has not been applied to Staging/Production.
 - Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+
+## Main follow-up absorbed — failed restore rollback integrity
+- Absorbed current main Local File hardening that re-validates authority integrity after a failed restore rollback before normal access resumes.
+- Product Recovery remains the active authority; Compatibility V7, 25/5 runtime baseline, and the 22-taxon reviewed matrix are unchanged.

@@ -271,3 +271,7 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Sex remains explicit unknown and reproduction is intentionally absent.
 - Canonical matrix: 22 taxa / 462 directions = 340 caution, 120 not_recommended, 2 compatible. Runtime/Admin baseline: 25 Profiles / 5 Pair Rules.
 - Added unapplied additive migration `202609120011_compatibility_discus_baseline.sql`. Product, runtime/Admin, build and GP001–GP004 gates all PASS.
+
+## Main follow-up absorbed — failed restore rollback integrity
+- Current main rollback-integrity validation is included; failed restore rollback must re-pass Local File integrity before authority becomes available again.
+- Product Recovery authority and the 25 Profile / 5 Pair runtime baseline are unchanged.

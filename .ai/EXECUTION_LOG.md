@@ -1,5 +1,11 @@
 # Execution Log
 
+## 2026-09-13 — failed restore rollback integrity closure
+- Reproduced a real filesystem race where target restore failed, the just-created safety backup was corrupted, rollback apply returned without validation, API claimed automatic rollback success, active root was unhealthy, and the restore journal was deleted.
+- Added pre-rollback safety `inspectRoot()` and post-rollback active-root `inspectRoot()` gates.
+- Added permanent regression; full Local File/UI/Operations/type/build gates PASS.
+- Pushed `6eb2e2a565187a239197be2872546f8d282beebb`; Product Golden Path `34749810616` PASS; Vercel `dpl_BkE6NRr6bDEHLhUKwiqXKdU7mpdd` READY.
+
 ## 2026-09-13 — backup candidate integrity closure
 - Fail-before-fix probe: create healthy backup -> delete copied asset blob -> `GET /backups` still returned the backup; direct restore returned 409.
 - Changed `listBackups()` to read manifest + `inspectRoot(backupDirectory(...))` and only return healthy entries.

@@ -789,7 +789,12 @@ const restoreBackup = async (backupId: string) => {
     return { backupId: id, safetyBackupId: safety.id, integrity: restoredIntegrity };
   } catch (error) {
     try {
-      await applyBackupDirectory(backupDirectory(root, safety.id));
+      const safetySource = backupDirectory(root, safety.id);
+      const safetyIntegrity = await inspectRoot(safetySource);
+      if (!safetyIntegrity.healthy) throw new Error(`Safety backup ${safety.id} failed integrity validation.`);
+      await applyBackupDirectory(safetySource);
+      const rollbackIntegrity = await inspectRoot(root);
+      if (!rollbackIntegrity.healthy) throw new Error(`Rolled-back Local Admin root failed integrity validation.`);
       await cleanupRestoreTempDirectories(root);
       await rm(journalPath, { force: true });
     } catch {
