@@ -261,6 +261,8 @@ try {
     result: 'public SEO GitHub Actions browser gate passed',
   }, null, 2));
 } catch (error) {
+  const diagnosticMessage = (error?.message || String(error)).replace(/[\r\n]+/g, ' ').slice(0, 900);
+  console.error(`::error title=Public SEO browser gate::${diagnosticMessage}`);
   if (diagnosticPath) {
     await writeFile(diagnosticPath, `${JSON.stringify({
       result: 'failed',
