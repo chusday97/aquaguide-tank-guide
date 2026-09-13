@@ -668,7 +668,11 @@ const listBackups = async () => {
   }
   const results: BackupManifest[] = [];
   for (const id of entries.filter(name => /^backup-\d{13,17}$/.test(name)).sort().reverse()) {
-    try { results.push(await readBackupManifest(root, id)); } catch { /* invalid backup remains on disk but is not offered for restore */ }
+    try {
+      const manifest = await readBackupManifest(root, id);
+      const integrity = await inspectRoot(backupDirectory(root, id));
+      if (integrity.healthy) results.push(manifest);
+    } catch { /* invalid backup remains on disk but is not offered for restore */ }
   }
   return results;
 };

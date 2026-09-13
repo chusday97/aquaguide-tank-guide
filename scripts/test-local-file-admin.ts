@@ -425,6 +425,21 @@ try {
   assert.equal(backups.response.status, 200);
   assert.equal(backups.payload.data.backups[0].id, backupId);
 
+  // A backup whose manifest is valid but whose copied authority is corrupt must not be offered as restorable.
+  const corruptListedBackup = await requestJson(started.base, '/backups', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'corrupt-list-candidate' }),
+  });
+  assert.equal(corruptListedBackup.response.status, 201);
+  const corruptListedBackupId = String(corruptListedBackup.payload.data.id);
+  await rm(path.join(root, 'backups', corruptListedBackupId, 'assets', `${assetId}.blob`));
+  const filteredBackups = await requestJson(started.base, '/backups');
+  assert.equal(filteredBackups.response.status, 200);
+  assert.equal(filteredBackups.payload.data.backups.some((item: any) => item.id === corruptListedBackupId), false,
+    'A corrupt backup must not be offered in the restorable backup list.');
+  const corruptRestore = await requestJson(started.base, `/backups/${corruptListedBackupId}/restore`, { method: 'POST' });
+  assert.equal(corruptRestore.response.status, 409, 'Direct restore must still reject a corrupt backup even when its id is known.');
+  assert.equal(corruptRestore.payload.error.code, 'MIGRATION_REJECTED');
+
   const concurrentBackups = await Promise.all(Array.from({ length: 24 }, (_, index) => requestJson(started.base, '/backups', {
     method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: `concurrent-${index}` }),
   })));
