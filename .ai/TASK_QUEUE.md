@@ -1,5 +1,13 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after interrupted restore recovery closure
+- DONE: protect restore with a durable transaction journal tied to the pre-restore safety backup.
+- DONE: recover an interrupted/mixed active root before serving any Local Admin request on the next process start.
+- DONE: clean stale `.restore-assets-*` directories and delete the journal only after successful rollback recovery.
+- DONE: fail closed for invalid journals or failed safety recovery.
+- DONE: formal fresh-process recovery regression + GitHub Product Golden Path PASS + Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 after PID-reuse lease closure
 - DONE: reproduce stale lease false-lock with a real unrelated live process reusing the recorded PID (`409 VERSION_CONFLICT`).
 - DONE: upgrade root lease identity from PID-only to PID + process-start identity.

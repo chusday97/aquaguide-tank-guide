@@ -1,5 +1,11 @@
 # Live Status
 
+## 2026-09-13 interrupted restore recovery
+- Functional main: `bac95f66`
+- Crash-interrupted restore is now durable: startup replays the pre-restore safety backup before serving Local Admin.
+- Fresh-process recovery regression PASS; Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion.
+
 ## 2026-09-13 — root lease PID-reuse hardening
 - main functional checkpoint: `8105f032` (`fix(admin): disambiguate reused lease pids`).
 - Reproduced false lock: stale owner PID reused by unrelated live process => pre-fix `409 VERSION_CONFLICT`.

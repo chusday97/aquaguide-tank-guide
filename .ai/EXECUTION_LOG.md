@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-13 — interrupted restore recovery closure
+- Observed main advanced to `bac95f66 fix(admin): recover interrupted restores` while `.ai` had not yet recorded the change.
+- Audited the implementation: durable restore journal + startup safety-backup recovery + temp cleanup + fail-closed invalid journal handling.
+- Re-ran `npm run test:local-file-admin`: PASS.
+- Verified GitHub Product Golden Path run `34743161119`: PASS.
+- Verified Vercel branch deployment `dpl_J9RLH19ncFUciVuMSFyQdUL9snpR`: READY, target null.
+- Synced canonical authority to the actual main state; no Production promotion.
+
 ## 2026-09-13 — reused-PID lease false lock
 - Reproduced: wrote a stale ownership lease using the PID of a real unrelated live process; pre-fix `/status` returned `409 VERSION_CONFLICT`.
 - Patched root lease format to v2 with `processStartIdentity`; Linux reads `/proc/<pid>/stat` start ticks and macOS reads `ps` start time + stable command identity.

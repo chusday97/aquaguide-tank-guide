@@ -1,5 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 interrupted restore recovery closed
+- New main checkpoint: `bac95f66 fix(admin): recover interrupted restores`.
+- Restore writes `.restore-transaction.json` before mutating authority. If the process dies mid-restore, the next Local Admin process acquires the root lease, rolls back from the recorded safety backup, removes `.restore-assets-*` residue, deletes the journal, and only then serves requests.
+- Regression builds a mixed root and proves a fresh process returns the safety Business/Care state with no journal or restore-temp residue.
+- GitHub Product Golden Path PASS; Vercel `dpl_J9RLH19ncFUciVuMSFyQdUL9snpR` READY.
+- Production unchanged.
+
 ## 2026-09-13 — reused PID no longer permanently false-locks Local File root
 - Functional checkpoint: `8105f032 fix(admin): disambiguate reused lease pids`.
 - Fail-before-fix used a real unrelated live process PID in a stale ownership record; Local Admin incorrectly returned `409 VERSION_CONFLICT` because PID liveness alone was treated as owner identity.

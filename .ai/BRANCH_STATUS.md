@@ -1,5 +1,12 @@
 # Branch Status
 
+## 2026-09-13 — interrupted restore recovery checkpoint
+- main functional checkpoint: `bac95f66 fix(admin): recover interrupted restores`
+- local/GitHub main were verified equal and clean after the checkpoint.
+- GitHub Product Golden Path: PASS (`34743161119`).
+- Vercel main branch deployment: `dpl_J9RLH19ncFUciVuMSFyQdUL9snpR` READY, target null.
+- Production not promoted; current Production runtime remains the separately controlled stable release.
+
 ## 2026-09-13 PID-reuse lease closure
 - canonical: `/Users/chuchu/aquaguide-main` / `main`
 - functional checkpoint: `8105f032aeade0d62e5fdd2e65c20f6ae46d4fbb` — `fix(admin): disambiguate reused lease pids`

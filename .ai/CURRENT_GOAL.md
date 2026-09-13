@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 interrupted restore recovery closed
+A concrete crash-interrupted restore badcase is closed on main at `bac95f66 fix(admin): recover interrupted restores`.
+
+- Restore now writes `.restore-transaction.json` after creating the pre-restore safety backup and before mutating active authority.
+- On the next Local Admin lease acquisition, an interrupted restore is recovered before any request is served: the safety backup is re-applied, `.restore-assets-*` staging residue is removed, and the journal is deleted.
+- Invalid/unreadable journals and failed safety recovery remain fail-closed with explicit INTERNAL_ERROR guidance instead of exposing a mixed authority root.
+- Permanent regression constructs a mixed active root + valid safety backup + restore journal, starts a fresh API process, and requires startup to expose only the safety state with no journal/temp residue.
+- PASS: Local File API regression, GitHub Product Golden Path, Vercel branch deployment READY. Production remains unchanged because Local File API is DEV-only.
+- NEXT: continue only from another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 reused-PID lease false lock closed
 A concrete stale-lease false-lock path is closed on main at `8105f032 fix(admin): disambiguate reused lease pids`.
 
