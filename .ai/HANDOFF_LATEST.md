@@ -9,7 +9,7 @@
 ## 2026-09-13 剩余门禁收口（进行中）
 
 - 已完成四组 Species 三档对照图的视觉审计，记录在 `docs/public-seo-visual-audit-20260913.md`。极火虾/黄金米虾视觉状态稳定；宝莲灯和孔雀鱼缺图回退稳定，其中宝莲灯仍待项目负责人确认素材用途。
-- 已扩展 CI 浏览器脚本，新增滚动、章节锚点、分类返回、reduced-motion 和交互延迟基线断言；需由 GitHub Actions 重新运行后才能登记通过。
+- 已扩展 CI 浏览器脚本，新增滚动、章节锚点、分类返回、reduced-motion 和交互延迟基线采集。GitHub Actions run `34766143025` 已在 SHA `ad4a690a9c694ac0ce400caf459397704da6cbac` 通过新增检查并上传 artifact；交互延迟观察器返回 `null`，仍需后续可用运行时补采。
 - 保持页面 `noindex,follow`，不调用 Figma，不修改 Product Truth、生产 Supabase、main 或三个用户未提交文件。
 
 # AquaGuide Species SEO 当前交接
