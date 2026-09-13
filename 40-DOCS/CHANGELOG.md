@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+### Added
+
+- 新增 `Public SEO Browser Gate` GitHub Actions 工作流和独立 Ubuntu Playwright 验收脚本，覆盖公开/应用 Shell、390/600/1440 响应式、Species 继承边界、noindex、禁止数据请求和截图 artifact；当前待推送运行，不将本地静态通过冒充浏览器通过。
+
 ### Verified
 
 - 当前提交的公开 SEO 证据、契约、品系卡片、lint、build 和 diff-check 全部通过（`EVD-20260913-135`）。

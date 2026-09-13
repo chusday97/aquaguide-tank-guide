@@ -180,6 +180,8 @@
 - `scripts/verify-species-landing.mjs`：公开物种页 390/1440、无缸/有缸、Variant、noindex 和横向溢出回归。
 - `scripts/test-public-seo-contract.ts`：Category/Care Guide 公开聚合、noindex 和未审核内容 fail-closed 门禁。
 - `scripts/verify-public-seo-routes.mjs`：公开/应用 Shell 路由、metadata、JSON-LD、响应式、44px 交互目标、焦点和字体/LCP/CLS 基线回归。
+- `scripts/verify-public-seo-github-actions.mjs`：Ubuntu Playwright Chromium 公开 SEO 浏览器门禁、禁止数据请求扫描和 390/600/1440 截图证据。
+- `.github/workflows/public-seo-browser.yml`：当前 Preview 分支与对应 PR 的 Public SEO 浏览器验收工作流。
 - `docs/public-seo-content-review-matrix.md`：Category、Species、Variant、Guide 的来源、审核、公开和索引门禁矩阵。
 - `docs/01-definition/UX_REFACTOR_PRD.md`：本轮交互重构定义。
 - `docs/02-design/UX_REFACTOR_CONCEPTS.md`：三套设计方向与默认自然水族册方案。

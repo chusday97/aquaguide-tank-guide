@@ -1,0 +1,82 @@
+name: Public SEO Browser Gate
+
+on:
+  push:
+    branches: [codex/species-seo-preview-v1]
+    paths:
+      - '.github/workflows/public-seo-browser.yml'
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/verify-public-seo-github-actions.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/public-seo-browser.yml'
+      - 'src/**'
+      - 'public/**'
+      - 'scripts/verify-public-seo-github-actions.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+  workflow_dispatch:
+
+concurrency:
+  group: public-seo-browser-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Static SEO contracts
+        run: |
+          npm run test:seo-editorial-evidence
+          npm run test:seo-evidence-bindings
+          npm run test:public-seo-contract
+          npm run test:public-seo-copy
+          npm run test:public-seo-structure
+          npm run test:public-seo-responsive-contract
+          npm run test:seo-asset-candidates
+          npm run test:species-variant-card
+          npm run lint
+          git diff --check
+      - name: Build production preview
+        run: npm run build
+      - name: Start preview server
+        run: |
+          npm run preview -- --host 127.0.0.1 --port 4173 > /tmp/aquaguide-public-seo-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl -fsS http://127.0.0.1:4173 >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/aquaguide-public-seo-preview.log
+          exit 1
+      - name: Public SEO browser gate
+        env:
+          PREVIEW_URL: http://127.0.0.1:4173
+          SEO_SCREENSHOT_DIR: artifacts/public-seo
+        run: npm run test:public-seo-github-actions
+      - name: Upload browser evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-seo-browser-evidence-${{ github.sha }}
+          path: |
+            artifacts/public-seo
+            /tmp/aquaguide-public-seo-preview.log
+          retention-days: 7
+          if-no-files-found: warn

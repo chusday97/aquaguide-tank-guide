@@ -3,6 +3,7 @@
   "project_id": "PRJ-aquaguide",
   "updated_at": "2026-09-13T18:26:06+08:00",
   "evidence_items": [
+    {"id":"EVD-20260913-137","type":"browser-gate-infrastructure","locator":"scripts/verify-public-seo-github-actions.mjs; .github/workflows/public-seo-browser.yml; HEAD WORKTREE","date":"2026-09-13","version":"WORKTREE","accessible":true,"sensitive":false,"notes":"新增独立Ubuntu Playwright Chromium浏览器验收轨道，覆盖四条Species、Marketing、Category、Guide和App Shell，390/600/1440、noindex、44px、Shell边界、禁止Supabase/登录/鱼缸请求，并准备12张Species原始截图与4张对照图；本地静态门禁已通过，GitHub Actions尚未运行，因此不计为浏览器验收通过。"},
     {"id":"EVD-20260715-001","type":"commit","locator":"917b80a","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"今日行动、水族册独立地址与生命纪念回流"},
     {"id":"EVD-20260715-002","type":"test","locator":"npm run lint; npm run build; 1280/390 browser regression","date":"2026-07-15","version":"917b80a","accessible":true,"sensitive":false,"notes":"类型、构建和直达行为验证"},
     {"id":"EVD-20260715-003","type":"commit","locator":"b38508c","date":"2026-07-15","version":"codex/aquaguide-ux-refactor","accessible":true,"sensitive":false,"notes":"加载恢复、响应式图片和慢网 3D"},

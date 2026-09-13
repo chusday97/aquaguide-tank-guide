@@ -1,3 +1,11 @@
+## 2026-09-13 GitHub Actions 浏览器验收轨道（进行中）
+
+- [x] 新增独立 `scripts/verify-public-seo-github-actions.mjs`：使用 Ubuntu Playwright Chromium 覆盖公开/应用路由、390/600/1440、4 条 Species、无禁止数据请求、noindex、Shell 边界、44px 目标和截图输出。
+- [x] 新增 `.github/workflows/public-seo-browser.yml`：仅监听 `codex/species-seo-preview-v1` 与对应 PR，使用 Node 22、Playwright 1.60、4173 production preview，并上传 12 张 Species 截图和 4 张对照图（保留 7 天）。
+- [x] 未触碰三个用户未提交文件；Figma、Product Truth、生产 Supabase、main、页面样式和索引策略均未改变。
+- [x] 静态 Editorial/Evidence/Public Contract/Copy/Structure/Responsive/Asset、lint、build、diff-check 全部通过；当前实现提交待本地提交并触发 GitHub Actions。
+- [ ] GitHub Actions 全绿、截图 artifact 和同一 SHA 复核尚未完成；在此之前不计为自动化浏览器通过。
+
 ## 2026-09-13 Docker 浏览器恢复尝试
 
 - [x] 磁盘可用空间约 55GiB，当前提交 `a70f7caa` 的 production build 通过；用户三个未提交文件保持原样。
