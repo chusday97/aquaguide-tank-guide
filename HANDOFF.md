@@ -1508,3 +1508,7 @@
 - 代码提交为 `5bc61b1b`；测试与内置浏览器复核证据为 `EVD-20260913-133`。
 - 用户未提交的 `scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts` 未修改、未暂存。
 - 下一步：恢复可控浏览器后验证三档；Critic 输出可读正文后复验；Figma 继续暂停；所有页面保持 `noindex,follow`。
+# 2026-09-13 系统 Chrome 回归阻塞复核
+
+- 再次执行 `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing`；Chrome 启动后 SIGABRT/Target page closed，未进入 DOM 断言，证据为 `EVD-20260913-134`。
+- 不再反复启动同一失败引擎；内置浏览器证据继续仅覆盖当前视口，不能替代三档真实截图。

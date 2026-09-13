@@ -1708,3 +1708,7 @@
 - [x] 无已确认 Editorial 的孔雀鱼不再使用 `fish.description` 作为 Hero 文案，改用用户可理解的通用身份引导；Product Truth、fallback、路由和 noindex 不变。
 - [x] `test:species-variant-card`、`test:public-seo-contract`、lint、build、diff-check 通过；内置浏览器复核孔雀鱼只显示身份、参数和 fallback，证据为 `EVD-20260913-133`。
 - [ ] 系统 Chrome/MachPort、600px 可控视口、可读独立 Critic、Figma Canonical、性能和索引发布门禁仍未完成。
+## 2026-09-13 Chrome 三档回归再次确认
+
+- [x] `PLAYWRIGHT_CHANNEL=chrome npm run test:species-landing` 已重新执行；Chrome 进程启动后 SIGABRT 并关闭，未进入页面断言，证据为 `EVD-20260913-134`。
+- [ ] 该结果仍是环境阻塞，不代表页面断言失败；不再重复启动。真实 390/600/1440 截图、可读独立 Critic、Figma Canonical、性能和索引门禁仍未完成。

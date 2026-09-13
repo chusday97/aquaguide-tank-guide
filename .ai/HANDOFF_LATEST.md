@@ -455,3 +455,7 @@
 
 - Species 页面不再把未确认的 catalog `fish.description` 回退为公开 Hero 文案；孔雀鱼实际运行只呈现身份、Product Truth、fallback 和工具入口。
 - 当前静态门禁和内置浏览器证据为 `EVD-20260913-133`；系统 Chrome 三档、600px、可读 Critic、Figma Canonical 和索引门禁仍阻塞。
+# 2026-09-13 系统 Chrome 回归状态
+
+- 当前系统 Chrome 仍在启动层退出，未取得三档真实视口证据；本次结果记录为 `EVD-20260913-134`。
+- 下一步保持代码稳定，等待可用浏览器运行时；不重复启动、不调用 Figma、不解除 noindex。
