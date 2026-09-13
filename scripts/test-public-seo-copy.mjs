@@ -60,6 +60,11 @@ if (speciesSource.includes('从它如何寻找食物开始，认识日常照料�
 if (!speciesSource.includes("title={labels.care}")) {
   throw new Error('Species care section is missing the shared daily-care heading');
 }
+for (const duplicateHeading of ['eyebrow="生活方式"', 'eyebrow="环境"', "title={profile.editorial.feeding && !profile.editorial.maintenance ? '取食方式' : labels.care}"]) {
+  if (speciesSource.includes(duplicateHeading)) {
+    throw new Error(`Species page contains an inconsistent duplicate heading: ${duplicateHeading}`);
+  }
+}
 if (!speciesSource.includes('const personalizeFaq')) {
   throw new Error('Species FAQ must adapt inherited copy to the visible species name');
 }
