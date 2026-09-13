@@ -4,6 +4,16 @@
   "updated_at": "2026-09-14T00:30:00+08:00",
   "evidence_items": [
     {
+      "id": "EVD-20260914-154",
+      "type": "independent-critic-infrastructure-block",
+      "locator": "Codex task 01a05275-2b85-76f2-9e84-98bbb04617d5; latest turn 01a09bc7-26fb-7d61-942d-e9dbbcb129df; 14ffac3b",
+      "date": "2026-09-14",
+      "version": "14ffac3b0b91cd54d8aedd4f2ea6cf8a01f5a884",
+      "accessible": true,
+      "sensitive": false,
+      "notes": "同一只读Critic线程已完成当前14ffac3b复验，但read_thread返回空items且无可读六维正文。该结果不计为独立审查通过；不创建重复线程，浏览器门禁、页面代码、Product Truth、Figma和索引策略未改变。"
+    },
+    {
       "id": "EVD-20260914-153",
       "type": "hosted-browser-verification",
       "locator": "https://github.com/chusday97/aquaguide-tank-guide/actions/runs/34770927457; artifact public-seo-browser-evidence-14ffac3b0b91cd54d8aedd4f2ea6cf8a01f5a884",
