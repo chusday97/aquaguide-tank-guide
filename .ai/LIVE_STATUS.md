@@ -1,5 +1,11 @@
 # Live Status
 
+## 2026-09-13 — backup manifest-directory binding closed
+- CLOSED on main: `57985b5a` requires backup `manifest.id` to equal the directory id.
+- Fail-before-fix: newest backup metadata could alias an older id; UI-equivalent restore returned 200 but restored the old Business state.
+- Mismatched manifests are now hidden from restorable candidates and direct restore returns 409.
+- CI `34754738827` PASS; Vercel Git auto-preview not created, no manual Preview; Production unchanged.
+
 ## 2026-09-13 — restore immediate rollback integrity
 - CLOSED on main: `6eb2e2a5` validates safety backup before immediate rollback and active root after rollback.
 - Fail-before-fix: rollback was reported successful while active authority was unhealthy and journal had been deleted.

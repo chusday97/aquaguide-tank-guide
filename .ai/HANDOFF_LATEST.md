@@ -1,5 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 — backup manifest-directory binding closed
+- Main functional checkpoint: `57985b5aed38c48dd4a72d4cd0ccb0e323c0c7c9` (`fix(admin): bind backup manifests to directories`).
+- Reproduced: newest backup row could carry an older `manifest.id`, so Operations Studio displayed newest metadata but restored the older directory and returned 200.
+- Fixed: every backup manifest must identify its own directory; mismatch is hidden from candidate listing and rejected by direct restore with 409.
+- Regression + Local File/UI/Operations/mode/type/build gates PASS; GitHub Product Golden Path `34754738827` PASS.
+- Vercel Git auto-preview was not created for this push; no manual Preview was triggered because Local Admin is DEV-only. Production remains on `5fa915d3`.
+
 ## 2026-09-13 — failed restore rollback integrity closed
 - Main functional checkpoint: `6eb2e2a565187a239197be2872546f8d282beebb` (`fix(admin): validate failed restore rollback`).
 - Immediate restore rollback now checks safety-backup integrity before apply and active-root integrity after apply; journal/temp cleanup occurs only after both pass.

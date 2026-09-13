@@ -1,5 +1,15 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 backup manifest-directory binding closed
+A concrete backup identity/audit badcase is closed on main at `57985b5a fix(admin): bind backup manifests to directories`.
+
+- Fail-before-fix: the newest backup directory had its `manifest.id` changed to an older backup id. `GET /backups` still presented the newest row (`reason=latest`, newest `createdAt`) but Operations Studio restored using the spoofed id; restore returned 200 and Business state became the old backup.
+- `readBackupManifest(root, backupId)` now requires `manifest.id === backupId`. A mismatched manifest is not listed as restorable and direct restore of that directory fails `409 MIGRATION_REJECTED`.
+- Permanent regression creates a dedicated backup, rewrites its manifest id to alias another valid backup, requires the list not to create a duplicate/restorable alias, and requires direct restore rejection.
+- PASS: Local File API, Local Admin mode contract, Local File browser restart/backup/restore, Operations Studio populated UI, API/root TypeScript, full build, GitHub Product Golden Path `34754738827`.
+- Vercel Git auto-preview was not created for this push; no manual Preview was triggered because the route is DEV-only and Production remains unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 failed restore rollback integrity closed
 A concrete immediate-rollback integrity badcase is closed on main at `6eb2e2a5 fix(admin): validate failed restore rollback`.
 

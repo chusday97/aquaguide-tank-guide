@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after backup manifest-directory binding closure
+- DONE: reproduce newest backup metadata aliasing an older backup id and restoring the wrong directory with HTTP 200.
+- DONE: require `manifest.id === backup directory id` in the canonical backup reader.
+- DONE: mismatched manifest hidden from candidate list; direct restore rejected with 409.
+- DONE: permanent regression + Local File/UI/Operations/mode/TypeScript/full-build gates.
+- DONE: GitHub Product Golden Path `34754738827` PASS.
+- NOTE: Vercel Git auto-preview was not created for this push; no manual Preview was triggered because Local Admin is DEV-only and Production is unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 after failed restore rollback integrity closure
 - DONE: reproduce restore failure reporting successful automatic rollback while the safety backup had become corrupt.
 - DONE: validate safety backup before immediate rollback apply.
