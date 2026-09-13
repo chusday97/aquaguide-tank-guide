@@ -453,6 +453,28 @@ const inspectRoot = async (root: string): Promise<IntegrityReport> => {
   };
 };
 
+const assertActiveRootHealthyForMutation = async (
+  repairAssetId?: string,
+  repairMode: 'put' | 'delete' = 'put',
+) => {
+  const root = localRoot();
+  const integrity = await inspectRoot(root);
+  if (integrity.healthy) return;
+  const errors = integrity.issues.filter(issue => issue.severity === 'error');
+  const repairableAssetCodes = new Set(['ASSET_PAIR_MISSING', 'ASSET_META_INVALID', 'ASSET_SIZE_MISMATCH', 'ASSET_READ_FAILED', 'REFERENCED_ASSET_MISSING']);
+  const onlyTargetAssetErrors = Boolean(repairAssetId)
+    && errors.length > 0
+    && errors.every(issue => repairableAssetCodes.has(issue.code) && issue.message.includes(repairAssetId!));
+  if (onlyTargetAssetErrors && repairAssetId) {
+    if (repairMode === 'put') return;
+    const business = await readPartitionState(root, 'business', false);
+    if (!collectReferencedAssets(business).has(repairAssetId)) return;
+  }
+  throw new ApiError(409, 'INTEGRITY_FAILED',
+    `Local Admin active authority integrity is unhealthy; ordinary writes are blocked until recovery (${errors.length} error${errors.length === 1 ? '' : 's'}).`,
+    { root, issues: errors });
+};
+
 const sha256 = (value: unknown) => createHash('sha256').update(JSON.stringify(value)).digest('hex');
 const runtimePublicationRoot = () => path.resolve(process.env.ADMIN_RUNTIME_SNAPSHOT_ROOT || path.join(repoRoot, 'public'));
 const runtimeSnapshotFile = () => path.join(runtimePublicationRoot(), 'runtime-authority.json');
@@ -834,7 +856,10 @@ localAdminFileRouter.get('/state/:partition', asyncRoute(async (request, respons
 localAdminFileRouter.put('/state/:partition', asyncRoute(async (request, response) => {
   await requireEnabled();
   const partition = safePartition(request.params.partition);
-  await withAuthorityWrite(() => writePartitionState(localRoot(), partition, request.body));
+  await withAuthorityWrite(async () => {
+    await assertActiveRootHealthyForMutation();
+    await writePartitionState(localRoot(), partition, request.body);
+  });
   return sendData(request, response, { partition, persisted: true, localFileFormatVersion });
 }));
 
@@ -848,7 +873,9 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    return withAuthorityWrite(() => withAssetPairLock(assetId, async () => {
+    return withAuthorityWrite(async () => {
+      await assertActiveRootHealthyForMutation(assetId);
+      return withAssetPairLock(assetId, async () => {
       const root = localRoot();
       const blobPath = assetFile(root, assetId);
       const metadataPath = assetMetaFile(root, assetId);
@@ -866,7 +893,8 @@ localAdminFileRouter.put(
         throw error;
       }
       return sendData(request, response, { assetId, persisted: true, mimeType, byteSize: request.body.length }, 201);
-    }));
+      });
+    });
   }),
 );
 localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response) => {
@@ -889,7 +917,9 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
 localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, response) => {
   await requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
-  return withAuthorityWrite(() => withAssetPairLock(assetId, async () => {
+  return withAuthorityWrite(async () => {
+    await assertActiveRootHealthyForMutation(assetId, 'delete');
+    return withAssetPairLock(assetId, async () => {
     const root = localRoot();
     const blobPath = assetFile(root, assetId);
     const metadataPath = assetMetaFile(root, assetId);
@@ -912,5 +942,6 @@ localAdminFileRouter.delete('/assets/:assetId', asyncRoute(async (request, respo
       throw error;
     }
     return sendData(request, response, { assetId, removed: true });
-  }));
+    });
+  });
 }));

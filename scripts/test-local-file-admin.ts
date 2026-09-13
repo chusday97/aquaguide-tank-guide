@@ -408,6 +408,38 @@ try {
   await rm(path.join(root, 'assets', `${assetId}.json`), { recursive: true, force: true });
   await writeFile(path.join(root, 'assets', `${assetId}.json`), originalAssetMeta);
 
+  // Ordinary writes must fail closed if a previously healthy active root becomes corrupt while the API stays live.
+  const runtimeCorruptState = {
+    ...businessState,
+    species: [{ id: 'demo', image: { storageBucket: 'local-file', id: assetId } }],
+    updatedAt: 'runtime-corruption-baseline',
+  };
+  assert.equal((await putState(started.base, 'business', runtimeCorruptState)).response.status, 200);
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+  await rm(path.join(root, 'assets', `${assetId}.blob`));
+  const runtimeCorruptIntegrity = await requestJson(started.base, '/integrity');
+  assert.equal(runtimeCorruptIntegrity.payload.data.healthy, false);
+  assert(runtimeCorruptIntegrity.payload.data.issues.some((issue: any) => issue.code === 'ASSET_PAIR_MISSING'));
+  const blockedStateWrite = await putState(started.base, 'business', { ...runtimeCorruptState, updatedAt: 'must-not-persist' });
+  assert.equal(blockedStateWrite.response.status, 409);
+  assert.equal(blockedStateWrite.payload.error.code, 'INTEGRITY_FAILED');
+  const blockedAssetPut = await requestJson(started.base, '/assets/local-asset-runtime-blocked', {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: imageBytes,
+  });
+  assert.equal(blockedAssetPut.response.status, 409);
+  assert.equal(blockedAssetPut.payload.error.code, 'INTEGRITY_FAILED');
+  const blockedAssetDelete = await requestJson(started.base, `/assets/${assetId}`, { method: 'DELETE' });
+  assert.equal(blockedAssetDelete.response.status, 409);
+  assert.equal(blockedAssetDelete.payload.error.code, 'INTEGRITY_FAILED');
+  await assert.rejects(stat(path.join(root, 'assets', 'local-asset-runtime-blocked.blob')), (error: NodeJS.ErrnoException) => error.code === 'ENOENT');
+  const targetedRepair = await requestJson(started.base, `/assets/${assetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: imageBytes,
+  });
+  assert.equal(targetedRepair.response.status, 201, 'Re-uploading the one corrupt asset must remain available as a targeted repair.');
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+  assert.equal((await putState(started.base, 'business', businessState)).response.status, 200,
+    'Ordinary writes must resume after operator repair restores a healthy active root.');
+
   const integrity = await requestJson(started.base, '/integrity');
   assert.equal(integrity.response.status, 200);
   assert.equal(integrity.payload.data.healthy, true);
