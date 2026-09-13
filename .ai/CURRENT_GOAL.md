@@ -240,3 +240,7 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 - Admin/Git runtime baseline advances to 24 Profiles / 5 Pair Rules. Additive migration `202609120010_compatibility_ramirezi_baseline.sql` is repository authority only and has not been applied to Staging/Production.
 - Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
 - Next: push this checkpoint, refresh real `origin/main`, and continue only with another distinct canonical taxon backed by reviewed evidence.
+
+## Main convergence checkpoint — Local File lease/restore/backup hardening
+- Absorbed current main Local File reliability fixes: held root leases are revalidated before continued use, interrupted-restore recovery is integrity-checked before serving, and corrupt backup candidates are filtered from operator choices.
+- These changes do not alter Product Recovery authority, Compatibility V7, the 24 Profile / 5 Pair runtime baseline, or the 21-taxon canonical matrix.

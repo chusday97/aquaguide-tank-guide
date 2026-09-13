@@ -1,5 +1,25 @@
 # Live Status
 
+## 2026-09-13 — corrupt backup candidate filtering closed
+- Main functional checkpoint: `091b3601`.
+- `GET /backups` now means "healthy/restorable candidates", not merely "directories with valid manifests".
+- Corrupt backups are retained on disk but hidden from restore choices; direct restore still independently rejects them.
+- CI PASS / Vercel branch READY / Production unchanged.
+
+
+## 2026-09-13 interrupted restore integrity
+- Functional main: `73276ee8`.
+- Automatic interrupted-restore recovery now requires a healthy safety backup and a healthy recovered active root before cleanup/journal deletion.
+- Corrupt safety backup fails closed and preserves the journal; valid recovery continues to pass.
+- Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion.
+
+## 2026-09-13 held root lease displacement
+- Functional main: `988f6e4c`
+- Live Local Admin processes now continuously revalidate their root lease against the on-disk PID/token and fail closed if another process has displaced ownership.
+- 20-cycle displacement stress PASS; Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion.
+
 ## 2026-09-13 fail-closed startup guidance
 - Functional main: `5845c79b`
 - Four startup failure domains now render distinct operator recovery guidance instead of one fixed owner-conflict footer.

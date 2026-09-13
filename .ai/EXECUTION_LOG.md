@@ -1,5 +1,26 @@
 # Execution Log
 
+## 2026-09-13 — backup candidate integrity closure
+- Fail-before-fix probe: create healthy backup -> delete copied asset blob -> `GET /backups` still returned the backup; direct restore returned 409.
+- Changed `listBackups()` to read manifest + `inspectRoot(backupDirectory(...))` and only return healthy entries.
+- Added regression requiring corrupt candidate hidden from list while direct restore remains rejected.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `test:operations-studio-ui`, `check:api`, root TypeScript, full build, diff check.
+- Functional commit `091b3601`; GitHub Product Golden Path PASS; Vercel `dpl_5G81rekKcM6eU26toAHt4cmGTGR3` READY.
+
+
+## 2026-09-13 — interrupted restore integrity closure
+- Audited fresh-process restore recovery versus normal restore and found recovery skipped both pre-apply and post-apply integrity validation.
+- Reproduced with a safety backup containing metadata without its blob: startup `/status` returned 200, subsequent `/integrity` reported `ASSET_PAIR_MISSING`, and the recovery journal was missing.
+- Added safety-backup preflight `inspectRoot()` plus recovered-root `inspectRoot()` before journal cleanup.
+- Permanent regression proves corrupt safety backup => startup 500 fail-closed + journal retained + active root unchanged, while valid recovery still succeeds.
+- PASS: Local File API/UI, mode contract, TypeScript, full build, Product Golden Path `34747163120`, Vercel `dpl_9ctCqTd71u3rTWfa2tHVeMHcpPaa` READY.
+
+## 2026-09-13 — held root lease displacement closure
+- Reproduced a dual-owner corruption path: remove the active owner lease, start a replacement process (200), then the original process still served 200 from its stale in-memory claim.
+- Patched `ensureRootLease()` to verify the on-disk PID/token before trusting a held lease; missing lease forces atomic reacquisition and displaced ownership fails closed.
+- Added a permanent cross-process regression and ran 20 displacement/reacquisition cycles: 20/20 displaced owners returned 409; 20/20 safe reacquisitions returned 200 after replacement exit.
+- PASS: Local File API/UI, mode contract, API/root TypeScript, full build, GitHub Product Golden Path `34746075147`; Vercel `dpl_79GvoJ2iAM2F2yaf9MFDuGToJ3LF` READY.
+
 ## 2026-09-13 — fail-closed startup guidance closure
 - Re-read canonical main (`c1acdfe2`) and reproduced three misleading startup paths in real browser: invalid restore journal, invalid root lease, and future schema all incorrectly showed the same close-old-process instruction.
 - Added cause-specific `getLocalAdminStartupRecoveryGuidance()` and changed the fail-closed startup page to render a dedicated recovery action.

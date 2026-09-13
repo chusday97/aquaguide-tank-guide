@@ -1,5 +1,32 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after corrupt backup candidate filtering closure
+- DONE: reproduce a manifest-valid but content-corrupt backup still appearing in `GET /backups`.
+- DONE: filter restorable backup candidates by full backup-root integrity, not manifest validity alone.
+- DONE: preserve corrupt backups on disk for operator inspection; do not auto-delete.
+- DONE: retain direct restore integrity rejection as a second safety gate.
+- DONE: permanent regression + Local File/UI/mode/Operations/TypeScript/build gates.
+- DONE: GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
+## CURRENT OVERRIDE — 2026-09-13 after interrupted restore integrity closure
+- DONE: reproduce startup recovery accepting a corrupt safety backup and deleting its journal.
+- DONE: validate the safety backup before apply.
+- DONE: validate the recovered active root before temp/journal cleanup.
+- DONE: permanent regression requires corrupt safety backup => startup 500 + journal retained + active root unchanged.
+- DONE: valid interrupted-restore recovery remains PASS.
+- DONE: Local File API/UI / mode contract / TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+## CURRENT OVERRIDE — 2026-09-13 after held root lease displacement closure
+- DONE: reproduce dual-live-owner state after externally deleting the active `.aqua-admin-owner.json`.
+- DONE: revalidate in-memory lease ownership against on-disk PID + token on every Local Admin request.
+- DONE: missing lease forces atomic reacquisition; displaced owner fails closed instead of continuing to serve.
+- DONE: formal regression + 20-cycle displacement/reacquisition stress.
+- DONE: Local File API/UI / mode contract / API+root TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase. Do not expand multi-owner semantics.
+
 ## CURRENT OVERRIDE — 2026-09-13 after fail-closed startup guidance closure
 - DONE: reproduce misleading fixed startup guidance for invalid restore journal, unreadable root lease, and future Local File schema.
 - DONE: map Local Admin startup failures to cause-specific operator actions.

@@ -261,3 +261,7 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Canonical matrix: 21 taxa / 420 directions = 340 caution, 78 not_recommended, 2 compatible. Runtime/Admin baseline: 24 Profiles / 5 Pair Rules.
 - Added unapplied additive migration `202609120010_compatibility_ramirezi_baseline.sql`.
 - Product, runtime/Admin, build and GP001–GP004 gates all PASS.
+
+## Main convergence checkpoint — Local File lease/restore/backup hardening
+- Absorbed current main Local File reliability fixes: held root leases are revalidated before continued use, interrupted-restore recovery is integrity-checked before serving, and corrupt backup candidates are filtered from operator choices.
+- These changes do not alter Product Recovery authority, Compatibility V7, the 24 Profile / 5 Pair runtime baseline, or the 21-taxon canonical matrix.
