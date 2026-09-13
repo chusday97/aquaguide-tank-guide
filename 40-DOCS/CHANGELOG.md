@@ -820,6 +820,8 @@
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
 [Unreleased]
 
+- Changed: 强化 `verify-public-seo-github-actions.mjs`，为四条 Species 路由增加章节相对顺序和破图回退断言；本地静态检查通过，等待 GitHub Actions 在新 SHA 上复验。证据为 `EVD-20260914-157`。
+
 - Blocked: 2026-09-14 当前提交 `2a07878b` 的既有 Critic 同线程复验已完成，但没有返回可读六维正文；不计为独立审查通过，不创建重复线程。证据为 `EVD-20260914-156`。
 
 - Verified: 2026-09-14 在 `71ffc8cc` 上重跑公开 SEO 静态回归、lint、build 和 diff-check，全部通过；未触碰三个用户未提交文件。证据为 `EVD-20260914-155`。Critic 可读报告、Figma Canonical、完整性能基线和索引发布仍未完成。

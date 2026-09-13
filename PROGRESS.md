@@ -1,5 +1,8 @@
 ## 2026-09-14 浏览器门禁诊断（进行中）
 
+- [x] 强化 CI 浏览器门禁：对四条 Species 路由增加章节相对顺序断言和破图回退断言；脚本语法、全部公开 SEO 静态测试、lint、build、diff-check通过。证据为 `EVD-20260914-157`。
+- [ ] 新断言尚未在 GitHub Actions 运行；推送后需核对新的 SHA、运行状态和 artifact，不能把本地静态通过当作浏览器通过。
+
 - [x] 已将当前提交 `2a07878b` 交回既有 Critic 同线程复验；任务完成但 `latestAssistantMessage` 为空，仍没有可读六维正文。证据为 `EVD-20260914-156`；不创建重复 Critic，不解除 `noindex`。
 
 - [x] 在提交 `71ffc8cc` 上重跑公开 SEO 静态回归：Editorial/Evidence/Public Contract/Copy/Structure/Responsive/Variant Card、lint、build 和 diff-check 全部通过；未触碰三个用户未提交文件。证据为 `EVD-20260914-155`。

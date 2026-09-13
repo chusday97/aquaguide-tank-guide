@@ -78,6 +78,9 @@ const inspect = async (route, width) => {
     const firstInteractive = document.querySelector('a,button,select,input,[role="button"]');
     firstInteractive?.focus();
     const focusStyle = firstInteractive ? getComputedStyle(firstInteractive) : null;
+    const sectionOrder = [...document.querySelectorAll('section[id]')]
+      .map(section => section.id)
+      .filter(id => ['overview', 'behavior', 'habitat', 'care', 'variants', 'faq'].includes(id));
     return {
       scrollWidth: document.documentElement.scrollWidth,
       viewportWidth: innerWidth,
@@ -95,6 +98,8 @@ const inspect = async (route, width) => {
       dataRailColumns: document.querySelector('.seo-data-rail') ? getComputedStyle(document.querySelector('.seo-data-rail')).gridTemplateColumns.split(' ').length : null,
       heroLead: document.querySelector('.seo-hero__content .seo-lead')?.textContent || '',
       compatibilityHref: document.querySelector('a[href*="mode=compatibility"]')?.getAttribute('href') || '',
+      sectionOrder,
+      brokenImages: [...document.images].filter(image => image.complete && image.naturalWidth === 0).length,
       vitals: window.__seoVitals,
     };
   });
@@ -108,6 +113,7 @@ const inspect = async (route, width) => {
   assert.equal(result.appShell, false, `${route.path} should not mount App Shell`);
   assert.equal(result.onboarding, false, `${route.path} should not mount onboarding`);
   assert.equal(result.robots, 'noindex,follow', `${route.path} robots policy changed`);
+  assert.equal(result.brokenImages, 0, `${route.path} has a broken image without a stable fallback`);
   assert.doesNotMatch(result.body, prohibitedCopy, `${route.path} exposes internal publishing terminology`);
   assert.deepEqual(typesFor(result.jsonLd).sort(), [...route.jsonLd].sort(), `${route.path} JSON-LD does not match its publication gate`);
 
@@ -154,6 +160,11 @@ const inspect = async (route, width) => {
   }
   if (route.id.startsWith('sp_') && result.dataRailColumns !== null) {
     assert.equal(result.dataRailColumns, width === 390 ? 2 : width === 600 ? 3 : 6, `${route.path} data rail columns mismatch at ${width}px`);
+  }
+  if (route.id.startsWith('sp_')) {
+    const order = ['overview', 'behavior', 'habitat', 'care', 'variants', 'faq'];
+    const indexes = result.sectionOrder.map(id => order.indexOf(id));
+    assert.ok(indexes.every((index, position) => index > -1 && (position === 0 || index > indexes[position - 1])), `${route.path} SEO chapter order is inconsistent`);
   }
 
   if (screenshotDir && route.id.startsWith('sp_')) await page.screenshot({ path: path.join(screenshotDir, fileNameFor(route.id, width)), fullPage: true });

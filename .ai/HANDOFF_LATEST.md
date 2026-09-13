@@ -14,6 +14,11 @@
 
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-14 浏览器门禁断言补强
+
+- [x] `verify-public-seo-github-actions.mjs` 新增 Species 章节顺序和破图回退断言；本地脚本语法、静态测试、lint、build、diff-check通过。
+- [ ] 尚未取得新提交的 GitHub Actions 结果；推送后需核对运行 SHA 与 artifact。Critic、Figma Canonical、完整性能基线和索引门禁仍未完成。
+
 ## 2026-09-14 Critic 复验输出阻塞
 
 - [x] 当前提交 `2a07878b` 已交回既有 Critic 同线程；任务完成但没有 assistant 正文，不能计为独立审查通过。证据为 `EVD-20260914-156`。
