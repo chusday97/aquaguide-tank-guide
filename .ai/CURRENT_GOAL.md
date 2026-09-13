@@ -1,5 +1,14 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 fail-closed startup guidance closed
+A reproducible operator-guidance badcase is closed on main at `5845c79b fix(admin): tailor fail-closed startup guidance`.
+
+- Fail-before-fix: every Local Admin startup failure used the same fixed footer telling the operator to close an old process, even when the actual cause was a corrupt restore journal, unreadable ownership lease, or a Local File format newer than the current app.
+- Startup recovery guidance is now cause-specific: owner conflict -> close the old owner; unreadable lease -> verify no other owner and inspect the exact lease path; restore journal failure -> stop writes and inspect the exact journal + safety backup; newer schema -> do not overwrite/downgrade and switch to code that supports the newer format.
+- Local Admin API now returns `root/filePath/journalPath/safetyBackupId` details for local recovery failures where relevant. The startup page remains fail-closed and never falls back to browser-only persistence.
+- Real browser verification PASS for all four scenarios. Full Local File API/UI, mode contract, API/root TypeScript and build gates PASS. GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- Production remains unchanged. NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-13 Local owner conflict operator guidance closed
 A concrete fail-closed operator UX badcase is closed on main at `ac5959e6 fix(admin): preserve local owner conflict guidance`.
 

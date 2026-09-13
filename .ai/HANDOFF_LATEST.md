@@ -1,5 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 fail-closed startup guidance closed
+- New main checkpoint: `5845c79b fix(admin): tailor fail-closed startup guidance`.
+- The Local Admin startup screen no longer gives the same root-owner instruction for unrelated fail-closed causes. Guidance is now mapped by API error/code.
+- Browser-proven recovery paths: owner conflict -> close old owner; invalid `.aqua-admin-owner.json` -> verify no active owner and inspect exact file; invalid `.restore-transaction.json` -> stop writes and inspect exact journal/safety backup; newer Local File schema -> do not overwrite/downgrade, use newer compatible code.
+- API error details expose local recovery file paths where needed. Local File remains fail-closed with no browser-only fallback.
+- Local File API/UI + mode contract + TypeScript + build PASS; Product Golden Path PASS; Vercel `dpl_3qMeuV5hXC1GB6ocsqk2db2udiUc` READY. Production unchanged.
+
 ## 2026-09-13 Local owner conflict operator guidance closed
 - New main checkpoint: `ac5959e6 fix(admin): preserve local owner conflict guidance`.
 - Startup hydration no longer collapses root-ownership `VERSION_CONFLICT` into a generic Local File unavailable message; the original API reason is retained.

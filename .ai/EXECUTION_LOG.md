@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-13 — fail-closed startup guidance closure
+- Re-read canonical main (`c1acdfe2`) and reproduced three misleading startup paths in real browser: invalid restore journal, invalid root lease, and future schema all incorrectly showed the same close-old-process instruction.
+- Added cause-specific `getLocalAdminStartupRecoveryGuidance()` and changed the fail-closed startup page to render a dedicated recovery action.
+- Added local API error details for unreadable owner lease and interrupted restore journal/recovery failures so the browser can show exact local paths.
+- Re-ran deterministic same-root owner browser probe after first owner acquired the lease: owner reason + close-old-process guidance PASS.
+- Real browser PASS: invalid journal -> journal path + safety backup; invalid lease -> lease path + owner verification; future schema -> no overwrite/downgrade; owner conflict -> close old process.
+- PASS: Local File API/UI, mode contract, API/root TypeScript, full build, GitHub Product Golden Path `34744999232`, Vercel `dpl_3qMeuV5hXC1GB6ocsqk2db2udiUc` READY.
+
 ## 2026-09-13 — Local owner conflict guidance closure
 - Re-read real main and first synced the previously unrecorded `bac95f66` interrupted-restore recovery checkpoint.
 - Audited Local File client error propagation and reproduced an operator UX defect: startup hydration discarded the explicit same-root owner conflict reason.

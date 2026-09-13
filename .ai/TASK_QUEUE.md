@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after fail-closed startup guidance closure
+- DONE: reproduce misleading fixed startup guidance for invalid restore journal, unreadable root lease, and future Local File schema.
+- DONE: map Local Admin startup failures to cause-specific operator actions.
+- DONE: expose exact lease/journal recovery paths through DEV-only Local Admin API error details.
+- DONE: deterministic same-root owner browser probe still shows owner reason + close-old-process action.
+- DONE: real browser verification for owner conflict / invalid journal / invalid lease / future schema.
+- DONE: Local File API/UI / mode contract / API+root TypeScript / full build / GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase. Do not add recovery buttons or mutate authority speculatively.
+
 ## CURRENT OVERRIDE — 2026-09-13 after Local owner conflict guidance closure
 - DONE: reproduce the startup UX loss of the same-root `VERSION_CONFLICT` reason.
 - DONE: preserve the actionable Local File API message through startup hydration.

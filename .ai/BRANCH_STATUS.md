@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-13 — fail-closed startup guidance checkpoint
+- main functional checkpoint: `5845c79b fix(admin): tailor fail-closed startup guidance`
+- GitHub Product Golden Path: PASS (`34744999232`).
+- Vercel main branch deployment: `dpl_3qMeuV5hXC1GB6ocsqk2db2udiUc` READY, target null.
+- Real browser verification covers: same-root owner conflict, invalid restore journal, unreadable root lease, and future Local File schema; each now renders a distinct recovery action.
+- Restore-journal and lease failures expose the exact local file path through API error details; future-schema failures explicitly prohibit overwrite/downgrade.
+- Production not promoted.
+
 ## 2026-09-13 — Local owner conflict guidance checkpoint
 - main functional checkpoint: `ac5959e6 fix(admin): preserve local owner conflict guidance`
 - GitHub Product Golden Path: PASS (`34744235122`).

@@ -1,5 +1,12 @@
 # Live Status
 
+## 2026-09-13 fail-closed startup guidance
+- Functional main: `5845c79b`
+- Four startup failure domains now render distinct operator recovery guidance instead of one fixed owner-conflict footer.
+- Exact lease/journal paths are surfaced for local recovery; newer-schema guidance explicitly forbids overwrite/downgrade.
+- Real browser 4-scenario verification PASS; Product Golden Path PASS; Vercel branch deployment READY.
+- No Production promotion.
+
 ## 2026-09-13 Local owner conflict operator guidance
 - Functional main: `ac5959e6`
 - Same-root owner conflicts remain fail-closed, but the startup page now preserves the exact API reason and gives the operator a concrete recovery action.
