@@ -1,5 +1,13 @@
 # Branch Status
 
+
+## 2026-09-14 — referenced asset delete guard checkpoint
+- Functional main checkpoint: `77a32708db01fded317412394cb73c86166add52` — `fix(admin): protect referenced asset deletes`.
+- GitHub Product Golden Path `34771352211` PASS.
+- Vercel Git auto-preview was not created for this DEV-only main push; no manual deployment triggered.
+- Local/GitHub main synchronized at functional push; no force push.
+- Production intentionally unchanged.
+
 ## 2026-09-14 — post-write state integrity checkpoint
 - Functional main checkpoint: `5c8f6a63853d3bfd98634e726e780b0fafae076c` — `fix(admin): rollback invalid state writes`.
 - GitHub Product Golden Path `34769296960` PASS.

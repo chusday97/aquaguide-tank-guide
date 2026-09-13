@@ -1,5 +1,13 @@
 # Execution Log
 
+
+## 2026-09-14 — referenced asset delete guard closure
+- Reproduced healthy root -> Business references local asset -> DELETE asset returns 200 -> root becomes unhealthy with `REFERENCED_ASSET_MISSING`.
+- Added Business-reference preflight to asset DELETE under the authority write lock. Referenced delete now returns 409 before mutation.
+- Added permanent regression requiring asset preservation + healthy integrity after rejection; existing orphan/delete rollback flows remain PASS.
+- PASS: Local File API, mode contract, browser Local File regression, Operations Studio, API/root TypeScript, full build, diff check.
+- Pushed `77a32708db01fded317412394cb73c86166add52`; Product Golden Path `34771352211` PASS. No Vercel auto-preview; Production unchanged.
+
 ## 2026-09-14 — post-write state integrity rollback closure
 - Fail-before-fix probe: healthy root -> `PUT /state/business` referencing missing `local-asset-does-not-exist` -> HTTP 200 -> bad reference persisted -> `/integrity` `healthy=false / REFERENCED_ASSET_MISSING`.
 - Added `writePartitionStateWithIntegrityRollback()`: preserve previous file, write candidate, inspect full root, restore previous file on failure, verify rollback health.

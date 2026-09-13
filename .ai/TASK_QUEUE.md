@@ -1,5 +1,15 @@
 # Task Queue
 
+
+## CURRENT OVERRIDE — 2026-09-14 after referenced asset delete guard
+- DONE: reproduce healthy Business reference -> asset DELETE 200 -> `REFERENCED_ASSET_MISSING`.
+- DONE: reject deletion of assets still referenced by Business state before filesystem mutation.
+- DONE: preserve orphan/upload-failure cleanup behavior.
+- DONE: permanent regression + Local File/UI/Operations/mode/TypeScript/full-build gates.
+- DONE: GitHub Product Golden Path `34771352211` PASS.
+- NOTE: no Vercel auto-preview was created for this DEV-only main push; no manual Preview triggered.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-14 after post-write integrity rollback closure
 - DONE: reproduce a healthy active root accepting and persisting a Business state that referenced a nonexistent Local File asset.
 - DONE: make state PUT transactional with previous-file preservation, post-write full integrity validation, automatic rollback, and rollback integrity verification.

@@ -1,5 +1,12 @@
 # Live Status
 
+
+## 2026-09-14 — referenced asset delete guard
+- CLOSED on main at `77a32708`: a healthy referenced asset can no longer be deleted out from under Business state.
+- Referenced DELETE => `409 INTEGRITY_FAILED`; asset remains readable; integrity remains healthy.
+- Orphan/unreferenced deletion remains supported.
+- Product Golden Path `34771352211` PASS; no Vercel auto-preview; Production unchanged.
+
 ## 2026-09-14 — post-write integrity rollback closed
 - CLOSED on main: `5c8f6a63` makes Local File state PUT transactional against full post-write integrity.
 - Bad state candidates no longer get HTTP 200 and remain on disk; they are rolled back and return `409 INTEGRITY_FAILED`.

@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+
+## 2026-09-14 — referenced asset delete guard closed
+- Main functional checkpoint: `77a32708db01fded317412394cb73c86166add52` (`fix(admin): protect referenced asset deletes`).
+- Fail-before-fix: deleting a healthy asset still referenced by Business returned 200 and created `REFERENCED_ASSET_MISSING`.
+- Fixed: referenced asset DELETE now fails before mutation with `409 INTEGRITY_FAILED`; asset remains intact and root stays healthy.
+- Unreferenced/orphan cleanup remains available. Full Local File/UI/Operations/type/build gates PASS; Product Golden Path `34771352211` PASS.
+- No Vercel auto-preview for this DEV-only push; Production unchanged.
+
 ## 2026-09-14 — post-write state integrity rollback closed
 - Functional main checkpoint: `5c8f6a63853d3bfd98634e726e780b0fafae076c` (`fix(admin): rollback invalid state writes`).
 - Reproduced: healthy active root + Business state candidate referencing a missing Local File asset returned 200, persisted the bad reference, then made `/integrity` unhealthy.

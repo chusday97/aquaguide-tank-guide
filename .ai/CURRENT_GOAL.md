@@ -1,5 +1,17 @@
 # Current Goal
 
+
+## CURRENT OVERRIDE — 2026-09-14 referenced asset delete guard closed
+A concrete healthy-root deletion badcase is closed on main at `77a32708 fix(admin): protect referenced asset deletes`.
+
+- Fail-before-fix: with a healthy Business state referencing a valid local asset, `DELETE /assets/:id` returned 200, removed the pair, and immediately made `/integrity` unhealthy with `REFERENCED_ASSET_MISSING`.
+- Asset DELETE now checks Business references inside the authority write lock even when the root is currently healthy. A referenced asset returns `409 INTEGRITY_FAILED` before deletion.
+- Rejected delete leaves the asset readable and the active root healthy. Unreferenced/orphan cleanup remains allowed, including upload-failure cleanup.
+- Permanent regression requires referenced healthy asset DELETE => 409, asset still 200 on GET, integrity still healthy. Existing delete rollback/orphan cleanup tests remain PASS.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio populated UI, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34771352211`.
+- Vercel Git auto-preview was not created for this DEV-only main push; no manual Preview triggered. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-14 post-write integrity rollback closed
 A concrete state-candidate corruption badcase is closed on main at `5c8f6a63 fix(admin): rollback invalid state writes`.
 
