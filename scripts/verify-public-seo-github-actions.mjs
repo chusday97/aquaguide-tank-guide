@@ -72,7 +72,7 @@ const inspect = async (route, width) => {
       .filter(visible)
       .filter(node => {
         const rect = node.getBoundingClientRect();
-        return Math.round(rect.width) < 44 || Math.round(rect.height) < 44;
+        return rect.width < 44 || rect.height < 44;
       }).length;
     const firstInteractive = document.querySelector('a,button,select,input,[role="button"]');
     firstInteractive?.focus();
@@ -118,11 +118,16 @@ const inspect = async (route, width) => {
     assert.match(result.compatibilityHref, /source=species-profile/);
     assert.ok(await page.locator('a[href="#behavior"]').count() > 0, `${route.path} should expose a behavior chapter anchor`);
     const faqButton = page.locator('#faq button[aria-expanded]').first();
-    if (await faqButton.count() > 0) {
-      await faqButton.focus();
-      await faqButton.press('Space');
-      assert.equal(await faqButton.getAttribute('aria-expanded'), 'true', `${route.path} FAQ should expand by keyboard`);
-    }
+    assert.ok(await faqButton.count() > 0, `${route.path} should expose at least one FAQ disclosure`);
+    await faqButton.focus();
+    await faqButton.press('Space');
+    assert.equal(await faqButton.getAttribute('aria-expanded'), 'true', `${route.path} FAQ should expand by keyboard`);
+    assert.equal(await page.evaluate(() => document.activeElement?.matches('#faq button[aria-expanded]')), true, `${route.path} FAQ should retain focus after expansion`);
+    const answerId = await faqButton.getAttribute('aria-controls');
+    assert.ok(answerId, `${route.path} FAQ should identify its answer panel`);
+    const answer = page.locator(`#${answerId}`);
+    assert.equal(await answer.getAttribute('aria-hidden'), 'false', `${route.path} FAQ answer should become visible`);
+    assert.ok(await answer.isVisible(), `${route.path} FAQ answer content should be visible`);
   }
   if (route.id === 'sp_0001-variant-sp_0030') {
     assert.match(result.body, /黄金米虾/);
