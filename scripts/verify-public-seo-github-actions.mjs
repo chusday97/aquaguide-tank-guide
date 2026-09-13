@@ -69,12 +69,15 @@ const inspect = async (route, width) => {
       return rect.width > 0 && rect.height > 0;
     };
     const headings = [...document.querySelectorAll('h1,h2,h3')].filter(visible).map(node => Number(node.tagName.slice(1)));
-    const smallTargets = [...document.querySelectorAll('a,button,select,input,[role="button"]')]
+    const smallTargetDetails = [...document.querySelectorAll('a,button,select,input,[role="button"]')]
       .filter(visible)
       .filter(node => {
         const rect = node.getBoundingClientRect();
         return rect.width < 44 || rect.height < 44;
-      }).length;
+      }).map(node => {
+        const rect = node.getBoundingClientRect();
+        return { tag: node.tagName, text: (node.textContent || node.getAttribute('aria-label') || '').trim().slice(0, 80), href: node.getAttribute('href'), width: rect.width, height: rect.height };
+      });
     const firstInteractive = document.querySelector('a,button,select,input,[role="button"]');
     firstInteractive?.focus();
     const focusStyle = firstInteractive ? getComputedStyle(firstInteractive) : null;
@@ -86,7 +89,8 @@ const inspect = async (route, width) => {
       viewportWidth: innerWidth,
       h1Count: document.querySelectorAll('h1').length,
       headings,
-      smallTargets,
+      smallTargets: smallTargetDetails.length,
+      smallTargetDetails,
       focusVisible: Boolean(focusStyle && focusStyle.outlineStyle !== 'none'),
       publicShell: Boolean(document.querySelector('.public-seo-root')),
       appShell: Boolean(document.querySelector('.aquaguide-app, .desktop-shell-active, .phone-shell-active')),
@@ -107,7 +111,7 @@ const inspect = async (route, width) => {
   assert.equal(result.scrollWidth, width, `${route.path} overflows at ${width}px`);
   assert.equal(result.h1Count, 1, `${route.path} should have one H1`);
   assert.ok(result.headings.every((level, index) => index === 0 || level <= result.headings[index - 1] + 1), `${route.path} heading levels should be continuous`);
-  assert.equal(result.smallTargets, 0, `${route.path} has an interactive target smaller than 44px`);
+  assert.deepEqual(result.smallTargetDetails, [], `${route.path} has interactive target(s) smaller than 44px: ${JSON.stringify(result.smallTargetDetails)}`);
   assert.equal(result.focusVisible, true, `${route.path} has no visible keyboard focus`);
   assert.equal(result.publicShell, true, `${route.path} should use Public Shell`);
   assert.equal(result.appShell, false, `${route.path} should not mount App Shell`);

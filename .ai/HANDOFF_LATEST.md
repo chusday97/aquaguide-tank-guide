@@ -14,6 +14,11 @@
 
 # AquaGuide Species SEO 当前交接
 
+## 2026-09-14 44px 门禁发现真实缺口
+
+- [x] GitHub Actions Run `34771775858` 在 `sp_0436` 发现 1 个实际小于 44px 的交互目标；已把失败诊断扩展为输出具体标签、文本、href 和浮点尺寸。
+- [ ] 尚未获得具体元素详情；不盲改布局，下一步先通过新 CI 运行定位，再做最小修复。旧用户文件仍不触碰。
+
 ## 2026-09-14 浏览器门禁断言补强
 
 - [x] `verify-public-seo-github-actions.mjs` 新增 Species 章节顺序和破图回退断言；本地脚本语法、静态测试、lint、build、diff-check通过。

@@ -820,6 +820,8 @@
 - 真实浏览器滚动、性能/reduced-motion、Figma Canonical和可读独立Critic仍未完成。
 [Unreleased]
 
+- Fixed-in-progress: GitHub Actions 已发现孔雀鱼页面的真实 44px 交互目标缺口；浏览器门禁诊断现会输出具体元素和浮点尺寸，等待下一次运行后实施最小修复。证据为 `EVD-20260914-158`。
+
 - Changed: 强化 `verify-public-seo-github-actions.mjs`，为四条 Species 路由增加章节相对顺序和破图回退断言；本地静态检查通过，等待 GitHub Actions 在新 SHA 上复验。证据为 `EVD-20260914-157`。
 
 - Blocked: 2026-09-14 当前提交 `2a07878b` 的既有 Critic 同线程复验已完成，但没有返回可读六维正文；不计为独立审查通过，不创建重复线程。证据为 `EVD-20260914-156`。
