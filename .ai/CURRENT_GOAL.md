@@ -1,5 +1,13 @@
 # Current Goal
 
+## Denison barb reviewed-authority checkpoint — 2026-09-13
+- Added standard `Sahyadria denisonii` / 一眉道人 (`sp_0440`) as the 17th canonical priority taxon using Seriously Fish + FishBase reviewed evidence.
+- Reviewed planning authority: 15–25°C, pH 6.5–7.8, 5–25 dGH, ~11 cm SL, 120 cm tank length, ~243 L planning volume, school minimum 6 with 6–10 preferred.
+- Reproduction remains absent because current captive-breeding authority is not strong enough for a stable user-facing contract. Gold/Longfin/Red Line catalog variants do not inherit this standard-species authority automatically.
+- Canonical coverage: 17 taxa / 272 ordered directions = 238 caution, 32 not_recommended, 2 compatible; no new unconditional green-light direction.
+- Runtime/Admin reviewed baseline: 20 Profiles / 5 Pair Rules. Additive migration `202609120006_compatibility_denison_barb_baseline.sql` is repository authority only and is not applied to Staging/Production.
+- Full Product/Admin/runtime/build/browser validation is green through GP001–GP004.
+
 ## Main follow-up absorbed — Local File restore visibility / snapshot consistency (2026-09-13)
 - Absorbed main checkpoints `f83c08fd`, `deb5b085`, `fc125aab`, and `b6361522`: integrity/status/state/asset snapshot reads now use the shared authority read side, while restore and mutations use the exclusive write side.
 - Recovery keeps the dynamic canonical Compatibility exact-baseline guard; the Local File concurrency upgrade does not downgrade the current 19 Profiles / 5 Pair Rules authority.

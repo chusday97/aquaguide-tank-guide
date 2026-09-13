@@ -184,7 +184,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         tankSize: '至少 100 升',
       });
       const result = evaluateLegacyTankCompatibility({
-        tank: makeTank({ dimensions: { length: '100', width: '50', height: '50' } }),
+        tank: makeTank({ dimensions: { length: '100', width: '55', height: '50' } }),
         existingSpecies: [{ species: predator, record: { quantity: 1 } }],
         candidateSpecies: makeFish(),
       });
@@ -204,7 +204,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         size: 'Large',
         tankSize: '至少 100 升',
       });
-      const tank = makeTank({ dimensions: { length: '100', width: '50', height: '50' } });
+      const tank = makeTank({ dimensions: { length: '100', width: '55', height: '50' } });
       const forward = evaluateCompatibilityDecision({
         tank,
         items: [{ species: smallFish, quantity: 1 }, { species: predator, quantity: 1 }],
@@ -486,6 +486,34 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Denison-barb authority enforces 243L planning, 120cm length, six-fish group and cool-water ceiling',
+    run: () => {
+      const denison = fishData.find(item => item.id === 'sp_0440');
+      if (!denison) return false;
+      const underPlanned = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '40' }, targetTemperature: '24' }),
+        candidateSpecies: denison,
+        candidateQuantity: 4,
+      });
+      const fullPlan = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '45' }, targetTemperature: '24' }),
+        candidateSpecies: denison,
+        candidateQuantity: 6,
+      });
+      const hotTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '45' }, targetTemperature: '26' }),
+        candidateSpecies: denison,
+        candidateQuantity: 6,
+      });
+      return underPlanned.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_volume_below_species_minimum')
+        && underPlanned.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+        && fullPlan.warningRules.every(rule => !['minimum_group_not_met', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum'].includes(rule.code))
+        && hotTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && fullPlan.evidenceIds?.includes('seriouslyfish-sahyadria-denisonii');
+    },
+  },
+  {
     name: 'reviewed cherry-barb authority overrides legacy 40L catalog and enforces six-fish group context',
     run: () => {
       const cherryBarb = fishData.find(item => item.id === 'sp_0012');
@@ -672,7 +700,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       const reviewed = getReviewedCompatibilityProfileForFish(variant);
       if (reviewed?.speciesId !== 'base:Channa asiatica' || !reviewed.behaviorTraits.includes('predatory') || !reviewed.behaviorTraits.includes('solitary_required')) return false;
       const result = evaluateCompatibilityDecision({
-        tank: makeTank({ dimensions: { length: '120', width: '50', height: '50' } }),
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '50' } }),
         items: [
           { species: variant, quantity: 1 },
           { species: makeFish({ id: 'small-reviewed-target', size: 'Small' }), quantity: 1 },
@@ -740,7 +768,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         housingMode: '建议单养',
       });
       const result = evaluateCompatibilityDecision({
-        tank: makeTank({ dimensions: { length: '100', width: '50', height: '50' }, targetTemperature: '25' }),
+        tank: makeTank({ dimensions: { length: '100', width: '55', height: '50' }, targetTemperature: '25' }),
         items: [
           { species: tigerBarb, quantity: 8, origin: 'existing' },
           { species: angelfish, quantity: 1, origin: 'candidate' },
@@ -833,7 +861,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     run: () => {
       const tiny = makeFish({ id: 'sp_0431', name: '红绿灯', scientificName: 'Paracheirodon innesi', size: 'Small' });
       const result = evaluateLegacyTankCompatibility({
-        tank: makeTank({ dimensions: { length: '120', width: '50', height: '50' } }),
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '50' } }),
         existingSpecies: [{ species: tiny, record: { quantity: 40 } }],
         candidateSpecies: tiny,
         candidateQuantity: 1,
@@ -917,7 +945,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     run: () => {
       const fish = makeFish({ id: 'sp_0431', waterType: 'freshwater' });
       const tank = makeTank({
-        dimensions: { length: '120', width: '50', height: '50' },
+        dimensions: { length: '120', width: '55', height: '50' },
         fishes: [{ id: 'existing', fishId: fish.id, quantity: 2, entryDate: '2026-01-01', lastWaterChangeDate: '2026-01-01' }],
       });
       const result = executeSpeciesAddition({

@@ -1,5 +1,12 @@
 # Aqua Product Recovery Status
 
+## P1 — Denison barb reviewed-authority checkpoint (2026-09-13)
+- Standard `Sahyadria denisonii` (`sp_0440`) is reviewed directly from Seriously Fish + FishBase. Gold/Longfin/Red Line variants are intentionally excluded from automatic inheritance.
+- Species Knowledge V2 reviewed facts: freshwater; 15–25°C; pH 6.5–7.8; 5–25 dGH; ~11 cm SL; 120 cm / ~243 L planning space; peaceful schooling; minimum group 6, preferred 6–10; adult sex identification only as an auxiliary cue.
+- Reproduction remains unknown/absent rather than inferring a generic barb breeding contract.
+- Canonical priority matrix: 17 taxa / 272 ordered directions = 238 caution, 32 not_recommended, 2 compatible.
+- Runtime/Admin reviewed authority: 20 Profiles / 5 Pair Rules; additive migration `202609120006_compatibility_denison_barb_baseline.sql` is repository-only and not applied to Staging/Production.
+
 Updated: 2026-09-13
 Active branch: `product-recovery-20260911`
 Base: current aligned `main` @ `af03864d13a920442a736326aac9ceb084f3c435`

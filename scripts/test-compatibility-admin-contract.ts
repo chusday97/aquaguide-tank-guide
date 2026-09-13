@@ -206,7 +206,16 @@ assert.deepEqual(normalizeEmberProfile(emberTetraProfiles[0]), normalizeEmberPro
 assert.equal((emberTetraMigration.match(/Compatibility ember-tetra profile drift:/g) || []).length, 2);
 assert.equal((emberTetraMigration.match(/Compatibility ember-tetra profile evidence drift:/g) || []).length, 2);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469']);
+const denisonMigration = readFileSync('supabase/migrations/202609120006_compatibility_denison_barb_baseline.sql', 'utf8');
+assert.match(denisonMigration, /Compatibility denison-barb baseline is partial or not fully published/, 'Denison-barb baseline must fail closed on partial published catalog coverage.');
+const denisonProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0440');
+assert.ok(denisonProfile, '120006 must own the reviewed Denison-barb profile.');
+assert.equal(denisonMigration.includes('sp_0440'), true);
+for (const source of denisonProfile.citations) assert.equal(denisonMigration.includes(source.id), true, `Denison-barb migration must include source ${source.id}`);
+assert.equal((denisonMigration.match(/Compatibility denison-barb profile drift:/g) || []).length, 1);
+assert.equal((denisonMigration.match(/Compatibility denison-barb profile evidence drift:/g) || []).length, 1);
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

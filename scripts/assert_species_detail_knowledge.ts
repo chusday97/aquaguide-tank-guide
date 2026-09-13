@@ -206,6 +206,30 @@ assert.equal(emberSources.length, 2);
 assert.ok(emberSources.some(source => source.publisher === 'Seriously Fish'));
 assert.ok(emberSources.some(source => source.publisher === 'FishBase'));
 
+const denisonKnowledge = buildSpeciesKnowledgeProfile({
+  ...baseFish,
+  id: 'sp_0440',
+  name: '一眉道人',
+  scientificName: 'Sahyadria denisonii',
+  waterTemperature: '15-25°C',
+  phLevel: '6.5-7.8',
+  tankSize: '至少 120 升',
+});
+assert.deepEqual(denisonKnowledge.facts.temperatureRange, { min: 15, max: 25 });
+assert.deepEqual(denisonKnowledge.facts.phRange, { min: 6.5, max: 7.8 });
+assert.deepEqual(denisonKnowledge.knowledge.environment?.hardnessDgh, { min: 5, max: 25 });
+assert.equal(denisonKnowledge.knowledge.socialBehavior?.minimumGroupSize, 6);
+assert.deepEqual(denisonKnowledge.knowledge.socialBehavior?.recommendedGroupSize, { min: 6, max: 10 });
+assert.equal(denisonKnowledge.knowledge.spaceAndGrowth?.adultLengthCm?.max, 11);
+assert.equal(denisonKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 243);
+assert.equal(denisonKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
+assert.equal(denisonKnowledge.knowledge.reproduction, undefined, 'Denison barb reproduction stays absent until stronger reviewed captive-breeding authority exists');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0196', scientificName: 'Sahyadria denisonii var. Gold' }), undefined, 'Denison ornamental variants must not inherit standard-species authority automatically');
+const denisonSources = resolveKnowledgeSources(denisonKnowledge.knowledge.environment?.evidence.sourceIds || []);
+assert.equal(denisonSources.length, 2);
+assert.ok(denisonSources.some(source => source.publisher === 'Seriously Fish'));
+assert.ok(denisonSources.some(source => source.publisher === 'FishBase'));
+
 const harlequinKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
   id: 'sp_0468',

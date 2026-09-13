@@ -55,7 +55,50 @@ const emberTetraKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+const denisonBarbKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '成熟后可用体型与体色作辅助判断',
+    summary: 'Seriously Fish 记录成熟母鱼通常稍大、体型更厚实，体色也比公鱼略淡；这些只适合作为成熟个体的辅助特征。',
+    points: ['母鱼：成熟后通常稍大、体型更厚实。', '公鱼：相对更纤细，体色通常更鲜明。'],
+    confidence: 'verified',
+    source: { type: 'species_data', label: 'Seriously Fish', confidence: 'verified' },
+    reliableFromLifeStage: 'adult',
+    maleTraits: ['相对更纤细', '体色通常更鲜明'],
+    femaleTraits: ['成熟后通常稍大', '体型更厚实', '体色通常略淡'],
+    limitations: ['仅适合成熟个体辅助判断，不应作为单一确定性别依据。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sahyadria-denisonii'], reviewedAt: '2026-09-13' },
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 15, max: 25 },
+    phRange: { min: 6.5, max: 7.8 },
+    hardnessDgh: { min: 5, max: 25 },
+    notes: ['偏好洁净、高溶氧并有一定水流的环境；Reviewed 范围优先于泛化 catalog 数据。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sahyadria-denisonii', 'fishbase-sahyadria-denisonii'], reviewedAt: '2026-09-13' },
+  },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 6,
+    recommendedGroupSize: { min: 6, max: 10 },
+    territoriality: 'none',
+    finNipping: 'unknown',
+    predationRisk: 'unknown',
+    swimmingPace: 'fast',
+    summary: '总体和平但属于活跃群游鱼；建议至少 6–10 条，并为整群提供足够长的游泳空间。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sahyadria-denisonii', 'fishbase-sahyadria-denisonii'], reviewedAt: '2026-09-13' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 11, measurement: 'SL' },
+    minVolumeLiters: 243,
+    minTankLengthCm: 120,
+    activityLevel: 'high',
+    spaceNotes: ['长期群养按至少 120 × 45 cm 缸底、约 243 L 规划；FishBase 另记录最大约 15 cm TL，测量口径不同，不直接混成同一精确值。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sahyadria-denisonii', 'fishbase-sahyadria-denisonii'], reviewedAt: '2026-09-13' },
+  },
+};
+
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0440: denisonBarbKnowledge,
   sp_0114: emberTetraKnowledge,
   sp_0469: emberTetraKnowledge,
   sp_0011: {

@@ -1,6 +1,22 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-sahyadria-denisonii': {
+    id: 'seriouslyfish-sahyadria-denisonii',
+    title: 'Sahyadria denisonii (Red-line Torpedo Barb)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/sahyadria-denisonii',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-sahyadria-denisonii': {
+    id: 'fishbase-sahyadria-denisonii',
+    title: 'Dawkinsia denisonii (Denison barb) species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Sahyadria-denisonii.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-hyphessobrycon-amandae': {
     id: 'seriouslyfish-hyphessobrycon-amandae',
     title: 'Hyphessobrycon amandae (Ember Tetra)',

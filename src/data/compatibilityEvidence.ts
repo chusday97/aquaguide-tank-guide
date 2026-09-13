@@ -134,6 +134,24 @@ const cherryBarbFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const denisonBarbSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-sahyadria-denisonii',
+  title: 'Sahyadria denisonii (Red-line Torpedo Barb)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/sahyadria-denisonii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const denisonBarbFishBase: EvidenceSourceDto = {
+  id: 'fishbase-sahyadria-denisonii',
+  title: 'Dawkinsia denisonii (Denison barb) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Sahyadria-denisonii.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const emberTetraSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-hyphessobrycon-amandae',
   title: 'Hyphessobrycon amandae (Ember Tetra)',
@@ -409,6 +427,17 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0440: {
+    speciesId: 'sp_0440',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 6,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [denisonBarbSeriouslyFish, denisonBarbFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
   sp_0114: makeEmberTetraProfile('sp_0114'),
   sp_0469: makeEmberTetraProfile('sp_0469'),
   sp_0012: {

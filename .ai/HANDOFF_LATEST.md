@@ -1,5 +1,12 @@
 # Handoff Latest
 
+## Denison barb reviewed-authority checkpoint — 2026-09-13
+- Added direct reviewed Species Knowledge V2 + Compatibility authority for standard `Sahyadria denisonii` (`sp_0440`); ornamental variants remain unreviewed and do not inherit automatically.
+- Canonical coverage is now 17 taxa / 272 directions: 238 caution, 32 not_recommended, 2 compatible.
+- Runtime/Admin baseline is 20 Profiles / 5 Pair Rules; Git runtime snapshot matches canonical static authority.
+- New additive migration: `202609120006_compatibility_denison_barb_baseline.sql`; not applied to Staging/Production.
+- Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical coverage, Admin/Git/DB runtime, Staging preflight, Local File Admin, full build, Species Detail, Compatibility Beginner Action and GP001–GP004.
+
 ## Main restore-visibility / cross-operation consistency absorbed — 2026-09-13
 - Absorbed latest main Local File reader/writer authority lock and restore visibility fixes through `b6361522`.
 - Recovery-specific canonical Compatibility publication guard remains dynamic and exact; main’s historical 7/4 constants are not reintroduced.
