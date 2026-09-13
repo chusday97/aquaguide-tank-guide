@@ -45,6 +45,10 @@ assert.match(read('src/main.tsx'), /getLocalAdminStartupRecoveryGuidance[\s\S]*D
   'The fail-closed startup screen must render cause-specific recovery guidance instead of one fixed root-owner instruction.');
 assert.match(localFilePersistence, /具体原因：\$\{error\.message\}/,
   'Local File startup failures must preserve the actionable API reason instead of collapsing into a generic unavailable message.');
+assert.match(localFilePersistence, /apiRequest<LocalAdminIntegrityReport>\('\/local-admin\/integrity'[\s\S]*!integrity\.healthy[\s\S]*INTEGRITY_FAILED/,
+  'Durable Local File startup must fail closed before hydrating an already-corrupt active authority.');
+assert.match(read('src/main.tsx'), /INTEGRITY_FAILED[\s\S]*getLocalAdminSafetySnapshot[\s\S]*local-admin-restore-latest[\s\S]*restoreLocalAdminBackup/,
+  'Integrity startup failure must preserve a healthy-backup recovery action without opening normal Admin workspaces.');
 assert.match(localFilePersistence, /关闭占用同一 Local File root 的旧 Local Admin 进程后重试/,
   'Same-root owner conflicts must keep an explicit operator recovery instruction.');
 assert.match(localFileRouter, /ownership file is unreadable[\s\S]*\{ root, filePath \}/,
