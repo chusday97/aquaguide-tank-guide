@@ -268,3 +268,7 @@ Continue distinct canonical taxon expansion only after the Ember-tetra checkpoin
 - Admin/Git runtime baseline advances to 26 Profiles / 5 Pair Rules. Additive migration `202609120012_compatibility_pygmy_cory_baseline.sql` is repository authority only and has not been applied to Staging/Production.
 - Fixed unapplied `202609120011_compatibility_discus_baseline.sql` so its drift assertion matches inserted `minimum_group_size = 5`; Admin contract now also checks additive-migration minimumGroupSize and requiredFacts self-consistency, not behaviorTraits alone.
 - Validation PASS: TypeScript, Species Knowledge, Compatibility, canonical evidence coverage, Compatibility Admin contract, Git/runtime authority, Staging preflight, Local File Admin, SQL parse, full build, Species Detail E2E, Compatibility Beginner Action E2E, GP001–GP004.
+
+## Main convergence checkpoint — backup manifest binding and corrupt authority fail-closed
+- Absorbed current main Local File hardening that binds each backup manifest to its directory identity and refuses startup when the active durable authority is corrupt.
+- Product Recovery remains the active authority; Compatibility V7, the 26 Profile / 5 Pair runtime baseline, and the 23-taxon canonical matrix are unchanged.

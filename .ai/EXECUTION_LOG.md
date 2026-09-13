@@ -1,5 +1,22 @@
 # Execution Log
 
+## 2026-09-13 — corrupt active authority startup recovery closure
+- Real browser fail-before-fix: generated Durable Local File authority, deleted its current local asset blob, restarted the same root, and observed `ASSET_PAIR_MISSING` + `REFERENCED_ASSET_MISSING` while `/admin/content` still loaded Operations Studio with normal workspace entry points.
+- Added `/integrity` preflight to `hydrateLocalAdminFileStores()` and frontend `INTEGRITY_FAILED` handling.
+- Added fail-closed recovery UI that queries healthy backup candidates, restores the latest healthy backup, and reloads only after restore succeeds.
+- Extended `verify-local-file-admin.mjs` with the full corrupt-root recovery cycle; added mode-contract assertions.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `test:operations-studio-ui`, `check:api`, root TypeScript, full build, diff check.
+- Pushed `ed3789e7105354d04f099bfb85290c27150d0e3a`; Product Golden Path `34756774041` PASS.
+- Vercel Git auto-preview: no deployment record; no manual deployment triggered. Production unchanged.
+
+## 2026-09-13 — backup manifest-directory binding closure
+- Fail-before-fix probe: newest backup directory manifest id was rewritten to an older backup id; `GET /backups` exposed the newest row with the old id, UI-equivalent restore returned 200, and Business state restored the old marker.
+- Added manifest-directory identity validation in `readBackupManifest()`.
+- Added permanent regression requiring mismatched manifest id to be hidden from restore candidates and direct restore to return 409.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `test:operations-studio-ui`, API/root TypeScript, full build, diff check.
+- Pushed `57985b5aed38c48dd4a72d4cd0ccb0e323c0c7c9`; Product Golden Path `34754738827` PASS.
+- Vercel Git auto-preview: no deployment record for the exact post-push window; no manual deployment triggered. Production unchanged.
+
 ## 2026-09-13 — failed restore rollback integrity closure
 - Reproduced a real filesystem race where target restore failed, the just-created safety backup was corrupted, rollback apply returned without validation, API claimed automatic rollback success, active root was unhealthy, and the restore journal was deleted.
 - Added pre-rollback safety `inspectRoot()` and post-rollback active-root `inspectRoot()` gates.

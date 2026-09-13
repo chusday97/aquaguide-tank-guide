@@ -286,3 +286,7 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Canonical matrix: 23 taxa / 506 directions = 378 caution, 126 not_recommended, 2 compatible. Runtime/Admin baseline: 26 Profiles / 5 Pair Rules.
 - Added unapplied additive migration `202609120012_compatibility_pygmy_cory_baseline.sql`. Corrected the also-unapplied Discus `120011` minimum-group drift assertion and extended migration self-consistency tests to minimumGroupSize + requiredFacts.
 - Product, runtime/Admin, build and GP001–GP004 gates all PASS.
+
+## Main convergence checkpoint — backup manifest binding and corrupt authority fail-closed
+- Current main Local File hardening is absorbed: backup manifests are directory-bound and corrupt active authority now fails closed with recovery guidance.
+- Product Recovery authority, Compatibility V7, 26/5 runtime baseline, and the 23-taxon reviewed matrix are unchanged.

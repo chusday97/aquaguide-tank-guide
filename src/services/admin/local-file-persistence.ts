@@ -88,6 +88,9 @@ export const getLocalAdminStartupRecoveryGuidance = (error: unknown) => {
   if (error.code === 'MIGRATION_REJECTED' && error.message.includes('newer than this app supports')) {
     return '当前代码版本落后于本地 authority 格式。不要覆盖或降级这些文件；切换到支持该版本的更新代码后再启动。';
   }
+  if (error.code === 'INTEGRITY_FAILED') {
+    return 'active Local File authority 已损坏，普通编辑已停止。优先恢复最近健康 backup；如果没有可用 backup，请按上方完整性错误检查本地文件后再启动。';
+  }
   if (error.code === 'MIGRATION_REJECTED') {
     return '本地 authority 未通过迁移/格式校验。不要用 seed 或空数据覆盖；先检查对应 Local File JSON 或从已验证 backup 恢复。';
   }
@@ -156,6 +159,14 @@ export const hydrateLocalAdminFileStores = async () => {
   try {
     const remoteStatus = await apiRequest<LocalFileStatus>('/local-admin/status', { authenticated: false });
     rootPath = remoteStatus.root;
+    const integrity = await apiRequest<LocalAdminIntegrityReport>('/local-admin/integrity', { authenticated: false });
+    if (!integrity.healthy) {
+      const errors = integrity.issues.filter(issue => issue.severity === 'error');
+      const summary = errors.slice(0, 3).map(issue => `${issue.code}: ${issue.message}`).join('；');
+      throw new AquaGuideApiError(409, 'INTEGRITY_FAILED',
+        `Local Admin active authority 未通过完整性校验（${errors.length} 个错误）${summary ? `：${summary}` : ''}`,
+        undefined, { root: remoteStatus.root, issues: errors });
+    }
     for (const partition of Object.keys(storageKeys) as LocalAdminPartition[]) {
       let stateValue: unknown = null;
       if (remoteStatus.partitions[partition]) {

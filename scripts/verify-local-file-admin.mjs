@@ -215,9 +215,33 @@ try {
   assert.match(await page.getByTestId('operations-local-persistence').innerText(), /磁盘已持久化/);
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0);
   assert.deepEqual(restartErrors, []);
+
+  // A pre-existing disk corruption must stop ordinary Admin hydration but keep a healthy-backup recovery path.
+  const durableBusiness = await readState('business');
+  const durableSpecies = durableBusiness.species.find(item => item.catalogKey === 'sp_0001');
+  const durableAsset = durableSpecies.speciesAssets.find(asset => asset.isCurrent && asset.storageBucket === 'local-file');
+  assert.ok(durableAsset?.id);
+  const durableBlobPath = path.join(root, 'assets', `${durableAsset.id}.blob`);
+  await context.close();
+  await stopLocalAdmin();
+  await rm(durableBlobPath);
+  await startLocalAdmin();
+
+  context = await browser.newContext({ viewport: { width: 390, height: 844 } });
+  page = await context.newPage();
+  await page.goto(`${baseUrl}/admin/content`, { waitUntil: 'networkidle' });
+  await page.getByRole('heading', { name: 'Local Admin 未启动' }).waitFor();
+  assert.match(await page.locator('body').innerText(), /active authority 未通过完整性校验/);
+  const restoreLatest = page.getByTestId('local-admin-restore-latest');
+  await restoreLatest.waitFor();
+  await restoreLatest.click();
+  await page.getByRole('heading', { name: '运营工作台' }).waitFor({ timeout: 20_000 });
+  const recoveredIntegrity = await fetch(`${baseUrl}/api/v1/local-admin/integrity`).then(response => response.json());
+  assert.equal(recoveredIntegrity.data.healthy, true, 'Healthy backup recovery must restore active root integrity before normal Admin resumes.');
+  assert.equal(await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth), 0);
   await context.close();
 
-  console.log('PASS durable Local File Admin: versioned disk state + Product/asset/Compatibility/Care SEO + one-click backup/restore survive full restart.');
+  console.log('PASS durable Local File Admin: versioned disk state + Product/asset/Compatibility/Care SEO + one-click backup/restore + corrupt-root recovery survive full restart.');
 } finally {
   await stopLocalAdmin().catch(() => undefined);
   await browser.close();
