@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-13 corrupt backup candidate filtering closure
+- Functional main: `091b3601 fix(admin): hide corrupt backup candidates`.
+- Reproduced: manifest-valid backup with a missing copied asset blob was still returned by `GET /backups`; direct restore rejected it with 409.
+- Fixed: backup listing now runs `inspectRoot()` per candidate and only exposes healthy/restorable backups. Corrupt backup directories stay on disk for manual inspection.
+- Regression: corrupted candidate hidden from list; direct restore still 409.
+- Gates PASS: Local File API/UI, Local Admin mode, Operations Studio populated UI, API/root TypeScript, full build, GitHub Product Golden Path; Vercel branch READY. Production unchanged.
+
+
 ## 2026-09-13 interrupted restore integrity closed
 - New main checkpoint: `73276ee8 fix(admin): validate interrupted restore recovery`.
 - Fresh-process recovery no longer trusts a backup manifest alone. It validates the safety backup before applying it and validates the recovered active root before deleting `.restore-transaction.json`.

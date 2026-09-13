@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-13 — backup candidate integrity closure
+- Fail-before-fix probe: create healthy backup -> delete copied asset blob -> `GET /backups` still returned the backup; direct restore returned 409.
+- Changed `listBackups()` to read manifest + `inspectRoot(backupDirectory(...))` and only return healthy entries.
+- Added regression requiring corrupt candidate hidden from list while direct restore remains rejected.
+- PASS: `test:local-file-admin`, `test:local-admin-mode-contract`, `test:local-file-admin-ui`, `test:operations-studio-ui`, `check:api`, root TypeScript, full build, diff check.
+- Functional commit `091b3601`; GitHub Product Golden Path PASS; Vercel `dpl_5G81rekKcM6eU26toAHt4cmGTGR3` READY.
+
+
 ## 2026-09-13 — interrupted restore integrity closure
 - Audited fresh-process restore recovery versus normal restore and found recovery skipped both pre-apply and post-apply integrity validation.
 - Reproduced with a safety backup containing metadata without its blob: startup `/status` returned 200, subsequent `/integrity` reported `ASSET_PAIR_MISSING`, and the recovery journal was missing.

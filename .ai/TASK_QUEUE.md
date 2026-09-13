@@ -1,5 +1,15 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-13 after corrupt backup candidate filtering closure
+- DONE: reproduce a manifest-valid but content-corrupt backup still appearing in `GET /backups`.
+- DONE: filter restorable backup candidates by full backup-root integrity, not manifest validity alone.
+- DONE: preserve corrupt backups on disk for operator inspection; do not auto-delete.
+- DONE: retain direct restore integrity rejection as a second safety gate.
+- DONE: permanent regression + Local File/UI/mode/Operations/TypeScript/build gates.
+- DONE: GitHub Product Golden Path PASS; Vercel branch deployment READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 after interrupted restore integrity closure
 - DONE: reproduce startup recovery accepting a corrupt safety backup and deleting its journal.
 - DONE: validate the safety backup before apply.

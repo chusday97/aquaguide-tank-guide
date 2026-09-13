@@ -1,5 +1,12 @@
 # Live Status
 
+## 2026-09-13 — corrupt backup candidate filtering closed
+- Main functional checkpoint: `091b3601`.
+- `GET /backups` now means "healthy/restorable candidates", not merely "directories with valid manifests".
+- Corrupt backups are retained on disk but hidden from restore choices; direct restore still independently rejects them.
+- CI PASS / Vercel branch READY / Production unchanged.
+
+
 ## 2026-09-13 interrupted restore integrity
 - Functional main: `73276ee8`.
 - Automatic interrupted-restore recovery now requires a healthy safety backup and a healthy recovered active root before cleanup/journal deletion.

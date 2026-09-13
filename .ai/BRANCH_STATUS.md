@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-13 corrupt backup candidate filtering
+- main functional checkpoint: `091b3601 fix(admin): hide corrupt backup candidates`
+- local/GitHub main synchronized after push.
+- GitHub Product Golden Path PASS.
+- Vercel branch deployment `dpl_5G81rekKcM6eU26toAHt4cmGTGR3` READY, target null.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`; no promotion.
+
+
 ## 2026-09-13 — interrupted restore integrity checkpoint
 - main functional checkpoint: `73276ee8 fix(admin): validate interrupted restore recovery`.
 - Fail-before-fix: a corrupted pre-restore safety backup could be applied during fresh-process recovery; `/status` returned 200, `/integrity` was unhealthy, and the recovery journal was deleted.

@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-13 corrupt backup candidate filtering closed
+A concrete backup-list/operator badcase is closed on main at `091b3601 fix(admin): hide corrupt backup candidates`.
+
+- Fail-before-fix: after a healthy backup was created, deleting one copied asset blob left the manifest valid; `GET /backups` still listed the backup as restorable even though direct restore correctly failed `409 MIGRATION_REJECTED`.
+- `listBackups()` now validates each candidate backup with `inspectRoot()` after reading its manifest and only returns healthy backups.
+- Corrupt backups remain on disk for manual inspection/recovery; they are not silently deleted. Direct restore keeps its independent integrity gate and still rejects a corrupt backup even when its id is known.
+- Permanent regression creates a valid backup, corrupts one copied asset pair, requires the backup list to exclude it, and requires direct restore to remain 409.
+- PASS: Local File API, Local Admin mode contract, Local File browser restart/backup/restore, Operations Studio populated UI, API/root TypeScript, full build, GitHub Product Golden Path, Vercel branch deployment READY. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-13 interrupted restore integrity closed
 A concrete crash-recovery integrity badcase is closed on main at `73276ee8 fix(admin): validate interrupted restore recovery`.
 
