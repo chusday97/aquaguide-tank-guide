@@ -6,6 +6,12 @@
 - 截图 artifact 已下载至 `/private/tmp/aquaguide-seo-evidence`，仅作本地复核，不写入仓库。相同 SHA 已交回既有 Critic，当前等待可读六维正文。
 - 继续保持 `noindex,follow`；不修改 Figma、Product Truth、生产 Supabase、main、生产部署或三个用户未提交文件。
 
+## 2026-09-13 剩余门禁收口（进行中）
+
+- 已完成四组 Species 三档对照图的视觉审计，记录在 `docs/public-seo-visual-audit-20260913.md`。极火虾/黄金米虾视觉状态稳定；宝莲灯和孔雀鱼缺图回退稳定，其中宝莲灯仍待项目负责人确认素材用途。
+- 已扩展 CI 浏览器脚本，新增滚动、章节锚点、分类返回、reduced-motion 和交互延迟基线断言；需由 GitHub Actions 重新运行后才能登记通过。
+- 保持页面 `noindex,follow`，不调用 Figma，不修改 Product Truth、生产 Supabase、main 或三个用户未提交文件。
+
 # AquaGuide Species SEO 当前交接
 
 ## 2026-09-13 Docker 浏览器恢复结果

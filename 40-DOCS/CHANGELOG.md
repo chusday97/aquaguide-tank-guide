@@ -2,6 +2,11 @@
 
 ## [Unreleased]
 
+### Changed
+
+- 完成 Species 390/600/1440 对照图视觉审计，新增视觉审计记录；极火虾/黄金米虾保持确认素材，宝莲灯和孔雀鱼继续按素材门禁显示回退。
+- 扩展 GitHub Actions 浏览器门禁，增加滚动、章节锚点、浏览器返回、reduced-motion 和交互延迟基线检查；等待新提交运行。
+
 ### Added
 
 - 新增 `Public SEO Browser Gate` GitHub Actions 工作流和独立 Ubuntu Playwright 验收脚本，覆盖公开/应用 Shell、390/600/1440 响应式、Species 继承边界、noindex、禁止数据请求和截图 artifact。

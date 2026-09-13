@@ -38,6 +38,11 @@ await context.addInitScript(() => {
           if (!entry.hadRecentInput) window.__seoVitals.cls += entry.value;
         }
       }).observe({ type: 'layout-shift', buffered: true });
+      new PerformanceObserver(list => {
+        for (const entry of list.getEntries()) {
+          window.__seoVitals.inp = Math.max(window.__seoVitals.inp || 0, entry.duration || 0);
+        }
+      }).observe({ type: 'event', buffered: true, durationThreshold: 16 });
     } catch {
       // Metrics are best-effort; layout and content assertions remain authoritative.
     }
@@ -182,6 +187,36 @@ try {
     }
   }
 
+  checkingPublicRoute = true;
+  await page.goto(`${baseUrl}/species/sp_0001`, { waitUntil: 'networkidle' });
+  const behaviorAnchor = page.locator('a[href="#behavior"]').first();
+  assert.ok(await behaviorAnchor.count() > 0, 'Species page should expose a behavior chapter link');
+  await behaviorAnchor.click();
+  assert.match(page.url(), /#behavior$/, 'behavior chapter link should update the URL');
+  assert.ok(await page.locator('#behavior').isVisible(), 'behavior chapter should be reachable after clicking its anchor');
+  await page.goto(`${baseUrl}/category/shrimp-snails-crabs`, { waitUntil: 'networkidle' });
+  await page.locator('a[href="/species/sp_0001"]').first().click();
+  await page.goBack({ waitUntil: 'networkidle' });
+  assert.match(page.url(), /\/category\/shrimp-snails-crabs$/, 'browser back should return to the public category page');
+  assert.equal(await page.locator('h1').first().textContent(), '虾螺蟹', 'browser back should restore the category page');
+  checkingPublicRoute = false;
+
+  const reducedContext = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'zh-CN', reducedMotion: 'reduce' });
+  await reducedContext.addInitScript(() => localStorage.setItem('aquaguide_locale', 'zh-CN'));
+  const reducedPage = await reducedContext.newPage();
+  await reducedPage.goto(`${baseUrl}/species/sp_0001`, { waitUntil: 'networkidle' });
+  const reducedMotionResult = await reducedPage.evaluate(() => ({
+    hiddenSections: [...document.querySelectorAll('.seo-section')].filter(section => {
+      const style = getComputedStyle(section);
+      return style.visibility === 'hidden' || style.display === 'none' || Number.parseFloat(style.opacity) === 0;
+    }).length,
+    contentHeight: document.documentElement.scrollHeight,
+    viewportHeight: innerHeight,
+  }));
+  assert.equal(reducedMotionResult.hiddenSections, 0, 'reduced-motion should not hide SEO sections');
+  assert.ok(reducedMotionResult.contentHeight > reducedMotionResult.viewportHeight, 'reduced-motion page should remain scrollable');
+  await reducedContext.close();
+
   await buildComparison('species', [
     { width: 390, file: fileNameFor('sp_0001', 390) },
     { width: 600, file: fileNameFor('sp_0001', 600) },
@@ -213,6 +248,7 @@ try {
     screenshots: screenshotDir ? '12 raw + 4 comparison' : 'disabled',
     lcpMs: final?.vitals?.lcp || null,
     cls: final?.vitals?.cls || null,
+    interactionMs: final?.vitals?.inp || null,
     forbiddenRequests: blocked.length,
     result: 'public SEO GitHub Actions browser gate passed',
   }, null, 2));

@@ -1,3 +1,10 @@
+## 2026-09-13 剩余门禁收口（进行中）
+
+- [x] 已完成四组 Species 对照图的视觉审计：极火虾/黄金米虾图片比例与品系卡片一致，宝莲灯/孔雀鱼缺图状态稳定；审计记录见 `docs/public-seo-visual-audit-20260913.md`。
+- [x] 已扩展 GitHub Actions 浏览器脚本，增加真实滚动、行为章节锚点、分类 → Species → 浏览器返回、FAQ 键盘展开、reduced-motion 内容可见性和交互延迟基线采集。
+- [ ] 宝莲灯 Hero/品系卡片仍待项目负责人正式确认；确认前普通页面继续使用 fallback。
+- [ ] 新增交互与 reduced-motion 断言尚未在 GitHub Actions 上重新运行；Critic 仍无可读正文，Figma Canonical 和索引门禁保持未完成。
+
 ## 2026-09-13 GitHub Actions 浏览器验收已通过
 
 - [x] 新增独立 `scripts/verify-public-seo-github-actions.mjs`：使用 Ubuntu Playwright Chromium 覆盖公开/应用路由、390/600/1440、4 条 Species、无禁止数据请求、noindex、Shell 边界、44px 目标和截图输出。
