@@ -497,4 +497,5 @@
 - 鱼类只有一个相关链接时不再单独渲染相关内容区；资料来源组件在无补充说明时只显示来源列表，减少模板性空段。
 - `npm run test:public-seo-copy`、`npm run test:public-seo-structure`、`npm run test:public-seo-contract`、`npm run lint`、`npm run build`、`git diff --check` 已通过。
 - 仍未完成：当前版本新的 GitHub Actions 截图、可读独立 Critic、Figma Canonical、完整性能基线和索引发布门禁。页面继续 `noindex,follow`。
+- 内置浏览器已读取四个物种当前运行态并验证继承/缺失边界；这只是桌面运行证据，不替代 390/600/1440 三档截图。GitHub 状态 API 本轮因 DNS 不可用，未宣称 CI 通过。
 - 三个用户未提交文件仍保持原样：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
