@@ -1763,3 +1763,5 @@
 - [ ] 当前版本尚未取得新的 CI 截图；Critic 可读报告、Figma Canonical、完整性能基线和索引门禁继续未完成。
 - [x] 内置浏览器读取四个物种运行态：极火虾与黄金米虾继承内容和品系差异正确，宝莲灯显示鱼类环境/活动/群游/取食内容，孔雀鱼仅显示身份、参数和图片回退；记录 `EVD-20260914-146`。
 - [ ] GitHub 状态 API 与远端读取本轮因 DNS 不可用，未把 CI 状态或最新截图误记为通过。
+- [x] GitHub Actions run `34769155328` 已在当前提交 `d9bda6f7` 成功完成，生成 `public-seo-browser-evidence-d9bda6f74291cda5080db161a3c5b79970b7da5f`（5.86 MB）；记录 `EVD-20260914-147`。
+- [ ] 运行页面出现 GitHub Actions Node.js 20 弃用警告；不阻塞本次验收，后续单独升级 workflow action 版本。

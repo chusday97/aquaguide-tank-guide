@@ -499,3 +499,8 @@
 - 仍未完成：当前版本新的 GitHub Actions 截图、可读独立 Critic、Figma Canonical、完整性能基线和索引发布门禁。页面继续 `noindex,follow`。
 - 内置浏览器已读取四个物种当前运行态并验证继承/缺失边界；这只是桌面运行证据，不替代 390/600/1440 三档截图。GitHub 状态 API 本轮因 DNS 不可用，未宣称 CI 通过。
 - 三个用户未提交文件仍保持原样：`scripts/verify-public-seo-routes.mjs`、`scripts/verify-species-landing.mjs`、`src/data/speciesLandingPilot.ts`。
+## 2026-09-14 当前提交浏览器门禁结果
+
+- GitHub Actions run `34769155328` 对应提交 `d9bda6f7` 已成功完成，artifact `public-seo-browser-evidence-d9bda6f74291cda5080db161a3c5b79970b7da5f` 已生成，大小 5.86 MB。
+- 内置浏览器同时读取四个物种运行态：极火虾与黄金米虾继承内容正确，宝莲灯鱼类内容独立，孔雀鱼缺图/缺正文时自然回退。该证据不替代 artifact 中的三档截图。
+- CI 只有 Node.js 20 弃用警告，待后续升级 action 版本；不影响本次运行结果。Critic 可读报告、Figma Canonical、完整性能基线和索引发布门禁仍未完成。
