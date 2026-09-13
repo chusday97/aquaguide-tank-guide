@@ -1748,3 +1748,9 @@
 - [x] 文案、结构、响应式契约、品系卡片、lint 和 build 通过；本地 Playwright 仍受既知 macOS MachPort 权限阻塞。
 - [ ] 需要用 GitHub Actions 或内置浏览器重新生成当前改版的三档截图，并复核宝莲灯、极火虾和黄金米虾的页面节奏。
 - [ ] Critic 可读报告、Figma Canonical、交互延迟基线和索引发布门禁仍未完成。
+## 2026-09-14 Species 页面第二轮内容收口（已提交，进行中）
+
+- [x] 用内置浏览器实际回读宝莲灯页面，确认产品能力卡与相关链接重复提供混养入口。
+- [x] 相关内容移除重复的混养计算链接；产品能力卡改为用户问题“它适合我的鱼缸吗？”，资料说明改为直接来源表达。
+- [x] `test:public-seo-copy`、`test:public-seo-structure`、`test:public-seo-contract`、lint、build 和 diff-check 通过。
+- [ ] 当前改版仍需 GitHub Actions 截图复核；本地 Playwright 继续受 MachPort 阻塞。

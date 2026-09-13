@@ -22,7 +22,7 @@ import { setSeoDocument } from '../services/seo/seo-document.service';
 import type { Fish, PublishedContentSection, PublishedLifeAnswer, PublishedSpeciesAsset } from '../types';
 
 const labels = {
-  back: '首页', freshwater: '淡水', saltwater: '海水', difficulty: '养护难度', easy: '极易', medium: '中等', hard: '困难', favorite: '收藏', saved: '已收藏', chapters: '章节导航', overview: '一眼了解', behavior: '它如何生活', habitat: '适合怎样的环境', care: '日常怎么养', variants: '外观与品系', faq: '常见问题', showDetails: '展开详情', hideDetails: '收起详情', tool: '把物种要求与你的真实鱼缸进行比较。', toolDetail: '准备好后进入 AquaGuide，检查具体鱼缸或缸内伙伴。', openTool: '检查我的鱼缸', temp: '水温', ph: 'pH', minTank: '最低缸体', size: '体型', temperament: '性情', imageUnavailable: '图片暂时不可用', imageFailed: '图片暂时不可用', related: '继续探索', current: '当前', sources: '资料来源', sourceText: '这里汇总了本页使用的目录与专业资料。', returnSearch: '回到首页', missing: '没有找到这个物种页面。', learnMore: '回到首页继续浏览。',
+  back: '首页', freshwater: '淡水', saltwater: '海水', difficulty: '养护难度', easy: '极易', medium: '中等', hard: '困难', favorite: '收藏', saved: '已收藏', chapters: '章节导航', overview: '一眼了解', behavior: '它如何生活', habitat: '适合怎样的环境', care: '日常怎么养', variants: '外观与品系', faq: '常见问题', showDetails: '展开详情', hideDetails: '收起详情', tool: '它适合我的鱼缸吗？', toolDetail: '把它带入 AquaGuide，比较真实鱼缸的环境与同缸关系。', openTool: '检查我的鱼缸', temp: '水温', ph: 'pH', minTank: '最低缸体', size: '体型', temperament: '性情', imageUnavailable: '图片暂时不可用', imageFailed: '图片暂时不可用', related: '相关内容', current: '当前', sources: '资料来源', sourceText: '本页内容来源于 AquaGuide 目录数据和专业资料。', returnSearch: '回到首页', missing: '没有找到这个物种页面。', learnMore: '回到首页继续浏览。',
 } as const;
 
 const localizeDifficulty = (fish: Fish) => getDifficultyLabel(fish);

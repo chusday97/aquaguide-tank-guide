@@ -170,7 +170,6 @@ export const getPublishedSpeciesProfile = (
     relatedLinks: [
       ...(categoryHrefFor(species.category) ? [{ id: 'category', label: `浏览${species.category}分类`, href: categoryHrefFor(species.category)!, kind: 'category' as const }] : []),
       { id: 'care', label: '查看养护百科', href: '/care', kind: 'care-guide' },
-      { id: 'compatibility', label: '把它加入混养计算', href: `/encyclopedia?mode=compatibility&species=${encodeURIComponent(species.id)}&source=species-profile`, kind: 'compatibility' },
     ],
     metadata: {
       locale,
