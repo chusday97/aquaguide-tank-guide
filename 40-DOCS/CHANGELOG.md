@@ -4,7 +4,11 @@
 
 ### Added
 
-- 新增 `Public SEO Browser Gate` GitHub Actions 工作流和独立 Ubuntu Playwright 验收脚本，覆盖公开/应用 Shell、390/600/1440 响应式、Species 继承边界、noindex、禁止数据请求和截图 artifact；当前待推送运行，不将本地静态通过冒充浏览器通过。
+- 新增 `Public SEO Browser Gate` GitHub Actions 工作流和独立 Ubuntu Playwright 验收脚本，覆盖公开/应用 Shell、390/600/1440 响应式、Species 继承边界、noindex、禁止数据请求和截图 artifact。
+
+### Verified
+
+- GitHub Actions run `34754020520` 在 `9fde0973` 全绿，Ubuntu Chromium 完成公开/应用路由和三档响应式验收，并上传 12 张 Species 原始截图、4 张对照图和 preview 日志；证据 `EVD-20260913-138`。Critic 仍待可读复验，页面继续 noindex。
 
 ### Verified
 

@@ -1,8 +1,9 @@
-## 2026-09-13 GitHub Actions 浏览器验收轨道（进行中）
+## 2026-09-13 GitHub Actions 浏览器验收已通过
 
 - 已新增独立 CI 脚本 `scripts/verify-public-seo-github-actions.mjs` 和工作流 `.github/workflows/public-seo-browser.yml`，不修改已有用户未提交浏览器脚本。
 - CI 将使用 Ubuntu + Node 22 + Playwright 1.60 Chromium，在 4173 production preview 上验证 4 条 Species、Marketing、Category、Guide 和 `/aquarium`、`/care`、`/welcome`；公开路由扫描 Supabase、登录和鱼缸 API 请求，输出 12 张 Species 原始截图与 4 张对照图。
-- 本地静态契约、lint、build 和 diff-check 已通过。当前尚未推送/运行 GitHub Actions，不能把 CI 浏览器验收记为通过。
+- 本地静态契约、lint、build 和 diff-check 已通过。GitHub Actions run `34754020520` 已在 SHA `9fde0973c348edb6f79aa832ba43a753f2eae681` 全绿并上传 artifact；运行地址为 https://github.com/chusday97/aquaguide-tank-guide/actions/runs/34754020520。
+- 截图 artifact 已下载至 `/private/tmp/aquaguide-seo-evidence`，仅作本地复核，不写入仓库。相同 SHA 已交回既有 Critic，当前等待可读六维正文。
 - 继续保持 `noindex,follow`；不修改 Figma、Product Truth、生产 Supabase、main、生产部署或三个用户未提交文件。
 
 # AquaGuide Species SEO 当前交接

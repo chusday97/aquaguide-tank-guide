@@ -109,6 +109,15 @@ const inspect = async (route, width) => {
     assert.match(result.body, /极火虾/);
     assert.match(result.body, /一眼了解/);
     assert.match(result.body, /常见问题/);
+    assert.match(result.compatibilityHref, /species=sp_0001/);
+    assert.match(result.compatibilityHref, /source=species-profile/);
+    assert.ok(await page.locator('a[href="#behavior"]').count() > 0, `${route.path} should expose a behavior chapter anchor`);
+    const faqButton = page.locator('#faq button[aria-expanded]').first();
+    if (await faqButton.count() > 0) {
+      await faqButton.focus();
+      await faqButton.press('Space');
+      assert.equal(await faqButton.getAttribute('aria-expanded'), 'true', `${route.path} FAQ should expand by keyboard`);
+    }
   }
   if (route.id === 'sp_0001-variant-sp_0030') {
     assert.match(result.body, /黄金米虾/);
