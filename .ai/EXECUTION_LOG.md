@@ -1,3 +1,10 @@
+## 2026-09-14 — Production promote attempt blocked by Vercel deployment quota
+- Reconfirmed local/GitHub main at `12aea504`; only unrelated `artifacts/` remains untracked.
+- Reconfirmed release candidate `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` is READY at commit `93549ddf`; stable Production was `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / `5fa915d3`.
+- User authorized the code-only promote. Ran `vercel promote dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE --yes`.
+- Vercel rejected the request before promotion with HTTP 402 `api-deployments-free-per-day` / “Resource is limited - try again in 24 hours”.
+- Production was re-read after the failure and is unchanged. No alias workaround was used; Preview/Production environment semantics remain intact.
+
 ## 2026-09-14 — Production release rehearsal
 - Compared Production `5fa915d3` to main: 142 commits ahead, 88 changed files, 15 Compatibility migrations present but held.
 - Verified migrations are not required for code-only runtime: exact-baseline DB switch + partial fallback PASS; Git runtime authority fallback PASS.

@@ -1,3 +1,10 @@
+## LIVE STATUS — 2026-09-14 Production promote blocked
+- Release authorization: granted.
+- Promote attempt: rejected by Vercel before state change with HTTP 402 `api-deployments-free-per-day`.
+- Candidate: `93549ddf` / `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE`, READY.
+- Production: `5fa915d3` / `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`, READY and unchanged.
+- No migration, DB-authority, indexing, alias-bypass, or Production mutation occurred.
+
 ## LIVE STATUS — 2026-09-14 Release Candidate
 - Main / GitHub: `93549ddf1cad0855a7c479e4a696cdde7e66f06c`.
 - RC1 Operator Acceptance: PASS, no remaining product blocker.

@@ -1,3 +1,10 @@
+## RELEASE STATUS — 2026-09-14 PROMOTE BLOCKED BY PLATFORM QUOTA
+- Authorized code-only release candidate: `93549ddf1cad0855a7c479e4a696cdde7e66f06c`.
+- READY Preview: `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE`.
+- Promote attempt failed before any Production mutation: Vercel HTTP 402 `api-deployments-free-per-day`.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / `5fa915d3`, READY.
+- Do not alias Preview directly to Production as a quota workaround. HOLD migrations/DB authority/Care indexing.
+
 ## RELEASE REHEARSAL — 2026-09-14 GO WITH HOLDS
 - Candidate main: `93549ddf1cad0855a7c479e4a696cdde7e66f06c` (`fix(release): align compatibility presentation gates`).
 - Production remains `5fa915d31ebb6aa0915cc39b34016a1ffa933a66` / `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`; no promote executed.

@@ -1,3 +1,12 @@
+## CURRENT OVERRIDE — 2026-09-14 Production promote blocked by Vercel quota
+Release authorization was given and the code-only promote of candidate `93549ddf` was attempted. Vercel rejected the promotion before any Production change with HTTP 402 `api-deployments-free-per-day` (“Resource is limited - try again in 24 hours”).
+
+- Candidate remains `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` / `93549ddf`, READY.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / `5fa915d3`, READY and unchanged.
+- Do not bypass the quota by aliasing the Preview deployment onto the Production domain; that would bypass Production environment/promotion semantics.
+- HOLD remains unchanged: 15 Compatibility migrations, DB-authority switch, Care indexing.
+- NEXT: retry the same code-only Vercel promote only after platform quota allows it; then run immediate Production smoke and rollback on any regression.
+
 ## CURRENT OVERRIDE — 2026-09-14 Release Rehearsal PASS
 RC1 has advanced from Operator Acceptance to release-ready code candidate `93549ddf`.
 

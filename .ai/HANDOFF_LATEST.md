@@ -1,3 +1,8 @@
+## HANDOFF — 2026-09-14 Production promote attempted but externally blocked
+User authorization for the code-only Production promote was received. `vercel promote dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` failed before promotion with HTTP 402 `api-deployments-free-per-day`. No Production state changed.
+
+Candidate remains `93549ddf` / `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` READY. Stable Production remains `5fa915d3` / `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` READY. Do not work around the quota with a Preview alias. Retry the same code-only promotion only when Vercel permits deployments; migrations/DB authority/Care indexing remain HOLD.
+
 ## HANDOFF — 2026-09-14 Release Rehearsal complete
 Current release candidate is main `93549ddf1cad0855a7c479e4a696cdde7e66f06c`. RC1 Operator Acceptance and Production Release Rehearsal are both PASS.
 

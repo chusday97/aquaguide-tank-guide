@@ -1,3 +1,10 @@
+## CURRENT RELEASE QUEUE — 2026-09-14 quota-blocked
+1. DONE: explicit approval for code-only Production promote received.
+2. BLOCKED: Vercel promotion quota rejected the attempt with HTTP 402 `api-deployments-free-per-day`; Production did not change.
+3. RETRY ONLY WHEN PLATFORM ALLOWS: promote existing READY candidate `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` (`93549ddf`).
+4. After successful promote, immediately run Production API/runtime + GP smoke and rollback to `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` on regression.
+5. HOLD: all 15 Compatibility migrations, DB authority switch, Care indexing changes. Do not bypass quota with Preview aliasing.
+
 ## CURRENT RELEASE QUEUE — 2026-09-14
 1. **Decision gate:** explicit approval required before any Production promote.
 2. If approved, perform **code-only** promote of release candidate `93549ddf`; do not apply Compatibility migrations.
