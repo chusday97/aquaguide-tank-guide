@@ -1002,11 +1002,15 @@ localAdminFileRouter.get('/assets/:assetId', asyncRoute(async (request, response
   await requireEnabled();
   const assetId = safeAssetId(request.params.assetId);
   return withAuthorityRead(() => withAssetPairLock(assetId, async () => {
-    const metadata = await readJsonOrNull(assetMetaFile(localRoot(), assetId)) as { mimeType?: string } | null;
+    const metadata = await readJsonOrNull(assetMetaFile(localRoot(), assetId)) as { mimeType?: string; byteSize?: number } | null;
     if (!metadata) throw new ApiError(404, 'NOT_FOUND', 'Local asset metadata was not found.');
     try {
       const body = await readFile(assetFile(localRoot(), assetId));
-      response.setHeader('Content-Type', metadata.mimeType || 'application/octet-stream');
+      const mimeType = String(metadata.mimeType || '');
+      if (!supportedMime.has(mimeType) || Number(metadata.byteSize) !== body.length || !await assetContentDecodesAsMime(mimeType, body)) {
+        throw new ApiError(409, 'INTEGRITY_FAILED', `Local asset ${assetId} failed integrity validation; repair the asset before reading it.`, { assetId });
+      }
+      response.setHeader('Content-Type', mimeType);
       response.setHeader('Cache-Control', 'no-store');
       return response.status(200).send(body);
     } catch (error) {

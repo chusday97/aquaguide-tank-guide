@@ -323,6 +323,9 @@ try {
   const invalidContentIntegrity = await requestJson(started.base, '/integrity');
   assert.equal(invalidContentIntegrity.payload.data.healthy, false);
   assert(invalidContentIntegrity.payload.data.issues.some((issue: any) => issue.code === 'ASSET_CONTENT_INVALID'));
+  const corruptAssetRead = await requestJson(started.base, `/assets/${assetId}`);
+  assert.equal(corruptAssetRead.response.status, 409, 'Asset GET must fail closed instead of serving bytes that fail Local File integrity.');
+  assert.equal(corruptAssetRead.payload.error.code, 'INTEGRITY_FAILED');
   const repairedInvalidContent = await requestJson(started.base, `/assets/${assetId}`, {
     method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: imageBytes,
   });
