@@ -226,7 +226,7 @@ try {
 
   {
     const { page, errors } = await open('/encyclopedia?mode=compatibility');
-    await page.getByText('混养风险计算', { exact: true }).first().waitFor();
+    await page.getByRole('heading', { name: '混养计算', exact: true }).waitFor();
     assert.equal(errors.length, 0, `compatibility page errors: ${errors.join('; ')}`);
     await page.close();
   }

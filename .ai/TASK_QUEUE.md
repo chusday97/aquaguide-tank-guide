@@ -1,5 +1,13 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 after Product Closure Checkpoint 2
+- DONE: remove canonical `compatible` / legacy caution summary contradiction; add permanent compatibility-service regression.
+- DONE: keep `compatible_community` achievement strict and replace stale unreviewed test fixtures with reviewed compatible authority.
+- DONE: align three-step and task-action gates with current product copy/structure and the active recovery preview.
+- DONE: GP-001/002/003/004 + Compatibility + Collection + three-step + task-action + TypeScript + full production build PASS.
+- CURRENT: product closure code path is release-gate green on the recovery worktree.
+- NEXT: perform recovery → main pre-merge audit (Git/PR/divergence/migrations/preview parity) without deploying or applying DB migrations; do not expand product scope.
+
 ## CURRENT OVERRIDE — 2026-09-14 after Product Closure Checkpoint 1
 - DONE: collapse common Compatibility result flow to one verdict/action hierarchy while preserving explicit multi-candidate/removal controls.
 - DONE: align Aquarium stage headline with canonical Today Action truth and protect the post-Daily-Check advance path.

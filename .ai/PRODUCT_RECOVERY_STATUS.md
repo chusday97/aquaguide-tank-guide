@@ -1,5 +1,13 @@
 # Aqua Product Recovery Status
 
+## 2026-09-14 — Product Closure Checkpoint 2
+- Release-gate audit corrected a canonical Compatibility presentation contradiction: a true `compatible` result with zero warning/missing rules can no longer inherit the legacy caution sentence “需要先处理风险项”; compatible summary now comes from canonical clear-authority evidence.
+- Collection achievement coverage was aligned with reviewed authority: the `compatible_community` regression fixture now uses a genuinely reviewed compatible shrimp/snail community instead of unreviewed species that correctly resolve to `insufficient_data`. The achievement rule itself remains strict.
+- Three-step contracts now validate the real current product structure instead of stale copy: Care Quick Check is a single-screen question list with an independent result screen; Daily Check secondary evidence is verified collapsed through `aria-expanded=false`; add-species planning verifies the current “查看规划判断 → 加入后风险判定” flow.
+- Browser test defaults were aligned to the active recovery preview (`127.0.0.1:4319`) where needed so release gates do not accidentally exercise another local app on port 3000.
+- Full release-gate set green: Golden Path contract + GP-001/002/003/004, canonical Compatibility service + beginner actions, Collection achievements/hub/swipe cards, three-step paths/UI, task-action closure, TypeScript, and full production build.
+- Production unchanged. No Staging/Production migration was applied.
+
 ## 2026-09-14 — Product Closure Checkpoint 1
 - Compatibility result hierarchy is reduced to one beginner-facing verdict/action surface for the common single-candidate flow; secondary selection/removal controls appear only when the user has multiple addable candidates or an explicit removable blocked candidate.
 - Compatibility page entry copy is de-duplicated; implementation/source metadata is removed from the primary task surface.

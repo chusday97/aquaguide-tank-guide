@@ -37,8 +37,10 @@ if (!aquariumSource.includes('一次完成今天检查')) failures.push('每日�
 if (!aquariumSource.includes('addFishSuccess ? (') || !aquariumSource.includes('addFishCompatibilityReview ? (')) {
   failures.push('添加生物尚未分离选择屏与结果确认屏');
 }
-if (!careSource.includes('一次填完') || careSource.includes('第 ${activeQuestionIndex + 1} 题')) {
-  failures.push('养护问题自查仍包含逐题页面');
+if (!careSource.includes('diagnosisQuestions.map((question, index) =>')
+  || !careSource.includes('已回答 ${answeredCount}/${diagnosisQuestions.length}')
+  || careSource.includes('第 ${activeQuestionIndex + 1} 题')) {
+  failures.push('养护快速检查未保持单屏问题列表 + 独立结果屏');
 }
 
 if (failures.length > 0) {

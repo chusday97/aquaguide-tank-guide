@@ -218,7 +218,8 @@ export const applyCanonicalCompatibilityDecision = (
       ? missingData[0]?.evidence || '关键资料不足，暂时无法可靠判断。'
       : effectiveStatus === 'caution'
         ? warningRules[0]?.evidence || result.summary
-        : result.summary;
+        : domainInformationalRules.find(rule => rule.code === 'compatibility_clear')?.evidence
+          || '已审核事实与当前环境没有发现明确阻断或需要先处理的条件风险。';
   return {
     ...result,
     status: effectiveStatus,
