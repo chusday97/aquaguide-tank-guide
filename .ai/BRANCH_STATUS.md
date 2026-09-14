@@ -1,3 +1,10 @@
+## RELEASE REHEARSAL — 2026-09-14 GO WITH HOLDS
+- Candidate main: `93549ddf1cad0855a7c479e4a696cdde7e66f06c` (`fix(release): align compatibility presentation gates`).
+- Production remains `5fa915d31ebb6aa0915cc39b34016a1ffa933a66` / `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`; no promote executed.
+- Rehearsal verdict: code-only release candidate is GO. HOLD all 15 Compatibility migrations, DB-authority switch, and Care indexing changes.
+- Latest Product Golden Path `34832136047` PASS; Preview `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` READY / target null.
+- Local Admin remains excluded from the Vercel business bundle.
+
 ## 2026-09-14 RC1 Operator Acceptance status
 - Canonical branch remains `main`; acceptance checkpoint `66030ece test(rc): align operator acceptance gates` is on GitHub main.
 - This checkpoint changes only acceptance scripts: Care test follows scene -> browse UX; Compatibility test reads dynamic baseline and explicitly selects tiger barb.

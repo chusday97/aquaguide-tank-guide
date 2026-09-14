@@ -1,3 +1,13 @@
+## CURRENT OVERRIDE — 2026-09-14 Release Rehearsal PASS
+RC1 has advanced from Operator Acceptance to release-ready code candidate `93549ddf`.
+
+- Release rehearsal found and fixed one real user-facing blocker: `confirmed_facts` Compatibility results could show raw `insufficient_data` label “还不能判断”; Visual Result now uses the canonical presentation headline “当前可确认”.
+- A stale launch-cohort gate was corrected: the frozen 30-species research cohort no longer incorrectly requires every later reviewed species to remain in that cohort. Readiness remains evidence-gated.
+- PASS: runtime fallback without DB migrations, Git runtime authority, Product/Care runtime isolation, Publish Center, Care noindex release readiness, Local Admin DEV-only contract, Compatibility release gates, Golden Paths, TypeScript, full build, GitHub CI, Vercel Preview.
+- RELEASE VERDICT: **GO WITH HOLDS**. Code may be promoted only with explicit authorization. Do not apply the 15 Compatibility migrations, do not switch DB authority, and do not change Care indexing in the same release.
+- Knowledge scope remains limited: 29 reviewed profiles / 5 pair rules across 411 compatibility-eligible species. Fail-closed stability is validated; broad knowledge coverage is not claimed.
+- NEXT: explicit Production code-only promote decision, followed by immediate smoke verification and rollback if required.
+
 ## CURRENT OVERRIDE — 2026-09-14 RC1 Operator Acceptance PASS
 Aqua Operations Studio has moved out of open-ended reliability hardening and into release-candidate acceptance. RC1 operator acceptance on main `66030ece test(rc): align operator acceptance gates` found no product-level blocker.
 

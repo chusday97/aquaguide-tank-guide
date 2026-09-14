@@ -1,3 +1,13 @@
+## LIVE STATUS — 2026-09-14 Release Candidate
+- Main / GitHub: `93549ddf1cad0855a7c479e4a696cdde7e66f06c`.
+- RC1 Operator Acceptance: PASS, no remaining product blocker.
+- Release Rehearsal: PASS / GO WITH HOLDS.
+- Latest CI: Product Golden Path `34832136047` PASS.
+- Latest candidate Preview: `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` READY / target null.
+- Production: `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`, commit `5fa915d3`, READY; unchanged.
+- HOLD: 15 Compatibility migrations, DB authority switch, Care indexing changes.
+- Coverage boundary: 29 reviewed profiles / 5 reviewed pair rules; broad compatibility knowledge coverage remains incomplete.
+
 ## 2026-09-14 RC1 Operator Acceptance
 - RC1 operator acceptance: PASS on main `66030ece`; no product blocker found.
 - Acceptance coverage: Product/Care publish boundaries; Compatibility Profile/Pair review+publish lifecycle; Local File restart/backup/restore/recovery; Operations Studio desktop/mobile; GP-001..GP-004; three-step flows.

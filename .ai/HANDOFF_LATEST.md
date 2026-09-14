@@ -1,3 +1,12 @@
+## HANDOFF — 2026-09-14 Release Rehearsal complete
+Current release candidate is main `93549ddf1cad0855a7c479e4a696cdde7e66f06c`. RC1 Operator Acceptance and Production Release Rehearsal are both PASS.
+
+Release decision is **GO WITH HOLDS**: a code-only Production promote is technically cleared, but requires explicit authorization. Keep all 15 Compatibility migrations repository-only, keep DB authority unchanged, keep Care SEO noindex/indexing policy unchanged, and do not expose Local Admin in Production.
+
+Evidence: Product Golden Path `34832136047` PASS; Vercel Preview `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` READY; Production remains stable deployment `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` at `5fa915d3`.
+
+If promotion is authorized: promote code candidate only, then immediately smoke GP-001–GP-004/API/runtime and verify Production SHA; rollback to the prior stable deployment on any regression.
+
 ## 2026-09-14 — RC1 Operator Acceptance PASS
 - Main acceptance checkpoint `66030ece test(rc): align operator acceptance gates` contains only test-gate updates; no product behavior changed.
 - Product/Care save-vs-publish boundaries, Compatibility Profile/Pair operator lifecycle, Durable Local File restart/backup/restore/recovery, Operations Studio desktop/mobile, three-step flows, and GP-001..GP-004 all PASS.

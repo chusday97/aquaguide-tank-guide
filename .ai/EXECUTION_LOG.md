@@ -1,3 +1,12 @@
+## 2026-09-14 — Production release rehearsal
+- Compared Production `5fa915d3` to main: 142 commits ahead, 88 changed files, 15 Compatibility migrations present but held.
+- Verified migrations are not required for code-only runtime: exact-baseline DB switch + partial fallback PASS; Git runtime authority fallback PASS.
+- Verified Vercel bundle entry is `apps/api/src/business-app.ts`; generated business bundle contains no Local Admin routes.
+- Found real presentation blocker and fixed it at `93549ddf`: partial confirmed Compatibility results now use canonical presentation headline instead of raw insufficient-data label.
+- Corrected stale frozen-cohort test semantics; launch matrix remains 435 deterministic/symmetric pairs.
+- Product Golden Path `34832136047` PASS; Preview `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` READY. Production unchanged.
+- Verdict: GO WITH HOLDS; no promote performed.
+
 ## 2026-09-14 — RC1 Operator Acceptance execution
 - Re-read canonical main/authority before acceptance; only unrelated `artifacts/` was untracked.
 - Initial operator gates exposed two stale test assumptions: hidden Care search under default Interactive Check mode, and historic Compatibility 7/4/list-order assumptions.
