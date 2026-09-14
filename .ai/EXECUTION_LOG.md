@@ -1,5 +1,13 @@
 # Execution Log
 
+
+## 2026-09-14 — corrupt asset read fail-closed closure
+- Reproduced: externally corrupt a valid asset blob while preserving metadata size; `/integrity` => `ASSET_CONTENT_INVALID`, but direct asset GET still returned 200 and corrupt bytes.
+- Patched Local Admin asset GET to validate MIME, byteSize and full decode before response; corrupt reads now return `409 INTEGRITY_FAILED`.
+- Same-asset repair remains available and normal GET resumes after repair.
+- PASS: Local File API, mode contract, browser Local File, Operations Studio, API/root TypeScript, full build, diff check.
+- Commit `422dbede`; Product Golden Path `34814195437` PASS; Vercel Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY.
+
 ## 2026-09-14 — Decodable Local asset closure
 - Reproduced signature-only false positive: PNG magic bytes + garbage body were accepted by prior Local File validation while `sharp` full decode failed.
 - Added `assetContentDecodesAsMime()`: fast signature precheck, decoded-format/dimensions validation, then `sharp(...).stats()` full decode. PUT returns 400 before mutation when decode fails; root integrity reports `ASSET_CONTENT_INVALID` for persisted decode failures.

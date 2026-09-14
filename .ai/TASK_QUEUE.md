@@ -1,5 +1,14 @@
 # Task Queue
 
+
+## CURRENT OVERRIDE — 2026-09-14 after corrupt asset read closure
+- DONE: reproduce `/integrity` unhealthy while direct asset GET still returned 200 corrupt bytes.
+- DONE: make asset GET fail closed on MIME/byteSize/decode mismatch with `409 INTEGRITY_FAILED`.
+- DONE: preserve same-asset targeted repair.
+- DONE: Local File/API/UI/Operations/type/full-build gates + Product Golden Path + Preview.
+- NOTE: unrelated untracked `artifacts/` screenshots remain outside Admin commits.
+- NEXT: only another concrete reproducible Local File operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-14 after decodable Local asset closure
 - DONE: reproduce a PNG-signature-correct garbage body that passed signature-only validation but failed real decode.
 - DONE: require Local asset full decode + MIME/decoded-format match at PUT and in root integrity.

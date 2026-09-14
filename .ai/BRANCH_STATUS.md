@@ -1,5 +1,13 @@
 # Branch Status
 
+
+## 2026-09-14 — corrupt asset read fail-closed checkpoint
+- Functional main checkpoint: `422dbede51171ee071e29c1d4d878fb4a4703798` — `fix(admin): fail closed on corrupt asset reads`.
+- GitHub Product Golden Path `34814195437` PASS.
+- Vercel Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY / target null.
+- Production intentionally unchanged; no promotion.
+- `artifacts/` contains unrelated untracked product screenshots and was not staged or committed.
+
 ## 2026-09-14 — Decodable Local asset checkpoint
 - Functional checkpoint: `935bb529338ab3a0e74c65014c25c253fd70dd32` — `fix(admin): require decodable local assets`.
 - `935bb529` was immediately absorbed by main merge `b01f2d2856576369fe15e34fdf82973b16f021df` (`merge: close Aqua product recovery into main`). Its direct Product Golden Path run `34812271758` was cancelled as superseded; merged-head Product Golden Path `34812307958` PASS.

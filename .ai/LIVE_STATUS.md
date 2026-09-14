@@ -1,5 +1,13 @@
 # Live Status
 
+
+## 2026-09-14 — corrupt asset GET fail-closed
+- CLOSED on main at `422dbede`.
+- `/integrity`-known corrupt assets are no longer served with HTTP 200; GET validates MIME, byteSize and full decode and returns `409 INTEGRITY_FAILED` on corruption.
+- Targeted same-asset repair remains available.
+- Product Golden Path `34814195437` PASS; Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY / target null.
+- Production unchanged.
+
 ## 2026-09-14 — Decodable Local assets
 - CLOSED: `935bb529` upgrades Local File image validation from signature-only to successful full decode + MIME/format match.
 - A signature-correct corrupt image now returns 400 before persistence; persisted decode failures become `ASSET_CONTENT_INVALID`; same-asset repair remains supported.

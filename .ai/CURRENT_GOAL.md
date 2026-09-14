@@ -1,5 +1,16 @@
 # Current Goal
 
+
+## CURRENT OVERRIDE — 2026-09-14 corrupt Local asset reads fail closed
+A concrete read-path integrity badcase is closed on main at `422dbede fix(admin): fail closed on corrupt asset reads`.
+
+- Fail-before-fix: after a valid asset blob was externally replaced with same-size PNG-signature bytes that could not decode, `/integrity` correctly reported `ASSET_CONTENT_INVALID` but `GET /assets/:id` still returned `200 image/png` and served the corrupt bytes.
+- Asset GET now validates supported MIME, metadata byteSize, and full decodability before sending bytes. Any mismatch returns `409 INTEGRITY_FAILED` instead of serving known-corrupt content.
+- Targeted repair remains unchanged: re-PUT of the same corrupt asset can restore the root and normal GET resumes afterward.
+- Permanent regression requires corrupt GET => 409 while existing same-asset repair + all Local File/API/UI/Operations/type/build gates remain PASS.
+- PASS: Product Golden Path `34814195437`; Vercel Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY / target null.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 ## CURRENT OVERRIDE — 2026-09-14 decodable Local asset content closed
 A concrete signature-correct-but-undecodable image badcase is closed on main at `935bb529 fix(admin): require decodable local assets`, now contained by merged main `b01f2d28`.
 
