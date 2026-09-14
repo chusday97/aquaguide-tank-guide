@@ -1,3 +1,9 @@
+## 2026-09-14 — Latest main Admin safety line merged into Product Recovery
+- Main moved ahead during Product Release Gate; recovery explicitly fetched and merged the 7 new main-only commits through `38eed2a7 fix(admin): validate local asset signatures`.
+- Imported functional Admin checkpoints include invalid state-write rollback, referenced asset delete protection, hidden internal restore safety backups, and PNG/JPEG/WebP signature validation for Local assets.
+- Local Admin route + regression test merged automatically; Product UI / Compatibility closure code did not conflict.
+- Product Recovery authority remains the release owner for this branch; merged-head Product + Admin dual validation is green, and latest-head remote CI is the remaining merge prerequisite.
+- Production unchanged; no Compatibility migration has been applied.
 # Handoff Latest
 
 ## Clown loach reviewed-authority checkpoint — 2026-09-13

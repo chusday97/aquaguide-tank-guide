@@ -1,5 +1,29 @@
 # Branch Status
 
+## 2026-09-14 main checkpoint
+- Functional main: `ae59e1d4 fix(admin): hide internal restore safety backups`
+- Remote `main` matched before push; normal push, no force.
+- CI: Product Golden Path `34809050078` PASS.
+- Preview: `dpl_GGiDquTN3TcWDozYcSWzwASCoJQd` READY / target null.
+- Production unchanged.
+
+
+
+## 2026-09-14 — referenced asset delete guard checkpoint
+- Functional main checkpoint: `77a32708db01fded317412394cb73c86166add52` — `fix(admin): protect referenced asset deletes`.
+- GitHub Product Golden Path `34771352211` PASS.
+- Vercel Git auto-preview was not created for this DEV-only main push; no manual deployment triggered.
+- Local/GitHub main synchronized at functional push; no force push.
+- Production intentionally unchanged.
+
+## 2026-09-14 — post-write state integrity checkpoint
+- Functional main checkpoint: `5c8f6a63853d3bfd98634e726e780b0fafae076c` — `fix(admin): rollback invalid state writes`.
+- GitHub Product Golden Path `34769296960` PASS.
+- Vercel Git auto-preview was not created for this main push; no manual deployment was triggered because the behavior is DEV-only.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`; no promotion.
+- Local/GitHub main were equal at push; no force push.
+
+
 ## 2026-09-13 — runtime corrupt-root mutation guard checkpoint
 - Functional main checkpoint: `0060d200ed056345aba0ac96e52e8a1810925886` — `fix(admin): block writes on corrupt active authority`.
 - GitHub Product Golden Path `34758190657` PASS.

@@ -1,5 +1,12 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-14 Product Release Gate after latest main Admin safety sync
+- Latest `main` safety line has been merged into Product Recovery after main advanced by 7 commits.
+- Imported Admin safety behavior: transactional state-write rollback (`5c8f6a63`), referenced-asset delete guard (`77a32708`), operator restore-list isolation for `pre-restore-safety` backups (`ae59e1d4`), and Local asset MIME/signature validation (`38eed2a7`), plus their authority-doc checkpoints.
+- `apps/api/src/routes/local-admin.ts` and `scripts/test-local-file-admin.ts` auto-merged without code conflicts; only authority documents required manual convergence.
+- Product scope remains closed: no new product modules, no Species Knowledge expansion in this window.
+- PASS: merged-head Admin Local File API/mode/UI gates + Product GP-001–GP-004/Compatibility/Collection/three-step/Task Action gates + TypeScript/full build are green. CURRENT: require latest-head remote CI before any `main` merge decision.
+- HOLD: 15 additive Compatibility migrations remain repository-only. No Production deploy or DB migration without separate authorization.
 ## Clown loach reviewed-authority checkpoint — 2026-09-13
 - Added standard `Chromobotia macracanthus` / 三间鼠 (`sp_0126`) as the 25th canonical priority taxon using Seriously Fish + FishBase reviewed evidence.
 - Reviewed planning authority: 24–30°C, pH 5.0–7.0, 1–12 dGH, adult size up to ~40 cm SL, 180 cm tank length, ~648 L long-term group planning, minimum group 5 with 10+ preferred.

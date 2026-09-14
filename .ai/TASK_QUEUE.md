@@ -1,5 +1,12 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 after syncing latest main Admin safety
+- DONE: detect main advancing by 7 commits during Product Release Gate instead of relying on stale `origin/main` tracking.
+- DONE: explicitly fetch latest `main` and merge Admin safety commits through `38eed2a7` into Product Recovery.
+- DONE: Local Admin code/test merged without code conflicts; authority conflicts manually converged without dropping Product Release state.
+- DONE: merged-head Local File/Admin safety regression + Product Golden/three-step/Compatibility/Collection/Task Action gates + TypeScript/full build PASS.
+- NEXT: push only after local dual-gate success, then require current-head GitHub CI. Merge/release remains a separate decision.
+- HOLD: 15 Compatibility migrations repository-only; no Staging/Production apply.
 ## CURRENT OVERRIDE — 2026-09-14 Release Gate remote sync
 - DONE: Product Closure Checkpoint 1 + 2 committed and local/production-like Preview gates green.
 - DONE: latest recovery commits pushed to PR #149; PR scope/title refreshed and PR marked Ready for review.
