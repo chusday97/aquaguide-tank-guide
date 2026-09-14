@@ -1,0 +1,208 @@
+/* Species Detail + Compatibility UI convergence V1.
+ * View-layer only: domain/service behavior remains untouched.
+ */
+
+/* Species detail: reduce the legacy multi-color card stack into one calm profile. */
+[data-detail-viewport="desktop-rail"] .species-detail-header,
+[data-detail-viewport="phone-sheet"] .species-detail-header {
+  background: rgba(253, 252, 248, 0.98) !important;
+  border-color: rgba(23, 63, 53, 0.10) !important;
+}
+
+[data-detail-viewport] [data-species-detail-layout] > section:first-child {
+  border-color: rgba(23, 63, 53, 0.10) !important;
+  background: #fff !important;
+  box-shadow: 0 18px 46px rgba(15, 62, 51, 0.07) !important;
+}
+
+[data-detail-viewport] [data-species-detail-hero] {
+  border-color: rgba(23, 63, 53, 0.10) !important;
+  background: linear-gradient(180deg, #fbfdfc 0%, #f3f8f5 100%) !important;
+  box-shadow: none !important;
+}
+
+[data-detail-viewport] [data-species-feeding-summary] {
+  border-color: rgba(127, 104, 55, 0.12) !important;
+  background: #f8f6ef !important;
+}
+
+[data-detail-viewport] [data-species-environment-summary] {
+  border-color: rgba(23, 63, 53, 0.10) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+[data-detail-viewport] [data-species-environment-summary] > div + div > div {
+  border: 1px solid rgba(23, 63, 53, 0.07);
+  background: #f6f9f7 !important;
+}
+
+[data-detail-viewport] [data-species-detail-sections] {
+  gap: 8px !important;
+}
+
+[data-detail-viewport] [data-species-detail-sections] > section,
+[data-detail-viewport] [data-species-detail-sections] > details {
+  border-color: rgba(23, 63, 53, 0.10) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+}
+
+[data-detail-viewport] [data-species-detail-sections] > details > summary,
+[data-detail-viewport] [data-species-detail-sections] > section > button {
+  color: #173f35 !important;
+}
+
+[data-detail-viewport] [data-species-detail-sections] a {
+  border-color: rgba(23, 63, 53, 0.10) !important;
+  background: #f7faf8 !important;
+  color: #17654f !important;
+}
+
+[data-detail-viewport] [data-visual-result-status] {
+  border-width: 1px !important;
+  box-shadow: inset 3px 0 0 currentColor;
+}
+
+[data-detail-viewport] .modalFooter {
+  border-color: rgba(23, 63, 53, 0.10) !important;
+  background: rgba(253, 252, 248, 0.94) !important;
+  backdrop-filter: blur(14px);
+}
+
+/* Compatibility page: decision workspace, not a narrow checkout drawer. */
+.compatibility-page {
+  background:
+    radial-gradient(circle at 18% 0%, rgba(189, 227, 214, 0.22), transparent 34%),
+    #eef3f0 !important;
+}
+
+.compatibility-page .editorial-page-header {
+  max-width: 1180px !important;
+}
+
+.compatibility-page .editorial-title {
+  color: #173f35 !important;
+  font-size: clamp(24px, 2.2vw, 34px) !important;
+  letter-spacing: -0.035em;
+}
+
+.compatibility-page .editorial-lede {
+  max-width: 680px;
+  color: rgba(23, 63, 53, 0.62) !important;
+  font-size: 13px !important;
+}
+
+.compatibility-page [data-ui-block="compatibility-workspace"] {
+  max-width: 1180px !important;
+  margin-top: 22px !important;
+}
+
+.compatibility-page [data-surface="compatibility-checkout-drawer"] {
+  width: 100% !important;
+  max-width: none !important;
+  overflow: hidden !important;
+  border-color: rgba(23, 63, 53, 0.11) !important;
+  border-radius: 30px !important;
+  background: rgba(252, 253, 252, 0.98) !important;
+  box-shadow: 0 22px 60px rgba(15, 62, 51, 0.10) !important;
+}
+
+.compatibility-page [data-surface="compatibility-checkout-drawer"] > div:first-of-type {
+  border-color: rgba(23, 63, 53, 0.10) !important;
+  background: #f6faf7 !important;
+  padding: 18px 22px !important;
+}
+
+.compatibility-page [data-surface="compatibility-checkout-drawer"] > div:first-of-type h2 {
+  font-size: 18px !important;
+  color: #173f35 !important;
+}
+
+.compatibility-page [data-surface="compatibility-checkout-drawer"] > div:first-of-type p {
+  margin-top: 3px;
+  font-size: 11px !important;
+  color: rgba(23, 63, 53, 0.55) !important;
+}
+
+.compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid {
+  gap: 16px !important;
+  padding: 16px 16px 22px !important;
+}
+
+.compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid > section {
+  border: 1px solid rgba(23, 63, 53, 0.08) !important;
+  background: #fff !important;
+  border-radius: 22px !important;
+  box-shadow: none !important;
+}
+
+.compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid > section:first-of-type > div:first-child {
+  border-color: rgba(23, 63, 53, 0.08) !important;
+  background: #f6faf7 !important;
+}
+
+.compatibility-page [data-ui-block="compatibility-decision-workspace"] {
+  border: 1px solid rgba(23, 63, 53, 0.09);
+  background: #f8faf9 !important;
+}
+
+@media (min-width: 1200px) {
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid {
+    grid-template-columns: minmax(360px, 0.86fr) minmax(470px, 1.14fr) !important;
+    grid-template-rows: auto minmax(0, 1fr);
+    align-items: start !important;
+  }
+
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid > section:nth-of-type(1) {
+    grid-column: 1 !important;
+    grid-row: 1 / span 2 !important;
+  }
+
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid > section:nth-of-type(2) {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+  }
+
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid > section:nth-of-type(3) {
+    grid-column: 2 !important;
+    grid-row: 2 !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] {
+    width: 100% !important;
+    max-width: 860px !important;
+    margin-inline: auto;
+  }
+
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid > section {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .compatibility-page {
+    padding-inline: 12px !important;
+    padding-top: 16px !important;
+  }
+
+  .compatibility-page .editorial-page-header,
+  .compatibility-page [data-ui-block="compatibility-workspace"] {
+    width: 100% !important;
+  }
+
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] {
+    border-radius: 24px !important;
+  }
+
+  .compatibility-page [data-surface="compatibility-checkout-drawer"] > .grid {
+    padding: 10px 10px 18px !important;
+  }
+}
