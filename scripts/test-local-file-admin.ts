@@ -591,6 +591,13 @@ try {
   assert.equal(restored.payload.data.backupId, backupId);
   assert.match(restored.payload.data.safetyBackupId, /^backup-\d{13,17}$/);
   assert.equal(restored.payload.data.integrity.healthy, true);
+  const backupsAfterRestore = await requestJson(started.base, '/backups');
+  assert.equal(backupsAfterRestore.response.status, 200);
+  assert.notEqual(backupsAfterRestore.payload.data.backups[0]?.reason, 'pre-restore-safety',
+    'Internal pre-restore safety backups must not replace the latest operator backup after restore.');
+  assert.equal(backupsAfterRestore.payload.data.backups.some((item: any) => item.id === restored.payload.data.safetyBackupId), false,
+    'Internal pre-restore safety backups must stay hidden from the operator restore list.');
+  await stat(path.join(root, 'backups', restored.payload.data.safetyBackupId, 'manifest.json'));
   assert.deepEqual((await requestJson(started.base, '/state/business')).payload.data.state, businessState);
   const restoredImage = await fetch(`${started.base}/assets/${assetId}`);
   assert.equal(restoredImage.status, 200);

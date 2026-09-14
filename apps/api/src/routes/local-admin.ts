@@ -727,6 +727,7 @@ const listBackups = async () => {
   for (const id of entries.filter(name => /^backup-\d{13,17}$/.test(name)).sort().reverse()) {
     try {
       const manifest = await readBackupManifest(root, id);
+      if (manifest.reason === 'pre-restore-safety') continue;
       const integrity = await inspectRoot(backupDirectory(root, id));
       if (integrity.healthy) results.push(manifest);
     } catch { /* invalid backup remains on disk but is not offered for restore */ }
