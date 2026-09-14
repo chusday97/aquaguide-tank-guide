@@ -8,7 +8,7 @@ import { chromium } from 'playwright';
 
 const root = await mkdtemp(path.join(os.tmpdir(), 'aquaguide-local-file-ui-'));
 const marker = '【Durable Local File regression】';
-const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9Zl1sAAAAASUVORK5CYII=', 'base64');
+const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWNgYGD4DwABBAEAfbLI3wAAAABJRU5ErkJggg==', 'base64');
 
 const getFreePort = () => new Promise((resolve, reject) => {
   const server = net.createServer();

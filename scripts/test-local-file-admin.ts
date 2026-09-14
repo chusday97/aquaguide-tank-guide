@@ -38,17 +38,14 @@ const requestJson = async (base: string, suffix: string, init?: RequestInit) => 
 const putState = (base: string, partition: string, state: unknown) => requestJson(base, `/state/${partition}`, {
   method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state),
 });
-const pngFixture = (size: number, fill = 0x41) => {
-  const body = Buffer.alloc(Math.max(size, 8), fill);
-  Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(body, 0);
-  return body;
+const pngSeed = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACXBIWXMAAAPoAAAD6AG1e1JrAAAADUlEQVQImWNgYGD4DwABBAEAfbLI3wAAAABJRU5ErkJggg==', 'base64');
+const webpSeed = Buffer.from('UklGRiQAAABXRUJQVlA4IBgAAAAwAQCdASoBAAEAAUAmJaQAA3AA/v02aAA=', 'base64');
+const paddedImageFixture = (seed: Buffer, size: number, fill: number) => {
+  const targetSize = Math.max(size, seed.length);
+  return Buffer.concat([seed, Buffer.alloc(targetSize - seed.length, fill)]);
 };
-const webpFixture = (size: number, fill = 0x42) => {
-  const body = Buffer.alloc(Math.max(size, 12), fill);
-  body.write('RIFF', 0, 'ascii');
-  body.write('WEBP', 8, 'ascii');
-  return body;
-};
+const pngFixture = (size: number, fill = 0x41) => paddedImageFixture(pngSeed, size, fill);
+const webpFixture = (size: number, fill = 0x42) => paddedImageFixture(webpSeed, size, fill);
 
 let active: Server | null = null;
 let leaseChild: ReturnType<typeof spawn> | null = null;
@@ -303,7 +300,7 @@ try {
   assert.equal(invalidPartition.response.status, 400);
   assert.equal(invalidPartition.payload.error.code, 'VALIDATION_ERROR');
 
-  const imageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x00]);
+  const imageBytes = pngFixture(128, 0x00);
   const assetId = 'local-asset-test-001';
   const imagePut = await requestJson(started.base, `/assets/${assetId}`, {
     method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: imageBytes,
@@ -311,14 +308,14 @@ try {
   assert.equal(imagePut.response.status, 201);
   assert.equal(imagePut.payload.data.byteSize, imageBytes.length);
   const fakePngUpload = await requestJson(started.base, '/assets/local-asset-fake-png', {
-    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.from('not-a-real-png'),
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.concat([pngSeed.subarray(0, 8), Buffer.alloc(120, 0x61)]),
   });
-  assert.equal(fakePngUpload.response.status, 400, 'Asset PUT must reject content whose file signature does not match its declared MIME.');
+  assert.equal(fakePngUpload.response.status, 400, 'Asset PUT must reject a signature-correct PNG whose body cannot be decoded.');
   assert.equal(fakePngUpload.payload.error.code, 'VALIDATION_ERROR');
   await assert.rejects(stat(path.join(root, 'assets', 'local-asset-fake-png.blob')), (error: NodeJS.ErrnoException) => error.code === 'ENOENT');
 
   // Existing on-disk assets must also be checked so external/corrupt writes cannot remain falsely healthy.
-  await writeFile(path.join(root, 'assets', `${assetId}.blob`), Buffer.alloc(imageBytes.length, 0x61));
+  await writeFile(path.join(root, 'assets', `${assetId}.blob`), Buffer.concat([pngSeed.subarray(0, 8), Buffer.alloc(imageBytes.length - 8, 0x61)]));
   const invalidContentIntegrity = await requestJson(started.base, '/integrity');
   assert.equal(invalidContentIntegrity.payload.data.healthy, false);
   assert(invalidContentIntegrity.payload.data.issues.some((issue: any) => issue.code === 'ASSET_CONTENT_INVALID'));
@@ -718,7 +715,7 @@ try {
   const savedManifestPath = `${manifestPath}.saved`;
   await rename(manifestPath, savedManifestPath);
   await mkdir(manifestPath);
-  const changedImageBytes = Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x01]);
+  const changedImageBytes = pngFixture(imageBytes.length, 0x01);
   await writeFile(path.join(root, 'assets', `${assetId}.blob`), changedImageBytes);
   const failedBusinessState = structuredClone(exportBusinessState);
   failedBusinessState.publishedSpeciesAssets['sp-published'][0].assetVersion = 2;

@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { careArticleAdminInputSchema, speciesAdminInputSchema, type GitRuntimeAuthoritySnapshot, type RuntimeAuthorityAssetDto } from '../../../../packages/contracts/src/index';
+import sharp from 'sharp';
 import { ApiError, asyncRoute, sendData } from '../http';
 
 const currentDir = path.dirname(fileURLToPath(import.meta.url));
@@ -29,6 +30,18 @@ const assetSignatureMatchesMime = (mimeType: string, body: Buffer) => {
     return body.length >= 12 && body.subarray(0, 4).toString('ascii') === 'RIFF' && body.subarray(8, 12).toString('ascii') === 'WEBP';
   }
   return false;
+};
+const assetFormatForMime: Record<string, string> = { 'image/png': 'png', 'image/jpeg': 'jpeg', 'image/webp': 'webp' };
+const assetContentDecodesAsMime = async (mimeType: string, body: Buffer) => {
+  if (!assetSignatureMatchesMime(mimeType, body)) return false;
+  try {
+    const metadata = await sharp(body, { failOn: 'warning' }).metadata();
+    if (metadata.format !== assetFormatForMime[mimeType] || !metadata.width || !metadata.height) return false;
+    await sharp(body, { failOn: 'warning' }).stats();
+    return true;
+  } catch {
+    return false;
+  }
 };
 type AuthorityLockWaiter = { mode: 'read' | 'write'; resolve: () => void };
 let authorityActiveReaders = 0;
@@ -441,8 +454,8 @@ const inspectRoot = async (root: string): Promise<IntegrityReport> => {
         issues.push({ severity: 'error', code: 'ASSET_SIZE_MISMATCH', message: `${id} 图片 metadata byteSize 与 blob 不一致。` });
       } else {
         const body = await readFile(assetFile(root, id));
-        if (!assetSignatureMatchesMime(mimeType, body)) {
-          issues.push({ severity: 'error', code: 'ASSET_CONTENT_INVALID', message: `${id} 图片内容与声明格式不一致或文件头损坏。` });
+        if (!await assetContentDecodesAsMime(mimeType, body)) {
+          issues.push({ severity: 'error', code: 'ASSET_CONTENT_INVALID', message: `${id} 图片无法完整解码或内容与声明格式不一致。` });
         }
       }
     } catch (error) {
@@ -924,8 +937,8 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
-    if (!assetSignatureMatchesMime(mimeType, request.body)) {
-      throw new ApiError(400, 'VALIDATION_ERROR', '图片内容与声明格式不一致或文件头损坏。');
+    if (!await assetContentDecodesAsMime(mimeType, request.body)) {
+      throw new ApiError(400, 'VALIDATION_ERROR', '图片无法完整解码或内容与声明格式不一致。');
     }
     return withAuthorityWrite(async () => {
       await assertActiveRootHealthyForMutation(assetId);
