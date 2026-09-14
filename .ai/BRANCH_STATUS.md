@@ -1,3 +1,10 @@
+## 2026-09-14 RC1 Operator Acceptance status
+- Canonical branch remains `main`; acceptance checkpoint `66030ece test(rc): align operator acceptance gates` is on GitHub main.
+- This checkpoint changes only acceptance scripts: Care test follows scene -> browse UX; Compatibility test reads dynamic baseline and explicitly selects tiger barb.
+- Full operator/product acceptance is green; no product-code blocker was found.
+- `artifacts/` remains unrelated untracked screenshot output and must stay outside Admin/RC commits.
+- Production is intentionally unchanged pending a separate release decision.
+
 ## 2026-09-14 runtime publication TOCTOU checkpoint
 - main functional checkpoint: `78aaef71 fix(admin): revalidate runtime asset publication`.
 - GitHub Product Golden Path `34821812724` PASS.

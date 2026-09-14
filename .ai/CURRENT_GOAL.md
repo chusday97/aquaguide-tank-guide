@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-14 RC1 Operator Acceptance PASS
+Aqua Operations Studio has moved out of open-ended reliability hardening and into release-candidate acceptance. RC1 operator acceptance on main `66030ece test(rc): align operator acceptance gates` found no product-level blocker.
+
+- Product publish boundary PASS: Save remains private; Publish advances public Encyclopedia runtime.
+- Care publish boundary PASS through the real default flow: `/care` opens Interactive Check; operator switches to Traditional Browse before searching. Save remains private; Publish advances public Care runtime.
+- Compatibility operator flow PASS: canonical reviewed baseline is currently 29 Profiles / 5 Pair Rules; tiger-barb Profile Draft and Pair Draft both complete Operations deep-link -> review checks -> human approval -> reviewed publish -> task closure.
+- Durable Local File browser flow PASS: state/assets/Compatibility/Care SEO persist across restart; backup/restore and corrupt-root recovery remain usable.
+- Product Golden Path PASS: contract has 5 journeys with no partial E2E coverage; GP-001..GP-004 all pass. Operations Studio desktop/mobile and three-step browser acceptance pass; 16 formal task paths stay within 3 navigation clicks / 3 task screens.
+- Engineering gates PASS: API/root TypeScript, full build, diff check, GitHub Product Golden Path `34826290607`.
+- Two failures discovered during acceptance were stale test assumptions, not product blockers: Care search visibility changed with scene/browse mode, and Compatibility tests hard-coded historic 7/4 counts and list order. Acceptance gates now follow current product behavior and dynamic reviewed authority.
+- NEXT: Production Release Decision / release rehearsal only. Do not resume speculative Local File hardening unless a new reproducible operator blocker appears. No Production promote or Compatibility migration apply without separate authorization.
+
 ## CURRENT OVERRIDE — 2026-09-14 runtime asset publication TOCTOU closed
 A concrete Git runtime snapshot publication race is closed on main at `78aaef71 fix(admin): revalidate runtime asset publication`.
 

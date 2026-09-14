@@ -154,6 +154,7 @@ try {
   assert.equal(publishedTitle, oldPublishedTitle, 'Save must not advance the public Care version');
   const beforePublish = await newPreviewPage();
   await beforePublish.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
+  await beforePublish.getByRole('button', { name: '传统浏览', exact: true }).click();
   const beforeInput = beforePublish.locator('#care-search [role="combobox"]');
   await beforeInput.waitFor({ state: 'visible' });
   await beforeInput.fill(oldPublishedTitle);
@@ -171,6 +172,7 @@ try {
 
   const afterPublish = await newPreviewPage();
   await afterPublish.goto(`${baseUrl}/care`, { waitUntil: 'domcontentloaded' });
+  await afterPublish.getByRole('button', { name: '传统浏览', exact: true }).click();
   const afterInput = afterPublish.locator('#care-search [role="combobox"]');
   await afterInput.waitFor({ state: 'visible' });
   await afterInput.fill(nextPublishedTitle);

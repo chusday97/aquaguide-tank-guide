@@ -20,6 +20,16 @@ const unavailable = route => route.fulfill({
   status: 503, contentType: 'application/json',
   body: JSON.stringify({ error: { code: 'DEPENDENCY_UNAVAILABLE', message: 'cloud disabled in local-mode test' }, requestId: 'local-compat-test' }),
 });
+const assertLocalBaselineAligned = text => {
+  const profiles = text.match(/Reviewed Profiles\s+(\d+)\s+Local baseline (\d+)\/(\d+)/);
+  const pairs = text.match(/Reviewed Pair Rules\s+(\d+)\s+Local baseline (\d+)\/(\d+)/);
+  assert.ok(profiles, 'Compatibility authority summary must expose Reviewed Profiles and its Local baseline.');
+  assert.ok(pairs, 'Compatibility authority summary must expose Reviewed Pair Rules and its Local baseline.');
+  assert.equal(profiles[1], profiles[2]);
+  assert.equal(profiles[1], profiles[3]);
+  assert.equal(pairs[1], pairs[2]);
+  assert.equal(pairs[1], pairs[3]);
+};
 try {
   for (const viewport of [{ width: 1280, height: 900 }, { width: 390, height: 844 }]) {
     const page = await browser.newPage({ viewport });
@@ -38,14 +48,13 @@ try {
 
     const firstBody = await page.locator('body').innerText();
     assert.match(firstBody, /Profile \/ Pair Draft 已启用/);
-    assert.match(firstBody, /Local baseline 7\/7/);
-    assert.match(firstBody, /Local baseline 4\/4/);
+    assertLocalBaselineAligned(firstBody);
     assert.doesNotMatch(firstBody, /DB baseline/);
     const authoritySummary = page.getByTestId('compatibility-authority-summary');
     const summaryHeight = await authoritySummary.evaluate(element => element.getBoundingClientRect().height);
     assert.equal(summaryHeight <= (viewport.width === 390 ? 120 : 100), true, `${viewport.width}px authority summary must stay compact.`);
     assert.equal(await authoritySummary.evaluate(element => element.scrollWidth - element.clientWidth), 0, `${viewport.width}px authority summary must not overflow internally.`);
-    await page.getByRole('button', { name: '创建 Profile Draft' }).first().click();
+    await page.getByTestId('compatibility-profile-sp_0439').getByRole('button', { name: '创建 Profile Draft' }).click();
     const profileEditor = page.getByTestId('compatibility-draft-editor');
     await profileEditor.waitFor();
     const editorTop = await profileEditor.evaluate(element => element.getBoundingClientRect().top + window.scrollY);
@@ -117,7 +126,7 @@ try {
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     const profilePublishedText = await page.locator('body').innerText();
     assert.match(profilePublishedText, /虎皮鱼[\s\S]{0,500}最低群体：7/);
-    assert.match(profilePublishedText, /Local baseline 7\/7/);
+    assertLocalBaselineAligned(profilePublishedText);
 
     await page.getByRole('button', { name: '返回管理后台' }).click();
     await page.waitForURL(/\/admin\/content$/);
@@ -201,7 +210,7 @@ try {
     await page.getByRole('heading', { name: 'Compatibility Admin' }).waitFor();
     const pairPublishedText = await page.locator('body').innerText();
     assert.match(pairPublishedText, /迷你鹦鹉鱼 × 虎皮鱼[\s\S]{0,300}谨慎混养/);
-    assert.match(pairPublishedText, /Local baseline 4\/4/);
+    assertLocalBaselineAligned(pairPublishedText);
     await page.goto(`${baseUrl}/admin/publish-center`, { waitUntil: 'domcontentloaded' });
     await page.getByRole('heading', { name: 'Unified Publish Center' }).waitFor();
     const publishCenterText = await page.locator('body').innerText();

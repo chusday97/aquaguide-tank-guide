@@ -15,8 +15,7 @@ assert.equal(first.length, LAUNCH_COHORT_TARGET, 'launch cohort must contain exa
 assert.equal(new Set(firstIds).size, first.length, 'launch cohort IDs must be unique');
 assert.deepEqual(firstIds, secondIds, 'launch cohort ordering must be deterministic');
 for (const reviewedId of getCompatibilityEvidenceAudit().reviewedSpeciesIds) {
-  assert.ok(firstIds.includes(reviewedId), `existing reviewed species ${reviewedId} must remain in the launch cohort`);
-  assert.equal(isSpeciesDecisionReady(reviewedId), true, `reviewed species ${reviewedId} must be decision-ready`);
+  assert.equal(isSpeciesDecisionReady(reviewedId), true, `reviewed species ${reviewedId} must be decision-ready whether or not it remains in the frozen research cohort`);
 }
 assert.equal(isSpeciesDecisionReady('unreviewed-launch-candidate'), false, 'cohort membership cannot grant decision readiness');
 
