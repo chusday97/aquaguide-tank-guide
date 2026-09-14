@@ -1,5 +1,10 @@
 # Current Goal
 
+## SYNCED MAIN AUTHORITY — 2026-09-14 Local asset signature integrity
+- Main docs checkpoint `58fd8d8b` records the already-merged functional fix `38eed2a7 fix(admin): validate local asset signatures`.
+- Asset PUT rejects MIME/signature mismatch before filesystem mutation; persisted PNG/JPEG/WebP blobs are independently checked by root integrity and may emit `ASSET_CONTENT_INVALID`.
+- Same-asset targeted repair remains available. Main reports Local File/UI/Operations/type/build gates PASS, GitHub Product Golden Path `34810288146` PASS, Preview READY, Production unchanged.
+- Product Release authority is unchanged: latest-head Product + Admin CI remains required before any merge decision.
 ## CURRENT OVERRIDE — 2026-09-14 Product Release Gate after latest main Admin safety sync
 - Latest `main` safety line has been merged into Product Recovery after main advanced by 7 commits.
 - Imported Admin safety behavior: transactional state-write rollback (`5c8f6a63`), referenced-asset delete guard (`77a32708`), operator restore-list isolation for `pre-restore-safety` backups (`ae59e1d4`), and Local asset MIME/signature validation (`38eed2a7`), plus their authority-doc checkpoints.

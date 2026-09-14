@@ -1,3 +1,8 @@
+## 2026-09-14 — Synced main Local asset signature authority
+- Main docs checkpoint `58fd8d8b` records functional `38eed2a7`: Local asset PUT now validates PNG/JPEG/WebP signatures and active-root integrity detects persisted signature corruption as `ASSET_CONTENT_INVALID`.
+- Targeted re-PUT repair is preserved; fake uploads leave no files behind.
+- Main validation: Local File/UI/Operations/type/build PASS; Product Golden Path `34810288146` PASS; Preview READY; Production unchanged.
+- Recovery already contains the functional code and passed its merged-head Admin + Product dual gates.
 ## 2026-09-14 — Latest main Admin safety line merged into Product Recovery
 - Main moved ahead during Product Release Gate; recovery explicitly fetched and merged the 7 new main-only commits through `38eed2a7 fix(admin): validate local asset signatures`.
 - Imported functional Admin checkpoints include invalid state-write rollback, referenced asset delete protection, hidden internal restore safety backups, and PNG/JPEG/WebP signature validation for Local assets.

@@ -1,5 +1,10 @@
 # Task Queue
 
+## SYNCED MAIN QUEUE — 2026-09-14 Local asset signature integrity
+- DONE on main: reject fake PNG/JPEG/WebP content before mutation and detect persisted content corruption with `ASSET_CONTENT_INVALID`.
+- DONE on recovery: corresponding functional code is already merged and merged-head Local File/Admin + Product gates are green.
+- CURRENT: keep Product Release Gate blocked on latest-head remote Product Golden Path / Main Convergence CI; do not expand Admin semantics speculatively.
+- HOLD: no Production deploy and no Compatibility migration apply.
 ## CURRENT OVERRIDE — 2026-09-14 after syncing latest main Admin safety
 - DONE: detect main advancing by 7 commits during Product Release Gate instead of relying on stale `origin/main` tracking.
 - DONE: explicitly fetch latest `main` and merge Admin safety commits through `38eed2a7` into Product Recovery.

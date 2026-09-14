@@ -1,5 +1,15 @@
 # Execution Log
 
+## 2026-09-14 — Local asset signature integrity closure
+- Reproduced arbitrary text uploaded as `image/png`: PUT 201, Business reference accepted, `/integrity` falsely `healthy=true`.
+- Added PNG/JPEG/WebP signature validation at asset PUT before mutation. Signature mismatch now returns 400 and creates no blob/meta pair.
+- Added signature validation to `inspectRoot()` with `ASSET_CONTENT_INVALID`; external same-size blob corruption is now detected.
+- Added targeted repair support for `ASSET_CONTENT_INVALID` so re-PUT of the same asset can recover the root.
+- Updated stress fixtures to carry valid file headers without reducing sizes, concurrency counts, backup/runtime snapshot stress, restore visibility, or rollback coverage.
+- PASS: Local File API, mode contract, browser Local File regression, Operations Studio, API/root TypeScript, full build, diff check.
+- Commit `38eed2a7`; GitHub Product Golden Path `34810288146` PASS; Vercel Preview `dpl_92QLGAArBwyk6M7T9mfgZTrMngBA` READY / target null. Production unchanged.
+
+
 ## 2026-09-14 — internal safety backup list isolation
 - Reproduced manual A -> active B -> restore A; restore returned 200 with a newer safety backup and `/backups[0].reason === pre-restore-safety`.
 - Patched `listBackups()` to skip internal `pre-restore-safety` manifests only at listing time. Safety directory remains intact.
