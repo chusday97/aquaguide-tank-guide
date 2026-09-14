@@ -1,5 +1,13 @@
 # Live Status
 
+## 2026-09-14 — Decodable Local assets
+- CLOSED: `935bb529` upgrades Local File image validation from signature-only to successful full decode + MIME/format match.
+- A signature-correct corrupt image now returns 400 before persistence; persisted decode failures become `ASSET_CONTENT_INVALID`; same-asset repair remains supported.
+- Current main `b01f2d28` contains the fix. Latest merged-head Product Golden Path `34812307958` PASS.
+- Functional Preview `dpl_2X2ifijjxD6WzqLvrDBVFY8fpksa` READY; current-main Preview `dpl_CBz286UQRWMuMgVuTKa28J39Csea` READY.
+- Production unchanged at `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+
+
 ## 2026-09-14 — Local asset signature integrity
 - CLOSED on main at `38eed2a7`: Local File no longer treats arbitrary bytes with an image MIME as a healthy asset.
 - New upload MIME/signature mismatch => `400 VALIDATION_ERROR`, no persisted pair.

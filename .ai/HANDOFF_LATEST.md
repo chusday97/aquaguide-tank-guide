@@ -1,3 +1,9 @@
+## 2026-09-14 — Decodable Local asset integrity closed
+- Functional `935bb529 fix(admin): require decodable local assets` is contained in current main merge `b01f2d28`.
+- Signature-correct but non-decodable PNG/JPEG/WebP content is no longer accepted: PUT requires successful `sharp` decode + format match, and root integrity applies the same rule to persisted blobs.
+- `ASSET_CONTENT_INVALID` remains targeted-repairable by re-PUT of the same asset. Local File/API/UI/Operations/type/build gates PASS.
+- Direct functional CI was cancelled only because the immediate main merge superseded it; merged-head Product Golden Path `34812307958` PASS. Functional and merged-head Vercel Previews are READY. Production remains on `5fa915d3`; no DB migration/promotion.
+
 ## 2026-09-14 — Synced main Local asset signature authority
 - Main docs checkpoint `58fd8d8b` records functional `38eed2a7`: Local asset PUT now validates PNG/JPEG/WebP signatures and active-root integrity detects persisted signature corruption as `ASSET_CONTENT_INVALID`.
 - Targeted re-PUT repair is preserved; fake uploads leave no files behind.

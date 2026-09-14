@@ -1,5 +1,15 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 after decodable Local asset closure
+- DONE: reproduce a PNG-signature-correct garbage body that passed signature-only validation but failed real decode.
+- DONE: require Local asset full decode + MIME/decoded-format match at PUT and in root integrity.
+- DONE: keep `ASSET_CONTENT_INVALID` targeted repair and convert API/browser stress fixtures to real decodable 1x1 seeds without reducing sizes or concurrency coverage.
+- DONE: Local File/API/UI/Operations/type/full-build gates PASS.
+- DONE: functional `935bb529` absorbed by current main `b01f2d28`; merged-head Product Golden Path `34812307958` PASS; functional + merged-head Vercel Previews READY.
+- HOLD: Production unchanged; no Compatibility migration apply.
+- NEXT: only another concrete reproducible Local File operator/runtime/data-reliability badcase.
+
+
 ## SYNCED MAIN QUEUE — 2026-09-14 Local asset signature integrity
 - DONE on main: reject fake PNG/JPEG/WebP content before mutation and detect persisted content corruption with `ASSET_CONTENT_INVALID`.
 - DONE on recovery: corresponding functional code is already merged and merged-head Local File/Admin + Product gates are green.

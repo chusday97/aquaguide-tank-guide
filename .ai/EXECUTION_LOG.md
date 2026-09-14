@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-14 — Decodable Local asset closure
+- Reproduced signature-only false positive: PNG magic bytes + garbage body were accepted by prior Local File validation while `sharp` full decode failed.
+- Added `assetContentDecodesAsMime()`: fast signature precheck, decoded-format/dimensions validation, then `sharp(...).stats()` full decode. PUT returns 400 before mutation when decode fails; root integrity reports `ASSET_CONTENT_INVALID` for persisted decode failures.
+- Kept targeted same-asset repair. Replaced synthetic pressure fixtures with real 1x1 PNG/WebP seeds plus padding, preserving original sizes and concurrency counts; corrected the browser fixture that metadata could read but libpng could not decode.
+- PASS: Local File API, mode contract, browser Local File regression, Operations Studio, API/root TypeScript, full build, diff check.
+- Functional `935bb529`; direct CI was superseded/cancelled by immediate main merge. Merged main `b01f2d28` contains the fix and Product Golden Path `34812307958` PASS. Functional Preview `dpl_2X2ifijjxD6WzqLvrDBVFY8fpksa` READY; merged-head Preview `dpl_CBz286UQRWMuMgVuTKa28J39Csea` READY. Production unchanged.
+
+
 ## 2026-09-14 — Local asset signature integrity closure
 - Reproduced arbitrary text uploaded as `image/png`: PUT 201, Business reference accepted, `/integrity` falsely `healthy=true`.
 - Added PNG/JPEG/WebP signature validation at asset PUT before mutation. Signature mismatch now returns 400 and creates no blob/meta pair.

@@ -1,5 +1,12 @@
 # Branch Status
 
+## 2026-09-14 — Decodable Local asset checkpoint
+- Functional checkpoint: `935bb529338ab3a0e74c65014c25c253fd70dd32` — `fix(admin): require decodable local assets`.
+- `935bb529` was immediately absorbed by main merge `b01f2d2856576369fe15e34fdf82973b16f021df` (`merge: close Aqua product recovery into main`). Its direct Product Golden Path run `34812271758` was cancelled as superseded; merged-head Product Golden Path `34812307958` PASS.
+- Functional Preview `dpl_2X2ifijjxD6WzqLvrDBVFY8fpksa` READY / target null; merged-head Preview `dpl_CBz286UQRWMuMgVuTKa28J39Csea` READY / target null.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`; no promotion or DB migration.
+
+
 ## 2026-09-14 — Local asset signature integrity checkpoint
 - Functional main checkpoint: `38eed2a7e50ec42bd8f49a355b3e582c5a99f7f1` — `fix(admin): validate local asset signatures`.
 - GitHub Product Golden Path `34810288146` PASS.

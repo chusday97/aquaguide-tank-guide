@@ -1,5 +1,17 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-14 decodable Local asset content closed
+A concrete signature-correct-but-undecodable image badcase is closed on main at `935bb529 fix(admin): require decodable local assets`, now contained by merged main `b01f2d28`.
+
+- Fail-before-fix: a PNG-signature-correct buffer whose remaining body was garbage passed the previous signature-only validation even though `sharp(...).stats()` failed with a corrupt-header/libpng decode error.
+- Local asset PUT now requires both declared MIME/signature agreement and successful full image decode via `sharp` metadata + stats; actual decoded format and nonzero dimensions must match PNG/JPEG/WebP expectations.
+- `inspectRoot()` uses the same decode rule, so externally corrupted/historical blobs that retain a valid file signature cannot remain falsely healthy and are reported as `ASSET_CONTENT_INVALID`.
+- Same-asset targeted repair remains available. Browser/API stress fixtures now use real 1x1 PNG/WebP seeds padded to the original test sizes, preserving concurrency, backup/runtime snapshot, restore, and rollback coverage.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio populated UI, API/root TypeScript, full build, diff check. Latest merged-head GitHub Product Golden Path `34812307958` PASS.
+- Functional Preview `dpl_2X2ifijjxD6WzqLvrDBVFY8fpksa` READY; merged-head Preview `dpl_CBz286UQRWMuMgVuTKa28J39Csea` READY. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase; do not weaken image decode checks to accommodate synthetic fixtures.
+
+
 ## SYNCED MAIN AUTHORITY — 2026-09-14 Local asset signature integrity
 - Main docs checkpoint `58fd8d8b` records the already-merged functional fix `38eed2a7 fix(admin): validate local asset signatures`.
 - Asset PUT rejects MIME/signature mismatch before filesystem mutation; persisted PNG/JPEG/WebP blobs are independently checked by root integrity and may emit `ASSET_CONTENT_INVALID`.
