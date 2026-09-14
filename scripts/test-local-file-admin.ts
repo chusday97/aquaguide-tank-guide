@@ -778,6 +778,50 @@ try {
     assert.equal(isPngRuntime || isWebpRuntime, true, 'Concurrent runtime snapshot must contain one complete published asset version.');
   }
 
+  // External disk mutation after the snapshot preflight must not bypass publication integrity.
+  const externalRaceSlowId = 'local-asset-runtime-external-slow';
+  const externalRaceTargetId = 'local-asset-runtime-external-target';
+  const externalRaceSlowBytes = pngFixture(20 * 1024 * 1024, 0x61);
+  const externalRaceTargetBytes = pngFixture(4096, 0x62);
+  const externalRaceCorruptTarget = Buffer.concat([pngSeed.subarray(0, 8), Buffer.alloc(externalRaceTargetBytes.length - 8, 0x63)]);
+  for (const [id, body] of [[externalRaceSlowId, externalRaceSlowBytes], [externalRaceTargetId, externalRaceTargetBytes]] as const) {
+    await writeFile(path.join(root, 'assets', `${id}.blob`), body);
+    await writeFile(path.join(root, 'assets', `${id}.json`), `${JSON.stringify({ id, mimeType: 'image/png', byteSize: body.length })}\n`, 'utf8');
+  }
+  const externalRaceBusiness = structuredClone(exportBusinessState);
+  externalRaceBusiness.publishedSpeciesAssets['sp-published'] = [externalRaceSlowId, externalRaceTargetId].map(id => ({
+    id, variant: 'detail', storageBucket: 'local-file', storagePath: id, assetVersion: 1, isCurrent: true, mimeType: 'image/png',
+  }));
+  assert.equal((await putState(started.base, 'business', externalRaceBusiness)).response.status, 200);
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+  const manifestBeforeExternalRace = await readFile(manifestPath);
+  const externalRaceExport = requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
+  const externalRaceDeadline = Date.now() + 10_000;
+  let externalRaceStagingSeen = false;
+  while (Date.now() < externalRaceDeadline) {
+    const entries = await readdir(path.join(root, 'public')).catch(() => [] as string[]);
+    if (entries.some(name => name.startsWith('runtime-assets.tmp-'))) { externalRaceStagingSeen = true; break; }
+    await new Promise(resolve => setTimeout(resolve, 1));
+  }
+  assert.equal(externalRaceStagingSeen, true, 'Runtime snapshot regression must observe staging after preflight before corrupting the later published asset.');
+  await writeFile(path.join(root, 'assets', `${externalRaceTargetId}.blob`), externalRaceCorruptTarget);
+  const externalRaceResult = await externalRaceExport;
+  assert.equal(externalRaceResult.response.status, 409,
+    'Runtime snapshot must fail closed when a published asset is corrupted externally after the initial integrity preflight.');
+  assert.equal(externalRaceResult.payload.error.code, 'MIGRATION_REJECTED');
+  assert.deepEqual(await readFile(manifestPath), manifestBeforeExternalRace,
+    'A failed post-preflight asset validation must keep the previously committed runtime authority manifest unchanged.');
+  assert.equal((await readdir(path.join(root, 'public'))).some(name => name.startsWith('runtime-assets.tmp-')), false,
+    'Failed external-mutation runtime export must clean its isolated staging directory.');
+  await writeFile(path.join(root, 'assets', `${externalRaceTargetId}.blob`), externalRaceTargetBytes);
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+  assert.equal((await putState(started.base, 'business', exportBusinessState)).response.status, 200);
+  await rm(path.join(root, 'assets', `${externalRaceSlowId}.blob`), { force: true });
+  await rm(path.join(root, 'assets', `${externalRaceSlowId}.json`), { force: true });
+  await rm(path.join(root, 'assets', `${externalRaceTargetId}.blob`), { force: true });
+  await rm(path.join(root, 'assets', `${externalRaceTargetId}.json`), { force: true });
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+
   // Restore must not expose a new Business reference before the matching asset set is visible.
   const restoreVisibilityAssetA = 'local-asset-restore-visibility-a';
   const restoreVisibilityAssetB = 'local-asset-restore-visibility-b';

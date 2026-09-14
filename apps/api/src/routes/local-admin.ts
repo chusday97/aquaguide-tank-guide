@@ -586,11 +586,17 @@ const copyRuntimeAssets = async (root: string, assets: unknown, tempDirectory: s
     }
     const metadata = asRecord(await readJsonOrNull(assetMetaFile(root, id)));
     if (!metadata) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} metadata is missing.`);
-    const mimeType = String(metadata.mimeType || asset.mimeType || '');
+    const mimeType = String(metadata.mimeType || '');
     const extension = assetExtension(mimeType);
     if (!extension) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} has unsupported MIME type ${mimeType}.`);
     const body = await readFile(assetFile(root, id)).catch(() => null);
     if (!body) throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} blob is missing.`);
+    if (Number(metadata.byteSize) !== body.length) {
+      throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} metadata byteSize does not match the copied blob.`);
+    }
+    if (!await assetContentDecodesAsMime(mimeType, body)) {
+      throw new ApiError(409, 'MIGRATION_REJECTED', `Published asset ${id} cannot be fully decoded as ${mimeType}; Git runtime snapshot was not generated.`);
+    }
     const assetVersion = Math.max(1, Number(asset.assetVersion) || 1);
     const contentHash = createHash('sha256').update(body).digest('hex').slice(0, 12);
     const fileName = `${id}-v${assetVersion}-${contentHash}.${extension}`;
