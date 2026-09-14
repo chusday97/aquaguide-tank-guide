@@ -1,3 +1,10 @@
+## 2026-09-14 runtime publication TOCTOU checkpoint
+- main functional checkpoint: `78aaef71 fix(admin): revalidate runtime asset publication`.
+- GitHub Product Golden Path `34821812724` PASS.
+- Vercel Preview `dpl_9W7EHy8Lhn6pTfw97x9C4fX9vBby` READY / target null.
+- Production remains unchanged; no DB migration/indexing promotion.
+- Untracked `artifacts/` screenshots remain outside Admin commits.
+
 # Branch Status
 
 ## 2026-09-14 — Restore safety backup lifecycle cleanup

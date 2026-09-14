@@ -1,3 +1,10 @@
+## 2026-09-14 — Runtime asset publication TOCTOU closure
+- Functional main `78aaef71 fix(admin): revalidate runtime asset publication`.
+- Reproduced external post-preflight disk corruption causing `/runtime-snapshot` to return 201 while committing an undecodable published asset.
+- Runtime publication now validates the exact copied metadata/body pair again for MIME, byteSize and full decode before staging can commit.
+- Failed post-preflight validation returns `409 MIGRATION_REJECTED`, leaves the prior runtime manifest unchanged, and removes staging residue.
+- Product Golden Path `34821812724` PASS; Preview `dpl_9W7EHy8Lhn6pTfw97x9C4fX9vBby` READY; Production unchanged.
+
 ## 2026-09-14 — Decodable Local asset integrity closed
 
 ## 2026-09-14 — Restore safety backup lifecycle closure

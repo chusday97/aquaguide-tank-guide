@@ -1,3 +1,13 @@
+## CURRENT OVERRIDE — 2026-09-14 runtime asset publication TOCTOU closed
+A concrete Git runtime snapshot publication race is closed on main at `78aaef71 fix(admin): revalidate runtime asset publication`.
+
+- Fail-before-fix: active root integrity passed, runtime staging opened, an external filesystem write then replaced a later published PNG with same-size undecodable bytes, yet `/runtime-snapshot` returned 201 and committed the corrupt bytes into `runtime-assets`.
+- `copyRuntimeAssets()` now revalidates the exact metadata/body pair it is about to publish: durable metadata MIME only, metadata byteSize equality, and full decode/format match.
+- External mutation after the initial root preflight now fails publication with `409 MIGRATION_REJECTED`; the previous committed runtime manifest remains unchanged and isolated staging is cleaned.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34821812724`.
+- Vercel Preview `dpl_9W7EHy8Lhn6pTfw97x9C4fX9vBby` READY / target null. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase; otherwise enter maintenance/observation rather than inventing defects.
+
 # Current Goal
 
 ## CURRENT OVERRIDE — 2026-09-14 restore safety backup lifecycle closed

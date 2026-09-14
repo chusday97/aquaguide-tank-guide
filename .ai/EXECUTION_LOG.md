@@ -1,3 +1,9 @@
+## 2026-09-14 — Closed runtime asset publication TOCTOU
+- Reproduced: root healthy at preflight -> runtime staging created -> external replacement of later published asset -> old code returned 201 and copied undecodable bytes.
+- Fixed: publication-time metadata MIME, byteSize and full decode validation on the exact body copied into runtime-assets.
+- Regression: failed race returns 409, prior manifest unchanged, staging cleaned, root repair restores healthy state.
+- Gates: Local File API/mode/browser/Operations/API+root TypeScript/full build/diff PASS; Product Golden Path `34821812724` PASS; Preview READY.
+
 # Execution Log
 
 ## 2026-09-14 — Restore safety backup lifecycle cleanup

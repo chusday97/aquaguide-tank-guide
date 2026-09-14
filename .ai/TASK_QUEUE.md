@@ -1,3 +1,12 @@
+## CURRENT OVERRIDE — 2026-09-14 runtime publication TOCTOU closure
+- DONE: reproduce healthy preflight followed by external corruption before published asset copy.
+- DONE: prove old behavior returned 201 and committed undecodable runtime asset bytes.
+- DONE: revalidate actual publication metadata/body for MIME, byteSize and full decode.
+- DONE: preserve previous runtime manifest and clean staging when post-preflight validation fails.
+- DONE: Local File/API/UI/Operations/type/build gates + Product Golden Path `34821812724` + READY Preview.
+- NEXT: only another concrete reproducible reliability badcase; otherwise maintenance/observation.
+- HOLD: no Production promote and no Compatibility migration apply.
+
 # Task Queue
 
 ## CURRENT OVERRIDE — 2026-09-14 restore safety backup lifecycle

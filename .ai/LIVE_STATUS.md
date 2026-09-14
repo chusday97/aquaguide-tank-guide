@@ -1,3 +1,9 @@
+## 2026-09-14 runtime publication TOCTOU status
+- `78aaef71` is on GitHub main and closes post-preflight external asset corruption during Git runtime snapshot export.
+- Runtime publication now rechecks the exact copied asset metadata/body pair before commit.
+- Product Golden Path `34821812724` PASS; Preview `dpl_9W7EHy8Lhn6pTfw97x9C4fX9vBby` READY.
+- Production runtime is intentionally unchanged.
+
 # Live Status
 
 ## 2026-09-14 — Restore safety backup lifecycle
