@@ -1,5 +1,13 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 Release Gate remote sync
+- DONE: Product Closure Checkpoint 1 + 2 committed and local/production-like Preview gates green.
+- DONE: latest recovery commits pushed to PR #149; PR scope/title refreshed and PR marked Ready for review.
+- DONE: Cloudflare branch Preview succeeded on latest product head; Supabase Preview intentionally skipped (no authorized Supabase branch).
+- HOLD: 15 additive Compatibility migrations remain repository-only; no Staging/Production apply.
+- CURRENT: force a latest-head PR synchronize via this authority checkpoint, then require Product Golden Path / Main Convergence CI before merge consideration.
+- DO NOT: merge main, deploy Production, or apply DB migrations without a separate release decision.
+
 ## CURRENT OVERRIDE — 2026-09-14 after Product Closure Checkpoint 2
 - DONE: remove canonical `compatible` / legacy caution summary contradiction; add permanent compatibility-service regression.
 - DONE: keep `compatible_community` achievement strict and replace stale unreviewed test fixtures with reviewed compatible authority.

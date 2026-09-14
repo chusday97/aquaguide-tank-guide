@@ -1,5 +1,13 @@
 # Aqua Product Recovery Status
 
+## 2026-09-14 — Release Gate remote-sync checkpoint
+- PR #149 is updated to the current Product Closure scope and marked Ready for review; merge/release remains separately gated.
+- Product Recovery branch remains 0 behind main and was 75 commits ahead before this docs-only checkpoint; current main is the merge base.
+- Local + production-like Preview gates are green for GP-001–GP-004, Compatibility beginner actions, Collection Hub, three-step UI, Task Action closure, TypeScript and full production build.
+- Latest branch Preview integrations reached Cloudflare success; Supabase Preview is intentionally skipped because no Supabase branch is authorized for this recovery line.
+- 15 additive Compatibility migrations remain repository-only; none has been applied to Staging or Production.
+- NEXT: require CI on the latest non-draft PR head before any main merge decision. Do not deploy Production or apply migrations without separate authorization.
+
 ## 2026-09-14 — Product Closure Checkpoint 2
 - Release-gate audit corrected a canonical Compatibility presentation contradiction: a true `compatible` result with zero warning/missing rules can no longer inherit the legacy caution sentence “需要先处理风险项”; compatible summary now comes from canonical clear-authority evidence.
 - Collection achievement coverage was aligned with reviewed authority: the `compatible_community` regression fixture now uses a genuinely reviewed compatible shrimp/snail community instead of unreviewed species that correctly resolve to `insufficient_data`. The achievement rule itself remains strict.
