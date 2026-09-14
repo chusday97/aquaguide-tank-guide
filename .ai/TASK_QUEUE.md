@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-14 RC1 Operator Acceptance
+- DONE: Product Save remains private; Product Publish advances public runtime.
+- DONE: Care Save remains private; Care Publish advances public runtime through current Interactive Check -> Traditional Browse UX.
+- DONE: Compatibility Profile + Pair Draft operator lifecycle through Operations, checks, approval, reviewed publish, and task closure.
+- DONE: dynamic reviewed baseline alignment (current 29 Profiles / 5 Pair Rules); no historical 7/4 hard-code.
+- DONE: Durable Local File restart + backup/restore + corrupt-root recovery browser acceptance.
+- DONE: Golden Path contract + GP-001..GP-004 + Operations desktop/mobile + three-step UI; 16 formal paths <=3 clicks/screens.
+- DONE: API/root TypeScript, full build, diff check, GitHub Product Golden Path `34826290607`.
+- RC1 RESULT: no product-level operator blocker found. Two stale test gates were corrected.
+- NEXT: explicit Production Release Decision / rehearsal. HOLD: Production promote, Compatibility migrations, indexing changes.
+
 ## CURRENT OVERRIDE — 2026-09-14 runtime publication TOCTOU closure
 - DONE: reproduce healthy preflight followed by external corruption before published asset copy.
 - DONE: prove old behavior returned 201 and committed undecodable runtime asset bytes.

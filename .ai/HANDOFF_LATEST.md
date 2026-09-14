@@ -1,3 +1,11 @@
+## 2026-09-14 — RC1 Operator Acceptance PASS
+- Main acceptance checkpoint `66030ece test(rc): align operator acceptance gates` contains only test-gate updates; no product behavior changed.
+- Product/Care save-vs-publish boundaries, Compatibility Profile/Pair operator lifecycle, Durable Local File restart/backup/restore/recovery, Operations Studio desktop/mobile, three-step flows, and GP-001..GP-004 all PASS.
+- Current reviewed Compatibility authority observed by acceptance: 29 Profiles / 5 Pair Rules. The gate now validates Local baseline alignment dynamically and targets tiger barb explicitly instead of depending on list order.
+- Care acceptance now follows the real default Interactive Check -> Traditional Browse path before searching.
+- GitHub Product Golden Path `34826290607` PASS; Production remains unchanged on `5fa915d3`.
+- Next phase is release decision/rehearsal, not further speculative Admin reliability expansion.
+
 ## 2026-09-14 — Runtime asset publication TOCTOU closure
 - Functional main `78aaef71 fix(admin): revalidate runtime asset publication`.
 - Reproduced external post-preflight disk corruption causing `/runtime-snapshot` to return 201 while committing an undecodable published asset.

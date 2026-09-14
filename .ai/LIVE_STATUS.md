@@ -1,3 +1,11 @@
+## 2026-09-14 RC1 Operator Acceptance
+- RC1 operator acceptance: PASS on main `66030ece`; no product blocker found.
+- Acceptance coverage: Product/Care publish boundaries; Compatibility Profile/Pair review+publish lifecycle; Local File restart/backup/restore/recovery; Operations Studio desktop/mobile; GP-001..GP-004; three-step flows.
+- Current reviewed Compatibility baseline observed in UI: 29 Profiles / 5 Pair Rules.
+- GitHub Product Golden Path `34826290607`: PASS.
+- Production remains deployment `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8`, runtime commit `5fa915d3`, READY/production.
+- Next state: release decision/rehearsal. No authorized Production promote or DB migration.
+
 ## 2026-09-14 runtime publication TOCTOU status
 - `78aaef71` is on GitHub main and closes post-preflight external asset corruption during Git runtime snapshot export.
 - Runtime publication now rechecks the exact copied asset metadata/body pair before commit.

@@ -1,3 +1,11 @@
+## 2026-09-14 — RC1 Operator Acceptance execution
+- Re-read canonical main/authority before acceptance; only unrelated `artifacts/` was untracked.
+- Initial operator gates exposed two stale test assumptions: hidden Care search under default Interactive Check mode, and historic Compatibility 7/4/list-order assumptions.
+- Verified product behavior first, then updated only acceptance scripts. Care publish preview PASS after switching to Traditional Browse; Compatibility full Profile/Pair lifecycle PASS with explicit tiger-barb selection and dynamic 29/5 baseline alignment.
+- PASS: Operations work-items, Product publish preview, Care publish preview, Compatibility Admin, Durable Local File browser acceptance, three-step paths/UI, Golden Path contract, GP-001..GP-004, Operations Studio desktop/mobile, API/root TypeScript, full build, diff check.
+- Committed/pushed `66030ece test(rc): align operator acceptance gates`; GitHub Product Golden Path `34826290607` PASS.
+- Production rechecked unchanged on `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / `5fa915d3`.
+
 ## 2026-09-14 — Closed runtime asset publication TOCTOU
 - Reproduced: root healthy at preflight -> runtime staging created -> external replacement of later published asset -> old code returned 201 and copied undecodable bytes.
 - Fixed: publication-time metadata MIME, byteSize and full decode validation on the exact body copied into runtime-assets.
