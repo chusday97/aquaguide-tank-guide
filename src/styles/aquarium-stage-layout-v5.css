@@ -91,7 +91,7 @@
   margin-top: 14px;
 }
 
-@media (min-width: 960px) {
+@media (min-width: 1200px) {
   .aquaguide-app.desktop-shell-active .desktop-workspace-scroll:has(.desktop-canvas--aquarium) {
     padding: 18px clamp(16px, 1.7vw, 24px) 28px !important;
   }
@@ -204,7 +204,7 @@
   }
 }
 
-@media (min-width: 768px) and (max-width: 959px) {
+@media (min-width: 768px) and (max-width: 1199px) {
   .aquarium-dashboard-tank {
     display: flex;
     flex-direction: column;
@@ -331,5 +331,55 @@
 @media (prefers-reduced-motion: reduce) {
   .aquarium-dashboard-actions .desktop-card-grid > button {
     transition: none !important;
+  }
+}
+
+
+/* V5 visual polish: make the canonical Today Action read as the primary task
+   without changing its disclosure state or task truth. */
+.aquarium-dashboard-rail .aquarium-status > section[data-panel-level="collapsed"] {
+  padding: 8px !important;
+  background: rgba(250, 252, 250, 0.98) !important;
+}
+
+.aquarium-dashboard-rail [data-today-action-handle="true"] {
+  min-height: 104px !important;
+  padding: 18px 20px !important;
+  border: 1px solid rgba(23, 63, 53, 0.08);
+  border-radius: 20px !important;
+  background: #fff !important;
+  color: #173f35 !important;
+}
+
+.aquarium-dashboard-rail [data-today-action-handle="true"] > span:first-child {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  font-size: clamp(16px, 1.5vw, 21px) !important;
+  line-height: 1.35 !important;
+  letter-spacing: -0.02em;
+}
+
+.aquarium-dashboard-rail [data-today-action-handle="true"] > span:last-child {
+  color: rgba(23, 63, 53, 0.5) !important;
+}
+
+/* Preserve the semantic completed-water-change emphasis. V5 neutralizes the
+   rest of the management surface, but this button uses white text by design. */
+.aquarium-dashboard-actions .desktop-card-grid > button.bg-emerald-700 {
+  border-color: #047857 !important;
+  background: #047857 !important;
+  color: #fff !important;
+}
+
+.aquarium-dashboard-actions .desktop-card-grid > button.bg-emerald-700:hover {
+  border-color: #065f46 !important;
+  background: #065f46 !important;
+}
+
+@media (max-width: 767px) {
+  .aquarium-dashboard-rail [data-today-action-handle="true"] {
+    min-height: 94px !important;
+    padding: 16px !important;
   }
 }
