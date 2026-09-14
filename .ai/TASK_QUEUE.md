@@ -1,3 +1,11 @@
+## CURRENT RELEASE QUEUE — 2026-09-14
+1. **Decision gate:** explicit approval required before any Production promote.
+2. If approved, perform **code-only** promote of release candidate `93549ddf`; do not apply Compatibility migrations.
+3. Immediately verify Production health/API and GP-001–GP-004 smoke paths after promote.
+4. Confirm Local Admin routes remain absent from Production business bundle and Care indexing/noindex policy remains unchanged.
+5. If any regression appears, rollback to stable deployment `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / commit `5fa915d3`.
+6. Separately plan future Compatibility knowledge expansion and any DB-authority migration; do not couple those to this release.
+
 ## CURRENT OVERRIDE — 2026-09-14 RC1 Operator Acceptance
 - DONE: Product Save remains private; Product Publish advances public runtime.
 - DONE: Care Save remains private; Care Publish advances public runtime through current Interactive Check -> Traditional Browse UX.
