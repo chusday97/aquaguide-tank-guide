@@ -1,5 +1,18 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-14 Local asset signature integrity closed
+A concrete false-healthy asset-content badcase is closed on main at `38eed2a7 fix(admin): validate local asset signatures`.
+
+- Fail-before-fix: a client could upload arbitrary text bytes with `Content-Type: image/png`; asset PUT returned 201, Business could reference it, and `/integrity` still reported `healthy=true`.
+- Local asset PUT now verifies the declared PNG/JPEG/WebP file signature before any filesystem mutation; signature mismatch returns `400 VALIDATION_ERROR` and nothing is persisted.
+- `inspectRoot()` also checks on-disk asset signatures and reports `ASSET_CONTENT_INVALID`, so externally corrupted or historical same-size blobs no longer remain falsely healthy.
+- Targeted repair remains available: `ASSET_CONTENT_INVALID` is repairable by re-PUT of the same asset, after which integrity can return healthy.
+- Permanent regression covers fake-PNG rejection, no bad file creation, external same-size blob corruption detection, and same-asset repair. Existing asset pair, backup, runtime snapshot, restore visibility and rollback stress tests remain PASS with valid file headers.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio populated UI, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34810288146`.
+- Vercel Preview `dpl_92QLGAArBwyk6M7T9mfgZTrMngBA` READY / target null. Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 ## CURRENT OVERRIDE — 2026-09-14 internal restore safety backup list isolation closed
 A concrete operator-restore selection badcase is closed on main at `ae59e1d4 fix(admin): hide internal restore safety backups`.
 

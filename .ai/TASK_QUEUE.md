@@ -1,5 +1,16 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 after Local asset signature integrity closure
+- DONE: reproduce arbitrary text accepted as `image/png` with `/integrity` falsely healthy.
+- DONE: validate PNG/JPEG/WebP signatures before asset PUT mutation; mismatch returns 400 and creates no files.
+- DONE: detect historical/external content corruption via `ASSET_CONTENT_INVALID`.
+- DONE: preserve same-asset targeted repair for content-invalid blobs.
+- DONE: preserve asset concurrency, backup, runtime snapshot, restore visibility and rollback stress coverage using valid fixture headers.
+- DONE: Local File API/UI, Operations Studio, mode contract, API/root TypeScript, full build, diff check, GitHub Product Golden Path PASS.
+- DONE: Vercel Preview `dpl_92QLGAArBwyk6M7T9mfgZTrMngBA` READY / target null.
+- NEXT: only another reproducible Local File operator/runtime/data-reliability badcase; do not broaden image parsing or storage semantics speculatively.
+
+
 ## 2026-09-14 queue update
 - CLOSED: completed restore created `pre-restore-safety` as newest `/backups` item, causing “恢复最近备份” to point at the pre-restore state.
 - FIXED: internal safety backups are hidden from ordinary operator restore candidates but retained on disk for journal/rollback recovery.

@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-14 — Local asset signature integrity checkpoint
+- Functional main checkpoint: `38eed2a7e50ec42bd8f49a355b3e582c5a99f7f1` — `fix(admin): validate local asset signatures`.
+- GitHub Product Golden Path `34810288146` PASS.
+- Vercel Preview `dpl_92QLGAArBwyk6M7T9mfgZTrMngBA` READY / target null.
+- Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`; no promotion.
+- Local/GitHub main synchronized at functional push; no force push.
+
+
 ## 2026-09-14 main checkpoint
 - Functional main: `ae59e1d4 fix(admin): hide internal restore safety backups`
 - Remote `main` matched before push; normal push, no force.

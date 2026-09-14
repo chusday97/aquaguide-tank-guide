@@ -1,5 +1,13 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-14 — Local asset signature integrity closed
+- Functional main: `38eed2a7 fix(admin): validate local asset signatures`.
+- Fail-before-fix: arbitrary non-image bytes declared as `image/png` were accepted and could remain `/integrity` healthy even when referenced by Business.
+- Fix: asset PUT validates PNG/JPEG/WebP signatures before mutation; root integrity independently validates persisted blob signatures and emits `ASSET_CONTENT_INVALID` for historical/external corruption.
+- Re-uploading the one content-invalid asset remains available as targeted repair. Fake uploads leave no files behind.
+- Full Local File/UI/Operations/type/build gates PASS; GitHub Product Golden Path `34810288146` PASS; Vercel Preview `dpl_92QLGAArBwyk6M7T9mfgZTrMngBA` READY / target null. Production unchanged at runtime `5fa915d3`.
+
+
 ## 2026-09-14 — Internal restore safety backups hidden from operator restore list
 - Functional main: `ae59e1d4 fix(admin): hide internal restore safety backups`.
 - Reproduced: after restoring backup A from active B, `/backups` listed the newer `pre-restore-safety` first; Operations therefore treated the pre-restore B snapshot as “最近备份”.

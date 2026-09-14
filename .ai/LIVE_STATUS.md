@@ -1,5 +1,14 @@
 # Live Status
 
+## 2026-09-14 — Local asset signature integrity
+- CLOSED on main at `38eed2a7`: Local File no longer treats arbitrary bytes with an image MIME as a healthy asset.
+- New upload MIME/signature mismatch => `400 VALIDATION_ERROR`, no persisted pair.
+- Existing same-size corrupt blobs => `/integrity` `ASSET_CONTENT_INVALID`; same-asset re-PUT remains a supported repair.
+- Product Golden Path `34810288146` PASS.
+- Vercel Preview `dpl_92QLGAArBwyk6M7T9mfgZTrMngBA` READY / target null.
+- Production unchanged at `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+
+
 ## 2026-09-14 restore safety list isolation
 - main functional: `ae59e1d4`
 - GitHub Product Golden Path: `34809050078` PASS
