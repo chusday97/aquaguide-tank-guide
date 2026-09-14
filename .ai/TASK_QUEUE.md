@@ -1,4 +1,31 @@
+## CURRENT OVERRIDE — 2026-09-14 runtime publication TOCTOU closure
+- DONE: reproduce healthy preflight followed by external corruption before published asset copy.
+- DONE: prove old behavior returned 201 and committed undecodable runtime asset bytes.
+- DONE: revalidate actual publication metadata/body for MIME, byteSize and full decode.
+- DONE: preserve previous runtime manifest and clean staging when post-preflight validation fails.
+- DONE: Local File/API/UI/Operations/type/build gates + Product Golden Path `34821812724` + READY Preview.
+- NEXT: only another concrete reproducible reliability badcase; otherwise maintenance/observation.
+- HOLD: no Production promote and no Compatibility migration apply.
+
 # Task Queue
+
+## CURRENT OVERRIDE — 2026-09-14 restore safety backup lifecycle
+- DONE: reproduce unbounded hidden `pre-restore-safety` growth across repeated successful restores.
+- DONE: clean consumed safety backup after successful restore, successful automatic rollback, and successful crash recovery.
+- DONE: keep safety backup + journal on failed rollback/recovery.
+- DONE: add repeated-restore no-growth regression and `safetyBackupRetained=false` success contract.
+- DONE: Local File/API/UI/Operations/type/build gates PASS; Product Golden Path `34819368401` PASS; Preview READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+- HOLD: no Production promote and no Compatibility migration apply.
+
+
+## CURRENT OVERRIDE — 2026-09-14 after corrupt asset read closure
+- DONE: reproduce `/integrity` unhealthy while direct asset GET still returned 200 corrupt bytes.
+- DONE: make asset GET fail closed on MIME/byteSize/decode mismatch with `409 INTEGRITY_FAILED`.
+- DONE: preserve same-asset targeted repair.
+- DONE: Local File/API/UI/Operations/type/full-build gates + Product Golden Path + Preview.
+- NOTE: unrelated untracked `artifacts/` screenshots remain outside Admin commits.
+- NEXT: only another concrete reproducible Local File operator/runtime/data-reliability badcase.
 
 ## CURRENT OVERRIDE — 2026-09-14 after decodable Local asset closure
 - DONE: reproduce a PNG-signature-correct garbage body that passed signature-only validation but failed real decode.

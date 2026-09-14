@@ -1,4 +1,26 @@
+## 2026-09-14 — Closed runtime asset publication TOCTOU
+- Reproduced: root healthy at preflight -> runtime staging created -> external replacement of later published asset -> old code returned 201 and copied undecodable bytes.
+- Fixed: publication-time metadata MIME, byteSize and full decode validation on the exact body copied into runtime-assets.
+- Regression: failed race returns 409, prior manifest unchanged, staging cleaned, root repair restores healthy state.
+- Gates: Local File API/mode/browser/Operations/API+root TypeScript/full build/diff PASS; Product Golden Path `34821812724` PASS; Preview READY.
+
 # Execution Log
+
+## 2026-09-14 — Restore safety backup lifecycle cleanup
+- Reproduced hidden disk growth: 1 manual backup + 5 successful restores => 6 backup directories, including 5 hidden `pre-restore-safety` snapshots.
+- Added completed-transaction cleanup for successful restore, successful automatic rollback, and successful interrupted-restore recovery.
+- Failed rollback/recovery retains safety backup + journal; no dangerous cleanup on unresolved transactions.
+- Added `safetyBackupRetained` to restore result; normal success reports false.
+- Permanent regression covers success cleanup, repeated restore no-growth, crash recovery cleanup, and failed rollback retention.
+- Commit `57577c74`; Product Golden Path `34819368401` PASS; Vercel Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY.
+
+
+## 2026-09-14 — corrupt asset read fail-closed closure
+- Reproduced: externally corrupt a valid asset blob while preserving metadata size; `/integrity` => `ASSET_CONTENT_INVALID`, but direct asset GET still returned 200 and corrupt bytes.
+- Patched Local Admin asset GET to validate MIME, byteSize and full decode before response; corrupt reads now return `409 INTEGRITY_FAILED`.
+- Same-asset repair remains available and normal GET resumes after repair.
+- PASS: Local File API, mode contract, browser Local File, Operations Studio, API/root TypeScript, full build, diff check.
+- Commit `422dbede`; Product Golden Path `34814195437` PASS; Vercel Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY.
 
 ## 2026-09-14 — Decodable Local asset closure
 - Reproduced signature-only false positive: PNG magic bytes + garbage body were accepted by prior Local File validation while `sharp` full decode failed.

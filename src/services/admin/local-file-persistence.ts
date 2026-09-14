@@ -135,7 +135,7 @@ export const publishLocalRuntimeAuthoritySnapshot = async () => {
 
 export const restoreLocalAdminBackup = async (backupId: string) => {
   if (!isLocalAdminFileMode) throw new AquaGuideApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Local File Mode 未启用。');
-  return apiRequest<{ backupId: string; safetyBackupId: string; integrity: LocalAdminIntegrityReport }>(
+  return apiRequest<{ backupId: string; safetyBackupId: string; safetyBackupRetained: boolean; integrity: LocalAdminIntegrityReport }>(
     `/local-admin/backups/${encodeURIComponent(backupId)}/restore`,
     { method: 'POST', authenticated: false },
   );

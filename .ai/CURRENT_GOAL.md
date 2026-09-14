@@ -1,4 +1,36 @@
+## CURRENT OVERRIDE — 2026-09-14 runtime asset publication TOCTOU closed
+A concrete Git runtime snapshot publication race is closed on main at `78aaef71 fix(admin): revalidate runtime asset publication`.
+
+- Fail-before-fix: active root integrity passed, runtime staging opened, an external filesystem write then replaced a later published PNG with same-size undecodable bytes, yet `/runtime-snapshot` returned 201 and committed the corrupt bytes into `runtime-assets`.
+- `copyRuntimeAssets()` now revalidates the exact metadata/body pair it is about to publish: durable metadata MIME only, metadata byteSize equality, and full decode/format match.
+- External mutation after the initial root preflight now fails publication with `409 MIGRATION_REJECTED`; the previous committed runtime manifest remains unchanged and isolated staging is cleaned.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34821812724`.
+- Vercel Preview `dpl_9W7EHy8Lhn6pTfw97x9C4fX9vBby` READY / target null. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase; otherwise enter maintenance/observation rather than inventing defects.
+
 # Current Goal
+
+## CURRENT OVERRIDE — 2026-09-14 restore safety backup lifecycle closed
+A concrete hidden-backup disk growth badcase is closed on main at `57577c74 fix(admin): clean completed restore safety backups`.
+
+- Fail-before-fix: one manual backup followed by 5 successful restores left 6 backup directories on disk, 5 of them hidden `pre-restore-safety` snapshots.
+- Safety backups are now transaction-scoped: retained while restore/rollback/crash recovery may still need them, removed only after the transaction journal has been cleared and recovery is complete.
+- Successful restore returns `safetyBackupRetained=false`; repeated completed restores do not accumulate hidden safety directories.
+- Successful crash recovery also removes its consumed safety backup. Failed rollback/recovery still preserves both journal and safety backup for operator inspection/retry.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34819368401`.
+- Vercel Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY / target null. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
+## CURRENT OVERRIDE — 2026-09-14 corrupt Local asset reads fail closed
+A concrete read-path integrity badcase is closed on main at `422dbede fix(admin): fail closed on corrupt asset reads`.
+
+- Fail-before-fix: after a valid asset blob was externally replaced with same-size PNG-signature bytes that could not decode, `/integrity` correctly reported `ASSET_CONTENT_INVALID` but `GET /assets/:id` still returned `200 image/png` and served the corrupt bytes.
+- Asset GET now validates supported MIME, metadata byteSize, and full decodability before sending bytes. Any mismatch returns `409 INTEGRITY_FAILED` instead of serving known-corrupt content.
+- Targeted repair remains unchanged: re-PUT of the same corrupt asset can restore the root and normal GET resumes afterward.
+- Permanent regression requires corrupt GET => 409 while existing same-asset repair + all Local File/API/UI/Operations/type/build gates remain PASS.
+- PASS: Product Golden Path `34814195437`; Vercel Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY / target null.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
 
 ## CURRENT OVERRIDE — 2026-09-14 decodable Local asset content closed
 A concrete signature-correct-but-undecodable image badcase is closed on main at `935bb529 fix(admin): require decodable local assets`, now contained by merged main `b01f2d28`.

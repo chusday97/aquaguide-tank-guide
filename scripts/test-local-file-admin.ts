@@ -213,6 +213,9 @@ try {
   assert.equal(recoveredCare.payload.data.state.marker, 'safety-a');
   assert.equal((await readdir(recoveryRoot)).some(name => name.startsWith('.restore-assets-')), false);
   await assert.rejects(readFile(path.join(recoveryRoot, '.restore-transaction.json'), 'utf8'));
+  await assert.rejects(stat(path.join(recoveryRoot, 'backups', safetyBackupId)),
+    (error: NodeJS.ErrnoException) => error.code === 'ENOENT',
+    'Completed crash recovery must remove its internal safety backup.');
   recoveryChild.kill('SIGTERM');
   await new Promise<void>(resolve => recoveryChild!.once('exit', () => resolve()));
   recoveryChild = null;
@@ -627,6 +630,7 @@ try {
   assert.equal(restored.response.status, 200);
   assert.equal(restored.payload.data.backupId, backupId);
   assert.match(restored.payload.data.safetyBackupId, /^backup-\d{13,17}$/);
+  assert.equal(restored.payload.data.safetyBackupRetained, false);
   assert.equal(restored.payload.data.integrity.healthy, true);
   const backupsAfterRestore = await requestJson(started.base, '/backups');
   assert.equal(backupsAfterRestore.response.status, 200);
@@ -634,7 +638,21 @@ try {
     'Internal pre-restore safety backups must not replace the latest operator backup after restore.');
   assert.equal(backupsAfterRestore.payload.data.backups.some((item: any) => item.id === restored.payload.data.safetyBackupId), false,
     'Internal pre-restore safety backups must stay hidden from the operator restore list.');
-  await stat(path.join(root, 'backups', restored.payload.data.safetyBackupId, 'manifest.json'));
+  await assert.rejects(stat(path.join(root, 'backups', restored.payload.data.safetyBackupId)),
+    (error: NodeJS.ErrnoException) => error.code === 'ENOENT',
+    'Completed restore must remove its internal safety backup instead of leaking hidden disk snapshots.');
+  for (let repeatRestore = 0; repeatRestore < 3; repeatRestore += 1) {
+    const repeated = await requestJson(started.base, `/backups/${backupId}/restore`, { method: 'POST' });
+    assert.equal(repeated.response.status, 200);
+    assert.equal(repeated.payload.data.safetyBackupRetained, false);
+  }
+  const backupEntriesAfterRepeatedRestore = await readdir(path.join(root, 'backups'));
+  const leakedSafetyBackups = [];
+  for (const backupEntry of backupEntriesAfterRepeatedRestore) {
+    const manifest = JSON.parse(await readFile(path.join(root, 'backups', backupEntry, 'manifest.json'), 'utf8'));
+    if (manifest.reason === 'pre-restore-safety') leakedSafetyBackups.push(backupEntry);
+  }
+  assert.deepEqual(leakedSafetyBackups, [], 'Repeated completed restores must not accumulate hidden pre-restore safety backups.');
   assert.deepEqual((await requestJson(started.base, '/state/business')).payload.data.state, businessState);
   const restoredImage = await fetch(`${started.base}/assets/${assetId}`);
   assert.equal(restoredImage.status, 200);
@@ -760,6 +778,50 @@ try {
     assert.equal(isPngRuntime || isWebpRuntime, true, 'Concurrent runtime snapshot must contain one complete published asset version.');
   }
 
+  // External disk mutation after the snapshot preflight must not bypass publication integrity.
+  const externalRaceSlowId = 'local-asset-runtime-external-slow';
+  const externalRaceTargetId = 'local-asset-runtime-external-target';
+  const externalRaceSlowBytes = pngFixture(20 * 1024 * 1024, 0x61);
+  const externalRaceTargetBytes = pngFixture(4096, 0x62);
+  const externalRaceCorruptTarget = Buffer.concat([pngSeed.subarray(0, 8), Buffer.alloc(externalRaceTargetBytes.length - 8, 0x63)]);
+  for (const [id, body] of [[externalRaceSlowId, externalRaceSlowBytes], [externalRaceTargetId, externalRaceTargetBytes]] as const) {
+    await writeFile(path.join(root, 'assets', `${id}.blob`), body);
+    await writeFile(path.join(root, 'assets', `${id}.json`), `${JSON.stringify({ id, mimeType: 'image/png', byteSize: body.length })}\n`, 'utf8');
+  }
+  const externalRaceBusiness = structuredClone(exportBusinessState);
+  externalRaceBusiness.publishedSpeciesAssets['sp-published'] = [externalRaceSlowId, externalRaceTargetId].map(id => ({
+    id, variant: 'detail', storageBucket: 'local-file', storagePath: id, assetVersion: 1, isCurrent: true, mimeType: 'image/png',
+  }));
+  assert.equal((await putState(started.base, 'business', externalRaceBusiness)).response.status, 200);
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+  const manifestBeforeExternalRace = await readFile(manifestPath);
+  const externalRaceExport = requestJson(started.base, '/runtime-snapshot', { method: 'POST' });
+  const externalRaceDeadline = Date.now() + 10_000;
+  let externalRaceStagingSeen = false;
+  while (Date.now() < externalRaceDeadline) {
+    const entries = await readdir(path.join(root, 'public')).catch(() => [] as string[]);
+    if (entries.some(name => name.startsWith('runtime-assets.tmp-'))) { externalRaceStagingSeen = true; break; }
+    await new Promise(resolve => setTimeout(resolve, 1));
+  }
+  assert.equal(externalRaceStagingSeen, true, 'Runtime snapshot regression must observe staging after preflight before corrupting the later published asset.');
+  await writeFile(path.join(root, 'assets', `${externalRaceTargetId}.blob`), externalRaceCorruptTarget);
+  const externalRaceResult = await externalRaceExport;
+  assert.equal(externalRaceResult.response.status, 409,
+    'Runtime snapshot must fail closed when a published asset is corrupted externally after the initial integrity preflight.');
+  assert.equal(externalRaceResult.payload.error.code, 'MIGRATION_REJECTED');
+  assert.deepEqual(await readFile(manifestPath), manifestBeforeExternalRace,
+    'A failed post-preflight asset validation must keep the previously committed runtime authority manifest unchanged.');
+  assert.equal((await readdir(path.join(root, 'public'))).some(name => name.startsWith('runtime-assets.tmp-')), false,
+    'Failed external-mutation runtime export must clean its isolated staging directory.');
+  await writeFile(path.join(root, 'assets', `${externalRaceTargetId}.blob`), externalRaceTargetBytes);
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+  assert.equal((await putState(started.base, 'business', exportBusinessState)).response.status, 200);
+  await rm(path.join(root, 'assets', `${externalRaceSlowId}.blob`), { force: true });
+  await rm(path.join(root, 'assets', `${externalRaceSlowId}.json`), { force: true });
+  await rm(path.join(root, 'assets', `${externalRaceTargetId}.blob`), { force: true });
+  await rm(path.join(root, 'assets', `${externalRaceTargetId}.json`), { force: true });
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+
   // Restore must not expose a new Business reference before the matching asset set is visible.
   const restoreVisibilityAssetA = 'local-asset-restore-visibility-a';
   const restoreVisibilityAssetB = 'local-asset-restore-visibility-b';
@@ -866,6 +928,7 @@ try {
   assert.equal(typeof JSON.parse(await readFile(rollbackJournalPath, 'utf8')).safetyBackupId, 'string',
     'A failed rollback integrity check must retain the restore journal for crash recovery/operator inspection.');
   assert.equal(rollbackSafetyId.length > 0, true);
+  await stat(path.join(root, 'backups', rollbackSafetyId, 'manifest.json'));
 
   process.env.ADMIN_LOCAL_FILE_MODE = 'false';
   const disabled = await requestJson(started.base, '/status');

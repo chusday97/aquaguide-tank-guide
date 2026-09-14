@@ -1,4 +1,27 @@
+## 2026-09-14 runtime publication TOCTOU status
+- `78aaef71` is on GitHub main and closes post-preflight external asset corruption during Git runtime snapshot export.
+- Runtime publication now rechecks the exact copied asset metadata/body pair before commit.
+- Product Golden Path `34821812724` PASS; Preview `dpl_9W7EHy8Lhn6pTfw97x9C4fX9vBby` READY.
+- Production runtime is intentionally unchanged.
+
 # Live Status
+
+## 2026-09-14 — Restore safety backup lifecycle
+- CLOSED on main at `57577c74`.
+- Hidden `pre-restore-safety` backups are no longer retained after completed restore transactions.
+- Failed rollback/recovery continues to preserve safety + journal for recovery.
+- Repeated restore no-growth regression PASS.
+- GitHub Product Golden Path `34819368401` PASS.
+- Vercel Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY / target null.
+- Production unchanged.
+
+
+## 2026-09-14 — corrupt asset GET fail-closed
+- CLOSED on main at `422dbede`.
+- `/integrity`-known corrupt assets are no longer served with HTTP 200; GET validates MIME, byteSize and full decode and returns `409 INTEGRITY_FAILED` on corruption.
+- Targeted same-asset repair remains available.
+- Product Golden Path `34814195437` PASS; Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY / target null.
+- Production unchanged.
 
 ## 2026-09-14 — Decodable Local assets
 - CLOSED: `935bb529` upgrades Local File image validation from signature-only to successful full decode + MIME/format match.

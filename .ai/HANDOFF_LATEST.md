@@ -1,4 +1,25 @@
+## 2026-09-14 — Runtime asset publication TOCTOU closure
+- Functional main `78aaef71 fix(admin): revalidate runtime asset publication`.
+- Reproduced external post-preflight disk corruption causing `/runtime-snapshot` to return 201 while committing an undecodable published asset.
+- Runtime publication now validates the exact copied metadata/body pair again for MIME, byteSize and full decode before staging can commit.
+- Failed post-preflight validation returns `409 MIGRATION_REJECTED`, leaves the prior runtime manifest unchanged, and removes staging residue.
+- Product Golden Path `34821812724` PASS; Preview `dpl_9W7EHy8Lhn6pTfw97x9C4fX9vBby` READY; Production unchanged.
+
 ## 2026-09-14 — Decodable Local asset integrity closed
+
+## 2026-09-14 — Restore safety backup lifecycle closure
+- Main `57577c74` makes `pre-restore-safety` backups transaction-scoped instead of permanently hidden disk snapshots.
+- Successful restore / successful rollback / successful crash recovery remove the consumed safety backup only after journal cleanup.
+- Failed rollback/recovery still retains safety backup + journal.
+- Repeated restore regression proves hidden safety directories no longer grow linearly.
+- Product Golden Path `34819368401` PASS; Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY; Production unchanged.
+
+## 2026-09-14 — corrupt asset reads now fail closed
+- Functional main: `422dbede fix(admin): fail closed on corrupt asset reads`.
+- A corrupt on-disk asset can no longer bypass integrity by being fetched directly: GET validates MIME, metadata size and full image decode before sending bytes.
+- Known-corrupt reads return `409 INTEGRITY_FAILED`; targeted re-PUT repair remains supported.
+- Full Local File/UI/Operations/type/build gates PASS; GitHub Product Golden Path `34814195437` PASS; Preview `dpl_43FE572hz3QRDXyQCUevp33kWVzx` READY.
+
 - Functional `935bb529 fix(admin): require decodable local assets` is contained in current main merge `b01f2d28`.
 - Signature-correct but non-decodable PNG/JPEG/WebP content is no longer accepted: PUT requires successful `sharp` decode + format match, and root integrity applies the same rule to persisted blobs.
 - `ASSET_CONTENT_INVALID` remains targeted-repairable by re-PUT of the same asset. Local File/API/UI/Operations/type/build gates PASS.
