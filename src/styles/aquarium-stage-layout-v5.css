@@ -1,0 +1,335 @@
+/*
+ * Aquarium Stage Layout V5
+ *
+ * UI-only convergence: Today Action first, aquarium as the dominant visual,
+ * management as a secondary surface. Domain/service behavior is untouched.
+ */
+
+.aquarium-dashboard > .aquarium-zone-header {
+  display: none !important;
+}
+
+.aquarium-dashboard .aquarium-zone-index {
+  display: none !important;
+}
+
+.aquarium-dashboard-actions > .aquarium-zone-header,
+.aquarium-followup-grid > .aquarium-zone-header {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0;
+  padding: 0;
+}
+
+.aquarium-dashboard-actions > .aquarium-zone-header .type-card-title,
+.aquarium-followup-grid > .aquarium-zone-header .type-card-title {
+  color: #173f35;
+  font-size: clamp(18px, 1.7vw, 24px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+}
+
+.aquarium-dashboard-actions > .aquarium-zone-header .type-meta,
+.aquarium-followup-grid > .aquarium-zone-header .type-meta {
+  color: rgba(23, 63, 53, 0.56);
+}
+
+/* The stage should show the aquarium, not repeat the Today Action as a giant
+   overlay inside the water scene. The canonical task remains in the status card. */
+.aquarium-dashboard .aquarium-stage-intro {
+  display: none !important;
+}
+
+.aquarium-dashboard-rail .aquarium-status > section,
+.aquarium-dashboard-actions,
+.aquarium-followup-grid {
+  border: 1px solid rgba(23, 63, 53, 0.10);
+  background: rgba(250, 252, 250, 0.96);
+  box-shadow: 0 16px 40px rgba(19, 73, 59, 0.08);
+}
+
+.aquarium-dashboard-rail .aquarium-status > section {
+  overflow: hidden;
+}
+
+.aquarium-dashboard-actions > .aquarium-actions {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.aquarium-dashboard-actions > .aquarium-actions > :first-child {
+  display: none !important;
+}
+
+.aquarium-dashboard-actions > .aquarium-actions > :nth-child(2) {
+  margin-top: 0 !important;
+}
+
+.aquarium-dashboard-actions .desktop-card-grid > button {
+  border: 1px solid rgba(23, 63, 53, 0.11);
+  background: #fff;
+  box-shadow: none;
+}
+
+.aquarium-dashboard-actions .desktop-card-grid > button:hover {
+  border-color: rgba(9, 126, 92, 0.28);
+  background: #f5faf7;
+}
+
+.aquarium-followup-grid {
+  margin-top: 18px;
+  padding: clamp(16px, 2vw, 24px);
+  border-radius: 28px;
+}
+
+.aquarium-followup-grid > .grid {
+  margin-top: 14px;
+}
+
+@media (min-width: 960px) {
+  .aquaguide-app.desktop-shell-active .desktop-workspace-scroll:has(.desktop-canvas--aquarium) {
+    padding: 18px clamp(16px, 1.7vw, 24px) 28px !important;
+  }
+
+  .aquarium-dashboard {
+    gap: 0 !important;
+  }
+
+  .aquarium-dashboard-stage {
+    display: block;
+    width: 100%;
+  }
+
+  .aquarium-dashboard-tank {
+    position: relative;
+    display: grid;
+    isolation: isolate;
+    width: 100%;
+    min-height: 0;
+    grid-template-columns: minmax(0, 2.25fr) minmax(300px, 0.85fr);
+    grid-template-rows: auto minmax(560px, min(66dvh, 720px));
+    gap: 16px;
+    overflow: visible;
+    border-radius: 0;
+    align-items: stretch;
+  }
+
+  .aquarium-dashboard-rail {
+    position: relative;
+    inset: auto;
+    z-index: 2;
+    grid-column: 1 / -1;
+    grid-row: 1;
+    width: 100%;
+    max-width: none;
+    pointer-events: auto;
+  }
+
+  .aquarium-dashboard-rail .aquarium-status > section {
+    min-height: 0;
+    border-radius: 28px;
+    padding: clamp(20px, 2vw, 28px);
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank {
+    position: relative;
+    inset: auto;
+    z-index: 1;
+    grid-column: 1;
+    grid-row: 2;
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 560px !important;
+    overflow: hidden;
+    border: 1px solid rgba(23, 63, 53, 0.14);
+    border-radius: 30px;
+    box-shadow: 0 18px 46px rgba(15, 62, 51, 0.11);
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank canvas {
+    width: 100% !important;
+    height: 100% !important;
+    transform: none !important;
+  }
+
+  .aquarium-dashboard-actions {
+    position: relative;
+    inset: auto;
+    z-index: 2;
+    grid-column: 2;
+    grid-row: 2;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+    padding: 20px;
+    overflow: auto;
+    border-radius: 28px;
+    backdrop-filter: none;
+  }
+
+  .aquarium-dashboard-actions > .aquarium-zone-header {
+    margin-bottom: 14px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 8px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid > button {
+    width: 100%;
+    min-width: 0;
+    min-height: 62px;
+    height: auto;
+    grid-template-columns: 36px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 16px;
+  }
+
+  .aquarium-dashboard-tank [data-tank-species-entry] {
+    bottom: 22px !important;
+    left: 22px !important;
+    z-index: 45;
+    max-width: 190px;
+  }
+
+  .aquarium-followup-grid > .grid {
+    grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr) !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 959px) {
+  .aquarium-dashboard-tank {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: visible;
+  }
+
+  .aquarium-dashboard-rail {
+    position: relative;
+    inset: auto;
+    order: 1;
+    width: 100%;
+    max-width: none;
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank {
+    position: relative;
+    order: 2;
+    width: 100% !important;
+    height: min(58dvh, 560px) !important;
+    min-height: 420px !important;
+    overflow: hidden;
+    border: 1px solid rgba(23, 63, 53, 0.14);
+    border-radius: 28px;
+  }
+
+  .aquarium-dashboard-actions {
+    position: relative;
+    inset: auto;
+    order: 3;
+    width: 100%;
+    margin: 0;
+    padding: 18px;
+    border-radius: 26px;
+  }
+
+  .aquarium-dashboard-actions > .aquarium-zone-header {
+    margin-bottom: 12px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+}
+
+@media (max-width: 767px) {
+  .aquarium-workspace-zone {
+    gap: 14px;
+  }
+
+  .aquarium-dashboard-stage {
+    display: block;
+  }
+
+  .aquarium-dashboard-tank {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    overflow: visible;
+  }
+
+  .aquarium-dashboard-rail {
+    position: relative;
+    inset: auto;
+    z-index: 2;
+    order: 1;
+    width: 100%;
+    max-width: none;
+  }
+
+  .aquarium-dashboard-rail .aquarium-status > section {
+    border-radius: 24px;
+    padding: 18px;
+  }
+
+  .aquarium-dashboard-tank > .aquarium-tank {
+    position: relative;
+    order: 2;
+    width: 100% !important;
+    height: min(52dvh, 500px) !important;
+    min-height: 360px !important;
+    overflow: hidden;
+    border: 1px solid rgba(23, 63, 53, 0.14);
+    border-radius: 24px;
+    box-shadow: 0 14px 34px rgba(15, 62, 51, 0.10);
+  }
+
+  .aquarium-dashboard-actions {
+    position: relative;
+    inset: auto;
+    order: 3;
+    width: 100%;
+    margin: 0;
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .aquarium-dashboard-actions > .aquarium-zone-header {
+    margin-bottom: 12px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .aquarium-dashboard-actions .desktop-card-grid > button {
+    min-height: 80px;
+    border-radius: 18px;
+  }
+
+  .aquarium-followup-grid {
+    margin-top: 0;
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .aquarium-followup-grid > .grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .aquarium-dashboard-actions .desktop-card-grid > button {
+    transition: none !important;
+  }
+}
