@@ -74,7 +74,7 @@ try {
 
   const firstScreen = dialog.locator('[data-care-first-screen]');
   await firstScreen.waitFor();
-  await firstScreen.getByText('先做快速评测', { exact: true }).waitFor();
+  await firstScreen.getByText('先做快速检查', { exact: true }).waitFor();
 
   const start = dialog.getByRole('button', { name: '开始快速检查', exact: true });
   await start.waitFor();

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
-import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
+import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
 import type { Aquarium } from '../src/types';
@@ -52,8 +52,8 @@ for (const existing of prioritySpecies) {
     directionStatuses[pair.status] = (directionStatuses[pair.status] || 0) + 1;
     if (pair.status === 'compatible' || pair.status === 'caution') {
       recordablePriorityDirections += 1;
-      assert.ok(getReviewedCompatibilityProfile(existing.id), `recordable priority pair is missing reviewed evidence for ${existing.name}`);
-      assert.ok(getReviewedCompatibilityProfile(candidate.id), `recordable priority pair is missing reviewed evidence for ${candidate.name}`);
+      assert.ok(getReviewedCompatibilityProfileForFish(existing), `recordable priority pair is missing reviewed evidence for ${existing.name}`);
+      assert.ok(getReviewedCompatibilityProfileForFish(candidate), `recordable priority pair is missing reviewed evidence for ${candidate.name}`);
     }
   }
 }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ArrowLeft, Calculator } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -56,7 +56,6 @@ export default function Compatibility() {
     return () => { cancelled = true; };
   }, []);
 
-  const source = useMemo(() => new URLSearchParams(location.search).get('source') || 'species-detail', [location.search]);
 
   const syncSpecies = (ids: string[]) => {
     setSpeciesIds(ids);
@@ -87,10 +86,8 @@ export default function Compatibility() {
       <header className="editorial-page-header mx-auto flex w-full max-w-[1280px] items-start justify-between gap-4">
         <div>
           <button type="button" data-action-id="compatibility.back" onClick={() => navigate(-1)} className="quiet-icon-button mb-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-ink/55 hover:text-accent"><ArrowLeft className="h-4 w-4" />{t('common.back', '返回')}</button>
-          <p className="editorial-kicker"><Calculator className="h-4 w-4" />{t('encyclopedia.compatibilityCalc')}</p>
-          <h1 className="editorial-title">{t('encyclopedia.compatibilityCalc')}</h1>
-          <p className="editorial-lede">选择当前鱼缸与物种，先看证据和调整条件，再决定下一步。</p>
-          <p className="mt-2 text-xs font-semibold text-ink/42">来源：{source === 'species-detail' ? '物种详情' : source}</p>
+          <h1 className="editorial-title flex items-center gap-2"><Calculator className="h-5 w-5 text-accent" />{t('encyclopedia.compatibilityCalc')}</h1>
+          <p className="editorial-lede">先看能不能一起养、现在该做什么；需要时再展开专业依据。</p>
         </div>
       </header>
       <section data-ui-block="compatibility-workspace" className="editorial-workspace mx-auto mt-8 w-full max-w-[1280px]">

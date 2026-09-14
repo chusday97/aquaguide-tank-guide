@@ -208,6 +208,7 @@
     "test:aquarium-stage-layout": "node --import tsx scripts/test-aquarium-stage-layout-contract.ts",
     "test:three-stage-framing": "node --import tsx scripts/test-three-stage-framing.ts",
     "test:desktop-layout": "node scripts/test-desktop-layout-contract.mjs",
+    "test:compatibility-beginner-actions-ui": "node scripts/verify-compatibility-beginner-actions.mjs",
     "test:git-runtime-authority": "tsx scripts/test-git-runtime-authority.ts",
     "build:business-api": "node scripts/build-vercel-business-api.mjs"
   },

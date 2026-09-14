@@ -43,5 +43,7 @@
       "destination": "/index.html"
     }
   ],
-  "ignoreCommand": "node scripts/vercel-ignore-build.mjs"
+  "ignoreCommand": "node scripts/vercel-ignore-build.mjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
 }

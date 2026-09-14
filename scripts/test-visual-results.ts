@@ -1,6 +1,10 @@
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
 import { buildCompatibilityVisualResult, buildDiagnosisVisualResult, mapFitStatus } from '../src/components/visual-results/visual-result.adapters';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
+import { buildBeginnerCompatibilityAction } from '../src/services/compatibility/compatibility-action.service';
+import type { CompatibilityDecision } from '../src/modules/knowledge/knowledge.types';
+import type { TankCompatibilityRule, TankCompatibilityStatus } from '../src/services/compatibility/compatibility.service';
 import type { DiagnosisOutput } from '../src/modules/diagnosis/diagnosis.types';
 import type { Aquarium, Fish } from '../src/types';
 
@@ -22,6 +26,18 @@ const makeFish = (overrides: Partial<Fish> & Pick<Fish, 'id' | 'name'>): Fish =>
   size: 'Small',
   housingMode: '适合混养',
   ...overrides,
+});
+
+const makeRule = (code: string, evidence: string, severity: TankCompatibilityRule['severity'] = 'medium'): TankCompatibilityRule => ({
+  code,
+  title: evidence,
+  evidence,
+  severity,
+  basis: 'tank_condition',
+  confidence: 'medium',
+  reviewStatus: 'reviewed',
+  affectedSpeciesIds: [],
+  citations: [],
 });
 
 const focus = makeFish({ id: 'focus', name: '孔雀鱼' });
@@ -52,11 +68,133 @@ const compatibilityModel = buildCompatibilityVisualResult({
 });
 
 assert.equal(compatibilityModel.status, 'insufficient_data');
+assert.equal(compatibilityModel.title, '现在还不能可靠判断', '新手首屏必须先给可理解的最终状态');
+assert.ok(compatibilityModel.currentAction.startsWith('先别急着加'), '新手首屏必须直接告诉用户现在该做什么');
+assert.ok(compatibilityModel.detailSections.some(section => section.title === '为什么这样判断'), '专业解释必须下沉到可展开依据层');
 assert.equal(compatibilityModel.subjects[0]?.id, focus.id, '明确指定的关注物种必须保持为视觉中心');
 assert.equal(compatibilityModel.subjects.length, species.length, '关联对象不能被适配器丢失');
 assert.ok(compatibilityModel.subjects.some(item => item.id === predator.id && item.status === 'insufficient_data'));
 assert.ok(compatibilityModel.detailSections.length > 0, '完整依据应进入折叠层');
 assert.equal(JSON.stringify(decision), originalDecision, '展示适配不能修改规则结果');
+
+const actionDecision = (
+  status: TankCompatibilityStatus,
+  domainRuleCodes: string[],
+  options: Partial<Pick<CompatibilityDecision, 'passedRules' | 'warningRules' | 'blockingRules' | 'missingData'>> = {},
+): CompatibilityDecision => ({
+  ...decision,
+  status,
+  summary: '测试结论',
+  passedRules: options.passedRules || [],
+  warningRules: options.warningRules || [],
+  blockingRules: options.blockingRules || [],
+  missingData: options.missingData || [],
+  metadata: { ...decision.metadata, domainStatus: status, domainRuleCodes },
+});
+
+const compatibleAction = buildBeginnerCompatibilityAction(actionDecision(
+  'compatible',
+  ['compatibility_clear'],
+  { passedRules: [makeRule('compatibility_clear', '没有发现明确阻断。', 'info')] },
+));
+assert.equal(compatibleAction.headline, '可以混养');
+assert.ok(compatibleAction.immediateAction.includes('可以按当前计划加入'));
+
+const softCapacityAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['bioload_screening_high'],
+  { warningRules: [makeRule('bioload_screening_high', '当前粗粒度负荷筛查偏高。')] },
+));
+assert.equal(softCapacityAction.headline, '可以尝试，但别一次加太多');
+assert.ok(softCapacityAction.immediateAction.includes('不要只因为低于一个参考水体值就立刻换缸'));
+assert.ok(softCapacityAction.observeAfterAction?.includes('3–7 天'));
+
+const predationVulnerabilityAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['predation_vulnerability_context'],
+  { warningRules: [makeRule('predation_vulnerability_context', '组合中一方是鱼类，另一方对捕食较脆弱。', 'medium')] },
+));
+assert.equal(predationVulnerabilityAction.verdict, 'add_with_conditions');
+assert.equal(predationVulnerabilityAction.headline, '先确认鱼不会把虾当食物');
+assert.match(predationVulnerabilityAction.immediateAction, /性情温和/);
+
+const territorialPressureAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['territorial_pressure_context'],
+  { warningRules: [makeRule('territorial_pressure_context', '一方有明显领地行为，另一方是低领地或非领地型物种。')] },
+));
+assert.equal(territorialPressureAction.verdict, 'add_with_conditions');
+assert.equal(territorialPressureAction.headline, '先处理领地压迫风险');
+assert.ok(territorialPressureAction.immediateAction.includes('退让路线'));
+assert.ok(territorialPressureAction.observeAfterAction?.includes('进食受阻'));
+
+const finNippingTargetAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['fin_nipping_target_vulnerability'],
+  { warningRules: [makeRule('fin_nipping_target_vulnerability', '追鳍鱼与脆弱鳍型不匹配。')] },
+));
+assert.equal(finNippingTargetAction.headline, '先不要把追鳍鱼和脆弱鳍型直接混养');
+assert.ok(finNippingTargetAction.immediateAction.includes('优先更换其中一方'));
+assert.ok(finNippingTargetAction.observeAfterAction?.includes('鳍条破损'));
+
+const reviewedPairBlockAction = buildBeginnerCompatibilityAction(actionDecision(
+  'not_recommended',
+  ['reviewed_pair_rule', 'fin_nipping_target_vulnerability'],
+  { blockingRules: [makeRule('pair_rule_fin_nipping_long_fin_conflict', '虎皮鱼与孔雀鱼有已审核的长鳍追咬冲突。', 'high')] },
+));
+assert.equal(reviewedPairBlockAction.headline, '不建议混养');
+assert.ok(reviewedPairBlockAction.immediateAction.includes('先不要把这组生物放在一起'));
+
+const finNippingGroupAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['minimum_group_not_met', 'fin_nipping_group_pressure'],
+  { warningRules: [makeRule('fin_nipping_group_pressure', '群体不足会放大追鳍压力。')] },
+));
+assert.equal(finNippingGroupAction.headline, '先把群体数量补够，再混养');
+assert.ok(finNippingGroupAction.immediateAction.includes('不是“少养几条更安全”'));
+assert.ok(finNippingGroupAction.observeAfterAction?.includes('破鳍'));
+
+const compatibilityCalculatorSource = readFileSync('src/components/CompatibilityRiskCalculator.tsx', 'utf8');
+assert.equal(
+  /currentAction\s*:\s*getResultNextAction/.test(compatibilityCalculatorSource),
+  false,
+  'Compatibility page must not overwrite the Beginner Action Layer with a generic status action',
+);
+
+const groupSizeAction = buildBeginnerCompatibilityAction({
+  ...actionDecision(
+    'caution',
+    ['minimum_group_not_met'],
+    { warningRules: [makeRule('minimum_group_not_met', '红绿灯当前计划数量低于已审核最低群体要求。')] },
+  ),
+  stockingGuidance: {
+    kind: 'minimum_group_only',
+    recommendedMin: 8,
+    recommendedMax: null,
+    constraints: ['最低群体数量 8'],
+    confidence: 'high',
+    evidenceIds: ['seriouslyfish-paracheirodon-innesi'],
+  },
+});
+assert.equal(groupSizeAction.headline, '可以养，但数量要够');
+assert.ok(groupSizeAction.immediateAction.includes('至少 8 条/只'));
+assert.ok(groupSizeAction.detailsLabel.includes('数量'));
+
+const hardBlockAction = buildBeginnerCompatibilityAction(actionDecision(
+  'not_recommended',
+  ['predation_risk'],
+  { blockingRules: [makeRule('predation_risk', '存在明确捕食或吞食风险。', 'high')] },
+));
+assert.equal(hardBlockAction.headline, '不建议混养');
+assert.ok(hardBlockAction.immediateAction.includes('先不要把这组生物放在一起'));
+
+const missingAction = buildBeginnerCompatibilityAction(actionDecision(
+  'insufficient_data',
+  ['tank_missing'],
+  { missingData: [makeRule('tank_missing', '还不知道当前鱼缸条件。', 'high')] },
+));
+assert.equal(missingAction.headline, '现在还不能可靠判断');
+assert.ok(missingAction.immediateAction.startsWith('先别急着加'));
 
 const diagnosis: DiagnosisOutput = {
   riskLevel: 'high',
@@ -139,4 +277,4 @@ assert.equal(mapFitStatus('suitable'), 'compatible');
 assert.equal(mapFitStatus('conflictRisk'), 'not_recommended');
 assert.equal(mapFitStatus('unknown'), 'insufficient_data');
 
-console.log('visual results: compatibility focus, diagnosis mapping, evidence folding passed');
+console.log('visual results: beginner golden actions, compatibility mapping, diagnosis mapping, evidence folding passed');

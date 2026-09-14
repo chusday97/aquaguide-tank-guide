@@ -1,9 +1,9 @@
 {
   "stats": {
     "catalog_count": 486,
-    "base_group_count": 276,
-    "grouped_member_count": 293,
-    "batch_candidate_groups": 83,
+    "base_group_count": 275,
+    "grouped_member_count": 295,
+    "batch_candidate_groups": 84,
     "explicit_variant_members": 223,
     "exact_duplicate_records": 28,
     "category_conflict_groups": 5,
@@ -3737,12 +3737,12 @@
         "鲶鱼/异型"
       ],
       "category_conflict": false,
-      "member_count": 1,
+      "member_count": 2,
       "variant_count": 1,
       "duplicate_count": 0,
       "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
+      "batch_candidate": true,
+      "seo_strategy": "shared_base_plus_variant_override",
       "members": [
         {
           "id": "sp_0231",
@@ -3756,33 +3756,16 @@
           "variant_label": "Albino",
           "relation_type": "variety",
           "grouping_confidence": "high"
-        }
-      ]
-    },
-    {
-      "group_key": "base:corydoras-pandas",
-      "base_scientific_name": "Corydoras pandas",
-      "primary_category": "鲶鱼/异型",
-      "categories": [
-        "鲶鱼/异型"
-      ],
-      "category_conflict": false,
-      "member_count": 1,
-      "variant_count": 0,
-      "duplicate_count": 0,
-      "duplicate_sets": [],
-      "batch_candidate": false,
-      "seo_strategy": "single_species",
-      "members": [
+        },
         {
           "id": "sp_0443",
           "catalog_key": "sp_0443",
           "name": "熊猫鼠",
-          "scientific_name": "Corydoras pandas",
+          "scientific_name": "Corydoras panda",
           "category": "鲶鱼/异型",
           "status": "catalog",
-          "base_species_key": "base:corydoras-pandas",
-          "base_scientific_name": "Corydoras pandas",
+          "base_species_key": "base:corydoras-panda",
+          "base_scientific_name": "Corydoras panda",
           "variant_label": null,
           "relation_type": "exact_species",
           "grouping_confidence": "high"

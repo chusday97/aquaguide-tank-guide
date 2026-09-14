@@ -1,6 +1,6 @@
 import { chromium } from 'playwright';
 
-const baseUrl = process.env.AQUAGUIDE_PREVIEW_URL || 'http://localhost:3000';
+const baseUrl = process.env.AQUAGUIDE_PREVIEW_URL || 'http://127.0.0.1:4319';
 const browser = await chromium.launch({ headless: true });
 const state = {
   version: 1,
@@ -56,23 +56,24 @@ try {
     await generate.click();
     const visualResult = page.locator('[data-visual-result-status]');
     await visualResult.waitFor();
-    assert(await visualResult.getByText(/展开具体判断依据/).count() === 1, '每日检查依据没有默认折叠');
+    const evidenceToggle = visualResult.getByRole('button', { name: /查看判断依据 · \d+ 项/ });
+    assert(await evidenceToggle.count() === 1, '每日检查结果缺少判断依据入口');
+    assert(await evidenceToggle.getAttribute('aria-expanded') === 'false', '每日检查判断依据应默认折叠');
     assert(errors.length === 0, `每日检查发生页面错误：${errors.join('；')}`);
     await page.close();
   }
 
   {
-    const { page, errors } = await openPage('/care');
-    await page.getByText('水质变差怎么办？', { exact: true }).last().click();
-    await page.getByRole('button', { name: '开始快速评测', exact: true }).click();
-    const panel = page.locator('section').filter({ hasText: '快速评测' }).last();
+    const { page, errors } = await openPage('/care?topic=guide_water_deteriorate');
+    await page.getByRole('button', { name: '开始快速检查', exact: true }).click();
+    const panel = page.locator('section').filter({ hasText: '快速检查' }).last();
     await panel.getByText(/已回答 0\//).waitFor();
     assert(await panel.getByText('水体是否浑浊或有异味？', { exact: true }).count() === 1, '养护自查没有一次展示相关问题');
     const normalOptions = panel.getByRole('button', { name: '没有', exact: true });
     const optionCount = await normalOptions.count();
     assert(optionCount >= 2, '养护自查缺少可选答案');
     for (let index = optionCount - 1; index >= 0; index -= 1) await normalOptions.nth(index).click();
-    const showResult = panel.getByRole('button', { name: '查看处理方案', exact: true });
+    const showResult = panel.getByRole('button', { name: '查看处理建议', exact: true });
     assert(await showResult.isEnabled(), '养护自查填写完整后仍不能生成结果');
     await showResult.click();
     const actionResult = panel.locator('[data-care-assessment-result]');
@@ -91,8 +92,8 @@ try {
     await dialog.getByRole('button').filter({ hasText: '孔雀鱼' }).first().click();
     await search.fill('公子小丑');
     await dialog.getByRole('button').filter({ hasText: '公子小丑' }).first().click();
-    await dialog.getByRole('button', { name: '确认添加到鱼缸', exact: true }).click();
-    await dialog.getByText('第 2 步：混养复核', { exact: true }).waitFor();
+    await dialog.getByRole('button', { name: '查看规划判断', exact: true }).click();
+    await dialog.getByText('加入后风险判定', { exact: true }).waitFor();
     assert(await search.count() === 0, '混养复核屏仍叠加显示生物选择长列表');
     assert(errors.length === 0, `添加生物发生页面错误：${errors.join('；')}`);
     await page.close();

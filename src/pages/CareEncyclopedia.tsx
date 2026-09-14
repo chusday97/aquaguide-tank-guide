@@ -975,7 +975,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '建议尽快处理',
       guideType: 'diagnosis',
-      ctaLabel: '开始快速评测',
+      ctaLabel: '开始快速检查',
       relatedIssueType: 'cloudy',
     };
   }
@@ -996,7 +996,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '需要立即处理',
       guideType: 'diagnosis',
-      ctaLabel: '开始快速评测',
+      ctaLabel: '开始快速检查',
       relatedIssueType: inferStepDiagnosisIssue(topic),
     };
   }
@@ -1006,7 +1006,7 @@ const getCareGuideMeta = (topic: CareTopic): CareGuideMeta => {
       topicTags: Array.from(topicTags).slice(0, 2),
       urgencyTag: '建议尽快处理',
       guideType: 'diagnosis',
-      ctaLabel: '开始快速评测',
+      ctaLabel: '开始快速检查',
       relatedIssueType: inferStepDiagnosisIssue(topic),
     };
   }
@@ -3117,7 +3117,7 @@ export function CareArticleDetail({
           ? (isEn ? `Save ${completedVisibleActions} Completed` : `保存已完成的 ${completedVisibleActions} 项`)
           : (isEn ? 'Check Completed Items First' : '先勾选已完成项目')
       : meta.guideType === 'diagnosis'
-        ? (isEn ? 'Start Quick Assessment' : '开始快速评测')
+        ? (isEn ? 'Start Quick Check' : '开始快速检查')
         : meta.guideType === 'knowledge'
           ? favorite
             ? onOpenCollection
@@ -3349,7 +3349,7 @@ export function CareArticleDetail({
 
   const detailLead = meta.guideType === 'diagnosis'
     ? {
-      label: isEn ? 'Assess first, then act' : '先做快速评测',
+      label: isEn ? 'Check first, then act' : '先做快速检查',
       text: isEn ? 'Answer only what you can observe. The result will show the exact steps to take.' : '只回答你能观察到的情况，结果会直接给出处理步骤。',
     }
     : meta.guideType === 'procedure'

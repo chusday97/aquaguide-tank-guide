@@ -3,6 +3,7 @@ import { isAquaticPlantSpecies, isHardscapeSpecies } from '../../lib/speciesClas
 import { loggerService } from '../../services/logger/logger.service';
 import { Aquarium, Fish } from '../../types';
 import { speciesDetailInputSchema, speciesListInputSchema, SpeciesDetailOutput, SpeciesListOutput } from './species.schema';
+import { getSpeciesHousingAuthority } from '../knowledge/speciesHousingAuthority';
 
 const secondaryCategoryOrder: Record<string, string[]> = {
   freshwaterFish: [
@@ -329,7 +330,7 @@ export const getSpeciesRoleLabel = (fish: Fish, isEn = false) => {
   if (tools.includes('清残饵')) return isEn ? 'Bottom Dweller / Scavenger' : '底层生物 / 清残饵';
   if (lifeType === 'reptile') return isEn ? 'Semi-Aquatic / Standalone Tank' : '水陆生物 / 独立规划';
   if (lifeType === 'invertebrate') return isEn ? 'Ornamental Invertebrate / Eco Balance' : '观赏无脊椎 / 生态搭配';
-  if (fish.housingMode === '建议单养' || (fish.housingMode as string) === 'Single Specimen') return isEn ? 'Feature Specimen / Single Species' : '观赏主角 / 建议单养';
+  if (getSpeciesHousingAuthority(fish, isEn).solitaryRequired) return isEn ? 'Feature Specimen / Single Species' : '观赏主角 / 建议单养';
   if (fish.size === 'Small' && fish.temperament === 'Peaceful') return isEn ? 'Small Fish / Schooling Mix' : '小型观赏鱼 / 群游搭配';
   return isEn ? 'Ornamental Creature / Tank Mix' : '观赏生物 / 鱼缸搭配';
 };
@@ -340,8 +341,10 @@ export const getSpeciesPositioning = (fish: Fish, isEn = false) => {
   const tools = getToolFunctions(fish);
   if (tools.includes('除藻')) return isEn ? 'Suitable as an algae control helper' : '适合作为除藻辅助生物';
   if (tools.includes('清残饵')) return isEn ? 'Suitable bottom dweller for clearing leftover food' : '适合清理残饵的底层生物';
-  if (fish.housingMode === '建议单养' || (fish.housingMode as string) === 'Single Specimen') return isEn ? 'Best suited for single species keeping' : '更适合单独饲养观察';
-  if (fish.housingMode === '谨慎混养' || (fish.housingMode as string) === 'Caution Mix') return isEn ? 'Compatible, but confirm tank mates first' : '可混养，但需要先确认同缸对象';
+  const housing = getSpeciesHousingAuthority(fish, isEn);
+  if (housing.solitaryRequired) return isEn ? 'Best suited for single species keeping' : '更适合单独饲养观察';
+  if (housing.minimumGroupSize) return isEn ? `Keep in a group of at least ${housing.minimumGroupSize}; assess tank mates separately` : `建议至少 ${housing.minimumGroupSize} 条/只成群规划；同缸对象仍需单独判断`;
+  if (housing.status === 'warning') return isEn ? 'Compatible only after checking tank-mate risks' : '需要先确认同缸对象和行为风险';
   if (fish.difficulty === 'Easy' && fish.size === 'Small') return isEn ? 'Beginner-friendly small ornamental species' : '适合新手的小型观赏生物';
   return fish.temperament === 'Peaceful' ? (isEn ? 'Suitable for peaceful community tanks' : '适合温和社区缸搭配') : (isEn ? 'Requires attention to temperament and tank space' : '需要留意性情和空间');
 };
@@ -357,6 +360,8 @@ export const getSpeciesFilterTags = (fish: Fish) => {
   const isPlant = lifeType === 'plant';
   const isHardscape = lifeType === 'hardscape';
   const isOrnamentalFish = lifeType === 'fish';
+  const housing = getSpeciesHousingAuthority(fish);
+  const canonicalHousingTag = housing.communityCategory === '需观察' ? null : housing.communityCategory;
   const grassTankSuitable = !saltwater && !isHardscape && (
     isPlant || (isOrnamentalFish && fish.temperament === 'Peaceful' && fish.size !== 'Large')
   );
@@ -375,7 +380,7 @@ export const getSpeciesFilterTags = (fish: Fish) => {
     cleaningTools.length > 0 ? '工具生物' : null,
     grassTankSuitable ? '适合草缸' : null,
     isPlant || isHardscape ? '水草造景' : null,
-    fish.housingMode,
+    canonicalHousingTag,
   ]);
 
   const environmentTags = uniqueValues(override?.environmentTags || [
@@ -396,14 +401,15 @@ export const getSpeciesFilterTags = (fish: Fish) => {
       fish.difficulty === 'Medium' ? '中等' : null,
       fish.difficulty === 'Hard' ? '困难' : null,
     ]),
-    housingTags: uniqueValues([fish.housingMode]),
+    housingTags: uniqueValues([canonicalHousingTag, housing.label]),
     searchKeywords: uniqueValues([
       fish.name,
       fish.scientificName,
       fish.category,
       fish.description,
-      fish.housingMode,
-      fish.housingReason,
+      canonicalHousingTag,
+      housing.label,
+      housing.advice,
       taxonomy.waterType,
       taxonomy.variety,
       getSpeciesRoleLabel(fish),

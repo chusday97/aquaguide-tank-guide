@@ -1,40 +1,50 @@
 # Task Queue
 
-## CURRENT OVERRIDE — 2026-09-14 after Local asset signature integrity closure
-- DONE: reproduce arbitrary text accepted as `image/png` with `/integrity` falsely healthy.
-- DONE: validate PNG/JPEG/WebP signatures before asset PUT mutation; mismatch returns 400 and creates no files.
-- DONE: detect historical/external content corruption via `ASSET_CONTENT_INVALID`.
-- DONE: preserve same-asset targeted repair for content-invalid blobs.
-- DONE: preserve asset concurrency, backup, runtime snapshot, restore visibility and rollback stress coverage using valid fixture headers.
-- DONE: Local File API/UI, Operations Studio, mode contract, API/root TypeScript, full build, diff check, GitHub Product Golden Path PASS.
-- DONE: Vercel Preview `dpl_92QLGAArBwyk6M7T9mfgZTrMngBA` READY / target null.
-- NEXT: only another reproducible Local File operator/runtime/data-reliability badcase; do not broaden image parsing or storage semantics speculatively.
+## SYNCED MAIN QUEUE — 2026-09-14 Local asset signature integrity
+- DONE on main: reject fake PNG/JPEG/WebP content before mutation and detect persisted content corruption with `ASSET_CONTENT_INVALID`.
+- DONE on recovery: corresponding functional code is already merged and merged-head Local File/Admin + Product gates are green.
+- CURRENT: keep Product Release Gate blocked on latest-head remote Product Golden Path / Main Convergence CI; do not expand Admin semantics speculatively.
+- HOLD: no Production deploy and no Compatibility migration apply.
+## CURRENT OVERRIDE — 2026-09-14 after syncing latest main Admin safety
+- DONE: detect main advancing by 7 commits during Product Release Gate instead of relying on stale `origin/main` tracking.
+- DONE: explicitly fetch latest `main` and merge Admin safety commits through `38eed2a7` into Product Recovery.
+- DONE: Local Admin code/test merged without code conflicts; authority conflicts manually converged without dropping Product Release state.
+- DONE: merged-head Local File/Admin safety regression + Product Golden/three-step/Compatibility/Collection/Task Action gates + TypeScript/full build PASS.
+- NEXT: push only after local dual-gate success, then require current-head GitHub CI. Merge/release remains a separate decision.
+- HOLD: 15 Compatibility migrations repository-only; no Staging/Production apply.
+## CURRENT OVERRIDE — 2026-09-14 Release Gate remote sync
+- DONE: Product Closure Checkpoint 1 + 2 committed and local/production-like Preview gates green.
+- DONE: latest recovery commits pushed to PR #149; PR scope/title refreshed and PR marked Ready for review.
+- DONE: Cloudflare branch Preview succeeded on latest product head; Supabase Preview intentionally skipped (no authorized Supabase branch).
+- HOLD: 15 additive Compatibility migrations remain repository-only; no Staging/Production apply.
+- CURRENT: force a latest-head PR synchronize via this authority checkpoint, then require Product Golden Path / Main Convergence CI before merge consideration.
+- DO NOT: merge main, deploy Production, or apply DB migrations without a separate release decision.
 
+## CURRENT OVERRIDE — 2026-09-14 after Product Closure Checkpoint 2
+- DONE: remove canonical `compatible` / legacy caution summary contradiction; add permanent compatibility-service regression.
+- DONE: keep `compatible_community` achievement strict and replace stale unreviewed test fixtures with reviewed compatible authority.
+- DONE: align three-step and task-action gates with current product copy/structure and the active recovery preview.
+- DONE: GP-001/002/003/004 + Compatibility + Collection + three-step + task-action + TypeScript + full production build PASS.
+- CURRENT: product closure code path is release-gate green on the recovery worktree.
+- NEXT: perform recovery → main pre-merge audit (Git/PR/divergence/migrations/preview parity) without deploying or applying DB migrations; do not expand product scope.
 
-## 2026-09-14 queue update
-- CLOSED: completed restore created `pre-restore-safety` as newest `/backups` item, causing “恢复最近备份” to point at the pre-restore state.
-- FIXED: internal safety backups are hidden from ordinary operator restore candidates but retained on disk for journal/rollback recovery.
-- NEXT: only continue from another concrete reproducible Local File operator/runtime/data-reliability badcase; do not expand locking or backup semantics speculatively.
+## CURRENT OVERRIDE — 2026-09-14 after Product Closure Checkpoint 1
+- DONE: collapse common Compatibility result flow to one verdict/action hierarchy while preserving explicit multi-candidate/removal controls.
+- DONE: align Aquarium stage headline with canonical Today Action truth and protect the post-Daily-Check advance path.
+- DONE: reuse canonical Compatibility decision/presentation in Species Detail with no-tank fail-safe.
+- DONE: unify Care diagnosis language on Quick Check and stabilize the task-action browser regression.
+- DONE: targeted browser gates + TypeScript + full production build PASS.
+- AUDIT: Collection/Care saved-guide action hierarchy has no proven duplicate primary action requiring code change.
+- NEXT: responsive/mobile + desktop product consistency and full Golden Path/release-gate audit; do not expand product scope.
 
-
-
-## CURRENT OVERRIDE — 2026-09-14 after referenced asset delete guard
-- DONE: reproduce healthy Business reference -> asset DELETE 200 -> `REFERENCED_ASSET_MISSING`.
-- DONE: reject deletion of assets still referenced by Business state before filesystem mutation.
-- DONE: preserve orphan/upload-failure cleanup behavior.
-- DONE: permanent regression + Local File/UI/Operations/mode/TypeScript/full-build gates.
-- DONE: GitHub Product Golden Path `34771352211` PASS.
-- NOTE: no Vercel auto-preview was created for this DEV-only main push; no manual Preview triggered.
-- NEXT: only another reproducible operator/runtime/data-reliability badcase.
-
-## CURRENT OVERRIDE — 2026-09-14 after post-write integrity rollback closure
-- DONE: reproduce a healthy active root accepting and persisting a Business state that referenced a nonexistent Local File asset.
-- DONE: make state PUT transactional with previous-file preservation, post-write full integrity validation, automatic rollback, and rollback integrity verification.
-- DONE: return `409 INTEGRITY_FAILED` after successful rollback; return 500 + stop-write guidance if rollback cannot restore a healthy root.
-- DONE: permanent regression proving rejected candidate leaves previous state and `healthy=true`.
-- DONE: Local File API/UI, Operations Studio, mode contract, API/root TypeScript, full build, diff check, GitHub Product Golden Path PASS.
-- NOTE: no Vercel Git auto-preview was created for this DEV-only push; no manual Preview triggered. Production unchanged.
-- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+## CURRENT OVERRIDE — 2026-09-13 after Red Rainbowfish reviewed-authority checkpoint
+- DONE: add reviewed `Glossolepis incisus` Species Knowledge V2 environment / social / reproduction / space authority with Seriously Fish + FishBase evidence.
+- DONE: add reviewed Compatibility profile and canonical coverage inclusion for `sp_0133`.
+- DONE: add additive migration `202609120015_compatibility_red_rainbowfish_baseline.sql`; repository-only, not applied to Staging/Production.
+- DONE: focused Species Knowledge / Compatibility / evidence coverage / Admin runtime authority checks PASS.
+- DONE: TypeScript and full production build PASS.
+- CURRENT METRIC: 26 canonical taxa / 650 ordered directions; 29 reviewed Profiles / 5 reviewed Pair Rules.
+- NEXT: continue only with another reviewed high-frequency species or a reproducible product/runtime badcase; keep database deployment separately authorized.
 
 
 ## CURRENT OVERRIDE — 2026-09-13 after runtime corrupt-root mutation guard

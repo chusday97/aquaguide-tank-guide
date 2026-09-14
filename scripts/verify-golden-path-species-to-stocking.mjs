@@ -85,16 +85,18 @@ try {
   const candidateChip = candidateName.locator('xpath=ancestor::div[contains(@class,"rounded-full")][1]');
   const plusButton = candidateChip.getByRole('button', { name: '+' });
   await plusButton.waitFor();
-  for (let index = 1; index < 6; index += 1) await plusButton.click();
-  await candidateChip.getByText(/×6/).waitFor();
+  for (let index = 1; index < 8; index += 1) await plusButton.click();
+  await candidateChip.getByText(/×8/).waitFor();
 
   const resultText = (await calculator.textContent()) || '';
-  assert.match(resultText, /当前可混养|有条件可尝试/, 'evidence-backed fixture must resolve to a recordable compatibility state');
+  const recordableAction = page.getByRole('button', { name: /已经实际入缸，记录下来|确认风险后再记录/ });
+  await recordableAction.waitFor();
+  assert.ok(await recordableAction.count() > 0, 'evidence-backed fixture must expose a recordable action');
   assert.equal(/不建议混养|需要补充鱼缸信息/.test(resultText), false, 'recording fixture must not bypass block or medium/high missing-data states');
   assert.equal(/当前鱼缸已有 红绿灯，不建议再加入体型明显更小的 宝莲灯/.test(resultText), false, 'peaceful prey wording must not regress into a predation block');
 
   // Milestone 6: caution requires an explicit confirmation before the real write.
-  let recordButton = page.getByRole('button', { name: /已经实际入缸，记录下来|确认风险后再记录/ });
+  let recordButton = recordableAction;
   await recordButton.waitFor();
   const firstLabel = await recordButton.textContent();
   await recordButton.click();
@@ -109,7 +111,7 @@ try {
   await page.waitForFunction(() => {
     const stored = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');
     const tank = stored.aquariums?.find(item => item.id === 'tank-gp2');
-    return tank?.fishes?.some(item => item.fishId === 'sp_0432' && item.quantity === 6);
+    return tank?.fishes?.some(item => item.fishId === 'sp_0432' && item.quantity === 8);
   });
 
   const successFeedback = calculator.getByText(/已加入|已记录到鱼缸|已记录/).last();
@@ -119,11 +121,11 @@ try {
   const tank = stored.aquariums?.find(item => item.id === 'tank-gp2');
   assert.ok(tank, 'target aquarium must still exist after stocking');
   const candidate = tank.fishes?.find(item => item.fishId === 'sp_0432');
-  assert.equal(candidate?.quantity, 6, '宝莲灯 group quantity must persist as 6 after the Golden Path');
+  assert.equal(candidate?.quantity, 8, '宝莲灯 group quantity must persist as 8 after the Golden Path');
   assert.equal(tank.fishes?.find(item => item.fishId === 'sp_0431')?.quantity, 6, 'existing 红绿灯 quantity must remain unchanged');
   assert.deepEqual(pageErrors, [], `GP-002 must not emit page errors: ${pageErrors.join('; ')}`);
 
-  console.log('GP-002 continuous E2E passed: search 宝莲灯 → exact detail → compatibility → quantity ×6 → caution confirmation → actual stocking → persisted quantity.');
+  console.log('GP-002 continuous E2E passed: search 宝莲灯 → exact detail → compatibility → quantity ×8 → caution confirmation → actual stocking → persisted quantity.');
 } finally {
   await browser.close();
 }

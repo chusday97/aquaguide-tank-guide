@@ -12,7 +12,7 @@ const cases = [
   },
   {
     topicId: 'guide_water_deteriorate',
-    expected: ['先做快速评测', '开始快速检查'],
+    expected: ['先做快速检查', '开始快速检查'],
     absent: ['现在按顺序做'],
     openAssessmentResult: true,
   },
@@ -48,9 +48,9 @@ try {
     assert.ok(await referenceSection.locator('a[href^="https://"]').count(), `${testCase.topicId} 必须显示可访问的外部来源`);
     if (testCase.openAssessmentResult) {
       await dialog.getByRole('button', { name: '开始快速检查', exact: true }).click();
-      const assessment = dialog.locator('section').filter({ hasText: '快速评测' }).last();
+      const assessment = dialog.locator('section').filter({ hasText: '快速检查' }).last();
       const normalOptions = dialog.getByRole('button', { name: '没有', exact: true });
-      assert.equal(await normalOptions.count(), 3, '水质快速评测应显示 3 个可回答的问题');
+      assert.equal(await normalOptions.count(), 3, '水质快速检查应显示 3 个可回答的问题');
       for (let index = (await normalOptions.count()) - 1; index >= 0; index -= 1) await normalOptions.nth(index).click();
       await dialog.getByRole('button', { name: '查看处理建议', exact: true }).click();
       await dialog.locator('[data-care-assessment-result]').waitFor();

@@ -106,6 +106,12 @@ export interface Aquarium {
     oxygen?: boolean;
     light?: '无' | '普通灯' | '水草灯' | '海水灯';
   };
+  stabilityContext?: {
+    establishedDays?: number | null;
+    stableCoexistenceDays?: number | null;
+    maintenanceConsistent?: boolean | null;
+    recentWaterQualityIncident?: boolean | null;
+  };
 }
 
 export type SpeciesAdditionIntent = 'record_existing' | 'planned_addition';

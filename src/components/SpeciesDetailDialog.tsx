@@ -9,22 +9,22 @@ import { getCareTaxonomyPath, getLifeType, getSpeciesRoleLabel, getToolFunctions
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/tankCompatibilityEngine';
 import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
+import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
+import { resolveKnowledgeSources } from '../modules/knowledge/knowledgeSources';
 import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
-import type { PairCompatibilityResult } from '../modules/knowledge/knowledge.types';
 import type { PreviewImage } from './common/ImagePreviewModal';
 import { AdaptiveDetailContent } from './common/AdaptiveDetailContent';
 import { SurfaceHeader } from './common/SurfaceHeader';
 import { ResilientImage } from './common/ResilientImage';
 import { VisualResultCard } from './visual-results/VisualResultCard';
-import { getVisualEmphasis, mapFitStatus } from './visual-results/visual-result.adapters';
+import { buildCompatibilityVisualResult, mapFitStatus } from './visual-results/visual-result.adapters';
 import type { VisualResultViewModel } from './visual-results/visual-result.types';
 import { markSpeciesViewed } from '../services/onboarding/onboarding.service';
 import { normalizeSpeciesBatches } from '../services/aquarium/species-batches.service';
 import { deriveSpeciesGroups, findGroupForSpecies, getVariantLabel } from '../lib/speciesGrouping';
 import { QuickDatePicker } from './forms/QuickDatePicker';
 import { MemorialCauseSelector } from './memorial/MemorialCauseSelector';
-import { getCompatibilityPresentationForStatus } from '../services/compatibility/compatibility-presentation.service';
 
 const ImagePreviewModal = lazy(() => import('./common/ImagePreviewModal').then(module => ({ default: module.ImagePreviewModal })));
 const Interactive3DFishWrapper = lazy(() => import('./Interactive3DFishWrapper'));
@@ -102,9 +102,59 @@ const getTankVolumeLiters = (aquarium?: Aquarium | null) => {
   return Math.round((length * width * height * 0.85) / 1000);
 };
 
+const getReviewedSpaceKnowledge = (fish: Fish) => {
+  const space = buildSpeciesKnowledgeProfile(fish).knowledge.spaceAndGrowth;
+  return space?.evidence.reviewStatus === 'reviewed' ? space : undefined;
+};
+
 const getMinimumTankLiters = (fish: Fish) => {
+  const reviewedSpace = getReviewedSpaceKnowledge(fish);
+  if (reviewedSpace?.minVolumeLiters != null) return reviewedSpace.minVolumeLiters;
   const match = fish.tankSize.match(/(\d+)/);
   return match ? Number(match[1]) : null;
+};
+
+const getTankSizeRequirementLabel = (fish: Fish, isEn = false) => {
+  const reviewedSpace = getReviewedSpaceKnowledge(fish);
+  if (!reviewedSpace) return fish.tankSize;
+  const parts = [
+    reviewedSpace.minVolumeLiters != null ? `≥${reviewedSpace.minVolumeLiters}L` : null,
+    reviewedSpace.minTankLengthCm != null
+      ? (isEn ? `tank length ≥${reviewedSpace.minTankLengthCm}cm` : `缸长 ≥${reviewedSpace.minTankLengthCm}cm`)
+      : null,
+  ].filter(Boolean);
+  return parts.join(' · ') || fish.tankSize;
+};
+
+const getSwimmingZoneLabel = (zone: string | undefined, isEn = false) => {
+  if (!zone) return '';
+  const labels: Record<string, [string, string]> = {
+    surface: ['表层', 'Surface'],
+    upper: ['上层', 'Upper'],
+    middle: ['中层', 'Midwater'],
+    bottom: ['底层', 'Bottom'],
+    all: ['全水层', 'All levels'],
+    unknown: ['未知', 'Unknown'],
+  };
+  return labels[zone]?.[isEn ? 1 : 0] || zone;
+};
+
+const getActivityLevelLabel = (level: string | undefined, isEn = false) => {
+  if (!level) return '';
+  const labels: Record<string, [string, string]> = {
+    low: ['较低', 'Low'],
+    medium: ['中等', 'Moderate'],
+    high: ['较高', 'High'],
+    unknown: ['未知', 'Unknown'],
+  };
+  return labels[level]?.[isEn ? 1 : 0] || level;
+};
+
+const getRecommendedGroupLabel = (range: { min?: number; max?: number } | undefined, isEn = false) => {
+  if (!range?.min && !range?.max) return '';
+  if (range.min && range.max) return isEn ? `${range.min}–${range.max} individuals` : `${range.min}–${range.max} 条/只`;
+  if (range.min) return isEn ? `${range.min}+ individuals` : `≥${range.min} 条/只`;
+  return isEn ? `up to ${range.max} individuals` : `≤${range.max} 条/只`;
 };
 
 const getExistingLivestock = (aquarium?: Aquarium | null) => (
@@ -202,10 +252,6 @@ const getSpeciesRole = (fish: Fish, isEn = false) => {
   return getSpeciesRoleLabel(fish, isEn);
 };
 
-const getSexIdentificationGuide = (fish: Fish) => {
-  return buildSpeciesKnowledgeProfile(fish).knowledge.sexIdentification;
-};
-
 const getSecondaryCareType = (fish: Fish) => {
   const text = `${fish.name} ${fish.scientificName} ${fish.category}`;
   if (/水母|Aurelia|Chrysaora|Phyllorhiza|Cassiopea|Cotylorhiza|Sanderia/i.test(text)) return '水母';
@@ -272,7 +318,7 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
       type: 'space',
       label: isEn ? "Tank Size" : "缸体大小",
       current: tankLiters ? `~${tankLiters}L` : t('encyclopedia.noTankSelected'),
-      requirement: fish.tankSize,
+      requirement: getTankSizeRequirementLabel(fish, isEn),
       status: !tankLiters || !minLiters ? 'info' : tankLiters >= minLiters ? 'ok' : tankLiters < minLiters * 0.65 ? 'danger' : 'warning',
       advice: !tankLiters || !minLiters
         ? t('encyclopedia.adviceSpaceNoTank')
@@ -321,13 +367,14 @@ const getSpeciesFitAssessment = (fish: Fish, aquarium: Aquarium | null | undefin
     },
   ];
 
+  const housingPresentation = getSpeciesHousingAuthority(fish, isEn);
   const compatibilityFit: FitDimension[] = isEmptyTank ? [] : [{
     type: alreadyInTank ? 'livestock_status' : 'compatibility',
     label: isEn ? "Compatibility" : "混养",
     current: alreadyInTank ? t('encyclopedia.inTankAlready') : t('encyclopedia.livestockCount', { count: existingLivestock.length }),
-    requirement: fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.fitCaution'),
-    status: alreadyInTank ? 'ok' : fish.housingMode === '建议单养' ? 'danger' : fish.housingMode === '谨慎混养' ? 'warning' : 'ok',
-    advice: alreadyInTank ? t('encyclopedia.adviceLivestockInTank') : fish.housingReason || t('encyclopedia.adviceHousingDefault'),
+    requirement: housingPresentation.label,
+    status: alreadyInTank ? 'ok' : housingPresentation.status,
+    advice: alreadyInTank ? t('encyclopedia.adviceLivestockInTank') : housingPresentation.advice,
   }];
   const items = [...environmentFit, ...spaceFit, ...equipmentFit, ...compatibilityFit];
   const compatibilityResult = evaluateTankCompatibility({
@@ -519,22 +566,45 @@ export function SpeciesDetailDialog({
     ].filter(Boolean) as Array<FitDimension & { icon: typeof Waves }>;
   }, [displayFit]);
 
-  const sexIdentificationGuide = useMemo(() => fish ? getSexIdentificationGuide(fish) : null, [fish]);
+  const speciesKnowledge = useMemo(() => fish ? buildSpeciesKnowledgeProfile(fish) : null, [fish]);
+  const effectiveHousing = useMemo(() => fish ? getSpeciesHousingAuthority(fish, isEn) : null, [fish, isEn]);
+  const sexIdentificationGuide = speciesKnowledge?.knowledge.sexIdentification || null;
+  const reproductionKnowledge = speciesKnowledge?.knowledge.reproduction || null;
+  const environmentKnowledge = speciesKnowledge?.knowledge.environment || null;
+  const socialKnowledge = speciesKnowledge?.knowledge.socialBehavior || null;
+  const spaceKnowledge = speciesKnowledge?.knowledge.spaceAndGrowth || null;
+  const sexIdentificationSources = useMemo(() => resolveKnowledgeSources(
+    sexIdentificationGuide?.evidence?.sourceIds || [],
+  ), [sexIdentificationGuide]);
+  const reproductionSources = useMemo(() => resolveKnowledgeSources(
+    reproductionKnowledge?.evidence.sourceIds || [],
+  ), [reproductionKnowledge]);
+  const environmentSources = useMemo(() => resolveKnowledgeSources(
+    environmentKnowledge?.evidence.sourceIds || [],
+  ), [environmentKnowledge]);
+  const socialSources = useMemo(() => resolveKnowledgeSources(
+    socialKnowledge?.evidence.sourceIds || [],
+  ), [socialKnowledge]);
+  const spaceSources = useMemo(() => resolveKnowledgeSources(
+    spaceKnowledge?.evidence.sourceIds || [],
+  ), [spaceKnowledge]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
-  const compatibilityPairs = useMemo(() => {
-    if (!fish || !aquariumContext) return [];
+  const compatibilityDecision = useMemo(() => {
+    if (!fish || !aquariumContext) return null;
     const selectedQuantity = aquariumContext.fishes.find(item => item.fishId === fish.id)?.quantity || 1;
-    return getExistingLivestock(aquariumContext)
+    const fishAlreadyInTank = aquariumContext.fishes.some(record => record.fishId === fish.id);
+    const existingItems = getExistingLivestock(aquariumContext)
       .filter(item => item.fish.id !== fish.id)
-      .map(item => evaluateCompatibilityDecision({
-        tank: aquariumContext,
-        items: [
-          { species: fish, quantity: selectedQuantity, origin: aquariumContext.fishes.some(record => record.fishId === fish.id) ? 'existing' : 'candidate' },
-          { species: item.fish, quantity: item.aqFish.quantity, origin: 'existing' },
-        ],
-      }).pairResults[0])
-      .filter((pair): pair is PairCompatibilityResult => Boolean(pair));
+      .map(item => ({ species: item.fish, quantity: item.aqFish.quantity, origin: 'existing' as const }));
+    return evaluateCompatibilityDecision({
+      tank: aquariumContext,
+      items: [
+        { species: fish, quantity: selectedQuantity, origin: fishAlreadyInTank ? 'existing' : 'candidate' },
+        ...existingItems,
+      ],
+    });
   }, [fish, aquariumContext]);
+  const compatibilityPairs = compatibilityDecision?.pairResults || [];
 
   const mainActionLabel = useMemo(() => {
     if (!displayFit || !aquariumContext) return t('encyclopedia.btnGoSetTank');
@@ -560,63 +630,18 @@ export function SpeciesDetailDialog({
       .slice(0, 3);
   }, [aquariumContext, displayFit]);
   const compatibilityVisualModel = useMemo<VisualResultViewModel | null>(() => {
-    if (!fish) return null;
-    const statusRank = { compatible: 0, caution: 1, insufficient_data: 2, not_recommended: 3 } as const;
-    const status = compatibilityPairs.length === 0
-      ? 'insufficient_data'
-      : compatibilityPairs.reduce<PairCompatibilityResult['status']>((current, pair) => (
-        statusRank[pair.status] > statusRank[current] ? pair.status : current
-      ), 'compatible');
-    const primaryPair = [...compatibilityPairs].sort((a, b) => statusRank[b.status] - statusRank[a.status])[0];
-    const hasConfirmedFacts = compatibilityPairs.some(pair => (
-      pair.rawResult.passedRules.length > 0 || pair.rawResult.warningRules.length > 0 || pair.rawResult.blockingRules.length > 0
-    ));
-    const presentation = getCompatibilityPresentationForStatus({ status, hasConfirmedFacts });
-    const conclusion = status === 'insufficient_data'
-      ? (hasConfirmedFacts ? '当前可确认部分条件，先加入种草清单。' : '暂未开放这组混养建议，可先查看物种养护。')
-      : primaryPair?.primaryReason?.evidence || primaryPair?.rawResult.summary || t('encyclopedia.conclusionNoPairs');
-    return {
-      status,
-      presentationMode: presentation.mode,
-      statusLabel: presentation.mode === 'confirmed_facts' ? (isEn ? 'Confirmed factors' : '当前可确认') : presentation.mode === 'unavailable' ? (isEn ? 'Not yet available' : '暂未开放') : undefined,
-      coverageLabel: presentation.coverageLabel,
-      title: t('encyclopedia.compatibilityCalc'),
-      conclusion,
-      emphasis: getVisualEmphasis(conclusion),
-      subjects: [{
-        id: fish.id,
-        name: fish.name,
-        image: getSpeciesDisplayImage(fish),
-        role: 'focus',
-        status,
-        shortReason: conclusion,
-        badgeLabel: t('encyclopedia.currentSpec'),
-      }, ...compatibilityPairs.map(pair => {
-        const other = pair.speciesA.id === fish.id ? pair.speciesB : pair.speciesA;
-        const reason = pair.primaryReason?.evidence || pair.rawResult.summary;
-        return {
-          id: other.id,
-          name: other.name,
-          image: getSpeciesDisplayImage(other),
-          role: 'related' as const,
-          status: pair.status,
-          shortReason: reason,
-          badgeLabel: pair.primaryReason?.title || (pair.status === 'compatible' ? t('encyclopedia.housingBehaviorMatch') : pair.status === 'caution' ? t('encyclopedia.fitCaution') : pair.status === 'not_recommended' ? t('encyclopedia.fitNotRecommended') : (isEn ? 'Confirmed factors' : '当前可确认')),
-          emphasis: getVisualEmphasis(reason),
-        };
-      })],
-      currentAction: status === 'insufficient_data' ? '先加入种草清单，资料完善后再回来判断。' : primaryPair?.actions[0] || t('encyclopedia.actionNoPairs'),
-      primaryAction: { label: t('encyclopedia.compatibilityCalc'), actionType: 'route' },
-      detailSections: compatibilityPairs.map(pair => {
-        const other = pair.speciesA.id === fish.id ? pair.speciesB : pair.speciesA;
-        return {
-          id: pair.pairId,
-          title: t('encyclopedia.withSpecies', { name: other.name }),
-          items: [pair.primaryReason?.evidence, ...pair.secondaryReasons.map(item => item.evidence)].filter((item): item is string => Boolean(item)),
-        };
-      }).filter(section => section.items.length > 0),
-    };
-  }, [compatibilityPairs, fish, t]);
+    if (!fish || !compatibilityDecision) return null;
+    const relatedSpecies = getExistingLivestock(aquariumContext)
+      .map(item => item.fish)
+      .filter(item => item.id !== fish.id);
+    return buildCompatibilityVisualResult({
+      decision: compatibilityDecision,
+      species: [fish, ...relatedSpecies],
+      focusSpeciesId: fish.id,
+      primaryActionLabel: t('encyclopedia.compatibilityCalc'),
+      primaryActionType: 'route',
+    });
+  }, [aquariumContext, compatibilityDecision, fish, t]);
 
   const getMetricSettingsPanel = (metric: FitDimension) => {
     if (metric.type === 'space') return 'size' as const;
@@ -765,8 +790,8 @@ export function SpeciesDetailDialog({
                           <span className={`shrink-0 rounded-full border px-2 py-1 text-[10px] font-black ${getDifficultyBadgeClass(fish.difficulty)}`}>{fish.difficulty === 'Easy' ? t('encyclopedia.difficultyEasyShort') : fish.difficulty === 'Medium' ? t('encyclopedia.difficultyMediumShort') : t('encyclopedia.difficultyHardShort')}</span>
                         </div>
                         <div className="mt-2 flex flex-wrap gap-1 min-[760px]:mt-3 min-[760px]:gap-1.5">
-                          {[selectedTaxonomy?.variety, fish.housingMode, ...getToolFunctions(fish)].filter(Boolean).slice(0, 3).map(tag => {
-                            const displayTag = translateTag(tag, t);
+                          {[selectedTaxonomy?.variety, effectiveHousing?.label, ...getToolFunctions(fish)].filter(Boolean).slice(0, 3).map(tag => {
+                            const displayTag = tag === effectiveHousing?.label ? tag : translateTag(tag, t);
                             return <span key={tag} className="rounded-full border border-border bg-white px-2 py-1 text-[10px] font-bold text-ink/60">{displayTag}</span>;
                           })}
                         </div>
@@ -870,7 +895,7 @@ export function SpeciesDetailDialog({
                       {[
                         { label: isEn ? 'Temperature' : '水温', value: fish.waterTemperature },
                         { label: isEn ? 'Water' : '水体', value: selectedTaxonomy?.waterType || fish.category },
-                        { label: isEn ? 'Space' : '空间', value: fish.tankSize },
+                        { label: isEn ? 'Space' : '空间', value: getTankSizeRequirementLabel(fish, isEn) },
                         { label: isEn ? 'Water change' : '换水', value: t('encyclopedia.careWaterChangeValue', { days: fish.waterChangeCycle }) },
                       ].map(item => (
                         <div key={item.label} className="min-w-0 rounded-[13px] bg-bg p-2.5">
@@ -1012,17 +1037,16 @@ export function SpeciesDetailDialog({
                       </button>
                       {expandedSection === 'compatibility' && (
                         <div className="grid gap-3 border-t border-border/70 p-3">
-                          {compatibilityVisualModel?.presentationMode === 'unavailable' ? (
+                          {!aquariumContext || compatibilityVisualModel?.presentationMode === 'unavailable' ? (
                             <section className="rounded-[18px] border border-sky-100 bg-sky-50/70 p-3" data-visual-result-presentation="unavailable">
                               <div className="text-[13px] font-black text-ink">暂未开放这组混养建议</div>
-                              <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">先查看物种养护，或打开混养计算器主动保存这组组合。</p>
-                              <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="mt-3 min-h-11 rounded-full bg-accent px-4 text-[11px] font-black text-white">打开混养计算器</button>
+                              <p className="mt-1 text-[11px] font-bold leading-relaxed text-ink/62">{isEn ? 'Review species care first, then use the compatibility calculator when you want to evaluate a planned combination.' : '先查看物种养护；需要评估计划组合时，再使用下方混养计算器。'}</p>
                             </section>
                           ) : compatibilityVisualModel && <VisualResultCard model={compatibilityVisualModel} showPrimaryAction={false} onPrimaryAction={handleOpenCalculator} />}
-                          {(fish.housingMode || fish.housingReason) && (
-                            <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60">
-                              <div className="font-black text-ink">{fish.housingMode ? translateTag(fish.housingMode, t) : t('encyclopedia.adviceHousingDefault')}</div>
-                              {fish.housingReason && <p className="mt-1">{fish.housingReason}</p>}
+                          {effectiveHousing && (
+                            <div className="rounded-[14px] bg-bg p-3 text-[12px] font-medium leading-relaxed text-ink/60" data-species-effective-housing>
+                              <div className="font-black text-ink">{effectiveHousing.label}</div>
+                              <p className="mt-1">{effectiveHousing.advice}</p>
                             </div>
                           )}
                           <button type="button" data-action-id="species.open-compatibility" onClick={handleOpenCalculator} className="flex min-h-11 items-center justify-center gap-2 rounded-full border border-accent/20 bg-accent/5 px-4 text-[12px] font-black text-accent">
@@ -1042,6 +1066,138 @@ export function SpeciesDetailDialog({
                         <p className="mt-2 text-[11px] font-bold leading-relaxed text-ink/58">
                           {sexIdentificationGuide.summary === '当前图鉴没有经过人工审核的公母辨别字段，系统不会仅凭名称或品类猜测公母。' ? t('encyclopedia.sexSummaryPlaceholder') : sexIdentificationGuide.summary}
                         </p>
+                        {sexIdentificationSources.length > 0 && (
+                          <div className="mt-3 border-t border-emerald-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {sexIdentificationSources.map(sourceItem => (
+                                <a
+                                  key={sourceItem.id}
+                                  href={sourceItem.url}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="rounded-full border border-emerald-100 bg-white px-2 py-1 text-[9px] font-black text-emerald-800 underline-offset-2 hover:underline"
+                                >
+                                  {sourceItem.publisher}
+                                </a>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
+                    {environmentKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="environment" className="rounded-[18px] border border-cyan-100 bg-cyan-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Reviewed water conditions' : '已审核水质环境'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <div className="grid grid-cols-2 gap-1.5 rounded-[12px] bg-white/80 p-2.5">
+                            {environmentKnowledge.temperatureRangeC ? <p><strong className="text-ink/75">{isEn ? 'Temperature: ' : '温度：'}</strong>{environmentKnowledge.temperatureRangeC.min}–{environmentKnowledge.temperatureRangeC.max}°C</p> : null}
+                            {environmentKnowledge.phRange ? <p><strong className="text-ink/75">pH: </strong>{environmentKnowledge.phRange.min}–{environmentKnowledge.phRange.max}</p> : null}
+                            {environmentKnowledge.hardnessDgh ? <p><strong className="text-ink/75">{isEn ? 'Hardness: ' : '硬度：'}</strong>{environmentKnowledge.hardnessDgh.min}–{environmentKnowledge.hardnessDgh.max} dGH</p> : null}
+                          </div>
+                          {environmentKnowledge.notes?.length ? <p>{environmentKnowledge.notes.join('；')}</p> : null}
+                          <p className="text-[10px] text-ink/45">{isEn ? 'Reviewed ranges override broader legacy catalog values when they differ.' : '当已审核范围与旧图鉴字段不一致时，以已审核范围作为兼容性判断依据。'}</p>
+                        </div>
+                        {environmentSources.length > 0 && (
+                          <div className="mt-3 border-t border-cyan-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {environmentSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-cyan-100 bg-white px-2 py-1 text-[9px] font-black text-cyan-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
+                    {spaceKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="space" className="rounded-[18px] border border-violet-100 bg-violet-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Adult size & space' : '成体与空间'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <div className="grid grid-cols-2 gap-1.5 rounded-[12px] bg-white/80 p-2.5">
+                            {spaceKnowledge.adultLengthCm?.max != null ? <p><strong className="text-ink/75">{isEn ? 'Adult size: ' : '成体体长：'}</strong>{spaceKnowledge.adultLengthCm.max} cm {spaceKnowledge.adultLengthCm.measurement && spaceKnowledge.adultLengthCm.measurement !== 'unknown' ? spaceKnowledge.adultLengthCm.measurement : ''}</p> : null}
+                            {spaceKnowledge.minVolumeLiters != null ? <p><strong className="text-ink/75">{isEn ? 'Planning volume: ' : '参考水体：'}</strong>≥{spaceKnowledge.minVolumeLiters}L</p> : null}
+                            {spaceKnowledge.minTankLengthCm != null ? <p><strong className="text-ink/75">{isEn ? 'Tank length: ' : '参考缸长：'}</strong>≥{spaceKnowledge.minTankLengthCm}cm</p> : null}
+                            {spaceKnowledge.swimmingZone ? <p><strong className="text-ink/75">{isEn ? 'Swimming zone: ' : '活动水层：'}</strong>{getSwimmingZoneLabel(spaceKnowledge.swimmingZone, isEn)}</p> : null}
+                            {spaceKnowledge.activityLevel ? <p><strong className="text-ink/75">{isEn ? 'Activity: ' : '活动量：'}</strong>{getActivityLevelLabel(spaceKnowledge.activityLevel, isEn)}</p> : null}
+                          </div>
+                          {spaceKnowledge.spaceNotes?.length ? <p>{spaceKnowledge.spaceNotes.join('；')}</p> : null}
+                          <p className="text-[10px] text-ink/45">{isEn ? 'These are long-term planning references, not a one-number pass/fail rule.' : '这些是长期空间规划参考，不按单一升数做“差一点就不能养”的硬判定。'}</p>
+                        </div>
+                        {spaceSources.length > 0 && (
+                          <div className="mt-3 border-t border-violet-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {spaceSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-violet-100 bg-white px-2 py-1 text-[9px] font-black text-violet-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
+                    {reproductionKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-rose-100 bg-rose-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Reproduction' : '繁殖与幼鱼'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <p><strong className="text-ink/80">{reproductionKnowledge.plainLanguageLabel}</strong> · {reproductionKnowledge.summary}</p>
+                          {reproductionKnowledge.gestationOrIncubation?.label && (
+                            <p className="rounded-[12px] bg-white/80 px-2.5 py-2"><strong className="text-ink/75">{isEn ? 'Timing: ' : '周期：'}</strong>{reproductionKnowledge.gestationOrIncubation.label}</p>
+                          )}
+                          {reproductionKnowledge.breedingBehavior?.length ? (
+                            <p><strong className="text-ink/75">{isEn ? 'Behavior: ' : '繁殖行为：'}</strong>{reproductionKnowledge.breedingBehavior.join('；')}</p>
+                          ) : null}
+                          {reproductionKnowledge.fryCare?.length ? (
+                            <p><strong className="text-ink/75">{isEn ? 'Fry care: ' : '幼鱼照护：'}</strong>{reproductionKnowledge.fryCare.join('；')}</p>
+                          ) : null}
+                          {reproductionKnowledge.parentFryRisk?.length ? (
+                            <p className="text-amber-800"><strong>{isEn ? 'Watch for: ' : '注意：'}</strong>{reproductionKnowledge.parentFryRisk.join('；')}</p>
+                          ) : null}
+                        </div>
+                        {reproductionSources.length > 0 && (
+                          <div className="mt-3 border-t border-rose-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {reproductionSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-rose-100 bg-white px-2 py-1 text-[9px] font-black text-rose-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
+                            </div>
+                          </div>
+                        )}
+                      </details>
+                    )}
+
+                    {socialKnowledge && (
+                      <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="social" className="rounded-[18px] border border-sky-100 bg-sky-50/45 p-3">
+                        <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
+                          <span>{isEn ? 'Social & group needs' : '群体与混养习性'}</span>
+                          <ChevronRight className="h-4 w-4 text-ink/35" />
+                        </summary>
+                        <div className="mt-2 grid gap-2 text-[11px] font-semibold leading-relaxed text-ink/60">
+                          <p>{socialKnowledge.summary}</p>
+                          {(socialKnowledge.minimumGroupSize || socialKnowledge.recommendedGroupSize || socialKnowledge.swimmingZone || socialKnowledge.sexRatioGuidance) && (
+                            <div className="grid gap-1.5 rounded-[12px] bg-white/80 p-2.5">
+                              {socialKnowledge.minimumGroupSize ? <p><strong className="text-ink/75">{isEn ? 'Minimum group: ' : '最低群体：'}</strong>{socialKnowledge.minimumGroupSize} {isEn ? 'individuals' : '条/只'}</p> : null}
+                              {socialKnowledge.recommendedGroupSize ? <p><strong className="text-ink/75">{isEn ? 'Recommended group: ' : '建议群体：'}</strong>{getRecommendedGroupLabel(socialKnowledge.recommendedGroupSize, isEn)}</p> : null}
+                              {socialKnowledge.swimmingZone ? <p><strong className="text-ink/75">{isEn ? 'Swimming zone: ' : '活动水层：'}</strong>{getSwimmingZoneLabel(socialKnowledge.swimmingZone, isEn)}</p> : null}
+                              {socialKnowledge.sexRatioGuidance ? <p><strong className="text-ink/75">{isEn ? 'Sex ratio: ' : '性别比例：'}</strong>{socialKnowledge.sexRatioGuidance}</p> : null}
+                            </div>
+                          )}
+                        </div>
+                        {socialSources.length > 0 && (
+                          <div className="mt-3 border-t border-sky-100 pt-2">
+                            <div className="text-[9px] font-black uppercase tracking-[0.08em] text-ink/38">{isEn ? 'Reviewed sources' : '审核来源'}</div>
+                            <div className="mt-1.5 flex flex-wrap gap-1.5">
+                              {socialSources.map(sourceItem => <a key={sourceItem.id} href={sourceItem.url} target="_blank" rel="noreferrer" className="rounded-full border border-sky-100 bg-white px-2 py-1 text-[9px] font-black text-sky-800 underline-offset-2 hover:underline">{sourceItem.publisher}</a>)}
+                            </div>
+                          </div>
+                        )}
                       </details>
                     )}
                   </div>

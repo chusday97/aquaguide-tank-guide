@@ -4,15 +4,19 @@ import { localCompatibilityAdminStore } from '../src/services/admin/local-compat
 import { hydrateReviewedCompatibilityEvidence, getRuntimeCompatibilityStatus, resetRuntimeCompatibilityEvidenceForTest } from '../src/data/runtimeCompatibilityEvidence';
 import { getRuntimeContentStatus, hydratePublishedContentCatalog, runtimeCareTopicsData, runtimeFishData } from '../src/data/runtimeContentCatalog';
 import { resetGitRuntimeAuthoritySnapshotForTest } from '../src/data/gitRuntimeAuthority';
+import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
 import type { GitRuntimeAuthoritySnapshot } from '../packages/contracts/src';
 
+const canonicalAudit = getCompatibilityEvidenceAudit();
+const expectedProfileCount = canonicalAudit.reviewedProfiles.length;
+const expectedPairRuleCount = canonicalAudit.reviewedPairRules.length;
 
 const committedSnapshot = JSON.parse(await readFile(new URL('../public/runtime-authority.json', import.meta.url), 'utf8')) as GitRuntimeAuthoritySnapshot;
 assert.equal(committedSnapshot.authority, 'local-file-git');
 assert.equal(typeof committedSnapshot.generatedAt, 'string');
 assert.equal(committedSnapshot.compatibility?.authority, 'reviewed-git');
-assert.equal(committedSnapshot.compatibility?.profiles.length, 7);
-assert.equal(committedSnapshot.compatibility?.pairRules.length, 4);
+assert.equal(committedSnapshot.compatibility?.profiles.length, expectedProfileCount);
+assert.equal(committedSnapshot.compatibility?.pairRules.length, expectedPairRuleCount);
 
 const localCompatibility = await localCompatibilityAdminStore.getBootstrap();
 const compatibility = { ...localCompatibility, authority: 'reviewed-git' as const };
@@ -74,6 +78,6 @@ resetRuntimeCompatibilityEvidenceForTest();
 await hydrateReviewedCompatibilityEvidence(true);
 assert.equal(getRuntimeCompatibilityStatus().source, 'reviewed-git');
 assert.match(getRuntimeCompatibilityStatus().authorityVersion, /^tank-compatibility-v3-reviewed-git-[0-9a-f]{8}$/);
-assert.equal(getRuntimeCompatibilityStatus().profiles, 7);
-assert.equal(getRuntimeCompatibilityStatus().pairRules, 4);
+assert.equal(getRuntimeCompatibilityStatus().profiles, expectedProfileCount);
+assert.equal(getRuntimeCompatibilityStatus().pairRules, expectedPairRuleCount);
 console.log('git runtime authority: non-empty Product/Care + Compatibility preferred; empty Product/Care falls through to Published API PASS');
