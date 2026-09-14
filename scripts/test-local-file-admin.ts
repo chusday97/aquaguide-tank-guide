@@ -38,6 +38,17 @@ const requestJson = async (base: string, suffix: string, init?: RequestInit) => 
 const putState = (base: string, partition: string, state: unknown) => requestJson(base, `/state/${partition}`, {
   method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(state),
 });
+const pngFixture = (size: number, fill = 0x41) => {
+  const body = Buffer.alloc(Math.max(size, 8), fill);
+  Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]).copy(body, 0);
+  return body;
+};
+const webpFixture = (size: number, fill = 0x42) => {
+  const body = Buffer.alloc(Math.max(size, 12), fill);
+  body.write('RIFF', 0, 'ascii');
+  body.write('WEBP', 8, 'ascii');
+  return body;
+};
 
 let active: Server | null = null;
 let leaseChild: ReturnType<typeof spawn> | null = null;
@@ -299,6 +310,24 @@ try {
   });
   assert.equal(imagePut.response.status, 201);
   assert.equal(imagePut.payload.data.byteSize, imageBytes.length);
+  const fakePngUpload = await requestJson(started.base, '/assets/local-asset-fake-png', {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.from('not-a-real-png'),
+  });
+  assert.equal(fakePngUpload.response.status, 400, 'Asset PUT must reject content whose file signature does not match its declared MIME.');
+  assert.equal(fakePngUpload.payload.error.code, 'VALIDATION_ERROR');
+  await assert.rejects(stat(path.join(root, 'assets', 'local-asset-fake-png.blob')), (error: NodeJS.ErrnoException) => error.code === 'ENOENT');
+
+  // Existing on-disk assets must also be checked so external/corrupt writes cannot remain falsely healthy.
+  await writeFile(path.join(root, 'assets', `${assetId}.blob`), Buffer.alloc(imageBytes.length, 0x61));
+  const invalidContentIntegrity = await requestJson(started.base, '/integrity');
+  assert.equal(invalidContentIntegrity.payload.data.healthy, false);
+  assert(invalidContentIntegrity.payload.data.issues.some((issue: any) => issue.code === 'ASSET_CONTENT_INVALID'));
+  const repairedInvalidContent = await requestJson(started.base, `/assets/${assetId}`, {
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: imageBytes,
+  });
+  assert.equal(repairedInvalidContent.response.status, 201, 'Re-uploading the one content-invalid asset must remain available as a targeted repair.');
+  assert.equal((await requestJson(started.base, '/integrity')).payload.data.healthy, true);
+
   const invalidAsset = await requestJson(started.base, '/assets/not-local-asset', {
     method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: imageBytes,
   });
@@ -310,8 +339,8 @@ try {
 
   const concurrentAssetId = 'local-asset-concurrent-put';
   for (let round = 0; round < 24; round += 1) {
-    const pngBytes = Buffer.alloc(97 + round, 0x41);
-    const webpBytes = Buffer.alloc(211 + round, 0x42);
+    const pngBytes = pngFixture(97 + round, 0x41);
+    const webpBytes = webpFixture(211 + round, 0x42);
     const concurrentWrites = await Promise.all([
       requestJson(started.base, `/assets/${concurrentAssetId}`, { method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: pngBytes }),
       requestJson(started.base, `/assets/${concurrentAssetId}`, { method: 'PUT', headers: { 'Content-Type': 'image/webp' }, body: webpBytes }),
@@ -327,8 +356,8 @@ try {
 
   // Concurrent reads of one asset id must never combine metadata from one version with blob bytes from another.
   const readRaceAssetId = 'local-asset-concurrent-read';
-  const readRacePng = Buffer.alloc(192 * 1024 + 7, 0x31);
-  const readRaceWebp = Buffer.alloc(640 * 1024 + 19, 0x32);
+  const readRacePng = pngFixture(192 * 1024 + 7, 0x31);
+  const readRaceWebp = webpFixture(640 * 1024 + 19, 0x32);
   assert.equal((await requestJson(started.base, `/assets/${readRaceAssetId}`, {
     method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: readRacePng,
   })).response.status, 201);
@@ -357,8 +386,8 @@ try {
 
   // Integrity is a cross-file snapshot and must not report false asset errors during a queued rewrite.
   const integrityRaceAssetId = 'local-asset-integrity-race';
-  const integrityRacePng = Buffer.alloc(128 * 1024 + 3, 0x61);
-  const integrityRaceWebp = Buffer.alloc(448 * 1024 + 29, 0x62);
+  const integrityRacePng = pngFixture(128 * 1024 + 3, 0x61);
+  const integrityRaceWebp = webpFixture(448 * 1024 + 29, 0x62);
   assert.equal((await requestJson(started.base, `/assets/${integrityRaceAssetId}`, {
     method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: integrityRacePng,
   })).response.status, 201);
@@ -400,7 +429,7 @@ try {
   await rm(path.join(root, 'assets', `${assetId}.json`));
   await mkdir(path.join(root, 'assets', `${assetId}.json`));
   const overwriteFailure = await requestJson(started.base, `/assets/${assetId}`, {
-    method: 'PUT', headers: { 'Content-Type': 'image/webp' }, body: Buffer.concat([imageBytes, Buffer.from('new')]),
+    method: 'PUT', headers: { 'Content-Type': 'image/webp' }, body: webpFixture(imageBytes.length + 3, 0x6e),
   });
   assert.equal(overwriteFailure.response.status, 500);
   assert.deepEqual(await readFile(path.join(root, 'assets', `${assetId}.blob`)), imageBytes,
@@ -521,8 +550,8 @@ try {
 
   // Backup must snapshot one complete authority state even while the same asset is being rewritten.
   const backupRaceAssetId = 'local-asset-backup-race';
-  const backupRacePng = Buffer.alloc(256 * 1024 + 17, 0x41);
-  const backupRaceWebp = Buffer.alloc(768 * 1024 + 31, 0x42);
+  const backupRacePng = pngFixture(256 * 1024 + 17, 0x41);
+  const backupRaceWebp = webpFixture(768 * 1024 + 31, 0x42);
   assert.equal((await requestJson(started.base, `/assets/${backupRaceAssetId}`, {
     method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: backupRacePng,
   })).response.status, 201);
@@ -551,16 +580,20 @@ try {
   assert.equal((await requestJson(started.base, `/assets/${backupRaceAssetId}`, { method: 'DELETE' })).response.status, 200);
 
   // A mid-copy filesystem failure must not leave a hidden partial backup directory.
-  const blobPath = path.join(root, 'assets', `${assetId}.blob`);
+  // Keep the authority itself healthy: integrity ignores directories, while recursive backup copy must enter this one.
+  const forcedCopyFailureDirectory = path.join(root, 'assets', 'forced-copy-failure-dir');
+  await mkdir(forcedCopyFailureDirectory);
+  await writeFile(path.join(forcedCopyFailureDirectory, 'nested.bin'), 'copy-failure');
   const backupEntriesBeforeFailure = (await readdir(path.join(root, 'backups'))).sort();
   let failedBackup: Awaited<ReturnType<typeof requestJson>>;
-  await chmod(blobPath, 0o000);
+  await chmod(forcedCopyFailureDirectory, 0o000);
   try {
     failedBackup = await requestJson(started.base, '/backups', {
       method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ reason: 'forced-copy-failure' }),
     });
   } finally {
-    await chmod(blobPath, 0o600);
+    await chmod(forcedCopyFailureDirectory, 0o700);
+    await rm(forcedCopyFailureDirectory, { recursive: true, force: true });
   }
   assert.equal(failedBackup.response.status, 500);
   assert.equal(failedBackup.payload.error.code, 'INTERNAL_ERROR');
@@ -700,8 +733,8 @@ try {
   await rename(savedManifestPath, manifestPath);
 
   // Runtime export must read one complete published asset version while asset rewrites are queued.
-  const runtimeRacePng = Buffer.alloc(128 * 1024 + 13, 0x51);
-  const runtimeRaceWebp = Buffer.alloc(512 * 1024 + 29, 0x52);
+  const runtimeRacePng = pngFixture(128 * 1024 + 13, 0x51);
+  const runtimeRaceWebp = webpFixture(512 * 1024 + 29, 0x52);
   assert.equal((await requestJson(started.base, `/assets/${assetId}`, {
     method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: runtimeRacePng,
   })).response.status, 201);
@@ -730,8 +763,8 @@ try {
   // Restore must not expose a new Business reference before the matching asset set is visible.
   const restoreVisibilityAssetA = 'local-asset-restore-visibility-a';
   const restoreVisibilityAssetB = 'local-asset-restore-visibility-b';
-  const restoreVisibilityBytesA = Buffer.alloc(4096, 0x71);
-  const restoreVisibilityBytesB = Buffer.alloc(4097, 0x72);
+  const restoreVisibilityBytesA = pngFixture(4096, 0x71);
+  const restoreVisibilityBytesB = pngFixture(4097, 0x72);
   const restoreVisibilityBusiness = (assetId: string) => ({
     schemaVersion: 1,
     species: [{ id: 'restore-visibility-species', image: { id: assetId, storageBucket: 'local-file', storagePath: assetId } }],
@@ -776,12 +809,12 @@ try {
     schemaVersion: 1, species: [{ id: `species-${assetId}`, image: { storageBucket: 'local-file', id: assetId } }], care: [], updatedAt: assetId,
   });
   assert.equal((await requestJson(started.base, `/assets/${rollbackAssetA}`, {
-    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.alloc(1024, 0x41),
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: pngFixture(1024, 0x41),
   })).response.status, 201);
   assert.equal((await putState(started.base, 'business', rollbackBusiness(rollbackAssetA))).response.status, 200);
   assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], marker: 'rollback-a' })).response.status, 200);
   assert.equal((await requestJson(started.base, `/assets/${rollbackAssetB}`, {
-    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.alloc(2048, 0x42),
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: pngFixture(2048, 0x42),
   })).response.status, 201);
   assert.equal((await putState(started.base, 'business', rollbackBusiness(rollbackAssetB))).response.status, 200);
   assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], marker: 'rollback-b' })).response.status, 200);
@@ -792,12 +825,12 @@ try {
   const rollbackTargetId = String(rollbackTarget.payload.data.id);
   const rollbackTargetDirectory = path.join(root, 'backups', rollbackTargetId);
   const rollbackHugeOrphan = 'local-asset-rollback-window';
-  await writeFile(path.join(rollbackTargetDirectory, 'assets', `${rollbackHugeOrphan}.blob`), Buffer.alloc(32 * 1024 * 1024, 0x5a));
+  await writeFile(path.join(rollbackTargetDirectory, 'assets', `${rollbackHugeOrphan}.blob`), pngFixture(32 * 1024 * 1024, 0x5a));
   await writeFile(path.join(rollbackTargetDirectory, 'assets', `${rollbackHugeOrphan}.json`), `${JSON.stringify({
     id: rollbackHugeOrphan, mimeType: 'image/png', byteSize: 32 * 1024 * 1024,
   })}\n`, 'utf8');
   assert.equal((await requestJson(started.base, `/assets/${rollbackAssetA}`, {
-    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: Buffer.alloc(1024, 0x41),
+    method: 'PUT', headers: { 'Content-Type': 'image/png' }, body: pngFixture(1024, 0x41),
   })).response.status, 201);
   assert.equal((await putState(started.base, 'business', rollbackBusiness(rollbackAssetA))).response.status, 200);
   assert.equal((await putState(started.base, 'care-seo', { schemaVersion: 1, revisions: [], marker: 'rollback-a' })).response.status, 200);

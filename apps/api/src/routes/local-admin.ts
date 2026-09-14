@@ -18,6 +18,18 @@ const localFileFormatVersion = 1;
 const backupFormatVersion = 1;
 const supportedMime = new Set(['image/png', 'image/jpeg', 'image/webp']);
 const maxAssetBytes = 20 * 1024 * 1024;
+const assetSignatureMatchesMime = (mimeType: string, body: Buffer) => {
+  if (mimeType === 'image/png') {
+    return body.length >= 8 && body.subarray(0, 8).equals(Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]));
+  }
+  if (mimeType === 'image/jpeg') {
+    return body.length >= 3 && body[0] === 0xff && body[1] === 0xd8 && body[2] === 0xff;
+  }
+  if (mimeType === 'image/webp') {
+    return body.length >= 12 && body.subarray(0, 4).toString('ascii') === 'RIFF' && body.subarray(8, 12).toString('ascii') === 'WEBP';
+  }
+  return false;
+};
 type AuthorityLockWaiter = { mode: 'read' | 'write'; resolve: () => void };
 let authorityActiveReaders = 0;
 let authorityWriterActive = false;
@@ -422,10 +434,16 @@ const inspectRoot = async (root: string): Promise<IntegrityReport> => {
     try {
       const metadata = asRecord(await readJsonOrNull(assetMetaFile(root, id)));
       const bytes = await stat(assetFile(root, id));
-      if (!metadata || !supportedMime.has(String(metadata.mimeType || ''))) {
+      const mimeType = String(metadata?.mimeType || '');
+      if (!metadata || !supportedMime.has(mimeType)) {
         issues.push({ severity: 'error', code: 'ASSET_META_INVALID', message: `${id} 图片 metadata 无效。` });
       } else if (Number(metadata.byteSize) !== bytes.size) {
         issues.push({ severity: 'error', code: 'ASSET_SIZE_MISMATCH', message: `${id} 图片 metadata byteSize 与 blob 不一致。` });
+      } else {
+        const body = await readFile(assetFile(root, id));
+        if (!assetSignatureMatchesMime(mimeType, body)) {
+          issues.push({ severity: 'error', code: 'ASSET_CONTENT_INVALID', message: `${id} 图片内容与声明格式不一致或文件头损坏。` });
+        }
       }
     } catch (error) {
       issues.push({ severity: 'error', code: 'ASSET_READ_FAILED', message: `${id} 图片文件无法完整读取：${error instanceof Error ? error.message : 'unknown error'}` });
@@ -493,7 +511,7 @@ const assertActiveRootHealthyForMutation = async (
     return;
   }
   const errors = integrity.issues.filter(issue => issue.severity === 'error');
-  const repairableAssetCodes = new Set(['ASSET_PAIR_MISSING', 'ASSET_META_INVALID', 'ASSET_SIZE_MISMATCH', 'ASSET_READ_FAILED', 'REFERENCED_ASSET_MISSING']);
+  const repairableAssetCodes = new Set(['ASSET_PAIR_MISSING', 'ASSET_META_INVALID', 'ASSET_SIZE_MISMATCH', 'ASSET_READ_FAILED', 'ASSET_CONTENT_INVALID', 'REFERENCED_ASSET_MISSING']);
   const onlyTargetAssetErrors = Boolean(repairAssetId)
     && errors.length > 0
     && errors.every(issue => repairableAssetCodes.has(issue.code) && issue.message.includes(repairAssetId!));
@@ -906,6 +924,9 @@ localAdminFileRouter.put(
     if (!supportedMime.has(mimeType)) throw new ApiError(400, 'VALIDATION_ERROR', 'Only PNG, JPEG and WebP Local assets are supported.');
     if (!Buffer.isBuffer(request.body) || request.body.length === 0) throw new ApiError(400, 'VALIDATION_ERROR', 'Local asset body is empty.');
     if (request.body.length > maxAssetBytes) throw new ApiError(413, 'PAYLOAD_TOO_LARGE', '图片不能超过 20MB。');
+    if (!assetSignatureMatchesMime(mimeType, request.body)) {
+      throw new ApiError(400, 'VALIDATION_ERROR', '图片内容与声明格式不一致或文件头损坏。');
+    }
     return withAuthorityWrite(async () => {
       await assertActiveRootHealthyForMutation(assetId);
       return withAssetPairLock(assetId, async () => {
