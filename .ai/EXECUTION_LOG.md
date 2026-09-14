@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-14 — internal safety backup list isolation
+- Reproduced manual A -> active B -> restore A; restore returned 200 with a newer safety backup and `/backups[0].reason === pre-restore-safety`.
+- Patched `listBackups()` to skip internal `pre-restore-safety` manifests only at listing time. Safety directory remains intact.
+- Added regression asserting safety id absent from list and manifest still exists on disk.
+- PASS: Local File API, mode contract, browser Local File, Operations Studio, API/root TypeScript, full build, diff check.
+- Commit `ae59e1d4`; GitHub Product Golden Path `34809050078` PASS; Vercel Preview `dpl_GGiDquTN3TcWDozYcSWzwASCoJQd` READY / target null. Production unchanged.
+
+
 
 ## 2026-09-14 — referenced asset delete guard closure
 - Reproduced healthy root -> Business references local asset -> DELETE asset returns 200 -> root becomes unhealthy with `REFERENCED_ASSET_MISSING`.

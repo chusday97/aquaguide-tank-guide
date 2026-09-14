@@ -1,5 +1,13 @@
 # Branch Status
 
+## 2026-09-14 main checkpoint
+- Functional main: `ae59e1d4 fix(admin): hide internal restore safety backups`
+- Remote `main` matched before push; normal push, no force.
+- CI: Product Golden Path `34809050078` PASS.
+- Preview: `dpl_GGiDquTN3TcWDozYcSWzwASCoJQd` READY / target null.
+- Production unchanged.
+
+
 
 ## 2026-09-14 — referenced asset delete guard checkpoint
 - Functional main checkpoint: `77a32708db01fded317412394cb73c86166add52` — `fix(admin): protect referenced asset deletes`.

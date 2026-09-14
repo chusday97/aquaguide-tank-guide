@@ -1,5 +1,12 @@
 # AquaGuide Admin / Operations Studio — HANDOFF LATEST
 
+## 2026-09-14 — Internal restore safety backups hidden from operator restore list
+- Functional main: `ae59e1d4 fix(admin): hide internal restore safety backups`.
+- Reproduced: after restoring backup A from active B, `/backups` listed the newer `pre-restore-safety` first; Operations therefore treated the pre-restore B snapshot as “最近备份”.
+- Fix: operator backup listing excludes `reason=pre-restore-safety`; the safety backup remains on disk for journal/crash/rollback recovery by explicit id.
+- Regression + full Local File/UI/TypeScript/build gates PASS. GitHub Product Golden Path `34809050078` PASS. Vercel Preview `dpl_GGiDquTN3TcWDozYcSWzwASCoJQd` READY, target null. Production unchanged.
+
+
 
 ## 2026-09-14 — referenced asset delete guard closed
 - Main functional checkpoint: `77a32708db01fded317412394cb73c86166add52` (`fix(admin): protect referenced asset deletes`).

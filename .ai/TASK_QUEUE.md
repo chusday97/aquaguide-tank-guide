@@ -1,5 +1,11 @@
 # Task Queue
 
+## 2026-09-14 queue update
+- CLOSED: completed restore created `pre-restore-safety` as newest `/backups` item, causing “恢复最近备份” to point at the pre-restore state.
+- FIXED: internal safety backups are hidden from ordinary operator restore candidates but retained on disk for journal/rollback recovery.
+- NEXT: only continue from another concrete reproducible Local File operator/runtime/data-reliability badcase; do not expand locking or backup semantics speculatively.
+
+
 
 ## CURRENT OVERRIDE — 2026-09-14 after referenced asset delete guard
 - DONE: reproduce healthy Business reference -> asset DELETE 200 -> `REFERENCED_ASSET_MISSING`.

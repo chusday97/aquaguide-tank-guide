@@ -1,5 +1,13 @@
 # Live Status
 
+## 2026-09-14 restore safety list isolation
+- main functional: `ae59e1d4`
+- GitHub Product Golden Path: `34809050078` PASS
+- Vercel Preview: `dpl_GGiDquTN3TcWDozYcSWzwASCoJQd` READY / target null
+- Production: unchanged at `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`
+- Invariant: `pre-restore-safety` backups stay on disk for internal recovery but are excluded from normal operator restore candidates.
+
+
 
 ## 2026-09-14 — referenced asset delete guard
 - CLOSED on main at `77a32708`: a healthy referenced asset can no longer be deleted out from under Business state.

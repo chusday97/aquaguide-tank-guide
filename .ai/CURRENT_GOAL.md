@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-14 internal restore safety backup list isolation closed
+A concrete operator-restore selection badcase is closed on main at `ae59e1d4 fix(admin): hide internal restore safety backups`.
+
+- Fail-before-fix API sequence: create manual backup A -> change active state to B -> restore A. Restore correctly created a newer `pre-restore-safety` backup, but `GET /backups` sorted it first, so Operations `backups[0]` / “恢复最近备份” pointed back to B and could silently undo the completed restore.
+- `listBackups()` now excludes manifests whose `reason === 'pre-restore-safety'` from the ordinary operator restore list. The safety backup directory remains on disk and restore journals / automatic rollback continue to address it directly by id.
+- Permanent regression requires the restore-created safety id to be absent from `/backups`, the first listed backup not to be a safety backup, and the safety manifest to still exist on disk.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio populated UI, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34809050078`.
+- Vercel Preview `dpl_GGiDquTN3TcWDozYcSWzwASCoJQd` READY / target null. Production remains `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / runtime `5fa915d3`.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
+
 
 ## CURRENT OVERRIDE — 2026-09-14 referenced asset delete guard closed
 A concrete healthy-root deletion badcase is closed on main at `77a32708 fix(admin): protect referenced asset deletes`.
