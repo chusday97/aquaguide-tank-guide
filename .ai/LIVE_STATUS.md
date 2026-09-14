@@ -1,5 +1,14 @@
 # Live Status
 
+## 2026-09-14 — Restore safety backup lifecycle
+- CLOSED on main at `57577c74`.
+- Hidden `pre-restore-safety` backups are no longer retained after completed restore transactions.
+- Failed rollback/recovery continues to preserve safety + journal for recovery.
+- Repeated restore no-growth regression PASS.
+- GitHub Product Golden Path `34819368401` PASS.
+- Vercel Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY / target null.
+- Production unchanged.
+
 
 ## 2026-09-14 — corrupt asset GET fail-closed
 - CLOSED on main at `422dbede`.

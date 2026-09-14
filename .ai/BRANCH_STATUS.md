@@ -1,5 +1,12 @@
 # Branch Status
 
+## 2026-09-14 — Restore safety backup lifecycle cleanup
+- Functional main checkpoint: `57577c74 fix(admin): clean completed restore safety backups`.
+- Repeated successful restores no longer accumulate hidden `pre-restore-safety` directories.
+- GitHub Product Golden Path `34819368401` PASS.
+- Vercel Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY / target null.
+- Production unchanged; no promote.
+
 
 ## 2026-09-14 — corrupt asset read fail-closed checkpoint
 - Functional main checkpoint: `422dbede51171ee071e29c1d4d878fb4a4703798` — `fix(admin): fail closed on corrupt asset reads`.

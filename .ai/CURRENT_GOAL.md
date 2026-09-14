@@ -1,5 +1,16 @@
 # Current Goal
 
+## CURRENT OVERRIDE — 2026-09-14 restore safety backup lifecycle closed
+A concrete hidden-backup disk growth badcase is closed on main at `57577c74 fix(admin): clean completed restore safety backups`.
+
+- Fail-before-fix: one manual backup followed by 5 successful restores left 6 backup directories on disk, 5 of them hidden `pre-restore-safety` snapshots.
+- Safety backups are now transaction-scoped: retained while restore/rollback/crash recovery may still need them, removed only after the transaction journal has been cleared and recovery is complete.
+- Successful restore returns `safetyBackupRetained=false`; repeated completed restores do not accumulate hidden safety directories.
+- Successful crash recovery also removes its consumed safety backup. Failed rollback/recovery still preserves both journal and safety backup for operator inspection/retry.
+- PASS: Local File API, mode contract, Local File browser regression, Operations Studio, API/root TypeScript, full build, diff check, GitHub Product Golden Path `34819368401`.
+- Vercel Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY / target null. Production unchanged.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+
 
 ## CURRENT OVERRIDE — 2026-09-14 corrupt Local asset reads fail closed
 A concrete read-path integrity badcase is closed on main at `422dbede fix(admin): fail closed on corrupt asset reads`.

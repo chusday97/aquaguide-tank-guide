@@ -1,5 +1,12 @@
 ## 2026-09-14 — Decodable Local asset integrity closed
 
+## 2026-09-14 — Restore safety backup lifecycle closure
+- Main `57577c74` makes `pre-restore-safety` backups transaction-scoped instead of permanently hidden disk snapshots.
+- Successful restore / successful rollback / successful crash recovery remove the consumed safety backup only after journal cleanup.
+- Failed rollback/recovery still retains safety backup + journal.
+- Repeated restore regression proves hidden safety directories no longer grow linearly.
+- Product Golden Path `34819368401` PASS; Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY; Production unchanged.
+
 ## 2026-09-14 — corrupt asset reads now fail closed
 - Functional main: `422dbede fix(admin): fail closed on corrupt asset reads`.
 - A corrupt on-disk asset can no longer bypass integrity by being fetched directly: GET validates MIME, metadata size and full image decode before sending bytes.

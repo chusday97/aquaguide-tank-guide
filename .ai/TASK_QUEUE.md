@@ -1,5 +1,14 @@
 # Task Queue
 
+## CURRENT OVERRIDE — 2026-09-14 restore safety backup lifecycle
+- DONE: reproduce unbounded hidden `pre-restore-safety` growth across repeated successful restores.
+- DONE: clean consumed safety backup after successful restore, successful automatic rollback, and successful crash recovery.
+- DONE: keep safety backup + journal on failed rollback/recovery.
+- DONE: add repeated-restore no-growth regression and `safetyBackupRetained=false` success contract.
+- DONE: Local File/API/UI/Operations/type/build gates PASS; Product Golden Path `34819368401` PASS; Preview READY.
+- NEXT: only another reproducible operator/runtime/data-reliability badcase.
+- HOLD: no Production promote and no Compatibility migration apply.
+
 
 ## CURRENT OVERRIDE — 2026-09-14 after corrupt asset read closure
 - DONE: reproduce `/integrity` unhealthy while direct asset GET still returned 200 corrupt bytes.

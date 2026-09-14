@@ -1,5 +1,13 @@
 # Execution Log
 
+## 2026-09-14 — Restore safety backup lifecycle cleanup
+- Reproduced hidden disk growth: 1 manual backup + 5 successful restores => 6 backup directories, including 5 hidden `pre-restore-safety` snapshots.
+- Added completed-transaction cleanup for successful restore, successful automatic rollback, and successful interrupted-restore recovery.
+- Failed rollback/recovery retains safety backup + journal; no dangerous cleanup on unresolved transactions.
+- Added `safetyBackupRetained` to restore result; normal success reports false.
+- Permanent regression covers success cleanup, repeated restore no-growth, crash recovery cleanup, and failed rollback retention.
+- Commit `57577c74`; Product Golden Path `34819368401` PASS; Vercel Preview `dpl_2U3yL9oq4FpPp7CyABU2Wi74DZrB` READY.
+
 
 ## 2026-09-14 — corrupt asset read fail-closed closure
 - Reproduced: externally corrupt a valid asset blob while preserving metadata size; `/integrity` => `ASSET_CONTENT_INVALID`, but direct asset GET still returned 200 and corrupt bytes.
