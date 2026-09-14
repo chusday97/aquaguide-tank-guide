@@ -115,7 +115,7 @@ export function buildCompatibilityVisualResult({
   return {
     status: decision.status,
     presentationMode: presentation.mode,
-    statusLabel: compatibilityStatusLabels[decision.status],
+    statusLabel: presentation.headline,
     coverageLabel: presentation.coverageLabel,
     title: beginnerAction.headline,
     conclusion: beginnerAction.primaryReason,
