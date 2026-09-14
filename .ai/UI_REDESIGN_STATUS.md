@@ -57,3 +57,12 @@ Use this Care interaction as a candidate pattern while continuing the broader Aq
 ## Current release boundary
 - UI redesign remains Draft PR #150 only.
 - Do not merge to `main`, deploy Production, or apply DB migrations without a separate review decision.
+
+## Species Detail + Compatibility convergence
+- Added `src/styles/species-compat-layout-v1.css` as a View Layer only convergence pass.
+- Species Detail keeps the existing rail/sheet behavior but removes the multi-color patchwork feel: neutral hero, calmer feeding/environment surfaces, unified evidence cards, stronger verdict hierarchy.
+- Compatibility expands from the old 640px decision drawer into a task workspace: ≥1200px uses tank/context on the left and selection/result on the right; 768–1199px and mobile stack safely.
+- No `SpeciesDetailDialog.tsx`, Compatibility domain/service, stocking, or persistence behavior changed.
+- Rendered evidence checked at 1440 desktop and 390 mobile; no horizontal overflow.
+- `test:species-detail-ui`, `test:responsive-detail-surface`, `test:compatibility-beginner-actions-ui`, GP-002, `npm run lint`, and full `npm run build` all pass.
+- Local preview remains `http://127.0.0.1:4333/` for Aquarium, Care, Species Detail and Compatibility review.
