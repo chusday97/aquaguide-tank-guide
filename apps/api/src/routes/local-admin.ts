@@ -835,6 +835,14 @@ const cleanupRestoreTempDirectories = async (root: string) => {
     .filter(name => name.startsWith('.restore-assets-'))
     .map(name => rm(path.join(root, name), { recursive: true, force: true })));
 };
+const cleanupCompletedSafetyBackup = async (root: string, safetyBackupId: string) => {
+  try {
+    await rm(backupDirectory(root, safetyBackupId), { recursive: true, force: true });
+    return true;
+  } catch {
+    return false;
+  }
+};
 const recoverInterruptedRestoreIfNeeded = async (root: string) => {
   const journalPath = restoreJournalFile(root);
   let raw: unknown;
@@ -859,6 +867,7 @@ const recoverInterruptedRestoreIfNeeded = async (root: string) => {
     }
     await cleanupRestoreTempDirectories(root);
     await rm(journalPath, { force: true });
+    await cleanupCompletedSafetyBackup(root, safetyBackupId);
   } catch {
     throw new ApiError(500, 'INTERNAL_ERROR', `Interrupted restore recovery from safety backup ${safetyBackupId} failed; stop writing and inspect the Local Admin root.`, { root, journalPath, safetyBackupId });
   }
@@ -886,7 +895,8 @@ const restoreBackup = async (backupId: string) => {
     if (!restoredIntegrity.healthy) throw new ApiError(409, 'MIGRATION_REJECTED', '恢复后完整性校验失败。');
     await cleanupRestoreTempDirectories(root);
     await rm(journalPath, { force: true });
-    return { backupId: id, safetyBackupId: safety.id, integrity: restoredIntegrity };
+    const safetyBackupRetained = !(await cleanupCompletedSafetyBackup(root, safety.id));
+    return { backupId: id, safetyBackupId: safety.id, safetyBackupRetained, integrity: restoredIntegrity };
   } catch (error) {
     try {
       const safetySource = backupDirectory(root, safety.id);
@@ -897,6 +907,7 @@ const restoreBackup = async (backupId: string) => {
       if (!rollbackIntegrity.healthy) throw new Error(`Rolled-back Local Admin root failed integrity validation.`);
       await cleanupRestoreTempDirectories(root);
       await rm(journalPath, { force: true });
+      await cleanupCompletedSafetyBackup(root, safety.id);
     } catch {
       throw new ApiError(500, 'INTERNAL_ERROR', `恢复 ${id} 失败，且 safety backup ${safety.id} 自动回滚失败；恢复事务日志已保留，请停止写入并人工检查本地文件。`);
     }

@@ -213,6 +213,9 @@ try {
   assert.equal(recoveredCare.payload.data.state.marker, 'safety-a');
   assert.equal((await readdir(recoveryRoot)).some(name => name.startsWith('.restore-assets-')), false);
   await assert.rejects(readFile(path.join(recoveryRoot, '.restore-transaction.json'), 'utf8'));
+  await assert.rejects(stat(path.join(recoveryRoot, 'backups', safetyBackupId)),
+    (error: NodeJS.ErrnoException) => error.code === 'ENOENT',
+    'Completed crash recovery must remove its internal safety backup.');
   recoveryChild.kill('SIGTERM');
   await new Promise<void>(resolve => recoveryChild!.once('exit', () => resolve()));
   recoveryChild = null;
@@ -627,6 +630,7 @@ try {
   assert.equal(restored.response.status, 200);
   assert.equal(restored.payload.data.backupId, backupId);
   assert.match(restored.payload.data.safetyBackupId, /^backup-\d{13,17}$/);
+  assert.equal(restored.payload.data.safetyBackupRetained, false);
   assert.equal(restored.payload.data.integrity.healthy, true);
   const backupsAfterRestore = await requestJson(started.base, '/backups');
   assert.equal(backupsAfterRestore.response.status, 200);
@@ -634,7 +638,21 @@ try {
     'Internal pre-restore safety backups must not replace the latest operator backup after restore.');
   assert.equal(backupsAfterRestore.payload.data.backups.some((item: any) => item.id === restored.payload.data.safetyBackupId), false,
     'Internal pre-restore safety backups must stay hidden from the operator restore list.');
-  await stat(path.join(root, 'backups', restored.payload.data.safetyBackupId, 'manifest.json'));
+  await assert.rejects(stat(path.join(root, 'backups', restored.payload.data.safetyBackupId)),
+    (error: NodeJS.ErrnoException) => error.code === 'ENOENT',
+    'Completed restore must remove its internal safety backup instead of leaking hidden disk snapshots.');
+  for (let repeatRestore = 0; repeatRestore < 3; repeatRestore += 1) {
+    const repeated = await requestJson(started.base, `/backups/${backupId}/restore`, { method: 'POST' });
+    assert.equal(repeated.response.status, 200);
+    assert.equal(repeated.payload.data.safetyBackupRetained, false);
+  }
+  const backupEntriesAfterRepeatedRestore = await readdir(path.join(root, 'backups'));
+  const leakedSafetyBackups = [];
+  for (const backupEntry of backupEntriesAfterRepeatedRestore) {
+    const manifest = JSON.parse(await readFile(path.join(root, 'backups', backupEntry, 'manifest.json'), 'utf8'));
+    if (manifest.reason === 'pre-restore-safety') leakedSafetyBackups.push(backupEntry);
+  }
+  assert.deepEqual(leakedSafetyBackups, [], 'Repeated completed restores must not accumulate hidden pre-restore safety backups.');
   assert.deepEqual((await requestJson(started.base, '/state/business')).payload.data.state, businessState);
   const restoredImage = await fetch(`${started.base}/assets/${assetId}`);
   assert.equal(restoredImage.status, 200);
@@ -866,6 +884,7 @@ try {
   assert.equal(typeof JSON.parse(await readFile(rollbackJournalPath, 'utf8')).safetyBackupId, 'string',
     'A failed rollback integrity check must retain the restore journal for crash recovery/operator inspection.');
   assert.equal(rollbackSafetyId.length > 0, true);
+  await stat(path.join(root, 'backups', rollbackSafetyId, 'manifest.json'));
 
   process.env.ADMIN_LOCAL_FILE_MODE = 'false';
   const disabled = await requestJson(started.base, '/status');
