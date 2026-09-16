@@ -50,7 +50,7 @@ for (const existing of prioritySpecies) {
     if (!pair) continue;
     priorityDirections += 1;
     directionStatuses[pair.status] = (directionStatuses[pair.status] || 0) + 1;
-    if (pair.status === 'compatible' || pair.status === 'caution') {
+    if (pair.status !== 'insufficient_data') {
       recordablePriorityDirections += 1;
       assert.ok(getReviewedCompatibilityProfileForFish(existing), `recordable priority pair is missing reviewed evidence for ${existing.name}`);
       assert.ok(getReviewedCompatibilityProfileForFish(candidate), `recordable priority pair is missing reviewed evidence for ${candidate.name}`);
