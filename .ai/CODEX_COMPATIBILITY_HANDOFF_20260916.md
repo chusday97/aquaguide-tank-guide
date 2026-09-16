@@ -270,6 +270,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 27 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 28 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0292`, `sp_0293`, `sp_0348`, `sp_0349`, `sp_0350`, `sp_0351`, `sp_0385`, `sp_0386`, `sp_0387`, and `sp_0392`.
+- FishBase professional records were reviewed for Poecilia, Carassius, and Ancistrus catalog variants. Commercial, color, body-shape, and fin variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 27 → Batch 28: feeding `reviewed_unknown 262→272`, `needs_research 54→44`; environment `reviewed_unknown 258→268`, `needs_research 191→181`; space `reviewed_unknown 258→268`, `needs_research 154→144`; social `reviewed_unknown 261→271`, `needs_research 85→75`; care `reviewed_unknown 262→272`, `reviewed_supported 182→172`.
+- Batch 28 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
