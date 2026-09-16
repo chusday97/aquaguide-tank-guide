@@ -13,6 +13,7 @@
 - Fixed: Preserved the existing runtime Neritina natalensis authority for the `sp_0428` duplicate launch-catalog object while keeping its Batch 15 completion record matrix-only; frozen Compatibility output remains unchanged.
 - Added: Knowledge Completion Phase 2 Batch 16 direct reviewed-unknown records for ten backlog objects, with source registrations, matrix/backlog integration, and a regression contract; no Compatibility authority or launch pair was changed.
 - Fixed: Preserved existing runtime Neocaridina davidi Red authority for `sp_0001` while keeping its Batch 16 completion record matrix-only; frozen Compatibility output remains unchanged.
+- Added: Knowledge Completion Phase 2 Batch 17 direct reviewed-unknown records for ten backlog objects, with source registrations, matrix/backlog integration, and a regression contract; no Compatibility authority or launch pair was changed.
 - Fixed: Preserved runtime base-species behavior for the existing Crystal Shrimp completion record while keeping its commercial variant completion matrix entry direct and fail-closed.
 - Added: Knowledge Completion Phase 2 Batch 03 direct records for ten backlog objects, with FishBase-supported facts for `sp_0052`, `sp_0112`, and `sp_0115`, and strict reviewed-unknown boundaries for seven commercial variants. Added a regression contract; no Compatibility authority or launch pair was changed.
 - Changed: Completion matrix generation now includes Batch 03 direct feeding/care authority and direct Knowledge IDs while preserving fail-closed Compatibility inheritance boundaries.
