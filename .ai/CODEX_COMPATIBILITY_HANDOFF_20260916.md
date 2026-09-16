@@ -243,6 +243,14 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 21 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0285`, `sp_0286`, `sp_0296`, `sp_0297`, `sp_0318`, `sp_0319`, `sp_0321`, `sp_0322`, `sp_0323`, and `sp_0325`.
+- FishBase and WoRMS professional taxonomic records were reviewed for the named snakehead, marine catalog variants, corals, and anemone objects. Commercial variants and marine invertebrates remain fail-closed where object-specific husbandry authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 20 → Batch 21: feeding `needs_research 91→91`, `template_only 127→117`, `reviewed_unknown 192→202`; environment `needs_research 261→251`, `reviewed_unknown 188→198`; space `needs_research 223→213`, `reviewed_unknown 188→198`; social `needs_research 154→144`, `reviewed_unknown 191→201`; care `reviewed_supported 251→241`, `reviewed_unknown 192→202`.
+- Batch 21 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 20 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0200`, `sp_0216`, `sp_0229`, `sp_0234`, `sp_0242`, `sp_0248`, `sp_0268`, `sp_0269`, `sp_0283`, and `sp_0284`.
 - FishBase professional species records were reviewed for Dario, Channa, Gyrinocheilus, Scleropages, Osphronemus, and Trichopodus taxa. Commercial variants remain fail-closed; no template, name inference, or base-species inheritance was promoted.
