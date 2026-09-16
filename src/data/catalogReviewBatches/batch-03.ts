@@ -60,7 +60,7 @@ const seeds: Seed[] = [
   {
     speciesId: 'sp_0475', commonName: '高体鳑鲏', scientificName: 'Rhodeus ocellatus',
     baseSpeciesKey: 'Rhodeus ocellatus', sourceId: 'batch03-fishbase-rhodeus-ocellatus',
-    sourceTitle: 'Rhodeus ocellatus species summary', sourceUrl: 'https://www.fishbase.se/summary/Rhodeus-ocellatus.html', water: 'freshwater',
+    sourceTitle: 'Rhodeus ocellatus species summary', sourceUrl: 'https://www.fishbase.se/summary/Rhodeus-ocellatus.html',
   },
   {
     speciesId: 'sp_0459', commonName: '黑壳虾', scientificName: 'Neocaridina davidi wild type',
@@ -94,6 +94,7 @@ const seeds: Seed[] = [
 
 const unknownReason = (seed: Seed, field: string) => {
   if (field === 'identity' && seed.identityUnknown) return seed.identityUnknown;
+  if (field === 'water' && seed.speciesId === 'sp_0475') return 'FishBase 同时记录 freshwater 与 brackish；当前单值 waterType 无法无损表达双水体记录，因此保持 unknown。';
   if (field === 'water' && !seed.water) return '现有物种来源未同时确认观赏贸易名对应的完整水体阶段需求。';
   if (field === 'ph') return '该来源未给出可直接用于本产品混养判断的审定 pH 区间。';
   if (field === 'temperature') return '该来源未给出可直接用于本产品混养判断的审定水温区间。';
@@ -121,6 +122,10 @@ const verifiedFieldValues: Record<string, Partial<Record<typeof fields[number], 
   sp_0224: {
     temperature: { min: 4, max: 22 },
     adult_size: { min: null, max: 100 },
+  },
+  sp_0475: {
+    temperature: { min: 18, max: 24 },
+    adult_size: { min: null, max: 9.2 },
   },
   sp_0258: {
     temperature: { min: 24, max: 30 },
@@ -202,6 +207,7 @@ export const catalogReviewBatch03VerifiedSourceIds: string[] = [
   'batch03-fishbase-amatitlania-nigrofasciata',
   'batch03-fishbase-channa-asiatica',
   'batch03-fishbase-channa-argus',
+  'batch03-fishbase-rhodeus-ocellatus',
   'batch03-fishbase-betta-splendens',
   'batch03-uf-ifas-neocaridina-davidi',
   'batch03-usfws-neocaridina-davidi-red-morphs',
