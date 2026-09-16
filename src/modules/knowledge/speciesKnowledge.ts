@@ -1548,6 +1548,13 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
+  // Neritina natalensis has an existing reviewed compatibility profile. Keep
+  // its runtime base authority for the duplicate launch-catalog object; the
+  // direct completion record remains matrix-only and fail-closed.
+  if (fish.id === 'sp_0428') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
   // Phase 2 completion records are direct evidence for the matrix and
   // Species Detail, but do not become Compatibility authority by existence.
   if (completionOnlyDirectKnowledgeIds.has(fish.id)) return undefined;

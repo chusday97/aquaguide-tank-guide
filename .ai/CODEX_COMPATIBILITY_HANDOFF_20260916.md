@@ -183,6 +183,7 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Matrix Batch 07 → Batch 08: feeding `needs_research 159→150`, `reviewed_unknown 62→72`; environment `needs_research 391→381`, `reviewed_unknown 58→68`; space `needs_research 351→341`, `reviewed_unknown 58→68`; social `needs_research 282→272`, `reviewed_unknown 61→71`; care `reviewed_supported 367→358`, `reviewed_unknown 62→72`.
 - Batch 08 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+- Regression fix after Batch 15: preserved the existing runtime Neritina natalensis authority for `sp_0428` while keeping its direct completion record matrix-only, restoring the frozen launch matrix and duplicate-catalog evidence consistency.
 
 ## Phase 2 Batch 09 checkpoint — 2026-09-16
 - Completed ten direct reviewed-unknown records: `sp_0175`, `sp_0176`, `sp_0177`, `sp_0178`, `sp_0182`, `sp_0187`, `sp_0201`, `sp_0202`, `sp_0207`, and `sp_0208`.
