@@ -2745,34 +2745,172 @@ select {
   .interactive-care-open-guide { min-width: 112px; }
 }
 
-/* Care ecosystem wheel — 2026-09-16 refinement. View layer only. */
-.interactive-care-toolbar-actions {
-  display: flex;
-  flex: 0 0 auto;
-  align-items: center;
-  gap: 9px;
+/* Care cover library + detail view — corrected interaction model, 2026-09-16. */
+.interactive-care-workspace--covers {
+  grid-template-columns: minmax(360px, .76fr) minmax(560px, 1.24fr);
+  align-items: start;
 }
 
-.interactive-care-search {
+.interactive-care-layer-column--photo {
+  overflow: hidden;
+  align-self: start;
+  background: #f6faf8;
+}
+
+.interactive-care-aquarium-photo {
+  position: relative;
+  min-height: 650px;
+  overflow: hidden;
+  border-radius: 24px;
+  background: #dcebe6;
+}
+
+.interactive-care-aquarium-photo-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.interactive-care-aquarium-photo-shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / .05), rgb(6 44 36 / .10)),
+    linear-gradient(90deg, rgb(13 63 52 / .10), transparent 32%, transparent 72%, rgb(13 63 52 / .08));
+}
+
+.interactive-care-layer-hotspot {
+  position: absolute;
+  z-index: 3;
+  display: grid;
+  gap: 2px;
+  min-width: 118px;
+  border: 1px solid rgb(255 255 255 / .72);
+  border-radius: 16px;
+  background: rgb(250 253 251 / .82);
+  padding: 10px 12px;
+  color: #17372f;
+  text-align: left;
+  box-shadow: 0 8px 24px rgb(7 42 34 / .13);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.interactive-care-layer-hotspot strong {
+  font-size: 13px;
+  font-weight: 900;
+  line-height: 1.2;
+}
+
+.interactive-care-layer-hotspot span {
+  color: rgb(23 55 47 / .62);
+  font-size: 9px;
+  font-weight: 760;
+  line-height: 1.35;
+}
+
+.interactive-care-layer-hotspot:hover,
+.interactive-care-layer-hotspot:focus-visible,
+.interactive-care-layer-hotspot.is-selected {
+  transform: translateY(-3px) scale(1.02);
+  outline: none;
+  border-color: rgb(14 132 103 / .36);
+  background: rgb(246 255 251 / .95);
+  box-shadow: 0 12px 30px rgb(7 42 34 / .18), 0 0 0 3px rgb(14 132 103 / .09);
+}
+
+.interactive-care-layer-hotspot.is-selected {
+  background: #0b7d62;
+  color: #fff;
+}
+
+.interactive-care-layer-hotspot.is-selected span { color: rgb(255 255 255 / .78); }
+.interactive-care-layer-hotspot.is-surface { top: 14%; left: 6%; }
+.interactive-care-layer-hotspot.is-water { top: 34%; left: 6%; }
+.interactive-care-layer-hotspot.is-life { top: 48%; right: 5%; }
+.interactive-care-layer-hotspot.is-plants { top: 65%; left: 7%; }
+.interactive-care-layer-hotspot.is-substrate { bottom: 6%; left: 7%; }
+.interactive-care-layer-hotspot.is-filter { top: 24%; right: 5%; }
+
+.interactive-care-guide-panel--library {
+  min-height: 650px;
+  max-height: 820px;
+  overflow: hidden;
+  padding: 0;
+  background: #fbfdfc;
+}
+
+.interactive-care-cover-library,
+.interactive-care-detail-view {
+  height: 100%;
+  min-height: 650px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.interactive-care-cover-library { padding: 22px; }
+
+.interactive-care-cover-library-head {
+  position: sticky;
+  z-index: 4;
+  top: -22px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(190px, 240px);
+  gap: 18px;
+  align-items: end;
+  margin: -22px -22px 18px;
+  border-bottom: 1px solid rgb(21 55 47 / .08);
+  background: rgb(251 253 252 / .94);
+  padding: 22px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.interactive-care-cover-library-head > div > span {
+  color: #0b8b70;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.interactive-care-cover-library-head h3 {
+  margin: 4px 0 0;
+  color: #15372f;
+  font-size: 23px;
+  font-weight: 900;
+  letter-spacing: -.025em;
+}
+
+.interactive-care-cover-library-head p {
+  max-width: 520px;
+  margin: 6px 0 0;
+  color: rgb(24 67 55 / .60);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.interactive-care-cover-search {
   display: flex;
-  width: clamp(210px, 21vw, 310px);
   min-height: 42px;
   align-items: center;
   gap: 8px;
-  border: 1px solid rgb(8 122 97 / 0.15);
+  border: 1px solid rgb(21 55 47 / .12);
   border-radius: 13px;
-  background: rgb(255 255 255 / 0.9);
-  padding: 0 12px;
-  color: #56756c;
-  box-shadow: 0 8px 24px rgb(21 55 47 / 0.04);
+  background: #fff;
+  padding: 0 11px;
+  color: #5a766e;
 }
 
-.interactive-care-search:focus-within {
-  border-color: rgb(8 122 97 / 0.38);
-  box-shadow: 0 0 0 3px rgb(8 122 97 / 0.09), 0 8px 24px rgb(21 55 47 / 0.05);
+.interactive-care-cover-search:focus-within {
+  border-color: rgb(8 122 97 / .36);
+  box-shadow: 0 0 0 3px rgb(8 122 97 / .08);
 }
 
-.interactive-care-search input {
+.interactive-care-cover-search input {
   width: 100%;
   min-width: 0;
   border: 0;
@@ -2780,360 +2918,289 @@ select {
   background: transparent;
   color: #17372f;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 720;
 }
 
-.interactive-care-search input::placeholder { color: rgb(24 67 55 / 0.42); }
-
-.interactive-care-workspace {
-  grid-template-columns: minmax(540px, 1.03fr) minmax(460px, .97fr);
-}
-
-.interactive-care-layer-column {
-  background: linear-gradient(180deg, #eef8f4 0%, #e5f0eb 58%, #e8dfcb 100%);
-  box-shadow: 0 18px 50px rgb(21 55 47 / 0.07);
-}
-
-.interactive-care-ecosystem-map {
-  min-height: 650px;
-  isolation: isolate;
-  background:
-    radial-gradient(circle at 14% 20%, rgb(255 255 255 / 0.7) 0 3px, transparent 4px),
-    radial-gradient(circle at 76% 31%, rgb(255 255 255 / 0.5) 0 2px, transparent 3px),
-    radial-gradient(circle at 32% 45%, rgb(255 255 255 / 0.42) 0 2px, transparent 3px),
-    linear-gradient(180deg, #e1f3ed 0%, #c9e8df 43%, #dcebe4 74%, #ddd1b9 100%);
-}
-
-.interactive-care-ecosystem-map::before {
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  background:
-    linear-gradient(180deg, rgb(255 255 255 / 0.32), transparent 18%),
-    repeating-linear-gradient(180deg, transparent 0 78px, rgb(255 255 255 / 0.08) 79px 80px);
-  content: '';
-  pointer-events: none;
-}
-
-.interactive-care-ecosystem-map::after {
-  position: absolute;
-  z-index: 2;
-  right: 84px;
-  bottom: 0;
-  left: 0;
-  height: 118px;
-  background:
-    radial-gradient(ellipse at 12% 100%, #9eaa78 0 14px, transparent 15px),
-    radial-gradient(ellipse at 25% 105%, #6f8e70 0 18px, transparent 19px),
-    radial-gradient(ellipse at 72% 108%, #8ca473 0 16px, transparent 17px),
-    linear-gradient(180deg, transparent, rgb(103 84 55 / 0.07));
-  content: '';
-  opacity: .72;
-  pointer-events: none;
-}
-
-.interactive-care-layer {
-  z-index: 3;
-  overflow: hidden;
-  border-bottom-color: rgb(21 55 47 / 0.07);
-  padding: 0 30px;
-  background: transparent !important;
-  box-shadow: inset 0 1px rgb(255 255 255 / 0.22);
-}
-
-.interactive-care-layer::before {
-  width: 8px;
-  height: 8px;
-  flex: 0 0 auto;
-  border: 2px solid rgb(8 122 97 / 0.25);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.72);
-  content: '';
-  opacity: 0;
-  transition: opacity 160ms ease, transform 160ms ease;
-}
-
-.interactive-care-layer strong { margin-right: auto; }
-
-.interactive-care-layer:hover::before,
-.interactive-care-layer:focus-visible::before,
-.interactive-care-layer.is-selected::before {
-  opacity: 1;
-  transform: scale(1.12);
-}
-
-.interactive-care-layer:hover,
-.interactive-care-layer:focus-visible {
-  background: rgb(255 255 255 / 0.18) !important;
-}
-
-.interactive-care-layer.is-selected {
-  background: linear-gradient(90deg, rgb(240 253 248 / 0.84), rgb(255 255 255 / 0.26)) !important;
-  box-shadow: inset 5px 0 #0b8b70, inset 0 1px rgb(255 255 255 / 0.48), 0 12px 30px rgb(21 55 47 / 0.08);
-}
-
-.interactive-care-layer.is-surface { background-image: linear-gradient(180deg, rgb(230 249 243 / 0.68), rgb(213 241 232 / 0.42)) !important; }
-.interactive-care-layer.is-water { background-image: linear-gradient(180deg, rgb(202 234 224 / 0.36), rgb(188 224 213 / 0.30)) !important; }
-.interactive-care-layer.is-life { background-image: linear-gradient(180deg, rgb(230 243 237 / 0.30), rgb(215 235 226 / 0.30)) !important; }
-.interactive-care-layer.is-plants { background-image: linear-gradient(180deg, rgb(214 235 218 / 0.34), rgb(199 224 204 / 0.42)) !important; }
-.interactive-care-layer.is-substrate { background-image: linear-gradient(180deg, rgb(222 210 186 / 0.62), rgb(211 194 160 / 0.78)) !important; }
-
-.interactive-care-filter-layer {
-  z-index: 7;
-  right: 24px;
-  width: 66px;
-  border: 1px solid rgb(255 255 255 / 0.16);
-  background: linear-gradient(180deg, #40675b, #244f44);
-  box-shadow: 0 18px 30px rgb(21 55 47 / 0.14), inset 0 1px rgb(255 255 255 / 0.12);
-}
-
-.interactive-care-layer-issue-menu {
-  position: absolute;
-  z-index: 12;
-  right: 108px;
-  left: 24px;
+.interactive-care-cover-grid {
   display: grid;
-  max-height: 210px;
-  gap: 10px;
-  overflow: auto;
-  border: 1px solid rgb(8 122 97 / 0.15);
-  border-radius: 18px;
-  background: rgb(250 255 252 / 0.92);
-  padding: 13px;
-  box-shadow: 0 18px 38px rgb(21 55 47 / 0.14);
-  backdrop-filter: blur(14px);
-  transform: translateY(-50%);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
 }
 
-.interactive-care-layer-issue-menu.is-water_surface { top: 15%; }
-.interactive-care-layer-issue-menu.is-water_body { top: 34%; }
-.interactive-care-layer-issue-menu.is-livestock { top: 56%; }
-.interactive-care-layer-issue-menu.is-plants_equipment { top: 70%; }
-.interactive-care-layer-issue-menu.is-substrate { top: 84%; }
-.interactive-care-layer-issue-menu.is-filter { top: 40%; }
-
-.interactive-care-layer-issue-head {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 10px;
-}
-
-.interactive-care-layer-issue-head span {
-  color: #0b8b70;
-  font-size: 9px;
-  font-weight: 900;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
-
-.interactive-care-layer-issue-head strong {
-  color: #15372f;
-  font-size: 12px;
-  font-weight: 900;
-}
-
-.interactive-care-layer-groups,
-.interactive-care-layer-problems {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-}
-
-.interactive-care-layer-groups button,
-.interactive-care-layer-problems button {
-  min-height: 32px;
-  border: 1px solid rgb(21 55 47 / 0.10);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.92);
-  padding: 6px 10px;
-  color: #31564c;
-  font-size: 10px;
-  font-weight: 820;
-  line-height: 1.25;
-  text-align: left;
-  transition: transform 140ms ease, border-color 140ms ease, background-color 140ms ease, color 140ms ease;
-}
-
-.interactive-care-layer-groups button:hover,
-.interactive-care-layer-groups button:focus-visible,
-.interactive-care-layer-groups button.is-selected,
-.interactive-care-layer-problems button:hover,
-.interactive-care-layer-problems button:focus-visible,
-.interactive-care-layer-problems button.is-selected {
-  transform: translateY(-1px);
-  border-color: rgb(8 122 97 / 0.34);
-  outline: none;
-  background: #e5f5ef;
-  color: #087a61;
-}
-
-.interactive-care-guide-panel {
-  min-height: 720px;
-  overflow: hidden;
-  background: linear-gradient(180deg, #ffffff 0%, #fbfdfc 100%);
-  box-shadow: 0 18px 50px rgb(21 55 47 / 0.06);
-}
-
-.interactive-care-problem-identify {
-  border-radius: 16px;
-  background: linear-gradient(135deg, #f4fbf8 0%, #eef7f3 100%);
-}
-
-.interactive-care-guide-wheel {
+.interactive-care-cover-card {
   position: relative;
-  height: 400px;
+  display: grid;
+  gap: 9px;
   overflow: hidden;
-  margin-top: 12px;
-  border: 1px solid rgb(21 55 47 / 0.08);
-  border-radius: 22px;
-  background:
-    radial-gradient(circle at 50% 50%, rgb(255 255 255 / 0.92), transparent 54%),
-    linear-gradient(180deg, #edf5f1 0%, #e6f0eb 100%);
-  perspective: 1100px;
-  touch-action: pan-x;
-}
-
-.interactive-care-wheel-viewport {
-  position: absolute;
-  inset: 0 44px 0 0;
-  transform-style: preserve-3d;
-}
-
-.interactive-care-wheel-card {
-  position: absolute;
-  top: 50%;
-  right: 7%;
-  left: 7%;
-  display: block;
-  height: 248px;
-  overflow: hidden;
-  border: 1px solid rgb(21 55 47 / 0.10);
-  border-radius: 20px;
+  border: 1px solid rgb(21 55 47 / .10);
+  border-radius: 18px;
   background: #fff;
-  padding: 0;
-  box-shadow: 0 18px 36px rgb(21 55 47 / 0.12);
-  cursor: pointer;
-  transform-origin: center center;
-  transition: transform 260ms cubic-bezier(.2,.8,.2,1), opacity 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-  will-change: transform, opacity;
+  padding: 0 0 12px;
+  color: #17372f;
+  text-align: left;
+  box-shadow: 0 8px 20px rgb(21 55 47 / .05);
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.interactive-care-wheel-card:hover,
-.interactive-care-wheel-card:focus-visible,
-.interactive-care-wheel-card.is-active {
-  border-color: rgb(8 122 97 / 0.34);
+.interactive-care-cover-card:hover,
+.interactive-care-cover-card:focus-visible {
+  transform: translateY(-4px);
   outline: none;
+  border-color: rgb(8 122 97 / .32);
+  box-shadow: 0 16px 34px rgb(21 55 47 / .12);
 }
 
-.interactive-care-wheel-card.is-active {
-  box-shadow: 0 26px 56px rgb(21 55 47 / 0.20), 0 0 0 3px rgb(8 122 97 / 0.08);
-}
-
-.interactive-care-wheel-card.is-hidden { pointer-events: none; }
-
-.interactive-care-wheel-image {
+.interactive-care-cover-image {
   width: 100%;
-  height: 100%;
-  background: #f7faf8;
-  object-fit: contain;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  background: #f1f5f3;
 }
 
-.interactive-care-wheel-label {
-  position: absolute;
-  right: 12px;
-  bottom: 12px;
-  max-width: calc(100% - 24px);
-  border-radius: 999px;
-  background: rgb(13 59 48 / 0.84);
-  padding: 6px 10px;
-  color: #fff;
-  font-size: 9px;
+.interactive-care-cover-card strong {
+  display: -webkit-box;
+  min-height: 38px;
+  overflow: hidden;
+  padding: 0 11px;
+  font-size: 11px;
   font-weight: 850;
+  line-height: 1.45;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.interactive-care-cover-urgency {
+  position: absolute;
+  top: 9px;
+  right: 9px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / .88);
+  padding: 4px 7px;
+  color: #557168;
+  font-size: 8px;
+  font-weight: 900;
+  box-shadow: 0 4px 12px rgb(21 55 47 / .10);
   backdrop-filter: blur(8px);
 }
 
-.interactive-care-wheel-controls {
-  position: absolute;
-  z-index: 30;
-  top: 50%;
-  right: 9px;
-  display: grid;
-  gap: 7px;
-  transform: translateY(-50%);
-}
+.interactive-care-cover-urgency.is-watch { color: #966317; }
+.interactive-care-cover-urgency.is-urgent { color: #b42318; }
 
-.interactive-care-wheel-controls button {
+.interactive-care-cover-empty {
   display: grid;
-  width: 34px;
-  height: 34px;
+  min-height: 320px;
   place-items: center;
-  border: 1px solid rgb(21 55 47 / 0.12);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.92);
-  color: #17372f;
-  box-shadow: 0 6px 16px rgb(21 55 47 / 0.08);
+  color: rgb(24 67 55 / .58);
+  font-size: 13px;
+  font-weight: 760;
 }
 
-.interactive-care-wheel-controls button:hover,
-.interactive-care-wheel-controls button:focus-visible {
-  border-color: rgb(8 122 97 / 0.34);
+.interactive-care-detail-view { padding: 22px; }
+
+.interactive-care-detail-toolbar {
+  position: sticky;
+  z-index: 5;
+  top: -22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: -22px -22px 18px;
+  border-bottom: 1px solid rgb(21 55 47 / .08);
+  background: rgb(251 253 252 / .94);
+  padding: 16px 22px;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+}
+
+.interactive-care-detail-toolbar > span {
+  color: #0b8b70;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.interactive-care-detail-back {
+  display: inline-flex;
+  min-height: 38px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgb(21 55 47 / .11);
+  border-radius: 12px;
+  background: #fff;
+  padding: 0 11px;
+  color: #17372f;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.interactive-care-detail-back:hover,
+.interactive-care-detail-back:focus-visible {
   outline: none;
+  border-color: rgb(8 122 97 / .32);
   color: #087a61;
 }
 
-.interactive-care-wheel-controls button:disabled { opacity: .32; }
+.interactive-care-detail-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 180px;
+  gap: 20px;
+  align-items: center;
+  border: 1px solid rgb(8 122 97 / .11);
+  border-radius: 20px;
+  background: linear-gradient(145deg, #f3faf6, #fbfdfc);
+  padding: 18px;
+}
 
-.interactive-care-guide-copy { padding-top: 12px; }
-.interactive-care-guide-copy .interactive-care-guide-why { color: rgb(24 67 55 / 0.54); }
-.interactive-care-guide-avoid { border-left: 3px solid #d9a959; padding-left: 10px; }
-.interactive-care-guide-actions { margin-top: 14px; }
+.interactive-care-detail-hero > div > span {
+  color: #0b8b70;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.interactive-care-detail-hero h3 {
+  margin: 5px 0 8px;
+  color: #15372f;
+  font-size: 23px;
+  font-weight: 900;
+  line-height: 1.28;
+  letter-spacing: -.025em;
+}
+
+.interactive-care-detail-hero p {
+  margin: 0;
+  color: rgb(24 67 55 / .67);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.interactive-care-detail-cover {
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  object-fit: cover;
+  box-shadow: 0 10px 24px rgb(21 55 47 / .10);
+}
+
+.interactive-care-detail-steps {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.interactive-care-detail-step {
+  display: grid;
+  grid-template-columns: minmax(180px, .78fr) minmax(0, 1.22fr);
+  gap: 18px;
+  align-items: stretch;
+  border: 1px solid rgb(21 55 47 / .09);
+  border-radius: 18px;
+  background: #fff;
+  padding: 14px;
+}
+
+.interactive-care-detail-step-image-wrap {
+  overflow: hidden;
+  border-radius: 14px;
+  background: #eef4f1;
+}
+
+.interactive-care-detail-step-image {
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
+  object-fit: cover;
+}
+
+.interactive-care-detail-step-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4px 6px;
+}
+
+.interactive-care-detail-step-copy > span {
+  color: #0b8b70;
+  font-size: 10px;
+  font-weight: 900;
+}
+
+.interactive-care-detail-step-copy h4 {
+  margin: 5px 0 12px;
+  color: #15372f;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.interactive-care-detail-step-copy dl { display: grid; gap: 10px; margin: 0; }
+.interactive-care-detail-step-copy dl > div { display: grid; gap: 3px; }
+.interactive-care-detail-step-copy dt { color: #547168; font-size: 9px; font-weight: 900; }
+.interactive-care-detail-step-copy dd { margin: 0; color: rgb(24 67 55 / .72); font-size: 12px; line-height: 1.65; }
+
+.interactive-care-detail-avoid {
+  border: 1px solid #f0d8b0;
+  border-radius: 16px;
+  background: #fff9ed;
+  padding: 14px 16px;
+}
+
+.interactive-care-detail-avoid strong { color: #926019; font-size: 11px; font-weight: 900; }
+.interactive-care-detail-avoid p { margin: 5px 0 0; color: #77552a; font-size: 12px; line-height: 1.6; }
+
+.interactive-care-detail-legacy {
+  display: grid;
+  gap: 14px;
+  margin-top: 16px;
+  border: 1px solid rgb(21 55 47 / .10);
+  border-radius: 16px;
+  background: #fff;
+  padding: 16px;
+}
+
+.interactive-care-detail-legacy p { margin: 0; color: rgb(24 67 55 / .67); font-size: 12px; line-height: 1.65; }
 
 @media (max-width: 1199px) {
-  .interactive-care-workspace { grid-template-columns: minmax(0, 1fr); }
-  .interactive-care-ecosystem-map { min-height: 590px; }
-  .interactive-care-guide-panel { min-height: 620px; }
-  .interactive-care-guide-wheel { height: 380px; }
+  .interactive-care-workspace--covers { grid-template-columns: minmax(0, 1fr); }
+  .interactive-care-aquarium-photo { min-height: 560px; }
+  .interactive-care-guide-panel--library { max-height: none; }
+  .interactive-care-cover-library,
+  .interactive-care-detail-view { min-height: 0; max-height: none; }
 }
 
 @media (max-width: 767px) {
-  .interactive-care-toolbar { flex-wrap: wrap; }
-  .interactive-care-toolbar-actions { width: 100%; }
-  .interactive-care-search { width: auto; min-width: 0; flex: 1; }
-  .interactive-care-browse-all { flex: 0 0 auto; }
+  .interactive-care-aquarium-photo { min-height: 480px; border-radius: 20px; }
+  .interactive-care-layer-hotspot { min-width: 96px; border-radius: 13px; padding: 8px 9px; }
+  .interactive-care-layer-hotspot strong { font-size: 11px; }
+  .interactive-care-layer-hotspot span { display: none; }
+  .interactive-care-layer-hotspot.is-surface { top: 13%; left: 4%; }
+  .interactive-care-layer-hotspot.is-water { top: 31%; left: 4%; }
+  .interactive-care-layer-hotspot.is-life { top: 47%; right: 4%; }
+  .interactive-care-layer-hotspot.is-plants { top: 65%; left: 4%; }
+  .interactive-care-layer-hotspot.is-substrate { bottom: 5%; left: 4%; }
+  .interactive-care-layer-hotspot.is-filter { top: 25%; right: 4%; }
 
-  .interactive-care-ecosystem-map { min-height: 520px; }
-  .interactive-care-layer { padding-right: 76px; padding-left: 16px; }
-  .interactive-care-layer.is-selected { padding-left: 20px; }
-  .interactive-care-filter-layer { right: 10px; width: 48px; }
-
-  .interactive-care-layer-issue-menu {
-    right: 66px;
-    left: 10px;
-    max-height: 178px;
-    padding: 10px;
-    border-radius: 15px;
+  .interactive-care-cover-library { padding: 14px; }
+  .interactive-care-cover-library-head {
+    top: -14px;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+    margin: -14px -14px 14px;
+    padding: 16px 14px 14px;
   }
-  .interactive-care-layer-issue-menu.is-water_surface { top: 18%; }
-  .interactive-care-layer-issue-menu.is-water_body { top: 35%; }
-  .interactive-care-layer-issue-menu.is-livestock { top: 56%; }
-  .interactive-care-layer-issue-menu.is-plants_equipment { top: 70%; }
-  .interactive-care-layer-issue-menu.is-substrate { top: 82%; }
-  .interactive-care-layer-issue-menu.is-filter { top: 42%; }
+  .interactive-care-cover-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .interactive-care-cover-card { border-radius: 15px; }
+  .interactive-care-cover-card strong { font-size: 10px; }
 
-  .interactive-care-layer-issue-head strong { font-size: 11px; }
-  .interactive-care-layer-groups button,
-  .interactive-care-layer-problems button { min-height: 29px; padding: 5px 8px; font-size: 9px; }
-
-  .interactive-care-guide-panel { min-height: 570px; }
-  .interactive-care-guide-wheel { height: 340px; border-radius: 18px; }
-  .interactive-care-wheel-viewport { inset-right: 38px; }
-  .interactive-care-wheel-card { right: 5%; left: 5%; height: 218px; border-radius: 17px; }
-  .interactive-care-wheel-controls { right: 5px; }
-  .interactive-care-wheel-controls button { width: 30px; height: 30px; }
+  .interactive-care-detail-view { padding: 14px; }
+  .interactive-care-detail-toolbar { top: -14px; margin: -14px -14px 14px; padding: 12px 14px; }
+  .interactive-care-detail-hero { grid-template-columns: minmax(0, 1fr); gap: 14px; padding: 14px; }
+  .interactive-care-detail-cover { max-width: 220px; justify-self: center; }
+  .interactive-care-detail-hero h3 { font-size: 20px; }
+  .interactive-care-detail-step { grid-template-columns: minmax(0, 1fr); gap: 12px; padding: 12px; }
+  .interactive-care-detail-step-image { min-height: 0; aspect-ratio: 1 / 1; }
+  .interactive-care-detail-step-copy { padding: 0 2px 4px; }
 }
 
-/* Wheel hit-testing: keep the active card visually on top without blocking the exposed cards behind it. */
-.interactive-care-wheel-card.is-active { pointer-events: none; }
-.interactive-care-wheel-image,
-.interactive-care-wheel-label { pointer-events: none; }
+@media (max-width: 767px) {
+  .interactive-care-detail-view { padding-bottom: 96px; }
+  .interactive-care-cover-library { padding-bottom: 96px; }
+}
