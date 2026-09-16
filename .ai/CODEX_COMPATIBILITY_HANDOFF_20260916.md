@@ -205,5 +205,12 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 11 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 12 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0263`, `sp_0264`, `sp_0265`, `sp_0266`, `sp_0270`, `sp_0271`, `sp_0272`, `sp_0273`, `sp_0282`, and `sp_0288`.
+- FishBase/FAO professional sources were searched for the named base taxa. Albino, color, long-fin, gold, and platinum commercial variants remain fail-closed; no base-species facts were inherited into variants.
+- Matrix Batch 11 → Batch 12: feeding `needs_research 123→113`, `reviewed_unknown 102→112`; environment `needs_research 351→341`, `reviewed_unknown 98→108`; space `needs_research 301→291`, `reviewed_unknown 98→108`; social `needs_research 242→232`, `reviewed_unknown 101→111`.
+- Batch 12 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 Continue AquaGuide Knowledge Completion Program from the local Batch 6 checkpoint in `/Users/chuchu/aquaguide-compat-core` on branch `agent/compatibility-core-20260916`. Use the latest research backlog for the next 10–15 uncompleted catalog objects, use source-first evidence, preserve strict variant boundaries, regenerate the matrix/backlog, run the full required gates, create one local commit per passing batch excluding the protected CSV, and update this handoff. Never push, merge, deploy, migrate production, or weaken evidence standards.
