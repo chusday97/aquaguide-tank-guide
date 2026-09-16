@@ -156,6 +156,12 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 
 ## Session stop record — 2026-09-16
 
+## Phase 2 Batch 05 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0245`, `sp_0246`, `sp_0255`, `sp_0287`, `sp_0339`, `sp_0358`, `sp_0360`, `sp_0362`, `sp_0375`, and `sp_0002`.
+- Sources reviewed were FishBase base-species pages and an ITIS taxonomic record; no variant-specific authority was found, so no fields inherit from base species.
+- Batch 04 → Batch 05: feeding `needs_research 186→176`, environment `needs_research 421→411`, space `needs_research 380→371`, social `needs_research 311→302`, care `template_only 59→49`; each field gained 10 `reviewed_unknown` records, with one inherited-space count changing due the protected CSV state.
+- Batch contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+
 - Exact HEAD remains `cdccdc038ebaced006d323076b3666ba3ffe01cc`.
 - Batch 02 changes are uncommitted because Git could not create the worktree index lock at `/Users/chuchu/aquaguide-preview-current/.git/worktrees/aquaguide-compat-core/index.lock` (`Operation not permitted`). No commit was created, nothing was pushed, and no user-owned work was discarded.
 - Stop reason: required local checkpoint commit is unavailable under the session filesystem boundary; the exact `tsx` and Vite build gates are also blocked by the pre-existing cross-worktree dependency/cache boundary. Equivalent TypeScript test invocations passed as recorded above.
