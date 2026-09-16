@@ -256,6 +256,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 25 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 26 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0160`, `sp_0161`, `sp_0162`, `sp_0168`, `sp_0169`, `sp_0180`, `sp_0188`, `sp_0189`, `sp_0190`, and `sp_0196`.
+- FishBase professional records were reviewed for Ancistrus, Poecilia, Carassius, Lysmata, Thor, and Sahyadria/Dawkinsia objects. Commercial variants and marine invertebrates remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 25 → Batch 26: feeding `reviewed_unknown 242→252`, `needs_research 74→64`; environment `reviewed_unknown 238→248`, `needs_research 211→201`; space `reviewed_unknown 238→248`, `needs_research 174→164`; social `reviewed_unknown 241→251`, `needs_research 105→95`; care `reviewed_unknown 242→252`, `reviewed_supported 202→192`.
+- Batch 26 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
