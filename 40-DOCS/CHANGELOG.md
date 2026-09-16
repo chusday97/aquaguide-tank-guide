@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added: Knowledge Completion Phase 2 Batch 41 direct reviewed-unknown records for ten backlog fish and ornamental variants, with FishBase source registrations, matrix/backlog integration, a regression contract, and preservation of existing Species Detail/Compatibility runtime boundaries; no launch pair or Compatibility authority changed.
 - Added: Knowledge Completion Phase 2 Batch 40 direct reviewed-unknown records for ten regenerated-backlog duplicate, fish, shrimp, and snail objects, with professional source registrations, matrix/backlog integration, and a regression contract; preserved existing Species Detail/Compatibility runtime boundaries and changed no Compatibility authority or launch pair.
 - Added: Knowledge Completion Phase 2 Batch 39 direct reviewed-unknown records for ten regenerated-backlog shrimp variant objects, with professional source registrations, matrix/backlog integration, and a regression contract; preserved existing Species Detail/Compatibility runtime boundaries and changed no Compatibility authority or launch pair.
 - Added: Knowledge Completion Phase 2 Batch 38 direct reviewed-unknown records for ten regenerated-backlog fish, shrimp, and ornamental-variant objects, with professional source registrations, matrix/backlog integration, and a regression contract; preserved existing Species Detail/Compatibility runtime boundaries and changed no Compatibility authority or launch pair.

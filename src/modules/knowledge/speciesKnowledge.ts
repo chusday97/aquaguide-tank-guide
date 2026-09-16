@@ -40,6 +40,7 @@ import { phase2Batch37Knowledge } from './phase2Batch37Authority';
 import { phase2Batch38Knowledge } from './phase2Batch38Authority';
 import { phase2Batch39Knowledge } from './phase2Batch39Authority';
 import { phase2Batch40Knowledge } from './phase2Batch40Authority';
+import { phase2Batch41Knowledge } from './phase2Batch41Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -82,6 +83,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0446', 'sp_0013', 'sp_0028', 'sp_0030', 'sp_0031', 'sp_0164', 'sp_0165', 'sp_0166', 'sp_0223', 'sp_0238',
   'sp_0239', 'sp_0274', 'sp_0275', 'sp_0276', 'sp_0277', 'sp_0278', 'sp_0279', 'sp_0342', 'sp_0396', 'sp_0397',
   'sp_0398', 'sp_0455', 'sp_0027', 'sp_0010', 'sp_0011', 'sp_0014', 'sp_0431', 'sp_0432', 'sp_0434', 'sp_0435',
+  'sp_0437', 'sp_0438', 'sp_0447', 'sp_0451', 'sp_0444', 'sp_0468', 'sp_0053', 'sp_0114', 'sp_0259', 'sp_0260',
 ]);
 
 
@@ -829,6 +831,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch38Knowledge,
   ...phase2Batch39Knowledge,
   ...phase2Batch40Knowledge,
+  ...phase2Batch41Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1737,6 +1740,15 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
   if (['sp_0027', 'sp_0398'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  if (['sp_0437', 'sp_0438', 'sp_0447', 'sp_0451', 'sp_0444', 'sp_0468', 'sp_0053', 'sp_0114', 'sp_0259', 'sp_0260'].includes(fish.id)) {
+    if (['sp_0259', 'sp_0260'].includes(fish.id)) {
+      const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+      return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+    }
+    if (reviewedKnowledgeBySpeciesId[fish.id]) return reviewedKnowledgeBySpeciesId[fish.id];
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }

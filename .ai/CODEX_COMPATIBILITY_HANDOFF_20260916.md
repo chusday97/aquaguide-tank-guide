@@ -243,6 +243,15 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 41 checkpoint preparation — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0437`, `sp_0438`, `sp_0447`, `sp_0451`, `sp_0444`, `sp_0468`, `sp_0053`, `sp_0114`, `sp_0259`, and `sp_0260`.
+- FishBase professional species records were reviewed for the named taxa. Existing ornamental variants were kept independent from their base species; no unsupported feeding, care, environment, space, or social claim was promoted.
+- Matrix now reports feeding `reviewed_unknown 387→397`, environment `reviewed_unknown 368→370`, space `reviewed_unknown 368→370`, social `reviewed_unknown 371→373`, and care `reviewed_unknown 387→397`; existing runtime profiles were preserved with narrow Species Detail branches.
+- Batch 41 contract, matrix contract, Species Detail assertions, launch matrix, and protected CSV SHA checks pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then the next unprocessed backlog objects; the Batch 41 objects are now excluded from the feeding/care gap queue.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 
 ## Phase 2 Batch 40 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0398`, `sp_0455`, `sp_0027`, `sp_0010`, `sp_0011`, `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, and `sp_0435`.
