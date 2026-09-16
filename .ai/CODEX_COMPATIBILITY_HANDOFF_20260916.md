@@ -167,4 +167,9 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Stop reason: required local checkpoint commit is unavailable under the session filesystem boundary; the exact `tsx` and Vite build gates are also blocked by the pre-existing cross-worktree dependency/cache boundary. Equivalent TypeScript test invocations passed as recorded above.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 06 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0005`, `sp_0051`, `sp_0018`, `sp_0019`, `sp_0023`, `sp_0024`, `sp_0026`, `sp_0033`, `sp_0034`, and `sp_0042`. Existing reviewed authority for `sp_0049` was detected and excluded to prevent regression.
+- Batch contract, matrix contract, and lint pass. No Compatibility or launch change; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 Continue AquaGuide Knowledge Completion Program from the local Batch 2 checkpoint in `/Users/chuchu/aquaguide-compat-core` on branch `agent/compatibility-core-20260916`. Do not redo Batch 2 and do not touch or stage `docs/species_knowledge_audit.csv` (verify its SHA first). Start Batch 3 with the next exact candidates recorded above, use source-first evidence, preserve strict variant boundaries, regenerate the matrix/backlog, run the full required gates, create one local commit per passing batch excluding the protected CSV, and update this handoff. Never push, merge, deploy, migrate production, or weaken evidence standards.
