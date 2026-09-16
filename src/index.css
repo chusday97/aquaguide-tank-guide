@@ -2751,91 +2751,195 @@ select {
   align-items: start;
 }
 
-.interactive-care-layer-column--photo {
+.interactive-care-layer-column--refined {
   overflow: hidden;
   align-self: start;
   background: #f6faf8;
 }
 
-.interactive-care-aquarium-photo {
+.interactive-care-ecosystem-map--refined {
   position: relative;
   min-height: 650px;
   overflow: hidden;
   border-radius: 24px;
-  background: #dcebe6;
+  background: #e7f1ed;
+  box-shadow: inset 0 0 0 1px rgb(21 55 47 / .06);
 }
 
-.interactive-care-aquarium-photo-image {
+.interactive-care-ecosystem-map--refined::before {
   position: absolute;
+  z-index: 0;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-
-.interactive-care-aquarium-photo-shade {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
   background:
-    linear-gradient(180deg, rgb(255 255 255 / .05), rgb(6 44 36 / .10)),
-    linear-gradient(90deg, rgb(13 63 52 / .10), transparent 32%, transparent 72%, rgb(13 63 52 / .08));
+    radial-gradient(circle at 18% 24%, rgb(255 255 255 / .52) 0 2px, transparent 3px),
+    radial-gradient(circle at 72% 42%, rgb(255 255 255 / .32) 0 2px, transparent 3px),
+    linear-gradient(180deg, rgb(255 255 255 / .32), transparent 24%, rgb(18 90 72 / .04) 72%, rgb(85 69 42 / .09));
+  background-size: 58px 58px, 76px 76px, auto;
+  content: '';
+  pointer-events: none;
 }
 
-.interactive-care-layer-hotspot {
+.interactive-care-ecosystem-depth {
   position: absolute;
-  z-index: 3;
+  z-index: 1;
+  top: 9%;
+  bottom: 7%;
+  left: 20px;
+  width: 1px;
+  background: linear-gradient(180deg, rgb(255 255 255 / .10), rgb(15 89 70 / .25), rgb(95 74 43 / .26));
+  pointer-events: none;
+}
+
+.interactive-care-layer--refined {
+  z-index: 2;
+  overflow: hidden;
+  border-bottom-color: rgb(21 55 47 / .07);
+  padding: 0 30px 0 42px;
+  cursor: pointer;
+}
+
+.interactive-care-layer--refined::before {
+  position: absolute;
+  top: 50%;
+  left: 17px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid rgb(16 101 80 / .26);
+  border-radius: 999px;
+  background: rgb(255 255 255 / .72);
+  content: '';
+  transform: translateY(-50%);
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+.interactive-care-layer--refined::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgb(255 255 255 / .20) 58%, transparent);
+  content: '';
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.interactive-care-layer--refined .interactive-care-layer-copy {
   display: grid;
-  gap: 2px;
-  min-width: 118px;
-  border: 1px solid rgb(255 255 255 / .72);
-  border-radius: 16px;
-  background: rgb(250 253 251 / .82);
-  padding: 10px 12px;
-  color: #17372f;
-  text-align: left;
-  box-shadow: 0 8px 24px rgb(7 42 34 / .13);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: transform 160ms ease, background-color 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  gap: 4px;
 }
 
-.interactive-care-layer-hotspot strong {
-  font-size: 13px;
+.interactive-care-layer--refined .interactive-care-layer-copy strong {
+  font-size: 18px;
   font-weight: 900;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
-.interactive-care-layer-hotspot span {
-  color: rgb(23 55 47 / .62);
-  font-size: 9px;
-  font-weight: 760;
+.interactive-care-layer--refined .interactive-care-layer-copy small {
+  color: rgb(24 67 55 / .56);
+  font-size: 10px;
+  font-weight: 720;
   line-height: 1.35;
 }
 
-.interactive-care-layer-hotspot:hover,
-.interactive-care-layer-hotspot:focus-visible,
-.interactive-care-layer-hotspot.is-selected {
-  transform: translateY(-3px) scale(1.02);
+.interactive-care-layer-index {
+  color: rgb(24 67 55 / .28) !important;
+  font-size: 10px !important;
+  font-variant-numeric: tabular-nums;
+  font-weight: 850 !important;
+  letter-spacing: .08em;
+}
+
+.interactive-care-layer--refined:hover,
+.interactive-care-layer--refined:focus-visible {
+  z-index: 4;
+  padding-left: 46px;
   outline: none;
-  border-color: rgb(14 132 103 / .36);
-  background: rgb(246 255 251 / .95);
-  box-shadow: 0 12px 30px rgb(7 42 34 / .18), 0 0 0 3px rgb(14 132 103 / .09);
+  box-shadow: inset 0 0 0 1px rgb(8 122 97 / .12), 0 10px 24px rgb(21 55 47 / .06);
 }
 
-.interactive-care-layer-hotspot.is-selected {
-  background: #0b7d62;
-  color: #fff;
+.interactive-care-layer--refined:hover::after,
+.interactive-care-layer--refined:focus-visible::after,
+.interactive-care-layer--refined.is-selected::after { opacity: 1; }
+
+.interactive-care-layer--refined.is-selected {
+  z-index: 5;
+  padding-left: 48px;
+  color: #075f4c;
+  box-shadow: inset 0 0 0 1px rgb(8 122 97 / .22), inset 5px 0 #0b8b70, 0 12px 28px rgb(21 55 47 / .08);
 }
 
-.interactive-care-layer-hotspot.is-selected span { color: rgb(255 255 255 / .78); }
-.interactive-care-layer-hotspot.is-surface { top: 14%; left: 6%; }
-.interactive-care-layer-hotspot.is-water { top: 34%; left: 6%; }
-.interactive-care-layer-hotspot.is-life { top: 48%; right: 5%; }
-.interactive-care-layer-hotspot.is-plants { top: 65%; left: 7%; }
-.interactive-care-layer-hotspot.is-substrate { bottom: 6%; left: 7%; }
-.interactive-care-layer-hotspot.is-filter { top: 24%; right: 5%; }
+.interactive-care-layer--refined.is-selected::before {
+  border-color: #0b8b70;
+  background: #0b8b70;
+  transform: translateY(-50%) scale(1.18);
+}
+
+.interactive-care-layer--refined.is-surface {
+  top: 0;
+  height: 16%;
+  background: linear-gradient(180deg, #edf9f4 0%, #dff4eb 100%);
+}
+.interactive-care-layer--refined.is-water {
+  top: 16%;
+  height: 30%;
+  background: linear-gradient(180deg, #d9efe8 0%, #c8e6dc 100%);
+}
+.interactive-care-layer--refined.is-life {
+  top: 46%;
+  height: 18%;
+  background: linear-gradient(180deg, #dfece7 0%, #d6e7e0 100%);
+}
+.interactive-care-layer--refined.is-plants {
+  top: 64%;
+  height: 13%;
+  background: linear-gradient(180deg, #d8e9dc 0%, #cfdfd2 100%);
+}
+.interactive-care-layer--refined.is-substrate {
+  top: 77%;
+  height: 23%;
+  background:
+    radial-gradient(ellipse at 18% 72%, rgb(100 79 48 / .10) 0 5px, transparent 6px),
+    radial-gradient(ellipse at 54% 46%, rgb(100 79 48 / .08) 0 4px, transparent 5px),
+    linear-gradient(180deg, #ded4bd 0%, #cec0a3 100%);
+  background-size: 76px 50px, 94px 62px, auto;
+}
+
+.interactive-care-filter-layer--refined {
+  z-index: 8;
+  top: 20%;
+  right: 22px;
+  width: 68px;
+  height: 38%;
+  min-height: 190px;
+  border: 1px solid rgb(255 255 255 / .24);
+  border-radius: 22px;
+  background: linear-gradient(180deg, #41695d, #2f594d);
+  box-shadow: 0 14px 32px rgb(21 55 47 / .16), inset 0 0 0 1px rgb(255 255 255 / .06);
+  writing-mode: horizontal-tb;
+  flex-direction: column;
+  gap: 6px;
+  padding: 14px 8px;
+  text-align: center;
+}
+
+.interactive-care-filter-layer--refined strong {
+  writing-mode: vertical-rl;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .08em;
+}
+
+.interactive-care-filter-layer--refined small {
+  display: none;
+}
+
+.interactive-care-filter-layer--refined:hover,
+.interactive-care-filter-layer--refined:focus-visible,
+.interactive-care-filter-layer--refined.is-selected {
+  transform: translateY(-3px);
+  outline: none;
+  background: linear-gradient(180deg, #1f6a56, #145642);
+  box-shadow: 0 18px 38px rgb(21 55 47 / .22), 0 0 0 3px rgb(8 122 97 / .10);
+}
 
 .interactive-care-guide-panel--library {
   min-height: 650px;
@@ -2956,6 +3060,9 @@ select {
   object-fit: cover;
   background: #f1f5f3;
 }
+
+.interactive-care-cover-card { cursor: pointer; }
+.interactive-care-cover-card > * { pointer-events: none; }
 
 .interactive-care-cover-card strong {
   display: -webkit-box;
@@ -3146,37 +3253,16 @@ select {
 .interactive-care-detail-avoid strong { color: #926019; font-size: 11px; font-weight: 900; }
 .interactive-care-detail-avoid p { margin: 5px 0 0; color: #77552a; font-size: 12px; line-height: 1.6; }
 
-.interactive-care-detail-legacy {
-  display: grid;
-  gap: 14px;
-  margin-top: 16px;
-  border: 1px solid rgb(21 55 47 / .10);
-  border-radius: 16px;
-  background: #fff;
-  padding: 16px;
-}
-
-.interactive-care-detail-legacy p { margin: 0; color: rgb(24 67 55 / .67); font-size: 12px; line-height: 1.65; }
-
 @media (max-width: 1199px) {
   .interactive-care-workspace--covers { grid-template-columns: minmax(0, 1fr); }
-  .interactive-care-aquarium-photo { min-height: 560px; }
+  .interactive-care-ecosystem-map--refined { min-height: 560px; }
   .interactive-care-guide-panel--library { max-height: none; }
   .interactive-care-cover-library,
   .interactive-care-detail-view { min-height: 0; max-height: none; }
 }
 
 @media (max-width: 767px) {
-  .interactive-care-aquarium-photo { min-height: 480px; border-radius: 20px; }
-  .interactive-care-layer-hotspot { min-width: 96px; border-radius: 13px; padding: 8px 9px; }
-  .interactive-care-layer-hotspot strong { font-size: 11px; }
-  .interactive-care-layer-hotspot span { display: none; }
-  .interactive-care-layer-hotspot.is-surface { top: 13%; left: 4%; }
-  .interactive-care-layer-hotspot.is-water { top: 31%; left: 4%; }
-  .interactive-care-layer-hotspot.is-life { top: 47%; right: 4%; }
-  .interactive-care-layer-hotspot.is-plants { top: 65%; left: 4%; }
-  .interactive-care-layer-hotspot.is-substrate { bottom: 5%; left: 4%; }
-  .interactive-care-layer-hotspot.is-filter { top: 25%; right: 4%; }
+  .interactive-care-ecosystem-map--refined { min-height: 480px; border-radius: 20px; }
 
   .interactive-care-cover-library { padding: 14px; }
   .interactive-care-cover-library-head {
@@ -3203,4 +3289,29 @@ select {
 @media (max-width: 767px) {
   .interactive-care-detail-view { padding-bottom: 96px; }
   .interactive-care-cover-library { padding-bottom: 96px; }
+}
+
+
+@media (max-width: 767px) {
+  .interactive-care-layer--refined {
+    min-height: 54px;
+    padding: 0 62px 0 34px;
+  }
+  .interactive-care-layer--refined .interactive-care-layer-copy strong { font-size: 14px; }
+  .interactive-care-layer--refined .interactive-care-layer-copy small { display: none; }
+  .interactive-care-layer-index { font-size: 9px !important; }
+  .interactive-care-layer--refined::before { left: 13px; width: 7px; height: 7px; }
+  .interactive-care-layer--refined:hover,
+  .interactive-care-layer--refined:focus-visible,
+  .interactive-care-layer--refined.is-selected { padding-left: 38px; }
+  .interactive-care-filter-layer--refined {
+    top: 20%;
+    right: 11px;
+    width: 50px;
+    min-height: 150px;
+    border-radius: 17px;
+  }
+  .interactive-care-filter-layer--refined strong { font-size: 10px; }
+  .interactive-care-cover-card { cursor: pointer; }
+  .interactive-care-cover-card > * { pointer-events: none; }
 }

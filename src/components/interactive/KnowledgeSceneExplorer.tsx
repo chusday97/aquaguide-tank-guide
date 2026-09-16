@@ -1,9 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ArrowLeft, BookOpen, List, Search, Waves } from 'lucide-react';
-import type { CareTopic } from '../../data/careTopicsData';
-import { runtimeCareTopicsData } from '../../data/runtimeContentCatalog';
 import { getLatestCareGuide, type LatestCareGuide } from '../../data/latestCareGuideCatalog';
-import { getCareVisualSources } from '../../lib/careVisual';
 import { ResilientImage } from '../common/ResilientImage';
 import { getKnowledgeObservations, type KnowledgeObjectId, type KnowledgeObservation } from './knowledgeJourney';
 
@@ -30,7 +27,6 @@ type ProblemCover = {
   summary: string;
   imageUrl: string;
   latestGuide?: LatestCareGuide;
-  legacyTopic?: CareTopic;
 };
 
 const careLayers: CareLayer[] = [
@@ -41,12 +37,6 @@ const careLayers: CareLayer[] = [
   { id: 'substrate', zh: '底床', en: 'Substrate', hintZh: '残饵 · 清洁 · 有机物', hintEn: 'Waste · cleaning · organics', className: 'is-substrate', topicIds: ['qa_gen_015', 'qa_gen_014', 'guide_water_deteriorate'], searchQuery: '底床 残饵 清洁' },
   { id: 'filter', zh: '过滤系统', en: 'Filtration', hintZh: '滤材 · 流量 · 增氧', hintEn: 'Media · flow · aeration', className: 'is-filter', topicIds: ['qa_gen_016', 'qa_gen_026', 'qa_gen_027'], searchQuery: '过滤器 滤材 增氧' },
 ];
-
-const getProblemTopics = (layer: CareLayer, problem: KnowledgeObservation): CareTopic[] => {
-  const byId = new Map(runtimeCareTopicsData.map(topic => [topic.id, topic]));
-  const ids = [problem.topicId, ...layer.topicIds].filter((id): id is string => Boolean(id));
-  return Array.from(new Set(ids)).map(id => byId.get(id)).filter((topic): topic is CareTopic => Boolean(topic));
-};
 
 const urgencyLabel = (problem: KnowledgeObservation, isEn: boolean) => {
   if (problem.urgency === 'urgent') return isEn ? 'Priority' : '优先处理';
@@ -73,24 +63,13 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     if (!selectedLayer) return [];
     return allProblems.map<ProblemCover | null>(problem => {
       const latestGuide = getLatestCareGuide(problem.latestCareGuideId);
-      if (latestGuide) {
-        return {
-          problem,
-          latestGuide,
-          title: isEn ? latestGuide.titleEn : latestGuide.title,
-          summary: isEn ? latestGuide.conditionEn : latestGuide.condition,
-          imageUrl: latestGuide.coverUrl || latestGuide.imageUrl,
-        };
-      }
-      const legacyTopic = getProblemTopics(selectedLayer, problem)[0];
-      if (!legacyTopic) return null;
-      const visual = getCareVisualSources(legacyTopic.imageUrl);
+      if (!latestGuide) return null;
       return {
         problem,
-        legacyTopic,
-        title: legacyTopic.title,
-        summary: legacyTopic.summary,
-        imageUrl: visual.detail || legacyTopic.imageUrl,
+        latestGuide,
+        title: isEn ? latestGuide.titleEn : latestGuide.title,
+        summary: isEn ? latestGuide.conditionEn : latestGuide.condition,
+        imageUrl: latestGuide.coverUrl || latestGuide.imageUrl,
       };
     }).filter((item): item is ProblemCover => item !== null);
   }, [selectedLayer, allProblems, isEn]);
@@ -132,7 +111,6 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     how: 'What to do',
     why: 'Why this matters',
     avoid: 'Avoid',
-    openLegacy: 'Open full guide',
   } : {
     eyebrow: '互动养护指南',
     title: '从鱼缸位置开始，再直接选问题封面。',
@@ -150,7 +128,6 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     how: '怎么做',
     why: '为什么',
     avoid: '避免这样做',
-    openLegacy: '打开完整指南',
   };
 
   const selectLayer = (layer: CareLayer) => {
@@ -171,28 +148,38 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
       </header>
 
       <div className="interactive-care-workspace interactive-care-workspace--covers">
-        <div className="interactive-care-layer-column interactive-care-layer-column--photo">
-          <div className="interactive-care-aquarium-photo" aria-label={isEn ? 'Aquarium ecosystem navigation' : '鱼缸生态层导航'}>
-            <img
-              src="/responsive/care/scheme_tetra_planted-960.webp"
-              alt={isEn ? 'Planted aquarium used as an ecosystem layer navigator' : '用于选择生态层的水草鱼缸'}
-              className="interactive-care-aquarium-photo-image"
-              loading="eager"
-              decoding="async"
-            />
-            <div className="interactive-care-aquarium-photo-shade" aria-hidden="true" />
-            {careLayers.map(layer => (
+        <div className="interactive-care-layer-column interactive-care-layer-column--refined">
+          <div className="interactive-care-ecosystem-map interactive-care-ecosystem-map--refined" aria-label={isEn ? 'Aquarium ecosystem layers' : '鱼缸生态层级'}>
+            <div className="interactive-care-ecosystem-depth" aria-hidden="true" />
+            {careLayers.filter(layer => layer.id !== 'filter').map(layer => (
               <button
                 key={layer.id}
                 type="button"
                 aria-pressed={selectedLayerId === layer.id}
                 onClick={() => selectLayer(layer)}
-                className={`interactive-care-layer-hotspot ${layer.className} ${selectedLayerId === layer.id ? 'is-selected' : ''}`}
+                className={`interactive-care-layer interactive-care-layer--refined ${layer.className} ${selectedLayerId === layer.id ? 'is-selected' : ''}`}
               >
-                <strong>{isEn ? layer.en : layer.zh}</strong>
-                <span>{isEn ? layer.hintEn : layer.hintZh}</span>
+                <span className="interactive-care-layer-copy">
+                  <strong>{isEn ? layer.en : layer.zh}</strong>
+                  <small>{isEn ? layer.hintEn : layer.hintZh}</small>
+                </span>
+                <span className="interactive-care-layer-index" aria-hidden="true">{String(careLayers.findIndex(item => item.id === layer.id) + 1).padStart(2, '0')}</span>
               </button>
             ))}
+            {(() => {
+              const filterLayer = careLayers.find(layer => layer.id === 'filter')!;
+              return (
+                <button
+                  type="button"
+                  aria-pressed={selectedLayerId === filterLayer.id}
+                  onClick={() => selectLayer(filterLayer)}
+                  className={`interactive-care-filter-layer interactive-care-filter-layer--refined ${selectedLayerId === filterLayer.id ? 'is-selected' : ''}`}
+                >
+                  <strong>{isEn ? filterLayer.en : filterLayer.zh}</strong>
+                  <small>{isEn ? filterLayer.hintEn : filterLayer.hintZh}</small>
+                </button>
+              );
+            })()}
           </div>
         </div>
 
@@ -216,6 +203,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                 <form className="interactive-care-cover-search" role="search" onSubmit={(event) => event.preventDefault()}>
                   <Search className="h-4 w-4" aria-hidden="true" />
                   <input
+                    type="search"
                     value={searchTerm}
                     onChange={(event) => setSearchTerm(event.target.value)}
                     placeholder={copy.searchPlaceholder}
@@ -276,46 +264,35 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                 />
               </header>
 
-              {selectedCover.latestGuide ? (
-                <div className="interactive-care-detail-steps">
-                  {selectedCover.latestGuide.steps.map(step => (
-                    <section className="interactive-care-detail-step" key={step.step}>
-                      <div className="interactive-care-detail-step-image-wrap">
-                        <ResilientImage
-                          src={step.imageUrl}
-                          alt={isEn ? step.titleEn : step.title}
-                          className="interactive-care-detail-step-image"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                      <div className="interactive-care-detail-step-copy">
-                        <span>{copy.step} {step.step}</span>
-                        <h4>{isEn ? step.titleEn : step.title}</h4>
-                        <dl>
-                          <div><dt>{copy.how}</dt><dd>{isEn ? step.howEn : step.how}</dd></div>
-                          <div><dt>{copy.why}</dt><dd>{isEn ? step.whyEn : step.why}</dd></div>
-                        </dl>
-                      </div>
-                    </section>
-                  ))}
-                  {selectedCover.latestGuide.avoid && (
-                    <aside className="interactive-care-detail-avoid">
-                      <strong>{copy.avoid}</strong>
-                      <p>{isEn ? selectedCover.latestGuide.avoidEn : selectedCover.latestGuide.avoid}</p>
-                    </aside>
-                  )}
-                </div>
-              ) : (
-                <div className="interactive-care-detail-legacy">
-                  <p>{selectedCover.summary}</p>
-                  {selectedCover.legacyTopic && (
-                    <button type="button" className="interactive-care-open-guide" onClick={() => onOpenTopic(selectedCover.legacyTopic!.id, `knowledge-layer-${selectedLayer.id}-${selectedCover.problem.id}`)}>
-                      {copy.openLegacy}<BookOpen className="h-4 w-4" />
-                    </button>
-                  )}
-                </div>
-              )}
+              <div className="interactive-care-detail-steps">
+                {selectedCover.latestGuide!.steps.map(step => (
+                  <section className="interactive-care-detail-step" key={step.step}>
+                    <div className="interactive-care-detail-step-image-wrap">
+                      <ResilientImage
+                        src={step.imageUrl}
+                        alt={isEn ? step.titleEn : step.title}
+                        className="interactive-care-detail-step-image"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </div>
+                    <div className="interactive-care-detail-step-copy">
+                      <span>{copy.step} {step.step}</span>
+                      <h4>{isEn ? step.titleEn : step.title}</h4>
+                      <dl>
+                        <div><dt>{copy.how}</dt><dd>{isEn ? step.howEn : step.how}</dd></div>
+                        <div><dt>{copy.why}</dt><dd>{isEn ? step.whyEn : step.why}</dd></div>
+                      </dl>
+                    </div>
+                  </section>
+                ))}
+                {selectedCover.latestGuide!.avoid && (
+                  <aside className="interactive-care-detail-avoid">
+                    <strong>{copy.avoid}</strong>
+                    <p>{isEn ? selectedCover.latestGuide!.avoidEn : selectedCover.latestGuide!.avoid}</p>
+                  </aside>
+                )}
+              </div>
             </article>
           )}
         </aside>
