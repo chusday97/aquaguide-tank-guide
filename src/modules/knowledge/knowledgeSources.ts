@@ -1,6 +1,46 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'seriouslyfish-petitella-rhodostoma': {
+    id: 'seriouslyfish-petitella-rhodostoma',
+    title: 'Hemigrammus rhodostomus / Petitella rhodostoma (Rummy-nose tetra)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/hemigrammus-rhodostomus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-petitella-rhodostoma': {
+    id: 'fishbase-petitella-rhodostoma',
+    title: 'Petitella rhodostoma species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Hemigrammus-rhodostomus.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-otocinclus-vittatus': {
+    id: 'fishbase-otocinclus-vittatus',
+    title: 'Otocinclus vittatus species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Otocinclus-vittatus.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'aquariumcoop-otocinclus-catfish': {
+    id: 'aquariumcoop-otocinclus-catfish',
+    title: 'Care Guide for Otocinclus Catfish',
+    publisher: 'Aquarium Co-Op',
+    url: 'https://www.aquariumcoop.com/blogs/aquarium/otocinclus-catfish',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'scotcat-otocinclus-vittatus': {
+    id: 'scotcat-otocinclus-vittatus',
+    title: 'Otocinclus vittatus Regan, 1904',
+    publisher: 'ScotCat',
+    url: 'https://www.scotcat.com/loricariidae/otocinclus_vittatus.htm',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
   'seriouslyfish-symphysodon-aequifasciatus': {
     id: 'seriouslyfish-symphysodon-aequifasciatus',
     title: 'Symphysodon aequifasciatus (Discus)',

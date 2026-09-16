@@ -71,6 +71,47 @@ const neriteHusbandrySource: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const rummyNoseSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-petitella-rhodostoma',
+  title: 'Hemigrammus rhodostomus / Petitella rhodostoma (Rummy-nose tetra)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/hemigrammus-rhodostomus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const rummyNoseFishBase: EvidenceSourceDto = {
+  id: 'fishbase-petitella-rhodostoma',
+  title: 'Petitella rhodostoma species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Hemigrammus-rhodostomus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const otocinclusFishBase: EvidenceSourceDto = {
+  id: 'fishbase-otocinclus-vittatus',
+  title: 'Otocinclus vittatus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Otocinclus-vittatus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const otocinclusAquariumCoop: EvidenceSourceDto = {
+  id: 'aquariumcoop-otocinclus-catfish',
+  title: 'Care Guide for Otocinclus Catfish',
+  publisher: 'Aquarium Co-Op',
+  url: 'https://www.aquariumcoop.com/blogs/aquarium/otocinclus-catfish',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const otocinclusScotCat: EvidenceSourceDto = {
+  id: 'scotcat-otocinclus-vittatus',
+  title: 'Otocinclus vittatus Regan, 1904',
+  publisher: 'ScotCat',
+  url: 'https://www.scotcat.com/loricariidae/otocinclus_vittatus.htm',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const tigerBarbStudy: EvidenceSourceDto = {
   id: 'tiger-barb-group-size-study',
   title: 'The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria',
@@ -688,6 +729,27 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'high',
     reviewStatus: 'reviewed',
     citations: [blackSkirtSeriouslyFish, blackSkirtFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0433: {
+    speciesId: 'sp_0433',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 10,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [rummyNoseSeriouslyFish, rummyNoseFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0013: {
+    speciesId: 'sp_0013',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'bottom_dwelling'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [otocinclusFishBase, otocinclusAquariumCoop, otocinclusScotCat],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
   },
   sp_0468: {

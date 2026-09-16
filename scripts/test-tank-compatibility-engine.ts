@@ -1183,6 +1183,48 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed rummy-nose authority enforces group and warm-water planning',
+    run: () => {
+      const species = fishData.find(item => item.id === 'sp_0433');
+      if (!species) return false;
+      const profile = getReviewedCompatibilityProfileForFish(species);
+      const underGrouped = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '90', width: '35', height: '35' }, targetTemperature: '25' }),
+        candidateSpecies: species,
+        candidateQuantity: 4,
+      });
+      const coolTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '90', width: '35', height: '35' }, targetTemperature: '22' }),
+        candidateSpecies: species,
+        candidateQuantity: 10,
+      });
+      return profile?.reviewStatus === 'reviewed'
+        && profile.minimumGroupSize === 10
+        && underGrouped.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && coolTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && underGrouped.evidenceIds?.includes('seriouslyfish-petitella-rhodostoma');
+    },
+  },
+  {
+    name: 'reviewed Otocinclus authority stays peaceful without inventing a hard group minimum',
+    run: () => {
+      const species = fishData.find(item => item.id === 'sp_0013');
+      if (!species) return false;
+      const profile = getReviewedCompatibilityProfileForFish(species);
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '30', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: species,
+        candidateQuantity: 1,
+      });
+      return profile?.reviewStatus === 'reviewed'
+        && profile.minimumGroupSize == null
+        && profile.behaviorTraits.includes('peaceful')
+        && result.missingData.every(rule => rule.code !== 'behavior_evidence_unreviewed')
+        && result.warningRules.every(rule => rule.code !== 'minimum_group_not_met')
+        && result.evidenceIds?.includes('fishbase-otocinclus-vittatus');
+    },
+  },
+  {
     name: 'addition service blocks incompatible species before write',
     run: () => {
       const freshwater = makeFish({ waterType: 'freshwater' });

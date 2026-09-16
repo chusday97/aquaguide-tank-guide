@@ -524,7 +524,85 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+const rummyNoseKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供外观公母硬判断',
+    summary: '当前已审核来源足以支持环境、社交和混养规划，但不足以把外观性别特征作为稳定的用户判断规则。',
+    points: ['若有繁殖需求，优先结合成熟个体长期观察或可靠繁育来源，不凭单一外观特征下结论。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 24, max: 27 },
+    phRange: { min: 5.5, max: 7.0 },
+    hardnessDgh: { min: 2, max: 15 },
+    notes: ['当前 catalog 使用旧属名 Hemigrammus rhodostomus；FishBase 当前接受名为 Petitella rhodostoma。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-petitella-rhodostoma', 'fishbase-petitella-rhodostoma'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 10,
+    recommendedGroupSize: { min: 10 },
+    swimmingZone: 'middle',
+    territoriality: 'none',
+    finNipping: 'none',
+    swimmingPace: 'fast',
+    summary: '非常和平且紧密群游，建议至少 10 条；不适合与明显更大、强势或抢食激烈的鱼搭配。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-petitella-rhodostoma', 'fishbase-petitella-rhodostoma'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 5, measurement: 'SL' },
+    minTankLengthCm: 90,
+    activityLevel: 'high',
+    swimmingZone: 'middle',
+    needsCover: true,
+    spaceNotes: ['群体活跃游动，长期规划至少 90 cm 缸长。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-petitella-rhodostoma', 'fishbase-petitella-rhodostoma'], reviewedAt: '2026-09-16' },
+  },
+};
+
+const otocinclusVittatusKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供外观公母硬判断',
+    summary: '当前已审核来源足以支持环境、社交和混养规划，但不足以把外观性别特征作为稳定的用户判断规则。',
+    points: ['若有繁殖需求，优先结合成熟个体长期观察或可靠繁育来源，不凭单一外观特征下结论。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 20, max: 25 },
+    phRange: { min: 6.0, max: 7.5 },
+    notes: ['优先使用成熟、稳定且有持续藻膜/生物膜的水族箱；不要把“除藻鱼”理解为可以在新缸里缺食生存。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['fishbase-otocinclus-vittatus', 'aquariumcoop-otocinclus-catfish', 'scotcat-otocinclus-vittatus'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'group',
+    swimmingZone: 'bottom',
+    territoriality: 'none',
+    finNipping: 'none',
+    swimmingPace: 'slow',
+    predationVulnerability: 'high',
+    summary: '性情非常和平并有明显群体性，适合与体型接近、温和且不会抢食的鱼同缸；应避开大型或攻击性强、可能吞食它们的同伴。不同 husbandry 来源对固定最低群体数量建议不一致，因此本轮不设硬性 minimumGroupSize。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquariumcoop-otocinclus-catfish', 'scotcat-otocinclus-vittatus'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 3.3, measurement: 'unknown' },
+    activityLevel: 'low',
+    swimmingZone: 'bottom',
+    needsCover: true,
+    needsHidingPlaces: true,
+    spaceNotes: ['比固定升数更重要的是成熟缸、足够觅食表面和避免与强势鱼抢食。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['fishbase-otocinclus-vittatus', 'aquariumcoop-otocinclus-catfish'], reviewedAt: '2026-09-16' },
+  },
+};
+
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0433: rummyNoseKnowledge,
+  sp_0013: otocinclusVittatusKnowledge,
   sp_0133: redRainbowfishKnowledge,
   sp_0126: clownLoachKnowledge,
   sp_0045: hillstreamLoachKnowledge,

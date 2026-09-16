@@ -611,6 +611,25 @@ assert.equal(sexSourceRefs[0]?.publisher, 'Seriously Fish');
 assert.ok(sexSourceRefs[0]?.url.includes('paracheirodon-innesi'));
 assert.deepEqual(resolveKnowledgeSources(['unknown-source']), []);
 
+const rummyNoseFish = fishData.find(fish => fish.id === 'sp_0433');
+assert.ok(rummyNoseFish, 'Rummy-nose tetra must exist in catalog');
+const rummyNoseKnowledge = buildSpeciesKnowledgeProfile(rummyNoseFish);
+assert.deepEqual(rummyNoseKnowledge.facts.temperatureRange, { min: 24, max: 27 });
+assert.deepEqual(rummyNoseKnowledge.facts.phRange, { min: 5.5, max: 7 });
+assert.equal(rummyNoseKnowledge.knowledge.socialBehavior?.minimumGroupSize, 10);
+assert.equal(rummyNoseKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 90);
+assert.equal(resolveKnowledgeSources(rummyNoseKnowledge.knowledge.socialBehavior?.evidence.sourceIds || []).length, 2);
+
+const otocinclusFish = fishData.find(fish => fish.id === 'sp_0013');
+assert.ok(otocinclusFish, 'Otocinclus vittatus must exist in catalog');
+const otocinclusKnowledge = buildSpeciesKnowledgeProfile(otocinclusFish);
+assert.deepEqual(otocinclusKnowledge.facts.temperatureRange, { min: 20, max: 25 });
+assert.deepEqual(otocinclusKnowledge.facts.phRange, { min: 6, max: 7.5 });
+assert.equal(otocinclusKnowledge.knowledge.socialBehavior?.mode, 'group');
+assert.equal(otocinclusKnowledge.knowledge.socialBehavior?.minimumGroupSize, undefined, 'do not invent a fixed Otocinclus group-size threshold');
+assert.equal(otocinclusKnowledge.knowledge.socialBehavior?.predationVulnerability, 'high');
+assert.equal(resolveKnowledgeSources(otocinclusKnowledge.knowledge.socialBehavior?.evidence.sourceIds || []).length, 2);
+
 const reviewedAuthorityGaps = fishData
   .filter(fish => getReviewedCompatibilityProfileForFish(fish) && !getReviewedSpeciesKnowledgeForFish(fish))
   .map(fish => ({ id: fish.id, name: fish.name, scientificName: fish.scientificName }));
