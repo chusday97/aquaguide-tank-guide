@@ -243,6 +243,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 24 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0445`, `sp_0453`, `sp_0459`, `sp_0037`, `sp_0041`, `sp_0046`, `sp_0063`, `sp_0064`, `sp_0065`, and `sp_0066`.
+- FishBase professional species records were reviewed for Trichopodus, Pterois, Neocaridina, Acheilognathus, Abbottina, Aphyocypris, and Carassius catalog objects. Species records and goldfish/commercial variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Batch 24 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions must pass before the checkpoint commit. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment is part of this batch.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
 - FishBase and WoRMS professional taxonomic records were reviewed for the named anemone, arowana, stingray, snakehead, gourami, and algae-eater objects. Commercial variants remain fail-closed where object-specific husbandry authority was insufficient; no template, name inference, or base-species inheritance was promoted.

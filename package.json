@@ -150,6 +150,7 @@
     "test:knowledge-completion-batch-21": "node --import tsx scripts/test-knowledge-completion-batch-21.ts",
     "test:knowledge-completion-batch-22": "node --import tsx scripts/test-knowledge-completion-batch-22.ts",
     "test:knowledge-completion-batch-23": "node --import tsx scripts/test-knowledge-completion-batch-23.ts",
+    "test:knowledge-completion-batch-24": "node --import tsx scripts/test-knowledge-completion-batch-24.ts",
     "test:compatibility-coverage-scorecard": "node --import tsx scripts/test-compatibility-coverage-scorecard.ts",
     "test:golden-path-gp001-ui": "node scripts/verify-golden-path-first-tank-setup.mjs",
     "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs",
