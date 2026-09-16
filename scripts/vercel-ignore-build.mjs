@@ -1,5 +1,11 @@
 import { execFileSync } from 'node:child_process';
 
+const gitRef = process.env.VERCEL_GIT_COMMIT_REF || '';
+if (gitRef.startsWith('ai-studio/')) {
+  console.log(`Vercel build: skip AI Studio sync branch (${gitRef}).`);
+  process.exit(0);
+}
+
 const NON_RUNTIME_ONLY = [
   /^\.ai\//,
   /^HANDOFF\.md$/,
