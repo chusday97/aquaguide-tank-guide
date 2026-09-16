@@ -244,6 +244,16 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 
+## Phase 2 Batch 40 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0398`, `sp_0455`, `sp_0027`, `sp_0010`, `sp_0011`, `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, and `sp_0435`.
+- FishBase, California Academy of Sciences, professional aquarium, and institutional records were reviewed. Evidence did not establish complete object-specific feeding/care authority; duplicate and variant objects remain independently represented and no template, name inference, or base-species inheritance was promoted as completion evidence.
+- Existing Species Detail/Compatibility runtime boundaries were preserved for duplicate Neritina, shrimp variants, Black Tetra, Platy, Corydoras, Neon/Cardinal Tetra, White Cloud, and Zebra Danio objects through narrow runtime branches.
+- Final matrix after Batch 40: feeding `reviewed_unknown 382→387`, `needs_research 14→10`, `template_only 14→13`; environment `reviewed_supported 26→26`, `reviewed_unknown 366→368`, `needs_research 83→81`; space `reviewed_supported 35→36`, `reviewed_unknown 366→368`, `inherited_reviewed 10→7`, `needs_research 64→64`; social `reviewed_supported 32→33`, `reviewed_unknown 369→371`, `inherited_reviewed 10→7`, `needs_research 0→0`; care `reviewed_supported 88→86`, `reviewed_unknown 382→387`, `template_only 5→2`.
+- Batch 40 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0437`, `sp_0438`, `sp_0439`, and `sp_0443`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
 ## Phase 2 Batch 39 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0239`, `sp_0274`, `sp_0275`, `sp_0276`, `sp_0277`, `sp_0278`, `sp_0279`, `sp_0342`, `sp_0396`, and `sp_0397`.
 - Professional aquarium and taxonomic records were reviewed for the named shrimp lines. Evidence did not establish complete object-specific feeding/care authority; each ornamental line remains independent and no template, name inference, or base-species inheritance was promoted as completion evidence.
