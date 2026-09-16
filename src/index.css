@@ -3641,3 +3641,46 @@ select {
   object-fit: contain;
   background: #f7f5ef;
 }
+
+/* Care detail quick notes — local refinement, 2026-09-16. */
+.interactive-care-detail-quick-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.interactive-care-detail-quick-notes li {
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+  min-height: 52px;
+  border: 1px solid rgb(8 122 97 / .12);
+  border-radius: 12px;
+  background: rgb(255 255 255 / .72);
+  padding: 9px 10px;
+}
+
+.interactive-care-detail-quick-notes li > span {
+  color: #0b8b70;
+  font-size: 9px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 900;
+  line-height: 1.45;
+}
+
+.interactive-care-detail-quick-notes li > strong {
+  color: #17372f;
+  font-size: 11px;
+  font-weight: 820;
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+@media (max-width: 767px) {
+  .interactive-care-detail-quick-notes { grid-template-columns: minmax(0, 1fr); }
+  .interactive-care-detail-quick-notes li { min-height: 48px; }
+}

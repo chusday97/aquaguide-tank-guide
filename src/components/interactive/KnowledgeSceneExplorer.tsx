@@ -39,6 +39,15 @@ const careLayers: CareLayer[] = [
   { id: 'filter', zh: '过滤系统', en: 'Filtration', hintZh: '滤材 · 流量 · 增氧', hintEn: 'Media · flow · aeration', className: 'is-filter', topicIds: ['qa_gen_016', 'qa_gen_026', 'qa_gen_027'], searchQuery: '过滤器 滤材 增氧' },
 ];
 
+const buildQuickNotes = (guide: LatestCareGuide, isEn: boolean) => {
+  const stepTitles = guide.steps.map(step => isEn ? step.titleEn : step.title);
+  const avoidText = isEn ? guide.avoidEn : guide.avoid;
+  const avoidNotes = avoidText.split(/[；;。.!！]+/).map(item => item.trim()).filter(Boolean);
+  const quantified = stepTitles.filter(item => /\d|%|％|\/|小时|分钟|°|℃/.test(item));
+  const ordered = [...quantified, ...avoidNotes, ...stepTitles];
+  return Array.from(new Set(ordered)).slice(0, 4);
+};
+
 const urgencyLabel = (problem: KnowledgeObservation, isEn: boolean) => {
   if (problem.urgency === 'urgent') return isEn ? 'Priority' : '优先处理';
   if (problem.urgency === 'watch') return isEn ? 'Watch' : '需要观察';
@@ -143,6 +152,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     noResult: 'No matching hand-drawn care cover found.',
     back: 'Back to covers',
     condition: 'What you may be seeing',
+    quickNotes: 'Remember these first',
     step: 'Step',
     how: 'What to do',
     why: 'Why this matters',
@@ -160,6 +170,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     noResult: '没有找到匹配的最新手绘养护卡。',
     back: '返回问题封面',
     condition: '你可能看到的是',
+    quickNotes: '先记住',
     step: '步骤',
     how: '怎么做',
     why: '为什么',
@@ -304,9 +315,16 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
 
               <header className="interactive-care-detail-hero">
                 <div>
-                  <span>{copy.condition}</span>
+                  <span>{copy.quickNotes}</span>
                   <h3>{selectedCover.title}</h3>
-                  <p>{selectedCover.summary}</p>
+                  <ul className="interactive-care-detail-quick-notes" aria-label={copy.quickNotes}>
+                    {buildQuickNotes(selectedCover.latestGuide, isEn).map((note, index) => (
+                      <li key={`${selectedCover.latestGuide.id}-note-${index}`}>
+                        <span aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                        <strong>{note}</strong>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
                 <ResilientImage
                   src={selectedCover.imageUrl}
