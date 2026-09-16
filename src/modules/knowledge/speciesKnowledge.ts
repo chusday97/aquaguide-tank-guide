@@ -1558,6 +1558,13 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
+  // Neocaridina davidi Red is an existing reviewed shrimp runtime variant;
+  // preserve its established runtime behavior while keeping this completion
+  // record matrix-only and fail-closed for object-specific evidence.
+  if (fish.id === 'sp_0001') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
   // Phase 2 completion records are direct evidence for the matrix and
   // Species Detail, but do not become Compatibility authority by existence.
   if (completionOnlyDirectKnowledgeIds.has(fish.id)) return undefined;
