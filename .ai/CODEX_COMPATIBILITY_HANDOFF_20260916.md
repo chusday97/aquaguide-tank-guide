@@ -226,5 +226,12 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 14 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 15 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0416`, `sp_0417`, `sp_0419`, `sp_0421`, `sp_0428`, `sp_0429`, `sp_0449`, `sp_0450`, `sp_0452`, and `sp_0456`.
+- FishBase species summaries were reviewed for the named taxa. Commercial variants and duplicate catalog objects remain fail-closed; no base-species feeding, environment, space, social, care, or sex facts were inherited into a variant/object record.
+- Matrix Batch 14 → Batch 15: feeding `needs_research 98→91`, `template_only 180→177`, `reviewed_unknown 132→142`; environment `needs_research 321→311`, `reviewed_unknown 128→138`; space `needs_research 281→272`, `reviewed_unknown 128→138`, `inherited_reviewed 31→30`; social `needs_research 212→203`, `reviewed_unknown 131→141`, `inherited_reviewed 36→35`; care `reviewed_supported 306→300`, `template_only 37→33`, `reviewed_unknown 132→142`.
+- Batch 15 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 Continue AquaGuide Knowledge Completion Program from the local Batch 6 checkpoint in `/Users/chuchu/aquaguide-compat-core` on branch `agent/compatibility-core-20260916`. Use the latest research backlog for the next 10–15 uncompleted catalog objects, use source-first evidence, preserve strict variant boundaries, regenerate the matrix/backlog, run the full required gates, create one local commit per passing batch excluding the protected CSV, and update this handoff. Never push, merge, deploy, migrate production, or weaken evidence standards.
