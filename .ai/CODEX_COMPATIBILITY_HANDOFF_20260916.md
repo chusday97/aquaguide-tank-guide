@@ -243,6 +243,14 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 23 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
+- FishBase and WoRMS professional taxonomic records were reviewed for the named anemone, arowana, stingray, snakehead, gourami, and algae-eater objects. Commercial variants remain fail-closed where object-specific husbandry authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 22 → Batch 23: feeding `needs_research 91→91`, `template_only 107→97`, `reviewed_unknown 212→222`; environment `needs_research 241→231`, `reviewed_unknown 208→218`; space `needs_research 203→193`, `reviewed_unknown 208→218`; social `needs_research 134→124`, `reviewed_unknown 211→221`; care `reviewed_supported 231→221`, `reviewed_unknown 212→222`.
+- Batch 23 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 22 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0333`, `sp_0334`, `sp_0365`, `sp_0368`, `sp_0370`, `sp_0379`, `sp_0382`, `sp_0384`, `sp_0400`, and `sp_0401`.
 - FishBase and WoRMS professional taxonomic records were reviewed for the named anemone, jellyfish, coral, and marine variant objects. Commercial variants and marine invertebrates remain fail-closed where object-specific husbandry authority was insufficient; no template, name inference, or base-species inheritance was promoted.
