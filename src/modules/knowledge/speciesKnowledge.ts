@@ -141,6 +141,37 @@ const hillstreamLoachKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+const oscarKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供外观公母硬判断',
+    summary: '当前来源支持物种身份与养护边界，但不足以把外观差异作为稳定的用户性别判断规则。',
+    points: ['需要繁殖配对时，优先依据成熟个体行为和专门繁育来源，不凭体色或头型猜测。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 22, max: 25 },
+    notes: ['水体和温度沿用当前 Catalog Review 的 FishBase authority；生态来源同时记录其可见于淡水与半咸水环境，单值 catalog waterType 不扩展为半咸水结论。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-astronotus-ocellatus', 'fishbase-astronotus-ocellatus-ecology'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'solitary',
+    territoriality: 'unknown',
+    finNipping: 'unknown',
+    predationRisk: 'high',
+    summary: 'FishBase 记录其通常独居并取食小型鱼；Seriously Fish 明确指出其捕食性决定了不应与明显更小的鱼混养。该 authority 只支持 small_fish 边界，不把地图鱼对所有鱼类一律判为禁止。',
+    evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['fishbase-astronotus-ocellatus-ecology', 'seriouslyfish-astronotus-ocellatus'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 45.7, measurement: 'SL' },
+    activityLevel: 'medium',
+    spaceNotes: ['成体体型很大；Seriously Fish 的 150 × 60 cm 缸底建议仅作为大型单只成体的空间边界，不将此处的水族箱容量建议误当作兼容性 pair rule。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-astronotus-ocellatus', 'seriouslyfish-astronotus-ocellatus'], reviewedAt: '2026-09-16' },
+  },
+};
+
 const pygmyCoryKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   sexIdentification: {
     title: '成熟后可从俯视体型辅助判断',
@@ -608,6 +639,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   sp_0045: hillstreamLoachKnowledge,
   sp_0053: pygmyCoryKnowledge,
   sp_0447: discusKnowledge,
+  sp_0451: oscarKnowledge,
   sp_0448: ramireziKnowledge,
   sp_0017: agassiziiKnowledge,
   sp_0444: pearlGouramiKnowledge,

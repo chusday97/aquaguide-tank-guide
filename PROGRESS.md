@@ -790,3 +790,12 @@
 - [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`（当前提交为文档-only amend，UI bytes unchanged；manifest 已记录最终 checkpoint SHA）。
 - [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
 - [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。
+## 2026-09-16 Compatibility Core handoff checkpoint
+
+- [x] Preserved and verified the pre-existing `sp_0475 Rhodeus ocellatus` correction; committed as `72036acc`.
+- [x] Added source-scoped `sp_0451 Astronotus ocellatus` authority from FishBase ecology and Seriously Fish: `predationTargets=['small_fish']`; no universal pair prohibition.
+- [x] Added reviewed Species Knowledge V2 for Oscar with unknown sex/reproduction kept explicit and evidence IDs attached to every promoted section.
+- [x] Matrix moved from `435 / 21 insufficient / 185 blocked / 217 caution / 12 compatible` to `435 / 0 insufficient / 198 blocked / 221 caution / 16 compatible`; determinism and symmetry remain green.
+- [x] Regression coverage proves Oscar + medium-sized fish is not blocked solely by the scoped small-fish rule.
+- [x] Handoff test suite passed via `node --import tsx` where the repository `tsx` wrappers were blocked by sandbox IPC `EPERM`; no UI, migration, push, or Vercel operation performed.
+- [ ] Local checkpoint commit for Oscar authority and these status documents remains to be created after independent read-only Critic review.

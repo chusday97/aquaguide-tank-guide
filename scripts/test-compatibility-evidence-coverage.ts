@@ -137,6 +137,36 @@ assert.ok(directPairRule.citations.length >= 2, 'direct pair rule must retain it
 assert.equal(directPairRule.evidence.includes('并非直接配对实验'), false, 'direct pair evidence must not be mislabeled as indirect evidence');
 assert.ok(directPairRule.evidence.includes('实验条件不等于家庭水族箱长期同缸'), 'direct pair evidence must preserve the laboratory-to-husbandry limitation');
 
+const oscarProfile = getReviewedCompatibilityProfile('sp_0451');
+assert.ok(oscarProfile, 'Oscar must have a reviewed general compatibility profile');
+assert.deepEqual(oscarProfile?.predationTargets, ['small_fish'], 'Oscar authority must scope predation to small fish rather than every tankmate');
+assert.deepEqual(
+  oscarProfile?.citations.map(source => source.id),
+  ['fishbase-astronotus-ocellatus-ecology', 'seriouslyfish-astronotus-ocellatus'],
+  'Oscar general predation authority must retain both reviewed source citations',
+);
+assert.equal(
+  getReviewedSpeciesKnowledgeForFish(oscar)?.reproduction,
+  undefined,
+  'Oscar reproduction must remain absent until a reviewed reproductive source is added',
+);
+const redSwordtail = fishData.find(fish => fish.id === 'sp_0438');
+assert.ok(redSwordtail, 'Oscar scope regression requires a medium-sized comparison fish');
+const oscarRedSwordtailPair = evaluateCompatibilityDecision({
+  tank,
+  items: [
+    { species: oscar, quantity: 1, origin: 'existing' },
+    { species: redSwordtail, quantity: 1, origin: 'candidate' },
+  ],
+}).pairResults[0];
+assert.ok(oscarRedSwordtailPair, 'Oscar → medium-sized fish must produce a pair result');
+assert.notEqual(oscarRedSwordtailPair.status, 'not_recommended', 'Oscar small-fish authority must not universalize into a block for every medium-sized fish');
+assert.equal(
+  oscarRedSwordtailPair.rawResult.blockingRules.some(item => item.code === 'predation_risk'),
+  false,
+  'Oscar medium-sized comparison must not be blocked by the small_fish predation target',
+);
+
 const channa = fishData.find(fish => fish.id === 'sp_0224');
 const rhodeus = fishData.find(fish => fish.id === 'sp_0475');
 assert.ok(channa && rhodeus, 'Channa argus and Rhodeus ocellatus direct-evidence pair must exist in the catalog');

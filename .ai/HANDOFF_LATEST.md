@@ -379,3 +379,12 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 ## Main convergence checkpoint — corrupt active authority write guard
 - Current main now fails closed for both reads and writes when durable active authority is corrupt.
 - Product Recovery authority, Compatibility V7, 27/5 runtime baseline, and the 24-taxon reviewed matrix remain unchanged.
+## Compatibility Core checkpoint — 2026-09-16 (Oscar authority)
+
+- Rhodeus ocellatus review correction is committed as `72036acc` (`fix(catalog): preserve Rhodeus brackish provenance`); FishBase freshwater + brackish remains water `unknown` in the single-valued catalog schema.
+- Added scoped reviewed Oscar authority for `sp_0451 Astronotus ocellatus`: FishBase ecology + Seriously Fish citations support freshwater, predatory behavior, and `predationTargets: ['small_fish']`; no universal “all small species” or direct-pair extrapolation was added.
+- Added Species Knowledge V2 authority for `sp_0451`, preserving unknown sex/reproduction fields and provenance for environment, social behavior, and adult size.
+- Updated compatibility regression coverage to require Oscar source IDs and prove a medium-sized comparison fish is not universally blocked by the small-fish rule.
+- Matrix: `435 / 21 insufficient / 185 blocked / 217 caution / 12 compatible` before; `435 / 0 insufficient / 198 blocked / 221 caution / 16 compatible` after. The reduction is from reviewed, source-scoped trait authority; Oscar + direct zebrafish pair remains a reviewed `pair_rule`.
+- Test evidence: catalog review batches, catalog review contract, Species Knowledge V2, compatibility engine, launch matrix, evidence coverage, coverage scorecard, Domain, Service, and `lint` passed. `tsx` CLI wrappers for `test:species-knowledge`, `test:compatibility`, and `test:compatibility-evidence-coverage` hit sandbox IPC `EPERM`; equivalent `node --import tsx` commands passed.
+- No UI files, migration, push, or Vercel action performed. Remaining launch-cohort `insufficient_data`: none; broader 411-species coverage remains intentionally fail-closed outside reviewed authority.

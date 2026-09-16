@@ -590,6 +590,24 @@ const oscarZebrafishDevelopmentStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const oscarFishBaseEcology: EvidenceSourceDto = {
+  id: 'fishbase-astronotus-ocellatus-ecology',
+  title: 'Astronotus ocellatus ecology summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/Ecology/Astronotus_ocellatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const oscarSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-astronotus-ocellatus',
+  title: 'Astronotus ocellatus (Oscar)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/astronotus-ocellatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const channaRhodeusInformationDynamicsStudy: EvidenceSourceDto = {
   id: 'channa-rhodeus-information-dynamics-study',
   title: 'Information Dynamics in the Interaction between a Prey and a Predator Fish',
@@ -932,6 +950,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [angelfishSeriouslyFish, angelfishExtensionGuide],
     requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior', 'territoriality', 'predation'],
+  },
+  sp_0451: {
+    speciesId: 'sp_0451',
+    waterType: 'freshwater',
+    behaviorTraits: ['predatory'],
+    predationTargets: ['small_fish'],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [oscarFishBaseEcology, oscarSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'predation'],
   },
 };
 

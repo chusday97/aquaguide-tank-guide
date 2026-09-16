@@ -1222,7 +1222,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'reviewed Catalog temperature overrides stale Oscar legacy range while behavior remains evidence-gated',
+    name: 'reviewed Catalog temperature overrides stale Oscar legacy range while scoped behavior authority is preserved',
     run: () => {
       const oscar = fishData.find(item => item.id === 'sp_0451');
       if (!oscar) return false;
@@ -1231,10 +1231,11 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: oscar,
         candidateQuantity: 1,
       });
-      return getReviewedCompatibilityProfileForFish(oscar) == null
+      return getReviewedCompatibilityProfileForFish(oscar) != null
         && result.status === 'not_recommended'
         && result.metadata.domainRuleCodes.includes('tank_temperature_conflict')
-        && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict');
+        && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && result.blockingRules.every(rule => rule.reviewStatus === 'reviewed');
     },
   },
   {
