@@ -312,6 +312,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 33 contract, matrix contract, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next regenerated backlog candidates: `sp_0366`, `sp_0367`, `sp_0369`, `sp_0371`, `sp_0377`, `sp_0378`, `sp_0380`, `sp_0381`, `sp_0383`, and `sp_0403`.
 
+## Phase 2 Batch 34 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0366`, `sp_0367`, `sp_0369`, `sp_0371`, `sp_0377`, `sp_0378`, `sp_0380`, `sp_0381`, `sp_0383`, and `sp_0403`.
+- FishBase was reviewed for the `Synchiropus splendidus` variant; WoRMS professional taxonomy was reviewed/registered for the Zoanthus, Micromussa, Haliclona, Aurelia, Phyllorhiza, Cassiopea, and Cotylorhiza objects. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted.
+- Matrix now reports feeding `reviewed_unknown 322→332`, environment `reviewed_unknown 312→322`, space `reviewed_unknown 312→322`, social `reviewed_unknown 315→325`, and care `reviewed_unknown 322→332`; no template, name inference, or base-species inheritance was used.
+- Batch 34 contract, matrix contract, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0404`, `sp_0405`, `sp_0406`, `sp_0413`, `sp_0426`, `sp_0427`, `sp_0439`, `sp_0454`, `sp_0458`, and `sp_0460`.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
