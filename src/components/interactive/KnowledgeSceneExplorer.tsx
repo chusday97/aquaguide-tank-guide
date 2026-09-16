@@ -4,7 +4,7 @@ import type { CareTopic } from '../../data/careTopicsData';
 import { runtimeCareTopicsData } from '../../data/runtimeContentCatalog';
 import { getCareVisualSources } from '../../lib/careVisual';
 import { ResilientImage } from '../common/ResilientImage';
-import type { KnowledgeObjectId } from './knowledgeJourney';
+import { getKnowledgeObservations, type KnowledgeObjectId, type KnowledgeObservation } from './knowledgeJourney';
 
 type Props = {
   isEn?: boolean;
@@ -31,9 +31,10 @@ const careLayers: CareLayer[] = [
   { id: 'substrate', zh: '底床', en: 'Substrate', hintZh: '残饵 · 清洁 · 有机物', hintEn: 'Waste · cleaning · organics', className: 'is-substrate', topicIds: ['qa_gen_015', 'qa_gen_014', 'guide_water_deteriorate'], searchQuery: '底床 残饵 清洁' },
   { id: 'filter', zh: '过滤系统', en: 'Filtration', hintZh: '滤材 · 流量 · 增氧', hintEn: 'Media · flow · aeration', className: 'is-filter', topicIds: ['qa_gen_016', 'qa_gen_026', 'qa_gen_027'], searchQuery: '过滤器 滤材 增氧' },
 ];
-const getLayerTopics = (layer: CareLayer): CareTopic[] => {
+const getProblemTopics = (layer: CareLayer, problem: KnowledgeObservation): CareTopic[] => {
   const byId = new Map(runtimeCareTopicsData.map(topic => [topic.id, topic]));
-  return layer.topicIds.map(id => byId.get(id)).filter((topic): topic is CareTopic => Boolean(topic));
+  const ids = [problem.topicId, ...layer.topicIds].filter((id): id is string => Boolean(id));
+  return Array.from(new Set(ids)).map(id => byId.get(id)).filter((topic): topic is CareTopic => Boolean(topic));
 };
 
 const getUrgencyTone = (topic: CareTopic): 'priority' | 'soon' | 'routine' => {
@@ -51,18 +52,33 @@ const getStatusLabel = (topic: CareTopic, isEn: boolean) => {
 
 export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList }: Props) {
   const [selectedLayerId, setSelectedLayerId] = useState<KnowledgeObjectId | null>(null);
+  const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null);
   const [guideIndex, setGuideIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
   const selectedLayer = useMemo(
     () => careLayers.find(layer => layer.id === selectedLayerId) || null,
     [selectedLayerId]
   );
-  const guides = useMemo(() => selectedLayer ? getLayerTopics(selectedLayer) : [], [selectedLayer]);
+  const problems = useMemo(() => selectedLayer ? getKnowledgeObservations(selectedLayer.id) : [], [selectedLayer]);
+  const selectedProblem = useMemo(
+    () => problems.find(problem => problem.id === selectedProblemId) || null,
+    [problems, selectedProblemId]
+  );
+  const guides = useMemo(
+    () => selectedLayer && selectedProblem ? getProblemTopics(selectedLayer, selectedProblem) : [],
+    [selectedLayer, selectedProblem]
+  );
   const activeGuide = guides[guideIndex] || null;
   const visual = activeGuide ? getCareVisualSources(activeGuide.imageUrl) : null;
 
   const selectLayer = (layer: CareLayer) => {
     setSelectedLayerId(layer.id);
+    setSelectedProblemId(null);
+    setGuideIndex(0);
+  };
+
+  const selectProblem = (problem: KnowledgeObservation) => {
+    setSelectedProblemId(problem.id);
     setGuideIndex(0);
   };
 
@@ -72,8 +88,8 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
   };
 
   const openActiveGuide = () => {
-    if (activeGuide && selectedLayer) {
-      onOpenTopic(activeGuide.id, `knowledge-layer-${selectedLayer.id}`);
+    if (activeGuide && selectedLayer && selectedProblem) {
+      onOpenTopic(activeGuide.id, `knowledge-layer-${selectedLayer.id}-${selectedProblem.id}`);
       return;
     }
     if (selectedLayer) onBrowseList(selectedLayer.searchQuery);
@@ -81,22 +97,30 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
   const copy = isEn
     ? {
         eyebrow: 'Interactive care guide',
-        title: 'Find the problem by aquarium layer.',
-        description: 'Choose the layer you are observing, then browse the most relevant care guides without leaving the aquarium context.',
+        title: 'Choose a layer, then choose the problem.',
+        subtitle: 'The aquarium layers narrow the context. A problem choice comes before any guide.',
         browse: 'Browse all guides',
-        emptyTitle: 'Choose one aquarium layer',
-        emptyBody: 'Its most relevant care guides will appear here as a swipeable carousel.',
-        guides: 'Care guides',
+        problems: 'Possible problems',
+        identify: 'What problem is this?',
+        related: 'Related care guides',
+        chooseLayer: 'Choose an aquarium layer',
+        chooseLayerBody: 'Then select the problem you actually see. Guides stay hidden until the problem is chosen.',
+        chooseProblem: 'Choose one visible problem',
+        chooseProblemBody: 'The problem summary and matching care guides will appear here.',
         open: 'Open guide',
       }
     : {
         eyebrow: '互动养护指南',
-        title: '从鱼缸生态层找到问题。',
-        description: '先点你正在观察的层级，再左右浏览这一层最常见的养护问题；生态剖面只负责找入口，正式指南继续使用现有养护内容。',
+        title: '先选生态层，再选你看到的问题。',
+        subtitle: '生态层只负责缩小范围；用户确认“是什么问题”以后，右侧才出现对应养护指南。',
         browse: '浏览全部指南',
-        emptyTitle: '点击一个生态层',
-        emptyBody: '这里会出现这一层对应的养护问题指南轮播，你不用离开当前鱼缸视角。',
-        guides: '问题指南',
+        problems: '这一层可能的问题',
+        identify: '这是什么问题',
+        related: '相关养护指南',
+        chooseLayer: '先点击一个生态层',
+        chooseLayerBody: '再选择这一层里你实际看到的问题；问题未确认前，不直接给指南。',
+        chooseProblem: '再选择一个具体问题',
+        chooseProblemBody: '右侧会先解释问题是什么，再显示对应养护指南。',
         open: '打开指南',
       };
 
@@ -114,106 +138,161 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
 
   return (
     <section className="interactive-care-scene interactive-care-ecosystem" aria-label={isEn ? 'Interactive aquarium care guide' : '互动鱼缸养护指南'}>
-      <aside className="interactive-care-ecosystem-intro">
-        <div className="interactive-tank-eyebrow"><Waves className="h-4 w-4" />{copy.eyebrow}</div>
-        <h2>{copy.title}</h2>
-        <p>{copy.description}</p>
+      <header className="interactive-care-toolbar">
+        <div>
+          <div className="interactive-tank-eyebrow"><Waves className="h-4 w-4" />{copy.eyebrow}</div>
+          <h2>{copy.title}</h2>
+          <p>{copy.subtitle}</p>
+        </div>
         <button type="button" onClick={() => onBrowseList()} className="interactive-care-browse-all"><List className="h-4 w-4" />{copy.browse}</button>
-      </aside>
+      </header>
 
-      <div className="interactive-care-ecosystem-map" aria-label={isEn ? 'Aquarium ecosystem layers' : '鱼缸生态层级'}>
-        {careLayers.filter(layer => layer.id !== 'filter').map(layer => (
-          <button
-            key={layer.id}
-            type="button"
-            aria-pressed={selectedLayerId === layer.id}
-            onClick={() => selectLayer(layer)}
-            className={`interactive-care-layer ${layer.className} ${selectedLayerId === layer.id ? 'is-selected' : ''}`}
-          >
-            <strong>{isEn ? layer.en : layer.zh}</strong>
-            <span>{isEn ? layer.hintEn : layer.hintZh}</span>
-          </button>
-        ))}
-        {(() => {
-          const filterLayer = careLayers.find(layer => layer.id === 'filter')!;
-          return (
-            <button
-              type="button"
-              aria-pressed={selectedLayerId === filterLayer.id}
-              onClick={() => selectLayer(filterLayer)}
-              className={`interactive-care-filter-layer ${selectedLayerId === filterLayer.id ? 'is-selected' : ''}`}
-            >
-              {isEn ? filterLayer.en : filterLayer.zh}
-            </button>
-          );
-        })()}
+      <div className="interactive-care-workspace">
+        <div className="interactive-care-layer-column">
+          <div className="interactive-care-ecosystem-map" aria-label={isEn ? 'Aquarium ecosystem layers' : '鱼缸生态层级'}>
+            {careLayers.filter(layer => layer.id !== 'filter').map(layer => (
+              <button
+                key={layer.id}
+                type="button"
+                aria-pressed={selectedLayerId === layer.id}
+                onClick={() => selectLayer(layer)}
+                className={`interactive-care-layer ${layer.className} ${selectedLayerId === layer.id ? 'is-selected' : ''}`}
+              >
+                <strong>{isEn ? layer.en : layer.zh}</strong>
+                <span>{isEn ? layer.hintEn : layer.hintZh}</span>
+              </button>
+            ))}
+            {(() => {
+              const filterLayer = careLayers.find(layer => layer.id === 'filter')!;
+              return (
+                <button
+                  type="button"
+                  aria-pressed={selectedLayerId === filterLayer.id}
+                  onClick={() => selectLayer(filterLayer)}
+                  className={`interactive-care-filter-layer ${selectedLayerId === filterLayer.id ? 'is-selected' : ''}`}
+                >
+                  {isEn ? filterLayer.en : filterLayer.zh}
+                </button>
+              );
+            })()}
+          </div>
+
+          <div className={`interactive-care-problem-panel ${selectedLayer ? 'is-active' : ''}`} aria-live="polite">
+            {!selectedLayer ? (
+              <div className="interactive-care-problem-empty">
+                <strong>{copy.chooseLayer}</strong>
+                <span>{copy.chooseLayerBody}</span>
+              </div>
+            ) : (
+              <>
+                <div className="interactive-care-problem-head">
+                  <div>
+                    <span>{copy.problems}</span>
+                    <strong>{isEn ? selectedLayer.en : selectedLayer.zh}</strong>
+                  </div>
+                  <span>{problems.length}</span>
+                </div>
+                <div className="interactive-care-problem-grid">
+                  {problems.map(problem => (
+                    <button
+                      key={problem.id}
+                      type="button"
+                      aria-pressed={selectedProblemId === problem.id}
+                      onClick={() => selectProblem(problem)}
+                      className={selectedProblemId === problem.id ? 'is-selected' : ''}
+                    >
+                      <span>{problem.label}</span>
+                      <small>{problem.urgency === 'urgent' ? (isEn ? 'Priority' : '优先处理') : problem.urgency === 'watch' ? (isEn ? 'Watch' : '需要观察') : (isEn ? 'Routine' : '日常')}</small>
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+
+        <aside className="interactive-care-guide-panel" aria-live="polite">
+          {!selectedLayer && (
+            <div className="interactive-care-guide-empty">
+              <BookOpen className="h-6 w-6" />
+              <strong>{copy.chooseLayer}</strong>
+              <p>{copy.chooseLayerBody}</p>
+            </div>
+          )}
+
+          {selectedLayer && !selectedProblem && (
+            <div className="interactive-care-guide-empty">
+              <BookOpen className="h-6 w-6" />
+              <strong>{copy.chooseProblem}</strong>
+              <p>{copy.chooseProblemBody}</p>
+            </div>
+          )}
+
+          {selectedLayer && selectedProblem && activeGuide && (
+            <div className="interactive-care-carousel">
+              <section className="interactive-care-problem-identify">
+                <div className="interactive-care-section-label">{copy.identify}</div>
+                <div className="interactive-care-problem-title-row">
+                  <h3>{selectedProblem.label}</h3>
+                  <span className={`interactive-care-problem-urgency is-${selectedProblem.urgency}`}>
+                    {selectedProblem.urgency === 'urgent' ? (isEn ? 'Priority' : '优先处理') : selectedProblem.urgency === 'watch' ? (isEn ? 'Watch' : '需要观察') : (isEn ? 'Routine' : '日常')}
+                  </span>
+                </div>
+                <p>{activeGuide.summary}</p>
+                <div className="interactive-care-problem-keywords">
+                  {selectedProblem.searchQuery.split(/\s+/).filter(Boolean).slice(0, 4).map(keyword => <span key={keyword}>{keyword}</span>)}
+                </div>
+              </section>
+
+              <div className="interactive-care-carousel-head">
+                <div>
+                  <span>{copy.related}</span>
+                  <h4>{activeGuide.title}</h4>
+                </div>
+                <span className="interactive-care-carousel-count">{guideIndex + 1} / {guides.length}</span>
+              </div>
+
+              <div className="interactive-care-guide-stage" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+                <ResilientImage
+                  src={visual?.detail || activeGuide.imageUrl}
+                  srcSet={visual ? `${visual.thumbnail} 480w, ${visual.detail} 960w` : undefined}
+                  sizes="(max-width: 767px) calc(100vw - 64px), 480px"
+                  alt={activeGuide.title}
+                  className="interactive-care-guide-image"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+
+              <div className="interactive-care-guide-copy">
+                <span className={getUrgencyTone(activeGuide) === 'priority' ? 'is-priority' : ''}>{getStatusLabel(activeGuide, isEn)}</span>
+                <p>{activeGuide.summary}</p>
+                <div className="interactive-care-carousel-dots" aria-label={isEn ? 'Guide carousel position' : '指南轮播位置'}>
+                  {guides.map((guide, index) => (
+                    <button key={guide.id} type="button" aria-label={isEn ? `Guide ${index + 1}` : `第 ${index + 1} 条指南`} aria-current={index === guideIndex ? 'true' : undefined} onClick={() => setGuideIndex(index)} />
+                  ))}
+                </div>
+              </div>
+
+              <div className="interactive-care-guide-actions">
+                <div className="interactive-care-guide-arrows">
+                  <button type="button" aria-label={isEn ? 'Previous guide' : '上一条指南'} onClick={() => stepGuide(-1)} disabled={guides.length < 2}><ChevronLeft className="h-4 w-4" /></button>
+                  <button type="button" aria-label={isEn ? 'Next guide' : '下一条指南'} onClick={() => stepGuide(1)} disabled={guides.length < 2}><ChevronRight className="h-4 w-4" /></button>
+                </div>
+                <button type="button" className="interactive-care-open-guide" onClick={openActiveGuide}>{copy.open}<BookOpen className="h-4 w-4" /></button>
+              </div>
+            </div>
+          )}
+
+          {selectedLayer && selectedProblem && !activeGuide && (
+            <div className="interactive-care-guide-empty">
+              <BookOpen className="h-6 w-6" />
+              <strong>{isEn ? 'No reviewed guide is available for this problem yet.' : '这个问题暂时没有可用指南'}</strong>
+              <button type="button" onClick={() => onBrowseList(selectedProblem.searchQuery)} className="interactive-care-open-guide">{copy.browse}</button>
+            </div>
+          )}
+        </aside>
       </div>
-
-      <aside className="interactive-care-guide-panel" aria-live="polite">
-        {!selectedLayer && (
-          <div className="interactive-care-guide-empty">
-            <BookOpen className="h-6 w-6" />
-            <strong>{copy.emptyTitle}</strong>
-            <p>{copy.emptyBody}</p>
-          </div>
-        )}
-
-        {selectedLayer && activeGuide && (
-          <div className="interactive-care-carousel">
-            <div className="interactive-care-carousel-head">
-              <div>
-                <span>{copy.guides}</span>
-                <h3>{isEn ? selectedLayer.en : selectedLayer.zh}{isEn ? ' · Common issues' : ' · 常见问题'}</h3>
-              </div>
-              <span className="interactive-care-carousel-count">{guideIndex + 1} / {guides.length}</span>
-            </div>
-
-            <div className="interactive-care-guide-stage" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-              <ResilientImage
-                src={visual?.detail || activeGuide.imageUrl}
-                srcSet={visual ? `${visual.thumbnail} 480w, ${visual.detail} 960w` : undefined}
-                sizes="(max-width: 767px) calc(100vw - 64px), 420px"
-                alt={activeGuide.title}
-                className="interactive-care-guide-image"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-
-            <div className="interactive-care-guide-copy">
-              <span className={getUrgencyTone(activeGuide) === 'priority' ? 'is-priority' : ''}>{getStatusLabel(activeGuide, isEn)}</span>
-              <h4>{activeGuide.title}</h4>
-              <p>{activeGuide.summary}</p>
-              <div className="interactive-care-carousel-dots" aria-label={isEn ? 'Guide carousel position' : '指南轮播位置'}>
-                {guides.map((guide, index) => (
-                  <button
-                    key={guide.id}
-                    type="button"
-                    aria-label={isEn ? `Guide ${index + 1}` : `第 ${index + 1} 条指南`}
-                    aria-current={index === guideIndex ? 'true' : undefined}
-                    onClick={() => setGuideIndex(index)}
-                  />
-                ))}
-              </div>
-            </div>
-            <div className="interactive-care-guide-actions">
-              <div className="interactive-care-guide-arrows">
-                <button type="button" aria-label={isEn ? 'Previous guide' : '上一条指南'} onClick={() => stepGuide(-1)} disabled={guides.length < 2}><ChevronLeft className="h-4 w-4" /></button>
-                <button type="button" aria-label={isEn ? 'Next guide' : '下一条指南'} onClick={() => stepGuide(1)} disabled={guides.length < 2}><ChevronRight className="h-4 w-4" /></button>
-              </div>
-              <button type="button" className="interactive-care-open-guide" onClick={openActiveGuide}>{copy.open}<BookOpen className="h-4 w-4" /></button>
-            </div>
-          </div>
-        )}
-
-        {selectedLayer && !activeGuide && (
-          <div className="interactive-care-guide-empty">
-            <BookOpen className="h-6 w-6" />
-            <strong>{isEn ? 'No reviewed guide is available for this layer yet.' : '这一层暂时没有可用指南'}</strong>
-            <button type="button" onClick={() => onBrowseList(selectedLayer.searchQuery)} className="interactive-care-open-guide">{copy.browse}</button>
-          </div>
-        )}
-      </aside>
     </section>
   );
 }

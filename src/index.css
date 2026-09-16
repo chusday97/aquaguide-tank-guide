@@ -2132,49 +2132,46 @@ select {
 /* Care ecosystem guide carousel — view-layer only. */
 .interactive-care-ecosystem {
   display: grid;
-  grid-template-columns: minmax(220px, 280px) minmax(360px, 1fr) minmax(320px, 400px);
-  gap: 18px;
+  gap: 14px;
   width: 100%;
   min-width: 0;
-  align-items: stretch;
 }
 
-.interactive-care-ecosystem-intro,
-.interactive-care-ecosystem-map,
-.interactive-care-guide-panel {
-  min-width: 0;
-  border: 1px solid rgb(22 78 65 / 0.10);
-  border-radius: 24px;
+.interactive-care-toolbar {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 4px 2px 0;
 }
 
-.interactive-care-ecosystem-intro {
-  padding: 28px 26px;
-  background: #f7faf8;
-}
+.interactive-care-toolbar > div { min-width: 0; }
 
-.interactive-care-ecosystem-intro h2 {
-  margin: 12px 0 14px;
+.interactive-care-toolbar h2 {
+  margin: 8px 0 4px;
   color: #15372f;
-  font-size: clamp(28px, 3vw, 42px);
+  font-size: clamp(24px, 2.5vw, 34px);
   font-weight: 900;
-  line-height: 1.04;
-  letter-spacing: -0.045em;
+  line-height: 1.08;
+  letter-spacing: -0.035em;
 }
 
-.interactive-care-ecosystem-intro p {
-  margin: 0 0 18px;
-  color: rgb(24 67 55 / 0.64);
-  font-size: 14px;
+.interactive-care-toolbar p {
+  max-width: 720px;
+  margin: 0;
+  color: rgb(24 67 55 / 0.62);
+  font-size: 13px;
   font-weight: 650;
-  line-height: 1.7;
+  line-height: 1.65;
 }
 
 .interactive-care-browse-all {
   display: inline-flex;
-  min-height: 44px;
+  min-height: 42px;
+  flex: 0 0 auto;
   align-items: center;
   gap: 7px;
-  border: 1px solid rgb(8 122 97 / 0.16);
+  border: 1px solid rgb(8 122 97 / 0.18);
   border-radius: 12px;
   background: #fff;
   padding: 0 14px;
@@ -2185,14 +2182,34 @@ select {
 
 .interactive-care-browse-all:hover,
 .interactive-care-browse-all:focus-visible {
-  border-color: rgb(8 122 97 / 0.34);
+  border-color: rgb(8 122 97 / 0.38);
   outline: none;
   box-shadow: 0 0 0 3px rgb(8 122 97 / 0.10);
 }
 
+.interactive-care-workspace {
+  display: grid;
+  grid-template-columns: minmax(520px, 1.08fr) minmax(390px, .92fr);
+  gap: 18px;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.interactive-care-layer-column,
+.interactive-care-guide-panel {
+  min-width: 0;
+  border: 1px solid rgb(22 78 65 / 0.10);
+  border-radius: 24px;
+  background: #fbfdfc;
+}
+
+.interactive-care-layer-column {
+  overflow: hidden;
+}
+
 .interactive-care-ecosystem-map {
   position: relative;
-  min-height: 640px;
+  min-height: 500px;
   overflow: hidden;
   background: #e8f0ec;
 }
@@ -2202,7 +2219,7 @@ select {
   right: 0;
   left: 0;
   display: flex;
-  min-height: 70px;
+  min-height: 64px;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
@@ -2211,7 +2228,7 @@ select {
   padding: 0 28px;
   color: #15372f;
   text-align: left;
-  transition: padding 160ms ease, background-color 160ms ease, color 160ms ease;
+  transition: padding 160ms ease, background-color 160ms ease, color 160ms ease, box-shadow 160ms ease;
 }
 
 .interactive-care-layer strong {
@@ -2233,7 +2250,8 @@ select {
 }
 
 .interactive-care-layer.is-selected {
-  box-shadow: inset 4px 0 #0b8b70;
+  z-index: 2;
+  box-shadow: inset 4px 0 #0b8b70, 0 10px 26px rgb(21 55 47 / 0.08);
   color: #087a61;
 }
 
@@ -2251,13 +2269,13 @@ select {
   display: flex;
   width: 64px;
   height: 40%;
-  min-height: 190px;
+  min-height: 178px;
   align-items: center;
   justify-content: center;
   border: 0;
   border-radius: 18px;
   background: #3d6056;
-  color: white;
+  color: #fff;
   font-size: 11px;
   font-weight: 850;
   letter-spacing: .08em;
@@ -2274,10 +2292,125 @@ select {
   box-shadow: 0 10px 28px rgb(21 55 47 / 0.18);
 }
 
+.interactive-care-problem-panel {
+  min-height: 164px;
+  border-top: 1px solid rgb(21 55 47 / 0.09);
+  padding: 18px 20px 20px;
+  background: #f8fbf9;
+}
+
+.interactive-care-problem-panel.is-active { background: #f4faf7; }
+
+.interactive-care-problem-empty {
+  display: flex;
+  min-height: 120px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 6px;
+}
+
+.interactive-care-problem-empty strong {
+  color: #17372f;
+  font-size: 15px;
+  font-weight: 900;
+}
+
+.interactive-care-problem-empty span {
+  max-width: 560px;
+  color: rgb(24 67 55 / 0.58);
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.interactive-care-problem-head {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.interactive-care-problem-head > div {
+  display: grid;
+  gap: 3px;
+}
+
+.interactive-care-problem-head span {
+  color: #0b8b70;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.interactive-care-problem-head strong {
+  color: #15372f;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.interactive-care-problem-head > span {
+  display: grid;
+  width: 28px;
+  height: 28px;
+  place-items: center;
+  border-radius: 999px;
+  background: #e3f2ec;
+  color: #0b6d57;
+}
+
+.interactive-care-problem-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.interactive-care-problem-grid button {
+  display: flex;
+  min-height: 66px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid rgb(21 55 47 / 0.10);
+  border-radius: 14px;
+  background: #fff;
+  padding: 11px 12px;
+  color: #17372f;
+  text-align: left;
+  transition: border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+}
+
+.interactive-care-problem-grid button:hover,
+.interactive-care-problem-grid button:focus-visible,
+.interactive-care-problem-grid button.is-selected {
+  border-color: rgb(8 122 97 / 0.32);
+  outline: none;
+  background: #f0f8f5;
+  box-shadow: 0 7px 18px rgb(21 55 47 / 0.07);
+}
+
+.interactive-care-problem-grid button.is-selected {
+  box-shadow: inset 3px 0 #0b8b70, 0 7px 18px rgb(21 55 47 / 0.08);
+}
+
+.interactive-care-problem-grid button > span {
+  font-size: 12px;
+  font-weight: 820;
+  line-height: 1.45;
+}
+
+.interactive-care-problem-grid button small {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #eef5f2;
+  padding: 4px 7px;
+  color: #527067;
+  font-size: 9px;
+  font-weight: 820;
+}
+
 .interactive-care-guide-panel {
-  min-height: 640px;
-  background: #fbfdfc;
-  padding: 24px;
+  min-height: 682px;
+  padding: 22px;
 }
 
 .interactive-care-guide-empty {
@@ -2296,7 +2429,7 @@ select {
 }
 
 .interactive-care-guide-empty p {
-  max-width: 290px;
+  max-width: 300px;
   margin: 0;
   font-size: 13px;
   line-height: 1.65;
@@ -2308,6 +2441,74 @@ select {
   flex-direction: column;
 }
 
+.interactive-care-problem-identify {
+  border: 1px solid rgb(8 122 97 / 0.12);
+  border-radius: 18px;
+  background: linear-gradient(180deg, #f2faf6 0%, #f9fcfa 100%);
+  padding: 16px;
+}
+
+.interactive-care-section-label,
+.interactive-care-carousel-head > div > span {
+  color: #0b8b70;
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: .02em;
+}
+
+.interactive-care-problem-title-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 5px;
+}
+
+.interactive-care-problem-title-row h3 {
+  margin: 0;
+  color: #15372f;
+  font-size: 21px;
+  font-weight: 900;
+  line-height: 1.28;
+  letter-spacing: -0.025em;
+}
+
+.interactive-care-problem-urgency {
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #edf4f1;
+  padding: 5px 8px;
+  color: #527067;
+  font-size: 9px;
+  font-weight: 900;
+}
+
+.interactive-care-problem-urgency.is-watch { background: #fff4de; color: #986117; }
+.interactive-care-problem-urgency.is-urgent { background: #fee9e7; color: #b42318; }
+
+.interactive-care-problem-identify p {
+  margin: 10px 0 0;
+  color: rgb(24 67 55 / 0.68);
+  font-size: 12px;
+  line-height: 1.65;
+}
+
+.interactive-care-problem-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.interactive-care-problem-keywords span {
+  border-radius: 999px;
+  background: #e8f3ee;
+  padding: 4px 8px;
+  color: #35695b;
+  font-size: 9px;
+  font-weight: 780;
+}
+
 .interactive-care-carousel-head,
 .interactive-care-guide-actions {
   display: flex;
@@ -2316,32 +2517,32 @@ select {
   gap: 12px;
 }
 
-.interactive-care-carousel-head > div > span {
-  color: #0b8b70;
-  font-size: 11px;
-  font-weight: 850;
+.interactive-care-carousel-head {
+  margin-top: 18px;
 }
 
-.interactive-care-carousel-head h3 {
+.interactive-care-carousel-head h4 {
   margin: 4px 0 0;
   color: #15372f;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 900;
-  letter-spacing: -0.03em;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
 }
 
 .interactive-care-carousel-count {
+  flex: 0 0 auto;
   color: rgb(24 67 55 / 0.58);
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 760;
 }
 
 .interactive-care-guide-stage {
   display: grid;
-  min-height: 220px;
+  min-height: 236px;
   place-items: center;
   overflow: hidden;
-  margin-top: 18px;
+  margin-top: 14px;
   border-radius: 18px;
   background: #edf4f0;
 }
@@ -2349,42 +2550,33 @@ select {
 .interactive-care-guide-image {
   width: 100%;
   height: 100%;
-  max-height: 280px;
+  max-height: 320px;
   object-fit: contain;
 }
 
 .interactive-care-guide-copy {
-  padding: 18px 2px 0;
+  padding: 14px 2px 0;
 }
 
 .interactive-care-guide-copy > span {
   color: #0b8b70;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 850;
 }
 
 .interactive-care-guide-copy > span.is-priority { color: #b42318; }
 
-.interactive-care-guide-copy h4 {
-  margin: 6px 0 8px;
-  color: #17372f;
-  font-size: 20px;
-  font-weight: 900;
-  line-height: 1.3;
-  letter-spacing: -0.02em;
-}
-
 .interactive-care-guide-copy p {
-  margin: 0;
-  color: rgb(24 67 55 / 0.65);
-  font-size: 13px;
-  line-height: 1.65;
+  margin: 6px 0 0;
+  color: rgb(24 67 55 / 0.64);
+  font-size: 12px;
+  line-height: 1.6;
 }
 
 .interactive-care-carousel-dots {
   display: flex;
   gap: 6px;
-  margin-top: 16px;
+  margin-top: 13px;
 }
 
 .interactive-care-carousel-dots button {
@@ -2404,7 +2596,7 @@ select {
 .interactive-care-guide-actions {
   margin-top: auto;
   border-top: 1px solid rgb(21 55 47 / 0.10);
-  padding-top: 18px;
+  padding-top: 16px;
 }
 
 .interactive-care-guide-arrows {
@@ -2414,12 +2606,12 @@ select {
 
 .interactive-care-guide-arrows button {
   display: grid;
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
   place-items: center;
   border: 1px solid rgb(21 55 47 / 0.12);
   border-radius: 12px;
-  background: white;
+  background: #fff;
   color: #17372f;
 }
 
@@ -2427,7 +2619,7 @@ select {
 
 .interactive-care-open-guide {
   display: inline-flex;
-  min-height: 44px;
+  min-height: 42px;
   align-items: center;
   justify-content: center;
   gap: 7px;
@@ -2435,7 +2627,7 @@ select {
   border-radius: 12px;
   background: #087a61;
   padding: 0 15px;
-  color: white;
+  color: #fff;
   font-size: 12px;
   font-weight: 850;
 }
@@ -2447,45 +2639,34 @@ select {
   box-shadow: 0 0 0 3px rgb(8 122 97 / 0.12);
 }
 
-@media (max-width: 1020px) {
-  .interactive-care-ecosystem {
-    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+@media (max-width: 1199px) {
+  .interactive-care-workspace {
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .interactive-care-ecosystem-intro {
-    grid-column: 1 / -1;
-    padding: 22px 24px;
-  }
-
-  .interactive-care-ecosystem-intro p { max-width: 720px; }
-  .interactive-care-ecosystem-map,
-  .interactive-care-guide-panel { min-height: 560px; }
+  .interactive-care-guide-panel { min-height: 0; }
+  .interactive-care-ecosystem-map { min-height: 480px; }
 }
 
 @media (max-width: 767px) {
-  .interactive-care-ecosystem {
-    grid-template-columns: minmax(0, 1fr);
+  .interactive-care-ecosystem { gap: 10px; }
+
+  .interactive-care-toolbar {
+    align-items: flex-start;
     gap: 12px;
   }
 
-  .interactive-care-ecosystem-intro,
-  .interactive-care-ecosystem-map,
-  .interactive-care-guide-panel {
-    border-radius: 20px;
-  }
+  .interactive-care-toolbar h2 { font-size: 25px; }
+  .interactive-care-toolbar p { display: none; }
+  .interactive-care-browse-all { min-height: 38px; padding: 0 11px; }
 
-  .interactive-care-ecosystem-intro { padding: 20px; }
-  .interactive-care-ecosystem-intro h2 { font-size: 32px; }
-  .interactive-care-ecosystem-intro p { display: none; }
-  .interactive-care-browse-all { margin-top: 14px; }
+  .interactive-care-layer-column,
+  .interactive-care-guide-panel { border-radius: 20px; }
 
-  .interactive-care-ecosystem-map { min-height: 500px; }
-  .interactive-care-guide-panel { min-height: 0; padding: 18px; }
-}
+  .interactive-care-ecosystem-map { min-height: 430px; }
 
-@media (max-width: 767px) {
   .interactive-care-layer {
-    min-height: 58px;
+    min-height: 54px;
     padding: 0 18px;
   }
 
@@ -2498,43 +2679,20 @@ select {
   .interactive-care-filter-layer {
     top: 18%;
     right: 12px;
-    width: 54px;
-    min-height: 170px;
-    border-radius: 16px;
+    width: 52px;
+    min-height: 150px;
+    border-radius: 15px;
   }
 
-  .interactive-care-carousel-head h3 { font-size: 22px; }
-  .interactive-care-guide-stage { min-height: 210px; margin-top: 14px; }
-  .interactive-care-guide-image { max-height: 250px; }
-  .interactive-care-guide-copy h4 { font-size: 19px; }
+  .interactive-care-problem-panel { min-height: 146px; padding: 15px; }
+  .interactive-care-problem-grid { grid-template-columns: minmax(0, 1fr); gap: 8px; }
+  .interactive-care-problem-grid button { min-height: 58px; }
+
+  .interactive-care-guide-panel { padding: 16px; }
+  .interactive-care-problem-title-row h3 { font-size: 19px; }
+  .interactive-care-carousel-head h4 { font-size: 17px; }
+  .interactive-care-guide-stage { min-height: 220px; }
+  .interactive-care-guide-image { max-height: 280px; }
   .interactive-care-guide-actions { gap: 10px; }
-  .interactive-care-open-guide { min-width: 116px; }
-}
-
-@media (max-width: 767px) {
-  .interactive-care-layer {
-    min-height: 58px;
-    padding: 0 18px;
-  }
-
-  .interactive-care-layer strong { font-size: 15px; }
-  .interactive-care-layer span { display: none; }
-  .interactive-care-layer:hover,
-  .interactive-care-layer:focus-visible,
-  .interactive-care-layer.is-selected { padding-left: 24px; }
-
-  .interactive-care-filter-layer {
-    top: 18%;
-    right: 12px;
-    width: 54px;
-    min-height: 170px;
-    border-radius: 16px;
-  }
-
-  .interactive-care-carousel-head h3 { font-size: 22px; }
-  .interactive-care-guide-stage { min-height: 210px; margin-top: 14px; }
-  .interactive-care-guide-image { max-height: 250px; }
-  .interactive-care-guide-copy h4 { font-size: 19px; }
-  .interactive-care-guide-actions { gap: 10px; }
-  .interactive-care-open-guide { min-width: 116px; }
+  .interactive-care-open-guide { min-width: 112px; }
 }
