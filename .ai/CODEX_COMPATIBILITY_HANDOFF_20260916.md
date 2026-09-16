@@ -243,6 +243,14 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 20 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0200`, `sp_0216`, `sp_0229`, `sp_0234`, `sp_0242`, `sp_0248`, `sp_0268`, `sp_0269`, `sp_0283`, and `sp_0284`.
+- FishBase professional species records were reviewed for Dario, Channa, Gyrinocheilus, Scleropages, Osphronemus, and Trichopodus taxa. Commercial variants remain fail-closed; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 19 → Batch 20: feeding `needs_research 91→91`, `template_only 137→127`, `reviewed_unknown 182→192`; environment `needs_research 271→261`, `reviewed_unknown 178→188`; space `needs_research 233→223`, `reviewed_unknown 178→188`; social `needs_research 164→154`, `reviewed_unknown 181→191`; care `reviewed_supported 261→251`, `reviewed_unknown 182→192`.
+- Batch 20 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 19 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0151`, `sp_0156`, `sp_0179`, `sp_0181`, `sp_0183`, `sp_0184`, `sp_0185`, `sp_0197`, `sp_0198`, and `sp_0199`.
 - FishBase professional species records were reviewed for the named taxa, including marine angelfish/triggerfish, freshwater labyrinth fish, knifefish, and cichlids. Commercial variants remain fail-closed; no template, name inference, or base-species inheritance was promoted.
