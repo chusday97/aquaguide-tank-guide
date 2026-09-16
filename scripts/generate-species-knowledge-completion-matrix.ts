@@ -14,6 +14,7 @@ import { phase2Batch07Authority } from '../src/modules/knowledge/phase2Batch07Au
 import { phase2Batch08Authority } from '../src/modules/knowledge/phase2Batch08Authority';
 import { phase2Batch09Authority } from '../src/modules/knowledge/phase2Batch09Authority';
 import { phase2Batch10Authority } from '../src/modules/knowledge/phase2Batch10Authority';
+import { phase2Batch11Authority } from '../src/modules/knowledge/phase2Batch11Authority';
 
 type FieldStatus = 'reviewed_supported' | 'reviewed_unknown' | 'inherited_reviewed' | 'not_applicable' | 'needs_research' | 'template_only';
 type KnowledgeField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
@@ -70,6 +71,7 @@ const rows = fishData.map((fish) => {
     'sp_0123', 'sp_0125', 'sp_0129', 'sp_0146', 'sp_0152', 'sp_0157', 'sp_0158', 'sp_0163', 'sp_0173', 'sp_0174',
     'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0182', 'sp_0187', 'sp_0201', 'sp_0202', 'sp_0207', 'sp_0208',
     'sp_0211', 'sp_0214', 'sp_0217', 'sp_0218', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0235',
+    'sp_0236', 'sp_0240', 'sp_0241', 'sp_0243', 'sp_0247', 'sp_0249', 'sp_0250', 'sp_0251', 'sp_0256', 'sp_0257',
   ]);
   const knowledge = phase2DirectOnly.has(fish.id) ? directKnowledge : getReviewedSpeciesKnowledgeForFish(fish);
   const inheritedKnowledge = Boolean(knowledge && !directKnowledge);
@@ -83,7 +85,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'feeding') {
-      const phase2 = phase2Batch01Authority[fish.id]?.feeding ?? phase2Batch02Authority[fish.id]?.feeding ?? phase2Batch03Authority[fish.id]?.feeding ?? phase2Batch04Authority[fish.id]?.feeding ?? phase2Batch05Authority[fish.id]?.feeding ?? phase2Batch06Authority[fish.id]?.feeding ?? phase2Batch07Authority[fish.id]?.feeding ?? phase2Batch08Authority[fish.id]?.feeding ?? phase2Batch09Authority[fish.id]?.feeding ?? phase2Batch10Authority[fish.id]?.feeding;
+      const phase2 = phase2Batch01Authority[fish.id]?.feeding ?? phase2Batch02Authority[fish.id]?.feeding ?? phase2Batch03Authority[fish.id]?.feeding ?? phase2Batch04Authority[fish.id]?.feeding ?? phase2Batch05Authority[fish.id]?.feeding ?? phase2Batch06Authority[fish.id]?.feeding ?? phase2Batch07Authority[fish.id]?.feeding ?? phase2Batch08Authority[fish.id]?.feeding ?? phase2Batch09Authority[fish.id]?.feeding ?? phase2Batch10Authority[fish.id]?.feeding ?? phase2Batch11Authority[fish.id]?.feeding;
       if (phase2) fieldStatus[field] = phase2.status;
       else if (!fish.feedingProfile) fieldStatus[field] = 'needs_research';
       else if (audit.feeding_uses_template === 'yes') fieldStatus[field] = 'template_only';
@@ -92,7 +94,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'care') {
-      const phase2 = phase2Batch01Authority[fish.id]?.care ?? phase2Batch02Authority[fish.id]?.care ?? phase2Batch03Authority[fish.id]?.care ?? phase2Batch04Authority[fish.id]?.care ?? phase2Batch05Authority[fish.id]?.care ?? phase2Batch06Authority[fish.id]?.care ?? phase2Batch07Authority[fish.id]?.care ?? phase2Batch08Authority[fish.id]?.care ?? phase2Batch09Authority[fish.id]?.care ?? phase2Batch10Authority[fish.id]?.care;
+      const phase2 = phase2Batch01Authority[fish.id]?.care ?? phase2Batch02Authority[fish.id]?.care ?? phase2Batch03Authority[fish.id]?.care ?? phase2Batch04Authority[fish.id]?.care ?? phase2Batch05Authority[fish.id]?.care ?? phase2Batch06Authority[fish.id]?.care ?? phase2Batch07Authority[fish.id]?.care ?? phase2Batch08Authority[fish.id]?.care ?? phase2Batch09Authority[fish.id]?.care ?? phase2Batch10Authority[fish.id]?.care ?? phase2Batch11Authority[fish.id]?.care;
       fieldStatus[field] = phase2?.status ?? (audit.missing_species_specific_care === 'yes' ? 'template_only' : 'reviewed_supported');
       continue;
     }
