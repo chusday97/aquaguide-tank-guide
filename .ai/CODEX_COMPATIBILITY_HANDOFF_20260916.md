@@ -249,6 +249,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 24 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions must pass before the checkpoint commit. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment is part of this batch.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 
+## Phase 2 Batch 25 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0067`, `sp_0068`, `sp_0077`, `sp_0089`, `sp_0111`, `sp_0124`, `sp_0142`, `sp_0149`, `sp_0150`, and `sp_0159`.
+- FishBase, Texas A&M AquaPlant, and Kew professional records were reviewed for goldfish variants, aquatic plants, Sawbwa, Ancistrus, and Poecilia objects. Variant and genus-level records remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 24 → Batch 25: feeding `reviewed_unknown 232→242`, `needs_research 84→74`; environment `reviewed_unknown 228→238`, `needs_research 221→211`; space `reviewed_unknown 228→238`, `needs_research 184→174`; social `reviewed_unknown 231→241`, `needs_research 115→105`; care `reviewed_unknown 232→242`, `reviewed_supported 212→202`.
+- Batch 25 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
