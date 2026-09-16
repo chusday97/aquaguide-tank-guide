@@ -242,6 +242,14 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 16 contract, matrix contract, lint, launch matrix, and Compatibility evidence coverage pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 47 checkpoint preparation — 2026-09-17
+- Completed eight direct reviewed-unknown records: `sp_0017`, `sp_0440`, `sp_0448`, `sp_0469`, `sp_0020`, `sp_0045`, `sp_0126`, and `sp_0133`. These are the remaining eight real completion-gap objects; the regenerated backlog contains additional no-gap/follow-up rows, so no artificial objects were added just to reach ten.
+- FishBase professional species summaries were reviewed for the named taxa. Evidence was insufficient for object-specific feeding, environment, space, social, or care authority, so all five fields remain direct reviewed-unknown; no template, name inference, legacy fishData, or base-species inheritance was promoted.
+- Matrix Batch 46 → Batch 47: feeding `needs_research 4→0`, `reviewed_unknown 402→410`; care `reviewed_unknown 466→474`, with existing runtime-supported profiles preserved outside the matrix; environment, space, and social counts unchanged. The completion matrix has no remaining feeding gap, while environment retains ten needs-research rows.
+- Batch 47 contract, matrix contract, Species Detail assertions, Launch Compatibility, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, and `sp_0446`; continue with the latest backlog and retain the 40-item queue contract.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 46 checkpoint preparation — 2026-09-17
 - Completed thirteen direct reviewed-unknown records: `sp_0355`, `sp_0356`, `sp_0357`, `sp_0477`, `sp_0478`, `sp_0479`, `sp_0480`, `sp_0481`, `sp_0482`, `sp_0483`, `sp_0484`, `sp_0485`, and `sp_0486`.

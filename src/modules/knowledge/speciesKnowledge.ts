@@ -46,6 +46,7 @@ import { phase2Batch43Knowledge } from './phase2Batch43Authority';
 import { phase2Batch44Knowledge } from './phase2Batch44Authority';
 import { phase2Batch45Knowledge } from './phase2Batch45Authority';
 import { phase2Batch46Knowledge } from './phase2Batch46Authority';
+import { phase2Batch47Knowledge } from './phase2Batch47Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -94,6 +95,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0094', 'sp_0095', 'sp_0096', 'sp_0097', 'sp_0098', 'sp_0099', 'sp_0100', 'sp_0101', 'sp_0102', 'sp_0298', 'sp_0299', 'sp_0300', 'sp_0301', 'sp_0302', 'sp_0303',
   'sp_0304', 'sp_0305', 'sp_0306', 'sp_0307', 'sp_0308', 'sp_0309', 'sp_0310', 'sp_0311', 'sp_0312', 'sp_0313', 'sp_0314', 'sp_0315', 'sp_0316', 'sp_0317', 'sp_0354',
   'sp_0355', 'sp_0356', 'sp_0357', 'sp_0477', 'sp_0478', 'sp_0479', 'sp_0480', 'sp_0481', 'sp_0482', 'sp_0483', 'sp_0484', 'sp_0485', 'sp_0486',
+  'sp_0017', 'sp_0440', 'sp_0448', 'sp_0469', 'sp_0020', 'sp_0045', 'sp_0126', 'sp_0133',
 ]);
 
 
@@ -847,6 +849,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch44Knowledge,
   ...phase2Batch45Knowledge,
   ...phase2Batch46Knowledge,
+  ...phase2Batch47Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1768,6 +1771,14 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
   if (['sp_0261', 'sp_0262', 'sp_0389', 'sp_0390', 'sp_0391'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // These catalog objects have established Species Detail runtime profiles;
+  // keep those profiles while Batch 47's direct unknown records remain
+  // matrix-only and fail-closed for object-specific evidence.
+  if (['sp_0017', 'sp_0440', 'sp_0448', 'sp_0469', 'sp_0020', 'sp_0045', 'sp_0126', 'sp_0133'].includes(fish.id)) {
+    if (reviewedKnowledgeBySpeciesId[fish.id]) return reviewedKnowledgeBySpeciesId[fish.id];
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }

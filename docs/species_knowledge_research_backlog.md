@@ -33,16 +33,16 @@ Generated from 486 catalog objects. Reviewed authority is recorded in source-con
 | 27 | 黑壳虾 (sp_0459) | invertebrate |  | launch_cohort | elevated | 9 |
 | 28 | 金三角灯 (sp_0468) | fish |  | launch_cohort | elevated | 9 |
 | 29 | 高体鳑鲏 (sp_0475) | fish |  | launch_cohort | elevated | 9 |
-| 30 | 阿卡西短鲷 (sp_0017) | fish | feeding:needs_research | catalog_only | elevated | 8 |
-| 31 | 一眉道人 (sp_0440) | fish | feeding:needs_research | catalog_only | elevated | 8 |
-| 32 | 荷兰凤凰 (sp_0448) | fish | feeding:needs_research | catalog_only | elevated | 8 |
-| 33 | 斑马螺 (sp_0455) | invertebrate | environment:needs_research | catalog_only | elevated | 8 |
-| 34 | 喷火灯 (sp_0469) | fish | feeding:needs_research | catalog_only | elevated | 8 |
-| 35 | 刚果美人 (sp_0020) | fish | feeding:template_only | catalog_only | elevated | 7 |
-| 36 | 越南爬岩鳅 (sp_0045) | fish | feeding:template_only | catalog_only | elevated | 7 |
-| 37 | 三间鼠 (sp_0126) | fish | feeding:template_only | catalog_only | elevated | 7 |
-| 38 | 红苹果美人 (sp_0133) | fish | feeding:template_only | catalog_only | elevated | 7 |
-| 39 | 恶魔蟹 (sp_0006) | invertebrate |  | catalog_only | elevated | 3 |
-| 40 | 六角恐龙 (sp_0007) | reptile |  | catalog_only | elevated | 3 |
+| 30 | 斑马螺 (sp_0455) | invertebrate | environment:needs_research | catalog_only | elevated | 8 |
+| 31 | 恶魔蟹 (sp_0006) | invertebrate |  | catalog_only | elevated | 3 |
+| 32 | 六角恐龙 (sp_0007) | reptile |  | catalog_only | elevated | 3 |
+| 33 | 东方蝾螈 (sp_0008) | reptile |  | catalog_only | elevated | 3 |
+| 34 | 角蛙 (sp_0009) | reptile |  | catalog_only | elevated | 3 |
+| 35 | 接吻鱼 (sp_0015) | fish |  | catalog_only | elevated | 3 |
+| 36 | 阿卡西短鲷 (sp_0017) | fish |  | catalog_only | elevated | 3 |
+| 37 | 蓝王子 (sp_0018) | fish |  | catalog_only | elevated | 3 |
+| 38 | 埃及神仙 (sp_0019) | fish |  | catalog_only | elevated | 3 |
+| 39 | 刚果美人 (sp_0020) | fish |  | catalog_only | elevated | 3 |
+| 40 | 红利 (sp_0022) | fish |  | catalog_only | elevated | 3 |
 
 Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Every candidate requires source-by-source human review before authority writes.
