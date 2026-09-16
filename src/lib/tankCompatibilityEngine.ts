@@ -102,6 +102,21 @@ const resolveReviewedStageRisks = (speciesId: string, provider: CompatibilityEvi
   provider.getStageRisks(speciesId)
 );
 
+const reviewedProfileTargetsSpecies = (
+  predator: Fish,
+  prey: Fish,
+  provider: CompatibilityEvidenceProvider,
+) => {
+  const profile = resolveReviewedProfileForFish(predator, provider);
+  if (!profile) return false;
+  if (profile.predationTargets.length > 0) {
+    if (profile.predationTargets.includes(prey.id)) return true;
+    if (profile.predationTargets.includes('small_fish') && getLifeType(prey) === 'fish' && prey.size === 'Small') return true;
+    return false;
+  }
+  return profile.behaviorTraits.includes('predatory') && prey.size === 'Small';
+};
+
 export type EvaluateTankCompatibilityInput = {
   tank?: Aquarium | null;
   existingSpecies?: Array<Fish | { species?: Fish | null; record?: { quantity?: number; batches?: AquariumSpeciesBatch[] } | null }>;
@@ -382,12 +397,12 @@ const evaluateLegacyTankCompatibility = ({
         passedRules.push(asRule('ph_range_overlap', 'pH 区间有交集', `${pairName} 可以找到共同 pH 区间。`, 'info', reviewedRuleEvidence));
       }
 
-      const predator = [existing, candidateSpecies].find(item => (
-        resolveReviewedProfileForFish(item, provider)?.behaviorTraits.includes('predatory')
-      ));
-      const smaller = predator?.id === existing.id ? candidateSpecies : existing;
-      if (predator && smaller.size === 'Small' && predator.id !== smaller.id) {
-        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食特征，可能捕食或吞食 ${smaller.name}。`, 'high', evidenceFromProfile(predator, provider)));
+      const existingTargetsCandidate = reviewedProfileTargetsSpecies(existing, candidateSpecies, provider);
+      const candidateTargetsExisting = reviewedProfileTargetsSpecies(candidateSpecies, existing, provider);
+      const predator = existingTargetsCandidate ? existing : candidateTargetsExisting ? candidateSpecies : null;
+      const prey = predator?.id === existing.id ? candidateSpecies : existing;
+      if (predator && prey && predator.id !== prey.id) {
+        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食目标范围，可能捕食或吞食 ${prey.name}。`, 'high', evidenceFromProfile(predator, provider)));
       }
 
       if (reviewedPairRule) {
@@ -583,10 +598,8 @@ const evaluateLegacyTankCompatibility = ({
     }
   });
 
-  const hasPredator = currentSpecies.find(item => (
-    resolveReviewedProfileForFish(item, provider)?.behaviorTraits.includes('predatory')
-  ));
-  if (hasPredator && candidateSpecies.size === 'Small') {
+  const hasPredator = currentSpecies.find(item => reviewedProfileTargetsSpecies(item, candidateSpecies, provider));
+  if (hasPredator) {
     blockingRules.push(asRule(
       'predation_risk',
       '捕食或吞食风险',
@@ -759,6 +772,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     finNipVulnerability: reviewedSocial?.finNipVulnerability,
     swimmingPace: reviewedSocial?.swimmingPace,
     predationRisk: reviewedSocial?.predationRisk,
+    predationTargets: reviewed?.predationTargets || [],
     predationVulnerability: reviewedSocial?.predationVulnerability,
     lifeType: getLifeType(fish),
     size: fish.size,

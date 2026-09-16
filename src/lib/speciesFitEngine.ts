@@ -110,6 +110,17 @@ const isAnimalSpecies = (species: Fish) => {
   return lifeType !== 'plant' && lifeType !== 'hardscape' && !isAquaticPlantSpecies(species) && !isHardscapeSpecies(species);
 };
 
+const reviewedProfileTargetsSpecies = (predator: Fish, prey: Fish) => {
+  const reviewed = getReviewedCompatibilityProfileForFish(predator);
+  if (!reviewed) return false;
+  if (reviewed.predationTargets.length > 0) {
+    if (reviewed.predationTargets.includes(prey.id)) return true;
+    if (reviewed.predationTargets.includes('small_fish') && getLifeType(prey) === 'fish' && prey.size === 'Small') return true;
+    return false;
+  }
+  return reviewed.behaviorTraits.includes('predatory') && prey.size === 'Small';
+};
+
 export const getCurrentLivestockForAquarium = (aquarium: Aquarium | null | undefined, allSpecies: Fish[]) => (
   (aquarium?.fishes || [])
     .map(item => ({ record: item, species: allSpecies.find(species => species.id === item.fishId) }))
@@ -138,11 +149,11 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
     : /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
   const predator = validLivestock.find(item => {
     const reviewed = getReviewedCompatibilityProfileForFish(item.species);
-    if (reviewed) return reviewed.behaviorTraits.includes('predatory');
+    if (reviewed) return reviewedProfileTargetsSpecies(item.species, species);
     const predatorIdentity = `${item.species.name} ${item.species.category} ${item.species.description}`;
-    return /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
+    return selectedIsSmall && /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
   });
-  if (predator && selectedIsSmall) {
+  if (predator) {
     return {
       type: 'predation_risk',
       title: '存在捕食或吞食风险',

@@ -63,6 +63,7 @@ export type DomainSpeciesFact = {
   finNipVulnerability?: BehaviorRiskLevel;
   swimmingPace?: 'slow' | 'moderate' | 'fast' | 'unknown';
   predationRisk?: BehaviorRiskLevel;
+  predationTargets?: string[];
   predationVulnerability?: BehaviorRiskLevel;
   lifeType?: 'fish' | 'invertebrate' | 'reptile' | 'coral' | 'plant' | 'hardscape' | 'unknown';
   size?: 'Small' | 'Medium' | 'Large' | string;
@@ -178,6 +179,22 @@ const rangeContains = (value: number | null | undefined, min?: number | null, ma
   return value >= min && value <= max;
 };
 
+const predationTargetMatches = (predator: DomainSpeciesFact, prey: DomainSpeciesFact) => {
+  const targets = predator.predationTargets ?? [];
+  if (targets.length > 0) {
+    if (targets.includes(prey.id)) return true;
+    if (targets.includes('small_fish') && prey.lifeType === 'fish' && prey.size === 'Small') return true;
+    // `very_small_fish` intentionally has no generic size mapping yet: the
+    // reviewed evidence does not define a numeric threshold that Domain can
+    // safely infer from the coarse Small/Medium/Large catalogue class.
+    return false;
+  }
+  // Backward-compatible fallback for older reviewed profiles that only carry
+  // a broad predatory/high-risk trait and no explicit target scope.
+  return (predator.behaviorTraits?.includes('predatory') || predator.predationRisk === 'high')
+    && prey.size === 'Small';
+};
+
 export const evaluateCompatibility = ({
   intent,
   tank,
@@ -213,11 +230,11 @@ export const evaluateCompatibility = ({
         raise('not_recommended', 'water_type_conflict');
       }
       if (!existing.reviewed || !candidateSpecies.reviewed) raise('insufficient_data', 'species_evidence_unreviewed');
-      const predator = existing.behaviorTraits?.includes('predatory') || existing.predationRisk === 'high'
-        ? existing
-        : candidateSpecies.behaviorTraits?.includes('predatory') || candidateSpecies.predationRisk === 'high' ? candidateSpecies : null;
+      const existingTargetsCandidate = predationTargetMatches(existing, candidateSpecies);
+      const candidateTargetsExisting = predationTargetMatches(candidateSpecies, existing);
+      const predator = existingTargetsCandidate ? existing : candidateTargetsExisting ? candidateSpecies : null;
       const preyIsCandidate = predator?.id !== candidateSpecies.id;
-      if (predator && (preyIsCandidate ? candidateSpecies.size : existing.size) === 'Small') {
+      if (predator) {
         const preyContext = preyIsCandidate
           ? candidateContext
           : individualContexts?.[existing.id];

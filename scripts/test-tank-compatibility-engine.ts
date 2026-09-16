@@ -193,6 +193,28 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed small_fish predation target does not automatically include small invertebrates',
+    run: () => {
+      const predator = makeFish({
+        id: 'sp_0049',
+        name: '珍珠赤雷龙',
+        scientificName: 'Channa asiatica',
+        temperament: 'Aggressive',
+        size: 'Large',
+        tankSize: '至少 100 升',
+      });
+      const shrimp = fishData.find(item => item.id === 'sp_0001');
+      if (!shrimp) return false;
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '50' } }),
+        existingSpecies: [{ species: predator, record: { quantity: 1 } }],
+        candidateSpecies: shrimp,
+      });
+      return result.blockingRules.every(rule => rule.code !== 'predation_risk')
+        && result.metadata.domainRuleCodes.every(code => code !== 'predation_risk');
+    },
+  },
+  {
     name: 'pair result is independent of selection order',
     run: () => {
       const smallFish = makeFish();
