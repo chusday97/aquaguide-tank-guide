@@ -1,5 +1,5 @@
-import { useMemo, useState } from 'react';
-import { ArrowLeft, BookOpen, List, Search, Waves } from 'lucide-react';
+import { useMemo, useRef, useState } from 'react';
+import { ArrowLeft, BookOpen, ChevronLeft, ChevronRight, List, Search, Waves } from 'lucide-react';
 import { getLatestCareGuide, latestCareGuides, type LatestCareGuide } from '../../data/latestCareGuideCatalog';
 import { ResilientImage } from '../common/ResilientImage';
 import { getKnowledgeObservations, type KnowledgeObjectId, type KnowledgeObservation } from './knowledgeJourney';
@@ -49,6 +49,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
   const [selectedLayerId, setSelectedLayerId] = useState<KnowledgeObjectId | null>(null);
   const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const coverCarouselRef = useRef<HTMLDivElement | null>(null);
 
   const selectedLayer = useMemo(
     () => careLayers.find(layer => layer.id === selectedLayerId) || null,
@@ -137,7 +138,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     chooseLayer: 'Choose an aquarium layer',
     chooseLayerBody: 'Tap a hotspot on the tank to see the matching problem covers.',
     coverTitle: 'Problem covers',
-    coverBody: 'Each cover is one care problem. Choose the one that matches what you see.',
+    coverBody: 'Each cover is one care problem. Swipe or scroll sideways, then open the closest match.',
     searchPlaceholder: 'Search all care problems',
     noResult: 'No matching hand-drawn care cover found.',
     back: 'Back to covers',
@@ -154,7 +155,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     chooseLayer: '先选择鱼缸里的位置',
     chooseLayerBody: '点击左侧鱼缸中的生态层，右边会直接出现这一层对应的问题封面。',
     coverTitle: '这一层的问题',
-    coverBody: '每张封面代表一个问题，直接点击最像你当前情况的那一张。',
+    coverBody: '每张封面代表一个问题，左右滑动浏览，点击最像当前情况的那一张。',
     searchPlaceholder: '搜索全部养护问题',
     noResult: '没有找到匹配的最新手绘养护卡。',
     back: '返回问题封面',
@@ -169,6 +170,13 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     setSelectedLayerId(layer.id);
     setSelectedProblemId(null);
     setSearchTerm('');
+  };
+
+  const scrollCoverCarousel = (direction: -1 | 1) => {
+    const viewport = coverCarouselRef.current;
+    if (!viewport) return;
+    const distance = Math.max(280, viewport.clientWidth * 0.72);
+    viewport.scrollBy({ left: direction * distance, behavior: 'smooth' });
   };
 
   return (
@@ -196,7 +204,9 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
               >
                 <span className="interactive-care-layer-copy">
                   <strong>{isEn ? layer.en : layer.zh}</strong>
-                  <small>{isEn ? layer.hintEn : layer.hintZh}</small>
+                  <span className="interactive-care-layer-tags">
+                    {(isEn ? layer.hintEn : layer.hintZh).split(' · ').map(tag => <span key={tag}>{tag}</span>)}
+                  </span>
                 </span>
                 <span className="interactive-care-layer-index" aria-hidden="true">{String(careLayers.findIndex(item => item.id === layer.id) + 1).padStart(2, '0')}</span>
               </button>
@@ -211,7 +221,9 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                   className={`interactive-care-filter-layer interactive-care-filter-layer--refined ${selectedLayerId === filterLayer.id ? 'is-selected' : ''}`}
                 >
                   <strong>{isEn ? filterLayer.en : filterLayer.zh}</strong>
-                  <small>{isEn ? filterLayer.hintEn : filterLayer.hintZh}</small>
+                  <span className="interactive-care-filter-tags">
+                    {(isEn ? filterLayer.hintEn : filterLayer.hintZh).split(' · ').map(tag => <span key={tag}>{tag}</span>)}
+                  </span>
                 </button>
               );
             })()}
@@ -246,30 +258,34 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                   <p>{copy.chooseLayerBody}</p>
                 </div>
               ) : filteredCovers.length > 0 ? (
-                <div className="interactive-care-cover-carousel" aria-label={isEn ? 'Problem cover carousel' : '问题封面纵向轮播'}>
-                  <div className="interactive-care-cover-track">
-                    {filteredCovers.map(item => (
-                      <button
-                        key={`${item.layer?.id || 'global'}-${item.problem.id}`}
-                        type="button"
-                        className="interactive-care-cover-card interactive-care-cover-card--carousel"
-                        onClick={() => setSelectedProblemId(item.problem.id)}
-                        aria-label={item.title}
-                      >
-                        <ResilientImage
-                          src={item.imageUrl}
-                          alt={item.title}
-                          className="interactive-care-cover-image"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                        <div className="interactive-care-cover-meta">
-                          <span>{item.layer ? (isEn ? item.layer.en : item.layer.zh) : (isEn ? item.latestGuide.categoryEn : item.latestGuide.category)}</span>
-                          <strong>{item.title}</strong>
-                        </div>
-                      </button>
-                    ))}
+                <div className="interactive-care-cover-carousel-shell">
+                  <button type="button" className="interactive-care-cover-arrow is-prev" onClick={() => scrollCoverCarousel(-1)} aria-label={isEn ? 'Previous covers' : '上一组封面'}><ChevronLeft className="h-5 w-5" /></button>
+                  <div ref={coverCarouselRef} className="interactive-care-cover-carousel" aria-label={isEn ? 'Problem cover carousel' : '问题封面左右轮播'}>
+                    <div className="interactive-care-cover-track">
+                      {filteredCovers.map(item => (
+                        <button
+                          key={`${item.layer?.id || 'global'}-${item.problem.id}`}
+                          type="button"
+                          className="interactive-care-cover-card interactive-care-cover-card--carousel"
+                          onClick={() => setSelectedProblemId(item.problem.id)}
+                          aria-label={item.title}
+                        >
+                          <ResilientImage
+                            src={item.imageUrl}
+                            alt={item.title}
+                            className="interactive-care-cover-image"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <div className="interactive-care-cover-meta">
+                            <span>{item.layer ? (isEn ? item.layer.en : item.layer.zh) : (isEn ? item.latestGuide.categoryEn : item.latestGuide.category)}</span>
+                            <strong>{item.title}</strong>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
+                  <button type="button" className="interactive-care-cover-arrow is-next" onClick={() => scrollCoverCarousel(1)} aria-label={isEn ? 'Next covers' : '下一组封面'}><ChevronRight className="h-5 w-5" /></button>
                 </div>
               ) : (
                 <div className="interactive-care-cover-empty">{copy.noResult}</div>
