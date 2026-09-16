@@ -1,5 +1,5 @@
 import { useMemo, useRef, useState } from 'react';
-import { BookOpen, ChevronLeft, ChevronRight, List, Waves } from 'lucide-react';
+import { BookOpen, ChevronDown, ChevronUp, List, Search, Waves } from 'lucide-react';
 import type { CareTopic } from '../../data/careTopicsData';
 import { runtimeCareTopicsData } from '../../data/runtimeContentCatalog';
 import { getLatestCareGuide } from '../../data/latestCareGuideCatalog';
@@ -66,7 +66,10 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
   const [selectedProblemGroupId, setSelectedProblemGroupId] = useState<KnowledgeProblemGroupId | null>(null);
   const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null);
   const [guideIndex, setGuideIndex] = useState(0);
-  const touchStartX = useRef<number | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const touchStartY = useRef<number | null>(null);
+  const hoverLock = useRef(false);
+  const hoverUnlockTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const selectedLayer = useMemo(
     () => careLayers.find(layer => layer.id === selectedLayerId) || null,
     [selectedLayerId]
@@ -179,6 +182,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
         open: 'Open guide',
         nextStep: 'Next step',
         avoid: 'Avoid',
+        searchPlaceholder: 'Search care problems',
       }
     : {
         eyebrow: '互动养护指南',
@@ -198,18 +202,44 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
         open: '打开指南',
         nextStep: '下一步',
         avoid: '避免这样做',
+        searchPlaceholder: '搜索问题或养护指南',
       };
 
   const onTouchStart = (event: React.TouchEvent) => {
-    touchStartX.current = event.changedTouches[0]?.clientX ?? null;
+    touchStartY.current = event.changedTouches[0]?.clientY ?? null;
   };
 
   const onTouchEnd = (event: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const endX = event.changedTouches[0]?.clientX ?? touchStartX.current;
-    const delta = endX - touchStartX.current;
-    touchStartX.current = null;
-    if (Math.abs(delta) > 45) stepGuide(delta < 0 ? 1 : -1);
+    if (touchStartY.current === null) return;
+    const endY = event.changedTouches[0]?.clientY ?? touchStartY.current;
+    const delta = endY - touchStartY.current;
+    touchStartY.current = null;
+    if (Math.abs(delta) > 42) stepGuide(delta < 0 ? 1 : -1);
+  };
+
+  const holdHoverSelection = () => {
+    hoverLock.current = true;
+    if (hoverUnlockTimer.current) clearTimeout(hoverUnlockTimer.current);
+    hoverUnlockTimer.current = setTimeout(() => { hoverLock.current = false; }, 320);
+  };
+
+  const selectGuideFromHover = (index: number) => {
+    if (index === guideIndex || hoverLock.current) return;
+    holdHoverSelection();
+    setGuideIndex(index);
+  };
+
+  const onGuideWheel = (event: React.WheelEvent) => {
+    if (carouselItems.length < 2 || Math.abs(event.deltaY) < 8) return;
+    event.preventDefault();
+    holdHoverSelection();
+    stepGuide(event.deltaY > 0 ? 1 : -1);
+  };
+
+  const submitSearch = (event: React.FormEvent) => {
+    event.preventDefault();
+    const query = searchTerm.trim();
+    onBrowseList(query || undefined);
   };
 
   return (
@@ -220,7 +250,18 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
           <h2>{copy.title}</h2>
           <p>{copy.subtitle}</p>
         </div>
-        <button type="button" onClick={() => onBrowseList()} className="interactive-care-browse-all"><List className="h-4 w-4" />{copy.browse}</button>
+        <div className="interactive-care-toolbar-actions">
+          <form className="interactive-care-search" role="search" onSubmit={submitSearch}>
+            <Search className="h-4 w-4" aria-hidden="true" />
+            <input
+              value={searchTerm}
+              onChange={(event) => setSearchTerm(event.target.value)}
+              placeholder={copy.searchPlaceholder}
+              aria-label={copy.searchPlaceholder}
+            />
+          </form>
+          <button type="button" onClick={() => onBrowseList()} className="interactive-care-browse-all"><List className="h-4 w-4" />{copy.browse}</button>
+        </div>
       </header>
 
       <div className="interactive-care-workspace">
@@ -251,25 +292,15 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                 </button>
               );
             })()}
-          </div>
 
-          <div className={`interactive-care-problem-panel ${selectedLayer ? 'is-active' : ''}`} aria-live="polite">
-            {!selectedLayer ? (
-              <div className="interactive-care-problem-empty">
-                <strong>{copy.chooseLayer}</strong>
-                <span>{copy.chooseLayerBody}</span>
-              </div>
-            ) : (
-              <>
-                <div className="interactive-care-problem-head">
-                  <div>
-                    <span>{copy.problems}</span>
-                    <strong>{isEn ? selectedLayer.en : selectedLayer.zh}</strong>
-                  </div>
-                  <span>{allProblems.length}</span>
+            {selectedLayer && (
+              <div className={`interactive-care-layer-issue-menu is-${selectedLayer.id}`} aria-live="polite">
+                <div className="interactive-care-layer-issue-head">
+                  <span>{copy.problems}</span>
+                  <strong>{isEn ? selectedLayer.en : selectedLayer.zh}</strong>
                 </div>
                 {problemGroups.length > 0 && (
-                  <div className="interactive-care-problem-groups" aria-label={copy.problemTypes}>
+                  <div className="interactive-care-layer-groups" aria-label={copy.problemTypes}>
                     {problemGroups.map(group => (
                       <button
                         key={group.id}
@@ -279,18 +310,12 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                         className={selectedProblemGroupId === group.id ? 'is-selected' : ''}
                       >
                         {isEn ? group.labelEn : group.label}
-                        <small>{allProblems.filter(problem => problem.groupId === group.id).length}</small>
                       </button>
                     ))}
                   </div>
                 )}
-                {problemGroups.length > 0 && !selectedProblemGroupId ? (
-                  <div className="interactive-care-problem-empty is-compact">
-                    <strong>{copy.chooseGroup}</strong>
-                    <span>{copy.chooseGroupBody}</span>
-                  </div>
-                ) : (
-                  <div className="interactive-care-problem-grid">
+                {(problemGroups.length === 0 || selectedProblemGroupId) && (
+                  <div className="interactive-care-layer-problems">
                     {problems.map(problem => (
                       <button
                         key={problem.id}
@@ -299,15 +324,15 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                         onClick={() => selectProblem(problem)}
                         className={selectedProblemId === problem.id ? 'is-selected' : ''}
                       >
-                        <span>{isEn ? (problem.labelEn || problem.label) : problem.label}</span>
-                        <small>{problem.urgency === 'urgent' ? (isEn ? 'Priority' : '优先处理') : problem.urgency === 'watch' ? (isEn ? 'Watch' : '需要观察') : (isEn ? 'Routine' : '日常')}</small>
+                        {isEn ? (problem.labelEn || problem.label) : problem.label}
                       </button>
                     ))}
                   </div>
                 )}
-              </>
+              </div>
             )}
           </div>
+
         </div>
 
         <aside className="interactive-care-guide-panel" aria-live="polite">
@@ -351,35 +376,67 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                 <span className="interactive-care-carousel-count">{guideIndex + 1} / {carouselItems.length}</span>
               </div>
 
-              <div className="interactive-care-guide-stage" onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
-                <ResilientImage
-                  src={activeGuide.imageUrl}
-                  sizes="(max-width: 767px) calc(100vw - 64px), 480px"
-                  alt={activeGuide.title}
-                  className="interactive-care-guide-image"
-                  loading="lazy"
-                  decoding="async"
-                />
+              <div
+                className="interactive-care-guide-wheel"
+                onWheel={onGuideWheel}
+                onTouchStart={onTouchStart}
+                onTouchEnd={onTouchEnd}
+                aria-label={isEn ? 'Vertical care guide carousel' : '纵向养护卡轮播'}
+              >
+                <div className="interactive-care-wheel-viewport">
+                  {carouselItems.map((guide, index) => {
+                    const distance = index - guideIndex;
+                    const visibleDistance = Math.max(-2, Math.min(2, distance));
+                    const absDistance = Math.abs(distance);
+                    return (
+                      <button
+                        key={guide.id}
+                        type="button"
+                        className={`interactive-care-wheel-card ${index === guideIndex ? 'is-active' : ''} ${absDistance > 2 ? 'is-hidden' : ''}`}
+                        style={{
+                          transform: `translateY(calc(-50% + ${visibleDistance * 104}px)) scale(${index === guideIndex ? 1 : absDistance === 1 ? .88 : .78}) rotateX(${visibleDistance * -7}deg)`,
+                          opacity: absDistance > 2 ? 0 : index === guideIndex ? 1 : absDistance === 1 ? .72 : .36,
+                          zIndex: 10 - Math.min(absDistance, 9),
+                        }}
+                        aria-current={index === guideIndex ? 'true' : undefined}
+                        aria-label={guide.title}
+                        onMouseEnter={() => selectGuideFromHover(index)}
+                        onFocus={() => setGuideIndex(index)}
+                        onClick={() => setGuideIndex(index)}
+                      >
+                        <ResilientImage
+                          src={guide.imageUrl}
+                          sizes="(max-width: 767px) calc(100vw - 88px), 380px"
+                          alt={guide.title}
+                          className="interactive-care-wheel-image"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <span className="interactive-care-wheel-label">{guide.label}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+                <div className="interactive-care-wheel-controls">
+                  <button type="button" aria-label={isEn ? 'Previous card' : '上一张卡'} onClick={() => stepGuide(-1)} disabled={carouselItems.length < 2}><ChevronUp className="h-4 w-4" /></button>
+                  <button type="button" aria-label={isEn ? 'Next card' : '下一张卡'} onClick={() => stepGuide(1)} disabled={carouselItems.length < 2}><ChevronDown className="h-4 w-4" /></button>
+                </div>
               </div>
 
               <div className="interactive-care-guide-copy">
-                <span className={latestGuide ? '' : undefined}>{activeGuide.label}</span>
+                <span>{activeGuide.label}</span>
                 <p>{activeGuide.summary}</p>
                 {activeGuide.detail && <p className="interactive-care-guide-why">{activeGuide.detail}</p>}
                 {latestGuide && latestGuide.avoid && (
                   <p className="interactive-care-guide-avoid"><strong>{copy.avoid}：</strong>{isEn ? latestGuide.avoidEn : latestGuide.avoid}</p>
                 )}
+              </div>
+
+              <div className="interactive-care-guide-actions">
                 <div className="interactive-care-carousel-dots" aria-label={isEn ? 'Guide carousel position' : '指南轮播位置'}>
                   {carouselItems.map((guide, index) => (
                     <button key={guide.id} type="button" aria-label={isEn ? `Guide ${index + 1}` : `第 ${index + 1} 张养护卡`} aria-current={index === guideIndex ? 'true' : undefined} onClick={() => setGuideIndex(index)} />
                   ))}
-                </div>
-              </div>
-
-              <div className="interactive-care-guide-actions">
-                <div className="interactive-care-guide-arrows">
-                  <button type="button" aria-label={isEn ? 'Previous guide' : '上一条指南'} onClick={() => stepGuide(-1)} disabled={carouselItems.length < 2}><ChevronLeft className="h-4 w-4" /></button>
-                  <button type="button" aria-label={isEn ? 'Next guide' : '下一条指南'} onClick={() => stepGuide(1)} disabled={carouselItems.length < 2}><ChevronRight className="h-4 w-4" /></button>
                 </div>
                 <button type="button" className="interactive-care-open-guide" onClick={openActiveGuide}>{latestGuide ? (guideIndex < carouselItems.length - 1 ? copy.nextStep : copy.browse) : copy.open}<BookOpen className="h-4 w-4" /></button>
               </div>
