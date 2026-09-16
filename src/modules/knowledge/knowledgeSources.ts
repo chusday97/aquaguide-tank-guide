@@ -1,6 +1,13 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'batch05-fishbase-gastrodermus-hastatus': { id: 'batch05-fishbase-gastrodermus-hastatus', title: 'Gastrodermus hastatus species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Corydoras-hastatus', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'batch05-fishbase-poropanchax-normani': { id: 'batch05-fishbase-poropanchax-normani', title: 'Poropanchax normani species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Poropanchax-normani.html', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'batch05-fishbase-hyphessobrycon-amapaensis': { id: 'batch05-fishbase-hyphessobrycon-amapaensis', title: 'Hyphessobrycon amapaensis species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Hyphessobrycon-amapaensis', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'batch05-fishbase-hyphessobrycon-pulchripinnis': { id: 'batch05-fishbase-hyphessobrycon-pulchripinnis', title: 'Hyphessobrycon pulchripinnis species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Hyphessobrycon-pulchripinnis.html', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'batch05-fishbase-poecilia-reticulata': { id: 'batch05-fishbase-poecilia-reticulata', title: 'Poecilia reticulata species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Poecilia-reticulata.html', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'batch05-fishbase-hemigrammus-bleheri': { id: 'batch05-fishbase-hemigrammus-bleheri', title: 'Hemigrammus bleheri species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Hemigrammus-bleheri.html', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'batch05-fishbase-paracheirodon-innesi': { id: 'batch05-fishbase-paracheirodon-innesi', title: 'Paracheirodon innesi species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Paracheirodon-innesi.html', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'batch04-raffles-geosesarma-dennerle': {
     id: 'batch04-raffles-geosesarma-dennerle', title: 'Geosesarma dennerle species description', publisher: 'Raffles Bulletin of Zoology',
     url: 'https://lkcnhm.nus.edu.sg/wp-content/uploads/sites/11/app/uploads/2017/06/63rbz003-013.pdf', sourceType: 'peer_reviewed', reviewStatus: 'reviewed',

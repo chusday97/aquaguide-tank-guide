@@ -138,7 +138,18 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Protected CSV SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next exact candidates: `sp_0052` 月光鼠 / `Corydoras hastatus`, `sp_0112` 蓝眼灯 / `Poropanchax normani`, `sp_0115` 琥珀灯 / `Hyphessobrycon amapaensis`, then `sp_0141` 甜心柠檬灯 (variant). Continue fail-closed if direct evidence is not available.
 
+## Phase 2 Batch 03 checkpoint preparation — 2026-09-16
+- Completed ten direct Knowledge records: `sp_0052`, `sp_0112`, `sp_0115`, `sp_0141`, `sp_0143`, `sp_0144`, `sp_0145`, `sp_0154`, `sp_0155`, and `sp_0167`.
+- FishBase directly supports `sp_0052` (`Gastrodermus hastatus`) freshwater, 25–28°C, pH 6–8, 2.4 cm SL and small-school behavior; `sp_0112` (`Poropanchax normani`) freshwater, 22–26°C, pH 6.5–7.2 and 4.5 cm TL; and `sp_0115` (`Hyphessobrycon amapaensis`) freshwater and 3.0 cm SL. Other fields remain reviewed-unknown.
+- Seven commercial variants were searched against their base-species FishBase records, but no variant-specific authority was found. All five completion fields remain direct `reviewed_unknown`; no base-species inheritance is used.
+- Matrix before → after: feeding `needs_research 206→196`, `reviewed_unknown 12→22`; environment `needs_research 441→431`, `reviewed_supported 23→26`, `reviewed_unknown 11→18`; space `needs_research 400→390`, `reviewed_unknown 11→18`; social `needs_research 331→321`, `reviewed_unknown 12→21`; care `template_only 79→69`, `reviewed_unknown 12→22`.
+- No Compatibility Profile, pair rule, launch object, or production/schema change was made. Frozen launch gate remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Added `phase2Batch03Authority.ts`, its contract test, source registrations, matrix/backlog integration, and living documentation. Protected CSV was not staged or modified; SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Passing gates: Batch 01/02/03 contracts, Species Knowledge via `node --import tsx`, Knowledge Matrix, Catalog batch contract, Compatibility engine/evidence/scorecard, Domain, Compatibility Service, regression, admin, runtime authority, lint, and launch matrix. Direct `tsx` commands and Vite build remain blocked by pre-existing EPERM IPC/cache restrictions. Catalog review contract passes; its imported review diagnostic reports the pre-existing protected-CSV completeness mismatch without changing that file.
+- Next exact candidates after this batch are the regenerated research backlog ranks 1 onward; continue source-first and fail-closed.
+
 ## Session stop record — 2026-09-16
+
 - Exact HEAD remains `cdccdc038ebaced006d323076b3666ba3ffe01cc`.
 - Batch 02 changes are uncommitted because Git could not create the worktree index lock at `/Users/chuchu/aquaguide-preview-current/.git/worktrees/aquaguide-compat-core/index.lock` (`Operation not permitted`). No commit was created, nothing was pushed, and no user-owned work was discarded.
 - Stop reason: required local checkpoint commit is unavailable under the session filesystem boundary; the exact `tsx` and Vite build gates are also blocked by the pre-existing cross-worktree dependency/cache boundary. Equivalent TypeScript test invocations passed as recorded above.
