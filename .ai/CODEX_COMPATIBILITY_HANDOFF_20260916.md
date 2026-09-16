@@ -243,6 +243,15 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 46 checkpoint preparation — 2026-09-17
+- Completed thirteen direct reviewed-unknown records: `sp_0355`, `sp_0356`, `sp_0357`, `sp_0477`, `sp_0478`, `sp_0479`, `sp_0480`, `sp_0481`, `sp_0482`, `sp_0483`, `sp_0484`, `sp_0485`, and `sp_0486`.
+- Tropica professional plant records were reviewed for the named objects. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 426→439`, space `reviewed_unknown 426→439` with `needs_research 13→0`, and care `reviewed_unknown 453→466`; no feeding or social status changed.
+- Batch 46 contract, matrix contract, Species Detail assertions, Launch Compatibility, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, and `sp_0446`; the 40-item queue also retains reviewed-unknown follow-up candidates.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 45 checkpoint preparation — 2026-09-17
 - Completed fifteen direct reviewed-unknown records: `sp_0304`, `sp_0305`, `sp_0306`, `sp_0307`, `sp_0308`, `sp_0309`, `sp_0310`, `sp_0311`, `sp_0312`, `sp_0313`, `sp_0314`, `sp_0315`, `sp_0316`, `sp_0317`, and `sp_0354`.
 - Tropica professional plant records were reviewed for the named objects and variants. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.

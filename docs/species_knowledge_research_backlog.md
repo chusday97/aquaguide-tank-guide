@@ -13,36 +13,36 @@ Generated from 486 catalog objects. Reviewed authority is recorded in source-con
 | 7 | 虎皮鱼 (sp_0439) | fish | environment:needs_research | launch_cohort | elevated | 14 |
 | 8 | 熊猫鼠 (sp_0443) | fish | environment:needs_research | launch_cohort | elevated | 14 |
 | 9 | 天使鱼（神仙鱼） (sp_0446) | fish | environment:needs_research | launch_cohort | elevated | 14 |
-| 10 | 小水兰 (sp_0355) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 11 | 大水兰 (sp_0356) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 12 | 莫斯墙 (大三角) (sp_0357) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 13 | 趴地珍珠 (sp_0477) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 14 | 迷你牛毛毡 (sp_0478) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 15 | 红蝴蝶 (sp_0479) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 16 | 小对叶 (sp_0480) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 17 | 水罗兰 (sp_0481) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 18 | 红丁香 (sp_0482) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 19 | 红雨伞 (sp_0483) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 20 | 红根浮萍 (sp_0484) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 21 | 水芹 (sp_0485) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 22 | 小慈菇 (sp_0486) | plant | environment:needs_research, space:needs_research | catalog_only | standard | 10 |
-| 23 | 极火虾 (sp_0001) | invertebrate |  | launch_cohort | elevated | 9 |
-| 24 | 水晶虾 (sp_0002) | invertebrate |  | launch_cohort | elevated | 9 |
-| 25 | 黑裙鱼 (sp_0010) | fish |  | launch_cohort | elevated | 9 |
-| 26 | 月光鱼 (sp_0011) | fish |  | launch_cohort | elevated | 9 |
-| 27 | 樱桃灯 (sp_0012) | fish |  | launch_cohort | elevated | 9 |
-| 28 | 小精灵 (sp_0013) | fish |  | launch_cohort | elevated | 9 |
-| 29 | 迷你鹦鹉鱼 (sp_0021) | fish |  | launch_cohort | elevated | 9 |
-| 30 | 珍珠赤雷龙 (sp_0049) | fish |  | launch_cohort | elevated | 9 |
-| 31 | 白金雷龙 (sp_0224) | fish |  | launch_cohort | elevated | 9 |
-| 32 | 糖果KOI斗鱼 (sp_0258) | fish |  | launch_cohort | elevated | 9 |
-| 33 | 斑马螺 (sp_0428) | invertebrate |  | launch_cohort | elevated | 9 |
-| 34 | 红鼻剪刀 (sp_0433) | fish |  | launch_cohort | elevated | 9 |
-| 35 | 玛丽鱼 (sp_0437) | fish |  | launch_cohort | elevated | 9 |
-| 36 | 红剑鱼 (sp_0438) | fish |  | launch_cohort | elevated | 9 |
-| 37 | 珍珠马甲 (sp_0444) | fish |  | launch_cohort | elevated | 9 |
-| 38 | 七彩神仙鱼（七彩鱼） (sp_0447) | fish |  | launch_cohort | elevated | 9 |
-| 39 | 地图鱼 (sp_0451) | fish |  | launch_cohort | elevated | 9 |
-| 40 | 黑壳虾 (sp_0459) | invertebrate |  | launch_cohort | elevated | 9 |
+| 10 | 极火虾 (sp_0001) | invertebrate |  | launch_cohort | elevated | 9 |
+| 11 | 水晶虾 (sp_0002) | invertebrate |  | launch_cohort | elevated | 9 |
+| 12 | 黑裙鱼 (sp_0010) | fish |  | launch_cohort | elevated | 9 |
+| 13 | 月光鱼 (sp_0011) | fish |  | launch_cohort | elevated | 9 |
+| 14 | 樱桃灯 (sp_0012) | fish |  | launch_cohort | elevated | 9 |
+| 15 | 小精灵 (sp_0013) | fish |  | launch_cohort | elevated | 9 |
+| 16 | 迷你鹦鹉鱼 (sp_0021) | fish |  | launch_cohort | elevated | 9 |
+| 17 | 珍珠赤雷龙 (sp_0049) | fish |  | launch_cohort | elevated | 9 |
+| 18 | 白金雷龙 (sp_0224) | fish |  | launch_cohort | elevated | 9 |
+| 19 | 糖果KOI斗鱼 (sp_0258) | fish |  | launch_cohort | elevated | 9 |
+| 20 | 斑马螺 (sp_0428) | invertebrate |  | launch_cohort | elevated | 9 |
+| 21 | 红鼻剪刀 (sp_0433) | fish |  | launch_cohort | elevated | 9 |
+| 22 | 玛丽鱼 (sp_0437) | fish |  | launch_cohort | elevated | 9 |
+| 23 | 红剑鱼 (sp_0438) | fish |  | launch_cohort | elevated | 9 |
+| 24 | 珍珠马甲 (sp_0444) | fish |  | launch_cohort | elevated | 9 |
+| 25 | 七彩神仙鱼（七彩鱼） (sp_0447) | fish |  | launch_cohort | elevated | 9 |
+| 26 | 地图鱼 (sp_0451) | fish |  | launch_cohort | elevated | 9 |
+| 27 | 黑壳虾 (sp_0459) | invertebrate |  | launch_cohort | elevated | 9 |
+| 28 | 金三角灯 (sp_0468) | fish |  | launch_cohort | elevated | 9 |
+| 29 | 高体鳑鲏 (sp_0475) | fish |  | launch_cohort | elevated | 9 |
+| 30 | 阿卡西短鲷 (sp_0017) | fish | feeding:needs_research | catalog_only | elevated | 8 |
+| 31 | 一眉道人 (sp_0440) | fish | feeding:needs_research | catalog_only | elevated | 8 |
+| 32 | 荷兰凤凰 (sp_0448) | fish | feeding:needs_research | catalog_only | elevated | 8 |
+| 33 | 斑马螺 (sp_0455) | invertebrate | environment:needs_research | catalog_only | elevated | 8 |
+| 34 | 喷火灯 (sp_0469) | fish | feeding:needs_research | catalog_only | elevated | 8 |
+| 35 | 刚果美人 (sp_0020) | fish | feeding:template_only | catalog_only | elevated | 7 |
+| 36 | 越南爬岩鳅 (sp_0045) | fish | feeding:template_only | catalog_only | elevated | 7 |
+| 37 | 三间鼠 (sp_0126) | fish | feeding:template_only | catalog_only | elevated | 7 |
+| 38 | 红苹果美人 (sp_0133) | fish | feeding:template_only | catalog_only | elevated | 7 |
+| 39 | 恶魔蟹 (sp_0006) | invertebrate |  | catalog_only | elevated | 3 |
+| 40 | 六角恐龙 (sp_0007) | reptile |  | catalog_only | elevated | 3 |
 
 Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Every candidate requires source-by-source human review before authority writes.
