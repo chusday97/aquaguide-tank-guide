@@ -36,6 +36,7 @@ import { phase2Batch33Knowledge } from './phase2Batch33Authority';
 import { phase2Batch34Knowledge } from './phase2Batch34Authority';
 import { phase2Batch35Knowledge } from './phase2Batch35Authority';
 import { phase2Batch36Knowledge } from './phase2Batch36Authority';
+import { phase2Batch37Knowledge } from './phase2Batch37Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -74,6 +75,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0366', 'sp_0367', 'sp_0369', 'sp_0371', 'sp_0377', 'sp_0378', 'sp_0380', 'sp_0381', 'sp_0383', 'sp_0403',
   'sp_0404', 'sp_0405', 'sp_0406', 'sp_0413', 'sp_0426', 'sp_0427', 'sp_0439', 'sp_0454', 'sp_0458', 'sp_0460',
   'sp_0461', 'sp_0462', 'sp_0463', 'sp_0464', 'sp_0465', 'sp_0466', 'sp_0467', 'sp_0470', 'sp_0471', 'sp_0472',
+  'sp_0473', 'sp_0474', 'sp_0476', 'sp_0012', 'sp_0147', 'sp_0148', 'sp_0222', 'sp_0258', 'sp_0433', 'sp_0434',
 ]);
 
 
@@ -817,6 +819,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch34Knowledge,
   ...phase2Batch35Knowledge,
   ...phase2Batch36Knowledge,
+  ...phase2Batch37Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1649,6 +1652,34 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // while this completion record remains matrix-only and fail-closed.
   if (fish.id === 'sp_0439' && reviewedKnowledgeBySpeciesId[fish.id]) {
     return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // White cloud mountain minnow has an established Species Detail runtime
+  // profile; retain it while this completion record remains matrix-only.
+  if (fish.id === 'sp_0434' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Cherry barb has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only.
+  if (fish.id === 'sp_0012' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // The Blue parrot variant has an established reviewed base-species runtime
+  // profile; preserve that boundary without treating it as direct completion
+  // evidence for the variant's own care fields.
+  if (fish.id === 'sp_0147') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Rummy-nose tetra has an established Species Detail runtime profile;
+  // retain it while this completion record remains matrix-only.
+  if (fish.id === 'sp_0433' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // These Compatibility-reviewed ornamental variants retain their existing
+  // base runtime boundaries; their own completion records remain independent.
+  if (['sp_0148', 'sp_0222', 'sp_0258'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
   // These catalog objects also have established Species Detail runtime
   // profiles; keep those profiles while their Batch 31 completion claims

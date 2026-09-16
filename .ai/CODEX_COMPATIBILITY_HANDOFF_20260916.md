@@ -244,6 +244,16 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 
+## Phase 2 Batch 37 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0473`, `sp_0474`, `sp_0476`, `sp_0012`, `sp_0147`, `sp_0148`, `sp_0222`, `sp_0258`, `sp_0433`, and `sp_0434`.
+- FishBase and professional institutional records were reviewed for the named taxa. The evidence did not establish complete object-specific feeding/care authority; variants remain independent and no template, name inference, or base-species inheritance was promoted as completion evidence.
+- Existing Species Detail/Compatibility runtime profiles for Cherry Barb, Blue/White/Jellybean parrot variants, Koi Betta, Rummy-nose Tetra, and White Cloud Mountain Minnow were preserved through narrow runtime branches while matrix completion remained object-specific.
+- Matrix after Batch 37: feeding `reviewed_unknown 352→362`, `needs_research 36→31`, `template_only 22→17`; environment `reviewed_unknown 341→348`, `needs_research 108→101`; space `reviewed_unknown 341→348`, `needs_research 71→65`; social `reviewed_unknown 344→351`, `inherited_reviewed 32→28`, `needs_research 3→0`; care `reviewed_supported 98→90`, `reviewed_unknown 352→362`, `template_only 25→23`.
+- Batch 37 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0446`, `sp_0013`, `sp_0028`, `sp_0030`, `sp_0031`, `sp_0164`, `sp_0165`, `sp_0166`, `sp_0223`, and `sp_0238`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
 ## Phase 2 Batch 36 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0461`, `sp_0462`, `sp_0463`, `sp_0464`, `sp_0465`, `sp_0466`, `sp_0467`, `sp_0470`, `sp_0471`, and `sp_0472`.
 - Professional taxonomy/species records were reviewed through NCBI Taxonomy, CITES Species+, Taylor & Francis, and FishBase. The records did not establish complete object-specific feeding/care authority, so no reviewed_supported claim, template, name inference, or base-species inheritance was promoted.
