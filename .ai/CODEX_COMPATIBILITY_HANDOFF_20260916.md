@@ -291,6 +291,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 30 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 31 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0014`, `sp_0049`, `sp_0431`, `sp_0432`, `sp_0436`, `sp_0443`, `sp_0435`, `sp_0191`, `sp_0192`, and `sp_0193`.
+- FishBase professional records were reviewed for the seven freshwater fish; WoRMS professional taxonomy endpoints were registered for the three marine invertebrate objects. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted; no template, name inference, or variant/base inheritance was used.
+- Matrix now reports feeding `reviewed_unknown 292→302`, environment `reviewed_unknown 288→292`, space `reviewed_unknown 288→292`, social `reviewed_unknown 291→295`, and care `reviewed_unknown 292→302`; existing runtime Species Detail authority was preserved for objects with historical profiles.
+- Batch 31 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, lint, and build/catalog gates were run. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0194`, `sp_0195`, `sp_0210`, `sp_0233`, `sp_0252`, `sp_0267`, `sp_0295`, `sp_0320`, `sp_0324`, and `sp_0326`.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
