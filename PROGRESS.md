@@ -806,3 +806,8 @@
 - [x] Generated a 40-item ranked research backlog; launch-cohort membership is explicitly only a commonness proxy.
 - [x] Added matrix generator and contract test; no batch data, Profile, Species Knowledge, or migration authority was written in this phase.
 - [ ] Phase 2 research and authority writes remain blocked until each batch has source-specific evidence, citation provenance, additive migration ownership, and the complete requested gate suite.
+## 2026-09-16 — Reviewed Profile ownership repair
+
+- [x] Added additive migration owner `202609160001_compatibility_rummy_oto_oscar_baseline.sql` for `sp_0433`, `sp_0013`, `sp_0451` with exact/evidence drift guards.
+- [x] Admin contract passes via `node --import tsx`; no historical migration was edited.
+- [ ] Full Knowledge Completion Program Phase 2 remains pending; no new missing-species authority has been written.

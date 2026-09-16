@@ -397,3 +397,9 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Priority uses only explicit gap states, launch-cohort membership as an operational commonness proxy, and compatibility/temperament risk. No user-frequency telemetry was inferred.
 - `sp_0016`, `sp_0224`, and `sp_0475` are the first three backlog candidates. They remain unchanged and require source-by-source human review before authority writes.
 - Validation: `npm run knowledge:completion-matrix` and `npm run test:knowledge-completion-matrix` pass. Existing `docs/species_knowledge_audit.csv` has a pre-existing user modification and was preserved.
+## 2026-09-16 — Additive ownership repair after Phase 1
+
+- Added `supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql` for existing reviewed Profiles `sp_0433`, `sp_0013`, and `sp_0451` only.
+- Migration owns Profile rows, seven citation records, exact Profile drift guards, and exact evidence-link drift guards; historical migrations remain unchanged.
+- Extended `test:compatibility-admin-contract` to require this owner and preserve the explicit post-recovery ownership map. Equivalent `node --import tsx` Admin contract and `lint` pass.
+- This does not add any new missing-species knowledge. Phase 2 backlog research remains source-gated and unstarted.
