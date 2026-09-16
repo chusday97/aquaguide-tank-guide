@@ -4,6 +4,7 @@
 
 - Added: Knowledge Completion Phase 2 Batch 03 direct records for ten backlog objects, with FishBase-supported facts for `sp_0052`, `sp_0112`, and `sp_0115`, and strict reviewed-unknown boundaries for seven commercial variants. Added a regression contract; no Compatibility authority or launch pair was changed.
 - Changed: Completion matrix generation now includes Batch 03 direct feeding/care authority and direct Knowledge IDs while preserving fail-closed Compatibility inheritance boundaries.
+- Added: Knowledge Completion Phase 2 Batch 04 direct reviewed-unknown records for ten commercial variants; no Compatibility authority or launch pair was changed.
 
 - Added: Knowledge Completion Phase 2 Batch 02 direct records for ten high-priority catalog objects, with source-linked `reviewed_unknown` feeding/environment/space/social/care states and strict commercial-variant boundaries. Added a batch regression and kept these records out of runtime Compatibility authority unless separately reviewed.
 - Changed: Completion matrix generation now reads Batch 02 direct feeding/care authority and records that the backlog is an unresolved-work queue; frozen launch Compatibility remains 435 unordered pairs with 0 insufficient.

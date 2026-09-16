@@ -148,6 +148,12 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Passing gates: Batch 01/02/03 contracts, Species Knowledge via `node --import tsx`, Knowledge Matrix, Catalog batch contract, Compatibility engine/evidence/scorecard, Domain, Compatibility Service, regression, admin, runtime authority, lint, and launch matrix. Direct `tsx` commands and Vite build remain blocked by pre-existing EPERM IPC/cache restrictions. Catalog review contract passes; its imported review diagnostic reports the pre-existing protected-CSV completeness mismatch without changing that file.
 - Next exact candidates after this batch are the regenerated research backlog ranks 1 onward; continue source-first and fail-closed.
 
+## Phase 2 Batch 04 checkpoint preparation — 2026-09-16
+- Completed ten direct reviewed-unknown Knowledge records: `sp_0170`, `sp_0204`, `sp_0205`, `sp_0206`, `sp_0212`, `sp_0225`, `sp_0226`, `sp_0231`, `sp_0232`, and `sp_0244`.
+- All are commercial variants. FishBase base-species records were reviewed as negative evidence for variant-specific authority; no feeding, environment, space, social, care, or sex claim was inherited or promoted.
+- Matrix Batch 03 → Batch 04: feeding `needs_research 196→186`, `reviewed_unknown 22→32`; environment `needs_research 431→421`, `reviewed_unknown 18→28`; space `needs_research 390→380`, `reviewed_unknown 18→28`; social `needs_research 321→311`, `reviewed_unknown 21→31`; care `template_only 69→59`, `reviewed_unknown 22→32`.
+- Batch 04 contract, matrix contract, and lint pass. Protected CSV SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`; no Compatibility or launch state changed.
+
 ## Session stop record — 2026-09-16
 
 - Exact HEAD remains `cdccdc038ebaced006d323076b3666ba3ffe01cc`.

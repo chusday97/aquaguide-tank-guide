@@ -41,6 +41,7 @@
 - `scripts/catalog-research.ts` / `scripts/catalog-review.ts` / `scripts/test-catalog-review-contract.ts`：三批研究草稿、字段级审核校验和审核契约回归。
 - `src/modules/knowledge/phase2Batch02Authority.ts` / `scripts/test-knowledge-completion-batch-02.ts`：Phase 2 Batch 02 的十条直接、证据链接的 reviewed-unknown 知识记录与防回退契约。
 - `src/modules/knowledge/phase2Batch03Authority.ts` / `scripts/test-knowledge-completion-batch-03.ts`：Phase 2 Batch 03 的十条直接、来源链接知识记录；前三个对象仅升级 FishBase 明确支持的环境/尺寸/群体事实，品系保持 reviewed-unknown。
+- `src/modules/knowledge/phase2Batch04Authority.ts` / `scripts/test-knowledge-completion-batch-04.ts`：Phase 2 Batch 04 的十条直接、来源链接 reviewed-unknown 品系记录，不自动继承基础种。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。

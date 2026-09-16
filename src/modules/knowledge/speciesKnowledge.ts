@@ -3,11 +3,13 @@ import type { SpeciesKnowledgeProfile } from './knowledge.types';
 import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
 import { phase2Batch02Knowledge } from './phase2Batch02Authority';
 import { phase2Batch03Knowledge } from './phase2Batch03Authority';
+import { phase2Batch04Knowledge } from './phase2Batch04Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
   'sp_0004', 'sp_0032', 'sp_0036',
   'sp_0052', 'sp_0112', 'sp_0115', 'sp_0141', 'sp_0143', 'sp_0144', 'sp_0145', 'sp_0154', 'sp_0155', 'sp_0167',
+  'sp_0170', 'sp_0204', 'sp_0205', 'sp_0206', 'sp_0212', 'sp_0225', 'sp_0226', 'sp_0231', 'sp_0232', 'sp_0244',
 ]);
 
 
@@ -718,6 +720,7 @@ const rosyBitterlingPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
   ...phase2Batch02Knowledge,
   ...phase2Batch03Knowledge,
+  ...phase2Batch04Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
