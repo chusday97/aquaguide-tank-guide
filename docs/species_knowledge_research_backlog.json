@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T15:00:54.583Z",
+  "generated_at": "2026-09-16T15:10:11.043Z",
   "selection": "Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.",
   "items": [
     {
@@ -86,436 +86,6 @@
     },
     {
       "rank": 3,
-      "species_id": "sp_0054",
-      "common_name": "红宝石鱼",
-      "scientific_name": "Hemichromis bimaculatus",
-      "life_type": "fish",
-      "category": "硬景/底床",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 4,
-      "species_id": "sp_0055",
-      "common_name": "金刚鹦鹉鱼",
-      "scientific_name": "Cichlasoma var.",
-      "life_type": "fish",
-      "category": "慈鲷/斗鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 5,
-      "species_id": "sp_0056",
-      "common_name": "菠萝鱼",
-      "scientific_name": "Heros severus",
-      "life_type": "fish",
-      "category": "慈鲷/斗鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 6,
-      "species_id": "sp_0057",
-      "common_name": "珍珠虎",
-      "scientific_name": "Altolamprologus calvus",
-      "life_type": "fish",
-      "category": "海水鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 7,
-      "species_id": "sp_0058",
-      "common_name": "九间贝",
-      "scientific_name": "Neolamprologus multifasciatus",
-      "life_type": "fish",
-      "category": "海水鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 8,
-      "species_id": "sp_0062",
-      "common_name": "红眼灯",
-      "scientific_name": "Moenkhausia sanctaefilomenae",
-      "life_type": "fish",
-      "category": "灯科鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 9,
-      "species_id": "sp_0069",
-      "common_name": "红白锦鲤",
-      "scientific_name": "Cyprinus carpio var.",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 10,
-      "species_id": "sp_0070",
-      "common_name": "蝴蝶鲤",
-      "scientific_name": "Cyprinus carpio var. Longfin",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 11,
-      "species_id": "sp_0121",
-      "common_name": "黑斑马异型 (L134)",
-      "scientific_name": "Peckoltia compta",
-      "life_type": "fish",
-      "category": "鲶鱼/异型",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 12,
-      "species_id": "sp_0122",
-      "common_name": "金线绿皮异型 (L190)",
-      "scientific_name": "Panaque nigrolineatus",
-      "life_type": "fish",
-      "category": "鲶鱼/异型",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 23,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:needs_research",
-        "environment:needs_research",
-        "space:needs_research",
-        "social:needs_research"
-      ]
-    },
-    {
-      "rank": 13,
       "species_id": "sp_0123",
       "common_name": "女王异型 (L165)",
       "scientific_name": "Pterygoplichthys gibbiceps",
@@ -558,7 +128,7 @@
       ]
     },
     {
-      "rank": 14,
+      "rank": 4,
       "species_id": "sp_0125",
       "common_name": "雪球异型 (L102)",
       "scientific_name": "Hypancistrus inspector",
@@ -601,7 +171,7 @@
       ]
     },
     {
-      "rank": 15,
+      "rank": 5,
       "species_id": "sp_0129",
       "common_name": "宽鳍鱲 (溪流之王)",
       "scientific_name": "Zacco platypus",
@@ -644,7 +214,7 @@
       ]
     },
     {
-      "rank": 16,
+      "rank": 6,
       "species_id": "sp_0146",
       "common_name": "白金波子",
       "scientific_name": "Mikrogeophagus ramirezi var. Platinum",
@@ -687,7 +257,7 @@
       ]
     },
     {
-      "rank": 17,
+      "rank": 7,
       "species_id": "sp_0152",
       "common_name": "荧光斑马鱼",
       "scientific_name": "Danio rerio var. GloFish",
@@ -732,7 +302,7 @@
       ]
     },
     {
-      "rank": 18,
+      "rank": 8,
       "species_id": "sp_0157",
       "common_name": "蓝宝石短鲷",
       "scientific_name": "Mikrogeophagus ramirezi var. Blue",
@@ -775,7 +345,7 @@
       ]
     },
     {
-      "rank": 19,
+      "rank": 9,
       "species_id": "sp_0158",
       "common_name": "红苹果剑尾",
       "scientific_name": "Xiphophorus hellerii var.",
@@ -818,7 +388,7 @@
       ]
     },
     {
-      "rank": 20,
+      "rank": 10,
       "species_id": "sp_0163",
       "common_name": "鸿运当头锦鲤",
       "scientific_name": "Cyprinus carpio var. Kohaku",
@@ -861,7 +431,7 @@
       ]
     },
     {
-      "rank": 21,
+      "rank": 11,
       "species_id": "sp_0173",
       "common_name": "黄金河虎",
       "scientific_name": "Salminus brasiliensis var.",
@@ -904,7 +474,7 @@
       ]
     },
     {
-      "rank": 22,
+      "rank": 12,
       "species_id": "sp_0174",
       "common_name": "红眼白子红裙",
       "scientific_name": "Gymnocorymbus ternetzi var. Albino",
@@ -947,7 +517,7 @@
       ]
     },
     {
-      "rank": 23,
+      "rank": 13,
       "species_id": "sp_0175",
       "common_name": "血钻神仙",
       "scientific_name": "Pterophyllum scalare var. Red",
@@ -990,7 +560,7 @@
       ]
     },
     {
-      "rank": 24,
+      "rank": 14,
       "species_id": "sp_0176",
       "common_name": "黑白大理石神仙",
       "scientific_name": "Pterophyllum scalare var. Marble",
@@ -1033,7 +603,7 @@
       ]
     },
     {
-      "rank": 25,
+      "rank": 15,
       "species_id": "sp_0177",
       "common_name": "红眼蓝钻神仙",
       "scientific_name": "Pterophyllum scalare var. Blue",
@@ -1076,7 +646,7 @@
       ]
     },
     {
-      "rank": 26,
+      "rank": 16,
       "species_id": "sp_0178",
       "common_name": "熊猫神仙",
       "scientific_name": "Pterophyllum scalare var. Panda",
@@ -1119,7 +689,7 @@
       ]
     },
     {
-      "rank": 27,
+      "rank": 17,
       "species_id": "sp_0182",
       "common_name": "蓝眼异型 (L191)",
       "scientific_name": "Panaque sp. L191",
@@ -1162,7 +732,7 @@
       ]
     },
     {
-      "rank": 28,
+      "rank": 18,
       "species_id": "sp_0187",
       "common_name": "蓝魔鬼",
       "scientific_name": "Chrysiptera cyanea",
@@ -1205,7 +775,7 @@
       ]
     },
     {
-      "rank": 29,
+      "rank": 19,
       "species_id": "sp_0201",
       "common_name": "黑白双星异型 (L240)",
       "scientific_name": "Leporacanthicus cf. galaxias",
@@ -1248,7 +818,7 @@
       ]
     },
     {
-      "rank": 30,
+      "rank": 20,
       "species_id": "sp_0202",
       "common_name": "黄金美洲豹异型 (L014)",
       "scientific_name": "Scobinancistrus aureatus",
@@ -1291,7 +861,7 @@
       ]
     },
     {
-      "rank": 31,
+      "rank": 21,
       "species_id": "sp_0207",
       "common_name": "白金黑裙",
       "scientific_name": "Gymnocorymbus ternetzi var. White",
@@ -1334,7 +904,7 @@
       ]
     },
     {
-      "rank": 32,
+      "rank": 22,
       "species_id": "sp_0208",
       "common_name": "球形红十字",
       "scientific_name": "Aphyocharax anisitsi var. Balloon",
@@ -1377,7 +947,7 @@
       ]
     },
     {
-      "rank": 33,
+      "rank": 23,
       "species_id": "sp_0211",
       "common_name": "大点火口",
       "scientific_name": "Thorichthys meeki var.",
@@ -1420,7 +990,7 @@
       ]
     },
     {
-      "rank": 34,
+      "rank": 24,
       "species_id": "sp_0214",
       "common_name": "白金西非凤凰",
       "scientific_name": "Pelvicachromis pulcher var. Albino",
@@ -1463,7 +1033,7 @@
       ]
     },
     {
-      "rank": 35,
+      "rank": 25,
       "species_id": "sp_0217",
       "common_name": "白金黑地魔",
       "scientific_name": "Geophagus sp. var. Platinum",
@@ -1506,7 +1076,7 @@
       ]
     },
     {
-      "rank": 36,
+      "rank": 26,
       "species_id": "sp_0218",
       "common_name": "血心灯",
       "scientific_name": "Hyphessobrycon erythrostigma",
@@ -1549,7 +1119,7 @@
       ]
     },
     {
-      "rank": 37,
+      "rank": 27,
       "species_id": "sp_0219",
       "common_name": "球形金波子",
       "scientific_name": "Mikrogeophagus ramirezi var. Gold Balloon",
@@ -1592,7 +1162,7 @@
       ]
     },
     {
-      "rank": 38,
+      "rank": 28,
       "species_id": "sp_0220",
       "common_name": "白金波子 (球形)",
       "scientific_name": "Mikrogeophagus ramirezi var. Platinum Balloon",
@@ -1635,7 +1205,7 @@
       ]
     },
     {
-      "rank": 39,
+      "rank": 29,
       "species_id": "sp_0221",
       "common_name": "长鳍阿卡西短鲷",
       "scientific_name": "Apistogramma agassizii var. Fire Red",
@@ -1678,7 +1248,7 @@
       ]
     },
     {
-      "rank": 40,
+      "rank": 30,
       "species_id": "sp_0227",
       "common_name": "长鳍红裙鱼",
       "scientific_name": "Gymnocorymbus ternetzi var. Longfin",
@@ -1718,6 +1288,442 @@
         "environment:needs_research",
         "space:needs_research",
         "social:needs_research"
+      ]
+    },
+    {
+      "rank": 31,
+      "species_id": "sp_0228",
+      "common_name": "球形红裙鱼",
+      "scientific_name": "Gymnocorymbus ternetzi var. Balloon",
+      "life_type": "fish",
+      "category": "灯科鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "needs_research",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:needs_research",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research"
+      ]
+    },
+    {
+      "rank": 32,
+      "species_id": "sp_0235",
+      "common_name": "白金黑帝王灯",
+      "scientific_name": "Nematobrycon palmeri var. Platinum",
+      "life_type": "fish",
+      "category": "灯科鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "needs_research",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:needs_research",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research"
+      ]
+    },
+    {
+      "rank": 33,
+      "species_id": "sp_0236",
+      "common_name": "红眼白子红剑",
+      "scientific_name": "Xiphophorus hellerii var. Albino Red",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "needs_research",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:needs_research",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research"
+      ]
+    },
+    {
+      "rank": 34,
+      "species_id": "sp_0240",
+      "common_name": "白金神仙 (长鳍)",
+      "scientific_name": "Pterophyllum scalare var. Platinum Longfin",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "needs_research",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:needs_research",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research"
+      ]
+    },
+    {
+      "rank": 35,
+      "species_id": "sp_0241",
+      "common_name": "大理石神仙 (球形)",
+      "scientific_name": "Pterophyllum scalare var. Marble Balloon",
+      "life_type": "fish",
+      "category": "硬景/底床",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "needs_research",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:needs_research",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research"
+      ]
+    },
+    {
+      "rank": 36,
+      "species_id": "sp_0243",
+      "common_name": "球形血鹦鹉",
+      "scientific_name": "Cichlasoma var. Blood Parrot Balloon",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "needs_research",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:needs_research",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research"
+      ]
+    },
+    {
+      "rank": 37,
+      "species_id": "sp_0247",
+      "common_name": "蓝钻神仙 (球形)",
+      "scientific_name": "Pterophyllum scalare var. Blue Balloon",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "needs_research",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:needs_research",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research"
+      ]
+    },
+    {
+      "rank": 38,
+      "species_id": "sp_0249",
+      "common_name": "红眼金苹果螺",
+      "scientific_name": "Pomacea bridgesii var. Gold",
+      "life_type": "invertebrate",
+      "category": "虾螺蟹",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "template_only",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "template_only"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:template_only",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research",
+        "care:template_only"
+      ]
+    },
+    {
+      "rank": 39,
+      "species_id": "sp_0250",
+      "common_name": "蓝珍珠神秘螺",
+      "scientific_name": "Pomacea bridgesii var. Blue",
+      "life_type": "invertebrate",
+      "category": "虾螺蟹",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "template_only",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "template_only"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:template_only",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research",
+        "care:template_only"
+      ]
+    },
+    {
+      "rank": 40,
+      "species_id": "sp_0251",
+      "common_name": "紫晶神秘螺",
+      "scientific_name": "Pomacea bridgesii var. Purple",
+      "life_type": "invertebrate",
+      "category": "虾螺蟹",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "template_only",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "needs_research",
+        "care": "template_only"
+      },
+      "gap_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 23,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:template_only",
+        "environment:needs_research",
+        "space:needs_research",
+        "social:needs_research",
+        "care:template_only"
       ]
     }
   ]
