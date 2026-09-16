@@ -305,6 +305,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 32 contract, matrix contract, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next regenerated backlog candidates: `sp_0327`, `sp_0328`, `sp_0329`, `sp_0330`, `sp_0331`, `sp_0332`, `sp_0335`, `sp_0336`, `sp_0337`, and `sp_0361`.
 
+## Phase 2 Batch 33 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0327`, `sp_0328`, `sp_0329`, `sp_0330`, `sp_0331`, `sp_0332`, `sp_0335`, `sp_0336`, `sp_0337`, and `sp_0361`.
+- WoRMS professional taxonomy was reviewed for the marine invertebrate/coral objects, including accepted taxon records for `Sabellastarte spectabilis`, `Fromia milleporella`, and `Tubastraea faulkneri`; FishBase was reviewed for the Tanichthys albonubes variant. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted.
+- Matrix now reports feeding `reviewed_unknown 312→322`, environment `reviewed_unknown 302→312`, space `reviewed_unknown 302→312`, social `reviewed_unknown 305→315`, and care `reviewed_unknown 312→322`; no template, name inference, or base-species inheritance was used.
+- Batch 33 contract, matrix contract, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0366`, `sp_0367`, `sp_0369`, `sp_0371`, `sp_0377`, `sp_0378`, `sp_0380`, `sp_0381`, `sp_0383`, and `sp_0403`.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.

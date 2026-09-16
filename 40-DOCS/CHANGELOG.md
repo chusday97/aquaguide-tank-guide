@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added: Knowledge Completion Phase 2 Batch 33 direct reviewed-unknown records for ten regenerated-backlog objects, with WoRMS/FishBase source registrations, matrix/backlog integration, and a regression contract; no Compatibility authority or launch pair was changed.
 - Added: Knowledge Completion Phase 2 Batch 32 direct reviewed-unknown records for ten regenerated-backlog objects, with FishBase/WoRMS source registrations, matrix/backlog integration, and a regression contract; no Compatibility authority or launch pair was changed.
 - Added: Knowledge Completion Phase 2 Batch 31 direct reviewed-unknown records for ten latest-backlog objects, with FishBase/WoRMS source registrations, matrix/backlog integration, and a regression contract; preserved existing Species Detail runtime profiles and changed no Compatibility authority or launch pair.
 - Added: Knowledge Completion Phase 2 Batch 07 and Batch 08 direct reviewed-unknown records for twenty backlog objects, with source registrations, matrix/backlog integration, and regression contracts; no Compatibility authority or launch pair was changed.
