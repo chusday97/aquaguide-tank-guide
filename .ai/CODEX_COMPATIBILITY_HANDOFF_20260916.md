@@ -243,6 +243,14 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 18 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0117`, `sp_0118`, `sp_0119`, `sp_0120`, `sp_0127`, `sp_0130`, `sp_0131`, `sp_0138`, `sp_0139`, and `sp_0140`.
+- FishBase professional species records were reviewed for the named taxa, including Arowana, freshwater butterflyfish, knifefish, loach, and characins. Records remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 17 → Batch 18: feeding `needs_research 91→91`, `template_only 157→147`, `reviewed_unknown 162→172`; environment `needs_research 291→281`, `reviewed_unknown 158→168`; space `needs_research 253→243`, `reviewed_unknown 158→168`; social `needs_research 184→174`, `reviewed_unknown 161→171`; care `reviewed_supported 281→271`, `reviewed_unknown 162→172`.
+- Batch 18 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 17 checkpoint — 2026-09-16
 - Completed ten direct reviewed-unknown records: `sp_0048`, `sp_0050`, `sp_0059`, `sp_0103`, `sp_0104`, `sp_0105`, `sp_0108`, `sp_0109`, `sp_0110`, and `sp_0116`.
 - FishBase professional species records were reviewed for the named taxa. Snakehead, arowana, bichir, and other large-fish objects remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
