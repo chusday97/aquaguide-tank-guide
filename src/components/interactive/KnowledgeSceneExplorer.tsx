@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { ArrowLeft, BookOpen, List, Search, Waves } from 'lucide-react';
-import { getLatestCareGuide, type LatestCareGuide } from '../../data/latestCareGuideCatalog';
+import { getLatestCareGuide, latestCareGuides, type LatestCareGuide } from '../../data/latestCareGuideCatalog';
 import { ResilientImage } from '../common/ResilientImage';
 import { getKnowledgeObservations, type KnowledgeObjectId, type KnowledgeObservation } from './knowledgeJourney';
 
@@ -23,10 +23,11 @@ type CareLayer = {
 
 type ProblemCover = {
   problem: KnowledgeObservation;
+  layer: CareLayer | null;
   title: string;
   summary: string;
   imageUrl: string;
-  latestGuide?: LatestCareGuide;
+  latestGuide: LatestCareGuide;
 };
 
 const careLayers: CareLayer[] = [
@@ -59,39 +60,73 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     [selectedLayer]
   );
 
-  const coverItems = useMemo<ProblemCover[]>(() => {
-    if (!selectedLayer) return [];
-    return allProblems.map<ProblemCover | null>(problem => {
-      const latestGuide = getLatestCareGuide(problem.latestCareGuideId);
-      if (!latestGuide) return null;
-      return {
-        problem,
+  const allLatestCovers = useMemo<ProblemCover[]>(() => {
+    const seen = new Set<string>();
+    const items: ProblemCover[] = [];
+    for (const layer of careLayers) {
+      for (const problem of getKnowledgeObservations(layer.id)) {
+        const latestGuide = getLatestCareGuide(problem.latestCareGuideId);
+        if (!latestGuide || seen.has(latestGuide.id)) continue;
+        seen.add(latestGuide.id);
+        items.push({
+          problem,
+          layer,
+          latestGuide,
+          title: isEn ? latestGuide.titleEn : latestGuide.title,
+          summary: isEn ? latestGuide.conditionEn : latestGuide.condition,
+          imageUrl: latestGuide.coverUrl || latestGuide.imageUrl,
+        });
+      }
+    }
+    for (const latestGuide of latestCareGuides) {
+      if (seen.has(latestGuide.id)) continue;
+      items.push({
+        problem: {
+          id: `global-${latestGuide.id}`,
+          label: latestGuide.title,
+          labelEn: latestGuide.titleEn,
+          urgency: 'routine',
+          latestCareGuideId: latestGuide.id,
+          searchQuery: `${latestGuide.title} ${latestGuide.titleEn} ${latestGuide.category} ${latestGuide.categoryEn}`,
+        },
+        layer: null,
         latestGuide,
         title: isEn ? latestGuide.titleEn : latestGuide.title,
         summary: isEn ? latestGuide.conditionEn : latestGuide.condition,
         imageUrl: latestGuide.coverUrl || latestGuide.imageUrl,
-      };
-    }).filter((item): item is ProblemCover => item !== null);
-  }, [selectedLayer, allProblems, isEn]);
+      });
+    }
+    return items;
+  }, [isEn]);
+
+  const layerCovers = useMemo(
+    () => selectedLayer ? allLatestCovers.filter(item => item.layer?.id === selectedLayer.id) : [],
+    [allLatestCovers, selectedLayer]
+  );
 
   const filteredCovers = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
-    if (!query) return coverItems;
-    return coverItems.filter(item => {
+    const source = query ? allLatestCovers : layerCovers;
+    if (!query) return source;
+    return source.filter(item => {
       const haystack = [
         item.title,
         item.summary,
         item.problem.label,
         item.problem.labelEn,
         item.problem.searchQuery,
+        item.layer?.zh,
+        item.layer?.en,
+        item.latestGuide.category,
+        item.latestGuide.categoryEn,
       ].filter(Boolean).join(' ').toLowerCase();
       return haystack.includes(query);
     });
-  }, [coverItems, searchTerm]);
+  }, [allLatestCovers, layerCovers, searchTerm]);
 
   const selectedCover = useMemo(
-    () => coverItems.find(item => item.problem.id === selectedProblemId) || null,
-    [coverItems, selectedProblemId]
+    () => allLatestCovers.find(item => item.problem.id === selectedProblemId) || null,
+    [allLatestCovers, selectedProblemId]
   );
 
   const copy = isEn ? {
@@ -103,8 +138,8 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     chooseLayerBody: 'Tap a hotspot on the tank to see the matching problem covers.',
     coverTitle: 'Problem covers',
     coverBody: 'Each cover is one care problem. Choose the one that matches what you see.',
-    searchPlaceholder: 'Search this layer',
-    noResult: 'No matching care cover in this layer.',
+    searchPlaceholder: 'Search all care problems',
+    noResult: 'No matching hand-drawn care cover found.',
     back: 'Back to covers',
     condition: 'What you may be seeing',
     step: 'Step',
@@ -120,8 +155,8 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     chooseLayerBody: '点击左侧鱼缸中的生态层，右边会直接出现这一层对应的问题封面。',
     coverTitle: '这一层的问题',
     coverBody: '每张封面代表一个问题，直接点击最像你当前情况的那一张。',
-    searchPlaceholder: '搜索这一层的问题',
-    noResult: '这一层没有匹配的养护卡。',
+    searchPlaceholder: '搜索全部养护问题',
+    noResult: '没有找到匹配的最新手绘养护卡。',
     back: '返回问题封面',
     condition: '你可能看到的是',
     step: '步骤',
@@ -184,21 +219,13 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
         </div>
 
         <aside className="interactive-care-guide-panel interactive-care-guide-panel--library" aria-live="polite">
-          {!selectedLayer && (
-            <div className="interactive-care-guide-empty">
-              <BookOpen className="h-6 w-6" />
-              <strong>{copy.chooseLayer}</strong>
-              <p>{copy.chooseLayerBody}</p>
-            </div>
-          )}
-
-          {selectedLayer && !selectedCover && (
+          {!selectedCover && (
             <div className="interactive-care-cover-library">
               <div className="interactive-care-cover-library-head">
                 <div>
-                  <span>{isEn ? selectedLayer.en : selectedLayer.zh}</span>
+                  <span>{searchTerm.trim() ? (isEn ? 'All care problems' : '全部养护问题') : selectedLayer ? (isEn ? selectedLayer.en : selectedLayer.zh) : (isEn ? 'All latest guides' : '全部最新指南')}</span>
                   <h3>{copy.coverTitle}</h3>
-                  <p>{copy.coverBody}</p>
+                  <p>{searchTerm.trim() ? (isEn ? 'Search spans every aquarium layer.' : '搜索会覆盖所有生态层的问题。') : selectedLayer ? copy.coverBody : copy.chooseLayerBody}</p>
                 </div>
                 <form className="interactive-care-cover-search" role="search" onSubmit={(event) => event.preventDefault()}>
                   <Search className="h-4 w-4" aria-hidden="true" />
@@ -212,27 +239,37 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                 </form>
               </div>
 
-              {filteredCovers.length > 0 ? (
-                <div className="interactive-care-cover-grid">
-                  {filteredCovers.map(item => (
-                    <button
-                      key={item.problem.id}
-                      type="button"
-                      className="interactive-care-cover-card"
-                      onClick={() => setSelectedProblemId(item.problem.id)}
-                      aria-label={item.title}
-                    >
-                      <ResilientImage
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="interactive-care-cover-image"
-                        loading="lazy"
-                        decoding="async"
-                      />
-                      <span className={`interactive-care-cover-urgency is-${item.problem.urgency}`}>{urgencyLabel(item.problem, isEn)}</span>
-                      <strong>{item.title}</strong>
-                    </button>
-                  ))}
+              {!selectedLayer && !searchTerm.trim() ? (
+                <div className="interactive-care-guide-empty interactive-care-guide-empty--inside">
+                  <BookOpen className="h-6 w-6" />
+                  <strong>{copy.chooseLayer}</strong>
+                  <p>{copy.chooseLayerBody}</p>
+                </div>
+              ) : filteredCovers.length > 0 ? (
+                <div className="interactive-care-cover-carousel" aria-label={isEn ? 'Problem cover carousel' : '问题封面纵向轮播'}>
+                  <div className="interactive-care-cover-track">
+                    {filteredCovers.map(item => (
+                      <button
+                        key={`${item.layer?.id || 'global'}-${item.problem.id}`}
+                        type="button"
+                        className="interactive-care-cover-card interactive-care-cover-card--carousel"
+                        onClick={() => setSelectedProblemId(item.problem.id)}
+                        aria-label={item.title}
+                      >
+                        <ResilientImage
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="interactive-care-cover-image"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                        <div className="interactive-care-cover-meta">
+                          <span>{item.layer ? (isEn ? item.layer.en : item.layer.zh) : (isEn ? item.latestGuide.categoryEn : item.latestGuide.category)}</span>
+                          <strong>{item.title}</strong>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <div className="interactive-care-cover-empty">{copy.noResult}</div>
@@ -240,13 +277,13 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
             </div>
           )}
 
-          {selectedLayer && selectedCover && (
+          {selectedCover && (
             <article className="interactive-care-detail-view">
               <div className="interactive-care-detail-toolbar">
                 <button type="button" className="interactive-care-detail-back" onClick={() => setSelectedProblemId(null)}>
                   <ArrowLeft className="h-4 w-4" />{copy.back}
                 </button>
-                <span>{isEn ? selectedLayer.en : selectedLayer.zh}</span>
+                <span>{selectedCover.layer ? (isEn ? selectedCover.layer.en : selectedCover.layer.zh) : (isEn ? selectedCover.latestGuide.categoryEn : selectedCover.latestGuide.category)}</span>
               </div>
 
               <header className="interactive-care-detail-hero">

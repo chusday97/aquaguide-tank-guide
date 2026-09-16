@@ -3315,3 +3315,128 @@ select {
   .interactive-care-cover-card { cursor: pointer; }
   .interactive-care-cover-card > * { pointer-events: none; }
 }
+
+/* Care cover carousel — latest hand-drawn covers, global search, 2026-09-16. */
+.interactive-care-guide-panel--library {
+  max-height: none;
+  overflow: visible;
+}
+
+.interactive-care-cover-library {
+  min-height: 650px;
+  overflow: visible;
+}
+
+.interactive-care-guide-empty--inside {
+  min-height: 520px;
+}
+
+.interactive-care-cover-carousel {
+  position: relative;
+  height: 640px;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  scroll-padding-block: 28px;
+  scrollbar-width: thin;
+  scrollbar-color: rgb(11 139 112 / .28) transparent;
+  padding: 28px 38px 110px;
+  -webkit-overflow-scrolling: touch;
+}
+
+.interactive-care-cover-track {
+  display: grid;
+  gap: 24px;
+  width: min(100%, 410px);
+  margin: 0 auto;
+}
+
+.interactive-care-cover-card--carousel {
+  width: 100%;
+  min-height: 500px;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 16px 38px rgb(20 57 48 / .09);
+  cursor: pointer;
+  transition-property: transform, border-color, box-shadow;
+  transition-duration: 180ms;
+  transition-timing-function: ease;
+}
+
+.interactive-care-cover-card--carousel:hover,
+.interactive-care-cover-card--carousel:focus-visible {
+  transform: translateY(-3px) scale(1.01);
+  border-color: rgb(8 122 97 / .36);
+  box-shadow: 0 22px 48px rgb(20 57 48 / .14);
+}
+
+.interactive-care-cover-card--carousel:active {
+  transform: scale(.985);
+}
+
+.interactive-care-cover-card--carousel .interactive-care-cover-image {
+  aspect-ratio: 3 / 4;
+  pointer-events: none;
+}
+
+.interactive-care-cover-meta {
+  display: grid;
+  gap: 6px;
+  padding: 2px 16px 18px;
+  pointer-events: none;
+}
+
+.interactive-care-cover-meta > span {
+  color: #0b8b70;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.interactive-care-cover-meta > strong {
+  min-height: 0;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1.42;
+}
+
+.interactive-care-detail-view {
+  height: auto;
+  min-height: 0;
+  max-height: none;
+  overflow: visible;
+}
+
+@media (max-width: 1199px) {
+  .interactive-care-cover-carousel {
+    height: 600px;
+  }
+}
+
+@media (max-width: 767px) {
+  .interactive-care-cover-carousel {
+    height: 500px;
+    padding: 18px 14px 78px;
+    scroll-padding-block: 18px;
+  }
+
+  .interactive-care-cover-track {
+    width: min(100%, 300px);
+    gap: 18px;
+  }
+
+  .interactive-care-cover-card--carousel {
+    min-height: 390px;
+    border-radius: 18px;
+  }
+
+  .interactive-care-cover-meta {
+    padding: 2px 12px 14px;
+  }
+
+  .interactive-care-cover-meta > strong {
+    font-size: 12px;
+  }
+}
