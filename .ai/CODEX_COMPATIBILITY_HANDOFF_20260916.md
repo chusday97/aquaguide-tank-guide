@@ -243,6 +243,15 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
+## Phase 2 Batch 36 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0461`, `sp_0462`, `sp_0463`, `sp_0464`, `sp_0465`, `sp_0466`, `sp_0467`, `sp_0470`, `sp_0471`, and `sp_0472`.
+- Professional taxonomy/species records were reviewed through NCBI Taxonomy, CITES Species+, Taylor & Francis, and FishBase. The records did not establish complete object-specific feeding/care authority, so no reviewed_supported claim, template, name inference, or base-species inheritance was promoted.
+- Matrix after Batch 36: feeding `reviewed_unknown 342→352`, `template_only 32→22`; environment `reviewed_unknown 331→341`, `needs_research 118→108`; space `reviewed_unknown 331→341`, `needs_research 81→71`; social `reviewed_unknown 334→344`, `needs_research 13→3`; care `reviewed_supported 108→98`, `reviewed_unknown 342→352`.
+- Batch 36 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0473`, `sp_0474`, `sp_0476`, `sp_0012`, `sp_0147`, `sp_0148`, `sp_0222`, `sp_0258`, `sp_0433`, and `sp_0434`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 24 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0445`, `sp_0453`, `sp_0459`, `sp_0037`, `sp_0041`, `sp_0046`, `sp_0063`, `sp_0064`, `sp_0065`, and `sp_0066`.
 - FishBase professional species records were reviewed for Trichopodus, Pterois, Neocaridina, Acheilognathus, Abbottina, Aphyocypris, and Carassius catalog objects. Species records and goldfish/commercial variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
