@@ -34,6 +34,7 @@ import { phase2Batch31Knowledge } from './phase2Batch31Authority';
 import { phase2Batch32Knowledge } from './phase2Batch32Authority';
 import { phase2Batch33Knowledge } from './phase2Batch33Authority';
 import { phase2Batch34Knowledge } from './phase2Batch34Authority';
+import { phase2Batch35Knowledge } from './phase2Batch35Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -70,6 +71,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0194', 'sp_0195', 'sp_0210', 'sp_0233', 'sp_0252', 'sp_0267', 'sp_0295', 'sp_0320', 'sp_0324', 'sp_0326',
   'sp_0327', 'sp_0328', 'sp_0329', 'sp_0330', 'sp_0331', 'sp_0332', 'sp_0335', 'sp_0336', 'sp_0337', 'sp_0361',
   'sp_0366', 'sp_0367', 'sp_0369', 'sp_0371', 'sp_0377', 'sp_0378', 'sp_0380', 'sp_0381', 'sp_0383', 'sp_0403',
+  'sp_0404', 'sp_0405', 'sp_0406', 'sp_0413', 'sp_0426', 'sp_0427', 'sp_0439', 'sp_0454', 'sp_0458', 'sp_0460',
 ]);
 
 
@@ -811,6 +813,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch32Knowledge,
   ...phase2Batch33Knowledge,
   ...phase2Batch34Knowledge,
+  ...phase2Batch35Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1638,6 +1641,11 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   if (fish.id === 'sp_0049') {
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Tiger barb has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only and fail-closed.
+  if (fish.id === 'sp_0439' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
   }
   // These catalog objects also have established Species Detail runtime
   // profiles; keep those profiles while their Batch 31 completion claims

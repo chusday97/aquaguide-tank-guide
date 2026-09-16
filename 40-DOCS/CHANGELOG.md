@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Added: Knowledge Completion Phase 2 Batch 35 direct reviewed-unknown records for ten regenerated-backlog objects, with WoRMS/FishBase source registrations, matrix/backlog integration, and a regression contract; preserved the existing Tiger Barb Species Detail runtime profile and changed no Compatibility authority or launch pair.
 - Added: Knowledge Completion Phase 2 Batch 34 direct reviewed-unknown records for ten regenerated-backlog objects, with WoRMS/FishBase source registrations, matrix/backlog integration, and a regression contract; no Compatibility authority or launch pair was changed.
 - Added: Knowledge Completion Phase 2 Batch 33 direct reviewed-unknown records for ten regenerated-backlog objects, with WoRMS/FishBase source registrations, matrix/backlog integration, and a regression contract; no Compatibility authority or launch pair was changed.
 - Added: Knowledge Completion Phase 2 Batch 32 direct reviewed-unknown records for ten regenerated-backlog objects, with FishBase/WoRMS source registrations, matrix/backlog integration, and a regression contract; no Compatibility authority or launch pair was changed.
