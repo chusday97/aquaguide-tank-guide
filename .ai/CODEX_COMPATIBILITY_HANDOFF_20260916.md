@@ -243,6 +243,16 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 45 checkpoint preparation — 2026-09-17
+- Completed fifteen direct reviewed-unknown records: `sp_0304`, `sp_0305`, `sp_0306`, `sp_0307`, `sp_0308`, `sp_0309`, `sp_0310`, `sp_0311`, `sp_0312`, `sp_0313`, `sp_0314`, `sp_0315`, `sp_0316`, `sp_0317`, and `sp_0354`.
+- Tropica professional plant records were reviewed for the named objects and variants. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 411→426`, space `reviewed_unknown 411→426`, and care `reviewed_unknown 438→453`; no feeding or social status changed.
+- Backlog generation retains reviewed-unknown candidates to keep the contractually required 40-item research queue after the unresolved gap pool falls below 40.
+- Batch 45 contract, matrix contract, Species Detail assertions, Launch Compatibility, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then `sp_0355`, `sp_0356`, and `sp_0357`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 44 checkpoint preparation — 2026-09-17
 - Completed fifteen direct reviewed-unknown records: `sp_0094`, `sp_0095`, `sp_0096`, `sp_0097`, `sp_0098`, `sp_0099`, `sp_0100`, `sp_0101`, `sp_0102`, `sp_0298`, `sp_0299`, `sp_0300`, `sp_0301`, `sp_0302`, and `sp_0303`.
 - Tropica professional plant records were reviewed for the named objects and variants. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
