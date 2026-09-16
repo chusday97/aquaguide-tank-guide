@@ -127,3 +127,21 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 5. Keep evidence IDs / factEvidence provenance attached to every reviewed field used in runtime decisions.
 6. Make local checkpoint commit(s), but DO NOT push.
 7. Report exact changed files, exact matrix before/after, tests, remaining insufficients, and why any remaining gaps must stay fail-closed.
+
+## Phase 2 Batch 02 checkpoint — 2026-09-16
+- Completed ten direct, source-linked Knowledge records: `sp_0006`, `sp_0035`, `sp_0430`, `sp_0457`, `sp_0003`, `sp_0029`, `sp_0004`, `sp_0032`, `sp_0021`, and `sp_0036`.
+- Sources reviewed: Raffles Bulletin of Zoology for `Geosesarma dennerle`; Australian Government/Australian Museum freshwater-mollusc account for `Anentome helena`; ITIS for `Caridina dennerli`; WoRMS for `Vittina turrita`; FishBase for `Amatitlania nigrofasciata`.
+- All five applicable Knowledge completion fields are direct `reviewed_unknown` for this batch. No unsupported feeding, care, stocking, social, water, or variant claim was promoted. Existing mini-parrot Compatibility authority remains unchanged; no new profile, pair rule, migration, or launch object was created.
+- Matrix before → after: feeding `needs_research 212→206`, `template_only 196→192`, `reviewed_unknown 2→12`; environment `needs_research 451→441`, `reviewed_unknown 1→11`; space `needs_research 410→400`, `reviewed_unknown 1→11`; social `needs_research 340→331`, `reviewed_unknown 2→12`, `inherited_reviewed 38→37`; care `template_only 88→79`, `reviewed_supported 385→384`, `reviewed_unknown 2→12`. The small care supported delta reflects the existing protected audit CSV state and was not a rewrite of that CSV.
+- Frozen launch gate after the batch: 435 unordered pairs, 0 insufficient, 198 blocked, 221 caution, 16 compatible, deterministic and symmetric.
+- Gates: batch-02 contract PASS; matrix PASS; Species Knowledge PASS; catalog review and batch contracts PASS; Compatibility PASS; launch matrix PASS; evidence coverage PASS; coverage scorecard PASS; Domain PASS; Compatibility Service PASS; runtime authority PASS; regression gate PASS; admin contract PASS; lint PASS. Exact `tsx` launcher commands were attempted but hit pre-existing EPERM IPC failures; equivalent `node --import tsx` commands passed. `npm run build:web` hit the pre-existing sandbox EPERM Vite cache path; `--configLoader runner` then exposed the existing ESM `__dirname` config limitation.
+- Protected CSV SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next exact candidates: `sp_0052` 月光鼠 / `Corydoras hastatus`, `sp_0112` 蓝眼灯 / `Poropanchax normani`, `sp_0115` 琥珀灯 / `Hyphessobrycon amapaensis`, then `sp_0141` 甜心柠檬灯 (variant). Continue fail-closed if direct evidence is not available.
+
+## Session stop record — 2026-09-16
+- Exact HEAD remains `cdccdc038ebaced006d323076b3666ba3ffe01cc`.
+- Batch 02 changes are uncommitted because Git could not create the worktree index lock at `/Users/chuchu/aquaguide-preview-current/.git/worktrees/aquaguide-compat-core/index.lock` (`Operation not permitted`). No commit was created, nothing was pushed, and no user-owned work was discarded.
+- Stop reason: required local checkpoint commit is unavailable under the session filesystem boundary; the exact `tsx` and Vite build gates are also blocked by the pre-existing cross-worktree dependency/cache boundary. Equivalent TypeScript test invocations passed as recorded above.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+Continue AquaGuide Knowledge Completion Program from the local Batch 2 checkpoint in `/Users/chuchu/aquaguide-compat-core` on branch `agent/compatibility-core-20260916`. Do not redo Batch 2 and do not touch or stage `docs/species_knowledge_audit.csv` (verify its SHA first). Start Batch 3 with the next exact candidates recorded above, use source-first evidence, preserve strict variant boundaries, regenerate the matrix/backlog, run the full required gates, create one local commit per passing batch excluding the protected CSV, and update this handoff. Never push, merge, deploy, migrate production, or weaken evidence standards.

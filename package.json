@@ -128,6 +128,7 @@
     "knowledge:completion-matrix": "node --import tsx scripts/generate-species-knowledge-completion-matrix.ts",
     "test:knowledge-completion-matrix": "node --import tsx scripts/test-species-knowledge-completion-matrix.ts",
     "test:knowledge-completion-batch-01": "node --import tsx scripts/test-knowledge-completion-batch-01.ts",
+    "test:knowledge-completion-batch-02": "node --import tsx scripts/test-knowledge-completion-batch-02.ts",
     "test:compatibility-coverage-scorecard": "node --import tsx scripts/test-compatibility-coverage-scorecard.ts",
     "test:golden-path-gp001-ui": "node scripts/verify-golden-path-first-tank-setup.mjs",
     "test:golden-path-gp002-ui": "node scripts/verify-golden-path-species-to-stocking.mjs",

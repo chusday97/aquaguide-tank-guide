@@ -1,6 +1,12 @@
 import type { Fish } from '../../types';
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
+import { phase2Batch02Knowledge } from './phase2Batch02Authority';
+
+const completionOnlyDirectKnowledgeIds = new Set([
+  'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
+  'sp_0004', 'sp_0032', 'sp_0036',
+]);
 
 
 
@@ -708,6 +714,7 @@ const rosyBitterlingPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  ...phase2Batch02Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1487,6 +1494,16 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
+  // Mini-parrot already has an independent reviewed compatibility behavior
+  // authority. Preserve that runtime inheritance; the direct completion
+  // record is intentionally matrix-only until variant care is reviewed.
+  if (fish.id === 'sp_0021') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Phase 2 completion records are direct evidence for the matrix and
+  // Species Detail, but do not become Compatibility authority by existence.
+  if (completionOnlyDirectKnowledgeIds.has(fish.id)) return undefined;
   const direct = reviewedKnowledgeBySpeciesId[fish.id];
   if (direct) return direct;
   const baseKey = getBaseSpeciesScientificName(fish.scientificName);

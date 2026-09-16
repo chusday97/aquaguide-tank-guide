@@ -5,6 +5,7 @@ import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
 import { phase2Batch01Authority } from '../src/modules/knowledge/phase2Batch01Authority';
+import { phase2Batch02Authority } from '../src/modules/knowledge/phase2Batch02Authority';
 
 type FieldStatus = 'reviewed_supported' | 'reviewed_unknown' | 'inherited_reviewed' | 'not_applicable' | 'needs_research' | 'template_only';
 type KnowledgeField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
@@ -50,7 +51,10 @@ const rows = fishData.map((fish) => {
   const lifeType = getLifeType(fish);
   const applicable = applicableFields(lifeType);
   const directKnowledge = getReviewedSpeciesKnowledge(fish.id);
-  const phase2DirectOnly = new Set(['sp_0016', 'sp_0224', 'sp_0475']);
+  const phase2DirectOnly = new Set([
+    'sp_0016', 'sp_0224', 'sp_0475', 'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457',
+    'sp_0003', 'sp_0029', 'sp_0004', 'sp_0032', 'sp_0021', 'sp_0036',
+  ]);
   const knowledge = phase2DirectOnly.has(fish.id) ? directKnowledge : getReviewedSpeciesKnowledgeForFish(fish);
   const inheritedKnowledge = Boolean(knowledge && !directKnowledge);
   const directCompatibility = getReviewedCompatibilityProfile(fish.id);
@@ -63,7 +67,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'feeding') {
-      const phase2 = phase2Batch01Authority[fish.id]?.feeding;
+      const phase2 = phase2Batch01Authority[fish.id]?.feeding ?? phase2Batch02Authority[fish.id]?.feeding;
       if (phase2) fieldStatus[field] = phase2.status;
       else if (!fish.feedingProfile) fieldStatus[field] = 'needs_research';
       else if (audit.feeding_uses_template === 'yes') fieldStatus[field] = 'template_only';
@@ -72,7 +76,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'care') {
-      const phase2 = phase2Batch01Authority[fish.id]?.care;
+      const phase2 = phase2Batch01Authority[fish.id]?.care ?? phase2Batch02Authority[fish.id]?.care;
       fieldStatus[field] = phase2?.status ?? (audit.missing_species_specific_care === 'yes' ? 'template_only' : 'reviewed_supported');
       continue;
     }
@@ -112,14 +116,14 @@ const backlog = rows
   .map((row, index) => ({ rank: index + 1, ...row, research_reason: row.gap_fields.map(field => `${field}:${row.field_status[field]}`) }));
 
 const counts = Object.fromEntries(fields.map(field => [field, Object.fromEntries((['reviewed_supported', 'reviewed_unknown', 'inherited_reviewed', 'not_applicable', 'needs_research', 'template_only'] as FieldStatus[]).map(status => [status, rows.filter(row => row.field_status[field] === status).length]))]));
-const matrix = { generated_at: new Date().toISOString(), catalog_object_count: rows.length, fields, rows, status_counts: counts, source_conflicts: reviewedSourceConflicts, backlog_size: backlog.length, backlog_scope: 'Top 40 research candidates; no authority data was written by this phase.' };
+const matrix = { generated_at: new Date().toISOString(), catalog_object_count: rows.length, fields, rows, status_counts: counts, source_conflicts: reviewedSourceConflicts, backlog_size: backlog.length, backlog_scope: 'Top 40 research candidates; reviewed authority is recorded in source-controlled modules and this backlog is regenerated after each batch.' };
 writeFileSync(`${outputDir}/species_knowledge_completion_matrix.json`, `${JSON.stringify(matrix, null, 2)}\n`);
 const csvEscape = (value: unknown) => `"${String(value ?? '').replaceAll('"', '""')}"`;
 const csvHeader = ['species_id', 'common_name', 'scientific_name', 'life_type', 'category', ...fields.flatMap(field => fields.includes(field) ? [`${field}_status`] : []), 'gap_fields', 'commonness_proxy', 'risk_proxy', 'priority_score'];
 const csv = [csvHeader.join(','), ...rows.map(row => [row.species_id, row.common_name, row.scientific_name, row.life_type, row.category, ...fields.map(field => row.field_status[field]), row.gap_fields.join('|'), row.commonness_proxy, row.risk_proxy, row.priority_score].map(csvEscape).join(','))].join('\n');
 writeFileSync(`${outputDir}/species_knowledge_completion_matrix.csv`, `${csv}\n`);
 writeFileSync(`${outputDir}/species_knowledge_research_backlog.json`, `${JSON.stringify({ generated_at: matrix.generated_at, selection: 'Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.', items: backlog }, null, 2)}\n`);
-const markdown = ['# Species Knowledge Research Backlog', '', `Generated from ${rows.length} catalog objects. This phase writes no reviewed authority data.`, '', '| Rank | Species | Life type | Gap fields | Commonness proxy | Risk proxy | Score |', '|---:|---|---|---|---|---|---:|', ...backlog.map(item => `| ${item.rank} | ${item.common_name} (${item.species_id}) | ${item.life_type} | ${item.research_reason.join(', ')} | ${item.commonness_proxy} | ${item.risk_proxy} | ${item.priority_score} |`), '', 'Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Every candidate requires source-by-source human review before authority writes.'].join('\n');
+const markdown = ['# Species Knowledge Research Backlog', '', `Generated from ${rows.length} catalog objects. Reviewed authority is recorded in source-controlled modules; this file is the unresolved-work queue.`, '', '| Rank | Species | Life type | Gap fields | Commonness proxy | Risk proxy | Score |', '|---:|---|---|---|---|---|---:|', ...backlog.map(item => `| ${item.rank} | ${item.common_name} (${item.species_id}) | ${item.life_type} | ${item.research_reason.join(', ')} | ${item.commonness_proxy} | ${item.risk_proxy} | ${item.priority_score} |`), '', 'Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Every candidate requires source-by-source human review before authority writes.'].join('\n');
 writeFileSync(`${outputDir}/species_knowledge_research_backlog.md`, `${markdown}\n`);
 console.log(`species knowledge completion matrix: ${rows.length} catalog objects, ${backlog.length} prioritized research candidates`);
 console.log(JSON.stringify(counts, null, 2));

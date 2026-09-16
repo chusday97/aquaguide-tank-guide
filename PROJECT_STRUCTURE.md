@@ -39,6 +39,7 @@
 - `scripts/audit-species-data-quality.ts`：486 条物种记录的身份、来源、模板污染、显式水体和重复项审计。
 - `scripts/test-compatibility-launch-cohort.ts`：研究队列数量、去重、确定性和 evidence-gated readiness 回归。
 - `scripts/catalog-research.ts` / `scripts/catalog-review.ts` / `scripts/test-catalog-review-contract.ts`：三批研究草稿、字段级审核校验和审核契约回归。
+- `src/modules/knowledge/phase2Batch02Authority.ts` / `scripts/test-knowledge-completion-batch-02.ts`：Phase 2 Batch 02 的十条直接、证据链接的 reviewed-unknown 知识记录与防回退契约。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。

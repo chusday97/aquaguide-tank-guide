@@ -1,6 +1,26 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'batch04-raffles-geosesarma-dennerle': {
+    id: 'batch04-raffles-geosesarma-dennerle', title: 'Geosesarma dennerle species description', publisher: 'Raffles Bulletin of Zoology',
+    url: 'https://lkcnhm.nus.edu.sg/wp-content/uploads/sites/11/app/uploads/2017/06/63rbz003-013.pdf', sourceType: 'peer_reviewed', reviewStatus: 'reviewed',
+  },
+  'batch04-keys-anentome-helena': {
+    id: 'batch04-keys-anentome-helena', title: "Anentome 'helena' freshwater mollusc account", publisher: 'Australian Government / Australian Museum freshwater mollusc keys',
+    url: 'https://keys.lucidcentral.org/keys/v3/freshwater_molluscs/key/australian_freshwater_molluscs/Media/Html/entities/anentome_helena.htm', sourceType: 'government', reviewStatus: 'reviewed',
+  },
+  'batch04-itis-caridina-dennerli': {
+    id: 'batch04-itis-caridina-dennerli', title: 'Caridina dennerli ITIS taxon record', publisher: 'Integrated Taxonomic Information System',
+    url: 'https://www.itis.gov/servlet/SingleRpt/SingleRpt?search_topic=TSN&search_value=1173942', sourceType: 'government', reviewStatus: 'reviewed',
+  },
+  'batch04-worms-vittina-turrita': {
+    id: 'batch04-worms-vittina-turrita', title: 'Vittina turrita WoRMS taxon record', publisher: 'World Register of Marine Species',
+    url: 'https://www.marinespecies.org/aphia.php?p=taxlist&tName=Neritina+turrita', sourceType: 'professional_association', reviewStatus: 'reviewed',
+  },
+  'batch04-fishbase-amatitlania-nigrofasciata': {
+    id: 'batch04-fishbase-amatitlania-nigrofasciata', title: 'Amatitlania nigrofasciata FishBase species summary', publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Amatitlania-nigrofasciata.html', sourceType: 'curated_husbandry', reviewStatus: 'reviewed',
+  },
   'seriouslyfish-petitella-rhodostoma': {
     id: 'seriouslyfish-petitella-rhodostoma',
     title: 'Hemigrammus rhodostomus / Petitella rhodostoma (Rummy-nose tetra)',
