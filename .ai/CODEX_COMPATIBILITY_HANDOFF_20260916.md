@@ -243,6 +243,15 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 44 checkpoint preparation — 2026-09-17
+- Completed fifteen direct reviewed-unknown records: `sp_0094`, `sp_0095`, `sp_0096`, `sp_0097`, `sp_0098`, `sp_0099`, `sp_0100`, `sp_0101`, `sp_0102`, `sp_0298`, `sp_0299`, `sp_0300`, `sp_0301`, `sp_0302`, and `sp_0303`.
+- Tropica professional plant records were reviewed for the named objects and variants. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 396→411`, space `reviewed_unknown 396→411`, and care `reviewed_unknown 423→438`; no feeding or social status changed.
+- Batch 44 contract, matrix contract, Species Detail assertions, and launch matrix pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then `sp_0304`, `sp_0305`, and `sp_0306`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 43 checkpoint preparation — 2026-09-17
 - Completed fifteen direct reviewed-unknown records: `sp_0078`, `sp_0079`, `sp_0080`, `sp_0081`, `sp_0082`, `sp_0083`, `sp_0084`, `sp_0085`, `sp_0086`, `sp_0087`, `sp_0088`, `sp_0090`, `sp_0091`, `sp_0092`, and `sp_0093`.
 - Tropica professional plant records were reviewed for the named objects. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
