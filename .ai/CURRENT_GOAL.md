@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-16 RC1 Production release CLOSED
+Aqua RC1 is released and final Production browser smoke is PASS.
+
+- Production deployment: `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd`, commit `93549ddf1cad0855a7c479e4a696cdde7e66f06c`, READY / production.
+- Direct Production API health: `GET /api/v1/health` returned 200 with `ok=true`.
+- Browser smoke on the exact Production deployment PASS: GP-001 first-tank setup; GP-002 species search -> Compatibility -> stocking; GP-003 returning-user Daily Check; GP-004 abnormal-care Quick Check.
+- Smoke browser used a temporary localhost read-only reverse proxy only because all local Playwright engines could not establish TLS to the Vercel-protected deployment; the proxy fetched exact Production HTML/JS/API GET/HEAD bytes with Vercel JWT and rejected non-GET/HEAD requests. No Product/DB write was made by the proxy.
+- HOLD remains: 15 Compatibility migrations, DB-authority switch, Care indexing changes. Local Admin remains out of Production.
+- RC1 status: **RELEASED / CLOSED**. Do not resume RC1 fixes without a new reproducible Production regression.
+- NEXT work must be a separately scoped product/data/UI iteration (for example Care UI redesign or Compatibility knowledge expansion), with its own acceptance/release gate.
+
 ## CURRENT OVERRIDE — 2026-09-14 Production promote blocked by Vercel quota
 Release authorization was given and the code-only promote of candidate `93549ddf` was attempted. Vercel rejected the promotion before any Production change with HTTP 402 `api-deployments-free-per-day` (“Resource is limited - try again in 24 hours”).
 

@@ -1,3 +1,12 @@
+## CURRENT RELEASE QUEUE — 2026-09-16 RC1 CLOSED
+- DONE: code-only Production promote of validated candidate `93549ddf`.
+- DONE: verify Production deployment/SHA and API health.
+- DONE: Production browser smoke GP-001 through GP-004; all PASS.
+- DONE: no rollback required.
+- HOLD: 15 Compatibility migrations, DB-authority switch, Care indexing/noindex changes, Local Admin Production exposure.
+- RC1 queue is closed. Do not add speculative RC1 hardening tasks.
+- NEXT: open a new scoped iteration only for explicit product/data/UI goals and give it a separate acceptance/release gate.
+
 ## CURRENT RELEASE QUEUE — 2026-09-14 quota-blocked
 1. DONE: explicit approval for code-only Production promote received.
 2. BLOCKED: Vercel promotion quota rejected the attempt with HTTP 402 `api-deployments-free-per-day`; Production did not change.

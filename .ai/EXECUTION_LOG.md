@@ -1,3 +1,12 @@
+## 2026-09-16 — RC1 Production browser smoke and release closure
+- Confirmed Production deployment `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` is READY/production at candidate commit `93549ddf`.
+- Direct `/api/v1/health` returned 200 with `ok=true`.
+- Local Playwright Chromium/Firefox/WebKit and system Chrome could not directly negotiate the Vercel-protected deployment connection (`ERR_CONNECTION_CLOSED` / network interrupt / SSL error), while curl from the same machine was healthy.
+- Built a temporary read-only localhost reverse proxy that fetched exact Production GET/HEAD responses via curl + Vercel JWT and returned 204 for any non-read request; no tracked file or Production write was introduced.
+- Ran the existing browser Golden Paths against those exact Production assets: GP-001 PASS, GP-002 PASS, GP-003 PASS, GP-004 PASS. Worktree remained unchanged except pre-existing untracked `artifacts/`.
+- No rollback required. 15 Compatibility migrations, DB authority and Care indexing remain unchanged.
+- RC1 release is CLOSED.
+
 ## 2026-09-14 — Production promote attempt blocked by Vercel deployment quota
 - Reconfirmed local/GitHub main at `12aea504`; only unrelated `artifacts/` remains untracked.
 - Reconfirmed release candidate `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` is READY at commit `93549ddf`; stable Production was `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / `5fa915d3`.

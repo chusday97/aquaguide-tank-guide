@@ -1,3 +1,10 @@
+## RC1 RELEASE CLOSURE — 2026-09-16
+- Production runtime: `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production).
+- Final Production validation: API health PASS; GP-001..GP-004 browser smoke PASS; no rollback.
+- Smoke did not mutate repository or Production data; only pre-existing `artifacts/` remains untracked.
+- Release holds remain: 15 Compatibility migrations repository-only, DB authority unchanged, Care indexing unchanged, Local Admin excluded from Production.
+- RC1: **RELEASED / CLOSED**.
+
 ## RELEASE STATUS — 2026-09-14 PROMOTE BLOCKED BY PLATFORM QUOTA
 - Authorized code-only release candidate: `93549ddf1cad0855a7c479e4a696cdde7e66f06c`.
 - READY Preview: `dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE`.

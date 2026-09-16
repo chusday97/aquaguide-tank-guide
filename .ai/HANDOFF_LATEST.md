@@ -1,3 +1,12 @@
+## HANDOFF — 2026-09-16 RC1 Production release CLOSED
+Production is now `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production). Final Production smoke is PASS.
+
+Verified after promotion: `/api/v1/health` 200/ok; GP-001 first tank setup; GP-002 宝莲灯 search -> Compatibility -> quantity x8 -> stocking persistence; GP-003 Daily Check persistence and Today Action advance; GP-004 abnormal-care Quick Check with actionable result. No rollback required.
+
+The browser smoke executed Production artifacts through a temporary read-only localhost proxy because Playwright engines on the authorized Mac could not directly negotiate the Vercel-protected TLS connection; curl could. The proxy allowed only GET/HEAD/OPTIONS to Production and rejected writes.
+
+Release holds are unchanged: do not apply the 15 Compatibility migrations, do not switch DB authority, do not change Care indexing/noindex policy, and do not expose Local Admin. RC1 is closed; future work is a new scoped iteration.
+
 ## HANDOFF — 2026-09-14 Production promote attempted but externally blocked
 User authorization for the code-only Production promote was received. `vercel promote dpl_8yd3w1kzbDhusqvckoRBJgyAEPUE` failed before promotion with HTTP 402 `api-deployments-free-per-day`. No Production state changed.
 

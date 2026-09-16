@@ -1,3 +1,12 @@
+## LIVE STATUS — 2026-09-16 RC1 released / closed
+- Production: `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` / `93549ddf1cad0855a7c479e4a696cdde7e66f06c`, READY / production.
+- Production API health: PASS (200, `ok=true`).
+- Production browser smoke: GP-001, GP-002, GP-003, GP-004 all PASS.
+- Rollback: not required. Prior stable deployment remains known as `dpl_2n2CfsVatP4rzzE49Ttd9H752fR8` / `5fa915d3`.
+- HOLD unchanged: 15 Compatibility migrations, DB-authority switch, Care indexing changes.
+- Local Admin remains excluded from Production.
+- RC1 engineering/release status: **CLOSED**.
+
 ## LIVE STATUS — 2026-09-14 Production promote blocked
 - Release authorization: granted.
 - Promote attempt: rejected by Vercel before state change with HTTP 402 `api-deployments-free-per-day`.
