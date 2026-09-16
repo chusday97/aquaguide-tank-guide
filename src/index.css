@@ -2358,6 +2358,54 @@ select {
   color: #0b6d57;
 }
 
+.interactive-care-problem-groups {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 12px;
+}
+
+.interactive-care-problem-groups button {
+  display: inline-flex;
+  min-height: 36px;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid rgb(21 55 47 / 0.10);
+  border-radius: 999px;
+  background: #fff;
+  padding: 7px 10px;
+  color: #31564c;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.interactive-care-problem-groups button:hover,
+.interactive-care-problem-groups button:focus-visible,
+.interactive-care-problem-groups button.is-selected {
+  border-color: rgb(8 122 97 / 0.34);
+  outline: none;
+  background: #e8f5f0;
+  color: #087a61;
+}
+
+.interactive-care-problem-groups button small {
+  display: grid;
+  min-width: 19px;
+  height: 19px;
+  place-items: center;
+  border-radius: 999px;
+  background: rgb(8 122 97 / 0.08);
+  font-size: 9px;
+}
+
+.interactive-care-problem-empty.is-compact {
+  min-height: 90px;
+  border: 1px dashed rgb(21 55 47 / 0.12);
+  border-radius: 14px;
+  background: rgb(255 255 255 / 0.48);
+  padding: 14px;
+}
+
 .interactive-care-problem-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

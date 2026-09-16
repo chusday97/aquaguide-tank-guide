@@ -5,7 +5,7 @@ import { runtimeCareTopicsData } from '../../data/runtimeContentCatalog';
 import { getLatestCareGuide } from '../../data/latestCareGuideCatalog';
 import { getCareVisualSources } from '../../lib/careVisual';
 import { ResilientImage } from '../common/ResilientImage';
-import { getKnowledgeObservations, type KnowledgeObjectId, type KnowledgeObservation } from './knowledgeJourney';
+import { getKnowledgeObservations, getKnowledgeProblemGroups, type KnowledgeObjectId, type KnowledgeObservation, type KnowledgeProblemGroupId } from './knowledgeJourney';
 
 type Props = {
   isEn?: boolean;
@@ -37,7 +37,7 @@ type GuideCarouselItem = {
 const careLayers: CareLayer[] = [
   { id: 'water_surface', zh: '水面', en: 'Surface', hintZh: '泡沫 · 油膜 · 浮头', hintEn: 'Foam · film · gasping', className: 'is-surface', topicIds: ['qa_gen_003', 'qa_gen_020', 'guide_water_deteriorate'], searchQuery: '水面 油膜 浮头' },
   { id: 'water_body', zh: '水体', en: 'Water', hintZh: '浑浊 · 氨氮 · 温差', hintEn: 'Cloudiness · ammonia · temperature', className: 'is-water', topicIds: ['qa_gen_001', 'qa_gen_002', 'qa_gen_006'], searchQuery: '水质 浑浊 氨 亚硝酸盐' },
-  { id: 'livestock', zh: '缸内生物', en: 'Livestock', hintZh: '追咬 · 混养 · 拥挤', hintEn: 'Chasing · stocking · crowding', className: 'is-life', topicIds: ['qa_gen_008', 'qa_gen_007', 'qa_gen_010'], searchQuery: '追咬 混养 拥挤' },
+  { id: 'livestock', zh: '缸内生物', en: 'Livestock', hintZh: '呼吸 · 体表 · 行为 · 繁殖', hintEn: 'Breathing · body · behavior · breeding', className: 'is-life', topicIds: ['qa_gen_008', 'qa_gen_007', 'qa_gen_010'], searchQuery: '鱼体异常 行为 繁殖 鱼苗' },
   { id: 'plants_equipment', zh: '水草与灯光', en: 'Plants & light', hintZh: '藻类 · 融叶 · 光照', hintEn: 'Algae · melting · light', className: 'is-plants', topicIds: ['qa_gen_017', 'qa_gen_018', 'qa_gen_019'], searchQuery: '水草 藻类 光照' },
   { id: 'substrate', zh: '底床', en: 'Substrate', hintZh: '残饵 · 清洁 · 有机物', hintEn: 'Waste · cleaning · organics', className: 'is-substrate', topicIds: ['qa_gen_015', 'qa_gen_014', 'guide_water_deteriorate'], searchQuery: '底床 残饵 清洁' },
   { id: 'filter', zh: '过滤系统', en: 'Filtration', hintZh: '滤材 · 流量 · 增氧', hintEn: 'Media · flow · aeration', className: 'is-filter', topicIds: ['qa_gen_016', 'qa_gen_026', 'qa_gen_027'], searchQuery: '过滤器 滤材 增氧' },
@@ -63,6 +63,7 @@ const getStatusLabel = (topic: CareTopic, isEn: boolean) => {
 
 export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList }: Props) {
   const [selectedLayerId, setSelectedLayerId] = useState<KnowledgeObjectId | null>(null);
+  const [selectedProblemGroupId, setSelectedProblemGroupId] = useState<KnowledgeProblemGroupId | null>(null);
   const [selectedProblemId, setSelectedProblemId] = useState<string | null>(null);
   const [guideIndex, setGuideIndex] = useState(0);
   const touchStartX = useRef<number | null>(null);
@@ -70,10 +71,15 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
     () => careLayers.find(layer => layer.id === selectedLayerId) || null,
     [selectedLayerId]
   );
-  const problems = useMemo(() => selectedLayer ? getKnowledgeObservations(selectedLayer.id) : [], [selectedLayer]);
+  const allProblems = useMemo(() => selectedLayer ? getKnowledgeObservations(selectedLayer.id) : [], [selectedLayer]);
+  const problemGroups = useMemo(() => selectedLayer ? getKnowledgeProblemGroups(selectedLayer.id) : [], [selectedLayer]);
+  const problems = useMemo(
+    () => problemGroups.length === 0 ? allProblems : selectedProblemGroupId ? allProblems.filter(problem => problem.groupId === selectedProblemGroupId) : [],
+    [allProblems, problemGroups, selectedProblemGroupId]
+  );
   const selectedProblem = useMemo(
-    () => problems.find(problem => problem.id === selectedProblemId) || null,
-    [problems, selectedProblemId]
+    () => allProblems.find(problem => problem.id === selectedProblemId) || null,
+    [allProblems, selectedProblemId]
   );
   const latestGuide = useMemo(
     () => getLatestCareGuide(selectedProblem?.latestCareGuideId),
@@ -118,6 +124,13 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
 
   const selectLayer = (layer: CareLayer) => {
     setSelectedLayerId(layer.id);
+    setSelectedProblemGroupId(null);
+    setSelectedProblemId(null);
+    setGuideIndex(0);
+  };
+
+  const selectProblemGroup = (groupId: KnowledgeProblemGroupId) => {
+    setSelectedProblemGroupId(groupId);
     setSelectedProblemId(null);
     setGuideIndex(0);
   };
@@ -154,6 +167,9 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
         subtitle: 'The aquarium layers narrow the context. A problem choice comes before any guide.',
         browse: 'Browse all guides',
         problems: 'Possible problems',
+        problemTypes: 'What kind of issue?',
+        chooseGroup: 'Choose an issue type first',
+        chooseGroupBody: 'Start with the type of sign you notice, then pick the closest visible problem.',
         identify: 'What problem is this?',
         related: 'Related care guides',
         chooseLayer: 'Choose an aquarium layer',
@@ -170,6 +186,9 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
         subtitle: '生态层只负责缩小范围；用户确认“是什么问题”以后，右侧才出现对应养护指南。',
         browse: '浏览全部指南',
         problems: '这一层可能的问题',
+        problemTypes: '先看哪一类异常',
+        chooseGroup: '先选择问题类型',
+        chooseGroupBody: '先判断更像呼吸、体表、游姿行为、体况，还是繁殖鱼苗问题，再选具体症状。',
         identify: '这是什么问题',
         related: '相关养护指南',
         chooseLayer: '先点击一个生态层',
@@ -247,22 +266,45 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                     <span>{copy.problems}</span>
                     <strong>{isEn ? selectedLayer.en : selectedLayer.zh}</strong>
                   </div>
-                  <span>{problems.length}</span>
+                  <span>{allProblems.length}</span>
                 </div>
-                <div className="interactive-care-problem-grid">
-                  {problems.map(problem => (
-                    <button
-                      key={problem.id}
-                      type="button"
-                      aria-pressed={selectedProblemId === problem.id}
-                      onClick={() => selectProblem(problem)}
-                      className={selectedProblemId === problem.id ? 'is-selected' : ''}
-                    >
-                      <span>{isEn ? (problem.labelEn || problem.label) : problem.label}</span>
-                      <small>{problem.urgency === 'urgent' ? (isEn ? 'Priority' : '优先处理') : problem.urgency === 'watch' ? (isEn ? 'Watch' : '需要观察') : (isEn ? 'Routine' : '日常')}</small>
-                    </button>
-                  ))}
-                </div>
+                {problemGroups.length > 0 && (
+                  <div className="interactive-care-problem-groups" aria-label={copy.problemTypes}>
+                    {problemGroups.map(group => (
+                      <button
+                        key={group.id}
+                        type="button"
+                        aria-pressed={selectedProblemGroupId === group.id}
+                        onClick={() => selectProblemGroup(group.id)}
+                        className={selectedProblemGroupId === group.id ? 'is-selected' : ''}
+                      >
+                        {isEn ? group.labelEn : group.label}
+                        <small>{allProblems.filter(problem => problem.groupId === group.id).length}</small>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {problemGroups.length > 0 && !selectedProblemGroupId ? (
+                  <div className="interactive-care-problem-empty is-compact">
+                    <strong>{copy.chooseGroup}</strong>
+                    <span>{copy.chooseGroupBody}</span>
+                  </div>
+                ) : (
+                  <div className="interactive-care-problem-grid">
+                    {problems.map(problem => (
+                      <button
+                        key={problem.id}
+                        type="button"
+                        aria-pressed={selectedProblemId === problem.id}
+                        onClick={() => selectProblem(problem)}
+                        className={selectedProblemId === problem.id ? 'is-selected' : ''}
+                      >
+                        <span>{isEn ? (problem.labelEn || problem.label) : problem.label}</span>
+                        <small>{problem.urgency === 'urgent' ? (isEn ? 'Priority' : '优先处理') : problem.urgency === 'watch' ? (isEn ? 'Watch' : '需要观察') : (isEn ? 'Routine' : '日常')}</small>
+                      </button>
+                    ))}
+                  </div>
+                )}
               </>
             )}
           </div>
@@ -280,8 +322,8 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
           {selectedLayer && !selectedProblem && (
             <div className="interactive-care-guide-empty">
               <BookOpen className="h-6 w-6" />
-              <strong>{copy.chooseProblem}</strong>
-              <p>{copy.chooseProblemBody}</p>
+              <strong>{problemGroups.length > 0 && !selectedProblemGroupId ? copy.chooseGroup : copy.chooseProblem}</strong>
+              <p>{problemGroups.length > 0 && !selectedProblemGroupId ? copy.chooseGroupBody : copy.chooseProblemBody}</p>
             </div>
           )}
 
