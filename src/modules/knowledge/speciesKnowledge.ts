@@ -37,6 +37,7 @@ import { phase2Batch34Knowledge } from './phase2Batch34Authority';
 import { phase2Batch35Knowledge } from './phase2Batch35Authority';
 import { phase2Batch36Knowledge } from './phase2Batch36Authority';
 import { phase2Batch37Knowledge } from './phase2Batch37Authority';
+import { phase2Batch38Knowledge } from './phase2Batch38Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -76,6 +77,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0404', 'sp_0405', 'sp_0406', 'sp_0413', 'sp_0426', 'sp_0427', 'sp_0439', 'sp_0454', 'sp_0458', 'sp_0460',
   'sp_0461', 'sp_0462', 'sp_0463', 'sp_0464', 'sp_0465', 'sp_0466', 'sp_0467', 'sp_0470', 'sp_0471', 'sp_0472',
   'sp_0473', 'sp_0474', 'sp_0476', 'sp_0012', 'sp_0147', 'sp_0148', 'sp_0222', 'sp_0258', 'sp_0433', 'sp_0434',
+  'sp_0446', 'sp_0013', 'sp_0028', 'sp_0030', 'sp_0031', 'sp_0164', 'sp_0165', 'sp_0166', 'sp_0223', 'sp_0238',
 ]);
 
 
@@ -820,6 +822,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch35Knowledge,
   ...phase2Batch36Knowledge,
   ...phase2Batch37Knowledge,
+  ...phase2Batch38Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1678,6 +1681,28 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // These Compatibility-reviewed ornamental variants retain their existing
   // base runtime boundaries; their own completion records remain independent.
   if (['sp_0148', 'sp_0222', 'sp_0258'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // The Albino Channa asiatica variant retains the established predator and
+  // solitary runtime boundary; its variant completion record stays separate.
+  if (fish.id === 'sp_0223') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Angelfish has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only.
+  if (fish.id === 'sp_0446' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Otocinclus has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only.
+  if (fish.id === 'sp_0013' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Existing shrimp runtime boundaries remain available for these catalog
+  // variants; their completion records do not inherit those facts.
+  if (['sp_0028', 'sp_0030', 'sp_0031', 'sp_0164', 'sp_0165', 'sp_0166', 'sp_0238'].includes(fish.id)) {
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
