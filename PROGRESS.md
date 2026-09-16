@@ -811,3 +811,4 @@
 - [x] Added additive migration owner `202609160001_compatibility_rummy_oto_oscar_baseline.sql` for `sp_0433`, `sp_0013`, `sp_0451` with exact/evidence drift guards.
 - [x] Admin contract passes via `node --import tsx`; no historical migration was edited.
 - [ ] Full Knowledge Completion Program Phase 2 remains pending; no new missing-species authority has been written.
+- [x] Matrix conflict registry records the Oscar 22–25°C vs 20–28°C source disagreement without narrowing it into a universal hard block; non-overlap is the hard-conflict criterion.

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T13:15:15.916Z",
+  "generated_at": "2026-09-16T13:20:43.550Z",
   "selection": "Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.",
   "items": [
     {
@@ -36,6 +36,7 @@
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
       "priority_score": 29,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -78,6 +79,7 @@
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
       "priority_score": 28,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:template_only",
@@ -120,6 +122,7 @@
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
       "priority_score": 28,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:template_only",
@@ -163,6 +166,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "priority_score": 26,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:template_only",
@@ -207,6 +211,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "priority_score": 26,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:template_only",
@@ -251,6 +256,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "priority_score": 26,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:template_only",
@@ -295,6 +301,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "priority_score": 26,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:template_only",
@@ -339,6 +346,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -383,6 +391,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -425,6 +434,7 @@
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -467,6 +477,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -511,6 +522,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -555,6 +567,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -599,6 +612,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -643,6 +657,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -687,6 +702,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -731,6 +747,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -775,6 +792,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -819,6 +837,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -863,6 +882,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -907,6 +927,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -951,6 +972,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -995,6 +1017,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1039,6 +1062,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1083,6 +1107,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1127,6 +1152,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1171,6 +1197,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1215,6 +1242,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1259,6 +1287,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1303,6 +1332,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1347,6 +1377,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1391,6 +1422,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1435,6 +1467,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1479,6 +1512,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1523,6 +1557,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1567,6 +1602,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1611,6 +1647,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1655,6 +1692,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1699,6 +1737,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",
@@ -1743,6 +1782,7 @@
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "priority_score": 24,
+      "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
       "research_reason": [
         "feeding:needs_research",

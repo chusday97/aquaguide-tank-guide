@@ -403,3 +403,4 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Migration owns Profile rows, seven citation records, exact Profile drift guards, and exact evidence-link drift guards; historical migrations remain unchanged.
 - Extended `test:compatibility-admin-contract` to require this owner and preserve the explicit post-recovery ownership map. Equivalent `node --import tsx` Admin contract and `lint` pass.
 - This does not add any new missing-species knowledge. Phase 2 backlog research remains source-gated and unstarted.
+- Matrix conflict registry now records Oscar temperature disagreement (`FishBase 22–25°C` vs `Seriously Fish 20–28°C`) as `reviewed_conflict`: catalog runtime keeps its reviewed 22–25°C value, broader source remains husbandry guidance, and only non-overlap can be a hard Domain incompatibility.

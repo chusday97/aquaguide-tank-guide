@@ -13,6 +13,16 @@ const outputDir = `${root}docs`;
 mkdirSync(outputDir, { recursive: true });
 const launchIds = new Set(selectCompatibilityLaunchCohort().map(fish => fish.id));
 const fields: KnowledgeField[] = ['feeding', 'environment', 'space', 'social', 'care'];
+const reviewedSourceConflicts = [{
+  species_id: 'sp_0451',
+  field: 'environment.temperature',
+  conflict_status: 'reviewed_conflict',
+  sources: [
+    { source_id: 'batch03-fishbase-astronotus-ocellatus', range_c: { min: 22, max: 25 }, role: 'catalog_runtime_authority' },
+    { source_id: 'seriouslyfish-astronotus-ocellatus', range_c: { min: 20, max: 28 }, role: 'husbandry_guidance' },
+  ],
+  resolution: 'Do not collapse the disagreement into a universal narrow hard block. Domain hard incompatibility is valid only when reviewed ranges have no overlap; this conflict retains 22–25°C as the catalog runtime value, treats 20–28°C as contextual husbandry guidance, and exposes out-of-overlap conditions as caution unless a stronger species-specific source resolves the conflict.',
+}];
 const applicableFields = (lifeType: string): KnowledgeField[] => {
   if (lifeType === 'hardscape') return [];
   if (lifeType === 'plant') return ['environment', 'space', 'care'];
@@ -85,6 +95,7 @@ const rows = fishData.map((fish) => {
     commonness_proxy: commonnessProxy,
     risk_proxy: riskProxy,
     priority_score: priorityScore,
+    source_conflicts: reviewedSourceConflicts.filter(conflict => conflict.species_id === fish.id),
     evidence_boundary: 'No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.',
   };
 });
@@ -96,7 +107,7 @@ const backlog = rows
   .map((row, index) => ({ rank: index + 1, ...row, research_reason: row.gap_fields.map(field => `${field}:${row.field_status[field]}`) }));
 
 const counts = Object.fromEntries(fields.map(field => [field, Object.fromEntries((['reviewed_supported', 'reviewed_unknown', 'inherited_reviewed', 'not_applicable', 'needs_research', 'template_only'] as FieldStatus[]).map(status => [status, rows.filter(row => row.field_status[field] === status).length]))]));
-const matrix = { generated_at: new Date().toISOString(), catalog_object_count: rows.length, fields, rows, status_counts: counts, backlog_size: backlog.length, backlog_scope: 'Top 40 research candidates; no authority data was written by this phase.' };
+const matrix = { generated_at: new Date().toISOString(), catalog_object_count: rows.length, fields, rows, status_counts: counts, source_conflicts: reviewedSourceConflicts, backlog_size: backlog.length, backlog_scope: 'Top 40 research candidates; no authority data was written by this phase.' };
 writeFileSync(`${outputDir}/species_knowledge_completion_matrix.json`, `${JSON.stringify(matrix, null, 2)}\n`);
 const csvEscape = (value: unknown) => `"${String(value ?? '').replaceAll('"', '""')}"`;
 const csvHeader = ['species_id', 'common_name', 'scientific_name', 'life_type', 'category', ...fields.flatMap(field => fields.includes(field) ? [`${field}_status`] : []), 'gap_fields', 'commonness_proxy', 'risk_proxy', 'priority_score'];

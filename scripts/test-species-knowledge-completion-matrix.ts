@@ -5,10 +5,15 @@ const matrix = JSON.parse(readFileSync('docs/species_knowledge_completion_matrix
   catalog_object_count: number;
   rows: Array<{ species_id: string; life_type: string; applicable_fields: string[]; field_status: Record<string, string>; gap_fields: string[] }>;
   fields: string[];
+  source_conflicts: Array<{ species_id: string; field: string; conflict_status: string; resolution: string }>;
 };
 const validStatuses = new Set(['reviewed_supported', 'reviewed_unknown', 'inherited_reviewed', 'not_applicable', 'needs_research', 'template_only']);
 assert.equal(matrix.catalog_object_count, 486, 'completion matrix must cover all 486 catalog objects');
 assert.equal(matrix.rows.length, 486, 'completion matrix row count must match catalog object count');
+const oscarTemperatureConflict = matrix.source_conflicts.find(conflict => conflict.species_id === 'sp_0451' && conflict.field === 'environment.temperature');
+assert.ok(oscarTemperatureConflict, 'matrix must preserve the reviewed Oscar temperature conflict');
+assert.equal(oscarTemperatureConflict?.conflict_status, 'reviewed_conflict');
+assert.match(oscarTemperatureConflict?.resolution || '', /no overlap/i);
 assert.equal(new Set(matrix.rows.map(row => row.species_id)).size, 486, 'completion matrix species IDs must be unique');
 for (const row of matrix.rows) {
   assert.deepEqual(Object.keys(row.field_status).sort(), matrix.fields.slice().sort(), `${row.species_id} must expose every knowledge field`);
