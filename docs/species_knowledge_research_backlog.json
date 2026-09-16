@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T18:25:42.360Z",
+  "generated_at": "2026-09-16T18:30:37.368Z",
   "selection": "Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.",
   "items": [
     {
@@ -337,561 +337,6 @@
     },
     {
       "rank": 10,
-      "species_id": "sp_0078",
-      "common_name": "宫廷草",
-      "scientific_name": "Rotala rotundifolia 'Green'",
-      "life_type": "plant",
-      "category": "水草",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 11,
-      "species_id": "sp_0079",
-      "common_name": "红宫廷",
-      "scientific_name": "Rotala rotundifolia 'Red'",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 12,
-      "species_id": "sp_0080",
-      "common_name": "莫斯 (三角莫斯)",
-      "scientific_name": "Vesicularia dubyana",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 13,
-      "species_id": "sp_0081",
-      "common_name": "铁皇冠",
-      "scientific_name": "Microsorum pteropus",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 14,
-      "species_id": "sp_0082",
-      "common_name": "黑木蕨",
-      "scientific_name": "Bolbitis heudelotii",
-      "life_type": "plant",
-      "category": "水草",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 15,
-      "species_id": "sp_0083",
-      "common_name": "绿温蒂椒草",
-      "scientific_name": "Cryptocoryne wendtii 'Green'",
-      "life_type": "plant",
-      "category": "水草",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 16,
-      "species_id": "sp_0084",
-      "common_name": "大浪草",
-      "scientific_name": "Aponogeton crispus",
-      "life_type": "plant",
-      "category": "水草",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 17,
-      "species_id": "sp_0085",
-      "common_name": "绿浮萍",
-      "scientific_name": "Lemna minor",
-      "life_type": "plant",
-      "category": "水草",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 18,
-      "species_id": "sp_0086",
-      "common_name": "圆心萍",
-      "scientific_name": "Limnobium laevigatum",
-      "life_type": "plant",
-      "category": "水草",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 19,
-      "species_id": "sp_0087",
-      "common_name": "蜈蚣草",
-      "scientific_name": "Egeria densa",
-      "life_type": "plant",
-      "category": "水草",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 20,
-      "species_id": "sp_0088",
-      "common_name": "睡莲 (红荷根)",
-      "scientific_name": "Nymphaea lotus",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 21,
-      "species_id": "sp_0090",
-      "common_name": "细叶铁皇冠",
-      "scientific_name": "Microsorum pteropus 'Narrow'",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 22,
-      "species_id": "sp_0091",
-      "common_name": "南美叉柱花",
-      "scientific_name": "Staurogyne repens",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 23,
-      "species_id": "sp_0092",
-      "common_name": "红玫瑰",
-      "scientific_name": "Ludwigia glandulosa",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 24,
-      "species_id": "sp_0093",
-      "common_name": "十字珍珠",
-      "scientific_name": "Micranthemum umbrosum",
-      "life_type": "plant",
-      "category": "鱼类",
-      "applicable_fields": [
-        "environment",
-        "space",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "not_applicable",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "not_applicable",
-        "care": "reviewed_supported"
-      },
-      "gap_fields": [
-        "environment",
-        "space"
-      ],
-      "direct_species_knowledge": false,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "priority_score": 10,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research",
-        "space:needs_research"
-      ]
-    },
-    {
-      "rank": 25,
       "species_id": "sp_0094",
       "common_name": "大叶皇冠",
       "scientific_name": "Echinodorus amazonicus",
@@ -928,7 +373,7 @@
       ]
     },
     {
-      "rank": 26,
+      "rank": 11,
       "species_id": "sp_0095",
       "common_name": "细叶太阳",
       "scientific_name": "Ludwigia inclinata var. verticillata",
@@ -965,7 +410,7 @@
       ]
     },
     {
-      "rank": 27,
+      "rank": 12,
       "species_id": "sp_0096",
       "common_name": "虎耳草",
       "scientific_name": "Bacopa caroliniana",
@@ -1002,7 +447,7 @@
       ]
     },
     {
-      "rank": 28,
+      "rank": 13,
       "species_id": "sp_0097",
       "common_name": "绿羽毛",
       "scientific_name": "Myriophyllum aquaticum",
@@ -1039,7 +484,7 @@
       ]
     },
     {
-      "rank": 29,
+      "rank": 14,
       "species_id": "sp_0098",
       "common_name": "箦藻",
       "scientific_name": "Blyxa japonica",
@@ -1076,7 +521,7 @@
       ]
     },
     {
-      "rank": 30,
+      "rank": 15,
       "species_id": "sp_0099",
       "common_name": "鹿角苔",
       "scientific_name": "Riccia fluitans",
@@ -1113,7 +558,7 @@
       ]
     },
     {
-      "rank": 31,
+      "rank": 16,
       "species_id": "sp_0100",
       "common_name": "青丝绒莫斯",
       "scientific_name": "Vesicularia sp.",
@@ -1150,7 +595,7 @@
       ]
     },
     {
-      "rank": 32,
+      "rank": 17,
       "species_id": "sp_0101",
       "common_name": "凤尾藓",
       "scientific_name": "Fissidens fontanus",
@@ -1187,7 +632,7 @@
       ]
     },
     {
-      "rank": 33,
+      "rank": 18,
       "species_id": "sp_0102",
       "common_name": "大蜻蜓椒草",
       "scientific_name": "Cryptocoryne aponogetifolia",
@@ -1224,7 +669,7 @@
       ]
     },
     {
-      "rank": 34,
+      "rank": 19,
       "species_id": "sp_0298",
       "common_name": "迷你矮珍珠",
       "scientific_name": "Hemianthus callitrichoides",
@@ -1261,7 +706,7 @@
       ]
     },
     {
-      "rank": 35,
+      "rank": 20,
       "species_id": "sp_0299",
       "common_name": "牛毛毡",
       "scientific_name": "Eleocharis acicularis",
@@ -1298,7 +743,7 @@
       ]
     },
     {
-      "rank": 36,
+      "rank": 21,
       "species_id": "sp_0300",
       "common_name": "挖耳草",
       "scientific_name": "Utricularia graminifolia",
@@ -1335,7 +780,7 @@
       ]
     },
     {
-      "rank": 37,
+      "rank": 22,
       "species_id": "sp_0301",
       "common_name": "辣椒榕 (蓝调)",
       "scientific_name": "Bucephalandra sp. Blue",
@@ -1372,7 +817,7 @@
       ]
     },
     {
-      "rank": 38,
+      "rank": 23,
       "species_id": "sp_0302",
       "common_name": "迷你水榕",
       "scientific_name": "Anubias barteri var. nana 'Petite'",
@@ -1409,7 +854,7 @@
       ]
     },
     {
-      "rank": 39,
+      "rank": 24,
       "species_id": "sp_0303",
       "common_name": "红宫廷",
       "scientific_name": "Rotala rotundifolia 'Red'",
@@ -1446,10 +891,565 @@
       ]
     },
     {
-      "rank": 40,
+      "rank": 25,
       "species_id": "sp_0304",
       "common_name": "绿宫廷",
       "scientific_name": "Rotala rotundifolia 'Green'",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 26,
+      "species_id": "sp_0305",
+      "common_name": "铁皇冠",
+      "scientific_name": "Microsorum pteropus",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 27,
+      "species_id": "sp_0306",
+      "common_name": "黑木蕨",
+      "scientific_name": "Bolbitis heudelotii",
+      "life_type": "plant",
+      "category": "水草",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 28,
+      "species_id": "sp_0307",
+      "common_name": "三角莫斯",
+      "scientific_name": "Vesicularia dubyana",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 29,
+      "species_id": "sp_0308",
+      "common_name": "凤尾藓",
+      "scientific_name": "Fissidens fontanus",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 30,
+      "species_id": "sp_0309",
+      "common_name": "绿温蒂椒草",
+      "scientific_name": "Cryptocoryne wendtii 'Green'",
+      "life_type": "plant",
+      "category": "水草",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 31,
+      "species_id": "sp_0310",
+      "common_name": "大叶皇冠",
+      "scientific_name": "Echinodorus amazonicus",
+      "life_type": "plant",
+      "category": "水草",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 32,
+      "species_id": "sp_0311",
+      "common_name": "圆心萍",
+      "scientific_name": "Limnobium laevigatum",
+      "life_type": "plant",
+      "category": "水草",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 33,
+      "species_id": "sp_0312",
+      "common_name": "红荷根",
+      "scientific_name": "Nymphaea lotus",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 34,
+      "species_id": "sp_0313",
+      "common_name": "蜈蚣草",
+      "scientific_name": "Egeria densa",
+      "life_type": "plant",
+      "category": "水草",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 35,
+      "species_id": "sp_0314",
+      "common_name": "南美叉柱花",
+      "scientific_name": "Staurogyne repens",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 36,
+      "species_id": "sp_0315",
+      "common_name": "红太阴",
+      "scientific_name": "Ludwigia inclinata var. verticillata",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 37,
+      "species_id": "sp_0316",
+      "common_name": "绿羽毛",
+      "scientific_name": "Myriophyllum aquaticum",
+      "life_type": "plant",
+      "category": "鱼类",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 38,
+      "species_id": "sp_0317",
+      "common_name": "大蜻蜓椒草",
+      "scientific_name": "Cryptocoryne aponogetifolia",
+      "life_type": "plant",
+      "category": "水草",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 39,
+      "species_id": "sp_0354",
+      "common_name": "细叶皇冠",
+      "scientific_name": "Echinodorus tenellus",
+      "life_type": "plant",
+      "category": "水草",
+      "applicable_fields": [
+        "environment",
+        "space",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "not_applicable",
+        "environment": "needs_research",
+        "space": "needs_research",
+        "social": "not_applicable",
+        "care": "reviewed_supported"
+      },
+      "gap_fields": [
+        "environment",
+        "space"
+      ],
+      "direct_species_knowledge": false,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "priority_score": 10,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "environment:needs_research",
+        "space:needs_research"
+      ]
+    },
+    {
+      "rank": 40,
+      "species_id": "sp_0355",
+      "common_name": "小水兰",
+      "scientific_name": "Vallisneria nana",
       "life_type": "plant",
       "category": "鱼类",
       "applicable_fields": [

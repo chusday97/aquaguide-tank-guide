@@ -243,6 +243,15 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 43 checkpoint preparation — 2026-09-17
+- Completed fifteen direct reviewed-unknown records: `sp_0078`, `sp_0079`, `sp_0080`, `sp_0081`, `sp_0082`, `sp_0083`, `sp_0084`, `sp_0085`, `sp_0086`, `sp_0087`, `sp_0088`, `sp_0090`, `sp_0091`, `sp_0092`, and `sp_0093`.
+- Tropica professional plant records were reviewed for the named objects. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 381→396`, space `reviewed_unknown 381→396`, and care `reviewed_unknown 408→423`; no feeding or social status changed.
+- Batch 43 contract, matrix contract, Species Detail assertions, and launch matrix pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then `sp_0094`, `sp_0095`, and `sp_0096`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 42 checkpoint preparation — 2026-09-17
 - Completed eleven direct reviewed-unknown records: `sp_0261`, `sp_0262`, `sp_0389`, `sp_0390`, `sp_0391`, `sp_0071`, `sp_0072`, `sp_0073`, `sp_0074`, `sp_0075`, and `sp_0076`.
 - FishBase and Tropica professional records were reviewed for the named Betta variants and plants. Variant records remain independent from Betta splendens base evidence; no unsupported feeding, care, environment, space, or social claim was promoted.
