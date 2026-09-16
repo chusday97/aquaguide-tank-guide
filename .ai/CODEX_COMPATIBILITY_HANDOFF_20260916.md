@@ -3,7 +3,7 @@
 ## Worktree / branch
 - Worktree: `/Users/chuchu/aquaguide-compat-core`
 - Branch: `agent/compatibility-core-20260916`
-- Current committed HEAD at Phase 2 handoff baseline: `53323ca2` (`docs(knowledge): record reviewed source conflicts`).
+- Current committed HEAD: `bd3ab012` (`feat(knowledge): add phase2 batch01 authority`), based on the requested `53323ca2` baseline.
 - DO NOT work in `/Users/chuchu/aquaguide-ui-redesign` or the old admin worktree.
 - Default policy: local work + local commits only. DO NOT push or trigger Vercel unless the user explicitly approves a key milestone.
 
@@ -34,6 +34,7 @@ Do not use legacy fishData, template text, names, or automatic base-species inhe
 - Current launch closure target is only the remaining `sp_0451` Oscar authority and any regressions exposed while integrating it.
 
 ## Existing checkpoints
+- `bd3ab012` feat(knowledge): add Phase 2 Batch 1 direct authority and completion matrix evidence.
 - `53323ca2` docs(knowledge): record reviewed source conflicts; launch matrix is 0 insufficient.
 - `72036acc` fix(catalog): preserve Rhodeus brackish provenance.
 - `aa9706c5` fix(compatibility): close Oscar evidence authority.

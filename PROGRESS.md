@@ -818,4 +818,4 @@
 - [x] Updated `.ai/CODEX_COMPATIBILITY_HANDOFF_20260916.md` from stale `13ffcedd` / 21-insufficient state to `53323ca2` / frozen `435 pairs, 0 insufficient` baseline.
 - [x] Added direct, citation-backed Phase 2 Knowledge authority for `sp_0016`, `sp_0224`, `sp_0475`; no new Compatibility Profile or launch rule was added.
 - [x] Generated matrix after Batch 1 authority: 486 objects; feeding `1 supported / 2 reviewed_unknown / 212 needs_research / 196 template_only`; environment `23 supported / 1 reviewed_unknown`; space `32 supported / 1 reviewed_unknown`; social `31 supported / 2 reviewed_unknown`; care `385 supported / 2 reviewed_unknown / 88 template_only`.
-- [ ] Full knowledge/catalog/compatibility/admin/lint/build gates and local checkpoint remain to be completed; do not push or run migrations.
+- [x] Full knowledge/catalog/compatibility/admin/lint/build gates passed; local checkpoint `bd3ab012` created. `git diff --check` reports only the preserved user CSV trailing-whitespace line 444; do not alter it. No push or migration.
