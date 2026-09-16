@@ -46,6 +46,7 @@ Do not use legacy fishData, template text, names, or automatic base-species inhe
 - Platinum snakehead: no reliable Platinum-specific feeding, environment, social, space, or care source was found. Direct reviewed-unknown blocks fallback inheritance; no Compatibility Profile is created.
 - Rhodeus ocellatus: FishBase supports freshwater + brackish, 18–24°C, 9.2 cm SL and mussel-associated reproduction; J-STAGE supports 22–28°C reproductive temperature response. Water remains unknown in the single-value runtime schema, and no generic community behavior or feeding claim is promoted.
 - No new launch pair rules or Compatibility Profiles are authorized by this batch.
+- Runtime compatibility keeps the pre-existing reviewed Channa/Ram compatibility fallback where required for the frozen launch matrix; the completion matrix reads the three Phase 2 direct records and reports no inherited status for them. This is an explicit runtime compatibility boundary, not evidence completion by inheritance.
 
 ## Existing checkpoints (historical)
 - `e617b2d6` fix(compatibility): align reviewed authority resolution
