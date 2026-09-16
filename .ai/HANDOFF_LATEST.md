@@ -388,3 +388,12 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 - Matrix: `435 / 21 insufficient / 185 blocked / 217 caution / 12 compatible` before; `435 / 0 insufficient / 198 blocked / 221 caution / 16 compatible` after. The reduction is from reviewed, source-scoped trait authority; Oscar + direct zebrafish pair remains a reviewed `pair_rule`.
 - Test evidence: catalog review batches, catalog review contract, Species Knowledge V2, compatibility engine, launch matrix, evidence coverage, coverage scorecard, Domain, Service, and `lint` passed. `tsx` CLI wrappers for `test:species-knowledge`, `test:compatibility`, and `test:compatibility-evidence-coverage` hit sandbox IPC `EPERM`; equivalent `node --import tsx` commands passed.
 - No UI files, migration, push, or Vercel action performed. Remaining launch-cohort `insufficient_data`: none; broader 411-species coverage remains intentionally fail-closed outside reviewed authority.
+## 2026-09-16 — 486-species Knowledge Completion Program, Phase 1
+
+- Scope changed to a provenance-first 486-object completion program. Phase 1 is matrix/backlog only; no new Profile, Species Knowledge, migration, or batch authority data was written.
+- Generated `docs/species_knowledge_completion_matrix.json` and `.csv` plus `docs/species_knowledge_research_backlog.json`/`.md` from the current catalog and reviewed runtime authority.
+- Matrix contract: 486 unique catalog objects, five applicable knowledge fields (`feeding`, `environment`, `space`, `social`, `care`), explicit statuses, and 40 ranked research candidates.
+- Status counts: feeding `0 supported / 0 unknown / 0 inherited / 75 N/A / 213 needs_research / 198 template_only`; environment `21 / 0 / 0 / 11 / 454 / 0`; space `30 / 0 / 32 / 11 / 413 / 0`; social `30 / 0 / 38 / 75 / 343 / 0`; care `387 / 0 / 0 / 11 / 0 / 88`.
+- Priority uses only explicit gap states, launch-cohort membership as an operational commonness proxy, and compatibility/temperament risk. No user-frequency telemetry was inferred.
+- `sp_0016`, `sp_0224`, and `sp_0475` are the first three backlog candidates. They remain unchanged and require source-by-source human review before authority writes.
+- Validation: `npm run knowledge:completion-matrix` and `npm run test:knowledge-completion-matrix` pass. Existing `docs/species_knowledge_audit.csv` has a pre-existing user modification and was preserved.

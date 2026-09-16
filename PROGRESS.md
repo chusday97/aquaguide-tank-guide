@@ -799,3 +799,10 @@
 - [x] Regression coverage proves Oscar + medium-sized fish is not blocked solely by the scoped small-fish rule.
 - [x] Handoff test suite passed via `node --import tsx` where the repository `tsx` wrappers were blocked by sandbox IPC `EPERM`; no UI, migration, push, or Vercel operation performed.
 - [ ] Local checkpoint commit for Oscar authority and these status documents remains to be created after independent read-only Critic review.
+## 2026-09-16 — Knowledge Completion Program Phase 1
+
+- [x] Scanned all 486 catalog objects by lifeType and generated machine-readable completion matrix JSON/CSV.
+- [x] Classified feeding/environment/space/social/care as reviewed_supported, reviewed_unknown, inherited_reviewed, not_applicable, needs_research, or template_only.
+- [x] Generated a 40-item ranked research backlog; launch-cohort membership is explicitly only a commonness proxy.
+- [x] Added matrix generator and contract test; no batch data, Profile, Species Knowledge, or migration authority was written in this phase.
+- [ ] Phase 2 research and authority writes remain blocked until each batch has source-specific evidence, citation provenance, additive migration ownership, and the complete requested gate suite.
