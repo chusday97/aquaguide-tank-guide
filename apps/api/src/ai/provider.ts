@@ -71,7 +71,6 @@ export const requestVisionCandidates = (imageDataUrl: string, locale: 'zh-CN' | 
   {
     temperature: 0.1,
     max_tokens: 700,
-    response_format: { type: 'json_object' },
     messages: [{
       role: 'user',
       content: [
