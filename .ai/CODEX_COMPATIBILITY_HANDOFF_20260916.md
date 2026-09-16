@@ -251,6 +251,15 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, and `sp_0446`; continue with the latest backlog and retain the 40-item queue contract.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 48–49 checkpoint preparation — 2026-09-17
+- Completed nine direct reviewed-unknown environment records in Batch 48: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, and `sp_0446`; then completed the final one-object environment gap in Batch 49: `sp_0455`.
+- Existing FishBase/professional source registrations were reviewed. Evidence was insufficient for complete object-specific environment authority, so these records remain direct reviewed-unknown; no template, name inference, legacy fishData, or base-species inheritance was promoted.
+- Matrix after Batch 49 has zero `needs_research` and zero `template_only` rows across feeding, environment, space, social, and care. Environment changed `needs_research 10→0` and `reviewed_unknown 439→449`; all other dimensions remain unchanged from Batch 47.
+- Batch 48/49 contracts, matrix contract, Species Detail, Compatibility, admin gates, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- `npm run test:catalog-review` still reports the known protected-CSV citation/field diagnostics while its contract passes. `npm run build:web` remains blocked by the known Vite temp-cache `EPERM`; neither issue was caused by these batches.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed. All completion gaps are closed.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 46 checkpoint preparation — 2026-09-17
 - Completed thirteen direct reviewed-unknown records: `sp_0355`, `sp_0356`, `sp_0357`, `sp_0477`, `sp_0478`, `sp_0479`, `sp_0480`, `sp_0481`, `sp_0482`, `sp_0483`, `sp_0484`, `sp_0485`, and `sp_0486`.
 - Tropica professional plant records were reviewed for the named objects. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.

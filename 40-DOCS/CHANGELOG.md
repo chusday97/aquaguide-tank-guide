@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added: Knowledge Completion Phase 2 Batch 49 direct reviewed-unknown environment record for the final remaining gap object, with an existing professional source registration, matrix/backlog integration, and a regression contract; no launch pair or Compatibility authority changed.
+- Added: Knowledge Completion Phase 2 Batch 48 direct reviewed-unknown environment records for nine remaining gap objects, with existing FishBase source registrations, matrix/backlog integration, and a regression contract; no launch pair or Compatibility authority changed.
 - Added: Knowledge Completion Phase 2 Batch 47 direct reviewed-unknown records for eight remaining gap fish objects, with FishBase source registrations, matrix/backlog integration, a regression contract, and preservation of existing Species Detail runtime profiles; no launch pair or Compatibility authority changed.
 - Added: Knowledge Completion Phase 2 Batch 41 direct reviewed-unknown records for ten backlog fish and ornamental variants, with FishBase source registrations, matrix/backlog integration, a regression contract, and preservation of existing Species Detail/Compatibility runtime boundaries; no launch pair or Compatibility authority changed.
 - Added: Knowledge Completion Phase 2 Batch 42 direct reviewed-unknown records for five Betta ornamental variants and six aquarium-plant objects, with FishBase/Tropica source registrations, matrix/backlog integration, and a regression contract; no launch pair or Compatibility authority changed.

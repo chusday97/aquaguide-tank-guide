@@ -51,6 +51,8 @@ import { phase2Batch44Authority } from '../src/modules/knowledge/phase2Batch44Au
 import { phase2Batch45Authority } from '../src/modules/knowledge/phase2Batch45Authority';
 import { phase2Batch46Authority } from '../src/modules/knowledge/phase2Batch46Authority';
 import { phase2Batch47Authority } from '../src/modules/knowledge/phase2Batch47Authority';
+import { phase2Batch48Authority } from '../src/modules/knowledge/phase2Batch48Authority';
+import { phase2Batch49Authority } from '../src/modules/knowledge/phase2Batch49Authority';
 
 type FieldStatus = 'reviewed_supported' | 'reviewed_unknown' | 'inherited_reviewed' | 'not_applicable' | 'needs_research' | 'template_only';
 type KnowledgeField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
@@ -170,7 +172,11 @@ const rows = fishData.map((fish) => {
       fieldStatus[field] = phase2?.status ?? (audit.missing_species_specific_care === 'yes' ? 'template_only' : 'reviewed_supported');
       continue;
     }
-    fieldStatus[field] = statusForEvidence(knowledge?.[field === 'social' ? 'socialBehavior' : field === 'space' ? 'spaceAndGrowth' : field], inheritedKnowledge);
+    if (field === 'environment' && (phase2Batch48Authority[fish.id]?.environment || phase2Batch49Authority[fish.id]?.environment)) {
+      fieldStatus[field] = (phase2Batch48Authority[fish.id]?.environment || phase2Batch49Authority[fish.id].environment).status;
+    } else {
+      fieldStatus[field] = statusForEvidence(knowledge?.[field === 'social' ? 'socialBehavior' : field === 'space' ? 'spaceAndGrowth' : field], inheritedKnowledge);
+    }
   }
   const gaps = fields.filter(field => ['needs_research', 'template_only'].includes(fieldStatus[field]));
   const commonnessProxy = launchIds.has(fish.id) ? 'launch_cohort' : 'catalog_only';

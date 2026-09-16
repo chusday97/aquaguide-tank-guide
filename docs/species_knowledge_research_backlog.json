@@ -1,342 +1,9 @@
 {
-  "generated_at": "2026-09-16T18:55:32.626Z",
+  "generated_at": "2026-09-16T19:04:55.733Z",
   "selection": "Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.",
   "items": [
     {
       "rank": 1,
-      "species_id": "sp_0014",
-      "common_name": "咖啡鼠",
-      "scientific_name": "Corydoras aeneus",
-      "life_type": "fish",
-      "category": "鲶鱼/异型",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 2,
-      "species_id": "sp_0431",
-      "common_name": "红绿灯",
-      "scientific_name": "Paracheirodon innesi",
-      "life_type": "fish",
-      "category": "灯科鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 3,
-      "species_id": "sp_0432",
-      "common_name": "宝莲灯",
-      "scientific_name": "Paracheirodon axelrodi",
-      "life_type": "fish",
-      "category": "灯科鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 4,
-      "species_id": "sp_0434",
-      "common_name": "白云金丝",
-      "scientific_name": "Tanichthys albonubes",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 5,
-      "species_id": "sp_0435",
-      "common_name": "斑马鱼",
-      "scientific_name": "Danio rerio",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 6,
-      "species_id": "sp_0436",
-      "common_name": "孔雀鱼",
-      "scientific_name": "Poecilia reticulata",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 7,
-      "species_id": "sp_0439",
-      "common_name": "虎皮鱼",
-      "scientific_name": "Puntigrus tetrazona",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 8,
-      "species_id": "sp_0443",
-      "common_name": "熊猫鼠",
-      "scientific_name": "Corydoras panda",
-      "life_type": "fish",
-      "category": "鲶鱼/异型",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 9,
-      "species_id": "sp_0446",
-      "common_name": "天使鱼（神仙鱼）",
-      "scientific_name": "Pterophyllum scalare",
-      "life_type": "fish",
-      "category": "慈鲷/斗鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": true,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "launch_cohort",
-      "risk_proxy": "elevated",
-      "priority_score": 14,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 10,
       "species_id": "sp_0001",
       "common_name": "极火虾",
       "scientific_name": "Neocaridina davidi var. Red",
@@ -369,7 +36,7 @@
       "research_reason": []
     },
     {
-      "rank": 11,
+      "rank": 2,
       "species_id": "sp_0002",
       "common_name": "水晶虾",
       "scientific_name": "Caridina cantonensis var.",
@@ -402,7 +69,7 @@
       "research_reason": []
     },
     {
-      "rank": 12,
+      "rank": 3,
       "species_id": "sp_0010",
       "common_name": "黑裙鱼",
       "scientific_name": "Gymnocorymbus ternetzi",
@@ -435,7 +102,7 @@
       "research_reason": []
     },
     {
-      "rank": 13,
+      "rank": 4,
       "species_id": "sp_0011",
       "common_name": "月光鱼",
       "scientific_name": "Xiphophorus maculatus",
@@ -468,7 +135,7 @@
       "research_reason": []
     },
     {
-      "rank": 14,
+      "rank": 5,
       "species_id": "sp_0012",
       "common_name": "樱桃灯",
       "scientific_name": "Puntius titteya",
@@ -501,7 +168,7 @@
       "research_reason": []
     },
     {
-      "rank": 15,
+      "rank": 6,
       "species_id": "sp_0013",
       "common_name": "小精灵",
       "scientific_name": "Otocinclus vittatus",
@@ -534,7 +201,40 @@
       "research_reason": []
     },
     {
-      "rank": 16,
+      "rank": 7,
+      "species_id": "sp_0014",
+      "common_name": "咖啡鼠",
+      "scientific_name": "Corydoras aeneus",
+      "life_type": "fish",
+      "category": "鲶鱼/异型",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 8,
       "species_id": "sp_0021",
       "common_name": "迷你鹦鹉鱼",
       "scientific_name": "Amatitlania nigrofasciata var.",
@@ -567,7 +267,7 @@
       "research_reason": []
     },
     {
-      "rank": 17,
+      "rank": 9,
       "species_id": "sp_0049",
       "common_name": "珍珠赤雷龙",
       "scientific_name": "Channa asiatica",
@@ -600,7 +300,7 @@
       "research_reason": []
     },
     {
-      "rank": 18,
+      "rank": 10,
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
       "scientific_name": "Channa argus var. Platinum",
@@ -633,7 +333,7 @@
       "research_reason": []
     },
     {
-      "rank": 19,
+      "rank": 11,
       "species_id": "sp_0258",
       "common_name": "糖果KOI斗鱼",
       "scientific_name": "Betta splendens var. Koi",
@@ -666,7 +366,7 @@
       "research_reason": []
     },
     {
-      "rank": 20,
+      "rank": 12,
       "species_id": "sp_0428",
       "common_name": "斑马螺",
       "scientific_name": "Neritina natalensis",
@@ -699,7 +399,73 @@
       "research_reason": []
     },
     {
-      "rank": 21,
+      "rank": 13,
+      "species_id": "sp_0431",
+      "common_name": "红绿灯",
+      "scientific_name": "Paracheirodon innesi",
+      "life_type": "fish",
+      "category": "灯科鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 14,
+      "species_id": "sp_0432",
+      "common_name": "宝莲灯",
+      "scientific_name": "Paracheirodon axelrodi",
+      "life_type": "fish",
+      "category": "灯科鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 15,
       "species_id": "sp_0433",
       "common_name": "红鼻剪刀",
       "scientific_name": "Hemigrammus rhodostomus",
@@ -732,7 +498,106 @@
       "research_reason": []
     },
     {
-      "rank": 22,
+      "rank": 16,
+      "species_id": "sp_0434",
+      "common_name": "白云金丝",
+      "scientific_name": "Tanichthys albonubes",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 17,
+      "species_id": "sp_0435",
+      "common_name": "斑马鱼",
+      "scientific_name": "Danio rerio",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 18,
+      "species_id": "sp_0436",
+      "common_name": "孔雀鱼",
+      "scientific_name": "Poecilia reticulata",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 19,
       "species_id": "sp_0437",
       "common_name": "玛丽鱼",
       "scientific_name": "Poecilia sphenops",
@@ -765,7 +630,7 @@
       "research_reason": []
     },
     {
-      "rank": 23,
+      "rank": 20,
       "species_id": "sp_0438",
       "common_name": "红剑鱼",
       "scientific_name": "Xiphophorus hellerii",
@@ -798,7 +663,73 @@
       "research_reason": []
     },
     {
-      "rank": 24,
+      "rank": 21,
+      "species_id": "sp_0439",
+      "common_name": "虎皮鱼",
+      "scientific_name": "Puntigrus tetrazona",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 22,
+      "species_id": "sp_0443",
+      "common_name": "熊猫鼠",
+      "scientific_name": "Corydoras panda",
+      "life_type": "fish",
+      "category": "鲶鱼/异型",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 23,
       "species_id": "sp_0444",
       "common_name": "珍珠马甲",
       "scientific_name": "Trichopodus leerii",
@@ -814,6 +745,39 @@
       "field_status": {
         "feeding": "reviewed_unknown",
         "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": true,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "launch_cohort",
+      "risk_proxy": "elevated",
+      "priority_score": 9,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 24,
+      "species_id": "sp_0446",
+      "common_name": "天使鱼（神仙鱼）",
+      "scientific_name": "Pterophyllum scalare",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
         "space": "reviewed_supported",
         "social": "reviewed_supported",
         "care": "reviewed_unknown"
@@ -1022,43 +986,6 @@
     },
     {
       "rank": 30,
-      "species_id": "sp_0455",
-      "common_name": "斑马螺",
-      "scientific_name": "Neritina natalensis",
-      "life_type": "invertebrate",
-      "category": "虾螺蟹",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "needs_research",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [
-        "environment"
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": true,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "environment:needs_research"
-      ]
-    },
-    {
-      "rank": 31,
       "species_id": "sp_0006",
       "common_name": "恶魔蟹",
       "scientific_name": "Geosesarma dennerle",
@@ -1091,7 +1018,7 @@
       "research_reason": []
     },
     {
-      "rank": 32,
+      "rank": 31,
       "species_id": "sp_0007",
       "common_name": "六角恐龙",
       "scientific_name": "Ambystoma mexicanum",
@@ -1124,7 +1051,7 @@
       "research_reason": []
     },
     {
-      "rank": 33,
+      "rank": 32,
       "species_id": "sp_0008",
       "common_name": "东方蝾螈",
       "scientific_name": "Cynops orientalis",
@@ -1157,7 +1084,7 @@
       "research_reason": []
     },
     {
-      "rank": 34,
+      "rank": 33,
       "species_id": "sp_0009",
       "common_name": "角蛙",
       "scientific_name": "Ceratophrys ornata",
@@ -1190,7 +1117,7 @@
       "research_reason": []
     },
     {
-      "rank": 35,
+      "rank": 34,
       "species_id": "sp_0015",
       "common_name": "接吻鱼",
       "scientific_name": "Helostoma temminkii",
@@ -1223,7 +1150,7 @@
       "research_reason": []
     },
     {
-      "rank": 36,
+      "rank": 35,
       "species_id": "sp_0017",
       "common_name": "阿卡西短鲷",
       "scientific_name": "Apistogramma agassizii",
@@ -1256,7 +1183,7 @@
       "research_reason": []
     },
     {
-      "rank": 37,
+      "rank": 36,
       "species_id": "sp_0018",
       "common_name": "蓝王子",
       "scientific_name": "Chindongo socolofi",
@@ -1289,7 +1216,7 @@
       "research_reason": []
     },
     {
-      "rank": 38,
+      "rank": 37,
       "species_id": "sp_0019",
       "common_name": "埃及神仙",
       "scientific_name": "Pterophyllum altum",
@@ -1322,7 +1249,7 @@
       "research_reason": []
     },
     {
-      "rank": 39,
+      "rank": 38,
       "species_id": "sp_0020",
       "common_name": "刚果美人",
       "scientific_name": "Phenacogrammus interruptus",
@@ -1355,10 +1282,43 @@
       "research_reason": []
     },
     {
-      "rank": 40,
+      "rank": 39,
       "species_id": "sp_0022",
       "common_name": "红利",
       "scientific_name": "Lutjanus kasmira",
+      "life_type": "fish",
+      "category": "海水鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 3,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": []
+    },
+    {
+      "rank": 40,
+      "species_id": "sp_0023",
+      "common_name": "黄倒吊",
+      "scientific_name": "Zebrasoma flavescens",
       "life_type": "fish",
       "category": "海水鱼",
       "applicable_fields": [
