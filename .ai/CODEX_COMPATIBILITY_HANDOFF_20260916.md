@@ -219,5 +219,12 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 13 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 14 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0372`, `sp_0373`, `sp_0374`, `sp_0376`, `sp_0388`, `sp_0393`, `sp_0394`, `sp_0399`, `sp_0414`, and `sp_0415`.
+- FishBase species summaries were reviewed for the named taxa. Balloon, color, fin, marine catalog, and uncertain Geophagus variants remain fail-closed; no base-species facts were inherited into a variant object.
+- Matrix Batch 13 → Batch 14: feeding `needs_research 108→98`, `reviewed_unknown 122→132`; environment `needs_research 331→321`, `reviewed_unknown 118→128`; space `needs_research 291→281`, `reviewed_unknown 118→128`; social `needs_research 222→212`, `reviewed_unknown 121→131`; care `reviewed_supported 316→306`, `reviewed_unknown 122→132`.
+- Batch 14 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 Continue AquaGuide Knowledge Completion Program from the local Batch 6 checkpoint in `/Users/chuchu/aquaguide-compat-core` on branch `agent/compatibility-core-20260916`. Use the latest research backlog for the next 10–15 uncompleted catalog objects, use source-first evidence, preserve strict variant boundaries, regenerate the matrix/backlog, run the full required gates, create one local commit per passing batch excluding the protected CSV, and update this handoff. Never push, merge, deploy, migrate production, or weaken evidence standards.
