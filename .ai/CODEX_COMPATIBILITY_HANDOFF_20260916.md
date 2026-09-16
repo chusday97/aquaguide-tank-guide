@@ -284,6 +284,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Batch 29 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
+## Phase 2 Batch 30 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0128`, `sp_0132`, `sp_0134`, `sp_0135`, `sp_0136`, `sp_0137`, `sp_0153`, `sp_0171`, `sp_0172`, and `sp_0186`.
+- FishBase professional records were reviewed for Beaufortia, Parambassis, Iriatherina, Pseudomugil, Sphaerichthys, Semaprochilodus, Trichopodus, Tanichthys, and Chaetodon objects. Species and catalog variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 29 → Batch 30: feeding `reviewed_unknown 282→292`, `needs_research 42→42`; environment `reviewed_unknown 278→288`, `needs_research 171→161`; space `reviewed_unknown 278→288`, `needs_research 134→124`; social `reviewed_unknown 281→291`, `needs_research 65→55`; care `reviewed_unknown 282→292`, `reviewed_supported 162→152`.
+- Batch 30 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 23 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
