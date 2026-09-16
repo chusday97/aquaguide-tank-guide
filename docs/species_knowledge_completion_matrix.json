@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T13:20:43.550Z",
+  "generated_at": "2026-09-16T13:49:20.363Z",
   "catalog_object_count": 486,
   "fields": [
     "feeding",
@@ -554,25 +554,20 @@
         "care"
       ],
       "field_status": {
-        "feeding": "needs_research",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
+        "feeding": "reviewed_supported",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
         "care": "reviewed_supported"
       },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
+      "gap_fields": [],
+      "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
       "direct_compatibility_profile": false,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
-      "priority_score": 29,
+      "priority_score": 9,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -7912,25 +7907,20 @@
         "care"
       ],
       "field_status": {
-        "feeding": "template_only",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
       },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
+      "gap_fields": [],
+      "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
       "direct_compatibility_profile": false,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
-      "priority_score": 28,
+      "priority_score": 9,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -16712,25 +16702,20 @@
         "care"
       ],
       "field_status": {
-        "feeding": "template_only",
-        "environment": "needs_research",
-        "space": "needs_research",
-        "social": "needs_research",
-        "care": "reviewed_supported"
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
       },
-      "gap_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social"
-      ],
-      "direct_species_knowledge": false,
+      "gap_fields": [],
+      "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
       "direct_compatibility_profile": false,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
-      "priority_score": 28,
+      "priority_score": 9,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -17093,40 +17078,40 @@
   ],
   "status_counts": {
     "feeding": {
-      "reviewed_supported": 0,
-      "reviewed_unknown": 0,
+      "reviewed_supported": 1,
+      "reviewed_unknown": 2,
       "inherited_reviewed": 0,
       "not_applicable": 75,
-      "needs_research": 213,
-      "template_only": 198
+      "needs_research": 212,
+      "template_only": 196
     },
     "environment": {
-      "reviewed_supported": 21,
-      "reviewed_unknown": 0,
+      "reviewed_supported": 23,
+      "reviewed_unknown": 1,
       "inherited_reviewed": 0,
       "not_applicable": 11,
-      "needs_research": 454,
+      "needs_research": 451,
       "template_only": 0
     },
     "space": {
-      "reviewed_supported": 30,
-      "reviewed_unknown": 0,
+      "reviewed_supported": 32,
+      "reviewed_unknown": 1,
       "inherited_reviewed": 32,
       "not_applicable": 11,
-      "needs_research": 413,
+      "needs_research": 410,
       "template_only": 0
     },
     "social": {
-      "reviewed_supported": 30,
-      "reviewed_unknown": 0,
+      "reviewed_supported": 31,
+      "reviewed_unknown": 2,
       "inherited_reviewed": 38,
       "not_applicable": 75,
-      "needs_research": 343,
+      "needs_research": 340,
       "template_only": 0
     },
     "care": {
-      "reviewed_supported": 387,
-      "reviewed_unknown": 0,
+      "reviewed_supported": 385,
+      "reviewed_unknown": 2,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,

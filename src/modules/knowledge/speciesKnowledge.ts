@@ -536,7 +536,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
     evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-trichopodus-leerii'], reviewedAt: '2026-09-13' },
   },
   socialBehavior: {
-    mode: 'variable',
+    mode: 'pair',
     territoriality: 'none',
     finNipping: 'none',
     predationRisk: 'low',
@@ -631,7 +631,86 @@ const otocinclusVittatusKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+const phase2UnknownEvidence = (sourceIds: string[], note: string): NonNullable<NonNullable<SpeciesKnowledgeProfile['knowledge']['environment']>['evidence']> => ({
+  confidence: 'unknown',
+  reviewStatus: 'reviewed',
+  sourceIds,
+  note,
+  reviewedAt: '2026-09-16',
+});
+
+const goldRamPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供金波子品系的稳定公母硬判断',
+    summary: 'Aquarium Industries 记录金波子属于 Mikrogeophagus ramirezi 的颜色品系，但未给出足以支持本品系独立性别规则的证据。',
+    points: ['不凭颜色品系或单一鳍形推断公母。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '金波子品系性别证据不足', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+    evidence: phase2UnknownEvidence(['aquarium-industries-ramirezi-care-sheet'], '来源确认 gold ram 为颜色品系，但未提供可单独验证的品系性别规则。'),
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 24, max: 28 },
+    phRange: { min: 5, max: 7.2 },
+    notes: ['Aquarium Industries 的 Ramirezi care sheet 明确列出 gold ram 为颜色品系，并给出该物种的 24–28°C、pH 5.0–7.2 养护范围；不再从 legacy gold 文案继承范围。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquarium-industries-ramirezi-care-sheet'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'pair',
+    territoriality: 'medium',
+    finNipping: 'none',
+    predationRisk: 'low',
+    summary: '同一份专业 care sheet 说明繁殖期才明显攻击，并建议与和平、开放水域群游鱼搭配；该结论保留为金波子品系直接 authority。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquarium-industries-ramirezi-care-sheet'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { min: 4, max: 6, measurement: 'unknown' },
+    activityLevel: 'medium',
+    spaceNotes: ['来源给出 Ramirezi 成体约 4–6 cm；未给出金波子品系独立的最低缸体升数，因此不补写固定升数。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquarium-industries-ramirezi-care-sheet'], reviewedAt: '2026-09-16' },
+  },
+};
+
+const platinumSnakeheadPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供白金品系公母判断',
+    summary: '现有 Channa argus 物种来源不确认 Platinum 观赏品系的独立性别特征。',
+    points: ['不以白化/白金体色推断公母。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '白金雷龙品系性别证据不足', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+    evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], 'FishBase 物种页不确认 Platinum 品系性别特征。'),
+  },
+  environment: { waterType: 'unknown', notes: ['Channa argus 物种页不能替代白金品系的直接养护证据；温度、水体和 pH 保持 unknown。'], evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '禁止把基础种字段自动继承为品系 authority。') },
+  socialBehavior: { mode: 'unknown', territoriality: 'unknown', finNipping: 'unknown', predationRisk: 'unknown', summary: '没有白金雷龙品系的直接行为来源；保持 fail-closed。', evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '没有品系级混养或行为证据。') },
+  spaceAndGrowth: { activityLevel: 'unknown', spaceNotes: ['不能把基础种的尺寸或缸体建议自动外推到白金品系。'], evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '没有品系级空间来源。') },
+};
+
+const rosyBitterlingPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供稳定外观公母硬判断',
+    summary: 'FishBase 和 J-STAGE 资料支持物种生态与繁殖周期，但不足以形成日常外观性别规则。',
+    points: ['不凭发色或体型单一特征判断公母。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '高体鳑鲏性别字段待补充', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+    evidence: phase2UnknownEvidence(['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'], '来源没有给出稳定的水族箱外观性别识别规则。'),
+  },
+  environment: {
+    waterType: 'unknown',
+    temperatureRangeC: { min: 18, max: 24 },
+    notes: ['FishBase 同时记录 freshwater 与 brackish；保留 waterType unknown。FishBase 给出 18–24°C，J-STAGE 研究讨论 22–28°C 的繁殖季温度响应，后者不替代日常温度范围。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: { mode: 'unknown', summary: '现有专业来源没有确认适用于水族箱的群体最低数量或稳定社会模式。', evidence: phase2UnknownEvidence(['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'], '不把繁殖研究外推为社区混养行为。') },
+  spaceAndGrowth: { adultLengthCm: { max: 9.2, measurement: 'SL' }, activityLevel: 'unknown', spaceNotes: ['FishBase 给出最大 9.2 cm SL；没有足以支持最低缸长或升数的物种专属专业来源。'], evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-rhodeus-ocellatus'], reviewedAt: '2026-09-16' } },
+};
+
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  sp_0016: goldRamPhase2Knowledge,
+  sp_0224: platinumSnakeheadPhase2Knowledge,
+  sp_0475: rosyBitterlingPhase2Knowledge,
   sp_0433: rummyNoseKnowledge,
   sp_0013: otocinclusVittatusKnowledge,
   sp_0133: redRainbowfishKnowledge,
@@ -1400,6 +1479,14 @@ const getWaterType = (fish: Fish): SpeciesKnowledgeProfile['facts']['waterType']
 export const getReviewedSpeciesKnowledge = (speciesId: string) => reviewedKnowledgeBySpeciesId[speciesId];
 
 export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
+  // Channa argus Platinum has a direct Phase 2 completion record, but the
+  // existing reviewed Compatibility Profile remains the runtime authority for
+  // its predator/solitary boundary. The completion matrix reads the direct
+  // record explicitly and never counts this as inherited Knowledge.
+  if (fish.id === 'sp_0016' || fish.id === 'sp_0224') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
   const direct = reviewedKnowledgeBySpeciesId[fish.id];
   if (direct) return direct;
   const baseKey = getBaseSpeciesScientificName(fish.scientificName);

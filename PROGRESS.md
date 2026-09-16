@@ -812,3 +812,10 @@
 - [x] Admin contract passes via `node --import tsx`; no historical migration was edited.
 - [ ] Full Knowledge Completion Program Phase 2 remains pending; no new missing-species authority has been written.
 - [x] Matrix conflict registry records the Oscar 22–25°C vs 20–28°C source disagreement without narrowing it into a universal hard block; non-overlap is the hard-conflict criterion.
+## 2026-09-16 Knowledge Completion Program Phase 2 Batch 1 (in progress)
+
+- [x] Protected user-owned `docs/species_knowledge_audit.csv`; SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- [x] Updated `.ai/CODEX_COMPATIBILITY_HANDOFF_20260916.md` from stale `13ffcedd` / 21-insufficient state to `53323ca2` / frozen `435 pairs, 0 insufficient` baseline.
+- [x] Added direct, citation-backed Phase 2 Knowledge authority for `sp_0016`, `sp_0224`, `sp_0475`; no new Compatibility Profile or launch rule was added.
+- [x] Generated matrix after Batch 1 authority: 486 objects; feeding `1 supported / 2 reviewed_unknown / 212 needs_research / 196 template_only`; environment `23 supported / 1 reviewed_unknown`; space `32 supported / 1 reviewed_unknown`; social `31 supported / 2 reviewed_unknown`; care `385 supported / 2 reviewed_unknown / 88 template_only`.
+- [ ] Full knowledge/catalog/compatibility/admin/lint/build gates and local checkpoint remain to be completed; do not push or run migrations.

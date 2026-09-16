@@ -4,6 +4,7 @@ import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launc
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
+import { phase2Batch01Authority } from '../src/modules/knowledge/phase2Batch01Authority';
 
 type FieldStatus = 'reviewed_supported' | 'reviewed_unknown' | 'inherited_reviewed' | 'not_applicable' | 'needs_research' | 'template_only';
 type KnowledgeField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
@@ -49,7 +50,8 @@ const rows = fishData.map((fish) => {
   const lifeType = getLifeType(fish);
   const applicable = applicableFields(lifeType);
   const directKnowledge = getReviewedSpeciesKnowledge(fish.id);
-  const knowledge = getReviewedSpeciesKnowledgeForFish(fish);
+  const phase2DirectOnly = new Set(['sp_0016', 'sp_0224', 'sp_0475']);
+  const knowledge = phase2DirectOnly.has(fish.id) ? directKnowledge : getReviewedSpeciesKnowledgeForFish(fish);
   const inheritedKnowledge = Boolean(knowledge && !directKnowledge);
   const directCompatibility = getReviewedCompatibilityProfile(fish.id);
   const compatibility = getReviewedCompatibilityProfileForFish(fish);
@@ -61,14 +63,17 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'feeding') {
-      if (!fish.feedingProfile) fieldStatus[field] = 'needs_research';
+      const phase2 = phase2Batch01Authority[fish.id]?.feeding;
+      if (phase2) fieldStatus[field] = phase2.status;
+      else if (!fish.feedingProfile) fieldStatus[field] = 'needs_research';
       else if (audit.feeding_uses_template === 'yes') fieldStatus[field] = 'template_only';
       else if (audit.feeding_needs_review === 'yes' || fish.feedingProfile.sourceUrl?.includes('google.com')) fieldStatus[field] = 'needs_research';
       else fieldStatus[field] = fish.feedingProfile.sourceName?.toLowerCase().includes('inherited') ? 'inherited_reviewed' : 'reviewed_supported';
       continue;
     }
     if (field === 'care') {
-      fieldStatus[field] = audit.missing_species_specific_care === 'yes' ? 'template_only' : 'reviewed_supported';
+      const phase2 = phase2Batch01Authority[fish.id]?.care;
+      fieldStatus[field] = phase2?.status ?? (audit.missing_species_specific_care === 'yes' ? 'template_only' : 'reviewed_supported');
       continue;
     }
     fieldStatus[field] = statusForEvidence(knowledge?.[field === 'social' ? 'socialBehavior' : field === 'space' ? 'spaceAndGrowth' : field], inheritedKnowledge);
