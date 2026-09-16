@@ -30,6 +30,7 @@ import { phase2Batch23Authority } from '../src/modules/knowledge/phase2Batch23Au
 import { phase2Batch24Authority } from '../src/modules/knowledge/phase2Batch24Authority';
 import { phase2Batch25Authority } from '../src/modules/knowledge/phase2Batch25Authority';
 import { phase2Batch26Authority } from '../src/modules/knowledge/phase2Batch26Authority';
+import { phase2Batch27Authority } from '../src/modules/knowledge/phase2Batch27Authority';
 
 type FieldStatus = 'reviewed_supported' | 'reviewed_unknown' | 'inherited_reviewed' | 'not_applicable' | 'needs_research' | 'template_only';
 type KnowledgeField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
@@ -102,6 +103,7 @@ const rows = fishData.map((fish) => {
     'sp_0445', 'sp_0453', 'sp_0459', 'sp_0037', 'sp_0041', 'sp_0046', 'sp_0063', 'sp_0064', 'sp_0065', 'sp_0066',
     'sp_0067', 'sp_0068', 'sp_0077', 'sp_0089', 'sp_0111', 'sp_0124', 'sp_0142', 'sp_0149', 'sp_0150', 'sp_0159',
     'sp_0160', 'sp_0161', 'sp_0162', 'sp_0168', 'sp_0169', 'sp_0180', 'sp_0188', 'sp_0189', 'sp_0190', 'sp_0196',
+    'sp_0203', 'sp_0209', 'sp_0213', 'sp_0215', 'sp_0230', 'sp_0237', 'sp_0253', 'sp_0254', 'sp_0280', 'sp_0281',
   ]);
   const knowledge = phase2DirectOnly.has(fish.id) ? directKnowledge : getReviewedSpeciesKnowledgeForFish(fish);
   const inheritedKnowledge = Boolean(knowledge && !directKnowledge);
@@ -115,7 +117,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'feeding') {
-      const phase2 = phase2Batch01Authority[fish.id]?.feeding ?? phase2Batch02Authority[fish.id]?.feeding ?? phase2Batch03Authority[fish.id]?.feeding ?? phase2Batch04Authority[fish.id]?.feeding ?? phase2Batch05Authority[fish.id]?.feeding ?? phase2Batch06Authority[fish.id]?.feeding ?? phase2Batch07Authority[fish.id]?.feeding ?? phase2Batch08Authority[fish.id]?.feeding ?? phase2Batch09Authority[fish.id]?.feeding ?? phase2Batch10Authority[fish.id]?.feeding ?? phase2Batch11Authority[fish.id]?.feeding ?? phase2Batch12Authority[fish.id]?.feeding ?? phase2Batch13Authority[fish.id]?.feeding ?? phase2Batch14Authority[fish.id]?.feeding ?? phase2Batch15Authority[fish.id]?.feeding ?? phase2Batch16Authority[fish.id]?.feeding ?? phase2Batch17Authority[fish.id]?.feeding ?? phase2Batch18Authority[fish.id]?.feeding ?? phase2Batch19Authority[fish.id]?.feeding ?? phase2Batch20Authority[fish.id]?.feeding ?? phase2Batch21Authority[fish.id]?.feeding ?? phase2Batch22Authority[fish.id]?.feeding ?? phase2Batch23Authority[fish.id]?.feeding ?? phase2Batch24Authority[fish.id]?.feeding ?? phase2Batch25Authority[fish.id]?.feeding ?? phase2Batch26Authority[fish.id]?.feeding;
+      const phase2 = phase2Batch01Authority[fish.id]?.feeding ?? phase2Batch02Authority[fish.id]?.feeding ?? phase2Batch03Authority[fish.id]?.feeding ?? phase2Batch04Authority[fish.id]?.feeding ?? phase2Batch05Authority[fish.id]?.feeding ?? phase2Batch06Authority[fish.id]?.feeding ?? phase2Batch07Authority[fish.id]?.feeding ?? phase2Batch08Authority[fish.id]?.feeding ?? phase2Batch09Authority[fish.id]?.feeding ?? phase2Batch10Authority[fish.id]?.feeding ?? phase2Batch11Authority[fish.id]?.feeding ?? phase2Batch12Authority[fish.id]?.feeding ?? phase2Batch13Authority[fish.id]?.feeding ?? phase2Batch14Authority[fish.id]?.feeding ?? phase2Batch15Authority[fish.id]?.feeding ?? phase2Batch16Authority[fish.id]?.feeding ?? phase2Batch17Authority[fish.id]?.feeding ?? phase2Batch18Authority[fish.id]?.feeding ?? phase2Batch19Authority[fish.id]?.feeding ?? phase2Batch20Authority[fish.id]?.feeding ?? phase2Batch21Authority[fish.id]?.feeding ?? phase2Batch22Authority[fish.id]?.feeding ?? phase2Batch23Authority[fish.id]?.feeding ?? phase2Batch24Authority[fish.id]?.feeding ?? phase2Batch25Authority[fish.id]?.feeding ?? phase2Batch26Authority[fish.id]?.feeding ?? phase2Batch27Authority[fish.id]?.feeding;
       if (phase2) fieldStatus[field] = phase2.status;
       else if (!fish.feedingProfile) fieldStatus[field] = 'needs_research';
       else if (audit.feeding_uses_template === 'yes') fieldStatus[field] = 'template_only';
@@ -124,7 +126,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'care') {
-      const phase2 = phase2Batch01Authority[fish.id]?.care ?? phase2Batch02Authority[fish.id]?.care ?? phase2Batch03Authority[fish.id]?.care ?? phase2Batch04Authority[fish.id]?.care ?? phase2Batch05Authority[fish.id]?.care ?? phase2Batch06Authority[fish.id]?.care ?? phase2Batch07Authority[fish.id]?.care ?? phase2Batch08Authority[fish.id]?.care ?? phase2Batch09Authority[fish.id]?.care ?? phase2Batch10Authority[fish.id]?.care ?? phase2Batch11Authority[fish.id]?.care ?? phase2Batch12Authority[fish.id]?.care ?? phase2Batch13Authority[fish.id]?.care ?? phase2Batch14Authority[fish.id]?.care ?? phase2Batch15Authority[fish.id]?.care ?? phase2Batch16Authority[fish.id]?.care ?? phase2Batch17Authority[fish.id]?.care ?? phase2Batch18Authority[fish.id]?.care ?? phase2Batch19Authority[fish.id]?.care ?? phase2Batch20Authority[fish.id]?.care ?? phase2Batch21Authority[fish.id]?.care ?? phase2Batch22Authority[fish.id]?.care ?? phase2Batch23Authority[fish.id]?.care ?? phase2Batch24Authority[fish.id]?.care ?? phase2Batch25Authority[fish.id]?.care ?? phase2Batch26Authority[fish.id]?.care;
+      const phase2 = phase2Batch01Authority[fish.id]?.care ?? phase2Batch02Authority[fish.id]?.care ?? phase2Batch03Authority[fish.id]?.care ?? phase2Batch04Authority[fish.id]?.care ?? phase2Batch05Authority[fish.id]?.care ?? phase2Batch06Authority[fish.id]?.care ?? phase2Batch07Authority[fish.id]?.care ?? phase2Batch08Authority[fish.id]?.care ?? phase2Batch09Authority[fish.id]?.care ?? phase2Batch10Authority[fish.id]?.care ?? phase2Batch11Authority[fish.id]?.care ?? phase2Batch12Authority[fish.id]?.care ?? phase2Batch13Authority[fish.id]?.care ?? phase2Batch14Authority[fish.id]?.care ?? phase2Batch15Authority[fish.id]?.care ?? phase2Batch16Authority[fish.id]?.care ?? phase2Batch17Authority[fish.id]?.care ?? phase2Batch18Authority[fish.id]?.care ?? phase2Batch19Authority[fish.id]?.care ?? phase2Batch20Authority[fish.id]?.care ?? phase2Batch21Authority[fish.id]?.care ?? phase2Batch22Authority[fish.id]?.care ?? phase2Batch23Authority[fish.id]?.care ?? phase2Batch24Authority[fish.id]?.care ?? phase2Batch25Authority[fish.id]?.care ?? phase2Batch26Authority[fish.id]?.care ?? phase2Batch27Authority[fish.id]?.care;
       fieldStatus[field] = phase2?.status ?? (audit.missing_species_specific_care === 'yes' ? 'template_only' : 'reviewed_supported');
       continue;
     }

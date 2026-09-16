@@ -26,6 +26,7 @@ import { phase2Batch23Knowledge } from './phase2Batch23Authority';
 import { phase2Batch24Knowledge } from './phase2Batch24Authority';
 import { phase2Batch25Knowledge } from './phase2Batch25Authority';
 import { phase2Batch26Knowledge } from './phase2Batch26Authority';
+import { phase2Batch27Knowledge } from './phase2Batch27Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -54,6 +55,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0445', 'sp_0453', 'sp_0459', 'sp_0037', 'sp_0041', 'sp_0046', 'sp_0063', 'sp_0064', 'sp_0065', 'sp_0066',
   'sp_0067', 'sp_0068', 'sp_0077', 'sp_0089', 'sp_0111', 'sp_0124', 'sp_0142', 'sp_0149', 'sp_0150', 'sp_0159',
   'sp_0160', 'sp_0161', 'sp_0162', 'sp_0168', 'sp_0169', 'sp_0180', 'sp_0188', 'sp_0189', 'sp_0190', 'sp_0196',
+  'sp_0203', 'sp_0209', 'sp_0213', 'sp_0215', 'sp_0230', 'sp_0237', 'sp_0253', 'sp_0254', 'sp_0280', 'sp_0281',
 ]);
 
 
@@ -787,6 +789,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch24Knowledge,
   ...phase2Batch25Knowledge,
   ...phase2Batch26Knowledge,
+  ...phase2Batch27Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
