@@ -243,6 +243,15 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 - Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 42 checkpoint preparation — 2026-09-17
+- Completed eleven direct reviewed-unknown records: `sp_0261`, `sp_0262`, `sp_0389`, `sp_0390`, `sp_0391`, `sp_0071`, `sp_0072`, `sp_0073`, `sp_0074`, `sp_0075`, and `sp_0076`.
+- FishBase and Tropica professional records were reviewed for the named Betta variants and plants. Variant records remain independent from Betta splendens base evidence; no unsupported feeding, care, environment, space, or social claim was promoted.
+- Matrix now reports feeding `reviewed_unknown 397→402`, environment `reviewed_unknown 370→381`, space `reviewed_unknown 370→381`, social `reviewed_unknown 373→378`, and care `reviewed_unknown 397→408`; existing Betta runtime authority was preserved with narrow branches.
+- Batch 42 contract, matrix contract, Species Detail assertions, and launch matrix pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then the next unprocessed backlog objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 ## Phase 2 Batch 41 checkpoint preparation — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0437`, `sp_0438`, `sp_0447`, `sp_0451`, `sp_0444`, `sp_0468`, `sp_0053`, `sp_0114`, `sp_0259`, and `sp_0260`.
 - FishBase professional species records were reviewed for the named taxa. Existing ornamental variants were kept independent from their base species; no unsupported feeding, care, environment, space, or social claim was promoted.
