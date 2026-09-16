@@ -1,0 +1,1502 @@
+{
+  "schema_version": "2.0.0",
+  "name": "Aquapedia 34 Essential Care Guides (Fish Care & Emergency Troubleshooting)",
+  "description": "25 Essential Aquarium Care & Emergency Troubleshooting Guides with 1-to-1 Hand-Drawn Watercolor Visual Assets",
+  "design_system": {
+    "style": "Minimalist Japanese lifestyle watercolor sketch, pure white background #FFFFFF, fine black linework, subtle pastel accents",
+    "ratio": "16:9 triptych with crop lines, cuts into three 1:1 square cards",
+    "content_rule": "Zero jargon, plain colloquial Chinese, subject + action + tool + reason"
+  },
+  "guides": [
+    {
+      "id": "care_01",
+      "category": "Acclimatization & Introduction",
+      "title": "Acclimatizing and Introducing New Fish into the Tank",
+      "condition": "Newly purchased fish arrive home inside a plastic transport bag. Directly dumping them into the aquarium causes severe osmotic shock, pH shock, and rapid mortality due to sudden temperature and water chemistry discrepancies.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Float the sealed bag for 20 minutes to equalize temperature",
+          "how": "Place the unopened plastic transport bag directly onto the aquarium water surface to float undisturbed for 20 to 30 minutes.",
+          "why": "Water conducts heat gradually. Floating equalizes the internal and external water temperatures, preventing thermal shock to the fish's swim bladder and organs.",
+          "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Add small amounts of tank water in stages over 3 times",
+          "how": "Cut open the bag, fold the rim to keep it buoyant, and use a small cup to add 1/4 volume of aquarium water into the bag every 10 minutes, repeating 3 times.",
+          "why": "Slowly introducing aquarium water gently balances water hardness and pH levels, giving the fish's gills and osmoregulatory system time to adapt.",
+          "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Net the fish into the tank and discard transport bag water",
+          "how": "Use a soft dip net to gently scoop the fish out of the bag and release them into the aquarium. Pour the remaining transport bag water down the drain.",
+          "why": "Transport water contains high levels of accumulated fish waste, ammonia, and potential pathogens. Never allow bag water into your main display tank.",
+          "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never pour transport bag water into your aquarium; never release new fish into an uncycled tank with active ammonia or nitrite.",
+      "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation.jpg",
+      "cover_card": {
+        "short_title": "Acclimatizing New Fish",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/01_new_fish_acclimatization_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/01_new_fish_acclimatization_cover.jpg"
+      }
+    },
+    {
+      "id": "care_02",
+      "category": "Acclimatization & Introduction",
+      "title": "Sterilizing New Aquatic Plants (Pest Snail & Algae Removal)",
+      "condition": "Freshly bought aquatic plants from stores or farms often carry pest snails, gelatinous snail egg clutches, and stubborn filamentous algae spores that can overrun a clean tank if planted directly.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Rinse plants under running tap water to remove visible dirt and snails",
+          "how": "Hold the plants under a gentle lukewarm tap water stream, carefully inspecting the undersides of leaves and stems to pick off any visible snails or gelatinous egg clusters with tweezers.",
+          "why": "Physical rinsing dislodges loose detritus and superficial pests before chemical disinfection.",
+          "image_path": "assets/care_guides_handdrawn/02_plant_disinfection_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Dip in diluted potassium permanganate solution for 5 minutes",
+          "how": "Dissolve potassium permanganate crystals in a white basin of water until it turns a light rose-pink color. Immerse the entire plant for 3 to 5 minutes.",
+          "why": "The mild oxidizing solution penetrates cell walls to kill snail eggs, parasite cysts, and soft algae strands without burning delicate plant foliage.",
+          "image_path": "assets/care_guides_handdrawn/02_plant_disinfection_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Thoroughly rinse in clean dechlorinated water before planting",
+          "how": "Transfer the sanitized plants into a basin of clean dechlorinated water and swish them gently back and forth for 1 minute before trimming roots and planting.",
+          "why": "Completely washes off residual disinfectant chemicals so no oxidizing agents enter the main aquarium water.",
+          "image_path": "assets/care_guides_handdrawn/02_plant_disinfection_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Do not soak plants in concentrated dark purple solutions; avoid soaking extremely delicate mosses or Cryptocoryne species for longer than 3 minutes.",
+      "image_path": "assets/care_guides_handdrawn/02_plant_disinfection.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection.jpg",
+      "cover_card": {
+        "short_title": "Plant Disinfection",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/02_plant_dip_disinfection_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/02_plant_dip_disinfection_cover.jpg"
+      }
+    },
+    {
+      "id": "care_03",
+      "category": "Acclimatization & Introduction",
+      "title": "Cycling a New Aquarium (Establishing the Biological Filter)",
+      "condition": "In a newly set up aquarium without beneficial nitrifying bacteria, toxic ammonia excreted by fish cannot be broken down, turning the water into an invisible chemical death trap for any fish introduced on day one.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Run filter and aeration continuously for 48 hours",
+          "how": "Fill the tank with conditioned water, turn on the filter, powerhead, and air stone, and let the system run empty 24/7.",
+          "why": "Constant water circulation expels residual dissolved chlorine and enriches the water with dissolved oxygen required by aerobic bacteria.",
+          "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Dose nitrifying bacteria culture and add a small pinch of fish food",
+          "how": "Shake the bottle of liquid nitrifying bacteria well, pour the recommended dose directly into the filter intake, and drop 3 to 5 grains of fish food onto the gravel.",
+          "why": "The decaying fish food releases organic ammonia, providing the necessary food source for the seeded bacteria colonies to multiply on filter media.",
+          "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Wait 14 to 21 days until ammonia and nitrite drop to zero",
+          "how": "Keep the filter running continuously for 2 to 3 weeks without adding fish. Test water weekly with test strips or liquid test kits until ammonia and nitrite read 0 ppm.",
+          "why": "Nitrosomonas and Nitrobacter bacteria require 2 to 3 weeks to colonize ceramic rings and complete the biological nitrogen cycle.",
+          "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never introduce delicate or expensive fish on day one; do not perform large water changes or rinse filter media during the initial cycling phase.",
+      "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling.jpg",
+      "cover_card": {
+        "short_title": "Cycling New Tank",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/03_tank_cycling_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/03_tank_cycling_cover.jpg"
+      }
+    },
+    {
+      "id": "care_04",
+      "category": "Water Quality & Emergencies",
+      "title": "Sudden Milky Cloudy Water and Foul Odor (Bacterial Bloom)",
+      "condition": "The tank water suddenly turns foggy white or milky overnight and develops a stale fishy smell, caused by a massive bacterial bloom competing with fish for oxygen, signaling an imminent bio-filter collapse.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Immediately stop all feeding and reduce lighting",
+          "how": "Do not drop any food into the tank for the next 48 to 72 hours, and turn off high-intensity plant lights.",
+          "why": "Decaying uneaten food fuels runaway bacterial reproduction. Cutting off nutrients starves the suspended bacteria quickly.",
+          "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Increase aeration to prevent nighttime suffocation",
+          "how": "Turn the air pump to maximum or elevate the filter outflow pipe above the water surface to create vigorous bubbling and surface agitation.",
+          "why": "Billions of multiplying bacteria consume vast quantities of dissolved oxygen, putting fish at severe risk of nighttime asphyxiation.",
+          "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Perform a 25% water change and add fresh nitrifying bacteria",
+          "how": "Siphon out 25% of murky water from the middle water column, refill slowly with conditioned water of equal temperature, and dose biological booster into the filter.",
+          "why": "Dilutes suspended bacterial turbidity while reinforcing beneficial biofilm colonies on the biological filter media.",
+          "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Do not empty and replace 100% of the water (this resets the cycle); do not dump chemical algaecides or harsh clarifiers into the tank.",
+      "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix.jpg",
+      "cover_card": {
+        "short_title": "Cloudy Water",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/04_cloudy_water_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/04_cloudy_water_cover.jpg"
+      }
+    },
+    {
+      "id": "care_05",
+      "category": "Water Quality & Emergencies",
+      "title": "Winter Temperature Plunge / Heater Failure or Power Outage",
+      "condition": "In winter, an electrical outage or heater malfunction causes tank water to drop rapidly below 18°C (64°F). Tropical fish freeze into lethargy, sink to the bottom, and can suffer shock and death within hours.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Wrap tank exterior with a blanket or foam insulation to trap heat",
+          "how": "Immediately cover the sides and top of the aquarium glass with a thick wool blanket, towel, or styrofoam panels.",
+          "why": "Trapping ambient thermal energy slows down heat dissipation through the glass walls.",
+          "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Float a sealed bottle of warm water to slowly restore temperature",
+          "how": "Fill a clean plastic water bottle with warm water (around 40°C / 104°F), cap it tightly, and float it in the tank. Replace with new warm water every 30 minutes.",
+          "why": "Slowly transfers gentle heat into the water without localized scalding, giving fish time to adjust.",
+          "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Reinstall a working heater and raise temperature by no more than 2°C per hour",
+          "how": "Plug in a calibrated aquarium heater and adjust the dial to raise water temperature gradually by only 1 to 2°C (2 to 4°F) per hour until reaching 25°C (77°F).",
+          "why": "Rapid temperature increases cause fatal shock and gill organ spasms. Gradual warming ensures safe biological recovery.",
+          "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never pour boiling hot water directly into the aquarium; do not blast fish with high-heat water near the filter outlet.",
+      "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency.jpg",
+      "cover_card": {
+        "short_title": "Temperature Drop",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/05_temperature_drop_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/05_temperature_drop_cover.jpg"
+      }
+    },
+    {
+      "id": "care_06",
+      "category": "Water Quality & Emergencies",
+      "title": "Excessive Surface Foam, Bubbles, and Oily Protein Slick",
+      "condition": "An iridescent oily sheen and persistent foamy bubbles cover the water surface, blocking gas exchange and causing fish to gasp at the surface.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Lay a clean kitchen paper towel flat on the water surface to lift oil",
+          "how": "Take an unprinted, fragrance-free kitchen paper towel, lay it flat across the water surface for 3 seconds, and lift it by the corners to discard. Repeat 2 to 3 times.",
+          "why": "Pure wood-pulp paper absorbs surface lipid and protein molecules rapidly without leaving fibers.",
+          "image_path": "assets/care_guides_handdrawn/06_oil_film_removal_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Install an active surface skimmer attachment on the filter",
+          "how": "Attach a floating surface skimmer pipe to your filter intake or add a compact electric surface skimmer to draw in surface water.",
+          "why": "Continuously pulls the protein slick into mechanical filter floss to break down foam permanently.",
+          "image_path": "assets/care_guides_handdrawn/06_oil_film_removal_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Reduce feeding amount and frequency by half",
+          "how": "Cut the daily food ration in half, ensuring all food is completely eaten within 60 seconds.",
+          "why": "Excess dietary oils and decomposing food proteins are the primary root cause of surface slick buildup.",
+          "image_path": "assets/care_guides_handdrawn/06_oil_film_removal_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never spray household kitchen degreasers or detergents anywhere near the tank; do not use scented or wet chemical wipes on water.",
+      "image_path": "assets/care_guides_handdrawn/06_oil_film_removal.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal.jpg",
+      "cover_card": {
+        "short_title": "Surface Oil Film",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/06_surface_oil_film_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/06_surface_oil_film_cover.jpg"
+      }
+    },
+    {
+      "id": "care_07",
+      "category": "Water Quality & Emergencies",
+      "title": "Sudden Pea-Soup Green Water (Planktonic Algae Outbreak)",
+      "condition": "The entire water column turns opaque emerald green like pea soup within days due to a massive bloom of suspended single-celled cyanobacteria and green algae.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Completely blackout the aquarium with thick black cloth for 4 days",
+          "how": "Turn off all aquarium lights and wrap the tank in dark cardboard or a black blackout blanket for 4 full days, without peeking.",
+          "why": "Single-celled green algae are obligate autotrophs. Cutting off 100% of light starves and destroys their chloroplasts.",
+          "image_path": "assets/care_guides_handdrawn/07_green_water_fix_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Install an enclosed in-line UV sterilizer inside the filter chamber",
+          "how": "Connect an internal UV clarifier lamp into the filter flow path, running the ultraviolet light 24 hours a day.",
+          "why": "254nm ultraviolet radiation penetrates the water to shatter algae cellular DNA, killing suspended plankton instantly as water passes through.",
+          "image_path": "assets/care_guides_handdrawn/07_green_water_fix_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Perform a 30% water change and pack fine filter floss to trap dead algae",
+          "how": "After 4 days, siphon out 30% of water and pack dense white filter floss into the first stage of the filter, replacing the floss once it clogs.",
+          "why": "Quickly exports decaying dead algae cells from the water to prevent secondary ammonia spikes.",
+          "image_path": "assets/care_guides_handdrawn/07_green_water_fix_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never expose fish or human eyes directly to bare UV light; avoid dumping toxic copper sulfate algaecides into community tanks.",
+      "image_path": "assets/care_guides_handdrawn/07_green_water_fix.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix.jpg",
+      "cover_card": {
+        "short_title": "Green Water Bloom",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/07_green_water_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/07_green_water_cover.jpg"
+      }
+    },
+    {
+      "id": "care_08",
+      "category": "Water Quality & Emergencies",
+      "title": "Heavy Brown Diatom and Black Algae Outbreak on Glass and Plants",
+      "condition": "Aquarium glass, plant leaves, and rocks become coated in an unsightly, dusty brown slime layer of diatoms and black brush algae.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Use a magnetic scraper or clean razor blade to scrape glass clean",
+          "how": "Slide a magnetic algae cleaner or stainless-steel scraper firmly down the glass to peel off the brown algae film.",
+          "why": "Physical removal instantly clears aesthetic viewing glass and prevents diatoms from hardening into stubborn crusts.",
+          "image_path": "assets/care_guides_handdrawn/08_algae_control_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Introduce a cleanup crew of Nerite snails and Otocinclus catfish",
+          "how": "Add 2 to 3 Nerite snails or a pair of Otocinclus catfish to the aquarium.",
+          "why": "Otocinclus catfish and Nerite snails have specialized rasping mouthparts that actively consume diatoms from delicate plant leaves without harming foliage.",
+          "image_path": "assets/care_guides_handdrawn/08_algae_control_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Reduce lighting duration to 6 hours daily",
+          "how": "Set the light timer to run for only 5 to 6 hours per day and move the tank away from direct window sunlight.",
+          "why": "Diatom and nuisance algae reproduction is directly triggered by excessive photoperiods and ambient window light.",
+          "image_path": "assets/care_guides_handdrawn/08_algae_control_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Do not use metal scouring pads that scratch glass; do not dose harsh chemical algaecides with live ornamental invertebrates.",
+      "image_path": "assets/care_guides_handdrawn/08_algae_control.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control.jpg",
+      "cover_card": {
+        "short_title": "Brown Diatom Algae",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/08_brown_algae_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/08_brown_algae_cover.jpg"
+      }
+    },
+    {
+      "id": "care_09",
+      "category": "Disease & Physical Emergencies",
+      "title": "Fish Gasping at Surface with Rapid Breathing (Severe Hypoxia)",
+      "condition": "All fish gather at the water surface with mouths opening and closing rapidly, gulping for air, indicating depleted dissolved oxygen or acute ammonia poisoning that will wipe out the tank within hours.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Immediately turn on high-flow aeration",
+          "how": "Place an air stone on maximum output or raise the filter outflow pipe above the water surface to create crashing white foam ripples.",
+          "why": "Violent surface water agitation rapidly drives atmospheric oxygen molecules into the water column to relieve asphyxiation.",
+          "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Net out uneaten food and organic debris",
+          "how": "Use a fine mesh net to quickly scoop out all floating and settled food particles from the substrate and discard them.",
+          "why": "Decomposing food consumes enormous amounts of dissolved oxygen; removing it stops ongoing biochemical oxygen depletion immediately.",
+          "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Perform a 20% water change with conditioned water and turn off lights",
+          "how": "Siphon out 20% of tank water to remove dissolved toxins, refill gently, and switch off aquarium lights to keep the tank dim.",
+          "why": "A dim, tranquil environment slows fish heart rates and respiration demands, helping stressed fish stabilize safely.",
+          "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Strictly prohibit feeding during oxygen depletion; do not dose medications into the tank until gasping symptoms have completely subsided.",
+      "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency.jpg",
+      "cover_card": {
+        "short_title": "Fish Gasping",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/09_gasping_fish_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/09_gasping_fish_cover.jpg"
+      }
+    },
+    {
+      "id": "care_10",
+      "category": "Disease & Physical Emergencies",
+      "title": "Fish Covered in Fine White Sugar-Like Dots (Ich / White Spot Disease)",
+      "condition": "Fish body, fins, and gills are sprinkled with countless tiny white salt-like spots caused by the ciliate parasite Ichthyophthirius multifiliis, accompanied by clamped fins and shivering swimming behavior.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Gradually raise water temperature to 30°C (86°F)",
+          "how": "Adjust the aquarium heater upward by 1°C every 2 hours until the tank reaches a stable 30°C (86°F), maintaining this temperature for 7 days.",
+          "why": "Ich parasites cannot survive or replicate at temperatures above 28°C (82°F); heat accelerates their life cycle, forcing them to drop off the fish.",
+          "image_path": "assets/care_guides_handdrawn/10_ich_white_spot_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Add aquarium coarse salt at a concentration of 0.3%",
+          "how": "Weigh 3 grams of non-iodized aquarium coarse sea salt per 1 liter of water, dissolve it in a cup of tank water, and pour it gradually into the filter outflow.",
+          "why": "Mild saline water alters osmotic pressure, puncturing the cell walls of free-swimming theront parasites while assisting fish slime coat repair.",
+          "image_path": "assets/care_guides_handdrawn/10_ich_white_spot_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Increase aeration to compensate for reduced oxygen in warm water",
+          "how": "Turn the air pump output to maximum throughout the heat treatment period.",
+          "why": "High water temperatures substantially reduce dissolved oxygen capacity; strong aeration prevents fish suffocation during treatment.",
+          "image_path": "assets/care_guides_handdrawn/10_ich_white_spot_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never use iodized table salt with anti-caking agents; do not stop heat treatment immediately when spots disappear (continue for at least 3 extra days to kill juvenile cysts).",
+      "image_path": "assets/care_guides_handdrawn/10_ich_white_spot.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot.jpg",
+      "cover_card": {
+        "short_title": "Ich / White Spot",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/10_white_spot_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/10_white_spot_cover.jpg"
+      }
+    },
+    {
+      "id": "care_11",
+      "category": "Disease & Physical Emergencies",
+      "title": "Frayed, Whitish, Eroded Fin Margins (Bacterial Fin and Tail Rot)",
+      "condition": "Fish caudal and dorsal fins show ragged, torn edges with cloudy white necrosis and bloody red streaks, caused by opportunistic Aeromonas or Pseudomonas bacterial infection in degraded water.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Perform daily 20% water changes for 3 consecutive days",
+          "how": "Siphon out 20% of bottom water daily and refill with conditioned, temperature-matched fresh water.",
+          "why": "Pristine water quality with minimal organic waste is the most critical foundation for stopping bacterial spread and promoting fin tissue regeneration.",
+          "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Isolate the sick fish and dab fin edges with diluted povidone-iodine",
+          "how": "Net the fish into a shallow damp towel, use a fine cotton swab dipped in diluted povidone-iodine to lightly touch the frayed fin edges, then return the fish to water within 10 seconds.",
+          "why": "Topical antiseptic application directly sterilizes active bacterial infection sites on the fins without polluting the main tank filter.",
+          "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Dose mild aquarium broad-spectrum antiseptic solution into the isolation tank",
+          "how": "Add yellow powder (nitrofurazone) or methylene blue into an isolation quarantine tank at the recommended dosage.",
+          "why": "Inhibits secondary fungal infection (Saprolegnia) and protects raw exposed fin rays while healing.",
+          "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Avoid grabbing fish with dry hands which strips protective mucus; never pour antibiotics directly into the main display tank as it destroys nitrifying bacteria.",
+      "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment.jpg",
+      "cover_card": {
+        "short_title": "Fin Rot",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/11_fin_rot_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/11_fin_rot_cover.jpg"
+      }
+    },
+    {
+      "id": "care_12",
+      "category": "Disease & Physical Emergencies",
+      "title": "Fish Floating Upside Down or Rolling at Bottom (Swim Bladder Disorder)",
+      "condition": "Round-bodied fancy goldfish or bettas lose buoyancy control, floating helplessly belly-up at the surface or tumbling sideways on the bottom gravel, usually caused by overfeeding, constipation, or cold water.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Lower water level to 15 cm and raise temperature to 28°C",
+          "how": "Drain tank water down to a shallow depth of 12 to 15 cm (5 to 6 inches) and raise heater temperature to 28°C (82°F).",
+          "why": "Shallow water reduces hydrostatic pressure on the abdomen and lets the fish rest upright without exhausting itself swimming.",
+          "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Fast the fish completely for 3 days",
+          "how": "Do not feed any food for 3 consecutive days.",
+          "why": "Allows the compacted digestive tract to empty naturally, relieving physical pressure exerted on the adjacent swim bladder organ.",
+          "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Feed a boiled, peeled green pea",
+          "how": "Boil a fresh green pea until soft, remove the fibrous outer skin, crush the soft interior into tiny flakes, and feed a small portion to the fish.",
+          "why": "Green pea fiber acts as a natural, gentle laxative that clears intestinal blockage and restores normal swim bladder inflation.",
+          "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Strictly avoid feeding dry, expanding pellet food directly; never leave floating belly-up fish exposed to air without lowering water or providing floating support.",
+      "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care.jpg",
+      "cover_card": {
+        "short_title": "Swim Bladder Disorder",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/12_swim_bladder_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/12_swim_bladder_cover.jpg"
+      }
+    },
+    {
+      "id": "care_13",
+      "category": "Disease & Physical Emergencies",
+      "title": "Scales Flared Out Like a Pinecone with Abdominal Swelling (Dropsy)",
+      "condition": "Fish belly swells like a balloon and body scales stick straight out like an open pinecone, accompanied by bulging eyes, signaling acute internal kidney failure and fluid accumulation.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Immediately transfer sick fish to an isolation hospital tank",
+          "how": "Set up a dedicated 10-liter hospital container with an air stone and heater set to 28°C (82°F), and transfer the sick fish using a water-filled container.",
+          "why": "Dropsy often stems from internal bacterial infection; isolation prevents contagion and allows precise medication.",
+          "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Prepare an Epsom salt (Magnesium Sulfate) therapeutic bath",
+          "how": "Dissolve pure Epsom salt (magnesium sulfate) at 2 grams per liter of water in the hospital tank.",
+          "why": "Magnesium sulfate draws excess retained fluid out of the fish's body tissues via gentle osmotic dehydration, reducing internal abdominal pressure.",
+          "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Dose veterinary internal antibacterial medication (Kanamycin / Enrofloxacin)",
+          "how": "Dissolve aquatic-grade antibacterial medication into the hospital tank according to exact veterinary dosing guidelines.",
+          "why": "Targets internal systemic bacterial infections in the kidneys and abdominal cavity to arrest organ failure.",
+          "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Do not use table salt or high-sodium salt (which worsens fluid retention); do not wait until scales are 100% flared before starting treatment.",
+      "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone.jpg",
+      "cover_card": {
+        "short_title": "Dropsy / Pinecone Scales",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/13_dropsy_pinecone_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/13_dropsy_pinecone_cover.jpg"
+      }
+    },
+    {
+      "id": "care_14",
+      "category": "Disease & Physical Emergencies",
+      "title": "Opaque Whitish Film Covering Fish Eyes (Cloudy Eye / Cataract Disease)",
+      "condition": "One or both eyes of the fish turn foggy white with a translucent haze or protruding swelling, caused by poor water quality, mechanical corneal injury, or bacterial infection.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Perform a 30% water change and clean mechanical filter floss",
+          "how": "Change 30% of tank water and replace dirty mechanical filter floss to restore water clarity.",
+          "why": "High nitrate levels and dirty water irritate the eye cornea; clean water provides the foundation for natural tissue recovery.",
+          "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Apply a tiny dab of veterinary antibiotic eye ointment with a sterile cotton swab",
+          "how": "Rest the fish on a moist soft towel, use a cotton swab to apply a whisper-thin layer of erythromycin or terramycin eye ointment onto the cloudy eye, and return fish to water immediately.",
+          "why": "Antibiotic ointment adheres to the cornea to suppress localized bacterial infection and prevent corneal perforation.",
+          "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Dim aquarium lights and provide a calm, low-stress environment",
+          "how": "Turn off bright plant lighting or reduce fixture brightness to ambient room levels.",
+          "why": "Inflamed eyes are hypersensitive to intense light; dim lighting prevents photophobia stress and accelerates corneal healing.",
+          "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never hold fish with dry hands or rub the delicate cornea; do not smear thick clumps of ointment into the sensitive gill operculum.",
+      "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye.jpg",
+      "cover_card": {
+        "short_title": "Cloudy Eye",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/14_cloudy_eye_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/14_cloudy_eye_cover.jpg"
+      }
+    },
+    {
+      "id": "care_15",
+      "category": "Disease & Physical Emergencies",
+      "title": "Fish Frantically Flashing and Rubbing Body Against Gravel (External Parasites)",
+      "condition": "Fish swims erratically, darting and scratching its flanks against gravel, rocks, or driftwood to relieve intense itching, caused by skin flukes (Gyrodactylus) or anchor worms.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Inspect the fish in a clear cup and manually pluck large visible parasites with tweezers",
+          "how": "Place fish in a clear specimen cup under good light. If white thread-like anchor worms or fish lice are visible, gently pluck them off with blunt tweezers.",
+          "why": "Manually removes adult parasites that have deeply burrowed into the skin, preventing continuous blood loss and wound ulceration.",
+          "image_path": "assets/care_guides_handdrawn/15_fluke_parasite_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Dose external antiparasitic medication (Praziquantel) across the entire tank",
+          "how": "Dissolve praziquantel or anti-fluke medication in a cup of water and pour evenly into the filter outflow.",
+          "why": "Eradicates microscopic fluke larvae and cysts dwelling deep inside the gill filaments and substrate.",
+          "image_path": "assets/care_guides_handdrawn/15_fluke_parasite_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Change 1/3 of the water after 48 hours and add activated carbon to filter",
+          "how": "48 hours after dosing, siphon out 1/3 of the water and insert an activated carbon pouch into the filter compartment.",
+          "why": "Activated carbon adsorbs remaining chemical residues, preventing toxic accumulation in fish organs.",
+          "image_path": "assets/care_guides_handdrawn/15_fluke_parasite_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never exceed recommended medication doses; remove pet snails and ornamental shrimp before dosing, as antiparasitics are fatal to invertebrates.",
+      "image_path": "assets/care_guides_handdrawn/15_fluke_parasite.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite.jpg",
+      "cover_card": {
+        "short_title": "Body Scratching / Flukes",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/15_flukes_scratch_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/15_flukes_scratch_cover.jpg"
+      }
+    },
+    {
+      "id": "care_16",
+      "category": "Breeding, Conflicts & Maintenance",
+      "title": "Pregnant Mother Fish Giving Birth and Newborn Fry Rescue",
+      "condition": "Female livebearer (guppy, platy, molly, swordtail) exhibits a distended boxy 90-degree abdomen, dark black gravid spot near the vent, and retreats to tank corners breathing rapidly, ready to deliver fry.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Transfer pregnant female into a floating nursery breeding box",
+          "how": "Mount a dual-chamber acrylic breeding box to the tank wall and gently guide the mother fish into the upper compartment using a soft net.",
+          "why": "Newborn fry automatically drop through the slotted V-shaped divider into the lower chamber, preventing the mother from consuming her young.",
+          "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Place a sprig of live moss inside the box to keep the mother calm",
+          "how": "Drop a small clump of Java moss or floating hornwort into the box and avoid bright room lights or sudden movements nearby.",
+          "why": "Provides natural shelter and security, preventing high stress that causes premature labor or jumping.",
+          "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Return the mother fish to the main tank once labor is finished",
+          "how": "After the female's abdomen flattens and no new fry appear, gently net the mother back into the main tank, keeping fry in the nursery box.",
+          "why": "Post-labor females are voraciously hungry; separating her immediately safeguards the newborn fry for targeted feeding.",
+          "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never shine harsh direct flashlights onto laboring females; never leave mother and fry in the same undivided container after birth.",
+      "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care.jpg",
+      "cover_card": {
+        "short_title": "Guppy Giving Birth",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/16_guppy_birth_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/16_guppy_birth_cover.jpg"
+      }
+    },
+    {
+      "id": "care_17",
+      "category": "Breeding, Conflicts & Maintenance",
+      "title": "Feeding Newly Hatched Fish Fry (First Food & Survival Care)",
+      "condition": "On day 2 after birth, newborn fry absorb their golden yolk sacs and start swimming actively to forage. Because their mouths are needle-thin, they cannot ingest standard dry fish flakes and risk starvation.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Boil a chicken egg and dissolve a pinch of yolk in warm water",
+          "how": "Extract a grain-of-rice-sized speck of hard-boiled egg yolk, place it in a spoon, and mix with a few drops of warm water into a pale yellow suspension.",
+          "why": "Egg yolk particles disperse into fine microscopic dust, serving as an ideal protein-dense starter food for tiny fry mouths.",
+          "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Use a glass pipette dropper to deliver 1 to 2 droplets near fry",
+          "how": "Draw a tiny amount of yolk liquid into a pipette and gently release 1 to 2 clouds directly near the swimming fry.",
+          "why": "Suspended micro-particles allow fry to feed effortlessly. Stop feeding as soon as the fry's translucent bellies turn slightly golden.",
+          "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Siphon out uneaten debris from the nursery box bottom after 2 hours",
+          "how": "Two hours after feeding, use a thin air tube to siphon away white fluffy settled yolk waste from the container bottom.",
+          "why": "Egg yolk spoils rapidly and promotes lethal water mold (Saprolegnia); keeping the bottom clean protects delicate fry gills.",
+          "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never dump large chunks of egg yolk into the water; never feed uncrushed, hard adult dry pellets to newborn fry.",
+      "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care.jpg",
+      "cover_card": {
+        "short_title": "First Fry Feeding",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/17_fry_feeding_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/17_fry_feeding_cover.jpg"
+      }
+    },
+    {
+      "id": "care_18",
+      "category": "Breeding, Conflicts & Maintenance",
+      "title": "Aggressive Fish Fighting and Biting (Territorial Disputes & Fin Damage)",
+      "condition": "A dominant or aggressive fish relentlessly chases and nips a weaker tankmate, resulting in shredded fins, dislodged scales, and the victim shivering in fear behind filter pipes.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Immediately isolate the injured, weaker fish in a perforated floating box",
+          "how": "Gently net the battered fish into a floating transparent nursery box inside the tank and feed it high-protein food to recover.",
+          "why": "Physically removes the target from danger, allowing the traumatized fish to heal safely without fear of predation.",
+          "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Completely rearrange driftwood, rocks, and plant layout in the tank",
+          "how": "Move every piece of driftwood, rock, and plant to new orientations and locations, reconfiguring the entire hardscape.",
+          "why": "Territorial aggression relies on spatial visual memory. Redecorating completely resets established boundary claims.",
+          "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Add ceramic caves or dense plant thickets to provide visual barriers",
+          "how": "Place 2 to 3 hollow ceramic tubes or dense stem plants in corners of the tank.",
+          "why": "Creates line-of-sight visual barriers and escape tunnels, allowing chased fish to slip out of sight instantaneously.",
+          "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never ignore persistent violent fin-nipping; never house semi-aggressive species in barren, empty tanks without shelter.",
+      "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation.jpg",
+      "cover_card": {
+        "short_title": "Fish Fighting",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/18_fish_fighting_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/18_fish_fighting_cover.jpg"
+      }
+    },
+    {
+      "id": "care_19",
+      "category": "Breeding, Conflicts & Maintenance",
+      "title": "Cleaning Filter Media Safely (Preventing Total Biological Collapse)",
+      "condition": "Filter outflow weakens significantly due to heavy black sludge and organic muck accumulation. Beginners often rinse media under tap water, accidentally slaughtering beneficial bacteria and wiping out the tank.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Unplug power and draw a bucket of old aquarium tank water",
+          "how": "Disconnect filter power and siphon a plastic basin of old tank water into a bucket placed beside you.",
+          "why": "Nitrifying bacteria colonies on biological media are delicate and must only be rinsed in water of identical temperature and chemistry.",
+          "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Wash mechanical filter floss thoroughly under tap water or replace with new floss",
+          "how": "Remove the top mechanical white wool pad, scrub it under running tap water, or discard and replace with a fresh white pad.",
+          "why": "Mechanical floss only traps coarse physical debris; washing it in tap water has zero adverse effect on the biological system.",
+          "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Gently swish biological ceramic rings in the bucket of tank water twice",
+          "how": "Dip the mesh bag containing ceramic rings or bio-balls into the bucket of old aquarium water, gently shake off surface loose silt, and reinstall immediately.",
+          "why": "Never scrub or wash under chlorinated tap water. Gentle rinsing preserves dense colonies of nitrifying bacteria dwelling in micropores.",
+          "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Absolutely forbid rinsing ceramic bio-rings under chlorinated tap water; never use dishwashing detergent or soap on any aquarium equipment.",
+      "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper.jpg",
+      "cover_card": {
+        "short_title": "Cleaning Filter Media",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/19_filter_cleaning_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/19_filter_cleaning_cover.jpg"
+      }
+    },
+    {
+      "id": "care_20",
+      "category": "Breeding, Conflicts & Maintenance",
+      "title": "Preparing Tank for Long Holidays and Vacations (Safe Care While Away)",
+      "condition": "Going away on vacation for 7 to 10 days with no one home to feed fish or monitor equipment, creating anxiety about starvation, water fouling, or power cuts.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Perform a 30% water change and siphon bottom waste 2 days prior to departure",
+          "how": "48 hours before leaving, thoroughly clean the aquarium, siphon 30% of water from the substrate, and replenish with fresh conditioned water.",
+          "why": "Builds a substantial clean buffer capacity, diluting any metabolic waste that accumulates during your absence.",
+          "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Strictly forbid using vacation slow-release white feeding blocks",
+          "how": "Do not drop plaster vacation feeding blocks or excessive automatic food into the tank; allow healthy adult fish to fast naturally.",
+          "why": "Vacation feeder blocks disintegrate into rotting fungal muck that suffocates the tank. Healthy adult fish can easily fast for 7 to 10 days safely.",
+          "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Plug aquarium lighting into a timer set for 5 hours daily",
+          "how": "Connect the light fixture to an analog mechanical or smart digital timer set to run for 5 hours per day, keeping the tank dark at night.",
+          "why": "Prevents catastrophic green algae blooms caused by 24-hour continuous lighting while maintaining the biological circadian rhythm.",
+          "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never overfeed 'extra food' before departure to make up for future days; never leave lights continuously on 24/7.",
+      "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care.jpg",
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care.jpg",
+      "cover_card": {
+        "short_title": "Holiday Vacation Care",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "asset_path": "assets/care_guides_handdrawn/covers/20_holiday_care_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/20_holiday_care_cover.jpg"
+      }
+    },
+    {
+      "id": "care_21",
+      "category": "Routine Maintenance",
+      "title": "Routine Aquarium Water Change (Weekly Siphon & Safe Refill)",
+      "condition": "Neglecting regular water changes causes invisible toxic nitrates and organic acids to accumulate, stunting fish growth and causing chronic acidosis. However, dumping raw cold tap water into the tank will instantly burn delicate gills with chlorine and cause lethal thermal shock.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Rest tap water in an open basin for 24 hours to evaporate chlorine",
+          "how": "Fill a clean basin with tap water and leave it uncovered indoors for 24 hours (or aerate for 2 hours) to let chlorine gas fully dissipate naturally.",
+          "why": "Allows lethal chlorine gas to evaporate completely and equalizes water temperature with the aquarium.",
+          "image_path": "assets/care_guides_handdrawn/21_routine_water_change_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Siphon debris from substrate and drain 1/4 water",
+          "how": "Insert the gravel siphon vacuum deep into the substrate to extract settled fish waste and debris, stopping precisely when 1/4 of total water volume is drained.",
+          "why": "Physically eliminates the primary source of toxic ammonia while preserving 75% of established biological filter and osmotic balance.",
+          "image_path": "assets/care_guides_handdrawn/21_routine_water_change_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Slowly pour temperature-matched clean water along glass wall",
+          "how": "Use a small ladle to gently glide the dechlorinated water down the aquarium glass wall over 5 minutes until normal water level is restored.",
+          "why": "Prevents substrate dust clouds and ensures water temperature fluctuation is strictly under 1°C, preventing thermal shock.",
+          "image_path": "assets/care_guides_handdrawn/21_routine_water_change_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never perform 100% water changes; never pour raw unconditioned cold tap water directly into the tank; never net fish out during routine water changes.",
+      "image_path": "assets/care_guides_handdrawn/21_routine_water_change.jpg",
+      "cover_card": {
+        "short_title": "Routine Water Change",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "routine aquarium maintenance, an owner gently using a transparent siphon tube to vacuum bottom substrate while fresh clean water cascades",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing routine aquarium maintenance, an owner gently using a transparent siphon tube to vacuum bottom substrate while fresh clean water cascades in gentle droplets. Typography: '日常换水' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/21_routine_water_change_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/21_routine_water_change_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change.jpg"
+    },
+    {
+      "id": "care_22",
+      "category": "Diseases & Emergencies",
+      "title": "Clamped Fins and Bottom Sitting (Thermal Shock & Stress)",
+      "condition": "The fish holds its dorsal, ventral, and tail fins tightly clamped against its body like a closed folding fan, resting motionlessly at the bottom corner or behind the heater. This is the earliest physiological distress signal of severe stress, chill, or water deterioration.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Gradually raise heater temperature to 26-28°C",
+          "how": "Check thermometer and adjust heater knob by 1°C every two hours until water stabilizes at an optimal 26-28°C range.",
+          "why": "Gentle warming activates the fish's natural metabolic enzymes and immune response, relieving cold-induced stiffness.",
+          "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Siphon out 1/5 aged bottom water and add fresh conditioned water",
+          "how": "Gently vacuum bottom debris and drain 1/5 of aged water, replenishing with temperature-matched dechlorinated water.",
+          "why": "Dilutes irritating nitrites and chemical waste, relieving toxic nerve irritation on stressed fish.",
+          "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Turn off tank lights and fast fish for 48 hours",
+          "how": "Switch off display lights, secure the tank cover, and withhold all food for 48 hours in a peaceful, dim room.",
+          "why": "Darkness minimizes adrenaline and oxygen consumption, allowing the fish to redirect all metabolic energy toward cellular recovery.",
+          "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Do not dose harsh antibiotics blindly; do not raise temperature by more than 3°C rapidly; do not force-feed.",
+      "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting.jpg",
+      "cover_card": {
+        "short_title": "Clamped Fins",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a tropical fish resting motionlessly near the sandy bottom corner of an aquarium, its dorsal and tail fins tightly clamped",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a tropical fish resting motionlessly near the sandy bottom corner of an aquarium, its dorsal and tail fins tightly clamped. Typography: '鱼缩鳍' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/22_clamped_fins_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/22_clamped_fins_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting.jpg"
+    },
+    {
+      "id": "care_23",
+      "category": "Diseases & Emergencies",
+      "title": "White Cotton Wool Fungus on Fish Body (Saprolegnia / Fungus)",
+      "condition": "After mechanical trauma, netting injury, or cold exposure, fluffy off-white cotton-like fungal tufts grow across the fish's body, fins, or mouth, swaying in the current as the fish becomes lethargic and loses weight.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Dab white fungal tuft with diluted povidone-iodine on cotton swab",
+          "how": "Rest the fish on a moist cloth in a shallow tray and use a sterile cotton swab dipped in mild povidone-iodine to gently dab the fungus (strictly avoid eyes and gills).",
+          "why": "Povidone-iodine provides powerful local contact fungicidal action, penetrating fungal roots without burning surrounding tissue.",
+          "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Dose quarantine tank with methylene blue until pale sky-blue",
+          "how": "Transfer the fish into a lightly aerated isolation container and add drops of methylene blue until water reaches a clear sky-blue tint.",
+          "why": "Methylene blue effectively inhibits free-swimming water mold spores and protects exposed dermis from secondary bacterial infection.",
+          "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Maintain constant 28°C until fungal hyphae detach naturally",
+          "how": "Lock water temperature at 28°C for 3 to 5 days, waiting for the white hyphae to shrivel and detach on their own.",
+          "why": "Saprolegnia is a cold-water fungus; sustained 28°C temperatures completely halt fungal reproduction, causing mycelia to dehydrate and drop off.",
+          "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never forcefully pull fungal tufts with tweezers; never pour methylene blue directly into planted display tanks (it permanently stains silicone and destroys plants).",
+      "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus.jpg",
+      "cover_card": {
+        "short_title": "Cotton Wool Fungus",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fish with a distinct patch of soft white fluffy cotton-wool fungal growth on its flank",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a fish with a distinct patch of soft white fluffy cotton-wool fungal growth on its flank. Typography: '水霉病' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/23_cotton_wool_fungus_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/23_cotton_wool_fungus_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus.jpg"
+    },
+    {
+      "id": "care_24",
+      "category": "Diseases & Emergencies",
+      "title": "Fish Trailing Long White Stringy Feces (Enteritis & Indigestion)",
+      "condition": "The fish trails a persistent, hollow, translucent white mucous filament from its vent that refuses to detach. Accompanied by a sunken or mildly bloated belly and loss of appetite, this signals gastrointestinal enteritis or flagellate infection.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Completely fast fish for 3 days and scoop out all leftover food",
+          "how": "Seal food jars tightly, enforce a strict 72-hour fast, and net out any visible organic remnants or uneaten food particles.",
+          "why": "Relieves gastrointestinal workload and halts intestinal fermentation, allowing swollen gut mucosa to rest and decompress.",
+          "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Drain 1/4 water and raise temperature to 28°C",
+          "how": "Vacuum out 1/4 of aged bottom water and raise water temperature to 28°C to stimulate internal blood circulation.",
+          "why": "Dilutes pathogenic bacteria while optimal heat accelerates intestinal motility, expelling decaying gut toxins.",
+          "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Mix diluted fresh garlic juice with feed or in quarantine bath",
+          "how": "Crush fresh garlic to extract juice, dilute 2 drops in clean water, and soak a tiny pinch of dry pellets (or add into quarantine water).",
+          "why": "Allicin in fresh garlic acts as a potent natural antibacterial agent, suppressing intestinal flagellates and bacteria without chemical toxicity.",
+          "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Do not feed high-protein live worms or oily pellets during enteritis; avoid heavy dosing of human antibiotics that induce organ toxicity.",
+      "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop.jpg",
+      "cover_card": {
+        "short_title": "White Stringy Poop",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a tropical fish swimming gently, trailing a distinctive long thin translucent white hollow stringy thread of feces from its vent",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a tropical fish swimming gently, trailing a distinctive long thin translucent white hollow stringy thread of feces from its vent. Typography: '鱼拉白便' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/24_white_stringy_poop_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/24_white_stringy_poop_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop.jpg"
+    },
+    {
+      "id": "care_25",
+      "category": "Diseases & Emergencies",
+      "title": "Fish Darting into Glass & Jumping Out (Acute Panic & Rescue)",
+      "condition": "Fish suddenly dart wildly across the tank, slamming violently into glass walls, or panic and jump clear out of the aquarium onto the floor, becoming coated in carpet dust and suffering acute dehydration and asphyxiation.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Wrap fish in damp tissue and hold upright near filter outlet stream",
+          "how": "Wet hands in tank water, cradle the dehydrated fish in a moist paper towel, and gently hold it upright facing the filter outlet current to force oxygen through gills.",
+          "why": "Damp cloth preserves remaining epidermal slime coat, while the direct current forces oxygen-rich water across parched gills to jumpstart respiration.",
+          "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Install anti-jump mesh net or transparent acrylic cover on tank top",
+          "how": "Secure a breathable anti-jump mesh screen or fitted acrylic lid across the aquarium rim, eliminating all perimeter escape gaps.",
+          "why": "Establishes an absolute physical perimeter barrier, preventing frightened fish from launching above the water line.",
+          "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Eliminate light and keep surrounding room silent for 24 hours",
+          "how": "Extinguish all aquarium and room lights, minimize footsteps and vibrations nearby, and leave the fish undisturbed in dim quietness.",
+          "why": "Darkness and silence remove sensory overload, calming hyperactive neurological panic reflexes.",
+          "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never grab dry jumped fish with bare dry abrasive hands; never tap tank glass or flash bright room lights during panic episodes.",
+      "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic.jpg",
+      "cover_card": {
+        "short_title": "Fish Jumping Out",
+        "subtitle": "Click to View Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an aquarium with a protective transparent anti-jump acrylic mesh cover on the top rim, water splashing gently near the surface",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing an aquarium with a protective transparent anti-jump acrylic mesh cover on the top rim, water splashing gently near the surface. Typography: '鱼跳缸' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/25_fish_jumping_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/25_fish_jumping_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic.jpg"
+    },
+    {
+      "id": "care_26",
+      "category": "Fish Abnormalities & Emergency Care",
+      "title": "Pale Rotting Gill Filaments & Rapid Gasping (Bacterial Gill Rot)",
+      "condition": "Flavobacterium columnare invades sensitive gill filaments, turning healthy red tissue pale, grey, and eroded with sticky mucus. The fish breathes rapidly at the surface or hangs desperately by the water outlet.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Isolate for Medicated Antibacterial Bath",
+          "how": "Transfer the fish into a bare-bottom quarantine container. Administer a gentle bath with Nitrofurazone (Furan-2, 1-2mg/L) or Povidone-iodine for 15-20 minutes before returning to observation.",
+          "why": "Rapidly eradicates bacterial colonies clinging to gill surfaces, halting necrotic decay before it reaches deep cartilaginous arches.",
+          "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Maximize Aeration & Dissolved Oxygen",
+          "how": "Turn the air pump to maximum output in both tanks, using fine air stones to create a dense curtain of oxygen micro-bubbles.",
+          "why": "Damaged gills lose over 50% of respiratory efficiency; super-saturated oxygen keeps blood oxygen levels sufficient to sustain life.",
+          "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Deep Substrate Vacuum & 25% Water Flush",
+          "how": "Perform a 25% water change, plunging a gravel vacuum deep into the substrate to siphon decomposing debris, and rinse mechanical filter floss.",
+          "why": "Columnaris bacteria proliferate exponentially in organic bottom mulm; gravel cleaning removes the biological breeding reservoir.",
+          "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never dump heavy antibiotics directly into the display tank crashing the biological cycle; never physically scrape inflamed gill filaments.",
+      "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot.jpg",
+      "cover_card": {
+        "short_title": "Gill Rot",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a freshwater tropical fish displaying inflamed pale white gill filaments, panting gently near crystal clean water surface with airy bubbles",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a freshwater tropical fish displaying inflamed pale white gill filaments, panting gently near crystal clean water surface with airy bubbles. Typography: 'Gill Rot' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/26_bacterial_gill_rot_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/26_bacterial_gill_rot_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot.jpg"
+    },
+    {
+      "id": "care_27",
+      "category": "Fish Abnormalities & Emergency Care",
+      "title": "Swollen Bulging Eye & Corneal Cloudiness (Popeye Disease / Exophthalmia)",
+      "condition": "Retrobulbar bacterial infection or extreme osmotic distress from dirty water leads to severe fluid buildup behind the eye, causing one or both eyes to protrude dramatically with milky white haze.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Isolate in a Dim Bare Hospital Tank",
+          "how": "Gently transfer into a dimly lit, gentle-flow hospital tank free of rough rocks or abrasive ornaments.",
+          "why": "The swollen eye's cornea is paper-thin and fragile; high currents or nippy tankmates can cause traumatic rupture and permanent blindness.",
+          "image_path": "assets/care_guides_handdrawn/27_popeye_disease_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Administer Epsom Salt Osmotic Soak",
+          "how": "Add 1 level teaspoon (~5g) of Epsom Salt (Magnesium Sulfate, MgSO4) per 10 liters of hospital water, dissolving thoroughly.",
+          "why": "Epsom salt establishes safe osmotic tension, drawing accumulated intraocular inflammatory fluid out of the orbital socket.",
+          "image_path": "assets/care_guides_handdrawn/27_popeye_disease_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Targeted Broad-Spectrum Antibacterial Soak",
+          "how": "Dose a reliable aquatic antibacterial medication (such as Erythromycin or Kanamycin) per directions for 3-5 days at a stable 26-28°C.",
+          "why": "Eradicates the systemic bacterial culprits responsible for internal orbital abscesses and swelling.",
+          "image_path": "assets/care_guides_handdrawn/27_popeye_disease_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never use iodized table salt in place of pure Epsom salt; never manually squeeze or manipulate the bulging eye.",
+      "image_path": "assets/care_guides_handdrawn/27_popeye_disease.jpg",
+      "cover_card": {
+        "short_title": "Popeye Disease",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a close-up portrait of a freshwater fish with a swollen protruding eye and cloudy cornea, resting peacefully in a dim serene medical tank",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up portrait of a freshwater fish with a swollen protruding eye and cloudy cornea, resting peacefully in a dim serene medical tank. Typography: 'Popeye Disease' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/27_popeye_disease_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/27_popeye_disease_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease.jpg"
+    },
+    {
+      "id": "care_28",
+      "category": "Behavioral & Neurological Issues",
+      "title": "Stationary Body Wobble & S-Curve Swaying (The Shimmies / Body Swaying)",
+      "condition": "The fish hovers in place undulating its body in an exaggerated snake-like S-pattern without moving forward. Very common in livebearers (guppies, mollies, platies), triggered by temperature drops, extreme acidification (pH crash), or severe mineral deficiency.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Gradually Warm Water to 26-28°C",
+          "how": "Adjust the heater dial upward by 1°C every 2 hours until reaching a stable 26-28°C target.",
+          "why": "Gentle warming relaxes chilled neuromuscular spasming and restores basal metabolic activity.",
+          "image_path": "assets/care_guides_handdrawn/28_the_shimmies_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Add 0.2% Non-Iodized Aquarium Salt",
+          "how": "Dissolve 20g of pure aquarium salt or mineral sea salt per 10 liters of tank water, pouring slowly near filter discharge.",
+          "why": "Supplements vital electrolytes and relieves neurological reflex irritation caused by demineralized soft water.",
+          "image_path": "assets/care_guides_handdrawn/28_the_shimmies_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Check & Rebalance pH toward Neutral-Alkaline",
+          "how": "Test pH levels; if below 6.8, perform a gentle 20% water change with mineral-rich buffered water.",
+          "why": "Old acidic water strips away protective skin slime and agitates nerve endings; restoring pH 7.2-7.8 cures the underlying stress.",
+          "image_path": "assets/care_guides_handdrawn/28_the_shimmies_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never dump chemical baking soda recklessly causing brutal pH swings; never mistake this for bacterial enteritis and overdose antibiotics.",
+      "image_path": "assets/care_guides_handdrawn/28_the_shimmies.jpg",
+      "cover_card": {
+        "short_title": "The Shimmies",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a guppy fish swimming awkwardly with sinuous S-curve body wobbling while stationary, soft water plants in background",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a guppy fish swimming awkwardly with sinuous S-curve body wobbling while stationary, soft water plants in background. Typography: 'The Shimmies' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/28_the_shimmies_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/28_the_shimmies_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies.jpg"
+    },
+    {
+      "id": "care_29",
+      "category": "Behavioral & Neurological Issues",
+      "title": "Rapid Corkscrew Swimming & Loss of Balance (Whirling Disease / Vestibular Disorientation)",
+      "condition": "The fish frantically spins like a corkscrew, chases its own tail, or cartwheels out of control. Typically triggered by acute ammonia/nitrite intoxication causing central nervous shutdown, or myxosporean parasites invading the vestibular auditory organ.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Lower Water Level to 15cm to Prevent Collisions",
+          "how": "Transfer the spiraling fish to a shallow bare quarantine box with water depth limited to 10-15cm.",
+          "why": "Uncontrolled whirling causes violent collisions against glass and scale tearing; shallow water restricts spinning and preserves energy.",
+          "image_path": "assets/care_guides_handdrawn/29_whirling_disease_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Immediate 1/3 Water Change for Ammonia Flush",
+          "how": "Instantly siphon out 30% of tank water, slowly refilling with fresh conditioned water while maximizing aeration.",
+          "why": "Flushes out acute, neurotoxic ammonia or nitrite surges that poison brain vestibular centers.",
+          "image_path": "assets/care_guides_handdrawn/29_whirling_disease_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Dose Vitamin B Complex for Nerve Recovery",
+          "how": "Dissolve aquatic Vitamin B1 & B12 supplements into the quarantine water and keep lights completely off.",
+          "why": "Vitamin B aids myelin sheath repair and neurotransmitter rebuilding, supporting equilibrium recovery.",
+          "image_path": "assets/care_guides_handdrawn/29_whirling_disease_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never house a whirling fish with aggressive tankmates that will attack it; never dose neurotoxic organophosphate pesticides.",
+      "image_path": "assets/care_guides_handdrawn/29_whirling_disease.jpg",
+      "cover_card": {
+        "short_title": "Whirling Disease",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a vibrant tetra spiraling and spinning along dynamic circular motion trails in water, serene dimmed observation aquarium",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a vibrant tetra spiraling and spinning along dynamic circular motion trails in water, serene dimmed observation aquarium. Typography: 'Whirling Disease' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/29_whirling_disease_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/29_whirling_disease_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease.jpg"
+    },
+    {
+      "id": "care_30",
+      "category": "Behavioral & Neurological Issues",
+      "title": "Head-Down Tail-Up Hovering (Forward Tilt / Early Swim Bladder & Digestive Impaction)",
+      "condition": "The fish rests at a 45° to 90° angle, tilting steeply head-down with its tail floating upward. It paddles vigorously downward to stay level. A classic early sign of swim bladder compression from digestive impaction, dry food swelling, or gut chilling.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Enforce Strict 3-Day Complete Fasting",
+          "how": "Immediately suspend all dry pellets, freeze-dried worms, and flake feeding for 72 hours.",
+          "why": "Full intestinal blockage and gas exert mechanical pressure onto the swim bladder; fasting clears digestive tract congestion.",
+          "image_path": "assets/care_guides_handdrawn/30_head_down_hovering_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Warm to 28°C to Accelerate Peristalsis",
+          "how": "Elevate aquarium water temperature to a steady 28°C and maintain generous air stone bubbling.",
+          "why": "Increased temperature boosts metabolic rates and accelerates gut smooth muscle contraction to expel gas.",
+          "image_path": "assets/care_guides_handdrawn/30_head_down_hovering_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Feed Peeled Boiled Green Pea Mash",
+          "how": "Boil a single green pea until tender, discard the outer skin, crush the soft inside into tiny bits, and feed sparingly.",
+          "why": "Green peas are rich in gentle dietary fiber, acting as nature's most effective aquatic laxative to flush impaction.",
+          "image_path": "assets/care_guides_handdrawn/30_head_down_hovering_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never continue feeding dry unsoaked pellets that swell inside the gut; never physically force or bend the fish's body.",
+      "image_path": "assets/care_guides_handdrawn/30_head_down_hovering.jpg",
+      "cover_card": {
+        "short_title": "Head-Down Tilt",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fancy goldfish tilting vertically head-down tail-up in middle water layer, with soft bubbles and warm lighting",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a fancy goldfish tilting vertically head-down tail-up in middle water layer, with soft bubbles and warm lighting. Typography: 'Head-Down Tilt' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/30_head_down_hovering_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/30_head_down_hovering_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering.jpg"
+    },
+    {
+      "id": "care_31",
+      "category": "Breeding & Special Anatomy Care",
+      "title": "Pinched Tail Fins & Lethargy in Fry (Needle Tail Disease in Guppy/Betta Fry)",
+      "condition": "Newborn fry are unable to fan out their caudal fins, which clump tightly into needle-like points. Fry wobble weakly near the surface and can suffer total brood mortality within 24 hours if unmanaged.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Slow Drip-Feed 1/3 Water Renewal",
+          "how": "Using airline tubing with an adjustment valve, replace 1/3 of the nursery water at a rate of 1-2 drops per second.",
+          "why": "Delicate fry cannot tolerate abrupt shifts in chemistry or temperature; drip-feeding eliminates stress while purging toxins.",
+          "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Establish 0.2% Mild Salt Sanctuary",
+          "how": "Dissolve 20g of pure aquarium salt per 10 liters of fry water, adding in two stages with temp held at 27-28°C.",
+          "why": "A 0.2% salt concentration effectively suppresses Gyrodactylus flukes and fungus, letting fry fins reopen naturally.",
+          "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Daily Bottom Siphon of Dead Food & Waste",
+          "how": "Thirty minutes after feeding baby brine shrimp, use a turkey baster to siphon unconsumed nauplii and debris.",
+          "why": "Small nursery volumes foul within hours from decaying protein, triggering lethal bacterial blooms.",
+          "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never blast nursery tanks with strong filter currents; never dose harsh dyes like Malachite Green on delicate newborn fry.",
+      "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry.jpg",
+      "cover_card": {
+        "short_title": "Needle Tail Fry",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "tiny newborn guppy fry swimming in a nursery cup, their delicate caudal fins clamped together into a needle-like point",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing tiny newborn guppy fry swimming in a nursery cup, their delicate caudal fins clamped together into a needle-like point. Typography: 'Needle Tail Fry' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/31_needle_tail_in_fry_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/31_needle_tail_in_fry_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry.jpg"
+    },
+    {
+      "id": "care_32",
+      "category": "Breeding & Special Anatomy Care",
+      "title": "Razor-Thin Spine & Sunken Belly (Knifeback / Severe Wasting Disease)",
+      "condition": "Extreme wasting of dorsal muscle mass leaves the spinal ridge sharp and thin as a razor blade. The belly is hollow and sunken. Caused by internal parasites (Hexamita, nematodes) or chronic mycobacteriosis consuming host calories.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Quarantine & Inspect Fecal Threads",
+          "how": "Place in an observation container with a clean white bottom to inspect whether feces are white, hollow, and stringy.",
+          "why": "Determines whether internal flagellates or gut nematodes are present, guiding medication choice.",
+          "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Feed Metronidazole-Medicated Feed",
+          "how": "Soak high-quality sinking micro-pellets in Metronidazole medication (approx 1% ratio) and feed in tiny, frequent meals.",
+          "why": "Medicated food delivers the active agent directly into the infected gut lumen, wiping out flagellates.",
+          "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Replenish with High-Protein Live Foods",
+          "how": "Once parasite shedding subsides, introduce live freshly hatched baby brine shrimp or daphnia fortified with multivitamins.",
+          "why": "Nutrient-dense live foods are effortlessly digested, rapidly rebuilding lost dorsal muscle bulk.",
+          "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never foul the tank with excessive oily pellets that the weakened fish cannot eat; never subject knifeback fish to turbulent water jets.",
+      "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback.jpg",
+      "cover_card": {
+        "short_title": "Knifeback Wasting",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an emaciated aquarium fish with a razor-thin paper knifeback spine and hollow belly, resting calmly near soft moss",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing an emaciated aquarium fish with a razor-thin paper knifeback spine and hollow belly, resting calmly near soft moss. Typography: 'Knifeback Wasting' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/32_wasting_disease_knifeback_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/32_wasting_disease_knifeback_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback.jpg"
+    },
+    {
+      "id": "care_33",
+      "category": "Breeding & Special Anatomy Care",
+      "title": "Swollen Black Gravid Spot & Labor Arrest (Pregnant Livebearer Dystocia Emergency)",
+      "condition": "A heavily pregnant female guppy or molly develops a boxy, bloated belly and pitch-black gravid spot, but remains motionless in plants or by outlets for hours unable to deliver fry, risking egg-binding suffocation.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Provide Dense Moss Sanctuary & Dim Lighting",
+          "how": "Transfer the expectant mother into a tank rich in hornwort, java moss, or floating plants, dimming all illumination.",
+          "why": "Stress hormones (adrenaline) inhibit natural uterine contractions; a dark, sheltered sanctuary induces calming endorphins.",
+          "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Stimulate Labor with Fresh 2°C Temp Shift",
+          "how": "Slowly introduce conditioned fresh water that is 1.5-2°C cooler or warmer (around 15% volume) to create subtle fresh water flow.",
+          "why": "Simulates natural rain runoff, triggering pituitary hormonal surges that stimulate maternal labor contractions.",
+          "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Use Spacious Mesh Trap Instead of Cramped Plastic",
+          "how": "Ditch tiny plastic breeding traps and use a roomy mesh breeding enclosure (at least 5 liters capacity).",
+          "why": "Tight confinement causes panic collisions and asphyxiation; adequate volume maintains water exchange and swimming freedom.",
+          "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Never physically squeeze the mother's abdomen to force fry out (fatal hemorrhage); never leave aggressive males chasing her in labor.",
+      "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia.jpg",
+      "cover_card": {
+        "short_title": "Fish Dystocia",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a heavily gravid female livebearer fish with prominent dark gravid spot resting quietly near lush green water moss",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a heavily gravid female livebearer fish with prominent dark gravid spot resting quietly near lush green water moss. Typography: 'Fish Dystocia' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/33_pregnant_fish_dystocia_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/33_pregnant_fish_dystocia_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia.jpg"
+    },
+    {
+      "id": "care_34",
+      "category": "Breeding & Special Anatomy Care",
+      "title": "S-Shaped Spine Curvature & Stiff Locomotion (Scoliosis / Vertebral Deformity)",
+      "condition": "The fish's spine curves sideways in a pronounced S-shape or arches upward into a humpback. Locomotion is clumsy and jerky. Caused by generational inbreeding, juvenile Vitamin C / calcium deficiency, or stray electrical voltage spasms.",
+      "steps": [
+        {
+          "step": 1,
+          "title": "Audit Electrical Gear for Stray Voltage",
+          "how": "Use a digital multimeter or voltage sensor to test submersible heaters and pumps, replacing compromised equipment immediately.",
+          "why": "Micro-currents leaking into water cause involuntary muscular spasms, physically pulling malleable juvenile spines out of alignment.",
+          "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "Enrich Diet with Vitamin C & Bio-Available Calcium",
+          "how": "Fortify regular feed with water-soluble Vitamin C and mineral bone meal to bolster bone collagen metabolism.",
+          "why": "Vitamin C is a mandatory cofactor in vertebrate collagen synthesis; adequate minerals halt progressive bone demineralization.",
+          "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "Baffle Current & Create Barrier-Free Feeding Zone",
+          "how": "Turn down flow nozzles to create a serene, calm lower zone with slow-sinking appetizing food.",
+          "why": "Deformed fish have compromised swimming endurance; gentle flow ensures they feed effortlessly without exhausting themselves.",
+          "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "Severe inbreeding scoliosis is biologically irreversible, never dump toxic medications; never breed deformed individuals.",
+      "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis.jpg",
+      "cover_card": {
+        "short_title": "Spine Curvature",
+        "subtitle": "Tap for Care Guide",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a small ornamental fish swimming with a gentle S-curved bent spine deformity in tranquil calm water",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a small ornamental fish swimming with a gentle S-curved bent spine deformity in tranquil calm water. Typography: 'Spine Curvature' in delicate graphite 2B pencil hand-lettering, subtitle 'Tap for Care Guide'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/34_spine_deformity_scoliosis_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/34_spine_deformity_scoliosis_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis.jpg"
+    }
+  ]
+}
