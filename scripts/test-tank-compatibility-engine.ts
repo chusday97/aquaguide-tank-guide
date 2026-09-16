@@ -1076,7 +1076,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       const bronze = makeFish({ id: 'sp_0014', name: '咖啡鼠', scientificName: 'Corydoras aeneus', waterTemperature: '21-27°C', tankSize: '至少 72 升' });
       const panda = makeFish({ id: 'sp_0443', name: '熊猫鼠', scientificName: 'Corydoras panda', waterTemperature: '22-25°C', tankSize: '至少 41 升' });
       const result = evaluateLegacyTankCompatibility({
-        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' }, targetTemperature: '24' }),
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' }, targetTemperature: '25' }),
         existingSpecies: [{ species: bronze, record: { quantity: 6 } }],
         candidateSpecies: panda,
         candidateQuantity: 6,
@@ -1180,6 +1180,39 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       });
       return result.status === 'not_recommended'
         && result.blockingRules.some(rule => rule.code === 'conspecific_fry_predation' && rule.reviewStatus === 'reviewed');
+    },
+  },
+  {
+    name: 'reviewed Catalog temperature overrides stale Channa legacy range without inventing behavior authority',
+    run: () => {
+      const channa = fishData.find(item => item.id === 'sp_0224');
+      if (!channa) return false;
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '200', width: '80', height: '65' }, targetTemperature: '25' }),
+        candidateSpecies: channa,
+        candidateQuantity: 1,
+      });
+      return getReviewedCompatibilityProfileForFish(channa) == null
+        && result.status === 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('tank_temperature_conflict')
+        && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && result.metadata.decisionReadiness === 'unknown';
+    },
+  },
+  {
+    name: 'reviewed Catalog temperature overrides stale Oscar legacy range while behavior remains evidence-gated',
+    run: () => {
+      const oscar = fishData.find(item => item.id === 'sp_0451');
+      if (!oscar) return false;
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '200', width: '80', height: '65' }, targetTemperature: '28' }),
+        candidateSpecies: oscar,
+        candidateQuantity: 1,
+      });
+      return getReviewedCompatibilityProfileForFish(oscar) == null
+        && result.status === 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('tank_temperature_conflict')
+        && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict');
     },
   },
   {

@@ -4,6 +4,8 @@ import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassificati
 import { estimateWaterProfile } from './waterProfileEstimate';
 import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
+import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
+import { applyApprovedCatalogFieldReviews } from '../data/catalogFieldReviews';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -86,6 +88,8 @@ const getSpeciesMinLengthCm = (species: Fish) => {
 const getSpeciesWaterType = (species: Fish): SpeciesWaterType => {
   const reviewedWaterType = getReviewedCompatibilityProfileForFish(species)?.waterType;
   if (reviewedWaterType) return reviewedWaterType;
+  const catalogWaterType = applyApprovedCatalogFieldReviews(speciesProfileFromFish(species)).waterType;
+  if (catalogWaterType !== 'unknown') return catalogWaterType;
   const text = textOf(species);
   if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
   if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
@@ -238,8 +242,10 @@ export const evaluateSpeciesForAquarium = (
     ? reviewedKnowledge.spaceAndGrowth
     : undefined;
 
+  const catalogProfile = applyApprovedCatalogFieldReviews(speciesProfileFromFish(species));
+
   const volumeLiters = getAquariumVolumeLiters(aquarium);
-  const minVolume = reviewedSpace?.minVolumeLiters ?? getSpeciesMinVolumeLiters(species);
+  const minVolume = reviewedSpace?.minVolumeLiters ?? catalogProfile.minTankLiters ?? getSpeciesMinVolumeLiters(species);
   if (!volumeLiters || !minVolume) {
     confirmations.push({ type: 'missing_volume', title: '需要确认水体容量', detail: '当前鱼缸或物种缺少可靠容量数据。' });
     score -= 8;
@@ -254,7 +260,7 @@ export const evaluateSpeciesForAquarium = (
   }
 
   const aquariumLength = getAquariumLengthCm(aquarium);
-  const minLength = reviewedSpace?.minTankLengthCm ?? getSpeciesMinLengthCm(species);
+  const minLength = reviewedSpace?.minTankLengthCm ?? catalogProfile.minTankLengthCm ?? getSpeciesMinLengthCm(species);
   if (minLength && (!aquariumLength || aquariumLength < minLength)) {
     warnings.push({ type: 'length_too_short', title: '鱼缸长度不足', detail: `该物种建议至少 ${minLength}cm 缸长，当前缸长未满足。`, severity: 'medium' });
     score -= 12;
@@ -263,7 +269,10 @@ export const evaluateSpeciesForAquarium = (
     score += 6;
   }
 
-  const tempRange = reviewedEnvironment?.temperatureRangeC ?? parseRange(species.waterTemperature);
+  const catalogTempRange = catalogProfile.waterTemperatureMinC != null && catalogProfile.waterTemperatureMaxC != null
+    ? { min: catalogProfile.waterTemperatureMinC, max: catalogProfile.waterTemperatureMaxC }
+    : null;
+  const tempRange = reviewedEnvironment?.temperatureRangeC ?? catalogTempRange ?? parseRange(species.waterTemperature);
   const currentTemp = aquarium.targetTemperature ? Number(aquarium.targetTemperature) : null;
   if (!tempRange || !currentTemp || !Number.isFinite(currentTemp)) {
     confirmations.push({ type: 'missing_temperature', title: '需要确认温度', detail: '当前鱼缸或物种缺少可靠温度数据。' });
@@ -281,7 +290,10 @@ export const evaluateSpeciesForAquarium = (
     score += 14;
   }
 
-  const phRange = reviewedEnvironment?.phRange ?? parseRange(species.phLevel);
+  const catalogPhRange = catalogProfile.phMin != null && catalogProfile.phMax != null
+    ? { min: catalogProfile.phMin, max: catalogProfile.phMax }
+    : null;
+  const phRange = reviewedEnvironment?.phRange ?? catalogPhRange ?? parseRange(species.phLevel);
   const identityText = identityTextOf(species);
   const phSensitive = Boolean(phRange && (phRange.max - phRange.min <= 1.5 || species.difficulty === 'Hard' || /水晶虾|苏虾|虾|短鲷|七彩|珊瑚|海葵|水母/i.test(identityText)));
   if (phSensitive && species.phLevel && phRange) {

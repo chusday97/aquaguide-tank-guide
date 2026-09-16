@@ -16,6 +16,7 @@ import {
 } from '../data/runtimeCompatibilityRegistry';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
+import { applyApprovedCatalogFieldReviews } from '../data/catalogFieldReviews';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 import {
   COMPATIBILITY_RULE_VERSION,
@@ -239,6 +240,14 @@ const dedupeRules = (rules: TankCompatibilityRule[]) => {
   });
 };
 
+const catalogProfileForCompatibility = (fish: Fish) => (
+  applyApprovedCatalogFieldReviews(speciesProfileFromFish(fish))
+);
+
+const profileRange = (min: number | null, max: number | null) => (
+  min != null && max != null ? { min, max } : null
+);
+
 const formatReviewedPairRuleEvidence = (rule: ReviewedPairRule) => rule.basis === 'pair_rule'
   ? `${rule.reason} 该结论有直接配对或捕食风险实验支持；实验条件不等于家庭水族箱长期同缸，因此不外推为“已观察到长期同缸捕食”。`
   : `${rule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`;
@@ -351,8 +360,10 @@ const evaluateLegacyTankCompatibility = ({
         passedRules.push(asRule('species_water_type_match', '水体类型一致', `${pairName} 的水体类型一致。`, 'info', reviewedRuleEvidence));
       }
 
-      const existingTemperature = parseRange(existing.waterTemperature);
-      const candidateTemperature = parseRange(candidateSpecies.waterTemperature);
+      const existingCatalogProfile = catalogProfileForCompatibility(existing);
+      const candidateCatalogProfile = catalogProfileForCompatibility(candidateSpecies);
+      const existingTemperature = profileRange(existingCatalogProfile.waterTemperatureMinC, existingCatalogProfile.waterTemperatureMaxC);
+      const candidateTemperature = profileRange(candidateCatalogProfile.waterTemperatureMinC, candidateCatalogProfile.waterTemperatureMaxC);
       if (!existingTemperature || !candidateTemperature) {
         missingData.push(asRule('species_temperature_missing', '温度资料不足', `${pairName} 缺少可比较的温度区间。`, 'medium', reviewedRuleEvidence));
       } else if (!rangesOverlap(existingTemperature, candidateTemperature)) {
@@ -361,8 +372,8 @@ const evaluateLegacyTankCompatibility = ({
         passedRules.push(asRule('temperature_overlap', '温度区间有交集', `${pairName} 可以找到共同温度区间。`, 'info', reviewedRuleEvidence));
       }
 
-      const existingPh = parseRange(existing.phLevel);
-      const candidatePh = parseRange(candidateSpecies.phLevel);
+      const existingPh = profileRange(existingCatalogProfile.phMin, existingCatalogProfile.phMax);
+      const candidatePh = profileRange(candidateCatalogProfile.phMin, candidateCatalogProfile.phMax);
       if (!existingPh || !candidatePh) {
         missingData.push(asRule('species_ph_missing', 'pH 资料不足', `${pairName} 缺少可比较的 pH 区间。`, 'low', reviewedRuleEvidence));
       } else if (!rangesOverlap(existingPh, candidatePh)) {
@@ -516,7 +527,11 @@ const evaluateLegacyTankCompatibility = ({
   }
 
   currentSpecies.forEach(existing => {
-    if (!rangesOverlap(parseRange(existing.waterTemperature), parseRange(candidateSpecies.waterTemperature))) {
+    const existingCatalogProfile = catalogProfileForCompatibility(existing);
+    const candidateCatalogProfile = catalogProfileForCompatibility(candidateSpecies);
+    const existingTemperature = profileRange(existingCatalogProfile.waterTemperatureMinC, existingCatalogProfile.waterTemperatureMaxC);
+    const candidateTemperature = profileRange(candidateCatalogProfile.waterTemperatureMinC, candidateCatalogProfile.waterTemperatureMaxC);
+    if (!rangesOverlap(existingTemperature, candidateTemperature)) {
       blockingRules.push(asRule(
         'temperature_no_overlap',
         '温度区间不重合',
@@ -525,7 +540,9 @@ const evaluateLegacyTankCompatibility = ({
         reviewedRuleEvidence,
       ));
     }
-    if (!rangesOverlap(parseRange(existing.phLevel), parseRange(candidateSpecies.phLevel))) {
+    const existingPh = profileRange(existingCatalogProfile.phMin, existingCatalogProfile.phMax);
+    const candidatePh = profileRange(candidateCatalogProfile.phMin, candidateCatalogProfile.phMax);
+    if (!rangesOverlap(existingPh, candidatePh)) {
       warningRules.push(asRule(
         'ph_range_gap',
         'pH 区间差异较大',
@@ -697,7 +714,7 @@ const evaluateLegacyTankCompatibility = ({
 };
 
 const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider): DomainSpeciesFact => {
-  const profile = speciesProfileFromFish(fish);
+  const profile = catalogProfileForCompatibility(fish);
   const reviewed = resolveReviewedProfileForFish(fish, provider);
   const staticReviewed = getReviewedCompatibilityProfileForFish(fish);
   const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
