@@ -69,6 +69,7 @@
 - `src/modules/knowledge/phase2Batch29Authority.ts` / `scripts/test-knowledge-completion-batch-29.ts`：Phase 2 Batch 29 的十条直接 reviewed-unknown 记录，不自动继承基础种。
 - `src/modules/knowledge/phase2Batch30Authority.ts` / `scripts/test-knowledge-completion-batch-30.ts`：Phase 2 Batch 30 的十条直接 reviewed-unknown 记录，不自动继承基础种。
 - `src/modules/knowledge/phase2Batch31Authority.ts` / `scripts/test-knowledge-completion-batch-31.ts`：Phase 2 Batch 31 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch32Authority.ts` / `scripts/test-knowledge-completion-batch-32.ts`：Phase 2 Batch 32 的十条直接 reviewed-unknown 记录，不自动继承基础种。
 - `src/modules/knowledge/phase2Batch06Authority.ts` / `scripts/test-knowledge-completion-batch-06.ts`：Phase 2 Batch 06 的十条直接 reviewed-unknown 记录，不自动继承基础种。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
