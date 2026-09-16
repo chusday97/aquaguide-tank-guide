@@ -17,7 +17,7 @@ const eligibleSpecies = fishData.filter(species => !['plant', 'hardscape'].inclu
 const reviewedIds = getCompatibilityEvidenceAudit().reviewedSpeciesIds;
 const reviewedPairRules = getCompatibilityEvidenceAudit().reviewedPairRules;
 const prioritySpecies = eligibleSpecies.filter(species => priorityNames.includes(species.name));
-const reviewedPrioritySpecies = prioritySpecies.filter(species => Boolean(getReviewedCompatibilityProfile(species.id)));
+const reviewedPrioritySpecies = prioritySpecies.filter(species => Boolean(getReviewedCompatibilityProfileForFish(species)));
 
 const tank: Aquarium = {
   id: 'compatibility-coverage-scorecard',

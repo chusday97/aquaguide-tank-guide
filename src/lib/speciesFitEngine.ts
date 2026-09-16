@@ -230,8 +230,16 @@ export const evaluateSpeciesForAquarium = (
     score -= 18;
   }
 
+  const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(species);
+  const reviewedEnvironment = reviewedKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.environment
+    : undefined;
+  const reviewedSpace = reviewedKnowledge?.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.spaceAndGrowth
+    : undefined;
+
   const volumeLiters = getAquariumVolumeLiters(aquarium);
-  const minVolume = getSpeciesMinVolumeLiters(species);
+  const minVolume = reviewedSpace?.minVolumeLiters ?? getSpeciesMinVolumeLiters(species);
   if (!volumeLiters || !minVolume) {
     confirmations.push({ type: 'missing_volume', title: '需要确认水体容量', detail: '当前鱼缸或物种缺少可靠容量数据。' });
     score -= 8;
@@ -246,7 +254,7 @@ export const evaluateSpeciesForAquarium = (
   }
 
   const aquariumLength = getAquariumLengthCm(aquarium);
-  const minLength = getSpeciesMinLengthCm(species);
+  const minLength = reviewedSpace?.minTankLengthCm ?? getSpeciesMinLengthCm(species);
   if (minLength && (!aquariumLength || aquariumLength < minLength)) {
     warnings.push({ type: 'length_too_short', title: '鱼缸长度不足', detail: `该物种建议至少 ${minLength}cm 缸长，当前缸长未满足。`, severity: 'medium' });
     score -= 12;
@@ -255,7 +263,7 @@ export const evaluateSpeciesForAquarium = (
     score += 6;
   }
 
-  const tempRange = parseRange(species.waterTemperature);
+  const tempRange = reviewedEnvironment?.temperatureRangeC ?? parseRange(species.waterTemperature);
   const currentTemp = aquarium.targetTemperature ? Number(aquarium.targetTemperature) : null;
   if (!tempRange || !currentTemp || !Number.isFinite(currentTemp)) {
     confirmations.push({ type: 'missing_temperature', title: '需要确认温度', detail: '当前鱼缸或物种缺少可靠温度数据。' });
@@ -263,17 +271,17 @@ export const evaluateSpeciesForAquarium = (
   } else if (currentTemp < tempRange.min || currentTemp > tempRange.max) {
     const delta = currentTemp < tempRange.min ? tempRange.min - currentTemp : currentTemp - tempRange.max;
     if (delta <= 1) {
-      warnings.push({ type: 'temperature_adjustable', title: '温度轻微偏差', detail: `当前 ${currentTemp}℃，需求 ${species.waterTemperature}。`, severity: 'low' });
+      warnings.push({ type: 'temperature_adjustable', title: '温度轻微偏差', detail: `当前 ${currentTemp}℃，需求 ${tempRange.min}-${tempRange.max}℃。`, severity: 'low' });
       score -= 8;
     } else {
-      hardBlocks.push({ type: 'temperature_mismatch', title: '温度明显不匹配', detail: `当前 ${currentTemp}℃，需求 ${species.waterTemperature}。`, severity: 'high' });
+      hardBlocks.push({ type: 'temperature_mismatch', title: '温度明显不匹配', detail: `当前 ${currentTemp}℃，需求 ${tempRange.min}-${tempRange.max}℃。`, severity: 'high' });
     }
   } else {
-    matchedItems.push({ type: 'temperature', title: '温度匹配', detail: `当前 ${currentTemp}℃，需求 ${species.waterTemperature}。` });
+    matchedItems.push({ type: 'temperature', title: '温度匹配', detail: `当前 ${currentTemp}℃，需求 ${tempRange.min}-${tempRange.max}℃。` });
     score += 14;
   }
 
-  const phRange = parseRange(species.phLevel);
+  const phRange = reviewedEnvironment?.phRange ?? parseRange(species.phLevel);
   const identityText = identityTextOf(species);
   const phSensitive = Boolean(phRange && (phRange.max - phRange.min <= 1.5 || species.difficulty === 'Hard' || /水晶虾|苏虾|虾|短鲷|七彩|珊瑚|海葵|水母/i.test(identityText)));
   if (phSensitive && species.phLevel && phRange) {
@@ -281,7 +289,7 @@ export const evaluateSpeciesForAquarium = (
     confirmations.push({
       type: 'missing_ph',
       title: '敏感物种建议实测水质',
-      detail: `环境线索仅显示“${waterProfile.tendency === 'acidic' ? '可能偏酸' : waterProfile.tendency === 'alkaline' ? '可能偏碱' : waterProfile.tendency === 'marine' ? '海水环境' : '倾向不明确'}”，不能代替 pH 实测；该物种参考范围为 ${species.phLevel}。`,
+      detail: `环境线索仅显示“${waterProfile.tendency === 'acidic' ? '可能偏酸' : waterProfile.tendency === 'alkaline' ? '可能偏碱' : waterProfile.tendency === 'marine' ? '海水环境' : '倾向不明确'}”，不能代替 pH 实测；该物种参考范围为 ${phRange.min}-${phRange.max}。`,
       severity: 'low',
     });
     score -= 2;
