@@ -201,7 +201,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
                       onClick={() => selectProblem(problem)}
                       className={selectedProblemId === problem.id ? 'is-selected' : ''}
                     >
-                      <span>{problem.label}</span>
+                      <span>{isEn ? (problem.labelEn || problem.label) : problem.label}</span>
                       <small>{problem.urgency === 'urgent' ? (isEn ? 'Priority' : '优先处理') : problem.urgency === 'watch' ? (isEn ? 'Watch' : '需要观察') : (isEn ? 'Routine' : '日常')}</small>
                     </button>
                   ))}
@@ -233,7 +233,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
               <section className="interactive-care-problem-identify">
                 <div className="interactive-care-section-label">{copy.identify}</div>
                 <div className="interactive-care-problem-title-row">
-                  <h3>{selectedProblem.label}</h3>
+                  <h3>{isEn ? (selectedProblem.labelEn || selectedProblem.label) : selectedProblem.label}</h3>
                   <span className={`interactive-care-problem-urgency is-${selectedProblem.urgency}`}>
                     {selectedProblem.urgency === 'urgent' ? (isEn ? 'Priority' : '优先处理') : selectedProblem.urgency === 'watch' ? (isEn ? 'Watch' : '需要观察') : (isEn ? 'Routine' : '日常')}
                   </span>
