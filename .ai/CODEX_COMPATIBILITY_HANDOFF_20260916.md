@@ -244,6 +244,16 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 
+## Phase 2 Batch 39 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0239`, `sp_0274`, `sp_0275`, `sp_0276`, `sp_0277`, `sp_0278`, `sp_0279`, `sp_0342`, `sp_0396`, and `sp_0397`.
+- Professional aquarium and taxonomic records were reviewed for the named shrimp lines. Evidence did not establish complete object-specific feeding/care authority; each ornamental line remains independent and no template, name inference, or base-species inheritance was promoted as completion evidence.
+- Existing Species Detail/Compatibility runtime boundaries for the reviewed shrimp variants were preserved through narrow runtime branches while matrix completion remained object-specific.
+- Matrix after Batch 39: feeding `reviewed_unknown 372→382`, `needs_research 24→14`; environment `reviewed_unknown 356→366`, `needs_research 93→83`; space `reviewed_unknown 356→366`, `inherited_reviewed 20→10`, `needs_research 64→64`; social `reviewed_unknown 359→369`, `inherited_reviewed 20→10`, `needs_research 0→0`; care `reviewed_supported 88→88`, `reviewed_unknown 372→382`, `template_only 15→5`.
+- Batch 39 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0398`, `sp_0455`, `sp_0027`, `sp_0010`, `sp_0011`, `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, and `sp_0435`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
 ## Phase 2 Batch 38 checkpoint — 2026-09-17
 - Completed ten direct reviewed-unknown records: `sp_0446`, `sp_0013`, `sp_0028`, `sp_0030`, `sp_0031`, `sp_0164`, `sp_0165`, `sp_0166`, `sp_0223`, and `sp_0238`.
 - FishBase, ScienceDirect, and professional aquarium husbandry records were reviewed. Evidence did not establish complete object-specific feeding/care authority; ornamental variants remain independent and no template, name inference, or base-species inheritance was promoted as completion evidence.

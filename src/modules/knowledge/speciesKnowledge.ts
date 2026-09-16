@@ -38,6 +38,7 @@ import { phase2Batch35Knowledge } from './phase2Batch35Authority';
 import { phase2Batch36Knowledge } from './phase2Batch36Authority';
 import { phase2Batch37Knowledge } from './phase2Batch37Authority';
 import { phase2Batch38Knowledge } from './phase2Batch38Authority';
+import { phase2Batch39Knowledge } from './phase2Batch39Authority';
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -78,6 +79,7 @@ const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0461', 'sp_0462', 'sp_0463', 'sp_0464', 'sp_0465', 'sp_0466', 'sp_0467', 'sp_0470', 'sp_0471', 'sp_0472',
   'sp_0473', 'sp_0474', 'sp_0476', 'sp_0012', 'sp_0147', 'sp_0148', 'sp_0222', 'sp_0258', 'sp_0433', 'sp_0434',
   'sp_0446', 'sp_0013', 'sp_0028', 'sp_0030', 'sp_0031', 'sp_0164', 'sp_0165', 'sp_0166', 'sp_0223', 'sp_0238',
+  'sp_0239', 'sp_0274', 'sp_0275', 'sp_0276', 'sp_0277', 'sp_0278', 'sp_0279', 'sp_0342', 'sp_0396', 'sp_0397',
 ]);
 
 
@@ -823,6 +825,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch36Knowledge,
   ...phase2Batch37Knowledge,
   ...phase2Batch38Knowledge,
+  ...phase2Batch39Knowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1703,6 +1706,13 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // Existing shrimp runtime boundaries remain available for these catalog
   // variants; their completion records do not inherit those facts.
   if (['sp_0028', 'sp_0030', 'sp_0031', 'sp_0164', 'sp_0165', 'sp_0166', 'sp_0238'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // These shrimp variants have existing Compatibility-reviewed runtime
+  // boundaries; preserve them without using base inheritance as completion
+  // evidence for the variant objects.
+  if (['sp_0239', 'sp_0274', 'sp_0275', 'sp_0276', 'sp_0277', 'sp_0278', 'sp_0279', 'sp_0342', 'sp_0396', 'sp_0397'].includes(fish.id)) {
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }
