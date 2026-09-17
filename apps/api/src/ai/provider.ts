@@ -71,7 +71,6 @@ const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en') => ({
   stream: false,
   temperature: 0.1,
   max_tokens: 700,
-  response_format: { type: 'json_object' },
   messages: [
     { role: 'system', content: 'Return one strict JSON object only. Inspect the supplied image pixels; do not infer identity from the prompt alone.' },
     {

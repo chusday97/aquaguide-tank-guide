@@ -27,8 +27,8 @@ try {
   assert.deepEqual(result.payload, { candidates: [{ commonName: '孔雀鱼', scientificName: 'Poecilia reticulata', confidenceBand: 'high', visualEvidence: ['尾鳍特征'] }] });
   assert.deepEqual(calls.map(call => call.model), ['glm-primary', 'glm-primary', 'glm-fallback']);
   assert.equal(calls.every(call => call.stream === false), true);
-  assert.equal(calls.every(call => (call.response_format as { type?: string })?.type === 'json_object'), true);
-  console.log('vision provider fallback verified: 429 retries primary once, then uses glm fallback with strict JSON request');
+  assert.equal(calls.every(call => call.response_format === undefined), true);
+  console.log('vision provider fallback verified: 429 retries primary once, then uses glm fallback with the compatible vision request');
 } finally {
   globalThis.fetch = originalFetch;
 }
