@@ -22,6 +22,7 @@ export const apiConfig = {
   visionApiKey: process.env.VISION_API_KEY || '',
   visionBaseUrl: (process.env.VISION_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/$/, ''),
   visionModel: process.env.VISION_MODEL || 'glm-4.6v-flash',
+  visionFallbackModel: process.env.VISION_FALLBACK_MODEL || 'glm-4v-flash',
   visionTimeoutMs: Number(process.env.VISION_TIMEOUT_MS || 20_000),
   resendApiKey: process.env.RESEND_API_KEY || '',
   feedbackEmailTo: process.env.FEEDBACK_EMAIL_TO || '',

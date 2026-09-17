@@ -52,6 +52,7 @@ speciesAiRouter.post(
     let candidates: Array<ReturnType<typeof rawVisionCandidateSchema.parse>> = [];
     let source: 'model' | 'fallback' = 'model';
     let failureReason: 'not_configured' | 'timeout' | 'network' | 'invalid_response' | undefined;
+    let modelName = apiConfig.visionModel || 'unconfigured';
 
     try {
       const normalized = await sharp(request.body)
@@ -59,7 +60,9 @@ speciesAiRouter.post(
         .resize({ width: 1536, height: 1536, fit: 'inside', withoutEnlargement: true })
         .webp({ quality: 84 })
         .toBuffer();
-      const raw = await requestVisionCandidates(`data:image/webp;base64,${normalized.toString('base64')}`, locale) as { candidates?: unknown };
+      const vision = await requestVisionCandidates(`data:image/webp;base64,${normalized.toString('base64')}`, locale);
+      modelName = vision.modelName;
+      const raw = vision.payload as { candidates?: unknown };
       const parsed = rawVisionCandidateSchema.array().max(3).safeParse(raw.candidates);
       if (!parsed.success) throw new ProviderError('invalid_response', 'Vision candidates were invalid.');
       candidates = parsed.data;
@@ -78,7 +81,7 @@ speciesAiRouter.post(
       source,
       ...(failureReason ? { failureReason } : {}),
       generatedAt: new Date().toISOString(),
-      modelName: apiConfig.visionModel || 'unconfigured',
+      modelName,
     });
   }),
 );

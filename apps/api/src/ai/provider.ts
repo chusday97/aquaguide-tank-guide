@@ -3,7 +3,11 @@ import { apiConfig } from '../config';
 export type ProviderFailureReason = 'not_configured' | 'timeout' | 'network' | 'invalid_response';
 
 export class ProviderError extends Error {
-  constructor(public readonly reason: ProviderFailureReason, message: string) {
+  constructor(
+    public readonly reason: ProviderFailureReason,
+    message: string,
+    public readonly statusCode?: number,
+  ) {
     super(message);
   }
 }
@@ -36,8 +40,8 @@ const fetchJsonResponse = async (
         signal: controller.signal,
       });
       if (!response.ok) {
-        if (attempt === 0 && response.status >= 500) continue;
-        throw new ProviderError('network', `Provider returned HTTP ${response.status}.`);
+        if (attempt === 0 && (response.status === 429 || response.status >= 500)) continue;
+        throw new ProviderError('network', `Provider returned HTTP ${response.status}.`, response.status);
       }
       const payload = await response.json() as { choices?: Array<{ message?: { content?: unknown } }> };
       const content = payload.choices?.[0]?.message?.content;
@@ -63,15 +67,14 @@ const fetchJsonResponse = async (
   throw lastError instanceof Error ? lastError : new ProviderError('network', 'Provider request failed.');
 };
 
-export const requestVisionCandidates = (imageDataUrl: string, locale: 'zh-CN' | 'en') => fetchJsonResponse(
-  apiConfig.visionBaseUrl,
-  apiConfig.visionApiKey,
-  apiConfig.visionModel,
-  apiConfig.visionTimeoutMs,
-  {
-    temperature: 0.1,
-    max_tokens: 700,
-    messages: [{
+const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en') => ({
+  stream: false,
+  temperature: 0.1,
+  max_tokens: 700,
+  response_format: { type: 'json_object' },
+  messages: [
+    { role: 'system', content: 'Return one strict JSON object only. Inspect the supplied image pixels; do not infer identity from the prompt alone.' },
+    {
       role: 'user',
       content: [
         {
@@ -82,9 +85,43 @@ export const requestVisionCandidates = (imageDataUrl: string, locale: 'zh-CN' | 
         },
         { type: 'image_url', image_url: { url: imageDataUrl } },
       ],
-    }],
-  },
+    },
+  ],
+});
+
+const shouldUseVisionFallback = (error: unknown) => (
+  error instanceof ProviderError
+  && (
+    error.reason === 'timeout'
+    || error.statusCode === 429
+    || (typeof error.statusCode === 'number' && error.statusCode >= 500)
+  )
 );
+
+export const requestVisionCandidates = async (imageDataUrl: string, locale: 'zh-CN' | 'en') => {
+  const body = visionRequestBody(imageDataUrl, locale);
+  try {
+    const payload = await fetchJsonResponse(
+      apiConfig.visionBaseUrl,
+      apiConfig.visionApiKey,
+      apiConfig.visionModel,
+      apiConfig.visionTimeoutMs,
+      body,
+    );
+    return { payload, modelName: apiConfig.visionModel };
+  } catch (error) {
+    const fallbackModel = apiConfig.visionFallbackModel;
+    if (!fallbackModel || fallbackModel === apiConfig.visionModel || !shouldUseVisionFallback(error)) throw error;
+    const payload = await fetchJsonResponse(
+      apiConfig.visionBaseUrl,
+      apiConfig.visionApiKey,
+      fallbackModel,
+      apiConfig.visionTimeoutMs,
+      body,
+    );
+    return { payload, modelName: fallbackModel };
+  }
+};
 
 export const requestSymptomObservations = (context: Record<string, unknown>) => fetchJsonResponse(
   apiConfig.aiBaseUrl,
