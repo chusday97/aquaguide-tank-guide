@@ -6,6 +6,14 @@
       "main": false
     }
   },
+  "functions": {
+    "api/**/*.js": {
+      "excludeFiles": "dist/**"
+    },
+    "api/**/*.ts": {
+      "excludeFiles": "dist/**"
+    }
+  },
   "headers": [
     {
       "source": "/responsive/(.*)",
