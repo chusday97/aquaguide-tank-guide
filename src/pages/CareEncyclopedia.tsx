@@ -721,11 +721,12 @@ const getCareImage = (topic: CareTopic, isEn = false) => {
   let url = topic.imageUrl.startsWith('/') ? topic.imageUrl : `/${topic.imageUrl}`;
   if (isEn) {
     if (url.includes('pregnant_fish_breeder_box')) {
-      return '/assets/qa/pregnant_fish_breeder_box.png';
+      url = '/assets/qa/pregnant_fish_breeder_box.png';
+    } else {
+      url = url.replace(/_chinese(?:_realistic_fish)?/g, '');
     }
-    return url.replace(/_chinese(?:_realistic_fish)?/g, '');
   }
-  return url;
+  return getCareVisualSources(url).detail;
 };
 
 const displayTitleMapEn: Record<string, string> = {

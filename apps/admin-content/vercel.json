@@ -8,6 +8,10 @@
   },
   "rewrites": [
     {
+      "source": "/responsive/:path*",
+      "destination": "https://aqua-tank-guide.vercel.app/responsive/:path*"
+    },
+    {
       "source": "/api/admin-content/:path*",
       "destination": "https://aqua-tank-guide.vercel.app/api/admin-content/:path*"
     },

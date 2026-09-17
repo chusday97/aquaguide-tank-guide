@@ -4,7 +4,7 @@ export const appShareConfig = {
   timelineTitle: 'AquaGuide 水族助手：观赏鱼图鉴、鱼缸风险和混养建议',
   description: '查询观赏鱼、水草、虾螺龟资料，记录鱼缸状态，并获得混养风险提醒。',
   path: '/aquarium',
-  imageUrl: '/species-display/sp_0019_埃及神仙_display_white.png?v=share_20260512',
+  imageUrl: '/responsive/species/sp_0019-768.webp',
 };
 
 export const getAbsoluteShareUrl = (path = appShareConfig.path) => {

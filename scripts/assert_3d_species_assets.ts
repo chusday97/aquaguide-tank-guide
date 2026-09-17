@@ -15,7 +15,7 @@ const visibilityOverride = fishData.find(item => item.id === 'sp_0001');
 const displayOverride = fishData.find(item => item.id === 'sp_0019');
 assert.ok(visibilityOverride, 'visibility override fixture must exist');
 assert.ok(displayOverride, 'display override fixture must exist');
-assert.match(getSpeciesDisplayImage(visibilityOverride), /species-image-overrides\/sp_0001\.png\?v=/);
-assert.match(getSpeciesDisplayImage(displayOverride), /species-display\/sp_0019_.*\?v=/);
+assert.equal(getSpeciesDisplayImage(visibilityOverride), '/responsive/species/sp_0001-768.webp');
+assert.equal(getSpeciesDisplayImage(displayOverride), '/responsive/species/sp_0019-768.webp');
 
 console.log('3D species asset assertions passed');

@@ -3800,7 +3800,7 @@ export default function AquariumManager() {
       value: item.id,
       label: item.name,
       hint: item.scientificName,
-      image: item.image,
+      image: getSpeciesDisplayImage(item),
     })),
   ];
   const selectedScapeCount = (currentSubstrate !== '无' ? 1 : 0) + selectedHardscapeCount;

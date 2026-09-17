@@ -243,7 +243,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
 
   const openCarePreview = (topic: CareTopic) => {
     if (!topic.imageUrl) return;
-    setPreviewImages([{ src: topic.imageUrl, title: topic.title }]);
+    setPreviewImages([{ src: getCareVisualSources(topic.imageUrl).detail, title: topic.title }]);
     setPreviewOpen(true);
   };
 

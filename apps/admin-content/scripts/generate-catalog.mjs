@@ -35,7 +35,7 @@ const catalog = fishData.map((item) => ({
   scientific_name: item.scientificName,
   category: item.category,
   status: 'catalog',
-  image: item.image,
+  image: `/responsive/species/${item.id}-768.webp`,
   difficulty: item.difficulty || '',
   water_temperature: item.waterTemperature || '',
   ph_level: item.phLevel || '',

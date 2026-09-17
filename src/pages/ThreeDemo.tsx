@@ -114,7 +114,7 @@ function ThreeDCardFish({ imageUrl }: { imageUrl: string }) {
 export function ThreeDemo() {
   // We showcase the Crowntail Betta (sp_0260) or Congo Tetra (sp_0020)
   const testSpeciesId = "sp_0260";
-  const imgUrl = `/species-image-overrides/${testSpeciesId}.png`;
+  const imgUrl = `/responsive/species/${testSpeciesId}-768.webp`;
 
   return (
     <div className="min-h-screen w-full bg-slate-950 flex flex-col items-center justify-center p-8 text-white">
