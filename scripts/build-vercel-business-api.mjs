@@ -5,8 +5,10 @@ import { build } from 'esbuild';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const outfile = path.join(root, 'api/v1/_business-app.bundle.mjs');
+const legacyOutfile = path.join(root, 'api/v1/business-app.bundle.mjs');
 
 await mkdir(path.dirname(outfile), { recursive: true });
+await rm(legacyOutfile, { force: true });
 await rm(outfile, { force: true });
 await build({
   entryPoints: [path.join(root, 'apps/api/src/business-app.ts')],
