@@ -1,4 +1,4 @@
-import { createBusinessApiApp } from './business-app.bundle.mjs';
+import { createBusinessApiApp } from './_business-app.bundle.mjs';
 
 export const config = {
   maxDuration: 30,
