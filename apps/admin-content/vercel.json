@@ -1,0 +1,25 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "git": {
+    "deploymentEnabled": {
+      "*": false,
+      "main": false
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/admin-content/:path*",
+      "destination": "https://aqua-tank-guide.vercel.app/api/admin-content/:path*"
+    },
+    {
+      "source": "/api/translate",
+      "destination": "https://aqua-tank-guide.vercel.app/api/translate"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist"
+}
