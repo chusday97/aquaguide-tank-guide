@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 
+- Changed: Runtime Closure contracts now follow the accepted current Aquarium and Identification UI semantics without visual refactoring; browser smoke coverage confirms planning-versus-real-stocking separation, identification-to-triage separation, and safe no-secret fallback.
 - Added: Knowledge Completion Phase 2 Batch 49 direct reviewed-unknown environment record for the final remaining gap object, with an existing professional source registration, matrix/backlog integration, and a regression contract; no launch pair or Compatibility authority changed.
 - Added: Knowledge Completion Phase 2 Batch 48 direct reviewed-unknown environment records for nine remaining gap objects, with existing FishBase source registrations, matrix/backlog integration, and a regression contract; no launch pair or Compatibility authority changed.
 - Added: Knowledge Completion Phase 2 Batch 47 direct reviewed-unknown records for eight remaining gap fish objects, with FishBase source registrations, matrix/backlog integration, a regression contract, and preservation of existing Species Detail runtime profiles; no launch pair or Compatibility authority changed.

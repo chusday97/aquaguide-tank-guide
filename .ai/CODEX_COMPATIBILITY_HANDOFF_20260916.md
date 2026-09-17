@@ -505,3 +505,13 @@ Do not weaken tests to make the matrix greener. If reviewed evidence changes a f
 
 ## VISIBLE_CODEX_CHAT_NEXT_PROMPT
 Continue AquaGuide Knowledge Completion Program from the local Batch 6 checkpoint in `/Users/chuchu/aquaguide-compat-core` on branch `agent/compatibility-core-20260916`. Use the latest research backlog for the next 10–15 uncompleted catalog objects, use source-first evidence, preserve strict variant boundaries, regenerate the matrix/backlog, run the full required gates, create one local commit per passing batch excluding the protected CSV, and update this handoff. Never push, merge, deploy, migrate production, or weaken evidence standards.
+
+## Runtime Closure — 2026-09-17
+- Knowledge Completion is frozen at 486 catalog objects with zero `needs_research`, zero `template_only`, and zero rows with gap fields. Do not start another research batch; `reviewed_unknown` remains a valid final state.
+- Aquarium factual-flow behavior passes with an isolated AquaGuide preview: empty-tank creation preserves unknown facts, planning does not write livestock, wishlist remains livestock-free, explicit real-stock recording persists, and the legacy `add-species` route maps to planning.
+- Addition intent contract now matches the accepted “已经实际入缸，记录下来” semantics; planned addition, compatibility preview, wishlist, and real stocking remain distinct.
+- Identification UI contracts now match the accepted current copy: `拍照识别`, `已确认物种`, `发现异常？检查健康状态`, `健康状态检查`, `查看当前判断`, `查看依据与建议`, and `健康判断暂仅支持鱼类`. Mobile fallback, urgent triage, English desktop, and encyclopedia entry pass against the isolated local preview.
+- Diagnosis contract passes 14 scenarios. AI remains extraction-only; deterministic rules own urgency, red flags, questions, hypotheses, safe actions, and prohibited actions.
+- Compatibility remains frozen and verified: `435 unordered pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`, deterministic and symmetric. No pair rule or launch cohort changed.
+- `apps/api/src/config.ts` retains GLM defaults (`https://open.bigmodel.cn/api/paas/v4`, `glm-4.6v-flash`); the Vision adapter has no `response_format` override and schema/failure fallback contracts pass through the local no-secret browser flow. No real secret was read or printed.
+- Known environment limitations: direct `tsx` scripts fail with the pre-existing IPC pipe `EPERM`; equivalent `node --import tsx` runs pass. `npm run build:web` remains blocked by the pre-existing Vite `.vite-temp` `EPERM`. The protected audit CSV remains untouched and at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
