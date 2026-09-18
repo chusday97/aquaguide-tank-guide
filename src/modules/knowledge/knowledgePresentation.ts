@@ -1,18 +1,14 @@
 import type { Fish } from '../../types';
 import type { CompatibilityDecision, DiagnosisResultNode, SpeciesKnowledgeProfile } from './knowledge.types';
 import { getSpeciesKnowledgeTags } from './speciesKnowledge';
+import { getCompatibilityPresentation } from '../../services/compatibility/compatibility-presentation.service';
 
 export const buildCompatibilityPresentation = (decision: CompatibilityDecision) => {
+  const presentation = getCompatibilityPresentation(decision);
   const primaryPair = decision.primaryConflict;
   const primaryReason = primaryPair?.primaryReason;
   return {
-    title: decision.status === 'not_recommended'
-      ? '不建议加入'
-      : decision.status === 'caution'
-        ? '谨慎尝试'
-        : decision.status === 'insufficient_data'
-          ? '信息不足'
-          : '当前适合',
+    title: presentation.headline,
     summary: decision.summary,
     primaryPairLabel: primaryPair ? `${primaryPair.speciesA.name} × ${primaryPair.speciesB.name}` : '',
     primaryReason: primaryReason?.evidence || '',
@@ -29,8 +25,9 @@ export const buildCompatibilityPresentation = (decision: CompatibilityDecision) 
       passed: decision.passedRules,
       warnings: decision.warningRules,
       blocked: decision.blockingRules,
-      missing: decision.missingData,
+      missing: [],
     },
+    presentation,
   };
 };
 

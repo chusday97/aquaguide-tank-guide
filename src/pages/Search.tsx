@@ -132,7 +132,7 @@ export default function SearchPage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-5xl px-1 py-2 md:px-8 md:py-8">
+    <div className="workspace--content mx-auto w-full max-w-5xl px-1 py-2 md:px-8 md:py-8">
       <header>
         <h1 className="text-2xl font-black text-ink md:text-3xl">{t('searchPage.title')}</h1>
       </header>

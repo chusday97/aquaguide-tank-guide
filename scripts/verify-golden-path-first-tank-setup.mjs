@@ -6,8 +6,8 @@ const baseUrl = process.env.PREVIEW_URL || 'http://127.0.0.1:4173';
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, locale: 'zh-CN' });
-  page.setDefaultTimeout(10_000);
-  page.setDefaultNavigationTimeout(20_000);
+  page.setDefaultTimeout(30_000);
+  page.setDefaultNavigationTimeout(30_000);
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
 

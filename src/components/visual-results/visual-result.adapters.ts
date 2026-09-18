@@ -4,6 +4,8 @@ import type { CompatibilityDecision, CompatibilityRiskType, PairCompatibilityRes
 import { getSpeciesDisplayImage } from '../../lib/speciesVisual';
 import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
 import type { VisualResultStatus, VisualResultSubject, VisualResultViewModel } from './visual-result.types';
+import { getCompatibilityPresentation } from '../../services/compatibility/compatibility-presentation.service';
+import { buildBeginnerCompatibilityAction } from '../../services/compatibility/compatibility-action.service';
 
 const riskTypeLabels: Record<CompatibilityRiskType, string> = {
   water_type: '水体冲突',
@@ -20,10 +22,10 @@ const riskTypeLabels: Record<CompatibilityRiskType, string> = {
 };
 
 const compatibilityStatusLabels: Record<TankCompatibilityStatus, string> = {
-  compatible: '暂未发现冲突',
-  caution: '需要观察',
-  not_recommended: '存在阻断风险',
-  insufficient_data: '资料不足',
+  compatible: '可以混养',
+  caution: '可以，但有条件',
+  not_recommended: '不建议混养',
+  insufficient_data: '还不能判断',
 };
 
 const riskKeywords: Array<{ pattern: RegExp; label: string }> = [
@@ -71,6 +73,8 @@ export function buildCompatibilityVisualResult({
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
   focusSpeciesId?: string;
 }): VisualResultViewModel {
+  const presentation = getCompatibilityPresentation(decision);
+  const beginnerAction = buildBeginnerCompatibilityAction(decision);
   const primaryPair = decision.primaryConflict || decision.pairResults[0];
   const focus = species.find(item => item.id === focusSpeciesId)
     || primaryPair?.speciesB
@@ -103,24 +107,23 @@ export function buildCompatibilityVisualResult({
 
   const riskRules = [...decision.blockingRules, ...decision.warningRules];
   const detailSections = [
-    { id: 'risks', title: '风险与阻断', items: riskRules.map(rule => rule.evidence || rule.title) },
-    { id: 'missing', title: '缺失信息', items: decision.missingData.map(rule => rule.evidence || rule.title) },
-    { id: 'passed', title: '已通过规则', items: decision.passedRules.map(rule => rule.title) },
+    { id: 'risks', title: '为什么这样判断', items: riskRules.map(rule => rule.evidence || rule.title) },
+    { id: 'scope', title: '本次核对范围', items: presentation.coverageLabel ? [presentation.coverageLabel] : [] },
+    { id: 'passed', title: '已确认没问题', items: decision.passedRules.map(rule => rule.title) },
   ].filter(section => section.items.length > 0);
 
   return {
     status: decision.status,
-    title: '混养判断',
-    conclusion: focusReason || decision.summary,
-    emphasis: getVisualEmphasis(focusReason || decision.summary),
+    presentationMode: presentation.mode,
+    statusLabel: compatibilityStatusLabels[decision.status],
+    coverageLabel: presentation.coverageLabel,
+    title: beginnerAction.headline,
+    conclusion: beginnerAction.primaryReason,
+    emphasis: getVisualEmphasis(beginnerAction.primaryReason),
     subjects,
-    currentAction: decision.suggestions[0] || (
-      decision.status === 'not_recommended' ? '先移除阻断对象，再重新计算组合。'
-        : decision.status === 'insufficient_data' ? '先补充鱼缸信息，再决定是否加入。'
-          : decision.status === 'caution' ? '少量加入，并持续观察追咬和进食。'
-            : '可以少量加入，入缸后继续观察。'
-    ),
-    primaryAction: { label: primaryActionLabel, actionType: primaryActionType },
+    currentAction: beginnerAction.immediateAction,
+    actionItems: beginnerAction.observeAfterAction ? [beginnerAction.observeAfterAction] : undefined,
+    primaryAction: { label: presentation.primaryAction === 'save_to_wishlist' ? '加入种草清单' : primaryActionLabel, actionType: primaryActionType },
     detailSections,
   };
 }

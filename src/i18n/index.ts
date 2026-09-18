@@ -1,7 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { applyLocalization } from './localizeData';
-import { hydratePublishedContentCatalog } from '../data/runtimeContentCatalog';
 
 export const supportedLocales = ['zh-CN', 'en'] as const;
 export type SupportedLocale = (typeof supportedLocales)[number];
@@ -531,6 +530,7 @@ const resources = {
         addSpeciesBtn: '添加到我的鱼缸',
         viewRiskAndAdd: '查看风险后确认添加',
         viewRiskAndAlternatives: '查看风险与替代建议',
+        viewTankRisk: '查看当前鱼缸风险',
         completeAndAdd: '完善后再确认添加',
         addedSuccess: '成功添加 {{name}} 到鱼缸',
         selectTankFirst: '请先在“我的鱼缸”页面创建一个鱼缸。',
@@ -1430,6 +1430,7 @@ const resources = {
         addSpeciesBtn: 'Add to My Aquarium',
         viewRiskAndAdd: 'Check Risks & Confirm Add',
         viewRiskAndAlternatives: 'View Risks & Alternatives',
+        viewTankRisk: 'View current tank risks',
         completeAndAdd: 'Complete Parameters & Confirm Add',
         addedSuccess: 'Successfully added {{name}} to tank',
         selectTankFirst: 'Please create a tank on the \'My Aquarium\' page first.',
@@ -1831,23 +1832,18 @@ void i18n.use(initReactI18next).init({
 // Run initial localization of global datasets
 applyLocalization(initialLocale);
 
-const applyLocale = async (locale: SupportedLocale, persist: boolean) => {
-  await hydratePublishedContentCatalog(locale);
-  applyLocalization(locale);
+export const setLocale = async (locale: SupportedLocale) => {
   await i18n.changeLanguage(locale);
   if (typeof document !== 'undefined') {
     document.documentElement.lang = locale;
   }
-  if (!persist) return;
+  applyLocalization(locale);
   try {
     window.localStorage.setItem(STORAGE_KEY, locale);
   } catch {
     // Language still changes for the current session when storage is unavailable.
   }
 };
-
-export const setLocale = async (locale: SupportedLocale) => applyLocale(locale, true);
-export const setRouteLocale = async (locale: SupportedLocale) => applyLocale(locale, false);
 
 if (typeof document !== 'undefined') {
   document.documentElement.lang = i18n.language === 'zh-CN' ? 'zh-CN' : 'en';

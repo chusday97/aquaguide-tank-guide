@@ -6,7 +6,6 @@ import { getCareVisualSources } from '../../lib/careVisual';
 import { getSpeciesVisualSources } from '../../lib/speciesVisual';
 import { getSpeciesFilterTags } from '../../modules/species/species.service';
 import type { Fish } from '../../types';
-import { isRuntimeCarePublished, isRuntimeSpeciesPublished } from '../../data/runtimeContentCatalog';
 
 export type SearchSuggestionKind = 'species' | 'care' | 'related_query' | 'filter';
 export type SearchSuggestionMatch = 'exact' | 'prefix' | 'alias' | 'scientific' | 'keyword' | 'related';
@@ -58,14 +57,14 @@ const getAliases = (fish: FishWithAliases) => {
 };
 
 const getLocalizedSpeciesName = (fish: Fish, locale: 'zh-CN' | 'en') => {
-  if (isRuntimeSpeciesPublished(fish.id) || locale === 'zh-CN') return fish.name;
+  if (locale === 'zh-CN') return fish.name;
   const translatedName = englishTranslations[fish.id]?.name || autoTranslations[fish.id]?.name;
   if (translatedName && normalize(translatedName) !== normalize(fish.scientificName)) return translatedName;
   return fish.name;
 };
 
 const getLocalizedCategory = (fish: FishWithAliases, locale: 'zh-CN' | 'en') => {
-  if (isRuntimeSpeciesPublished(fish.id) || locale === 'zh-CN') return fish.category;
+  if (locale === 'zh-CN') return fish.category;
   return categoryTranslations[fish.category]
     || categoryTranslations[fish._originalCategory || '']
     || fish.category;
@@ -204,13 +203,12 @@ const buildCareSuggestions = (input: SearchSuggestionInput, normalizedQuery: str
 
   return candidates.slice(0, 5).map(({ topic, rank }) => {
     const translation = careTranslations[topic.id];
-    const published = isRuntimeCarePublished(topic.id);
-    const label = !published && input.locale === 'en' && translation?.title ? translation.title : topic.title;
+    const label = input.locale === 'en' && translation?.title ? translation.title : topic.title;
     return {
       id: `care:${topic.id}`,
       kind: 'care' as const,
       label,
-      category: !published && input.locale === 'en' && translation?.category ? translation.category : topic.category,
+      category: input.locale === 'en' && translation?.category ? translation.category : topic.category,
       image: getCareVisualSources(topic.imageUrl).thumbnail,
       query: label,
       matchedBy: rank <= 1 ? 'prefix' as const : 'keyword' as const,

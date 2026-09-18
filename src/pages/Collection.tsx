@@ -396,7 +396,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         onOpenChange={(open) => { if (!open) { setSelectedFish(null); clearDeepLinkItem(); restoreCard(); } }}
         onSelectSpecies={setSelectedFish}
         onAddToTank={(fish) => navigate(taskRoutes.aquarium.addSpecies(fish.id))}
-        onAddToCalculator={(fish) => { setCompatibilitySelection([fish.id]); navigate(taskRoutes.encyclopedia.compatibility); }}
+        onAddToCalculator={(fish) => { setCompatibilitySelection([fish.id]); navigate(taskRoutes.compatibility.with({ speciesIds: [fish.id], source: 'collection' })); }}
         onToggleWishlist={(fishId) => {
           const fish = fishData.find(item => item.id === fishId);
           if (fish) setPendingFishRemoval(fish);
@@ -404,7 +404,7 @@ export default function Collection({ module }: { module: CollectionModule }) {
         onGoCalculator={() => {
           if (!selectedFish) return;
           setCompatibilitySelection([selectedFish.id]);
-          navigate(taskRoutes.encyclopedia.compatibility);
+          navigate(taskRoutes.compatibility.with({ speciesIds: [selectedFish.id], source: 'collection' }));
         }}
         onViewInTank={() => navigate(taskRoutes.aquarium.livestock)}
         onOpenTankSettings={(panel) => navigate(currentAquarium ? taskRoutes.aquarium.settings(panel) : taskRoutes.aquarium.create())}

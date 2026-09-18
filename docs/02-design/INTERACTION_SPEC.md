@@ -48,12 +48,19 @@
 | 每日检查 | `/aquarium?action=daily-check` | 打开单页巡检 |
 | 缸内物种 | `/aquarium?action=livestock` | 打开唯一缸内物种详情 |
 | 记录换水 | `/aquarium?action=water-change` | 打开换水日期记录 |
-| 完整混养 | `/encyclopedia?mode=compatibility` | 进入完整混养计算 |
+| 完整混养 | `/compatibility` | 进入独立完整混养计算；保留当前物种和来源上下文 |
 | 鱼缸设置 | `/aquarium#settings-size|parameters|equipment` | 打开并定位对应设置组 |
 
 未知地址必须显示可恢复页面，提供“返回我的鱼缸 / 搜索内容”，不能只保留应用壳和空白正文。
 
 异步写操作必须立即禁用并显示进行中状态；成功显示 2–3 秒反馈，失败显示可关闭错误并保留用户输入。搜索结果和列表初始加载使用结构匹配的骨架；空列表提供解释和一个有效下一步。
+
+### 3.1 物种风险与完整混养动作边界
+
+- “查看当前鱼缸风险”是物种详情内的原位展开，URL保持不变，只显示当前判断、主要原因和建议动作。
+- “打开混养计算器 / 加入混养比较”才进入 `/compatibility`，并通过 `species`、`source` 和必要的鱼缸参数保留上下文。
+- 旧 `/encyclopedia?mode=compatibility` 仅作为兼容地址，进入后重定向到 `/compatibility`；新页面不得再把风险摘要和完整计算器混成一个表面。
+- 可见动作登记在 `src/services/navigation/ui-action-contracts.ts`，浏览器测试必须同时验证按钮结果和目标地址。
 
 ### 搜索联想与筛选
 

@@ -187,12 +187,18 @@ export const evaluateSpeciesForAquarium = (
   }
 
   const speciesWaterType = getSpeciesWaterType(species);
-  const aquariumWaterType = aquarium.waterType === 'Saltwater' ? 'saltwater' : 'freshwater';
+  const aquariumWaterType: SpeciesWaterType = aquarium.waterType === 'Saltwater'
+    ? 'saltwater'
+    : aquarium.waterType === 'Freshwater'
+      ? 'freshwater'
+      : 'unknown';
   const specialTankType = isSpecialTankSpecies(species);
   const lifeType = getLifeType(species);
   const missingCoreSpeciesData = !species.category || !species.waterTemperature || !species.tankSize;
 
-  if (speciesWaterType === 'unknown') {
+  if (aquariumWaterType === 'unknown') {
+    confirmations.push({ type: 'missing_water_type', title: '需要确认水体类型', detail: '当前鱼缸尚未记录淡水或海水类型，不能据此判断物种是否适配。', severity: 'medium' });
+  } else if (speciesWaterType === 'unknown') {
     confirmations.push({ type: 'unknown_water_type', title: '物种水体资料不足', detail: '该物种缺少可靠水体类型，不应默认判断为适合。' });
   } else if (aquariumWaterType === 'freshwater' && speciesWaterType !== 'freshwater') {
     hardBlocks.push({ type: 'water_type_mismatch', title: '水体类型不匹配', detail: '当前是淡水鱼缸，不能推荐海水、汽水、珊瑚、水母或海葵等特殊水体生物。', severity: 'high' });
@@ -205,7 +211,7 @@ export const evaluateSpeciesForAquarium = (
 
   if (specialTankType === 'jellyfish') {
     hardBlocks.push({ type: 'special_tank_required', title: '需要水母专用缸', detail: '水母需要圆形缸体和柔和循环水流，普通鱼缸不应推荐。', severity: 'high' });
-  } else if ((specialTankType === 'coral' || specialTankType === 'anemone') && aquariumWaterType !== 'saltwater') {
+  } else if ((specialTankType === 'coral' || specialTankType === 'anemone') && aquariumWaterType !== 'saltwater' && aquariumWaterType !== 'unknown') {
     hardBlocks.push({ type: 'special_tank_required', title: '需要海水特殊缸体', detail: '珊瑚和海葵需要稳定盐度、光照和水流条件。', severity: 'high' });
   } else if ((specialTankType === 'coral' || specialTankType === 'anemone') && aquarium.equipment?.light !== '海水灯') {
     warnings.push({ type: 'special_light_required', title: '需要确认海水灯光', detail: '珊瑚或海葵通常需要海水灯和稳定水流，当前设备未完整确认。', severity: 'medium' });

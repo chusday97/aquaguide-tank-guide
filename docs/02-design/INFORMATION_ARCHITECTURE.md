@@ -8,6 +8,7 @@
 flowchart TD
   A["AquaGuide"] --> B["我的鱼缸 /aquarium"]
   A --> C["图鉴 /encyclopedia"]
+  A --> C2["完整混养 /compatibility"]
   A --> D["养护百科 /care"]
   A --> E["我的水族册 /collection"]
   E --> E1["种草图鉴 /collection/wishlist"]
@@ -42,6 +43,7 @@ flowchart TD
 | `/identify` | 拍照候选、确认物种和状态判断 | 视觉候选、鱼缸上下文、规则 | 辅助任务 |
 | `/settings` | 语言选择与重新查看新手引导 | 本地/用户偏好 | 辅助任务 |
 | `/encyclopedia` | 查物种、种草、Mini 混养 | 物种库、收藏、混养规则 | 正式 |
+| `/compatibility` | 独立完整混养计算 | 当前鱼缸、已选物种、Domain 兼容性结果 | 正式 |
 | `/care` | 搜索养护知识、问题补救与收藏 | 养护文章、当前鱼缸 | 正式 |
 | `/collection` | 水族册模块首页 | 四类数量与用途 | 正式 |
 | `/collection/wishlist` | 种草图鉴 | 现有种草收藏 | 正式 |

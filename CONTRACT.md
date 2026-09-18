@@ -1,6 +1,6 @@
 # AquaGuide 三层数据契约
 
-> 版本：2.6.0
+> 版本：2.7.0
 > 状态：已确认，实施中
 > 生效日期：2026-08-09
 > SQL 来源：`supabase/migrations/202607160001_core_schema.sql` 至 `supabase/migrations/202608090002_atomic_care_reminder_completion.sql`
@@ -103,6 +103,15 @@ interface SyncFields {
 
 物种包含 UUID、`catalogKey`、中英文名、分类、难度、温度/pH 文本与可计算范围、换水周期、描述、食性、缸体要求、性情、体型、混养说明、检索词和发布状态。
 
+统一主数据补充以下契约：
+
+- `species.water_type` 只能是 `freshwater | saltwater | brackish | unknown`，不得从名称、描述或分类文字推断。
+- `species_reference_links` 将身份、环境和养护字段分别绑定到证据来源及审核状态；缺失或未审核字段保持 `null/unknown`。
+- `catalog_releases` 保存不可变 Catalog 版本、Schema 版本、SHA-256、对象数量、Storage 路径和发布时间。
+- 前端内置与云端相同版本的 Snapshot；云端下载只有在 Schema、校验和与引用完整性均通过后才能原子替换，失败继续使用本地版本。
+
+Catalog 的公共类型定义位于 `packages/contracts/src/catalog.ts`，数据库映射类型位于 `src/types/database.ts`。
+
 发布状态：
 
 ```ts
@@ -197,6 +206,8 @@ interface CareActionEvidence {
 - `aquarium_components`：底砂、水草和硬景。
 
 同一鱼缸内同一 `speciesCatalogKey` 只能保留一条有效记录，追加数量通过更新完成。
+
+新增生物命令必须携带 `intent`（`record_existing | planned_addition`）。规划加入还必须携带同一 `catalogVersion` 的 `compatibilityConfirmation`；`not_recommended` 返回 `COMPATIBILITY_BLOCKED`，`insufficient_data` 返回 `COMPATIBILITY_INFORMATION_REQUIRED`。现实中已存在的生物只记录事实，不因混养结论阻止保存。
 
 鱼缸创建时只保存名称、真实建缸日期和来源。尺寸、水体、目标温度、设备、底砂与换水日期在用户未提供时必须保持空值；UI 示例值不得进入持久化对象。`aquarium_species.last_water_change_at` 继续允许为空，入缸日期不得作为换水日期回填。
 
@@ -379,6 +390,7 @@ type ApiErrorCode =
 |---|---|---|---|---|
 | GET | `/species` | `locale cursor? limit? category? query?` | `Page<SpeciesSummary>` | 400/503 |
 | GET | `/species/:catalogKey` | `locale` | `SpeciesWithRelations` | 404/503 |
+| GET | `/catalog/releases/current` | 无 | `CatalogManifest` | 404/503 |
 | GET | `/care-articles` | `locale cursor? limit? category? urgency? query?` | `Page<CareArticleSummary>` | 400/503 |
 | GET | `/care-articles/:catalogKey` | `locale` | `CareArticleWithRelations` | 404/503 |
 

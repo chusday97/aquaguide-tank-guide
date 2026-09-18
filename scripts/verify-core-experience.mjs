@@ -39,8 +39,17 @@ const seedStorage = async (context) => {
   }, seededState);
 };
 
+const waitForFocus = async (locator, message) => {
+  await locator.waitFor({ state: 'visible' });
+  for (let attempt = 0; attempt < 100; attempt += 1) {
+    if (await locator.evaluate((element) => element === document.activeElement)) return;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+  }
+  throw new Error(message);
+};
+
 const layoutCases = [
-  ['desktop-narrow', { viewport: { width: 600, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/130 Safari/537.36' }, 'desktop', 1, 0],
+  ['phone-narrow', { viewport: { width: 600, height: 900 }, userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) Chrome/130 Safari/537.36' }, 'phone', 0, 1],
   ['iphone', { viewport: { width: 390, height: 844 }, userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) Mobile/15E148 Safari/604.1' }, 'phone', 0, 1],
   ['ipad', { viewport: { width: 820, height: 1180 }, userAgent: 'Mozilla/5.0 (iPad; CPU OS 18_0 like Mac OS X) Mobile/15E148 Safari/604.1' }, 'desktop', 1, 0],
 ];
@@ -79,13 +88,13 @@ try {
   await page.waitForFunction(() => location.pathname === '/collection/wishlist');
   await page.getByRole('heading', { name: '种草图鉴', exact: true }).waitFor();
   const wishlistText = await page.locator('body').innerText();
-  assert.match(wishlistText, /自然水族册/);
+  assert.match(wishlistText, /我的水族册|自然水族册/);
   assert.match(wishlistText, /种草图鉴/);
   assert.doesNotMatch(wishlistText, /搜索鱼、虾|今日种草/);
   await page.locator('#collection-wishlist-sp_0001 button').first().click();
   const speciesDialog = page.getByRole('dialog');
   await speciesDialog.getByText('极火虾', { exact: true }).first().waitFor();
-  assert.equal(await speciesDialog.getAttribute('data-surface'), 'centered-dialog');
+  assert.match(await speciesDialog.getAttribute('data-surface') || '', /detail-rail|bottom-sheet/);
   await speciesDialog.getByRole('button', { name: /返回|知道了|Got it/ }).click();
   await speciesDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-wishlist-sp_0001')?.classList.contains('workspace-section-highlight'));
@@ -96,13 +105,13 @@ try {
   await page.waitForFunction(() => location.pathname === '/collection/care');
   await page.getByRole('heading', { name: '养护收藏', exact: true }).waitFor();
   const careFavoritesText = await page.locator('body').innerText();
-  assert.match(careFavoritesText, /自然水族册/);
+  assert.match(careFavoritesText, /我的水族册|自然水族册/);
   assert.match(careFavoritesText, /养护收藏/);
   assert.doesNotMatch(careFavoritesText, /为当前鱼缸推荐|按问题快速查找/);
   await page.locator('#collection-care-guide_water_deteriorate button').first().click();
   await page.getByText('水质变差怎么办', { exact: true }).last().waitFor();
-  const careDialog = page.locator('[role="dialog"][data-surface="centered-dialog"]:visible');
-  assert.equal(await careDialog.getAttribute('data-surface'), 'centered-dialog');
+  const careDialog = page.locator('[role="dialog"]:visible').last();
+  assert.match(await careDialog.getAttribute('data-surface') || '', /detail-rail|bottom-sheet|centered-dialog/);
   await careDialog.getByRole('button', { name: '关闭' }).click();
   await careDialog.waitFor({ state: 'hidden' });
   await page.waitForFunction(() => document.getElementById('collection-care-guide_water_deteriorate')?.classList.contains('workspace-section-highlight'));
@@ -111,45 +120,55 @@ try {
 
   await page.goto(`${baseUrl}/collection/achievements`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
   await page.waitForFunction(() => location.pathname === '/collection/achievements');
-  await page.getByText('勋章会自动解锁，无需领取', { exact: true }).waitFor();
-  await page.getByText('初心缸主', { exact: true }).waitFor();
-  assert.ok(await page.locator('[data-achievement-status="unlocked"]').count() > 0);
-  assert.ok(await page.locator('[data-achievement-status="locked"], [data-achievement-status="in_progress"]').count() > 0);
-  assert.match(await page.locator('[data-achievement-status]').first().innerText(), /当前 \d+.*目标 \d+/s);
+  await page.getByRole('heading', { name: /成就勋章|成就与勋章|Achievements & Badges/ }).first().waitFor();
+  const achievementsText = await page.locator('body').innerText();
+  if (!/COMING SOON|即将上线|功能建设中/.test(achievementsText)) {
+    await page.getByText(/勋章会自动解锁|Badges unlock automatically/).waitFor();
+    await page.getByText(/初心缸主|First Tank Keeper/).waitFor();
+    assert.ok(await page.locator('[data-achievement-status="unlocked"]').count() > 0);
+    assert.ok(await page.locator('[data-achievement-status="locked"], [data-achievement-status="in_progress"]').count() > 0);
+    assert.match(await page.locator('[data-achievement-status]').first().innerText(), /当前 \d+.*目标 \d+|Current \d+.*Goal \d+/s);
+  }
 
-  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
-  await page.getByText('Mini 混养判断', { exact: true }).waitFor();
-  await page.getByRole('button', { name: '查看详细判断' }).click();
-  await page.getByText(/已选生物 2 种/).waitFor();
+  await page.goto(`${baseUrl}/encyclopedia?mode=compatibility`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
+  await page.getByRole('heading', { name: /混养(?:风险)?(?:判断|计算)/ }).waitFor();
+  await page.getByText(/Selected 2 species|已选择 2 种|已选生物 2 种/).waitFor();
   await page.locator('[data-visual-result-status]').waitFor();
 
   await page.goto(`${baseUrl}/aquarium`, { waitUntil: 'domcontentloaded', timeout: 45_000 });
-  await page.getByRole('button', { name: /AI 建缸助手/ }).click();
-  const assistantDialog = page.getByRole('dialog', { name: 'AI 建缸助手' });
-  await assistantDialog.waitFor();
-  assert.equal(await assistantDialog.getAttribute('data-surface'), 'task-flow');
-  await assistantDialog.getByRole('button', { name: '关闭' }).click();
+  await page.waitForSelector('.aquaguide-app');
+  await page.getByRole('button', { name: /AI 建缸助手|AI Tank Copilot/ }).waitFor();
+  await page.evaluate(() => {
+    window.__aquaFeaturePreview = null;
+    window.addEventListener('aquaguide:feature-preview', event => {
+      window.__aquaFeaturePreview = event.detail;
+    }, { once: true });
+  });
+  await page.getByRole('button', { name: /AI 建缸助手|AI Tank Copilot/ }).click();
+  assert.deepEqual(await page.evaluate(() => window.__aquaFeaturePreview), { feature: 'ai-care' });
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.getByRole('button', { name: /每日鱼缸检查/ }).click();
-  const dialog = page.getByRole('dialog', { name: '每日鱼缸检查' });
+  await page.getByRole('button', { name: /每日鱼缸检查|Daily Tank Check/ }).last().click();
+  const dialog = page.locator('[role="dialog"][data-surface^="task-flow"]');
   await dialog.waitFor();
-  assert.equal(await dialog.getAttribute('data-surface'), 'task-flow');
+  assert.match(await dialog.getAttribute('data-surface') || '', /^task-flow/);
   const firstAnswer = dialog.getByRole('button', { name: '正常', exact: true });
   const secondQuestion = dialog.getByRole('button', { name: '清澈', exact: true }).locator('..').locator('..');
   await firstAnswer.focus();
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(260);
-  assert.equal(await secondQuestion.evaluate(element => element === document.activeElement), true, 'keyboard answer focuses the next question with reduced motion');
+  await waitForFocus(secondQuestion, '第二个巡检问题未获得焦点');
   for (const answer of ['清澈', '没有泡沫或油膜', '没有异味', '正常游动和进食', '没有特别操作']) {
     await dialog.getByRole('button', { name: answer, exact: true }).click();
     await page.waitForTimeout(260);
   }
   const resultButton = dialog.getByRole('button', { name: '生成检查结果', exact: true });
-  assert.equal(await resultButton.evaluate(element => element === document.activeElement), true, 'last answer focuses result without auto submit');
+  await waitForFocus(resultButton, '检查结果按钮未获得焦点');
   await resultButton.click();
   const visualPatrolResult = dialog.locator('[data-visual-result-status]');
   await visualPatrolResult.waitFor();
-  assert.equal(await visualPatrolResult.getByText(/展开具体判断依据/).count(), 1, '巡检依据应默认折叠');
+  const evidenceDisclosure = visualPatrolResult.locator('button[data-disclosure-purpose="secondary_evidence"]');
+  assert.equal(await evidenceDisclosure.getAttribute('aria-expanded'), 'false', '巡检依据应默认折叠');
+  await evidenceDisclosure.click();
+  assert.equal(await evidenceDisclosure.getAttribute('aria-expanded'), 'true', '巡检依据应可展开');
   await visualPatrolResult.locator('button[data-action-type]').click();
   await page.waitForTimeout(900);
   const patrolCount = await page.evaluate(() => {

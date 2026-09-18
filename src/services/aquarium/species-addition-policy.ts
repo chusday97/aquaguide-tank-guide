@@ -1,5 +1,5 @@
 import type { SpeciesAdditionIntent, SpeciesAdditionPolicy } from '../../types';
-import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
+import type { TankCompatibilityStatus } from '../compatibility/compatibility.service';
 
 const recordPolicy: Record<TankCompatibilityStatus, SpeciesAdditionPolicy> = {
   compatible: 'save',

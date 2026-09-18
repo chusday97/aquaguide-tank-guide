@@ -76,10 +76,4 @@ export const authService = {
       return { ok: false, reason: isNetworkError(message) ? 'network' : 'unknown', message };
     }
   },
-
-  signOut: async () => {
-    if (!supabase) return;
-    const { error } = await supabase.auth.signOut();
-    if (error) throw error;
-  },
 };

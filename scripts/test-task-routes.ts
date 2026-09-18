@@ -26,6 +26,8 @@ assert.equal(
   taskRoutes.encyclopedia.compatibilitySpecies('fish-1', 'identify'),
   '/encyclopedia?mode=compatibility&species=fish-1&source=identify',
 );
+assert.equal(taskRoutes.compatibility.home, '/compatibility');
+assert.equal(taskRoutes.compatibility.with({ source: 'identify', speciesIds: ['fish-1'] }), '/compatibility?source=identify&species=fish-1');
 assert.equal(
   taskRoutes.encyclopedia.browseWith({ difficulty: 'Easy', source: 'onboarding' }),
   '/encyclopedia?mode=browse&difficulty=Easy&source=onboarding',

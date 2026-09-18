@@ -73,7 +73,10 @@ try {
   assert.equal(new URL(page.url()).pathname, '/encyclopedia', 'route 动作没有进入目标页面');
 
   await page.getByRole('dialog').getByRole('button', { name: '知道了', exact: true }).click();
-  await page.goto(`${baseUrl}/encyclopedia`, { waitUntil: 'domcontentloaded' });
+  // The default encyclopedia route is the interactive scene. Filter actions
+  // belong to the explicit traditional browse mode, so the test must select
+  // that mode instead of relying on the page default.
+  await page.goto(`${baseUrl}/encyclopedia?mode=browse`, { waitUntil: 'domcontentloaded' });
 
   const filterButton = page.getByRole('button', { name: /筛选/ }).first();
   await filterButton.click();

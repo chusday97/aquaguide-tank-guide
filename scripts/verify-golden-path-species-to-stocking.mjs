@@ -58,20 +58,21 @@ try {
   // Milestone 2: open the exact object, not the atlas home.
   await resultCard.click();
   await page.waitForURL(url => url.pathname === '/encyclopedia' && url.searchParams.get('species') === 'sp_0432');
-  const detail = page.locator('[role="dialog"][data-surface="right-drawer"]:visible');
+  const detail = page.locator('[role="dialog"][data-surface="detail-rail"]:visible, [role="dialog"][data-surface="bottom-sheet"]:visible').first();
   await detail.waitFor();
   await detail.getByText('宝莲灯', { exact: true }).first().waitFor();
 
-  // Milestone 3: use the species detail PRIMARY task CTA. The footer action is the canonical
-  // transition into full compatibility checkout, including caution states.
-  const mainTaskAction = detail.locator('.modalFooter button').first();
-  await mainTaskAction.waitFor();
-  const mainTaskLabel = (await mainTaskAction.textContent())?.trim() || '';
-  assert.match(mainTaskLabel, /风险|混养|加入/, `detail primary CTA must lead toward compatibility, got: ${mainTaskLabel}`);
-  await mainTaskAction.click();
+  // Milestone 3: risk stays inside the species detail. The explicit
+  // compatibility action is the only transition to the full calculator.
+  const riskAction = detail.getByRole('button', { name: '查看当前鱼缸风险', exact: true });
+  await riskAction.click();
+  assert.equal(new URL(page.url()).pathname, '/encyclopedia', 'view risk must stay in the species detail');
+  const calculatorAction = detail.getByRole('button', { name: /混养计算器|混养计算|Compatibility Calculator/ }).last();
+  await calculatorAction.waitFor();
+  await calculatorAction.click();
 
   // Milestones 4–5: the decision drawer must retain the real tank baseline and exact candidate.
-  const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible');
+  const calculator = page.locator('[data-surface="compatibility-checkout-drawer"]:visible, [data-ui-block="compatibility-workspace"]:visible').first();
   await calculator.waitFor();
   await calculator.getByText('当前鱼缸', { exact: true }).waitFor();
   await calculator.getByText('红绿灯', { exact: true }).first().waitFor();
@@ -93,12 +94,12 @@ try {
   assert.equal(/当前鱼缸已有 红绿灯，不建议再加入体型明显更小的 宝莲灯/.test(resultText), false, 'peaceful prey wording must not regress into a predation block');
 
   // Milestone 6: caution requires an explicit confirmation before the real write.
-  let recordButton = calculator.getByRole('button', { name: /已经实际入缸，记录下来|确认风险后再记录/ });
+  let recordButton = page.getByRole('button', { name: /已经实际入缸，记录下来|确认风险后再记录/ });
   await recordButton.waitFor();
   const firstLabel = await recordButton.textContent();
   await recordButton.click();
   if (firstLabel?.includes('确认风险后再记录')) {
-    recordButton = calculator.getByRole('button', { name: '已经实际入缸，记录下来' });
+    recordButton = page.getByRole('button', { name: '已经实际入缸，记录下来' });
     await recordButton.waitFor();
     await recordButton.click();
   }

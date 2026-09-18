@@ -16,7 +16,7 @@ try {
   assert.equal(await entry.count(), 1, '文章详情必须暴露唯一、明确的“生成养护卡”入口');
   await entry.click();
 
-  const cardDialog = page.getByRole('dialog').filter({ hasText: '生成养护卡' });
+  const cardDialog = page.locator('[role="dialog"][data-dialog-surface="task"]:visible').filter({ hasText: '生成养护卡' });
   await cardDialog.waitFor({ timeout: 5_000 });
   assert.equal(await cardDialog.getByRole('button', { name: '复制文字', exact: true }).count(), 1, '养护卡必须提供真实复制动作');
   assert.equal(await cardDialog.getByRole('button', { name: /生成分享链接|公开分享|发布/ }).count(), 0, '本地养护卡不得伪装成尚未上线的公开分享能力');

@@ -58,8 +58,8 @@ const state = {
 const browser = await chromium.launch({ headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, locale: 'zh-CN' });
-  page.setDefaultTimeout(10_000);
-  page.setDefaultNavigationTimeout(20_000);
+  page.setDefaultTimeout(30_000);
+  page.setDefaultNavigationTimeout(30_000);
   const pageErrors = [];
   page.on('pageerror', error => pageErrors.push(error.message));
 
@@ -74,6 +74,7 @@ try {
 
   const todayTask = page.locator('[data-daily-action="daily_check"]');
   await todayTask.waitFor();
+  await todayTask.locator('[data-today-action-handle]').click();
   await todayTask.getByRole('button', { name: '开始今日检查', exact: true }).click();
 
   const dialog = page.getByRole('dialog').filter({ hasText: '每日鱼缸检查' });

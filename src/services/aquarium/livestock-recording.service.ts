@@ -44,6 +44,7 @@ export const recordExistingLivestock = async (input: {
         quantity: item.quantity,
         entryDate: item.entryDate || new Date().toISOString().slice(0, 10),
         operationId: `${input.operationId}:${item.fishId}`,
+        intent: 'record_existing',
       });
       savedItems.push(item);
     } catch {
@@ -61,6 +62,7 @@ export const recordExistingLivestock = async (input: {
       aquarium: baselineAquarium,
       items: savedItems,
       speciesCatalog: input.speciesCatalog,
+      intent: 'record_existing',
     });
     return {
       aquarium: savedAquarium,

@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Aquarium, Fish } from '../src/types';
+import { fishData } from '../src/data/fishData';
 
 class MemoryStorage {
   private values = new Map<string, string>();
@@ -42,6 +43,7 @@ const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   name: '测试小型淡水鱼',
   scientificName: 'Testus freshwater',
   category: '淡水观赏鱼',
+  waterType: 'freshwater',
   image: '',
   difficulty: 'Easy',
   waterTemperature: '22-28°C',
@@ -68,27 +70,41 @@ const makeTank = (overrides: Partial<Aquarium> = {}): Aquarium => ({
 });
 
 const freshwater = makeFish();
-const saltwater = makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼' });
+const saltwater = makeFish({ id: 'saltwater-fish', name: '测试海水鱼', category: '海水观赏鱼', waterType: 'saltwater' });
 const companion = makeFish({ id: 'freshwater-companion', name: '测试同伴鱼' });
+const reviewedFreshwater = fishData.find(fish => fish.id === 'sp_0431');
+assert.ok(reviewedFreshwater, 'core flow compatible fixture requires an explicitly reviewed freshwater species');
 
-const compatible = evaluateTankCompatibility({ tank: makeTank(), candidateSpecies: freshwater });
+const compatible = evaluateTankCompatibility({
+  tank: makeTank(),
+  existingSpecies: [{ species: reviewedFreshwater, record: { quantity: 6 } }],
+  candidateSpecies: reviewedFreshwater,
+});
 assert.equal(compatible.status, 'compatible');
 assert.equal(getTankCompatibilityAddPolicy(compatible.status), 'allow');
 
-const cautionTank = makeTank({ equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' } });
-const warmCandidate = makeFish({ id: 'warm-candidate', waterTemperature: '24-28°C' });
-const caution = evaluateTankCompatibility({ tank: cautionTank, candidateSpecies: warmCandidate });
+const cautionTank = makeTank({
+  fishes: [{ id: 'existing-neon', fishId: 'sp_0431', quantity: 6, entryDate: '2026-08-11' }],
+  equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' },
+});
+const warmCandidate = fishData.find(fish => fish.id === 'sp_0432');
+assert.ok(warmCandidate, 'core flow caution fixture requires the reviewed cardinal tetra');
+const caution = evaluateTankCompatibility({
+  tank: cautionTank,
+  existingSpecies: [{ species: reviewedFreshwater, record: { quantity: 6 } }],
+  candidateSpecies: warmCandidate,
+});
 assert.equal(caution.status, 'caution');
 assert.equal(getTankCompatibilityAddPolicy(caution.status), 'confirm');
 const cautionBlocked = executeSpeciesAddition({
   aquariums: [cautionTank], aquarium: cautionTank,
-  items: [{ fishId: warmCandidate.id, quantity: 1 }], speciesCatalog: [warmCandidate], confirmedCaution: false,
+  items: [{ fishId: warmCandidate.id, quantity: 1 }], speciesCatalog: [reviewedFreshwater, warmCandidate], confirmedCaution: false,
 });
 assert.equal(cautionBlocked.added, false);
 assert.equal(cautionBlocked.reason, 'confirmation_required');
 const cautionConfirmed = executeSpeciesAddition({
   aquariums: [cautionTank], aquarium: cautionTank,
-  items: [{ fishId: warmCandidate.id, quantity: 1 }], speciesCatalog: [warmCandidate], confirmedCaution: true,
+  items: [{ fishId: warmCandidate.id, quantity: 1 }], speciesCatalog: [reviewedFreshwater, warmCandidate], confirmedCaution: true,
 });
 assert.equal(cautionConfirmed.added, true);
 

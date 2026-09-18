@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
+import { evaluateSpeciesCombination } from '../src/services/compatibility/compatibility.service';
 import type { Fish } from '../src/types';
 
 const makeFish = (overrides: Partial<Fish> & Pick<Fish, 'id' | 'name'>): Fish => ({
@@ -46,6 +46,6 @@ assert.equal(insufficient.status, 'insufficient_data');
 
 const needsMore = evaluateSpeciesCombination([peacefulA]);
 assert.equal(needsMore.status, 'insufficient_data');
-assert.equal(needsMore.missingData[0]?.code, 'missing_species_pair');
+assert.equal(needsMore.missingData[0]?.code, 'species_evidence_unreviewed');
 
 console.log('mini compatibility: reviewed blockers and unreviewed evidence gate passed');

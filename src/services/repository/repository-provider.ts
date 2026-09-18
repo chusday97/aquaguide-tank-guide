@@ -7,6 +7,7 @@ import { getCareFavorites } from '../favorites/favorites.service';
 import { getCareReminders, getCompletedCareOperations, getSavedCareChecklists } from '../care/care-activity.service';
 import { selectRepositoryMode } from './repository-mode';
 import type { RepositoryMode } from './repository-mode';
+import { isInteractivePreviewActive } from '../preview/preview-session.service';
 
 export type { RepositoryMode } from './repository-mode';
 
@@ -31,6 +32,7 @@ export const getAquaGuideRepository = (mode: RepositoryMode): AquaGuideRepositor
 );
 
 export const resolveRepositoryMode = async (): Promise<RepositoryMode> => {
+  if (isInteractivePreviewActive()) return 'local';
   if (!supabase) return 'local';
   const { data, error } = await supabase.auth.getSession();
   if (error) throw error;
@@ -41,6 +43,7 @@ export const getCurrentAquaGuideRepository = async () => getAquaGuideRepository(
 
 export const subscribeToRepositoryMode = (listener: (mode: RepositoryMode) => void) => {
   if (!supabase) return () => undefined;
+  if (isInteractivePreviewActive()) return () => undefined;
   const { data } = supabase.auth.onAuthStateChange((_event, session) => listener(modeForSession(Boolean(session))));
   return () => data.subscription.unsubscribe();
 };

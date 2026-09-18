@@ -14,6 +14,5 @@ evaluation/reports/*.json
 evaluation/reports/*.md
 !evaluation/reports/.gitkeep
 .vercel
-
-supabase/.temp/
-.local/aqua-admin/
+.artifacts/readiness/
+artifacts/visual-layout/*.png

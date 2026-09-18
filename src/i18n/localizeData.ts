@@ -1,10 +1,6 @@
-import {
-  runtimeFishData as fishData,
-  runtimeCareTopicsData as careTopicsData,
-  isRuntimeSpeciesPublished,
-  isRuntimeCarePublished,
-} from '../data/runtimeContentCatalog';
+import { fishData } from '../data/fishData';
 import { autoTranslations } from './localizeDataAuto';
+import { careTopicsData } from '../data/careTopicsData';
 import { careTranslations } from './localizeCareDataAuto';
 
 export const categoryTranslations: Record<string, string> = {
@@ -252,8 +248,6 @@ export const applyLocalization = (lng: string) => {
       }
     }
 
-    if (isRuntimeSpeciesPublished(fish.id)) return;
-
     if (isEn) {
       const stripEnPrefix = (str: string | undefined) => str ? str.replace(/^(?:\[EN\]\s*)+/gi, '').trim() : '';
 
@@ -347,8 +341,6 @@ export const applyLocalization = (lng: string) => {
       (topic as any)._originalNextStep = topic.nextStep;
       (topic as any)._originalKeywords = [...topic.keywords];
     }
-
-    if (isRuntimeCarePublished(topic.id)) return;
 
     if (isEn) {
       const trans = careTranslations[topic.id];
