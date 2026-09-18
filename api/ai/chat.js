@@ -1,4 +1,4 @@
-import app from '../../server/index.mjs';
+import app from '../../server/api-app.mjs';
 
 export const config = {
   maxDuration: 30,
