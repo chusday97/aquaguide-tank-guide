@@ -1703,7 +1703,9 @@ body::-webkit-scrollbar {
 .aquarium-dashboard-stage,
 .aquarium-dashboard-rail,
 .aquarium-dashboard-tank,
+.aquarium-dashboard-scene,
 .aquarium-dashboard-actions,
+.aquarium-dashboard-followup,
 .aquarium-dashboard-discovery,
 .aquarium-dashboard-archive {
   min-width: 0;
@@ -1712,6 +1714,34 @@ body::-webkit-scrollbar {
 .aquarium-dashboard-stage {
   display: grid;
   gap: 14px;
+}
+
+.aquarium-dashboard-tank {
+  display: grid;
+  min-width: 0;
+  gap: 10px;
+}
+
+.aquarium-dashboard-rail { order: 1; }
+.aquarium-dashboard-scene { order: 2; min-width: 0; }
+.aquarium-dashboard-actions { order: 3; margin-top: 0; }
+
+.aquarium-dashboard-scene > .aquarium-tank {
+  width: 100%;
+}
+
+.aquarium-dashboard-followup {
+  display: grid;
+  min-width: 0;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.aquarium-dashboard-archive { order: 1; }
+.aquarium-dashboard-discovery { order: 2; min-width: 0; }
+
+.aquarium-dashboard-discovery > .aquarium-zone-header {
+  margin-bottom: 8px;
 }
 
 .aquarium-dashboard-rail {
@@ -1796,10 +1826,15 @@ body::-webkit-scrollbar {
 
   .aquarium-dashboard-tank {
     position: relative;
+    display: block;
     min-height: calc(100dvh - 82px);
   }
 
-  .aquarium-dashboard-tank > .aquarium-tank {
+  .aquarium-dashboard-scene {
+    min-height: calc(100dvh - 82px);
+  }
+
+  .aquarium-dashboard-scene > .aquarium-tank {
     height: 100% !important;
     min-height: calc(100dvh - 82px) !important;
     border: 0;
@@ -1895,6 +1930,12 @@ body::-webkit-scrollbar {
   .aquarium-dashboard-rail .aquarium-status > section {
     min-height: 326px;
     padding: 24px;
+  }
+
+  .aquarium-dashboard-followup {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    padding: 0 16px 20px;
   }
 
 }

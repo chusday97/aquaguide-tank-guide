@@ -147,7 +147,11 @@ export function StatusSummaryCard({
   } as const;
 
   return (
-    <section className={`flex ${hideAction ? 'min-h-0' : 'min-h-[220px]'} flex-col rounded-[20px] border p-4 shadow-sm ${levelStyles[action.level]}`} data-daily-action={action.task.actionType}>
+    <section
+      className={`flex ${hideAction ? 'min-h-0' : 'min-h-[220px]'} flex-col rounded-[20px] border p-4 shadow-sm ${levelStyles[action.level]}`}
+      data-daily-action={action.task.actionType}
+      data-aquarium-state={action.level}
+    >
       {!hideAction && <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="text-[13px] font-black text-ink">{t('aquarium.todayAction')}</div>
@@ -188,6 +192,7 @@ export function StatusSummaryCard({
       {!hideAction && hasPrimaryAction && (
         <Button
           type="button"
+          data-aquarium-primary="today-action"
           onClick={onPrimaryAction}
           className="mt-auto h-11 w-full rounded-full bg-emerald-800 px-4 text-[12px] font-black text-white shadow-none hover:bg-emerald-900"
         >

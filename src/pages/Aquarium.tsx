@@ -245,9 +245,13 @@ function AquariumWorkspace({
   observeSubtitle,
   manageTitle,
   manageSubtitle,
+  learnTitle,
+  learnSubtitle,
   tank,
   status,
   actions,
+  archive,
+  discovery,
 }: {
   observeTitle: string;
   observeSubtitle: string;
@@ -283,20 +287,60 @@ function AquariumWorkspace({
   }, [location.hash, location.search]);
 
   return (
-    <section className="aquarium-workspace-zone aquarium-observe-zone aquarium-dashboard" aria-labelledby="aquarium-observe-title">
-        <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
-        <div className="aquarium-dashboard-stage">
-          <div className="aquarium-dashboard-tank">
+    <section
+      className="aquarium-workspace-zone aquarium-observe-zone aquarium-dashboard"
+      aria-labelledby="aquarium-observe-title"
+      data-aquarium-hierarchy="state-tank-actions-summary-discovery"
+    >
+      <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
+      <div className="aquarium-dashboard-stage">
+        <div className="aquarium-dashboard-tank">
+          <aside className="aquarium-dashboard-rail" aria-label={observeTitle} data-aquarium-hierarchy-item="state">
+            {status}
+          </aside>
+          <div className="aquarium-dashboard-scene" data-aquarium-hierarchy-item="tank">
             {tank}
-            <aside className="aquarium-dashboard-rail" aria-label={observeTitle}>
-              {status}
-            </aside>
-            <section id="aquarium-manage-zone" tabIndex={-1} className="aquarium-dashboard-actions" aria-labelledby="aquarium-manage-title">
-              <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
-              {actions}
-            </section>
           </div>
+          <section
+            id="aquarium-manage-zone"
+            tabIndex={-1}
+            className="aquarium-dashboard-actions"
+            aria-labelledby="aquarium-manage-title"
+            data-aquarium-hierarchy-item="actions"
+          >
+            <AquariumZoneHeader index={2} title={manageTitle} subtitle={manageSubtitle} titleId="aquarium-manage-title" />
+            {actions}
+          </section>
         </div>
+      </div>
+      {(archive || discovery) && (
+        <div className="aquarium-dashboard-followup">
+          {archive && (
+            <div className="aquarium-dashboard-archive" data-aquarium-hierarchy-item="summary">
+              {archive}
+            </div>
+          )}
+          {discovery && (
+            <section
+              id="aquarium-learn-zone"
+              tabIndex={-1}
+              className="aquarium-dashboard-discovery"
+              aria-labelledby="aquarium-learn-title"
+              data-aquarium-hierarchy-item="discovery"
+            >
+              {learnTitle && (
+                <AquariumZoneHeader
+                  index={3}
+                  title={learnTitle}
+                  subtitle={learnSubtitle || ''}
+                  titleId="aquarium-learn-title"
+                />
+              )}
+              {discovery}
+            </section>
+          )}
+        </div>
+      )}
     </section>
   );
 }
@@ -4600,7 +4644,6 @@ export default function AquariumManager() {
     },
   ];
   const visibleAquariumActions = commonActions
-    .filter(action => action.id !== 'smartRecommend')
     .map(action => ({
     ...action,
     onClick: () => {
