@@ -41,11 +41,15 @@ const observations: Record<KnowledgeObjectId, KnowledgeObservation[]> = {
   water_surface: [
     { id: 'oil_film', label: '水面有油膜或不散的泡沫', labelEn: 'Oil film or persistent foam on the surface', urgency: 'watch', topicId: 'qa_gen_003', latestCareGuideId: 'care_06', searchQuery: '油膜 泡沫' },
     { id: 'gasping', label: '鱼或螺集体浮头、急促呼吸', labelEn: 'Fish or snails are gasping at the surface', urgency: 'urgent', topicId: 'qa_gen_020', latestCareGuideId: 'care_09', searchQuery: '浮头 呼吸急促 缺氧' },
+    { id: 'acclimation', label: '新买的鱼到家水面漂袋过水', labelEn: 'Acclimatizing newly bought fish on water surface', urgency: 'routine', topicId: 'qa_gen_006', latestCareGuideId: 'care_01', searchQuery: '新鱼 入缸 过水' },
+    { id: 'jumping', label: '鱼突然惊慌乱撞跳出水面', labelEn: 'Fish jumping out of the tank or surface panic', urgency: 'urgent', latestCareGuideId: 'care_25', searchQuery: '跳缸 惊缸 乱撞' },
   ],
   water_body: [
     { id: 'cloudy', label: '水体发白、发绿或持续浑浊', labelEn: 'Water turns milky, green, or persistently cloudy', urgency: 'watch', topicId: 'qa_gen_001', latestCareGuideId: 'care_04', searchQuery: '水质浑浊 白浊' },
-    { id: 'ammonia', label: '氨或亚硝酸盐升高，鱼红鳃浮头', labelEn: 'Ammonia or nitrite spikes with red gills or gasping', urgency: 'urgent', topicId: 'qa_gen_002', searchQuery: '氨 亚硝酸盐 红鳃 浮头' },
-    { id: 'temperature', label: '换水后状态变差，怀疑温差刺激', labelEn: 'Fish worsen after a water change; temperature shock suspected', urgency: 'watch', topicId: 'qa_gen_006', latestCareGuideId: 'care_05', searchQuery: '换水 温差' },
+    { id: 'green_water', label: '鱼缸水体突然变绿爆发绿水', labelEn: 'Green water algae bloom throughout water body', urgency: 'watch', latestCareGuideId: 'care_07', searchQuery: '绿水 水体发绿' },
+    { id: 'temperature', label: '换水后状态变差，怀疑温差刺激', labelEn: 'Fish worsen after a water change; temperature shock suspected', urgency: 'watch', topicId: 'qa_gen_006', latestCareGuideId: 'care_05', searchQuery: '换水 温差 加热棒' },
+    { id: 'cycling', label: '新鱼缸开缸养水建立硝化系统', labelEn: 'Cycling a new tank and establishing bio-filtration', urgency: 'routine', topicId: 'qa_gen_002', latestCareGuideId: 'care_03', searchQuery: '开缸 养水 硝化细菌' },
+    { id: 'water_change', label: '每周例行科学吸污换水', labelEn: 'Routine weekly gravel vacuuming and water change', urgency: 'routine', topicId: 'qa_gen_014', latestCareGuideId: 'care_21', searchQuery: '例行换水 吸污' },
     { id: 'odor', label: '水体出现明显腥臭或腐败异味', labelEn: 'Water develops a strong fishy or rotten smell', urgency: 'urgent', topicId: 'guide_water_deteriorate', latestCareGuideId: 'care_04', searchQuery: '异味 水质' },
   ],
   livestock: [
@@ -80,19 +84,24 @@ const observations: Record<KnowledgeObjectId, KnowledgeObservation[]> = {
   ],
   filter: [
     { id: 'maintenance', label: '过滤器变脏、出水减弱或需要清洗', labelEn: 'Filter is dirty, flow is weaker, or cleaning is due', urgency: 'watch', topicId: 'qa_gen_016', latestCareGuideId: 'care_19', searchQuery: '过滤器 清洗 出水' },
-    { id: 'selection', label: '过滤流量或过滤器类型不适合当前鱼缸', labelEn: 'Filter type or flow does not fit the current tank', urgency: 'routine', topicId: 'qa_gen_026', searchQuery: '过滤器 选择 流量' },
-    { id: 'aeration', label: '出水正常但仍担心缺氧或水面波动不足', labelEn: 'Flow seems normal but oxygen or surface agitation may be insufficient', urgency: 'watch', topicId: 'qa_gen_027', latestCareGuideId: 'care_09', searchQuery: '增氧 水面波动' },
+    { id: 'filter_cycling', label: '滤材培菌开缸建立硝化系统', labelEn: 'Cycling filter media and establishing nitrifying bacteria', urgency: 'routine', latestCareGuideId: 'care_03', searchQuery: '滤材 培菌 硝化系统' },
+    { id: 'aeration', label: '出水正常但仍担心缺氧或水面波动不足', labelEn: 'Flow seems normal but oxygen or surface agitation may be insufficient', urgency: 'watch', topicId: 'qa_gen_027', latestCareGuideId: 'care_09', searchQuery: '增氧 水面波动 缺氧' },
+    { id: 'vacation_filter', label: '长假出差期间设备循环与托养保障', labelEn: 'Safeguarding filter circulation and tank during holidays', urgency: 'routine', latestCareGuideId: 'care_20', searchQuery: '长假 托养 停电 循环' },
+    { id: 'oil_overflow', label: '过滤棉有机物溢流与水面油膜', labelEn: 'Filter pad organic buildup causing surface oil film', urgency: 'watch', latestCareGuideId: 'care_06', searchQuery: '滤棉 溢流 油膜' },
   ],
   substrate: [
-    { id: 'leftovers', label: '底床残饵、粪便或有机物堆积', labelEn: 'Uneaten food, waste, or organics are building up on the substrate', urgency: 'watch', topicId: 'qa_gen_015', latestCareGuideId: 'care_21', searchQuery: '残饵 底床 清洁' },
+    { id: 'leftovers', label: '底床残饵、粪便或有机物堆积吸污', labelEn: 'Uneaten food, waste, or organics are building up on the substrate', urgency: 'watch', topicId: 'qa_gen_015', latestCareGuideId: 'care_21', searchQuery: '残饵 底床 吸污 清洁' },
     { id: 'cleaning', label: '不知道底床和鱼缸该多久清理一次', labelEn: 'Not sure how often the substrate or tank should be cleaned', urgency: 'routine', topicId: 'qa_gen_014', latestCareGuideId: 'care_21', searchQuery: '底床 清洁 换水' },
-    { id: 'odor', label: '翻动底床后出现明显异味', labelEn: 'A strong smell appears when the substrate is disturbed', urgency: 'urgent', topicId: 'guide_water_deteriorate', latestCareGuideId: 'care_04', searchQuery: '底床 异味' },
+    { id: 'substrate_cycling', label: '底床底砂活化与硝化系统建立', labelEn: 'Substrate bed activation and nitrifying establishment', urgency: 'routine', latestCareGuideId: 'care_03', searchQuery: '底砂 水草泥 开缸 硝化' },
+    { id: 'substrate_parasite', label: '鱼在水底沙石上疯狂擦身摩擦', labelEn: 'Fish flashing violently against bottom gravel', urgency: 'watch', latestCareGuideId: 'care_15', searchQuery: '擦身 蹭砂 体外寄生虫' },
+    { id: 'odor', label: '翻动底床后出现明显异味', labelEn: 'A strong smell appears when the substrate is disturbed', urgency: 'urgent', topicId: 'guide_water_deteriorate', latestCareGuideId: 'care_04', searchQuery: '底床 异味 水质发臭' },
   ],
   plants_equipment: [
     { id: 'algae', label: '缸壁、沉木或水草爆藻', labelEn: 'Algae is spreading on glass, wood, or plants', urgency: 'watch', topicId: 'qa_gen_017', latestCareGuideId: 'care_08', searchQuery: '水草 藻类 除藻' },
-    { id: 'plant_melt', label: '水草黄叶、烂叶或融叶', labelEn: 'Plants are yellowing, rotting, or melting', urgency: 'routine', topicId: 'qa_gen_019', searchQuery: '水草 黄叶 融叶' },
-    { id: 'heater', label: '加热棒位置、温控或安全性异常', labelEn: 'Heater placement, temperature control, or safety seems wrong', urgency: 'watch', topicId: 'qa_gen_025', latestCareGuideId: 'care_05', searchQuery: '加热棒 温控' },
-    { id: 'light', label: '光照时间或强度可能不合适', labelEn: 'Lighting duration or intensity may be inappropriate', urgency: 'routine', topicId: 'qa_gen_018', searchQuery: '灯光 光照 藻类' },
+    { id: 'plant_prep', label: '新买水草除螺除藻彻底消毒', labelEn: 'Disinfecting new aquatic plants against snails and algae', urgency: 'routine', topicId: 'qa_gen_019', latestCareGuideId: 'care_02', searchQuery: '水草 消毒 除螺 除藻' },
+    { id: 'green_water_light', label: '强光光照过长引发水体爆发绿水', labelEn: 'Excessive lighting causing water to turn green', urgency: 'watch', topicId: 'qa_gen_018', latestCareGuideId: 'care_07', searchQuery: '水草灯 强光 爆藻 绿水' },
+    { id: 'heater', label: '加热棒位置、温控或安全性异常', labelEn: 'Heater placement, temperature control, or safety seems wrong', urgency: 'watch', topicId: 'qa_gen_025', latestCareGuideId: 'care_05', searchQuery: '加热棒 温控 断电 故障' },
+    { id: 'soil_cycling', label: '水草泥底床培菌与新缸开缸建立', labelEn: 'Aquasoil cycling and equipment initialization', urgency: 'routine', latestCareGuideId: 'care_03', searchQuery: '水草泥 养水 开缸 设备' },
   ],
 };
 

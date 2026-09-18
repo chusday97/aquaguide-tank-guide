@@ -191,15 +191,15 @@ export function getAquariumCameraFrame({
   aspect: number;
   framing: 'contain' | 'stage-cover';
 }) {
-  const fov = 42 * (Math.PI / 180);
-  const halfHeight = height * 0.58;
-  const halfWidth = length * 0.56;
+  const fov = 40 * (Math.PI / 180);
+  const halfHeight = height * 0.54;
+  const halfWidth = length * 0.52;
   const fitHeight = halfHeight / Math.tan(fov / 2);
   const fitWidth = halfWidth / Math.max(0.35, Math.tan(fov / 2) * aspect);
   const distance = framing === 'stage-cover'
-    ? Math.min(fitHeight, fitWidth) * 0.96
-    : Math.max(fitHeight, fitWidth) * 1.08;
-  return new THREE.Vector3(length * 0.08, height * 0.04, width * 0.52 + distance);
+    ? Math.min(fitHeight, fitWidth) * 0.88
+    : Math.max(fitHeight, fitWidth) * 1.05;
+  return new THREE.Vector3(0, height * 0.02, width * 0.5 + distance);
 }
 
 function CameraFraming({ length, width, height, framing, targetPosition }: { length: number; width: number; height: number; framing: 'contain' | 'stage-cover'; targetPosition: THREE.Vector3 | null }) {
@@ -1004,10 +1004,10 @@ function SwimmingFish({
 function SceneLights({ isSaltwater }: { isSaltwater: boolean }) {
   return (
     <>
-      <ambientLight intensity={0.72} />
-      <directionalLight position={[2, 6, 3]} intensity={isSaltwater ? 2.1 : 1.7} color={isSaltwater ? '#d7f6ff' : '#fff8e6'} castShadow />
-      <pointLight position={[-3, 2.5, 2.5]} intensity={0.8} color={isSaltwater ? '#88d7ff' : '#7ed6c8'} />
-      <spotLight position={[0, 6, -3]} angle={0.42} penumbra={0.75} intensity={0.9} color="#ffffff" />
+      <ambientLight intensity={0.82} />
+      <directionalLight position={[2, 6, 3]} intensity={isSaltwater ? 2.0 : 1.6} color={isSaltwater ? '#d7f6ff' : '#fff8e6'} castShadow />
+      <directionalLight position={[-2, 5, -2]} intensity={0.65} color={isSaltwater ? '#bce8f7' : '#e6f7f1'} />
+      <pointLight position={[-3, 2.5, 2.5]} intensity={0.5} color={isSaltwater ? '#88d7ff' : '#7ed6c8'} />
     </>
   );
 }
@@ -1144,11 +1144,11 @@ export function ThreeAquarium({ aquarium, activeSpecies, onSpeciesSelect, framin
 
       <div className="pointer-events-none absolute inset-x-0 top-0 h-16 bg-gradient-to-b from-white/45 to-transparent" />
       {allSwimFishes.length === 0 && (
-        <div className="pointer-events-none absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full border border-white/70 bg-white/85 px-3 py-1.5 text-[11px] font-bold text-ink/55 shadow-sm backdrop-blur-md">
+        <div className="pointer-events-none absolute bottom-16 left-1/2 -translate-x-1/2 rounded-full border border-white/70 bg-white/85 px-3 py-1.5 text-[11px] font-bold text-ink/55 shadow-sm backdrop-blur-md">
           添加生物后，它们会在这个 3D 鱼缸里游动
         </div>
       )}
-      <div className="pointer-events-none absolute inset-x-4 bottom-3 hidden justify-between text-[10px] font-bold text-ink/35 md:flex">
+      <div className="pointer-events-none absolute inset-x-4 bottom-14 hidden justify-between text-[10px] font-bold text-ink/35 md:flex">
         <span>{aquarium.waterType ? (isSaltwater ? '海水礁岩视图' : '淡水造景视图') : '水体类型未记录'}</span>
         <span>{allSwimFishes.length > 0 ? `已显示 ${allSwimFishes.length} 个活体` : '空缸预览'}</span>
       </div>

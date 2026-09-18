@@ -2,6 +2,50 @@
 
 ## [Unreleased]
 
+- Fixed: 彻底修复物种详情排版错乱与底部按钮挤压重叠问题（用户反馈修复）：
+  - **核心指标 2×2 网格稳定排版**：根除因视口媒体查询（`min-[600px]:grid-cols-4`）在窄抽屉/弹窗中触发 4 列压缩为 70px 极窄缝隙导致的数值折行重叠事故（如 `2 5 >= 7.5cm`）。统一为稳健的 2×2 响应式网格，确保水温、pH、缸体、成体 4 项关键数据无论在 360px 移动端还是 450px 侧边栏下都有宽裕间距且字号清晰；
+  - **底部按钮防挤压纵向分层重构**：底部行动坞彻底舍弃死板的 `sm:flex-row` 水平挤压排版，改用稳健的纵向两层流：上方为主操作 CTA 按钮（`w-full` 全宽占据、醒目易触达），下方为两等分子操作按钮（愿望单 + 生命纪念，`grid-cols-2` 均分）；
+  - **全局样式隔离保护**：在 `index.css` 中将 `species-detail-container` 与全局模态框的大尺寸外边距/内边距（`padding: 32px`）解耦，限制为 `20px` 紧凑安全留白，避免按钮因容器过窄发生错位与文字截断；
+  - **纯净白底背景统一**：将 `AdaptiveDetailContent` 的模态背景从带微黄的 `#FDFCF8` 统一为纯净白底（`bg-white`），视觉纯粹简洁。
+
+- Fixed: 移除物种详情标本图像的奇怪晃动效果，还原纯净白色透明底（用户反馈修复）：
+  - 根因：此前针对特定物种（如 `sp_0260` 狮王斗鱼）引入了实验性的 `Interactive3DFishWrapper`，通过 Three.js 顶点着色器实时计算 `tailWiggle = Math.sin(x * 1.6 - time * 6.0) * 0.08` 导致鱼身不自然地高频扭动与跟随鼠标倾斜；
+  - 改造：彻底移除 3D 扭动着色器和画布依赖，所有物种标本统一渲染为高清透底静止摄影图（`ResilientImage`），搭配纯净的白底透明卡片（`bg-white border-slate-100`），质感高级、纯粹、不晃眼。
+- Changed: 优化物种详情展开后的整体空间与视觉布局（用户反馈修复）：
+  - 修复左右布局失衡与压迫感：将右侧详情抽屉固定为标准侧边检视坞（Inspector Dock: `w-[420px] lg:w-[450px] xl:w-[480px] shrink-0`），解除左侧 580px 宽度限制（`flex-1 min-w-0`），使中央互动鱼缸占据 670px+ 宽敞画幅，左右比例协调自然；
+  - 修复底床 6 维环境指标卡片文本挤压截断问题：将 `.interactive-tank-metrics-grid` 从死板的全局媒体查询改造为容器宽度自适应自动折行（`repeat(auto-fit, minmax(130px, 1fr))`），在侧栏开启时自动折为优雅的 3×2 网格，完整呈现指标数值与单位；
+  - 纯净极简白底设计（彻底去除黄砂暖黄底色）：全面移除 `#fcf9f2`、`#faf6ed`、`#ebdcc7`、`radial-gradient` 等老旧暖黄砂色与厚重边框，物种档案容器统一采用 Apple/Notion 风格的极简纯白卡片（`bg-white text-slate-900 border-black/[0.08]`），搭配中性灰色系（`slate-50`、`slate-100`、`slate-500`）与高亮翡翠绿点缀；
+  - 抽屉内各模块在侧边栏宽度下自适应纵向平铺（Single-Column Flow），标本图与标题自适应紧凑排版，彻底告别单行文字换行断裂。
+
+- Fixed: 彻底修复「这个页面暂时没有加载好」运行时崩溃错误：
+  - 定位根因：在右侧面板模式（`mode="panel"`）下，`SpeciesDetailDialog` 未被 `<Dialog>` 根组件包裹，但内部却渲染了 Base UI 的 `<DialogTitle>` 与 `<DialogDescription>`，导致 React 试图解构未注入的 `useDialogRootContext()` 触发致命的 `TypeError: Cannot destructure property 'store' of 'useDialogRootContext(...)' as it is undefined` 异常；
+  - 方案：重构 `SpeciesDetailDialog` 的标题层级，在 `mode="panel"` 下优雅降级为原生语义化标签 `<h2>` 与 `<p>`，保留 `mode="dialog"` 下无障碍辅助功能，彻底杜绝崩溃。
+- Fixed: 修复物种鱼缸游动生物图抖动（Jittering / Flickering）问题：
+  - 根因：`:hover` 伪类对按钮直接应用物理位移与缩放（`transform: translateY(-6px) scale(1.06)`）并突兀暂停动画（`animation-play-state: paused`），导致鼠标悬停在鱼边缘时碰撞区域高频进出触发 60Hz 剧烈颤动；
+  - 方案：按钮本体保持静态不动并扩充 10px 缓冲命中区（Hit-Box Buffer），将悬停发光质感（`drop-shadow`）与平滑缩放委托给内部子级图像并禁用子元素指针事件（`pointer-events: none`），使鱼群游动与悬停交互丝滑稳定。
+- Fixed: 修复养护百科（`/care`）右侧养护卡片不出现及自动滚动失效问题：
+  - 根因：CSS Grid 在非严格受限列中自动外扩（`min-width: auto`），导致包含 23 张宽幅手绘卡片的水平 Track 将右侧容器强行撑宽至 8896px，使卡片漂移至屏幕可视区外（`x = 2388px`）且无溢出可供滚动；
+  - 方案：在 `interactive-care-workspace--covers`、`interactive-care-cover-library` 与 `interactive-care-cover-carousel-shell` 层级显式锁死 `min-width: 0; max-width: 100%; overflow: hidden;`，使轮播容器精确居于右侧半屏，首卡完美入框，每 3.2 秒自动轮播与悬停暂停正常运转。
+- Changed: 完美闭环三板块联动（3-Panel Layout）交互架构：
+  - Panel 1（左侧）：全局侧边导航栏（我的鱼缸、物种图鉴、养护百科、我的水族册）全程可见可点击；
+  - Panel 2（中央）：主工作区（互动物种鱼缸/物种列表）在右侧档案拉开时平滑压缩在居中列，支持继续观察与直接点选其他鱼类；
+  - Panel 3（右侧）：物种档案从右侧平滑滑出（Drawer / Dock），展示 5 级全量档案内容；
+  - 三个板块同时并存、互不遮挡、全部可点，彻底告别弹窗黑幕遮罩。
+
+- Changed: 重构物种百科（`Encyclopedia`）物种详情查看模式为「Master-Detail 分栏侧边滑出面板（Split-View）」：
+  - 彻底抛弃模态遮罩弹窗（Modal Dialog），点击物种卡片不再弹出全屏遮挡，而是从右侧优雅滑出/展开悬浮详情面板（`aside.sticky`）；
+  - 左侧物种列表自适应折叠为精致紧凑的单列/双列导轨布局（`w-full md:w-[380px] lg:w-[420px] shrink-0`），且**完全保持交互能力，用户可无缝上下滚动并点选切换其他任意生物**；
+  - 点选卡片即时刷新右侧物种档案 HUD，当前选中卡片呈现鲜明的主题激活态（`border-emerald-600 ring-2 ring-emerald-500` 与“正在查看”徽章）；
+  - 右侧面板支持原生轻量关闭按钮（X），点击即刻收起侧栏并将左侧物种浏览页丝滑展开回全宽四列排版；移动端保持轻巧适配。
+- Changed: 消除 3D 鱼缸场景左上角的大圆点光晕伪影，将背景径向渐变（`radial-gradient`）替换为纯净的微渐变和自然通透纯色背景（`#eef7f5`），彻底恢复 3D 场景深邃通透的玻璃缸视效。
+- Changed: 重构鱼缸快捷管理功能为底部居中横向 Dock 工具栏（`aquarium-actions-dock`）：
+  - 摆脱原先右下角堆叠占地的双列方形大卡片，采用圆润半透明毛玻璃长条胶囊形态（`backdrop-blur-2xl bg-white/30 border-white/50 rounded-full`）；
+  - 8 项核心功能（每日检查、记录换水、记录喂食、记录生物、规划生物、AI建缸助手、养护记录等）水平平铺滚动排列，搭配微拟物图标与紧凑标签；
+  - 调整「查看缸内物种」按钮与空缸游动提示纵向避让间距（`bottom-16`），防止与底部 Dock 工具栏发生重叠遮挡，大幅释放 3D 鱼缸中央造景与底床展示面积。
+- Changed: 重构物种档案详情页（`SpeciesDetailDialog`）为「方案1自然暖砂画报底色 + 方案2 Bento Grid HUD 仪表盘排版 + 5 级纵深信息分层」：
+  - 底色采用 warm sand 自然象牙色调（`#fcf9f2` 画布与 `#faf6ed` 细砂底色），边框统一为暖色系纸张色（`#ebdcc7`），点缀森林墨绿（`#1b4d3e`），彻底告别冷硬白色的“网页版”观感；
+  - 严格构建 5 级信息层级：Level 1 活体标本展区（支持3D鱼与大图预览）+ 中文/拉丁学名 + 鱼缸适配诊断结论胶囊；Level 2 黄金生存核心量化指标 4 格独立磁贴（水温、pH、最小缸体、成体规格）；Level 3 日常喂养法则与生态习性；Level 4 缸内配伍相容性矩阵与科学审核证据展开；Level 5 悬浮常驻行动底栏（愿望单、生命纪念、混养计算与加入鱼缸主操作）。
+- Changed: 统一“我的鱼缸”主页为互动图鉴标准容器排版（`interactive-tank-page-wrap` + `interactive-tank-shell--full`），解除桌面端 460px 高度限制，实现 3D 鱼缸全幅撑满容器底床；鱼缸管理卡片、快速操作按钮、浮动工具按钮及“今日行动”均重构为半透明毛玻璃微拟物质感（`backdrop-blur-xl bg-white/28~35 border-white/40`），不遮挡底层 3D 动态景观。
 - Fixed: 对齐动作基础浏览器门禁与当前产品契约：物种风险在详情内展开，兼容性从显式入口进入独立页面；空缸可规划加入当前鱼缸；温度冲突按当前 Domain 展示为 `not_recommended`；互动图鉴筛选测试显式使用 `mode=browse`。授权环境下动作、路由、详情、Compatibility、lint、API 类型与 production build 均通过。
 - Fixed: 为谨慎/风险状态保留明确的“混养计算”次级入口，Golden Path 不再查找已废弃的内嵌兼容抽屉；风险仍原位展开，独立计算页面负责后续数量与记录流程。
 

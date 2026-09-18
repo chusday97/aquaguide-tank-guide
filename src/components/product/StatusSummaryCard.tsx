@@ -178,7 +178,17 @@ export function StatusSummaryCard({
   };
 
   return (
-    <section className={`flex flex-col rounded-[20px] border p-2 shadow-sm transition-[max-height,background] ${panelLevel === 'collapsed' ? 'min-h-0 bg-white/35' : panelLevel === 'half' ? 'min-h-0 bg-white/55' : `min-h-[220px] p-4 ${levelStyles[action.level]}`}`} data-daily-action={action.task.actionType} data-panel-level={panelLevel}>
+    <section
+      className={`flex flex-col transition-all duration-300 ${
+        panelLevel === 'collapsed'
+          ? 'h-auto shrink-0 w-fit max-w-[min(500px,calc(100vw-32px))] rounded-full border border-white/50 bg-white/40 p-1 shadow-sm backdrop-blur-xl'
+          : panelLevel === 'half'
+            ? 'w-full max-w-[560px] rounded-[22px] border border-white/50 bg-white/50 p-2.5 shadow-md backdrop-blur-2xl'
+            : `w-full max-w-[640px] rounded-[24px] border border-white/60 bg-white/60 p-4 shadow-xl backdrop-blur-2xl ${levelStyles[action.level]}`
+      }`}
+      data-daily-action={action.task.actionType}
+      data-panel-level={panelLevel}
+    >
       <button
         type="button"
         data-today-action-handle
@@ -188,17 +198,53 @@ export function StatusSummaryCard({
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         onClick={handleClick}
-        className="flex min-h-11 w-full touch-none items-center justify-between gap-2 rounded-[16px] bg-white/45 px-3 text-left text-ink/70 backdrop-blur-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+        className={`flex w-full touch-none items-center justify-between gap-3 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 ${
+          panelLevel === 'collapsed'
+            ? 'h-9 rounded-full px-3.5 text-ink/80 hover:bg-white/40'
+            : 'min-h-10 rounded-[16px] bg-white/40 px-3 text-ink/80 backdrop-blur-sm'
+        }`}
       >
-        <span className="min-w-0 truncate text-[12px] font-black">{t('aquarium.todayAction')} · {action.task.title}</span>
-        <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-black text-ink/45"><GripHorizontal className="h-4 w-4" />{panelLevel === 'collapsed' ? t('aquarium.expandTodayAction', { defaultValue: '展开' }) : panelLevel === 'half' ? t('aquarium.halfExpandTodayAction', { defaultValue: '半展开' }) : t('aquarium.collapseTodayAction', { defaultValue: '收起' })}</span>
+        <span className="flex min-w-0 items-center gap-2">
+          <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-emerald-100 text-emerald-800">
+            <Icon className="h-3 w-3" />
+          </span>
+          <span className="min-w-0 truncate text-[12px] font-black text-ink">
+            {t('aquarium.todayAction')}: {action.task.title}
+          </span>
+        </span>
+        <span className="flex shrink-0 items-center gap-1.5 text-[10px] font-bold text-ink/50">
+          <GripHorizontal className="h-3.5 w-3.5 opacity-60" />
+          <span className="rounded-full bg-black/5 px-2 py-0.5 text-[10px] font-black">
+            {panelLevel === 'collapsed'
+              ? t('aquarium.expandTodayAction', { defaultValue: '展开' })
+              : panelLevel === 'half'
+                ? t('aquarium.halfExpandTodayAction', { defaultValue: '半展开' })
+                : t('aquarium.collapseTodayAction', { defaultValue: '收起' })}
+          </span>
+        </span>
       </button>
+
       {panelLevel === 'half' && (
-        <div className="flex items-center gap-3 rounded-[15px] bg-white/65 p-3">
-          <div className="min-w-0 flex-1"><div className="text-[11px] font-black text-ink">{action.label}</div><div className="mt-1 truncate text-[12px] font-black text-ink">{action.task.title}</div></div>
-          {hasPrimaryAction && <Button type="button" onClick={onPrimaryAction} className="min-h-11 shrink-0 rounded-full bg-emerald-800 px-3 text-[11px] font-black text-white">{action.task.primaryLabel}</Button>}
+        <div className="mt-2 flex items-center justify-between gap-3 rounded-[16px] bg-white/70 p-3">
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5 text-[11px] font-black text-emerald-800">
+              <TagPill tone={levelTone[action.level]}>{action.label}</TagPill>
+              <span className="text-[10px] text-ink/45">{action.sourceLabel}</span>
+            </div>
+            <div className="mt-1 truncate text-[12px] font-black text-ink">{action.task.title}</div>
+          </div>
+          {hasPrimaryAction && (
+            <Button
+              type="button"
+              onClick={onPrimaryAction}
+              className="min-h-10 shrink-0 rounded-full bg-emerald-800 px-3.5 text-[11px] font-black text-white shadow-sm hover:bg-emerald-900"
+            >
+              {action.task.primaryLabel}
+            </Button>
+          )}
         </div>
       )}
+
       <div className={panelLevel === 'expanded' ? '' : 'hidden'}>
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">

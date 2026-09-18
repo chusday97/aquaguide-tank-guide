@@ -1469,7 +1469,7 @@ export default function Encyclopedia() {
       })
     : null;
   const pendingAddPolicy = pendingFit ? getTankCompatibilityAddPolicy(pendingFit.status) : null;
-  const isOverlayOpen = !!selectedFish || !!selectedGroup || !!pendingTankFish || isCategoryDrawerOpen;
+  const isOverlayOpen = !!selectedGroup || !!pendingTankFish || isCategoryDrawerOpen;
 
   const openSelectedVariantDetails = (fish: Fish) => {
     setSelectedGroup(null);
@@ -1570,65 +1570,32 @@ export default function Encyclopedia() {
         </div>
       )}
 
-      <div className="min-w-0">
-        <aside className="hidden">
-          <div className="p-0">
-            <div className="grid gap-2">
-              {atlasModeItems.map(item => {
-                const isActive = viewMode === item.id;
-                return (
-                  <button
-                    key={item.id}
-                    id={item.id === 'compatibility' ? 'calculator-tab-target' : undefined}
-                    type="button"
-                    onClick={() => setViewMode(item.id)}
-                    className={`rounded-[20px] px-3 py-3 text-left transition-colors ${
-                      isActive
-                        ? 'bg-accent text-white shadow-[0_12px_26px_rgba(27,77,62,0.18)]'
-                        : 'bg-bg/60 text-ink/56 hover:bg-emerald-50 hover:text-accent'
-                    }`}
-                  >
-                    <span className="flex items-center justify-between gap-2">
-                      <span className="text-[14px] font-black">{isEn ? getDifficultyLabelLocalized(item.id, true) : item.label}</span>
-                      {item.id === 'compatibility' && calculatorSpeciesIds.length > 0 && (
-                        <span className={`inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-black ${
-                          isActive ? 'bg-white/22 text-white' : 'bg-emerald-100 text-emerald-700'
-                        }`}>
-                          {calculatorSpeciesIds.length}
-                        </span>
-                      )}
-                    </span>
-                    <span className={`mt-1 block text-[10px] font-bold leading-relaxed ${isActive ? 'text-white/64' : 'text-ink/38'}`}>
-                      {item.description}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        </aside>
-        <div className="min-w-0">
-
-      {viewMode === 'scene' ? (
-        <SpeciesSceneAtlas
-          species={discoverySpecies}
-          isEn={isEn}
-          getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
-          onSelect={(fish) => openSpeciesDetail(fish, `species-scene-${fish.id}`)}
-          onBrowseList={() => changeViewMode('browse')}
-          onIdentify={() => navigateToRoute('/identify')}
-          onRefreshDiscoveries={refreshDiscoveries}
-          onRestartDiscoveries={restartDiscoveries}
-          discoveryBatch={{
-            size: discoverySpecies.length,
-            seenCount: discoveryState.sceneSeenIds.length + discoverySpecies.length,
-            complete: discoveryState.sceneComplete,
-            index: discoveryState.sceneBatchIndex,
-          }}
-        />
-      ) : viewMode === 'browse' ? (
-      <div className="flex flex-col gap-5">
-      <div id="atlas-toolbar" data-workspace-sticky="true" className="atlas-sticky-toolbar flex flex-wrap gap-4 md:items-center md:gap-3 md:rounded-[22px] md:border md:border-white/80 md:bg-white/82 md:p-3 md:shadow-sm">
+      <div className="flex w-full min-w-0 items-start gap-6 transition-all duration-300">
+        {/* Main Workspace (自适应主工作区：场景或列表) */}
+        <div className="flex flex-col flex-1 min-w-0 transition-all duration-300">
+          {viewMode === 'scene' ? (
+            <SpeciesSceneAtlas
+              species={discoverySpecies}
+              isEn={isEn}
+              selectedFishId={selectedFish?.id}
+              getDisplayName={(fish) => getSpeciesNameLocalized(fish, isEn)}
+              onSelect={(fish) => {
+                openSpeciesDetail(fish, `species-scene-${fish.id}`);
+              }}
+              onBrowseList={() => changeViewMode('browse')}
+              onIdentify={() => navigateToRoute('/identify')}
+              onRefreshDiscoveries={refreshDiscoveries}
+              onRestartDiscoveries={restartDiscoveries}
+              discoveryBatch={{
+                size: discoverySpecies.length,
+                seenCount: discoveryState.sceneSeenIds.length + discoverySpecies.length,
+                complete: discoveryState.sceneComplete,
+                index: discoveryState.sceneBatchIndex,
+              }}
+            />
+          ) : viewMode === 'browse' ? (
+            <div className="flex flex-col gap-5 min-w-0 w-full transition-all duration-300">
+          <div id="atlas-toolbar" data-workspace-sticky="true" className="atlas-sticky-toolbar flex flex-wrap gap-4 md:items-center md:gap-3 md:rounded-[22px] md:border md:border-white/80 md:bg-white/82 md:p-3 md:shadow-sm">
         <button
           type="button"
           data-scene-return
@@ -1832,7 +1799,11 @@ export default function Encyclopedia() {
         </div>
       </div>
 
-        <div id="atlas-grid" className="mt-1 grid scroll-mt-[178px] grid-cols-2 gap-2.5 md:col-span-2 md:grid-cols-2 md:gap-3 lg:grid-cols-3 xl:grid-cols-4">
+        <div id="atlas-grid" className={`mt-1 grid scroll-mt-[178px] transition-all duration-300 ${
+          selectedFish
+            ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-3'
+            : 'grid-cols-2 gap-2.5 md:col-span-2 md:grid-cols-2 md:gap-3 lg:grid-cols-3 xl:grid-cols-4'
+        }`}>
           {pagedAtlasItems.map((item) => {
             if (item.kind === 'group') {
               const group = item.group;
@@ -1984,23 +1955,31 @@ export default function Encyclopedia() {
             const isMarine = isSaltwaterSpecies(fish);
             const compactTags = getSpeciesFunctionTags(fish);
 
+            const isSelected = selectedFish?.id === fish.id;
+
             return (
               <div 
                 key={fish.id} 
                 data-species-card
-                className={`relative flex min-h-[356px] flex-col gap-2 rounded-[16px] border bg-white p-2.5 shadow-sm transition-colors md:min-h-[430px] md:w-full ${
-                  isInCalculator
-                    ? 'border-emerald-500 ring-2 ring-emerald-100'
-                    : isMarine
-                      ? 'border-sky-300 ring-1 ring-sky-100 hover:border-sky-400'
-                      : isOwned
-                        ? 'border-accent/50'
-                        : 'border-border/70 hover:border-accent/30'
+                onClick={() => openSpeciesDetail(fish, `atlas-species-${fish.id}`)}
+                className={`relative flex min-h-[356px] flex-col gap-2 rounded-[16px] border bg-white p-2.5 shadow-sm transition-all duration-200 cursor-pointer md:min-h-[430px] md:w-full ${
+                  isSelected
+                    ? 'border-emerald-600 ring-2 ring-emerald-500 bg-emerald-50/20 shadow-md scale-[1.01]'
+                    : isInCalculator
+                      ? 'border-emerald-500 ring-2 ring-emerald-100 hover:border-emerald-600'
+                      : isMarine
+                        ? 'border-sky-300 ring-1 ring-sky-100 hover:border-sky-400'
+                        : isOwned
+                          ? 'border-accent/50 hover:border-accent'
+                          : 'border-border/70 hover:border-emerald-400/60 hover:shadow-md'
                 }`}
               >
                 <button
                   type="button"
-                  onClick={() => handleWishlistToggle(fish)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleWishlistToggle(fish);
+                  }}
                   aria-pressed={wishlistFishIds.has(fish.id)}
                   aria-label={wishlistFishIds.has(fish.id) ? t('encyclopedia.wishlistRemoved', { name: fish.name }) : t('encyclopedia.wishlistAdded', { name: fish.name })}
                   title={wishlistFishIds.has(fish.id) ? t('encyclopedia.wishlistRemoved', { name: fish.name }) : t('encyclopedia.wishlistAdded', { name: fish.name })}
@@ -2022,6 +2001,11 @@ export default function Encyclopedia() {
                       : `border-transparent bg-transparent ${getSpeciesImageSurfaceClass(fish)}`
                 }`}
                 >
+                  {isSelected && (
+                    <span className="absolute left-1.5 bottom-1.5 z-10 rounded-full bg-emerald-700 px-2 py-0.5 text-[9px] font-black text-white shadow-sm">
+                      {isEn ? 'Viewing' : '正在查看'}
+                    </span>
+                  )}
                   {isInCalculator && (
                     <span className="absolute right-1.5 top-1.5 z-10 rounded-full bg-emerald-600 px-1.5 py-0.5 text-[9px] font-black text-white shadow-sm">
                       {t('encyclopedia.selectedInCalc')}
@@ -2064,14 +2048,18 @@ export default function Encyclopedia() {
                     </span>
                   ))}
                 </div>
-                <div className="mt-auto grid grid-cols-2 gap-2 pt-2 md:grid md:grid-cols-2">
+                <div className="mt-auto grid grid-cols-2 gap-2 pt-2 md:grid md:grid-cols-2" onClick={(e) => e.stopPropagation()}>
                   <button
                     id={`atlas-species-${fish.id}`}
                     type="button"
                     onClick={() => openSpeciesDetail(fish, `atlas-species-${fish.id}`)}
-                    className="h-9 w-full rounded-full border border-border bg-white text-[11px] font-black text-ink/55 hover:border-accent hover:text-accent"
+                    className={`h-9 w-full rounded-full border text-[11px] font-black transition-colors ${
+                      isSelected
+                        ? 'border-emerald-700 bg-emerald-700 text-white shadow-xs'
+                        : 'border-border bg-white text-ink/55 hover:border-accent hover:text-accent'
+                    }`}
                   >
-                    {t('encyclopedia.viewDetails')}
+                    {isSelected ? (isEn ? 'Viewing' : '查看中') : t('encyclopedia.viewDetails')}
                   </button>
                   <button
                     type="button"
@@ -2219,34 +2207,74 @@ export default function Encyclopedia() {
           <img src={flyingThumbnail.src} alt={flyingThumbnail.name} className="h-full w-full object-contain" referrerPolicy="no-referrer" />
         </div>
       )}
-      </div>
-      ) : null}
-      {viewMode === 'compatibility' && (
-        <div id="compatibility-calculator" className="scroll-mt-6">
-        <CompatibilityRiskCalculator
-          speciesIds={calculatorSpeciesIds}
-          onSpeciesIdsChange={setCalculatorSpeciesIds}
-          preferredSpeciesIds={Array.from(ownedFishIds)}
-          aquariums={aquariumSnapshots}
-          activeAquariumId={currentAquarium?.id || targetAquariumId}
-          onAddToAquarium={addCompatibilitySpeciesToAquarium}
-          onRequestTankInfo={(missingRuleCodes) => {
-            const panel = missingRuleCodes.some(code => /volume|size|tank/.test(code))
-              ? 'size'
-              : missingRuleCodes.some(code => /filter|heater|equipment/.test(code))
-                ? 'equipment'
-                : 'parameters';
-            navigateToView('/aquarium', `#settings-${panel}`);
-          }}
-          onViewAquarium={() => navigateToView('/aquarium')}
-          onBrowseAtlas={() => {
-            setViewMode('browse');
-            void navigateToSection('atlas-toolbar', { updateHash: false });
-          }}
-        />
+            </div>
+          ) : null}
+          {viewMode === 'compatibility' && (
+            <div id="compatibility-calculator" className="scroll-mt-6 w-full">
+              <CompatibilityRiskCalculator
+                speciesIds={calculatorSpeciesIds}
+                onSpeciesIdsChange={setCalculatorSpeciesIds}
+                preferredSpeciesIds={Array.from(ownedFishIds)}
+                aquariums={aquariumSnapshots}
+                activeAquariumId={currentAquarium?.id || targetAquariumId}
+                onAddToAquarium={addCompatibilitySpeciesToAquarium}
+                onRequestTankInfo={(missingRuleCodes) => {
+                  const panel = missingRuleCodes.some(code => /volume|size|tank/.test(code))
+                    ? 'size'
+                    : missingRuleCodes.some(code => /filter|heater|equipment/.test(code))
+                      ? 'equipment'
+                      : 'parameters';
+                  navigateToView('/aquarium', `#settings-${panel}`);
+                }}
+                onViewAquarium={() => navigateToView('/aquarium')}
+                onBrowseAtlas={() => {
+                  changeViewMode('browse');
+                  void navigateToSection('atlas-toolbar', { updateHash: false });
+                }}
+              />
+            </div>
+          )}
         </div>
-      )}
-        </div>
+
+        {/* PANEL 3: Right Dock (右侧滑出物种档案) */}
+        {selectedFish && (
+          <aside className="sticky top-4 hidden md:flex w-full md:w-[420px] lg:w-[450px] xl:w-[480px] shrink-0 max-h-[calc(100vh-32px)] flex-col rounded-[24px] border border-black/[0.08] bg-white shadow-[0_16px_40px_rgba(0,0,0,0.08)] overflow-hidden transition-all duration-300 animate-in slide-in-from-right">
+            <SpeciesDetailDialog
+              mode="panel"
+              fish={selectedFish}
+              open={!!selectedFish}
+              source="atlas"
+              aquariumContext={referenceAquarium}
+              imageSrc={selectedFish ? getEncyclopediaImage(selectedFish) : ''}
+              owned={!!selectedFish && ownedFishIds.has(selectedFish.id)}
+              inCalculator={!!selectedFish && calculatorSpeciesIds.includes(selectedFish.id)}
+              inWishlist={!!selectedFish && wishlistFishIds.has(selectedFish.id)}
+              detailFeedback={detailFeedback}
+              onOpenChange={(open) => !open && closeAtlasDetail()}
+              onSelectSpecies={setSelectedFish}
+              onAddToTank={handleAddToTank}
+              onAddToCalculator={handleAddToCalculator}
+              onToggleWishlist={toggleWishlist}
+              onGoCalculator={() => {
+                closeAtlasDetail(false);
+                changeViewMode('compatibility');
+                navigateToRoute(taskRoutes.compatibility.with({ speciesIds: selectedFish ? [selectedFish.id] : undefined, source: 'encyclopedia' }));
+              }}
+              onViewInTank={() => {
+                closeAtlasDetail(false);
+                navigateToRoute(taskRoutes.aquarium.livestock);
+              }}
+              onOpenTankSettings={(panel) => {
+                closeAtlasDetail(false);
+                navigateToRoute(taskRoutes.aquarium.settings(panel));
+              }}
+              onRecordDeath={(fish, input) => {
+                recordSpeciesMemorial({ fishId: fish.id, ...input });
+                setDetailFeedback(`已记录 ${getSpeciesNameLocalized(fish, isEn)} 为逝去的生物。`);
+              }}
+            />
+          </aside>
+        )}
       </div>
 
       <Dialog open={!!selectedGroup} onOpenChange={(open) => !open && closeAtlasDetail()}>
@@ -2404,7 +2432,7 @@ export default function Encyclopedia() {
 
       <SpeciesDetailDialog
         fish={selectedFish}
-        open={!!selectedFish}
+        open={!!selectedFish && typeof window !== 'undefined' && window.innerWidth < 768}
         source="atlas"
         aquariumContext={referenceAquarium}
         imageSrc={selectedFish ? getEncyclopediaImage(selectedFish) : ''}

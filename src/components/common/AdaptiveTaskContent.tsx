@@ -7,32 +7,20 @@ type AdaptiveTaskContentProps = ComponentProps<typeof DialogContent>;
 
 export function AdaptiveTaskContent({ className, style, ...props }: AdaptiveTaskContentProps) {
   const { isPhoneLayout } = useLayoutMode();
-  const desktopWidth = 'min(var(--adaptive-task-width, var(--surface-editing-width, 560px)), calc(100vw - var(--desktop-sidebar-width, 280px) - 48px))';
-  const desktopGeometry: CSSProperties | undefined = isPhoneLayout
-    ? undefined
-    : {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 'auto',
-        width: desktopWidth,
-        maxWidth: desktopWidth,
-        height: '100dvh',
-        maxHeight: '100dvh',
-        transform: 'none',
-      };
 
   return (
     <DialogContent
-      data-surface={isPhoneLayout ? 'task-flow-mobile' : 'task-flow-drawer'}
+      surface="task"
+      data-surface={isPhoneLayout ? 'task-flow-mobile' : 'task-flow-modal'}
+      withOverlay={true}
       className={cn(
-        'flex flex-col overflow-hidden border-border bg-white p-0 shadow-[0_24px_70px_rgba(15,23,42,0.16)] duration-200',
+        'flex flex-col overflow-hidden border-border bg-white p-0 shadow-[0_25px_75px_rgba(15,23,42,0.24)] duration-200',
         isPhoneLayout
-          ? 'bottom-0 left-0 right-auto top-0 h-[100dvh] max-h-[100dvh] w-full max-w-[430px] translate-x-0 translate-y-0 rounded-none'
-          : 'bottom-0 left-auto right-0 top-0 h-[100dvh] max-h-[100dvh] min-w-0 translate-x-0 translate-y-0 rounded-none rounded-l-[24px] data-open:slide-in-from-right-full data-closed:slide-out-to-right-full',
+          ? 'bottom-0 left-0 right-0 top-auto h-auto max-h-[90dvh] w-full rounded-b-none rounded-t-[32px] border-x-0 border-b-0 border-t border-white/60'
+          : 'top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[min(640px,calc(100vw-48px))] max-w-[640px] max-h-[min(88dvh,820px)] rounded-[32px] border border-white/80 ring-1 ring-black/5',
         className,
       )}
-      style={{ ...desktopGeometry, ...style }}
+      style={style}
       {...props}
     />
   );

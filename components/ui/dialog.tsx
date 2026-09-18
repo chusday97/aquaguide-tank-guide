@@ -58,12 +58,8 @@ function usePhoneViewport() {
 }
 
 function Dialog({ modal, disablePointerDismissal, children, ...props }: DialogPrimitive.Root.Props) {
-  const isPhoneViewport = usePhoneViewport()
-  const surfaceChildren = typeof children === "function" ? null : children
-  const markedSurface = React.useMemo(() => getMarkedSurface(surfaceChildren), [surfaceChildren])
-  const isRailSurface = markedSurface === "detail" || markedSurface === "task"
-  const resolvedModal = modal ?? (isRailSurface ? isPhoneViewport : true)
-  const keepNonModalSurfaceOpen = disablePointerDismissal ?? resolvedModal === false
+  const resolvedModal = modal ?? true
+  const keepNonModalSurfaceOpen = disablePointerDismissal ?? false
 
   React.useEffect(() => {
     if (!props.open || !resolvedModal) return
@@ -102,7 +98,7 @@ function DialogOverlay({
     <DialogPrimitive.Backdrop
       data-slot="dialog-overlay"
       className={cn(
-        "fixed inset-0 isolate z-[160] bg-black/10 duration-100 supports-backdrop-filter:backdrop-blur-xs data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+        "fixed inset-0 isolate z-[160] bg-slate-950/45 backdrop-blur-sm duration-200 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
         className
       )}
       {...props}
@@ -125,26 +121,24 @@ function DialogContent({
   const { t } = useTranslation()
   const isPhoneViewport = usePhoneViewport()
   const resolvedSurface = inferSurface(surface)
-  const isRailSurface = resolvedSurface === "detail" || resolvedSurface === "task"
-  const resolvedOverlay = withOverlay ?? (!isRailSurface || isPhoneViewport)
+  const resolvedOverlay = withOverlay ?? true
 
-  const surfaceClass = resolvedSurface === "blocking"
-    ? "top-1/2 left-1/2 w-[min(480px,calc(100vw-32px))] max-w-[calc(100vw-32px)] -translate-x-1/2 -translate-y-1/2 rounded-[28px]"
-    : resolvedSurface === "fullscreen" || resolvedSurface === "media"
-      ? "top-1/2 left-1/2 max-w-[calc(100vw-32px)] -translate-x-1/2 -translate-y-1/2 rounded-[28px]"
-      : resolvedSurface === "detail"
-        ? isPhoneViewport
-          ? "bottom-0 left-1/2 top-auto h-[68dvh] min-h-[52dvh] max-h-[82dvh] w-[min(100vw,430px)] max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px]"
-          : "bottom-0 left-auto right-0 top-0 h-[100dvh] max-h-[100dvh] w-[clamp(480px,42vw,600px)] max-w-[calc(100vw-280px)] translate-x-0 translate-y-0 rounded-l-[28px] rounded-r-none"
-        : "bottom-0 left-1/2 top-auto h-[82dvh] max-h-[92dvh] w-[min(100vw,430px)] max-w-[430px] -translate-x-1/2 translate-y-0 rounded-b-none rounded-t-[28px] md:left-auto md:right-0 md:top-0 md:h-[100dvh] md:max-h-[100dvh] md:w-[min(760px,calc(100vw-320px))] md:max-w-[760px] md:translate-x-0 md:rounded-l-[28px] md:rounded-r-none"
+  // App Modal Surface Classes:
+  // Mobile: iOS-style Bottom Sheet with rounded top corners
+  // Desktop: Centered Floating App Card with all-around rounded corners and deep floating shadow
+  const surfaceClass = isPhoneViewport
+    ? "bottom-0 left-0 right-0 top-auto h-auto max-h-[90dvh] w-full max-w-full -translate-x-0 translate-y-0 rounded-b-none rounded-t-[32px] shadow-[0_-16px_48px_rgba(15,23,42,0.22)] border-x-0 border-b-0 border-t border-white/60"
+    : resolvedSurface === "blocking"
+      ? "top-1/2 left-1/2 w-[min(480px,calc(100vw-32px))] max-w-[calc(100vw-32px)] max-h-[85dvh] -translate-x-1/2 -translate-y-1/2 rounded-[32px] shadow-[0_24px_70px_rgba(15,23,42,0.25)] border border-white/80"
+      : resolvedSurface === "fullscreen" || resolvedSurface === "media"
+        ? "top-1/2 left-1/2 w-[min(1120px,calc(100vw-48px))] max-w-[calc(100vw-48px)] max-h-[92dvh] -translate-x-1/2 -translate-y-1/2 rounded-[32px] shadow-[0_25px_80px_rgba(15,23,42,0.28)] border border-white/80"
+        : resolvedSurface === "detail"
+          ? "top-1/2 left-1/2 w-[min(840px,calc(100vw-48px))] max-w-[840px] max-h-[min(88dvh,860px)] -translate-x-1/2 -translate-y-1/2 rounded-[32px] shadow-[0_25px_80px_rgba(15,23,42,0.28)] border border-white/80"
+          : "top-1/2 left-1/2 w-[min(640px,calc(100vw-48px))] max-w-[640px] max-h-[min(88dvh,820px)] -translate-x-1/2 -translate-y-1/2 rounded-[32px] shadow-[0_25px_80px_rgba(15,23,42,0.28)] border border-white/80"
 
-  const motionClass = resolvedSurface === "task"
-    ? "data-open:slide-in-from-bottom data-closed:slide-out-to-bottom md:data-open:slide-in-from-right md:data-closed:slide-out-to-right"
-    : resolvedSurface === "detail"
-      ? isPhoneViewport
-        ? "data-open:zoom-in-100 data-open:slide-in-from-bottom data-closed:zoom-out-100 data-closed:slide-out-to-bottom"
-        : "data-open:zoom-in-100 data-open:slide-in-from-right data-closed:zoom-out-100 data-closed:slide-out-to-right"
-      : "data-open:zoom-in-95 data-closed:zoom-out-95"
+  const motionClass = isPhoneViewport
+    ? "data-open:slide-in-from-bottom data-closed:slide-out-to-bottom duration-250"
+    : "data-open:zoom-in-95 data-closed:zoom-out-95 data-open:fade-in-0 data-closed:fade-out-0 duration-200"
 
   return (
     <DialogPortal>
@@ -153,13 +147,15 @@ function DialogContent({
         data-slot="dialog-content"
         data-dialog-surface={resolvedSurface}
         className={cn(
-          "modalCard fixed z-[161] gap-0 bg-popover p-4 text-sm text-popover-foreground ring-1 ring-foreground/10 duration-100 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
+          "modalCard fixed z-[161] flex flex-col overflow-hidden bg-popover text-sm text-popover-foreground ring-1 ring-black/5 outline-none data-open:animate-in data-closed:animate-out",
           surfaceClass,
           motionClass,
           className,
         )}
         {...props}
       >
+        {/* iOS Grab Handle for mobile bottom sheet */}
+        <div className="mx-auto mt-2.5 mb-1 h-1.5 w-12 shrink-0 rounded-full bg-ink/15 md:hidden" />
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close
@@ -167,13 +163,12 @@ function DialogContent({
             render={
               <Button
                 variant="ghost"
-                className="absolute right-3 top-3 z-10 h-11 w-11 rounded-full bg-background/90 shadow-sm focus-visible:ring-2 focus-visible:ring-emerald-400"
+                className="absolute right-3.5 top-3.5 z-20 h-9 w-9 rounded-full bg-black/5 hover:bg-black/10 text-ink/70 backdrop-blur-md shadow-xs transition-colors focus-visible:ring-2 focus-visible:ring-emerald-400"
                 size="icon"
               />
             }
           >
-            <XIcon
-            />
+            <XIcon className="h-4 w-4" />
             <span className="sr-only">{t("common.close")}</span>
           </DialogPrimitive.Close>
         )}
