@@ -178,7 +178,12 @@ export function StatusSummaryCard({
   };
 
   return (
-    <section className={`flex flex-col rounded-[20px] border p-2 shadow-sm transition-[max-height,background] ${panelLevel === 'collapsed' ? 'min-h-0 bg-white/35' : panelLevel === 'half' ? 'min-h-0 bg-white/55' : `min-h-[220px] p-4 ${levelStyles[action.level]}`}`} data-daily-action={action.task.actionType} data-panel-level={panelLevel}>
+    <section
+      className={`flex flex-col rounded-[20px] border p-2 shadow-sm transition-[max-height,background] ${panelLevel === 'collapsed' ? 'min-h-0 bg-white/35' : panelLevel === 'half' ? 'min-h-0 bg-white/55' : `min-h-[220px] p-4 ${levelStyles[action.level]}`}`}
+      data-daily-action={action.task.actionType}
+      data-panel-level={panelLevel}
+      data-aquarium-state={action.level}
+    >
       <button
         type="button"
         data-today-action-handle
@@ -196,7 +201,7 @@ export function StatusSummaryCard({
       {panelLevel === 'half' && (
         <div className="flex items-center gap-3 rounded-[15px] bg-white/65 p-3">
           <div className="min-w-0 flex-1"><div className="text-[11px] font-black text-ink">{action.label}</div><div className="mt-1 truncate text-[12px] font-black text-ink">{action.task.title}</div></div>
-          {hasPrimaryAction && <Button type="button" onClick={onPrimaryAction} className="min-h-11 shrink-0 rounded-full bg-emerald-800 px-3 text-[11px] font-black text-white">{action.task.primaryLabel}</Button>}
+          {hasPrimaryAction && <Button type="button" data-aquarium-primary="today-action" onClick={onPrimaryAction} className="min-h-11 shrink-0 rounded-full bg-emerald-800 px-3 text-[11px] font-black text-white">{action.task.primaryLabel}</Button>}
         </div>
       )}
       <div className={panelLevel === 'expanded' ? '' : 'hidden'}>
@@ -235,6 +240,7 @@ export function StatusSummaryCard({
       {hasPrimaryAction && (
         <Button
           type="button"
+          data-aquarium-primary="today-action"
           onClick={onPrimaryAction}
           className="mt-auto h-11 w-full rounded-full bg-emerald-800 px-4 text-[12px] font-black text-white shadow-none hover:bg-emerald-900"
         >

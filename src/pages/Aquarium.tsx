@@ -284,7 +284,11 @@ function AquariumWorkspace({
 
   return (
     <>
-      <section className="aquarium-workspace-zone aquarium-observe-zone aquarium-dashboard" aria-labelledby="aquarium-observe-title">
+      <section
+        className="aquarium-workspace-zone aquarium-observe-zone aquarium-dashboard"
+        aria-labelledby="aquarium-observe-title"
+        data-aquarium-hierarchy="state-tank-actions-summary-discovery"
+      >
         <AquariumZoneHeader index={1} title={observeTitle} subtitle={observeSubtitle} titleId="aquarium-observe-title" />
         <div className="aquarium-dashboard-stage">
           <div className="aquarium-dashboard-tank">
@@ -5168,7 +5172,7 @@ export default function AquariumManager() {
         learnTitle={t('aquarium.zoneLearn')}
         learnSubtitle={t('aquarium.zoneLearnHint')}
         status={(
-      <div id="aquarium-overview" className="aquarium-status order-[2] scroll-mt-4 md:order-none">
+      <div id="aquarium-overview" className="aquarium-status order-[2] scroll-mt-4 md:order-none" data-aquarium-hierarchy-item="state">
         <StatusSummaryCard
           action={dailyActionViewModel}
           carePlan={carePlanSummary}
@@ -5196,7 +5200,7 @@ export default function AquariumManager() {
       </div>
         )}
         discovery={(
-      <section id="aquarium-discovery" className="aquarium-discovery order-[1] scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
+      <section id="aquarium-discovery" className="aquarium-discovery order-[1] scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none" data-aquarium-hierarchy-item="discovery">
         <div className="mb-2 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 text-[13px] font-black text-ink">
@@ -5301,7 +5305,7 @@ export default function AquariumManager() {
       </section>
         )}
         actions={(
-      <section id="aquarium-actions" className="aquarium-actions order-[3] scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none">
+      <section id="aquarium-actions" className="aquarium-actions order-[3] scroll-mt-4 overflow-hidden rounded-[20px] border border-white/80 bg-white/65 p-3 shadow-sm md:order-none" data-aquarium-hierarchy-item="actions">
         <SectionHeader title={isEn ? "Quick Actions" : "常用操作"} subtitle={isEn ? "Quickly log daily care tasks." : "快速记录日常养护。"} />
         <div className="mt-3">
           <QuickActionGrid actions={visibleAquariumActions} />
@@ -5309,7 +5313,7 @@ export default function AquariumManager() {
       </section>
         )}
         tank={(
-      <div id="aquarium-tank" tabIndex={-1} className="aquarium-tank order-[6] relative h-72 w-full scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 shadow-sm group md:order-none md:h-[min(50dvh,470px)] md:min-h-[360px]">
+      <div id="aquarium-tank" tabIndex={-1} className="aquarium-tank order-[6] relative h-72 w-full scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 shadow-sm group md:order-none md:h-[min(50dvh,470px)] md:min-h-[360px]" data-aquarium-hierarchy-item="tank">
         {shouldLoadThreeAquarium ? (
           <Suspense
             fallback={
@@ -5459,7 +5463,7 @@ export default function AquariumManager() {
       </div>
         )}
         archive={(
-      <section id="aquarium-records" className="aquarium-archive scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-[#F8F7F2] shadow-sm">
+      <section id="aquarium-records" className="aquarium-archive scroll-mt-4 overflow-hidden rounded-[18px] border border-white/80 bg-[#F8F7F2] shadow-sm" data-aquarium-hierarchy-item="summary">
         <button
           type="button"
           onClick={() => setIsTankArchiveExpanded(true)}
