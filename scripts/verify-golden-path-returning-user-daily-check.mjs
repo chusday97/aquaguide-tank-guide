@@ -74,8 +74,13 @@ try {
 
   const todayTask = page.locator('[data-daily-action="daily_check"]');
   await todayTask.waitFor();
-  await page.locator('[data-aquarium-next-action-title]').getByText('完成今天的鱼缸检查', { exact: true }).waitFor();
-  await todayTask.locator('[data-today-action-handle]').click();
+  const todayHandle = todayTask.locator('[data-today-action-handle]');
+  await todayHandle.waitFor();
+  assert.ok(
+    ((await todayHandle.textContent()) || '').includes('完成今天的鱼缸检查'),
+    'The visible canonical Today Action must present the Daily Check as the current task.',
+  );
+  await todayHandle.click();
   await todayTask.getByRole('button', { name: '开始今日检查', exact: true }).click();
 
   const dialog = page.getByRole('dialog').filter({ hasText: '每日鱼缸检查' });
@@ -138,14 +143,19 @@ try {
     0,
     'After a successful Daily Check save, the Today primary task must advance instead of asking for the same check.',
   );
-  const nextActionTitle = page.locator('[data-aquarium-next-action-title]');
-  await nextActionTitle.waitFor();
   const advancedTask = page.locator('[data-daily-action]').first();
   await advancedTask.waitFor();
   const advancedTaskTitle = ((await advancedTask.locator('[data-today-action-handle]').textContent()) || '').replace(/^今日行动\s*·\s*/, '').replace(/(展开|半展开|收起).*$/, '').trim();
-  const stageTitle = ((await nextActionTitle.textContent()) || '').trim();
-  assert.notEqual(stageTitle, '完成今天的鱼缸检查', 'The aquarium stage must not keep the completed Daily Check as the next action.');
-  assert.ok(advancedTaskTitle.includes(stageTitle), `Aquarium stage next action must match Today Action truth: stage=${stageTitle}, task=${advancedTaskTitle}`);
+  assert.notEqual(advancedTaskTitle, '完成今天的鱼缸检查', 'The visible canonical Today Action must advance after the Daily Check is saved.');
+
+  // V5 intentionally hides the aquarium-scene headline, but the hidden stage truth
+  // must still agree with the visible canonical Today Action when it is rendered.
+  const nextActionTitle = page.locator('[data-aquarium-next-action-title]');
+  if (await nextActionTitle.count()) {
+    const stageTitle = ((await nextActionTitle.textContent()) || '').trim();
+    assert.notEqual(stageTitle, '完成今天的鱼缸检查', 'The aquarium stage truth must not keep the completed Daily Check as the next action.');
+    assert.ok(advancedTaskTitle.includes(stageTitle), `Aquarium stage next action must match Today Action truth: stage=${stageTitle}, task=${advancedTaskTitle}`);
+  }
 
   const advancedStatus = page.getByText(/^(今日已检查|建议重新检查)$/, { exact: true }).first();
   await advancedStatus.waitFor();

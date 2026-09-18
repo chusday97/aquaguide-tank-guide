@@ -1,0 +1,1541 @@
+{
+  "schema_version": "2.0.0",
+  "name": "Aquapedia 34 Essential Care Guides (34个高频水族养护与鱼只异常急救指南)",
+  "design_system": {
+    "style": "Minimalist Japanese lifestyle watercolor sketch, pure white background #FFFFFF, fine black linework, subtle pastel accents",
+    "ratio": "16:9 triptych with crop lines, cuts into three 1:1 square cards",
+    "content_rule": "Zero jargon, plain colloquial Chinese, subject + action + tool + reason"
+  },
+  "guides": [
+    {
+      "id": "care_01",
+      "category": "入缸与转水",
+      "title": "新买的鱼到家入缸（过水定水）",
+      "condition": "刚买回家的鱼装在塑料袋里，袋内水温与鱼缸不同，且装满了几个小时积攒的鱼便与有害细菌，直接倒缸会导致温差休克或整缸水发臭。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "整袋泡水20分钟",
+          "how": "不解开袋子，直接丢在鱼缸水面上漂浮20分钟。",
+          "why": "依靠水温自然传导，让塑料袋内外的水温完全一致，防止鱼被温差冻死或热死。",
+          "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "舀鱼缸水倒进袋中",
+          "how": "解开袋口，用小量杯舀一点鱼缸里的水倒进袋里，每隔8分钟加一次，分3次完成。",
+          "why": "让鱼鳃缓慢适应主缸的pH值和渗透压，避免急性水质酸碱休克。",
+          "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "只把鱼捞进缸，旧水倒掉",
+          "how": "一手拿小鱼网把鱼捞进鱼缸，另一手把塑料袋里的脏水全部倒进水桶扔掉。",
+          "why": "绝不把运输袋里充满排泄物和细菌的陈旧水倒进主缸，阻断外来污染。",
+          "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿直接解袋倒鱼；切勿把袋子里的水倒入鱼缸。",
+      "image_path": "assets/care_guides_handdrawn/01_new_fish_acclimation.jpg",
+      "cover_card": {
+        "short_title": "新鱼入缸",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a transparent plastic bag with new colorful fish floating on the aquarium water surface, adapting water temperature, with an owner gently pouring tank water into the bag",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a transparent plastic bag with new colorful fish floating on the aquarium water surface, adapting water temperature, with an owner gently pouring tank water into the bag. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '新鱼入缸' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/01_new_fish_acclimatization_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/01_new_fish_acclimatization_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/01_new_fish_acclimation.jpg"
+    },
+    {
+      "id": "care_02",
+      "category": "入缸与转水",
+      "title": "新买的水草除螺除藻消毒",
+      "condition": "新买的水草往往藏有极其微小的蜗牛卵、寄生虫卵或黑毛藻丝，直接放进鱼缸2周后就会爆发成百上千只爆缸杂螺。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "自来水下冲洗修剪烂叶",
+          "how": "打开水龙头轻微流水，用手轻轻搓洗叶面，用小剪刀剪掉变黄发黑的烂根烂叶。",
+          "why": "物理剥离大颗粒泥沙杂质，并剔除腐烂组织防止败水。",
+          "image_path": "assets/care_guides_handdrawn/02_plant_disinfection_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "泡在稀释的高锰酸钾浅粉水5分钟",
+          "how": "在水盆里滴入微量消毒液调成浅粉色，把整棵水草完全泡入浸泡5分钟。",
+          "why": "利用弱氧化杀灭潜伏在叶背的蜗牛卵囊和寄生虫胞囊。",
+          "image_path": "assets/care_guides_handdrawn/02_plant_disinfection_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "清水反复漂洗3遍后再种进缸",
+          "how": "捞出水草，在干净的自来水盆里来回涮洗3遍冲掉残留药液，再用镊子夹入缸中栽种。",
+          "why": "彻底去除消毒药物残留，保护鱼虾不受药物刺激。",
+          "image_path": "assets/care_guides_handdrawn/02_plant_disinfection_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿用浓药水长时间浸泡，会烧焦水草娇嫩叶片。",
+      "image_path": "assets/care_guides_handdrawn/02_plant_disinfection.jpg",
+      "cover_card": {
+        "short_title": "水草消毒",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "aquatic green plants being gently soaked in a shallow basin with pink potassium permanganate solution to remove snails and parasites",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing aquatic green plants being gently soaked in a shallow basin with pink potassium permanganate solution to remove snails and parasites. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '水草消毒' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/02_plant_dip_disinfection_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/02_plant_dip_disinfection_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/02_plant_disinfection.jpg"
+    },
+    {
+      "id": "care_03",
+      "category": "入缸与转水",
+      "title": "新鱼缸开缸养水（建立硝化系统）",
+      "condition": "刚买回来的新鱼缸加满水虽然看似透明清澈，但水里没有任何益生菌，是无法分解鱼便的‘生水’，直接放鱼会导致鱼群中毒死亡。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "加满水后开过滤器空转3天",
+          "how": "缸内装满静置除氯过的水，插上水泵过滤器让水流连续循环流动72小时。",
+          "why": "挥发水里的微量自来水余氯，并激活滤材中的孔隙。",
+          "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "倒入硝化细菌液体并扔几粒鱼粮",
+          "how": "往水流最急的出水口倒入一盖硝化细菌液，同时丢入3-5粒鱼饲料。",
+          "why": "饲料腐烂产生微量氨氮，作为有益硝化菌生长繁殖的‘食物’。",
+          "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "耐心等待7-10天直到水彻底变清",
+          "how": "中间水体会短暂变白发雾，不要关机也不要换水，静候7-10天直到水变通透再放鱼。",
+          "why": "水质由雾转透标志着有益生态菌群建立完成，水质具备分解能力。",
+          "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "开缸第1周严禁大量放鱼；水发白发雾时切勿频繁全缸换水。",
+      "image_path": "assets/care_guides_handdrawn/03_new_tank_cycling.jpg",
+      "cover_card": {
+        "short_title": "新缸养水",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a sparkling clean new aquarium with water filter pump running smoothly, cycling clean water, with nitrifying bacteria being added drop by drop",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a sparkling clean new aquarium with water filter pump running smoothly, cycling clean water, with nitrifying bacteria being added drop by drop. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '新缸养水' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/03_tank_cycling_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/03_tank_cycling_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/03_new_tank_cycling.jpg"
+    },
+    {
+      "id": "care_04",
+      "category": "水质与环境突发",
+      "title": "水质突发发白变浑浊、发臭",
+      "condition": "鱼缸水突然从清澈变得像米汤一样浑浊发白，水面漂浮着久久不散的白泡沫，水有腥臭味。多因投喂过量或生化滤材被破坏引起有益菌崩溃。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "暂停喂食整整一天",
+          "how": "盖紧饲料瓶盖收好，24小时内不要往鱼缸里扔一粒鱼粮。",
+          "why": "切断水质恶化源，避免过剩饵料加剧水中细菌狂暴滋生。",
+          "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "吸走底便，换四分之一水",
+          "how": "用洗沙换水器贴紧底砂吸走堆积的鱼粪，抽掉1/4脏水，补入等温度的新水。",
+          "why": "移走有机脏污并稀释水中有害浓度，切忌全部换完导致鱼渗透压崩溃。",
+          "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "开启打氧，洗干净过滤棉",
+          "how": "调大氧气泵气石冲出大量微气泡，取下过滤器最上面的白色脏滤棉搓洗干净装回。",
+          "why": "强力充氧能帮助崩溃的硝化菌迅速复苏，物理洗棉阻断污物回流。",
+          "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿全缸100%换水；切勿直接用自来水搓洗生化陶瓷环。",
+      "image_path": "assets/care_guides_handdrawn/04_cloudy_water_fix.jpg",
+      "cover_card": {
+        "short_title": "水质变白",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an aquarium where the water has turned cloudy milky white, showing the milky haze in the water column and a siphon hose draining water into a bucket",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing an aquarium where the water has turned cloudy milky white, showing the milky haze in the water column and a siphon hose draining water into a bucket. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '水质变白' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/04_cloudy_water_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/04_cloudy_water_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/04_cloudy_water_fix.jpg"
+    },
+    {
+      "id": "care_05",
+      "category": "水质与环境突发",
+      "title": "冬季水温突降 / 加热棒故障断电",
+      "condition": "冬天加热棒坏掉或突发停电，水温骤跌至18°C以下，热带鱼趴在水底僵硬不动、鱼鳍收拢，若不及时回温会导致严重感冒甚至冻死。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "用塑料瓶装温水浮在水面缓释热量",
+          "how": "耐热塑料瓶装满约40°C的温水拧紧，漂浮在水面上让热量自然散发。",
+          "why": "温和渐进升温，绝对禁止直接向鱼缸倒开水烫伤鱼体黏膜。",
+          "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "用毛毯或厚泡沫板包裹鱼缸四周",
+          "how": "用厚被子、毛毯或发泡塑料板将鱼缸的正面除外的三面牢牢裹住。",
+          "why": "阻断室内寒冷空气从玻璃侧壁带走热量，形成保温屏障。",
+          "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "接通新加热棒，每两小时只调高1度",
+          "how": "换上备用加热棒，每隔2小时转动温控旋钮上调1°C，慢速恢复至26°C。",
+          "why": "剧烈升温与剧烈降温同样致命，阶梯式回温能保护鱼的心脏负荷。",
+          "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁直接往缸里加热水；严禁将冻僵的鱼直接捞进高温热水中。",
+      "image_path": "assets/care_guides_handdrawn/05_temp_drop_emergency.jpg",
+      "cover_card": {
+        "short_title": "水温骤降",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an aquarium thermometer showing a low temperature warning, with an underwater heater rod glowing with an orange pilot light to warm the water",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing an aquarium thermometer showing a low temperature warning, with an underwater heater rod glowing with an orange pilot light to warm the water. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '水温骤降' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/05_temperature_drop_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/05_temperature_drop_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/05_temp_drop_emergency.jpg"
+    },
+    {
+      "id": "care_06",
+      "category": "水质与环境突发",
+      "title": "水面产生大量难消泡沫与油膜",
+      "condition": "鱼缸水面上飘着一层反光的彩色油污膜，或者过滤器砸出的水泡聚集成堆不破灭，阻碍了空气溶氧，水质开始变腥。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "拿一张干净纸巾平铺在水面上吸走油膜",
+          "how": "拿一张普通厨房抽纸，平平摊在水面上停滞2秒，捏住纸角快速提走丢弃。",
+          "why": "纸张纤维微孔能依靠毛细现象快速吸附表层油性蛋白质浮层。",
+          "image_path": "assets/care_guides_handdrawn/06_oil_film_removal_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "用杯子舀走角落堆积的大泡沫",
+          "how": "用敞口小杯子贴着水面斜倾，把聚集在缸角的黏稠泡沫连带少量表层水舀掉。",
+          "why": "快速物理移走聚集在泡沫中的老化蛋白质和有机死质。",
+          "image_path": "assets/care_guides_handdrawn/06_oil_film_removal_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "调高过滤器出水口，砸破水面张力",
+          "how": "把过滤出水口抬高至高出水面1厘米，让水流跌落冲碎水面油层。",
+          "why": "打破水面静止表面张力，加速气体交换与油膜向过滤槽回收。",
+          "image_path": "assets/care_guides_handdrawn/06_oil_film_removal_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿使用任何洗洁精或化学去油剂。",
+      "image_path": "assets/care_guides_handdrawn/06_oil_film_removal.jpg",
+      "cover_card": {
+        "short_title": "水面油膜",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an oily reflective sheen and persistent small bubbles floating on the water surface, with a kitchen paper towel sheet being placed gently on the water to absorb oil",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing an oily reflective sheen and persistent small bubbles floating on the water surface, with a kitchen paper towel sheet being placed gently on the water to absorb oil. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '水面油膜' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/06_surface_oil_film_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/06_surface_oil_film_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/06_oil_film_removal.jpg"
+    },
+    {
+      "id": "care_07",
+      "category": "水质与环境突发",
+      "title": "鱼缸水体突然变绿（绿水爆发）",
+      "condition": "阳光长时间直射或开灯过久，水中的微小单细胞绿藻疯长，整缸水变成浓绿茶汤样，鱼群被完全遮挡。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "彻底遮光3天（关灯并拉上窗帘）",
+          "how": "用遮光布或大黑塑料袋将鱼缸全面罩住，连续72小时严禁任何光照。",
+          "why": "小球藻极其依赖光合作用，阻断光线即可切断其能量供给导致枯竭。",
+          "image_path": "assets/care_guides_handdrawn/07_green_water_fix_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "把打氧泵开到最大，持续充氧",
+          "how": "开启气石打出暴密气泡，24小时不间断打氧。",
+          "why": "大量绿藻在黑暗中会停止产氧转为吸氧，打氧防止藻类死亡耗尽氧气导致鱼窒息。",
+          "image_path": "assets/care_guides_handdrawn/07_green_water_fix_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "在过滤槽暗格加装UV杀菌灯",
+          "how": "在完全遮光的密闭过滤槽内安装专用紫外线灭藻灯管进行水循环消毒。",
+          "why": "紫外光能直接破坏随水流通过的游离藻类细胞核，彻底清除绿水。",
+          "image_path": "assets/care_guides_handdrawn/07_green_water_fix_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁将UV杀菌灯直接放在鱼缸主水体照射鱼群，会灼伤鱼眼及体表。",
+      "image_path": "assets/care_guides_handdrawn/07_green_water_fix.jpg",
+      "cover_card": {
+        "short_title": "绿水爆发",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an aquarium filled with opaque vibrant green algae bloom water, with a UV sterilizer lamp emitting subtle blue light inside the filter chamber",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing an aquarium filled with opaque vibrant green algae bloom water, with a UV sterilizer lamp emitting subtle blue light inside the filter chamber. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '绿水爆发' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/07_green_water_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/07_green_water_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/07_green_water_fix.jpg"
+    },
+    {
+      "id": "care_08",
+      "category": "水质与环境突发",
+      "title": "缸壁与水草大面积爆发褐色/黑色藻类",
+      "condition": "鱼缸玻璃上长满一层发黄的褐斑泥膜（褐藻），或者水草叶边与沉木上附着顽固的刷状黑毛（黑毛藻），影响美观且阻碍水草呼吸。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "用磁力刮藻刀把玻璃上的斑块刮除",
+          "how": "手持磁力刷贴紧玻璃来回推动，将附着的藻类刮落到水中。",
+          "why": "清除玻璃观赏面的顽固藻斑，改善光照通透度。",
+          "image_path": "assets/care_guides_handdrawn/08_algae_control_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "用长弯剪直接剪掉长满黑毛的老叶",
+          "how": "拿起水草修剪剪刀，沿着黑毛藻密布的老叶根部直接剪断捞出。",
+          "why": "黑毛藻与水草组织紧密纠缠难以剥除，修剪老叶是阻断其扩散的最快方法。",
+          "image_path": "assets/care_guides_handdrawn/08_algae_control_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "放入3-5只黑壳虾与工具鱼清理残藻",
+          "how": "引入黑壳虾、鲍鱼螺或黑线飞狐，并将日常开灯时间压缩至每天5-6小时。",
+          "why": "利用生物天性啃食微小藻丝，并通过减少光照时间压制藻类复发。",
+          "image_path": "assets/care_guides_handdrawn/08_algae_control_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁盲目大剂量乱倒化学除藻剂，容易导致水草融叶和敏感虾类团灭。",
+      "image_path": "assets/care_guides_handdrawn/08_algae_control.jpg",
+      "cover_card": {
+        "short_title": "爆褐藻",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "brown diatom algae coating aquatic plant leaves and glass walls, with an aquarium scraper blade gently scraping the glass clean",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing brown diatom algae coating aquatic plant leaves and glass walls, with an aquarium scraper blade gently scraping the glass clean. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '爆褐藻' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/08_brown_algae_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/08_brown_algae_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/08_algae_control.jpg"
+    },
+    {
+      "id": "care_09",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼群浮头大口喘气（严重缺氧）",
+      "condition": "所有鱼聚集在水面附近，嘴巴伸出水面急速开合喘气，反应迟钝甚至侧翻，表明水体溶氧耗尽或氨氮中毒，若不抢救几小时内全缸覆灭。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "立即开启大流量打氧",
+          "how": "立刻将气泵气石放入水中开至最大，或将过滤器出水口抬出水面剧烈冲砸出白色气泡水花。",
+          "why": "水面水花剧烈震荡能最快速将空气中的氧分子压入水体，解除窒息。",
+          "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "捞走吃不完的残饵",
+          "how": "用细网把漂浮在水面和沉在底部的残余饲料迅速捞出丢掉。",
+          "why": "残留饲料在水中分解会疯狂吞噬宝贵氧气，捞走残饵即刻遏制耗氧。",
+          "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "换少量温水，关灯静养",
+          "how": "换出20%水体带走溶存毒素，关闭鱼缸照明灯保持昏暗。",
+          "why": "昏暗环境能让受惊休克的鱼减慢心跳和呼吸耗氧，平稳度过危机。",
+          "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "缺氧时严禁喂食；严禁在浮头未缓解时大量下药。",
+      "image_path": "assets/care_guides_handdrawn/09_gasping_fish_emergency.jpg",
+      "cover_card": {
+        "short_title": "鱼浮头",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "fishes floating at the water surface gasping for air, with an aerator air bubbler producing surging white oxygen bubbles and current",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing fishes floating at the water surface gasping for air, with an aerator air bubbler producing surging white oxygen bubbles and current. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '鱼浮头' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/09_gasping_fish_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/09_gasping_fish_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/09_gasping_fish_emergency.jpg"
+    },
+    {
+      "id": "care_10",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼体布满密密麻麻的小白点（白点病）",
+      "condition": "鱼身上和鱼鳍上布满像细盐粒一样的小白点，鱼精神萎靡，不时在沉木和沙石上疯狂蹭痒，这是小瓜虫寄生病。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "加热棒缓慢升温恒定在30°C",
+          "how": "每2小时将加热棒旋钮上调1度，最终设定在30°C，连续保持5-7天。",
+          "why": "小瓜虫在28°C以上停止分裂繁殖，30°C高温会使其自然脱落死亡。",
+          "image_path": "assets/care_guides_handdrawn/10_ich_white_spot_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "往缸中加入千分之三专用无碘粗盐",
+          "how": "按100升水放300克大颗粒粗盐，化开后分两次沿出水口倒入。",
+          "why": "微量盐度能调节水体渗透压，刺激鱼体分泌健康黏液保护皮肤创口。",
+          "image_path": "assets/care_guides_handdrawn/10_ich_white_spot_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "每天换掉五分之一水并吸走缸底脱落虫体",
+          "how": "每天用换水管吸走底沙表面的沉积残渣，并补充等温无氯新水。",
+          "why": "将脱落到底部的休眠虫胞物理吸除，阻止其二次孵化重新寄生。",
+          "image_path": "assets/care_guides_handdrawn/10_ich_white_spot_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁使用加碘食用盐；严禁突然直接从24°C一口气升到30°C。",
+      "image_path": "assets/care_guides_handdrawn/10_ich_white_spot.jpg",
+      "cover_card": {
+        "short_title": "白点病",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "small tropical fish with tiny distinct white spots visible on its translucent fins and dorsal body, swimming calmly in soft water",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing small tropical fish with tiny distinct white spots visible on its translucent fins and dorsal body, swimming calmly in soft water. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '白点病' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/10_white_spot_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/10_white_spot_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/10_ich_white_spot.jpg"
+    },
+    {
+      "id": "care_11",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼鳍裂开、边缘发白腐烂（烂尾烂鳍）",
+      "condition": "鱼尾巴或背鳍开裂破损呈流苏状，边缘有一圈发红充血或发白发霉的腐烂白边，多因外伤后水质太脏被细菌感染所致。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "用捞网把病鱼捞入独立小药盆隔离",
+          "how": "用小塑料盒装入原缸老水，用网兜把烂鳍病鱼单独转移至小盒中。",
+          "why": "建立独立治疗环境，防止病菌在主缸蔓延，且利于精确控制药量。",
+          "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "滴入微量抗菌药（黄粉或杀菌水）药浴",
+          "how": "滴入专用黄粉溶液至水呈微淡黄色，浸泡病鱼药浴20-30分钟。",
+          "why": "针对革兰氏阳性/阴性菌进行外用杀菌，阻止尾鳍组织继续坏死溃烂。",
+          "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "主缸彻底换掉三分之一新水",
+          "how": "主鱼缸抽出1/3陈水，慢慢补入温和新水并洗净过滤棉。",
+          "why": "烂尾的根本诱因是水质菌群超标，优化主缸水质才能彻底断绝复发。",
+          "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁在水草主缸中大剂量泼洒抗生素破坏整个生化过滤系统。",
+      "image_path": "assets/care_guides_handdrawn/11_fin_rot_treatment.jpg",
+      "cover_card": {
+        "short_title": "烂尾病",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fish with frayed, cloudy white, shredded fin edges on its caudal tail fin, showing signs of bacterial fin rot",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a fish with frayed, cloudy white, shredded fin edges on its caudal tail fin, showing signs of bacterial fin rot. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '烂尾病' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/11_fin_rot_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/11_fin_rot_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/11_fin_rot_treatment.jpg"
+    },
+    {
+      "id": "care_12",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼肚子朝天漂浮或沉底翻滚（失鳔病）",
+      "condition": "鱼游动失控，头朝下肚子朝上倒立漂浮在水面，或侧翻躺在缸底像石头一样，但鱼鳃依然在快速起伏呼吸，此为鱼鳔调节失调。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "把病鱼放入浅水盒，水位仅没过鱼背5厘米",
+          "how": "将鱼转移到水深只有5-8厘米的平底隔离盒中静养。",
+          "why": "极浅水深能大幅减轻水压负担，防止病鱼因拼命挣扎调整平衡而力竭虚脱。",
+          "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "彻底停食整整3天",
+          "how": "连续72小时完全断食，不喂任何饲料颗粒。",
+          "why": "大部分失鳔由于暴食干粮膨胀挤压鱼鳔，断食能促使消化道排空积食与肠气。",
+          "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "喂食一小颗煮熟剥皮的甜豌豆泥",
+          "how": "水煮一颗青豌豆至软烂，剥掉外皮捏成微小泥末，投喂米粒大的一点点。",
+          "why": "熟豌豆富含天然植物水溶性纤维，能帮助鱼类肠道润滑通便解除胀气。",
+          "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "失鳔期间严禁投喂硬质干燥膨胀饲料；严禁留在深水大缸中强水流冲刷。",
+      "image_path": "assets/care_guides_handdrawn/12_swim_bladder_care.jpg",
+      "cover_card": {
+        "short_title": "鱼失鳔",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fancy goldfish struggling with buoyancy, floating belly-up at the water surface in a shallow hospital tank",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a fancy goldfish struggling with buoyancy, floating belly-up at the water surface in a shallow hospital tank. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '鱼失鳔' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/12_swim_bladder_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/12_swim_bladder_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/12_swim_bladder_care.jpg"
+    },
+    {
+      "id": "care_13",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼鳞片像松果一样炸开、腹部水肿（炸鳞腹水）",
+      "condition": "从正上方看，鱼身体两边的鳞片全部像打开的松果一样外立支棱，腹部肿胀发亮，表明体内严重细菌感染并发肾衰竭水肿。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "单独隔离，加入千分之五泻盐水",
+          "how": "在小治疗盒中按每升水放5克硫酸镁（泻盐），化匀后放入病鱼。",
+          "why": "泻盐能通过高渗透压原理将鱼体内腹腔蓄积的多余组织液吸拔出来。",
+          "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "水温恒定在28°C并提供柔和微打氧",
+          "how": "用小加热棒维持28°C水温，出气石调至极其柔和微细气泡。",
+          "why": "恒温能减轻病鱼代谢负荷，微弱水流避免扰动其衰弱的体躯。",
+          "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "配合水产广谱抗菌药连续药浴5天",
+          "how": "在药盒中加入杀菌消炎药，每天换掉半盒药水补入新配制等温药液。",
+          "why": "从根源遏制攻击内脏腺体的产气单胞菌等致病菌株。",
+          "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿拖延至全身严重炸鳞才隔离；切勿在强水流直冲环境下药浴。",
+      "image_path": "assets/care_guides_handdrawn/13_dropsy_pinecone.jpg",
+      "cover_card": {
+        "short_title": "鱼炸鳞",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a freshwater fish with pinecone-like raised, pineconed scales standing out from its swollen bloated abdomen",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a freshwater fish with pinecone-like raised, pineconed scales standing out from its swollen bloated abdomen. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '鱼炸鳞' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/13_dropsy_pinecone_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/13_dropsy_pinecone_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/13_dropsy_pinecone.jpg"
+    },
+    {
+      "id": "care_14",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼眼睛蒙上一层白雾甚至向外突出（蒙眼凸眼）",
+      "condition": "鱼眼球表面蒙上一层发白的混浊毛玻璃样白膜，甚至眼球整个向外肿胀凸出，多由于水质长时间偏酸腐败引发的角膜细菌感染。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "连续3天每天换掉五分之一水",
+          "how": "每天抽取缸底20%老水，补入等温新水，稀释全缸细菌密度。",
+          "why": "蒙眼最主要的病原是水质脏，清新水质是角膜自我愈合的基础环境。",
+          "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "用细棉签蘸取微量红霉素眼膏抹在眼球表面",
+          "how": "用湿透的柔和纸巾托住鱼身，用医用棉签在突出发白眼球上涂薄薄一层眼膏后迅速放回水里。",
+          "why": "抗生素油膏附着在角膜上进行针对性消炎，防止眼球溃破失明。",
+          "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "关掉强光射灯，保持柔和弱光环境",
+          "how": "暂时熄灭高亮度鱼缸水草灯，避免直射光线刺激受损眼睛。",
+          "why": "发炎的眼球对光极其敏感，暗光环境能消除应激加速组织再生。",
+          "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁直接用干手用力抓鱼摩擦眼球；切勿把药膏大团大块挤入鱼鳃中。",
+      "image_path": "assets/care_guides_handdrawn/14_cloudy_popeye.jpg",
+      "cover_card": {
+        "short_title": "鱼蒙眼",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fish eye covered with a cloudy, hazy white opaque film and slight swelling, close-up medical symptom detail",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a fish eye covered with a cloudy, hazy white opaque film and slight swelling, close-up medical symptom detail. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '鱼蒙眼' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/14_cloudy_eye_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/14_cloudy_eye_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/14_cloudy_popeye.jpg"
+    },
+    {
+      "id": "care_15",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼在水底沙石上疯狂擦身摩擦（体外寄生虫）",
+      "condition": "鱼在水中游动时身体剧烈摆动打挺，像发疯一样用身体侧面撞击缸底沙石或沉木摩擦，表明有锚头鳋、指环虫等体外寄生虫叮咬刺痛皮肉。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "捞入透明杯仔细观察体表并用小镊子拔除可见大虫",
+          "how": "用透明小量杯盛鱼，手电照射体表，若有类似白色细线或小锚状虫体插在鱼鳞间，用圆头镊子轻轻夹出拔除。",
+          "why": "直观清除已钻入肌肉深处的大型成虫，阻止其持续吸血。",
+          "image_path": "assets/care_guides_handdrawn/15_fluke_parasite_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "按剂量全缸泼洒体外寄生虫杀虫药水",
+          "how": "按说明书称量杀虫液，先在小量杯中用水稀释化开，然后均匀倒在过滤器出水口冲散。",
+          "why": "杀死潜伏在鱼鳃深处与水体底砂中肉眼不可见的水蚤与幼虫。",
+          "image_path": "assets/care_guides_handdrawn/15_fluke_parasite_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "48小时后换水三分之一并在过滤器中塞入活性炭",
+          "how": "用药满两天后抽换1/3水，在过滤槽中放入一包净水活性炭包。",
+          "why": "活性炭能强效吸除水体中残存的化学农药成分，防止鱼群药物蓄积中毒。",
+          "image_path": "assets/care_guides_handdrawn/15_fluke_parasite_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿擅自超剂量倒药；家里有观赏虾、螺类需提前捞出，杀虫药会毒死甲壳类。",
+      "image_path": "assets/care_guides_handdrawn/15_fluke_parasite.jpg",
+      "cover_card": {
+        "short_title": "鱼擦身",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fish darting swiftly against smooth river gravel stones and driftwood at the tank bottom, scratching its body flanks",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a fish darting swiftly against smooth river gravel stones and driftwood at the tank bottom, scratching its body flanks. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '鱼擦身' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/15_flukes_scratch_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/15_flukes_scratch_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/15_fluke_parasite.jpg"
+    },
+    {
+      "id": "care_16",
+      "category": "繁殖、争斗与日常维护",
+      "title": "母鱼怀孕临产与鱼苗抢救",
+      "condition": "胎生观赏鱼（孔雀、玛丽、剑尾）母鱼肚子呈90度方形胀满，肛门处胎斑呈暗黑色，独自缩在角落急促呼吸，即将生产鱼苗。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "把大肚子母鱼捞进隔离盒",
+          "how": "将带隔网的漂浮双层亚克力繁殖盒固定在缸壁水面，用软捞网把母鱼轻柔放入上层。",
+          "why": "小鱼生出后会自动通过格栅漏到下层保护仓，避免被母鱼自己吃掉。",
+          "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "盒内放点水草保持安静",
+          "how": "往盒中丢入一小簇莫斯水草或几片浮草，周围不要有强光或人影晃动。",
+          "why": "提供隐蔽遮蔽感，防止母鱼在陌生封闭盒中高度紧张导致难产或跳缸。",
+          "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "生完把母鱼捞走留小鱼",
+          "how": "母鱼腹部明显变瘪排空后，用网将母鱼捞回大缸，小鱼苗继续留在盒中单独投喂。",
+          "why": "生完后的母鱼极度饥饿会伺机捕食鱼苗；小鱼单独隔离方便精准喂养。",
+          "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁在无遮挡透明盒中强光照射临产母鱼；生完后绝不能将母鱼与幼苗同层混养。",
+      "image_path": "assets/care_guides_handdrawn/16_pregnant_fish_care.jpg",
+      "cover_card": {
+        "short_title": "母鱼分娩",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a heavily pregnant livebearer guppy fish with swollen dark gravid spot inside a floating breeding trap, giving birth to tiny fry",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing a heavily pregnant livebearer guppy fish with swollen dark gravid spot inside a floating breeding trap, giving birth to tiny fry. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '母鱼分娩' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/16_guppy_birth_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/16_guppy_birth_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/16_pregnant_fish_care.jpg"
+    },
+    {
+      "id": "care_17",
+      "category": "繁殖、争斗与日常维护",
+      "title": "刚出生的小鱼苗开口喂食（育苗保活）",
+      "condition": "小鱼刚出生第2天，腹部金黄色卵黄囊吸收干净，像缝衣针般大小游动觅食，因嘴巴极其微小吞不下常规大颗粒饲料，面临饥饿死亡危机。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "煮熟鸡蛋取出微量蛋黄化成水",
+          "how": "剥取米粒大小的纯熟蛋黄，放在小汤匙里滴入几滴温水搅拌碾成淡黄色蛋黄水。",
+          "why": "蛋黄微粒细小如粉尘，是小鱼初生阶段天然的高营养开口饵料。",
+          "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "用胶头滴管在小鱼嘴边轻滴一滴",
+          "how": "吸取微量蛋黄水，将管口探入小鱼游动的水层轻轻挤出1-2滴雾状颗粒。",
+          "why": "微粒悬浮在鱼苗吻部方便其吞食，看到小鱼透明肚子里呈现微黄颗粒即刻停止投喂。",
+          "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "两小时后用小细管把盒底残渣吸走",
+          "how": "投喂2小时后，用长吸管对准隔离盒底吸除沉积下来的白絮状未吃完残渣。",
+          "why": "蛋黄极其容易变质发臭滋生大量水霉菌，必须及时清理保护稚嫩鳃丝。",
+          "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁一次性倒入大团蛋黄导致整盒水发臭浑浊；严禁投喂硬质大颗粒干饲料。",
+      "image_path": "assets/care_guides_handdrawn/17_fry_feeding_care.jpg",
+      "cover_card": {
+        "short_title": "鱼苗开口",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "tiny newborn fish fry swimming in clear nursery water, with a pipette dropper feeding golden live baby brine shrimp nauplii",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing tiny newborn fish fry swimming in clear nursery water, with a pipette dropper feeding golden live baby brine shrimp nauplii. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '鱼苗开口' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/17_fry_feeding_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/17_fry_feeding_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/17_fry_feeding_care.jpg"
+    },
+    {
+      "id": "care_18",
+      "category": "繁殖、争斗与日常维护",
+      "title": "两只鱼疯狂打架追咬、咬烂鱼鳞（领地争斗）",
+      "condition": "缸内体型大或凶猛的鱼满缸狂追撕咬另一只弱小鱼，受害者背鳍撕裂、鳞片脱落，缩在过滤器管道后颤抖不敢游出，面临被咬死风险。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "立即把受伤弱小鱼捞进隔离盒保护",
+          "how": "先将挨打的弱小鱼捞出移入带孔透明漂浮盒中，单独投喂优质饲料恢复伤势。",
+          "why": "物理隔断伤害源，让受惊受创的鱼只迅速脱离死亡恐惧。",
+          "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "彻底打乱鱼缸里的沉木与石头摆放",
+          "how": "伸手将缸内的沉木、石块与植物全部挪换朝向与位置，重构缸底造景格局。",
+          "why": "强势鱼的领地占领基于视觉记忆，重布造景能彻底瓦解其既有地盘认知。",
+          "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "多放几个带孔陶罐或茂密水草增加隐蔽洞穴",
+          "how": "在缸底角落增设2-3个小异型瓦罐、陶管或密植蜈蚣草丛。",
+          "why": "提供视线阻隔屏障与钻入避险空间，让弱势鱼在遭遇追逐时能瞬时躲避。",
+          "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁对暴力追咬坐视不管；严禁在没有任何躲避物的空旷裸缸中混养好斗鱼种。",
+      "image_path": "assets/care_guides_handdrawn/18_fish_fighting_isolation.jpg",
+      "cover_card": {
+        "short_title": "鱼打架",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "two aggressive male fish displaying flared fins and nipping, with a transparent acrylic partition panel being inserted to separate them",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing two aggressive male fish displaying flared fins and nipping, with a transparent acrylic partition panel being inserted to separate them. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '鱼打架' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/18_fish_fighting_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/18_fish_fighting_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/18_fish_fighting_isolation.jpg"
+    },
+    {
+      "id": "care_19",
+      "category": "繁殖、争斗与日常维护",
+      "title": "清洗过滤器滤材（防止整缸水崩溃）",
+      "condition": "过滤器出水水流明显变慢减弱，滤盒内堆积了厚厚一层黑泥鱼便，很多新手盲目整盒端到自来水龙头下猛冲，导致益生菌全军覆没而暴毙倒缸。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "拔掉电源，盛一盆鱼缸老水备用",
+          "how": "拔掉过滤器插头，从鱼缸里抽出一小塑料盆原缸旧水放置在身旁。",
+          "why": "生化滤材上的硝化细菌极其脆弱，必须用与缸水完全等温等质的水体清洗。",
+          "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "白色物理过滤棉用自来水搓洗干净或换新",
+          "how": "取出最表层挡大便的白色棉垫，在水龙头下猛烈冲洗揉搓，或直接换上一张新白棉。",
+          "why": "物理滤棉只负责阻拦大颗粒粪便，自来水彻底洗净不会影响底层生化系统。",
+          "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "生化陶瓷环只在老水盆里轻轻晃荡两下",
+          "how": "装有生化球或陶瓷环的网袋放进刚刚盛出的原缸老水盆中，轻轻漂洗抖落表面浮泥即可装回。",
+          "why": "严禁搓洗或自来水直冲，最大限度保留寄宿在陶瓷孔隙中的有益硝化菌群。",
+          "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "绝对禁止用自来水直接冲洗生化陶瓷环；绝对禁止使用任何洗洁精或肥皂水洗滤材。",
+      "image_path": "assets/care_guides_handdrawn/19_filter_cleaning_proper.jpg",
+      "cover_card": {
+        "short_title": "洗过滤器",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "hands gently squeezing and rinsing dirty filter foam sponges inside a basin filled with old tank water to preserve beneficial bacteria",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing hands gently squeezing and rinsing dirty filter foam sponges inside a basin filled with old tank water to preserve beneficial bacteria. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '洗过滤器' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/19_filter_cleaning_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/19_filter_cleaning_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/19_filter_cleaning_proper.jpg"
+    },
+    {
+      "id": "care_20",
+      "category": "繁殖、争斗与日常维护",
+      "title": "出差或长假外出数天不在家（长假托养准备）",
+      "condition": "长假或春节需要外出7-10天，家里无人看管照顾鱼缸，极度担忧鱼饿死、水发黑发臭或设备突发断电故障。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "出发前2天换水三分之一并吸除底便",
+          "how": "启程前48小时给鱼缸彻底大扫除，换掉30%水体，把沉底污垢吸净。",
+          "why": "提前给水体储备足够的清洁缓冲容量，稀释长假期间可能积攒的代谢物。",
+          "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "严禁投入所谓几天慢慢融化的自动投食块",
+          "how": "外出期间不要在水里丢任何石膏投食块或大量自动投放饲料，让成鱼自然断食。",
+          "why": "市面所谓的缓释投食砖极易在缸底发霉腐败败坏整缸水；健康成鱼饿7-10天完全无性命之忧。",
+          "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "将鱼缸照明灯插在定时插座上设定每天开5小时",
+          "how": "给水草灯配一个机械或智能插座，设置每天定时开灯5小时，夜间保持黑暗。",
+          "why": "防止长时间全天亮灯导致全缸爆发灾难性绿藻，同时维持动植物自然昼夜节律。",
+          "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "外出期间切勿盲目加大投喂量‘喂饱’鱼只；切勿将灯光常开不关。",
+      "image_path": "assets/care_guides_handdrawn/20_holiday_vacation_care.jpg",
+      "cover_card": {
+        "short_title": "长假外出",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an automatic timed fish feeder mounted securely on the tank rim, with a snug mesh anti-jump lid covering the full water surface",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic.\nVisual Scene: Detailed, authentic close-up showing an automatic timed fish feeder mounted securely on the tank rim, with a snug mesh anti-jump lid covering the full water surface. Clean water, soft natural tones, pure artistic focus on the specific physical symptom and care action.\nTypography Layout:\n1. Centered vertical main title in Chinese: '长假外出' in deep charcoal ink-black creative artistic calligraphy with fluid stroke momentum (灵动水墨行韵创意体 / 柔和圆润笔触). Stems have organic curves and soft terminals, with delicate 3D embossed tactile relief and soft ambient drop shadows, sculptural yet gentle and elegant.\n2. Next to it on the right: vertical neat subtitle in delicate dark font '点击看养护方法'.\nSeamless Integration: The 3D typography is seamlessly fused directly into the watercolor scene. NO white gradient patch, NO white oval halo, NO UI buttons or tag badges. Minimalist, premium, editorial cover design.",
+        "asset_path": "assets/care_guides_handdrawn/covers/20_holiday_care_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/20_holiday_care_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/20_holiday_vacation_care.jpg"
+    },
+    {
+      "id": "care_21",
+      "category": "日常维护与基础运维",
+      "title": "鱼缸日常科学换水（每周例行吸污换水）",
+      "condition": "鱼缸长时间不换水会导致无色无味的硝酸盐和酸性老化物质剧烈累积，水质酸化且生长停滞；但若换水过猛或直接加生冷生自来水，残留余氯会瞬间灼伤鱼鳃致死。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "脸盆静置晾水24小时",
+          "how": "接满一盆自来水，敞口放在室内避光处静置24小时（有气泵可打气2小时加速挥发）。",
+          "why": "让自来水中的残留余氯自然挥发，且让水温与室内鱼缸温度完全平衡。",
+          "image_path": "assets/care_guides_handdrawn/21_routine_water_change_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "洗砂器吸底换水1/4",
+          "how": "虹吸洗砂头插到底砂深处翻吸沉淀的鱼粪和残饵，抽走整缸四分之一的水位后停止。",
+          "why": "物理移走氨氮毒素的温床，且只换四分之一绝不伤及原有硝化生态和鱼的渗透压。",
+          "image_path": "assets/care_guides_handdrawn/21_routine_water_change_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "沿缸壁极慢注入新水",
+          "how": "用小水瓢舀晾好的新水，贴着鱼缸侧壁缓缓滑入，分5分钟慢速加满至原水位。",
+          "why": "防止猛烈冲水激起底泥粉尘，并确保温差变动小于1°C，避免鱼只感冒缩鳍。",
+          "image_path": "assets/care_guides_handdrawn/21_routine_water_change_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿全缸100%彻底换水；切勿直接冲入未除氯的生冷自来水；切勿在换水时把鱼捞出。",
+      "image_path": "assets/care_guides_handdrawn/21_routine_water_change.jpg",
+      "cover_card": {
+        "short_title": "日常换水",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "routine aquarium maintenance, an owner gently using a transparent siphon tube to vacuum bottom substrate while fresh clean water cascades",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing routine aquarium maintenance, an owner gently using a transparent siphon tube to vacuum bottom substrate while fresh clean water cascades in gentle droplets. Typography: '日常换水' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/21_routine_water_change_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/21_routine_water_change_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/21_routine_water_change.jpg"
+    },
+    {
+      "id": "care_22",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼鳍紧缩夹拢、趴在缸底不动（夹尾缩鳍）",
+      "condition": "鱼背鳍、尾鳍像收拢的折扇一样紧缩成一条线，独处在缸底角落或加热棒后面不游动，食欲废绝，这是鱼体处于极度不适或急性温差应激的最早预警信号。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "加热棒升温至26-28度",
+          "how": "检查水温表，转动加热棒旋钮每两小时调高1度，最终恒定在26-28°C舒适区间。",
+          "why": "温和升温能激活鱼体自身的新陈代谢与免疫防御力，缓解急性感冒僵直。",
+          "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "换出五分之一等温老水",
+          "how": "吸走底层少许沉积残渣并换出五分之一老水，缓慢补入等温除氯新水。",
+          "why": "稀释水体中累积的刺激性亚硝酸盐，减轻水质酸碱对受损神经的物理刺激。",
+          "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "关灯停食静养48小时",
+          "how": "关闭鱼缸主照明灯，拉好盖板，连续两天不投喂任何饲料，保持环境昏暗安静。",
+          "why": "昏暗环境能大幅减慢鱼的心率与耗氧负荷，避免消化食物消耗宝贵抵抗力。",
+          "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "缩鳍期间严禁盲目大剂量乱下猛药；严禁突然升温超过3度；严禁强行喂食。",
+      "image_path": "assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting.jpg",
+      "cover_card": {
+        "short_title": "鱼缩鳍",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a tropical fish resting motionlessly near the sandy bottom corner of an aquarium, its dorsal and tail fins tightly clamped",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a tropical fish resting motionlessly near the sandy bottom corner of an aquarium, its dorsal and tail fins tightly clamped. Typography: '鱼缩鳍' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/22_clamped_fins_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/22_clamped_fins_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/22_clamped_fins_bottom_sitting.jpg"
+    },
+    {
+      "id": "care_23",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼体长出白色棉絮团毛毛（水霉真菌病）",
+      "condition": "鱼体表刮伤或受寒后，伤口边缘长出一簇簇灰白色、毛茸茸像发霉米饭一样的絮状菌丝，随着水流飘动，病鱼食欲减退、消瘦衰弱。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "棉签蘸淡碘伏点涂白毛",
+          "how": "将病鱼捞入湿毛巾浅托盘，用医用棉签蘸微量淡碘伏轻点菌丝处（避开鱼眼和鱼鳃）。",
+          "why": "碘伏具有极强的局部触杀真菌能力，能直达菌丝根部切断感染蔓延。",
+          "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "隔离盒滴入甲基蓝溶液",
+          "how": "将鱼转移至带微打氧的隔离小盒中，滴入甲基蓝杀菌液调至水体呈通透淡天蓝色。",
+          "why": "甲基蓝能广谱抑制游离水霉真菌孢子着床，并保护受损表皮免受二次细菌侵染。",
+          "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "恒温28度真菌自然脱落",
+          "how": "加热棒锁定在28°C恒温3-5天，静待白色菌丝发白萎缩后自行脱落。",
+          "why": "水霉真菌嗜冷（最适繁殖温度在15-20°C），28°C高温会彻底抑制其菌丝活性促其脱水脱落。",
+          "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严禁用镊子硬拔白色菌丝（会撕裂皮肉致大出血溃烂）；严禁在水草主缸泼洒甲基蓝（会染蓝硅胶并杀灭水草）。",
+      "image_path": "assets/care_guides_handdrawn/23_cotton_wool_fungus.jpg",
+      "cover_card": {
+        "short_title": "水霉病",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fish with a distinct patch of soft white fluffy cotton-wool fungal growth on its flank",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a fish with a distinct patch of soft white fluffy cotton-wool fungal growth on its flank. Typography: '水霉病' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/23_cotton_wool_fungus_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/23_cotton_wool_fungus_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/23_cotton_wool_fungus.jpg"
+    },
+    {
+      "id": "care_24",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼拖着长长的白色透明细丝便（肠炎与内寄）",
+      "condition": "鱼屁股后面拖着一根很长的透明、空心白色黏液状细线便，久久不脱落，鱼腹部轻微凹陷或微胀，食欲减退甚至拒食，多因吃变质饲料或受寒引起消化道炎症。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "彻底停食3天捞净残饵",
+          "how": "拧紧饲料罐盖，连续整整72小时完全断粮，并用细网捞干净缸内漂浮和沉底的一切残渣。",
+          "why": "切断胃肠消化负荷，防止肠道因持续发酵产气加重黏膜充血水肿。",
+          "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "换水四分之一并升温28度",
+          "how": "抽走底部四分之一陈水换入新水，温控旋钮上调至28°C加速血液循环。",
+          "why": "优化水质降低病菌浓度，同时高温能刺激鱼的肠胃蠕动排空体内腐败积食。",
+          "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "稀释大蒜汁抑菌调理",
+          "how": "将新鲜大蒜瓣捣碎压汁，取两滴用纯净水稀释后拌入微量鱼粮喂食，或滴入隔离水体中。",
+          "why": "大蒜素是天然强效广谱植物杀菌剂，能温和抑制六鞭毛虫与肠道致病杆菌，且无耐药性。",
+          "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "白便期间严禁继续投喂高蛋白活饵或油性大颗粒硬粮；严禁盲目大剂量下人用抗生素破坏鱼肝脏。",
+      "image_path": "assets/care_guides_handdrawn/24_white_stringy_poop.jpg",
+      "cover_card": {
+        "short_title": "鱼拉白便",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a tropical fish swimming gently, trailing a distinctive long thin translucent white hollow stringy thread of feces from its vent",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a tropical fish swimming gently, trailing a distinctive long thin translucent white hollow stringy thread of feces from its vent. Typography: '鱼拉白便' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/24_white_stringy_poop_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/24_white_stringy_poop_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/24_white_stringy_poop.jpg"
+    },
+    {
+      "id": "care_25",
+      "category": "鱼体异常与疾病急救",
+      "title": "鱼突然惊慌乱撞与跳出鱼缸（惊缸与跳缸急救）",
+      "condition": "平时温顺的鱼突然疯狂冲刺狂撞玻璃壁、急速翻滚，甚至在夜间或受惊时跳出鱼缸跌落地板，体表粘上灰尘且处于严重脱水窒息休克状态。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "湿纸巾包裹扶正人工打氧",
+          "how": "双手沾湿原缸水，用湿纸巾轻轻托起脱水鱼体送回鱼缸，在出水口大水流处用手扶正鱼身助其鳃部呼吸。",
+          "why": "湿毛巾保护残存黏膜防止窒息，正向水流冲刷能迅速强行将溶解氧灌入缺氧僵死的鱼鳃。",
+          "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "缸顶加装防跳网盖板",
+          "how": "测量鱼缸顶部尺寸，牢牢盖上高透气防跳网罩或亚克力带孔顶盖，不留任何跳跃缝隙。",
+          "why": "物理封死鱼只受惊向上跃起的逃逸路线，提供永久性防跳物理屏障。",
+          "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "避光防惊扰静养24小时",
+          "how": "关掉鱼缸灯与室内强光源，远离震动和走动频繁区域，让受惊鱼只在昏暗中慢慢缓神。",
+          "why": "视觉刺激与震动是诱发惊缸跳跃的主因，昏暗无干扰能让中枢神经系统迅速平复。",
+          "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "发现跳缸鱼时严禁直接用干燥粗糙的手用力抓捏；严禁在惊缸期间开大灯查看或敲击鱼缸玻璃。",
+      "image_path": "assets/care_guides_handdrawn/25_fish_jumping_panic.jpg",
+      "cover_card": {
+        "short_title": "鱼跳缸",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an aquarium with a protective transparent anti-jump acrylic mesh cover on the top rim, water splashing gently near the surface",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing an aquarium with a protective transparent anti-jump acrylic mesh cover on the top rim, water splashing gently near the surface. Typography: '鱼跳缸' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/25_fish_jumping_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/25_fish_jumping_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/25_fish_jumping_panic.jpg"
+    },
+    {
+      "id": "care_26",
+      "category": "鱼体异常与疾病急救",
+      "title": "鳃丝发白腐烂、急促呼吸吞气（细菌性烂鳃病）",
+      "condition": "柱状黄杆菌侵蚀鱼鳃娇嫩组织，鳃丝失去鲜红色变成灰白或带有粘稠黏液，鳃盖骨外翻常有缺损，病鱼呼吸极其微弱困难，靠在水面急促吞水或聚集在出水口处。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "隔离病鱼深层药浴",
+          "how": "将病鱼捞入静水隔离缸，使用黄粉（呋喃西林1-2mg/L）或聚维酮碘进行温和药浴15~20分钟后放回调养缸。",
+          "why": "快速杀灭附着在鳃丝表层的柱状黄杆菌，阻断致病菌向深层鳃弓软骨蔓延溃烂。",
+          "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "调大气泵强力爆氧",
+          "how": "主缸与隔离缸气泵调至最大档位，使用细化气石打出密集微气泡维持高溶氧环境。",
+          "why": "鳃丝溃烂导致气体交换面积暴跌50%以上，极高溶氧能维持病鱼基础血氧浓度保命。",
+          "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "洗砂换水排查污底",
+          "how": "换水1/4，用洗砂器彻底吸出底砂深层腐烂的残饵和积聚鱼便，清洗生化过滤第一层白棉。",
+          "why": "柱状菌在底泥腐殖物中极易暴增，清理底砂能从源头上掐断致病菌的滋生温床。",
+          "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿在主缸全缸倾倒大剂量抗生素杀灭硝化菌；切勿用手或棉签粗暴擦拭发炎鳃丝。",
+      "image_path": "assets/care_guides_handdrawn/26_bacterial_gill_rot.jpg",
+      "cover_card": {
+        "short_title": "鱼烂鳃",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a freshwater tropical fish displaying inflamed pale white gill filaments, panting gently near crystal clean water surface with airy bubbles",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a freshwater tropical fish displaying inflamed pale white gill filaments, panting gently near crystal clean water surface with airy bubbles. Typography: '鱼烂鳃' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/26_bacterial_gill_rot_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/26_bacterial_gill_rot_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/26_bacterial_gill_rot.jpg"
+    },
+    {
+      "id": "care_27",
+      "category": "鱼体异常与疾病急救",
+      "title": "眼球单侧/双侧突出充血、角膜蒙白（凸眼病 / 气泡眼）",
+      "condition": "细菌感染引起的眼球后部脓肿或水质恶化（亚硝酸盐超标）导致的眼后液体渗出，单侧或双侧眼球严重外突像气泡，常伴有角膜发白浑浊，食欲减退。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "捞入静水避光隔离缸",
+          "how": "用柔软捞网将病鱼移入微水流、光线昏暗的隔离缸，缸内不放尖锐沉木假山。",
+          "why": "突出眼球的结膜极度薄脆，强水流或同伴追啄会导致眼球破裂发生永久失明。",
+          "image_path": "assets/care_guides_handdrawn/27_popeye_disease_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "添加泻盐促进眼眶消肿",
+          "how": "每10升隔离水加入1茶匙（约5克）泻盐（硫酸镁MgSO4），搅拌至完全溶解。",
+          "why": "泻盐能提供安全的高渗透压，促使眼球后部积存的炎性组织液自然向外渗析消除水肿。",
+          "image_path": "assets/care_guides_handdrawn/27_popeye_disease_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "配合广谱水溶抗菌药浴",
+          "how": "按说明书滴加温和广谱抗菌药剂（如红霉素或水溶黄粉），连续药浴3-5天并保持水质恒温。",
+          "why": "彻底杀灭造成眼球后腔化脓感染的细菌，杜绝感染波及大脑中枢神经。",
+          "image_path": "assets/care_guides_handdrawn/27_popeye_disease_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿使用普通食用碘盐代替泻盐（硫酸镁）；切勿用手或棉签挤压外突的眼球。",
+      "image_path": "assets/care_guides_handdrawn/27_popeye_disease.jpg",
+      "cover_card": {
+        "short_title": "鱼凸眼",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a close-up portrait of a freshwater fish with a swollen protruding eye and cloudy cornea, resting peacefully in a dim serene medical tank",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up portrait of a freshwater fish with a swollen protruding eye and cloudy cornea, resting peacefully in a dim serene medical tank. Typography: '鱼凸眼' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/27_popeye_disease_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/27_popeye_disease_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/27_popeye_disease.jpg"
+    },
+    {
+      "id": "care_28",
+      "category": "行为与神经异常排查",
+      "title": "鱼原地像蛇一样左右摇摆、游不动（蛇游 / 摇摆病）",
+      "condition": "鱼停在原地剧烈像蛇一样扭动身体却无法向前游动，常见于花鳉类（孔雀鱼、玛丽鱼、剑尾鱼），核心起因是水温急降受凉、水质严重酸化（pH跌破软水下限）或体内缺乏矿物质。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "缓慢提温至26-28度",
+          "how": "转动加热棒旋钮每2小时调高1度，将水温从低温逐步恒定至26-28°C舒适区间。",
+          "why": "温和提温能唤醒鱼体神经肌肉活力，解除因低温引起的背部肌肉痉挛僵直。",
+          "image_path": "assets/care_guides_handdrawn/28_the_shimmies_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "添加水族千分之二粗盐",
+          "how": "按每10升水加入20克无碘天然海盐或水族专用粗盐，充分溶解后沿缸壁缓慢倒入。",
+          "why": "微量盐分能调节渗透压，改善花鳉类鱼因软水脱矿导致的神经反射异常与体表不适。",
+          "image_path": "assets/care_guides_handdrawn/28_the_shimmies_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "检测并缓慢回调水质pH",
+          "how": "使用试纸或测试笔检测水质pH，若低于6.8，微量换水1/5并补充矿物质微量元素。",
+          "why": "老水过度酸化会严重灼伤鱼体神经表皮，恢复中性弱碱（pH 7.2-7.8）是治愈根基。",
+          "image_path": "assets/care_guides_handdrawn/28_the_shimmies_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿直接粗暴加小苏打等化学强碱导致pH剧烈震荡；切勿误当成普通肠炎盲目下猛药。",
+      "image_path": "assets/care_guides_handdrawn/28_the_shimmies.jpg",
+      "cover_card": {
+        "short_title": "鱼蛇游",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a guppy fish swimming awkwardly with sinuous S-curve body wobbling while stationary, soft water plants in background",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a guppy fish swimming awkwardly with sinuous S-curve body wobbling while stationary, soft water plants in background. Typography: '鱼蛇游' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/28_the_shimmies_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/28_the_shimmies_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/28_the_shimmies.jpg"
+    },
+    {
+      "id": "care_29",
+      "category": "行为与神经异常排查",
+      "title": "鱼失去方向感高速打转、螺旋翻滚（旋转病 / 前庭神经受损）",
+      "condition": "鱼突然在水中像螺旋桨一样飞速打转、追尾巴狂游或侧身翻滚失控，多因急性水质氨氮/亚硝酸盐中毒导致脑前庭麻痹，或寄生虫（如脑粘孢子虫）侵害内耳前庭神经。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "降低水位至15cm防撞伤",
+          "how": "将打转病鱼捞入浅水隔离盒，水深降低至10~15厘米，避免缸底放置硬物。",
+          "why": "失控打转极易造成头部撞缸和鳞片脱落，浅水能限制其翻滚幅度，减少体力透支。",
+          "image_path": "assets/care_guides_handdrawn/29_whirling_disease_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "紧急换水1/3排查毒素",
+          "how": "立即抽取1/3原水并缓缓补入等温除氯新水，滴加硝化细菌并全开气石暴气。",
+          "why": "排查并清除水中突发的致命氨氮毒素，终止毒素对鱼类神经中枢的持续毒害。",
+          "image_path": "assets/care_guides_handdrawn/29_whirling_disease_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "补充复合维生素B族调养",
+          "how": "在隔离水体中溶入极微量维生素B1/B12（或浸泡饲料投喂），关灯静养数日。",
+          "why": "维生素B族具有修复受损髓鞘和末梢神经的关键营养功能，促进前庭平衡恢复。",
+          "image_path": "assets/care_guides_handdrawn/29_whirling_disease_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿将打转病鱼与凶猛鱼类混养以防被啄食；切勿下敌百虫等神经毒性杀虫猛药以免加速死亡。",
+      "image_path": "assets/care_guides_handdrawn/29_whirling_disease.jpg",
+      "cover_card": {
+        "short_title": "鱼打转",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a vibrant tetra spiraling and spinning along dynamic circular motion trails in water, serene dimmed observation aquarium",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a vibrant tetra spiraling and spinning along dynamic circular motion trails in water, serene dimmed observation aquarium. Typography: '鱼打转' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/29_whirling_disease_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/29_whirling_disease_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/29_whirling_disease.jpg"
+    },
+    {
+      "id": "care_30",
+      "category": "行为与神经异常排查",
+      "title": "鱼头朝下倒立悬停、尾巴浮起（头下尾上异常悬停）",
+      "condition": "鱼身体呈45°~90°垂直倒立，头部朝下竭力向下划水，一旦停止划水尾部就往上漂，属于鱼鳔前室受压、便秘胀气、消化道饱食压迫或内脏受冷痉挛的早期典型征兆。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "严格停食排空肠道气体",
+          "how": "立即停止投喂所有人工颗粒和冻干红虫，保持停食断粮3天，观察排便。",
+          "why": "饱食便秘会导致后肠胀气向上压迫鱼鳔前室，停食排空能消除胃肠物理压迫。",
+          "image_path": "assets/care_guides_handdrawn/30_head_down_hovering_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "升温至28度促进胃肠蠕动",
+          "how": "将鱼缸加热棒调高至28°C恒温，并加大水流溶氧量。",
+          "why": "适当提高基础代谢率能加速胃肠道平滑肌蠕动，帮助滞留宿便与积气排出体外。",
+          "image_path": "assets/care_guides_handdrawn/30_head_down_hovering_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "喂食煮熟去皮豌豆泥",
+          "how": "停食3天后，煮熟一颗新鲜青豌豆，剥去外皮，将内瓤捏成米粒大小微量投喂。",
+          "why": "豌豆含有丰富天然植物膳食纤维，是水族界公认最温和有效的天然通便清肠圣品。",
+          "image_path": "assets/care_guides_handdrawn/30_head_down_hovering_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿在倒立期间继续喂食遇水膨胀的劣质干硬饲料；切勿用手硬掰鱼身强行矫正姿势。",
+      "image_path": "assets/care_guides_handdrawn/30_head_down_hovering.jpg",
+      "cover_card": {
+        "short_title": "鱼倒立",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a fancy goldfish tilting vertically head-down tail-up in middle water layer, with soft bubbles and warm lighting",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a fancy goldfish tilting vertically head-down tail-up in middle water layer, with soft bubbles and warm lighting. Typography: '鱼倒立' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/30_head_down_hovering_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/30_head_down_hovering_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/30_head_down_hovering.jpg"
+    },
+    {
+      "id": "care_31",
+      "category": "繁殖与特定体征养护",
+      "title": "幼鱼苗尾鳍聚拢成针尖、批量衰竭（鱼苗针尾病）",
+      "condition": "刚出生的孔雀鱼、斗鱼苗尾巴无法展开，缩聚成一根尖细的“绣花针”，在水面摇晃无力，若不干预24小时内可能全窝夭折，核心根源是育苗缸水质酸化、氨氮堆积与三代虫/水霉合并侵袭。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "滴流法极慢换水1/3",
+          "how": "用医用输液管或调节阀以每秒1-2滴的速度，缓慢换出1/3老水并补入等温除氯新水。",
+          "why": "幼鱼对渗透压和温差极度敏感，滴流换水可在零应激前提下快速稀释水中毒素。",
+          "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "维持千分之二微盐环境",
+          "how": "按每10升水溶入20克水族粗盐，分两次加入幼鱼缸中，水温恒定在27-28°C。",
+          "why": "千分之二的微盐能迅速杀灭寄生在幼鱼娇嫩尾膜上的三代虫与水霉真菌，促使尾鳍展开。",
+          "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "每日吸尽死卵与残余活饵",
+          "how": "每次投喂刚孵化的丰年虾幼虫30分钟后，用吸管吸净缸底未吃完的残饵和沉底死卵。",
+          "why": "育苗容器小、水体脆弱，死虾极易在几个小时内败坏水质引发细菌爆发。",
+          "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿用大水流直接猛冲苗缸导致幼鱼折断脊柱；切勿对娇嫩幼鱼直接下高浓度孔雀石绿等烈性毒药。",
+      "image_path": "assets/care_guides_handdrawn/31_needle_tail_in_fry.jpg",
+      "cover_card": {
+        "short_title": "鱼苗针尾",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "tiny newborn guppy fry swimming in a nursery cup, their delicate caudal fins clamped together into a needle-like point",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing tiny newborn guppy fry swimming in a nursery cup, their delicate caudal fins clamped together into a needle-like point. Typography: '鱼苗针尾' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/31_needle_tail_in_fry_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/31_needle_tail_in_fry_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/31_needle_tail_in_fry.jpg"
+    },
+    {
+      "id": "care_32",
+      "category": "繁殖与特定体征养护",
+      "title": "背脊消瘦如刀片、腹部深陷营养耗竭（刀片背 / 严重消瘦病）",
+      "condition": "鱼背部肌肉极度萎缩，背脊骨薄如刀片刃口，腹部凹陷见骨，尽管偶有摄食但日渐枯槁无力，多因六鞭毛虫、体内蠕虫寄生虫长期掠夺营养，或慢性内脏结核细菌感染所致。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "隔离排查排泄物状态",
+          "how": "捞入观察缸，铺白色底板仔细观察鱼便是否呈白色半透明拉丝或脓冻状。",
+          "why": "排查确定是否为六鞭毛虫或肠道蠕虫感染，为针对性用药提供确切依据。",
+          "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "投喂甲硝唑药饵杀灭内寄",
+          "how": "取少量易消化的颗粒饲料，浸润甲硝唑药液（约1%药饵比例），晾干后少食多餐投喂。",
+          "why": "口服药饵能直接抵达病灶肠道深处，彻底杀灭消耗宿主血肉的体内寄生鞭毛虫。",
+          "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "补充鲜活高蛋白易消化营养",
+          "how": "驱虫见效后，逐步投喂鲜活干净的丰年虾幼虫或剪碎红虫，搭配少许复合维生素滴剂。",
+          "why": "鲜活高营养食料极易被虚弱肠胃吸收，快速帮助背部肌群重建与体力复苏。",
+          "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿在主缸一次性投入大量油腻颗粒饲料恶化水质；切勿让严重虚弱的刀片背病鱼在强造浪泵水流中挣扎。",
+      "image_path": "assets/care_guides_handdrawn/32_wasting_disease_knifeback.jpg",
+      "cover_card": {
+        "short_title": "鱼刀片背",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "an emaciated aquarium fish with a razor-thin paper knifeback spine and hollow belly, resting calmly near soft moss",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing an emaciated aquarium fish with a razor-thin paper knifeback spine and hollow belly, resting calmly near soft moss. Typography: '鱼刀片背' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/32_wasting_disease_knifeback_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/32_wasting_disease_knifeback_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/32_wasting_disease_knifeback.jpg"
+    },
+    {
+      "id": "care_33",
+      "category": "繁殖与特定体征养护",
+      "title": "胎生鳉科母鱼腹大如鼓、迟迟未产（母鱼难产急救）",
+      "condition": "临产的母孔雀鱼、玛丽鱼腹部膨大呈方形，胎斑漆黑如墨，但长时间静止趴在草丛或出水口，数小时未能产出幼鱼，母鱼呼吸急促，随时有憋死爆卵风险。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "提供密植水草暗光静养",
+          "how": "将母鱼移入密植蜈蚣草或莫斯的水草缸，遮挡强光，提供充分的安全隐蔽藏身所。",
+          "why": "母鱼在受惊或光照过强时会因应激反射分泌肾上腺素阻碍宫缩，暗处能放松肌肉自然生产。",
+          "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "注入微量2度温差新水刺激",
+          "how": "缓慢滴入比原缸水温高或低1.5~2°C的除氯新水（约总水量的15%），微调水流。",
+          "why": "微弱温差与新鲜溶解氧可模拟大自然雨后新水环境，刺激母鱼垂体激素分泌诱发催产分娩。",
+          "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "大容积产房避免紧迫狭窄",
+          "how": "放弃狭小拥挤的巴掌大亚克力产卵盒，改用大容积带格栅隔离网箱（不少于5升水体）。",
+          "why": "狭窄压抑空间会让母鱼窒息撞盒，大水体确保充足游动空间与良好水循环，避免幼鱼窒息。",
+          "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "切勿用手或棉签直接暴力挤压母鱼腹部物理催产，否则必死无疑；切勿将公鱼混在产房内持续追咬。",
+      "image_path": "assets/care_guides_handdrawn/33_pregnant_fish_dystocia.jpg",
+      "cover_card": {
+        "short_title": "母鱼难产",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a heavily gravid female livebearer fish with prominent dark gravid spot resting quietly near lush green water moss",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a heavily gravid female livebearer fish with prominent dark gravid spot resting quietly near lush green water moss. Typography: '母鱼难产' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/33_pregnant_fish_dystocia_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/33_pregnant_fish_dystocia_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/33_pregnant_fish_dystocia.jpg"
+    },
+    {
+      "id": "care_34",
+      "category": "繁殖与特定体征养护",
+      "title": "鱼体侧面呈S形弯曲、驼背游动吃力（脊柱畸形 / 骨骼发育异常）",
+      "condition": "鱼脊椎骨向左右弯曲呈S形或向上隆起呈驼背状，游动吃力摆动不协调。多由多代近亲繁殖基因缺陷、幼年期严重缺乏维生素C/钙质，或电击漏电肌肉痉挛后骨骼变形所致。",
+      "steps": [
+        {
+          "step": 1,
+          "title": "排查排查水族器材防漏电",
+          "how": "用感应电笔逐一排查水下加热棒、水泵电线是否有微弱感应漏电，拔除损坏设备。",
+          "why": "水中微弱杂散电流会导致鱼体神经肌肉长期强直收缩，进而拉扯脊椎骨永久畸形弯曲。",
+          "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_1_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_1_1x1.jpg"
+        },
+        {
+          "step": 2,
+          "title": "补充复合维生素C与钙质",
+          "how": "在投喂的饲料中拌入水溶性维生素C与矿物质骨粉，促进软骨组织健康新陈代谢。",
+          "why": "维生素C是鱼类脊椎胶原蛋白合成的核心辅酶，充足矿物质能有效遏制骨质进一步疏松恶化。",
+          "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_2_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_2_1x1.jpg"
+        },
+        {
+          "step": 3,
+          "title": "调缓水流提供平坦觅食区",
+          "how": "调小过滤出水口造浪力度，在缸底设置平坦缓流开阔区，投喂沉底缓慢的适口食料。",
+          "why": "脊柱变形鱼游泳能力受限，柔和水流能避免其体力枯竭，确保其能轻松获得每日食物。",
+          "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_3_1x1.jpg",
+          "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis_step_3_1x1.jpg"
+        }
+      ],
+      "avoid": "严重近亲畸形属于不可逆病变，切勿盲目乱投药物；畸形个体切勿继续作为亲鱼近亲繁殖。",
+      "image_path": "assets/care_guides_handdrawn/34_spine_deformity_scoliosis.jpg",
+      "cover_card": {
+        "short_title": "脊柱弯曲",
+        "subtitle": "点击看养护方法",
+        "aspect_ratio": "3:4",
+        "font_style": "Variant 1A delicate graphite 2B pencil hand-drawn sketch with fine carbon grain and ambient paper shadow",
+        "visual_detail": "a small ornamental fish swimming with a gentle S-curved bent spine deformity in tranquil calm water",
+        "prompt": "A refined book cover illustration in 3:4 portrait aspect ratio, Japanese lifestyle watercolor and hand-drawn line art aesthetic. Visual Scene: Detailed, authentic close-up showing a small ornamental fish swimming with a gentle S-curved bent spine deformity in tranquil calm water. Typography: '脊柱弯曲' in delicate graphite 2B pencil hand-lettering, subtitle '点击看养护方法'.",
+        "asset_path": "assets/care_guides_handdrawn/covers/34_spine_deformity_scoliosis_cover.jpg",
+        "absolute_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/covers/34_spine_deformity_scoliosis_cover.jpg"
+      },
+      "absolute_image_path": "/Users/chuchu/Desktop/Antigravity-Manager-main/90-PROJECTS/01-Aquapedia/assets/care_guides_handdrawn/34_spine_deformity_scoliosis.jpg"
+    }
+  ]
+}
