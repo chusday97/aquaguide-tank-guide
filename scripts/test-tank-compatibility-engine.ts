@@ -3,6 +3,8 @@ import { evaluateTankCompatibility, getTankCompatibilityAddPolicy } from '../src
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { executeSpeciesAddition, reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
 import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';
+import { fishData } from '../src/data/fishData';
+import { getReviewedCompatibilityProfileForSpecies, hasCompatibilityDecisionCoverage } from '../src/data/compatibilityEvidence';
 
 const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   id: 'peaceful-small-fish',
@@ -251,6 +253,59 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       return result.status === 'not_recommended'
         && result.blockingRules.some(rule => rule.code === 'bioload_over_limit')
         && result.blockingRules.every(rule => !['territorial_conflict', 'single_housing_required'].includes(rule.code));
+    },
+  },
+  {
+    name: 'real reviewed tiger-barb and neon-tetra pair reaches caution without lowering evidence threshold',
+    run: () => {
+      const tiger = fishData.find(fish => fish.id === 'sp_0439');
+      const neon = fishData.find(fish => fish.id === 'sp_0431');
+      if (!tiger || !neon) return false;
+      const result = evaluateTankCompatibility({
+        scope: 'species_only',
+        existingSpecies: [tiger],
+        candidateSpecies: neon,
+      });
+      return result.status === 'caution'
+        && result.warningRules.some(rule => rule.code === 'pair_rule_mixed_assemblage_behavior_risk')
+        && result.missingData.every(rule => rule.code !== 'behavior_evidence_unreviewed');
+    },
+  },
+  {
+    name: 'partial reviewed profile cannot be interpreted as broad compatibility clearance',
+    run: () => {
+      const tiger = fishData.find(fish => fish.id === 'sp_0439');
+      if (!tiger) return false;
+      const variant: Fish = {
+        ...tiger,
+        id: 'test-tiger-variant',
+        name: '测试绿虎皮',
+        scientificName: 'Puntigrus tetrazona var. Green',
+      };
+      const inherited = getReviewedCompatibilityProfileForSpecies(variant);
+      const result = evaluateTankCompatibility({
+        scope: 'species_only',
+        existingSpecies: [tiger],
+        candidateSpecies: variant,
+      });
+      return inherited?.speciesId === 'sp_0439'
+        && !hasCompatibilityDecisionCoverage(inherited)
+        && result.missingData.some(rule => rule.code === 'behavior_evidence_unreviewed')
+        && result.passedRules.every(rule => rule.code !== 'reviewed_behavior_no_block');
+    },
+  },
+  {
+    name: 'scientific-name inheritance is explicit and species-key scoped',
+    run: () => {
+      const inherited = getReviewedCompatibilityProfileForSpecies({
+        id: 'synthetic-tiger-color',
+        scientificName: 'Puntigrus tetrazona var. Green',
+      });
+      const unrelated = getReviewedCompatibilityProfileForSpecies({
+        id: 'synthetic-other-barb',
+        scientificName: 'Puntigrus partipentazona',
+      });
+      return inherited?.speciesId === 'sp_0439' && !unrelated;
     },
   },
   {

@@ -5,6 +5,7 @@ import type { KnowledgeObjectId } from '../../types';
 import { ResilientImage } from '../common/ResilientImage';
 import { getSpeciesImageClass, getSpeciesVisualSources } from '../../lib/speciesVisual';
 import { buildKnowledgeJourney, getKnowledgeObservations, type KnowledgeObservation } from '../../modules/knowledge/knowledgeJourney';
+import { careTopicsData } from '../../data/careTopicsData';
 
 type SceneObject = { id: KnowledgeObjectId; title: string; hint: string; icon: typeof Droplets; tone: string; left: string; top: string };
 const sceneObjects: SceneObject[] = [
@@ -30,6 +31,7 @@ type Props = {
 export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList }: Props) {
   const [selectedObject, setSelectedObject] = useState<SceneObject | null>(null);
   const [selectedObservation, setSelectedObservation] = useState<KnowledgeObservation | null>(null);
+  const [guideIndex, setGuideIndex] = useState(0);
   const selectedJourney = selectedObject && selectedObservation ? buildKnowledgeJourney(selectedObject.id, selectedObservation) : null;
   const urgent = selectedJourney?.urgency === 'urgent';
   const copy = isEn
@@ -39,6 +41,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
   const chooseObject = (object: SceneObject) => {
     setSelectedObject(object);
     setSelectedObservation(null);
+    setGuideIndex(0);
   };
 
   const openJourney = () => {
@@ -52,12 +55,11 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
 
   return (
     <section className="interactive-tank-shell interactive-care-scene" aria-label={isEn ? 'Interactive aquarium care guide' : '互动鱼缸养护指南'}>
-      <div className="interactive-tank-copy">
+      <div className="interactive-care-topbar">
         <div className="interactive-tank-eyebrow"><Waves className="h-4 w-4" />{copy.eyebrow}</div>
-        <h2>{copy.title}</h2>
-        <p>{copy.description}</p>
+        <span>{isEn ? 'Choose a layer → choose a visible problem → open the matching guide.' : '先选择生态层，再选择具体问题，最后查看对应养护指南。'}</span>
+        <button type="button" onClick={() => onBrowseList()} className="interactive-tank-tool interactive-tank-list"><List className="h-4 w-4" />{copy.browse}</button>
       </div>
-      <button type="button" onClick={() => onBrowseList()} className="interactive-tank-tool interactive-tank-list"><List className="h-4 w-4" />{copy.browse}</button>
 
       <div className={`interactive-tank-stage interactive-care-stage ${selectedObject ? 'has-selection' : ''}`}>
         <span aria-hidden="true" className="interactive-tank-surface" />
@@ -87,7 +89,15 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
         </>}
         {selectedObject && selectedObservation && selectedJourney && <>
           <button type="button" onClick={() => setSelectedObservation(null)} className="interactive-dock-back"><ArrowLeft className="h-4 w-4" />{isEn ? 'Change the sign' : '重新选择现象'}</button>
-          <div className={`interactive-care-result ${urgent ? 'is-urgent' : ''}`}><span>{urgent ? (isEn ? 'Priority observation' : '优先观察项') : (isEn ? 'Your next step' : '接下来这样做')}</span><h3>{getObservationLabel(selectedObservation, isEn)}</h3><p>{urgent ? (isEn ? 'Open the safe priority guide before making broader changes.' : '先打开安全优先指引，再决定是否做更大调整。') : (isEn ? 'Open the matching guide and follow only the steps that apply.' : '打开对应指南，只执行与当前现象相关的步骤。')}</p></div>
+          <div className={`interactive-care-result ${urgent ? 'is-urgent' : ''}`}><span>{isEn ? 'Problem identification' : '问题识别'}</span><h3>{getObservationLabel(selectedObservation, isEn)}</h3><p>{isEn ? 'We first identify the visible sign, then match the safest guide.' : '先确认你看到的现象，再匹配对应养护指南。'}</p><div className="interactive-care-diagnosis"><b>{isEn ? 'Possible focus' : '当前排查重点'}</b><small>{selectedObject.title} · {selectedObject.hint}</small></div></div>
+          <div className="interactive-care-guide-carousel">
+            <div className="interactive-care-guide-head"><b>{isEn ? 'Matching care guides' : '对应养护指南'}</b><span>{guideIndex + 1}/3</span></div>
+            <div className="interactive-care-guide-card">
+              <ResilientImage src={careTopicsData[guideIndex]?.imageUrl || '/assets/qa/qa_gen_008.png'} alt="" className="interactive-care-guide-image" loadingSurface="transparent" />
+              <div><h4>{careTopicsData[guideIndex]?.title || getObservationLabel(selectedObservation, isEn)}</h4><p>{careTopicsData[guideIndex]?.description || '根据当前问题查看对应处理步骤。'}</p></div>
+            </div>
+            <div className="interactive-care-guide-actions"><button type="button" onClick={() => setGuideIndex(Math.max(0, guideIndex - 1))}>←</button><button type="button" onClick={() => setGuideIndex(Math.min(2, guideIndex + 1))}>→</button></div>
+          </div>
           <button type="button" onClick={openJourney} className="interactive-tank-primary">{selectedJourney.relatedArticleIds[0] ? (urgent ? (isEn ? 'Open priority guide' : '打开优先处理指引') : (isEn ? 'Open matching guide' : '查看对应指南')) : (isEn ? 'Search matching guides' : '搜索相关指南')}<ArrowRight className="h-4 w-4" /></button>
           <span className="interactive-care-source"><AlertTriangle className="h-3.5 w-3.5" />{copy.source}</span>
         </>}
