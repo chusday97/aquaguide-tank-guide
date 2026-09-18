@@ -34,7 +34,7 @@ export function KnowledgeSceneExplorer({ isEn = false, onOpenTopic, onBrowseList
   const urgent = selectedJourney?.urgency === 'urgent';
   const copy = isEn
     ? { eyebrow: 'Scene guide', title: 'Point to what looks unusual.', description: 'Choose a place in the aquarium, then choose the visible sign. We give one relevant next step.', browse: 'Browse all guides', reset: 'Choose another area', source: 'Source review pending' }
-    : { eyebrow: '场景找问题', title: '点你看到异常的位置。', description: '先点鱼缸里的位置，再点具体表现；系统只给一条相关的下一步。', browse: '传统浏览全部指南', reset: '重新选择位置', source: '来源待专项复核' };
+    : { eyebrow: '场景找问题', title: '从生态层找到问题。', description: '先选择异常层级，再选择具体问题，最后查看对应养护指南。', browse: '浏览全部指南', reset: '重新选择位置', source: '来源待专项复核' };
 
   const chooseObject = (object: SceneObject) => {
     setSelectedObject(object);
