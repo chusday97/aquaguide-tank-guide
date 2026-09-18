@@ -22,3 +22,4 @@ artifacts/visual-layout/*.png
 
 # Vercel Business API generated bundle
 api/v1/business-app.bundle.mjs
+api/v1/_business-app.bundle.mjs
