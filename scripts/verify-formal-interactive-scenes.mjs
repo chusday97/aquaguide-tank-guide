@@ -40,6 +40,9 @@ try {
   await page.getByRole('region', { name: '互动鱼缸养护指南' }).waitFor();
   assert.ok(await page.locator('.interactive-care-scene .resilient-image-transparent').count() >= 1, 'care scene decorations use transparent image surfaces');
   await page.getByText('场景找问题', { exact: true }).waitFor();
+  await page.getByText('从生态层找到问题。', { exact: true }).waitFor();
+  await page.getByText('先选择异常层级，再选择具体问题，最后查看对应养护指南。', { exact: true }).waitFor();
+  await page.getByRole('button', { name: '浏览全部指南', exact: true }).waitFor();
   await page.getByRole('button', { name: '水面：泡沫、油膜、浮头' }).click();
   await page.getByText('再确认一个现象', { exact: true }).waitFor();
   await page.getByRole('button', { name: '传统浏览', exact: true }).click();
