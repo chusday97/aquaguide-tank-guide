@@ -147,6 +147,7 @@
 
 - `src/services/favorites/`：物种与养护收藏的唯一读写入口。
 - `src/services/api/`：携带 Supabase JWT、幂等键和结构化错误的版本化 API 客户端。
+- `src/services/api/api-origin.ts`：统一云端 API origin/path 解析；显式 Vite 配置优先，已知自定义生产域指向 Vercel，local-admin 保持 same-origin。
 - `src/services/admin/content-admin.service.ts`：内容后台唯一 API 访问层，封装 CRUD、发布状态与原始图片上传。
 - `src/services/repository/`：游客本地与登录云端两种 Repository 实现；页面后续只依赖统一接口。
 - `src/services/preview/preview-session.service.ts`：4319 正式页面预览会话、演示鱼缸 seed 和模块路由映射，强制本地数据边界。
@@ -231,6 +232,7 @@
 - `CONTRACT.md`：三层架构、数据库、RLS、API、Repository、迁移与 AI 边界的权威契约。
 - `src/types/database.ts`：camelCase 数据库与关联实体共享类型。
 - `scripts/test-three-tier-contract.ts` / `scripts/test-api-boundary.ts`：三层契约与本地 API 边界回归。
+- `scripts/test-api-origin-contract.ts`：API origin override、生产域、same-origin 默认值、路径拼接和 local-admin 隔离契约。
 - `scripts/test-business-api-contract.ts` / `scripts/test-repository-boundary.ts`：业务路由、校验、稳定 ID、安全规则与本地/云端访问边界回归。
 - `scripts/test-aquarium-creation-semantics.ts` / `scripts/test-addition-intents.ts` / `scripts/test-livestock-recording.ts`：空白鱼缸语义、两类 Intent 策略与现实记录顺序/幂等专项。
 - `supabase/migrations/202608090003_atomic_livestock_addition.sql`：原子创建/复用父物种、写入批次并登记幂等结果。

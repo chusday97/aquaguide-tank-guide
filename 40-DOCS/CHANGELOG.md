@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Added: unified browser API origin resolution with explicit `VITE_API_BASE_URL` override, Vercel fallback for the known custom production host, same-origin defaults, normalized paths, and local-admin same-origin isolation; added a Node contract test.
+
 - Fixed: 固化 reviewed Species Knowledge 的 exact direct → reviewed base → legacy 优先级与 matrix-only `reviewed_unknown` fail-closed 边界；补齐 Vision 默认模型、GLM 旧环境变量兼容、multimodal payload 与 429/5xx/timeout fallback 的无真实 credential contract tests。
 - Changed: Runtime Closure contracts now follow the accepted current Aquarium and Identification UI semantics without visual refactoring; browser smoke coverage confirms planning-versus-real-stocking separation, identification-to-triage separation, and safe no-secret fallback.
 - Added: Knowledge Completion Phase 2 Batch 49 direct reviewed-unknown environment record for the final remaining gap object, with an existing professional source registration, matrix/backlog integration, and a regression contract; no launch pair or Compatibility authority changed.
