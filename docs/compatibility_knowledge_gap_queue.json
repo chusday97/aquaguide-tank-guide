@@ -18,6 +18,11 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "none",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "representation_change",
+      "resolution_note": "Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 23
     },
@@ -38,6 +43,11 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "none",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "variant_authority_review",
+      "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 19
     },
@@ -57,6 +67,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -76,6 +89,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -95,6 +111,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -114,6 +133,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -133,6 +155,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -150,6 +175,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -167,6 +195,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -184,6 +215,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -201,6 +235,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -218,6 +255,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -235,6 +275,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -252,6 +295,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 1
     },
@@ -269,6 +315,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 1
     },
@@ -288,6 +337,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 0
     },
@@ -307,6 +359,9 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 0
     },
@@ -324,6 +379,9 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 0
     }
@@ -345,7 +403,12 @@
         "predation_vulnerability_context"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0002",
@@ -363,7 +426,12 @@
         "predation_vulnerability_context"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0010",
@@ -381,7 +449,12 @@
         "fin_nipping_group_pressure"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0011",
@@ -397,7 +470,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0012",
@@ -413,7 +491,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0013",
@@ -431,7 +514,12 @@
         "predation_vulnerability_context"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0016",
@@ -449,7 +537,12 @@
         "ph_range_gap"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0021",
@@ -465,7 +558,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0428",
@@ -481,7 +579,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0431",
@@ -497,7 +600,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0432",
@@ -516,7 +624,12 @@
         "ph_range_gap"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0433",
@@ -532,7 +645,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0434",
@@ -548,7 +666,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0435",
@@ -564,7 +687,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0436",
@@ -580,7 +708,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0437",
@@ -596,7 +729,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0438",
@@ -612,7 +750,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0439",
@@ -630,7 +773,12 @@
         "fin_nipping_group_pressure"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0443",
@@ -646,7 +794,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0444",
@@ -662,7 +815,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0446",
@@ -678,7 +836,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0459",
@@ -696,7 +859,12 @@
         "predation_vulnerability_context"
       ],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0468",
@@ -712,7 +880,12 @@
       ],
       "warning_codes": [],
       "score": 30,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0001",
@@ -729,7 +902,12 @@
         "predation_vulnerability_context"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0002",
@@ -746,7 +924,12 @@
         "predation_vulnerability_context"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0010",
@@ -763,7 +946,12 @@
         "fin_nipping_group_pressure"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0011",
@@ -778,7 +966,12 @@
       ],
       "warning_codes": [],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0012",
@@ -793,7 +986,12 @@
       ],
       "warning_codes": [],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0013",
@@ -810,7 +1008,12 @@
         "predation_vulnerability_context"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0021",
@@ -825,7 +1028,12 @@
       ],
       "warning_codes": [],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -840,7 +1048,12 @@
       ],
       "warning_codes": [],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -857,7 +1070,12 @@
         "minimum_group_not_met"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -874,7 +1092,12 @@
         "minimum_group_not_met"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -891,7 +1114,12 @@
         "minimum_group_not_met"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -908,7 +1136,12 @@
         "minimum_group_not_met"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -923,7 +1156,12 @@
       ],
       "warning_codes": [],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -938,7 +1176,12 @@
       ],
       "warning_codes": [],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -956,7 +1199,12 @@
         "minimum_group_not_met"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -973,7 +1221,12 @@
         "minimum_group_not_met"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -988,7 +1241,12 @@
       ],
       "warning_codes": [],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -1006,7 +1264,12 @@
         "predation_vulnerability_context"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     },
     {
       "species_a_id": "sp_0224",
@@ -1023,7 +1286,12 @@
         "minimum_group_not_met"
       ],
       "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
     }
   ]
 }

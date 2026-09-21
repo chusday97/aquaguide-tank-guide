@@ -52,6 +52,8 @@
   },
   "priority_species_gap_count": 18,
   "priority_pair_gap_count": 42,
+  "evidence_research_pair_gap_count": 0,
+  "boundary_blocked_pair_gap_count": 42,
   "top_pair_gap_root_species": [
     {
       "species_id": "sp_0475",
@@ -61,6 +63,10 @@
         "social",
         "compatibility_profile"
       ],
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "representation_change",
       "score": 60
     },
     {
@@ -73,6 +79,10 @@
         "social",
         "compatibility_profile"
       ],
+      "boundary_codes": [
+        "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "variant_authority_review",
       "score": 66
     },
     {
@@ -84,6 +94,8 @@
         "space",
         "social"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 27
     },
     {
@@ -95,6 +107,8 @@
         "space",
         "social"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 27
     },
     {
@@ -106,6 +120,8 @@
         "space",
         "social"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 27
     },
     {
@@ -117,6 +133,8 @@
         "space",
         "social"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 27
     },
     {
@@ -128,6 +146,8 @@
         "space",
         "social"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 27
     },
     {
@@ -137,6 +157,8 @@
       "gap_kinds": [
         "environment"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 19
     },
     {
@@ -146,6 +168,8 @@
       "gap_kinds": [
         "environment"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 19
     },
     {
@@ -155,6 +179,8 @@
       "gap_kinds": [
         "environment"
       ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
       "score": 19
     }
   ]

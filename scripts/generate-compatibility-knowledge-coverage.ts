@@ -7,6 +7,7 @@ import {
 } from '../src/data/compatibilityEvidence';
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
 import { getLifeType } from '../src/modules/species/species.service';
+import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKnowledge';
 
 type CompletionRow = {
   species_id: string;
@@ -45,6 +46,52 @@ const fieldCoverage = Object.fromEntries(allFields.map(field => {
 const eligibleSpecies = fishData.filter(fish => !['plant', 'hardscape'].includes(getLifeType(fish)));
 const launchRows = rows.filter(row => row.commonness_proxy === 'launch_cohort');
 
+type GapBoundaryCode =
+  | 'multi_water_type_not_representable'
+  | 'variant_authority_not_promotable';
+
+const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
+  const knowledge = getReviewedSpeciesKnowledge(row.species_id);
+  const environmentText = [
+    ...(knowledge?.environment?.notes || []),
+    knowledge?.environment?.evidence.note || '',
+  ].join(' ');
+  const variantText = [
+    ...((knowledge?.environment?.notes || [])),
+    knowledge?.environment?.evidence.note || '',
+    knowledge?.socialBehavior?.summary || '',
+    knowledge?.socialBehavior?.evidence.note || '',
+    ...((knowledge?.spaceAndGrowth?.spaceNotes || [])),
+    knowledge?.spaceAndGrowth?.evidence.note || '',
+  ].join(' ');
+
+  const codes: GapBoundaryCode[] = [];
+  if (
+    knowledge?.environment?.waterType === 'unknown'
+    && /freshwater/i.test(environmentText)
+    && /brackish/i.test(environmentText)
+  ) {
+    codes.push('multi_water_type_not_representable');
+  }
+  if (
+    row.scientific_name.toLowerCase().includes(' var.')
+    && /(禁止把基础种|基础种.*不能|不能把基础种|不能替代.*品系|品系级)/.test(variantText)
+  ) {
+    codes.push('variant_authority_not_promotable');
+  }
+  return codes;
+};
+
+const boundaryResolution = (codes: GapBoundaryCode[]) => {
+  if (codes.includes('multi_water_type_not_representable')) {
+    return 'representation_change';
+  }
+  if (codes.includes('variant_authority_not_promotable')) {
+    return 'variant_authority_review';
+  }
+  return 'evidence_research';
+};
+
 const speciesGapCandidates = launchRows.map(row => {
   const fish = fishById.get(row.species_id);
   const criticalUnknown = criticalFields.filter(field => (
@@ -57,6 +104,7 @@ const speciesGapCandidates = launchRows.map(row => {
     ...criticalUnknown,
     ...(effectiveProfile ? [] : ['compatibility_profile']),
   ];
+  const boundaryCodes = speciesBoundaryCodes(row);
   const score = Number(row.priority_score || 0)
     + criticalUnknown.length * 4
     + (effectiveProfile ? 0 : 5)
@@ -69,6 +117,13 @@ const speciesGapCandidates = launchRows.map(row => {
     gap_kinds: gapKinds,
     field_status: Object.fromEntries(criticalFields.map(field => [field, row.field_status[field] || 'missing'])),
     compatibility_profile: directProfile ? 'direct_reviewed' : inheritedProfile ? 'inherited_reviewed' : 'none',
+    boundary_codes: boundaryCodes,
+    resolution_mode: boundaryResolution(boundaryCodes),
+    resolution_note: boundaryCodes.includes('multi_water_type_not_representable')
+      ? 'Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.'
+      : boundaryCodes.includes('variant_authority_not_promotable')
+        ? 'Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.'
+        : 'Continue targeted evidence research for the missing compatibility-critical fields.',
     priority_basis: 'launch_cohort_proxy + compatibility-critical evidence gap',
   };
 }).filter(item => item.gap_kinds.length > 0);
@@ -120,6 +175,20 @@ pairGaps.sort((left, right) => {
   return leftKey.localeCompare(rightKey);
 });
 
+const boundaryCodesBySpecies = new Map(
+  launchRows.map(row => [row.species_id, speciesBoundaryCodes(row)]),
+);
+for (const item of pairGaps) {
+  const leftCodes = boundaryCodesBySpecies.get(String(item.species_a_id)) || [];
+  const rightCodes = boundaryCodesBySpecies.get(String(item.species_b_id)) || [];
+  const boundaryCodes = Array.from(new Set([...leftCodes, ...rightCodes])).sort();
+  item.boundary_codes = boundaryCodes;
+  item.resolution_mode = boundaryCodes.length > 0 ? 'boundary_blocked' : 'evidence_research';
+  item.resolution_note = boundaryCodes.length > 0
+    ? 'At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair.'
+    : 'Continue targeted pair/species evidence research.';
+}
+
 const pairGapImpact = new Map<string, number>();
 for (const item of pairGaps) {
   const leftId = String(item.species_a_id);
@@ -159,6 +228,8 @@ const report = {
   field_coverage: fieldCoverage,
   priority_species_gap_count: speciesGaps.length,
   priority_pair_gap_count: pairGaps.length,
+  evidence_research_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_research').length,
+  boundary_blocked_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
   top_pair_gap_root_species: speciesGaps
     .filter(item => item.blocked_pair_count > 0)
     .slice(0, 10)
@@ -167,6 +238,8 @@ const report = {
       common_name: item.common_name,
       blocked_pair_count: item.blocked_pair_count,
       gap_kinds: item.gap_kinds,
+      boundary_codes: item.boundary_codes,
+      resolution_mode: item.resolution_mode,
       score: item.score,
     })),
 };
@@ -201,6 +274,9 @@ markdown.push('- Reviewed compatibility profiles: ' + report.reviewed_compatibil
 markdown.push('- Reviewed pair rules: ' + report.reviewed_pair_rules);
 markdown.push('- Reviewed stage-risk profiles: ' + report.reviewed_stage_risk_profiles);
 markdown.push('- Launch-cohort species: ' + report.launch_cohort_species);
+markdown.push('- Current insufficient pair gaps: ' + report.priority_pair_gap_count);
+markdown.push('- Evidence-research-only pair gaps: ' + report.evidence_research_pair_gap_count);
+markdown.push('- Boundary-blocked pair gaps: ' + report.boundary_blocked_pair_gap_count);
 markdown.push('');
 markdown.push('| Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |');
 markdown.push('| --- | ---: | ---: | ---: | ---: |');
@@ -212,32 +288,33 @@ markdown.push('');
 markdown.push('## Highest-priority species gaps');
 markdown.push('');
 speciesGaps.slice(0, 20).forEach((item, index) => {
-  markdown.push(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + ') — ' + item.gap_kinds.join(', ') + ' — unlocks ' + item.blocked_pair_count + ' insufficient pairs — score ' + item.score);
+  markdown.push(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + ') — ' + item.gap_kinds.join(', ') + ' — ' + item.resolution_mode + (item.boundary_codes.length ? ' [' + item.boundary_codes.join(', ') + ']' : '') + ' — unlocks ' + item.blocked_pair_count + ' insufficient pairs — score ' + item.score);
 });
 if (speciesGaps.length === 0) markdown.push('No launch-cohort species gaps.');
 markdown.push('');
 markdown.push('## Highest-priority pair gaps');
 markdown.push('');
 pairGaps.slice(0, 20).forEach((item, index) => {
-  markdown.push(String(index + 1) + '. ' + item.species_a_name + ' × ' + item.species_b_name + ' — missing: ' + ((item.missing_codes as string[]).join(', ') || 'unspecified') + ' — score ' + item.score);
+  markdown.push(String(index + 1) + '. ' + item.species_a_name + ' × ' + item.species_b_name + ' — missing: ' + ((item.missing_codes as string[]).join(', ') || 'unspecified') + ' — ' + item.resolution_mode + (Array.isArray(item.boundary_codes) && item.boundary_codes.length ? ' [' + (item.boundary_codes as string[]).join(', ') + ']' : '') + ' — score ' + item.score);
 });
 if (pairGaps.length === 0) markdown.push('No launch-cohort pair currently returns insufficient_data.');
 markdown.push('');
 markdown.push('## Research workflow');
 markdown.push('');
 markdown.push('1. Take the highest-ranked gap.');
-markdown.push('2. Research only the missing compatibility-critical field or pair relationship.');
-markdown.push('3. Add reviewed authority with citations only when reliable evidence exists.');
-markdown.push('4. Keep reviewed_unknown when reliable evidence does not exist.');
-markdown.push('5. Regenerate this report and add regression coverage.');
-markdown.push('6. Run npm run test:backend-release-gate.');
+markdown.push('2. If resolution_mode is evidence_research, research only the missing compatibility-critical field or pair relationship.');
+markdown.push('3. If a boundary code is present, resolve the representation/variant-authority boundary before repeating ordinary evidence search.');
+markdown.push('4. Add reviewed authority with citations only when reliable evidence exists.');
+markdown.push('5. Keep reviewed_unknown when reliable evidence does not exist.');
+markdown.push('6. Regenerate this report and add regression coverage.');
+markdown.push('7. Run npm run test:backend-release-gate.');
 
 writeFileSync('docs/compatibility_knowledge_coverage.md', markdown.join('\n') + '\n');
 
 console.log(JSON.stringify(report, null, 2));
 console.log('TOP_SPECIES_GAPS');
 speciesGaps.slice(0, 15).forEach((item, index) => {
-  console.log(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + '): ' + item.gap_kinds.join(', ') + ' blocked_pairs=' + item.blocked_pair_count + ' score=' + item.score);
+  console.log(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + '): ' + item.gap_kinds.join(', ') + ' mode=' + item.resolution_mode + ' boundaries=' + item.boundary_codes.join(',') + ' blocked_pairs=' + item.blocked_pair_count + ' score=' + item.score);
 });
 console.log('TOP_PAIR_GAPS');
 pairGaps.slice(0, 15).forEach((item, index) => {
