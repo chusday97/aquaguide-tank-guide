@@ -685,4 +685,25 @@ assert.ok(
   'gold ram runtime knowledge must preserve its direct variant-aware source',
 );
 
+const reviewedBaseInheritance = getReviewedSpeciesKnowledgeForFish({
+  id: 'sp_0147',
+  scientificName: 'Amatitlania nigrofasciata var. Blue',
+});
+assert.equal(reviewedBaseInheritance?.socialBehavior?.evidence.sourceIds[0], 'convict-cichlid-territory-study', 'matrix-only variant must inherit the reviewed base runtime boundary');
+assert.equal(getPhase2Authority('sp_0147')?.feeding?.status, 'reviewed_unknown', 'matrix-only variant authority must remain reviewed_unknown');
+
+const reviewedUnknownVariant = getReviewedSpeciesKnowledgeForFish({
+  id: 'sp_0224',
+  scientificName: 'Channa argus var. Platinum',
+});
+assert.equal(getPhase2Authority('sp_0224')?.feeding?.status, 'reviewed_unknown');
+assert.equal(getPhase2Authority('sp_0224')?.care?.status, 'reviewed_unknown');
+assert.equal(reviewedUnknownVariant, undefined, 'matrix-only reviewed_unknown must remain fail-closed without reviewed base runtime authority');
+
+const directReviewedSpecies = getReviewedSpeciesKnowledgeForFish({
+  id: 'sp_0016',
+  scientificName: 'Mikrogeophagus ramirezi var. Gold',
+});
+assert.equal(directReviewedSpecies, goldRamKnowledge, 'exact reviewed species authority must win before base inheritance');
+
 console.log('species detail knowledge assertions passed');
