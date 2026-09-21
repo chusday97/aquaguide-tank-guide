@@ -42,7 +42,7 @@ for (const value of Object.values(report.field_coverage) as Array<{ applicable: 
 for (const item of queue.species_gaps) {
   assert.ok(Array.isArray(item.gap_kinds) && item.gap_kinds.length > 0);
   assert.ok(Array.isArray(item.boundary_codes));
-  assert.ok(['evidence_research', 'representation_change', 'variant_authority_review'].includes(item.resolution_mode));
+  assert.ok(['evidence_research', 'representation_change', 'variant_authority_review', 'identity_review'].includes(item.resolution_mode));
   assert.ok(Number.isInteger(item.blocked_pair_count) && item.blocked_pair_count >= 0);
   assert.match(item.priority_basis, /launch_cohort_proxy/);
   assert.match(item.priority_basis, /pair-gap unlock impact/);
@@ -56,6 +56,21 @@ const platinumSnakeheadGap = queue.species_gaps.find(item => item.species_id ===
 assert.ok(platinumSnakeheadGap, 'platinum snakehead gap must remain visible');
 assert.ok(platinumSnakeheadGap.boundary_codes.includes('variant_authority_not_promotable'));
 assert.equal(platinumSnakeheadGap.resolution_mode, 'variant_authority_review');
+
+const crystalShrimpGap = queue.species_gaps.find(item => item.species_id === 'sp_0002');
+assert.ok(crystalShrimpGap, 'Crystal Shrimp identity gap must remain visible');
+assert.ok(crystalShrimpGap.boundary_codes.includes('catalog_identity_unresolved'));
+assert.equal(crystalShrimpGap.resolution_mode, 'identity_review');
+
+const miniParrotGap = queue.species_gaps.find(item => item.species_id === 'sp_0021');
+assert.ok(miniParrotGap, 'Mini-parrot commercial identity gap must remain visible');
+assert.ok(miniParrotGap.boundary_codes.includes('catalog_identity_unresolved'));
+assert.equal(miniParrotGap.resolution_mode, 'identity_review');
+
+const zebraNeriteGap = queue.species_gaps.find(item => item.species_id === 'sp_0428');
+assert.ok(zebraNeriteGap, 'Zebra nerite catalog identity gap must remain visible');
+assert.ok(zebraNeriteGap.boundary_codes.includes('catalog_identity_unresolved'));
+assert.equal(zebraNeriteGap.resolution_mode, 'identity_review');
 if (queue.pair_gaps.length > 0) {
   assert.ok(queue.species_gaps.some(item => item.blocked_pair_count > 0), 'pair gaps must feed species-level unlock impact');
 }

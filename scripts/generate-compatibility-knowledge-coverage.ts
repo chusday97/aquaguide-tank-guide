@@ -1,5 +1,6 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
+import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import {
   getCompatibilityEvidenceAudit,
   getReviewedCompatibilityProfile,
@@ -48,7 +49,8 @@ const launchRows = rows.filter(row => row.commonness_proxy === 'launch_cohort');
 
 type GapBoundaryCode =
   | 'multi_water_type_not_representable'
-  | 'variant_authority_not_promotable';
+  | 'variant_authority_not_promotable'
+  | 'catalog_identity_unresolved';
 
 const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
   const knowledge = getReviewedSpeciesKnowledge(row.species_id);
@@ -79,6 +81,17 @@ const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
   ) {
     codes.push('variant_authority_not_promotable');
   }
+  const identityReview = getCatalogFieldReviews(row.species_id).find(review => (
+    review.field === 'identity'
+    && review.status === 'reviewed'
+    && review.resolution === 'unknown'
+  ));
+  if (
+    identityReview
+    || /(commercial.*form.*not identified|does not identify.*commercial variant|品系身份.*未.*确认|商业命名.*未.*确认|商业.*品系.*对应关系.*确认|商业名.*物种名.*混用)/i.test(variantText)
+  ) {
+    codes.push('catalog_identity_unresolved');
+  }
   return codes;
 };
 
@@ -88,6 +101,9 @@ const boundaryResolution = (codes: GapBoundaryCode[]) => {
   }
   if (codes.includes('variant_authority_not_promotable')) {
     return 'variant_authority_review';
+  }
+  if (codes.includes('catalog_identity_unresolved')) {
+    return 'identity_review';
   }
   return 'evidence_research';
 };
@@ -123,7 +139,9 @@ const speciesGapCandidates = launchRows.map(row => {
       ? 'Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.'
       : boundaryCodes.includes('variant_authority_not_promotable')
         ? 'Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.'
-        : 'Continue targeted evidence research for the missing compatibility-critical fields.',
+        : boundaryCodes.includes('catalog_identity_unresolved')
+          ? 'The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.'
+          : 'Continue targeted evidence research for the missing compatibility-critical fields.',
     priority_basis: 'launch_cohort_proxy + compatibility-critical evidence gap',
   };
 }).filter(item => item.gap_kinds.length > 0);
@@ -303,7 +321,7 @@ markdown.push('## Research workflow');
 markdown.push('');
 markdown.push('1. Take the highest-ranked gap.');
 markdown.push('2. If resolution_mode is evidence_research, research only the missing compatibility-critical field or pair relationship.');
-markdown.push('3. If a boundary code is present, resolve the representation/variant-authority boundary before repeating ordinary evidence search.');
+markdown.push('3. If a boundary code is present, resolve the representation, variant-authority, or catalog-identity boundary before repeating ordinary evidence search.');
 markdown.push('4. Add reviewed authority with citations only when reliable evidence exists.');
 markdown.push('5. Keep reviewed_unknown when reliable evidence does not exist.');
 markdown.push('6. Regenerate this report and add regression coverage.');

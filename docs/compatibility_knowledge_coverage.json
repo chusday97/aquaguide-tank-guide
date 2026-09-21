@@ -94,8 +94,10 @@
         "space",
         "social"
       ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
       "score": 27
     },
     {
@@ -107,8 +109,10 @@
         "space",
         "social"
       ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
       "score": 27
     },
     {
@@ -120,8 +124,10 @@
         "space",
         "social"
       ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
       "score": 27
     },
     {

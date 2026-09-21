@@ -67,9 +67,11 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
+      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -89,9 +91,11 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
+      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -111,9 +115,11 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
+      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 2
     },
@@ -355,9 +361,11 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
+      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 0
     },
@@ -424,6 +432,7 @@
       "score": 30,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "multi_water_type_not_representable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -447,6 +456,7 @@
       "score": 30,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "multi_water_type_not_representable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -556,6 +566,7 @@
       "score": 30,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "multi_water_type_not_representable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -577,6 +588,7 @@
       "score": 30,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "multi_water_type_not_representable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -922,6 +934,7 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -944,6 +957,7 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -1026,6 +1040,7 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -1046,6 +1061,7 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
+        "catalog_identity_unresolved",
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",

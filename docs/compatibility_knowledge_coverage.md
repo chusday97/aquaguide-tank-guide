@@ -32,9 +32,9 @@
 
 1. 高体鳑鲏 (sp_0475) — social, compatibility_profile — representation_change [multi_water_type_not_representable] — unlocks 23 insufficient pairs — score 60
 2. 白金雷龙 (sp_0224) — environment, space, social, compatibility_profile — variant_authority_review [variant_authority_not_promotable] — unlocks 19 insufficient pairs — score 66
-3. 水晶虾 (sp_0002) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
-4. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
-5. 斑马螺 (sp_0428) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
+3. 水晶虾 (sp_0002) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 2 insufficient pairs — score 27
+4. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 2 insufficient pairs — score 27
+5. 斑马螺 (sp_0428) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 2 insufficient pairs — score 27
 6. 极火虾 (sp_0001) — space — evidence_research — unlocks 2 insufficient pairs — score 19
 7. 红绿灯 (sp_0431) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
 8. 白云金丝 (sp_0434) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
@@ -46,20 +46,20 @@
 14. 宝莲灯 (sp_0432) — environment — evidence_research — unlocks 1 insufficient pairs — score 17
 15. 天使鱼（神仙鱼） (sp_0446) — environment — evidence_research — unlocks 1 insufficient pairs — score 17
 16. 珍珠赤雷龙 (sp_0049) — environment, space, social — evidence_research — unlocks 0 insufficient pairs — score 23
-17. 糖果KOI斗鱼 (sp_0258) — environment, space, social — evidence_research — unlocks 0 insufficient pairs — score 23
+17. 糖果KOI斗鱼 (sp_0258) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 23
 18. 咖啡鼠 (sp_0014) — environment — evidence_research — unlocks 0 insufficient pairs — score 15
 
 ## Highest-priority pair gaps
 
 1. 极火虾 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-2. 水晶虾 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-3. 黑裙鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
+2. 水晶虾 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
+3. 黑裙鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
 4. 月光鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
 5. 樱桃灯 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
 6. 小精灵 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
 7. 金波子 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-8. 迷你鹦鹉鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-9. 斑马螺 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
+8. 迷你鹦鹉鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
+9. 斑马螺 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
 10. 红绿灯 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
 11. 宝莲灯 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
 12. 红鼻剪刀 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
@@ -76,7 +76,7 @@
 
 1. Take the highest-ranked gap.
 2. If resolution_mode is evidence_research, research only the missing compatibility-critical field or pair relationship.
-3. If a boundary code is present, resolve the representation/variant-authority boundary before repeating ordinary evidence search.
+3. If a boundary code is present, resolve the representation, variant-authority, or catalog-identity boundary before repeating ordinary evidence search.
 4. Add reviewed authority with citations only when reliable evidence exists.
 5. Keep reviewed_unknown when reliable evidence does not exist.
 6. Regenerate this report and add regression coverage.
