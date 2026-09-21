@@ -266,7 +266,8 @@
     "test:api-cors-contract": "node --import tsx scripts/test-api-cors-contract.ts",
     "test:vision-provider-fallback": "node --import tsx scripts/test-vision-provider-fallback.ts",
     "test:species-knowledge-completion-matrix": "node --import tsx scripts/test-species-knowledge-completion-matrix.ts",
-    "test:backend-release-gate": "node scripts/test-backend-release-gate.mjs"
+    "test:backend-release-gate": "node scripts/test-backend-release-gate.mjs",
+    "test:compatibility-user-conclusion": "node --import tsx scripts/test-compatibility-user-conclusion.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

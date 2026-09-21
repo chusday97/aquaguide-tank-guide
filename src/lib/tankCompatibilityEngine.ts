@@ -673,24 +673,6 @@ const evaluateLegacyTankCompatibility = ({
     ));
   }
 
-  if (blockingRules.length > 0) {
-    suggestions.push('先移除阻断风险或更换候选生物。');
-  }
-  if (warningRules.some(rule => rule.code === 'group_requirement_gap')) {
-    suggestions.push(`群游物种不要只按少量个体试养；先把 ${candidateSpecies.name} 规划到已审核的最低群体数量。`);
-  } else if (warningRules.length > 0) {
-    suggestions.push('如需尝试，请先处理主要风险项，再按计划加入并观察。');
-  }
-  if (missingData.length > 0) {
-    const blockingMissing = missingData.filter(item => item.severity === 'high' || item.severity === 'medium');
-    suggestions.push(blockingMissing.length > 0
-      ? '先补充鱼缸尺寸、水温或必要设备信息后再评估。'
-      : '敏感物种可用试纸或滴定测试复核水质；普通判断无需填写 pH 数值。');
-  }
-  if (blockingRules.length === 0 && warningRules.length === 0 && missingData.length === 0) {
-    suggestions.push('可以少量加入，并在 3-7 天内观察追咬、拒食和水质波动。');
-  }
-
   const finalPassedRules = dedupeRules(passedRules);
   const finalWarningRules = dedupeRules(warningRules);
   const finalBlockingRules = dedupeRules(blockingRules);
@@ -712,6 +694,25 @@ const evaluateLegacyTankCompatibility = ({
       : status === 'caution'
         ? finalWarningRules.some(rule => rule.severity === 'medium' || rule.severity === 'high') ? 'medium' : 'low'
         : 'none';
+
+  if (status === 'not_recommended') {
+    suggestions.push('先解决明确阻断项；如果无法消除，建议更换候选生物。');
+  } else if (status === 'insufficient_data') {
+    const evidenceMissing = finalMissingData.some(item => (
+      item.code.includes('unreviewed')
+      || item.code.includes('evidence')
+      || item.code.includes('unknown')
+    ));
+    suggestions.push(evidenceMissing
+      ? '关键物种或行为资料尚未审核；先保留方案，补齐可靠资料后再决定是否加入。'
+      : '先补充鱼缸尺寸、水温或必要设备信息后再评估。');
+  } else if (finalWarningRules.some(rule => rule.code === 'group_requirement_gap')) {
+    suggestions.push(`先把 ${candidateSpecies.name} 规划到已审核的最低群体数量，再评估是否加入。`);
+  } else if (status === 'caution') {
+    suggestions.push('先处理主要风险项，再按计划加入并持续观察。');
+  } else {
+    suggestions.push('当前条件可加入；建议分步加入，并在 3-7 天内观察追咬、拒食和水质波动。');
+  }
 
   return {
     status,

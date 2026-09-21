@@ -65,15 +65,21 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
   const confirmed = new Set<CompatibilityDimension>();
   const confirmedFindings: string[] = [];
   const cautions: string[] = [];
+  const confirmedRuleCodes = new Set<string>();
+  const cautionRuleCodes = new Set<string>();
   const addConfirmed = (rule: { code: string; title: string; evidence?: string }) => {
     const dimension = ruleDimension(rule.code);
     if (!dimension || rule.code.includes('unreviewed') || rule.code.includes('missing') || rule.code.includes('unknown')) return;
     confirmed.add(dimension);
+    if (confirmedRuleCodes.has(rule.code)) return;
+    confirmedRuleCodes.add(rule.code);
     confirmedFindings.push(ruleText(rule, '已完成该项核对。'));
   };
   decision.passedRules.forEach(addConfirmed);
   decision.warningRules.forEach(rule => {
     addConfirmed(rule);
+    if (cautionRuleCodes.has(rule.code)) return;
+    cautionRuleCodes.add(rule.code);
     cautions.push(ruleText(rule, '该项需要继续观察。'));
   });
   decision.blockingRules.forEach(rule => {
