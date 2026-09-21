@@ -27,21 +27,21 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 36,
-      "reviewed_unknown": 439,
-      "supported_pct": 7.6
-    },
-    "space": {
-      "applicable": 475,
       "reviewed_supported": 37,
       "reviewed_unknown": 438,
       "supported_pct": 7.8
     },
+    "space": {
+      "applicable": 475,
+      "reviewed_supported": 39,
+      "reviewed_unknown": 436,
+      "supported_pct": 8.2
+    },
     "social": {
       "applicable": 411,
-      "reviewed_supported": 34,
-      "reviewed_unknown": 377,
-      "supported_pct": 8.3
+      "reviewed_supported": 36,
+      "reviewed_unknown": 375,
+      "supported_pct": 8.8
     },
     "care": {
       "applicable": 475,
@@ -50,7 +50,7 @@
       "supported_pct": 0.2
     }
   },
-  "priority_species_gap_count": 10,
+  "priority_species_gap_count": 7,
   "priority_pair_gap_count": 65,
   "evidence_research_pair_gap_count": 0,
   "boundary_blocked_pair_gap_count": 65,
@@ -142,28 +142,6 @@
       ],
       "resolution_mode": "identity_review",
       "score": 29
-    },
-    {
-      "species_id": "sp_0001",
-      "common_name": "极火虾",
-      "blocked_pair_count": 3,
-      "gap_kinds": [
-        "space"
-      ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "score": 21
-    },
-    {
-      "species_id": "sp_0459",
-      "common_name": "黑壳虾",
-      "blocked_pair_count": 3,
-      "gap_kinds": [
-        "social"
-      ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "score": 21
     }
   ]
 }

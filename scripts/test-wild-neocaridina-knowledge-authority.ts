@@ -15,9 +15,11 @@ assert.equal(direct.spaceAndGrowth?.minTankLengthCm, undefined);
 assert.equal(direct.spaceAndGrowth?.evidence.reviewStatus, 'reviewed');
 assert.notEqual(direct.spaceAndGrowth?.evidence.confidence, 'unknown');
 
-// Do not promote red-morph social evidence into wild-type object authority.
-assert.equal(direct.socialBehavior?.mode, 'unknown');
-assert.equal(direct.socialBehavior?.evidence.confidence, 'unknown');
+assert.equal(direct.socialBehavior?.mode, 'group');
+assert.equal(direct.socialBehavior?.minimumGroupSize, undefined);
+assert.equal(direct.socialBehavior?.evidence.reviewStatus, 'reviewed');
+assert.notEqual(direct.socialBehavior?.evidence.confidence, 'unknown');
+assert.ok(direct.socialBehavior?.evidence.sourceIds.includes('neocaridina-gregarious-zoology-2018'));
 
 const sourceIds = new Set([
   ...(direct.environment?.evidence.sourceIds || []),

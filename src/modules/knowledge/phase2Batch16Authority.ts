@@ -47,6 +47,18 @@ const fireRedShrimpKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
       reviewedAt: '2026-09-22',
     },
   },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 4, measurement: 'unknown' },
+    activityLevel: 'unknown',
+    swimmingZone: 'bottom',
+    spaceNotes: ['UF/IFAS reports Neocaridina davidi adults around 3-4 cm. No minimum aquarium volume or tank length is inferred from body size alone.'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['uf-ifas-neocaridina-davidi'],
+      reviewedAt: '2026-09-22',
+    },
+  },
 };
 
 export const phase2Batch16Knowledge = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [

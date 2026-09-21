@@ -48,6 +48,19 @@ const wildTypeNeocaridinaKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
       reviewedAt: '2026-09-22',
     },
   },
+  socialBehavior: {
+    mode: 'group',
+    swimmingZone: 'bottom',
+    territoriality: 'unknown',
+    predationRisk: 'unknown',
+    summary: 'A peer-reviewed Zoology study describes Neocaridina davidi itself as a highly gregarious caridean shrimp. This supports group-living context but not a hard minimum group count.',
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['neocaridina-gregarious-zoology-2018'],
+      reviewedAt: '2026-09-22',
+    },
+  },
 };
 
 export const phase2Batch24Knowledge = Object.fromEntries(Object.entries(phase2Batch24Subjects).map(([id, subject]) => [

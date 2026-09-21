@@ -146,68 +146,6 @@
       "blocked_pair_count": 3
     },
     {
-      "species_id": "sp_0001",
-      "common_name": "极火虾",
-      "scientific_name": "Neocaridina davidi var. Red",
-      "score": 21,
-      "gap_kinds": [
-        "space"
-      ],
-      "field_status": {
-        "environment": "reviewed_supported",
-        "space": "reviewed_unknown",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 3
-    },
-    {
-      "species_id": "sp_0459",
-      "common_name": "黑壳虾",
-      "scientific_name": "Neocaridina davidi wild type",
-      "score": 21,
-      "gap_kinds": [
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_supported",
-        "space": "reviewed_supported",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 3
-    },
-    {
-      "species_id": "sp_0049",
-      "common_name": "珍珠赤雷龙",
-      "scientific_name": "Channa asiatica",
-      "score": 23,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 0
-    },
-    {
       "species_id": "sp_0258",
       "common_name": "糖果KOI斗鱼",
       "scientific_name": "Betta splendens var. Koi",

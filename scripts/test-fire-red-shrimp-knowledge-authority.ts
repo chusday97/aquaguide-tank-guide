@@ -15,8 +15,11 @@ assert.notEqual(direct.socialBehavior?.evidence.confidence, 'unknown');
 
 // Do not fabricate a minimum tank size or hard group count from ecology/social studies.
 assert.equal(direct.socialBehavior?.minimumGroupSize, undefined);
+assert.equal(direct.spaceAndGrowth?.adultLengthCm?.max, 4);
 assert.equal(direct.spaceAndGrowth?.minVolumeLiters, undefined);
-assert.equal(direct.spaceAndGrowth?.evidence.confidence, 'unknown');
+assert.equal(direct.spaceAndGrowth?.minTankLengthCm, undefined);
+assert.equal(direct.spaceAndGrowth?.evidence.reviewStatus, 'reviewed');
+assert.notEqual(direct.spaceAndGrowth?.evidence.confidence, 'unknown');
 
 const sourceIds = new Set([
   ...(direct.environment?.evidence.sourceIds || []),
