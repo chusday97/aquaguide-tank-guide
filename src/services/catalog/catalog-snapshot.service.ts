@@ -4,6 +4,7 @@ import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getRevi
 import type { Fish } from '../../types';
 import { speciesProfileFromFish } from './species-profile.adapter';
 import { applyApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
+import { resolveApiV1Url } from '../api/api-origin';
 
 export const LOCAL_CATALOG_VERSION = 'local-fish-data-v1';
 const LOCAL_SNAPSHOT_URL = `https://catalog.invalid/releases/${LOCAL_CATALOG_VERSION}/catalog.snapshot.json`;
@@ -113,7 +114,7 @@ export const loadCatalogSnapshot = async (options: { manifestUrl?: string; fetch
   const fetchImpl = options.fetchImpl ?? globalThis.fetch;
   if (!fetchImpl) return { snapshot: local, source: 'local', fallbackReason: 'manifest_unavailable' };
   try {
-    const manifestResponse = await fetchImpl(options.manifestUrl ?? '/api/v1/catalog/releases/current');
+    const manifestResponse = await fetchImpl(options.manifestUrl ?? resolveApiV1Url('/catalog/releases/current'));
     if (!manifestResponse.ok) return { snapshot: local, source: 'local', fallbackReason: 'manifest_unavailable' };
     const manifest = catalogSnapshotSchema.shape.manifest.parse(await manifestResponse.json());
     const snapshotResponse = await fetchImpl(manifest.snapshotUrl);
