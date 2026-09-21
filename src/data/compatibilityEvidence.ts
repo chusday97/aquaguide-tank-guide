@@ -682,6 +682,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [ramireziSeriouslyFish, ramireziFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
   },
+  sp_0016: {
+    speciesId: 'sp_0016',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [ramireziSeriouslyFish, ramireziFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
   sp_0017: {
     speciesId: 'sp_0017',
     waterType: 'freshwater',

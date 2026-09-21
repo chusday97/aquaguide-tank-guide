@@ -9,6 +9,7 @@ const gates = [
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
+  ['Gold Ram Compatibility Authority', 'npm', ['run', 'test:gold-ram-compatibility-authority']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],

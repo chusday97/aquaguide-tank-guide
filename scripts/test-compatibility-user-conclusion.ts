@@ -37,11 +37,12 @@ const goldRamWithPanda = evaluateTankCompatibility({
   candidateSpecies: byId('sp_0443'),
   candidateQuantity: 6,
 });
-assert.equal(goldRamWithPanda.status, 'insufficient_data');
-assert.ok(goldRamWithPanda.missingData.some(rule => rule.code.includes('unreviewed')));
-assert.ok(goldRamWithPanda.suggestions.some(item => item.includes('资料尚未审核')));
+assert.equal(goldRamWithPanda.status, 'caution');
+assert.equal(goldRamWithPanda.missingData.length, 0);
+assert.ok(goldRamWithPanda.warningRules.some(rule => rule.code === 'territorial_pressure_context'));
+assert.ok(goldRamWithPanda.suggestions.some(item => item.includes('主要风险项')));
 assert.ok(goldRamWithPanda.suggestions.every(item => !item.includes('更换候选生物')));
-assert.ok(goldRamWithPanda.suggestions.every(item => !item.includes('移除阻断风险')));
+assert.ok(goldRamWithPanda.suggestions.every(item => !item.includes('资料尚未审核')));
 
 const channaWithNeon = evaluateTankCompatibility({
   tank: tank(120, 50, 40, 24),

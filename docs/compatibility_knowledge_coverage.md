@@ -12,7 +12,7 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 411
-- Reviewed compatibility profiles: 32
+- Reviewed compatibility profiles: 33
 - Reviewed pair rules: 5
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
@@ -27,25 +27,24 @@
 
 ## Highest-priority species gaps
 
-1. 金波子 (sp_0016) — compatibility_profile — unlocks 24 insufficient pairs — score 56
-2. 高体鳑鲏 (sp_0475) — social, compatibility_profile — unlocks 23 insufficient pairs — score 60
-3. 白金雷龙 (sp_0224) — environment, space, social, compatibility_profile — unlocks 19 insufficient pairs — score 66
-4. 极火虾 (sp_0001) — environment, space, social — unlocks 3 insufficient pairs — score 29
-5. 水晶虾 (sp_0002) — environment, space, social — unlocks 3 insufficient pairs — score 29
-6. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — unlocks 3 insufficient pairs — score 29
-7. 斑马螺 (sp_0428) — environment, space, social — unlocks 3 insufficient pairs — score 29
-8. 黑壳虾 (sp_0459) — environment, space, social — unlocks 3 insufficient pairs — score 29
-9. 红绿灯 (sp_0431) — environment — unlocks 3 insufficient pairs — score 21
-10. 斑马鱼 (sp_0435) — environment — unlocks 3 insufficient pairs — score 21
-11. 孔雀鱼 (sp_0436) — environment — unlocks 3 insufficient pairs — score 21
-12. 虎皮鱼 (sp_0439) — environment — unlocks 3 insufficient pairs — score 21
-13. 熊猫鼠 (sp_0443) — environment — unlocks 3 insufficient pairs — score 21
-14. 宝莲灯 (sp_0432) — environment — unlocks 2 insufficient pairs — score 19
-15. 白云金丝 (sp_0434) — environment — unlocks 2 insufficient pairs — score 19
-16. 天使鱼（神仙鱼） (sp_0446) — environment — unlocks 2 insufficient pairs — score 19
-17. 咖啡鼠 (sp_0014) — environment — unlocks 1 insufficient pairs — score 17
-18. 珍珠赤雷龙 (sp_0049) — environment, space, social — unlocks 0 insufficient pairs — score 23
-19. 糖果KOI斗鱼 (sp_0258) — environment, space, social — unlocks 0 insufficient pairs — score 23
+1. 高体鳑鲏 (sp_0475) — social, compatibility_profile — unlocks 23 insufficient pairs — score 60
+2. 白金雷龙 (sp_0224) — environment, space, social, compatibility_profile — unlocks 19 insufficient pairs — score 66
+3. 极火虾 (sp_0001) — environment, space, social — unlocks 2 insufficient pairs — score 27
+4. 水晶虾 (sp_0002) — environment, space, social — unlocks 2 insufficient pairs — score 27
+5. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — unlocks 2 insufficient pairs — score 27
+6. 斑马螺 (sp_0428) — environment, space, social — unlocks 2 insufficient pairs — score 27
+7. 黑壳虾 (sp_0459) — environment, space, social — unlocks 2 insufficient pairs — score 27
+8. 红绿灯 (sp_0431) — environment — unlocks 2 insufficient pairs — score 19
+9. 白云金丝 (sp_0434) — environment — unlocks 2 insufficient pairs — score 19
+10. 斑马鱼 (sp_0435) — environment — unlocks 2 insufficient pairs — score 19
+11. 孔雀鱼 (sp_0436) — environment — unlocks 2 insufficient pairs — score 19
+12. 虎皮鱼 (sp_0439) — environment — unlocks 2 insufficient pairs — score 19
+13. 熊猫鼠 (sp_0443) — environment — unlocks 2 insufficient pairs — score 19
+14. 宝莲灯 (sp_0432) — environment — unlocks 1 insufficient pairs — score 17
+15. 天使鱼（神仙鱼） (sp_0446) — environment — unlocks 1 insufficient pairs — score 17
+16. 珍珠赤雷龙 (sp_0049) — environment, space, social — unlocks 0 insufficient pairs — score 23
+17. 糖果KOI斗鱼 (sp_0258) — environment, space, social — unlocks 0 insufficient pairs — score 23
+18. 咖啡鼠 (sp_0014) — environment — unlocks 0 insufficient pairs — score 15
 
 ## Highest-priority pair gaps
 
