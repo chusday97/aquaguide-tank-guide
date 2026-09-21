@@ -1,0 +1,52 @@
+import { spawnSync } from 'node:child_process';
+
+const gates = [
+  ['Species Knowledge', 'npm', ['run', 'test:species-knowledge']],
+  ['Species Knowledge Completion Matrix', 'node', ['--import', 'tsx', 'scripts/test-species-knowledge-completion-matrix.ts']],
+  ['Compatibility Engine', 'npm', ['run', 'test:compatibility']],
+  ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],
+  ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
+  ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
+  ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
+  ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
+  ['Water Change', 'npm', ['run', 'test:p0-water-change']],
+  ['Care Guidance', 'npm', ['run', 'test:care-guidance']],
+  ['Core Flow V1', 'node', ['--import', 'tsx', 'scripts/test-core-flow-state-eval-v1.ts']],
+  ['Core Flow V2', 'node', ['--import', 'tsx', 'scripts/test-core-flow-state-eval-v2.ts']],
+  ['Species Diagnosis', 'npm', ['run', 'test:species-diagnosis']],
+  ['API Origin', 'npm', ['run', 'test:api-origin-contract']],
+  ['API CORS', 'node', ['--import', 'tsx', 'scripts/test-api-cors-contract.ts']],
+  ['Vision Provider', 'node', ['--import', 'tsx', 'scripts/test-vision-provider-fallback.ts']],
+  ['API Boundary', 'npm', ['run', 'test:api-boundary']],
+  ['Business API', 'npm', ['run', 'test:business-api-contract']],
+  ['Repository Boundary', 'npm', ['run', 'test:repository-boundary']],
+  ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
+  ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],
+  ['API Typecheck', 'npm', ['run', 'check:api']],
+  ['Project Typecheck', 'npm', ['run', 'lint']],
+  ['Vercel Business Bundle', 'npm', ['run', 'build:business-api']],
+  ['Git Diff Check', 'git', ['diff', '--check']],
+];
+
+for (const gate of gates) {
+  const label = gate[0];
+  const command = gate[1];
+  const args = gate[2];
+  process.stdout.write('\n=== ' + label + ' ===\n');
+  const result = spawnSync(command, args, {
+    cwd: process.cwd(),
+    env: process.env,
+    encoding: 'utf8',
+    stdio: 'inherit',
+  });
+  if (result.error) {
+    console.error('[backend-release-gate] ' + label + ': failed to start', result.error);
+    process.exit(1);
+  }
+  if (result.status !== 0) {
+    console.error('[backend-release-gate] ' + label + ': FAIL (' + result.status + ')');
+    process.exit(result.status || 1);
+  }
+}
+
+console.log('\nBACKEND_RELEASE_GATE=PASS');

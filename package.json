@@ -262,7 +262,11 @@
     "test:desktop-layout": "node scripts/test-desktop-layout-contract.mjs",
     "test:compatibility-beginner-actions-ui": "node scripts/verify-compatibility-beginner-actions.mjs",
     "test:git-runtime-authority": "tsx scripts/test-git-runtime-authority.ts",
-    "build:business-api": "node scripts/build-vercel-business-api.mjs"
+    "build:business-api": "node scripts/build-vercel-business-api.mjs",
+    "test:api-cors-contract": "node --import tsx scripts/test-api-cors-contract.ts",
+    "test:vision-provider-fallback": "node --import tsx scripts/test-vision-provider-fallback.ts",
+    "test:species-knowledge-completion-matrix": "node --import tsx scripts/test-species-knowledge-completion-matrix.ts",
+    "test:backend-release-gate": "node scripts/test-backend-release-gate.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
