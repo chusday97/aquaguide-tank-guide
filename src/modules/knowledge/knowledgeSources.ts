@@ -1,6 +1,8 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'uf-ifas-neocaridina-davidi': { id: 'uf-ifas-neocaridina-davidi', title: 'Cherry Shrimp Neocaridina davidi', publisher: 'UF/IFAS Extension', url: 'https://ask.ifas.ufl.edu/publication/IN1301', sourceType: 'professional_association', reviewStatus: 'reviewed' },
+  'neocaridina-social-environment-study': { id: 'neocaridina-social-environment-study', title: 'Effect of social environment on sexual differentiation in the highly gregarious red cherry shrimp (Neocaridina davidi)', publisher: 'Canadian Journal of Zoology', url: 'https://doi.org/10.1139/cjz-2018-0284', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
   'aquarium-industries-ramirezi-care-sheet': { id: 'aquarium-industries-ramirezi-care-sheet', title: 'Ramirezi Blue Cichlid care sheet', publisher: 'Aquarium Industries', url: 'https://www.aquariumindustries.com.au/wp-content/uploads/2015/03/Ramirezi.pdf', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'batch03-fishbase-channa-argus': { id: 'batch03-fishbase-channa-argus', title: 'Channa argus species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Channa-argus.html', sourceType: 'professional_association', reviewStatus: 'reviewed' },
   'batch03-fishbase-rhodeus-ocellatus': { id: 'batch03-fishbase-rhodeus-ocellatus', title: 'Rhodeus ocellatus species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Rhodeus-ocellatus.html', sourceType: 'professional_association', reviewStatus: 'reviewed' },

@@ -1,5 +1,5 @@
 species_id,common_name,scientific_name,life_type,category,feeding_status,environment_status,space_status,social_status,care_status,gap_fields,commonness_proxy,risk_proxy,priority_score
-"sp_0001","极火虾","Neocaridina davidi var. Red","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","launch_cohort","elevated","9"
+"sp_0001","极火虾","Neocaridina davidi var. Red","invertebrate","虾螺蟹","reviewed_unknown","reviewed_supported","reviewed_unknown","reviewed_supported","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0002","水晶虾","Caridina cantonensis var.","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0003","苏拉威西虾","Caridina dennerli","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0004","洋葱螺","Vittina turrita","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"

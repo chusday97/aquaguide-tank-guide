@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-16T19:04:55.733Z",
+  "generated_at": "2026-09-21T18:04:32.771Z",
   "catalog_object_count": 486,
   "fields": [
     "feeding",
@@ -24,9 +24,9 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
+        "environment": "reviewed_supported",
         "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
+        "social": "reviewed_supported",
         "care": "reviewed_unknown"
       },
       "gap_fields": [],
@@ -497,7 +497,7 @@
       "gap_fields": [],
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
+      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
@@ -14917,8 +14917,8 @@
       "template_only": 0
     },
     "environment": {
-      "reviewed_supported": 26,
-      "reviewed_unknown": 449,
+      "reviewed_supported": 27,
+      "reviewed_unknown": 448,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
@@ -14933,8 +14933,8 @@
       "template_only": 0
     },
     "social": {
-      "reviewed_supported": 33,
-      "reviewed_unknown": 378,
+      "reviewed_supported": 34,
+      "reviewed_unknown": 377,
       "inherited_reviewed": 0,
       "not_applicable": 75,
       "needs_research": 0,

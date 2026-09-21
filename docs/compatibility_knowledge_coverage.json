@@ -27,9 +27,9 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 26,
-      "reviewed_unknown": 449,
-      "supported_pct": 5.5
+      "reviewed_supported": 27,
+      "reviewed_unknown": 448,
+      "supported_pct": 5.7
     },
     "space": {
       "applicable": 475,
@@ -39,9 +39,9 @@
     },
     "social": {
       "applicable": 411,
-      "reviewed_supported": 33,
-      "reviewed_unknown": 378,
-      "supported_pct": 8
+      "reviewed_supported": 34,
+      "reviewed_unknown": 377,
+      "supported_pct": 8.3
     },
     "care": {
       "applicable": 475,
@@ -84,19 +84,6 @@
       ],
       "resolution_mode": "variant_authority_review",
       "score": 66
-    },
-    {
-      "species_id": "sp_0001",
-      "common_name": "极火虾",
-      "blocked_pair_count": 2,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "score": 27
     },
     {
       "species_id": "sp_0002",
@@ -149,6 +136,17 @@
       "boundary_codes": [],
       "resolution_mode": "evidence_research",
       "score": 27
+    },
+    {
+      "species_id": "sp_0001",
+      "common_name": "极火虾",
+      "blocked_pair_count": 2,
+      "gap_kinds": [
+        "space"
+      ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "score": 19
     },
     {
       "species_id": "sp_0431",

@@ -23,20 +23,20 @@
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
 | feeding | 411 | 1 | 410 | 0.2% |
-| environment | 475 | 26 | 449 | 5.5% |
+| environment | 475 | 27 | 448 | 5.7% |
 | space | 475 | 36 | 439 | 7.6% |
-| social | 411 | 33 | 378 | 8.0% |
+| social | 411 | 34 | 377 | 8.3% |
 | care | 475 | 1 | 474 | 0.2% |
 
 ## Highest-priority species gaps
 
 1. 高体鳑鲏 (sp_0475) — social, compatibility_profile — representation_change [multi_water_type_not_representable] — unlocks 23 insufficient pairs — score 60
 2. 白金雷龙 (sp_0224) — environment, space, social, compatibility_profile — variant_authority_review [variant_authority_not_promotable] — unlocks 19 insufficient pairs — score 66
-3. 极火虾 (sp_0001) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
-4. 水晶虾 (sp_0002) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
-5. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
-6. 斑马螺 (sp_0428) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
-7. 黑壳虾 (sp_0459) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
+3. 水晶虾 (sp_0002) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
+4. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
+5. 斑马螺 (sp_0428) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
+6. 黑壳虾 (sp_0459) — environment, space, social — evidence_research — unlocks 2 insufficient pairs — score 27
+7. 极火虾 (sp_0001) — space — evidence_research — unlocks 2 insufficient pairs — score 19
 8. 红绿灯 (sp_0431) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
 9. 白云金丝 (sp_0434) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
 10. 斑马鱼 (sp_0435) — environment — evidence_research — unlocks 2 insufficient pairs — score 19

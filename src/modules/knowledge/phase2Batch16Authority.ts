@@ -22,7 +22,37 @@ const makeKnowledge = (subject: Subject): SpeciesKnowledgeProfile['knowledge'] =
   socialBehavior: { mode: 'unknown', summary: '来源不足以确认稳定水族箱社会模式。', evidence: evidence(subject, 'social behavior') },
   spaceAndGrowth: { activityLevel: 'unknown', evidence: evidence(subject, 'space and growth') },
 });
-export const phase2Batch16Knowledge = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [id, makeKnowledge(subject)])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
+const fireRedShrimpKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  ...makeKnowledge(phase2Batch16Subjects.sp_0001),
+  environment: {
+    waterType: 'freshwater',
+    notes: ['UF/IFAS identifies the red/cherry morph as Neocaridina davidi and describes the species as a freshwater ornamental shrimp from freshwater streams.'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['uf-ifas-neocaridina-davidi'],
+      reviewedAt: '2026-09-22',
+    },
+  },
+  socialBehavior: {
+    mode: 'group',
+    swimmingZone: 'bottom',
+    territoriality: 'unknown',
+    predationRisk: 'unknown',
+    summary: 'Peer-reviewed work describes red cherry shrimp as highly gregarious; reviewed ecology sources also place the species as a benthic freshwater shrimp. This supports group-living context, but not a hard minimum group count.',
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['neocaridina-social-environment-study', 'uf-ifas-neocaridina-davidi'],
+      reviewedAt: '2026-09-22',
+    },
+  },
+};
+
+export const phase2Batch16Knowledge = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [
+  id,
+  id === 'sp_0001' ? fireRedShrimpKnowledge : makeKnowledge(subject),
+])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch16Authority = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [id, {
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },
   care: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific care authority.` },
