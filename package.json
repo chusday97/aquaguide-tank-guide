@@ -272,7 +272,8 @@
     "test:compatibility-knowledge-coverage": "node --import tsx scripts/test-compatibility-knowledge-coverage.ts",
     "test:gold-ram-compatibility-authority": "node --import tsx scripts/test-gold-ram-compatibility-authority.ts",
     "test:fire-red-shrimp-knowledge-authority": "node --import tsx scripts/test-fire-red-shrimp-knowledge-authority.ts",
-    "test:wild-neocaridina-knowledge-authority": "node --import tsx scripts/test-wild-neocaridina-knowledge-authority.ts"
+    "test:wild-neocaridina-knowledge-authority": "node --import tsx scripts/test-wild-neocaridina-knowledge-authority.ts",
+    "test:neon-tetra-environment-authority": "node --import tsx scripts/test-neon-tetra-environment-authority.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

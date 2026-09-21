@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T18:10:28.838Z",
+  "generated_at": "2026-09-21T18:18:34.324Z",
   "catalog_object_count": 486,
   "fields": [
     "feeding",
@@ -13180,7 +13180,7 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
+        "environment": "reviewed_supported",
         "space": "reviewed_supported",
         "social": "reviewed_supported",
         "care": "reviewed_unknown"
@@ -14917,8 +14917,8 @@
       "template_only": 0
     },
     "environment": {
-      "reviewed_supported": 28,
-      "reviewed_unknown": 447,
+      "reviewed_supported": 29,
+      "reviewed_unknown": 446,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,

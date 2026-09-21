@@ -1064,6 +1064,19 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0431: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 20, max: 26 },
+      phRange: { min: 5, max: 7 },
+      hardnessDgh: { min: 1, max: 2 },
+      notes: ['FishBase records Paracheirodon innesi as a freshwater tropical species from blackwater or clearwater tributaries.'],
+      evidence: {
+        confidence: 'verified',
+        reviewStatus: 'reviewed',
+        sourceIds: ['batch33-fishbase-paracheirodon-innesi'],
+        reviewedAt: '2026-09-22',
+      },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断',
       summary: '性成熟母鱼通常腹部更圆、体型略大；幼鱼阶段不建议仅凭体型判断。',

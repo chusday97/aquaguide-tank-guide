@@ -27,9 +27,9 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 28,
-      "reviewed_unknown": 447,
-      "supported_pct": 5.9
+      "reviewed_supported": 29,
+      "reviewed_unknown": 446,
+      "supported_pct": 6.1
     },
     "space": {
       "applicable": 475,
@@ -50,7 +50,7 @@
       "supported_pct": 0.2
     }
   },
-  "priority_species_gap_count": 18,
+  "priority_species_gap_count": 17,
   "priority_pair_gap_count": 42,
   "evidence_research_pair_gap_count": 0,
   "boundary_blocked_pair_gap_count": 42,
@@ -142,17 +142,6 @@
       "score": 19
     },
     {
-      "species_id": "sp_0431",
-      "common_name": "红绿灯",
-      "blocked_pair_count": 2,
-      "gap_kinds": [
-        "environment"
-      ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "score": 19
-    },
-    {
       "species_id": "sp_0434",
       "common_name": "白云金丝",
       "blocked_pair_count": 2,
@@ -177,6 +166,17 @@
     {
       "species_id": "sp_0436",
       "common_name": "孔雀鱼",
+      "blocked_pair_count": 2,
+      "gap_kinds": [
+        "environment"
+      ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "score": 19
+    },
+    {
+      "species_id": "sp_0439",
+      "common_name": "虎皮鱼",
       "blocked_pair_count": 2,
       "gap_kinds": [
         "environment"

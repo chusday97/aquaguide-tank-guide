@@ -429,7 +429,7 @@ species_id,common_name,scientific_name,life_type,category,feeding_status,environ
 "sp_0428","斑马螺","Neritina natalensis","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0429","神秘螺","Pomacea bridgesii","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0430","杀手螺","Anentome helena","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","3"
-"sp_0431","红绿灯","Paracheirodon innesi","fish","灯科鱼","reviewed_unknown","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_unknown","","launch_cohort","elevated","9"
+"sp_0431","红绿灯","Paracheirodon innesi","fish","灯科鱼","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0432","宝莲灯","Paracheirodon axelrodi","fish","灯科鱼","reviewed_unknown","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0433","红鼻剪刀","Hemigrammus rhodostomus","fish","灯科鱼","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0434","白云金丝","Tanichthys albonubes","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_unknown","","launch_cohort","elevated","9"

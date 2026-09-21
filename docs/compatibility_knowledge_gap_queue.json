@@ -144,26 +144,6 @@
       "blocked_pair_count": 2
     },
     {
-      "species_id": "sp_0431",
-      "common_name": "红绿灯",
-      "scientific_name": "Paracheirodon innesi",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
       "species_id": "sp_0434",
       "common_name": "白云金丝",
       "scientific_name": "Tanichthys albonubes",

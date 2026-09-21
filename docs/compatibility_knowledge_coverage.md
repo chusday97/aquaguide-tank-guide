@@ -23,7 +23,7 @@
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
 | feeding | 411 | 1 | 410 | 0.2% |
-| environment | 475 | 28 | 447 | 5.9% |
+| environment | 475 | 29 | 446 | 6.1% |
 | space | 475 | 37 | 438 | 7.8% |
 | social | 411 | 34 | 377 | 8.3% |
 | care | 475 | 1 | 474 | 0.2% |
@@ -36,18 +36,17 @@
 4. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 2 insufficient pairs — score 27
 5. 斑马螺 (sp_0428) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 2 insufficient pairs — score 27
 6. 极火虾 (sp_0001) — space — evidence_research — unlocks 2 insufficient pairs — score 19
-7. 红绿灯 (sp_0431) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-8. 白云金丝 (sp_0434) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-9. 斑马鱼 (sp_0435) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-10. 孔雀鱼 (sp_0436) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-11. 虎皮鱼 (sp_0439) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-12. 熊猫鼠 (sp_0443) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-13. 黑壳虾 (sp_0459) — social — evidence_research — unlocks 2 insufficient pairs — score 19
-14. 宝莲灯 (sp_0432) — environment — evidence_research — unlocks 1 insufficient pairs — score 17
-15. 天使鱼（神仙鱼） (sp_0446) — environment — evidence_research — unlocks 1 insufficient pairs — score 17
-16. 珍珠赤雷龙 (sp_0049) — environment, space, social — evidence_research — unlocks 0 insufficient pairs — score 23
-17. 糖果KOI斗鱼 (sp_0258) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 23
-18. 咖啡鼠 (sp_0014) — environment — evidence_research — unlocks 0 insufficient pairs — score 15
+7. 白云金丝 (sp_0434) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
+8. 斑马鱼 (sp_0435) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
+9. 孔雀鱼 (sp_0436) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
+10. 虎皮鱼 (sp_0439) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
+11. 熊猫鼠 (sp_0443) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
+12. 黑壳虾 (sp_0459) — social — evidence_research — unlocks 2 insufficient pairs — score 19
+13. 宝莲灯 (sp_0432) — environment — evidence_research — unlocks 1 insufficient pairs — score 17
+14. 天使鱼（神仙鱼） (sp_0446) — environment — evidence_research — unlocks 1 insufficient pairs — score 17
+15. 珍珠赤雷龙 (sp_0049) — environment, space, social — evidence_research — unlocks 0 insufficient pairs — score 23
+16. 糖果KOI斗鱼 (sp_0258) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 23
+17. 咖啡鼠 (sp_0014) — environment — evidence_research — unlocks 0 insufficient pairs — score 15
 
 ## Highest-priority pair gaps
 

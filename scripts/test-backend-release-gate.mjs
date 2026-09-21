@@ -4,6 +4,7 @@ const gates = [
   ['Species Knowledge', 'npm', ['run', 'test:species-knowledge']],
   ['Fire Red Shrimp Knowledge', 'npm', ['run', 'test:fire-red-shrimp-knowledge-authority']],
   ['Wild Neocaridina Knowledge', 'npm', ['run', 'test:wild-neocaridina-knowledge-authority']],
+  ['Neon Tetra Environment', 'npm', ['run', 'test:neon-tetra-environment-authority']],
   ['Species Knowledge Completion Matrix', 'node', ['--import', 'tsx', 'scripts/test-species-knowledge-completion-matrix.ts']],
   ['Compatibility Engine', 'npm', ['run', 'test:compatibility']],
   ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],
