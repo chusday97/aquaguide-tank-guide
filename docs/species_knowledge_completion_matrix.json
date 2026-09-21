@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T18:04:32.771Z",
+  "generated_at": "2026-09-21T18:10:28.838Z",
   "catalog_object_count": 486,
   "fields": [
     "feeding",
@@ -14073,8 +14073,8 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown",
         "care": "reviewed_unknown"
       },
@@ -14917,16 +14917,16 @@
       "template_only": 0
     },
     "environment": {
-      "reviewed_supported": 27,
-      "reviewed_unknown": 448,
+      "reviewed_supported": 28,
+      "reviewed_unknown": 447,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
       "template_only": 0
     },
     "space": {
-      "reviewed_supported": 36,
-      "reviewed_unknown": 439,
+      "reviewed_supported": 37,
+      "reviewed_unknown": 438,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,

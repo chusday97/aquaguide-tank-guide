@@ -25,7 +25,35 @@ const makeKnowledge = (subject: Subject): SpeciesKnowledgeProfile['knowledge'] =
   spaceAndGrowth: { activityLevel: 'unknown', evidence: evidence(subject, 'space and growth') },
 });
 
-export const phase2Batch24Knowledge = Object.fromEntries(Object.entries(phase2Batch24Subjects).map(([id, subject]) => [id, makeKnowledge(subject)])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
+const wildTypeNeocaridinaKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  ...makeKnowledge(phase2Batch24Subjects.sp_0459),
+  environment: {
+    waterType: 'freshwater',
+    notes: ['UF/IFAS explicitly describes wild-type Neocaridina davidi and identifies the species as a freshwater ornamental shrimp native to freshwater streams.'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['uf-ifas-neocaridina-davidi'],
+      reviewedAt: '2026-09-22',
+    },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 4, measurement: 'unknown' },
+    activityLevel: 'unknown',
+    spaceNotes: ['USGS reports body size up to 40 mm. No reviewed minimum aquarium volume is inferred from body length alone.'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['usgs-neocaridina-davidi'],
+      reviewedAt: '2026-09-22',
+    },
+  },
+};
+
+export const phase2Batch24Knowledge = Object.fromEntries(Object.entries(phase2Batch24Subjects).map(([id, subject]) => [
+  id,
+  id === 'sp_0459' ? wildTypeNeocaridinaKnowledge : makeKnowledge(subject),
+])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch24Authority = Object.fromEntries(Object.entries(phase2Batch24Subjects).map(([id, subject]) => [id, {
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },
   care: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific care authority.` },

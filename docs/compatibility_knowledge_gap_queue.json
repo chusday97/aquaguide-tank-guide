@@ -118,28 +118,6 @@
       "blocked_pair_count": 2
     },
     {
-      "species_id": "sp_0459",
-      "common_name": "黑壳虾",
-      "scientific_name": "Neocaridina davidi wild type",
-      "score": 27,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
       "species_id": "sp_0001",
       "common_name": "极火虾",
       "scientific_name": "Neocaridina davidi var. Red",
@@ -273,6 +251,26 @@
         "social": "reviewed_supported"
       },
       "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 2
+    },
+    {
+      "species_id": "sp_0459",
+      "common_name": "黑壳虾",
+      "scientific_name": "Neocaridina davidi wild type",
+      "score": 19,
+      "gap_kinds": [
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "inherited_reviewed",
       "boundary_codes": [],
       "resolution_mode": "evidence_research",
       "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",

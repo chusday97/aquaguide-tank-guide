@@ -457,7 +457,7 @@ species_id,common_name,scientific_name,life_type,category,feeding_status,environ
 "sp_0456","神秘螺","Pomacea bridgesii","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0457","杀手螺","Anentome helena","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","3"
 "sp_0458","玻璃猫鱼","Kryptopterus vitreolus","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
-"sp_0459","黑壳虾","Neocaridina davidi wild type","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","launch_cohort","elevated","9"
+"sp_0459","黑壳虾","Neocaridina davidi wild type","invertebrate","虾螺蟹","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_unknown","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0460","巴西龟","Trachemys scripta elegans","reptile","龟类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0461","草龟","Chinemys reevesii","reptile","龟类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0462","花龟","Mauremys sinensis","reptile","龟类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"

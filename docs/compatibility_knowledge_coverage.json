@@ -27,15 +27,15 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 27,
-      "reviewed_unknown": 448,
-      "supported_pct": 5.7
+      "reviewed_supported": 28,
+      "reviewed_unknown": 447,
+      "supported_pct": 5.9
     },
     "space": {
       "applicable": 475,
-      "reviewed_supported": 36,
-      "reviewed_unknown": 439,
-      "supported_pct": 7.6
+      "reviewed_supported": 37,
+      "reviewed_unknown": 438,
+      "supported_pct": 7.8
     },
     "social": {
       "applicable": 411,
@@ -125,19 +125,6 @@
       "score": 27
     },
     {
-      "species_id": "sp_0459",
-      "common_name": "黑壳虾",
-      "blocked_pair_count": 2,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "score": 27
-    },
-    {
       "species_id": "sp_0001",
       "common_name": "极火虾",
       "blocked_pair_count": 2,
@@ -173,6 +160,17 @@
     {
       "species_id": "sp_0435",
       "common_name": "斑马鱼",
+      "blocked_pair_count": 2,
+      "gap_kinds": [
+        "environment"
+      ],
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "score": 19
+    },
+    {
+      "species_id": "sp_0436",
+      "common_name": "孔雀鱼",
       "blocked_pair_count": 2,
       "gap_kinds": [
         "environment"
