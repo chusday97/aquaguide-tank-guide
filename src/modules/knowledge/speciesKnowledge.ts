@@ -47,6 +47,9 @@ import { phase2Batch44Knowledge } from './phase2Batch44Authority';
 import { phase2Batch45Knowledge } from './phase2Batch45Authority';
 import { phase2Batch46Knowledge } from './phase2Batch46Authority';
 import { phase2Batch47Knowledge } from './phase2Batch47Authority';
+import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
+
+export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
 
 const completionOnlyDirectKnowledgeIds = new Set([
   'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
@@ -1629,7 +1632,11 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // existing reviewed Compatibility Profile remains the runtime authority for
   // its predator/solitary boundary. The completion matrix reads the direct
   // record explicitly and never counts this as inherited Knowledge.
-  if (fish.id === 'sp_0016' || fish.id === 'sp_0224') {
+  //
+  // Gold ram (sp_0016) is intentionally not included here: Batch 01 contains
+  // direct variant-aware reviewed authority for that catalog object, so exact
+  // reviewed Species Knowledge must win over base-species inheritance.
+  if (fish.id === 'sp_0224') {
     const baseKey = getBaseSpeciesScientificName(fish.scientificName);
     return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
   }

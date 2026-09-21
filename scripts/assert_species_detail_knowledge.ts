@@ -5,6 +5,7 @@ import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSourc
 import { getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { fishData } from '../src/data/fishData';
 import { getSpeciesHousingAuthority } from '../src/modules/knowledge/speciesHousingAuthority';
+import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from '../src/modules/knowledge/speciesKnowledge';
 import { getSpeciesFilterTags, getSpeciesPositioning, getSpeciesRoleLabel } from '../src/modules/species/species.service';
 import type { Fish } from '../src/types';
 
@@ -659,5 +660,29 @@ const legacyHousing = getSpeciesHousingAuthority({ ...baseFish, id: 'legacy-spec
 assert.equal(legacyHousing.source, 'legacy');
 assert.equal(legacyHousing.status, 'warning');
 assert.equal(legacyHousing.communityCategory, '谨慎混养');
+
+assert.equal(phase2AuthorityBatchCount, 49, 'all Phase 2 authority batches must be registered');
+for (const [speciesId, authority] of Object.entries(phase2AuthorityBySpeciesId)) {
+  assert.ok(fishData.some(fish => fish.id === speciesId), `${speciesId} authority must resolve to a catalog object`);
+  for (const field of Object.values(authority)) {
+    for (const sourceId of field?.citationIds || []) {
+      assert.ok(resolveKnowledgeSources([sourceId]).length === 1, `${speciesId} authority citation ${sourceId} must be in knowledgeSources`);
+    }
+  }
+}
+assert.equal(getPhase2Authority('sp_0455')?.environment?.status, 'reviewed_unknown');
+assert.equal(getPhase2Authority('sp_0016')?.feeding?.status, 'reviewed_supported');
+assert.equal(getPhase2Authority('sp_0016')?.care?.status, 'reviewed_supported');
+
+const goldRam = fishData.find(fish => fish.id === 'sp_0016');
+assert.ok(goldRam, 'gold ram catalog object must exist');
+const goldRamKnowledge = getReviewedSpeciesKnowledgeForFish(goldRam);
+assert.ok(goldRamKnowledge, 'gold ram must resolve its direct reviewed Phase 2 knowledge');
+assert.deepEqual(goldRamKnowledge.environment?.temperatureRangeC, { min: 24, max: 28 });
+assert.deepEqual(goldRamKnowledge.environment?.phRange, { min: 5, max: 7.2 });
+assert.ok(
+  goldRamKnowledge.environment?.evidence.sourceIds.includes('aquarium-industries-ramirezi-care-sheet'),
+  'gold ram runtime knowledge must preserve its direct variant-aware source',
+);
 
 console.log('species detail knowledge assertions passed');
