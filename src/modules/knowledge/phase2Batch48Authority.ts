@@ -4,7 +4,7 @@ type Subject = { source: string; title: string };
 export const phase2Batch48Subjects: Record<string, Subject> = {
   sp_0014: { source: 'batch42-fishbase-corydoras-aeneus', title: 'Corydoras aeneus species review' },
   sp_0431: { source: 'batch33-fishbase-paracheirodon-innesi', title: 'Paracheirodon innesi FishBase species review' },
-  sp_0432: { source: 'batch42-fishbase-paracheirodon-axelrodi', title: 'Paracheirodon axelrodi species review' },
+  sp_0432: { source: 'batch33-fishbase-paracheirodon-axelrodi', title: 'Paracheirodon axelrodi FishBase species review' },
   sp_0434: { source: 'batch42-fishbase-tanichthys-albonubes', title: 'Tanichthys albonubes species review' },
   sp_0435: { source: 'batch42-fishbase-danio-rerio', title: 'Danio rerio species review' },
   sp_0436: { source: 'batch33-fishbase-poecilia-reticulata', title: 'Poecilia reticulata species review' },
@@ -15,6 +15,9 @@ export const phase2Batch48Subjects: Record<string, Subject> = {
 
 const supportedEnvironmentFacts: Partial<Record<string, string>> = {
   sp_0431: 'FishBase directly records Paracheirodon innesi as freshwater, 20-26C, pH 5.0-7.0 and dH 1-2.',
+  sp_0014: 'FishBase directly records the bronze cory accepted lineage as freshwater, 25-28C, pH 6-8 and dH 5-19.',
+  sp_0432: 'FishBase directly records Paracheirodon axelrodi as freshwater, 23-27C, pH 4-6 and dH 5-12.',
+  sp_0446: 'FishBase directly records Pterophyllum scalare as freshwater, 24-30C, pH 6-8 and dH 5-13.',
   sp_0434: 'FishBase directly records Tanichthys albonubes as freshwater, 18-22C, pH 6-8 and dH 5-19.',
   sp_0435: 'FishBase directly records Danio rerio as freshwater, 18-24C, pH 6-8 and dH 5-19.',
   sp_0439: 'FishBase directly records Puntigrus tetrazona as freshwater, 20-26C, pH 6-8 and dH 5-19.',

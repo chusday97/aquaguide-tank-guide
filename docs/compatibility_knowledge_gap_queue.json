@@ -186,66 +186,6 @@
       "blocked_pair_count": 3
     },
     {
-      "species_id": "sp_0432",
-      "common_name": "宝莲灯",
-      "scientific_name": "Paracheirodon axelrodi",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
-      "species_id": "sp_0446",
-      "common_name": "天使鱼（神仙鱼）",
-      "scientific_name": "Pterophyllum scalare",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
-      "species_id": "sp_0014",
-      "common_name": "咖啡鼠",
-      "scientific_name": "Corydoras aeneus",
-      "score": 17,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
-    },
-    {
       "species_id": "sp_0049",
       "common_name": "珍珠赤雷龙",
       "scientific_name": "Channa asiatica",

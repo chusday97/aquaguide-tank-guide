@@ -6,6 +6,7 @@ const gates = [
   ['Wild Neocaridina Knowledge', 'npm', ['run', 'test:wild-neocaridina-knowledge-authority']],
   ['Neon Tetra Environment', 'npm', ['run', 'test:neon-tetra-environment-authority']],
   ['Launch Environment Batch', 'npm', ['run', 'test:launch-environment-batch-authority']],
+  ['Secondary Environment Batch', 'npm', ['run', 'test:secondary-environment-batch-authority']],
   ['Species Knowledge Completion Matrix', 'node', ['--import', 'tsx', 'scripts/test-species-knowledge-completion-matrix.ts']],
   ['Compatibility Engine', 'npm', ['run', 'test:compatibility']],
   ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],

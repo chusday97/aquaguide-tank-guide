@@ -23,7 +23,7 @@
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
 | feeding | 411 | 1 | 410 | 0.2% |
-| environment | 475 | 33 | 442 | 6.9% |
+| environment | 475 | 36 | 439 | 7.6% |
 | space | 475 | 37 | 438 | 7.8% |
 | social | 411 | 34 | 377 | 8.3% |
 | care | 475 | 1 | 474 | 0.2% |
@@ -38,11 +38,8 @@
 6. 斑马螺 (sp_0428) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 3 insufficient pairs — score 29
 7. 极火虾 (sp_0001) — space — evidence_research — unlocks 3 insufficient pairs — score 21
 8. 黑壳虾 (sp_0459) — social — evidence_research — unlocks 3 insufficient pairs — score 21
-9. 宝莲灯 (sp_0432) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-10. 天使鱼（神仙鱼） (sp_0446) — environment — evidence_research — unlocks 2 insufficient pairs — score 19
-11. 咖啡鼠 (sp_0014) — environment — evidence_research — unlocks 1 insufficient pairs — score 17
-12. 珍珠赤雷龙 (sp_0049) — environment, space, social — evidence_research — unlocks 0 insufficient pairs — score 23
-13. 糖果KOI斗鱼 (sp_0258) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 23
+9. 珍珠赤雷龙 (sp_0049) — environment, space, social — evidence_research — unlocks 0 insufficient pairs — score 23
+10. 糖果KOI斗鱼 (sp_0258) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 23
 
 ## Highest-priority pair gaps
 

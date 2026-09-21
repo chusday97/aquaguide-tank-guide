@@ -27,9 +27,9 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 33,
-      "reviewed_unknown": 442,
-      "supported_pct": 6.9
+      "reviewed_supported": 36,
+      "reviewed_unknown": 439,
+      "supported_pct": 7.6
     },
     "space": {
       "applicable": 475,
@@ -50,7 +50,7 @@
       "supported_pct": 0.2
     }
   },
-  "priority_species_gap_count": 13,
+  "priority_species_gap_count": 10,
   "priority_pair_gap_count": 65,
   "evidence_research_pair_gap_count": 0,
   "boundary_blocked_pair_gap_count": 65,
@@ -164,28 +164,6 @@
       "boundary_codes": [],
       "resolution_mode": "evidence_research",
       "score": 21
-    },
-    {
-      "species_id": "sp_0432",
-      "common_name": "宝莲灯",
-      "blocked_pair_count": 2,
-      "gap_kinds": [
-        "environment"
-      ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "score": 19
-    },
-    {
-      "species_id": "sp_0446",
-      "common_name": "天使鱼（神仙鱼）",
-      "blocked_pair_count": 2,
-      "gap_kinds": [
-        "environment"
-      ],
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "score": 19
     }
   ]
 }

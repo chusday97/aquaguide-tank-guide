@@ -1132,6 +1132,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0432: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 23, max: 27 },
+      phRange: { min: 4, max: 6 },
+      hardnessDgh: { min: 5, max: 12 },
+      notes: ['FishBase records Paracheirodon axelrodi as freshwater, 23-27C, pH 4-6 and dH 5-12.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-paracheirodon-axelrodi'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断',
       summary: '性成熟母鱼通常腹部更圆、体型略大；幼鱼阶段不建议仅凭体型判断。',
@@ -1176,6 +1184,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0014: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 25, max: 28 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase currently accepts this bronze cory lineage as Osteogaster aenea and records freshwater, 25-28C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch42-fishbase-corydoras-aeneus'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断',
       summary: '成熟母鱼通常更大、腹部更圆更宽；公鱼相对纤细。',
@@ -1487,6 +1503,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   },
 
   sp_0446: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 24, max: 30 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 13 },
+      notes: ['FishBase records Pterophyllum scalare as freshwater, 24-30C, pH 6-8 and dH 5-13.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch40-fishbase-pterophyllum-scalare'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '平时很难可靠分公母',
       summary: '普通体态差异不可靠；进入繁殖状态后，可结合生殖乳突和配对行为辅助判断。',
