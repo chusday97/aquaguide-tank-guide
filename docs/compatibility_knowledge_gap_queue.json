@@ -4,6 +4,28 @@
   "uses_real_user_telemetry": false,
   "species_gaps": [
     {
+      "species_id": "sp_0436",
+      "common_name": "孔雀鱼",
+      "scientific_name": "Poecilia reticulata",
+      "score": 55,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "representation_change",
+      "resolution_note": "Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 25
+    },
+    {
       "species_id": "sp_0475",
       "common_name": "高体鳑鲏",
       "scientific_name": "Rhodeus ocellatus",
@@ -55,7 +77,7 @@
       "species_id": "sp_0002",
       "common_name": "水晶虾",
       "scientific_name": "Caridina cantonensis var.",
-      "score": 27,
+      "score": 29,
       "gap_kinds": [
         "environment",
         "space",
@@ -73,13 +95,13 @@
       "resolution_mode": "identity_review",
       "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
+      "blocked_pair_count": 3
     },
     {
       "species_id": "sp_0021",
       "common_name": "迷你鹦鹉鱼",
       "scientific_name": "Amatitlania nigrofasciata var.",
-      "score": 27,
+      "score": 29,
       "gap_kinds": [
         "environment",
         "space",
@@ -97,13 +119,13 @@
       "resolution_mode": "identity_review",
       "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
+      "blocked_pair_count": 3
     },
     {
       "species_id": "sp_0428",
       "common_name": "斑马螺",
       "scientific_name": "Neritina natalensis",
-      "score": 27,
+      "score": 29,
       "gap_kinds": [
         "environment",
         "space",
@@ -121,13 +143,13 @@
       "resolution_mode": "identity_review",
       "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
+      "blocked_pair_count": 3
     },
     {
       "species_id": "sp_0001",
       "common_name": "极火虾",
       "scientific_name": "Neocaridina davidi var. Red",
-      "score": 19,
+      "score": 21,
       "gap_kinds": [
         "space"
       ],
@@ -141,113 +163,13 @@
       "resolution_mode": "evidence_research",
       "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
-      "species_id": "sp_0434",
-      "common_name": "白云金丝",
-      "scientific_name": "Tanichthys albonubes",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
-      "species_id": "sp_0435",
-      "common_name": "斑马鱼",
-      "scientific_name": "Danio rerio",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
-      "species_id": "sp_0436",
-      "common_name": "孔雀鱼",
-      "scientific_name": "Poecilia reticulata",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
-      "species_id": "sp_0439",
-      "common_name": "虎皮鱼",
-      "scientific_name": "Puntigrus tetrazona",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
-    },
-    {
-      "species_id": "sp_0443",
-      "common_name": "熊猫鼠",
-      "scientific_name": "Corydoras panda",
-      "score": 19,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
+      "blocked_pair_count": 3
     },
     {
       "species_id": "sp_0459",
       "common_name": "黑壳虾",
       "scientific_name": "Neocaridina davidi wild type",
-      "score": 19,
+      "score": 21,
       "gap_kinds": [
         "social"
       ],
@@ -261,13 +183,13 @@
       "resolution_mode": "evidence_research",
       "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 2
+      "blocked_pair_count": 3
     },
     {
       "species_id": "sp_0432",
       "common_name": "宝莲灯",
       "scientific_name": "Paracheirodon axelrodi",
-      "score": 17,
+      "score": 19,
       "gap_kinds": [
         "environment"
       ],
@@ -281,12 +203,32 @@
       "resolution_mode": "evidence_research",
       "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
+      "blocked_pair_count": 2
     },
     {
       "species_id": "sp_0446",
       "common_name": "天使鱼（神仙鱼）",
       "scientific_name": "Pterophyllum scalare",
+      "score": 19,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [],
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 2
+    },
+    {
+      "species_id": "sp_0014",
+      "common_name": "咖啡鼠",
+      "scientific_name": "Corydoras aeneus",
       "score": 17,
       "gap_kinds": [
         "environment"
@@ -346,26 +288,6 @@
       ],
       "resolution_mode": "identity_review",
       "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 0
-    },
-    {
-      "species_id": "sp_0014",
-      "common_name": "咖啡鼠",
-      "scientific_name": "Corydoras aeneus",
-      "score": 15,
-      "gap_kinds": [
-        "environment"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_supported",
-        "social": "reviewed_supported"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [],
-      "resolution_mode": "evidence_research",
-      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 0
     }
@@ -548,6 +470,30 @@
       "boundary_codes": [
         "catalog_identity_unresolved",
         "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable",
+        "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",
       "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
@@ -1116,28 +1062,6 @@
     {
       "species_a_id": "sp_0224",
       "species_a_name": "白金雷龙",
-      "species_b_id": "sp_0436",
-      "species_b_name": "孔雀鱼",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
-      ],
-      "warning_codes": [
-        "minimum_group_not_met"
-      ],
-      "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "variant_authority_not_promotable"
-      ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
-    },
-    {
-      "species_a_id": "sp_0224",
-      "species_a_name": "白金雷龙",
       "species_b_id": "sp_0437",
       "species_b_name": "玛丽鱼",
       "status": "insufficient_data",
@@ -1281,6 +1205,506 @@
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "variant_authority_not_promotable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0001",
+      "species_a_name": "极火虾",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "catalog_identity_unresolved",
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0010",
+      "species_a_name": "黑裙鱼",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "ph_range_edge_overlap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "catalog_identity_unresolved",
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0011",
+      "species_a_name": "月光鱼",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0012",
+      "species_a_name": "樱桃灯",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0013",
+      "species_a_name": "小精灵",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0014",
+      "species_a_name": "咖啡鼠",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_gap",
+        "territorial_pressure_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "fin_nipping_target_vulnerability",
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "catalog_identity_unresolved",
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "catalog_identity_unresolved",
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0431",
+      "species_a_name": "红绿灯",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_edge_overlap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0432",
+      "species_a_name": "宝莲灯",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_conflict",
+        "ph_range_gap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0433",
+      "species_a_name": "红鼻剪刀",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_edge_overlap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0434",
+      "species_a_name": "白云金丝",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0435",
+      "species_a_name": "斑马鱼",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0437",
+      "species_b_name": "玛丽鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0438",
+      "species_b_name": "红剑鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0443",
+      "species_b_name": "熊猫鼠",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0444",
+      "species_b_name": "珍珠马甲",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0446",
+      "species_b_name": "天使鱼（神仙鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0447",
+      "species_b_name": "七彩神仙鱼（七彩鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_gap"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0459",
+      "species_b_name": "黑壳虾",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
+      ],
+      "resolution_mode": "boundary_blocked",
+      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0468",
+      "species_b_name": "金三角灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 28,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
+      "boundary_codes": [
+        "multi_water_type_not_representable"
       ],
       "resolution_mode": "boundary_blocked",
       "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."

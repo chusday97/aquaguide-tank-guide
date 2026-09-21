@@ -1017,6 +1017,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0436: {
+    environment: {
+      waterType: 'unknown',
+      temperatureRangeC: { min: 18, max: 28 },
+      phRange: { min: 7, max: 8 },
+      hardnessDgh: { min: 9, max: 19 },
+      notes: ['FishBase records Poecilia reticulata in both freshwater and brackish water. The current single-value waterType field cannot represent both without losing reviewed evidence.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-poecilia-reticulata'], reviewedAt: '2026-09-22', note: 'Freshwater and brackish are both reviewed; waterType remains unknown until multi-water-type representation exists.' },
+    },
     sexIdentification: {
       title: '成体公母较容易区分',
       summary: '成年公鱼通常更鲜艳，并具有由臀鳍特化形成的交接器；母鱼通常体型更大、更丰满。',
@@ -1189,6 +1197,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0443: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 20, max: 25 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 2, max: 25 },
+      notes: ['FishBase currently treats the taxon as Hoplisoma panda and records freshwater, 20-25C, pH 6-8 and dH 2-25.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-corydoras-panda'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可从俯视体型辅助判断',
       summary: '成熟母鱼通常腹部更圆、体型略大；俯视时差异更容易观察。',
@@ -1364,6 +1380,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0434: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 18, max: 22 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase records Tanichthys albonubes as freshwater, 18-22C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch42-fishbase-tanichthys-albonubes'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型和颜色辅助判断',
       summary: '成熟母鱼通常腹部更圆、略大；公鱼更纤细，繁殖状态下颜色往往更鲜明。',
@@ -1395,6 +1419,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0435: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 18, max: 24 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase records Danio rerio as freshwater, 18-24C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch42-fishbase-danio-rerio'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断', summary: '成熟母鱼通常腹部更圆、略大且颜色稍淡；公鱼相对纤细，繁殖状态下颜色更强。',
       points: ['母鱼：成熟后腹部更圆，通常略大。', '公鱼：相对纤细，繁殖状态下颜色更强。'], confidence: 'verified',
@@ -1421,6 +1453,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0439: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 20, max: 26 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase records Puntigrus tetrazona as freshwater, 20-26C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch37-fishbase-puntigrus-tetrazona'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成体公母通常可通过体型和颜色辅助判断', summary: '成年公鱼通常更小、更纤细且颜色更强；母鱼通常更丰满。',
       points: ['公鱼：通常更小、更纤细、颜色更强。', '母鱼：通常腹部更丰满。'], confidence: 'verified',
