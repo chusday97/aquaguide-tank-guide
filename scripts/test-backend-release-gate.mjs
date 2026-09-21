@@ -8,6 +8,7 @@ const gates = [
   ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
+  ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],

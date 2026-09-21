@@ -1,0 +1,161 @@
+{
+  "schema_version": 1,
+  "completion_boundary": "Completion means every catalog object reached a reviewed terminal state. reviewed_unknown is valid completion, not evidence for a positive compatibility claim.",
+  "coverage_boundary": "Coverage counts reviewed_supported evidence. reviewed_unknown remains fail-closed and becomes a research opportunity, not a data error.",
+  "telemetry_boundary": "Priority uses launch_cohort/commonness proxy plus evidence gaps. Real user-query telemetry is not used or claimed.",
+  "uses_real_user_telemetry": false,
+  "catalog_objects": 486,
+  "completion_matrix_objects": 486,
+  "compatibility_eligible_species": 411,
+  "reviewed_compatibility_profiles": 32,
+  "reviewed_pair_rules": 5,
+  "reviewed_stage_risk_profiles": 1,
+  "launch_cohort_species": 30,
+  "compatibility_critical_fields": [
+    "environment",
+    "space",
+    "social",
+    "compatibility_profile",
+    "pair_evidence"
+  ],
+  "field_coverage": {
+    "feeding": {
+      "applicable": 411,
+      "reviewed_supported": 1,
+      "reviewed_unknown": 410,
+      "supported_pct": 0.2
+    },
+    "environment": {
+      "applicable": 475,
+      "reviewed_supported": 26,
+      "reviewed_unknown": 449,
+      "supported_pct": 5.5
+    },
+    "space": {
+      "applicable": 475,
+      "reviewed_supported": 36,
+      "reviewed_unknown": 439,
+      "supported_pct": 7.6
+    },
+    "social": {
+      "applicable": 411,
+      "reviewed_supported": 33,
+      "reviewed_unknown": 378,
+      "supported_pct": 8
+    },
+    "care": {
+      "applicable": 475,
+      "reviewed_supported": 1,
+      "reviewed_unknown": 474,
+      "supported_pct": 0.2
+    }
+  },
+  "priority_species_gap_count": 19,
+  "priority_pair_gap_count": 65,
+  "top_pair_gap_root_species": [
+    {
+      "species_id": "sp_0016",
+      "common_name": "金波子",
+      "blocked_pair_count": 24,
+      "gap_kinds": [
+        "compatibility_profile"
+      ],
+      "score": 56
+    },
+    {
+      "species_id": "sp_0475",
+      "common_name": "高体鳑鲏",
+      "blocked_pair_count": 23,
+      "gap_kinds": [
+        "social",
+        "compatibility_profile"
+      ],
+      "score": 60
+    },
+    {
+      "species_id": "sp_0224",
+      "common_name": "白金雷龙",
+      "blocked_pair_count": 19,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "score": 66
+    },
+    {
+      "species_id": "sp_0001",
+      "common_name": "极火虾",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "score": 29
+    },
+    {
+      "species_id": "sp_0002",
+      "common_name": "水晶虾",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "score": 29
+    },
+    {
+      "species_id": "sp_0021",
+      "common_name": "迷你鹦鹉鱼",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "score": 29
+    },
+    {
+      "species_id": "sp_0428",
+      "common_name": "斑马螺",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "score": 29
+    },
+    {
+      "species_id": "sp_0459",
+      "common_name": "黑壳虾",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "score": 29
+    },
+    {
+      "species_id": "sp_0431",
+      "common_name": "红绿灯",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "environment"
+      ],
+      "score": 21
+    },
+    {
+      "species_id": "sp_0435",
+      "common_name": "斑马鱼",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "environment"
+      ],
+      "score": 21
+    }
+  ]
+}

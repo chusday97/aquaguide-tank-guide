@@ -1,0 +1,1462 @@
+{
+  "schema_version": 1,
+  "telemetry_boundary": "Priority uses launch_cohort/commonness proxy plus evidence gaps. Real user-query telemetry is not used or claimed.",
+  "uses_real_user_telemetry": false,
+  "species_gaps": [
+    {
+      "species_id": "sp_0016",
+      "common_name": "金波子",
+      "scientific_name": "Mikrogeophagus ramirezi var. Gold",
+      "score": 56,
+      "gap_kinds": [
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "none",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 24
+    },
+    {
+      "species_id": "sp_0475",
+      "common_name": "高体鳑鲏",
+      "scientific_name": "Rhodeus ocellatus",
+      "score": 60,
+      "gap_kinds": [
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 23
+    },
+    {
+      "species_id": "sp_0224",
+      "common_name": "白金雷龙",
+      "scientific_name": "Channa argus var. Platinum",
+      "score": 66,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 19
+    },
+    {
+      "species_id": "sp_0001",
+      "common_name": "极火虾",
+      "scientific_name": "Neocaridina davidi var. Red",
+      "score": 29,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "inherited_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0002",
+      "common_name": "水晶虾",
+      "scientific_name": "Caridina cantonensis var.",
+      "score": 29,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "inherited_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0021",
+      "common_name": "迷你鹦鹉鱼",
+      "scientific_name": "Amatitlania nigrofasciata var.",
+      "score": 29,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0428",
+      "common_name": "斑马螺",
+      "scientific_name": "Neritina natalensis",
+      "score": 29,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "inherited_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0459",
+      "common_name": "黑壳虾",
+      "scientific_name": "Neocaridina davidi wild type",
+      "score": 29,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "inherited_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0431",
+      "common_name": "红绿灯",
+      "scientific_name": "Paracheirodon innesi",
+      "score": 21,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0435",
+      "common_name": "斑马鱼",
+      "scientific_name": "Danio rerio",
+      "score": 21,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0436",
+      "common_name": "孔雀鱼",
+      "scientific_name": "Poecilia reticulata",
+      "score": 21,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0439",
+      "common_name": "虎皮鱼",
+      "scientific_name": "Puntigrus tetrazona",
+      "score": 21,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0443",
+      "common_name": "熊猫鼠",
+      "scientific_name": "Corydoras panda",
+      "score": 21,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 3
+    },
+    {
+      "species_id": "sp_0432",
+      "common_name": "宝莲灯",
+      "scientific_name": "Paracheirodon axelrodi",
+      "score": 19,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 2
+    },
+    {
+      "species_id": "sp_0434",
+      "common_name": "白云金丝",
+      "scientific_name": "Tanichthys albonubes",
+      "score": 19,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 2
+    },
+    {
+      "species_id": "sp_0446",
+      "common_name": "天使鱼（神仙鱼）",
+      "scientific_name": "Pterophyllum scalare",
+      "score": 19,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 2
+    },
+    {
+      "species_id": "sp_0014",
+      "common_name": "咖啡鼠",
+      "scientific_name": "Corydoras aeneus",
+      "score": 17,
+      "gap_kinds": [
+        "environment"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 1
+    },
+    {
+      "species_id": "sp_0049",
+      "common_name": "珍珠赤雷龙",
+      "scientific_name": "Channa asiatica",
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 0
+    },
+    {
+      "species_id": "sp_0258",
+      "common_name": "糖果KOI斗鱼",
+      "scientific_name": "Betta splendens var. Koi",
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "inherited_reviewed",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 0
+    }
+  ],
+  "pair_gaps": [
+    {
+      "species_a_id": "sp_0001",
+      "species_a_name": "极火虾",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0010",
+      "species_a_name": "黑裙鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0011",
+      "species_a_name": "月光鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0012",
+      "species_a_name": "樱桃灯",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0013",
+      "species_a_name": "小精灵",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "ph_range_gap"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0428",
+      "species_a_name": "斑马螺",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0431",
+      "species_a_name": "红绿灯",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0432",
+      "species_a_name": "宝莲灯",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "ph_range_conflict",
+        "ph_range_gap"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0433",
+      "species_a_name": "红鼻剪刀",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0434",
+      "species_a_name": "白云金丝",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0435",
+      "species_a_name": "斑马鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0436",
+      "species_a_name": "孔雀鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0437",
+      "species_a_name": "玛丽鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0438",
+      "species_a_name": "红剑鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0439",
+      "species_a_name": "虎皮鱼",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0443",
+      "species_a_name": "熊猫鼠",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0444",
+      "species_a_name": "珍珠马甲",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0446",
+      "species_a_name": "天使鱼（神仙鱼）",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0459",
+      "species_a_name": "黑壳虾",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context"
+      ],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0468",
+      "species_a_name": "金三角灯",
+      "species_b_id": "sp_0475",
+      "species_b_name": "高体鳑鲏",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed",
+        "water_type_unknown"
+      ],
+      "warning_codes": [],
+      "score": 30,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0001",
+      "species_a_name": "极火虾",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "ph_range_gap",
+        "predation_vulnerability_context",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0001",
+      "species_a_name": "极火虾",
+      "species_b_id": "sp_0224",
+      "species_b_name": "白金雷龙",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0002",
+      "species_a_name": "水晶虾",
+      "species_b_id": "sp_0224",
+      "species_b_name": "白金雷龙",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0010",
+      "species_a_name": "黑裙鱼",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0010",
+      "species_a_name": "黑裙鱼",
+      "species_b_id": "sp_0224",
+      "species_b_name": "白金雷龙",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0011",
+      "species_a_name": "月光鱼",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "ph_range_gap",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0011",
+      "species_a_name": "月光鱼",
+      "species_b_id": "sp_0224",
+      "species_b_name": "白金雷龙",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0012",
+      "species_a_name": "樱桃灯",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0012",
+      "species_a_name": "樱桃灯",
+      "species_b_id": "sp_0224",
+      "species_b_name": "白金雷龙",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0013",
+      "species_a_name": "小精灵",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0013",
+      "species_a_name": "小精灵",
+      "species_b_id": "sp_0224",
+      "species_b_name": "白金雷龙",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "predation_vulnerability_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0014",
+      "species_a_name": "咖啡鼠",
+      "species_b_id": "sp_0016",
+      "species_b_name": "金波子",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0021",
+      "species_b_name": "迷你鹦鹉鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "ph_range_gap",
+        "territorial_conflict"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "ph_range_gap",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0431",
+      "species_b_name": "红绿灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0432",
+      "species_b_name": "宝莲灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0433",
+      "species_b_name": "红鼻剪刀",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0435",
+      "species_b_name": "斑马鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_gap",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_gap",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0437",
+      "species_b_name": "玛丽鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "ph_range_gap",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0438",
+      "species_b_name": "红剑鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "ph_range_gap"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0439",
+      "species_b_name": "虎皮鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0443",
+      "species_b_name": "熊猫鼠",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0444",
+      "species_b_name": "珍珠马甲",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0446",
+      "species_b_name": "天使鱼（神仙鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_conflict"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0447",
+      "species_b_name": "七彩神仙鱼（七彩鱼）",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0459",
+      "species_b_name": "黑壳虾",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "ph_range_gap",
+        "predation_vulnerability_context",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0016",
+      "species_a_name": "金波子",
+      "species_b_id": "sp_0468",
+      "species_b_name": "金三角灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "territorial_pressure_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0021",
+      "species_a_name": "迷你鹦鹉鱼",
+      "species_b_id": "sp_0224",
+      "species_b_name": "白金雷龙",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0428",
+      "species_b_name": "斑马螺",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0431",
+      "species_b_name": "红绿灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0434",
+      "species_b_name": "白云金丝",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0435",
+      "species_b_name": "斑马鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0436",
+      "species_b_name": "孔雀鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0437",
+      "species_b_name": "玛丽鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0438",
+      "species_b_name": "红剑鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0439",
+      "species_b_name": "虎皮鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "fin_nipping_group_pressure",
+        "minimum_group_not_met"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0443",
+      "species_b_name": "熊猫鼠",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0451",
+      "species_b_name": "地图鱼",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0459",
+      "species_b_name": "黑壳虾",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met",
+        "predation_vulnerability_context"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    },
+    {
+      "species_a_id": "sp_0224",
+      "species_a_name": "白金雷龙",
+      "species_b_id": "sp_0468",
+      "species_b_name": "金三角灯",
+      "status": "insufficient_data",
+      "direct_reviewed_pair_rule": false,
+      "missing_codes": [
+        "behavior_evidence_unreviewed",
+        "species_evidence_unreviewed"
+      ],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
+      "score": 29,
+      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap"
+    }
+  ]
+}
