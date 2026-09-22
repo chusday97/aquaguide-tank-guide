@@ -8,6 +8,7 @@ const gates = [
   ['Neon Tetra Environment', 'npm', ['run', 'test:neon-tetra-environment-authority']],
   ['Launch Environment Batch', 'npm', ['run', 'test:launch-environment-batch-authority']],
   ['Multi Water Type Authority', 'npm', ['run', 'test:multi-water-type-authority']],
+  ['Species Fit Multi Water', 'npm', ['run', 'test:species-fit-multi-water']],
   ['Rhodeus Compatibility Authority', 'npm', ['run', 'test:rhodeus-compatibility-authority']],
   ['Secondary Environment Batch', 'npm', ['run', 'test:secondary-environment-batch-authority']],
   ['Species Knowledge Completion Matrix', 'node', ['--import', 'tsx', 'scripts/test-species-knowledge-completion-matrix.ts']],
