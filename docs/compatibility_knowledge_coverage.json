@@ -27,15 +27,15 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 39,
-      "reviewed_unknown": 436,
-      "supported_pct": 8.2
-    },
-    "space": {
-      "applicable": 475,
       "reviewed_supported": 40,
       "reviewed_unknown": 435,
       "supported_pct": 8.4
+    },
+    "space": {
+      "applicable": 475,
+      "reviewed_supported": 42,
+      "reviewed_unknown": 433,
+      "supported_pct": 8.8
     },
     "social": {
       "applicable": 411,
@@ -85,21 +85,6 @@
       "score": 25
     },
     {
-      "species_id": "sp_0021",
-      "common_name": "迷你鹦鹉鱼",
-      "blocked_pair_count": 1,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "boundary_codes": [
-        "catalog_identity_unresolved"
-      ],
-      "resolution_mode": "identity_review",
-      "score": 25
-    },
-    {
       "species_id": "sp_0428",
       "common_name": "斑马螺",
       "blocked_pair_count": 1,
@@ -113,6 +98,20 @@
       ],
       "resolution_mode": "identity_review",
       "score": 25
+    },
+    {
+      "species_id": "sp_0021",
+      "common_name": "迷你鹦鹉鱼",
+      "blocked_pair_count": 1,
+      "gap_kinds": [
+        "environment",
+        "social"
+      ],
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
+      "score": 21
     }
   ]
 }

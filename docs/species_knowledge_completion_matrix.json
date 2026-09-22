@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T00:54:08.005Z",
+  "generated_at": "2026-09-22T00:59:35.351Z",
   "catalog_object_count": 486,
   "fields": [
     "feeding",
@@ -645,7 +645,7 @@
       "field_status": {
         "feeding": "reviewed_unknown",
         "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown",
         "care": "reviewed_unknown"
       },
@@ -7931,8 +7931,8 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown",
         "care": "reviewed_unknown"
       },
@@ -14917,16 +14917,16 @@
       "template_only": 0
     },
     "environment": {
-      "reviewed_supported": 39,
-      "reviewed_unknown": 436,
+      "reviewed_supported": 40,
+      "reviewed_unknown": 435,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
       "template_only": 0
     },
     "space": {
-      "reviewed_supported": 40,
-      "reviewed_unknown": 435,
+      "reviewed_supported": 42,
+      "reviewed_unknown": 433,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,

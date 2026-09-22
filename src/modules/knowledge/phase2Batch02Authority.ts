@@ -50,8 +50,27 @@ const makeKnowledge = (subject: Batch02Subject): SpeciesKnowledgeProfile['knowle
   spaceAndGrowth: { activityLevel: 'unknown', evidence: unknownEvidence(subject, 'space and growth') },
 });
 
+const miniParrotKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  ...makeKnowledge(phase2Batch02Subjects.sp_0021),
+  spaceAndGrowth: {
+    adultLengthCm: { max: 10, measurement: 'unknown' },
+    activityLevel: 'unknown',
+    spaceNotes: ['Catalog Review approved a maximum adult size of about 10 cm for this catalog object. No minimum aquarium volume or tank length is inferred from body size alone.'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch03-fishbase-amatitlania-nigrofasciata'],
+      reviewedAt: '2026-09-22',
+      note: 'Explicit reviewed catalog-object bridge for adult size only; commercial-variant identity remains unresolved.',
+    },
+  },
+};
+
 export const phase2Batch02Knowledge: Record<string, SpeciesKnowledgeProfile['knowledge']> = Object.fromEntries(
-  Object.entries(phase2Batch02Subjects).map(([speciesId, subject]) => [speciesId, makeKnowledge(subject)]),
+  Object.entries(phase2Batch02Subjects).map(([speciesId, subject]) => [
+    speciesId,
+    speciesId === 'sp_0021' ? miniParrotKnowledge : makeKnowledge(subject),
+  ]),
 );
 
 export const phase2Batch02Authority: Record<string, Partial<Record<'feeding' | 'care', Phase2Batch02FieldAuthority>>> = Object.fromEntries(

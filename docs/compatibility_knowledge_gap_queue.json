@@ -51,30 +51,6 @@
       "blocked_pair_count": 1
     },
     {
-      "species_id": "sp_0021",
-      "common_name": "迷你鹦鹉鱼",
-      "scientific_name": "Amatitlania nigrofasciata var.",
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "direct_reviewed",
-      "boundary_codes": [
-        "catalog_identity_unresolved"
-      ],
-      "resolution_mode": "identity_review",
-      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
-      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
-    },
-    {
       "species_id": "sp_0428",
       "common_name": "斑马螺",
       "scientific_name": "Neritina natalensis",
@@ -99,18 +75,39 @@
       "blocked_pair_count": 1
     },
     {
-      "species_id": "sp_0258",
-      "common_name": "糖果KOI斗鱼",
-      "scientific_name": "Betta splendens var. Koi",
-      "score": 23,
+      "species_id": "sp_0021",
+      "common_name": "迷你鹦鹉鱼",
+      "scientific_name": "Amatitlania nigrofasciata var.",
+      "score": 21,
       "gap_kinds": [
         "environment",
-        "space",
         "social"
       ],
       "field_status": {
         "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "space": "reviewed_supported",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "direct_reviewed",
+      "boundary_codes": [
+        "catalog_identity_unresolved"
+      ],
+      "resolution_mode": "identity_review",
+      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
+      "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
+      "blocked_pair_count": 1
+    },
+    {
+      "species_id": "sp_0258",
+      "common_name": "糖果KOI斗鱼",
+      "scientific_name": "Betta splendens var. Koi",
+      "score": 15,
+      "gap_kinds": [
+        "social"
+      ],
+      "field_status": {
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
