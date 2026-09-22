@@ -305,6 +305,15 @@ for (const profile of audit.reviewedProfiles.filter(item => ['sp_0433', 'sp_0013
 assert.equal((rummyOtoOscarMigration.match(/Compatibility rummy-oto-oscar profile drift:/g) || []).length, 3);
 assert.equal((rummyOtoOscarMigration.match(/Compatibility rummy-oto-oscar profile evidence drift:/g) || []).length, 3);
 
+const goldRamRhodeusMigration = readFileSync('supabase/migrations/202609220001_compatibility_gold_ram_rhodeus_profiles.sql', 'utf8');
+assert.match(goldRamRhodeusMigration, /Compatibility gold-ram\/rhodeus baseline is partial or not fully published/);
+for (const profile of audit.reviewedProfiles.filter(item => ['sp_0016', 'sp_0475'].includes(item.speciesId))) {
+  assert.equal(goldRamRhodeusMigration.includes(profile.speciesId), true, 'gold-ram/rhodeus migration must own Profile ' + profile.speciesId);
+  for (const source of profile.citations) assert.equal(goldRamRhodeusMigration.includes(source.id), true, 'gold-ram/rhodeus migration must include source ' + source.id);
+}
+assert.equal((goldRamRhodeusMigration.match(/Compatibility gold-ram\/rhodeus profile drift:/g) || []).length, 2);
+assert.equal((goldRamRhodeusMigration.match(/Compatibility gold-ram\/rhodeus profile evidence drift:/g) || []).length, 2);
+
 const additiveCompatibilityMigrations = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',
@@ -331,7 +340,7 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451']);
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

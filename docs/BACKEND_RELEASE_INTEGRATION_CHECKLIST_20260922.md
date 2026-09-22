@@ -34,7 +34,7 @@ Do not blind merge or rebase the convergence branch onto main. Build an explaina
 ### Freeze / exclude from the first integration candidate
 - Vision implementation/tuning: `apps/api/src/ai/provider.ts`, Vision-specific portions of `apps/api/src/routes/species-ai.ts`, `src/lib/speciesRecognition.ts`, Vision contract/test changes unless independently required by main.
 - UI modifications, especially `src/pages/Aquarium.tsx` and any visual-result presentation changes not required for backend contract compatibility.
-- Repository-only Supabase Compatibility migration application; migration files may remain historical repository evidence but must not be applied as part of integration.
+- Supabase Compatibility migration application remains frozen. Repository-only migration files may be included when required as static contract/evidence artifacts; inclusion does not authorize applying them.
 - Production/Vercel promotion changes.
 - Care indexing/noindex changes.
 

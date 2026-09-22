@@ -1,5 +1,7 @@
 ## CURRENT OVERRIDE — 2026-09-22 Backend integration candidate READY
 
+- GitHub CI exposed two reviewed Profile DB-authority ownership gaps (sp_0016, sp_0475); repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql now owns them. No DB migration has been applied.
+- CI-required repository-only compatibility migration SQL is present as a static contract artifact; **no migration has been applied and DB authority remains HOLD**.
 - Candidate branch: `integration/backend-main-20260922`
 - Candidate code commit: `afc8ad2e` (`feat(backend): integrate convergence onto current main`)
 - Base: `origin/main@be0fdef9`

@@ -1,5 +1,7 @@
 ## HANDOFF — 2026-09-22 Local backend integration candidate validated
 
+- GitHub CI exposed two reviewed Profile DB-authority ownership gaps (sp_0016, sp_0475); repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql now owns them. No DB migration has been applied.
+- CI-required repository-only compatibility migration SQL is present as a static contract artifact; **no migration has been applied and DB authority remains HOLD**.
 A selective backend candidate has been assembled in `/Users/chuchu/aquaguide-backend-integration-20260922` on branch `integration/backend-main-20260922`.
 
 - Base: `origin/main@be0fdef9`

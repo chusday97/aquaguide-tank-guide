@@ -21,7 +21,7 @@
     "MANUAL_RECONCILE": 3,
     "EXCLUDE_FROZEN_VISION": 8,
     "EXCLUDE_FROZEN_UI": 2,
-    "EXCLUDE_DB_HOLD": 1
+    "INCLUDE_DB_ARTIFACT_HOLD": 2
   },
   "files": [
     {
@@ -971,8 +971,13 @@
     },
     {
       "path": "supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql",
-      "class": "EXCLUDE_DB_HOLD",
-      "reason": "Repository migration is HOLD and must not be applied/integrated in first candidate."
+      "class": "INCLUDE_DB_ARTIFACT_HOLD",
+      "reason": "Repository-only reviewed-baseline artifact required by CI contract; keep migration application/DB authority switch on HOLD."
+    },
+    {
+      "path": "supabase/migrations/202609220001_compatibility_gold_ram_rhodeus_profiles.sql",
+      "class": "INCLUDE_DB_ARTIFACT_HOLD",
+      "reason": "Repository-only additive owner for reviewed Profiles sp_0016/sp_0475; application remains HOLD."
     }
   ]
 }
