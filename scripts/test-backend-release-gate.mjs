@@ -21,6 +21,7 @@ const gates = [
   ['Gold Ram Compatibility Authority', 'npm', ['run', 'test:gold-ram-compatibility-authority']],
   ['Platinum Snakehead Catalog Bridge', 'npm', ['run', 'test:platinum-snakehead-catalog-bridge']],
   ['Identity Bound Catalog Bridges', 'npm', ['run', 'test:identity-bound-catalog-bridges']],
+  ['Catalog Identity Boundaries', 'npm', ['run', 'test:catalog-identity-boundaries']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],

@@ -21,6 +21,7 @@
       "boundary_codes": [
         "variant_authority_not_promotable"
       ],
+      "identity_boundary": null,
       "resolution_mode": "variant_authority_review",
       "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
@@ -43,10 +44,25 @@
       },
       "compatibility_profile": "inherited_reviewed",
       "boundary_codes": [
-        "catalog_identity_unresolved"
+        "trade_name_taxon_ambiguous"
       ],
+      "identity_boundary": {
+        "code": "trade_name_taxon_ambiguous",
+        "resolved_granularity": "trade_name_only",
+        "candidate_taxa": [
+          "Caridina logemanni",
+          "Caridina cantonensis complex"
+        ],
+        "source_ids": [
+          "batch03-itis-caridina-cantonensis",
+          "identity-zootaxa-caridina-logemanni",
+          "identity-worms-caridina-logemanni"
+        ],
+        "note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
+        "reviewed_at": "2026-09-22"
+      },
       "resolution_mode": "identity_review",
-      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
+      "resolution_note": "“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 1
     },
@@ -67,10 +83,23 @@
       },
       "compatibility_profile": "inherited_reviewed",
       "boundary_codes": [
-        "catalog_identity_unresolved"
+        "accepted_taxon_alias_trade_ambiguous"
       ],
+      "identity_boundary": {
+        "code": "accepted_taxon_alias_trade_ambiguous",
+        "resolved_granularity": "accepted_taxon_alias_only",
+        "candidate_taxa": [
+          "Vittina natalensis",
+          "other aquarium-trade zebra nerites"
+        ],
+        "source_ids": [
+          "batch03-obis-neritina-natalensis"
+        ],
+        "note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
+        "reviewed_at": "2026-09-22"
+      },
       "resolution_mode": "identity_review",
-      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
+      "resolution_note": "Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 1
     },
@@ -90,10 +119,23 @@
       },
       "compatibility_profile": "direct_reviewed",
       "boundary_codes": [
-        "catalog_identity_unresolved"
+        "commercial_hybrid_identity_unresolved"
       ],
+      "identity_boundary": {
+        "code": "commercial_hybrid_identity_unresolved",
+        "resolved_granularity": "commercial_lineage_only",
+        "candidate_taxa": [
+          "Amatitlania nigrofasciata lineage",
+          "commercial parrot/convict hybrid lineage"
+        ],
+        "source_ids": [
+          "batch03-fishbase-amatitlania-nigrofasciata"
+        ],
+        "note": "“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。",
+        "reviewed_at": "2026-09-22"
+      },
       "resolution_mode": "identity_review",
-      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
+      "resolution_note": "“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 1
     },
@@ -111,11 +153,10 @@
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [
-        "catalog_identity_unresolved"
-      ],
-      "resolution_mode": "identity_review",
-      "resolution_note": "The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.",
+      "boundary_codes": [],
+      "identity_boundary": null,
+      "resolution_mode": "evidence_research",
+      "resolution_note": "Continue targeted evidence research for the missing compatibility-critical fields.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
       "blocked_pair_count": 0
     }
@@ -160,7 +201,7 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
-        "catalog_identity_unresolved",
+        "trade_name_taxon_ambiguous",
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -266,7 +307,7 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
-        "catalog_identity_unresolved",
+        "commercial_hybrid_identity_unresolved",
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",
@@ -287,7 +328,7 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
-        "catalog_identity_unresolved",
+        "accepted_taxon_alias_trade_ambiguous",
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "boundary_blocked",

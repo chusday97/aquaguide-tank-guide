@@ -79,7 +79,7 @@
         "social"
       ],
       "boundary_codes": [
-        "catalog_identity_unresolved"
+        "trade_name_taxon_ambiguous"
       ],
       "resolution_mode": "identity_review",
       "score": 25
@@ -94,7 +94,7 @@
         "social"
       ],
       "boundary_codes": [
-        "catalog_identity_unresolved"
+        "accepted_taxon_alias_trade_ambiguous"
       ],
       "resolution_mode": "identity_review",
       "score": 25
@@ -108,7 +108,7 @@
         "social"
       ],
       "boundary_codes": [
-        "catalog_identity_unresolved"
+        "commercial_hybrid_identity_unresolved"
       ],
       "resolution_mode": "identity_review",
       "score": 21

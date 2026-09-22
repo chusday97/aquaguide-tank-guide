@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
+import { getCatalogIdentityBoundary, type CatalogIdentityBoundaryCode } from '../src/data/catalogIdentityBoundaries';
 import {
   getCompatibilityEvidenceAudit,
   getReviewedCompatibilityProfile,
@@ -50,6 +51,7 @@ const launchRows = rows.filter(row => row.commonness_proxy === 'launch_cohort');
 type GapBoundaryCode =
   | 'multi_water_type_not_representable'
   | 'variant_authority_not_promotable'
+  | CatalogIdentityBoundaryCode
   | 'catalog_identity_unresolved';
 
 const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
@@ -87,7 +89,10 @@ const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
     && review.status === 'reviewed'
     && review.resolution === 'unknown'
   ));
-  if (
+  const identityBoundary = getCatalogIdentityBoundary(row.species_id);
+  if (identityBoundary) {
+    codes.push(identityBoundary.code);
+  } else if (
     identityReview
     || /(commercial.*form.*not identified|does not identify.*commercial variant|品系身份.*未.*确认|商业命名.*未.*确认|商业.*品系.*对应关系.*确认|商业名.*物种名.*混用)/i.test(variantText)
   ) {
@@ -103,7 +108,12 @@ const boundaryResolution = (codes: GapBoundaryCode[]) => {
   if (codes.includes('variant_authority_not_promotable')) {
     return 'variant_authority_review';
   }
-  if (codes.includes('catalog_identity_unresolved')) {
+  if (
+    codes.includes('catalog_identity_unresolved')
+    || codes.includes('trade_name_taxon_ambiguous')
+    || codes.includes('accepted_taxon_alias_trade_ambiguous')
+    || codes.includes('commercial_hybrid_identity_unresolved')
+  ) {
     return 'identity_review';
   }
   return 'evidence_research';
@@ -122,6 +132,7 @@ const speciesGapCandidates = launchRows.map(row => {
     ...(effectiveProfile ? [] : ['compatibility_profile']),
   ];
   const boundaryCodes = speciesBoundaryCodes(row);
+  const identityBoundary = getCatalogIdentityBoundary(row.species_id);
   const score = Number(row.priority_score || 0)
     + criticalUnknown.length * 4
     + (effectiveProfile ? 0 : 5)
@@ -135,14 +146,24 @@ const speciesGapCandidates = launchRows.map(row => {
     field_status: Object.fromEntries(criticalFields.map(field => [field, row.field_status[field] || 'missing'])),
     compatibility_profile: directProfile ? 'direct_reviewed' : inheritedProfile ? 'inherited_reviewed' : 'none',
     boundary_codes: boundaryCodes,
+    identity_boundary: identityBoundary ? {
+      code: identityBoundary.code,
+      resolved_granularity: identityBoundary.resolvedGranularity,
+      candidate_taxa: identityBoundary.candidateTaxa,
+      source_ids: identityBoundary.sourceIds,
+      note: identityBoundary.note,
+      reviewed_at: identityBoundary.reviewedAt,
+    } : null,
     resolution_mode: boundaryResolution(boundaryCodes),
     resolution_note: boundaryCodes.includes('multi_water_type_not_representable')
       ? 'Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.'
       : boundaryCodes.includes('variant_authority_not_promotable')
         ? 'Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.'
-        : boundaryCodes.includes('catalog_identity_unresolved')
-          ? 'The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.'
-          : 'Continue targeted evidence research for the missing compatibility-critical fields.',
+        : identityBoundary
+          ? identityBoundary.note
+          : boundaryCodes.includes('catalog_identity_unresolved')
+            ? 'The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.'
+            : 'Continue targeted evidence research for the missing compatibility-critical fields.',
     priority_basis: 'launch_cohort_proxy + compatibility-critical evidence gap',
   };
 }).filter(item => item.gap_kinds.length > 0);

@@ -16,7 +16,13 @@ assert.equal(mini?.environment?.evidence.confidence, 'unknown');
 assert.equal(mini?.socialBehavior?.evidence.confidence, 'unknown');
 
 const koiIdentity = getCatalogFieldReviews('sp_0258').find(review => review.field === 'identity');
-assert.equal(koiIdentity?.resolution, 'unknown');
+assert.equal(koiIdentity?.resolution, 'supported');
+assert.deepEqual(koiIdentity?.proposedValue, {
+  scientificName: 'Betta splendens var. Koi',
+  baseSpeciesKey: 'Betta splendens',
+  variantKey: 'Koi',
+});
+assert.deepEqual(koiIdentity?.citationIds, ['batch03-sciadv-betta-mosaic-koi']);
 const koiApproved = new Map(getApprovedCatalogFieldReviews('sp_0258').map(review => [review.field, review]));
 assert.equal(koiApproved.get('water')?.proposedValue, 'freshwater');
 assert.deepEqual(koiApproved.get('temperature')?.proposedValue, { min: 24, max: 30 });

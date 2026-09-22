@@ -60,18 +60,27 @@ assert.equal(platinumSnakeheadGap.resolution_mode, 'variant_authority_review');
 
 const crystalShrimpGap = queue.species_gaps.find(item => item.species_id === 'sp_0002');
 assert.ok(crystalShrimpGap, 'Crystal Shrimp identity gap must remain visible');
-assert.ok(crystalShrimpGap.boundary_codes.includes('catalog_identity_unresolved'));
+assert.ok(crystalShrimpGap.boundary_codes.includes('trade_name_taxon_ambiguous'));
+assert.equal(crystalShrimpGap.identity_boundary.resolved_granularity, 'trade_name_only');
 assert.equal(crystalShrimpGap.resolution_mode, 'identity_review');
 
 const miniParrotGap = queue.species_gaps.find(item => item.species_id === 'sp_0021');
 assert.ok(miniParrotGap, 'Mini-parrot commercial identity gap must remain visible');
-assert.ok(miniParrotGap.boundary_codes.includes('catalog_identity_unresolved'));
+assert.ok(miniParrotGap.boundary_codes.includes('commercial_hybrid_identity_unresolved'));
+assert.equal(miniParrotGap.identity_boundary.resolved_granularity, 'commercial_lineage_only');
 assert.equal(miniParrotGap.resolution_mode, 'identity_review');
 
 const zebraNeriteGap = queue.species_gaps.find(item => item.species_id === 'sp_0428');
 assert.ok(zebraNeriteGap, 'Zebra nerite catalog identity gap must remain visible');
-assert.ok(zebraNeriteGap.boundary_codes.includes('catalog_identity_unresolved'));
+assert.ok(zebraNeriteGap.boundary_codes.includes('accepted_taxon_alias_trade_ambiguous'));
+assert.equal(zebraNeriteGap.identity_boundary.resolved_granularity, 'accepted_taxon_alias_only');
 assert.equal(zebraNeriteGap.resolution_mode, 'identity_review');
+const candyKoiGap = queue.species_gaps.find(item => item.species_id === 'sp_0258');
+assert.ok(candyKoiGap, 'Candy Koi Betta social gap must remain visible');
+assert.equal(candyKoiGap.boundary_codes.includes('catalog_identity_unresolved'), false);
+assert.equal(candyKoiGap.identity_boundary, null);
+assert.equal(candyKoiGap.resolution_mode, 'evidence_research');
+
 if (queue.pair_gaps.length > 0) {
   assert.ok(queue.species_gaps.some(item => item.blocked_pair_count > 0), 'pair gaps must feed species-level unlock impact');
 }

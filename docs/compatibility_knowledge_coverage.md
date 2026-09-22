@@ -31,21 +31,21 @@
 ## Highest-priority species gaps
 
 1. 白金雷龙 (sp_0224) — social, compatibility_profile — variant_authority_review [variant_authority_not_promotable] — unlocks 19 insufficient pairs — score 58
-2. 水晶虾 (sp_0002) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25
-3. 斑马螺 (sp_0428) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25
-4. 迷你鹦鹉鱼 (sp_0021) — environment, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 21
-5. 糖果KOI斗鱼 (sp_0258) — social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 15
+2. 水晶虾 (sp_0002) — environment, space, social — identity_review [trade_name_taxon_ambiguous] — unlocks 1 insufficient pairs — score 25
+3. 斑马螺 (sp_0428) — environment, space, social — identity_review [accepted_taxon_alias_trade_ambiguous] — unlocks 1 insufficient pairs — score 25
+4. 迷你鹦鹉鱼 (sp_0021) — environment, social — identity_review [commercial_hybrid_identity_unresolved] — unlocks 1 insufficient pairs — score 21
+5. 糖果KOI斗鱼 (sp_0258) — social — evidence_research — unlocks 0 insufficient pairs — score 15
 
 ## Highest-priority pair gaps
 
 1. 极火虾 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
-2. 水晶虾 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
+2. 水晶虾 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [trade_name_taxon_ambiguous, variant_authority_not_promotable] — score 29
 3. 黑裙鱼 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
 4. 月光鱼 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
 5. 樱桃灯 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
 6. 小精灵 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
-7. 迷你鹦鹉鱼 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
-8. 白金雷龙 × 斑马螺 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
+7. 迷你鹦鹉鱼 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [commercial_hybrid_identity_unresolved, variant_authority_not_promotable] — score 29
+8. 白金雷龙 × 斑马螺 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [accepted_taxon_alias_trade_ambiguous, variant_authority_not_promotable] — score 29
 9. 白金雷龙 × 红绿灯 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
 10. 白金雷龙 × 白云金丝 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
 11. 白金雷龙 × 斑马鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29

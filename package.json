@@ -281,7 +281,8 @@
     "test:rhodeus-compatibility-authority": "node --import tsx scripts/test-rhodeus-compatibility-authority.ts",
     "test:species-fit-multi-water": "node --import tsx scripts/test-species-fit-multi-water.ts",
     "test:platinum-snakehead-catalog-bridge": "node --import tsx scripts/test-platinum-snakehead-catalog-bridge.ts",
-    "test:identity-bound-catalog-bridges": "node --import tsx scripts/test-identity-bound-catalog-bridges.ts"
+    "test:identity-bound-catalog-bridges": "node --import tsx scripts/test-identity-bound-catalog-bridges.ts",
+    "test:catalog-identity-boundaries": "node --import tsx scripts/test-catalog-identity-boundaries.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
