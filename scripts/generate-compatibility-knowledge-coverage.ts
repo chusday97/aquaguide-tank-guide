@@ -3,6 +3,7 @@ import { fishData } from '../src/data/fishData';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getCatalogIdentityBoundary, type CatalogIdentityBoundaryCode } from '../src/data/catalogIdentityBoundaries';
 import { getKnowledgeEvidenceCeiling, type KnowledgeEvidenceCeilingCode } from '../src/data/knowledgeEvidenceCeilings';
+import { getCompatibilityPairEvidenceCeiling } from '../src/data/compatibilityPairEvidenceCeilings';
 import {
   getCompatibilityEvidenceAudit,
   getReviewedCompatibilityProfile,
@@ -246,14 +247,29 @@ const boundaryCodesBySpecies = new Map(
   launchRows.map(row => [row.species_id, speciesBoundaryCodes(row)]),
 );
 for (const item of pairGaps) {
-  const leftCodes = boundaryCodesBySpecies.get(String(item.species_a_id)) || [];
-  const rightCodes = boundaryCodesBySpecies.get(String(item.species_b_id)) || [];
+  const leftId = String(item.species_a_id);
+  const rightId = String(item.species_b_id);
+  const leftCodes = boundaryCodesBySpecies.get(leftId) || [];
+  const rightCodes = boundaryCodesBySpecies.get(rightId) || [];
   const boundaryCodes = Array.from(new Set([...leftCodes, ...rightCodes])).sort();
+  const pairEvidenceCeiling = getCompatibilityPairEvidenceCeiling(leftId, rightId);
   item.boundary_codes = boundaryCodes;
-  item.resolution_mode = boundaryCodes.length > 0 ? 'boundary_blocked' : 'evidence_research';
-  item.resolution_note = boundaryCodes.length > 0
-    ? 'At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair.'
-    : 'Continue targeted pair/species evidence research.';
+  item.pair_evidence_ceiling = pairEvidenceCeiling ? {
+    code: pairEvidenceCeiling.code,
+    source_ids: pairEvidenceCeiling.sourceIds,
+    note: pairEvidenceCeiling.note,
+    reviewed_at: pairEvidenceCeiling.reviewedAt,
+  } : null;
+  item.resolution_mode = pairEvidenceCeiling
+    ? 'evidence_ceiling'
+    : boundaryCodes.length > 0
+      ? 'boundary_blocked'
+      : 'evidence_research';
+  item.resolution_note = pairEvidenceCeiling
+    ? pairEvidenceCeiling.note
+    : boundaryCodes.length > 0
+      ? 'At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair.'
+      : 'Continue targeted pair/species evidence research.';
 }
 
 const pairGapImpact = new Map<string, number>();
@@ -299,6 +315,7 @@ const report = {
   evidence_ceiling_species_gap_count: speciesGaps.filter(item => item.resolution_mode === 'evidence_ceiling').length,
   priority_pair_gap_count: pairGaps.length,
   evidence_research_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_research').length,
+  evidence_ceiling_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_ceiling').length,
   boundary_blocked_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
   top_pair_gap_root_species: speciesGaps
     .filter(item => item.blocked_pair_count > 0)
@@ -346,6 +363,7 @@ markdown.push('- Reviewed stage-risk profiles: ' + report.reviewed_stage_risk_pr
 markdown.push('- Launch-cohort species: ' + report.launch_cohort_species);
 markdown.push('- Current insufficient pair gaps: ' + report.priority_pair_gap_count);
 markdown.push('- Evidence-research-only pair gaps: ' + report.evidence_research_pair_gap_count);
+markdown.push('- Evidence-ceiling pair gaps: ' + report.evidence_ceiling_pair_gap_count);
 markdown.push('- Boundary-blocked pair gaps: ' + report.boundary_blocked_pair_gap_count);
 markdown.push('');
 markdown.push('| Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |');
@@ -373,11 +391,12 @@ markdown.push('## Research workflow');
 markdown.push('');
 markdown.push('1. Take the highest-ranked gap.');
 markdown.push('2. If resolution_mode is evidence_research, research only the missing compatibility-critical field or pair relationship.');
-markdown.push('3. If a boundary code is present, resolve the representation, variant-authority, or catalog-identity boundary before repeating ordinary evidence search.');
-markdown.push('4. Add reviewed authority with citations only when reliable evidence exists.');
-markdown.push('5. Keep reviewed_unknown when reliable evidence does not exist.');
-markdown.push('6. Regenerate this report and add regression coverage.');
-markdown.push('7. Run npm run test:backend-release-gate.');
+markdown.push('3. If resolution_mode is evidence_ceiling, do not repeat ordinary evidence search until materially new evidence or identity authority appears.');
+markdown.push('4. If a boundary code is present without an evidence ceiling, resolve the representation, variant-authority, or catalog-identity boundary before repeating ordinary evidence search.');
+markdown.push('5. Add reviewed authority with citations only when reliable evidence exists.');
+markdown.push('6. Keep reviewed_unknown when reliable evidence does not exist.');
+markdown.push('7. Regenerate this report and add regression coverage.');
+markdown.push('8. Run npm run test:backend-release-gate.');
 
 writeFileSync('docs/compatibility_knowledge_coverage.md', markdown.join('\n') + '\n');
 

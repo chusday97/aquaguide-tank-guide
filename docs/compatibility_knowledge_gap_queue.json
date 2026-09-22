@@ -7,7 +7,7 @@
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
       "scientific_name": "Channa argus var. Platinum",
-      "score": 34,
+      "score": 26,
       "gap_kinds": [
         "social",
         "compatibility_profile"
@@ -26,7 +26,7 @@
       "resolution_mode": "variant_authority_review",
       "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 7
+      "blocked_pair_count": 3
     },
     {
       "species_id": "sp_0002",
@@ -110,7 +110,7 @@
       "species_id": "sp_0021",
       "common_name": "迷你鹦鹉鱼",
       "scientific_name": "Amatitlania nigrofasciata var.",
-      "score": 21,
+      "score": 19,
       "gap_kinds": [
         "environment",
         "social"
@@ -141,7 +141,7 @@
       "resolution_mode": "identity_review",
       "resolution_note": "“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
-      "blocked_pair_count": 1
+      "blocked_pair_count": 0
     },
     {
       "species_id": "sp_0258",
@@ -179,29 +179,6 @@
   ],
   "pair_gaps": [
     {
-      "species_a_id": "sp_0001",
-      "species_a_name": "极火虾",
-      "species_b_id": "sp_0224",
-      "species_b_name": "白金雷龙",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
-      ],
-      "warning_codes": [
-        "minimum_group_not_met",
-        "predation_vulnerability_context"
-      ],
-      "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "variant_authority_not_promotable"
-      ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
-    },
-    {
       "species_a_id": "sp_0002",
       "species_a_name": "水晶虾",
       "species_b_id": "sp_0224",
@@ -222,29 +199,19 @@
         "trade_name_taxon_ambiguous",
         "variant_authority_not_promotable"
       ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
-    },
-    {
-      "species_a_id": "sp_0021",
-      "species_a_name": "迷你鹦鹉鱼",
-      "species_b_id": "sp_0224",
-      "species_b_name": "白金雷龙",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
-      ],
-      "warning_codes": [],
-      "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "commercial_hybrid_identity_unresolved",
-        "variant_authority_not_promotable"
-      ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+      "pair_evidence_ceiling": {
+        "code": "prey_trade_identity_not_resolved",
+        "source_ids": [
+          "northern-snakehead-fws-erss-2024",
+          "northern-snakehead-usgs-diet-2012",
+          "identity-zootaxa-caridina-logemanni",
+          "identity-worms-caridina-logemanni"
+        ],
+        "note": "Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions.",
+        "reviewed_at": "2026-09-22"
+      },
+      "resolution_mode": "evidence_ceiling",
+      "resolution_note": "Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions."
     },
     {
       "species_a_id": "sp_0224",
@@ -264,28 +231,18 @@
         "accepted_taxon_alias_trade_ambiguous",
         "variant_authority_not_promotable"
       ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
-    },
-    {
-      "species_a_id": "sp_0224",
-      "species_a_name": "白金雷龙",
-      "species_b_id": "sp_0438",
-      "species_b_name": "红剑鱼",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
-      ],
-      "warning_codes": [],
-      "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "variant_authority_not_promotable"
-      ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+      "pair_evidence_ceiling": {
+        "code": "gastropod_predation_not_established",
+        "source_ids": [
+          "northern-snakehead-fws-erss-2024",
+          "northern-snakehead-usgs-diet-2012",
+          "batch03-obis-neritina-natalensis"
+        ],
+        "note": "Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods.",
+        "reviewed_at": "2026-09-22"
+      },
+      "resolution_mode": "evidence_ceiling",
+      "resolution_note": "Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods."
     },
     {
       "species_a_id": "sp_0224",
@@ -304,31 +261,19 @@
       "boundary_codes": [
         "variant_authority_not_promotable"
       ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
-    },
-    {
-      "species_a_id": "sp_0224",
-      "species_a_name": "白金雷龙",
-      "species_b_id": "sp_0459",
-      "species_b_name": "黑壳虾",
-      "status": "insufficient_data",
-      "direct_reviewed_pair_rule": false,
-      "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
-      ],
-      "warning_codes": [
-        "minimum_group_not_met",
-        "predation_vulnerability_context"
-      ],
-      "score": 29,
-      "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
-      "boundary_codes": [
-        "variant_authority_not_promotable"
-      ],
-      "resolution_mode": "boundary_blocked",
-      "resolution_note": "At least one root species is blocked by a representation or reviewed-variant authority boundary; ordinary evidence search alone may not clear this pair."
+      "pair_evidence_ceiling": {
+        "code": "large_fish_outside_supported_prey_window",
+        "source_ids": [
+          "northern-snakehead-fws-erss-2024",
+          "northern-snakehead-usgs-diet-2012",
+          "batch03-fishbase-astronotus-ocellatus",
+          "seriouslyfish-astronotus-ocellatus"
+        ],
+        "note": "USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted.",
+        "reviewed_at": "2026-09-22"
+      },
+      "resolution_mode": "evidence_ceiling",
+      "resolution_note": "USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted."
     }
   ]
 }

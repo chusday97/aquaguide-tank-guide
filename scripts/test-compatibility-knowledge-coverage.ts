@@ -120,17 +120,34 @@ for (const item of queue.pair_gaps) {
   const result = evaluateSpeciesCombination([left, right]);
   assert.equal(result.status, 'insufficient_data');
   assert.ok(Array.isArray(item.boundary_codes));
-  assert.ok(['boundary_blocked', 'evidence_research'].includes(item.resolution_mode));
+  assert.ok(['boundary_blocked', 'evidence_research', 'evidence_ceiling'].includes(item.resolution_mode));
   assert.match(item.priority_basis, /launch_cohort/);
 }
 assert.equal(
-  report.boundary_blocked_pair_gap_count + report.evidence_research_pair_gap_count,
+  report.boundary_blocked_pair_gap_count + report.evidence_research_pair_gap_count + report.evidence_ceiling_pair_gap_count,
   report.priority_pair_gap_count,
 );
 assert.equal(
   queue.pair_gaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
   report.boundary_blocked_pair_gap_count,
 );
+
+
+const pairCeilings = new Map<string, any>(queue.pair_gaps.map((item: any) => [[item.species_a_id, item.species_b_id].sort().join('::'), item]));
+for (const [key, code] of [
+  [['sp_0002', 'sp_0224'].sort().join('::'), 'prey_trade_identity_not_resolved'],
+  [['sp_0224', 'sp_0428'].sort().join('::'), 'gastropod_predation_not_established'],
+  [['sp_0224', 'sp_0451'].sort().join('::'), 'large_fish_outside_supported_prey_window'],
+]) {
+  const item = pairCeilings.get(key);
+  assert.ok(item, 'missing pair evidence ceiling for ' + key);
+  assert.equal(item.resolution_mode, 'evidence_ceiling');
+  assert.equal(item.pair_evidence_ceiling.code, code);
+  assert.ok(item.pair_evidence_ceiling.source_ids.length > 0);
+  assert.ok(item.resolution_note.length > 30);
+}
+assert.equal(report.evidence_ceiling_pair_gap_count, 3);
+assert.equal(report.boundary_blocked_pair_gap_count, 0);
 
 assert.equal(queue.uses_real_user_telemetry, false);
 console.log('compatibility knowledge coverage contract passed: deterministic coverage, fail-closed unknowns, and actionable gap queues');

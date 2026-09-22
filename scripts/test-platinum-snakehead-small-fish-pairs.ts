@@ -9,7 +9,7 @@ const smallFishIds = [
 ];
 
 const unresolvedIds = [
-  'sp_0438', 'sp_0451', 'sp_0021', 'sp_0459', 'sp_0001', 'sp_0002', 'sp_0428',
+  'sp_0451', 'sp_0002', 'sp_0428',
 ];
 
 const fish = selectCompatibilityLaunchCohort();

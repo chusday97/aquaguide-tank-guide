@@ -285,7 +285,9 @@
     "test:catalog-identity-boundaries": "node --import tsx scripts/test-catalog-identity-boundaries.ts",
     "test:knowledge-evidence-ceilings": "node --import tsx scripts/test-knowledge-evidence-ceilings.ts",
     "test:compatibility-symmetry": "node --import tsx scripts/test-compatibility-symmetry.ts",
-    "test:platinum-snakehead-small-fish-pairs": "node --import tsx scripts/test-platinum-snakehead-small-fish-pairs.ts"
+    "test:platinum-snakehead-small-fish-pairs": "node --import tsx scripts/test-platinum-snakehead-small-fish-pairs.ts",
+    "test:platinum-snakehead-remaining-pairs": "node --import tsx scripts/test-platinum-snakehead-remaining-pairs.ts",
+    "test:compatibility-pair-evidence-ceilings": "node --import tsx scripts/test-compatibility-pair-evidence-ceilings.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

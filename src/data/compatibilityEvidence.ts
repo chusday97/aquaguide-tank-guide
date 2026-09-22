@@ -1134,8 +1134,48 @@ const platinumSnakeheadSmallFishPairRules: ReviewedPairRule[] = platinumSnakehea
   citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
 }));
 
+const platinumSnakeheadAdditionalPredationPairRules: ReviewedPairRule[] = [
+  {
+    speciesIds: ['sp_0224', 'sp_0438'],
+    verdict: 'not_recommended',
+    riskType: 'predation_threat',
+    reason: '白金雷龙对象已审核到 Channa argus Platinum，最大体长约 100 cm；红剑鱼 reviewed 最大体长约 14 cm。USGS 物种资料记录成体 Channa argus 可捕食达到自身约 33% 体长的鱼，因此 14 cm 红剑鱼明显落在已记录捕食尺寸窗口内。该结论是物种捕食生态 + reviewed 体型的规则推断。',
+    mitigation: ['不要把白金雷龙与红剑鱼作为长期同缸组合；优先物理分缸。', '不要把幼体阶段暂时体型接近理解为成年后仍安全。'],
+    basis: 'rule_inference',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0224', 'sp_0438'],
+    citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+  },
+  {
+    speciesIds: ['sp_0224', 'sp_0021'],
+    verdict: 'not_recommended',
+    riskType: 'predation_threat',
+    reason: '迷你鹦鹉鱼 catalog object 的商业品系 taxon 仍未完全解析，但对象级最大体长约 10 cm 已审核通过。USGS 记录成体 Channa argus 可捕食达到自身约 33% 体长的鱼；10 cm 级鱼明显落在白金雷龙 reviewed 最大约 100 cm 所对应的捕食尺寸窗口内。该结论只依赖“鱼类 + reviewed 对象级体型”，不把基础种行为自动提升为该商业品系。',
+    mitigation: ['不要把白金雷龙与迷你鹦鹉鱼作为长期同缸组合；优先物理分缸。', '不要用商业品系身份尚未完全解析来反推捕食风险不存在。'],
+    basis: 'rule_inference',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0224', 'sp_0021'],
+    citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+  },
+  ...(['sp_0459', 'sp_0001'] as const).map(speciesId => ({
+    speciesIds: ['sp_0224', speciesId] as [string, string],
+    verdict: 'not_recommended' as const,
+    riskType: 'predation_threat',
+    reason: '黑壳虾/极火虾对象均有 reviewed Neocaridina davidi 身份与约 4 cm 最大体长 authority。USGS Channa argus 物种资料记录成体猎物包括 crayfish，并指出成体剩余非鱼类食物中包含 crustaceans；风险评估也把 surface-dwelling crayfish and shrimp 列为可能受影响的甲壳类。对 4 cm 级淡水虾，存在足够的捕食威胁，不应作为长期同缸安全组合。',
+    mitigation: ['不要把白金雷龙与该小型淡水虾作为长期同缸组合；优先物理分缸。', '不要把水草躲避物或短期未捕食理解为风险已消失。'],
+    basis: 'rule_inference' as const,
+    confidence: 'medium' as const,
+    reviewStatus: 'reviewed' as const,
+    affectedSpeciesIds: ['sp_0224', speciesId],
+    citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+  })),
+];
+
 const pairRules: ReviewedPairRule[] = [
   ...platinumSnakeheadSmallFishPairRules,
+  ...platinumSnakeheadAdditionalPredationPairRules,
   {
     speciesIds: ['sp_0439', 'sp_0436'],
     verdict: 'not_recommended',
