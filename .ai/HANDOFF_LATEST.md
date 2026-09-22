@@ -1,3 +1,14 @@
+## HANDOFF — 2026-09-22 Backend convergence ready for integration audit
+
+- Current branch/HEAD: `backend/convergence-20260922@c0dba9399dd8e6e0b212c732918f39157ecf9d8a`; upstream is `origin/backend/convergence-20260922`; worktree clean before this authority update.
+- Backend scope is converged and release-gated: knowledge/evidence authority, Compatibility, Tank State/Tank Evidence, Water Change, Care/Core Flow, API boundary, Catalog and TypeScript gates have passed in the convergence line.
+- Launch cohort has no ordinary unresolved research item: remaining unknowns are explicit evidence ceilings or identity boundaries and must not be converted to guessed facts.
+- User froze **image recognition** and **UI modification** on 2026-09-22. Do not continue Vision tuning or UI work during integration. Existing Vision/UI branch history is retained for audit, not automatically selected for main.
+- DB/infra holds remain unchanged: 15 Compatibility migrations are repository-only; DB-authority switch and Care indexing/noindex changes remain HOLD; Production must not be changed in this phase.
+- Integration risk: `origin/main...HEAD` = `13 main-only / 104 backend-only`; merge-base `437fe83fcfe282551806f573b3ca06f5bea37cc3`. This branch is not safe for a blind merge/rebase.
+- Diff audit confirms mixed scope: backend contracts/authority/tests/docs + frozen Vision files + `src/pages/Aquarium.tsx` + repository migration material. Integration must be selective and preserve current main behavior.
+- Source of truth for the next step: `docs/BACKEND_RELEASE_INTEGRATION_CHECKLIST_20260922.md`. Run that checklist before any main merge or Production action.
+
 ## HANDOFF — 2026-09-16 RC1 Production release CLOSED
 Production is now `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production). Final Production smoke is PASS.
 
