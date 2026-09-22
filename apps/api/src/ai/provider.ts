@@ -12,10 +12,18 @@ export class ProviderError extends Error {
   }
 }
 
-const cleanJsonText = (value: string) => value
-  .trim()
-  .replace(/^```(?:json)?\s*/i, '')
-  .replace(/\s*```$/, '');
+const cleanJsonText = (value: string) => {
+  const cleaned = value
+    .trim()
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```$/, '')
+    .trim();
+  const firstObject = cleaned.indexOf('{');
+  const lastObject = cleaned.lastIndexOf('}');
+  return firstObject >= 0 && lastObject > firstObject
+    ? cleaned.slice(firstObject, lastObject + 1)
+    : cleaned;
+};
 
 const fetchJsonResponse = async (
   baseUrl: string,
@@ -67,20 +75,33 @@ const fetchJsonResponse = async (
   throw lastError instanceof Error ? lastError : new ProviderError('network', 'Provider request failed.');
 };
 
-const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en') => ({
+const supportsVisionJsonMode = (model: string) => /^glm-4\.6v/i.test(model);
+
+const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: string) => ({
   stream: false,
-  temperature: 0.1,
+  temperature: 0,
   max_tokens: 700,
+  ...(supportsVisionJsonMode(model) ? { response_format: { type: 'json_object' as const } } : {}),
   messages: [
-    { role: 'system', content: 'Return one strict JSON object only. Inspect the supplied image pixels; do not infer identity from the prompt alone.' },
+    {
+      role: 'system',
+      content: [
+        'Return exactly one JSON object and nothing else.',
+        'Inspect only the supplied image pixels.',
+        'Never invent a descriptive common name as if it were an established species name.',
+        'commonName and scientificName must refer to the same organism.',
+        'If the scientific identity is uncertain, omit scientificName instead of guessing or returning an empty string.',
+        'Use high confidence only when visible diagnostic features strongly support one identity; otherwise use medium or low.',
+      ].join(' '),
+    },
     {
       role: 'user',
       content: [
         {
           type: 'text',
           text: locale === 'en'
-            ? 'Identify aquarium species visible in this image. Return JSON only: {"candidates":[{"commonName":"","scientificName":"","confidenceBand":"high|medium|low","visualEvidence":[""]}]}. Return at most 3 candidates. Use low confidence for blurry, multiple-subject, or non-aquarium images. Do not diagnose health.'
-            : '识别图片中的水族生物。只返回 JSON：{"candidates":[{"commonName":"","scientificName":"","confidenceBand":"high|medium|low","visualEvidence":[""]}]}。最多 3 个候选；模糊、多主体或非水族图片必须使用低置信度，不判断健康或疾病。',
+            ? 'Identify aquarium organisms visible in this image. Return JSON only in this shape: {"candidates":[{"commonName":"established name","confidenceBand":"high|medium|low","visualEvidence":["visible feature"]}]}. scientificName is optional: include it only when you are confident it matches commonName. Return at most 3 candidates. For blurry, multiple-subject, non-aquarium, cultivar/variant-ambiguous, or taxonomically uncertain images, lower confidence and do not guess a scientific name. Do not diagnose health.'
+            : '识别图片中的水族生物。只返回 JSON，结构为：{"candidates":[{"commonName":"通用物种名","confidenceBand":"high|medium|low","visualEvidence":["可见特征"]}]}。scientificName 是可选字段：只有在确认它与 commonName 指向同一物种时才填写；不确定时必须省略，不能留空字符串或猜测。最多 3 个候选。图片模糊、多主体、非水族、品系/变种难以区分或分类身份不确定时必须降低置信度。不要判断健康或疾病。',
         },
         { type: 'image_url', image_url: { url: imageDataUrl } },
       ],
@@ -94,18 +115,18 @@ const shouldUseVisionFallback = (error: unknown) => (
     error.reason === 'timeout'
     || error.statusCode === 429
     || (typeof error.statusCode === 'number' && error.statusCode >= 500)
+    || error.reason === 'invalid_response'
   )
 );
 
 export const requestVisionCandidates = async (imageDataUrl: string, locale: 'zh-CN' | 'en') => {
-  const body = visionRequestBody(imageDataUrl, locale);
   try {
     const payload = await fetchJsonResponse(
       apiConfig.visionBaseUrl,
       apiConfig.visionApiKey,
       apiConfig.visionModel,
       apiConfig.visionTimeoutMs,
-      body,
+      visionRequestBody(imageDataUrl, locale, apiConfig.visionModel),
     );
     return { payload, modelName: apiConfig.visionModel };
   } catch (error) {
@@ -116,7 +137,7 @@ export const requestVisionCandidates = async (imageDataUrl: string, locale: 'zh-
       apiConfig.visionApiKey,
       fallbackModel,
       apiConfig.visionTimeoutMs,
-      body,
+      visionRequestBody(imageDataUrl, locale, fallbackModel),
     );
     return { payload, modelName: fallbackModel };
   }

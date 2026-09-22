@@ -2,8 +2,8 @@ import assert from 'node:assert/strict';
 
 process.env.VISION_API_KEY = 'test-key';
 process.env.VISION_BASE_URL = 'https://vision.example/v4';
-process.env.VISION_MODEL = 'glm-primary';
-process.env.VISION_FALLBACK_MODEL = 'glm-fallback';
+process.env.VISION_MODEL = 'glm-4.6v-flash';
+process.env.VISION_FALLBACK_MODEL = 'glm-4v-flash';
 process.env.VISION_TIMEOUT_MS = '10';
 
 const { buildApiConfig } = await import('../apps/api/src/config.ts');
@@ -69,17 +69,20 @@ assert.equal(deriveUnreconciledRecognitionStatus([]), 'unmatched');
 assert.equal(deriveUnreconciledRecognitionStatus([{ confidenceBand: 'high' }]), 'ambiguous', 'provider confidence alone must never claim a catalog match');
 
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
-let failureMode: '429' | '5xx' | 'timeout' = '429';
+let failureMode: '429' | '5xx' | 'timeout' | 'invalid_response' = '429';
 const originalFetch = globalThis.fetch;
 
 globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
   const body = JSON.parse(String(init?.body || '{}')) as { model?: string; stream?: unknown; response_format?: unknown; messages?: unknown };
   calls.push(body);
-  if (body.model === 'glm-primary') {
+  if (body.model === 'glm-4.6v-flash') {
     if (failureMode === 'timeout') {
       return await new Promise<Response>((_resolve, reject) => {
         init?.signal?.addEventListener('abort', () => reject(Object.assign(new Error('aborted'), { name: 'AbortError' })));
       });
+    }
+    if (failureMode === 'invalid_response') {
+      return new Response(JSON.stringify({ choices: [{ message: { content: 'not valid JSON' } }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     }
     return new Response(JSON.stringify({ error: { code: '1305' } }), { status: failureMode === '429' ? 429 : 503, headers: { 'Content-Type': 'application/json' } });
   }
@@ -90,15 +93,16 @@ globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
 
 try {
   const { requestVisionCandidates } = await import('../apps/api/src/ai/provider.ts');
-  for (const mode of ['429', '5xx', 'timeout'] as const) {
+  for (const mode of ['429', '5xx', 'timeout', 'invalid_response'] as const) {
     failureMode = mode;
     calls.length = 0;
     const result = await requestVisionCandidates('data:image/webp;base64,AA==', 'zh-CN');
-    assert.equal(result.modelName, 'glm-fallback');
+    assert.equal(result.modelName, 'glm-4v-flash');
     assert.deepEqual(result.payload, { candidates: [{ commonName: '孔雀鱼', scientificName: 'Poecilia reticulata', confidenceBand: 'high', visualEvidence: ['尾鳍特征'] }] });
-    assert.deepEqual(calls.map(call => call.model), ['glm-primary', 'glm-primary', 'glm-fallback']);
+    assert.deepEqual(calls.map(call => call.model), ['glm-4.6v-flash', 'glm-4.6v-flash', 'glm-4v-flash']);
     assert.equal(calls.every(call => call.stream === false), true);
-    assert.equal(calls.every(call => call.response_format === undefined), true);
+    assert.deepEqual(calls.slice(0, 2).map(call => call.response_format), [{ type: 'json_object' }, { type: 'json_object' }]);
+    assert.equal(calls[2].response_format, undefined, 'legacy GLM-4V fallback stays on prompt-enforced JSON for compatibility');
     assert.equal(calls.every(call => Array.isArray(call.messages) && (call.messages as unknown[]).some(message => JSON.stringify(message).includes('image_url'))), true);
   }
   console.log('vision provider/config contract verified without real credentials: defaults, GLM aliases, multimodal payload, and 429/5xx/timeout fallback');
