@@ -42,7 +42,7 @@ for (const value of Object.values(report.field_coverage) as Array<{ applicable: 
 for (const item of queue.species_gaps) {
   assert.ok(Array.isArray(item.gap_kinds) && item.gap_kinds.length > 0);
   assert.ok(Array.isArray(item.boundary_codes));
-  assert.ok(['evidence_research', 'representation_change', 'variant_authority_review', 'identity_review'].includes(item.resolution_mode));
+  assert.ok(['evidence_research', 'evidence_ceiling', 'representation_change', 'variant_authority_review', 'identity_review'].includes(item.resolution_mode));
   assert.ok(Number.isInteger(item.blocked_pair_count) && item.blocked_pair_count >= 0);
   assert.match(item.priority_basis, /launch_cohort_proxy/);
   assert.match(item.priority_basis, /pair-gap unlock impact/);
@@ -79,7 +79,11 @@ const candyKoiGap = queue.species_gaps.find(item => item.species_id === 'sp_0258
 assert.ok(candyKoiGap, 'Candy Koi Betta social gap must remain visible');
 assert.equal(candyKoiGap.boundary_codes.includes('catalog_identity_unresolved'), false);
 assert.equal(candyKoiGap.identity_boundary, null);
-assert.equal(candyKoiGap.resolution_mode, 'evidence_research');
+assert.equal(candyKoiGap.resolution_mode, 'evidence_ceiling');
+assert.equal(candyKoiGap.evidence_ceiling.code, 'variant_social_not_established');
+assert.equal(candyKoiGap.evidence_ceiling.field, 'social');
+assert.match(candyKoiGap.resolution_note, /Koi\/candy|mosaic/i);
+assert.equal(report.evidence_ceiling_species_gap_count, 1);
 
 if (queue.pair_gaps.length > 0) {
   assert.ok(queue.species_gaps.some(item => item.blocked_pair_count > 0), 'pair gaps must feed species-level unlock impact');

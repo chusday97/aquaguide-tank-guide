@@ -46,6 +46,20 @@ const candyKoiBettaKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
       note: 'Explicit reviewed catalog-object bridge for adult size only.',
     },
   },
+  socialBehavior: {
+    mode: 'unknown',
+    territoriality: 'unknown',
+    finNipping: 'unknown',
+    predationRisk: 'unknown',
+    summary: 'Koi/candy 色型本身不能用于推断固定的攻击性、单养或社区缸模式；现有研究显示驯化斗鱼攻击性存在明显个体与品系差异。',
+    evidence: {
+      confidence: 'unknown',
+      reviewStatus: 'reviewed',
+      sourceIds: ['sciadv-betta-phenotypic-diversity', 'ygcen-betta-behavior-variation-2022'],
+      reviewedAt: '2026-09-22',
+      note: 'Evidence ceiling: Koi is a reviewed mosaic Betta splendens phenotype, but no reviewed source establishes a Koi-specific stable social mode. Base-species social authority is not promoted by color phenotype alone.',
+    },
+  },
 };
 
 export const phase2Batch37Knowledge = Object.fromEntries(Object.entries(phase2Batch37Subjects).map(([id, subject]) => [

@@ -34,7 +34,7 @@
 2. 水晶虾 (sp_0002) — environment, space, social — identity_review [trade_name_taxon_ambiguous] — unlocks 1 insufficient pairs — score 25
 3. 斑马螺 (sp_0428) — environment, space, social — identity_review [accepted_taxon_alias_trade_ambiguous] — unlocks 1 insufficient pairs — score 25
 4. 迷你鹦鹉鱼 (sp_0021) — environment, social — identity_review [commercial_hybrid_identity_unresolved] — unlocks 1 insufficient pairs — score 21
-5. 糖果KOI斗鱼 (sp_0258) — social — evidence_research — unlocks 0 insufficient pairs — score 15
+5. 糖果KOI斗鱼 (sp_0258) — social — evidence_ceiling [variant_social_not_established] — unlocks 0 insufficient pairs — score 15
 
 ## Highest-priority pair gaps
 

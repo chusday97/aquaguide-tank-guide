@@ -1,6 +1,8 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'sciadv-betta-phenotypic-diversity': { id: 'sciadv-betta-phenotypic-diversity', title: 'The genetic architecture of phenotypic diversity in the Betta fish (Betta splendens)', publisher: 'Science Advances', url: 'https://doi.org/10.1126/sciadv.abm4955', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
+  'ygcen-betta-behavior-variation-2022': { id: 'ygcen-betta-behavior-variation-2022', title: 'Variation in nest building, aggression, learning, and steroid hormone levels in Betta splendens', publisher: 'General and Comparative Endocrinology', url: 'https://doi.org/10.1016/j.ygcen.2022.114044', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
   'uf-ifas-neocaridina-davidi': { id: 'uf-ifas-neocaridina-davidi', title: 'Cherry Shrimp Neocaridina davidi', publisher: 'UF/IFAS Extension', url: 'https://ask.ifas.ufl.edu/publication/IN1301', sourceType: 'professional_association', reviewStatus: 'reviewed' },
   'usgs-neocaridina-davidi': { id: 'usgs-neocaridina-davidi', title: 'Neocaridina davidi (cherry shrimp) Species Profile', publisher: 'U.S. Geological Survey', url: 'https://nas.er.usgs.gov/Queries/FactSheet.aspx?SpeciesID=2257', sourceType: 'government', reviewStatus: 'reviewed' },
   'neocaridina-social-environment-study': { id: 'neocaridina-social-environment-study', title: 'Effect of social environment on sexual differentiation in the highly gregarious red cherry shrimp (Neocaridina davidi)', publisher: 'Canadian Journal of Zoology', url: 'https://doi.org/10.1139/cjz-2018-0284', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },

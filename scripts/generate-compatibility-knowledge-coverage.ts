@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getCatalogIdentityBoundary, type CatalogIdentityBoundaryCode } from '../src/data/catalogIdentityBoundaries';
+import { getKnowledgeEvidenceCeiling, type KnowledgeEvidenceCeilingCode } from '../src/data/knowledgeEvidenceCeilings';
 import {
   getCompatibilityEvidenceAudit,
   getReviewedCompatibilityProfile,
@@ -52,6 +53,7 @@ type GapBoundaryCode =
   | 'multi_water_type_not_representable'
   | 'variant_authority_not_promotable'
   | CatalogIdentityBoundaryCode
+  | KnowledgeEvidenceCeilingCode
   | 'catalog_identity_unresolved';
 
 const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
@@ -84,6 +86,11 @@ const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
   ) {
     codes.push('variant_authority_not_promotable');
   }
+  const evidenceCeiling = getKnowledgeEvidenceCeiling(row.species_id);
+  if (evidenceCeiling && row.field_status[evidenceCeiling.field] !== 'reviewed_supported') {
+    codes.push(evidenceCeiling.code);
+  }
+
   const identityReview = getCatalogFieldReviews(row.species_id).find(review => (
     review.field === 'identity'
     && review.status === 'reviewed'
@@ -107,6 +114,9 @@ const boundaryResolution = (codes: GapBoundaryCode[]) => {
   }
   if (codes.includes('variant_authority_not_promotable')) {
     return 'variant_authority_review';
+  }
+  if (codes.includes('variant_social_not_established')) {
+    return 'evidence_ceiling';
   }
   if (
     codes.includes('catalog_identity_unresolved')
@@ -133,6 +143,7 @@ const speciesGapCandidates = launchRows.map(row => {
   ];
   const boundaryCodes = speciesBoundaryCodes(row);
   const identityBoundary = getCatalogIdentityBoundary(row.species_id);
+  const evidenceCeiling = getKnowledgeEvidenceCeiling(row.species_id);
   const score = Number(row.priority_score || 0)
     + criticalUnknown.length * 4
     + (effectiveProfile ? 0 : 5)
@@ -154,6 +165,13 @@ const speciesGapCandidates = launchRows.map(row => {
       note: identityBoundary.note,
       reviewed_at: identityBoundary.reviewedAt,
     } : null,
+    evidence_ceiling: evidenceCeiling ? {
+      field: evidenceCeiling.field,
+      code: evidenceCeiling.code,
+      source_ids: evidenceCeiling.sourceIds,
+      note: evidenceCeiling.note,
+      reviewed_at: evidenceCeiling.reviewedAt,
+    } : null,
     resolution_mode: boundaryResolution(boundaryCodes),
     resolution_note: boundaryCodes.includes('multi_water_type_not_representable')
       ? 'Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.'
@@ -161,7 +179,9 @@ const speciesGapCandidates = launchRows.map(row => {
         ? 'Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.'
         : identityBoundary
           ? identityBoundary.note
-          : boundaryCodes.includes('catalog_identity_unresolved')
+          : evidenceCeiling
+            ? evidenceCeiling.note
+            : boundaryCodes.includes('catalog_identity_unresolved')
             ? 'The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.'
             : 'Continue targeted evidence research for the missing compatibility-critical fields.',
     priority_basis: 'launch_cohort_proxy + compatibility-critical evidence gap',
@@ -267,6 +287,7 @@ const report = {
   compatibility_critical_fields: ['environment', 'space', 'social', 'compatibility_profile', 'pair_evidence'],
   field_coverage: fieldCoverage,
   priority_species_gap_count: speciesGaps.length,
+  evidence_ceiling_species_gap_count: speciesGaps.filter(item => item.resolution_mode === 'evidence_ceiling').length,
   priority_pair_gap_count: pairGaps.length,
   evidence_research_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_research').length,
   boundary_blocked_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
