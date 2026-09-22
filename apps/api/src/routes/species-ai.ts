@@ -13,10 +13,16 @@ import { apiConfig } from '../config';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
 import { ProviderError, requestSymptomObservations, requestVisionCandidates } from '../ai/provider';
+import { fishData } from '../../../../src/data/fishData';
 
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const sessionMisses = new Map<string, number>();
 const rateBuckets = new Map<string, { startedAt: number; count: number }>();
+const recognitionCatalog = fishData.filter(item => item.category !== '硬景/底床');
+const recognitionCatalogByKey = new Map(recognitionCatalog.map(item => [item.id, item]));
+const recognitionCatalogPrompt = recognitionCatalog
+  .map(item => [item.id, item.name, item.scientificName || '', item.category || ''].join('|'))
+  .join('\n');
 
 const checkRateLimit = (request: express.Request) => {
   const key = request.ip || 'unknown';
@@ -38,6 +44,25 @@ const checkRateLimit = (request: express.Request) => {
 const providerFailure = (error: unknown) => error instanceof ProviderError ? error.reason : 'network' as const;
 
 export const deriveUnreconciledRecognitionStatus = (candidates: readonly unknown[]) => candidates.length === 0 ? 'unmatched' as const : 'ambiguous' as const;
+
+export const reconcileVisionCandidatesToCatalog = (candidates: Array<ReturnType<typeof rawVisionCandidateSchema.parse>>) => {
+  const seen = new Set<string>();
+  return candidates.flatMap(candidate => {
+    const catalogKey = candidate.catalogKey;
+    if (!catalogKey || seen.has(catalogKey)) return [];
+    const species = recognitionCatalogByKey.get(catalogKey);
+    if (!species) return [];
+    seen.add(catalogKey);
+    return [{
+      catalogKey: species.id,
+      commonName: species.name,
+      ...(species.scientificName?.trim() ? { scientificName: species.scientificName } : {}),
+      confidenceBand: candidate.confidenceBand,
+      visualEvidence: candidate.visualEvidence,
+      matchType: 'exact' as const,
+    }];
+  }).slice(0, 3);
+};
 
 export const speciesAiRouter = Router();
 
@@ -62,7 +87,7 @@ speciesAiRouter.post(
         .resize({ width: 1536, height: 1536, fit: 'inside', withoutEnlargement: true })
         .webp({ quality: 84 })
         .toBuffer();
-      const vision = await requestVisionCandidates(`data:image/webp;base64,${normalized.toString('base64')}`, locale);
+      const vision = await requestVisionCandidates(`data:image/webp;base64,${normalized.toString('base64')}`, locale, recognitionCatalogPrompt);
       modelName = vision.modelName;
       const raw = vision.payload as { candidates?: unknown };
       const parsed = rawVisionCandidateSchema.array().max(3).safeParse(raw.candidates);
@@ -74,11 +99,12 @@ speciesAiRouter.post(
       failureReason = providerFailure(error);
     }
 
+    const reconciledCandidates = reconcileVisionCandidatesToCatalog(candidates);
     return sendData(request, response, {
       recognitionId: randomUUID(),
       imageFingerprint,
-      status: deriveUnreconciledRecognitionStatus(candidates),
-      candidates: candidates.map(candidate => ({ ...candidate, matchType: 'none' as const })),
+      status: deriveUnreconciledRecognitionStatus(reconciledCandidates),
+      candidates: reconciledCandidates,
       requiresConfirmation: true as const,
       source,
       ...(failureReason ? { failureReason } : {}),

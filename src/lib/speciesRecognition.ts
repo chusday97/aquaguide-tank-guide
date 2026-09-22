@@ -52,6 +52,12 @@ export const mapVisionCandidateToCatalog = (
   candidate: RawVisionCandidate,
   catalog: Fish[],
 ): MappedRecognitionCandidate => {
+  if (candidate.catalogKey) {
+    const catalogMatch = catalog.find(fish => fish.id === candidate.catalogKey);
+    return catalogMatch
+      ? { ...candidate, fish: catalogMatch, matchType: 'exact' }
+      : { ...candidate, matchType: 'none' };
+  }
   const scientific = normalizeSpeciesName(candidate.scientificName);
   const common = normalizeSpeciesName(candidate.commonName);
   const scientificMatch = scientific && catalog.find(fish => normalizeSpeciesName(fish.scientificName) === scientific);

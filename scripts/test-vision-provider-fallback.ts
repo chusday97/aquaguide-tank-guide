@@ -64,9 +64,26 @@ const consistentGuppy = mapVisionCandidateToCatalog({
   visualEvidence: ['测试一致'],
 }, fishData);
 assert.equal(consistentGuppy.matchType, 'exact', 'consistent scientific identity must retain exact catalog matching');
-const { deriveUnreconciledRecognitionStatus } = await import('../apps/api/src/routes/species-ai.ts');
+const catalogKeyGuppy = mapVisionCandidateToCatalog({
+  catalogKey: consistentGuppy.fish!.id,
+  commonName: '模型可能写错的名字',
+  confidenceBand: 'medium',
+  visualEvidence: ['目录 key 测试'],
+}, fishData);
+assert.equal(catalogKeyGuppy.fish?.scientificName, 'Poecilia reticulata', 'valid catalogKey must resolve directly to catalog authority');
+assert.equal(catalogKeyGuppy.matchType, 'exact');
+const { deriveUnreconciledRecognitionStatus, reconcileVisionCandidatesToCatalog } = await import('../apps/api/src/routes/species-ai.ts');
 assert.equal(deriveUnreconciledRecognitionStatus([]), 'unmatched');
 assert.equal(deriveUnreconciledRecognitionStatus([{ confidenceBand: 'high' }]), 'ambiguous', 'provider confidence alone must never claim a catalog match');
+const reconciled = reconcileVisionCandidatesToCatalog([
+  { catalogKey: consistentGuppy.fish!.id, commonName: '错误模型名', scientificName: 'Wrong species', confidenceBand: 'medium', visualEvidence: ['尾鳍'] },
+  { catalogKey: 'sp_not_real', commonName: '伪造物种', confidenceBand: 'high', visualEvidence: ['无'] },
+  { commonName: '目录外自由文本', confidenceBand: 'high', visualEvidence: ['无'] },
+]);
+assert.equal(reconciled.length, 1, 'server must discard invented or missing catalog keys');
+assert.equal(reconciled[0].commonName, consistentGuppy.fish!.name, 'server must canonicalize model names from catalog authority');
+assert.equal(reconciled[0].scientificName, 'Poecilia reticulata');
+assert.equal(reconciled[0].matchType, 'exact');
 
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
 let failureMode: '429' | '5xx' | 'timeout' | 'invalid_response' = '429';
@@ -87,7 +104,7 @@ globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
     return new Response(JSON.stringify({ error: { code: '1305' } }), { status: failureMode === '429' ? 429 : 503, headers: { 'Content-Type': 'application/json' } });
   }
   return new Response(JSON.stringify({
-    choices: [{ message: { content: JSON.stringify({ candidates: [{ commonName: '孔雀鱼', scientificName: 'Poecilia reticulata', confidenceBand: 'high', visualEvidence: ['尾鳍特征'] }] }) } }],
+    choices: [{ message: { content: JSON.stringify({ candidates: [{ catalogKey: consistentGuppy.fish!.id, commonName: '孔雀鱼', scientificName: 'Poecilia reticulata', confidenceBand: 'high', visualEvidence: ['尾鳍特征'] }] }) } }],
   }), { status: 200, headers: { 'Content-Type': 'application/json' } });
 }) as typeof fetch;
 
@@ -96,14 +113,15 @@ try {
   for (const mode of ['429', '5xx', 'timeout', 'invalid_response'] as const) {
     failureMode = mode;
     calls.length = 0;
-    const result = await requestVisionCandidates('data:image/webp;base64,AA==', 'zh-CN');
+    const result = await requestVisionCandidates('data:image/webp;base64,AA==', 'zh-CN', `${consistentGuppy.fish!.id}|孔雀鱼|Poecilia reticulata|鱼类`);
     assert.equal(result.modelName, 'glm-4v-flash');
-    assert.deepEqual(result.payload, { candidates: [{ commonName: '孔雀鱼', scientificName: 'Poecilia reticulata', confidenceBand: 'high', visualEvidence: ['尾鳍特征'] }] });
+    assert.deepEqual(result.payload, { candidates: [{ catalogKey: consistentGuppy.fish!.id, commonName: '孔雀鱼', scientificName: 'Poecilia reticulata', confidenceBand: 'high', visualEvidence: ['尾鳍特征'] }] });
     assert.deepEqual(calls.map(call => call.model), ['glm-4.6v-flash', 'glm-4.6v-flash', 'glm-4v-flash']);
     assert.equal(calls.every(call => call.stream === false), true);
     assert.deepEqual(calls.slice(0, 2).map(call => call.response_format), [{ type: 'json_object' }, { type: 'json_object' }]);
     assert.equal(calls[2].response_format, undefined, 'legacy GLM-4V fallback stays on prompt-enforced JSON for compatibility');
     assert.equal(calls.every(call => Array.isArray(call.messages) && (call.messages as unknown[]).some(message => JSON.stringify(message).includes('image_url'))), true);
+    assert.equal(calls.every(call => JSON.stringify(call.messages).includes(consistentGuppy.fish!.id)), true, 'every vision model attempt must receive the constrained Aqua catalog');
   }
   console.log('vision provider/config contract verified without real credentials: defaults, GLM aliases, multimodal payload, and 429/5xx/timeout fallback');
 } finally {

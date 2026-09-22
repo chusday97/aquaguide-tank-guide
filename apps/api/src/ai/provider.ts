@@ -77,7 +77,7 @@ const fetchJsonResponse = async (
 
 const supportsVisionJsonMode = (model: string) => /^glm-4\.6v/i.test(model);
 
-const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: string) => ({
+const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: string, catalogOptions: string) => ({
   stream: false,
   temperature: 0,
   max_tokens: 700,
@@ -88,10 +88,10 @@ const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: 
       content: [
         'Return exactly one JSON object and nothing else.',
         'Inspect only the supplied image pixels.',
-        'Never invent a descriptive common name as if it were an established species name.',
-        'commonName and scientificName must refer to the same organism.',
-        'If the scientific identity is uncertain, omit scientificName instead of guessing or returning an empty string.',
-        'Use high confidence only when visible diagnostic features strongly support one identity; otherwise use medium or low.',
+        'You are doing closed-set recognition against AQUA_CATALOG, not open-ended species naming.',
+        'Every candidate MUST use a catalogKey that appears verbatim in AQUA_CATALOG. Never invent a catalogKey or species outside the catalog.',
+        'Copy commonName and scientificName from the selected catalog row; if no catalog row is visually supportable, return an empty candidates array.',
+        'Use high confidence only when visible diagnostic features strongly support one catalog identity; otherwise use medium or low.',
       ].join(' '),
     },
     {
@@ -99,9 +99,10 @@ const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: 
       content: [
         {
           type: 'text',
-          text: locale === 'en'
-            ? 'Identify aquarium organisms visible in this image. Return JSON only in this shape: {"candidates":[{"commonName":"established name","confidenceBand":"high|medium|low","visualEvidence":["visible feature"]}]}. scientificName is optional: include it only when you are confident it matches commonName. Return at most 3 candidates. For blurry, multiple-subject, non-aquarium, cultivar/variant-ambiguous, or taxonomically uncertain images, lower confidence and do not guess a scientific name. Do not diagnose health.'
-            : '识别图片中的水族生物。只返回 JSON，结构为：{"candidates":[{"commonName":"通用物种名","confidenceBand":"high|medium|low","visualEvidence":["可见特征"]}]}。scientificName 是可选字段：只有在确认它与 commonName 指向同一物种时才填写；不确定时必须省略，不能留空字符串或猜测。最多 3 个候选。图片模糊、多主体、非水族、品系/变种难以区分或分类身份不确定时必须降低置信度。不要判断健康或疾病。',
+          text: (locale === 'en'
+            ? 'Choose only from AQUA_CATALOG. Return JSON only: {"candidates":[{"catalogKey":"sp_0000","commonName":"exact catalog name","scientificName":"exact catalog scientific name","confidenceBand":"high|medium|low","visualEvidence":["visible feature"]}]}. Return at most 3 catalog candidates. If the image does not support any listed identity, return {"candidates":[]}. Closely related species, cultivars, variants, blurry images, or multiple subjects must remain medium/low confidence and may return multiple alternatives. Do not diagnose health.'
+            : '只能从 AQUA_CATALOG 中选择。只返回 JSON：{"candidates":[{"catalogKey":"sp_0000","commonName":"目录中的准确名称","scientificName":"目录中的准确学名","confidenceBand":"high|medium|low","visualEvidence":["可见特征"]}]}。最多返回 3 个目录候选；若图片不足以支持任何目录物种，返回 {"candidates":[]}。近缘种、品系/变种、图片模糊或多主体时必须降低置信度，并可返回多个备选。不要判断健康或疾病。')
+            + `\n\nAQUA_CATALOG (catalogKey|commonName|scientificName|category):\n${catalogOptions}`,
         },
         { type: 'image_url', image_url: { url: imageDataUrl } },
       ],
@@ -119,14 +120,14 @@ const shouldUseVisionFallback = (error: unknown) => (
   )
 );
 
-export const requestVisionCandidates = async (imageDataUrl: string, locale: 'zh-CN' | 'en') => {
+export const requestVisionCandidates = async (imageDataUrl: string, locale: 'zh-CN' | 'en', catalogOptions = '') => {
   try {
     const payload = await fetchJsonResponse(
       apiConfig.visionBaseUrl,
       apiConfig.visionApiKey,
       apiConfig.visionModel,
       apiConfig.visionTimeoutMs,
-      visionRequestBody(imageDataUrl, locale, apiConfig.visionModel),
+      visionRequestBody(imageDataUrl, locale, apiConfig.visionModel, catalogOptions),
     );
     return { payload, modelName: apiConfig.visionModel };
   } catch (error) {
@@ -137,7 +138,7 @@ export const requestVisionCandidates = async (imageDataUrl: string, locale: 'zh-
       apiConfig.visionApiKey,
       fallbackModel,
       apiConfig.visionTimeoutMs,
-      visionRequestBody(imageDataUrl, locale, fallbackModel),
+      visionRequestBody(imageDataUrl, locale, fallbackModel, catalogOptions),
     );
     return { payload, modelName: fallbackModel };
   }
