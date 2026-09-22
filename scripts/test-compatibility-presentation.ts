@@ -86,8 +86,16 @@ for (const file of [
 
 const aquariumSource = readFileSync(resolve(process.cwd(), 'src/pages/Aquarium.tsx'), 'utf8');
 assert.doesNotMatch(aquariumSource, /请先补充鱼缸信息，再评估是否可以加入/);
-assert.match(aquariumSource, /presentation\?\.mode === 'confirmed_facts' \? '当前可确认部分条件'/);
-assert.match(aquariumSource, /presentation\?\.mode === 'unavailable' \? '暂未开放这组混养建议'/);
+assert.match(aquariumSource, /evaluation\.result\.passedRules/);
+assert.match(aquariumSource, /evaluation\.result\.blockingRules/);
+assert.match(aquariumSource, /evaluation\.result\.warningRules/);
+assert.match(aquariumSource, /evaluation\.result\.missingData/);
+assert.match(aquariumSource, /primaryReason \|\| evaluation\.result\.summary/);
+assert.match(aquariumSource, /primaryActionText/);
+assert.match(aquariumSource, /'查看依据'/);
+assert.doesNotMatch(aquariumSource, /'Not recommended to add'/);
+assert.doesNotMatch(aquariumSource, /'当前可确认部分条件'/);
+assert.doesNotMatch(aquariumSource, /'暂未开放这组混养建议'/);
 assert.match(aquariumSource, /syncWishlistFishIds\(next\)/);
 assert.match(aquariumSource, /getCompatibilityPresentationForStatus/);
 

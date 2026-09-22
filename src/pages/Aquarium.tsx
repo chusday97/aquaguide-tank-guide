@@ -1699,28 +1699,36 @@ export default function AquariumManager() {
 
   const addFishReviewPresentation = useMemo(() => {
     if (!addFishCompatibilityReview) return null;
-    const confirmedFindings = addFishCompatibilityReview.evaluations.flatMap(evaluation => [
-      ...evaluation.result.passedRules,
+    const confirmedFindings = addFishCompatibilityReview.evaluations.flatMap(evaluation => (
+      evaluation.result.passedRules
+    )).map(rule => rule.evidence || rule.title);
+    const cautions = addFishCompatibilityReview.evaluations.flatMap(evaluation => [
+      ...evaluation.result.blockingRules,
       ...evaluation.result.warningRules,
+      ...evaluation.result.missingData,
     ]).map(rule => rule.evidence || rule.title);
     return getCompatibilityPresentationForStatus({
       status: addFishCompatibilityReview.status,
-      hasConfirmedFacts: confirmedFindings.length > 0,
+      hasConfirmedFacts: confirmedFindings.length > 0 || cautions.length > 0,
       confirmedFindings,
+      cautions,
     });
   }, [addFishCompatibilityReview]);
 
   const addFishEvaluationPresentations = useMemo(() => {
     if (!addFishCompatibilityReview) return new Map<string, ReturnType<typeof getCompatibilityPresentationForStatus>>();
     return new Map(addFishCompatibilityReview.evaluations.map(evaluation => {
-      const hasConfirmedFacts = evaluation.result.passedRules.length > 0
-        || evaluation.result.warningRules.length > 0
-        || evaluation.result.blockingRules.length > 0;
+      const confirmedFindings = evaluation.result.passedRules.map(rule => rule.evidence || rule.title);
+      const cautions = [
+        ...evaluation.result.blockingRules,
+        ...evaluation.result.warningRules,
+        ...evaluation.result.missingData,
+      ].map(rule => rule.evidence || rule.title);
       return [evaluation.fish.id, getCompatibilityPresentationForStatus({
         status: evaluation.result.status,
-        hasConfirmedFacts,
-        confirmedFindings: evaluation.result.passedRules.map(rule => rule.evidence || rule.title),
-        cautions: evaluation.result.warningRules.map(rule => rule.evidence || rule.title),
+        hasConfirmedFacts: confirmedFindings.length > 0 || cautions.length > 0,
+        confirmedFindings,
+        cautions,
       })] as const;
     }));
   }, [addFishCompatibilityReview]);
@@ -6406,19 +6414,19 @@ export default function AquariumManager() {
                     <div>
                       <div className="text-[11px] font-black text-ink/45">{isEn ? 'Post-addition Risk Assessment' : '加入后风险判定'}</div>
                       <div className={`mt-1 font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[28px] leading-tight text-red-700' : 'text-lg text-ink'}`}>
-                        {addFishCompatibilityReview.status === 'not_recommended'
-                          ? (isEn ? 'Not recommended to add' : '不建议加入')
+                        {isEn
+                          ? ({
+                            '可以养': 'Can add',
+                            '有条件可以': 'Can add with conditions',
+                            '不建议': 'Not recommended',
+                            '暂时无法判断': 'Cannot determine yet',
+                          } as const)[addFishReviewPresentation?.headline || '暂时无法判断']
                           : addFishReviewPresentation?.headline || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
                       </div>
                       <p className={`mt-2 leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[14px] font-black text-red-800' : 'text-[12px] font-bold text-ink/62'}`}>
-                        {addFishCompatibilityReview.status === 'not_recommended'
-                          ? '当前规划命中阻断风险，不建议实际加入；这不会删除现实中已经存在的记录。'
-                          : addFishCompatibilityReview.status === 'insufficient_data'
-                            ? '这组规划暂未开放完整建议，可先查看物种养护或加入种草清单。'
-                            : addFishCompatibilityReview.status === 'caution'
-                              ? '存在需要注意的条件；确认理解后，只有实际入缸时才记录。'
-                              : '当前规划允许继续；只有实际入缸后才记录到鱼缸。'}
+                        {addFishReviewPresentation?.primaryReason}
                       </p>
+                      <p className="text-[11px] font-bold text-ink/52">{isEn ? 'Do now:' : '现在做：'} {addFishReviewPresentation?.primaryActionText}</p>
                     </div>
                     <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-ink/55 shadow-sm">
                       {addFishCompatibilityReview.evaluations.length} 种生物
@@ -6434,7 +6442,7 @@ export default function AquariumManager() {
                             <>
                               <span className="min-w-0">
                                 <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
-                                <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.mode === 'confirmed_facts' ? '当前可确认部分条件' : presentation?.mode === 'unavailable' ? '暂未开放这组混养建议' : evaluation.result.summary}</span>
+                                <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.primaryReason || evaluation.result.summary}</span>
                               </span>
                               <span className="shrink-0 text-[10px] font-black text-ink/60">{presentation?.headline || getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
                             </>
@@ -6444,9 +6452,9 @@ export default function AquariumManager() {
                     ))}
                   </div>
 
-                  {addFishCompatibilityReview.keyRules.length > 0 && addFishCompatibilityReview.status !== 'insufficient_data' && (
+                  {addFishCompatibilityReview.keyRules.length > 0 && (
                     <div className={`rounded-[16px] p-4 ${addFishCompatibilityReview.status === 'not_recommended' ? 'border-2 border-red-200 bg-white' : 'bg-white/72'}`}>
-                      <div className={`font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[15px] text-red-700' : 'text-[11px] text-ink'}`}>{isEn ? 'Key Reasons' : '不建议混养的原因'}</div>
+                      <div className={`font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[15px] text-red-700' : 'text-[11px] text-ink'}`}>{isEn ? 'Evidence' : '查看依据'}</div>
                       <div className="mt-2 grid gap-1.5">
                         {addFishCompatibilityReview.keyRules.slice(0, 3).map(rule => (
                           <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className={`leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'rounded-[12px] bg-red-50 px-3 py-2 text-[14px] font-bold text-red-900' : 'text-[11px] font-medium text-ink/62'}`}>
