@@ -869,10 +869,17 @@ export const evaluateSpeciesCombination = (species: Fish[], evidenceProvider?: C
     });
   }
 
-  const results = uniqueSpecies.slice(1).map((candidateSpecies, index) => evaluateTankCompatibility({
+  // A species-combination preview is a symmetric question: A+B must produce
+  // the same compatibility decision as B+A. Planned-addition keeps its
+  // candidate-specific semantics in evaluateTankCompatibility; here every
+  // species takes one turn as the candidate against the complete remainder so
+  // candidate-only rules (for example minimum group size) cannot depend on
+  // caller ordering.
+  const evaluationSpecies = [...uniqueSpecies].sort((left, right) => left.id.localeCompare(right.id));
+  const results = evaluationSpecies.map((candidateSpecies) => evaluateTankCompatibility({
     scope: 'species_only',
     candidateSpecies,
-    existingSpecies: uniqueSpecies.slice(0, index + 1),
+    existingSpecies: evaluationSpecies.filter(item => item.id !== candidateSpecies.id),
     evidenceProvider,
   }));
   const rank: Record<TankCompatibilityStatus, number> = {

@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { spawnSync } from 'node:child_process';
 import { fishData } from '../src/data/fishData';
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
+import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launch-cohort';
 
 const files = [
   'docs/compatibility_knowledge_coverage.json',
@@ -32,6 +33,28 @@ assert.equal(report.completion_matrix_objects, 486);
 assert.equal(report.uses_real_user_telemetry, false);
 assert.match(report.telemetry_boundary, /proxy/i);
 assert.match(report.telemetry_boundary, /not used|not claimed/i);
+
+assert.equal(report.launch_pair_count, report.launch_cohort_species * (report.launch_cohort_species - 1) / 2);
+assert.equal(
+  Object.values(report.launch_pair_status_counts).reduce((sum: number, value: unknown) => sum + Number(value), 0),
+  report.launch_pair_count,
+);
+assert.equal(report.launch_pair_status_counts.insufficient_data, queue.pair_gaps.length);
+assert.equal(report.launch_pair_status_counts.insufficient_data, report.priority_pair_gap_count);
+assert.equal(report.evidence_research_pair_gap_count, 0, 'launch pair insufficiency must not have unexplained evidence-research roots');
+
+const exhaustiveInsufficientKeys = new Set<string>();
+const launchFish = selectCompatibilityLaunchCohort();
+for (let leftIndex = 0; leftIndex < launchFish.length; leftIndex += 1) {
+  for (let rightIndex = leftIndex + 1; rightIndex < launchFish.length; rightIndex += 1) {
+    const result = evaluateSpeciesCombination([launchFish[leftIndex], launchFish[rightIndex]]);
+    if (result.status === 'insufficient_data') {
+      exhaustiveInsufficientKeys.add([launchFish[leftIndex].id, launchFish[rightIndex].id].sort().join('::'));
+    }
+  }
+}
+const queuedInsufficientKeys = new Set(queue.pair_gaps.map(item => [item.species_a_id, item.species_b_id].sort().join('::')));
+assert.deepEqual(queuedInsufficientKeys, exhaustiveInsufficientKeys, 'gap queue must account for every exhaustive launch-cohort insufficient pair');
 
 for (const value of Object.values(report.field_coverage) as Array<{ applicable: number; reviewed_supported: number; reviewed_unknown: number }>) {
   assert.ok(value.reviewed_supported <= value.applicable);

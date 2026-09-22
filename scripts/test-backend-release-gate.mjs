@@ -13,6 +13,7 @@ const gates = [
   ['Secondary Environment Batch', 'npm', ['run', 'test:secondary-environment-batch-authority']],
   ['Species Knowledge Completion Matrix', 'node', ['--import', 'tsx', 'scripts/test-species-knowledge-completion-matrix.ts']],
   ['Compatibility Engine', 'npm', ['run', 'test:compatibility']],
+  ['Compatibility Symmetry', 'npm', ['run', 'test:compatibility-symmetry']],
   ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],
   ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],

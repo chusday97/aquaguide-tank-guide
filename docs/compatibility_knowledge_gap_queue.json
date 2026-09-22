@@ -190,6 +190,7 @@
         "species_evidence_unreviewed"
       ],
       "warning_codes": [
+        "minimum_group_not_met",
         "predation_vulnerability_context"
       ],
       "score": 29,
@@ -212,6 +213,7 @@
         "species_evidence_unreviewed"
       ],
       "warning_codes": [
+        "minimum_group_not_met",
         "predation_vulnerability_context"
       ],
       "score": 29,
@@ -235,7 +237,8 @@
         "species_evidence_unreviewed"
       ],
       "warning_codes": [
-        "fin_nipping_group_pressure"
+        "fin_nipping_group_pressure",
+        "minimum_group_not_met"
       ],
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
@@ -277,7 +280,9 @@
         "behavior_evidence_unreviewed",
         "species_evidence_unreviewed"
       ],
-      "warning_codes": [],
+      "warning_codes": [
+        "minimum_group_not_met"
+      ],
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [

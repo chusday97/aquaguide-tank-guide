@@ -196,11 +196,18 @@ const launchFish = launchRows
   .filter((fish): fish is NonNullable<typeof fish> => Boolean(fish));
 
 const pairGaps: Array<Record<string, unknown>> = [];
+const launchPairStatusCounts: Record<string, number> = {
+  compatible: 0,
+  caution: 0,
+  not_recommended: 0,
+  insufficient_data: 0,
+};
 for (let leftIndex = 0; leftIndex < launchFish.length; leftIndex += 1) {
   for (let rightIndex = leftIndex + 1; rightIndex < launchFish.length; rightIndex += 1) {
     const left = launchFish[leftIndex];
     const right = launchFish[rightIndex];
     const result = evaluateSpeciesCombination([left, right]);
+    launchPairStatusCounts[result.status] = (launchPairStatusCounts[result.status] || 0) + 1;
     if (result.status !== 'insufficient_data') continue;
     const leftRow = rowById.get(left.id);
     const rightRow = rowById.get(right.id);
@@ -284,6 +291,8 @@ const report = {
   reviewed_pair_rules: audit.reviewedPairRules.length,
   reviewed_stage_risk_profiles: audit.reviewedStageRiskProfiles.length,
   launch_cohort_species: launchRows.length,
+  launch_pair_count: launchFish.length * (launchFish.length - 1) / 2,
+  launch_pair_status_counts: launchPairStatusCounts,
   compatibility_critical_fields: ['environment', 'space', 'social', 'compatibility_profile', 'pair_evidence'],
   field_coverage: fieldCoverage,
   priority_species_gap_count: speciesGaps.length,

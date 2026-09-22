@@ -11,6 +11,13 @@
   "reviewed_pair_rules": 5,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,
+  "launch_pair_count": 435,
+  "launch_pair_status_counts": {
+    "compatible": 17,
+    "caution": 300,
+    "not_recommended": 99,
+    "insufficient_data": 19
+  },
   "compatibility_critical_fields": [
     "environment",
     "space",
