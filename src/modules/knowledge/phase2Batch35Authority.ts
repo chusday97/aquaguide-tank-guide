@@ -1,6 +1,6 @@
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 
-export type Phase2Batch35FieldAuthority = { status: 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
+export type Phase2Batch35FieldAuthority = { status: 'reviewed_supported' | 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
 type Subject = { source: string; title: string };
 
 export const phase2Batch35Subjects: Record<string, Subject> = {
@@ -21,3 +21,16 @@ const evidence = (subject: Subject, field: string) => ({ confidence: 'unknown' a
 const makeKnowledge = (subject: Subject): SpeciesKnowledgeProfile['knowledge'] => ({ sexIdentification: { title: '本轮不提供稳定的公母辨别规则', summary: '来源不足以形成稳定的对象级性别判断。', points: ['不凭名称、品系或类别模板猜测性别。'], confidence: 'unknown', source: { type: 'unknown', label: '本批次性别证据不足', confidence: 'unknown' }, reliableFromLifeStage: 'unknown', evidence: evidence(subject, 'sex identification') }, environment: { waterType: 'unknown', evidence: evidence(subject, 'environment') }, socialBehavior: { mode: 'unknown', summary: '来源不足以确认稳定水族箱社会模式。', evidence: evidence(subject, 'social behavior') }, spaceAndGrowth: { activityLevel: 'unknown', evidence: evidence(subject, 'space and growth') } });
 export const phase2Batch35Knowledge = Object.fromEntries(Object.entries(phase2Batch35Subjects).map(([id, subject]) => [id, makeKnowledge(subject)])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch35Authority = Object.fromEntries(Object.entries(phase2Batch35Subjects).map(([id, subject]) => [id, { feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` }, care: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific care authority.` } } satisfies Record<'feeding' | 'care', Phase2Batch35FieldAuthority>])) as Record<string, Record<'feeding' | 'care', Phase2Batch35FieldAuthority>>;
+
+Object.assign(phase2Batch35Authority.sp_0439!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-puntigrus-tetrazona'],
+    factEvidence: 'Seriously Fish describes Puntigrus tetrazona as an omnivore feeding on aquatic invertebrates plus some plant material and detritus, and recommends varied small live/frozen foods with quality dried foods containing some plant matter.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-puntigrus-tetrazona'],
+    factEvidence: 'Seriously Fish provides direct tiger barb husbandry guidance and emphasizes that this active, boisterous schooling species should be kept in sufficient numbers and space to reduce fin-nipping pressure on tankmates.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch35FieldAuthority>);

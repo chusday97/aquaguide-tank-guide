@@ -1,6 +1,6 @@
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 
-export type Phase2Batch37FieldAuthority = { status: 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
+export type Phase2Batch37FieldAuthority = { status: 'reviewed_supported' | 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
 type Subject = { source: string; title: string };
 
 export const phase2Batch37Subjects: Record<string, Subject> = {
@@ -67,3 +67,29 @@ export const phase2Batch37Knowledge = Object.fromEntries(Object.entries(phase2Ba
   id === 'sp_0258' ? candyKoiBettaKnowledge : makeKnowledge(subject),
 ])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch37Authority = Object.fromEntries(Object.entries(phase2Batch37Subjects).map(([id, subject]) => [id, { feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` }, care: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific care authority.` } } satisfies Record<'feeding' | 'care', Phase2Batch37FieldAuthority>])) as Record<string, Record<'feeding' | 'care', Phase2Batch37FieldAuthority>>;
+
+Object.assign(phase2Batch37Authority.sp_0012!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-puntius-titteya'],
+    factEvidence: 'Seriously Fish describes Puntius titteya as a wild forager on diatoms, algae, detritus, small invertebrates and zooplankton, and recommends varied small live/frozen foods plus quality dried foods with some plant or algal content in aquaria.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-puntius-titteya'],
+    factEvidence: 'Seriously Fish provides direct aquarium husbandry guidance for Puntius titteya, including a 60 × 30 cm base, planted cover with optional floating plants/wood/leaf litter, some water movement, and 20–27°C conditions.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch37FieldAuthority>);
+
+Object.assign(phase2Batch37Authority.sp_0433!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-petitella-rhodostoma'],
+    factEvidence: 'Seriously Fish describes the reviewed rummy-nose species as omnivorous with a small mouth and recommends appropriately sized dried flakes/granules plus small live and frozen foods.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-petitella-rhodostoma'],
+    factEvidence: 'Seriously Fish provides direct husbandry guidance for the reviewed rummy-nose species, including dim or planted/blackwater-style cover, 24–27°C water, regular partial water changes, and sensitivity to unfavourable conditions.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch37FieldAuthority>);

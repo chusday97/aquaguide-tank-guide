@@ -1,6 +1,6 @@
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 
-export type Phase2Batch31FieldAuthority = { status: 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
+export type Phase2Batch31FieldAuthority = { status: 'reviewed_supported' | 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
 type Subject = { source: string; title: string };
 
 export const phase2Batch31Subjects: Record<string, Subject> = {
@@ -63,3 +63,81 @@ export const phase2Batch31Knowledge = Object.fromEntries(Object.entries(phase2Ba
   id === 'sp_0049' ? pearlRedSnakeheadKnowledge : makeKnowledge(subject),
 ])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch31Authority = Object.fromEntries(Object.entries(phase2Batch31Subjects).map(([id, subject]) => [id, { feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` }, care: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific care authority.` } } satisfies Record<'feeding' | 'care', Phase2Batch31FieldAuthority>])) as Record<string, Record<'feeding' | 'care', Phase2Batch31FieldAuthority>>;
+
+Object.assign(phase2Batch31Authority.sp_0049!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-channa-asiatica'],
+    factEvidence: 'Seriously Fish describes Channa asiatica as an obligate predator of smaller fishes and insects that adapts to dead alternatives in captivity, with meaty foods such as shrimp, earthworms, prawns, mussels and pieces of whole fish; dried foods are not recommended as a normal diet and mammalian/avian meat or feeder fish should be avoided.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-channa-asiatica'],
+    factEvidence: 'Seriously Fish provides direct Channa asiatica husbandry guidance including at least a 100 × 40 cm base, dim light with abundant cover, a tightly fitting lid with humid air access above the water, and 15–25°C conditions.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch31FieldAuthority>);
+
+Object.assign(phase2Batch31Authority.sp_0431!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['batch33-fishbase-paracheirodon-innesi', 'seriouslyfish-paracheirodon-innesi'],
+    factEvidence: 'FishBase records worms, small insects, crustaceans and plant matter in the adult diet; Seriously Fish adds aquarium feeding guidance using a varied diet with appropriately small dried, live and frozen foods.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-paracheirodon-innesi'],
+    factEvidence: 'Seriously Fish provides direct aquarium husbandry guidance for Paracheirodon innesi, including a 60 × 30 cm minimum base, dim-light preference, cover from wood/leaf litter or suitable plants, and notes that commercial stock is generally more adaptable than wild specimens.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch31FieldAuthority>);
+
+Object.assign(phase2Batch31Authority.sp_0432!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-paracheirodon-axelrodi'],
+    factEvidence: 'Seriously Fish describes Paracheirodon axelrodi as an omnivore and recommends a varied aquarium diet combining suitable dried foods with small live or frozen foods such as chironomid larvae, mosquito larvae, Daphnia and Moina.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-paracheirodon-axelrodi'],
+    factEvidence: 'Seriously Fish provides direct aquarium husbandry guidance for Paracheirodon axelrodi, including a 60 × 30 cm minimum base, subdued lighting, planted or natural-style cover, and extra care with wild specimens because they are less tolerant of deteriorating water conditions.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch31FieldAuthority>);
+
+Object.assign(phase2Batch31Authority.sp_0435!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-danio-rerio'],
+    factEvidence: 'Seriously Fish records wild Brachydanio/Danio rerio as a micropredator on aquatic crustaceans and other invertebrates and recommends a balanced aquarium diet of quality dried products plus small live and frozen foods.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-danio-rerio'],
+    factEvidence: 'Seriously Fish provides direct aquarium husbandry guidance for Brachydanio/Danio rerio, including a 90 × 30 cm minimum base for this active species, planted cover, moderate water movement, and general maintenance around 18–25°C.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch31FieldAuthority>);
+
+Object.assign(phase2Batch31Authority.sp_0436!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-poecilia-reticulata'],
+    factEvidence: 'Seriously Fish records wild Poecilia reticulata as primarily insectivorous and notes that modern aquarium strains accept most foods offered.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-poecilia-reticulata'],
+    factEvidence: 'Seriously Fish provides direct guppy husbandry guidance including a 45 × 30 cm base, planted/floating cover, avoidance of strong currents, and long-term maintenance in moderately hard or harder water at 17–28°C.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch31FieldAuthority>);
+
+Object.assign(phase2Batch31Authority.sp_0443!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-corydoras-panda'],
+    factEvidence: 'Seriously Fish describes Corydoras panda as an omnivore and recommends sinking pellets or tablets supplemented with live and frozen foods such as Daphnia, Artemia and bloodworm.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-corydoras-panda'],
+    factEvidence: 'Seriously Fish provides direct panda cory husbandry guidance including clean sand/substrate, cover, strong maintenance hygiene, and long-term 22–25°C water; deteriorating conditions and dirty substrate are specifically flagged as risks.',
+  },
+} satisfies Record<'feeding' | 'care', Phase2Batch31FieldAuthority>);

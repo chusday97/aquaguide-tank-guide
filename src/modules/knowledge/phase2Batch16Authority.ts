@@ -1,6 +1,6 @@
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 
-export type Phase2Batch16FieldAuthority = { status: 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
+export type Phase2Batch16FieldAuthority = { status: 'reviewed_supported' | 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
 type Subject = { source: string; title: string };
 export const phase2Batch16Subjects: Record<string, Subject> = {
   sp_0001: { source: 'batch18-fishbase-neocaridina-davidi-red', title: 'Neocaridina davidi Red variant review' },
@@ -69,3 +69,19 @@ export const phase2Batch16Authority = Object.fromEntries(Object.entries(phase2Ba
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },
   care: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific care authority.` },
 } satisfies Record<'feeding' | 'care', Phase2Batch16FieldAuthority>])) as Record<string, Record<'feeding' | 'care', Phase2Batch16FieldAuthority>>;
+
+Object.assign(phase2Batch16Authority.sp_0001!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['batch18-fishbase-neocaridina-davidi-red', 'uf-ifas-neocaridina-davidi'],
+    factEvidence: 'The reviewed red-variant record anchors this catalog object to Neocaridina davidi, while UF/IFAS explicitly covers red/cherry morphs and describes N. davidi as an opportunistic detritivore grazing leaf litter, algae, biofilm, dead plant/animal material and meiofauna. This supports feeding ecology without inventing a packaged-food schedule.',
+  },
+} satisfies Partial<Record<'feeding' | 'care', Phase2Batch16FieldAuthority>>);
+
+Object.assign(phase2Batch16Authority.sp_0001!, {
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['lajar-neocaridina-davidi-culture-2024', 'uf-ifas-neocaridina-davidi'],
+    factEvidence: 'A peer-reviewed aquarium experiment explicitly included the fire-red/red Neocaridina davidi phenotype in previously cycled 40-L freshwater tanks with filtration/aeration, sand and plants, monitored water chemistry, 28 ± 2°C and weekly 30% water renewal. These are demonstrated culture conditions, not universal optimum or minimum claims.',
+  },
+} satisfies Partial<Record<'feeding' | 'care', Phase2Batch16FieldAuthority>>);

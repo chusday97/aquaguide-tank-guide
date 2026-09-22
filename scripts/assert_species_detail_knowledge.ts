@@ -670,6 +670,22 @@ for (const [speciesId, authority] of Object.entries(phase2AuthorityBySpeciesId))
     }
   }
 }
+
+for (const fish of fishData) {
+  const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
+  if (!reviewedKnowledge) continue;
+  const reviewedEvidence = [
+    ['sexIdentification', reviewedKnowledge.sexIdentification?.evidence],
+    ['environment', reviewedKnowledge.environment?.evidence],
+    ['socialBehavior', reviewedKnowledge.socialBehavior?.evidence],
+    ['spaceAndGrowth', reviewedKnowledge.spaceAndGrowth?.evidence],
+  ] as const;
+  for (const [field, evidence] of reviewedEvidence) {
+    for (const sourceId of evidence?.sourceIds || []) {
+      assert.equal(resolveKnowledgeSources([sourceId]).length, 1, `${fish.id}/${field} reviewed source ${sourceId} must be in knowledgeSources`);
+    }
+  }
+}
 assert.equal(getPhase2Authority('sp_0455')?.environment?.status, 'reviewed_unknown');
 assert.equal(getPhase2Authority('sp_0016')?.feeding?.status, 'reviewed_supported');
 assert.equal(getPhase2Authority('sp_0016')?.care?.status, 'reviewed_supported');

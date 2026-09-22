@@ -19,10 +19,21 @@
       },
       "compatibility_profile": "none",
       "boundary_codes": [
-        "variant_authority_not_promotable"
+        "variant_authority_not_promotable",
+        "variant_husbandry_not_established"
       ],
       "identity_boundary": null,
-      "evidence_ceiling": null,
+      "evidence_ceiling": {
+        "field": "social",
+        "code": "variant_husbandry_not_established",
+        "source_ids": [
+          "batch03-fishbase-channa-argus",
+          "northern-snakehead-fws-erss-2024",
+          "northern-snakehead-usgs-diet-2012"
+        ],
+        "note": "Reviewed Channa argus sources establish the base species ecology, predation risk and diet, but targeted review did not establish a Platinum-morph-specific stable social profile. Do not promote base-species behavior to the ornamental morph without an explicit reviewed bridge.",
+        "reviewed_at": "2026-09-22"
+      },
       "resolution_mode": "variant_authority_review",
       "resolution_note": "Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.",
       "priority_basis": "launch_cohort_proxy + compatibility-critical evidence gap + pair-gap unlock impact",
@@ -197,7 +208,8 @@
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "trade_name_taxon_ambiguous",
-        "variant_authority_not_promotable"
+        "variant_authority_not_promotable",
+        "variant_husbandry_not_established"
       ],
       "pair_evidence_ceiling": {
         "code": "prey_trade_identity_not_resolved",
@@ -229,7 +241,8 @@
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "accepted_taxon_alias_trade_ambiguous",
-        "variant_authority_not_promotable"
+        "variant_authority_not_promotable",
+        "variant_husbandry_not_established"
       ],
       "pair_evidence_ceiling": {
         "code": "gastropod_predation_not_established",
@@ -259,7 +272,8 @@
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
-        "variant_authority_not_promotable"
+        "variant_authority_not_promotable",
+        "variant_husbandry_not_established"
       ],
       "pair_evidence_ceiling": {
         "code": "large_fish_outside_supported_prey_window",

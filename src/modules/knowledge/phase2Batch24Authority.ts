@@ -1,6 +1,6 @@
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 
-export type Phase2Batch24FieldAuthority = { status: 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
+export type Phase2Batch24FieldAuthority = { status: 'reviewed_supported' | 'reviewed_unknown'; citationIds: string[]; factEvidence: string };
 type Subject = { source: string; title: string };
 
 export const phase2Batch24Subjects: Record<string, Subject> = {
@@ -71,3 +71,19 @@ export const phase2Batch24Authority = Object.fromEntries(Object.entries(phase2Ba
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },
   care: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific care authority.` },
 } satisfies Record<'feeding' | 'care', Phase2Batch24FieldAuthority>])) as Record<string, Record<'feeding' | 'care', Phase2Batch24FieldAuthority>>;
+
+Object.assign(phase2Batch24Authority.sp_0459!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['batch26-fishbase-neocaridina-davidi-wild-type', 'uf-ifas-neocaridina-davidi'],
+    factEvidence: 'The reviewed wild-type record anchors this catalog object to Neocaridina davidi, and UF/IFAS explicitly describes wild-type N. davidi plus species feeding on leaf litter, algae, biofilms, decaying plant/animal material and meiofauna. No unsupported commercial feeding schedule is inferred.',
+  },
+} satisfies Partial<Record<'feeding' | 'care', Phase2Batch24FieldAuthority>>);
+
+Object.assign(phase2Batch24Authority.sp_0459!, {
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['lajar-neocaridina-davidi-culture-2024', 'uf-ifas-neocaridina-davidi'],
+    factEvidence: 'A peer-reviewed aquarium experiment explicitly included the wild Neocaridina davidi phenotype in previously cycled 40-L freshwater tanks with filtration/aeration, sand and plants, monitored water chemistry, 28 ± 2°C and weekly 30% water renewal. These are demonstrated culture conditions, not universal optimum or minimum claims.',
+  },
+} satisfies Partial<Record<'feeding' | 'care', Phase2Batch24FieldAuthority>>);

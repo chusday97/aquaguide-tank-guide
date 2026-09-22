@@ -6,7 +6,7 @@ import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKno
 
 const ids = ['sp_0016', 'sp_0224', 'sp_0475'];
 const sourceIds = new Set(phase2Batch01Sources.map(source => source.id));
-const existingSourceIds = new Set(['batch03-fishbase-channa-argus', 'batch03-fishbase-rhodeus-ocellatus']);
+const existingSourceIds = new Set(['batch03-fishbase-channa-argus', 'batch03-fishbase-rhodeus-ocellatus', 'j-morph-rhodeus-ocellatus-husbandry-2021']);
 const allSourceIds = new Set([...sourceIds, ...existingSourceIds]);
 const failures: string[] = [];
 for (const id of ids) {

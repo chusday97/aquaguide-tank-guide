@@ -119,6 +119,9 @@ const boundaryResolution = (codes: GapBoundaryCode[]) => {
   if (codes.includes('variant_social_not_established')) {
     return 'evidence_ceiling';
   }
+  if (codes.includes('variant_husbandry_not_established')) {
+    return 'evidence_ceiling';
+  }
   if (
     codes.includes('catalog_identity_unresolved')
     || codes.includes('trade_name_taxon_ambiguous')

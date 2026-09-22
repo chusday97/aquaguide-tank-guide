@@ -34,14 +34,14 @@ export const phase2Batch01Authority: Record<string, Partial<Record<'feeding' | '
   },
   sp_0475: {
     feeding: {
-      status: 'reviewed_unknown',
-      citationIds: ['batch03-fishbase-rhodeus-ocellatus'],
-      factEvidence: 'FishBase does not provide a defensible aquarium feeding regime for this catalog object; the legacy rule fallback remains excluded.',
+      status: 'reviewed_supported',
+      citationIds: ['j-morph-rhodeus-ocellatus-husbandry-2021'],
+      factEvidence: 'A peer-reviewed Rhodeus ocellatus husbandry protocol kept adult fish in indoor freshwater aquaria and fed frozen chironomid larvae daily. This supports a direct captive-feeding fact without turning one research diet into a universal optimum.',
     },
     care: {
-      status: 'reviewed_unknown',
-      citationIds: ['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'],
-      factEvidence: 'Sources support ecology and reproductive temperature response, not a complete species-specific aquarium care protocol.',
+      status: 'reviewed_supported',
+      citationIds: ['j-morph-rhodeus-ocellatus-husbandry-2021', 'batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'],
+      factEvidence: 'Peer-reviewed captive husbandry kept adult Rhodeus ocellatus in indoor freshwater aquaria at 22.5 ± 1°C with controlled lighting and daily caretaker checks; FishBase independently places the species at 18–24°C. This is direct successful husbandry evidence, not a claim that the research setup defines a universal minimum tank size or optimum.',
     },
   },
 };

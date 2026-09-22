@@ -2,6 +2,8 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launch-cohort';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
+import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
 import { phase2Batch01Authority } from '../src/modules/knowledge/phase2Batch01Authority';
@@ -56,12 +58,38 @@ import { phase2Batch49Authority } from '../src/modules/knowledge/phase2Batch49Au
 
 type FieldStatus = 'reviewed_supported' | 'reviewed_unknown' | 'inherited_reviewed' | 'not_applicable' | 'needs_research' | 'template_only';
 type KnowledgeField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
+type ReviewedUnknownMode = 'targeted_source_expansion' | 'do_not_repeat_ordinary_research';
+type ReviewedUnknownResolution = {
+  field: KnowledgeField;
+  mode: ReviewedUnknownMode;
+  reason: 'explicit_evidence_ceiling' | 'catalog_identity_boundary' | 'reviewed_unknown_no_explicit_ceiling';
+  code: string | null;
+  note: string;
+};
 
 const root = new URL('../', import.meta.url).pathname;
 const outputDir = `${root}docs`;
 mkdirSync(outputDir, { recursive: true });
 const launchIds = new Set(selectCompatibilityLaunchCohort().map(fish => fish.id));
 const fields: KnowledgeField[] = ['feeding', 'environment', 'space', 'social', 'care'];
+const phase2FieldAuthorityBatches = [
+  phase2Batch01Authority, phase2Batch02Authority, phase2Batch03Authority, phase2Batch04Authority, phase2Batch05Authority,
+  phase2Batch06Authority, phase2Batch07Authority, phase2Batch08Authority, phase2Batch09Authority, phase2Batch10Authority,
+  phase2Batch11Authority, phase2Batch12Authority, phase2Batch13Authority, phase2Batch14Authority, phase2Batch15Authority,
+  phase2Batch16Authority, phase2Batch17Authority, phase2Batch18Authority, phase2Batch19Authority, phase2Batch20Authority,
+  phase2Batch21Authority, phase2Batch22Authority, phase2Batch23Authority, phase2Batch24Authority, phase2Batch25Authority,
+  phase2Batch26Authority, phase2Batch27Authority, phase2Batch28Authority, phase2Batch29Authority, phase2Batch30Authority,
+  phase2Batch31Authority, phase2Batch32Authority, phase2Batch33Authority, phase2Batch34Authority, phase2Batch35Authority,
+  phase2Batch36Authority, phase2Batch37Authority, phase2Batch38Authority, phase2Batch39Authority, phase2Batch40Authority,
+  phase2Batch41Authority, phase2Batch42Authority, phase2Batch43Authority, phase2Batch44Authority, phase2Batch45Authority,
+  phase2Batch46Authority, phase2Batch47Authority,
+] as const;
+const selectBestPhase2FieldAuthority = (speciesId: string, field: 'feeding' | 'care') => {
+  const candidates = phase2FieldAuthorityBatches
+    .map(batch => (batch as Record<string, any>)[speciesId]?.[field])
+    .filter(Boolean);
+  return candidates.find(candidate => candidate.status === 'reviewed_supported') ?? candidates[0];
+};
 const reviewedSourceConflicts = [{
   species_id: 'sp_0451',
   field: 'environment.temperature',
@@ -159,7 +187,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'feeding') {
-      const phase2 = phase2Batch01Authority[fish.id]?.feeding ?? phase2Batch02Authority[fish.id]?.feeding ?? phase2Batch03Authority[fish.id]?.feeding ?? phase2Batch04Authority[fish.id]?.feeding ?? phase2Batch05Authority[fish.id]?.feeding ?? phase2Batch06Authority[fish.id]?.feeding ?? phase2Batch07Authority[fish.id]?.feeding ?? phase2Batch08Authority[fish.id]?.feeding ?? phase2Batch09Authority[fish.id]?.feeding ?? phase2Batch10Authority[fish.id]?.feeding ?? phase2Batch11Authority[fish.id]?.feeding ?? phase2Batch12Authority[fish.id]?.feeding ?? phase2Batch13Authority[fish.id]?.feeding ?? phase2Batch14Authority[fish.id]?.feeding ?? phase2Batch15Authority[fish.id]?.feeding ?? phase2Batch16Authority[fish.id]?.feeding ?? phase2Batch17Authority[fish.id]?.feeding ?? phase2Batch18Authority[fish.id]?.feeding ?? phase2Batch19Authority[fish.id]?.feeding ?? phase2Batch20Authority[fish.id]?.feeding ?? phase2Batch21Authority[fish.id]?.feeding ?? phase2Batch22Authority[fish.id]?.feeding ?? phase2Batch23Authority[fish.id]?.feeding ?? phase2Batch24Authority[fish.id]?.feeding ?? phase2Batch25Authority[fish.id]?.feeding ?? phase2Batch26Authority[fish.id]?.feeding ?? phase2Batch27Authority[fish.id]?.feeding ?? phase2Batch28Authority[fish.id]?.feeding ?? phase2Batch29Authority[fish.id]?.feeding ?? phase2Batch30Authority[fish.id]?.feeding ?? phase2Batch31Authority[fish.id]?.feeding ?? phase2Batch32Authority[fish.id]?.feeding ?? phase2Batch33Authority[fish.id]?.feeding ?? phase2Batch34Authority[fish.id]?.feeding ?? phase2Batch35Authority[fish.id]?.feeding ?? phase2Batch36Authority[fish.id]?.feeding ?? phase2Batch37Authority[fish.id]?.feeding ?? phase2Batch38Authority[fish.id]?.feeding ?? phase2Batch39Authority[fish.id]?.feeding ?? phase2Batch40Authority[fish.id]?.feeding ?? phase2Batch41Authority[fish.id]?.feeding ?? phase2Batch42Authority[fish.id]?.feeding ?? phase2Batch43Authority[fish.id]?.feeding ?? phase2Batch44Authority[fish.id]?.feeding ?? phase2Batch45Authority[fish.id]?.feeding ?? phase2Batch46Authority[fish.id]?.feeding ?? phase2Batch47Authority[fish.id]?.feeding;
+      const phase2 = selectBestPhase2FieldAuthority(fish.id, 'feeding');
       if (phase2) fieldStatus[field] = phase2.status;
       else if (!fish.feedingProfile) fieldStatus[field] = 'needs_research';
       else if (audit.feeding_uses_template === 'yes') fieldStatus[field] = 'template_only';
@@ -168,7 +196,7 @@ const rows = fishData.map((fish) => {
       continue;
     }
     if (field === 'care') {
-      const phase2 = phase2Batch01Authority[fish.id]?.care ?? phase2Batch02Authority[fish.id]?.care ?? phase2Batch03Authority[fish.id]?.care ?? phase2Batch04Authority[fish.id]?.care ?? phase2Batch05Authority[fish.id]?.care ?? phase2Batch06Authority[fish.id]?.care ?? phase2Batch07Authority[fish.id]?.care ?? phase2Batch08Authority[fish.id]?.care ?? phase2Batch09Authority[fish.id]?.care ?? phase2Batch10Authority[fish.id]?.care ?? phase2Batch11Authority[fish.id]?.care ?? phase2Batch12Authority[fish.id]?.care ?? phase2Batch13Authority[fish.id]?.care ?? phase2Batch14Authority[fish.id]?.care ?? phase2Batch15Authority[fish.id]?.care ?? phase2Batch16Authority[fish.id]?.care ?? phase2Batch17Authority[fish.id]?.care ?? phase2Batch18Authority[fish.id]?.care ?? phase2Batch19Authority[fish.id]?.care ?? phase2Batch20Authority[fish.id]?.care ?? phase2Batch21Authority[fish.id]?.care ?? phase2Batch22Authority[fish.id]?.care ?? phase2Batch23Authority[fish.id]?.care ?? phase2Batch24Authority[fish.id]?.care ?? phase2Batch25Authority[fish.id]?.care ?? phase2Batch26Authority[fish.id]?.care ?? phase2Batch27Authority[fish.id]?.care ?? phase2Batch28Authority[fish.id]?.care ?? phase2Batch29Authority[fish.id]?.care ?? phase2Batch30Authority[fish.id]?.care ?? phase2Batch31Authority[fish.id]?.care ?? phase2Batch32Authority[fish.id]?.care ?? phase2Batch33Authority[fish.id]?.care ?? phase2Batch34Authority[fish.id]?.care ?? phase2Batch35Authority[fish.id]?.care ?? phase2Batch36Authority[fish.id]?.care ?? phase2Batch37Authority[fish.id]?.care ?? phase2Batch38Authority[fish.id]?.care ?? phase2Batch39Authority[fish.id]?.care ?? phase2Batch40Authority[fish.id]?.care ?? phase2Batch41Authority[fish.id]?.care ?? phase2Batch42Authority[fish.id]?.care ?? phase2Batch43Authority[fish.id]?.care ?? phase2Batch44Authority[fish.id]?.care ?? phase2Batch45Authority[fish.id]?.care ?? phase2Batch46Authority[fish.id]?.care ?? phase2Batch47Authority[fish.id]?.care;
+      const phase2 = selectBestPhase2FieldAuthority(fish.id, 'care');
       fieldStatus[field] = phase2?.status ?? (audit.missing_species_specific_care === 'yes' ? 'template_only' : 'reviewed_supported');
       continue;
     }
@@ -179,9 +207,41 @@ const rows = fishData.map((fish) => {
     }
   }
   const gaps = fields.filter(field => ['needs_research', 'template_only'].includes(fieldStatus[field]));
+  const reviewedUnknownFields = fields.filter(field => fieldStatus[field] === 'reviewed_unknown');
+  const identityBoundary = getCatalogIdentityBoundary(fish.id);
+  const reviewedUnknownResolutions: ReviewedUnknownResolution[] = reviewedUnknownFields.map(field => {
+    const evidenceCeiling = getKnowledgeEvidenceCeiling(fish.id, field);
+    if (evidenceCeiling) {
+      return {
+        field,
+        mode: 'do_not_repeat_ordinary_research',
+        reason: 'explicit_evidence_ceiling',
+        code: evidenceCeiling.code,
+        note: evidenceCeiling.note,
+      };
+    }
+    if (identityBoundary) {
+      return {
+        field,
+        mode: 'do_not_repeat_ordinary_research',
+        reason: 'catalog_identity_boundary',
+        code: identityBoundary.code,
+        note: identityBoundary.note,
+      };
+    }
+    return {
+      field,
+      mode: 'targeted_source_expansion',
+      reason: 'reviewed_unknown_no_explicit_ceiling',
+      code: null,
+      note: 'The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data.',
+    };
+  });
+  const targetedSourceExpansionCount = reviewedUnknownResolutions.filter(item => item.mode === 'targeted_source_expansion').length;
   const commonnessProxy = launchIds.has(fish.id) ? 'launch_cohort' : 'catalog_only';
   const riskProxy = launchIds.has(fish.id) || Boolean(compatibility) || fish.temperament !== 'Peaceful' ? 'elevated' : 'standard';
   const priorityScore = gaps.reduce((score, field) => score + (fieldStatus[field] === 'template_only' ? 4 : 5), 0)
+    + targetedSourceExpansionCount
     + (commonnessProxy === 'launch_cohort' ? 6 : 0)
     + (riskProxy === 'elevated' ? 3 : 0);
   return {
@@ -193,6 +253,8 @@ const rows = fishData.map((fish) => {
     applicable_fields: applicable,
     field_status: fieldStatus,
     gap_fields: gaps,
+    reviewed_unknown_fields: reviewedUnknownFields,
+    reviewed_unknown_resolutions: reviewedUnknownResolutions,
     direct_species_knowledge: Boolean(directKnowledge),
     inherited_species_knowledge: inheritedKnowledge,
     direct_compatibility_profile: Boolean(directCompatibility),
@@ -206,20 +268,27 @@ const rows = fishData.map((fish) => {
 });
 
 const backlog = rows
-  .filter(row => row.life_type !== 'hardscape' && (row.gap_fields.length > 0 || Object.values(row.field_status).includes('reviewed_unknown')))
+  .filter(row => row.life_type !== 'hardscape' && (row.gap_fields.length > 0 || row.reviewed_unknown_fields.length > 0))
   .sort((a, b) => b.priority_score - a.priority_score || a.species_id.localeCompare(b.species_id))
   .slice(0, 40)
-  .map((row, index) => ({ rank: index + 1, ...row, research_reason: row.gap_fields.map(field => `${field}:${row.field_status[field]}`) }));
+  .map((row, index) => ({
+    rank: index + 1,
+    ...row,
+    research_reason: [
+      ...row.gap_fields.map(field => `${field}:${row.field_status[field]}`),
+      ...row.reviewed_unknown_resolutions.map(item => `${item.field}:reviewed_unknown(${item.mode};${item.reason}${item.code ? `:${item.code}` : ''})`),
+    ],
+  }));
 
 const counts = Object.fromEntries(fields.map(field => [field, Object.fromEntries((['reviewed_supported', 'reviewed_unknown', 'inherited_reviewed', 'not_applicable', 'needs_research', 'template_only'] as FieldStatus[]).map(status => [status, rows.filter(row => row.field_status[field] === status).length]))]));
-const matrix = { generated_at: new Date().toISOString(), catalog_object_count: rows.length, fields, rows, status_counts: counts, source_conflicts: reviewedSourceConflicts, backlog_size: backlog.length, backlog_scope: 'Top 40 research candidates; reviewed authority is recorded in source-controlled modules and this backlog is regenerated after each batch.' };
+const matrix = { catalog_object_count: rows.length, fields, rows, status_counts: counts, source_conflicts: reviewedSourceConflicts, backlog_size: backlog.length, backlog_scope: 'Top 40 research candidates; reviewed authority is recorded in source-controlled modules and this backlog is regenerated after each batch.', generation_policy: 'deterministic_source_controlled_artifact' };
 writeFileSync(`${outputDir}/species_knowledge_completion_matrix.json`, `${JSON.stringify(matrix, null, 2)}\n`);
 const csvEscape = (value: unknown) => `"${String(value ?? '').replaceAll('"', '""')}"`;
 const csvHeader = ['species_id', 'common_name', 'scientific_name', 'life_type', 'category', ...fields.flatMap(field => fields.includes(field) ? [`${field}_status`] : []), 'gap_fields', 'commonness_proxy', 'risk_proxy', 'priority_score'];
 const csv = [csvHeader.join(','), ...rows.map(row => [row.species_id, row.common_name, row.scientific_name, row.life_type, row.category, ...fields.map(field => row.field_status[field]), row.gap_fields.join('|'), row.commonness_proxy, row.risk_proxy, row.priority_score].map(csvEscape).join(','))].join('\n');
 writeFileSync(`${outputDir}/species_knowledge_completion_matrix.csv`, `${csv}\n`);
-writeFileSync(`${outputDir}/species_knowledge_research_backlog.json`, `${JSON.stringify({ generated_at: matrix.generated_at, selection: 'Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.', items: backlog }, null, 2)}\n`);
-const markdown = ['# Species Knowledge Research Backlog', '', `Generated from ${rows.length} catalog objects. Reviewed authority is recorded in source-controlled modules; this file is the unresolved-work queue.`, '', '| Rank | Species | Life type | Gap fields | Commonness proxy | Risk proxy | Score |', '|---:|---|---|---|---|---|---:|', ...backlog.map(item => `| ${item.rank} | ${item.common_name} (${item.species_id}) | ${item.life_type} | ${item.research_reason.join(', ')} | ${item.commonness_proxy} | ${item.risk_proxy} | ${item.priority_score} |`), '', 'Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Every candidate requires source-by-source human review before authority writes.'].join('\n');
+writeFileSync(`${outputDir}/species_knowledge_research_backlog.json`, `${JSON.stringify({ generation_policy: 'deterministic_source_controlled_artifact', selection: 'Queue separates actionable needs_research/template_only gaps from reviewed_unknown. Each reviewed_unknown field is classified as targeted_source_expansion or do_not_repeat_ordinary_research using explicit evidence-ceiling and catalog-identity authorities. targeted_source_expansion means the current reviewed source was insufficient and a different field-specific source class should be researched; evidence-ceiling/identity-blocked unknowns remain visible without being rewarded for repeated research. No user telemetry was inferred.', items: backlog }, null, 2)}\n`);
+const markdown = ['# Species Knowledge Research Backlog', '', `Generated from ${rows.length} catalog objects. Reviewed authority is recorded in source-controlled modules; this queue distinguishes actionable gaps from evidence-limited reviewed unknowns.`, '', '> `reviewed_unknown` is a valid reviewed terminal state. `targeted_source_expansion` means the source reviewed so far was insufficient, so research should switch to a different field-specific authority rather than repeat the same source class. `do_not_repeat_ordinary_research` means an explicit evidence ceiling or catalog identity boundary already blocks ordinary repeated searching.', '', '| Rank | Species | Life type | Open / evidence-limited fields | Commonness proxy | Risk proxy | Score |', '|---:|---|---|---|---|---|---:|', ...backlog.map(item => `| ${item.rank} | ${item.common_name} (${item.species_id}) | ${item.life_type} | ${item.research_reason.join(', ')} | ${item.commonness_proxy} | ${item.risk_proxy} | ${item.priority_score} |`), '', 'Selection note: launch-cohort membership is an operational proxy, not a claim about measured user frequency. Evidence-limited items remain visible for planning, but only actionable gaps and targeted source-expansion candidates increase research priority.'].join('\n');
 writeFileSync(`${outputDir}/species_knowledge_research_backlog.md`, `${markdown}\n`);
 console.log(`species knowledge completion matrix: ${rows.length} catalog objects, ${backlog.length} prioritized research candidates`);
 console.log(JSON.stringify(counts, null, 2));
