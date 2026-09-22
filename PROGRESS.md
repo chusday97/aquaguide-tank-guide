@@ -790,3 +790,32 @@
 - [x] 4319 候选四模块在 390/600/768/1024/1280/1440/1920px 生成 28 张截图；全部 HTTP 200、无 page error、无 failed request。证据目录：`/private/tmp/aquaguide-visual-matrix/ui-parity-e6a59190`（当前提交为文档-only amend，UI bytes unchanged；manifest 已记录最终 checkpoint SHA）。
 - [ ] 当前视觉仍需用户一次性确认后才能生成新的 UI Freeze；旧 `02457dd2` 基线不作为本轮候选验收结果。
 - [ ] 生产冻结、Supabase 第 27 个 migration、Catalog 发布、main 合并仍未授权。
+## 2026-09-16 Compatibility Core handoff checkpoint
+
+- [x] Preserved and verified the pre-existing `sp_0475 Rhodeus ocellatus` correction; committed as `72036acc`.
+- [x] Added source-scoped `sp_0451 Astronotus ocellatus` authority from FishBase ecology and Seriously Fish: `predationTargets=['small_fish']`; no universal pair prohibition.
+- [x] Added reviewed Species Knowledge V2 for Oscar with unknown sex/reproduction kept explicit and evidence IDs attached to every promoted section.
+- [x] Matrix moved from `435 / 21 insufficient / 185 blocked / 217 caution / 12 compatible` to `435 / 0 insufficient / 198 blocked / 221 caution / 16 compatible`; determinism and symmetry remain green.
+- [x] Regression coverage proves Oscar + medium-sized fish is not blocked solely by the scoped small-fish rule.
+- [x] Handoff test suite passed via `node --import tsx` where the repository `tsx` wrappers were blocked by sandbox IPC `EPERM`; no UI, migration, push, or Vercel operation performed.
+- [ ] Local checkpoint commit for Oscar authority and these status documents remains to be created after independent read-only Critic review.
+## 2026-09-16 — Knowledge Completion Program Phase 1
+
+- [x] Scanned all 486 catalog objects by lifeType and generated machine-readable completion matrix JSON/CSV.
+- [x] Classified feeding/environment/space/social/care as reviewed_supported, reviewed_unknown, inherited_reviewed, not_applicable, needs_research, or template_only.
+- [x] Generated a 40-item ranked research backlog; launch-cohort membership is explicitly only a commonness proxy.
+- [x] Added matrix generator and contract test; no batch data, Profile, Species Knowledge, or migration authority was written in this phase.
+- [ ] Phase 2 research and authority writes remain blocked until each batch has source-specific evidence, citation provenance, additive migration ownership, and the complete requested gate suite.
+## 2026-09-16 — Reviewed Profile ownership repair
+
+- [x] Added additive migration owner `202609160001_compatibility_rummy_oto_oscar_baseline.sql` for `sp_0433`, `sp_0013`, `sp_0451` with exact/evidence drift guards.
+- [x] Admin contract passes via `node --import tsx`; no historical migration was edited.
+- [ ] Full Knowledge Completion Program Phase 2 remains pending; no new missing-species authority has been written.
+- [x] Matrix conflict registry records the Oscar 22–25°C vs 20–28°C source disagreement without narrowing it into a universal hard block; non-overlap is the hard-conflict criterion.
+## 2026-09-16 Knowledge Completion Program Phase 2 Batch 1 (in progress)
+
+- [x] Protected user-owned `docs/species_knowledge_audit.csv`; SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- [x] Updated `.ai/CODEX_COMPATIBILITY_HANDOFF_20260916.md` from stale `13ffcedd` / 21-insufficient state to `53323ca2` / frozen `435 pairs, 0 insufficient` baseline.
+- [x] Added direct, citation-backed Phase 2 Knowledge authority for `sp_0016`, `sp_0224`, `sp_0475`; no new Compatibility Profile or launch rule was added.
+- [x] Generated matrix after Batch 1 authority: 486 objects; feeding `1 supported / 2 reviewed_unknown / 212 needs_research / 196 template_only`; environment `23 supported / 1 reviewed_unknown`; space `32 supported / 1 reviewed_unknown`; social `31 supported / 2 reviewed_unknown`; care `385 supported / 2 reviewed_unknown / 88 template_only`.
+- [x] Full knowledge/catalog/compatibility/admin/lint/build gates passed; local checkpoint `bd3ab012` created. `git diff --check` reports only the preserved user CSV trailing-whitespace line 444; do not alter it. No push or migration.

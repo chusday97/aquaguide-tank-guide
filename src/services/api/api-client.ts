@@ -1,4 +1,5 @@
 import { supabase } from '../../lib/supabaseClient';
+import { resolveApiV1Url } from './api-origin';
 
 export type ApiErrorCode =
   | 'VALIDATION_ERROR'
@@ -62,7 +63,7 @@ export const apiRequest = async <T>(path: string, options: ApiRequestOptions = {
 
   let response: Response;
   try {
-    response = await fetch(`/api/v1${path}`, {
+    response = await fetch(resolveApiV1Url(path), {
       ...options,
       headers,
       body: options.body === undefined ? undefined : JSON.stringify(options.body),

@@ -193,6 +193,28 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed small_fish predation target does not automatically include small invertebrates',
+    run: () => {
+      const predator = makeFish({
+        id: 'sp_0049',
+        name: '珍珠赤雷龙',
+        scientificName: 'Channa asiatica',
+        temperament: 'Aggressive',
+        size: 'Large',
+        tankSize: '至少 100 升',
+      });
+      const shrimp = fishData.find(item => item.id === 'sp_0001');
+      if (!shrimp) return false;
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '120', width: '55', height: '50' } }),
+        existingSpecies: [{ species: predator, record: { quantity: 1 } }],
+        candidateSpecies: shrimp,
+      });
+      return result.blockingRules.every(rule => rule.code !== 'predation_risk')
+        && result.metadata.domainRuleCodes.every(code => code !== 'predation_risk');
+    },
+  },
+  {
     name: 'pair result is independent of selection order',
     run: () => {
       const smallFish = makeFish();
@@ -1076,7 +1098,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       const bronze = makeFish({ id: 'sp_0014', name: '咖啡鼠', scientificName: 'Corydoras aeneus', waterTemperature: '21-27°C', tankSize: '至少 72 升' });
       const panda = makeFish({ id: 'sp_0443', name: '熊猫鼠', scientificName: 'Corydoras panda', waterTemperature: '22-25°C', tankSize: '至少 41 升' });
       const result = evaluateLegacyTankCompatibility({
-        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' }, targetTemperature: '24' }),
+        tank: makeTank({ dimensions: { length: '100', width: '40', height: '35' }, targetTemperature: '25' }),
         existingSpecies: [{ species: bronze, record: { quantity: 6 } }],
         candidateSpecies: panda,
         candidateQuantity: 6,
@@ -1180,6 +1202,82 @@ const cases: Array<{ name: string; run: () => boolean }> = [
       });
       return result.status === 'not_recommended'
         && result.blockingRules.some(rule => rule.code === 'conspecific_fry_predation' && rule.reviewStatus === 'reviewed');
+    },
+  },
+  {
+    name: 'reviewed Catalog temperature overrides stale Channa legacy range without inventing behavior authority',
+    run: () => {
+      const channa = fishData.find(item => item.id === 'sp_0224');
+      if (!channa) return false;
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '200', width: '80', height: '65' }, targetTemperature: '25' }),
+        candidateSpecies: channa,
+        candidateQuantity: 1,
+      });
+      return getReviewedCompatibilityProfileForFish(channa) == null
+        && result.status === 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('tank_temperature_conflict')
+        && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && result.metadata.decisionReadiness === 'unknown';
+    },
+  },
+  {
+    name: 'reviewed Catalog temperature overrides stale Oscar legacy range while scoped behavior authority is preserved',
+    run: () => {
+      const oscar = fishData.find(item => item.id === 'sp_0451');
+      if (!oscar) return false;
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '200', width: '80', height: '65' }, targetTemperature: '28' }),
+        candidateSpecies: oscar,
+        candidateQuantity: 1,
+      });
+      return getReviewedCompatibilityProfileForFish(oscar) != null
+        && result.status === 'not_recommended'
+        && result.metadata.domainRuleCodes.includes('tank_temperature_conflict')
+        && result.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && result.blockingRules.every(rule => rule.reviewStatus === 'reviewed');
+    },
+  },
+  {
+    name: 'reviewed rummy-nose authority enforces group and warm-water planning',
+    run: () => {
+      const species = fishData.find(item => item.id === 'sp_0433');
+      if (!species) return false;
+      const profile = getReviewedCompatibilityProfileForFish(species);
+      const underGrouped = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '90', width: '35', height: '35' }, targetTemperature: '25' }),
+        candidateSpecies: species,
+        candidateQuantity: 4,
+      });
+      const coolTank = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '90', width: '35', height: '35' }, targetTemperature: '22' }),
+        candidateSpecies: species,
+        candidateQuantity: 10,
+      });
+      return profile?.reviewStatus === 'reviewed'
+        && profile.minimumGroupSize === 10
+        && underGrouped.warningRules.some(rule => rule.code === 'minimum_group_not_met')
+        && coolTank.blockingRules.some(rule => rule.code === 'tank_temperature_conflict')
+        && underGrouped.evidenceIds?.includes('seriouslyfish-petitella-rhodostoma');
+    },
+  },
+  {
+    name: 'reviewed Otocinclus authority stays peaceful without inventing a hard group minimum',
+    run: () => {
+      const species = fishData.find(item => item.id === 'sp_0013');
+      if (!species) return false;
+      const profile = getReviewedCompatibilityProfileForFish(species);
+      const result = evaluateLegacyTankCompatibility({
+        tank: makeTank({ dimensions: { length: '60', width: '30', height: '30' }, targetTemperature: '24' }),
+        candidateSpecies: species,
+        candidateQuantity: 1,
+      });
+      return profile?.reviewStatus === 'reviewed'
+        && profile.minimumGroupSize == null
+        && profile.behaviorTraits.includes('peaceful')
+        && result.missingData.every(rule => rule.code !== 'behavior_evidence_unreviewed')
+        && result.warningRules.every(rule => rule.code !== 'minimum_group_not_met')
+        && result.evidenceIds?.includes('fishbase-otocinclus-vittatus');
     },
   },
   {

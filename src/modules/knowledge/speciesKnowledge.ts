@@ -1,6 +1,105 @@
 import type { Fish } from '../../types';
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
+import { phase2Batch02Knowledge } from './phase2Batch02Authority';
+import { phase2Batch03Knowledge } from './phase2Batch03Authority';
+import { phase2Batch04Knowledge } from './phase2Batch04Authority';
+import { phase2Batch05Knowledge } from './phase2Batch05Authority';
+import { phase2Batch06Knowledge } from './phase2Batch06Authority';
+import { phase2Batch07Knowledge } from './phase2Batch07Authority';
+import { phase2Batch08Knowledge } from './phase2Batch08Authority';
+import { phase2Batch09Knowledge } from './phase2Batch09Authority';
+import { phase2Batch10Knowledge } from './phase2Batch10Authority';
+import { phase2Batch11Knowledge } from './phase2Batch11Authority';
+import { phase2Batch12Knowledge } from './phase2Batch12Authority';
+import { phase2Batch13Knowledge } from './phase2Batch13Authority';
+import { phase2Batch14Knowledge } from './phase2Batch14Authority';
+import { phase2Batch15Knowledge } from './phase2Batch15Authority';
+import { phase2Batch16Knowledge } from './phase2Batch16Authority';
+import { phase2Batch17Knowledge } from './phase2Batch17Authority';
+import { phase2Batch18Knowledge } from './phase2Batch18Authority';
+import { phase2Batch19Knowledge } from './phase2Batch19Authority';
+import { phase2Batch20Knowledge } from './phase2Batch20Authority';
+import { phase2Batch21Knowledge } from './phase2Batch21Authority';
+import { phase2Batch22Knowledge } from './phase2Batch22Authority';
+import { phase2Batch23Knowledge } from './phase2Batch23Authority';
+import { phase2Batch24Knowledge } from './phase2Batch24Authority';
+import { phase2Batch25Knowledge } from './phase2Batch25Authority';
+import { phase2Batch26Knowledge } from './phase2Batch26Authority';
+import { phase2Batch27Knowledge } from './phase2Batch27Authority';
+import { phase2Batch28Knowledge } from './phase2Batch28Authority';
+import { phase2Batch29Knowledge } from './phase2Batch29Authority';
+import { phase2Batch30Knowledge } from './phase2Batch30Authority';
+import { phase2Batch31Knowledge } from './phase2Batch31Authority';
+import { phase2Batch32Knowledge } from './phase2Batch32Authority';
+import { phase2Batch33Knowledge } from './phase2Batch33Authority';
+import { phase2Batch34Knowledge } from './phase2Batch34Authority';
+import { phase2Batch35Knowledge } from './phase2Batch35Authority';
+import { phase2Batch36Knowledge } from './phase2Batch36Authority';
+import { phase2Batch37Knowledge } from './phase2Batch37Authority';
+import { phase2Batch38Knowledge } from './phase2Batch38Authority';
+import { phase2Batch39Knowledge } from './phase2Batch39Authority';
+import { phase2Batch40Knowledge } from './phase2Batch40Authority';
+import { phase2Batch41Knowledge } from './phase2Batch41Authority';
+import { phase2Batch42Knowledge } from './phase2Batch42Authority';
+import { phase2Batch43Knowledge } from './phase2Batch43Authority';
+import { phase2Batch44Knowledge } from './phase2Batch44Authority';
+import { phase2Batch45Knowledge } from './phase2Batch45Authority';
+import { phase2Batch46Knowledge } from './phase2Batch46Authority';
+import { phase2Batch47Knowledge } from './phase2Batch47Authority';
+import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
+
+export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
+
+const completionOnlyDirectKnowledgeIds = new Set([
+  'sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0003', 'sp_0029',
+  'sp_0004', 'sp_0032', 'sp_0036',
+  'sp_0052', 'sp_0112', 'sp_0115', 'sp_0141', 'sp_0143', 'sp_0144', 'sp_0145', 'sp_0154', 'sp_0155', 'sp_0167',
+  'sp_0170', 'sp_0204', 'sp_0205', 'sp_0206', 'sp_0212', 'sp_0225', 'sp_0226', 'sp_0231', 'sp_0232', 'sp_0244',
+  'sp_0245', 'sp_0246', 'sp_0255', 'sp_0287', 'sp_0339', 'sp_0358', 'sp_0360', 'sp_0362', 'sp_0375', 'sp_0002',
+  'sp_0005', 'sp_0051', 'sp_0018', 'sp_0019', 'sp_0023', 'sp_0024', 'sp_0026', 'sp_0033', 'sp_0034', 'sp_0042',
+  'sp_0054', 'sp_0055', 'sp_0056', 'sp_0057', 'sp_0058', 'sp_0062', 'sp_0069', 'sp_0070', 'sp_0121', 'sp_0122',
+  'sp_0123', 'sp_0125', 'sp_0129', 'sp_0146', 'sp_0152', 'sp_0157', 'sp_0158', 'sp_0163', 'sp_0173', 'sp_0174',
+  'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0182', 'sp_0187', 'sp_0201', 'sp_0202', 'sp_0207', 'sp_0208',
+  'sp_0211', 'sp_0214', 'sp_0217', 'sp_0218', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0235',
+  'sp_0236', 'sp_0240', 'sp_0241', 'sp_0243', 'sp_0247', 'sp_0249', 'sp_0250', 'sp_0251', 'sp_0256', 'sp_0257',
+  'sp_0263', 'sp_0264', 'sp_0265', 'sp_0266', 'sp_0270', 'sp_0271', 'sp_0272', 'sp_0273', 'sp_0282', 'sp_0288',
+  'sp_0289', 'sp_0290', 'sp_0291', 'sp_0294', 'sp_0338', 'sp_0340', 'sp_0341', 'sp_0359', 'sp_0363', 'sp_0364',
+  'sp_0372', 'sp_0373', 'sp_0374', 'sp_0376', 'sp_0388', 'sp_0393', 'sp_0394', 'sp_0399', 'sp_0414', 'sp_0415',
+  'sp_0416', 'sp_0417', 'sp_0419', 'sp_0421', 'sp_0428', 'sp_0429', 'sp_0449', 'sp_0450', 'sp_0452', 'sp_0456',
+  'sp_0001', 'sp_0007', 'sp_0008', 'sp_0009', 'sp_0015', 'sp_0022', 'sp_0038', 'sp_0043', 'sp_0044', 'sp_0047',
+  'sp_0048', 'sp_0050', 'sp_0059', 'sp_0103', 'sp_0104', 'sp_0105', 'sp_0108', 'sp_0109', 'sp_0110', 'sp_0116',
+  'sp_0117', 'sp_0118', 'sp_0119', 'sp_0120', 'sp_0127', 'sp_0130', 'sp_0131', 'sp_0138', 'sp_0139', 'sp_0140',
+  'sp_0151', 'sp_0156', 'sp_0179', 'sp_0181', 'sp_0183', 'sp_0184', 'sp_0185', 'sp_0197', 'sp_0198', 'sp_0199',
+  'sp_0200', 'sp_0216', 'sp_0229', 'sp_0234', 'sp_0242', 'sp_0248', 'sp_0268', 'sp_0269', 'sp_0283', 'sp_0284',
+  'sp_0285', 'sp_0286', 'sp_0296', 'sp_0297', 'sp_0318', 'sp_0319', 'sp_0321', 'sp_0322', 'sp_0323', 'sp_0325',
+  'sp_0333', 'sp_0334', 'sp_0365', 'sp_0368', 'sp_0370', 'sp_0379', 'sp_0382', 'sp_0384', 'sp_0400', 'sp_0401',
+  'sp_0402', 'sp_0407', 'sp_0408', 'sp_0409', 'sp_0410', 'sp_0411', 'sp_0412', 'sp_0420', 'sp_0441', 'sp_0442',
+  'sp_0445', 'sp_0453', 'sp_0459', 'sp_0037', 'sp_0041', 'sp_0046', 'sp_0063', 'sp_0064', 'sp_0065', 'sp_0066',
+  'sp_0067', 'sp_0068', 'sp_0077', 'sp_0089', 'sp_0111', 'sp_0124', 'sp_0142', 'sp_0149', 'sp_0150', 'sp_0159',
+  'sp_0160', 'sp_0161', 'sp_0162', 'sp_0168', 'sp_0169', 'sp_0180', 'sp_0188', 'sp_0189', 'sp_0190', 'sp_0196',
+  'sp_0203', 'sp_0209', 'sp_0213', 'sp_0215', 'sp_0230', 'sp_0237', 'sp_0253', 'sp_0254', 'sp_0280', 'sp_0281',
+  'sp_0292', 'sp_0293', 'sp_0348', 'sp_0349', 'sp_0350', 'sp_0351', 'sp_0385', 'sp_0386', 'sp_0387', 'sp_0392',
+  'sp_0395', 'sp_0418', 'sp_0025', 'sp_0039', 'sp_0040', 'sp_0060', 'sp_0061', 'sp_0106', 'sp_0107', 'sp_0113',
+  'sp_0128', 'sp_0132', 'sp_0134', 'sp_0135', 'sp_0136', 'sp_0137', 'sp_0153', 'sp_0171', 'sp_0172', 'sp_0186',
+  'sp_0014', 'sp_0049', 'sp_0431', 'sp_0432', 'sp_0436', 'sp_0443', 'sp_0435', 'sp_0191', 'sp_0192', 'sp_0193',
+  'sp_0194', 'sp_0195', 'sp_0210', 'sp_0233', 'sp_0252', 'sp_0267', 'sp_0295', 'sp_0320', 'sp_0324', 'sp_0326',
+  'sp_0327', 'sp_0328', 'sp_0329', 'sp_0330', 'sp_0331', 'sp_0332', 'sp_0335', 'sp_0336', 'sp_0337', 'sp_0361',
+  'sp_0366', 'sp_0367', 'sp_0369', 'sp_0371', 'sp_0377', 'sp_0378', 'sp_0380', 'sp_0381', 'sp_0383', 'sp_0403',
+  'sp_0404', 'sp_0405', 'sp_0406', 'sp_0413', 'sp_0426', 'sp_0427', 'sp_0439', 'sp_0454', 'sp_0458', 'sp_0460',
+  'sp_0461', 'sp_0462', 'sp_0463', 'sp_0464', 'sp_0465', 'sp_0466', 'sp_0467', 'sp_0470', 'sp_0471', 'sp_0472',
+  'sp_0473', 'sp_0474', 'sp_0476', 'sp_0012', 'sp_0147', 'sp_0148', 'sp_0222', 'sp_0258', 'sp_0433', 'sp_0434',
+  'sp_0446', 'sp_0013', 'sp_0028', 'sp_0030', 'sp_0031', 'sp_0164', 'sp_0165', 'sp_0166', 'sp_0223', 'sp_0238',
+  'sp_0239', 'sp_0274', 'sp_0275', 'sp_0276', 'sp_0277', 'sp_0278', 'sp_0279', 'sp_0342', 'sp_0396', 'sp_0397',
+  'sp_0398', 'sp_0455', 'sp_0027', 'sp_0010', 'sp_0011', 'sp_0014', 'sp_0431', 'sp_0432', 'sp_0434', 'sp_0435',
+  'sp_0437', 'sp_0438', 'sp_0447', 'sp_0451', 'sp_0444', 'sp_0468', 'sp_0053', 'sp_0114', 'sp_0259', 'sp_0260',
+  'sp_0261', 'sp_0262', 'sp_0389', 'sp_0390', 'sp_0391', 'sp_0071', 'sp_0072', 'sp_0073', 'sp_0074', 'sp_0075', 'sp_0076',
+  'sp_0078', 'sp_0079', 'sp_0080', 'sp_0081', 'sp_0082', 'sp_0083', 'sp_0084', 'sp_0085', 'sp_0086', 'sp_0087', 'sp_0088', 'sp_0090', 'sp_0091', 'sp_0092', 'sp_0093',
+  'sp_0094', 'sp_0095', 'sp_0096', 'sp_0097', 'sp_0098', 'sp_0099', 'sp_0100', 'sp_0101', 'sp_0102', 'sp_0298', 'sp_0299', 'sp_0300', 'sp_0301', 'sp_0302', 'sp_0303',
+  'sp_0304', 'sp_0305', 'sp_0306', 'sp_0307', 'sp_0308', 'sp_0309', 'sp_0310', 'sp_0311', 'sp_0312', 'sp_0313', 'sp_0314', 'sp_0315', 'sp_0316', 'sp_0317', 'sp_0354',
+  'sp_0355', 'sp_0356', 'sp_0357', 'sp_0477', 'sp_0478', 'sp_0479', 'sp_0480', 'sp_0481', 'sp_0482', 'sp_0483', 'sp_0484', 'sp_0485', 'sp_0486',
+  'sp_0017', 'sp_0440', 'sp_0448', 'sp_0469', 'sp_0020', 'sp_0045', 'sp_0126', 'sp_0133',
+]);
 
 
 
@@ -138,6 +237,37 @@ const hillstreamLoachKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
     substrateNotes: ['优先提供岩石、圆润砾石与可形成生物膜的硬表面，并保留开放的高流通区域。'],
     spaceNotes: ['长期群养按至少 75 × 30 cm 缸底、约 68 L 规划；空间不足会放大同形底栖鱼之间的觅食位竞争。'],
     evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-sewellia-lineolata'], reviewedAt: '2026-09-13' },
+  },
+};
+
+const oscarKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供外观公母硬判断',
+    summary: '当前来源支持物种身份与养护边界，但不足以把外观差异作为稳定的用户性别判断规则。',
+    points: ['需要繁殖配对时，优先依据成熟个体行为和专门繁育来源，不凭体色或头型猜测。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 22, max: 25 },
+    notes: ['水体和温度沿用当前 Catalog Review 的 FishBase authority；生态来源同时记录其可见于淡水与半咸水环境，单值 catalog waterType 不扩展为半咸水结论。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-astronotus-ocellatus', 'fishbase-astronotus-ocellatus-ecology'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'solitary',
+    territoriality: 'unknown',
+    finNipping: 'unknown',
+    predationRisk: 'high',
+    summary: 'FishBase 记录其通常独居并取食小型鱼；Seriously Fish 明确指出其捕食性决定了不应与明显更小的鱼混养。该 authority 只支持 small_fish 边界，不把地图鱼对所有鱼类一律判为禁止。',
+    evidence: { confidence: 'derived', reviewStatus: 'reviewed', sourceIds: ['fishbase-astronotus-ocellatus-ecology', 'seriouslyfish-astronotus-ocellatus'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 45.7, measurement: 'SL' },
+    activityLevel: 'medium',
+    spaceNotes: ['成体体型很大；Seriously Fish 的 150 × 60 cm 缸底建议仅作为大型单只成体的空间边界，不将此处的水族箱容量建议误当作兼容性 pair rule。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-astronotus-ocellatus', 'seriouslyfish-astronotus-ocellatus'], reviewedAt: '2026-09-16' },
   },
 };
 
@@ -505,7 +635,7 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
     evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-trichopodus-leerii'], reviewedAt: '2026-09-13' },
   },
   socialBehavior: {
-    mode: 'variable',
+    mode: 'pair',
     territoriality: 'none',
     finNipping: 'none',
     predationRisk: 'low',
@@ -524,12 +654,254 @@ const pearlGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+const rummyNoseKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供外观公母硬判断',
+    summary: '当前已审核来源足以支持环境、社交和混养规划，但不足以把外观性别特征作为稳定的用户判断规则。',
+    points: ['若有繁殖需求，优先结合成熟个体长期观察或可靠繁育来源，不凭单一外观特征下结论。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 24, max: 27 },
+    phRange: { min: 5.5, max: 7.0 },
+    hardnessDgh: { min: 2, max: 15 },
+    notes: ['当前 catalog 使用旧属名 Hemigrammus rhodostomus；FishBase 当前接受名为 Petitella rhodostoma。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-petitella-rhodostoma', 'fishbase-petitella-rhodostoma'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 10,
+    recommendedGroupSize: { min: 10 },
+    swimmingZone: 'middle',
+    territoriality: 'none',
+    finNipping: 'none',
+    swimmingPace: 'fast',
+    summary: '非常和平且紧密群游，建议至少 10 条；不适合与明显更大、强势或抢食激烈的鱼搭配。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-petitella-rhodostoma', 'fishbase-petitella-rhodostoma'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 5, measurement: 'SL' },
+    minTankLengthCm: 90,
+    activityLevel: 'high',
+    swimmingZone: 'middle',
+    needsCover: true,
+    spaceNotes: ['群体活跃游动，长期规划至少 90 cm 缸长。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['seriouslyfish-petitella-rhodostoma', 'fishbase-petitella-rhodostoma'], reviewedAt: '2026-09-16' },
+  },
+};
+
+const otocinclusVittatusKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供外观公母硬判断',
+    summary: '当前已审核来源足以支持环境、社交和混养规划，但不足以把外观性别特征作为稳定的用户判断规则。',
+    points: ['若有繁殖需求，优先结合成熟个体长期观察或可靠繁育来源，不凭单一外观特征下结论。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '公母辨别字段待补充专门来源', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 20, max: 25 },
+    phRange: { min: 6.0, max: 7.5 },
+    notes: ['优先使用成熟、稳定且有持续藻膜/生物膜的水族箱；不要把“除藻鱼”理解为可以在新缸里缺食生存。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['fishbase-otocinclus-vittatus', 'aquariumcoop-otocinclus-catfish', 'scotcat-otocinclus-vittatus'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'group',
+    swimmingZone: 'bottom',
+    territoriality: 'none',
+    finNipping: 'none',
+    swimmingPace: 'slow',
+    predationVulnerability: 'high',
+    summary: '性情非常和平并有明显群体性，适合与体型接近、温和且不会抢食的鱼同缸；应避开大型或攻击性强、可能吞食它们的同伴。不同 husbandry 来源对固定最低群体数量建议不一致，因此本轮不设硬性 minimumGroupSize。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquariumcoop-otocinclus-catfish', 'scotcat-otocinclus-vittatus'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 3.3, measurement: 'unknown' },
+    activityLevel: 'low',
+    swimmingZone: 'bottom',
+    needsCover: true,
+    needsHidingPlaces: true,
+    spaceNotes: ['比固定升数更重要的是成熟缸、足够觅食表面和避免与强势鱼抢食。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['fishbase-otocinclus-vittatus', 'aquariumcoop-otocinclus-catfish'], reviewedAt: '2026-09-16' },
+  },
+};
+
+const phase2UnknownEvidence = (sourceIds: string[], note: string): NonNullable<NonNullable<SpeciesKnowledgeProfile['knowledge']['environment']>['evidence']> => ({
+  confidence: 'unknown',
+  reviewStatus: 'reviewed',
+  sourceIds,
+  note,
+  reviewedAt: '2026-09-16',
+});
+
+const goldRamPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供金波子品系的稳定公母硬判断',
+    summary: 'Aquarium Industries 记录金波子属于 Mikrogeophagus ramirezi 的颜色品系，但未给出足以支持本品系独立性别规则的证据。',
+    points: ['不凭颜色品系或单一鳍形推断公母。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '金波子品系性别证据不足', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+    evidence: phase2UnknownEvidence(['aquarium-industries-ramirezi-care-sheet'], '来源确认 gold ram 为颜色品系，但未提供可单独验证的品系性别规则。'),
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 24, max: 28 },
+    phRange: { min: 5, max: 7.2 },
+    notes: ['Aquarium Industries 的 Ramirezi care sheet 明确列出 gold ram 为颜色品系，并给出该物种的 24–28°C、pH 5.0–7.2 养护范围；不再从 legacy gold 文案继承范围。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquarium-industries-ramirezi-care-sheet'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'pair',
+    territoriality: 'medium',
+    finNipping: 'none',
+    predationRisk: 'low',
+    summary: '同一份专业 care sheet 说明繁殖期才明显攻击，并建议与和平、开放水域群游鱼搭配；该结论保留为金波子品系直接 authority。',
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquarium-industries-ramirezi-care-sheet'], reviewedAt: '2026-09-16' },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { min: 4, max: 6, measurement: 'unknown' },
+    activityLevel: 'medium',
+    spaceNotes: ['来源给出 Ramirezi 成体约 4–6 cm；未给出金波子品系独立的最低缸体升数，因此不补写固定升数。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['aquarium-industries-ramirezi-care-sheet'], reviewedAt: '2026-09-16' },
+  },
+};
+
+const platinumSnakeheadPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供白金品系公母判断',
+    summary: '现有 Channa argus 物种来源不确认 Platinum 观赏品系的独立性别特征。',
+    points: ['不以白化/白金体色推断公母。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '白金雷龙品系性别证据不足', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+    evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], 'FishBase 物种页不确认 Platinum 品系性别特征。'),
+  },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 4, max: 22 },
+    notes: ['Catalog Review 已将白金雷龙对象明确映射为 Channa argus 的 Platinum 品系，并审核通过 freshwater 与 4–22°C；pH 仍保持 unknown。'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch03-fishbase-channa-argus'],
+      reviewedAt: '2026-09-22',
+      note: 'This is an explicit reviewed catalog-object bridge for identity/water/temperature, not automatic variant inheritance.',
+    },
+  },
+  socialBehavior: { mode: 'unknown', territoriality: 'unknown', finNipping: 'unknown', predationRisk: 'unknown', summary: '没有足够的白金雷龙品系级通用社会行为 authority；pair-level 捕食证据不外推为所有混养结论。', evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '没有足够的品系级通用社会行为证据；继续 fail-closed。') },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 100, measurement: 'TL' },
+    activityLevel: 'unknown',
+    spaceNotes: ['Catalog Review 已对该白金雷龙 catalog object 审核通过最大体长约 100 cm；不从体长反推最低缸体升数或缸长。'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch03-fishbase-channa-argus'],
+      reviewedAt: '2026-09-22',
+      note: 'Explicit reviewed catalog-object bridge for adult size; no minimum tank size is inferred.',
+    },
+  },
+};
+
+const rosyBitterlingPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  sexIdentification: {
+    title: '本轮不提供稳定外观公母硬判断',
+    summary: 'FishBase 和 J-STAGE 资料支持物种生态与繁殖周期，但不足以形成日常外观性别规则。',
+    points: ['不凭发色或体型单一特征判断公母。'],
+    confidence: 'unknown',
+    source: { type: 'unknown', label: '高体鳑鲏性别字段待补充', confidence: 'unknown' },
+    reliableFromLifeStage: 'unknown',
+    evidence: phase2UnknownEvidence(['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'], '来源没有给出稳定的水族箱外观性别识别规则。'),
+  },
+  environment: {
+    waterType: 'unknown',
+    waterTypes: ['freshwater', 'brackish'],
+    temperatureRangeC: { min: 18, max: 24 },
+    notes: ['FishBase 同时记录 freshwater 与 brackish；使用 waterTypes 无损表达双水体记录。FishBase 给出 18–24°C，J-STAGE 研究讨论 22–28°C 的繁殖季温度响应，后者不替代日常温度范围。'],
+    evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'], reviewedAt: '2026-09-16' },
+  },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 3,
+    recommendedGroupSize: { min: 3 },
+    swimmingZone: 'unknown',
+    territoriality: 'unknown',
+    finNipping: 'unknown',
+    predationRisk: 'unknown',
+    summary: 'J-STAGE 水槽实验直接研究 Rhodeus ocellatus ocellatus 的群游，结果显示 3 条及以上才能维持稳定 schooling；该实验不支持额外推断“温和”或“无领地性”。',
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['jstage-rhodeus-ocellatus-schooling'],
+      reviewedAt: '2026-09-22',
+    },
+  },
+  spaceAndGrowth: { adultLengthCm: { max: 9.2, measurement: 'SL' }, activityLevel: 'unknown', spaceNotes: ['FishBase 给出最大 9.2 cm SL；没有足以支持最低缸长或升数的物种专属专业来源。'], evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-rhodeus-ocellatus'], reviewedAt: '2026-09-16' } },
+};
+
 const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfile['knowledge']>> = {
+  ...phase2Batch02Knowledge,
+  ...phase2Batch03Knowledge,
+  ...phase2Batch04Knowledge,
+  ...phase2Batch05Knowledge,
+  ...phase2Batch06Knowledge,
+  ...phase2Batch07Knowledge,
+  ...phase2Batch08Knowledge,
+  ...phase2Batch09Knowledge,
+  ...phase2Batch10Knowledge,
+  ...phase2Batch11Knowledge,
+  ...phase2Batch12Knowledge,
+  ...phase2Batch13Knowledge,
+  ...phase2Batch14Knowledge,
+  ...phase2Batch15Knowledge,
+  ...phase2Batch16Knowledge,
+  ...phase2Batch17Knowledge,
+  ...phase2Batch18Knowledge,
+  ...phase2Batch19Knowledge,
+  ...phase2Batch20Knowledge,
+  ...phase2Batch21Knowledge,
+  ...phase2Batch22Knowledge,
+  ...phase2Batch23Knowledge,
+  ...phase2Batch24Knowledge,
+  ...phase2Batch25Knowledge,
+  ...phase2Batch26Knowledge,
+  ...phase2Batch27Knowledge,
+  ...phase2Batch28Knowledge,
+  ...phase2Batch29Knowledge,
+  ...phase2Batch30Knowledge,
+  ...phase2Batch31Knowledge,
+  ...phase2Batch32Knowledge,
+  ...phase2Batch33Knowledge,
+  ...phase2Batch34Knowledge,
+  ...phase2Batch35Knowledge,
+  ...phase2Batch36Knowledge,
+  ...phase2Batch37Knowledge,
+  ...phase2Batch38Knowledge,
+  ...phase2Batch39Knowledge,
+  ...phase2Batch40Knowledge,
+  ...phase2Batch41Knowledge,
+  ...phase2Batch42Knowledge,
+  ...phase2Batch43Knowledge,
+  ...phase2Batch44Knowledge,
+  ...phase2Batch45Knowledge,
+  ...phase2Batch46Knowledge,
+  ...phase2Batch47Knowledge,
+  sp_0016: goldRamPhase2Knowledge,
+  sp_0224: platinumSnakeheadPhase2Knowledge,
+  sp_0475: rosyBitterlingPhase2Knowledge,
+  sp_0433: rummyNoseKnowledge,
+  sp_0013: otocinclusVittatusKnowledge,
   sp_0133: redRainbowfishKnowledge,
   sp_0126: clownLoachKnowledge,
   sp_0045: hillstreamLoachKnowledge,
   sp_0053: pygmyCoryKnowledge,
   sp_0447: discusKnowledge,
+  sp_0451: oscarKnowledge,
   sp_0448: ramireziKnowledge,
   sp_0017: agassiziiKnowledge,
   sp_0444: pearlGouramiKnowledge,
@@ -683,6 +1055,15 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0436: {
+    environment: {
+      waterType: 'unknown',
+      waterTypes: ['freshwater', 'brackish'],
+      temperatureRangeC: { min: 18, max: 28 },
+      phRange: { min: 7, max: 8 },
+      hardnessDgh: { min: 9, max: 19 },
+      notes: ['FishBase records Poecilia reticulata in both freshwater and brackish water; waterTypes preserves both reviewed habitats.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-poecilia-reticulata'], reviewedAt: '2026-09-22', note: 'Freshwater and brackish are both represented explicitly; the legacy single waterType stays unknown to avoid lossy collapse.' },
+    },
     sexIdentification: {
       title: '成体公母较容易区分',
       summary: '成年公鱼通常更鲜艳，并具有由臀鳍特化形成的交接器；母鱼通常体型更大、更丰满。',
@@ -730,6 +1111,19 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0431: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 20, max: 26 },
+      phRange: { min: 5, max: 7 },
+      hardnessDgh: { min: 1, max: 2 },
+      notes: ['FishBase records Paracheirodon innesi as a freshwater tropical species from blackwater or clearwater tributaries.'],
+      evidence: {
+        confidence: 'verified',
+        reviewStatus: 'reviewed',
+        sourceIds: ['batch33-fishbase-paracheirodon-innesi'],
+        reviewedAt: '2026-09-22',
+      },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断',
       summary: '性成熟母鱼通常腹部更圆、体型略大；幼鱼阶段不建议仅凭体型判断。',
@@ -777,6 +1171,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0432: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 23, max: 27 },
+      phRange: { min: 4, max: 6 },
+      hardnessDgh: { min: 5, max: 12 },
+      notes: ['FishBase records Paracheirodon axelrodi as freshwater, 23-27C, pH 4-6 and dH 5-12.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-paracheirodon-axelrodi'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断',
       summary: '性成熟母鱼通常腹部更圆、体型略大；幼鱼阶段不建议仅凭体型判断。',
@@ -821,6 +1223,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0014: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 25, max: 28 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase currently accepts this bronze cory lineage as Osteogaster aenea and records freshwater, 25-28C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch42-fishbase-corydoras-aeneus'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断',
       summary: '成熟母鱼通常更大、腹部更圆更宽；公鱼相对纤细。',
@@ -842,6 +1252,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0443: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 20, max: 25 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 2, max: 25 },
+      notes: ['FishBase currently treats the taxon as Hoplisoma panda and records freshwater, 20-25C, pH 6-8 and dH 2-25.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-corydoras-panda'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可从俯视体型辅助判断',
       summary: '成熟母鱼通常腹部更圆、体型略大；俯视时差异更容易观察。',
@@ -1017,6 +1435,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0434: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 18, max: 22 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase records Tanichthys albonubes as freshwater, 18-22C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch42-fishbase-tanichthys-albonubes'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型和颜色辅助判断',
       summary: '成熟母鱼通常腹部更圆、略大；公鱼更纤细，繁殖状态下颜色往往更鲜明。',
@@ -1048,6 +1474,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0435: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 18, max: 24 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase records Danio rerio as freshwater, 18-24C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch42-fishbase-danio-rerio'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成熟后可通过体型辅助判断', summary: '成熟母鱼通常腹部更圆、略大且颜色稍淡；公鱼相对纤细，繁殖状态下颜色更强。',
       points: ['母鱼：成熟后腹部更圆，通常略大。', '公鱼：相对纤细，繁殖状态下颜色更强。'], confidence: 'verified',
@@ -1074,6 +1508,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
     },
   },
   sp_0439: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 20, max: 26 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 19 },
+      notes: ['FishBase records Puntigrus tetrazona as freshwater, 20-26C, pH 6-8 and dH 5-19.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch37-fishbase-puntigrus-tetrazona'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '成体公母通常可通过体型和颜色辅助判断', summary: '成年公鱼通常更小、更纤细且颜色更强；母鱼通常更丰满。',
       points: ['公鱼：通常更小、更纤细、颜色更强。', '母鱼：通常腹部更丰满。'], confidence: 'verified',
@@ -1100,6 +1542,14 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   },
 
   sp_0446: {
+    environment: {
+      waterType: 'freshwater',
+      temperatureRangeC: { min: 24, max: 30 },
+      phRange: { min: 6, max: 8 },
+      hardnessDgh: { min: 5, max: 13 },
+      notes: ['FishBase records Pterophyllum scalare as freshwater, 24-30C, pH 6-8 and dH 5-13.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch40-fishbase-pterophyllum-scalare'], reviewedAt: '2026-09-22' },
+    },
     sexIdentification: {
       title: '平时很难可靠分公母',
       summary: '普通体态差异不可靠；进入繁殖状态后，可结合生殖乳突和配对行为辅助判断。',
@@ -1287,9 +1737,185 @@ const getWaterType = (fish: Fish): SpeciesKnowledgeProfile['facts']['waterType']
   return 'unknown';
 };
 
-export const getReviewedSpeciesKnowledge = (speciesId: string) => reviewedKnowledgeBySpeciesId[speciesId];
+export const getReviewedSpeciesKnowledge = (speciesId: string) => (
+  speciesId === 'sp_0455'
+    ? reviewedKnowledgeByBaseSpeciesKey['Neritina natalensis']
+    : reviewedKnowledgeBySpeciesId[speciesId]
+);
 
 export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
+  // Channa argus Platinum has a direct Phase 2 completion record, but the
+  // existing reviewed Compatibility Profile remains the runtime authority for
+  // its predator/solitary boundary. The completion matrix reads the direct
+  // record explicitly and never counts this as inherited Knowledge.
+  //
+  // Gold ram (sp_0016) is intentionally not included here: Batch 01 contains
+  // direct variant-aware reviewed authority for that catalog object, so exact
+  // reviewed Species Knowledge must win over base-species inheritance.
+  if (fish.id === 'sp_0224') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Mini-parrot already has an independent reviewed compatibility behavior
+  // authority. Preserve that runtime inheritance; the direct completion
+  // record is intentionally matrix-only until variant care is reviewed.
+  if (fish.id === 'sp_0021') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Crystal Shrimp has a direct taxonomic completion record, but its
+  // commercial form is not identified by that record. Keep runtime detail
+  // inheritance for the existing base-species behavior; the matrix still
+  // reads the direct record explicitly.
+  if (fish.id === 'sp_0002') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Neritina natalensis has an existing reviewed compatibility profile. Keep
+  // its runtime base authority for the duplicate launch-catalog object; the
+  // direct completion record remains matrix-only and fail-closed.
+  if (fish.id === 'sp_0428') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Neocaridina davidi Red is an existing reviewed shrimp runtime variant;
+  // preserve its established runtime behavior while keeping this completion
+  // record matrix-only and fail-closed for object-specific evidence.
+  if (fish.id === 'sp_0001') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Neocaridina davidi wild type is also covered by an existing reviewed
+  // shrimp runtime authority; keep that behavior while this direct catalog
+  // completion record remains matrix-only and fail-closed.
+  if (fish.id === 'sp_0459') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Guppy has an established reviewed runtime profile used by Species Detail;
+  // keep that behavior while the direct completion record remains matrix-only.
+  if (fish.id === 'sp_0436') {
+    if (reviewedKnowledgeBySpeciesId[fish.id]) return reviewedKnowledgeBySpeciesId[fish.id];
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // The snakehead runtime authority is keyed by its base scientific name;
+  // preserve that existing predator/solitary profile for Species Detail.
+  if (fish.id === 'sp_0049') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Tiger barb has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only and fail-closed.
+  if (fish.id === 'sp_0439' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // White cloud mountain minnow has an established Species Detail runtime
+  // profile; retain it while this completion record remains matrix-only.
+  if (fish.id === 'sp_0434' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Cherry barb has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only.
+  if (fish.id === 'sp_0012' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // The Blue parrot variant has an established reviewed base-species runtime
+  // profile; preserve that boundary without treating it as direct completion
+  // evidence for the variant's own care fields.
+  if (fish.id === 'sp_0147') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Rummy-nose tetra has an established Species Detail runtime profile;
+  // retain it while this completion record remains matrix-only.
+  if (fish.id === 'sp_0433' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // These Compatibility-reviewed ornamental variants retain their existing
+  // base runtime boundaries; their own completion records remain independent.
+  if (['sp_0148', 'sp_0222', 'sp_0258'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // The Albino Channa asiatica variant retains the established predator and
+  // solitary runtime boundary; its variant completion record stays separate.
+  if (fish.id === 'sp_0223') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Angelfish has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only.
+  if (fish.id === 'sp_0446' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Otocinclus has an established Species Detail runtime profile; retain it
+  // while this completion record remains matrix-only.
+  if (fish.id === 'sp_0013' && reviewedKnowledgeBySpeciesId[fish.id]) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Existing shrimp runtime boundaries remain available for these catalog
+  // variants; their completion records do not inherit those facts.
+  if (['sp_0028', 'sp_0030', 'sp_0031', 'sp_0164', 'sp_0165', 'sp_0166', 'sp_0238'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // These shrimp variants have existing Compatibility-reviewed runtime
+  // boundaries; preserve them without using base inheritance as completion
+  // evidence for the variant objects.
+  if (['sp_0239', 'sp_0274', 'sp_0275', 'sp_0276', 'sp_0277', 'sp_0278', 'sp_0279', 'sp_0342', 'sp_0396', 'sp_0397'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // The duplicate zebra-nerite catalog object retains the established
+  // Neritina natalensis runtime boundary; its completion record stays direct.
+  if (fish.id === 'sp_0455') {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Preserve established Species Detail runtime profiles for catalog objects
+  // that are also part of the reviewed compatibility surface.
+  if (['sp_0010', 'sp_0011', 'sp_0431', 'sp_0432', 'sp_0435'].includes(fish.id)) {
+    if (reviewedKnowledgeBySpeciesId[fish.id]) return reviewedKnowledgeBySpeciesId[fish.id];
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  if (['sp_0027', 'sp_0398'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  if (['sp_0437', 'sp_0438', 'sp_0447', 'sp_0451', 'sp_0444', 'sp_0468', 'sp_0053', 'sp_0114', 'sp_0259', 'sp_0260'].includes(fish.id)) {
+    if (['sp_0259', 'sp_0260'].includes(fish.id)) {
+      const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+      return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+    }
+    if (reviewedKnowledgeBySpeciesId[fish.id]) return reviewedKnowledgeBySpeciesId[fish.id];
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  if (['sp_0261', 'sp_0262', 'sp_0389', 'sp_0390', 'sp_0391'].includes(fish.id)) {
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // These catalog objects have established Species Detail runtime profiles;
+  // keep those profiles while Batch 47's direct unknown records remain
+  // matrix-only and fail-closed for object-specific evidence.
+  if (['sp_0017', 'sp_0440', 'sp_0448', 'sp_0469', 'sp_0020', 'sp_0045', 'sp_0126', 'sp_0133'].includes(fish.id)) {
+    if (reviewedKnowledgeBySpeciesId[fish.id]) return reviewedKnowledgeBySpeciesId[fish.id];
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // These catalog objects also have established Species Detail runtime
+  // profiles; keep those profiles while their Batch 31 completion claims
+  // remain matrix-only and fail-closed.
+  if (['sp_0014', 'sp_0049', 'sp_0431', 'sp_0432', 'sp_0443', 'sp_0435'].includes(fish.id)) {
+    if (reviewedKnowledgeBySpeciesId[fish.id]) return reviewedKnowledgeBySpeciesId[fish.id];
+    const baseKey = getBaseSpeciesScientificName(fish.scientificName);
+    return baseKey ? reviewedKnowledgeByBaseSpeciesKey[baseKey] : undefined;
+  }
+  // Phase 2 completion records are direct evidence for the matrix and
+  // Species Detail, but do not become Compatibility authority by existence.
+  if (completionOnlyDirectKnowledgeIds.has(fish.id)) return undefined;
   const direct = reviewedKnowledgeBySpeciesId[fish.id];
   if (direct) return direct;
   const baseKey = getBaseSpeciesScientificName(fish.scientificName);
@@ -1315,6 +1941,7 @@ export const buildSpeciesKnowledgeProfile = (fish: Fish): SpeciesKnowledgeProfil
     topTags,
     facts: {
       waterType: reviewedEnvironment?.waterType ?? getWaterType(fish),
+      waterTypes: reviewedEnvironment?.waterTypes,
       temperatureRange: reviewedEnvironment?.temperatureRangeC ?? parseRange(fish.waterTemperature),
       phRange: reviewedEnvironment?.phRange ?? parseRange(fish.phLevel),
       minVolumeLiters: parseMinLiters(fish.tankSize),

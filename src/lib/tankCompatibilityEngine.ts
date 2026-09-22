@@ -16,6 +16,7 @@ import {
 } from '../data/runtimeCompatibilityRegistry';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
+import { applyApprovedCatalogFieldReviews } from '../data/catalogFieldReviews';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 import {
   COMPATIBILITY_RULE_VERSION,
@@ -100,6 +101,21 @@ const resolveReviewedPairRule = (leftId: string, rightId: string, provider: Comp
 const resolveReviewedStageRisks = (speciesId: string, provider: CompatibilityEvidenceProvider) => (
   provider.getStageRisks(speciesId)
 );
+
+const reviewedProfileTargetsSpecies = (
+  predator: Fish,
+  prey: Fish,
+  provider: CompatibilityEvidenceProvider,
+) => {
+  const profile = resolveReviewedProfileForFish(predator, provider);
+  if (!profile) return false;
+  if (profile.predationTargets.length > 0) {
+    if (profile.predationTargets.includes(prey.id)) return true;
+    if (profile.predationTargets.includes('small_fish') && getLifeType(prey) === 'fish' && prey.size === 'Small') return true;
+    return false;
+  }
+  return profile.behaviorTraits.includes('predatory') && prey.size === 'Small';
+};
 
 export type EvaluateTankCompatibilityInput = {
   tank?: Aquarium | null;
@@ -239,6 +255,14 @@ const dedupeRules = (rules: TankCompatibilityRule[]) => {
   });
 };
 
+const catalogProfileForCompatibility = (fish: Fish) => (
+  applyApprovedCatalogFieldReviews(speciesProfileFromFish(fish))
+);
+
+const profileRange = (min: number | null, max: number | null) => (
+  min != null && max != null ? { min, max } : null
+);
+
 const formatReviewedPairRuleEvidence = (rule: ReviewedPairRule) => rule.basis === 'pair_rule'
   ? `${rule.reason} 该结论有直接配对或捕食风险实验支持；实验条件不等于家庭水族箱长期同缸，因此不外推为“已观察到长期同缸捕食”。`
   : `${rule.reason} 此结论根据两种生物各自的已审核行为资料推断，并非直接配对实验。`;
@@ -351,8 +375,10 @@ const evaluateLegacyTankCompatibility = ({
         passedRules.push(asRule('species_water_type_match', '水体类型一致', `${pairName} 的水体类型一致。`, 'info', reviewedRuleEvidence));
       }
 
-      const existingTemperature = parseRange(existing.waterTemperature);
-      const candidateTemperature = parseRange(candidateSpecies.waterTemperature);
+      const existingCatalogProfile = catalogProfileForCompatibility(existing);
+      const candidateCatalogProfile = catalogProfileForCompatibility(candidateSpecies);
+      const existingTemperature = profileRange(existingCatalogProfile.waterTemperatureMinC, existingCatalogProfile.waterTemperatureMaxC);
+      const candidateTemperature = profileRange(candidateCatalogProfile.waterTemperatureMinC, candidateCatalogProfile.waterTemperatureMaxC);
       if (!existingTemperature || !candidateTemperature) {
         missingData.push(asRule('species_temperature_missing', '温度资料不足', `${pairName} 缺少可比较的温度区间。`, 'medium', reviewedRuleEvidence));
       } else if (!rangesOverlap(existingTemperature, candidateTemperature)) {
@@ -361,8 +387,8 @@ const evaluateLegacyTankCompatibility = ({
         passedRules.push(asRule('temperature_overlap', '温度区间有交集', `${pairName} 可以找到共同温度区间。`, 'info', reviewedRuleEvidence));
       }
 
-      const existingPh = parseRange(existing.phLevel);
-      const candidatePh = parseRange(candidateSpecies.phLevel);
+      const existingPh = profileRange(existingCatalogProfile.phMin, existingCatalogProfile.phMax);
+      const candidatePh = profileRange(candidateCatalogProfile.phMin, candidateCatalogProfile.phMax);
       if (!existingPh || !candidatePh) {
         missingData.push(asRule('species_ph_missing', 'pH 资料不足', `${pairName} 缺少可比较的 pH 区间。`, 'low', reviewedRuleEvidence));
       } else if (!rangesOverlap(existingPh, candidatePh)) {
@@ -371,12 +397,12 @@ const evaluateLegacyTankCompatibility = ({
         passedRules.push(asRule('ph_range_overlap', 'pH 区间有交集', `${pairName} 可以找到共同 pH 区间。`, 'info', reviewedRuleEvidence));
       }
 
-      const predator = [existing, candidateSpecies].find(item => (
-        resolveReviewedProfileForFish(item, provider)?.behaviorTraits.includes('predatory')
-      ));
-      const smaller = predator?.id === existing.id ? candidateSpecies : existing;
-      if (predator && smaller.size === 'Small' && predator.id !== smaller.id) {
-        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食特征，可能捕食或吞食 ${smaller.name}。`, 'high', evidenceFromProfile(predator, provider)));
+      const existingTargetsCandidate = reviewedProfileTargetsSpecies(existing, candidateSpecies, provider);
+      const candidateTargetsExisting = reviewedProfileTargetsSpecies(candidateSpecies, existing, provider);
+      const predator = existingTargetsCandidate ? existing : candidateTargetsExisting ? candidateSpecies : null;
+      const prey = predator?.id === existing.id ? candidateSpecies : existing;
+      if (predator && prey && predator.id !== prey.id) {
+        blockingRules.push(asRule('predation_risk', '捕食或吞食风险', `${predator.name} 有已审核的捕食目标范围，可能捕食或吞食 ${prey.name}。`, 'high', evidenceFromProfile(predator, provider)));
       }
 
       if (reviewedPairRule) {
@@ -516,7 +542,11 @@ const evaluateLegacyTankCompatibility = ({
   }
 
   currentSpecies.forEach(existing => {
-    if (!rangesOverlap(parseRange(existing.waterTemperature), parseRange(candidateSpecies.waterTemperature))) {
+    const existingCatalogProfile = catalogProfileForCompatibility(existing);
+    const candidateCatalogProfile = catalogProfileForCompatibility(candidateSpecies);
+    const existingTemperature = profileRange(existingCatalogProfile.waterTemperatureMinC, existingCatalogProfile.waterTemperatureMaxC);
+    const candidateTemperature = profileRange(candidateCatalogProfile.waterTemperatureMinC, candidateCatalogProfile.waterTemperatureMaxC);
+    if (!rangesOverlap(existingTemperature, candidateTemperature)) {
       blockingRules.push(asRule(
         'temperature_no_overlap',
         '温度区间不重合',
@@ -525,7 +555,9 @@ const evaluateLegacyTankCompatibility = ({
         reviewedRuleEvidence,
       ));
     }
-    if (!rangesOverlap(parseRange(existing.phLevel), parseRange(candidateSpecies.phLevel))) {
+    const existingPh = profileRange(existingCatalogProfile.phMin, existingCatalogProfile.phMax);
+    const candidatePh = profileRange(candidateCatalogProfile.phMin, candidateCatalogProfile.phMax);
+    if (!rangesOverlap(existingPh, candidatePh)) {
       warningRules.push(asRule(
         'ph_range_gap',
         'pH 区间差异较大',
@@ -566,10 +598,8 @@ const evaluateLegacyTankCompatibility = ({
     }
   });
 
-  const hasPredator = currentSpecies.find(item => (
-    resolveReviewedProfileForFish(item, provider)?.behaviorTraits.includes('predatory')
-  ));
-  if (hasPredator && candidateSpecies.size === 'Small') {
+  const hasPredator = currentSpecies.find(item => reviewedProfileTargetsSpecies(item, candidateSpecies, provider));
+  if (hasPredator) {
     blockingRules.push(asRule(
       'predation_risk',
       '捕食或吞食风险',
@@ -643,24 +673,6 @@ const evaluateLegacyTankCompatibility = ({
     ));
   }
 
-  if (blockingRules.length > 0) {
-    suggestions.push('先移除阻断风险或更换候选生物。');
-  }
-  if (warningRules.some(rule => rule.code === 'group_requirement_gap')) {
-    suggestions.push(`群游物种不要只按少量个体试养；先把 ${candidateSpecies.name} 规划到已审核的最低群体数量。`);
-  } else if (warningRules.length > 0) {
-    suggestions.push('如需尝试，请先处理主要风险项，再按计划加入并观察。');
-  }
-  if (missingData.length > 0) {
-    const blockingMissing = missingData.filter(item => item.severity === 'high' || item.severity === 'medium');
-    suggestions.push(blockingMissing.length > 0
-      ? '先补充鱼缸尺寸、水温或必要设备信息后再评估。'
-      : '敏感物种可用试纸或滴定测试复核水质；普通判断无需填写 pH 数值。');
-  }
-  if (blockingRules.length === 0 && warningRules.length === 0 && missingData.length === 0) {
-    suggestions.push('可以少量加入，并在 3-7 天内观察追咬、拒食和水质波动。');
-  }
-
   const finalPassedRules = dedupeRules(passedRules);
   const finalWarningRules = dedupeRules(warningRules);
   const finalBlockingRules = dedupeRules(blockingRules);
@@ -683,6 +695,25 @@ const evaluateLegacyTankCompatibility = ({
         ? finalWarningRules.some(rule => rule.severity === 'medium' || rule.severity === 'high') ? 'medium' : 'low'
         : 'none';
 
+  if (status === 'not_recommended') {
+    suggestions.push('先解决明确阻断项；如果无法消除，建议更换候选生物。');
+  } else if (status === 'insufficient_data') {
+    const evidenceMissing = finalMissingData.some(item => (
+      item.code.includes('unreviewed')
+      || item.code.includes('evidence')
+      || item.code.includes('unknown')
+    ));
+    suggestions.push(evidenceMissing
+      ? '关键物种或行为资料尚未审核；先保留方案，补齐可靠资料后再决定是否加入。'
+      : '先补充鱼缸尺寸、水温或必要设备信息后再评估。');
+  } else if (finalWarningRules.some(rule => rule.code === 'group_requirement_gap')) {
+    suggestions.push(`先把 ${candidateSpecies.name} 规划到已审核的最低群体数量，再评估是否加入。`);
+  } else if (status === 'caution') {
+    suggestions.push('先处理主要风险项，再按计划加入并持续观察。');
+  } else {
+    suggestions.push('当前条件可加入；建议分步加入，并在 3-7 天内观察追咬、拒食和水质波动。');
+  }
+
   return {
     status,
     riskLevel,
@@ -697,7 +728,7 @@ const evaluateLegacyTankCompatibility = ({
 };
 
 const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider): DomainSpeciesFact => {
-  const profile = speciesProfileFromFish(fish);
+  const profile = catalogProfileForCompatibility(fish);
   const reviewed = resolveReviewedProfileForFish(fish, provider);
   const staticReviewed = getReviewedCompatibilityProfileForFish(fish);
   const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
@@ -721,6 +752,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   return {
     id: profile.catalogKey,
     waterType: reviewedEnvironment?.waterType ?? staticReviewed?.waterType ?? profile.waterType,
+    waterTypes: reviewedEnvironment?.waterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
     temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
     temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
     phMin: reviewedEnvironment?.phRange?.min ?? profile.phMin,
@@ -742,6 +774,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     finNipVulnerability: reviewedSocial?.finNipVulnerability,
     swimmingPace: reviewedSocial?.swimmingPace,
     predationRisk: reviewedSocial?.predationRisk,
+    predationTargets: reviewed?.predationTargets || [],
     predationVulnerability: reviewedSocial?.predationVulnerability,
     lifeType: getLifeType(fish),
     size: fish.size,
@@ -836,10 +869,17 @@ export const evaluateSpeciesCombination = (species: Fish[], evidenceProvider?: C
     });
   }
 
-  const results = uniqueSpecies.slice(1).map((candidateSpecies, index) => evaluateTankCompatibility({
+  // A species-combination preview is a symmetric question: A+B must produce
+  // the same compatibility decision as B+A. Planned-addition keeps its
+  // candidate-specific semantics in evaluateTankCompatibility; here every
+  // species takes one turn as the candidate against the complete remainder so
+  // candidate-only rules (for example minimum group size) cannot depend on
+  // caller ordering.
+  const evaluationSpecies = [...uniqueSpecies].sort((left, right) => left.id.localeCompare(right.id));
+  const results = evaluationSpecies.map((candidateSpecies) => evaluateTankCompatibility({
     scope: 'species_only',
     candidateSpecies,
-    existingSpecies: uniqueSpecies.slice(0, index + 1),
+    existingSpecies: evaluationSpecies.filter(item => item.id !== candidateSpecies.id),
     evidenceProvider,
   }));
   const rank: Record<TankCompatibilityStatus, number> = {
