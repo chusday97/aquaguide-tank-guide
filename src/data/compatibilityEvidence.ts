@@ -6,6 +6,7 @@ import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
   waterType?: 'freshwater' | 'saltwater' | 'brackish';
+  waterTypes?: Array<'freshwater' | 'saltwater' | 'brackish'>;
   behaviorTraits: string[];
   minimumGroupSize?: number;
   predationTargets: string[];
@@ -608,6 +609,24 @@ const oscarSeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const rhodeusFishBase: EvidenceSourceDto = {
+  id: 'batch03-fishbase-rhodeus-ocellatus',
+  title: 'Rhodeus ocellatus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Rhodeus-ocellatus.html',
+  sourceType: 'professional_association',
+  reviewStatus: 'reviewed',
+};
+
+const rhodeusSchoolingStudy: EvidenceSourceDto = {
+  id: 'jstage-rhodeus-ocellatus-schooling',
+  title: 'Characteristics of Schooling Behavior by the Group Size of Rose Bitterling in the Experimental Water Tank',
+  publisher: 'Nippon Suisan Gakkaishi / J-STAGE',
+  url: 'https://doi.org/10.2331/suisan.51.1977',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const channaRhodeusInformationDynamicsStudy: EvidenceSourceDto = {
   id: 'channa-rhodeus-information-dynamics-study',
   title: 'Information Dynamics in the Interaction between a Prey and a Predator Fish',
@@ -943,6 +962,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0436: {
     speciesId: 'sp_0436',
     waterType: 'freshwater',
+    waterTypes: ['freshwater', 'brackish'],
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -950,6 +970,18 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [guppyFishBase, guppyShoalingStudy],
     requiredFacts: ['water', 'temperature', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0475: {
+    speciesId: 'sp_0475',
+    waterType: 'freshwater',
+    waterTypes: ['freshwater', 'brackish'],
+    behaviorTraits: ['schooling'],
+    minimumGroupSize: 3,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [rhodeusFishBase, rhodeusSchoolingStudy],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
   },
   sp_0446: {
     speciesId: 'sp_0446',

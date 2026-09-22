@@ -12,54 +12,51 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 411
-- Reviewed compatibility profiles: 33
+- Reviewed compatibility profiles: 34
 - Reviewed pair rules: 5
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
-- Current insufficient pair gaps: 65
+- Current insufficient pair gaps: 19
 - Evidence-research-only pair gaps: 0
-- Boundary-blocked pair gaps: 65
+- Boundary-blocked pair gaps: 19
 
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
 | feeding | 411 | 1 | 410 | 0.2% |
-| environment | 475 | 37 | 438 | 7.8% |
+| environment | 475 | 38 | 437 | 8.0% |
 | space | 475 | 39 | 436 | 8.2% |
-| social | 411 | 36 | 375 | 8.8% |
+| social | 411 | 37 | 374 | 9.0% |
 | care | 475 | 1 | 474 | 0.2% |
 
 ## Highest-priority species gaps
 
-1. 孔雀鱼 (sp_0436) — environment — representation_change [multi_water_type_not_representable] — unlocks 25 insufficient pairs — score 55
-2. 高体鳑鲏 (sp_0475) — social, compatibility_profile — representation_change [multi_water_type_not_representable] — unlocks 23 insufficient pairs — score 60
-3. 白金雷龙 (sp_0224) — environment, space, social, compatibility_profile — variant_authority_review [variant_authority_not_promotable] — unlocks 19 insufficient pairs — score 66
-4. 水晶虾 (sp_0002) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 3 insufficient pairs — score 29
-5. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 3 insufficient pairs — score 29
-6. 斑马螺 (sp_0428) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 3 insufficient pairs — score 29
-7. 糖果KOI斗鱼 (sp_0258) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 23
+1. 白金雷龙 (sp_0224) — environment, space, social, compatibility_profile — variant_authority_review [variant_authority_not_promotable] — unlocks 19 insufficient pairs — score 66
+2. 水晶虾 (sp_0002) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25
+3. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25
+4. 斑马螺 (sp_0428) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25
+5. 糖果KOI斗鱼 (sp_0258) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 0 insufficient pairs — score 23
 
 ## Highest-priority pair gaps
 
-1. 极火虾 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-2. 水晶虾 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
-3. 黑裙鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
-4. 月光鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-5. 樱桃灯 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-6. 小精灵 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-7. 金波子 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-8. 迷你鹦鹉鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
-9. 白金雷龙 × 孔雀鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable, variant_authority_not_promotable] — score 30
-10. 斑马螺 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [catalog_identity_unresolved, multi_water_type_not_representable] — score 30
-11. 红绿灯 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-12. 宝莲灯 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-13. 红鼻剪刀 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-14. 白云金丝 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-15. 斑马鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-16. 孔雀鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-17. 玛丽鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-18. 红剑鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-19. 虎皮鱼 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
-20. 熊猫鼠 × 高体鳑鲏 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed, water_type_unknown — boundary_blocked [multi_water_type_not_representable] — score 30
+1. 极火虾 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+2. 水晶虾 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
+3. 黑裙鱼 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
+4. 月光鱼 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+5. 樱桃灯 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+6. 小精灵 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+7. 迷你鹦鹉鱼 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
+8. 白金雷龙 × 斑马螺 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [catalog_identity_unresolved, variant_authority_not_promotable] — score 29
+9. 白金雷龙 × 红绿灯 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+10. 白金雷龙 × 白云金丝 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+11. 白金雷龙 × 斑马鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+12. 白金雷龙 × 孔雀鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+13. 白金雷龙 × 玛丽鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+14. 白金雷龙 × 红剑鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+15. 白金雷龙 × 虎皮鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+16. 白金雷龙 × 熊猫鼠 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+17. 白金雷龙 × 地图鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+18. 白金雷龙 × 黑壳虾 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
+19. 白金雷龙 × 金三角灯 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — boundary_blocked [variant_authority_not_promotable] — score 29
 
 ## Research workflow
 

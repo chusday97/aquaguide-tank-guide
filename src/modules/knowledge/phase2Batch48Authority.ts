@@ -20,6 +20,7 @@ const supportedEnvironmentFacts: Partial<Record<string, string>> = {
   sp_0446: 'FishBase directly records Pterophyllum scalare as freshwater, 24-30C, pH 6-8 and dH 5-13.',
   sp_0434: 'FishBase directly records Tanichthys albonubes as freshwater, 18-22C, pH 6-8 and dH 5-19.',
   sp_0435: 'FishBase directly records Danio rerio as freshwater, 18-24C, pH 6-8 and dH 5-19.',
+  sp_0436: 'FishBase directly records Poecilia reticulata in both freshwater and brackish water; the reviewed multi-water representation preserves both without collapsing to one value.',
   sp_0439: 'FishBase directly records Puntigrus tetrazona as freshwater, 20-26C, pH 6-8 and dH 5-19.',
   sp_0443: 'FishBase directly records Hoplisoma/Corydoras panda as freshwater, 20-25C, pH 6-8 and dH 2-25.',
 };
@@ -36,9 +37,7 @@ export const phase2Batch48Authority = Object.fromEntries(Object.entries(phase2Ba
       : {
           status: 'reviewed_unknown',
           citationIds: [subject.source],
-          factEvidence: id === 'sp_0436'
-            ? 'FishBase directly records Poecilia reticulata in both freshwater and brackish water; the current single-value waterType field cannot represent both without loss.'
-            : subject.title + ' does not establish complete object-specific environment authority.',
+          factEvidence: subject.title + ' does not establish complete object-specific environment authority.',
         },
   } satisfies { environment: Phase2Batch48FieldAuthority }];
 })) as Record<string, { environment: Phase2Batch48FieldAuthority }>;

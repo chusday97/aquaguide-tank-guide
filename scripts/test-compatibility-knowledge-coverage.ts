@@ -48,9 +48,10 @@ for (const item of queue.species_gaps) {
   assert.match(item.priority_basis, /pair-gap unlock impact/);
 }
 const bitterlingGap = queue.species_gaps.find(item => item.species_id === 'sp_0475');
-assert.ok(bitterlingGap, 'high-body bitterling gap must remain visible');
-assert.ok(bitterlingGap.boundary_codes.includes('multi_water_type_not_representable'));
-assert.equal(bitterlingGap.resolution_mode, 'representation_change');
+assert.equal(bitterlingGap, undefined, 'high-body bitterling must clear after multi-water + reviewed schooling/profile authority');
+
+const guppyGap = queue.species_gaps.find(item => item.species_id === 'sp_0436');
+assert.equal(guppyGap, undefined, 'guppy multi-water environment must be fully represented and no longer queued');
 
 const platinumSnakeheadGap = queue.species_gaps.find(item => item.species_id === 'sp_0224');
 assert.ok(platinumSnakeheadGap, 'platinum snakehead gap must remain visible');

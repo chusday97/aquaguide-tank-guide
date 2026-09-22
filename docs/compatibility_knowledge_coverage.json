@@ -7,7 +7,7 @@
   "catalog_objects": 486,
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 411,
-  "reviewed_compatibility_profiles": 33,
+  "reviewed_compatibility_profiles": 34,
   "reviewed_pair_rules": 5,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,
@@ -27,9 +27,9 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 37,
-      "reviewed_unknown": 438,
-      "supported_pct": 7.8
+      "reviewed_supported": 38,
+      "reviewed_unknown": 437,
+      "supported_pct": 8
     },
     "space": {
       "applicable": 475,
@@ -39,9 +39,9 @@
     },
     "social": {
       "applicable": 411,
-      "reviewed_supported": 36,
-      "reviewed_unknown": 375,
-      "supported_pct": 8.8
+      "reviewed_supported": 37,
+      "reviewed_unknown": 374,
+      "supported_pct": 9
     },
     "care": {
       "applicable": 475,
@@ -50,38 +50,11 @@
       "supported_pct": 0.2
     }
   },
-  "priority_species_gap_count": 7,
-  "priority_pair_gap_count": 65,
+  "priority_species_gap_count": 5,
+  "priority_pair_gap_count": 19,
   "evidence_research_pair_gap_count": 0,
-  "boundary_blocked_pair_gap_count": 65,
+  "boundary_blocked_pair_gap_count": 19,
   "top_pair_gap_root_species": [
-    {
-      "species_id": "sp_0436",
-      "common_name": "孔雀鱼",
-      "blocked_pair_count": 25,
-      "gap_kinds": [
-        "environment"
-      ],
-      "boundary_codes": [
-        "multi_water_type_not_representable"
-      ],
-      "resolution_mode": "representation_change",
-      "score": 55
-    },
-    {
-      "species_id": "sp_0475",
-      "common_name": "高体鳑鲏",
-      "blocked_pair_count": 23,
-      "gap_kinds": [
-        "social",
-        "compatibility_profile"
-      ],
-      "boundary_codes": [
-        "multi_water_type_not_representable"
-      ],
-      "resolution_mode": "representation_change",
-      "score": 60
-    },
     {
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
@@ -101,7 +74,7 @@
     {
       "species_id": "sp_0002",
       "common_name": "水晶虾",
-      "blocked_pair_count": 3,
+      "blocked_pair_count": 1,
       "gap_kinds": [
         "environment",
         "space",
@@ -111,12 +84,12 @@
         "catalog_identity_unresolved"
       ],
       "resolution_mode": "identity_review",
-      "score": 29
+      "score": 25
     },
     {
       "species_id": "sp_0021",
       "common_name": "迷你鹦鹉鱼",
-      "blocked_pair_count": 3,
+      "blocked_pair_count": 1,
       "gap_kinds": [
         "environment",
         "space",
@@ -126,12 +99,12 @@
         "catalog_identity_unresolved"
       ],
       "resolution_mode": "identity_review",
-      "score": 29
+      "score": 25
     },
     {
       "species_id": "sp_0428",
       "common_name": "斑马螺",
-      "blocked_pair_count": 3,
+      "blocked_pair_count": 1,
       "gap_kinds": [
         "environment",
         "space",
@@ -141,7 +114,7 @@
         "catalog_identity_unresolved"
       ],
       "resolution_mode": "identity_review",
-      "score": 29
+      "score": 25
     }
   ]
 }

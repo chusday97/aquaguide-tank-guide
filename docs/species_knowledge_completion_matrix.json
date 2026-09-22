@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T18:35:39.744Z",
+  "generated_at": "2026-09-22T00:21:01.307Z",
   "catalog_object_count": 486,
   "fields": [
     "feeding",
@@ -13335,7 +13335,7 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
+        "environment": "reviewed_supported",
         "space": "reviewed_supported",
         "social": "reviewed_supported",
         "care": "reviewed_unknown"
@@ -14571,13 +14571,13 @@
         "feeding": "reviewed_unknown",
         "environment": "reviewed_supported",
         "space": "reviewed_supported",
-        "social": "reviewed_unknown",
+        "social": "reviewed_supported",
         "care": "reviewed_unknown"
       },
       "gap_fields": [],
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
+      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",
@@ -14917,8 +14917,8 @@
       "template_only": 0
     },
     "environment": {
-      "reviewed_supported": 37,
-      "reviewed_unknown": 438,
+      "reviewed_supported": 38,
+      "reviewed_unknown": 437,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
@@ -14933,8 +14933,8 @@
       "template_only": 0
     },
     "social": {
-      "reviewed_supported": 36,
-      "reviewed_unknown": 375,
+      "reviewed_supported": 37,
+      "reviewed_unknown": 374,
       "inherited_reviewed": 0,
       "not_applicable": 75,
       "needs_research": 0,

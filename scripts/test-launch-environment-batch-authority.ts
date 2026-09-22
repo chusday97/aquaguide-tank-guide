@@ -24,11 +24,12 @@ for (const [id, waterType, temp, ph, hardness] of supported) {
 const guppy = getReviewedSpeciesKnowledge('sp_0436');
 assert.ok(guppy);
 assert.equal(guppy.environment?.waterType, 'unknown');
+assert.deepEqual(guppy.environment?.waterTypes, ['freshwater', 'brackish']);
 assert.deepEqual(guppy.environment?.temperatureRangeC, { min: 18, max: 28 });
 assert.deepEqual(guppy.environment?.phRange, { min: 7, max: 8 });
 assert.deepEqual(guppy.environment?.hardnessDgh, { min: 9, max: 19 });
 assert.match((guppy.environment?.notes || []).join(' '), /freshwater/i);
 assert.match((guppy.environment?.notes || []).join(' '), /brackish/i);
-assert.equal(phase2Batch48Authority.sp_0436?.environment.status, 'reviewed_unknown');
+assert.equal(phase2Batch48Authority.sp_0436?.environment.status, 'reviewed_supported');
 
 console.log('Launch environment batch authority passed: 4 supported species + guppy multi-water representation boundary');

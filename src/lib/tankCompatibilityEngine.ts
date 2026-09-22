@@ -752,6 +752,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
   return {
     id: profile.catalogKey,
     waterType: reviewedEnvironment?.waterType ?? staticReviewed?.waterType ?? profile.waterType,
+    waterTypes: reviewedEnvironment?.waterTypes ?? reviewed?.waterTypes ?? staticReviewed?.waterTypes,
     temperatureMinC: reviewedEnvironment?.temperatureRangeC?.min ?? profile.waterTemperatureMinC,
     temperatureMaxC: reviewedEnvironment?.temperatureRangeC?.max ?? profile.waterTemperatureMaxC,
     phMin: reviewedEnvironment?.phRange?.min ?? profile.phMin,

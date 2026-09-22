@@ -798,11 +798,27 @@ const rosyBitterlingPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
   environment: {
     waterType: 'unknown',
+    waterTypes: ['freshwater', 'brackish'],
     temperatureRangeC: { min: 18, max: 24 },
-    notes: ['FishBase 同时记录 freshwater 与 brackish；保留 waterType unknown。FishBase 给出 18–24°C，J-STAGE 研究讨论 22–28°C 的繁殖季温度响应，后者不替代日常温度范围。'],
+    notes: ['FishBase 同时记录 freshwater 与 brackish；使用 waterTypes 无损表达双水体记录。FishBase 给出 18–24°C，J-STAGE 研究讨论 22–28°C 的繁殖季温度响应，后者不替代日常温度范围。'],
     evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'], reviewedAt: '2026-09-16' },
   },
-  socialBehavior: { mode: 'unknown', summary: '现有专业来源没有确认适用于水族箱的群体最低数量或稳定社会模式。', evidence: phase2UnknownEvidence(['batch03-fishbase-rhodeus-ocellatus', 'jstage-rhodeus-ocellatus-reproductive-cycle'], '不把繁殖研究外推为社区混养行为。') },
+  socialBehavior: {
+    mode: 'school',
+    minimumGroupSize: 3,
+    recommendedGroupSize: { min: 3 },
+    swimmingZone: 'unknown',
+    territoriality: 'unknown',
+    finNipping: 'unknown',
+    predationRisk: 'unknown',
+    summary: 'J-STAGE 水槽实验直接研究 Rhodeus ocellatus ocellatus 的群游，结果显示 3 条及以上才能维持稳定 schooling；该实验不支持额外推断“温和”或“无领地性”。',
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['jstage-rhodeus-ocellatus-schooling'],
+      reviewedAt: '2026-09-22',
+    },
+  },
   spaceAndGrowth: { adultLengthCm: { max: 9.2, measurement: 'SL' }, activityLevel: 'unknown', spaceNotes: ['FishBase 给出最大 9.2 cm SL；没有足以支持最低缸长或升数的物种专属专业来源。'], evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch03-fishbase-rhodeus-ocellatus'], reviewedAt: '2026-09-16' } },
 };
 
@@ -1019,11 +1035,12 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   sp_0436: {
     environment: {
       waterType: 'unknown',
+      waterTypes: ['freshwater', 'brackish'],
       temperatureRangeC: { min: 18, max: 28 },
       phRange: { min: 7, max: 8 },
       hardnessDgh: { min: 9, max: 19 },
-      notes: ['FishBase records Poecilia reticulata in both freshwater and brackish water. The current single-value waterType field cannot represent both without losing reviewed evidence.'],
-      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-poecilia-reticulata'], reviewedAt: '2026-09-22', note: 'Freshwater and brackish are both reviewed; waterType remains unknown until multi-water-type representation exists.' },
+      notes: ['FishBase records Poecilia reticulata in both freshwater and brackish water; waterTypes preserves both reviewed habitats.'],
+      evidence: { confidence: 'verified', reviewStatus: 'reviewed', sourceIds: ['batch33-fishbase-poecilia-reticulata'], reviewedAt: '2026-09-22', note: 'Freshwater and brackish are both represented explicitly; the legacy single waterType stays unknown to avoid lossy collapse.' },
     },
     sexIdentification: {
       title: '成体公母较容易区分',
@@ -1902,6 +1919,7 @@ export const buildSpeciesKnowledgeProfile = (fish: Fish): SpeciesKnowledgeProfil
     topTags,
     facts: {
       waterType: reviewedEnvironment?.waterType ?? getWaterType(fish),
+      waterTypes: reviewedEnvironment?.waterTypes,
       temperatureRange: reviewedEnvironment?.temperatureRangeC ?? parseRange(fish.waterTemperature),
       phRange: reviewedEnvironment?.phRange ?? parseRange(fish.phLevel),
       minVolumeLiters: parseMinLiters(fish.tankSize),

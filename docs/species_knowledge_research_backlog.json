@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-21T18:35:39.744Z",
+  "generated_at": "2026-09-22T00:21:01.307Z",
   "selection": "Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.",
   "items": [
     {
@@ -579,7 +579,7 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
+        "environment": "reviewed_supported",
         "space": "reviewed_supported",
         "social": "reviewed_supported",
         "care": "reviewed_unknown"
@@ -969,13 +969,13 @@
         "feeding": "reviewed_unknown",
         "environment": "reviewed_supported",
         "space": "reviewed_supported",
-        "social": "reviewed_unknown",
+        "social": "reviewed_supported",
         "care": "reviewed_unknown"
       },
       "gap_fields": [],
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
+      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "launch_cohort",
       "risk_proxy": "elevated",

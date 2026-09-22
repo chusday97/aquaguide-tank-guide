@@ -276,7 +276,9 @@
     "test:neon-tetra-environment-authority": "node --import tsx scripts/test-neon-tetra-environment-authority.ts",
     "test:launch-environment-batch-authority": "node --import tsx scripts/test-launch-environment-batch-authority.ts",
     "test:secondary-environment-batch-authority": "node --import tsx scripts/test-secondary-environment-batch-authority.ts",
-    "test:pearl-red-snakehead-knowledge-authority": "node --import tsx scripts/test-pearl-red-snakehead-knowledge-authority.ts"
+    "test:pearl-red-snakehead-knowledge-authority": "node --import tsx scripts/test-pearl-red-snakehead-knowledge-authority.ts",
+    "test:multi-water-type-authority": "node --import tsx scripts/test-multi-water-type-authority.ts",
+    "test:rhodeus-compatibility-authority": "node --import tsx scripts/test-rhodeus-compatibility-authority.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

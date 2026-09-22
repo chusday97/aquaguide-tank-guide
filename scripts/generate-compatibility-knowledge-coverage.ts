@@ -70,6 +70,7 @@ const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
   const codes: GapBoundaryCode[] = [];
   if (
     knowledge?.environment?.waterType === 'unknown'
+    && (knowledge?.environment?.waterTypes?.length || 0) < 2
     && /freshwater/i.test(environmentText)
     && /brackish/i.test(environmentText)
   ) {

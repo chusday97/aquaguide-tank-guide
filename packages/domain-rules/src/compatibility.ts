@@ -42,6 +42,7 @@ export type TankStabilityContext = {
 export type DomainSpeciesFact = {
   id: string;
   waterType: 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+  waterTypes?: Array<'freshwater' | 'saltwater' | 'brackish'>;
   temperatureMinC?: number | null;
   temperatureMaxC?: number | null;
   phMin?: number | null;
@@ -164,6 +165,27 @@ export const getCompatibilityAddPolicy = (
   return 'complete_information';
 };
 
+const supportedWaterTypes = (species?: DomainSpeciesFact | null) => {
+  if (!species) return [] as Array<'freshwater' | 'saltwater' | 'brackish'>;
+  const reviewed = species.waterTypes?.filter((value, index, all) => all.indexOf(value) === index) || [];
+  if (reviewed.length > 0) return reviewed;
+  return species.waterType === 'unknown' ? [] : [species.waterType];
+};
+
+const waterTypesOverlap = (left?: DomainSpeciesFact | null, right?: DomainSpeciesFact | null) => {
+  const leftTypes = supportedWaterTypes(left);
+  const rightTypes = supportedWaterTypes(right);
+  if (leftTypes.length === 0 || rightTypes.length === 0) return null;
+  return leftTypes.some(type => rightTypes.includes(type));
+};
+
+const supportsTankWaterType = (species: DomainSpeciesFact, tankWaterType?: DomainTankFact['waterType']) => {
+  if (!tankWaterType || tankWaterType === 'unknown') return null;
+  const supported = supportedWaterTypes(species);
+  if (supported.length === 0) return null;
+  return supported.includes(tankWaterType);
+};
+
 const rangesOverlap = (leftMin?: number | null, leftMax?: number | null, rightMin?: number | null, rightMax?: number | null) => {
   if (leftMin == null || leftMax == null || rightMin == null || rightMax == null) return null;
   return Math.max(leftMin, rightMin) <= Math.min(leftMax, rightMax);
@@ -224,9 +246,10 @@ export const evaluateCompatibility = ({
 
   if (candidateSpecies && existingSpecies.length > 0) {
     for (const existing of existingSpecies) {
-      if (existing.waterType === 'unknown' || candidateSpecies.waterType === 'unknown') {
+      const speciesWaterOverlap = waterTypesOverlap(existing, candidateSpecies);
+      if (speciesWaterOverlap === null) {
         raise('insufficient_data', 'water_type_unknown');
-      } else if (existing.waterType !== candidateSpecies.waterType) {
+      } else if (!speciesWaterOverlap) {
         raise('not_recommended', 'water_type_conflict');
       }
       if (!existing.reviewed || !candidateSpecies.reviewed) raise('insufficient_data', 'species_evidence_unreviewed');
@@ -335,8 +358,9 @@ export const evaluateCompatibility = ({
 
   if (candidateSpecies && tank) {
     if (!tank.waterType || tank.waterType === 'unknown') raise('insufficient_data', 'tank_water_type_missing');
-    if (candidateSpecies.waterType === 'unknown') raise('insufficient_data', 'candidate_water_type_missing');
-    if (tank.waterType !== 'unknown' && candidateSpecies.waterType !== 'unknown' && tank.waterType !== candidateSpecies.waterType) {
+    const candidateTankWaterFit = supportsTankWaterType(candidateSpecies, tank.waterType);
+    if (candidateTankWaterFit === null && tank.waterType && tank.waterType !== 'unknown') raise('insufficient_data', 'candidate_water_type_missing');
+    if (candidateTankWaterFit === false) {
       raise('not_recommended', 'candidate_tank_water_type_conflict');
     }
     if (tank.volumeLiters == null || tank.volumeLiters <= 0) raise('insufficient_data', 'tank_volume_missing');
