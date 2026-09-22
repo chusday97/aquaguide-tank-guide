@@ -1,3 +1,4 @@
+import { rawVisionCandidateSchema } from '../../../../packages/contracts/src/index';
 import { apiConfig } from '../config';
 
 export type ProviderFailureReason = 'not_configured' | 'timeout' | 'network' | 'invalid_response';
@@ -31,10 +32,12 @@ const fetchJsonResponse = async (
   model: string,
   timeoutMs: number,
   body: Record<string, unknown>,
+  maxAttempts = 2,
 ) => {
   if (!apiKey || !baseUrl || !model) throw new ProviderError('not_configured', 'AI provider is not configured.');
+  const attempts = Math.max(1, maxAttempts);
   let lastError: unknown;
-  for (let attempt = 0; attempt < 2; attempt += 1) {
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), timeoutMs);
     try {
@@ -48,7 +51,7 @@ const fetchJsonResponse = async (
         signal: controller.signal,
       });
       if (!response.ok) {
-        if (attempt === 0 && (response.status === 429 || response.status >= 500)) continue;
+        if (attempt < attempts - 1 && (response.status === 429 || response.status >= 500)) continue;
         throw new ProviderError('network', `Provider returned HTTP ${response.status}.`, response.status);
       }
       const payload = await response.json() as { choices?: Array<{ message?: { content?: unknown } }> };
@@ -67,7 +70,7 @@ const fetchJsonResponse = async (
       } else {
         lastError = new ProviderError('network', 'Provider request failed.');
       }
-      if (attempt === 1) throw lastError;
+      if (attempt === attempts - 1) throw lastError;
     } finally {
       clearTimeout(timeout);
     }
@@ -110,6 +113,32 @@ const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: 
   ],
 });
 
+const visionCategoryRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: string, categories: readonly string[]) => ({
+  stream: false,
+  temperature: 0,
+  max_tokens: 120,
+  ...(supportsVisionJsonMode(model) ? { response_format: { type: 'json_object' as const } } : {}),
+  messages: [
+    {
+      role: 'system',
+      content: 'Classify only the visible aquarium organism into exactly one allowed Aqua catalog category. Return one JSON object only. Do not identify the species yet.',
+    },
+    {
+      role: 'user',
+      content: [
+        {
+          type: 'text',
+          text: (locale === 'en'
+            ? 'Return {"category":"one exact allowed category"}. If the image is too unclear or does not show an aquarium organism, return {"category":""}.'
+            : '只返回 {"category":"一个完全一致的允许类别"}。如果图片太模糊或不是水族生物，返回 {"category":""}。')
+            + `\nAllowed categories: ${categories.join(' | ')}`,
+        },
+        { type: 'image_url', image_url: { url: imageDataUrl } },
+      ],
+    },
+  ],
+});
+
 const shouldUseVisionFallback = (error: unknown) => (
   error instanceof ProviderError
   && (
@@ -120,29 +149,51 @@ const shouldUseVisionFallback = (error: unknown) => (
   )
 );
 
-export const requestVisionCandidates = async (imageDataUrl: string, locale: 'zh-CN' | 'en', catalogOptions = '') => {
+const runVisionWithFallback = async <T>(
+  bodyForModel: (model: string) => Record<string, unknown>,
+  validate: (payload: unknown) => T,
+) => {
+  const run = async (model: string) => validate(await fetchJsonResponse(
+    apiConfig.visionBaseUrl,
+    apiConfig.visionApiKey,
+    model,
+    apiConfig.visionTimeoutMs,
+    bodyForModel(model),
+    1,
+  ));
   try {
-    const payload = await fetchJsonResponse(
-      apiConfig.visionBaseUrl,
-      apiConfig.visionApiKey,
-      apiConfig.visionModel,
-      apiConfig.visionTimeoutMs,
-      visionRequestBody(imageDataUrl, locale, apiConfig.visionModel, catalogOptions),
-    );
-    return { payload, modelName: apiConfig.visionModel };
+    return { payload: await run(apiConfig.visionModel), modelName: apiConfig.visionModel };
   } catch (error) {
     const fallbackModel = apiConfig.visionFallbackModel;
     if (!fallbackModel || fallbackModel === apiConfig.visionModel || !shouldUseVisionFallback(error)) throw error;
-    const payload = await fetchJsonResponse(
-      apiConfig.visionBaseUrl,
-      apiConfig.visionApiKey,
-      fallbackModel,
-      apiConfig.visionTimeoutMs,
-      visionRequestBody(imageDataUrl, locale, fallbackModel, catalogOptions),
-    );
-    return { payload, modelName: fallbackModel };
+    return { payload: await run(fallbackModel), modelName: fallbackModel };
   }
 };
+
+export const requestVisionCatalogCategory = (
+  imageDataUrl: string,
+  locale: 'zh-CN' | 'en',
+  allowedCategories: readonly string[],
+) => runVisionWithFallback(
+  model => visionCategoryRequestBody(imageDataUrl, locale, model, allowedCategories),
+  payload => {
+    const category = (payload as { category?: unknown })?.category;
+    if (typeof category !== 'string' || !allowedCategories.includes(category)) {
+      throw new ProviderError('invalid_response', 'Vision category was invalid.');
+    }
+    return { category };
+  },
+);
+
+export const requestVisionCandidates = (imageDataUrl: string, locale: 'zh-CN' | 'en', catalogOptions = '') => runVisionWithFallback(
+  model => visionRequestBody(imageDataUrl, locale, model, catalogOptions),
+  payload => {
+    const raw = payload as { candidates?: unknown };
+    const parsed = rawVisionCandidateSchema.array().max(3).safeParse(raw.candidates);
+    if (!parsed.success) throw new ProviderError('invalid_response', 'Vision candidates were invalid.');
+    return { candidates: parsed.data };
+  },
+);
 
 export const requestSymptomObservations = (context: Record<string, unknown>) => fetchJsonResponse(
   apiConfig.aiBaseUrl,

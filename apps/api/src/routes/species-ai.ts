@@ -12,7 +12,7 @@ import { buildSpeciesDiagnosisStep } from '../../../../packages/domain-rules/src
 import { apiConfig } from '../config';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
-import { ProviderError, requestSymptomObservations, requestVisionCandidates } from '../ai/provider';
+import { ProviderError, requestSymptomObservations, requestVisionCandidates, requestVisionCatalogCategory } from '../ai/provider';
 import { fishData } from '../../../../src/data/fishData';
 
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -20,9 +20,13 @@ const sessionMisses = new Map<string, number>();
 const rateBuckets = new Map<string, { startedAt: number; count: number }>();
 const recognitionCatalog = fishData.filter(item => item.category !== '硬景/底床');
 const recognitionCatalogByKey = new Map(recognitionCatalog.map(item => [item.id, item]));
-const recognitionCatalogPrompt = recognitionCatalog
+const recognitionCategories = [...new Set(recognitionCatalog.map(item => item.category).filter((value): value is string => Boolean(value)))];
+const recognitionCatalogPromptFor = (category: string) => recognitionCatalog
+  .filter(item => item.category === category)
   .map(item => [item.id, item.name, item.scientificName || '', item.category || ''].join('|'))
   .join('\n');
+
+export const recognitionCatalogSizeForCategory = (category: string) => recognitionCatalog.filter(item => item.category === category).length;
 
 const checkRateLimit = (request: express.Request) => {
   const key = request.ip || 'unknown';
@@ -87,12 +91,14 @@ speciesAiRouter.post(
         .resize({ width: 1536, height: 1536, fit: 'inside', withoutEnlargement: true })
         .webp({ quality: 84 })
         .toBuffer();
-      const vision = await requestVisionCandidates(`data:image/webp;base64,${normalized.toString('base64')}`, locale, recognitionCatalogPrompt);
+      const imageDataUrl = `data:image/webp;base64,${normalized.toString('base64')}`;
+      const categoryResult = await requestVisionCatalogCategory(imageDataUrl, locale, recognitionCategories);
+      modelName = categoryResult.modelName;
+      const shortlistPrompt = recognitionCatalogPromptFor(categoryResult.payload.category);
+      if (!shortlistPrompt) throw new ProviderError('invalid_response', 'Vision category had no catalog candidates.');
+      const vision = await requestVisionCandidates(imageDataUrl, locale, shortlistPrompt);
       modelName = vision.modelName;
-      const raw = vision.payload as { candidates?: unknown };
-      const parsed = rawVisionCandidateSchema.array().max(3).safeParse(raw.candidates);
-      if (!parsed.success) throw new ProviderError('invalid_response', 'Vision candidates were invalid.');
-      candidates = parsed.data;
+      candidates = vision.payload.candidates;
     } catch (error) {
       if (error instanceof Error && error.message.includes('Input buffer')) throw new ApiError(400, 'VALIDATION_ERROR', '图片无法读取，请换一张清晰图片。');
       source = 'fallback';

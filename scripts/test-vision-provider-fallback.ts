@@ -72,7 +72,7 @@ const catalogKeyGuppy = mapVisionCandidateToCatalog({
 }, fishData);
 assert.equal(catalogKeyGuppy.fish?.scientificName, 'Poecilia reticulata', 'valid catalogKey must resolve directly to catalog authority');
 assert.equal(catalogKeyGuppy.matchType, 'exact');
-const { deriveUnreconciledRecognitionStatus, reconcileVisionCandidatesToCatalog } = await import('../apps/api/src/routes/species-ai.ts');
+const { deriveUnreconciledRecognitionStatus, reconcileVisionCandidatesToCatalog, recognitionCatalogSizeForCategory } = await import('../apps/api/src/routes/species-ai.ts');
 assert.equal(deriveUnreconciledRecognitionStatus([]), 'unmatched');
 assert.equal(deriveUnreconciledRecognitionStatus([{ confidenceBand: 'high' }]), 'ambiguous', 'provider confidence alone must never claim a catalog match');
 const reconciled = reconcileVisionCandidatesToCatalog([
@@ -84,6 +84,9 @@ assert.equal(reconciled.length, 1, 'server must discard invented or missing cata
 assert.equal(reconciled[0].commonName, consistentGuppy.fish!.name, 'server must canonicalize model names from catalog authority');
 assert.equal(reconciled[0].scientificName, 'Poecilia reticulata');
 assert.equal(reconciled[0].matchType, 'exact');
+assert.equal(recognitionCatalogSizeForCategory('灯科鱼') > 0, true);
+assert.equal(recognitionCatalogSizeForCategory('灯科鱼') < 100, true, 'stage two must use a bounded category shortlist instead of the full catalog');
+assert.equal(recognitionCatalogSizeForCategory('鱼类') < fishData.length, true, 'largest category must still be smaller than the full catalog');
 
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
 let failureMode: '429' | '5xx' | 'timeout' | 'invalid_response' = '429';
@@ -116,13 +119,27 @@ try {
     const result = await requestVisionCandidates('data:image/webp;base64,AA==', 'zh-CN', `${consistentGuppy.fish!.id}|孔雀鱼|Poecilia reticulata|鱼类`);
     assert.equal(result.modelName, 'glm-4v-flash');
     assert.deepEqual(result.payload, { candidates: [{ catalogKey: consistentGuppy.fish!.id, commonName: '孔雀鱼', scientificName: 'Poecilia reticulata', confidenceBand: 'high', visualEvidence: ['尾鳍特征'] }] });
-    assert.deepEqual(calls.map(call => call.model), ['glm-4.6v-flash', 'glm-4.6v-flash', 'glm-4v-flash']);
+    assert.deepEqual(calls.map(call => call.model), ['glm-4.6v-flash', 'glm-4v-flash'], 'vision stages must not retry the same failing model before fallback');
     assert.equal(calls.every(call => call.stream === false), true);
-    assert.deepEqual(calls.slice(0, 2).map(call => call.response_format), [{ type: 'json_object' }, { type: 'json_object' }]);
-    assert.equal(calls[2].response_format, undefined, 'legacy GLM-4V fallback stays on prompt-enforced JSON for compatibility');
+    assert.deepEqual(calls.slice(0, 1).map(call => call.response_format), [{ type: 'json_object' }]);
+    assert.equal(calls[1].response_format, undefined, 'legacy GLM-4V fallback stays on prompt-enforced JSON for compatibility');
     assert.equal(calls.every(call => Array.isArray(call.messages) && (call.messages as unknown[]).some(message => JSON.stringify(message).includes('image_url'))), true);
     assert.equal(calls.every(call => JSON.stringify(call.messages).includes(consistentGuppy.fish!.id)), true, 'every vision model attempt must receive the constrained Aqua catalog');
   }
+  failureMode = '429';
+  calls.length = 0;
+  const { requestVisionCatalogCategory } = await import('../apps/api/src/ai/provider.ts');
+  const originalCategoryFetch = globalThis.fetch;
+  globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
+    const body = JSON.parse(String(init?.body || '{}')) as { model?: string; stream?: unknown; response_format?: unknown; messages?: unknown };
+    calls.push(body);
+    return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ category: '鱼类' }) } }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+  }) as typeof fetch;
+  const categoryResult = await requestVisionCatalogCategory('data:image/webp;base64,AA==', 'zh-CN', ['鱼类', '灯科鱼']);
+  assert.equal(categoryResult.payload.category, '鱼类');
+  assert.equal(calls.length, 1, 'category stage should use one primary call when valid');
+  assert.equal(JSON.stringify(calls[0].messages).includes('鱼类 | 灯科鱼'), true);
+  globalThis.fetch = originalCategoryFetch;
   console.log('vision provider/config contract verified without real credentials: defaults, GLM aliases, multimodal payload, and 429/5xx/timeout fallback');
 } finally {
   globalThis.fetch = originalFetch;
