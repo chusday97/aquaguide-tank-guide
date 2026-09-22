@@ -1,3 +1,16 @@
+## CURRENT OVERRIDE — 2026-09-22 Backend integration candidate READY
+
+- Candidate branch: `integration/backend-main-20260922`
+- Candidate code commit: `afc8ad2e` (`feat(backend): integrate convergence onto current main`)
+- Base: `origin/main@be0fdef9`
+- Full integration backend gate: `BACKEND_RELEASE_GATE=PASS`
+- Golden Path contract: 5 journeys, no partial end-to-end gap.
+- Frozen scope verified absent from the candidate: Vision/image recognition, UI changes, DB migration application/HOLD migration, Production changes.
+- Current-main presentation semantics are intentionally preserved. `src/services/compatibility/compatibility-presentation.service.ts` and `scripts/test-compatibility-presentation.ts` remain main versions; backend user-conclusion testing retains engine/safety assertions but does not override frozen display copy.
+- Main build behavior is preserved: business API bundle is generated before project typecheck; main `postbuild`/Vercel pruning logic remains authoritative.
+- Candidate is LOCAL ONLY: do not push, merge to main, deploy, or apply DB changes without a separate decision.
+- Integration evidence: `docs/BACKEND_RELEASE_INTEGRATION_CHECKLIST_20260922.md` and `docs/BACKEND_INTEGRATION_FILE_MANIFEST_20260922.*`.
+
 ## CURRENT OVERRIDE — 2026-09-16 RC1 Production release CLOSED
 Aqua RC1 is released and final Production browser smoke is PASS.
 

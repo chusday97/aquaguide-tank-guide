@@ -1,3 +1,15 @@
+## HANDOFF — 2026-09-22 Local backend integration candidate validated
+
+A selective backend candidate has been assembled in `/Users/chuchu/aquaguide-backend-integration-20260922` on branch `integration/backend-main-20260922`.
+
+- Base: `origin/main@be0fdef9`
+- Code commit: `afc8ad2e`
+- Validation: full backend integration gate PASS; Golden Path contract PASS; `git diff --check` PASS.
+- Candidate construction preserved main-only CI/Vercel/build work and excluded user-frozen Vision/UI plus DB-HOLD migration scope.
+- Integration debugging found presentation-layer leakage in the original backend manifest. The candidate therefore keeps current-main compatibility presentation service/test unchanged. User-conclusion tests retain backend status/risk/action safety only.
+- No Production deployment, DB migration, DB authority switch, Care indexing change, or main merge has occurred.
+- Next decision is repository integration only: inspect/review `afc8ad2e`; if accepted, push the candidate branch and open/merge a PR separately.
+
 ## HANDOFF — 2026-09-16 RC1 Production release CLOSED
 Production is now `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production). Final Production smoke is PASS.
 

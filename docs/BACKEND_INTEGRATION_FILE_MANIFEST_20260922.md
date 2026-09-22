@@ -34,6 +34,15 @@ Classification is intentionally conservative. No merge/rebase is authorized by t
 - `apps/api/src/config.ts`: preserve non-Vision API configuration; exclude Vision model/key/fallback configuration while Vision is frozen.
 - `package.json`: reconcile backend scripts with main's newer business-bundle/typecheck/Vercel workflow; never replace the whole main file.
 
+## Integration-candidate refinements discovered by validation
+
+The initial file classification was conservative but validation found additional presentation coupling:
+- `src/services/compatibility/compatibility-presentation.service.ts`: kept from current main because user-facing copy is frozen.
+- `scripts/test-compatibility-presentation.ts`: kept from current main so existing presentation semantics remain the contract.
+- `scripts/test-compatibility-user-conclusion.ts`: mixed file; backend status/risk/action safety assertions retained, presentation-copy assertions removed from the backend integration scope.
+
+These refinements are represented in candidate commit `afc8ad2e` and are stricter than the initial manifest.
+
 ## Files
 
 | Class | Path | Reason |
