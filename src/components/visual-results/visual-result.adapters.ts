@@ -107,7 +107,7 @@ export function buildCompatibilityVisualResult({
 
   const decisionReasonRules = [...decision.blockingRules, ...decision.warningRules, ...decision.missingData];
   const detailSections = [
-    { id: 'risks', title: '为什么这样判断', items: decisionReasonRules.map(rule => rule.evidence || rule.title) },
+    { id: 'risks', title: presentation.detailsLabel, items: decisionReasonRules.map(rule => rule.evidence || rule.title) },
     { id: 'scope', title: '本次核对范围', items: presentation.coverageLabel ? [presentation.coverageLabel] : [] },
     { id: 'passed', title: '已确认没问题', items: decision.passedRules.map(rule => rule.title) },
   ].filter(section => section.items.length > 0);
@@ -115,13 +115,13 @@ export function buildCompatibilityVisualResult({
   return {
     status: decision.status,
     presentationMode: presentation.mode,
-    statusLabel: presentation.headline,
+    statusLabel: beginnerAction.headline,
     coverageLabel: presentation.coverageLabel,
-    title: beginnerAction.headline,
-    conclusion: beginnerAction.primaryReason,
-    emphasis: getVisualEmphasis(beginnerAction.primaryReason),
+    title: presentation.headline,
+    conclusion: presentation.primaryReason,
+    emphasis: getVisualEmphasis(presentation.primaryReason),
     subjects,
-    currentAction: beginnerAction.immediateAction,
+    currentAction: presentation.primaryActionText,
     actionItems: beginnerAction.observeAfterAction ? [beginnerAction.observeAfterAction] : undefined,
     primaryAction: { label: presentation.primaryAction === 'save_to_wishlist' ? '加入种草清单' : primaryActionLabel, actionType: primaryActionType },
     detailSections,

@@ -75,8 +75,22 @@ const duplicateWarningDecision = {
 } as unknown as CompatibilityDecision;
 
 const presentation = getCompatibilityPresentation(duplicateWarningDecision);
-assert.equal(presentation.headline, '调整后可尝试');
+assert.equal(presentation.headline, '有条件可以');
 assert.equal(presentation.cautions.length, 1);
 assert.equal(presentation.confirmedFindings.length, 1);
+assert.equal(presentation.primaryReason, '证据 A');
+assert.equal(presentation.secondaryReason, '证据 B');
+assert.ok(presentation.primaryActionText.length > 0);
+assert.equal(presentation.detailsLabel, '查看依据');
+
+const underGroupedPresentation = getCompatibilityPresentation(underGroupedNeon as unknown as CompatibilityDecision);
+assert.equal(underGroupedPresentation.headline, '有条件可以');
+assert.match(underGroupedPresentation.primaryReason, /群体|最低/);
+assert.match(underGroupedPresentation.primaryActionText, /至少|最低群体|规划/);
+
+const predationPresentation = getCompatibilityPresentation(channaWithNeon as unknown as CompatibilityDecision);
+assert.equal(predationPresentation.headline, '不建议');
+assert.match(predationPresentation.primaryReason, /捕食|吞食/);
+assert.match(predationPresentation.primaryActionText, /不要|先不要/);
 
 console.log('compatibility user conclusion contract passed: status-specific actions, reviewed-unknown safety, and user-facing dedupe');

@@ -1,4 +1,5 @@
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
+import { buildBeginnerCompatibilityAction } from './compatibility-action.service';
 
 export type CompatibilityDimension =
   | 'water_type'
@@ -22,7 +23,11 @@ export type CompatibilityCoverage = {
 };
 export type CompatibilityPresentation = {
   mode: CompatibilityPresentationMode;
-  headline: string;
+  headline: '可以养' | '有条件可以' | '不建议' | '暂时无法判断';
+  primaryReason: string;
+  secondaryReason: string | null;
+  primaryActionText: string;
+  detailsLabel: '查看依据';
   confirmedFindings: string[];
   cautions: string[];
   coverageLabel: string | null;
@@ -60,6 +65,19 @@ const ruleDimension = (code: string, riskType?: CompatibilityRiskType): Compatib
 };
 
 const ruleText = (rule: { code: string; title: string; evidence?: string }, fallback: string) => rule.evidence || rule.title || fallback;
+
+const headlineForStatus = (status: CompatibilityDecision['status']): CompatibilityPresentation['headline'] => {
+  if (status === 'compatible') return '可以养';
+  if (status === 'caution') return '有条件可以';
+  if (status === 'not_recommended') return '不建议';
+  return '暂时无法判断';
+};
+
+const firstDistinctText = (primaryReason: string, values: string[]) => (
+  Array.from(new Set(values.map(value => value.trim()).filter(Boolean)))
+    .find(value => value != primaryReason.trim()) || null
+);
+
 
 export const getCompatibilityPresentation = (decision: CompatibilityDecision): CompatibilityPresentation => {
   const confirmed = new Set<CompatibilityDimension>();
@@ -103,19 +121,35 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     ? `本次已核对：${confirmedDimensions.map(dimension => dimensionLabels[dimension]).join('、') || '部分环境条件'}`
     : null;
 
+  const beginnerAction = buildBeginnerCompatibilityAction(decision);
+  const primaryReason = beginnerAction.primaryReason;
+  const secondaryReason = firstDistinctText(primaryReason, [
+    ...decision.blockingRules.map(rule => ruleText(rule, '')),
+    ...decision.warningRules.map(rule => ruleText(rule, '')),
+    ...decision.missingData.map(rule => ruleText(rule, '')),
+    ...decision.passedRules.map(rule => ruleText(rule, '')),
+  ]);
+  const directFields = {
+    headline: headlineForStatus(decision.status),
+    primaryReason,
+    secondaryReason,
+    primaryActionText: beginnerAction.immediateAction,
+    detailsLabel: '查看依据' as const,
+  };
+
   if (decision.status === 'not_recommended') {
-    return { mode: 'verdict', headline: '不建议一起饲养', confirmedFindings, cautions, coverageLabel, primaryAction: 'none', coverage };
+    return { mode: 'verdict', ...directFields, confirmedFindings, cautions, coverageLabel, primaryAction: 'none', coverage };
   }
   if (decision.status === 'caution') {
-    return { mode: 'verdict', headline: '调整后可尝试', confirmedFindings, cautions, coverageLabel, primaryAction: 'confirm_addition', coverage };
+    return { mode: 'verdict', ...directFields, confirmedFindings, cautions, coverageLabel, primaryAction: 'confirm_addition', coverage };
   }
   if (decision.status === 'compatible') {
-    return { mode: 'verdict', headline: '当前条件适合', confirmedFindings, cautions, coverageLabel, primaryAction: 'add_to_tank', coverage };
+    return { mode: 'verdict', ...directFields, confirmedFindings, cautions, coverageLabel, primaryAction: 'add_to_tank', coverage };
   }
   if (coverageLevel === 'partial') {
     return {
       mode: 'confirmed_facts',
-      headline: '当前可确认',
+      ...directFields,
       confirmedFindings: Array.from(new Set(confirmedFindings)).slice(0, 5),
       cautions: Array.from(new Set(cautions)).slice(0, 3),
       coverageLabel,
@@ -125,7 +159,7 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
   }
   return {
     mode: 'unavailable',
-    headline: '暂未开放这组混养建议',
+    ...directFields,
     confirmedFindings: [],
     cautions: [],
     coverageLabel: null,
@@ -145,24 +179,44 @@ export const getCompatibilityPresentationForStatus = ({
   confirmedFindings?: string[];
   cautions?: string[];
 }): CompatibilityPresentation => {
+  const headline = headlineForStatus(status);
+  const reasonCandidates = status === 'compatible' ? confirmedFindings : [...cautions, ...confirmedFindings];
+  const fallbackReason = status === 'not_recommended'
+    ? '当前存在明确的混养风险。'
+    : status === 'caution'
+      ? '当前有条件需要先调整。'
+      : status === 'compatible'
+        ? '当前没有发现明确阻断。'
+        : '关键条件还不能可靠确认。';
+  const primaryReason = reasonCandidates[0] || fallbackReason;
+  const secondaryReason = firstDistinctText(primaryReason, reasonCandidates.slice(1));
+  const primaryActionText = status === 'not_recommended'
+    ? '不要直接混养；先处理明确风险后再重新判断。'
+    : status === 'caution'
+      ? '先处理最重要的条件，再加入并继续观察。'
+      : status === 'compatible'
+        ? '可以按当前计划加入，并继续观察。'
+        : '暂时不要加入；有更明确的信息后再重新判断。';
+  const common = { headline, primaryReason, secondaryReason, primaryActionText, detailsLabel: '查看依据' as const };
+
   if (status === 'not_recommended') return {
-    mode: 'verdict', headline: '不建议一起饲养', confirmedFindings, cautions, coverageLabel: null,
+    mode: 'verdict', ...common, confirmedFindings, cautions, coverageLabel: null,
     primaryAction: 'none', coverage: { level: 'full', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: true },
   };
   if (status === 'caution') return {
-    mode: 'verdict', headline: '调整后可尝试', confirmedFindings, cautions, coverageLabel: null,
+    mode: 'verdict', ...common, confirmedFindings, cautions, coverageLabel: null,
     primaryAction: 'confirm_addition', coverage: { level: 'full', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: true },
   };
   if (status === 'compatible') return {
-    mode: 'verdict', headline: '当前条件适合', confirmedFindings, cautions, coverageLabel: null,
+    mode: 'verdict', ...common, confirmedFindings, cautions, coverageLabel: null,
     primaryAction: 'add_to_tank', coverage: { level: 'full', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: true },
   };
   return hasConfirmedFacts ? {
-    mode: 'confirmed_facts', headline: '当前可确认', confirmedFindings: Array.from(new Set(confirmedFindings)).slice(0, 5),
+    mode: 'confirmed_facts', ...common, confirmedFindings: Array.from(new Set(confirmedFindings)).slice(0, 5),
     cautions: Array.from(new Set(cautions)).slice(0, 3), coverageLabel: '本次仅展示已核对的环境与行为条件', primaryAction: 'save_to_wishlist',
     coverage: { level: 'partial', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: false },
   } : {
-    mode: 'unavailable', headline: '暂未开放这组混养建议', confirmedFindings: [], cautions: [], coverageLabel: null,
+    mode: 'unavailable', ...common, confirmedFindings: [], cautions: [], coverageLabel: null,
     primaryAction: 'save_to_wishlist', coverage: { level: 'none', confirmedDimensions: [], omittedDimensions: dimensions, canIssueOverallVerdict: false },
   };
 };
