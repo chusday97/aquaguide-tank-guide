@@ -21,6 +21,7 @@ const gates = [
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
   ['Gold Ram Compatibility Authority', 'npm', ['run', 'test:gold-ram-compatibility-authority']],
   ['Platinum Snakehead Catalog Bridge', 'npm', ['run', 'test:platinum-snakehead-catalog-bridge']],
+  ['Platinum Snakehead Small Fish Pairs', 'npm', ['run', 'test:platinum-snakehead-small-fish-pairs']],
   ['Identity Bound Catalog Bridges', 'npm', ['run', 'test:identity-bound-catalog-bridges']],
   ['Catalog Identity Boundaries', 'npm', ['run', 'test:catalog-identity-boundaries']],
   ['Knowledge Evidence Ceilings', 'npm', ['run', 'test:knowledge-evidence-ceilings']],

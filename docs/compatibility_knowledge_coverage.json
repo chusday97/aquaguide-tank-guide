@@ -8,15 +8,15 @@
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 411,
   "reviewed_compatibility_profiles": 34,
-  "reviewed_pair_rules": 5,
+  "reviewed_pair_rules": 17,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,
   "launch_pair_count": 435,
   "launch_pair_status_counts": {
     "compatible": 17,
     "caution": 300,
-    "not_recommended": 99,
-    "insufficient_data": 19
+    "not_recommended": 111,
+    "insufficient_data": 7
   },
   "compatibility_critical_fields": [
     "environment",
@@ -59,14 +59,14 @@
   },
   "priority_species_gap_count": 5,
   "evidence_ceiling_species_gap_count": 1,
-  "priority_pair_gap_count": 19,
+  "priority_pair_gap_count": 7,
   "evidence_research_pair_gap_count": 0,
-  "boundary_blocked_pair_gap_count": 19,
+  "boundary_blocked_pair_gap_count": 7,
   "top_pair_gap_root_species": [
     {
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
-      "blocked_pair_count": 19,
+      "blocked_pair_count": 7,
       "gap_kinds": [
         "social",
         "compatibility_profile"
@@ -75,7 +75,7 @@
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "variant_authority_review",
-      "score": 58
+      "score": 34
     },
     {
       "species_id": "sp_0002",

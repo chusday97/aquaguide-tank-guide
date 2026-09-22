@@ -140,6 +140,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const northernSnakeheadFwsAssessment: EvidenceSourceDto = {
+  id: 'northern-snakehead-fws-erss-2024',
+  title: 'Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk',
+  publisher: 'U.S. Fish and Wildlife Service',
+  url: 'https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk',
+  sourceType: 'government',
+  reviewStatus: 'reviewed',
+};
+
+const northernSnakeheadDietStudy: EvidenceSourceDto = {
+  id: 'northern-snakehead-usgs-diet-2012',
+  title: 'Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA',
+  publisher: 'U.S. Geological Survey / Ecology of Freshwater Fish',
+  url: 'https://pubs.usgs.gov/publication/70168483',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const discusSeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-symphysodon-aequifasciatus',
   title: 'Symphysodon aequifasciatus (Discus)',
@@ -1088,7 +1106,36 @@ const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
   },
 };
 
+const platinumSnakeheadSmallFishIds = [
+  'sp_0431',
+  'sp_0434',
+  'sp_0436',
+  'sp_0435',
+  'sp_0439',
+  'sp_0010',
+  'sp_0011',
+  'sp_0437',
+  'sp_0012',
+  'sp_0468',
+  'sp_0443',
+  'sp_0013',
+] as const;
+
+const platinumSnakeheadSmallFishPairRules: ReviewedPairRule[] = platinumSnakeheadSmallFishIds.map(speciesId => ({
+  speciesIds: ['sp_0224', speciesId],
+  verdict: 'not_recommended',
+  riskType: 'predation_threat',
+  reason: '白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。',
+  mitigation: ['不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。', '不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。'],
+  basis: 'rule_inference',
+  confidence: 'medium',
+  reviewStatus: 'reviewed',
+  affectedSpeciesIds: ['sp_0224', speciesId],
+  citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+}));
+
 const pairRules: ReviewedPairRule[] = [
+  ...platinumSnakeheadSmallFishPairRules,
   {
     speciesIds: ['sp_0439', 'sp_0436'],
     verdict: 'not_recommended',
