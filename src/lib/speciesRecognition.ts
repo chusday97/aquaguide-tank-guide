@@ -55,10 +55,23 @@ export const mapVisionCandidateToCatalog = (
   const scientific = normalizeSpeciesName(candidate.scientificName);
   const common = normalizeSpeciesName(candidate.commonName);
   const scientificMatch = scientific && catalog.find(fish => normalizeSpeciesName(fish.scientificName) === scientific);
-  if (scientificMatch) return { ...candidate, fish: scientificMatch, matchType: 'exact' };
-  const nameMatch = catalog.find(fish => normalizeSpeciesName(fish.name) === common);
+  const nameMatch = common && catalog.find(fish => normalizeSpeciesName(fish.name) === common);
+  const aliasMatch = common && catalog.find(fish => normalizeSpeciesName((fish as Fish & { _originalName?: string })._originalName) === common);
+  const commonMatch = nameMatch || aliasMatch;
+
+  if (scientific) {
+    if (scientificMatch) {
+      if (commonMatch && commonMatch.id !== scientificMatch.id) return { ...candidate, matchType: 'none' };
+      return { ...candidate, fish: scientificMatch, matchType: 'exact' };
+    }
+    if (commonMatch) return { ...candidate, fish: commonMatch, matchType: 'fuzzy' };
+    const fuzzy = common.length >= 3
+      ? catalog.find(fish => normalizeSpeciesName(fish.name).includes(common) || common.includes(normalizeSpeciesName(fish.name)))
+      : undefined;
+    return { ...candidate, ...(fuzzy ? { fish: fuzzy, matchType: 'fuzzy' as const } : { matchType: 'none' as const }) };
+  }
+
   if (nameMatch) return { ...candidate, fish: nameMatch, matchType: 'exact' };
-  const aliasMatch = catalog.find(fish => normalizeSpeciesName((fish as Fish & { _originalName?: string })._originalName) === common);
   if (aliasMatch) return { ...candidate, fish: aliasMatch, matchType: 'alias' };
   const fuzzy = common.length >= 3
     ? catalog.find(fish => normalizeSpeciesName(fish.name).includes(common) || common.includes(normalizeSpeciesName(fish.name)))

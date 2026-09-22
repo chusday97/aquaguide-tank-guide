@@ -37,6 +37,8 @@ const checkRateLimit = (request: express.Request) => {
 
 const providerFailure = (error: unknown) => error instanceof ProviderError ? error.reason : 'network' as const;
 
+export const deriveUnreconciledRecognitionStatus = (candidates: readonly unknown[]) => candidates.length === 0 ? 'unmatched' as const : 'ambiguous' as const;
+
 export const speciesAiRouter = Router();
 
 speciesAiRouter.post(
@@ -75,7 +77,7 @@ speciesAiRouter.post(
     return sendData(request, response, {
       recognitionId: randomUUID(),
       imageFingerprint,
-      status: candidates.length === 0 ? 'unmatched' : candidates.length === 1 && candidates[0].confidenceBand === 'high' ? 'matched' : 'ambiguous',
+      status: deriveUnreconciledRecognitionStatus(candidates),
       candidates: candidates.map(candidate => ({ ...candidate, matchType: 'none' as const })),
       requiresConfirmation: true as const,
       source,

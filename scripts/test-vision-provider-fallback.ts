@@ -47,6 +47,27 @@ const scopedConfig = buildApiConfig({
 assert.equal(scopedConfig.visionApiKey, 'scoped-test-key');
 assert.equal(scopedConfig.visionModel, 'scoped-primary');
 
+const { fishData } = await import('../src/data/fishData.ts');
+const { mapVisionCandidateToCatalog } = await import('../src/lib/speciesRecognition.ts');
+const silverArowanaConflict = mapVisionCandidateToCatalog({
+  commonName: '银龙鱼',
+  scientificName: 'Arapaima',
+  confidenceBand: 'high',
+  visualEvidence: ['测试冲突'],
+}, fishData);
+assert.equal(silverArowanaConflict.matchType, 'fuzzy', 'conflicting scientific/common names must never become an exact catalog match');
+assert.equal(silverArowanaConflict.fish?.scientificName, 'Osteoglossum bicirrhosum', 'common-name suggestion may remain visible only as a fuzzy candidate');
+const consistentGuppy = mapVisionCandidateToCatalog({
+  commonName: '孔雀鱼',
+  scientificName: 'Poecilia reticulata',
+  confidenceBand: 'high',
+  visualEvidence: ['测试一致'],
+}, fishData);
+assert.equal(consistentGuppy.matchType, 'exact', 'consistent scientific identity must retain exact catalog matching');
+const { deriveUnreconciledRecognitionStatus } = await import('../apps/api/src/routes/species-ai.ts');
+assert.equal(deriveUnreconciledRecognitionStatus([]), 'unmatched');
+assert.equal(deriveUnreconciledRecognitionStatus([{ confidenceBand: 'high' }]), 'ambiguous', 'provider confidence alone must never claim a catalog match');
+
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
 let failureMode: '429' | '5xx' | 'timeout' = '429';
 const originalFetch = globalThis.fetch;
