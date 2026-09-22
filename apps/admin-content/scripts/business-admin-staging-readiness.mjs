@@ -25,6 +25,8 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609120013_compatibility_sewellia_baseline.sql',
   '202609120014_compatibility_clown_loach_baseline.sql',
   '202609120015_compatibility_red_rainbowfish_baseline.sql',
+  '202609160001_compatibility_rummy_oto_oscar_baseline.sql',
+  '202609220001_compatibility_gold_ram_rhodeus_profiles.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
