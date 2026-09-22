@@ -18,7 +18,7 @@
   ],
   "counts": {
     "INCLUDE_BACKEND": 176,
-    "MANUAL_RECONCILE": 3,
+    "MANUAL_RECONCILE": 4,
     "EXCLUDE_FROZEN_VISION": 8,
     "EXCLUDE_FROZEN_UI": 2,
     "INCLUDE_DB_ARTIFACT_HOLD": 2
@@ -978,6 +978,11 @@
       "path": "supabase/migrations/202609220001_compatibility_gold_ram_rhodeus_profiles.sql",
       "class": "INCLUDE_DB_ARTIFACT_HOLD",
       "reason": "Repository-only additive owner for reviewed Profiles sp_0016/sp_0475; application remains HOLD."
+    },
+    {
+      "path": "apps/admin-content/scripts/business-admin-staging-readiness.mjs",
+      "class": "MANUAL_RECONCILE",
+      "reason": "Current-main Business Admin staging plan reconciled to include repository-only Compatibility authority migrations; no migration execution is performed."
     }
   ]
 }

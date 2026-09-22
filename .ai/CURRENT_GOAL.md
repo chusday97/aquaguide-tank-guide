@@ -3,14 +3,14 @@
 - GitHub CI exposed two reviewed Profile DB-authority ownership gaps (sp_0016, sp_0475); repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql now owns them. No DB migration has been applied.
 - CI-required repository-only compatibility migration SQL is present as a static contract artifact; **no migration has been applied and DB authority remains HOLD**.
 - Candidate branch: `integration/backend-main-20260922`
-- Candidate code commit: `afc8ad2e` (`feat(backend): integrate convergence onto current main`)
+- Candidate implementation chain: `afc8ad2e` (selective backend integration) → `cb15eb6b` (reviewed Profile migration ownership) → `018c52ba` (Business Admin staging migration plan).
 - Base: `origin/main@be0fdef9`
 - Full integration backend gate: `BACKEND_RELEASE_GATE=PASS`
 - Golden Path contract: 5 journeys, no partial end-to-end gap.
-- Frozen scope verified absent from the candidate: Vision/image recognition, UI changes, DB migration application/HOLD migration, Production changes.
+- Frozen scope verified absent from behavior changes: Vision/image recognition and UI remain unchanged; DB migration **application**, DB authority switch, Care indexing and Production changes remain HOLD. Repository-only SQL artifacts are present for contract/authority ownership only.
 - Current-main presentation semantics are intentionally preserved. `src/services/compatibility/compatibility-presentation.service.ts` and `scripts/test-compatibility-presentation.ts` remain main versions; backend user-conclusion testing retains engine/safety assertions but does not override frozen display copy.
 - Main build behavior is preserved: business API bundle is generated before project typecheck; main `postbuild`/Vercel pruning logic remains authoritative.
-- Candidate is LOCAL ONLY: do not push, merge to main, deploy, or apply DB changes without a separate decision.
+- Draft PR #154 is pushed for review: https://github.com/chusday97/aquaguide-tank-guide/pull/154 . GitHub CI is green at implementation tip `018c52ba`. Do not merge to main, deploy Production, or apply DB changes without a separate decision.
 - Integration evidence: `docs/BACKEND_RELEASE_INTEGRATION_CHECKLIST_20260922.md` and `docs/BACKEND_INTEGRATION_FILE_MANIFEST_20260922.*`.
 
 ## CURRENT OVERRIDE — 2026-09-16 RC1 Production release CLOSED

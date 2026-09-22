@@ -23,7 +23,7 @@ Classification is intentionally conservative. No merge/rebase is authorized by t
 ## Summary
 
 - INCLUDE_BACKEND: 176
-- MANUAL_RECONCILE: 3
+- MANUAL_RECONCILE: 4
 - EXCLUDE_FROZEN_VISION: 8
 - EXCLUDE_FROZEN_UI: 2
 - EXCLUDE_DB_HOLD: 0
@@ -37,6 +37,7 @@ Classification is intentionally conservative. No merge/rebase is authorized by t
 
 ## Integration-candidate refinements discovered by validation
 
+- `apps/admin-content/scripts/business-admin-staging-readiness.mjs`: current-main staging plan now lists the two repository-only Compatibility authority migrations so preflight remains exhaustive; this does not apply them.
 - CI ownership audit found that reviewed Profiles sp_0016 and sp_0475 lacked explicit additive migration ownership. Repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql closes that authority gap; it is not applied by this integration.
 - CI requires `supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql` as a static contract artifact. It is included in the repository candidate but **must not be applied** during this integration.
 The initial file classification was conservative but validation found additional presentation coupling:
@@ -241,3 +242,4 @@ These refinements are represented in candidate commit `afc8ad2e` and are stricte
 | INCLUDE_BACKEND | `src/services/compatibility/compatibility-presentation.service.ts` | Backend/data/authority/test scope with no detected frozen-scope or main-only path overlap. |
 | INCLUDE_DB_ARTIFACT_HOLD | `supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql` | Repository-only reviewed-baseline artifact required by CI contract; migration application and DB authority switch remain HOLD. |
 | INCLUDE_DB_ARTIFACT_HOLD | supabase/migrations/202609220001_compatibility_gold_ram_rhodeus_profiles.sql | Repository-only additive owner for reviewed Profiles sp_0016/sp_0475; application remains HOLD. |
+| MANUAL_RECONCILE | `apps/admin-content/scripts/business-admin-staging-readiness.mjs` | Current-main Business Admin staging plan reconciled to include repository-only Compatibility authority migrations; no migration execution is performed. |
