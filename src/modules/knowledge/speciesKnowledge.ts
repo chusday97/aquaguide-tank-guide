@@ -781,9 +781,31 @@ const platinumSnakeheadPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {
     reliableFromLifeStage: 'unknown',
     evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], 'FishBase 物种页不确认 Platinum 品系性别特征。'),
   },
-  environment: { waterType: 'unknown', notes: ['Channa argus 物种页不能替代白金品系的直接养护证据；温度、水体和 pH 保持 unknown。'], evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '禁止把基础种字段自动继承为品系 authority。') },
-  socialBehavior: { mode: 'unknown', territoriality: 'unknown', finNipping: 'unknown', predationRisk: 'unknown', summary: '没有白金雷龙品系的直接行为来源；保持 fail-closed。', evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '没有品系级混养或行为证据。') },
-  spaceAndGrowth: { activityLevel: 'unknown', spaceNotes: ['不能把基础种的尺寸或缸体建议自动外推到白金品系。'], evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '没有品系级空间来源。') },
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 4, max: 22 },
+    notes: ['Catalog Review 已将白金雷龙对象明确映射为 Channa argus 的 Platinum 品系，并审核通过 freshwater 与 4–22°C；pH 仍保持 unknown。'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch03-fishbase-channa-argus'],
+      reviewedAt: '2026-09-22',
+      note: 'This is an explicit reviewed catalog-object bridge for identity/water/temperature, not automatic variant inheritance.',
+    },
+  },
+  socialBehavior: { mode: 'unknown', territoriality: 'unknown', finNipping: 'unknown', predationRisk: 'unknown', summary: '没有足够的白金雷龙品系级通用社会行为 authority；pair-level 捕食证据不外推为所有混养结论。', evidence: phase2UnknownEvidence(['batch03-fishbase-channa-argus'], '没有足够的品系级通用社会行为证据；继续 fail-closed。') },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 100, measurement: 'TL' },
+    activityLevel: 'unknown',
+    spaceNotes: ['Catalog Review 已对该白金雷龙 catalog object 审核通过最大体长约 100 cm；不从体长反推最低缸体升数或缸长。'],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch03-fishbase-channa-argus'],
+      reviewedAt: '2026-09-22',
+      note: 'Explicit reviewed catalog-object bridge for adult size; no minimum tank size is inferred.',
+    },
+  },
 };
 
 const rosyBitterlingPhase2Knowledge: SpeciesKnowledgeProfile['knowledge'] = {

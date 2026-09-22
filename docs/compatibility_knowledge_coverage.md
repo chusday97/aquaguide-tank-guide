@@ -23,14 +23,14 @@
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
 | feeding | 411 | 1 | 410 | 0.2% |
-| environment | 475 | 38 | 437 | 8.0% |
-| space | 475 | 39 | 436 | 8.2% |
+| environment | 475 | 39 | 436 | 8.2% |
+| space | 475 | 40 | 435 | 8.4% |
 | social | 411 | 37 | 374 | 9.0% |
 | care | 475 | 1 | 474 | 0.2% |
 
 ## Highest-priority species gaps
 
-1. 白金雷龙 (sp_0224) — environment, space, social, compatibility_profile — variant_authority_review [variant_authority_not_promotable] — unlocks 19 insufficient pairs — score 66
+1. 白金雷龙 (sp_0224) — social, compatibility_profile — variant_authority_review [variant_authority_not_promotable] — unlocks 19 insufficient pairs — score 58
 2. 水晶虾 (sp_0002) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25
 3. 迷你鹦鹉鱼 (sp_0021) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25
 4. 斑马螺 (sp_0428) — environment, space, social — identity_review [catalog_identity_unresolved] — unlocks 1 insufficient pairs — score 25

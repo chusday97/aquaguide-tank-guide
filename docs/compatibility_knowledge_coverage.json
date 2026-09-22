@@ -27,15 +27,15 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 38,
-      "reviewed_unknown": 437,
-      "supported_pct": 8
-    },
-    "space": {
-      "applicable": 475,
       "reviewed_supported": 39,
       "reviewed_unknown": 436,
       "supported_pct": 8.2
+    },
+    "space": {
+      "applicable": 475,
+      "reviewed_supported": 40,
+      "reviewed_unknown": 435,
+      "supported_pct": 8.4
     },
     "social": {
       "applicable": 411,
@@ -60,8 +60,6 @@
       "common_name": "白金雷龙",
       "blocked_pair_count": 19,
       "gap_kinds": [
-        "environment",
-        "space",
         "social",
         "compatibility_profile"
       ],
@@ -69,7 +67,7 @@
         "variant_authority_not_promotable"
       ],
       "resolution_mode": "variant_authority_review",
-      "score": 66
+      "score": 58
     },
     {
       "species_id": "sp_0002",

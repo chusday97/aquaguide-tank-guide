@@ -7,16 +7,14 @@
       "species_id": "sp_0224",
       "common_name": "白金雷龙",
       "scientific_name": "Channa argus var. Platinum",
-      "score": 66,
+      "score": 58,
       "gap_kinds": [
-        "environment",
-        "space",
         "social",
         "compatibility_profile"
       ],
       "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "none",

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-22T00:21:01.307Z",
+  "generated_at": "2026-09-22T00:54:08.005Z",
   "selection": "Priority score uses explicit gap status, launch-cohort commonness proxy, and compatibility-risk proxy; no user telemetry was inferred.",
   "items": [
     {
@@ -315,8 +315,8 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown",
         "care": "reviewed_unknown"
       },

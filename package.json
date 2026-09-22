@@ -279,7 +279,8 @@
     "test:pearl-red-snakehead-knowledge-authority": "node --import tsx scripts/test-pearl-red-snakehead-knowledge-authority.ts",
     "test:multi-water-type-authority": "node --import tsx scripts/test-multi-water-type-authority.ts",
     "test:rhodeus-compatibility-authority": "node --import tsx scripts/test-rhodeus-compatibility-authority.ts",
-    "test:species-fit-multi-water": "node --import tsx scripts/test-species-fit-multi-water.ts"
+    "test:species-fit-multi-water": "node --import tsx scripts/test-species-fit-multi-water.ts",
+    "test:platinum-snakehead-catalog-bridge": "node --import tsx scripts/test-platinum-snakehead-catalog-bridge.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

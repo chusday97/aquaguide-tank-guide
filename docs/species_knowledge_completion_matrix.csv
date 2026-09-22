@@ -222,7 +222,7 @@ species_id,common_name,scientific_name,life_type,category,feeding_status,environ
 "sp_0221","长鳍阿卡西短鲷","Apistogramma agassizii var. Fire Red","fish","慈鲷/斗鱼","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","3"
 "sp_0222","蓝宝鹦鹉 (球形)","Amatitlania nigrofasciata var. Jellybean","fish","慈鲷/斗鱼","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","3"
 "sp_0223","红眼白子雷龙","Channa asiatica var. Albino","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","3"
-"sp_0224","白金雷龙","Channa argus var. Platinum","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","launch_cohort","elevated","9"
+"sp_0224","白金雷龙","Channa argus var. Platinum","fish","鱼类","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_unknown","reviewed_unknown","","launch_cohort","elevated","9"
 "sp_0225","大帆红鼻剪刀","Hemigrammus bleheri var. Longfin","fish","灯科鱼","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0226","白金红鼻剪刀","Hemigrammus bleheri var. Platinum","fish","灯科鱼","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0227","长鳍红裙鱼","Gymnocorymbus ternetzi var. Longfin","fish","灯科鱼","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","3"
