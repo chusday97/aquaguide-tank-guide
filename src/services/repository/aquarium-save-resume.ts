@@ -150,10 +150,11 @@ const newSpeciesCompatible = (
   current: AquariumSaveServerSpecies,
   desired: Aquarium['fishes'][number],
 ) => {
-  if (day(current.entryDate) !== day(desired.entryDate)) return false;
+  const batches = desired.batches || [];
+  const createdEntryDate = batches[0]?.entryDate || desired.entryDate;
+  if (day(current.entryDate) !== day(createdEntryDate)) return false;
   if (!sameScalar(current.lastWaterChangeAt, desired.lastWaterChangeDate)) return false;
 
-  const batches = desired.batches || [];
   if (batches.length === 0) {
     if (current.quantity !== desired.quantity || current.batches.length !== 1) return false;
     const [batch] = current.batches;

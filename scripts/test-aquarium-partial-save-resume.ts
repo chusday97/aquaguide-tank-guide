@@ -153,6 +153,17 @@ assert.equal(
   'own parent + batch + species progress must be recognized as a resumable intermediate state',
 );
 
+const desiredWithDistinctSpeciesEntryDate = structuredClone(desired);
+desiredWithDistinctSpeciesEntryDate.fishes[1].entryDate = '2026-09-24';
+desiredWithDistinctSpeciesEntryDate.fishes[1].batches![0].entryDate = '2026-09-22';
+const partialWithInitialBatchDate = structuredClone(partial);
+partialWithInitialBatchDate.species[1].entryDate = '2026-09-22';
+assert.equal(
+  aquariumPartialSaveCanResume(before, partialWithInitialBatchDate, desiredWithDistinctSpeciesEntryDate),
+  true,
+  'a newly created batched species must resume using the initial batch entry date actually sent by saveAquarium',
+);
+
 const canonical = canonicalizeAquariumResumeInput(desired, partial);
 assert.equal(canonical.fishes[0].id, speciesId);
 assert.equal(canonical.fishes[0].batches?.[1].id, '55555555-5555-4555-8555-555555555555');
