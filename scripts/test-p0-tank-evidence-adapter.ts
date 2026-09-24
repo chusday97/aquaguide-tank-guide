@@ -175,4 +175,20 @@ const baseTank = (overrides: Partial<Aquarium> = {}): Aquarium => ({
   console.log('PASS combination age uses latest current-stock entry');
 }
 
+
+{
+  const tank = baseTank({
+    fishes: [
+      { id: 'past-entry', fishId: miniParrot.id, quantity: 1, entryDate: '2026-08-01T12:00:00.000Z' },
+      { id: 'future-entry', fishId: tigerBarb.id, quantity: 1, entryDate: '2026-09-01T12:00:00.000Z' },
+    ],
+  });
+  assert.equal(
+    getCurrentCombinationAgeDays(tank, NOW),
+    22,
+    'future entry dates must not reset current combination age to zero',
+  );
+  console.log('PASS future stock entry is ignored when deriving current combination age');
+}
+
 console.log('P0 Tank Evidence Adapter V1: PASS');

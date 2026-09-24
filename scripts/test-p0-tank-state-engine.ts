@@ -123,6 +123,20 @@ const cases = [
     },
   },
   {
+    name: 'BC-TIME-001 future urgent observation is ignored until it happens',
+    run: () => {
+      const result = evaluateTankState({
+        now: NOW,
+        observations: [
+          recent(1, 'normal_activity'),
+          { code: 'respiratory_distress', evidence: 'future typo', observedAt: '2026-08-24T12:00:00.000Z' },
+        ],
+      });
+      assert.equal(result.state, 'stable');
+      assert.equal(result.activeSignals.includes('respiratory_distress'), false);
+    },
+  },
+  {
     name: 'AQ-STATE-008 no prior and no observation is unknown',
     run: () => {
       const result = evaluateTankState({ now: NOW });

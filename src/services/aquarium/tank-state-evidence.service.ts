@@ -198,8 +198,13 @@ export const getCurrentCombinationAgeDays = (aquarium: Aquarium, now = new Date(
       ? record.batches.map(batch => batch.entryDate)
       : [record.entryDate]
   )).filter(Boolean);
-  const latestEntryMs = Math.max(...entryDates.map(value => Date.parse(value)).filter(Number.isFinite));
-  const fallbackMs = aquarium.startedAt ? Date.parse(aquarium.startedAt) : Number.NaN;
+  const nowMs = now.getTime();
+  const eligibleEntryMs = entryDates
+    .map(value => Date.parse(value))
+    .filter(value => Number.isFinite(value) && value <= nowMs);
+  const latestEntryMs = eligibleEntryMs.length > 0 ? Math.max(...eligibleEntryMs) : Number.NaN;
+  const parsedFallbackMs = aquarium.startedAt ? Date.parse(aquarium.startedAt) : Number.NaN;
+  const fallbackMs = Number.isFinite(parsedFallbackMs) && parsedFallbackMs <= nowMs ? parsedFallbackMs : Number.NaN;
   const startMs = Number.isFinite(latestEntryMs) ? latestEntryMs : fallbackMs;
   if (!Number.isFinite(startMs)) return 0;
   return Math.max(0, Math.floor((now.getTime() - startMs) / (24 * 60 * 60 * 1000)));

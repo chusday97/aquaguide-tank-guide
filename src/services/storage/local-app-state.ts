@@ -105,6 +105,26 @@ const normalizeState = (value: Partial<LocalAppState> | null | undefined): Local
 
 let pendingTimer: number | null = null;
 let pendingState: LocalAppState | null = null;
+let pendingExpectedUpdatedAt: string | null = null;
+
+const getStoredPrimaryUpdatedAt = () => {
+  const raw = localStorage.getItem(AQUARIUM_APP_STATE_KEY);
+  if (!raw) return null;
+  try {
+    const parsed = JSON.parse(raw) as Partial<LocalAppState> | null;
+    return typeof parsed?.updatedAt === 'string' ? parsed.updatedAt : null;
+  } catch {
+    return null;
+  }
+};
+
+const assertExpectedRevision = (expectedUpdatedAt?: string | null) => {
+  if (!expectedUpdatedAt) return;
+  const storedUpdatedAt = getStoredPrimaryUpdatedAt();
+  if (storedUpdatedAt && storedUpdatedAt !== expectedUpdatedAt) {
+    throw new Error('STALE_APP_STATE_WRITE');
+  }
+};
 
 const emitAppStateChanged = () => {
   if (typeof window === 'undefined') return;
@@ -125,10 +145,14 @@ export const loadAppStateFromStorage = (): LocalAppState => {
   });
 };
 
-export const saveAppStateToStorage = (appState: LocalAppState, options: { debounce?: boolean } = {}) => {
+export const saveAppStateToStorage = (
+  appState: LocalAppState,
+  options: { debounce?: boolean; expectedUpdatedAt?: string | null } = {},
+) => {
   const normalized = normalizeState({ ...appState, updatedAt: new Date().toISOString() });
-  const write = () => {
+  const write = (expectedUpdatedAt?: string | null) => {
     try {
+      assertExpectedRevision(expectedUpdatedAt);
       localStorage.setItem(AQUARIUM_APP_STATE_KEY, JSON.stringify(normalized));
       localStorage.setItem('aquariums', JSON.stringify(normalized.aquariums));
       localStorage.setItem('wishlistFishIds', JSON.stringify(normalized.wishlist));
@@ -147,16 +171,22 @@ export const saveAppStateToStorage = (appState: LocalAppState, options: { deboun
   if (!options.debounce) {
     if (pendingTimer !== null) window.clearTimeout(pendingTimer);
     pendingTimer = null;
-    pendingState = null;
-    write();
-    return normalized;
+    try {
+      write(options.expectedUpdatedAt);
+      return normalized;
+    } finally {
+      pendingState = null;
+      pendingExpectedUpdatedAt = null;
+    }
   }
 
   pendingState = normalized;
+  pendingExpectedUpdatedAt = options.expectedUpdatedAt ?? pendingExpectedUpdatedAt ?? appState.updatedAt;
   if (pendingTimer !== null) window.clearTimeout(pendingTimer);
   pendingTimer = window.setTimeout(() => {
     if (pendingState) {
       try {
+        assertExpectedRevision(pendingExpectedUpdatedAt);
         localStorage.setItem(AQUARIUM_APP_STATE_KEY, JSON.stringify(pendingState));
         localStorage.setItem('aquariums', JSON.stringify(pendingState.aquariums));
         localStorage.setItem('wishlistFishIds', JSON.stringify(pendingState.wishlist));
@@ -169,17 +199,23 @@ export const saveAppStateToStorage = (appState: LocalAppState, options: { deboun
       } catch (error) {
         console.warn('AquaGuide local app state debounced save failed', error);
         notifyDataRecovery(AQUARIUM_APP_STATE_KEY, error);
+        emitAppStateChanged();
       }
     }
     pendingTimer = null;
     pendingState = null;
+    pendingExpectedUpdatedAt = null;
   }, 700);
   return normalized;
 };
 
 export const patchLocalAppState = (patch: Partial<LocalAppState>, options: { debounce?: boolean } = {}) => {
-  const current = loadAppStateFromStorage();
-  return saveAppStateToStorage({ ...current, ...patch, version: AQUARIUM_APP_STATE_VERSION }, options);
+  const current = pendingState || loadAppStateFromStorage();
+  const expectedUpdatedAt = pendingState ? pendingExpectedUpdatedAt : current.updatedAt;
+  return saveAppStateToStorage(
+    { ...current, ...patch, version: AQUARIUM_APP_STATE_VERSION },
+    { ...options, expectedUpdatedAt },
+  );
 };
 
 export const subscribeToAppState = (listener: () => void) => {

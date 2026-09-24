@@ -50,6 +50,8 @@ const gates = [
   ['Addition Intent Safety', 'node', ['--import', 'tsx', 'scripts/test-addition-intents.ts']],
   ['Complex Compatibility Badcases', 'node', ['--import', 'tsx', 'scripts/test-complex-compatibility-badcases.ts']],
   ['Local State Recovery Badcases', 'node', ['--import', 'tsx', 'scripts/test-local-state-recovery-badcases.ts']],
+  ['Cross-tab Local State Badcases', 'node', ['--import', 'tsx', 'scripts/test-cross-tab-local-state-badcases.ts']],
+  ['Large Tank Badcases', 'node', ['--import', 'tsx', 'scripts/test-large-tank-badcases.ts']],
   ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
   ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],
   ['API Typecheck', 'npm', ['run', 'check:api']],
