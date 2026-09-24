@@ -48,6 +48,9 @@ export type ApiRequestOptions = Omit<RequestInit, 'body'> & {
 };
 
 export const apiRequest = async <T>(path: string, options: ApiRequestOptions = {}): Promise<T> => {
+  if (typeof navigator !== 'undefined' && navigator.onLine === false) {
+    throw new AquaGuideApiError(0, 'DEPENDENCY_UNAVAILABLE', '当前处于离线状态，请恢复网络后重试。');
+  }
   const headers = new Headers(options.headers);
   headers.set('Accept', 'application/json');
   if (options.body !== undefined) headers.set('Content-Type', 'application/json');

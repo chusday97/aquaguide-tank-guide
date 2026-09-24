@@ -6,6 +6,89 @@ import type { CareEventType } from '../../types/database';
 export const AQUARIUM_APP_STATE_KEY = 'aquarium_app_state_v1';
 export const AQUARIUM_APP_STATE_VERSION = 1;
 export const APP_STATE_CHANGED_EVENT = 'aquaguide:app-state-changed';
+export const LOCAL_APP_STATE_IMPORT_MAX_BYTES = 4 * 1024 * 1024;
+
+const LOCAL_APP_STATE_IMPORT_KEYS = new Set([
+  'version',
+  'currentAquariumId',
+  'aquariums',
+  'wishlist',
+  'dismissedRecommendations',
+  'diagnosisRecords',
+  'compatibilityRecords',
+  'deceasedRecords',
+  'feedingRecords',
+  'observationRecords',
+  'careEvents',
+  'riskReminderState',
+  'discoveryState',
+  'onboarding',
+  'cloudMigrationConfirmed',
+  'updatedAt',
+]);
+
+const LOCAL_APP_STATE_IMPORT_DATA_KEYS = new Set([
+  'aquariums',
+  'wishlist',
+  'dismissedRecommendations',
+  'diagnosisRecords',
+  'compatibilityRecords',
+  'deceasedRecords',
+  'feedingRecords',
+  'observationRecords',
+  'careEvents',
+  'riskReminderState',
+  'discoveryState',
+  'onboarding',
+]);
+
+const isPlainObject = (value: unknown): value is Record<string, unknown> => (
+  Boolean(value) && typeof value === 'object' && !Array.isArray(value)
+);
+
+const isStringArray = (value: unknown) => Array.isArray(value) && value.every(item => typeof item === 'string');
+
+const isImportableAquarium = (value: unknown) => {
+  if (!isPlainObject(value)) return false;
+  if (typeof value.id !== 'string' || typeof value.name !== 'string' || !Array.isArray(value.fishes)) return false;
+  return value.fishes.every(fish => (
+    isPlainObject(fish)
+    && typeof fish.id === 'string'
+    && typeof fish.fishId === 'string'
+    && Number.isInteger(fish.quantity)
+    && Number(fish.quantity) >= 0
+    && (fish.entryDate === undefined || typeof fish.entryDate === 'string')
+    && (fish.batches === undefined || Array.isArray(fish.batches))
+  ));
+};
+
+const validateImportShape = (value: unknown): Partial<LocalAppState> => {
+  if (!isPlainObject(value)) throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  const keys = Object.keys(value);
+  if (!keys.some(key => LOCAL_APP_STATE_IMPORT_KEYS.has(key))) throw new Error('UNRECOGNIZED_LOCAL_APP_STATE_IMPORT');
+  if (!keys.some(key => LOCAL_APP_STATE_IMPORT_DATA_KEYS.has(key))) throw new Error('EMPTY_LOCAL_APP_STATE_IMPORT');
+  if (value.version !== undefined && value.version !== AQUARIUM_APP_STATE_VERSION) {
+    throw new Error('UNSUPPORTED_LOCAL_APP_STATE_VERSION');
+  }
+  if (value.currentAquariumId !== undefined && typeof value.currentAquariumId !== 'string') throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  if (value.aquariums !== undefined && (!Array.isArray(value.aquariums) || !value.aquariums.every(isImportableAquarium))) {
+    throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  }
+  for (const key of ['diagnosisRecords', 'compatibilityRecords', 'deceasedRecords'] as const) {
+    if (value[key] !== undefined && !Array.isArray(value[key])) throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  }
+  for (const key of ['wishlist', 'dismissedRecommendations'] as const) {
+    if (value[key] !== undefined && !isStringArray(value[key])) throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  }
+  for (const key of ['feedingRecords', 'observationRecords', 'careEvents'] as const) {
+    if (value[key] !== undefined && !Array.isArray(value[key])) throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  }
+  if (value.riskReminderState !== undefined && !isPlainObject(value.riskReminderState)) throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  if (value.discoveryState !== undefined && !isPlainObject(value.discoveryState)) throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  if (value.onboarding !== undefined && !isPlainObject(value.onboarding)) throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  if (value.updatedAt !== undefined && typeof value.updatedAt !== 'string') throw new Error('INVALID_LOCAL_APP_STATE_IMPORT');
+  return value as Partial<LocalAppState>;
+};
 
 export type LocalEventRecord = {
   id: string;
@@ -220,13 +303,26 @@ export const patchLocalAppState = (patch: Partial<LocalAppState>, options: { deb
 
 export const subscribeToAppState = (listener: () => void) => {
   if (typeof window === 'undefined') return () => undefined;
-  const handleStorage = (event: StorageEvent) => {
-    if (event.key === AQUARIUM_APP_STATE_KEY) listener();
+  let active = true;
+  let scheduled = false;
+  const notify = () => {
+    if (!active || scheduled) return;
+    scheduled = true;
+    const run = () => {
+      scheduled = false;
+      if (active) listener();
+    };
+    if (typeof queueMicrotask === 'function') queueMicrotask(run);
+    else Promise.resolve().then(run);
   };
-  window.addEventListener(APP_STATE_CHANGED_EVENT, listener);
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key === AQUARIUM_APP_STATE_KEY) notify();
+  };
+  window.addEventListener(APP_STATE_CHANGED_EVENT, notify);
   window.addEventListener('storage', handleStorage);
   return () => {
-    window.removeEventListener(APP_STATE_CHANGED_EVENT, listener);
+    active = false;
+    window.removeEventListener(APP_STATE_CHANGED_EVENT, notify);
     window.removeEventListener('storage', handleStorage);
   };
 };
@@ -247,8 +343,25 @@ export const clearLocalAppState = () => {
   }
 };
 
+export const exportLocalAppState = () => JSON.stringify(loadAppStateFromStorage(), null, 2);
+
 export const importLocalAppState = (json: string) => {
-  const parsed = safeParse<Partial<LocalAppState> | null>(json, null, 'local-data-import');
-  if (!parsed) throw new Error('导入失败：不是有效的 AquaGuide 本地数据。');
-  return saveAppStateToStorage(normalizeState(parsed));
+  if (typeof json !== 'string' || new TextEncoder().encode(json).byteLength > LOCAL_APP_STATE_IMPORT_MAX_BYTES) {
+    throw new Error('导入失败：本地数据文件过大或格式无效。');
+  }
+  let parsed: unknown;
+  try {
+    parsed = JSON.parse(json);
+  } catch (error) {
+    notifyDataRecovery('local-data-import', error);
+    throw new Error('导入失败：不是有效的 AquaGuide 本地数据。');
+  }
+  const validated = validateImportShape(parsed);
+  const current = loadAppStateFromStorage();
+  const imported = normalizeState({
+    ...validated,
+    // Imported data becomes local authority until the user explicitly confirms a cloud migration again.
+    cloudMigrationConfirmed: false,
+  });
+  return saveAppStateToStorage(imported, { expectedUpdatedAt: current.updatedAt });
 };
