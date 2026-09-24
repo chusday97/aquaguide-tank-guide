@@ -42,6 +42,7 @@ const gates = [
   ['Business API', 'npm', ['run', 'test:business-api-contract']],
   ['Repository Boundary', 'npm', ['run', 'test:repository-boundary']],
   ['Aquarium Idempotency Contract', 'node', ['--import', 'tsx', 'scripts/test-aquarium-idempotency-contract.ts']],
+  ['Aquarium Aggregate Concurrency', 'node', ['--import', 'tsx', 'scripts/test-aquarium-aggregate-concurrency.ts']],
   ['Atomic Livestock Addition Badcases', 'node', ['--import', 'tsx', 'scripts/test-atomic-livestock-addition.ts']],
   ['Livestock Addition API Errors', 'node', ['--import', 'tsx', 'scripts/test-livestock-addition-api-errors.ts']],
   ['Livestock Addition API Behavior', 'node', ['--import', 'tsx', 'scripts/test-livestock-addition-api-behavior.ts']],

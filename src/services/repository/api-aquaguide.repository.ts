@@ -1,8 +1,8 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import type { Aquarium, AquariumFish, AquariumSpeciesBatch, DeceasedRecord } from '../../types';
 import type { CareReminderRecord } from '../care/care-activity.service';
-import { apiRequest, createIdempotencyKey } from '../api/api-client';
-import { decrementSpeciesBatch } from '../aquarium/species-batches.service';
+import { apiRequest, AquaGuideApiError, createIdempotencyKey } from '../api/api-client';
+import { aquariumWriteBaselineMatches, createAquariumWriteBaseline, type AquariumWriteBaseline } from './aquarium-write-concurrency';
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
@@ -130,6 +130,7 @@ type ApiAquariumFish = AquariumFish;
 
 export class ApiAquaGuideRepository implements AquaGuideRepository {
   private aquariumVersions = new Map<string, number>();
+  private aquariumWriteBaselines = new Map<string, AquariumWriteBaseline>();
   private speciesVersions = new Map<string, number>();
   private reminderVersions = new Map<string, number>();
   private contentIds = new Map<string, string>();
@@ -137,8 +138,24 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
 
   private rememberAquarium(record: ApiAquarium) {
     this.aquariumVersions.set(record.id, record.version);
+    this.aquariumWriteBaselines.set(record.id, createAquariumWriteBaseline(record));
     for (const item of record.species || []) this.speciesVersions.set(item.id, item.version);
     return toLegacyAquarium(record);
+  }
+
+  private assertAquariumAggregateFresh(
+    aquariumId: string,
+    current: ApiAquarium,
+    options: { ignoreAquariumVersion?: boolean } = {},
+  ) {
+    const baseline = this.aquariumWriteBaselines.get(aquariumId);
+    if (!baseline || !aquariumWriteBaselineMatches(baseline, current, options)) {
+      throw new AquaGuideApiError(
+        409,
+        'VERSION_CONFLICT',
+        '鱼缸内容已在其他设备更新，请刷新后重试。',
+      );
+    }
   }
 
   private async syncSpeciesBatches(aquariumId: string, current: ApiAquariumSpecies, desired: AquariumSpeciesBatch[]) {
@@ -291,17 +308,30 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
     };
 
     const version = this.aquariumVersions.get(aquarium.id);
-    let saved = version && isUuid(aquarium.id)
-      ? await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`, {
-          method: 'PATCH',
-          body: { ...baseInput, version },
-          idempotencyKey: `aquarium-save-update:${aquarium.id}:v${version}`,
-        })
-      : await apiRequest<ApiAquarium>('/aquariums', {
-          method: 'POST',
-          body: baseInput,
-          idempotencyKey: `aquarium-save-create:${aquarium.id}`,
-        });
+    let saved: ApiAquarium;
+    if (isUuid(aquarium.id)) {
+      if (!version || !this.aquariumWriteBaselines.has(aquarium.id)) {
+        throw new AquaGuideApiError(
+          409,
+          'VERSION_CONFLICT',
+          '当前鱼缸缺少同步基线，请重新加载后再保存。',
+        );
+      }
+      const current = await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`);
+      this.assertAquariumAggregateFresh(aquarium.id, current, { ignoreAquariumVersion: true });
+      saved = await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`, {
+        method: 'PATCH',
+        body: { ...baseInput, version },
+        idempotencyKey: `aquarium-save-update:${aquarium.id}:v${version}`,
+      });
+      this.assertAquariumAggregateFresh(aquarium.id, saved, { ignoreAquariumVersion: true });
+    } else {
+      saved = await apiRequest<ApiAquarium>('/aquariums', {
+        method: 'POST',
+        body: baseInput,
+        idempotencyKey: `aquarium-save-create:${aquarium.id}`,
+      });
+    }
 
     const currentById = new Map((saved.species || []).map(item => [item.id, item]));
     const currentByCatalogKey = new Map((saved.species || []).map(item => [item.speciesCatalogKey, item]));
@@ -544,16 +574,8 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
       },
     );
     this.livestockMemorialAttempts.delete(input.operationId);
-    const current = attempt.aquarium;
-    const aquarium = toLegacyAquarium(current);
-    const fish = aquarium.fishes.find(item => item.id === input.aquariumFishId)!;
-    const nextFish = decrementSpeciesBatch(fish, input.batchId);
-    const updatedAquarium = {
-      ...aquarium,
-      fishes: nextFish
-        ? aquarium.fishes.map(item => item.id === fish.id ? nextFish : item)
-        : aquarium.fishes.filter(item => item.id !== fish.id),
-    };
+    const refreshed = await apiRequest<ApiAquarium>(`/aquariums/${input.aquariumId}`);
+    const updatedAquarium = this.rememberAquarium(refreshed);
     return {
       record: {
         id: raw.id,
