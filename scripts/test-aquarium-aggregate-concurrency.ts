@@ -62,16 +62,18 @@ const saveEnd = repository.indexOf('async removeLivestock', saveStart);
 assert.ok(saveStart >= 0 && saveEnd > saveStart);
 const save = repository.slice(saveStart, saveEnd);
 const preflightIndex = save.indexOf('const current = await apiRequest<ApiAquarium>');
-const firstFreshnessIndex = save.indexOf("this.assertAquariumAggregateFresh(aquarium.id, current, { ignoreAquariumVersion: true })");
+const baselineFreshIndex = save.indexOf('const baselineFresh = Boolean(');
+const safeResumeIndex = save.indexOf('aquariumPartialSaveCanResume(pending.before, current, pending.target)', baselineFreshIndex);
 const patchIndex = save.indexOf("method: 'PATCH'");
 const secondFreshnessIndex = save.indexOf("this.assertAquariumAggregateFresh(aquarium.id, saved, { ignoreAquariumVersion: true })");
 const childReconcileIndex = save.indexOf('const currentById = new Map');
-assert.ok(preflightIndex >= 0 && preflightIndex < firstFreshnessIndex, 'existing aggregate save must read current server state before freshness assertion');
-assert.ok(firstFreshnessIndex < patchIndex, 'child drift must fail before the parent write');
+assert.ok(preflightIndex >= 0 && preflightIndex < baselineFreshIndex, 'existing aggregate save must read current server state before checking the child baseline');
+assert.ok(baselineFreshIndex < safeResumeIndex, 'a stale child baseline may only proceed through explicit safe-resume validation');
+assert.ok(safeResumeIndex < patchIndex, 'unsafe child drift must fail before the parent write');
 assert.ok(patchIndex < secondFreshnessIndex, 'parent write must be followed by a second child freshness check');
 assert.ok(secondFreshnessIndex < childReconcileIndex, 'post-PATCH child drift must fail before child reconciliation');
 assert.ok(
-  save.includes("this.assertAquariumAggregateFresh(aquarium.id, current, { ignoreAquariumVersion: true })"),
+  save.includes('aquariumWriteBaselineMatches(baseline, current, { ignoreAquariumVersion: true })'),
   'preflight must leave parent version replay to PATCH idempotency while still guarding child drift',
 );
 assert.match(save, /if \(!version \|\| !this\.aquariumWriteBaselines\.has\(aquarium\.id\)\)/, 'existing UUID saves without a known baseline must fail closed');

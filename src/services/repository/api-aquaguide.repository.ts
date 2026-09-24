@@ -3,6 +3,11 @@ import type { Aquarium, AquariumFish, AquariumSpeciesBatch, DeceasedRecord } fro
 import type { CareReminderRecord } from '../care/care-activity.service';
 import { apiRequest, AquaGuideApiError, createIdempotencyKey } from '../api/api-client';
 import { aquariumWriteBaselineMatches, createAquariumWriteBaseline, type AquariumWriteBaseline } from './aquarium-write-concurrency';
+import {
+  aquariumPartialSaveCanResume,
+  aquariumSaveFingerprint,
+  canonicalizeAquariumResumeInput,
+} from './aquarium-save-resume';
 import type {
   AquaGuideRepository,
   AquariumCreateCommand,
@@ -128,9 +133,18 @@ const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
 
 type ApiAquariumFish = AquariumFish;
 
+type AquariumSaveResumeState = {
+  fingerprint: string;
+  before: ApiAquarium;
+  target: Aquarium;
+  desired: Aquarium;
+  serverAquariumId: string;
+};
+
 export class ApiAquaGuideRepository implements AquaGuideRepository {
   private aquariumVersions = new Map<string, number>();
   private aquariumWriteBaselines = new Map<string, AquariumWriteBaseline>();
+  private aquariumSaveResumes = new Map<string, AquariumSaveResumeState>();
   private speciesVersions = new Map<string, number>();
   private reminderVersions = new Map<string, number>();
   private contentIds = new Map<string, string>();
@@ -255,6 +269,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
 
   async getAquariums() {
     const records = await apiRequest<ApiAquarium[]>('/aquariums');
+    this.aquariumSaveResumes.clear();
     return records.map(record => this.rememberAquarium(record));
   }
 
@@ -292,127 +307,227 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
   }
 
   async saveAquarium(aquarium: Aquarium) {
-    const dimensions = aquarium.dimensions;
-    const baseInput = {
-      name: aquarium.name,
-      waterType: aquarium.waterType,
-      lengthCm: dimensions?.length ? Number(dimensions.length) : undefined,
-      widthCm: dimensions?.width ? Number(dimensions.width) : undefined,
-      heightCm: dimensions?.height ? Number(dimensions.height) : undefined,
-      targetTemperatureC: aquarium.targetTemperature ? Number(aquarium.targetTemperature) : undefined,
-      lastWaterChangeAt: aquarium.lastWaterChangeDate,
-      lastWaterStoredAt: aquarium.lastWaterStoredDate,
-      startedAt: aquarium.startedAt,
-      startedAtSource: aquarium.startedAtSource,
-      startedAtConfirmedAt: aquarium.startedAtConfirmedAt,
+    const resumeKey = aquarium.id;
+    const fingerprint = aquariumSaveFingerprint(aquarium);
+    const pendingAtStart = this.aquariumSaveResumes.get(resumeKey);
+    if (pendingAtStart && pendingAtStart.fingerprint !== fingerprint) {
+      throw new AquaGuideApiError(
+        409,
+        'VERSION_CONFLICT',
+        '上一次保存只完成了一部分，请重新加载鱼缸后再继续修改。',
+      );
+    }
+
+    let desiredAquarium = pendingAtStart?.desired || aquarium;
+    let parentWriteConfirmed = false;
+
+    const baseInputFor = (target: Aquarium) => {
+      const dimensions = target.dimensions;
+      return {
+        name: target.name,
+        waterType: target.waterType,
+        lengthCm: dimensions?.length ? Number(dimensions.length) : undefined,
+        widthCm: dimensions?.width ? Number(dimensions.width) : undefined,
+        heightCm: dimensions?.height ? Number(dimensions.height) : undefined,
+        targetTemperatureC: target.targetTemperature ? Number(target.targetTemperature) : undefined,
+        lastWaterChangeAt: target.lastWaterChangeDate,
+        lastWaterStoredAt: target.lastWaterStoredDate,
+        startedAt: target.startedAt,
+        startedAtSource: target.startedAtSource,
+        startedAtConfirmedAt: target.startedAtConfirmedAt,
+      };
     };
 
-    const version = this.aquariumVersions.get(aquarium.id);
-    let saved: ApiAquarium;
-    if (isUuid(aquarium.id)) {
-      if (!version || !this.aquariumWriteBaselines.has(aquarium.id)) {
-        throw new AquaGuideApiError(
-          409,
-          'VERSION_CONFLICT',
-          '当前鱼缸缺少同步基线，请重新加载后再保存。',
-        );
+    const recoverPendingSave = async (error: unknown) => {
+      const pending = this.aquariumSaveResumes.get(resumeKey);
+      const dependencyFailure = error instanceof AquaGuideApiError
+        && (error.status === 0 || error.code === 'DEPENDENCY_UNAVAILABLE');
+      if (!pending || (!parentWriteConfirmed && !dependencyFailure)) {
+        if (pending) this.aquariumSaveResumes.delete(resumeKey);
+        return;
       }
-      const current = await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`);
-      this.assertAquariumAggregateFresh(aquarium.id, current, { ignoreAquariumVersion: true });
-      saved = await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`, {
-        method: 'PATCH',
-        body: { ...baseInput, version },
-        idempotencyKey: `aquarium-save-update:${aquarium.id}:v${version}`,
-      });
-      this.assertAquariumAggregateFresh(aquarium.id, saved, { ignoreAquariumVersion: true });
-    } else {
-      saved = await apiRequest<ApiAquarium>('/aquariums', {
-        method: 'POST',
-        body: baseInput,
-        idempotencyKey: `aquarium-save-create:${aquarium.id}`,
-      });
-    }
 
-    const currentById = new Map((saved.species || []).map(item => [item.id, item]));
-    const currentByCatalogKey = new Map((saved.species || []).map(item => [item.speciesCatalogKey, item]));
-    const retained = new Set<string>();
-
-    for (const fish of aquarium.fishes) {
-      const current = currentById.get(fish.id) || currentByCatalogKey.get(fish.fishId);
-      if (current) {
-        retained.add(current.id);
-        const usesBatches = Boolean(fish.batches?.length);
-        if ((!usesBatches && current.quantity !== fish.quantity) || current.entryDate !== fish.entryDate || current.lastWaterChangeAt !== fish.lastWaterChangeDate) {
-          const updated = await apiRequest<ApiAquariumSpecies>(`/aquariums/${saved.id}/species/${current.id}`, {
-            method: 'PATCH',
-            body: {
-              ...(!usesBatches ? { quantity: fish.quantity } : {}),
-              entryDate: fish.entryDate.slice(0, 10),
-              lastWaterChangeAt: fish.lastWaterChangeDate,
-              version: current.version,
-            },
-            idempotencyKey: `aquarium-save-species-update:${current.id}:v${current.version}`,
-          });
-          this.speciesVersions.set(updated.id, updated.version);
+      try {
+        const current = await apiRequest<ApiAquarium>(`/aquariums/${pending.serverAquariumId}`);
+        if (!aquariumPartialSaveCanResume(pending.before, current, pending.target)) {
+          this.aquariumSaveResumes.delete(resumeKey);
+          return;
         }
-        if (usesBatches) await this.syncSpeciesBatches(saved.id, current, fish.batches!);
-      } else {
-        const desiredBatches = fish.batches || [];
-        const initialBatch = desiredBatches[0];
-        const created = await apiRequest<ApiAquariumSpecies>(`/aquariums/${saved.id}/species`, {
-          method: 'POST',
-          body: {
-            speciesCatalogKey: fish.fishId,
-            quantity: initialBatch?.quantity ?? fish.quantity,
-            entryDate: (initialBatch?.entryDate ?? fish.entryDate).slice(0, 10),
-            lastWaterChangeAt: fish.lastWaterChangeDate,
-            lifeStage: initialBatch?.lifeStage,
-            reproductiveState: initialBatch?.reproductiveState,
-          },
-          idempotencyKey: `aquarium-save-species-create:${saved.id}:${fish.id}`,
+        const canonical = canonicalizeAquariumResumeInput(pending.target, current);
+        this.rememberAquarium(current);
+        this.aquariumSaveResumes.set(resumeKey, { ...pending, desired: canonical });
+      } catch {
+        // Keep the pending resume state. A later retry can probe the server again.
+      }
+    };
+
+    try {
+      let saved: ApiAquarium;
+      let pending = pendingAtStart;
+
+      if (isUuid(aquarium.id)) {
+        const current = await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`);
+        const baseline = this.aquariumWriteBaselines.get(aquarium.id);
+        const baselineFresh = Boolean(
+          baseline && aquariumWriteBaselineMatches(baseline, current, { ignoreAquariumVersion: true }),
+        );
+
+        if (!baselineFresh) {
+          if (!pending || !aquariumPartialSaveCanResume(pending.before, current, pending.target)) {
+            throw new AquaGuideApiError(
+              409,
+              'VERSION_CONFLICT',
+              '鱼缸内容已在其他设备更新，请刷新后重试。',
+            );
+          }
+          desiredAquarium = canonicalizeAquariumResumeInput(pending.target, current);
+          this.rememberAquarium(current);
+          pending = { ...pending, desired: desiredAquarium, serverAquariumId: current.id };
+          this.aquariumSaveResumes.set(resumeKey, pending);
+        }
+
+        const version = this.aquariumVersions.get(aquarium.id);
+        if (!version || !this.aquariumWriteBaselines.has(aquarium.id)) {
+          throw new AquaGuideApiError(
+            409,
+            'VERSION_CONFLICT',
+            '当前鱼缸缺少同步基线，请重新加载后再保存。',
+          );
+        }
+
+        if (!pending) {
+          pending = {
+            fingerprint,
+            before: current,
+            target: aquarium,
+            desired: desiredAquarium,
+            serverAquariumId: aquarium.id,
+          };
+          this.aquariumSaveResumes.set(resumeKey, pending);
+        }
+
+        saved = await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`, {
+          method: 'PATCH',
+          body: { ...baseInputFor(desiredAquarium), version },
+          idempotencyKey: `aquarium-save-update:${aquarium.id}:v${version}`,
         });
-        retained.add(created.id);
-        this.speciesVersions.set(created.id, created.version);
-        for (const batch of desiredBatches.slice(1)) {
-          await apiRequest(`/aquariums/${saved.id}/species/${created.id}/batches`, {
+        parentWriteConfirmed = true;
+        this.assertAquariumAggregateFresh(aquarium.id, saved, { ignoreAquariumVersion: true });
+      } else {
+        saved = await apiRequest<ApiAquarium>('/aquariums', {
+          method: 'POST',
+          body: baseInputFor(desiredAquarium),
+          idempotencyKey: `aquarium-save-create:${aquarium.id}`,
+        });
+        parentWriteConfirmed = true;
+
+        if (pending) {
+          if (!aquariumPartialSaveCanResume(pending.before, saved, pending.target)) {
+            throw new AquaGuideApiError(
+              409,
+              'VERSION_CONFLICT',
+              '上一次保存后的服务端状态已经发生其他变化，请重新加载后重试。',
+            );
+          }
+          desiredAquarium = canonicalizeAquariumResumeInput(pending.target, saved);
+          pending = { ...pending, desired: desiredAquarium, serverAquariumId: saved.id };
+        } else {
+          pending = {
+            fingerprint,
+            before: saved,
+            target: aquarium,
+            desired: desiredAquarium,
+            serverAquariumId: saved.id,
+          };
+        }
+        this.aquariumSaveResumes.set(resumeKey, pending);
+      }
+
+      const currentById = new Map((saved.species || []).map(item => [item.id, item]));
+      const currentByCatalogKey = new Map((saved.species || []).map(item => [item.speciesCatalogKey, item]));
+      const retained = new Set<string>();
+
+      for (const fish of desiredAquarium.fishes) {
+        const current = currentById.get(fish.id) || currentByCatalogKey.get(fish.fishId);
+        if (current) {
+          retained.add(current.id);
+          const usesBatches = Boolean(fish.batches?.length);
+          if ((!usesBatches && current.quantity !== fish.quantity) || current.entryDate !== fish.entryDate || current.lastWaterChangeAt !== fish.lastWaterChangeDate) {
+            const updated = await apiRequest<ApiAquariumSpecies>(`/aquariums/${saved.id}/species/${current.id}`, {
+              method: 'PATCH',
+              body: {
+                ...(!usesBatches ? { quantity: fish.quantity } : {}),
+                entryDate: fish.entryDate.slice(0, 10),
+                lastWaterChangeAt: fish.lastWaterChangeDate,
+                version: current.version,
+              },
+              idempotencyKey: `aquarium-save-species-update:${current.id}:v${current.version}`,
+            });
+            this.speciesVersions.set(updated.id, updated.version);
+          }
+          if (usesBatches) await this.syncSpeciesBatches(saved.id, current, fish.batches!);
+        } else {
+          const desiredBatches = fish.batches || [];
+          const initialBatch = desiredBatches[0];
+          const created = await apiRequest<ApiAquariumSpecies>(`/aquariums/${saved.id}/species`, {
             method: 'POST',
             body: {
-              quantity: batch.quantity,
-              entryDate: batch.entryDate.slice(0, 10),
-              lifeStage: batch.lifeStage,
-              reproductiveState: batch.reproductiveState,
+              speciesCatalogKey: fish.fishId,
+              quantity: initialBatch?.quantity ?? fish.quantity,
+              entryDate: (initialBatch?.entryDate ?? fish.entryDate).slice(0, 10),
+              lastWaterChangeAt: fish.lastWaterChangeDate,
+              lifeStage: initialBatch?.lifeStage,
+              reproductiveState: initialBatch?.reproductiveState,
             },
-            idempotencyKey: `aquarium-save-batch-create:${created.id}:${batch.id}`,
+            idempotencyKey: `aquarium-save-species-create:${saved.id}:${fish.id}`,
+          });
+          retained.add(created.id);
+          this.speciesVersions.set(created.id, created.version);
+          for (const batch of desiredBatches.slice(1)) {
+            await apiRequest(`/aquariums/${saved.id}/species/${created.id}/batches`, {
+              method: 'POST',
+              body: {
+                quantity: batch.quantity,
+                entryDate: batch.entryDate.slice(0, 10),
+                lifeStage: batch.lifeStage,
+                reproductiveState: batch.reproductiveState,
+              },
+              idempotencyKey: `aquarium-save-batch-create:${created.id}:${batch.id}`,
+            });
+          }
+        }
+      }
+
+      for (const current of saved.species || []) {
+        if (!retained.has(current.id)) {
+          await apiRequest(`/aquariums/${saved.id}/species/${current.id}?version=${current.version}`, {
+            method: 'DELETE',
+            idempotencyKey: `aquarium-save-species-delete:${current.id}:v${current.version}`,
           });
         }
       }
-    }
 
-    for (const current of saved.species || []) {
-      if (!retained.has(current.id)) {
-        await apiRequest(`/aquariums/${saved.id}/species/${current.id}?version=${current.version}`, {
-          method: 'DELETE',
-          idempotencyKey: `aquarium-save-species-delete:${current.id}:v${current.version}`,
+      if (desiredAquarium.equipment) {
+        await apiRequest(`/aquariums/${saved.id}/equipment`, {
+          method: 'PUT',
+          body: {
+            filterType: desiredAquarium.equipment.filter,
+            heater: desiredAquarium.equipment.heater,
+            oxygen: desiredAquarium.equipment.oxygen,
+            lightType: desiredAquarium.equipment.light,
+            version: saved.equipment?.version,
+          },
+          idempotencyKey: `aquarium-save-equipment:${saved.id}:v${saved.equipment?.version ?? 0}`,
         });
       }
-    }
 
-    if (aquarium.equipment) {
-      await apiRequest(`/aquariums/${saved.id}/equipment`, {
-        method: 'PUT',
-        body: {
-          filterType: aquarium.equipment.filter,
-          heater: aquarium.equipment.heater,
-          oxygen: aquarium.equipment.oxygen,
-          lightType: aquarium.equipment.light,
-          version: saved.equipment?.version,
-        },
-        idempotencyKey: `aquarium-save-equipment:${saved.id}:v${saved.equipment?.version ?? 0}`,
-      });
+      saved = await apiRequest<ApiAquarium>(`/aquariums/${saved.id}`);
+      this.aquariumSaveResumes.delete(resumeKey);
+      return this.rememberAquarium(saved);
+    } catch (error) {
+      await recoverPendingSave(error);
+      throw error;
     }
-
-    saved = await apiRequest<ApiAquarium>(`/aquariums/${saved.id}`);
-    return this.rememberAquarium(saved);
   }
 
   async removeLivestock(input: LivestockRemovalInput) {
