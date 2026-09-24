@@ -3,6 +3,8 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Aquarium } from '../src/types';
 import {
+  aquariumComponentSemanticKey,
+  aquariumDesiredComponents,
   aquariumEquipmentMatchesTarget,
   aquariumPartialSaveCanResume,
   aquariumSaveFingerprint,
@@ -237,6 +239,102 @@ assert.equal(
   'retry can detect that the equipment PUT already reached the desired state',
 );
 
+const unknownEquipmentTarget = structuredClone(desired);
+delete unknownEquipmentTarget.equipment;
+assert.equal(
+  aquariumPartialSaveCanResume(before, partial, unknownEquipmentTarget),
+  true,
+  'omitted equipment means unknown/unmodified and must preserve the before-state equipment during resume',
+);
+assert.equal(
+  aquariumEquipmentMatchesTarget(before.equipment, undefined),
+  false,
+  'omitted equipment must not be reinterpreted as an explicit equipment deletion target',
+);
+
+const componentBefore: AquariumSaveServerSnapshot = {
+  ...structuredClone(before),
+  components: [{
+    id: 'aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    componentType: 'substrate',
+    name: '河沙',
+    version: 2,
+  }],
+};
+const componentTarget: Aquarium = {
+  ...structuredClone(desired),
+  substrate: '水草泥',
+  plants: ['sp_plant_1', 'sp_plant_1'],
+  hardscape: ['sp_hardscape_1'],
+};
+assert.deepEqual(
+  aquariumDesiredComponents(componentTarget),
+  [
+    { componentType: 'hardscape', name: 'sp_hardscape_1' },
+    { componentType: 'plant', name: 'sp_plant_1' },
+    { componentType: 'substrate', name: '水草泥' },
+  ],
+  'component targets must be normalized, de-duplicated and stable for replay',
+);
+const componentPartial: AquariumSaveServerSnapshot = {
+  ...structuredClone(partial),
+  components: [
+    ...componentBefore.components!,
+    {
+      id: 'bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',
+      componentType: 'substrate',
+      name: '水草泥',
+      version: 1,
+    },
+    {
+      id: 'cccccccc-cccc-4ccc-8ccc-cccccccccccc',
+      componentType: 'plant',
+      name: 'sp_plant_1',
+      version: 1,
+    },
+  ],
+};
+assert.equal(
+  aquariumPartialSaveCanResume(componentBefore, componentPartial, componentTarget),
+  true,
+  'component create progress may coexist with an old component that is still awaiting deletion',
+);
+const componentAfterDelete = structuredClone(componentPartial);
+componentAfterDelete.components = componentAfterDelete.components!.filter(item => item.name !== '河沙');
+assert.equal(
+  aquariumPartialSaveCanResume(componentBefore, componentAfterDelete, componentTarget),
+  true,
+  'a requested component deletion must be resumable once the old component is gone',
+);
+const rogueComponent = structuredClone(componentPartial);
+rogueComponent.components!.push({
+  id: 'dddddddd-dddd-4ddd-8ddd-dddddddddddd',
+  componentType: 'plant',
+  name: 'external_plant',
+  version: 1,
+});
+assert.equal(
+  aquariumPartialSaveCanResume(componentBefore, rogueComponent, componentTarget),
+  false,
+  'an unrelated remote component addition must block partial-save resume',
+);
+const retainedComponentTarget: Aquarium = { ...structuredClone(desired), substrate: '河沙' };
+const missingRetainedComponent = { ...structuredClone(partial), components: [] };
+assert.equal(
+  aquariumPartialSaveCanResume(componentBefore, missingRetainedComponent, retainedComponentTarget),
+  false,
+  'remote deletion of a component still required by the target must block resume',
+);
+assert.notEqual(
+  aquariumSaveFingerprint(desired),
+  aquariumSaveFingerprint({ ...desired, plants: ['sp_plant_1'] }),
+  'environment component changes must participate in partial-save fingerprinting',
+);
+assert.equal(
+  aquariumComponentSemanticKey({ componentType: 'plant', name: ' sp_plant_1 ' }),
+  'plant:sp_plant_1',
+);
+
 const missingRetainedSpecies = structuredClone(partial);
 missingRetainedSpecies.species = missingRetainedSpecies.species.filter(item => item.id !== speciesId);
 assert.equal(
@@ -291,6 +389,21 @@ assert.match(
   save,
   /for \(const current of saved\.species \|\| \[\]\) \{\s*if \(!retained\.has\(current\.id\)\)/s,
   'species deletion retries must derive work from the refreshed server snapshot so an already deleted species is not deleted again',
+);
+assert.match(
+  save,
+  /const desiredComponents = aquariumDesiredComponents\(desiredAquarium\);/,
+  'aggregate save must reconcile substrate, plant and hardscape components',
+);
+assert.match(
+  save,
+  /idempotencyKey: `aquarium-save-component-create:\$\{saved\.id\}:\$\{stableOperationToken\(aquariumComponentSemanticKey\(desiredComponent\)\)\}`/,
+  'component creates must use stable bounded semantic idempotency keys',
+);
+assert.match(
+  save,
+  /idempotencyKey: `aquarium-save-component-delete:\$\{current\.id\}:v\$\{current\.version\}`/,
+  'component deletes must use optimistic-version-bound idempotency keys',
 );
 assert.match(repository, /this\.aquariumSaveResumes\.clear\(\);/, 'a full authoritative aquarium reload must clear pending resume state');
 

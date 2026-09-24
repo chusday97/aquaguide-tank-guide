@@ -20,6 +20,16 @@ export type AquariumSaveServerSpecies = {
   batches: AquariumSaveServerBatch[];
 };
 
+export type AquariumSaveServerComponent = {
+  id: string;
+  componentType: 'substrate' | 'plant' | 'hardscape';
+  name: string;
+  quantity?: number;
+  version: number;
+};
+
+export type AquariumDesiredComponent = Pick<AquariumSaveServerComponent, 'componentType' | 'name'>;
+
 export type AquariumSaveServerSnapshot = {
   id: string;
   name: string;
@@ -43,11 +53,63 @@ export type AquariumSaveServerSnapshot = {
     lightType?: string;
     version: number;
   };
+  components?: AquariumSaveServerComponent[];
 };
 
 const nil = <T>(value: T | null | undefined) => value ?? null;
 const sameScalar = (left: unknown, right: unknown) => nil(left) === nil(right);
 const day = (value: string | undefined) => value ? value.slice(0, 10) : undefined;
+
+export const aquariumComponentSemanticKey = (
+  component: Pick<AquariumSaveServerComponent, 'componentType' | 'name'>,
+) => `${component.componentType}:${component.name.trim()}`;
+
+export const aquariumDesiredComponents = (aquarium: Aquarium): AquariumDesiredComponent[] => {
+  const desired: AquariumDesiredComponent[] = [];
+  const substrate = aquarium.substrate?.trim();
+  if (substrate) desired.push({ componentType: 'substrate', name: substrate });
+
+  for (const name of aquarium.plants || []) {
+    const normalized = name.trim();
+    if (normalized) desired.push({ componentType: 'plant', name: normalized });
+  }
+  for (const name of aquarium.hardscape || []) {
+    const normalized = name.trim();
+    if (normalized) desired.push({ componentType: 'hardscape', name: normalized });
+  }
+
+  const unique = new Map<string, AquariumDesiredComponent>();
+  for (const component of desired) unique.set(aquariumComponentSemanticKey(component), component);
+  return [...unique.values()].sort((left, right) => (
+    aquariumComponentSemanticKey(left).localeCompare(aquariumComponentSemanticKey(right))
+  ));
+};
+
+const componentTransitionCompatible = (
+  before: AquariumSaveServerComponent[] = [],
+  current: AquariumSaveServerComponent[] = [],
+  desired: AquariumDesiredComponent[] = [],
+) => {
+  const beforeById = new Map(before.map(component => [component.id, component]));
+  const currentIds = new Set(current.map(component => component.id));
+  const desiredKeys = new Set(desired.map(aquariumComponentSemanticKey));
+
+  for (const component of current) {
+    const previous = beforeById.get(component.id);
+    if (previous) {
+      if (aquariumComponentSemanticKey(previous) !== aquariumComponentSemanticKey(component)) return false;
+      continue;
+    }
+    if (!desiredKeys.has(aquariumComponentSemanticKey(component))) return false;
+  }
+
+  for (const previous of before) {
+    if (currentIds.has(previous.id)) continue;
+    if (desiredKeys.has(aquariumComponentSemanticKey(previous))) return false;
+  }
+
+  return true;
+};
 
 const desiredParent = (aquarium: Aquarium) => ({
   name: aquarium.name,
@@ -215,6 +277,7 @@ export const aquariumSaveFingerprint = (aquarium: Aquarium) => JSON.stringify({
     })),
   })),
   equipment: aquarium.equipment || null,
+  components: aquariumDesiredComponents(aquarium),
 });
 
 export const aquariumPartialSaveCanResume = (
@@ -275,6 +338,12 @@ export const aquariumPartialSaveCanResume = (
   const equipmentIsBefore = equipmentMatchesServer(current.equipment, before.equipment);
   const equipmentIsTarget = aquariumEquipmentMatchesTarget(current.equipment, desired.equipment);
   if (!equipmentIsBefore && !equipmentIsTarget) return false;
+
+  if (!componentTransitionCompatible(
+    before.components || [],
+    current.components || [],
+    aquariumDesiredComponents(desired),
+  )) return false;
 
   return true;
 };

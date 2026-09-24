@@ -21,6 +21,10 @@ const base: AquariumAggregateVersionShape = {
     },
   ],
   equipment: { id: 'equipment-1', version: 3 },
+  components: [
+    { id: 'component-1', version: 2 },
+    { id: 'component-2', version: 1 },
+  ],
 };
 
 const baseline = createAquariumWriteBaseline(base);
@@ -55,6 +59,18 @@ assert.equal(aquariumWriteBaselineMatches(baseline, remoteEquipmentUpdate), fals
 const remoteEquipmentRemoval = structuredClone(base);
 delete remoteEquipmentRemoval.equipment;
 assert.equal(aquariumWriteBaselineMatches(baseline, remoteEquipmentRemoval), false, 'remote equipment removal must stop stale recreation');
+
+const remoteComponentAddition = structuredClone(base);
+remoteComponentAddition.components!.push({ id: 'component-3', version: 1 });
+assert.equal(aquariumWriteBaselineMatches(baseline, remoteComponentAddition), false, 'remote component additions must stop stale environment reconciliation');
+
+const remoteComponentUpdate = structuredClone(base);
+remoteComponentUpdate.components![0].version += 1;
+assert.equal(aquariumWriteBaselineMatches(baseline, remoteComponentUpdate), false, 'remote component updates must stop stale environment reconciliation');
+
+const remoteComponentRemoval = structuredClone(base);
+remoteComponentRemoval.components = remoteComponentRemoval.components!.slice(1);
+assert.equal(aquariumWriteBaselineMatches(baseline, remoteComponentRemoval), false, 'remote component removals must stop stale environment recreation');
 
 const repository = readFileSync(resolve(import.meta.dirname, '../src/services/repository/api-aquaguide.repository.ts'), 'utf8');
 const saveStart = repository.indexOf('async saveAquarium');

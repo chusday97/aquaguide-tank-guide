@@ -7,12 +7,14 @@ export type AquariumAggregateVersionShape = {
     batches?: Array<{ id: string; version: number }>;
   }>;
   equipment?: { id: string; version: number };
+  components?: Array<{ id: string; version: number }>;
 };
 
 export type AquariumWriteBaseline = {
   aquariumVersion: number;
   species: Record<string, { version: number; batches: Record<string, number> }>;
   equipment: { id: string; version: number } | null;
+  components: Record<string, number>;
 };
 
 const versionMap = (items: Array<{ id: string; version: number }> = []) => Object.fromEntries(
@@ -31,6 +33,7 @@ export const createAquariumWriteBaseline = (record: AquariumAggregateVersionShap
   equipment: record.equipment
     ? { id: record.equipment.id, version: record.equipment.version }
     : null,
+  components: versionMap(record.components || []),
 });
 
 const sameVersionMap = (expected: Record<string, number>, actual: Record<string, number>) => {
@@ -66,7 +69,14 @@ export const aquariumWriteBaselineMatches = (
     if (!actual || expected.version !== actual.version || !sameVersionMap(expected.batches, actual.batches)) return false;
   }
 
-  if (!baseline.equipment && !current.equipment) return true;
-  if (!baseline.equipment || !current.equipment) return false;
-  return baseline.equipment.id === current.equipment.id && baseline.equipment.version === current.equipment.version;
+  const equipmentMatches = (!baseline.equipment && !current.equipment)
+    || Boolean(
+      baseline.equipment
+      && current.equipment
+      && baseline.equipment.id === current.equipment.id
+      && baseline.equipment.version === current.equipment.version
+    );
+  if (!equipmentMatches) return false;
+
+  return sameVersionMap(baseline.components, versionMap(current.components || []));
 };

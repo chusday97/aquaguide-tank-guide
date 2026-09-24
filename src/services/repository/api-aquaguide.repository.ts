@@ -4,6 +4,8 @@ import type { CareReminderRecord } from '../care/care-activity.service';
 import { apiRequest, AquaGuideApiError, createIdempotencyKey } from '../api/api-client';
 import { aquariumWriteBaselineMatches, createAquariumWriteBaseline, type AquariumWriteBaseline } from './aquarium-write-concurrency';
 import {
+  aquariumComponentSemanticKey,
+  aquariumDesiredComponents,
   aquariumEquipmentMatchesTarget,
   aquariumPartialSaveCanResume,
   aquariumSaveFingerprint,
@@ -86,6 +88,17 @@ type ApiReminder = {
 type ApiCareEvent = CareTimelineRecord & { version: number };
 
 const isUuid = (value: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+
+const stableOperationToken = (value: string) => {
+  let left = 0x811c9dc5;
+  let right = 0x9e3779b9;
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index);
+    left = Math.imul(left ^ code, 0x01000193);
+    right = Math.imul(right ^ code, 0x85ebca6b);
+  }
+  return `${(left >>> 0).toString(36)}${(right >>> 0).toString(36)}`;
+};
 
 const toLegacyAquarium = (record: ApiAquarium): Aquarium => {
   const components = record.components || [];
@@ -506,6 +519,33 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
             idempotencyKey: `aquarium-save-species-delete:${current.id}:v${current.version}`,
           });
         }
+      }
+
+      const desiredComponents = aquariumDesiredComponents(desiredAquarium);
+      const retainedComponentIds = new Set<string>();
+      for (const desiredComponent of desiredComponents) {
+        const current = (saved.components || []).find(component => (
+          !retainedComponentIds.has(component.id)
+          && aquariumComponentSemanticKey(component) === aquariumComponentSemanticKey(desiredComponent)
+        ));
+        if (current) {
+          retainedComponentIds.add(current.id);
+          continue;
+        }
+
+        await apiRequest(`/aquariums/${saved.id}/components`, {
+          method: 'POST',
+          body: desiredComponent,
+          idempotencyKey: `aquarium-save-component-create:${saved.id}:${stableOperationToken(aquariumComponentSemanticKey(desiredComponent))}`,
+        });
+      }
+
+      for (const current of saved.components || []) {
+        if (retainedComponentIds.has(current.id)) continue;
+        await apiRequest(`/aquariums/${saved.id}/components/${current.id}?version=${current.version}`, {
+          method: 'DELETE',
+          idempotencyKey: `aquarium-save-component-delete:${current.id}:v${current.version}`,
+        });
       }
 
       if (
