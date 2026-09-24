@@ -173,7 +173,7 @@ const newSpeciesCompatible = (
   return true;
 };
 
-const equipmentMatchesTarget = (
+export const aquariumEquipmentMatchesTarget = (
   current: AquariumSaveServerSnapshot['equipment'],
   desired: Aquarium['equipment'],
 ) => {
@@ -273,7 +273,7 @@ export const aquariumPartialSaveCanResume = (
   }
 
   const equipmentIsBefore = equipmentMatchesServer(current.equipment, before.equipment);
-  const equipmentIsTarget = equipmentMatchesTarget(current.equipment, desired.equipment);
+  const equipmentIsTarget = aquariumEquipmentMatchesTarget(current.equipment, desired.equipment);
   if (!equipmentIsBefore && !equipmentIsTarget) return false;
 
   return true;

@@ -4,6 +4,7 @@ import type { CareReminderRecord } from '../care/care-activity.service';
 import { apiRequest, AquaGuideApiError, createIdempotencyKey } from '../api/api-client';
 import { aquariumWriteBaselineMatches, createAquariumWriteBaseline, type AquariumWriteBaseline } from './aquarium-write-concurrency';
 import {
+  aquariumEquipmentMatchesTarget,
   aquariumPartialSaveCanResume,
   aquariumSaveFingerprint,
   canonicalizeAquariumResumeInput,
@@ -507,7 +508,10 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
         }
       }
 
-      if (desiredAquarium.equipment) {
+      if (
+        desiredAquarium.equipment
+        && !aquariumEquipmentMatchesTarget(saved.equipment, desiredAquarium.equipment)
+      ) {
         await apiRequest(`/aquariums/${saved.id}/equipment`, {
           method: 'PUT',
           body: {

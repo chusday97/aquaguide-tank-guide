@@ -3,6 +3,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import type { Aquarium } from '../src/types';
 import {
+  aquariumEquipmentMatchesTarget,
   aquariumPartialSaveCanResume,
   aquariumSaveFingerprint,
   canonicalizeAquariumResumeInput,
@@ -207,6 +208,35 @@ assert.equal(
   'unrelated equipment drift must block resume',
 );
 
+const equipmentTarget = structuredClone(desired);
+equipmentTarget.equipment = {
+  filter: '上滤',
+  heater: false,
+  oxygen: true,
+  light: '水草灯',
+};
+const equipmentWritePartial = structuredClone(before);
+equipmentWritePartial.name = '新名字';
+equipmentWritePartial.version = 5;
+equipmentWritePartial.equipment = {
+  ...equipmentWritePartial.equipment!,
+  filterType: '上滤',
+  heater: false,
+  oxygen: true,
+  lightType: '水草灯',
+  version: 3,
+};
+assert.equal(
+  aquariumPartialSaveCanResume(before, equipmentWritePartial, equipmentTarget),
+  true,
+  'equipment already written to the target state must be recognized as resumable progress after response loss',
+);
+assert.equal(
+  aquariumEquipmentMatchesTarget(equipmentWritePartial.equipment, equipmentTarget.equipment),
+  true,
+  'retry can detect that the equipment PUT already reached the desired state',
+);
+
 const missingRetainedSpecies = structuredClone(partial);
 missingRetainedSpecies.species = missingRetainedSpecies.species.filter(item => item.id !== speciesId);
 assert.equal(
@@ -251,6 +281,16 @@ assert.match(
   save,
   /if \(!pending \|\| \(!parentWriteConfirmed && !dependencyFailure\)\) \{\s*if \(pending\) this\.aquariumSaveResumes\.delete\(resumeKey\);/s,
   'deterministic failures before a confirmed write must clear resume state instead of blocking corrected input',
+);
+assert.match(
+  save,
+  /desiredAquarium\.equipment\s*&& !aquariumEquipmentMatchesTarget\(saved\.equipment, desiredAquarium\.equipment\)/s,
+  'a resumed save must skip equipment PUT when the server already reached the requested equipment state',
+);
+assert.match(
+  save,
+  /for \(const current of saved\.species \|\| \[\]\) \{\s*if \(!retained\.has\(current\.id\)\)/s,
+  'species deletion retries must derive work from the refreshed server snapshot so an already deleted species is not deleted again',
 );
 assert.match(repository, /this\.aquariumSaveResumes\.clear\(\);/, 'a full authoritative aquarium reload must clear pending resume state');
 
