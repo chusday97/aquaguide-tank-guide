@@ -292,11 +292,15 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
 
     const version = this.aquariumVersions.get(aquarium.id);
     let saved = version && isUuid(aquarium.id)
-      ? await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`, { method: 'PATCH', body: { ...baseInput, version }, idempotencyKey: createIdempotencyKey('aquarium-update') })
+      ? await apiRequest<ApiAquarium>(`/aquariums/${aquarium.id}`, {
+          method: 'PATCH',
+          body: { ...baseInput, version },
+          idempotencyKey: `aquarium-save-update:${aquarium.id}:v${version}`,
+        })
       : await apiRequest<ApiAquarium>('/aquariums', {
           method: 'POST',
           body: baseInput,
-          idempotencyKey: createIdempotencyKey('aquarium'),
+          idempotencyKey: `aquarium-save-create:${aquarium.id}`,
         });
 
     const currentById = new Map((saved.species || []).map(item => [item.id, item]));
@@ -317,7 +321,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
               lastWaterChangeAt: fish.lastWaterChangeDate,
               version: current.version,
             },
-            idempotencyKey: createIdempotencyKey('aquarium-species-update'),
+            idempotencyKey: `aquarium-save-species-update:${current.id}:v${current.version}`,
           });
           this.speciesVersions.set(updated.id, updated.version);
         }
@@ -335,7 +339,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
             lifeStage: initialBatch?.lifeStage,
             reproductiveState: initialBatch?.reproductiveState,
           },
-          idempotencyKey: createIdempotencyKey('aquarium-species'),
+          idempotencyKey: `aquarium-save-species-create:${saved.id}:${fish.id}`,
         });
         retained.add(created.id);
         this.speciesVersions.set(created.id, created.version);
@@ -348,7 +352,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
               lifeStage: batch.lifeStage,
               reproductiveState: batch.reproductiveState,
             },
-            idempotencyKey: createIdempotencyKey('aquarium-species-batch'),
+            idempotencyKey: `aquarium-save-batch-create:${created.id}:${batch.id}`,
           });
         }
       }
@@ -356,7 +360,10 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
 
     for (const current of saved.species || []) {
       if (!retained.has(current.id)) {
-        await apiRequest(`/aquariums/${saved.id}/species/${current.id}?version=${current.version}`, { method: 'DELETE', idempotencyKey: createIdempotencyKey('aquarium-species-delete') });
+        await apiRequest(`/aquariums/${saved.id}/species/${current.id}?version=${current.version}`, {
+          method: 'DELETE',
+          idempotencyKey: `aquarium-save-species-delete:${current.id}:v${current.version}`,
+        });
       }
     }
 
@@ -370,7 +377,7 @@ export class ApiAquaGuideRepository implements AquaGuideRepository {
           lightType: aquarium.equipment.light,
           version: saved.equipment?.version,
         },
-        idempotencyKey: createIdempotencyKey('aquarium-equipment'),
+        idempotencyKey: `aquarium-save-equipment:${saved.id}:v${saved.equipment?.version ?? 0}`,
       });
     }
 
