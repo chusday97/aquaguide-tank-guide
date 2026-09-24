@@ -13,7 +13,10 @@ export type UiFailureDiagnostic = {
 const SESSION_KEY = 'aquaguide_ui_failures_session';
 export const DATA_RECOVERY_EVENT = 'aquaguide:data-recovered';
 
-const getBuildVersion = () => import.meta.env.VITE_APP_VERSION || `${import.meta.env.MODE}-local`;
+const getBuildVersion = () => {
+  const env = (import.meta as ImportMeta & { env?: { VITE_APP_VERSION?: string; MODE?: string } }).env;
+  return env?.VITE_APP_VERSION || `${env?.MODE || 'unknown'}-local`;
+};
 
 export const classifyUiFailure = (error: unknown): UiFailureKind => {
   const message = error instanceof Error ? `${error.name} ${error.message}` : String(error || '');
