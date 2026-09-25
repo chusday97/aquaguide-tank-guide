@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-25 Backend candidate synchronized at whole-tank aggregation
+
+- Canonical integration worktree: `/Users/chuchu/aquaguide-backend-integration-20260922` on `integration/backend-main-20260922`.
+- Validated functional head: `9be6e49c8e0d64dda57f57c22c4ae0eb8e891b89` (`fix(compatibility): lead with whole-tank risk summary`), built on `2b191896...` whole-tank aggregation. The branch is synchronized with `origin/integration/backend-main-20260922`; an authority-only docs checkpoint may follow this functional SHA.
+- Compatibility decision path now keeps pairwise explanations and adds a 3+ species whole-tank pass through the same canonical domain engine, so cumulative constraints such as bioload/shared tank conditions are retained in the overall verdict.
+- Regression proof: a 63 L, three-species fixture has no pairwise bioload warning but the whole-tank pass raises `bioload_screening_elevated`; the overall verdict remains `caution`.
+- Full `npm run test:backend-release-gate` PASS at this head, including the new `Multi-species Tank Aggregate` gate; catalog snapshot remains 486 species / 63 evidence sources / checksum `589854390f89442e606efbce33f99900062648ab4ae4f871521be8ab155cc942`.
+- PR #154 remains OPEN / non-draft / MERGEABLE and contains validated functional head `9be6e49c...`; CI is re-triggered on each pushed checkpoint. No main merge has occurred.
+- Frozen scope remains unchanged: no UI/Vision changes in this iteration; no DB migration application, DB authority switch, Care indexing change, or Production promote.
+- NEXT: product-level badcase acceptance of direct user conclusions on real multi-species scenarios. Do not merge main, deploy Production, or apply migrations without separate authorization.
+
 ## CURRENT OVERRIDE — 2026-09-22 Backend integration candidate READY
 
 - GitHub CI exposed two reviewed Profile DB-authority ownership gaps (sp_0016, sp_0475); repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql now owns them. No DB migration has been applied.

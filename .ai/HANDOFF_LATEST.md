@@ -1,3 +1,12 @@
+## HANDOFF — 2026-09-25 Whole-tank compatibility aggregation validated
+
+- Current integration candidate: `/Users/chuchu/aquaguide-backend-integration-20260922`, branch `integration/backend-main-20260922`, validated functional head `9be6e49c8e0d64dda57f57c22c4ae0eb8e891b89`, built on `2b191896...`.
+- Local and remote integration are synchronized (`0/0`). PR #154 is OPEN / non-draft / MERGEABLE and contains functional head `9be6e49c...`; foundation/validate/Vercel/Cloudflare were green at the previous checkpoint and are re-triggered by new pushes, with heavy optional gates intentionally skipped.
+- Multi-species compatibility now combines pairwise explanations with a whole-tank canonical domain pass for 3+ species. This captures cumulative constraints that pairwise-only aggregation can miss without creating a second rules engine.
+- Regression proves whole-tank-only `bioload_screening_elevated` is propagated to the overall verdict while 1–2 species stay on the existing pairwise path. The direct summary now leads with a tank-level-only risk when that risk changes the 3+ species verdict, and soft-capacity disclaimers are idempotent.
+- Full backend release gate PASS at this head. Frozen UI/Vision behavior remains untouched; DB migration application/authority switch/Production remain HOLD.
+- Next execution target: representative product-level badcases and direct user conclusion quality, not additional repository restructuring. Main merge requires a separate explicit decision.
+
 ## HANDOFF — 2026-09-22 Local backend integration candidate validated
 
 - GitHub CI exposed two reviewed Profile DB-authority ownership gaps (sp_0016, sp_0475); repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql now owns them. No DB migration has been applied.
