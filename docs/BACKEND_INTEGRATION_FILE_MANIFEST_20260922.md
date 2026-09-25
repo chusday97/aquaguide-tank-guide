@@ -27,7 +27,7 @@ Classification is intentionally conservative. No merge/rebase is authorized by t
 - EXCLUDE_FROZEN_VISION: 8
 - EXCLUDE_FROZEN_UI: 2
 - EXCLUDE_DB_HOLD: 0
-- INCLUDE_DB_ARTIFACT_HOLD: 2
+- INCLUDE_DB_ARTIFACT_HOLD: 3
 
 ## Manual reconcile notes
 
@@ -39,6 +39,7 @@ Classification is intentionally conservative. No merge/rebase is authorized by t
 
 - `apps/admin-content/scripts/business-admin-staging-readiness.mjs`: current-main staging plan now lists the two repository-only Compatibility authority migrations so preflight remains exhaustive; this does not apply them.
 - CI ownership audit found that reviewed Profiles sp_0016 and sp_0475 lacked explicit additive migration ownership. Repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql closes that authority gap; it is not applied by this integration.
+- Priority knowledge batch 1 adds repository-only migration 202609250001_compatibility_priority_batch1_profiles.sql as explicit additive ownership for sp_0015/sp_0059/sp_0199/sp_0200/sp_0019; application remains HOLD.
 - CI requires `supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql` as a static contract artifact. It is included in the repository candidate but **must not be applied** during this integration.
 The initial file classification was conservative but validation found additional presentation coupling:
 - `src/services/compatibility/compatibility-presentation.service.ts`: kept from current main because user-facing copy is frozen.
@@ -242,4 +243,5 @@ These refinements are represented in candidate commit `afc8ad2e` and are stricte
 | INCLUDE_BACKEND | `src/services/compatibility/compatibility-presentation.service.ts` | Backend/data/authority/test scope with no detected frozen-scope or main-only path overlap. |
 | INCLUDE_DB_ARTIFACT_HOLD | `supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql` | Repository-only reviewed-baseline artifact required by CI contract; migration application and DB authority switch remain HOLD. |
 | INCLUDE_DB_ARTIFACT_HOLD | supabase/migrations/202609220001_compatibility_gold_ram_rhodeus_profiles.sql | Repository-only additive owner for reviewed Profiles sp_0016/sp_0475; application remains HOLD. |
+| INCLUDE_DB_ARTIFACT_HOLD | supabase/migrations/202609250001_compatibility_priority_batch1_profiles.sql | Repository-only additive owner for priority batch 1 reviewed Profiles sp_0015/sp_0059/sp_0199/sp_0200/sp_0019; application remains HOLD. |
 | MANUAL_RECONCILE | `apps/admin-content/scripts/business-admin-staging-readiness.mjs` | Current-main Business Admin staging plan reconciled to include repository-only Compatibility authority migrations; no migration execution is performed. |

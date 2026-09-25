@@ -21,7 +21,7 @@
     "MANUAL_RECONCILE": 4,
     "EXCLUDE_FROZEN_VISION": 8,
     "EXCLUDE_FROZEN_UI": 2,
-    "INCLUDE_DB_ARTIFACT_HOLD": 2
+    "INCLUDE_DB_ARTIFACT_HOLD": 3
   },
   "files": [
     {
@@ -978,6 +978,11 @@
       "path": "supabase/migrations/202609220001_compatibility_gold_ram_rhodeus_profiles.sql",
       "class": "INCLUDE_DB_ARTIFACT_HOLD",
       "reason": "Repository-only additive owner for reviewed Profiles sp_0016/sp_0475; application remains HOLD."
+    },
+    {
+      "path": "supabase/migrations/202609250001_compatibility_priority_batch1_profiles.sql",
+      "class": "INCLUDE_DB_ARTIFACT_HOLD",
+      "reason": "Repository-only additive owner for reviewed Compatibility priority batch 1 Profiles sp_0015/sp_0059/sp_0199/sp_0200/sp_0019; application remains HOLD."
     },
     {
       "path": "apps/admin-content/scripts/business-admin-staging-readiness.mjs",

@@ -8,6 +8,7 @@
 - Representative runtime behavior: Altum + small fish can hard-block on reviewed predation; Paradise Fish at 27°C hard-blocks on temperature; Kissing Gourami surfaces reviewed 150 cm / ~304 L long-term space pressure.
 - Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`, including the new Priority Compatibility Knowledge Batch gate.
 - Frozen scope unchanged: no UI/Vision behavior changes, no DB migration application/authority switch, no Production promote, no main merge.
+- CI ownership closure: repository-only `202609250001_compatibility_priority_batch1_profiles.sql` owns these 5 reviewed Profiles; it is a static HOLD artifact only and has not been applied.
 - NEXT: continue evidence-first promotion from the priority queue in small auditable batches; never bulk-enable Phase-2 completion records.
 
 ## CURRENT OVERRIDE — 2026-09-25 Backend candidate synchronized at whole-tank aggregation

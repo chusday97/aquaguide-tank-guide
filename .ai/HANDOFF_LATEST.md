@@ -7,6 +7,7 @@
 - New regression validates Altum small-fish predation, Paradise Fish cool-water ceiling, Kissing Gourami space pressure, exact runtime promotion, and fail-closed variant behavior.
 - Full backend release gate PASS; snapshot checksum `22e5de3d94a7985e325602ead8af5b2ff04943d4943981c33175c7c063a55ee8`.
 - No UI/Vision changes, DB migration application, DB-authority switch, Production promote, or main merge.
+- Repository-only `202609250001_compatibility_priority_batch1_profiles.sql` was added solely as explicit reviewed-Profile ownership; application remains HOLD.
 - Continue knowledge expansion in small source-audited batches only.
 
 ## HANDOFF — 2026-09-25 Whole-tank compatibility aggregation validated
