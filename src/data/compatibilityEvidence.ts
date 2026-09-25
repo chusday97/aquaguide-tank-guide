@@ -36,6 +36,12 @@ export type ReviewedStageRiskProfile = CompatibilityEvidenceDto & {
 };
 
 
+const kissingGouramiSeriouslyFish: EvidenceSourceDto = { id: 'seriouslyfish-helostoma-temminkii', title: 'Helostoma temminkii (Kissing Gourami)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/helostoma-temminkii', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' };
+const paradiseFishSeriouslyFish: EvidenceSourceDto = { id: 'seriouslyfish-macropodus-opercularis', title: 'Macropodus opercularis (Paradise Fish)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/macropodus-opercularis', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' };
+const badisSeriouslyFish: EvidenceSourceDto = { id: 'seriouslyfish-badis-badis', title: 'Badis badis (Badis)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/badis-badis', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' };
+const scarletBadisSeriouslyFish: EvidenceSourceDto = { id: 'seriouslyfish-dario-dario', title: 'Dario dario (Scarlet Badis)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/dario-dario/', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' };
+const altumAngelSeriouslyFish: EvidenceSourceDto = { id: 'seriouslyfish-pterophyllum-altum', title: 'Pterophyllum altum (Altum Angel)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/pterophyllum-altum', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' };
+
 const neocaridinaHusbandrySource: EvidenceSourceDto = {
   id: 'aquariumhq-neocaridina-davidi',
   title: 'Cherry shrimp (Neocaridina davidi) care and compatibility',
@@ -676,6 +682,11 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
 });
 
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0015: { speciesId: 'sp_0015', waterType: 'freshwater', behaviorTraits: ['interspecific_aggression'], predationTargets: [], confidence: 'high', reviewStatus: 'reviewed', citations: [kissingGouramiSeriouslyFish], requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'] },
+  sp_0059: { speciesId: 'sp_0059', waterType: 'freshwater', behaviorTraits: ['territorial'], predationTargets: [], confidence: 'high', reviewStatus: 'reviewed', citations: [paradiseFishSeriouslyFish], requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'territoriality'] },
+  sp_0199: { speciesId: 'sp_0199', waterType: 'freshwater', behaviorTraits: ['territorial'], predationTargets: [], confidence: 'high', reviewStatus: 'reviewed', citations: [badisSeriouslyFish], requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'territoriality'] },
+  sp_0200: { speciesId: 'sp_0200', waterType: 'freshwater', behaviorTraits: ['territorial'], predationTargets: [], confidence: 'high', reviewStatus: 'reviewed', citations: [scarletBadisSeriouslyFish], requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'territoriality'] },
+  sp_0019: { speciesId: 'sp_0019', waterType: 'freshwater', behaviorTraits: ['predatory'], predationTargets: ['small_fish'], confidence: 'high', reviewStatus: 'reviewed', citations: [altumAngelSeriouslyFish], requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'predation'] },
   sp_0133: {
     speciesId: 'sp_0133',
     waterType: 'freshwater',

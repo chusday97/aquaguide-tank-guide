@@ -20,6 +20,7 @@ const gates = [
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
+  ['Priority Compatibility Knowledge Batch', 'node', ['--import', 'tsx', 'scripts/test-priority-compatibility-knowledge-batch.ts']],
   ['Gold Ram Compatibility Authority', 'npm', ['run', 'test:gold-ram-compatibility-authority']],
   ['Platinum Snakehead Catalog Bridge', 'npm', ['run', 'test:platinum-snakehead-catalog-bridge']],
   ['Platinum Snakehead Small Fish Pairs', 'npm', ['run', 'test:platinum-snakehead-small-fish-pairs']],
