@@ -211,13 +211,16 @@ export const applyCanonicalCompatibilityDecision = (
   // The legacy engine is presentation/evidence input only. Old coarse load
   // thresholds are explicitly reclassified as warnings so they cannot leak
   // back into a canonical hard-block decision.
+  const softCapacityDisclaimer = '该数值只用于粗略筛查，不代表硬性安全上限。';
   const legacySoftCapacityWarnings = [
     ...result.blockingRules.filter(rule => LEGACY_SOFT_CAPACITY_CODES.has(rule.code)),
     ...result.warningRules.filter(rule => LEGACY_SOFT_CAPACITY_CODES.has(rule.code)),
   ].map(rule => ({
     ...rule,
     title: '容量/负荷参考提醒',
-    evidence: `${rule.evidence} 该数值只用于粗略筛查，不代表硬性安全上限。`,
+    evidence: rule.evidence.includes(softCapacityDisclaimer)
+      ? rule.evidence
+      : `${rule.evidence} ${softCapacityDisclaimer}`,
     severity: 'medium' as const,
     confidence: 'low' as const,
   }));

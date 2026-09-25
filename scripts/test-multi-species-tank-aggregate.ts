@@ -44,6 +44,19 @@ assert.ok(
   'overall verdict must retain whole-tank-only warnings',
 );
 assert.equal(decision.status, 'caution', 'whole-tank cumulative pressure must affect the overall verdict');
+assert.match(
+  decision.summary,
+  /负荷/,
+  'when the whole-tank pass adds a new cumulative risk, the direct summary must lead with that tank-level reason',
+);
+
+const legacyLoadWarning = decision.warningRules.find(rule => rule.code === 'bioload_near_limit');
+assert.ok(legacyLoadWarning, 'fixture should retain the coarse legacy load warning as supporting context');
+assert.equal(
+  legacyLoadWarning.evidence.split('该数值只用于粗略筛查，不代表硬性安全上限。').length - 1,
+  1,
+  'soft-capacity disclaimer must stay idempotent when results are aggregated repeatedly',
+);
 
 const twoSpeciesDecision = evaluateCompatibilityDecision({ tank, items: items.slice(0, 2) });
 assert.equal(twoSpeciesDecision.tankAggregateResult, undefined, '1–2 species must preserve the existing pairwise-only path');

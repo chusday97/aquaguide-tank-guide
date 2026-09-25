@@ -244,16 +244,28 @@ const buildAggregateResult = (
   pairResults: PairCompatibilityResult[],
   tankAggregateResult?: TankCompatibilityResult,
 ): TankCompatibilityResult => {
+  const pairAggregate = mergeDirectionalResults(pairResults.map(pair => pair.rawResult));
   const merged = mergeDirectionalResults([
     ...pairResults.map(pair => pair.rawResult),
     ...(tankAggregateResult ? [tankAggregateResult] : []),
   ]);
+
+  const pairBlockingCodes = new Set(pairAggregate.blockingRules.map(rule => rule.code));
+  const pairWarningCodes = new Set(pairAggregate.warningRules.map(rule => rule.code));
+  const pairMissingCodes = new Set(pairAggregate.missingData.map(rule => rule.code));
+  const wholeTankOnlyBlocking = tankAggregateResult?.blockingRules.find(rule => !pairBlockingCodes.has(rule.code));
+  const wholeTankOnlyWarning = tankAggregateResult?.warningRules.find(rule => !pairWarningCodes.has(rule.code));
+  const wholeTankOnlyMissing = tankAggregateResult?.missingData.find(rule => !pairMissingCodes.has(rule.code));
+
+  // When a 3+ species pass discovers a risk that no pair can see, make that
+  // tank-level delta the first sentence. Pairwise details remain available
+  // below, but should not hide the reason the overall verdict changed.
   const summary = merged.status === 'not_recommended'
-    ? merged.blockingRules[0]?.evidence || '当前组合存在阻断风险。'
+    ? wholeTankOnlyBlocking?.evidence || merged.blockingRules[0]?.evidence || '当前组合存在阻断风险。'
     : merged.status === 'caution'
-      ? merged.warningRules[0]?.evidence || '当前组合可以尝试，但需要谨慎观察。'
+      ? wholeTankOnlyWarning?.evidence || merged.warningRules[0]?.evidence || '当前组合可以尝试，但需要谨慎观察。'
       : merged.status === 'insufficient_data'
-        ? merged.missingData[0]?.evidence || '当前组合缺少关键资料。'
+        ? wholeTankOnlyMissing?.evidence || merged.missingData[0]?.evidence || '当前组合缺少关键资料。'
         : '当前组合未发现明确阻断风险。';
 
   return {
