@@ -178,6 +178,8 @@ export type CompatibilityDecision = {
   riskLevel: TankCompatibilityResult['riskLevel'];
   summary: string;
   pairResults: PairCompatibilityResult[];
+  /** Whole-tank evaluation across all selected species; present for 3+ species. */
+  tankAggregateResult?: TankCompatibilityResult;
   primaryConflict?: PairCompatibilityResult;
   blockedReasons: CompatibilityRelationship[];
   adjustableReasons: CompatibilityRelationship[];

@@ -52,6 +52,7 @@ const gates = [
   ['Recommendation Unknown Filter', 'node', ['--import', 'tsx', 'scripts/test-recommendation-unknown-filter.ts']],
   ['Addition Intent Safety', 'node', ['--import', 'tsx', 'scripts/test-addition-intents.ts']],
   ['Complex Compatibility Badcases', 'node', ['--import', 'tsx', 'scripts/test-complex-compatibility-badcases.ts']],
+  ['Multi-species Tank Aggregate', 'node', ['--import', 'tsx', 'scripts/test-multi-species-tank-aggregate.ts']],
   ['Local State Recovery Badcases', 'node', ['--import', 'tsx', 'scripts/test-local-state-recovery-badcases.ts']],
   ['Cross-tab Local State Badcases', 'node', ['--import', 'tsx', 'scripts/test-cross-tab-local-state-badcases.ts']],
   ['Storage Subscription Lifecycle', 'node', ['--import', 'tsx', 'scripts/test-storage-subscription-lifecycle.ts']],
