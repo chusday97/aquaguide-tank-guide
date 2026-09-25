@@ -1,3 +1,13 @@
+## CURRENT OVERRIDE — 2026-09-25 Priority compatibility knowledge batch 2 validated
+
+- Functional head: `f90a57fdf8afc93e5e4c4a89f97ffcc12c81de36` (`feat(knowledge): promote compatibility batch two`).
+- Exact runtime promotions: `sp_0043` 圆尾斗鱼 / Macropodus ocellatus, `sp_0044` 黑叉尾斗鱼 / Macropodus spechti, `sp_0062` 红眼灯 / Moenkhausia sanctaefilomenae, `sp_0119` 古代蝴蝶鱼 / Pantodon buchholzi, `sp_0125` Hypancistrus inspector.
+- Runtime reviewed Compatibility/Species Knowledge catalog objects increased `75 → 80`; direct reviewed Profile records `39 → 44`; evidence sources `68 → 73`. Catalog remains 486.
+- Batch 2 models breeding-only Macropodus defense contextually rather than as permanent territoriality; Red-eye Tetra gets reviewed six-fish shoal/fin-nipping pressure; Pantodon gets small-fish predation; H. inspector gets 120 cm / ~243 L space authority without inventing a minimum group size.
+- Catalog snapshot checksum: `a7469f42a52100c98a9a2bf103c60c1c8b7cd0e734f899e1aa306e8d8763086a`. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- CI ownership is included in the same checkpoint via repository-only `202609250002_compatibility_priority_batch2_profiles.sql`; DB application / authority switch remain HOLD and this file has not been applied.
+- UI/Vision/Production/main remain unchanged. NEXT: continue only with exact-species, source-audited small batches and keep identity-ambiguous trade forms fail-closed.
+
 ## CURRENT OVERRIDE — 2026-09-25 Priority compatibility knowledge batch 1 validated
 
 - Functional head: `410434765bc9c64e5e513f4748b321094c2768d3` (`feat(knowledge): promote five compatibility species`).

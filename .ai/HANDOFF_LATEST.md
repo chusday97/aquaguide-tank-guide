@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-25 Priority compatibility knowledge batch 2
+
+- Validated functional checkpoint: `f90a57fdf8afc93e5e4c4a89f97ffcc12c81de36`.
+- Five exact objects promoted: Macropodus ocellatus, Macropodus spechti, Moenkhausia sanctaefilomenae, Pantodon buchholzi, Hypancistrus inspector.
+- Coverage: runtime reviewed objects `75 → 80`; direct reviewed Profiles `39 → 44`; evidence sources `68 → 73`; catalog stays 486.
+- Full backend release gate PASS. Compatibility Admin contract PASS at 44 Profiles / 21 Pair Rules; staging preflight PASS.
+- Repository-only batch2 Profile owner `202609250002_compatibility_priority_batch2_profiles.sql` is HOLD and has not been applied. No DB authority switch, UI/Vision change, Production promote, or main merge occurred.
+
 ## HANDOFF — 2026-09-25 Priority compatibility knowledge batch 1
 
 - Validated functional checkpoint: `410434765bc9c64e5e513f4748b321094c2768d3`.
