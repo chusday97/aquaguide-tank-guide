@@ -1,3 +1,14 @@
+## HANDOFF — 2026-09-25 Priority compatibility knowledge batch 1
+
+- Validated functional checkpoint: `410434765bc9c64e5e513f4748b321094c2768d3`.
+- Five exact high-priority freshwater species were promoted from completion-only records to runtime Species Knowledge + Compatibility authority after object-specific source review: 接吻鱼、天堂鱼、Badis badis、Dario dario、Pterophyllum altum.
+- Coverage counters: direct reviewed profile records 34 → 39; runtime catalog objects resolving to reviewed Compatibility/Species Knowledge 70 → 75; evidence sources 63 → 68; catalog objects remain 486.
+- Safety boundary remains intact: generic Phase-2 completion records stay matrix/detail evidence only, and unreviewed variants do not inherit base-species authority.
+- New regression validates Altum small-fish predation, Paradise Fish cool-water ceiling, Kissing Gourami space pressure, exact runtime promotion, and fail-closed variant behavior.
+- Full backend release gate PASS; snapshot checksum `22e5de3d94a7985e325602ead8af5b2ff04943d4943981c33175c7c063a55ee8`.
+- No UI/Vision changes, DB migration application, DB-authority switch, Production promote, or main merge.
+- Continue knowledge expansion in small source-audited batches only.
+
 ## HANDOFF — 2026-09-25 Whole-tank compatibility aggregation validated
 
 - Current integration candidate: `/Users/chuchu/aquaguide-backend-integration-20260922`, branch `integration/backend-main-20260922`, validated functional head `9be6e49c8e0d64dda57f57c22c4ae0eb8e891b89`, built on `2b191896...`.

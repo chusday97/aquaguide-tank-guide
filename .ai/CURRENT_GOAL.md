@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-25 Priority compatibility knowledge batch 1 validated
+
+- Functional head: `410434765bc9c64e5e513f4748b321094c2768d3` (`feat(knowledge): promote five compatibility species`).
+- Exact catalog objects promoted from Phase-2 completion-only evidence into runtime Compatibility authority: sp_0015 接吻鱼 / Helostoma temminkii, sp_0059 天堂鱼 / Macropodus opercularis, sp_0199 珍珠麒麟 / Badis badis, sp_0200 变色鱼(喷火麒麟) / Dario dario, sp_0019 埃及神仙 / Pterophyllum altum.
+- Promotion is object-specific and source-bounded. Commercial/ornamental variants do not silently inherit this authority; sp_0234 remains fail-closed in regression coverage.
+- Coverage counters: direct reviewed Compatibility profile records 34 → 39; catalog objects resolving to reviewed runtime Compatibility/Species Knowledge 70 → 75.
+- Evidence-source count: 68; catalog remains 486 objects; snapshot checksum `22e5de3d94a7985e325602ead8af5b2ff04943d4943981c33175c7c063a55ee8`.
+- Representative runtime behavior: Altum + small fish can hard-block on reviewed predation; Paradise Fish at 27°C hard-blocks on temperature; Kissing Gourami surfaces reviewed 150 cm / ~304 L long-term space pressure.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`, including the new Priority Compatibility Knowledge Batch gate.
+- Frozen scope unchanged: no UI/Vision behavior changes, no DB migration application/authority switch, no Production promote, no main merge.
+- NEXT: continue evidence-first promotion from the priority queue in small auditable batches; never bulk-enable Phase-2 completion records.
+
 ## CURRENT OVERRIDE — 2026-09-25 Backend candidate synchronized at whole-tank aggregation
 
 - Canonical integration worktree: `/Users/chuchu/aquaguide-backend-integration-20260922` on `integration/backend-main-20260922`.
