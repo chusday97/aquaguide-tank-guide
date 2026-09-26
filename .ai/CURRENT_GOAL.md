@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-26 Runtime tank-state acceptance validated
+
+- Functional head: `0af0e000c2551feeaff89492b783fecd6dfc514f` (`fix(tank-state): preserve reviewed runtime risk`).
+- Added a 9-case runtime acceptance suite that combines reviewed static compatibility with actual structured tank observations.
+- Product correction: a reviewed high predation/aggression/territory prior plus one recent normal patrol now remains `watch / observe`; one normal observation cannot turn a red reviewed combination into `stable / no_action`.
+- Scope remains precise: high space guidance plus normal current behavior may still be stable; medium behavior priors plus normal evidence may still be stable. The new persistence rule is limited to reviewed high predation/aggression/territory risk.
+- Current environmental correction: no-common-temperature / active target-temperature blockers now become Tank State hard constraints with `intervene / adjust`; freshwater-vs-marine remains `urgent`. Normal behavior cannot clear either current environmental constraint.
+- Presentation actions are signal-specific: respiratory distress points to aeration/surface agitation + filter/temperature/water checks; injury points to stopping further harm and stable isolation; chasing+hiding points to conflict reduction and separation if persistent.
+- Tank State Engine is now 13/13; Tank Evidence Adapter PASS; `Tank State Runtime Acceptance` is included in `test:backend-release-gate`.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`. Catalog/evidence authority is unchanged at 486 species / 49 reviewed Profiles / 22 reviewed Pair Rules / 79 evidence sources.
+- No UI, Vision, DB migration application, DB authority switch, Production promote, or main merge.
+
 ## CURRENT OVERRIDE — 2026-09-26 Complex 5–8 species compatibility acceptance validated
 
 - Functional head: `a64b366dbccf5ef1f63cddbd8835d7cddb48bdc1` (`fix(compatibility): rank complex tank risks`).

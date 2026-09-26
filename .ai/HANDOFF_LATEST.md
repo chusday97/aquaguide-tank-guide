@@ -1,3 +1,13 @@
+## HANDOFF — 2026-09-26 Runtime tank-state acceptance
+
+- Functional checkpoint `0af0e000c2551feeaff89492b783fecd6dfc514f`.
+- Added 9 static-risk + real-observation runtime cases and placed them in the backend release gate.
+- Reviewed red predation/aggression/territory combinations no longer become `stable / no_action` after one normal patrol; they remain `watch / observe`.
+- Generic high space guidance is intentionally not treated the same way and may remain stable when current evidence is normal.
+- Temperature no-overlap/current target-temperature blockers are now active `intervene` hard constraints; water-type conflicts remain `urgent`.
+- Current-state presentation now gives concrete signal-specific actions for respiratory distress, injury, and corroborated chasing/hiding pressure.
+- Full backend release gate PASS. No catalog counts or DB artifacts changed; no UI/Vision/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Complex multi-species compatibility acceptance
 
 - Functional checkpoint `a64b366dbccf5ef1f63cddbd8835d7cddb48bdc1`.
