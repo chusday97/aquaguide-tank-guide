@@ -71,6 +71,23 @@ const ruleDimension = (code: string, riskType?: CompatibilityRiskType): Compatib
 
 const ruleText = (rule: { code: string; title: string; evidence?: string }, fallback: string) => rule.evidence || rule.title || fallback;
 
+const blockerPriority = (rule: { code: string }) => {
+  const dimension = ruleDimension(rule.code);
+  if (dimension === 'water_type') return 0;
+  if (dimension === 'predation') return 1;
+  if (dimension === 'temperature') return 2;
+  if (rule.code.includes('single_housing') || rule.code.includes('solitary')) return 3;
+  if (dimension === 'social_behavior') return 4;
+  if (dimension === 'ph') return 5;
+  if (dimension === 'space') return 6;
+  if (dimension === 'bioload') return 7;
+  return 8;
+};
+
+const sortBlockingRulesForPresentation = <T extends { code: string }>(rules: T[]) => (
+  [...rules].sort((left, right) => blockerPriority(left) - blockerPriority(right))
+);
+
 const verdictForStatus = (status: CompatibilityDecision['status']) => {
   if (status === 'not_recommended') return { status, label: '不建议一起饲养', indicator: 'red' as const };
   if (status === 'caution') return { status, label: '调整后可尝试', indicator: 'yellow' as const };
@@ -109,7 +126,7 @@ const adjustmentForRule = (rule: { code: string; evidence?: string }): string | 
 
 const buildDecisionReasons = (decision: CompatibilityDecision) => {
   const rawActiveRules = decision.status === 'not_recommended'
-    ? decision.blockingRules
+    ? sortBlockingRulesForPresentation(decision.blockingRules)
     : decision.status === 'caution'
       ? decision.warningRules
       : decision.status === 'insufficient_data'
@@ -117,7 +134,10 @@ const buildDecisionReasons = (decision: CompatibilityDecision) => {
         : [];
   const hasSpecificPairRule = rawActiveRules.some(rule => rule.code.startsWith('pair_rule_'));
   const activeRules = rawActiveRules.filter(rule => !(hasSpecificPairRule && rule.code === 'reviewed_pair_rule'));
-  const primaryRule = activeRules.find(rule => ruleText(rule, '') === decision.summary);
+  const summaryRule = activeRules.find(rule => ruleText(rule, '') === decision.summary);
+  const primaryRule = decision.status === 'not_recommended'
+    ? activeRules[0]
+    : summaryRule;
   const usedDimensions = new Set<CompatibilityDimension>();
   const primaryDimension = primaryRule ? ruleDimension(primaryRule.code) : null;
   if (primaryDimension) usedDimensions.add(primaryDimension);
@@ -137,7 +157,10 @@ const buildDecisionReasons = (decision: CompatibilityDecision) => {
     ));
   // The direct decision summary is the canonical primary reason. This matters
   // for 3+ species, where a whole-tank-only risk may outrank pairwise details.
-  if (decision.status !== 'compatible') return uniqueText([decision.summary, ...secondaryReasons]);
+  if (decision.status !== 'compatible') {
+    const primaryText = primaryRule ? ruleText(primaryRule, decision.summary) : decision.summary;
+    return uniqueText([primaryText, ...secondaryReasons]);
+  }
   return uniqueText([
     decision.summary,
     ...decision.passedRules.map(rule => ruleText(rule, '该项已核对通过。')),
@@ -146,7 +169,7 @@ const buildDecisionReasons = (decision: CompatibilityDecision) => {
 
 const buildDecisionAdjustments = (decision: CompatibilityDecision) => {
   const rawActiveRules = decision.status === 'not_recommended'
-    ? decision.blockingRules
+    ? sortBlockingRulesForPresentation(decision.blockingRules)
     : decision.status === 'caution'
       ? decision.warningRules
       : decision.status === 'insufficient_data'
@@ -154,20 +177,27 @@ const buildDecisionAdjustments = (decision: CompatibilityDecision) => {
         : [];
   const hasSpecificPairRule = rawActiveRules.some(rule => rule.code.startsWith('pair_rule_'));
   const activeRules = rawActiveRules.filter(rule => !(hasSpecificPairRule && rule.code === 'reviewed_pair_rule'));
-  const hasSpecificGroupGaps = activeRules.some(rule => rule.code === 'group_requirement_gap');
+  const groupGapRules = activeRules.filter(rule => rule.code === 'group_requirement_gap');
+  const hasSpecificGroupGaps = groupGapRules.length > 0;
   const adjustmentRules = activeRules.filter(rule => !(
-    hasSpecificGroupGaps && (rule.code === 'minimum_group_not_met' || rule.code === 'fin_nipping_group_pressure')
+    hasSpecificGroupGaps && (rule.code === 'minimum_group_not_met' || rule.code === 'fin_nipping_group_pressure' || rule.code === 'group_requirement_gap')
   ));
+  const groupGapActions = groupGapRules
+    .map(rule => adjustmentForRule(rule))
+    .filter((item): item is string => Boolean(item));
+  const compactGroupAction = groupGapActions.length > 0
+    ? `先补足群体数量：${groupGapActions.map(item => item.replace(/；补足后重新核对空间与整缸负荷。$/, '')).join('；')}。补足后重新核对空间与整缸负荷。`
+    : null;
   const usedDimensions = new Set<CompatibilityDimension>();
-  const mapped = uniqueText(adjustmentRules.flatMap(rule => {
-    // Preserve one concrete action per under-grouped species, but collapse
-    // duplicate technical rules for the same non-group risk dimension.
-    if (rule.code === 'group_requirement_gap') return [adjustmentForRule(rule)];
-    const dimension = ruleDimension(rule.code);
-    if (dimension && usedDimensions.has(dimension)) return [];
-    if (dimension) usedDimensions.add(dimension);
-    return [adjustmentForRule(rule)];
-  }));
+  const mapped = uniqueText([
+    ...adjustmentRules.flatMap(rule => {
+      const dimension = ruleDimension(rule.code);
+      if (dimension && usedDimensions.has(dimension)) return [];
+      if (dimension) usedDimensions.add(dimension);
+      return [adjustmentForRule(rule)];
+    }),
+    compactGroupAction,
+  ]);
   const specificSuggestions = decision.suggestions.filter(item => (
     !item.includes('主要风险项')
     && !item.includes('明确阻断项')

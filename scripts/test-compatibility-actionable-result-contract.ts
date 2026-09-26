@@ -8,7 +8,7 @@ const tank=(l:number,w:number,h:number,t:number):Aquarium=>({id:'contract',name:
 const compatible=getCompatibilityPresentation(evaluateCompatibilityDecision({tank:tank(90,40,40,24),items:[{species:byId('sp_0431'),quantity:10}]}));
 assert.deepEqual(compatible.verdict,{status:'compatible',label:'当前条件适合',indicator:'green'}); assert.ok(compatible.reasons.length>=1); assert.match(compatible.adjustments[0],/无需先做兼容性调整/);
 const caution=getCompatibilityPresentation(evaluateCompatibilityDecision({tank:tank(70,30,40,24),items:[{species:byId('sp_0431'),quantity:7}]}));
-assert.deepEqual(caution.verdict,{status:'caution',label:'调整后可尝试',indicator:'yellow'}); assert.equal(caution.reasons.length,1); assert.match(caution.reasons[0],/最低群体数量/); assert.deepEqual(caution.adjustments,['红绿灯：当前 7 → 至少 8 只/条；补足后重新核对空间与整缸负荷。']);
+assert.deepEqual(caution.verdict,{status:'caution',label:'调整后可尝试',indicator:'yellow'}); assert.equal(caution.reasons.length,1); assert.match(caution.reasons[0],/最低群体数量/); assert.deepEqual(caution.adjustments,['先补足群体数量：红绿灯：当前 7 → 至少 8 只/条。补足后重新核对空间与整缸负荷。']);
 const blocked=getCompatibilityPresentation(evaluateCompatibilityDecision({tank:tank(120,50,40,24),items:[{species:byId('sp_0431'),quantity:10},{species:byId('sp_0049'),quantity:1}]}));
 assert.deepEqual(blocked.verdict,{status:'not_recommended',label:'不建议一起饲养',indicator:'red'}); assert.match(blocked.reasons[0],/捕食|吞食/); assert.ok(blocked.adjustments.some(x=>/分缸|更换/.test(x)));
 const items=[['sp_0011',10],['sp_0012',10],['sp_0013',10]].map(([id,q])=>({species:byId(String(id)),quantity:Number(q)}));
