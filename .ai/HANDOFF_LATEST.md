@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-26 Multi-intervention sequence reasoning
+
+- Functional checkpoint `abd4c1f1b7c66a9c2c07ef0f33bba7b34601b643`.
+- Intervention evidence now retains the sequence across multiple executed actions instead of reducing the user-facing conclusion to the newest action.
+- Supported patterns: failed/uncertain earlier control then later improvement; earlier improvement then relapse; multiple evaluated actions still not controlling the problem.
+- Sequence summaries preserve causality limits and exclude insufficient-followup actions from strong failure/improvement patterns.
+- Targeted sequence tests and full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Intervention effect evidence
 
 - Functional checkpoint `4cdf7620197b72521b69d675e6f1bc710e628e2f`.

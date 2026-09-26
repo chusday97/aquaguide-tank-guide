@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-26 Multi-intervention sequence reasoning validated
+
+- Functional head: `abd4c1f1b7c66a9c2c07ef0f33bba7b34601b643` (`feat(tank-state): summarize intervention sequences`).
+- Multi-action intervention histories are now summarized as a sequence instead of showing only the latest action.
+- Three explicit patterns are covered: `escalated_then_improved`, `relapsed_after_improvement`, and `multiple_actions_not_controlled`.
+- Example: if added hiding is followed by persistent chasing, then temporary isolation is followed by two relevant normal confirmations, the result keeps both facts: the first action did not control the problem; the later action was followed by improvement. It still does not claim the later action caused recovery.
+- If a prior action was followed by improvement but a later action window contains renewed abnormal evidence, the result says the problem relapsed and the earlier improvement did not prove long-term resolution.
+- If multiple evaluated actions each retain abnormal follow-up, the result advises stopping same-level repetition and re-evaluating cause / escalating the intervention path.
+- Insufficient-followup actions are not misclassified as failed actions and do not participate in strong sequence patterns until they have relevant follow-up evidence.
+- Multi-action service tests and runtime presentation tests PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-26 Intervention outcome evidence validated
 
 - Functional head: `4cdf7620197b72521b69d675e6f1bc710e628e2f` (`feat(tank-state): track intervention outcomes`).
