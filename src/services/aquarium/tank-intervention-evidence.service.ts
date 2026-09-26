@@ -12,6 +12,11 @@ export type TankInterventionType =
   | 'reduce_stocking'
   | 'other';
 
+export type TankInterventionTarget = {
+  speciesId: string;
+  quantity?: number;
+};
+
 export type TankIntervention = {
   interventionId: string;
   type: TankInterventionType;
@@ -19,6 +24,10 @@ export type TankIntervention = {
   performedAt: string;
   note?: string;
   sourceDiagnosisId: string;
+  targetScope?: 'whole_tank' | 'species_specific';
+  targets?: TankInterventionTarget[];
+  conflictSpeciesIds?: string[];
+  recordedReason?: string;
 };
 
 export type TankInterventionOutcome =
@@ -146,6 +155,38 @@ const parseInterventionType = (value: string | undefined): TankInterventionType 
   return interventionAliases[value.trim()] || null;
 };
 
+const parseCsv = (value: string | undefined) => (
+  [...new Set((value || '').split(',').map(item => item.trim()).filter(Boolean))]
+);
+
+const parsePositiveInt = (value: string | undefined) => {
+  if (!value || !/^\d+$/.test(value.trim())) return undefined;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : undefined;
+};
+
+const parseTargets = (record: DiagnosisRecord): TankInterventionTarget[] => {
+  const speciesIds = parseCsv(record.answers?.interventionTargetSpeciesIds || record.answers?.targetSpeciesIds);
+  const quantities = (record.answers?.interventionTargetQuantities || '')
+    .split(',')
+    .map(item => parsePositiveInt(item));
+  return speciesIds.map((speciesId, index) => ({ speciesId, quantity: quantities[index] }));
+};
+
+const LOCAL_INTERVENTION_TYPES = new Set<TankInterventionType>([
+  'add_hiding', 'temporary_isolation', 'separate_tank', 'reduce_stocking',
+]);
+
+const observationMatchesTarget = (observation: TankObservation, intervention: TankIntervention) => {
+  if (!LOCAL_INTERVENTION_TYPES.has(intervention.type)) return true;
+  const targetIds = intervention.targets?.map(item => item.speciesId) || [];
+  if (targetIds.length === 0) return true; // legacy action: preserve existing behavior
+  const observedIds = observation.subjectSpeciesIds || [];
+  if (observation.scope === 'whole_tank' || observedIds.length === 0) return false;
+  const targetSet = new Set(targetIds);
+  return observedIds.some(id => targetSet.has(id));
+};
+
 export const buildTankInterventionsFromDiagnosisRecords = (
   records: DiagnosisRecord[],
   aquariumId: string,
@@ -160,6 +201,12 @@ export const buildTankInterventionsFromDiagnosisRecords = (
     const performedAt = explicitAt && parseTime(explicitAt) !== null ? explicitAt : record.createdAt;
     const performedMs = parseTime(performedAt);
     if (performedMs === null || performedMs > nowMs) return [];
+    const targets = parseTargets(record);
+    const conflictSpeciesIds = parseCsv(record.answers?.interventionConflictSpeciesIds);
+    const requestedScope = record.answers?.interventionTargetScope || record.answers?.targetScope;
+    const targetScope = requestedScope === 'whole_tank'
+      ? 'whole_tank' as const
+      : targets.length > 0 ? 'species_specific' as const : undefined;
     return [{
       interventionId: `${record.diagnosisId}:${type}:${performedAt}`,
       type,
@@ -167,6 +214,10 @@ export const buildTankInterventionsFromDiagnosisRecords = (
       performedAt,
       note: record.answers?.interventionNote?.trim() || undefined,
       sourceDiagnosisId: record.diagnosisId,
+      targetScope,
+      targets: targets.length > 0 ? targets : undefined,
+      conflictSpeciesIds: conflictSpeciesIds.length > 0 ? conflictSpeciesIds : undefined,
+      recordedReason: record.answers?.interventionReason?.trim() || undefined,
     } satisfies TankIntervention];
   });
 
@@ -217,7 +268,10 @@ export const evaluateTankInterventionEffects = ({
     const scope = relevantSignals[intervention.type];
     const normalSet = new Set<TankObservationCode>(scope.normal);
     const abnormalSet = new Set<TankObservationCode>(scope.abnormal);
-    const followups = observations.filter(item => observationAfterIntervention(item, intervention, nowMs, nextInterventionAt));
+    const followups = observations.filter(item => (
+      observationAfterIntervention(item, intervention, nowMs, nextInterventionAt)
+      && observationMatchesTarget(item, intervention)
+    ));
     const normal = followups.filter(item => normalSet.has(item.code));
     const abnormal = followups.filter(item => abnormalSet.has(item.code));
     const normalConfirmationCount = uniqueObservationDates(normal);

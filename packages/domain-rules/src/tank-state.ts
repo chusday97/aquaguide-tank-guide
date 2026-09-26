@@ -39,6 +39,10 @@ export type TankObservation = {
   code: TankObservationCode;
   observedAt: string;
   evidence?: string;
+  /** Optional structured provenance. Missing means legacy / unknown scope, not whole-tank proof. */
+  subjectSpeciesIds?: string[];
+  scope?: 'whole_tank' | 'species_specific';
+  sourceDiagnosisId?: string;
 };
 
 export type EvaluateTankStateInput = {
@@ -121,13 +125,32 @@ const recoveryCodesBySignal: Partial<Record<TankObservationCode, TankObservation
   severe_injury: ['no_injury'],
 };
 
+const recoveryScopeMatchesSignal = (signal: TankObservation, recovery: TankObservation) => {
+  const signalIds = signal.subjectSpeciesIds || [];
+  const recoveryIds = recovery.subjectSpeciesIds || [];
+  if (signal.scope === 'whole_tank') {
+    return recovery.scope === 'whole_tank' || (!recovery.scope && recoveryIds.length === 0);
+  }
+  if (signal.scope === 'species_specific' || signalIds.length > 0) {
+    if (recovery.scope === 'whole_tank') return true;
+    if (recoveryIds.length === 0) return false;
+    const signalSet = new Set(signalIds);
+    return recoveryIds.some(id => signalSet.has(id));
+  }
+  // Legacy unscoped incidents keep legacy recovery behavior.
+  return true;
+};
+
 const laterRecoveryObservations = (signal: TankObservation, pool: TankObservation[]) => {
   const signalMs = parseTime(signal.observedAt);
   const recoveryCodes = recoveryCodesBySignal[signal.code] || [];
   if (signalMs === null || recoveryCodes.length === 0) return [];
   return pool.filter(item => {
     const itemMs = parseTime(item.observedAt);
-    return itemMs !== null && itemMs > signalMs && recoveryCodes.includes(item.code);
+    return itemMs !== null
+      && itemMs > signalMs
+      && recoveryCodes.includes(item.code)
+      && recoveryScopeMatchesSignal(signal, item);
   });
 };
 

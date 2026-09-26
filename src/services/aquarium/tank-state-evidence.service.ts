@@ -39,11 +39,24 @@ const riskKindMap: Partial<Record<CompatibilityRiskType, TankPriorRiskKind>> = {
   equipment: 'equipment',
 };
 
-const normalizeObservation = (code: TankObservationCode, record: DiagnosisRecord): TankObservation => ({
-  code,
-  observedAt: record.createdAt,
-  evidence: `${record.problemType}：${record.resultSummary || record.answers?.behavior || record.answers?.aggression || code}`,
-});
+const parseSpeciesIds = (value: string | undefined) => (
+  [...new Set((value || '').split(',').map(item => item.trim()).filter(Boolean))]
+);
+
+const normalizeObservation = (code: TankObservationCode, record: DiagnosisRecord): TankObservation => {
+  const subjectSpeciesIds = parseSpeciesIds(record.answers?.targetSpeciesIds);
+  const explicitScope = record.answers?.targetScope;
+  return {
+    code,
+    observedAt: record.createdAt,
+    evidence: `${record.problemType}：${record.resultSummary || record.answers?.behavior || record.answers?.aggression || code}`,
+    subjectSpeciesIds: subjectSpeciesIds.length > 0 ? subjectSpeciesIds : undefined,
+    scope: explicitScope === 'whole_tank'
+      ? 'whole_tank'
+      : subjectSpeciesIds.length > 0 ? 'species_specific' : undefined,
+    sourceDiagnosisId: record.diagnosisId,
+  };
+};
 
 const includesOne = (value: string | undefined, options: string[]) => Boolean(value && options.some(option => value.includes(option)));
 
@@ -125,7 +138,7 @@ export const buildTankObservationsFromDiagnosisRecords = (
 
   const seen = new Set<string>();
   return observations.filter(item => {
-    const key = `${item.observedAt}::${item.code}`;
+    const key = `${item.observedAt}::${item.code}::${item.scope || 'unknown'}::${(item.subjectSpeciesIds || []).slice().sort().join(',')}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;

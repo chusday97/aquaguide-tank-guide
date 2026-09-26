@@ -26,7 +26,13 @@ const record = (
   followUpNotes:[],
   ...overrides,
 });
-const obs=(code:TankObservation['code'],observedAt:string,evidence:string=code):TankObservation=>({code,observedAt,evidence});
+const obs=(
+  code:TankObservation['code'],
+  observedAt:string,
+  evidence:string=code,
+  subjectSpeciesIds?:string[],
+  scope?:TankObservation['scope'],
+):TankObservation=>({code,observedAt,evidence,subjectSpeciesIds,scope});
 const effects=(records:DiagnosisRecord[], observations:TankObservation[])=>{
   const interventions=buildTankInterventionsFromDiagnosisRecords(records,'tank-action',NOW);
   return {interventions,effects:evaluateTankInterventionEffects({interventions,observations,now:NOW})};
@@ -227,3 +233,70 @@ console.log('tank intervention attribution window passed: newer actions stop evi
 }
 
 console.log('tank intervention multi-action sequence passed: escalation, relapse, repeated non-control');
+
+
+// 15) Structured target provenance is preserved with quantities and conflict pair.
+{
+  const {interventions}=effects([
+    record('a15','2026-09-22T08:00:00.000Z',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+      interventionConflictSpeciesIds:'sp_0439,sp_0436',
+      interventionReason:'虎皮鱼持续追咬孔雀鱼',
+    }),
+  ],[]);
+  assert.deepEqual(interventions[0].targets,[{speciesId:'sp_0436',quantity:4}]);
+  assert.deepEqual(interventions[0].conflictSpeciesIds,['sp_0439','sp_0436']);
+  assert.equal(interventions[0].recordedReason,'虎皮鱼持续追咬孔雀鱼');
+  assert.equal(interventions[0].targetScope,'species_specific');
+}
+
+// 16) A targeted local action cannot borrow normal follow-up from a different species.
+{
+  const records=[record('a16','2026-09-22T08:00:00.000Z',{
+    interventionType:'临时隔离',
+    interventionTargetSpeciesIds:'sp_0436',
+    interventionTargetQuantities:'4',
+  })];
+  const observations=[
+    obs('normal_feeding','2026-09-23T08:00:00.000Z','红绿灯进食正常',['sp_0431'],'species_specific'),
+    obs('no_persistent_chasing','2026-09-24T08:00:00.000Z','红绿灯没有追咬',['sp_0431'],'species_specific'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.equal(rows[0].outcome,'insufficient_followup');
+  assert.equal(rows[0].followupObservationCount,0);
+}
+
+// 17) The same targeted action can use follow-up for the same target species.
+{
+  const records=[record('a17','2026-09-22T08:00:00.000Z',{
+    interventionType:'临时隔离',
+    interventionTargetSpeciesIds:'sp_0436',
+    interventionTargetQuantities:'4',
+  })];
+  const observations=[
+    obs('normal_feeding','2026-09-23T08:00:00.000Z','孔雀鱼进食正常',['sp_0436'],'species_specific'),
+    obs('no_persistent_chasing','2026-09-24T08:00:00.000Z','孔雀鱼未再被追咬',['sp_0436'],'species_specific'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.equal(rows[0].outcome,'improved_after_action');
+  assert.equal(rows[0].normalConfirmationCount,2);
+}
+
+// 18) An explicitly whole-tank environmental action still uses whole-tank observations.
+{
+  const records=[record('a18','2026-09-22T08:00:00.000Z',{
+    interventionType:'加强曝气',
+    interventionTargetScope:'whole_tank',
+  })];
+  const observations=[
+    obs('normal_breathing','2026-09-23T08:00:00.000Z','全缸呼吸正常',undefined,'whole_tank'),
+    obs('normal_breathing','2026-09-24T08:00:00.000Z','全缸再次呼吸正常',undefined,'whole_tank'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.equal(rows[0].outcome,'improved_after_action');
+  assert.equal(rows[0].normalConfirmationCount,2);
+}
+
+console.log('tank intervention object provenance passed: targets, quantities, conflicts, and scoped follow-up');

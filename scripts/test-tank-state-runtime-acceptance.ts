@@ -286,3 +286,54 @@ console.log('Intervention presentation outcomes passed: follow-up guidance is ac
 }
 
 console.log('Multi-intervention presentation passed: failed→improved and improved→relapsed histories remain visible');
+
+
+// Object-scoped recovery: normal checks on another species cannot clear guppy-specific chasing/hiding pressure.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const incident = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-22T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ];
+  const wrongTarget = run(tank,[
+    ...incident,
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+  ]).evidence.result;
+  assert.equal(wrongTarget.state,'intervene');
+  assert.ok(wrongTarget.activeSignals.includes('persistent_chasing'));
+  assert.ok(wrongTarget.activeSignals.includes('hiding_pressure'));
+
+  const correctTarget = run(tank,[
+    ...incident,
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]).evidence.result;
+  assert.equal(correctTarget.state,'watch');
+  assert.ok(correctTarget.matchedRules.includes('AQ-STATE-010'));
+  assert.equal(correctTarget.recovery?.confirmations,2);
+}
+
+// Targeted intervention presentation resolves species IDs to names and preserves quantity + conflict provenance.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-22T09:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+      interventionConflictSpeciesIds:'sp_0439,sp_0436',
+      interventionReason:'虎皮鱼持续追咬孔雀鱼',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]);
+  assert.deepEqual(evidence.interventions[0].targets,[{speciesId:'sp_0436',quantity:4}]);
+  assert.equal(evidence.interventionEffects[0].outcome,'improved_after_action');
+  assert.match(items[0]?.nextStep || '',/孔雀鱼 4只/);
+  assert.match(items[0]?.nextStep || '',/虎皮鱼 × 孔雀鱼/);
+  assert.match(items[0]?.nextStep || '',/虎皮鱼持续追咬孔雀鱼/);
+}
+
+console.log('Object-scoped recovery and intervention presentation passed');

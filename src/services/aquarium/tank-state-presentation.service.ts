@@ -32,37 +32,62 @@ const latestInterventionEffect = (evidence: CurrentTankStateEvidence) => (
     .sort((left, right) => Date.parse(right.intervention.performedAt) - Date.parse(left.intervention.performedAt))[0] || null
 );
 
-const interventionEffectGuidance = (evidence: CurrentTankStateEvidence) => {
+const speciesName = (id: string, speciesCatalog: Fish[]) => speciesCatalog.find(item => item.id === id)?.name || id;
+
+const interventionObjectText = (
+  intervention: CurrentTankStateEvidence['interventions'][number],
+  speciesCatalog: Fish[],
+) => {
+  const targets = (intervention.targets || []).map(target => (
+    `${speciesName(target.speciesId, speciesCatalog)}${target.quantity ? ` ${target.quantity}只` : ''}`
+  ));
+  const conflict = (intervention.conflictSpeciesIds || []).map(id => speciesName(id, speciesCatalog));
+  const parts = [
+    targets.length > 0 ? `对象：${targets.join('、')}` : '',
+    conflict.length > 0 ? `关联冲突：${conflict.join(' × ')}` : '',
+    intervention.recordedReason ? `记录原因：${intervention.recordedReason}` : '',
+  ].filter(Boolean);
+  return parts.length > 0 ? `${intervention.label}（${parts.join('；')}）` : intervention.label;
+};
+
+const interventionEffectGuidance = (evidence: CurrentTankStateEvidence, speciesCatalog: Fish[]) => {
   const sequence = summarizeTankInterventionSequence(evidence.interventionEffects);
   if (sequence) {
+    const involved = sequence.interventionIds
+      .map(id => evidence.interventionEffects.find(item => item.intervention.interventionId === id)?.intervention)
+      .filter((item): item is CurrentTankStateEvidence['interventions'][number] => Boolean(item));
+    const objectTrail = involved
+      .filter(item => (item.targets?.length || 0) > 0 || (item.conflictSpeciesIds?.length || 0) > 0 || item.recordedReason)
+      .map(item => interventionObjectText(item, speciesCatalog));
     return {
-      text: `措施过程：${sequence.summary}`,
+      text: `措施过程：${sequence.summary}${objectTrail.length > 0 ? ` 对象记录：${objectTrail.join('；')}。` : ''}`,
       next: sequence.nextStep,
     };
   }
   const latest = latestInterventionEffect(evidence);
   if (!latest) return null;
+  const actionLabel = interventionObjectText(latest.intervention, speciesCatalog);
   if (latest.outcome === 'improved_after_action') {
     return {
       text: `措施记录：${latest.summary}`,
-      next: `暂时保留「${latest.intervention.label}」这一已执行措施，并继续结构化复查；如果异常复发，不把之前的改善当成该措施必然有效。`,
+      next: `暂时保留「${actionLabel}」这一已执行措施，并继续结构化复查；如果异常复发，不把之前的改善当成该措施必然有效。`,
     };
   }
   if (latest.outcome === 'problem_persisted_after_action') {
     return {
       text: `措施后复查：${latest.summary}`,
-      next: `不要重复依赖「${latest.intervention.label}」作为唯一处理；重新核对当前异常，必要时升级为隔离、分缸或环境检查。`,
+      next: `不要重复依赖「${actionLabel}」作为唯一处理；重新核对当前异常，必要时升级为隔离、分缸或环境检查。`,
     };
   }
   if (latest.outcome === 'mixed_after_action') {
     return {
       text: `措施后复查：${latest.summary}`,
-      next: `先保持其他条件尽量稳定，再补充结构化复查；当前证据不足以判断「${latest.intervention.label}」是否伴随持续改善。`,
+      next: `先保持其他条件尽量稳定，再补充结构化复查；当前证据不足以判断「${actionLabel}」是否伴随持续改善。`,
     };
   }
   return {
     text: `措施复查不足：${latest.summary}`,
-    next: `先补足与「${latest.intervention.label}」相关的至少 2 次结构化复查，再评价措施后的变化。`,
+    next: `先补足与「${actionLabel}」相关的至少 2 次结构化复查，再评价措施后的变化。`,
   };
 };
 
@@ -90,7 +115,7 @@ export const buildCurrentTankRiskItems = ({
   if (!evidence) return [];
   const { result, hardConstraints } = evidence;
   const subjects = stockedSubjects(aquarium, speciesCatalog);
-  const interventionGuidance = interventionEffectGuidance(evidence);
+  const interventionGuidance = interventionEffectGuidance(evidence, speciesCatalog);
 
   if (hardConstraints.length > 0) {
     const hasWaterTypeConflict = hardConstraints.some(item => ['water_type_mismatch', 'species_water_type_conflict'].includes(item.code));
