@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-26 Actionable compatibility result contract validated
+
+- Functional head: `f28999d9901653833acba69cf4b5c142400c8d60` (`feat(compatibility): add actionable result contract`).
+- Every Compatibility presentation now exposes an explicit three-part product contract: `verdict` (status + label + semantic indicator), `reasons`, and `adjustments`.
+- Semantic indicator mapping is stable and UI-agnostic: compatible=`green`, caution=`yellow`, not_recommended=`red`, insufficient_data=`gray`.
+- Adjustments are derived from active risk codes (water type, temperature, pH, space, group size, territoriality, breeding, predation, solitary requirements, fin-nipping, bioload, or missing evidence) instead of generic advice when a concrete action is available.
+- Whole-tank-only risks remain first in `reasons` when they are the canonical decision summary; duplicate reasons from the same risk dimension are collapsed.
+- `buildCompatibilityPresentation()` consumes the same contract, so downstream product surfaces no longer need to reconstruct reason/action semantics independently.
+- New `Compatibility Actionable Result` regression covers green/yellow/red indicators, compatible/caution/block cases, and a 3-species whole-tank bioload case. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI/Vision files changed, no DB migration changed/applied, no Production promote, no main merge.
+
 ## CURRENT OVERRIDE — 2026-09-26 Priority compatibility knowledge batch 3 validated
 
 - Functional head: `b597790b7f672e32246c1af92a3c85c0de4f6cf0` (`feat(knowledge): promote compatibility batch three`).

@@ -1,3 +1,10 @@
+## HANDOFF — 2026-09-26 Actionable compatibility result contract
+
+- Validated functional checkpoint: `f28999d9901653833acba69cf4b5c142400c8d60`.
+- Compatibility output is now structurally `判断 / 原因 / 调整方式`: `verdict`, `reasons`, `adjustments`, with semantic indicator green/yellow/red/gray.
+- Risk-specific adjustment mapping is backend-owned; whole-tank primary reasons outrank pairwise secondary reasons; duplicate same-dimension reasons are suppressed.
+- Full backend release gate PASS. UI/Vision/DB application/Production/main remain untouched.
+
 ## HANDOFF — 2026-09-26 Priority compatibility knowledge batch 3
 
 - Validated functional checkpoint: `b597790b7f672e32246c1af92a3c85c0de4f6cf0`.
