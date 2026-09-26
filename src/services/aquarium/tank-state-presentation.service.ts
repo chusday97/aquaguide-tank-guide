@@ -119,15 +119,29 @@ export const buildCurrentTankRiskItems = ({
   }
 
   if (result.state === 'watch') {
+    const recovering = result.matchedRules.includes('AQ-STATE-010');
+    const needsRecheck = result.matchedRules.includes('AQ-STATE-011');
     return [{
       group: '混养风险',
       severity: 'warning',
-      title: '当前建议继续观察',
+      title: recovering ? '异常已有缓解，继续观察是否复发' : needsRecheck ? '之前有重复异常，先确认现在是否仍在发生' : '当前建议继续观察',
       detail: result.summary,
-      nextStep: result.observationTargets.length > 0 ? `重点观察：${result.observationTargets.slice(0, 3).join('、')}。` : '补充一次当前鱼缸检查，再决定是否需要调整。',
+      nextStep: recovering
+        ? '保持当前已经奏效的调整，并继续完成 1–2 次结构化复查；若异常再次出现，立即重新升级处理。'
+        : needsRecheck
+          ? '完成一次当前状态复查；只有确认追咬、躲藏或摄食压力仍在持续时，才重新升级到干预。'
+          : result.observationTargets.length > 0 ? `重点观察：${result.observationTargets.slice(0, 3).join('、')}。` : '补充一次当前鱼缸检查，再决定是否需要调整。',
       subjects,
-      actionSteps: ['完成一次当前状态检查。', '记录追逐、躲藏、摄食和伤情是否真实发生。', '只有异常持续或相互印证时再升级处理。'],
-      avoidActions: ['不要把理论风险直接当成当前冲突', '不要仅因推荐缸容差距立即移鱼或换缸', '不要制造没有观察依据的精确负载结论'],
+      actionSteps: recovering
+        ? ['不要因为一次恢复正常就立即撤销已经奏效的隔离、遮挡或供氧调整。', '继续记录呼吸、追逐、躲藏、进食和伤情是否保持正常。', '如果相同异常再次出现，按当前异常级别重新处理。']
+        : needsRecheck
+          ? ['记录当前是否仍有持续追逐、躲藏、摄食受压或新伤。', '若当前没有异常，继续完成后续复查，不把 1–2 周前的事件当成当前冲突。', '若异常复发，按最新结构化观察重新升级处理。']
+          : ['完成一次当前状态检查。', '记录追逐、躲藏、摄食和伤情是否真实发生。', '只有异常持续或相互印证时再升级处理。'],
+      avoidActions: recovering
+        ? ['不要把一次正常复查当成永久恢复', '不要立即重新增加生物或撤掉必要隔离', '不要忽略原有静态混养风险']
+        : needsRecheck
+          ? ['不要因为旧记录继续无限期保持红色干预', '不要把没有近期证据当成已经恢复', '不要忽略静态高风险配对']
+          : ['不要把理论风险直接当成当前冲突', '不要仅因推荐缸容差距立即移鱼或换缸', '不要制造没有观察依据的精确负载结论'],
       primaryAction: 'open_daily_check',
       primaryLabel: '记录当前状态',
     }];

@@ -36,6 +36,7 @@ const gates = [
   ['Compatibility Pair Evidence Ceilings', 'npm', ['run', 'test:compatibility-pair-evidence-ceilings']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank State Runtime Acceptance', 'node', ['--import', 'tsx', 'scripts/test-tank-state-runtime-acceptance.ts']],
+  ['Tank State Recovery Acceptance', 'node', ['--import', 'tsx', 'scripts/test-tank-state-recovery-acceptance.ts']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],
   ['Care Guidance', 'npm', ['run', 'test:care-guidance']],

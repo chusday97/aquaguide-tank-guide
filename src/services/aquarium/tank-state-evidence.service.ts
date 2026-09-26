@@ -70,8 +70,10 @@ export const buildTankObservationsFromDiagnosisRecords = (
       if (answers.behavior === '正常游动和进食') {
         add(record, 'normal_activity');
         add(record, 'normal_feeding');
+        add(record, 'no_persistent_chasing');
+        add(record, 'no_hiding_pressure');
       }
-      if (answers.breathing === '正常') add(record, 'normal_activity');
+      if (answers.breathing === '正常') add(record, 'normal_breathing');
       if (includesOne(answers.behavior, ['追咬打架'])) add(record, 'persistent_chasing');
       if (includesOne(answers.behavior, ['持续躲藏'])) add(record, 'hiding_pressure');
       if (includesOne(answers.behavior, ['拒食'])) add(record, 'appetite_drop');
@@ -86,6 +88,7 @@ export const buildTankObservationsFromDiagnosisRecords = (
     if (record.problemType === '躲藏不动') {
       if (includesOne(answers.hiding, ['长时间躲藏', '趴底不动'])) add(record, 'hiding_pressure');
       if (includesOne(answers.chasing, ['明显追咬'])) add(record, 'persistent_chasing');
+      if (answers.chasing === '没有') add(record, 'no_persistent_chasing');
     }
 
     if (record.problemType === '拒食') {
@@ -95,12 +98,15 @@ export const buildTankObservationsFromDiagnosisRecords = (
         add(record, 'feeding_exclusion');
       } else if (includesOne(answers.chasing, ['明显追咬'])) {
         add(record, 'persistent_chasing');
+      } else if (answers.chasing === '没有') {
+        add(record, 'no_persistent_chasing');
       }
     }
 
     if (['鱼浮头 / 呼吸急促', '鱼只异常'].includes(record.problemType)) {
       const respiratoryAnswer = answers.gasping || answers.symptom || answers.fishBehavior;
       if (includesOne(respiratoryAnswer, ['经常浮头', '呼吸明显急促', '急促呼吸', '浮头喘气'])) add(record, 'respiratory_distress');
+      if (respiratoryAnswer === '没有') add(record, 'normal_breathing');
     }
 
     if (['死亡 / 异常死亡', '死亡处理'].includes(record.problemType)) {
