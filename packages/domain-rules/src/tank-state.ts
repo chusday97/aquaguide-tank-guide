@@ -236,22 +236,6 @@ export const evaluateTankState = ({
     };
   }
 
-  if (hadRepeatedBehaviorProblem && !repeatedBehaviorProblem && !recoveryConfirmedBehaviorProblem) {
-    matchedRules.push('AQ-STATE-011');
-    reasons.push(...allChasingSignals.map(item => item.evidence || item.code));
-    return {
-      state: 'watch',
-      confidence: 'low',
-      primaryAction: 'observe',
-      summary: '过去两周出现过重复追咬或行为压力，但近期缺少足够复查；先确认是否仍在发生。',
-      reasons: unique(reasons),
-      matchedRules,
-      activeSignals: [],
-      priorCodes,
-      observationTargets,
-    };
-  }
-
   const watchSignals = recent.filter(item => watchCodes.has(item.code) && !isRecovered(item, recent, 1));
   if (watchSignals.length > 0) {
     reasons.push(...watchSignals.map(item => item.evidence || item.code));
@@ -264,6 +248,22 @@ export const evaluateTankState = ({
       reasons,
       matchedRules,
       activeSignals: unique(watchSignals.map(item => item.code)),
+      priorCodes,
+      observationTargets,
+    };
+  }
+
+  if (hadRepeatedBehaviorProblem && !repeatedBehaviorProblem && !recoveryConfirmedBehaviorProblem) {
+    matchedRules.push('AQ-STATE-011');
+    reasons.push(...allChasingSignals.map(item => item.evidence || item.code));
+    return {
+      state: 'watch',
+      confidence: 'low',
+      primaryAction: 'observe',
+      summary: '过去两周出现过重复追咬或行为压力，但近期缺少足够复查；先确认是否仍在发生。',
+      reasons: unique(reasons),
+      matchedRules,
+      activeSignals: [],
       priorCodes,
       observationTargets,
     };

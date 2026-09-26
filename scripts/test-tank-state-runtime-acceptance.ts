@@ -143,4 +143,38 @@ const normal=[record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',beh
   assert.match(evidence.result.summary,/缺少足够近期现实观察/);
 }
 
-console.log('tank-state runtime acceptance passed: 9 static-risk + real-observation scenarios');
+
+
+// Recovery trajectory: current relapse signals outrank unresolved historical pressure.
+{
+  const base = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-22T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏'}),
+  ];
+  const oneNormal = [...base, record('2026-09-24T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'})];
+  const twoNormals = [...oneNormal, record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'})];
+  const threeNormals = [
+    ...base,
+    record('2026-09-23T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+  ];
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const a = run(tank,base).evidence.result;
+  const b = run(tank,oneNormal).evidence.result;
+  const c = run(tank,twoNormals).evidence.result;
+  const d = run(tank,threeNormals).evidence.result;
+  const relapse = run(tank,[...threeNormals,record('2026-09-26T07:00:00.000Z','追咬打架',{aggression:'明显追咬'})]).evidence.result;
+  assert.equal(a.state,'intervene');
+  assert.equal(b.state,'intervene','one normal follow-up is not enough to clear corroborated behavior pressure');
+  assert.equal(c.state,'watch');
+  assert.ok(c.matchedRules.includes('AQ-STATE-010'));
+  assert.equal(d.state,'watch','reviewed high-risk pair remains watch even after three normal confirmations');
+  assert.ok(d.matchedRules.includes('AQ-STATE-009'));
+  assert.equal(relapse.state,'watch');
+  assert.equal(relapse.confidence,'medium','a new current chase must outrank unresolved historical-pressure fallback');
+  assert.ok(relapse.activeSignals.includes('persistent_chasing'));
+  assert.ok(relapse.matchedRules.includes('AQ-STATE-006'));
+}
+
+console.log('Recovery trajectory acceptance passed: intervene -> watch, reviewed risk retained, relapse stays active');
