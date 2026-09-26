@@ -1,5 +1,5 @@
 import { fishData } from './fishData';
-import { getReviewedCompatibilityProfile } from './compatibilityEvidence';
+import { getReviewedCompatibilityProfileForFish } from './compatibilityEvidence';
 import { getLifeType } from '../modules/species/species.service';
 import type { Fish } from '../types';
 
@@ -70,6 +70,8 @@ export const selectCompatibilityLaunchCohort = (): Fish[] => {
 };
 
 export const isSpeciesDecisionReady = (speciesId: string) => {
-  const profile = getReviewedCompatibilityProfile(speciesId);
+  const species = eligibleById.get(speciesId);
+  if (!species) return false;
+  const profile = getReviewedCompatibilityProfileForFish(species);
   return Boolean(profile && profile.reviewStatus === 'reviewed' && profile.citations.length > 0);
 };

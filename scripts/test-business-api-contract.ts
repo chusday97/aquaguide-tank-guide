@@ -130,6 +130,40 @@ assert.equal(
   getRequestHash({ ...requestShape } as Parameters<typeof getRequestHash>[0]),
   'response-loss retry must keep the same API request hash',
 );
+assert.notEqual(
+  getRequestHash({
+    ...requestShape,
+    method: 'DELETE',
+    originalUrl: '/api/v1/aquariums/00000000-0000-4000-8000-000000000001/species/00000000-0000-4000-8000-000000000002?version=1',
+    path: '/aquariums/00000000-0000-4000-8000-000000000001/species/00000000-0000-4000-8000-000000000002',
+    body: undefined,
+  } as Parameters<typeof getRequestHash>[0]),
+  getRequestHash({
+    ...requestShape,
+    method: 'DELETE',
+    originalUrl: '/api/v1/aquariums/00000000-0000-4000-8000-000000000001/species/00000000-0000-4000-8000-000000000002?version=2',
+    path: '/aquariums/00000000-0000-4000-8000-000000000001/species/00000000-0000-4000-8000-000000000002',
+    body: undefined,
+  } as Parameters<typeof getRequestHash>[0]),
+  'idempotency request hashes must distinguish query-bound optimistic versions',
+);
+assert.equal(
+  getRequestHash({
+    ...requestShape,
+    method: 'DELETE',
+    originalUrl: '/api/v1/example?version=1&mode=safe',
+    path: '/example',
+    body: undefined,
+  } as Parameters<typeof getRequestHash>[0]),
+  getRequestHash({
+    ...requestShape,
+    method: 'DELETE',
+    originalUrl: '/api/v1/example?mode=safe&version=1',
+    path: '/example',
+    body: undefined,
+  } as Parameters<typeof getRequestHash>[0]),
+  'query ordering must not change idempotency identity',
+);
 const parentIds = new Set<string>();
 const batchIds = new Set<string>();
 for (let attempt = 0; attempt < 2; attempt += 1) {

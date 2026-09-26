@@ -136,6 +136,63 @@ const uniqueRules = (rules: TankCompatibilityRule[]) => {
 const LEGACY_SOFT_CAPACITY_CODES = new Set(['bioload_over_limit', 'bioload_near_limit']);
 const CANONICAL_REVIEWED_STAGE_HARD_BLOCK_CODES = new Set(['conspecific_fry_predation']);
 
+const GENERIC_COMPATIBILITY_SUGGESTIONS = new Set([
+  '先移除阻断风险或更换候选生物。',
+  '先解决明确阻断项；如果无法消除，建议更换候选生物。',
+  '如需尝试，请先处理主要风险项，再按计划加入并观察。',
+  '先处理主要风险项，再按计划加入并持续观察。',
+  '先补充鱼缸尺寸、水温或必要设备信息后再评估。',
+  '敏感物种可用试纸或滴定测试复核水质；普通判断无需填写 pH 数值。',
+  '可以少量加入，并在 3-7 天内观察追咬、拒食和水质波动。',
+  '当前条件可加入；建议分步加入，并在 3-7 天内观察追咬、拒食和水质波动。',
+]);
+
+const canonicalSuggestions = ({
+  status,
+  result,
+  warningRules,
+  missingData,
+}: {
+  status: TankCompatibilityStatus;
+  result: TankCompatibilityResult;
+  warningRules: TankCompatibilityRule[];
+  missingData: TankCompatibilityRule[];
+}) => {
+  const preserved = result.suggestions.filter(item => (
+    !GENERIC_COMPATIBILITY_SUGGESTIONS.has(item)
+    && !item.startsWith('群游物种不要只按少量个体试养')
+    && !item.startsWith('先把 ')
+  ));
+
+  if (status === 'not_recommended') {
+    preserved.push('先解决明确阻断项；如果无法消除，建议更换候选生物。');
+  } else if (status === 'insufficient_data') {
+    const evidenceMissing = missingData.some(item => (
+      item.code.includes('unreviewed')
+      || item.code.includes('evidence')
+      || item.code.includes('unknown')
+    ));
+    const sensitiveWaterCheck = missingData.some(item => (
+      item.code === 'missing_ph'
+      || item.code === 'missing_hardness'
+    ));
+    preserved.push(evidenceMissing
+      ? '关键物种或行为资料尚未审核；先保留方案，补齐可靠资料后再决定是否加入。'
+      : '先补充鱼缸尺寸、水温或必要设备信息后再评估。');
+    if (sensitiveWaterCheck) {
+      preserved.push('敏感物种建议用试纸或滴定测试复核 pH / 硬度；环境线索不能代替实测。');
+    }
+  } else if (warningRules.some(rule => rule.code === 'minimum_group_not_met' || rule.code === 'group_requirement_gap')) {
+    preserved.push('先满足已审核的最低群体数量，再评估是否加入。');
+  } else if (status === 'caution') {
+    preserved.push('先处理主要风险项，再按计划加入并持续观察。');
+  } else {
+    preserved.push('当前条件可加入；建议分步加入，并在 3-7 天内观察追咬、拒食和水质波动。');
+  }
+
+  return Array.from(new Set(preserved)).slice(0, 5);
+};
+
 export const applyCanonicalCompatibilityDecision = (
   result: TankCompatibilityResult,
   decision: CompatibilityDecision,
@@ -154,13 +211,16 @@ export const applyCanonicalCompatibilityDecision = (
   // The legacy engine is presentation/evidence input only. Old coarse load
   // thresholds are explicitly reclassified as warnings so they cannot leak
   // back into a canonical hard-block decision.
+  const softCapacityDisclaimer = '该数值只用于粗略筛查，不代表硬性安全上限。';
   const legacySoftCapacityWarnings = [
     ...result.blockingRules.filter(rule => LEGACY_SOFT_CAPACITY_CODES.has(rule.code)),
     ...result.warningRules.filter(rule => LEGACY_SOFT_CAPACITY_CODES.has(rule.code)),
   ].map(rule => ({
     ...rule,
     title: '容量/负荷参考提醒',
-    evidence: `${rule.evidence} 该数值只用于粗略筛查，不代表硬性安全上限。`,
+    evidence: rule.evidence.includes(softCapacityDisclaimer)
+      ? rule.evidence
+      : `${rule.evidence} ${softCapacityDisclaimer}`,
     severity: 'medium' as const,
     confidence: 'low' as const,
   }));
@@ -229,6 +289,7 @@ export const applyCanonicalCompatibilityDecision = (
     warningRules,
     passedRules: uniqueRules([...result.passedRules, ...domainInformationalRules]),
     missingData,
+    suggestions: canonicalSuggestions({ status: effectiveStatus, result, warningRules, missingData }),
     stockingGuidance: decision.stockingGuidance,
     observedStatus: decision.observedStatus,
     evidenceIds: decision.evidenceIds,

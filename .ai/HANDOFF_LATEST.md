@@ -1,3 +1,130 @@
+## HANDOFF — 2026-09-26 Species-scoped intervention provenance
+
+- Functional checkpoint `c9029a93834f3b90283b42fe81bdca35b550794d`.
+- Tank observations and executed interventions now retain species-level provenance when provided through structured diagnosis answers.
+- Local intervention effects are target-scoped: follow-up from unrelated species no longer counts as evidence for the intervention. Recovery confirmation uses the same object-aware rule.
+- Intervention result text can expose target species, quantity, conflict pair, and recorded reason using catalog names.
+- Existing unscoped records remain backward-compatible; no DB schema/migration was added. Full backend release gate PASS. No UI/Vision/Production/main changes.
+
+## HANDOFF — 2026-09-26 Multi-intervention sequence reasoning
+
+- Functional checkpoint `abd4c1f1b7c66a9c2c07ef0f33bba7b34601b643`.
+- Intervention evidence now retains the sequence across multiple executed actions instead of reducing the user-facing conclusion to the newest action.
+- Supported patterns: failed/uncertain earlier control then later improvement; earlier improvement then relapse; multiple evaluated actions still not controlling the problem.
+- Sequence summaries preserve causality limits and exclude insufficient-followup actions from strong failure/improvement patterns.
+- Targeted sequence tests and full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
+## HANDOFF — 2026-09-26 Intervention effect evidence
+
+- Functional checkpoint `4cdf7620197b72521b69d675e6f1bc710e628e2f`.
+- Tank State now retains explicit executed interventions and evaluates their relevant follow-up evidence without claiming causal proof.
+- Four outcomes are supported: improvement after action, persisted problem, mixed evidence, and insufficient follow-up.
+- Newer actions close earlier attribution windows, preventing later recovery from being credited to multiple prior interventions.
+- Presentation adds an actionable next step for each outcome. Full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
+## HANDOFF — 2026-09-26 Tank recovery progress contract
+
+- Functional checkpoint `937012fe5fd162494760f93f81921bc840f03edb`.
+- Tank State result now carries structured recovery progress instead of forcing presentation layers to guess recovery stage.
+- Runtime semantics: 1/2 = still confirming, 2/3 = recovery-watch with one confirmation left, 3/3 = current incident recovered. Reviewed static high-risk combinations remain observable after 3/3.
+- Presentation uses exact progress counts and explicitly separates incident recovery from long-term compatibility risk.
+- Targeted recovery tests and full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
+## HANDOFF — 2026-09-26 Recovery / relapse priority
+
+- Functional checkpoint `b81cef2efa3d9d0afb720daf879811fc2d988374`.
+- Recovery path is now explicitly covered: intervene → recovery-watch; reviewed high-risk compatibility remains remembered after repeated normal checks.
+- Fixed relapse bug where a new chase after recovery was swallowed by historical AQ-STATE-011 context. Current relapse now wins and is exposed as an active signal.
+- Targeted recovery tests PASS; full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
+## HANDOFF — 2026-09-26 Runtime tank-state acceptance
+
+- Functional checkpoint `0af0e000c2551feeaff89492b783fecd6dfc514f`.
+- Added 9 static-risk + real-observation runtime cases and placed them in the backend release gate.
+- Reviewed red predation/aggression/territory combinations no longer become `stable / no_action` after one normal patrol; they remain `watch / observe`.
+- Generic high space guidance is intentionally not treated the same way and may remain stable when current evidence is normal.
+- Temperature no-overlap/current target-temperature blockers are now active `intervene` hard constraints; water-type conflicts remain `urgent`.
+- Current-state presentation now gives concrete signal-specific actions for respiratory distress, injury, and corroborated chasing/hiding pressure.
+- Full backend release gate PASS. No catalog counts or DB artifacts changed; no UI/Vision/Production/main changes.
+
+## HANDOFF — 2026-09-26 Complex multi-species compatibility acceptance
+
+- Functional checkpoint `a64b366dbccf5ef1f63cddbd8835d7cddb48bdc1`.
+- Compatibility real-tank regression now has 11 scenarios, including five 6–8 species tanks.
+- Fixed complex red-verdict ordering so direct predation and no-common-temperature blockers outrank lower-priority social/territorial context.
+- Fixed multi-group presentation truncation: all under-grouped species survive as one concise current→minimum action.
+- Fixed Pair Rule evidence wording so direct husbandry fin-nipping evidence is not described as a predation experiment.
+- Added Compatibility Evidence Coverage to the backend release gate; full gate PASS.
+- No catalog/evidence/pair counts changed in this step; no new DB artifact was added or applied. UI/Vision/Production/main remain untouched.
+
+## HANDOFF — 2026-09-26 Real-tank compatibility acceptance
+
+- Validated functional checkpoint: `0acf8e9316cd1872b437305c5493230ca213573d`.
+- Real-tank acceptance is now a release gate with six 3–4 species fixtures covering green community, temperature hard block, exact predation pair, multiple group deficits, space pressure, and whole-tank load.
+- Fixed a real false positive: prey-vulnerability alone no longer makes peaceful community combinations yellow; reviewed predation pressure is required.
+- Adjustments are more executable: under-grouped species receive exact current→minimum quantities; red hard blocks no longer mix in lower-priority warning actions.
+- Added reviewed Angelfish × Neon Tetra predation Pair Rule while keeping generic `very_small_fish` mapping fail-closed.
+- Authority counts: 49 reviewed Profiles / 22 reviewed Pair Rules / 79 evidence sources / 486 catalog objects; snapshot checksum `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- Full backend release gate PASS. `202609260002_compatibility_angelfish_neon_pair.sql` is repository-only HOLD and has not been applied. No UI/Vision/Production/main changes.
+
+## HANDOFF — 2026-09-26 Actionable compatibility result contract
+
+- Validated functional checkpoint: `f28999d9901653833acba69cf4b5c142400c8d60`.
+- Compatibility output is now structurally `判断 / 原因 / 调整方式`: `verdict`, `reasons`, `adjustments`, with semantic indicator green/yellow/red/gray.
+- Risk-specific adjustment mapping is backend-owned; whole-tank primary reasons outrank pairwise secondary reasons; duplicate same-dimension reasons are suppressed.
+- Full backend release gate PASS. UI/Vision/DB application/Production/main remain untouched.
+
+## HANDOFF — 2026-09-26 Priority compatibility knowledge batch 3
+
+- Validated functional checkpoint: `b597790b7f672e32246c1af92a3c85c0de4f6cf0`.
+- Five exact species promoted: Gnathonemus petersii, Piaractus brachypomus, Serrasalmus rhombeus, Gymnotus carapo, Leporinus fasciatus.
+- Coverage: runtime reviewed objects `80 → 85`; direct reviewed Profiles `44 → 49`; evidence sources `73 → 78`; catalog stays 486.
+- Full backend release gate PASS; Compatibility Admin contract PASS at 49 Profiles / 21 Pair Rules; staging preflight PASS.
+- `202609260001_compatibility_priority_batch3_profiles.sql` is repository-only HOLD ownership and has not been applied.
+
+## HANDOFF — 2026-09-25 Priority compatibility knowledge batch 2
+
+- Validated functional checkpoint: `f90a57fdf8afc93e5e4c4a89f97ffcc12c81de36`.
+- Five exact objects promoted: Macropodus ocellatus, Macropodus spechti, Moenkhausia sanctaefilomenae, Pantodon buchholzi, Hypancistrus inspector.
+- Coverage: runtime reviewed objects `75 → 80`; direct reviewed Profiles `39 → 44`; evidence sources `68 → 73`; catalog stays 486.
+- Full backend release gate PASS. Compatibility Admin contract PASS at 44 Profiles / 21 Pair Rules; staging preflight PASS.
+- Repository-only batch2 Profile owner `202609250002_compatibility_priority_batch2_profiles.sql` is HOLD and has not been applied. No DB authority switch, UI/Vision change, Production promote, or main merge occurred.
+
+## HANDOFF — 2026-09-25 Priority compatibility knowledge batch 1
+
+- Validated functional checkpoint: `410434765bc9c64e5e513f4748b321094c2768d3`.
+- Five exact high-priority freshwater species were promoted from completion-only records to runtime Species Knowledge + Compatibility authority after object-specific source review: 接吻鱼、天堂鱼、Badis badis、Dario dario、Pterophyllum altum.
+- Coverage counters: direct reviewed profile records 34 → 39; runtime catalog objects resolving to reviewed Compatibility/Species Knowledge 70 → 75; evidence sources 63 → 68; catalog objects remain 486.
+- Safety boundary remains intact: generic Phase-2 completion records stay matrix/detail evidence only, and unreviewed variants do not inherit base-species authority.
+- New regression validates Altum small-fish predation, Paradise Fish cool-water ceiling, Kissing Gourami space pressure, exact runtime promotion, and fail-closed variant behavior.
+- Full backend release gate PASS; snapshot checksum `22e5de3d94a7985e325602ead8af5b2ff04943d4943981c33175c7c063a55ee8`.
+- No UI/Vision changes, DB migration application, DB-authority switch, Production promote, or main merge.
+- Repository-only `202609250001_compatibility_priority_batch1_profiles.sql` was added solely as explicit reviewed-Profile ownership; application remains HOLD.
+- Continue knowledge expansion in small source-audited batches only.
+
+## HANDOFF — 2026-09-25 Whole-tank compatibility aggregation validated
+
+- Current integration candidate: `/Users/chuchu/aquaguide-backend-integration-20260922`, branch `integration/backend-main-20260922`, validated functional head `9be6e49c8e0d64dda57f57c22c4ae0eb8e891b89`, built on `2b191896...`.
+- Local and remote integration are synchronized (`0/0`). PR #154 is OPEN / non-draft / MERGEABLE and contains functional head `9be6e49c...`; foundation/validate/Vercel/Cloudflare were green at the previous checkpoint and are re-triggered by new pushes, with heavy optional gates intentionally skipped.
+- Multi-species compatibility now combines pairwise explanations with a whole-tank canonical domain pass for 3+ species. This captures cumulative constraints that pairwise-only aggregation can miss without creating a second rules engine.
+- Regression proves whole-tank-only `bioload_screening_elevated` is propagated to the overall verdict while 1–2 species stay on the existing pairwise path. The direct summary now leads with a tank-level-only risk when that risk changes the 3+ species verdict, and soft-capacity disclaimers are idempotent.
+- Full backend release gate PASS at this head. Frozen UI/Vision behavior remains untouched; DB migration application/authority switch/Production remain HOLD.
+- Next execution target: representative product-level badcases and direct user conclusion quality, not additional repository restructuring. Main merge requires a separate explicit decision.
+
+## HANDOFF — 2026-09-22 Local backend integration candidate validated
+
+- GitHub CI exposed two reviewed Profile DB-authority ownership gaps (sp_0016, sp_0475); repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql now owns them. No DB migration has been applied.
+- CI-required repository-only compatibility migration SQL is present as a static contract artifact; **no migration has been applied and DB authority remains HOLD**.
+A selective backend candidate has been assembled in `/Users/chuchu/aquaguide-backend-integration-20260922` on branch `integration/backend-main-20260922`.
+
+- Base: `origin/main@be0fdef9`
+- Implementation tip: `018c52ba` (after `afc8ad2e` integration + `cb15eb6b` ownership fix)
+- Validation: full backend integration gate PASS; Golden Path contract PASS; Business Admin staging preflight PASS; Compatibility Admin contract PASS (34 reviewed profiles / 21 reviewed pair rules); `git diff --check` PASS; GitHub PR checks all green at `018c52ba`.
+- Candidate construction preserved main-only CI/Vercel/build work and excluded user-frozen Vision/UI behavior. Repository-only Compatibility SQL artifacts are included because CI/authority contracts require them; migration application remains HOLD.
+- Integration debugging found presentation-layer leakage in the original backend manifest. The candidate therefore keeps current-main compatibility presentation service/test unchanged. User-conclusion tests retain backend status/risk/action safety only.
+- No Production deployment, DB migration, DB authority switch, Care indexing change, or main merge has occurred.
+- Draft PR #154 is open and green: https://github.com/chusday97/aquaguide-tank-guide/pull/154 . Next decision is review/merge only; keep Draft and do not merge, deploy, or apply migrations without separate authorization.
+
 ## HANDOFF — 2026-09-16 RC1 Production release CLOSED
 Production is now `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production). Final Production smoke is PASS.
 

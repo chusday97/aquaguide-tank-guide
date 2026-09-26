@@ -20,6 +20,7 @@ export type TankHardConstraint = {
 export type TankObservationCode =
   | 'normal_feeding'
   | 'normal_activity'
+  | 'normal_breathing'
   | 'no_persistent_chasing'
   | 'no_injury'
   | 'no_hiding_pressure'
@@ -38,6 +39,10 @@ export type TankObservation = {
   code: TankObservationCode;
   observedAt: string;
   evidence?: string;
+  /** Optional structured provenance. Missing means legacy / unknown scope, not whole-tank proof. */
+  subjectSpeciesIds?: string[];
+  scope?: 'whole_tank' | 'species_specific';
+  sourceDiagnosisId?: string;
 };
 
 export type EvaluateTankStateInput = {
@@ -49,6 +54,13 @@ export type EvaluateTankStateInput = {
 };
 
 export type TankStateAction = 'no_action' | 'observe' | 'adjust' | 'urgent_action' | 'complete_check';
+export type TankRecoveryPhase = 'confirming' | 'recovering' | 'confirmed';
+export type TankRecoveryProgress = {
+  phase: TankRecoveryPhase;
+  confirmations: number;
+  targetConfirmations: number;
+  remainingConfirmations: number;
+};
 
 export type TankStateResult = {
   state: TankState;
@@ -60,6 +72,8 @@ export type TankStateResult = {
   activeSignals: TankObservationCode[];
   priorCodes: string[];
   observationTargets: string[];
+  /** Progress for clearing a concrete recent incident; this never clears static reviewed priors. */
+  recovery?: TankRecoveryProgress;
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -69,6 +83,7 @@ const REPEAT_WINDOW_DAYS = 14;
 const normalCodes = new Set<TankObservationCode>([
   'normal_feeding',
   'normal_activity',
+  'normal_breathing',
   'no_persistent_chasing',
   'no_injury',
   'no_hiding_pressure',
@@ -99,6 +114,79 @@ const withinDays = (observedAt: string, nowMs: number, days: number) => {
 };
 
 const unique = <T,>(values: T[]) => Array.from(new Set(values));
+
+const recoveryCodesBySignal: Partial<Record<TankObservationCode, TankObservationCode[]>> = {
+  respiratory_distress: ['normal_breathing'],
+  persistent_chasing: ['no_persistent_chasing'],
+  hiding_pressure: ['no_hiding_pressure'],
+  feeding_exclusion: ['normal_feeding'],
+  appetite_drop: ['normal_feeding'],
+  injury: ['no_injury'],
+  severe_injury: ['no_injury'],
+};
+
+const recoveryScopeMatchesSignal = (signal: TankObservation, recovery: TankObservation) => {
+  const signalIds = signal.subjectSpeciesIds || [];
+  const recoveryIds = recovery.subjectSpeciesIds || [];
+  if (signal.scope === 'whole_tank') {
+    return recovery.scope === 'whole_tank' || (!recovery.scope && recoveryIds.length === 0);
+  }
+  if (signal.scope === 'species_specific' || signalIds.length > 0) {
+    if (recovery.scope === 'whole_tank') return true;
+    if (recoveryIds.length === 0) return false;
+    const signalSet = new Set(signalIds);
+    return recoveryIds.some(id => signalSet.has(id));
+  }
+  // Legacy unscoped incidents keep legacy recovery behavior.
+  return true;
+};
+
+const laterRecoveryObservations = (signal: TankObservation, pool: TankObservation[]) => {
+  const signalMs = parseTime(signal.observedAt);
+  const recoveryCodes = recoveryCodesBySignal[signal.code] || [];
+  if (signalMs === null || recoveryCodes.length === 0) return [];
+  return pool.filter(item => {
+    const itemMs = parseTime(item.observedAt);
+    return itemMs !== null
+      && itemMs > signalMs
+      && recoveryCodes.includes(item.code)
+      && recoveryScopeMatchesSignal(signal, item);
+  });
+};
+
+const isRecovered = (signal: TankObservation, pool: TankObservation[], confirmations = 2) => (
+  new Set(laterRecoveryObservations(signal, pool).map(item => item.observedAt)).size >= confirmations
+);
+
+const buildRecoveryProgress = (
+  signals: TankObservation[],
+  pool: TankObservation[],
+): TankRecoveryProgress | undefined => {
+  const recoverable = signals.filter(signal => (recoveryCodesBySignal[signal.code]?.length || 0) > 0);
+  if (recoverable.length === 0) return undefined;
+  const confirmations = Math.min(...recoverable.map(signal => (
+    new Set(laterRecoveryObservations(signal, pool).map(item => item.observedAt)).size
+  )));
+  const capped = Math.min(confirmations, 3);
+  if (capped >= 3) return {
+    phase: 'confirmed',
+    confirmations: 3,
+    targetConfirmations: 3,
+    remainingConfirmations: 0,
+  };
+  if (capped >= 2) return {
+    phase: 'recovering',
+    confirmations: capped,
+    targetConfirmations: 3,
+    remainingConfirmations: 3 - capped,
+  };
+  return {
+    phase: 'confirming',
+    confirmations: capped,
+    targetConfirmations: 2,
+    remainingConfirmations: 2 - capped,
+  };
+};
 
 export const evaluateTankState = ({
   priors = [],
@@ -134,8 +222,10 @@ export const evaluateTankState = ({
   }
 
   const urgentSignals = recent.filter(item => urgentCodes.has(item.code));
-  if (urgentSignals.length > 0) {
-    reasons.push(...urgentSignals.map(item => item.evidence || item.code));
+  const activeUrgentSignals = urgentSignals.filter(item => !isRecovered(item, recent));
+  const recoveringUrgentSignals = urgentSignals.filter(item => isRecovered(item, recent) && !isRecovered(item, recent, 3));
+  if (activeUrgentSignals.length > 0) {
+    reasons.push(...activeUrgentSignals.map(item => item.evidence || item.code));
     matchedRules.push('AQ-STATE-007');
     return {
       state: 'urgent',
@@ -144,20 +234,31 @@ export const evaluateTankState = ({
       summary: '当前观察到需要优先处理的异常信号。',
       reasons,
       matchedRules,
-      activeSignals: unique(urgentSignals.map(item => item.code)),
+      activeSignals: unique(activeUrgentSignals.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(urgentSignals, recent),
     };
   }
 
   const directInterventionSignals = recent.filter(item => interveneCodes.has(item.code));
-  const chasingCount = repeatWindow.filter(item => item.code === 'persistent_chasing').length;
-  const correlatedBehaviorSignals = new Set(recent.filter(item => ['hiding_pressure', 'feeding_exclusion'].includes(item.code)).map(item => item.code));
-  const repeatedBehaviorProblem = chasingCount >= 2 || (chasingCount >= 1 && correlatedBehaviorSignals.size > 0);
-  if (directInterventionSignals.length > 0 || repeatedBehaviorProblem) {
+  const activeDirectInterventionSignals = directInterventionSignals.filter(item => !isRecovered(item, recent));
+  const recoveringDirectInterventionSignals = directInterventionSignals.filter(item => isRecovered(item, recent) && !isRecovered(item, recent, 3));
+  const allChasingSignals = repeatWindow.filter(item => item.code === 'persistent_chasing');
+  const activeChasingSignals = allChasingSignals.filter(item => !isRecovered(item, repeatWindow));
+  const allCorrelatedBehaviorSignals = recent.filter(item => ['hiding_pressure', 'feeding_exclusion'].includes(item.code));
+  const activeCorrelatedBehaviorSignals = allCorrelatedBehaviorSignals.filter(item => !isRecovered(item, recent));
+  const correlatedBehaviorCodes = new Set(activeCorrelatedBehaviorSignals.map(item => item.code));
+  const activeRecentChasingSignals = activeChasingSignals.filter(item => withinDays(item.observedAt, nowMs, RECENT_WINDOW_DAYS));
+  const hadRepeatedBehaviorProblem = allChasingSignals.length >= 2
+    || (allChasingSignals.length >= 1 && allCorrelatedBehaviorSignals.length > 0);
+  const repeatedBehaviorProblem = (activeChasingSignals.length >= 2 && activeRecentChasingSignals.length >= 1)
+    || (activeRecentChasingSignals.length >= 1 && correlatedBehaviorCodes.size > 0);
+  if (activeDirectInterventionSignals.length > 0 || repeatedBehaviorProblem) {
     const involved = [
-      ...directInterventionSignals,
-      ...recent.filter(item => item.code === 'persistent_chasing' || correlatedBehaviorSignals.has(item.code)),
+      ...activeDirectInterventionSignals,
+      ...activeRecentChasingSignals,
+      ...activeCorrelatedBehaviorSignals,
     ];
     reasons.push(...involved.map(item => item.evidence || item.code));
     matchedRules.push('AQ-STATE-006');
@@ -171,10 +272,41 @@ export const evaluateTankState = ({
       activeSignals: unique(involved.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(involved, repeatWindow),
     };
   }
 
-  const watchSignals = recent.filter(item => watchCodes.has(item.code));
+  const behaviorSignalsForRecovery = [...allChasingSignals, ...allCorrelatedBehaviorSignals];
+  const recoveryConfirmedBehaviorProblem = hadRepeatedBehaviorProblem
+    && behaviorSignalsForRecovery.length > 0
+    && behaviorSignalsForRecovery.every(item => isRecovered(item, repeatWindow));
+  const fullyRecoveredBehaviorProblem = recoveryConfirmedBehaviorProblem
+    && behaviorSignalsForRecovery.every(item => isRecovered(item, repeatWindow, 3));
+  const recoveringBehaviorProblem = recoveryConfirmedBehaviorProblem && !fullyRecoveredBehaviorProblem;
+  const incidentSignalsForRecovery = [
+    ...urgentSignals,
+    ...directInterventionSignals,
+    ...(hadRepeatedBehaviorProblem ? behaviorSignalsForRecovery : []),
+  ];
+  if (recoveringUrgentSignals.length > 0 || recoveringDirectInterventionSignals.length > 0 || recoveringBehaviorProblem) {
+    const recoverySignals = recent.filter(item => normalCodes.has(item.code));
+    reasons.push(...recoverySignals.map(item => item.evidence || item.code));
+    matchedRules.push('AQ-STATE-010');
+    return {
+      state: 'watch',
+      confidence: 'medium',
+      primaryAction: 'observe',
+      summary: '之前的异常已有后续正常复查支持缓解，但仍处于恢复观察期；继续确认没有复发。',
+      reasons: unique(reasons),
+      matchedRules,
+      activeSignals: unique(recoverySignals.map(item => item.code)),
+      priorCodes,
+      observationTargets,
+      recovery: buildRecoveryProgress(incidentSignalsForRecovery, repeatWindow),
+    };
+  }
+
+  const watchSignals = recent.filter(item => watchCodes.has(item.code) && !isRecovered(item, recent, 1));
   if (watchSignals.length > 0) {
     reasons.push(...watchSignals.map(item => item.evidence || item.code));
     matchedRules.push('AQ-STATE-006');
@@ -188,6 +320,24 @@ export const evaluateTankState = ({
       activeSignals: unique(watchSignals.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(watchSignals, recent),
+    };
+  }
+
+  if (hadRepeatedBehaviorProblem && !repeatedBehaviorProblem && !recoveryConfirmedBehaviorProblem) {
+    matchedRules.push('AQ-STATE-011');
+    reasons.push(...allChasingSignals.map(item => item.evidence || item.code));
+    return {
+      state: 'watch',
+      confidence: 'low',
+      primaryAction: 'observe',
+      summary: '过去两周出现过重复追咬或行为压力，但近期缺少足够复查；先确认是否仍在发生。',
+      reasons: unique(reasons),
+      matchedRules,
+      activeSignals: [],
+      priorCodes,
+      observationTargets,
+      recovery: buildRecoveryProgress(behaviorSignalsForRecovery, repeatWindow),
     };
   }
 
@@ -195,6 +345,23 @@ export const evaluateTankState = ({
   if (normalSignals.length > 0) {
     reasons.push(...normalSignals.map(item => item.evidence || item.code));
     matchedRules.push('AQ-STATE-001', 'AQ-STATE-003');
+    const hasHighPrior = priors.some(item => item.level === 'high' && ['predation', 'aggression', 'territory'].includes(item.kind));
+    if (hasHighPrior) {
+      matchedRules.push('AQ-STATE-009');
+      reasons.push(...priors.filter(item => item.level === 'high').map(item => item.evidence || item.code));
+      return {
+        state: 'watch',
+        confidence: 'medium',
+        primaryAction: 'observe',
+        summary: '近期没有观察到异常，但当前组合存在已审核的高风险背景；不能把一次正常观察当成已经安全。',
+        reasons: unique(reasons),
+        matchedRules,
+        activeSignals: unique(normalSignals.map(item => item.code)),
+        priorCodes,
+        observationTargets,
+        recovery: buildRecoveryProgress(incidentSignalsForRecovery, repeatWindow),
+      };
+    }
     return {
       state: 'stable',
       confidence: priors.length > 0 ? 'medium' : normalSignals.length >= 2 ? 'high' : 'medium',
@@ -207,6 +374,7 @@ export const evaluateTankState = ({
       activeSignals: unique(normalSignals.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(incidentSignalsForRecovery, repeatWindow),
     };
   }
 

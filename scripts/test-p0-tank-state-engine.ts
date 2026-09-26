@@ -22,6 +22,14 @@ const spacePrior = {
   observationTargets: ['活动受限', '领地冲突'],
 };
 
+const predationPrior = {
+  code: 'reviewed-predation-pair',
+  kind: 'predation' as const,
+  level: 'high' as const,
+  evidence: '该组合存在已审核的直接捕食风险。',
+  observationTargets: ['持续追逐', '受伤', '失踪'],
+};
+
 const cases = [
   {
     name: 'BC-STATE-001 medium prior + recent normal evidence stays stable',
@@ -34,6 +42,20 @@ const cases = [
       assert.equal(result.state, 'stable');
       assert.equal(result.primaryAction, 'no_action');
       assert.ok(result.priorCodes.includes('territory-prior'));
+    },
+  },
+  {
+    name: 'AQ-STATE-009 high predation prior + recent normal evidence remains watch',
+    run: () => {
+      const result = evaluateTankState({
+        now: NOW,
+        priors: [predationPrior],
+        observations: [recent(1, 'normal_feeding'), recent(1, 'normal_activity')],
+      });
+      assert.equal(result.state, 'watch');
+      assert.equal(result.primaryAction, 'observe');
+      assert.ok(result.matchedRules.includes('AQ-STATE-009'));
+      assert.match(result.summary, /不能把一次正常观察当成已经安全/);
     },
   },
   {
@@ -120,6 +142,20 @@ const cases = [
       });
       assert.equal(result.state, 'urgent');
       assert.ok(result.matchedRules.includes('AQ-STATE-004'));
+    },
+  },
+  {
+    name: 'BC-TIME-001 future urgent observation is ignored until it happens',
+    run: () => {
+      const result = evaluateTankState({
+        now: NOW,
+        observations: [
+          recent(1, 'normal_activity'),
+          { code: 'respiratory_distress', evidence: 'future typo', observedAt: '2026-08-24T12:00:00.000Z' },
+        ],
+      });
+      assert.equal(result.state, 'stable');
+      assert.equal(result.activeSignals.includes('respiratory_distress'), false);
     },
   },
   {

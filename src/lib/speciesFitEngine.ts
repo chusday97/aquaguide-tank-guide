@@ -4,6 +4,8 @@ import { isAquaticPlantSpecies, isHardscapeSpecies } from './speciesClassificati
 import { estimateWaterProfile } from './waterProfileEstimate';
 import { getReviewedCompatibilityProfileForFish } from '../data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
+import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
+import { applyApprovedCatalogFieldReviews } from '../data/catalogFieldReviews';
 
 export type SpeciesFitStatus = 'suitable' | 'adjustable' | 'unsuitable' | 'unknown';
 
@@ -83,14 +85,26 @@ const getSpeciesMinLengthCm = (species: Fish) => {
   return match ? Number(match[1]) : null;
 };
 
-const getSpeciesWaterType = (species: Fish): SpeciesWaterType => {
-  const reviewedWaterType = getReviewedCompatibilityProfileForFish(species)?.waterType;
-  if (reviewedWaterType) return reviewedWaterType;
+const getSpeciesWaterTypes = (species: Fish): SpeciesWaterType[] => {
+  const reviewedProfile = getReviewedCompatibilityProfileForFish(species);
+  if (reviewedProfile?.waterTypes?.length) return [...reviewedProfile.waterTypes];
+
+  const reviewedEnvironment = getReviewedSpeciesKnowledgeForFish(species)?.environment;
+  if (reviewedEnvironment?.evidence.reviewStatus === 'reviewed' && reviewedEnvironment.waterTypes?.length) {
+    return [...reviewedEnvironment.waterTypes];
+  }
+
+  const reviewedWaterType = reviewedProfile?.waterType;
+  if (reviewedWaterType) return [reviewedWaterType];
+
+  const catalogWaterType = applyApprovedCatalogFieldReviews(speciesProfileFromFish(species)).waterType;
+  if (catalogWaterType !== 'unknown') return [catalogWaterType];
+
   const text = textOf(species);
-  if (/汽水|半咸|brackish/i.test(text)) return 'brackish';
-  if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return 'saltwater';
-  if (species.category || /淡水|水草|灯科|鼠鱼|虾|螺|斗鱼|慈鲷|孔雀|金鱼|锦鲤|freshwater/i.test(text)) return 'freshwater';
-  return 'unknown';
+  if (/汽水|半咸|brackish/i.test(text)) return ['brackish'];
+  if (isSaltwaterSpecies(species) || /海水|珊瑚|海葵|水母|蛋白分离|盐度|reef|marine|coral|anemone|jellyfish/i.test(text)) return ['saltwater'];
+  if (species.category || /淡水|水草|灯科|鼠鱼|虾|螺|斗鱼|慈鲷|孔雀|金鱼|锦鲤|freshwater/i.test(text)) return ['freshwater'];
+  return [];
 };
 
 const isSpecialTankSpecies = (species: Fish) => {
@@ -104,6 +118,17 @@ const isSpecialTankSpecies = (species: Fish) => {
 const isAnimalSpecies = (species: Fish) => {
   const lifeType = getLifeType(species);
   return lifeType !== 'plant' && lifeType !== 'hardscape' && !isAquaticPlantSpecies(species) && !isHardscapeSpecies(species);
+};
+
+const reviewedProfileTargetsSpecies = (predator: Fish, prey: Fish) => {
+  const reviewed = getReviewedCompatibilityProfileForFish(predator);
+  if (!reviewed) return false;
+  if (reviewed.predationTargets.length > 0) {
+    if (reviewed.predationTargets.includes(prey.id)) return true;
+    if (reviewed.predationTargets.includes('small_fish') && getLifeType(prey) === 'fish' && prey.size === 'Small') return true;
+    return false;
+  }
+  return reviewed.behaviorTraits.includes('predatory') && prey.size === 'Small';
 };
 
 export const getCurrentLivestockForAquarium = (aquarium: Aquarium | null | undefined, allSpecies: Fish[]) => (
@@ -134,11 +159,11 @@ const getCompatibilityRisk = (species: Fish, currentLivestock: Array<{ species?:
     : /长鳍|蝶尾|神仙|斗鱼|孔雀/i.test(speciesText);
   const predator = validLivestock.find(item => {
     const reviewed = getReviewedCompatibilityProfileForFish(item.species);
-    if (reviewed) return reviewed.behaviorTraits.includes('predatory');
+    if (reviewed) return reviewedProfileTargetsSpecies(item.species, species);
     const predatorIdentity = `${item.species.name} ${item.species.category} ${item.species.description}`;
-    return /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
+    return selectedIsSmall && /掠食鱼|肉食鱼|龙鱼|雷龙|地图(?:鱼)?|雀鳝|魟|鳗|捕食|吞食/i.test(predatorIdentity);
   });
-  if (predator && selectedIsSmall) {
+  if (predator) {
     return {
       type: 'predation_risk',
       title: '存在捕食或吞食风险',
@@ -198,7 +223,7 @@ export const evaluateSpeciesForAquarium = (
     };
   }
 
-  const speciesWaterType = getSpeciesWaterType(species);
+  const speciesWaterTypes = getSpeciesWaterTypes(species);
   const aquariumWaterType: SpeciesWaterType = aquarium.waterType === 'Saltwater'
     ? 'saltwater'
     : aquarium.waterType === 'Freshwater'
@@ -210,14 +235,27 @@ export const evaluateSpeciesForAquarium = (
 
   if (aquariumWaterType === 'unknown') {
     confirmations.push({ type: 'missing_water_type', title: '需要确认水体类型', detail: '当前鱼缸尚未记录淡水或海水类型，不能据此判断物种是否适配。', severity: 'medium' });
-  } else if (speciesWaterType === 'unknown') {
+  } else if (speciesWaterTypes.length === 0) {
     confirmations.push({ type: 'unknown_water_type', title: '物种水体资料不足', detail: '该物种缺少可靠水体类型，不应默认判断为适合。' });
-  } else if (aquariumWaterType === 'freshwater' && speciesWaterType !== 'freshwater') {
-    hardBlocks.push({ type: 'water_type_mismatch', title: '水体类型不匹配', detail: '当前是淡水鱼缸，不能推荐海水、汽水、珊瑚、水母或海葵等特殊水体生物。', severity: 'high' });
-  } else if (aquariumWaterType === 'saltwater' && speciesWaterType === 'freshwater') {
-    hardBlocks.push({ type: 'water_type_mismatch', title: '水体类型不匹配', detail: '当前是海水鱼缸，不能推荐普通淡水鱼、淡水虾螺或水草。', severity: 'high' });
+  } else if (!speciesWaterTypes.includes(aquariumWaterType)) {
+    hardBlocks.push({
+      type: 'water_type_mismatch',
+      title: '水体类型不匹配',
+      detail: aquariumWaterType === 'freshwater'
+        ? '当前是淡水鱼缸，该物种的已审核水体类型不包含淡水。'
+        : '当前是海水鱼缸，该物种的已审核水体类型不包含海水。',
+      severity: 'high',
+    });
   } else {
-    matchedItems.push({ type: 'water_type', title: '水体类型匹配', detail: aquariumWaterType === 'saltwater' ? '当前为海水鱼缸。' : '当前为淡水鱼缸。' });
+    matchedItems.push({
+      type: 'water_type',
+      title: '水体类型匹配',
+      detail: speciesWaterTypes.length > 1
+        ? '当前鱼缸水体属于该物种已审核的可适应水体范围。'
+        : aquariumWaterType === 'saltwater'
+          ? '当前为海水鱼缸。'
+          : '当前为淡水鱼缸。',
+    });
     score += 24;
   }
 
@@ -230,8 +268,18 @@ export const evaluateSpeciesForAquarium = (
     score -= 18;
   }
 
+  const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(species);
+  const reviewedEnvironment = reviewedKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.environment
+    : undefined;
+  const reviewedSpace = reviewedKnowledge?.spaceAndGrowth?.evidence.reviewStatus === 'reviewed'
+    ? reviewedKnowledge.spaceAndGrowth
+    : undefined;
+
+  const catalogProfile = applyApprovedCatalogFieldReviews(speciesProfileFromFish(species));
+
   const volumeLiters = getAquariumVolumeLiters(aquarium);
-  const minVolume = getSpeciesMinVolumeLiters(species);
+  const minVolume = reviewedSpace?.minVolumeLiters ?? catalogProfile.minTankLiters ?? getSpeciesMinVolumeLiters(species);
   if (!volumeLiters || !minVolume) {
     confirmations.push({ type: 'missing_volume', title: '需要确认水体容量', detail: '当前鱼缸或物种缺少可靠容量数据。' });
     score -= 8;
@@ -246,7 +294,7 @@ export const evaluateSpeciesForAquarium = (
   }
 
   const aquariumLength = getAquariumLengthCm(aquarium);
-  const minLength = getSpeciesMinLengthCm(species);
+  const minLength = reviewedSpace?.minTankLengthCm ?? catalogProfile.minTankLengthCm ?? getSpeciesMinLengthCm(species);
   if (minLength && (!aquariumLength || aquariumLength < minLength)) {
     warnings.push({ type: 'length_too_short', title: '鱼缸长度不足', detail: `该物种建议至少 ${minLength}cm 缸长，当前缸长未满足。`, severity: 'medium' });
     score -= 12;
@@ -255,7 +303,10 @@ export const evaluateSpeciesForAquarium = (
     score += 6;
   }
 
-  const tempRange = parseRange(species.waterTemperature);
+  const catalogTempRange = catalogProfile.waterTemperatureMinC != null && catalogProfile.waterTemperatureMaxC != null
+    ? { min: catalogProfile.waterTemperatureMinC, max: catalogProfile.waterTemperatureMaxC }
+    : null;
+  const tempRange = reviewedEnvironment?.temperatureRangeC ?? catalogTempRange ?? parseRange(species.waterTemperature);
   const currentTemp = aquarium.targetTemperature ? Number(aquarium.targetTemperature) : null;
   if (!tempRange || !currentTemp || !Number.isFinite(currentTemp)) {
     confirmations.push({ type: 'missing_temperature', title: '需要确认温度', detail: '当前鱼缸或物种缺少可靠温度数据。' });
@@ -263,17 +314,20 @@ export const evaluateSpeciesForAquarium = (
   } else if (currentTemp < tempRange.min || currentTemp > tempRange.max) {
     const delta = currentTemp < tempRange.min ? tempRange.min - currentTemp : currentTemp - tempRange.max;
     if (delta <= 1) {
-      warnings.push({ type: 'temperature_adjustable', title: '温度轻微偏差', detail: `当前 ${currentTemp}℃，需求 ${species.waterTemperature}。`, severity: 'low' });
+      warnings.push({ type: 'temperature_adjustable', title: '温度轻微偏差', detail: `当前 ${currentTemp}℃，需求 ${tempRange.min}-${tempRange.max}℃。`, severity: 'low' });
       score -= 8;
     } else {
-      hardBlocks.push({ type: 'temperature_mismatch', title: '温度明显不匹配', detail: `当前 ${currentTemp}℃，需求 ${species.waterTemperature}。`, severity: 'high' });
+      hardBlocks.push({ type: 'temperature_mismatch', title: '温度明显不匹配', detail: `当前 ${currentTemp}℃，需求 ${tempRange.min}-${tempRange.max}℃。`, severity: 'high' });
     }
   } else {
-    matchedItems.push({ type: 'temperature', title: '温度匹配', detail: `当前 ${currentTemp}℃，需求 ${species.waterTemperature}。` });
+    matchedItems.push({ type: 'temperature', title: '温度匹配', detail: `当前 ${currentTemp}℃，需求 ${tempRange.min}-${tempRange.max}℃。` });
     score += 14;
   }
 
-  const phRange = parseRange(species.phLevel);
+  const catalogPhRange = catalogProfile.phMin != null && catalogProfile.phMax != null
+    ? { min: catalogProfile.phMin, max: catalogProfile.phMax }
+    : null;
+  const phRange = reviewedEnvironment?.phRange ?? catalogPhRange ?? parseRange(species.phLevel);
   const identityText = identityTextOf(species);
   const phSensitive = Boolean(phRange && (phRange.max - phRange.min <= 1.5 || species.difficulty === 'Hard' || /水晶虾|苏虾|虾|短鲷|七彩|珊瑚|海葵|水母/i.test(identityText)));
   if (phSensitive && species.phLevel && phRange) {
@@ -281,7 +335,7 @@ export const evaluateSpeciesForAquarium = (
     confirmations.push({
       type: 'missing_ph',
       title: '敏感物种建议实测水质',
-      detail: `环境线索仅显示“${waterProfile.tendency === 'acidic' ? '可能偏酸' : waterProfile.tendency === 'alkaline' ? '可能偏碱' : waterProfile.tendency === 'marine' ? '海水环境' : '倾向不明确'}”，不能代替 pH 实测；该物种参考范围为 ${species.phLevel}。`,
+      detail: `环境线索仅显示“${waterProfile.tendency === 'acidic' ? '可能偏酸' : waterProfile.tendency === 'alkaline' ? '可能偏碱' : waterProfile.tendency === 'marine' ? '海水环境' : '倾向不明确'}”，不能代替 pH 实测；该物种参考范围为 ${phRange.min}-${phRange.max}。`,
       severity: 'low',
     });
     score -= 2;
@@ -346,7 +400,7 @@ export const evaluateSpeciesForAquarium = (
 
   const status: SpeciesFitStatus = hardBlocks.length > 0
     ? 'unsuitable'
-    : matchedItems.length === 0 || speciesWaterType === 'unknown' || missingCoreSpeciesData
+    : matchedItems.length === 0 || speciesWaterTypes.length === 0 || missingCoreSpeciesData
       ? 'unknown'
       : warnings.length > 0 || confirmations.length > 0
         ? 'adjustable'

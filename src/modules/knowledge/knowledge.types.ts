@@ -24,6 +24,9 @@ export type KnowledgeFieldEvidence = {
   reviewedAt?: string;
 };
 
+export type SpeciesWaterType = 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+export type ReviewedSpeciesWaterType = Exclude<SpeciesWaterType, 'unknown'>;
+
 export type SpeciesSocialMode = 'solitary' | 'pair' | 'harem' | 'shoal' | 'school' | 'group' | 'colony' | 'variable' | 'unknown';
 export type SpeciesSwimmingZone = 'surface' | 'upper' | 'middle' | 'bottom' | 'all' | 'unknown';
 export type SpeciesReproductiveMode =
@@ -82,7 +85,8 @@ export type SpeciesSocialKnowledge = {
 };
 
 export type SpeciesEnvironmentKnowledge = {
-  waterType?: 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+  waterType?: SpeciesWaterType;
+  waterTypes?: ReviewedSpeciesWaterType[];
   temperatureRangeC?: { min: number; max: number };
   phRange?: { min: number; max: number };
   hardnessDgh?: { min: number; max: number };
@@ -110,7 +114,8 @@ export type SpeciesKnowledgeProfile = {
   category: string;
   topTags: string[];
   facts: {
-    waterType: 'freshwater' | 'saltwater' | 'brackish' | 'unknown';
+    waterType: SpeciesWaterType;
+    waterTypes?: ReviewedSpeciesWaterType[];
     temperatureRange?: { min: number; max: number };
     phRange?: { min: number; max: number };
     minVolumeLiters?: number;
@@ -173,6 +178,8 @@ export type CompatibilityDecision = {
   riskLevel: TankCompatibilityResult['riskLevel'];
   summary: string;
   pairResults: PairCompatibilityResult[];
+  /** Whole-tank evaluation across all selected species; present for 3+ species. */
+  tankAggregateResult?: TankCompatibilityResult;
   primaryConflict?: PairCompatibilityResult;
   blockedReasons: CompatibilityRelationship[];
   adjustableReasons: CompatibilityRelationship[];

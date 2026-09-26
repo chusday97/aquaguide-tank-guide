@@ -39,6 +39,55 @@
 - `scripts/audit-species-data-quality.ts`：486 条物种记录的身份、来源、模板污染、显式水体和重复项审计。
 - `scripts/test-compatibility-launch-cohort.ts`：研究队列数量、去重、确定性和 evidence-gated readiness 回归。
 - `scripts/catalog-research.ts` / `scripts/catalog-review.ts` / `scripts/test-catalog-review-contract.ts`：三批研究草稿、字段级审核校验和审核契约回归。
+- `src/modules/knowledge/phase2Batch02Authority.ts` / `scripts/test-knowledge-completion-batch-02.ts`：Phase 2 Batch 02 的十条直接、证据链接的 reviewed-unknown 知识记录与防回退契约。
+- `src/modules/knowledge/phase2Batch03Authority.ts` / `scripts/test-knowledge-completion-batch-03.ts`：Phase 2 Batch 03 的十条直接、来源链接知识记录；前三个对象仅升级 FishBase 明确支持的环境/尺寸/群体事实，品系保持 reviewed-unknown。
+- `src/modules/knowledge/phase2Batch04Authority.ts` / `scripts/test-knowledge-completion-batch-04.ts`：Phase 2 Batch 04 的十条直接、来源链接 reviewed-unknown 品系记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch05Authority.ts` / `scripts/test-knowledge-completion-batch-05.ts`：Phase 2 Batch 05 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch06Authority.ts` / `scripts/test-knowledge-completion-batch-06.ts`：Phase 2 Batch 06 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch07Authority.ts` / `scripts/test-knowledge-completion-batch-07.ts`：Phase 2 Batch 07 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch08Authority.ts` / `scripts/test-knowledge-completion-batch-08.ts`：Phase 2 Batch 08 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch09Authority.ts` / `scripts/test-knowledge-completion-batch-09.ts`：Phase 2 Batch 09 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch10Authority.ts` / `scripts/test-knowledge-completion-batch-10.ts`：Phase 2 Batch 10 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch11Authority.ts` / `scripts/test-knowledge-completion-batch-11.ts`：Phase 2 Batch 11 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch12Authority.ts` / `scripts/test-knowledge-completion-batch-12.ts`：Phase 2 Batch 12 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch13Authority.ts` / `scripts/test-knowledge-completion-batch-13.ts`：Phase 2 Batch 13 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch14Authority.ts` / `scripts/test-knowledge-completion-batch-14.ts`：Phase 2 Batch 14 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch15Authority.ts` / `scripts/test-knowledge-completion-batch-15.ts`：Phase 2 Batch 15 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch16Authority.ts` / `scripts/test-knowledge-completion-batch-16.ts`：Phase 2 Batch 16 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch17Authority.ts` / `scripts/test-knowledge-completion-batch-17.ts`：Phase 2 Batch 17 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch18Authority.ts` / `scripts/test-knowledge-completion-batch-18.ts`：Phase 2 Batch 18 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch19Authority.ts` / `scripts/test-knowledge-completion-batch-19.ts`：Phase 2 Batch 19 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch20Authority.ts` / `scripts/test-knowledge-completion-batch-20.ts`：Phase 2 Batch 20 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch21Authority.ts` / `scripts/test-knowledge-completion-batch-21.ts`：Phase 2 Batch 21 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch22Authority.ts` / `scripts/test-knowledge-completion-batch-22.ts`：Phase 2 Batch 22 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch23Authority.ts` / `scripts/test-knowledge-completion-batch-23.ts`：Phase 2 Batch 23 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch24Authority.ts` / `scripts/test-knowledge-completion-batch-24.ts`：Phase 2 Batch 24 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch25Authority.ts` / `scripts/test-knowledge-completion-batch-25.ts`：Phase 2 Batch 25 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch26Authority.ts` / `scripts/test-knowledge-completion-batch-26.ts`：Phase 2 Batch 26 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch27Authority.ts` / `scripts/test-knowledge-completion-batch-27.ts`：Phase 2 Batch 27 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch28Authority.ts` / `scripts/test-knowledge-completion-batch-28.ts`：Phase 2 Batch 28 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch29Authority.ts` / `scripts/test-knowledge-completion-batch-29.ts`：Phase 2 Batch 29 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch30Authority.ts` / `scripts/test-knowledge-completion-batch-30.ts`：Phase 2 Batch 30 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch31Authority.ts` / `scripts/test-knowledge-completion-batch-31.ts`：Phase 2 Batch 31 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch32Authority.ts` / `scripts/test-knowledge-completion-batch-32.ts`：Phase 2 Batch 32 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch33Authority.ts` / `scripts/test-knowledge-completion-batch-33.ts`：Phase 2 Batch 33 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch34Authority.ts` / `scripts/test-knowledge-completion-batch-34.ts`：Phase 2 Batch 34 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch35Authority.ts` / `scripts/test-knowledge-completion-batch-35.ts`：Phase 2 Batch 35 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch36Authority.ts` / `scripts/test-knowledge-completion-batch-36.ts`：Phase 2 Batch 36 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch37Authority.ts` / `scripts/test-knowledge-completion-batch-37.ts`：Phase 2 Batch 37 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch38Authority.ts` / `scripts/test-knowledge-completion-batch-38.ts`：Phase 2 Batch 38 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch39Authority.ts` / `scripts/test-knowledge-completion-batch-39.ts`：Phase 2 Batch 39 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch40Authority.ts` / `scripts/test-knowledge-completion-batch-40.ts`：Phase 2 Batch 40 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch41Authority.ts` / `scripts/test-knowledge-completion-batch-41.ts`：Phase 2 Batch 41 的十条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch42Authority.ts` / `scripts/test-knowledge-completion-batch-42.ts`：Phase 2 Batch 42 的十一条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch43Authority.ts` / `scripts/test-knowledge-completion-batch-43.ts`：Phase 2 Batch 43 的十五条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch44Authority.ts` / `scripts/test-knowledge-completion-batch-44.ts`：Phase 2 Batch 44 的十五条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch45Authority.ts` / `scripts/test-knowledge-completion-batch-45.ts`：Phase 2 Batch 45 的十五条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch46Authority.ts` / `scripts/test-knowledge-completion-batch-46.ts`：Phase 2 Batch 46 的十三条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch47Authority.ts` / `scripts/test-knowledge-completion-batch-47.ts`：Phase 2 Batch 47 的八条直接 reviewed-unknown 记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch48Authority.ts` / `scripts/test-knowledge-completion-batch-48.ts`：Phase 2 Batch 48 的九条直接 reviewed-unknown 环境记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch49Authority.ts` / `scripts/test-knowledge-completion-batch-49.ts`：Phase 2 Batch 49 的一条最终直接 reviewed-unknown 环境记录，不自动继承基础种。
+- `src/modules/knowledge/phase2Batch06Authority.ts` / `scripts/test-knowledge-completion-batch-06.ts`：Phase 2 Batch 06 的十条直接 reviewed-unknown 记录，不自动继承基础种。
 - `supabase/migrations/`：PostgreSQL 表、索引、RLS、触发器和 Storage 策略。
 - `supabase/migrations/202607160002_localization.sql`：四张翻译表、审核字段、索引与公开/管理员 RLS。
 - `supabase/migrations/202607180001_species_recognition.sql`：只允许后端聚合写入的匿名识别未命中表。
@@ -98,6 +147,7 @@
 
 - `src/services/favorites/`：物种与养护收藏的唯一读写入口。
 - `src/services/api/`：携带 Supabase JWT、幂等键和结构化错误的版本化 API 客户端。
+- `src/services/api/api-origin.ts`：统一云端 API origin/path 解析；显式 Vite 配置优先，已知自定义生产域指向 Vercel，local-admin 保持 same-origin。
 - `src/services/admin/content-admin.service.ts`：内容后台唯一 API 访问层，封装 CRUD、发布状态与原始图片上传。
 - `src/services/repository/`：游客本地与登录云端两种 Repository 实现；页面后续只依赖统一接口。
 - `src/services/preview/preview-session.service.ts`：4319 正式页面预览会话、演示鱼缸 seed 和模块路由映射，强制本地数据边界。
@@ -182,6 +232,7 @@
 - `CONTRACT.md`：三层架构、数据库、RLS、API、Repository、迁移与 AI 边界的权威契约。
 - `src/types/database.ts`：camelCase 数据库与关联实体共享类型。
 - `scripts/test-three-tier-contract.ts` / `scripts/test-api-boundary.ts`：三层契约与本地 API 边界回归。
+- `scripts/test-api-origin-contract.ts`：API origin override、生产域、same-origin 默认值、路径拼接和 local-admin 隔离契约。
 - `scripts/test-business-api-contract.ts` / `scripts/test-repository-boundary.ts`：业务路由、校验、稳定 ID、安全规则与本地/云端访问边界回归。
 - `scripts/test-aquarium-creation-semantics.ts` / `scripts/test-addition-intents.ts` / `scripts/test-livestock-recording.ts`：空白鱼缸语义、两类 Intent 策略与现实记录顺序/幂等专项。
 - `supabase/migrations/202608090003_atomic_livestock_addition.sql`：原子创建/复用父物种、写入批次并登记幂等结果。

@@ -17,6 +17,7 @@ assert.deepEqual(firstIds, secondIds, 'launch cohort ordering must be determinis
 for (const reviewedId of getCompatibilityEvidenceAudit().reviewedSpeciesIds) {
   assert.equal(isSpeciesDecisionReady(reviewedId), true, `reviewed species ${reviewedId} must be decision-ready whether or not it remains in the frozen research cohort`);
 }
+assert.equal(isSpeciesDecisionReady('sp_0258'), true, 'Betta ornamental variant must inherit the explicitly reviewed Betta splendens base-species authority');
 assert.equal(isSpeciesDecisionReady('unreviewed-launch-candidate'), false, 'cohort membership cannot grant decision readiness');
 
 console.log(`compatibility launch cohort verified: ${first.length} deterministic research targets; readiness remains evidence-gated`);

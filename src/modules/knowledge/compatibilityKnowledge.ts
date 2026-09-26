@@ -216,54 +216,61 @@ const buildPairResult = (
   };
 };
 
-const buildAggregateResult = (pairResults: PairCompatibilityResult[]): TankCompatibilityResult => {
-  const status = pairResults.reduce<TankCompatibilityStatus>((current, pair) => (
-    statusRank[pair.status] > statusRank[current] ? pair.status : current
-  ), 'compatible');
-  const blockingRules = uniqueRules(pairResults.flatMap(pair => pair.rawResult.blockingRules));
-  const warningRules = uniqueRules(pairResults.flatMap(pair => pair.rawResult.warningRules));
-  const missingData = uniqueRules(pairResults.flatMap(pair => pair.rawResult.missingData));
-  const passedRules = uniqueRules(pairResults.flatMap(pair => pair.rawResult.passedRules));
-  const suggestions = Array.from(new Set(pairResults.flatMap(pair => pair.rawResult.suggestions))).slice(0, 5);
-  const riskLevel: TankCompatibilityResult['riskLevel'] = status === 'not_recommended'
-    ? 'high'
-    : status === 'caution'
-      ? 'medium'
-      : status === 'insufficient_data'
-        ? 'unknown'
-        : 'none';
-  const summary = status === 'not_recommended'
-    ? blockingRules[0]?.evidence || '当前组合存在阻断风险。'
-    : status === 'caution'
-      ? warningRules[0]?.evidence || '当前组合可以尝试，但需要谨慎观察。'
-      : status === 'insufficient_data'
-        ? missingData[0]?.evidence || '当前组合缺少关键资料。'
+const buildWholeTankResult = (
+  tank: Aquarium | null | undefined,
+  items: CompatibilityItem[],
+): TankCompatibilityResult | undefined => {
+  // Pairwise results remain the explanation layer. For 3+ species, also run the
+  // canonical domain engine against the full set so cumulative constraints such
+  // as bioload, shared tank conditions and group pressure are not lost.
+  if (items.length < 3) return undefined;
+
+  const results = items.map((candidate, candidateIndex) => evaluateTankCompatibility({
+    tank,
+    existingSpecies: items
+      .filter((_, index) => index !== candidateIndex)
+      .map(item => ({
+        species: item.species,
+        record: { quantity: getQuantity(item.quantity) },
+      })),
+    candidateSpecies: candidate.species,
+    candidateQuantity: getQuantity(candidate.quantity),
+  }));
+
+  return mergeDirectionalResults(results);
+};
+
+const buildAggregateResult = (
+  pairResults: PairCompatibilityResult[],
+  tankAggregateResult?: TankCompatibilityResult,
+): TankCompatibilityResult => {
+  const pairAggregate = mergeDirectionalResults(pairResults.map(pair => pair.rawResult));
+  const merged = mergeDirectionalResults([
+    ...pairResults.map(pair => pair.rawResult),
+    ...(tankAggregateResult ? [tankAggregateResult] : []),
+  ]);
+
+  const pairBlockingCodes = new Set(pairAggregate.blockingRules.map(rule => rule.code));
+  const pairWarningCodes = new Set(pairAggregate.warningRules.map(rule => rule.code));
+  const pairMissingCodes = new Set(pairAggregate.missingData.map(rule => rule.code));
+  const wholeTankOnlyBlocking = tankAggregateResult?.blockingRules.find(rule => !pairBlockingCodes.has(rule.code));
+  const wholeTankOnlyWarning = tankAggregateResult?.warningRules.find(rule => !pairWarningCodes.has(rule.code));
+  const wholeTankOnlyMissing = tankAggregateResult?.missingData.find(rule => !pairMissingCodes.has(rule.code));
+
+  // When a 3+ species pass discovers a risk that no pair can see, make that
+  // tank-level delta the first sentence. Pairwise details remain available
+  // below, but should not hide the reason the overall verdict changed.
+  const summary = merged.status === 'not_recommended'
+    ? wholeTankOnlyBlocking?.evidence || merged.blockingRules[0]?.evidence || '当前组合存在阻断风险。'
+    : merged.status === 'caution'
+      ? wholeTankOnlyWarning?.evidence || merged.warningRules[0]?.evidence || '当前组合可以尝试，但需要谨慎观察。'
+      : merged.status === 'insufficient_data'
+        ? wholeTankOnlyMissing?.evidence || merged.missingData[0]?.evidence || '当前组合缺少关键资料。'
         : '当前组合未发现明确阻断风险。';
 
   return {
-    status,
-    riskLevel,
+    ...merged,
     summary,
-    passedRules,
-    warningRules,
-    blockingRules,
-    missingData,
-    suggestions,
-    metadata: {
-      ruleVersion: pairResults[0]?.rawResult.metadata.ruleVersion || 'tank-compatibility-v1',
-      speciesDataVersion: pairResults[0]?.rawResult.metadata.speciesDataVersion || 'local-fish-data-v1',
-      calculatedAt: new Date().toISOString(),
-      scope: pairResults[0]?.rawResult.metadata.scope || 'tank',
-      intent: pairResults[0]?.rawResult.metadata.intent || 'planned_addition',
-      catalogVersion: pairResults[0]?.rawResult.metadata.catalogVersion || 'unknown',
-      domainRuleCodes: Array.from(new Set(pairResults.flatMap(result => result.rawResult.metadata.domainRuleCodes || []))),
-      domainStatus: pairResults[0]?.rawResult.metadata.domainStatus || status,
-      decisionReadiness: readinessOf(pairResults.map(result => result.rawResult)),
-      authorityVersion: pairResults[0]?.rawResult.metadata.authorityVersion || 'unknown-authority',
-    },
-    stockingGuidance: pairResults.find(result => result.rawResult.stockingGuidance)?.rawResult.stockingGuidance,
-    observedStatus: pairResults.find(result => result.rawResult.observedStatus)?.rawResult.observedStatus,
-    evidenceIds: Array.from(new Set(pairResults.flatMap(result => result.rawResult.evidenceIds || []))),
   };
 };
 
@@ -280,8 +287,9 @@ export const evaluateCompatibilityDecision = ({
     }
   }
 
+  const tankAggregateResult = buildWholeTankResult(tank, normalized);
   const aggregateResult = pairResults.length > 0
-    ? buildAggregateResult(pairResults)
+    ? buildAggregateResult(pairResults, tankAggregateResult)
     : evaluateTankCompatibility({ tank, candidateSpecies: normalized[0]?.species || null, candidateQuantity: normalized[0]?.quantity });
   const primaryConflict = pairResults
     .filter(pair => pair.primaryReason)
@@ -298,6 +306,7 @@ export const evaluateCompatibilityDecision = ({
     riskLevel: aggregateResult.riskLevel,
     summary: aggregateResult.summary,
     pairResults,
+    tankAggregateResult,
     primaryConflict,
     blockedReasons,
     adjustableReasons,

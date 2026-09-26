@@ -1,0 +1,113 @@
+{
+  "schema_version": 1,
+  "completion_boundary": "Completion means every catalog object reached a reviewed terminal state. reviewed_unknown is valid completion, not evidence for a positive compatibility claim.",
+  "coverage_boundary": "Coverage counts reviewed_supported evidence. reviewed_unknown remains fail-closed and becomes a research opportunity, not a data error.",
+  "telemetry_boundary": "Priority uses launch_cohort/commonness proxy plus evidence gaps. Real user-query telemetry is not used or claimed.",
+  "uses_real_user_telemetry": false,
+  "catalog_objects": 486,
+  "completion_matrix_objects": 486,
+  "compatibility_eligible_species": 411,
+  "reviewed_compatibility_profiles": 49,
+  "reviewed_pair_rules": 22,
+  "reviewed_stage_risk_profiles": 1,
+  "launch_cohort_species": 30,
+  "launch_pair_count": 435,
+  "launch_pair_status_counts": {
+    "compatible": 21,
+    "caution": 295,
+    "not_recommended": 116,
+    "insufficient_data": 3
+  },
+  "compatibility_critical_fields": [
+    "environment",
+    "space",
+    "social",
+    "compatibility_profile",
+    "pair_evidence"
+  ],
+  "field_coverage": {
+    "feeding": {
+      "applicable": 411,
+      "reviewed_supported": 25,
+      "reviewed_unknown": 386,
+      "supported_pct": 6.1
+    },
+    "environment": {
+      "applicable": 475,
+      "reviewed_supported": 40,
+      "reviewed_unknown": 435,
+      "supported_pct": 8.4
+    },
+    "space": {
+      "applicable": 475,
+      "reviewed_supported": 42,
+      "reviewed_unknown": 433,
+      "supported_pct": 8.8
+    },
+    "social": {
+      "applicable": 411,
+      "reviewed_supported": 37,
+      "reviewed_unknown": 374,
+      "supported_pct": 9
+    },
+    "care": {
+      "applicable": 475,
+      "reviewed_supported": 25,
+      "reviewed_unknown": 450,
+      "supported_pct": 5.3
+    }
+  },
+  "priority_species_gap_count": 5,
+  "evidence_ceiling_species_gap_count": 1,
+  "priority_pair_gap_count": 3,
+  "evidence_research_pair_gap_count": 0,
+  "evidence_ceiling_pair_gap_count": 3,
+  "boundary_blocked_pair_gap_count": 0,
+  "top_pair_gap_root_species": [
+    {
+      "species_id": "sp_0224",
+      "common_name": "白金雷龙",
+      "blocked_pair_count": 3,
+      "gap_kinds": [
+        "social",
+        "compatibility_profile"
+      ],
+      "boundary_codes": [
+        "variant_authority_not_promotable",
+        "variant_husbandry_not_established"
+      ],
+      "resolution_mode": "variant_authority_review",
+      "score": 26
+    },
+    {
+      "species_id": "sp_0002",
+      "common_name": "水晶虾",
+      "blocked_pair_count": 1,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "boundary_codes": [
+        "trade_name_taxon_ambiguous"
+      ],
+      "resolution_mode": "identity_review",
+      "score": 25
+    },
+    {
+      "species_id": "sp_0428",
+      "common_name": "斑马螺",
+      "blocked_pair_count": 1,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social"
+      ],
+      "boundary_codes": [
+        "accepted_taxon_alias_trade_ambiguous"
+      ],
+      "resolution_mode": "identity_review",
+      "score": 25
+    }
+  ]
+}
