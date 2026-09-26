@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-26 Priority compatibility knowledge batch 3
+
+- Validated functional checkpoint: `b597790b7f672e32246c1af92a3c85c0de4f6cf0`.
+- Five exact species promoted: Gnathonemus petersii, Piaractus brachypomus, Serrasalmus rhombeus, Gymnotus carapo, Leporinus fasciatus.
+- Coverage: runtime reviewed objects `80 → 85`; direct reviewed Profiles `44 → 49`; evidence sources `73 → 78`; catalog stays 486.
+- Full backend release gate PASS; Compatibility Admin contract PASS at 49 Profiles / 21 Pair Rules; staging preflight PASS.
+- `202609260001_compatibility_priority_batch3_profiles.sql` is repository-only HOLD ownership and has not been applied.
+
 ## HANDOFF — 2026-09-25 Priority compatibility knowledge batch 2
 
 - Validated functional checkpoint: `f90a57fdf8afc93e5e4c4a89f97ffcc12c81de36`.

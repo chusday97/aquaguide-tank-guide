@@ -1,3 +1,12 @@
+## CURRENT OVERRIDE — 2026-09-26 Priority compatibility knowledge batch 3 validated
+
+- Functional head: `b597790b7f672e32246c1af92a3c85c0de4f6cf0` (`feat(knowledge): promote compatibility batch three`).
+- Exact runtime promotions: `sp_0181` Gnathonemus petersii, `sp_0139` Piaractus brachypomus, `sp_0140` Serrasalmus rhombeus, `sp_0120` Gymnotus carapo, `sp_0138` Leporinus fasciatus.
+- Runtime reviewed Compatibility/Species Knowledge catalog objects increased `80 → 85`; direct reviewed Profile records `44 → 49`; evidence sources `73 → 78`. Catalog remains 486.
+- Batch 3 adds large-space and predation authority while explicitly avoiding false universal territorial/group requirements where sources only support conspecific or context-dependent behavior.
+- Catalog snapshot checksum: `499cff3a1ccbe2edf7d19d155eec9e31fd0371cd42812f179b7afa8a7f6e047a`. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- Repository-only `202609260001_compatibility_priority_batch3_profiles.sql` is a static HOLD owner only; it has not been applied. No DB authority switch, UI/Vision change, Production promote, or main merge occurred.
+
 ## CURRENT OVERRIDE — 2026-09-25 Priority compatibility knowledge batch 2 validated
 
 - Functional head: `f90a57fdf8afc93e5e4c4a89f97ffcc12c81de36` (`feat(knowledge): promote compatibility batch two`).

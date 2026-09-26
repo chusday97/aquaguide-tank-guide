@@ -21,7 +21,7 @@
     "MANUAL_RECONCILE": 4,
     "EXCLUDE_FROZEN_VISION": 8,
     "EXCLUDE_FROZEN_UI": 2,
-    "INCLUDE_DB_ARTIFACT_HOLD": 4
+    "INCLUDE_DB_ARTIFACT_HOLD": 5
   },
   "files": [
     {
@@ -988,6 +988,11 @@
       "path": "supabase/migrations/202609250002_compatibility_priority_batch2_profiles.sql",
       "class": "INCLUDE_DB_ARTIFACT_HOLD",
       "reason": "Repository-only additive owner for reviewed Compatibility priority batch 2 Profiles sp_0043/sp_0044/sp_0062/sp_0119/sp_0125; application remains HOLD."
+    },
+    {
+      "path": "supabase/migrations/202609260001_compatibility_priority_batch3_profiles.sql",
+      "class": "INCLUDE_DB_ARTIFACT_HOLD",
+      "reason": "Repository-only additive owner for reviewed Compatibility priority batch 3 Profiles sp_0181/sp_0139/sp_0140/sp_0120/sp_0138; application remains HOLD."
     },
     {
       "path": "apps/admin-content/scripts/business-admin-staging-readiness.mjs",
