@@ -361,9 +361,19 @@ const ordinaryFishWithVulnerableShrimp = evaluateCompatibility({
   existingSpecies: [{ ...base, id: 'ordinary-fish', lifeType: 'fish', predationRisk: 'low' }],
   candidateSpecies: { ...base, id: 'vulnerable-shrimp', lifeType: 'invertebrate', predationVulnerability: 'high' },
 });
-assert.equal(ordinaryFishWithVulnerableShrimp.status, 'caution');
-assert.ok(ordinaryFishWithVulnerableShrimp.ruleCodes.includes('predation_vulnerability_context'));
+assert.equal(ordinaryFishWithVulnerableShrimp.status, 'compatible');
+assert.ok(!ordinaryFishWithVulnerableShrimp.ruleCodes.includes('predation_vulnerability_context'));
 assert.ok(!ordinaryFishWithVulnerableShrimp.ruleCodes.includes('predation_risk'));
+
+const plausiblePredatorWithVulnerableShrimp = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, lengthCm: 90, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'plausible-predator-fish', lifeType: 'fish', predationRisk: 'medium' }],
+  candidateSpecies: { ...base, id: 'vulnerable-shrimp-context', lifeType: 'invertebrate', predationVulnerability: 'high' },
+});
+assert.equal(plausiblePredatorWithVulnerableShrimp.status, 'caution');
+assert.ok(plausiblePredatorWithVulnerableShrimp.ruleCodes.includes('predation_vulnerability_context'));
+assert.ok(!plausiblePredatorWithVulnerableShrimp.ruleCodes.includes('predation_risk'));
 
 const predatorFishWithVulnerableShrimp = evaluateCompatibility({
   intent: 'planned_addition',

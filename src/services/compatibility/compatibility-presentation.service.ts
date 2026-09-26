@@ -82,17 +82,23 @@ const uniqueText = (items: Array<string | null | undefined>, limit = 3) => (
   Array.from(new Set(items.map(item => item?.trim()).filter((item): item is string => Boolean(item)))).slice(0, limit)
 );
 
-const adjustmentForRuleCode = (code: string): string | null => {
+const adjustmentForRule = (rule: { code: string; evidence?: string }): string | null => {
+  const { code, evidence = '' } = rule;
   if (code.includes('water_type')) return '不要放在同一水体；改为分缸，或更换水体类型相符的候选物种。';
   if (code === 'temperature_range_conflict') return '双方已审核适温区间没有可靠重叠；不要靠折中温度硬混，建议更换候选物种。';
   if (code.includes('temperature')) return '先把目标水温调整到已审核适温范围，再重新评估整缸其他物种是否仍适合。';
   if (code.includes('ph_')) return '先把 pH 稳定到双方已审核的可重叠范围；若没有可靠重叠，改为分缸或更换物种。';
   if (code.includes('tank_volume') || code.includes('tank_length') || code.includes('volume_too_small') || code.includes('space')) return '先升级到满足已审核最低缸长/体积的鱼缸；空间未达标前不要继续加入。';
-  if (code === 'minimum_group_not_met' || code === 'group_requirement_gap' || code === 'fin_nipping_group_pressure') return '先补足已审核的最低群体数量，并重新核对增加数量后的空间与负荷。';
+  if (code === 'group_requirement_gap') {
+    const match = evidence.match(/^(.+?) 当前模拟合计 (\d+) 只\/条，已审核 minimumGroupSize 为 (\d+)/);
+    if (match) return `${match[1]}：当前 ${match[2]} → 至少 ${match[3]} 只/条；补足后重新核对空间与整缸负荷。`;
+    return '先补足已审核的最低群体数量，并重新核对增加数量后的空间与负荷。';
+  }
+  if (code === 'minimum_group_not_met' || code === 'fin_nipping_group_pressure') return '先补足已审核的最低群体数量，并重新核对增加数量后的空间与负荷。';
   if (code === 'territorial_conflict' || code === 'territorial_pressure_context') return '增加领地空间、躲避点和视觉遮挡；若仍持续追咬或压迫，改为分缸。';
   if (code === 'breeding_territory_active' || code.includes('breeding')) return '繁殖期增加隔离与躲避；出现持续追咬时临时分缸，繁殖期结束后再复评。';
   if (code === 'single_housing_required' || code === 'solitary_species_conflict') return '按单养要求处理，不要用增加躲避物替代分缸。';
-  if (code === 'predation_risk' || code === 'juvenile_predation_risk' || code === 'conspecific_fry_predation') return '不要与可被吞食的个体同缸；分缸，或更换为体型与捕食关系更合适的室友。';
+  if (code === 'predation_risk' || code === 'juvenile_predation_risk' || code === 'conspecific_fry_predation' || code.includes('predation_threat')) return '不要与可被吞食的个体同缸；分缸，或更换为体型与捕食关系更合适的室友。';
   if (code === 'predation_vulnerability_context') return '避免加入明显更大或有捕食倾向的室友，并准备可快速分缸的备用方案。';
   if (code === 'fin_nipping_target_vulnerability' || code.includes('fin_nipping')) return '避免与长鳍、慢游或容易被追咬的鱼搭配；必要时补足群体、扩大空间或分缸。';
   if (code.includes('bioload')) return '降低整缸总负荷或升级过滤与水体容量；分批加入，并在每次加入后复核水质和行为。';
@@ -102,13 +108,15 @@ const adjustmentForRuleCode = (code: string): string | null => {
 };
 
 const buildDecisionReasons = (decision: CompatibilityDecision) => {
-  const activeRules = decision.status === 'not_recommended'
+  const rawActiveRules = decision.status === 'not_recommended'
     ? decision.blockingRules
     : decision.status === 'caution'
       ? decision.warningRules
       : decision.status === 'insufficient_data'
         ? decision.missingData
         : [];
+  const hasSpecificPairRule = rawActiveRules.some(rule => rule.code.startsWith('pair_rule_'));
+  const activeRules = rawActiveRules.filter(rule => !(hasSpecificPairRule && rule.code === 'reviewed_pair_rule'));
   const primaryRule = activeRules.find(rule => ruleText(rule, '') === decision.summary);
   const usedDimensions = new Set<CompatibilityDimension>();
   const primaryDimension = primaryRule ? ruleDimension(primaryRule.code) : null;
@@ -137,14 +145,29 @@ const buildDecisionReasons = (decision: CompatibilityDecision) => {
 };
 
 const buildDecisionAdjustments = (decision: CompatibilityDecision) => {
-  const activeRules = decision.status === 'not_recommended'
-    ? [...decision.blockingRules, ...decision.warningRules]
+  const rawActiveRules = decision.status === 'not_recommended'
+    ? decision.blockingRules
     : decision.status === 'caution'
       ? decision.warningRules
       : decision.status === 'insufficient_data'
         ? decision.missingData
         : [];
-  const mapped = uniqueText(activeRules.map(rule => adjustmentForRuleCode(rule.code)));
+  const hasSpecificPairRule = rawActiveRules.some(rule => rule.code.startsWith('pair_rule_'));
+  const activeRules = rawActiveRules.filter(rule => !(hasSpecificPairRule && rule.code === 'reviewed_pair_rule'));
+  const hasSpecificGroupGaps = activeRules.some(rule => rule.code === 'group_requirement_gap');
+  const adjustmentRules = activeRules.filter(rule => !(
+    hasSpecificGroupGaps && (rule.code === 'minimum_group_not_met' || rule.code === 'fin_nipping_group_pressure')
+  ));
+  const usedDimensions = new Set<CompatibilityDimension>();
+  const mapped = uniqueText(adjustmentRules.flatMap(rule => {
+    // Preserve one concrete action per under-grouped species, but collapse
+    // duplicate technical rules for the same non-group risk dimension.
+    if (rule.code === 'group_requirement_gap') return [adjustmentForRule(rule)];
+    const dimension = ruleDimension(rule.code);
+    if (dimension && usedDimensions.has(dimension)) return [];
+    if (dimension) usedDimensions.add(dimension);
+    return [adjustmentForRule(rule)];
+  }));
   const specificSuggestions = decision.suggestions.filter(item => (
     !item.includes('主要风险项')
     && !item.includes('明确阻断项')

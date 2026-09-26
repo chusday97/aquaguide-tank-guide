@@ -201,8 +201,7 @@
         "species_evidence_unreviewed"
       ],
       "warning_codes": [
-        "minimum_group_not_met",
-        "predation_vulnerability_context"
+        "minimum_group_not_met"
       ],
       "score": 29,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",

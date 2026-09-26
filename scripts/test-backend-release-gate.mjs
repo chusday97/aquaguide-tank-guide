@@ -20,6 +20,7 @@ const gates = [
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Actionable Result', 'node', ['--import', 'tsx', 'scripts/test-compatibility-actionable-result-contract.ts']],
+  ['Compatibility Real Tank Acceptance', 'node', ['--import', 'tsx', 'scripts/test-compatibility-real-tank-acceptance.ts']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
   ['Priority Compatibility Knowledge Batch', 'node', ['--import', 'tsx', 'scripts/test-priority-compatibility-knowledge-batch.ts']],
   ['Priority Compatibility Knowledge Batch 2', 'node', ['--import', 'tsx', 'scripts/test-priority-compatibility-knowledge-batch2.ts']],

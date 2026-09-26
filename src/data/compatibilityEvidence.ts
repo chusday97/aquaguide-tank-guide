@@ -580,6 +580,15 @@ const angelfishExtensionGuide: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const angelfishTfhProfile: EvidenceSourceDto = {
+  id: 'tfh-pterophyllum-scalare-neon-risk',
+  title: 'Pterophyllum scalare',
+  publisher: 'Tropical Fish Hobbyist Magazine',
+  url: 'https://www.tfhmagazine.com/articles/freshwater/pterophyllum-scalare',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const guppyShoalingStudy: EvidenceSourceDto = {
   id: 'guppy-schooling-learning-study',
   title: 'Schooling and learning: early social environment predicts social learning ability in the guppy, Poecilia reticulata',
@@ -1205,6 +1214,18 @@ const platinumSnakeheadAdditionalPredationPairRules: ReviewedPairRule[] = [
 ];
 
 const pairRules: ReviewedPairRule[] = [
+  {
+    speciesIds: ['sp_0446', 'sp_0431'],
+    verdict: 'not_recommended',
+    riskType: 'predation_threat',
+    reason: '成体神仙鱼会捕食能入口的小鱼；现有 reviewed 资料明确将 Neon Tetra 作为高风险小型同伴，因此不应把该组合当作普通社区混养。',
+    mitigation: ['不要把成体神仙鱼与红绿灯作为长期同缸组合；优先更换更大、不会入口的室友，或分缸。', '不要用“幼鱼阶段暂时和平”或增加躲避物替代捕食风险隔离。'],
+    basis: 'pair_rule',
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0446', 'sp_0431'],
+    citations: [angelfishSeriouslyFish, angelfishTfhProfile],
+  },
   ...platinumSnakeheadSmallFishPairRules,
   ...platinumSnakeheadAdditionalPredationPairRules,
   {

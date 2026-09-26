@@ -8,14 +8,14 @@
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 411,
   "reviewed_compatibility_profiles": 49,
-  "reviewed_pair_rules": 21,
+  "reviewed_pair_rules": 22,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,
   "launch_pair_count": 435,
   "launch_pair_status_counts": {
-    "compatible": 17,
-    "caution": 300,
-    "not_recommended": 115,
+    "compatible": 21,
+    "caution": 295,
+    "not_recommended": 116,
     "insufficient_data": 3
   },
   "compatibility_critical_fields": [

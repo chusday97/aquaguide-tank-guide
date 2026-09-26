@@ -341,6 +341,15 @@ for (const profile of audit.reviewedProfiles.filter(item => ['sp_0181','sp_0139'
 assert.equal((priorityBatch3Migration.match(/Compatibility priority batch3 profile drift:/g) || []).length, 1);
 assert.equal((priorityBatch3Migration.match(/Compatibility priority batch3 profile evidence drift:/g) || []).length, 1);
 
+const angelfishNeonMigration = readFileSync('supabase/migrations/202609260002_compatibility_angelfish_neon_pair.sql', 'utf8');
+assert.match(angelfishNeonMigration, /DB application \/ DB authority switch remain on HOLD/);
+const angelfishNeonPair = audit.reviewedPairRules.find(rule => [...rule.speciesIds].sort().join('__') === 'sp_0431__sp_0446');
+assert.ok(angelfishNeonPair, 'reviewed Angelfish x Neon Pair Rule must exist.');
+for (const speciesId of angelfishNeonPair.speciesIds) assert.equal(angelfishNeonMigration.includes(speciesId), true, 'angelfish/neon migration must include Pair species ' + speciesId);
+for (const source of angelfishNeonPair.citations) assert.equal(angelfishNeonMigration.includes(source.id), true, 'angelfish/neon migration must include Pair source ' + source.id);
+assert.equal((angelfishNeonMigration.match(/Compatibility angelfish\/neon pair rule drift/g) || []).length, 1);
+assert.equal((angelfishNeonMigration.match(/Compatibility angelfish\/neon pair evidence drift/g) || []).length, 1);
+
 const additiveCompatibilityMigrations = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',

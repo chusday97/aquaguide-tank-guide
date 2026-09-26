@@ -274,9 +274,16 @@ export const evaluateCompatibility = ({
         species.predationVulnerability === 'medium'
         || species.predationVulnerability === 'high'
       );
-      const fishTargetsVulnerableExisting = candidateSpecies.lifeType === 'fish' && isPredationVulnerable(existing);
-      const existingFishTargetsVulnerableCandidate = existing.lifeType === 'fish' && isPredationVulnerable(candidateSpecies);
-      if (!predator && existing.id !== candidateSpecies.id && (fishTargetsVulnerableExisting || existingFishTargetsVulnerableCandidate)) {
+      const hasPredationPressure = (species: DomainSpeciesFact) => (
+        species.behaviorTraits?.includes('predatory')
+        || species.behaviorTraits?.includes('small_fish_predation')
+        || species.predationRisk === 'medium'
+        || species.predationRisk === 'high'
+        || (species.predationTargets?.length ?? 0) > 0
+      );
+      const predatorPressureOnVulnerableExisting = hasPredationPressure(candidateSpecies) && isPredationVulnerable(existing);
+      const existingPredatorPressureOnVulnerableCandidate = hasPredationPressure(existing) && isPredationVulnerable(candidateSpecies);
+      if (!predator && existing.id !== candidateSpecies.id && (predatorPressureOnVulnerableExisting || existingPredatorPressureOnVulnerableCandidate)) {
         raise('caution', 'predation_vulnerability_context');
       }
       const existingTerritorial = existing.behaviorTraits?.includes('territorial')
