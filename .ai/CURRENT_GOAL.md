@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-26 Tank recovery progress contract validated
+
+- Functional head: `937012fe5fd162494760f93f81921bc840f03edb` (`feat(tank-state): expose recovery progress`).
+- Tank State now exposes optional structured `recovery` progress: `phase`, `confirmations`, `targetConfirmations`, and `remainingConfirmations`.
+- Recovery thresholds are explicit: `0–1/2 = confirming` (incident not yet cleared), `2/3 = recovering` (downgraded to recovery-watch), `3/3 = confirmed` (this incident is recovered).
+- `3/3 confirmed` clears only the concrete incident. It does not clear reviewed static compatibility priors; a reviewed high predation/aggression/territory combination can therefore remain `watch` even after the incident reaches 3/3.
+- Presentation no longer says vague “1–2 more checks”: it uses the runtime counter, e.g. `2/3 次，还差 1 次`, and distinguishes “本次异常已恢复” from “组合本身仍需观察”.
+- Relapse resets the relevant incident progress and current relapse signals still outrank historical summaries.
+- Recovery Acceptance and Runtime Acceptance both PASS with structured progress assertions; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-26 Recovery / relapse ordering hardened
 
 - Functional head: `b81cef2efa3d9d0afb720daf879811fc2d988374` (`fix(tank-state): prioritize relapse signals`).

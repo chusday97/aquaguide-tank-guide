@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-26 Tank recovery progress contract
+
+- Functional checkpoint `937012fe5fd162494760f93f81921bc840f03edb`.
+- Tank State result now carries structured recovery progress instead of forcing presentation layers to guess recovery stage.
+- Runtime semantics: 1/2 = still confirming, 2/3 = recovery-watch with one confirmation left, 3/3 = current incident recovered. Reviewed static high-risk combinations remain observable after 3/3.
+- Presentation uses exact progress counts and explicitly separates incident recovery from long-term compatibility risk.
+- Targeted recovery tests and full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Recovery / relapse priority
 
 - Functional checkpoint `b81cef2efa3d9d0afb720daf879811fc2d988374`.
