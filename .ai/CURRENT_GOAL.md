@@ -1,3 +1,11 @@
+## CURRENT OVERRIDE — 2026-09-26 Recovery / relapse ordering hardened
+
+- Functional head: `b81cef2efa3d9d0afb720daf879811fc2d988374` (`fix(tank-state): prioritize relapse signals`).
+- Recovery trajectory validated: corroborated chasing+hiding stays `intervene` after only one normal follow-up, becomes `watch` after two confirming normal follow-ups, and a reviewed high-risk pair remains `watch` after three normal confirmations rather than being erased.
+- Fixed relapse ordering: a new current `persistent_chasing` signal after apparent recovery now outranks the historical unresolved-pressure fallback, remains in `activeSignals`, and returns medium-confidence `watch` via AQ-STATE-006.
+- Existing Tank State Recovery Acceptance also passes 10 escalation→recovery→relapse scenarios.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`. No UI, Vision, DB application, DB authority switch, Production promote, or main merge.
+
 ## CURRENT OVERRIDE — 2026-09-26 Runtime tank-state acceptance validated
 
 - Functional head: `0af0e000c2551feeaff89492b783fecd6dfc514f` (`fix(tank-state): preserve reviewed runtime risk`).

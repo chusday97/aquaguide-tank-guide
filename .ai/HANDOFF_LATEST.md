@@ -1,3 +1,10 @@
+## HANDOFF — 2026-09-26 Recovery / relapse priority
+
+- Functional checkpoint `b81cef2efa3d9d0afb720daf879811fc2d988374`.
+- Recovery path is now explicitly covered: intervene → recovery-watch; reviewed high-risk compatibility remains remembered after repeated normal checks.
+- Fixed relapse bug where a new chase after recovery was swallowed by historical AQ-STATE-011 context. Current relapse now wins and is exposed as an active signal.
+- Targeted recovery tests PASS; full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Runtime tank-state acceptance
 
 - Functional checkpoint `0af0e000c2551feeaff89492b783fecd6dfc514f`.
