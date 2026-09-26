@@ -122,9 +122,10 @@ const baseTank = (overrides: Partial<Aquarium> = {}): Aquarium => ({
   });
   assert.ok(state.priors.length > 0, 'reviewed planning conflict must remain as prior context');
   assert.equal(state.hardConstraints.length, 0, 'behavior/territory conflict is not a water-type hard constraint');
-  assert.equal(state.result.state, 'stable');
-  assert.equal(state.result.primaryAction, 'no_action');
-  console.log('PASS reviewed planning conflict + normal reality can produce stable current state');
+  assert.equal(state.result.state, 'watch');
+  assert.equal(state.result.primaryAction, 'observe');
+  assert.match(state.result.summary, /不能把一次正常观察当成已经安全/);
+  console.log('PASS reviewed high behavior conflict + one normal patrol remains watch, not falsely stable');
 }
 
 {

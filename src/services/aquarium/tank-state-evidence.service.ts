@@ -12,7 +12,15 @@ import {
   type TankStateResult,
 } from '../../../packages/domain-rules/src';
 
-const HARD_CONSTRAINT_CODES = new Set(['water_type_mismatch', 'species_water_type_conflict']);
+const HARD_CONSTRAINT_CODES = new Set([
+  'water_type_mismatch',
+  'species_water_type_conflict',
+  'temperature_range_conflict',
+  'temperature_no_overlap',
+  'tank_temperature_conflict',
+  'temperature_mismatch',
+]);
+const URGENT_HARD_CONSTRAINT_CODES = new Set(['water_type_mismatch', 'species_water_type_conflict']);
 
 const riskKindMap: Partial<Record<CompatibilityRiskType, TankPriorRiskKind>> = {
   water_type: 'water_type',
@@ -187,7 +195,7 @@ export const buildTankHardConstraintsFromCompatibilityDecision = (decision: Comp
     .map(rule => ({
       code: rule.code,
       active: true,
-      severity: 'urgent' as const,
+      severity: URGENT_HARD_CONSTRAINT_CODES.has(rule.code) ? 'urgent' as const : 'intervene' as const,
       evidence: rule.evidence,
     }))
 );

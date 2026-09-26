@@ -195,6 +195,22 @@ export const evaluateTankState = ({
   if (normalSignals.length > 0) {
     reasons.push(...normalSignals.map(item => item.evidence || item.code));
     matchedRules.push('AQ-STATE-001', 'AQ-STATE-003');
+    const hasHighPrior = priors.some(item => item.level === 'high' && ['predation', 'aggression', 'territory'].includes(item.kind));
+    if (hasHighPrior) {
+      matchedRules.push('AQ-STATE-009');
+      reasons.push(...priors.filter(item => item.level === 'high').map(item => item.evidence || item.code));
+      return {
+        state: 'watch',
+        confidence: 'medium',
+        primaryAction: 'observe',
+        summary: '近期没有观察到异常，但当前组合存在已审核的高风险背景；不能把一次正常观察当成已经安全。',
+        reasons: unique(reasons),
+        matchedRules,
+        activeSignals: unique(normalSignals.map(item => item.code)),
+        priorCodes,
+        observationTargets,
+      };
+    }
     return {
       state: 'stable',
       confidence: priors.length > 0 ? 'medium' : normalSignals.length >= 2 ? 'high' : 'medium',
