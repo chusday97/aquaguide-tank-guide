@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-26 Complex 5–8 species compatibility acceptance validated
+
+- Functional head: `a64b366dbccf5ef1f63cddbd8835d7cddb48bdc1` (`fix(compatibility): rank complex tank risks`).
+- Real-tank acceptance now covers 11 scenarios total: the original six 3–4 species cases plus five 6–8 species cases.
+- Complex red verdicts now rank user-facing blockers by biological severity: water-type/predation first, then temperature, then solitary/social conflicts, instead of blindly preserving an incidental aggregate summary.
+- A seven-species multi-conflict fixture now presents Angelfish × Neon predation first, no-common-temperature second, and Tiger Barb × Guppy fin-nipping third.
+- Multiple `group_requirement_gap` rules are no longer truncated by the three-action presentation cap. Six simultaneous deficits are compressed into one complete current→minimum action line.
+- Direct reviewed Pair Rule evidence language is now risk-type aware: predation Pair Rules retain laboratory-to-husbandry limitations; non-predation Pair Rules use direct husbandry wording and are not mislabeled as predation experiments.
+- `test:compatibility-evidence-coverage` was aligned with the reviewed predation-pressure contract and added to `test:backend-release-gate`.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`. Catalog remains 486 species / 49 reviewed Profiles / 22 reviewed Pair Rules / 79 evidence sources; checksum remains `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- No UI, Vision, DB application, DB authority switch, Production promote, or main merge.
+
 ## CURRENT OVERRIDE — 2026-09-26 Real-tank actionable compatibility acceptance validated
 
 - Functional head: `0acf8e9316cd1872b437305c5493230ca213573d` (`fix(compatibility): harden real tank conclusions`).

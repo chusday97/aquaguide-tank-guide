@@ -1,3 +1,13 @@
+## HANDOFF — 2026-09-26 Complex multi-species compatibility acceptance
+
+- Functional checkpoint `a64b366dbccf5ef1f63cddbd8835d7cddb48bdc1`.
+- Compatibility real-tank regression now has 11 scenarios, including five 6–8 species tanks.
+- Fixed complex red-verdict ordering so direct predation and no-common-temperature blockers outrank lower-priority social/territorial context.
+- Fixed multi-group presentation truncation: all under-grouped species survive as one concise current→minimum action.
+- Fixed Pair Rule evidence wording so direct husbandry fin-nipping evidence is not described as a predation experiment.
+- Added Compatibility Evidence Coverage to the backend release gate; full gate PASS.
+- No catalog/evidence/pair counts changed in this step; no new DB artifact was added or applied. UI/Vision/Production/main remain untouched.
+
 ## HANDOFF — 2026-09-26 Real-tank compatibility acceptance
 
 - Validated functional checkpoint: `0acf8e9316cd1872b437305c5493230ca213573d`.
