@@ -4,6 +4,7 @@ import type { TankObservation } from '../packages/domain-rules/src/tank-state';
 import {
   buildTankInterventionsFromDiagnosisRecords,
   evaluateTankInterventionEffects,
+  summarizeTankInterventionSequence,
 } from '../src/services/aquarium/tank-intervention-evidence.service';
 
 const NOW = new Date('2026-09-26T08:00:00.000Z');
@@ -165,3 +166,64 @@ console.log('tank intervention evidence passed: 10 action -> follow-up correlati
 }
 
 console.log('tank intervention attribution window passed: newer actions stop evidence leakage to earlier actions');
+
+
+// 12) Earlier action does not control the problem; escalation is followed by improvement.
+{
+  const records=[
+    record('a12-hide','2026-09-20T08:00:00.000Z',{interventionType:'增加遮挡'}),
+    record('a12-isolate','2026-09-22T08:00:00.000Z',{interventionType:'临时隔离'}),
+  ];
+  const observations=[
+    obs('persistent_chasing','2026-09-21T08:00:00.000Z','加遮挡后仍追咬'),
+    obs('normal_feeding','2026-09-23T08:00:00.000Z','隔离后进食正常'),
+    obs('no_persistent_chasing','2026-09-24T08:00:00.000Z','隔离后未再持续追咬'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.deepEqual(rows.map(item=>item.outcome),['problem_persisted_after_action','improved_after_action']);
+  const sequence=summarizeTankInterventionSequence(rows);
+  assert.equal(sequence?.pattern,'escalated_then_improved');
+  assert.match(sequence?.summary || '',/增加遮挡.*仍有异常/);
+  assert.match(sequence?.summary || '',/临时隔离.*2 次相关正常复查/);
+  assert.match(sequence?.summary || '',/不能证明.*唯一原因/);
+}
+
+// 13) Earlier action was followed by improvement, but a later action window contains a relapse.
+{
+  const records=[
+    record('a13-hide','2026-09-19T08:00:00.000Z',{interventionType:'增加遮挡'}),
+    record('a13-isolate','2026-09-22T08:00:00.000Z',{interventionType:'临时隔离'}),
+  ];
+  const observations=[
+    obs('normal_feeding','2026-09-20T08:00:00.000Z','加遮挡后进食正常'),
+    obs('no_persistent_chasing','2026-09-21T08:00:00.000Z','加遮挡后未追咬'),
+    obs('persistent_chasing','2026-09-23T08:00:00.000Z','后续再次追咬'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.deepEqual(rows.map(item=>item.outcome),['improved_after_action','problem_persisted_after_action']);
+  const sequence=summarizeTankInterventionSequence(rows);
+  assert.equal(sequence?.pattern,'relapsed_after_improvement');
+  assert.match(sequence?.summary || '',/曾记录到相关正常复查/);
+  assert.match(sequence?.summary || '',/再次出现相关异常/);
+}
+
+// 14) Two successive actions both have persistent abnormal follow-up.
+{
+  const records=[
+    record('a14-hide','2026-09-19T08:00:00.000Z',{interventionType:'增加遮挡'}),
+    record('a14-isolate','2026-09-22T08:00:00.000Z',{interventionType:'临时隔离'}),
+  ];
+  const observations=[
+    obs('persistent_chasing','2026-09-20T08:00:00.000Z','加遮挡后仍追咬'),
+    obs('persistent_chasing','2026-09-23T08:00:00.000Z','隔离后仍追咬'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.deepEqual(rows.map(item=>item.outcome),['problem_persisted_after_action','problem_persisted_after_action']);
+  const sequence=summarizeTankInterventionSequence(rows);
+  assert.equal(sequence?.pattern,'multiple_actions_not_controlled');
+  assert.match(sequence?.summary || '',/增加遮挡/);
+  assert.match(sequence?.summary || '',/临时隔离/);
+  assert.match(sequence?.nextStep || '',/停止继续重复同一层级/);
+}
+
+console.log('tank intervention multi-action sequence passed: escalation, relapse, repeated non-control');

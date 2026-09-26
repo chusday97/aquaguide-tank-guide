@@ -245,3 +245,44 @@ console.log('Intervention evidence integration passed: action-followup associati
 }
 
 console.log('Intervention presentation outcomes passed: follow-up guidance is actionable and causality-safe');
+
+
+// Multi-intervention presentation: failed first action + improved escalation must preserve both steps.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-19T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-20T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-21T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-22T08:00:00.000Z','巡检',{interventionType:'临时隔离'}),
+    record('2026-09-23T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.deepEqual(evidence.interventionEffects.map(item=>item.outcome),['problem_persisted_after_action','improved_after_action']);
+  assert.match(items[0]?.nextStep || '',/措施过程：/);
+  assert.match(items[0]?.nextStep || '',/增加遮挡.*仍有异常/);
+  assert.match(items[0]?.nextStep || '',/临时隔离.*相关正常复查/);
+  assert.match(items[0]?.nextStep || '',/不能证明.*唯一原因/);
+}
+
+// Multi-intervention presentation: improvement followed by a new abnormal action window is treated as relapse.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-18T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-19T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-20T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-21T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-22T08:00:00.000Z','巡检',{interventionType:'临时隔离'}),
+    record('2026-09-23T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-23T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.deepEqual(evidence.interventionEffects.map(item=>item.outcome),['improved_after_action','problem_persisted_after_action']);
+  assert.equal(evidence.result.state,'intervene');
+  assert.match(items[0]?.nextStep || '',/曾记录到相关正常复查/);
+  assert.match(items[0]?.nextStep || '',/此前的改善不能视为问题已经长期解决/);
+}
+
+console.log('Multi-intervention presentation passed: failed→improved and improved→relapsed histories remain visible');

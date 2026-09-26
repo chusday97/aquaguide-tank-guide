@@ -39,6 +39,18 @@ export type TankInterventionEffect = {
   summary: string;
 };
 
+export type TankInterventionSequencePattern =
+  | 'escalated_then_improved'
+  | 'relapsed_after_improvement'
+  | 'multiple_actions_not_controlled';
+
+export type TankInterventionSequenceSummary = {
+  pattern: TankInterventionSequencePattern;
+  summary: string;
+  nextStep: string;
+  interventionIds: string[];
+};
+
 const DAY_MS = 24 * 60 * 60 * 1000;
 const FOLLOWUP_WINDOW_DAYS = 7;
 
@@ -238,4 +250,62 @@ export const evaluateTankInterventionEffects = ({
       summary,
     };
   });
+};
+
+
+const outcomeIsNotControlled = (outcome: TankInterventionOutcome) => (
+  outcome === 'problem_persisted_after_action' || outcome === 'mixed_after_action'
+);
+
+/**
+ * Summarizes a multi-action trajectory without ranking actions or claiming causality.
+ * Only action windows with actual follow-up evidence participate in trajectory patterns.
+ */
+export const summarizeTankInterventionSequence = (
+  effects: TankInterventionEffect[],
+): TankInterventionSequenceSummary | null => {
+  if (effects.length < 2) return null;
+  const ordered = [...effects].sort((left, right) => (
+    Date.parse(left.intervention.performedAt) - Date.parse(right.intervention.performedAt)
+  ));
+  const evaluated = ordered.filter(item => item.outcome !== 'insufficient_followup');
+  if (evaluated.length < 2) return null;
+
+  const latest = evaluated[evaluated.length - 1];
+  const earlier = evaluated.slice(0, -1);
+  const earlierNotControlled = earlier.filter(item => outcomeIsNotControlled(item.outcome));
+  const earlierImproved = earlier.filter(item => item.outcome === 'improved_after_action');
+
+  if (latest.outcome === 'improved_after_action' && earlierNotControlled.length > 0) {
+    const failedLabels = earlierNotControlled.map(item => `「${item.intervention.label}」`).join('、');
+    return {
+      pattern: 'escalated_then_improved',
+      summary: `${failedLabels}后的复查仍有异常；之后执行「${latest.intervention.label}」后记录到 ${latest.normalConfirmationCount} 次相关正常复查，且该动作自己的观察窗口内没有记录到对应异常。这里只能说明后一个动作之后伴随改善，不能证明它是唯一原因。`,
+      nextStep: `暂时保留「${latest.intervention.label}」并继续复查；不要重新依赖前面没有控制住问题的措施作为唯一处理。`,
+      interventionIds: evaluated.map(item => item.intervention.interventionId),
+    };
+  }
+
+  if (outcomeIsNotControlled(latest.outcome) && earlierImproved.length > 0) {
+    const improvedLabels = earlierImproved.map(item => `「${item.intervention.label}」`).join('、');
+    return {
+      pattern: 'relapsed_after_improvement',
+      summary: `${improvedLabels}之后曾记录到相关正常复查，但后续在「${latest.intervention.label}」的观察窗口内再次出现相关异常；此前的改善不能视为问题已经长期解决。`,
+      nextStep: '按当前最新异常重新处理，并保留前后措施与复查记录；不要因为之前曾改善就降低这次复发的处理级别。',
+      interventionIds: evaluated.map(item => item.intervention.interventionId),
+    };
+  }
+
+  const notControlled = evaluated.filter(item => outcomeIsNotControlled(item.outcome));
+  if (notControlled.length >= 2 && latest.outcome !== 'improved_after_action') {
+    const labels = notControlled.map(item => `「${item.intervention.label}」`).join('、');
+    return {
+      pattern: 'multiple_actions_not_controlled',
+      summary: `${labels}各自的观察窗口内都仍记录到相关异常；目前没有足够证据认为这些已执行措施已经把问题控制住。`,
+      nextStep: '停止继续重复同一层级的处理，重新核对异常来源；行为冲突可升级稳定隔离/分缸，环境异常则重新检查水质、供氧、过滤和温度。',
+      interventionIds: evaluated.map(item => item.intervention.interventionId),
+    };
+  }
+
+  return null;
 };

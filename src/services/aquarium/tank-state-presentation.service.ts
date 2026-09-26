@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../../types';
 import type { CurrentTankStateEvidence } from './tank-state-evidence.service';
+import { summarizeTankInterventionSequence } from './tank-intervention-evidence.service';
 
 export type CurrentTankRiskItem = {
   group: '容量风险' | '水质参数冲突' | '混养风险' | '信息不足';
@@ -32,6 +33,13 @@ const latestInterventionEffect = (evidence: CurrentTankStateEvidence) => (
 );
 
 const interventionEffectGuidance = (evidence: CurrentTankStateEvidence) => {
+  const sequence = summarizeTankInterventionSequence(evidence.interventionEffects);
+  if (sequence) {
+    return {
+      text: `措施过程：${sequence.summary}`,
+      next: sequence.nextStep,
+    };
+  }
   const latest = latestInterventionEffect(evidence);
   if (!latest) return null;
   if (latest.outcome === 'improved_after_action') {
