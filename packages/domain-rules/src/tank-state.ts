@@ -50,6 +50,13 @@ export type EvaluateTankStateInput = {
 };
 
 export type TankStateAction = 'no_action' | 'observe' | 'adjust' | 'urgent_action' | 'complete_check';
+export type TankRecoveryPhase = 'confirming' | 'recovering' | 'confirmed';
+export type TankRecoveryProgress = {
+  phase: TankRecoveryPhase;
+  confirmations: number;
+  targetConfirmations: number;
+  remainingConfirmations: number;
+};
 
 export type TankStateResult = {
   state: TankState;
@@ -61,6 +68,8 @@ export type TankStateResult = {
   activeSignals: TankObservationCode[];
   priorCodes: string[];
   observationTargets: string[];
+  /** Progress for clearing a concrete recent incident; this never clears static reviewed priors. */
+  recovery?: TankRecoveryProgress;
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -126,6 +135,36 @@ const isRecovered = (signal: TankObservation, pool: TankObservation[], confirmat
   new Set(laterRecoveryObservations(signal, pool).map(item => item.observedAt)).size >= confirmations
 );
 
+const buildRecoveryProgress = (
+  signals: TankObservation[],
+  pool: TankObservation[],
+): TankRecoveryProgress | undefined => {
+  const recoverable = signals.filter(signal => (recoveryCodesBySignal[signal.code]?.length || 0) > 0);
+  if (recoverable.length === 0) return undefined;
+  const confirmations = Math.min(...recoverable.map(signal => (
+    new Set(laterRecoveryObservations(signal, pool).map(item => item.observedAt)).size
+  )));
+  const capped = Math.min(confirmations, 3);
+  if (capped >= 3) return {
+    phase: 'confirmed',
+    confirmations: 3,
+    targetConfirmations: 3,
+    remainingConfirmations: 0,
+  };
+  if (capped >= 2) return {
+    phase: 'recovering',
+    confirmations: capped,
+    targetConfirmations: 3,
+    remainingConfirmations: 3 - capped,
+  };
+  return {
+    phase: 'confirming',
+    confirmations: capped,
+    targetConfirmations: 2,
+    remainingConfirmations: 2 - capped,
+  };
+};
+
 export const evaluateTankState = ({
   priors = [],
   observations = [],
@@ -175,6 +214,7 @@ export const evaluateTankState = ({
       activeSignals: unique(activeUrgentSignals.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(urgentSignals, recent),
     };
   }
 
@@ -209,6 +249,7 @@ export const evaluateTankState = ({
       activeSignals: unique(involved.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(involved, repeatWindow),
     };
   }
 
@@ -219,6 +260,11 @@ export const evaluateTankState = ({
   const fullyRecoveredBehaviorProblem = recoveryConfirmedBehaviorProblem
     && behaviorSignalsForRecovery.every(item => isRecovered(item, repeatWindow, 3));
   const recoveringBehaviorProblem = recoveryConfirmedBehaviorProblem && !fullyRecoveredBehaviorProblem;
+  const incidentSignalsForRecovery = [
+    ...urgentSignals,
+    ...directInterventionSignals,
+    ...(hadRepeatedBehaviorProblem ? behaviorSignalsForRecovery : []),
+  ];
   if (recoveringUrgentSignals.length > 0 || recoveringDirectInterventionSignals.length > 0 || recoveringBehaviorProblem) {
     const recoverySignals = recent.filter(item => normalCodes.has(item.code));
     reasons.push(...recoverySignals.map(item => item.evidence || item.code));
@@ -233,6 +279,7 @@ export const evaluateTankState = ({
       activeSignals: unique(recoverySignals.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(incidentSignalsForRecovery, repeatWindow),
     };
   }
 
@@ -250,6 +297,7 @@ export const evaluateTankState = ({
       activeSignals: unique(watchSignals.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(watchSignals, recent),
     };
   }
 
@@ -266,6 +314,7 @@ export const evaluateTankState = ({
       activeSignals: [],
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(behaviorSignalsForRecovery, repeatWindow),
     };
   }
 
@@ -287,6 +336,7 @@ export const evaluateTankState = ({
         activeSignals: unique(normalSignals.map(item => item.code)),
         priorCodes,
         observationTargets,
+        recovery: buildRecoveryProgress(incidentSignalsForRecovery, repeatWindow),
       };
     }
     return {
@@ -301,6 +351,7 @@ export const evaluateTankState = ({
       activeSignals: unique(normalSignals.map(item => item.code)),
       priorCodes,
       observationTargets,
+      recovery: buildRecoveryProgress(incidentSignalsForRecovery, repeatWindow),
     };
   }
 

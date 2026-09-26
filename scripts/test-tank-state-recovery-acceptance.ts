@@ -56,6 +56,9 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
     record(1, '巡检', { breathing: '正常', behavior: '正常游动和进食' }, 'normal-1'),
   ]);
   assert.equal(evidence.result.state, 'urgent');
+  assert.deepEqual(evidence.result.recovery, {
+    phase: 'confirming', confirmations: 1, targetConfirmations: 2, remainingConfirmations: 1,
+  });
 }
 
 {
@@ -66,7 +69,11 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
   ]);
   assert.equal(evidence.result.state, 'watch');
   assert.ok(evidence.result.matchedRules.includes('AQ-STATE-010'));
+  assert.deepEqual(evidence.result.recovery, {
+    phase: 'recovering', confirmations: 2, targetConfirmations: 3, remainingConfirmations: 1,
+  });
   assert.match(items[0]?.title || '', /异常已有缓解/);
+  assert.match(items[0]?.nextStep || '', /2\/3 次，还差 1 次/);
 }
 
 {
@@ -79,6 +86,9 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
   assert.equal(evidence.result.state, 'stable');
   assert.equal(evidence.result.primaryAction, 'no_action');
   assert.equal(evidence.result.matchedRules.includes('AQ-STATE-010'), false);
+  assert.deepEqual(evidence.result.recovery, {
+    phase: 'confirmed', confirmations: 3, targetConfirmations: 3, remainingConfirmations: 0,
+  });
   assert.deepEqual(items, []);
 }
 
@@ -89,6 +99,9 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
     record(1, '巡检', { breathing: '正常', behavior: '正常游动和进食' }, 'normal-1'),
   ]);
   assert.equal(evidence.result.state, 'intervene');
+  assert.deepEqual(evidence.result.recovery, {
+    phase: 'confirming', confirmations: 1, targetConfirmations: 2, remainingConfirmations: 1,
+  });
 }
 
 {
@@ -100,7 +113,10 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
   ]);
   assert.equal(evidence.result.state, 'watch');
   assert.ok(evidence.result.matchedRules.includes('AQ-STATE-010'));
-  assert.match(items[0]?.nextStep || '', /1–2 次结构化复查/);
+  assert.deepEqual(evidence.result.recovery, {
+    phase: 'recovering', confirmations: 2, targetConfirmations: 3, remainingConfirmations: 1,
+  });
+  assert.match(items[0]?.nextStep || '', /2\/3 次，还差 1 次/);
 }
 
 {
@@ -114,6 +130,9 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
   assert.equal(evidence.result.state, 'watch');
   assert.ok(evidence.result.matchedRules.includes('AQ-STATE-009'));
   assert.equal(evidence.result.matchedRules.includes('AQ-STATE-010'), false);
+  assert.deepEqual(evidence.result.recovery, {
+    phase: 'confirmed', confirmations: 3, targetConfirmations: 3, remainingConfirmations: 0,
+  });
 }
 
 {
@@ -139,6 +158,9 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
     ],
   });
   assert.equal(result.state, 'stable');
+  assert.deepEqual(result.recovery, {
+    phase: 'confirmed', confirmations: 3, targetConfirmations: 3, remainingConfirmations: 0,
+  });
 }
 
 {
@@ -153,6 +175,9 @@ const tigerGuppy = aquarium([['sp_0439', 8], ['sp_0436', 8]]);
   ]);
   assert.equal(evidence.result.state, 'intervene');
   assert.ok(evidence.result.activeSignals.includes('persistent_chasing'));
+  assert.deepEqual(evidence.result.recovery, {
+    phase: 'confirming', confirmations: 0, targetConfirmations: 2, remainingConfirmations: 2,
+  });
 }
 
 {

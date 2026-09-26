@@ -19,6 +19,13 @@ const stockedSubjects = (aquarium: Aquarium, speciesCatalog: Fish[]) => aquarium
   return species ? [{ id: species.id, name: species.name, quantity: Math.max(1, record.quantity || 1) }] : [];
 });
 
+const recoveryProgressText = (result: CurrentTankStateEvidence['result']) => {
+  const recovery = result.recovery;
+  if (!recovery) return null;
+  if (recovery.phase === 'confirmed') return `本次异常已完成 ${recovery.confirmations}/${recovery.targetConfirmations} 次恢复确认。`;
+  return `恢复确认已完成 ${recovery.confirmations}/${recovery.targetConfirmations} 次，还差 ${recovery.remainingConfirmations} 次。`;
+};
+
 export const getCurrentTankRiskLevel = (evidence: CurrentTankStateEvidence | null) => {
   const state = evidence?.result.state;
   if (state === 'urgent') return 'high' as const;
@@ -75,13 +82,13 @@ export const buildCurrentTankRiskItems = ({
       severity: 'danger',
       title: respiratory ? '出现呼吸急促 / 浮头，先处理供氧与水质' : deaths ? '出现连续或多只死亡，立即停止继续加鱼' : severeInjury ? '出现严重受伤，需要立即隔离并稳定环境' : '当前观察到需要优先处理的异常',
       detail: result.reasons[0] || result.summary,
-      nextStep: respiratory
+      nextStep: `${respiratory
         ? '先提高水面扰动和供氧，并立即检查过滤、水温和关键水质；不要先把问题归因于混养。'
         : deaths
           ? '暂停新增和非必要操作，先核对水温、过滤、供氧与关键水质，再判断是否同时存在混养冲突。'
           : severeInjury
             ? '先把持续受攻击或严重受伤个体稳定隔离，再检查伤情和冲突来源。'
-            : '先处理当前异常，再根据复查结果决定是否调整组合。',
+            : '先处理当前异常，再根据复查结果决定是否调整组合。'}${result.recovery && result.recovery.confirmations > 0 ? ` ${recoveryProgressText(result)}` : ''}`,
       subjects,
       actionSteps: respiratory
         ? ['立即加强曝气或水面扰动，并确认过滤仍在正常运行。', '检查水温及可用的氨/亚硝酸盐等关键水质信息。', '在呼吸恢复前暂停继续加鱼，并记录 30–60 分钟后的变化。']
@@ -105,9 +112,9 @@ export const buildCurrentTankRiskItems = ({
       severity: 'danger',
       title: injury ? '已经出现受伤，当前组合需要调整' : behaviorPressure ? '追咬已造成持续压力，当前组合需要调整' : '当前异常已支持进行调整',
       detail: result.reasons[0] || result.summary,
-      nextStep: injury
+      nextStep: `${injury
         ? '先阻断继续受伤：确认攻击者和受伤个体，必要时立即隔离；稳定后再决定是否永久分缸。'
-        : '先降低追咬压力：确认攻击者与受压个体，增加有效遮挡；仍持续时改为稳定隔离或分缸。',
+        : '先降低追咬压力：确认攻击者与受压个体，增加有效遮挡；仍持续时改为稳定隔离或分缸。'}${result.recovery && result.recovery.confirmations > 0 ? ` ${recoveryProgressText(result)}` : ''}`,
       subjects,
       actionSteps: injury
         ? ['确认攻击者、受伤个体和伤情是否仍在加重。', '若仍持续追咬，先做稳定隔离；同时维持清洁、稳定水质并观察伤口。', '停止新增生物，待 2–3 次复查无继续受伤后再评估组合。']
@@ -121,16 +128,31 @@ export const buildCurrentTankRiskItems = ({
   if (result.state === 'watch') {
     const recovering = result.matchedRules.includes('AQ-STATE-010');
     const needsRecheck = result.matchedRules.includes('AQ-STATE-011');
+    const recoveryConfirmedButPriorRemains = result.recovery?.phase === 'confirmed'
+      && result.matchedRules.includes('AQ-STATE-009');
+    const confirmingRecovery = result.recovery?.phase === 'confirming';
     return [{
       group: '混养风险',
       severity: 'warning',
-      title: recovering ? '异常已有缓解，继续观察是否复发' : needsRecheck ? '之前有重复异常，先确认现在是否仍在发生' : '当前建议继续观察',
+      title: recoveryConfirmedButPriorRemains
+        ? '本次异常已恢复，但组合本身仍需观察'
+        : recovering
+          ? '异常已有缓解，继续完成恢复确认'
+          : needsRecheck
+            ? '之前有重复异常，先确认现在是否仍在发生'
+            : confirmingRecovery
+              ? '当前异常尚未形成持续证据，继续确认'
+              : '当前建议继续观察',
       detail: result.summary,
-      nextStep: recovering
-        ? '保持当前已经奏效的调整，并继续完成 1–2 次结构化复查；若异常再次出现，立即重新升级处理。'
-        : needsRecheck
-          ? '完成一次当前状态复查；只有确认追咬、躲藏或摄食压力仍在持续时，才重新升级到干预。'
-          : result.observationTargets.length > 0 ? `重点观察：${result.observationTargets.slice(0, 3).join('、')}。` : '补充一次当前鱼缸检查，再决定是否需要调整。',
+      nextStep: recoveryConfirmedButPriorRemains
+        ? `${recoveryProgressText(result)} 这只代表本次异常已经恢复；由于组合仍有已审核的高风险背景，继续观察，不等于混养风险消失。`
+        : recovering
+          ? `${recoveryProgressText(result)} 保持当前已经奏效的调整；完成下一次正常复查后再判断是否结束本次恢复观察。若异常再次出现，立即重新升级处理。`
+          : needsRecheck
+            ? '完成一次当前状态复查；只有确认追咬、躲藏或摄食压力仍在持续时，才重新升级到干预。'
+            : confirmingRecovery
+              ? `${recoveryProgressText(result)} 在达到当前确认门槛前，不把这次异常视为已经恢复。`
+              : result.observationTargets.length > 0 ? `重点观察：${result.observationTargets.slice(0, 3).join('、')}。` : '补充一次当前鱼缸检查，再决定是否需要调整。',
       subjects,
       actionSteps: recovering
         ? ['不要因为一次恢复正常就立即撤销已经奏效的隔离、遮挡或供氧调整。', '继续记录呼吸、追逐、躲藏、进食和伤情是否保持正常。', '如果相同异常再次出现，按当前异常级别重新处理。']

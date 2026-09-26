@@ -171,10 +171,12 @@ const normal=[record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',beh
   assert.ok(c.matchedRules.includes('AQ-STATE-010'));
   assert.equal(d.state,'watch','reviewed high-risk pair remains watch even after three normal confirmations');
   assert.ok(d.matchedRules.includes('AQ-STATE-009'));
+  assert.deepEqual(d.recovery,{phase:'confirmed',confirmations:3,targetConfirmations:3,remainingConfirmations:0});
   assert.equal(relapse.state,'watch');
   assert.equal(relapse.confidence,'medium','a new current chase must outrank unresolved historical-pressure fallback');
   assert.ok(relapse.activeSignals.includes('persistent_chasing'));
   assert.ok(relapse.matchedRules.includes('AQ-STATE-006'));
+  assert.deepEqual(relapse.recovery,{phase:'confirming',confirmations:0,targetConfirmations:2,remainingConfirmations:2});
 }
 
 console.log('Recovery trajectory acceptance passed: intervene -> watch, reviewed risk retained, relapse stays active');
