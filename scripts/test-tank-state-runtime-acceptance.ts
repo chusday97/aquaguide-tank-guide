@@ -180,3 +180,68 @@ const normal=[record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',beh
 }
 
 console.log('Recovery trajectory acceptance passed: intervene -> watch, reviewed risk retained, relapse stays active');
+
+// Intervention evidence integration: executed action + follow-up is visible without claiming causality.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-22T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏'}),
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'增加遮挡',interventionNote:'增加沉木形成视线遮挡'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.equal(evidence.interventions.length,1);
+  assert.equal(evidence.interventionEffects.length,1);
+  assert.equal(evidence.interventionEffects[0].outcome,'improved_after_action');
+  assert.match(evidence.interventionEffects[0].summary,/时间先后相关/);
+  assert.equal(evidence.interventionEffects[0].summary.includes('导致恢复'),false);
+  assert.ok(items[0]?.nextStep.includes('措施记录：'));
+  assert.ok(items[0]?.nextStep.includes('时间先后相关'));
+}
+
+// Intervention evidence integration: a repeated problem after the action must remain visible as not controlled.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-24T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-24T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏',chasing:'明显追咬'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.equal(evidence.result.state,'intervene');
+  assert.equal(evidence.interventionEffects[0].outcome,'problem_persisted_after_action');
+  assert.match(items[0]?.nextStep || '',/措施后复查/);
+  assert.match(items[0]?.nextStep || '',/没有足够证据认为该措施已经控制住问题/);
+}
+
+console.log('Intervention evidence integration passed: action-followup association is visible and causality-safe');
+
+
+// Intervention presentation outcomes: every effect state must tell the user what to do next.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const base = [record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'})];
+
+  const insufficient = run(tank,[
+    ...base,
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+  ]);
+  assert.equal(insufficient.evidence.interventionEffects[0].outcome,'insufficient_followup');
+  assert.match(insufficient.items[0]?.nextStep || '',/至少 2 次结构化复查/);
+
+  const mixed = run(tank,[
+    ...base,
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'临时隔离'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-26T07:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+  ]);
+  assert.equal(mixed.evidence.interventionEffects[0].outcome,'mixed_after_action');
+  assert.match(mixed.items[0]?.nextStep || '',/证据不足以判断.*是否伴随持续改善/);
+}
+
+console.log('Intervention presentation outcomes passed: follow-up guidance is actionable and causality-safe');

@@ -37,6 +37,7 @@ const gates = [
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
   ['Tank State Runtime Acceptance', 'node', ['--import', 'tsx', 'scripts/test-tank-state-runtime-acceptance.ts']],
   ['Tank State Recovery Acceptance', 'node', ['--import', 'tsx', 'scripts/test-tank-state-recovery-acceptance.ts']],
+  ['Tank Intervention Evidence', 'node', ['--import', 'tsx', 'scripts/test-tank-intervention-evidence.ts']],
   ['Tank Evidence', 'npm', ['run', 'test:p0-tank-evidence']],
   ['Water Change', 'npm', ['run', 'test:p0-water-change']],
   ['Care Guidance', 'npm', ['run', 'test:care-guidance']],

@@ -3,6 +3,12 @@ import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import { evaluateCompatibilityDecision, type CompatibilityItem } from '../../modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
 import {
+  buildTankInterventionsFromDiagnosisRecords,
+  evaluateTankInterventionEffects,
+  type TankIntervention,
+  type TankInterventionEffect,
+} from './tank-intervention-evidence.service';
+import {
   evaluateTankState,
   type TankHardConstraint,
   type TankObservation,
@@ -229,6 +235,8 @@ export type CurrentTankStateEvidence = {
   priors: TankPriorRisk[];
   hardConstraints: TankHardConstraint[];
   observations: TankObservation[];
+  interventions: TankIntervention[];
+  interventionEffects: TankInterventionEffect[];
   cohabitationDays: number;
   result: TankStateResult;
 };
@@ -257,6 +265,8 @@ export const deriveCurrentTankState = ({
   const priors = compatibilityDecision ? buildTankPriorsFromCompatibilityDecision(compatibilityDecision) : [];
   const hardConstraints = compatibilityDecision ? buildTankHardConstraintsFromCompatibilityDecision(compatibilityDecision) : [];
   const observations = buildTankObservationsFromDiagnosisRecords(diagnosisRecords, aquarium.id);
+  const interventions = buildTankInterventionsFromDiagnosisRecords(diagnosisRecords, aquarium.id, now);
+  const interventionEffects = evaluateTankInterventionEffects({ interventions, observations, now });
   const cohabitationDays = getCurrentCombinationAgeDays(aquarium, now);
   const result = evaluateTankState({
     priors,
@@ -266,5 +276,5 @@ export const deriveCurrentTankState = ({
     now: now.toISOString(),
   });
 
-  return { compatibilityDecision, priors, hardConstraints, observations, cohabitationDays, result };
+  return { compatibilityDecision, priors, hardConstraints, observations, interventions, interventionEffects, cohabitationDays, result };
 };

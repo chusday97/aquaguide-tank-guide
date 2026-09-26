@@ -26,6 +26,38 @@ const recoveryProgressText = (result: CurrentTankStateEvidence['result']) => {
   return `恢复确认已完成 ${recovery.confirmations}/${recovery.targetConfirmations} 次，还差 ${recovery.remainingConfirmations} 次。`;
 };
 
+const latestInterventionEffect = (evidence: CurrentTankStateEvidence) => (
+  [...evidence.interventionEffects]
+    .sort((left, right) => Date.parse(right.intervention.performedAt) - Date.parse(left.intervention.performedAt))[0] || null
+);
+
+const interventionEffectGuidance = (evidence: CurrentTankStateEvidence) => {
+  const latest = latestInterventionEffect(evidence);
+  if (!latest) return null;
+  if (latest.outcome === 'improved_after_action') {
+    return {
+      text: `措施记录：${latest.summary}`,
+      next: `暂时保留「${latest.intervention.label}」这一已执行措施，并继续结构化复查；如果异常复发，不把之前的改善当成该措施必然有效。`,
+    };
+  }
+  if (latest.outcome === 'problem_persisted_after_action') {
+    return {
+      text: `措施后复查：${latest.summary}`,
+      next: `不要重复依赖「${latest.intervention.label}」作为唯一处理；重新核对当前异常，必要时升级为隔离、分缸或环境检查。`,
+    };
+  }
+  if (latest.outcome === 'mixed_after_action') {
+    return {
+      text: `措施后复查：${latest.summary}`,
+      next: `先保持其他条件尽量稳定，再补充结构化复查；当前证据不足以判断「${latest.intervention.label}」是否伴随持续改善。`,
+    };
+  }
+  return {
+    text: `措施复查不足：${latest.summary}`,
+    next: `先补足与「${latest.intervention.label}」相关的至少 2 次结构化复查，再评价措施后的变化。`,
+  };
+};
+
 export const getCurrentTankRiskLevel = (evidence: CurrentTankStateEvidence | null) => {
   const state = evidence?.result.state;
   if (state === 'urgent') return 'high' as const;
@@ -50,6 +82,7 @@ export const buildCurrentTankRiskItems = ({
   if (!evidence) return [];
   const { result, hardConstraints } = evidence;
   const subjects = stockedSubjects(aquarium, speciesCatalog);
+  const interventionGuidance = interventionEffectGuidance(evidence);
 
   if (hardConstraints.length > 0) {
     const hasWaterTypeConflict = hardConstraints.some(item => ['water_type_mismatch', 'species_water_type_conflict'].includes(item.code));
@@ -88,7 +121,7 @@ export const buildCurrentTankRiskItems = ({
           ? '暂停新增和非必要操作，先核对水温、过滤、供氧与关键水质，再判断是否同时存在混养冲突。'
           : severeInjury
             ? '先把持续受攻击或严重受伤个体稳定隔离，再检查伤情和冲突来源。'
-            : '先处理当前异常，再根据复查结果决定是否调整组合。'}${result.recovery && result.recovery.confirmations > 0 ? ` ${recoveryProgressText(result)}` : ''}`,
+            : '先处理当前异常，再根据复查结果决定是否调整组合。'}${result.recovery && result.recovery.confirmations > 0 ? ` ${recoveryProgressText(result)}` : ''}${interventionGuidance ? ` ${interventionGuidance.text} ${interventionGuidance.next}` : ''}`,
       subjects,
       actionSteps: respiratory
         ? ['立即加强曝气或水面扰动，并确认过滤仍在正常运行。', '检查水温及可用的氨/亚硝酸盐等关键水质信息。', '在呼吸恢复前暂停继续加鱼，并记录 30–60 分钟后的变化。']
@@ -114,7 +147,7 @@ export const buildCurrentTankRiskItems = ({
       detail: result.reasons[0] || result.summary,
       nextStep: `${injury
         ? '先阻断继续受伤：确认攻击者和受伤个体，必要时立即隔离；稳定后再决定是否永久分缸。'
-        : '先降低追咬压力：确认攻击者与受压个体，增加有效遮挡；仍持续时改为稳定隔离或分缸。'}${result.recovery && result.recovery.confirmations > 0 ? ` ${recoveryProgressText(result)}` : ''}`,
+        : '先降低追咬压力：确认攻击者与受压个体，增加有效遮挡；仍持续时改为稳定隔离或分缸。'}${result.recovery && result.recovery.confirmations > 0 ? ` ${recoveryProgressText(result)}` : ''}${interventionGuidance ? ` ${interventionGuidance.text} ${interventionGuidance.next}` : ''}`,
       subjects,
       actionSteps: injury
         ? ['确认攻击者、受伤个体和伤情是否仍在加重。', '若仍持续追咬，先做稳定隔离；同时维持清洁、稳定水质并观察伤口。', '停止新增生物，待 2–3 次复查无继续受伤后再评估组合。']
@@ -145,14 +178,14 @@ export const buildCurrentTankRiskItems = ({
               : '当前建议继续观察',
       detail: result.summary,
       nextStep: recoveryConfirmedButPriorRemains
-        ? `${recoveryProgressText(result)} 这只代表本次异常已经恢复；由于组合仍有已审核的高风险背景，继续观察，不等于混养风险消失。`
+        ? `${recoveryProgressText(result)} 这只代表本次异常已经恢复；由于组合仍有已审核的高风险背景，继续观察，不等于混养风险消失。${interventionGuidance ? ` ${interventionGuidance.text} ${interventionGuidance.next}` : ''}`
         : recovering
-          ? `${recoveryProgressText(result)} 保持当前已经奏效的调整；完成下一次正常复查后再判断是否结束本次恢复观察。若异常再次出现，立即重新升级处理。`
+          ? `${recoveryProgressText(result)} 保持当前已经奏效的调整；完成下一次正常复查后再判断是否结束本次恢复观察。若异常再次出现，立即重新升级处理。${interventionGuidance ? ` ${interventionGuidance.text} ${interventionGuidance.next}` : ''}`
           : needsRecheck
-            ? '完成一次当前状态复查；只有确认追咬、躲藏或摄食压力仍在持续时，才重新升级到干预。'
+            ? `完成一次当前状态复查；只有确认追咬、躲藏或摄食压力仍在持续时，才重新升级到干预。${interventionGuidance ? ` ${interventionGuidance.text} ${interventionGuidance.next}` : ''}`
             : confirmingRecovery
-              ? `${recoveryProgressText(result)} 在达到当前确认门槛前，不把这次异常视为已经恢复。`
-              : result.observationTargets.length > 0 ? `重点观察：${result.observationTargets.slice(0, 3).join('、')}。` : '补充一次当前鱼缸检查，再决定是否需要调整。',
+              ? `${recoveryProgressText(result)} 在达到当前确认门槛前，不把这次异常视为已经恢复。${interventionGuidance ? ` ${interventionGuidance.text} ${interventionGuidance.next}` : ''}`
+              : `${result.observationTargets.length > 0 ? `重点观察：${result.observationTargets.slice(0, 3).join('、')}。` : '补充一次当前鱼缸检查，再决定是否需要调整。'}${interventionGuidance ? ` ${interventionGuidance.text} ${interventionGuidance.next}` : ''}`,
       subjects,
       actionSteps: recovering
         ? ['不要因为一次恢复正常就立即撤销已经奏效的隔离、遮挡或供氧调整。', '继续记录呼吸、追逐、躲藏、进食和伤情是否保持正常。', '如果相同异常再次出现，按当前异常级别重新处理。']

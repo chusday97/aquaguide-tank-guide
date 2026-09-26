@@ -1,0 +1,167 @@
+import assert from 'node:assert/strict';
+import type { DiagnosisRecord } from '../src/modules/diagnosis/diagnosis.types';
+import type { TankObservation } from '../packages/domain-rules/src/tank-state';
+import {
+  buildTankInterventionsFromDiagnosisRecords,
+  evaluateTankInterventionEffects,
+} from '../src/services/aquarium/tank-intervention-evidence.service';
+
+const NOW = new Date('2026-09-26T08:00:00.000Z');
+const record = (
+  id: string,
+  createdAt: string,
+  answers: Record<string,string>,
+  overrides: Partial<DiagnosisRecord> = {},
+): DiagnosisRecord => ({
+  diagnosisId:id,
+  createdAt,
+  aquariumId:'tank-action',
+  problemType:'巡检',
+  answers,
+  resultSummary:'结构化记录',
+  riskLevel:'低风险',
+  suggestedActions:[],
+  missingInfo:[],
+  followUpNotes:[],
+  ...overrides,
+});
+const obs=(code:TankObservation['code'],observedAt:string,evidence:string=code):TankObservation=>({code,observedAt,evidence});
+const effects=(records:DiagnosisRecord[], observations:TankObservation[])=>{
+  const interventions=buildTankInterventionsFromDiagnosisRecords(records,'tank-action',NOW);
+  return {interventions,effects:evaluateTankInterventionEffects({interventions,observations,now:NOW})};
+};
+
+// 1) A structured completed action is recordable without a DB schema change.
+{
+  const {interventions}=effects([
+    record('a1','2026-09-23T08:00:00.000Z',{interventionType:'增加遮挡',interventionNote:'增加沉木遮挡'}),
+  ],[]);
+  assert.equal(interventions.length,1);
+  assert.equal(interventions[0].type,'add_hiding');
+  assert.equal(interventions[0].label,'增加遮挡 / 躲避空间');
+}
+
+// 2) Suggested actions are not evidence that the user performed them.
+{
+  const {interventions}=effects([
+    record('a2','2026-09-23T08:00:00.000Z',{}, {suggestedActions:['建议增加遮挡','建议隔离']})
+  ],[]);
+  assert.deepEqual(interventions,[]);
+}
+
+// 3) Free text alone is not promoted to an executed action.
+{
+  const {interventions}=effects([
+    record('a3','2026-09-23T08:00:00.000Z',{userDescription:'我好像增加了遮挡，可能有用'})
+  ],[]);
+  assert.deepEqual(interventions,[]);
+}
+
+// 4) Future action timestamps are ignored until they actually happen.
+{
+  const {interventions}=effects([
+    record('a4','2026-09-23T08:00:00.000Z',{interventionType:'增加遮挡',interventionAt:'2026-09-27T08:00:00.000Z'})
+  ],[]);
+  assert.deepEqual(interventions,[]);
+}
+
+// 5) Two relevant normal confirmations after hiding support a correlation-safe improvement label.
+{
+  const records=[record('a5','2026-09-23T08:00:00.000Z',{interventionType:'增加遮挡'})];
+  const observations=[
+    obs('no_persistent_chasing','2026-09-24T08:00:00.000Z','第一次无持续追咬'),
+    obs('normal_feeding','2026-09-25T08:00:00.000Z','第二次正常进食'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.equal(rows[0].outcome,'improved_after_action');
+  assert.equal(rows[0].normalConfirmationCount,2);
+  assert.match(rows[0].summary,/时间先后相关/);
+  assert.match(rows[0].summary,/不能据此确认因果关系/);
+}
+
+// 6) An abnormal signal after the action means the problem persisted after the action.
+{
+  const {effects:rows}=effects([
+    record('a6','2026-09-23T08:00:00.000Z',{interventionType:'增加遮挡'})
+  ],[
+    obs('persistent_chasing','2026-09-24T08:00:00.000Z','加遮挡后仍追咬'),
+  ]);
+  assert.equal(rows[0].outcome,'problem_persisted_after_action');
+  assert.match(rows[0].summary,/仍出现/);
+}
+
+// 7) Normal and abnormal follow-up together stays mixed, never auto-declared effective.
+{
+  const {effects:rows}=effects([
+    record('a7','2026-09-22T08:00:00.000Z',{interventionType:'临时隔离'})
+  ],[
+    obs('normal_feeding','2026-09-23T08:00:00.000Z','进食恢复'),
+    obs('no_persistent_chasing','2026-09-24T08:00:00.000Z','没有追咬'),
+    obs('persistent_chasing','2026-09-25T08:00:00.000Z','重新追咬'),
+  ]);
+  assert.equal(rows[0].outcome,'mixed_after_action');
+  assert.match(rows[0].summary,/结果混合/);
+}
+
+// 8) One normal follow-up is not enough to claim improvement.
+{
+  const {effects:rows}=effects([
+    record('a8','2026-09-23T08:00:00.000Z',{interventionType:'分缸'})
+  ],[
+    obs('normal_activity','2026-09-24T08:00:00.000Z','活动正常'),
+  ]);
+  assert.equal(rows[0].outcome,'insufficient_followup');
+  assert.match(rows[0].summary,/至少 2 次结构化复查/);
+}
+
+// 9) Aeration uses respiratory-specific follow-up rather than unrelated behavior signals.
+{
+  const {effects:rows}=effects([
+    record('a9','2026-09-23T08:00:00.000Z',{interventionType:'加强曝气'})
+  ],[
+    obs('normal_activity','2026-09-24T07:00:00.000Z','活动正常但不等于呼吸恢复'),
+    obs('normal_breathing','2026-09-24T08:00:00.000Z','呼吸正常'),
+    obs('normal_breathing','2026-09-25T08:00:00.000Z','再次呼吸正常'),
+  ]);
+  assert.equal(rows[0].outcome,'improved_after_action');
+  assert.equal(rows[0].normalConfirmationCount,2);
+}
+
+// 10) Same-timestamp diagnosis evidence is not counted as post-action follow-up.
+{
+  const {effects:rows}=effects([
+    record('a10','2026-09-23T08:00:00.000Z',{interventionType:'加强曝气'})
+  ],[
+    obs('normal_breathing','2026-09-23T08:00:00.000Z','与动作同一时间'),
+    obs('normal_breathing','2026-09-24T08:00:00.000Z','动作后第一次复查'),
+  ]);
+  assert.equal(rows[0].outcome,'insufficient_followup');
+  assert.equal(rows[0].normalConfirmationCount,1);
+}
+
+console.log('tank intervention evidence passed: 10 action -> follow-up correlation cases');
+
+
+// 11) A newer intervention closes the earlier action attribution window.
+// Later recovery evidence belongs to the newer action window, not both actions.
+{
+  const records=[
+    record('a11-hide','2026-09-22T08:00:00.000Z',{interventionType:'增加遮挡'}),
+    record('a11-isolate','2026-09-23T08:00:00.000Z',{interventionType:'临时隔离'}),
+  ];
+  const observations=[
+    obs('normal_feeding','2026-09-24T08:00:00.000Z','隔离后进食正常'),
+    obs('no_persistent_chasing','2026-09-25T08:00:00.000Z','隔离后没有追咬'),
+  ];
+  const {effects:rows}=effects(records,observations);
+  assert.equal(rows.length,2);
+  assert.equal(rows[0].intervention.type,'add_hiding');
+  assert.equal(rows[0].outcome,'insufficient_followup');
+  assert.equal(rows[0].followupObservationCount,0);
+  assert.equal(rows[0].evaluationWindowEnd,'2026-09-23T08:00:00.000Z');
+  assert.equal(rows[1].intervention.type,'temporary_isolation');
+  assert.equal(rows[1].outcome,'improved_after_action');
+  assert.equal(rows[1].normalConfirmationCount,2);
+}
+
+console.log('tank intervention attribution window passed: newer actions stop evidence leakage to earlier actions');
