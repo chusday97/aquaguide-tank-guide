@@ -27,7 +27,7 @@ Classification is intentionally conservative. No merge/rebase is authorized by t
 - EXCLUDE_FROZEN_VISION: 8
 - EXCLUDE_FROZEN_UI: 2
 - EXCLUDE_DB_HOLD: 0
-- INCLUDE_DB_ARTIFACT_HOLD: 5
+- INCLUDE_DB_ARTIFACT_HOLD: 6
 
 ## Manual reconcile notes
 
@@ -42,6 +42,7 @@ Classification is intentionally conservative. No merge/rebase is authorized by t
 - Priority knowledge batch 1 adds repository-only migration 202609250001_compatibility_priority_batch1_profiles.sql as explicit additive ownership for sp_0015/sp_0059/sp_0199/sp_0200/sp_0019; application remains HOLD.
 - Priority knowledge batch 2 adds repository-only migration 202609250002_compatibility_priority_batch2_profiles.sql as explicit additive ownership for sp_0043/sp_0044/sp_0062/sp_0119/sp_0125; application remains HOLD.
 - Priority knowledge batch 3 adds repository-only migration 202609260001_compatibility_priority_batch3_profiles.sql as explicit additive ownership for sp_0181/sp_0139/sp_0140/sp_0120/sp_0138; application remains HOLD.
+- Real-tank acceptance adds repository-only migration 202609260002_compatibility_angelfish_neon_pair.sql as explicit ownership for the reviewed Pterophyllum scalare × Paracheirodon innesi predation Pair Rule; application remains HOLD.
 - CI requires `supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql` as a static contract artifact. It is included in the repository candidate but **must not be applied** during this integration.
 The initial file classification was conservative but validation found additional presentation coupling:
 - `src/services/compatibility/compatibility-presentation.service.ts`: kept from current main because user-facing copy is frozen.
@@ -248,4 +249,5 @@ These refinements are represented in candidate commit `afc8ad2e` and are stricte
 | INCLUDE_DB_ARTIFACT_HOLD | supabase/migrations/202609250001_compatibility_priority_batch1_profiles.sql | Repository-only additive owner for priority batch 1 reviewed Profiles sp_0015/sp_0059/sp_0199/sp_0200/sp_0019; application remains HOLD. |
 | INCLUDE_DB_ARTIFACT_HOLD | supabase/migrations/202609250002_compatibility_priority_batch2_profiles.sql | Repository-only additive owner for priority batch 2 reviewed Profiles sp_0043/sp_0044/sp_0062/sp_0119/sp_0125; application remains HOLD. |
 | INCLUDE_DB_ARTIFACT_HOLD | supabase/migrations/202609260001_compatibility_priority_batch3_profiles.sql | Repository-only additive owner for priority batch 3 reviewed Profiles sp_0181/sp_0139/sp_0140/sp_0120/sp_0138; application remains HOLD. |
+| INCLUDE_DB_ARTIFACT_HOLD | supabase/migrations/202609260002_compatibility_angelfish_neon_pair.sql | Repository-only owner for the reviewed Angelfish × Neon Tetra predation Pair Rule; application remains HOLD. |
 | MANUAL_RECONCILE | `apps/admin-content/scripts/business-admin-staging-readiness.mjs` | Current-main Business Admin staging plan reconciled to include repository-only Compatibility authority migrations; no migration execution is performed. |

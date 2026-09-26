@@ -1,3 +1,16 @@
+## CURRENT OVERRIDE — 2026-09-26 Real-tank actionable compatibility acceptance validated
+
+- Functional head: `0acf8e9316cd1872b437305c5493230ca213573d` (`fix(compatibility): harden real tank conclusions`).
+- Six 3–4 species real-tank acceptance cases are now part of the backend release gate: safe community, no-common-temperature hard block, Angelfish × Neon predation, three simultaneous under-grouped species, long-term space pressure, and whole-tank cumulative load.
+- Product correction: `predation_vulnerability_context` no longer turns every ordinary fish + prey-vulnerable species into a caution. It now requires actual reviewed predation pressure. The safe reviewed community fixture therefore returns `compatible` / green.
+- Action correction: multiple under-grouped species now receive per-species numeric instructions, e.g. `金三角灯 4 → 8`, `红眼灯 4 → 6`, `熊猫鼠 3 → 6`, instead of one generic “补足群体” sentence.
+- Hard-block correction: red results derive adjustments from blocking rules only; lower-severity warnings no longer displace the action needed to resolve the blocker.
+- Pair authority: exact `sp_0446` Pterophyllum scalare × `sp_0431` Paracheirodon innesi is now a reviewed `not_recommended / predation_threat` Pair Rule with direct Angelfish/Neon husbandry evidence. Generic `very_small_fish` remains fail-closed for other Small catalog objects.
+- Reviewed Compatibility remains 49 Profiles; reviewed Pair Rules increased `21 → 22`; catalog remains 486; evidence sources increased `78 → 79`. Catalog snapshot checksum: `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`, including `Compatibility Actionable Result` and `Compatibility Real Tank Acceptance`.
+- Repository-only `202609260002_compatibility_angelfish_neon_pair.sql` owns the new Pair Rule as a static HOLD artifact. It has not been applied; no DB authority switch occurred.
+- UI/Vision/Production/main remain unchanged.
+
 ## CURRENT OVERRIDE — 2026-09-26 Actionable compatibility result contract validated
 
 - Functional head: `f28999d9901653833acba69cf4b5c142400c8d60` (`feat(compatibility): add actionable result contract`).

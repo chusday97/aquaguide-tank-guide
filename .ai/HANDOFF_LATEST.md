@@ -1,3 +1,13 @@
+## HANDOFF — 2026-09-26 Real-tank compatibility acceptance
+
+- Validated functional checkpoint: `0acf8e9316cd1872b437305c5493230ca213573d`.
+- Real-tank acceptance is now a release gate with six 3–4 species fixtures covering green community, temperature hard block, exact predation pair, multiple group deficits, space pressure, and whole-tank load.
+- Fixed a real false positive: prey-vulnerability alone no longer makes peaceful community combinations yellow; reviewed predation pressure is required.
+- Adjustments are more executable: under-grouped species receive exact current→minimum quantities; red hard blocks no longer mix in lower-priority warning actions.
+- Added reviewed Angelfish × Neon Tetra predation Pair Rule while keeping generic `very_small_fish` mapping fail-closed.
+- Authority counts: 49 reviewed Profiles / 22 reviewed Pair Rules / 79 evidence sources / 486 catalog objects; snapshot checksum `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- Full backend release gate PASS. `202609260002_compatibility_angelfish_neon_pair.sql` is repository-only HOLD and has not been applied. No UI/Vision/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Actionable compatibility result contract
 
 - Validated functional checkpoint: `f28999d9901653833acba69cf4b5c142400c8d60`.

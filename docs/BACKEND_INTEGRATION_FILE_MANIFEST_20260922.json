@@ -21,7 +21,7 @@
     "MANUAL_RECONCILE": 4,
     "EXCLUDE_FROZEN_VISION": 8,
     "EXCLUDE_FROZEN_UI": 2,
-    "INCLUDE_DB_ARTIFACT_HOLD": 5
+    "INCLUDE_DB_ARTIFACT_HOLD": 6
   },
   "files": [
     {
@@ -993,6 +993,11 @@
       "path": "supabase/migrations/202609260001_compatibility_priority_batch3_profiles.sql",
       "class": "INCLUDE_DB_ARTIFACT_HOLD",
       "reason": "Repository-only additive owner for reviewed Compatibility priority batch 3 Profiles sp_0181/sp_0139/sp_0140/sp_0120/sp_0138; application remains HOLD."
+    },
+    {
+      "path": "supabase/migrations/202609260002_compatibility_angelfish_neon_pair.sql",
+      "class": "INCLUDE_DB_ARTIFACT_HOLD",
+      "reason": "Repository-only reviewed Pair Rule owner for Pterophyllum scalare × Paracheirodon innesi predation authority; application remains HOLD."
     },
     {
       "path": "apps/admin-content/scripts/business-admin-staging-readiness.mjs",
