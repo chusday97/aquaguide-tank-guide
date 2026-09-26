@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-26 Intervention effect evidence
+
+- Functional checkpoint `4cdf7620197b72521b69d675e6f1bc710e628e2f`.
+- Tank State now retains explicit executed interventions and evaluates their relevant follow-up evidence without claiming causal proof.
+- Four outcomes are supported: improvement after action, persisted problem, mixed evidence, and insufficient follow-up.
+- Newer actions close earlier attribution windows, preventing later recovery from being credited to multiple prior interventions.
+- Presentation adds an actionable next step for each outcome. Full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Tank recovery progress contract
 
 - Functional checkpoint `937012fe5fd162494760f93f81921bc840f03edb`.

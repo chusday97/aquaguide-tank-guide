@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-26 Intervention outcome evidence validated
+
+- Functional head: `4cdf7620197b72521b69d675e6f1bc710e628e2f` (`feat(tank-state): track intervention outcomes`).
+- Added structured Tank intervention evidence for executed actions only: add hiding, temporary isolation, separate tank, increase aeration, water change, filter check, temperature adjustment, reduce stocking, or explicit other. Suggested actions and free text are not treated as proof that an action happened.
+- Each intervention is evaluated against only relevant post-action observations inside a 7-day follow-up window. Outcomes are `improved_after_action`, `problem_persisted_after_action`, `mixed_after_action`, or `insufficient_followup`.
+- Causal safety: even when two relevant normal confirmations follow an action, copy says the improvement is temporally associated and does not claim the action caused recovery.
+- Attribution hardening: a newer executed intervention closes the earlier intervention's evidence window, so recovery after isolation is not also credited back to an earlier hiding-space change.
+- User-facing guidance now differs by outcome: retain-and-monitor after associated improvement; stop relying on the action alone if the problem persists; stabilize conditions and recheck for mixed results; collect at least two relevant structured follow-ups when evidence is insufficient.
+- Tank Intervention Evidence is part of `test:backend-release-gate`; targeted intervention/runtime tests PASS and full `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-26 Tank recovery progress contract validated
 
 - Functional head: `937012fe5fd162494760f93f81921bc840f03edb` (`feat(tank-state): expose recovery progress`).
