@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-26 Species-scoped intervention provenance validated
+
+- Functional head: `c9029a93834f3b90283b42fe81bdca35b550794d` (`feat(tank-state): scope intervention evidence by species`).
+- Structured Tank observations can now carry optional object provenance: `subjectSpeciesIds`, `scope`, and `sourceDiagnosisId`. Legacy unscoped records remain supported.
+- Executed interventions can now carry `targets[{speciesId, quantity}]`, `conflictSpeciesIds`, `targetScope`, and a recorded reason. These remain stored inside existing diagnosis `answers`, so no DB schema/migration is required.
+- Object-level effect attribution is now conservative: local actions (hiding, temporary isolation, separate tank, reduce stocking) with explicit targets only consume follow-up observations for the same target species. A normal check on another species cannot be credited to the targeted action.
+- Recovery is object-aware too: species-specific normal observations cannot clear a different species' incident or a whole-tank incident. Explicit whole-tank recovery may clear a species-specific incident; legacy unscoped incidents keep legacy behavior.
+- User-facing presentation resolves target IDs to species names and can show quantity, conflict pair, and recorded reason, e.g. `临时隔离（对象：孔雀鱼 4只；关联冲突：虎皮鱼 × 孔雀鱼）`.
+- Targeted tests cover wrong-species follow-up, same-species follow-up, whole-tank environmental action, species-scoped recovery, and object-readable presentation. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-26 Multi-intervention sequence reasoning validated
 
 - Functional head: `abd4c1f1b7c66a9c2c07ef0f33bba7b34601b643` (`feat(tank-state): summarize intervention sequences`).

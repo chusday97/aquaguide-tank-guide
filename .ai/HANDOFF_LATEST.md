@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-26 Species-scoped intervention provenance
+
+- Functional checkpoint `c9029a93834f3b90283b42fe81bdca35b550794d`.
+- Tank observations and executed interventions now retain species-level provenance when provided through structured diagnosis answers.
+- Local intervention effects are target-scoped: follow-up from unrelated species no longer counts as evidence for the intervention. Recovery confirmation uses the same object-aware rule.
+- Intervention result text can expose target species, quantity, conflict pair, and recorded reason using catalog names.
+- Existing unscoped records remain backward-compatible; no DB schema/migration was added. Full backend release gate PASS. No UI/Vision/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Multi-intervention sequence reasoning
 
 - Functional checkpoint `abd4c1f1b7c66a9c2c07ef0f33bba7b34601b643`.
