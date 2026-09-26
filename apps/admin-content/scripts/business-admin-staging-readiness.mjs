@@ -29,6 +29,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609220001_compatibility_gold_ram_rhodeus_profiles.sql',
   '202609250001_compatibility_priority_batch1_profiles.sql',
   '202609250002_compatibility_priority_batch2_profiles.sql',
+  '202609260001_compatibility_priority_batch3_profiles.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [

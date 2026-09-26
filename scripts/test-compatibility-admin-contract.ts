@@ -332,6 +332,15 @@ for (const profile of audit.reviewedProfiles.filter(item => ['sp_0043','sp_0044'
 assert.equal((priorityBatch2Migration.match(/Compatibility priority batch2 profile drift:/g) || []).length, 1);
 assert.equal((priorityBatch2Migration.match(/Compatibility priority batch2 profile evidence drift:/g) || []).length, 1);
 
+const priorityBatch3Migration = readFileSync('supabase/migrations/202609260001_compatibility_priority_batch3_profiles.sql', 'utf8');
+assert.match(priorityBatch3Migration, /DB application \/ DB authority switch remain on HOLD/);
+for (const profile of audit.reviewedProfiles.filter(item => ['sp_0181','sp_0139','sp_0140','sp_0120','sp_0138'].includes(item.speciesId))) {
+  assert.equal(priorityBatch3Migration.includes(profile.speciesId), true, 'priority-batch3 migration must own Profile ' + profile.speciesId);
+  for (const source of profile.citations) assert.equal(priorityBatch3Migration.includes(source.id), true, 'priority-batch3 migration must include source ' + source.id);
+}
+assert.equal((priorityBatch3Migration.match(/Compatibility priority batch3 profile drift:/g) || []).length, 1);
+assert.equal((priorityBatch3Migration.match(/Compatibility priority batch3 profile evidence drift:/g) || []).length, 1);
+
 const additiveCompatibilityMigrations = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',
@@ -358,7 +367,7 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0059','sp_0199','sp_0200','sp_0019','sp_0043','sp_0044','sp_0062','sp_0119','sp_0125']);
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0059','sp_0199','sp_0200','sp_0019','sp_0043','sp_0044','sp_0062','sp_0119','sp_0125','sp_0181','sp_0139','sp_0140','sp_0120','sp_0138']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

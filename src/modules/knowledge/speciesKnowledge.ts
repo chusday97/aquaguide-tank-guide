@@ -49,6 +49,7 @@ import { phase2Batch46Knowledge } from './phase2Batch46Authority';
 import { phase2Batch47Knowledge } from './phase2Batch47Authority';
 import { priorityCompatibilityKnowledge20260925 } from './priorityCompatibilityKnowledge20260925';
 import { priorityCompatibilityKnowledgeBatch2_20260925 } from './priorityCompatibilityKnowledgeBatch2_20260925';
+import { priorityCompatibilityKnowledgeBatch3_20260926 } from './priorityCompatibilityKnowledgeBatch3_20260926';
 import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
 
 export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
@@ -895,6 +896,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch47Knowledge,
   ...priorityCompatibilityKnowledge20260925,
   ...priorityCompatibilityKnowledgeBatch2_20260925,
+  ...priorityCompatibilityKnowledgeBatch3_20260926,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1920,7 +1922,7 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // These exact high-priority catalog objects were re-reviewed for runtime
   // compatibility on 2026-09-25. Their promoted fields are object-specific;
   // no ornamental/base-species inheritance is implied.
-  if (['sp_0015', 'sp_0059', 'sp_0199', 'sp_0200', 'sp_0019', 'sp_0043', 'sp_0044', 'sp_0062', 'sp_0119', 'sp_0125'].includes(fish.id)) {
+  if (['sp_0015', 'sp_0059', 'sp_0199', 'sp_0200', 'sp_0019', 'sp_0043', 'sp_0044', 'sp_0062', 'sp_0119', 'sp_0125', 'sp_0181', 'sp_0139', 'sp_0140', 'sp_0120', 'sp_0138'].includes(fish.id)) {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }
   // Phase 2 completion records are direct evidence for the matrix and
