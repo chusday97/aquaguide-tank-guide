@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-27 Partial reviewed-risk coverage hardened
+
+- Functional head: `c5e1d7333694a5933fb1bb2857fe8667f285e106` (`feat(tank-state): keep remaining reviewed risks visible`).
+- Intervention decisions now distinguish target-risk improvement from whole-tank safety. A local action can be followed by improvement for its target pair while other independent reviewed direct conflicts remain active in the same tank.
+- Added structured `reviewedDirectConflictScope` with values `only_current_reviewed_direct_conflict`, `one_of_multiple_current_reviewed_direct_conflicts`, or `unknown`, plus `remainingReviewedDirectRisks[]` containing pair IDs/names, verdict and normalized reviewed risk semantics.
+- If an improved action covers only one of several current high-confidence reviewed direct pair conflicts, judgment becomes `目标风险措施后伴随改善，但整缸仍有其他已审核直接冲突`; reason lists the remaining reviewed pairs and adjustment explicitly says not to treat local improvement as whole-tank safety.
+- Even when the target pair is the only current high-confidence reviewed direct conflict, copy explicitly says this does not prove absence of inferred risks, parameter risks, or future relapse.
+- User-facing intervention guidance is now generated from the same structured `buildTankInterventionDecisionSummary(...)` contract, removing a second independent long-copy decision path and reducing presentation/logic drift.
+- Targeted runtime badcase uses Tiger Barb + Guppy + Angelfish + Neon Tetra: guppy-targeted isolation can improve the fin-nipping pair while Angelfish × Neon predation remains surfaced as an independent reviewed risk.
+- Targeted runtime/recovery/typecheck PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority mutation, DB artifact/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-27 Intervention risk decision contract validated
 
 - Functional head: `19e38ac9687eee703c29741e43730004f177ef1d` (`feat(tank-state): expose intervention risk decisions`).

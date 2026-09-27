@@ -1,3 +1,10 @@
+## HANDOFF — 2026-09-27 Partial reviewed-risk coverage
+
+- Functional checkpoint `c5e1d7333694a5933fb1bb2857fe8667f285e106`.
+- Local intervention improvement no longer implies whole-tank safety. Structured decision output now identifies whether the action covers the only current reviewed direct conflict or only one of multiple, and lists remaining reviewed direct risks.
+- User-facing intervention guidance is derived from the same structured summary contract (`judgment / reason / adjustment / outcome / targetRisk / remaining risks`) to prevent copy and logic from diverging.
+- Four-species acceptance proves Tiger Barb–Guppy improvement can coexist with an independent Angelfish–Neon predation risk. Full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-27 Intervention risk decision contract
 
 - Functional checkpoint `19e38ac9687eee703c29741e43730004f177ef1d`.
