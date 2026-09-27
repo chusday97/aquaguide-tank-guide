@@ -3,6 +3,7 @@ import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import { evaluateCompatibilityDecision, type CompatibilityItem } from '../../modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
 import {
+  attachReviewedConflictPairsToInterventions,
   buildTankInterventionsFromDiagnosisRecords,
   evaluateTankInterventionEffects,
   type TankIntervention,
@@ -278,7 +279,8 @@ export const deriveCurrentTankState = ({
   const priors = compatibilityDecision ? buildTankPriorsFromCompatibilityDecision(compatibilityDecision) : [];
   const hardConstraints = compatibilityDecision ? buildTankHardConstraintsFromCompatibilityDecision(compatibilityDecision) : [];
   const observations = buildTankObservationsFromDiagnosisRecords(diagnosisRecords, aquarium.id);
-  const interventions = buildTankInterventionsFromDiagnosisRecords(diagnosisRecords, aquarium.id, now);
+  const rawInterventions = buildTankInterventionsFromDiagnosisRecords(diagnosisRecords, aquarium.id, now);
+  const interventions = attachReviewedConflictPairsToInterventions(rawInterventions, compatibilityDecision);
   const interventionEffects = evaluateTankInterventionEffects({ interventions, observations, now });
   const cohabitationDays = getCurrentCombinationAgeDays(aquarium, now);
   const result = evaluateTankState({

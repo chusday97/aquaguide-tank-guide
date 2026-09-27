@@ -44,7 +44,7 @@ const interventionObjectText = (
   const conflict = (intervention.conflictSpeciesIds || []).map(id => speciesName(id, speciesCatalog));
   const parts = [
     targets.length > 0 ? `对象：${targets.join('、')}` : '',
-    conflict.length > 0 ? `关联冲突：${conflict.join(' × ')}` : '',
+    conflict.length > 0 ? `关联冲突：${conflict.join(' × ')}${intervention.conflictPairSource === 'reviewed_pair_rule' ? '（依据已审核直接配对规则自动关联）' : ''}` : '',
     intervention.recordedReason ? `记录原因：${intervention.recordedReason}` : '',
   ].filter(Boolean);
   return parts.length > 0 ? `${intervention.label}（${parts.join('；')}）` : intervention.label;

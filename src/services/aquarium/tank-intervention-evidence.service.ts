@@ -1,4 +1,6 @@
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
+import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
+import { getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { TankObservation, TankObservationCode } from '../../../packages/domain-rules/src';
 
 export type TankInterventionType =
@@ -27,6 +29,8 @@ export type TankIntervention = {
   targetScope?: 'whole_tank' | 'species_specific';
   targets?: TankInterventionTarget[];
   conflictSpeciesIds?: string[];
+  conflictPairSource?: 'explicit' | 'reviewed_pair_rule';
+  conflictPairEvidenceIds?: string[];
   recordedReason?: string;
 };
 
@@ -217,6 +221,7 @@ export const buildTankInterventionsFromDiagnosisRecords = (
       targetScope,
       targets: targets.length > 0 ? targets : undefined,
       conflictSpeciesIds: conflictSpeciesIds.length > 0 ? conflictSpeciesIds : undefined,
+      conflictPairSource: conflictSpeciesIds.length > 0 ? 'explicit' as const : undefined,
       recordedReason: record.answers?.interventionReason?.trim() || undefined,
     } satisfies TankIntervention];
   });
@@ -229,6 +234,44 @@ export const buildTankInterventionsFromDiagnosisRecords = (
       seen.add(item.interventionId);
       return true;
     });
+};
+
+export const attachReviewedConflictPairsToInterventions = (
+  interventions: TankIntervention[],
+  decision: CompatibilityDecision | null,
+): TankIntervention[] => {
+  if (!decision) return interventions;
+  return interventions.map(intervention => {
+    if ((intervention.conflictSpeciesIds?.length || 0) > 0) return intervention;
+    if (!LOCAL_INTERVENTION_TYPES.has(intervention.type) || intervention.targetScope !== 'species_specific') return intervention;
+    const targetIds = intervention.targets?.map(item => item.speciesId) || [];
+    if (targetIds.length === 0) return intervention;
+    const targetSet = new Set(targetIds);
+    const candidates = decision.pairResults.flatMap(pair => {
+      const pairIds = [pair.speciesA.id, pair.speciesB.id];
+      if (!pairIds.some(id => targetSet.has(id)) || pair.status === 'compatible') return [];
+      const reviewed = getReviewedPairRule(pair.speciesA.id, pair.speciesB.id);
+      if (!reviewed
+        || reviewed.reviewStatus !== 'reviewed'
+        || reviewed.confidence !== 'high'
+        || reviewed.basis !== 'pair_rule'
+        || !['not_recommended', 'caution'].includes(reviewed.verdict)) return [];
+      return [{
+        pairIds: [...reviewed.speciesIds] as string[],
+        evidenceIds: reviewed.citations.map(item => item.id),
+      }];
+    });
+    const unique = new Map<string, { pairIds: string[]; evidenceIds: string[] }>();
+    candidates.forEach(candidate => unique.set([...candidate.pairIds].sort().join('::'), candidate));
+    if (unique.size !== 1) return intervention;
+    const [candidate] = unique.values();
+    return {
+      ...intervention,
+      conflictSpeciesIds: candidate.pairIds,
+      conflictPairSource: 'reviewed_pair_rule' as const,
+      conflictPairEvidenceIds: candidate.evidenceIds,
+    };
+  });
 };
 
 const observationAfterIntervention = (

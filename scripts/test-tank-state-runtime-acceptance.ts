@@ -337,3 +337,67 @@ console.log('Multi-intervention presentation passed: failed→improved and impro
 }
 
 console.log('Object-scoped recovery and intervention presentation passed');
+
+
+// Unique reviewed high-confidence direct pair is auto-associated with a species-targeted local action.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]);
+  assert.deepEqual(new Set(evidence.interventions[0].conflictSpeciesIds),new Set(['sp_0439','sp_0436']));
+  assert.equal(evidence.interventions[0].conflictPairSource,'reviewed_pair_rule');
+  assert.ok((evidence.interventions[0].conflictPairEvidenceIds?.length || 0) >= 2);
+  assert.match(items[0]?.nextStep || '',/虎皮鱼 × 孔雀鱼|孔雀鱼 × 虎皮鱼/);
+  assert.match(items[0]?.nextStep || '',/依据已审核直接配对规则自动关联/);
+}
+
+// Ambiguous target set matching two independent direct reviewed pairs must fail closed instead of guessing.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0446',2],['sp_0431',10]]);
+  const {evidence}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'分缸',
+      interventionTargetSpeciesIds:'sp_0436,sp_0431',
+      interventionTargetQuantities:'4,6',
+    }),
+  ]);
+  assert.equal(evidence.interventions[0].conflictSpeciesIds,undefined);
+  assert.equal(evidence.interventions[0].conflictPairSource,undefined);
+}
+
+// Reviewed rule-inference is not treated as a direct pair fact for automatic provenance.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0021',2]]);
+  const {evidence}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'增加遮挡',
+      interventionTargetSpeciesIds:'sp_0439',
+    }),
+  ]);
+  assert.equal(evidence.interventions[0].conflictSpeciesIds,undefined);
+  assert.equal(evidence.interventions[0].conflictPairSource,undefined);
+}
+
+// Explicit user-recorded conflict pair always wins over automatic reviewed-pair inference.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const {evidence}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionConflictSpeciesIds:'sp_0436,sp_0431',
+    }),
+  ]);
+  assert.deepEqual(evidence.interventions[0].conflictSpeciesIds,['sp_0436','sp_0431']);
+  assert.equal(evidence.interventions[0].conflictPairSource,'explicit');
+  assert.equal(evidence.interventions[0].conflictPairEvidenceIds,undefined);
+}
+
+console.log('Reviewed conflict-pair auto association passed: unique direct evidence only; ambiguity and inference fail closed');
