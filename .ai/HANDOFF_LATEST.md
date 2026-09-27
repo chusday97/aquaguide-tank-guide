@@ -1,3 +1,10 @@
+## HANDOFF — 2026-09-28 Gymnotus build contract follow-up
+
+- Runtime identity correction: `5b0c7e8a1313c54da88348e9edd180f2fc429a47`; build parser/gate fix: `a42d492009eaaee779e7a918709610a0d73b8586`.
+- Remote Vercel/CI initially failed because Admin text-parsed the old `fishData` export shape. Admin and responsive-image static seed readers now support `catalogSeedFishData`; full Production build and updated backend release gate PASS.
+- Admin Catalog Build is now part of the backend release gate, preventing recurrence of this exact local/remote blind spot.
+- No generated catalogue change, no UI/Vision/DB/Production/main change.
+
 ## HANDOFF — 2026-09-28 Gymnotus runtime identity correction
 
 - Functional checkpoint `5b0c7e8a1313c54da88348e9edd180f2fc429a47`.

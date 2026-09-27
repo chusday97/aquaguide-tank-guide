@@ -1,3 +1,12 @@
+## CURRENT OVERRIDE — 2026-09-28 Gymnotus build contract follow-up
+
+- Runtime identity functional head remains `5b0c7e8a1313c54da88348e9edd180f2fc429a47`; build-contract fix head is `a42d492009eaaee779e7a918709610a0d73b8586`.
+- Remote CI/Vercel exposed a build-only regression after introducing `catalogSeedFishData`: Admin `generate-catalog.mjs` still parsed `export const fishData = [...]` via a greedy text regex and attempted to JSON.parse the runtime correction expression. Product runtime logic itself had passed the full backend gate, but the complete Production build was not covered by that gate.
+- Fixed Admin catalogue generation and responsive-image static seed readers to explicitly parse `catalogSeedFishData` while remaining backward-compatible with legacy `fishData`. Generated Admin catalogue remains 486 rows and no generated catalogue diff was produced.
+- Added `Admin Catalog Build` to `test:backend-release-gate`, closing the local-vs-Vercel blind spot. `npm run build:seo-admin` PASS, full `npm run build` PASS, and the updated full backend release gate PASS.
+- Historical `local-fish-data-v1` snapshot checksum remains unchanged: `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- No UI component/page, Vision, DB migration/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-28 Gymnotus carapo runtime identity corrected
 
 - Functional head: `5b0c7e8a1313c54da88348e9edd180f2fc429a47` (`fix(catalog): correct Gymnotus runtime identity`).
