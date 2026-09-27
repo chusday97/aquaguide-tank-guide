@@ -1,3 +1,12 @@
+## HANDOFF — 2026-09-28 Batch 5 + freshwater-cichlid runtime correction
+
+- Functional head `0826a5ee6a2c6aedc76796d81e56ad4c11507c10`.
+- Corrected three exact runtime catalogue objects without rewriting historical seed: `sp_0054` Hemichromis bimaculatus (was hardscape), `sp_0057` Altolamprologus calvus and `sp_0058` Neolamprologus multifasciatus (were marine). All are now freshwater cichlid runtime objects.
+- Promoted the same three exact objects into reviewed Species Knowledge + Compatibility authority. Coverage now 55 reviewed Compatibility profiles / 91 runtime reviewed Species Knowledge / 22 pair rules / 85 evidence sources.
+- Key non-overgeneralization: Calvus has no invented reviewed numeric minimum aquarium; Multifasciatus colony guidance has no invented universal minimum group size; Jewel territoriality is caution context while breeding defense remains contextual.
+- Static HOLD owner `202609280002_compatibility_priority_batch5_profiles.sql` is registered in staging manifest but NOT applied. Snapshot checksum `4045fa1c6a8e28de2aaa7d6450342b1225c5d72d700c036be90ed719e9d37ce8`.
+- Targeted tests + full backend release gate PASS. No UI/Vision/Production/main/DB-authority change.
+
 ## HANDOFF — 2026-09-28 Batch 4 staging manifest follow-up
 
 - CI fix `ed5c9a85ee570cf9128c586656827bd6fb3d89eb`: Batch 4 HOLD migration is now registered in `BUSINESS_ADMIN_AUTHORITY_MIGRATIONS`.

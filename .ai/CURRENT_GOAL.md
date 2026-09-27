@@ -1,3 +1,18 @@
+## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 5 + freshwater-cichlid runtime correction
+
+- Functional checkpoint: `0826a5ee6a2c6aedc76796d81e56ad4c11507c10` (`feat(compatibility): add priority knowledge batch 5`).
+- Before expanding authority, three legacy catalogue-row errors were reproduced and corrected at runtime with exact catalog-key + scientific-name guards while preserving historical `local-fish-data-v1` seed rows: `sp_0054` Hemichromis bimaculatus was mislabeled `硬景/底床`; `sp_0057` Altolamprologus calvus and `sp_0058` Neolamprologus multifasciatus were mislabeled `海水鱼`. All three are now runtime `慈鲷/斗鱼` and resolve to freshwater.
+- `sp_0054` 红宝石鱼 / Hemichromis bimaculatus: reviewed freshwater 22–28°C, pH 6.0–7.8, dGH 4–18; 15 cm SL; 120 cm / ~108 L planning; territorial + breeding-defense authority. Normal territorial overlap is caution, not an automatic hard block; breeding aggression remains a contextual risk.
+- `sp_0057` 珍珠虎 / Altolamprologus calvus: reviewed Tanganyika freshwater 24–27°C, pH 7.5–9.0, dGH 8–20; 13.8 cm SL; territorial predator with explicit `small_fish` predation. Exact source does not provide a defensible fixed minimum aquarium number, so legacy `120 L` is removed from runtime reviewed-looking copy and is NOT promoted into `minVolumeLiters` / `minTankLengthCm`.
+- `sp_0058` 九间贝 / Neolamprologus multifasciatus: reviewed Tanganyika freshwater 24–27°C, pH 7.5–9.0, dGH 8–25; 4.5 cm SL; shell-territorial colony context; pair planning ~40 L / 45 cm, sand + more shells than fish. Colony/sex-ratio guidance is NOT converted into a universal `minimumGroupSize`.
+- Runtime acceptance: Jewel Cichlid + another reviewed territorial cichlid => `caution / territorial_conflict`; Calvus + Neon Tetra => `not_recommended / predation_risk`; Calvus alone in an 80 cm test tank does not receive a fabricated legacy 120 L reviewed warning; a too-small Multifasciatus tank receives volume + length caution without an invented group-size warning.
+- Coverage after Batch 5: 486 catalog objects; 55 reviewed Compatibility profiles (52 → 55); 91 runtime reviewed Species Knowledge objects (88 → 91); 22 reviewed pair rules; 85 evidence sources. Snapshot checksum: `4045fa1c6a8e28de2aaa7d6450342b1225c5d72d700c036be90ed719e9d37ce8`. Historical seed rows remain unchanged.
+- Repository-only `supabase/migrations/202609280002_compatibility_priority_batch5_profiles.sql` owns the three new Profiles and evidence links. It is registered in `BUSINESS_ADMIN_AUTHORITY_MIGRATIONS` but remains a static HOLD artifact; no migration was applied and no DB authority switch occurred.
+- Catalog identity correction regression now covers the three freshwater-cichlid corrections, source provenance, exact-taxon fail-closed behavior, runtime freshwater classification, and immutable historical snapshot fields.
+- Batch 5 targeted regression, Compatibility Admin ownership, Business Admin Staging Preflight, catalog snapshot, core Compatibility, actionable-result contract, TypeScript, Admin build, and full `npm run test:backend-release-gate` all PASS (`BACKEND_RELEASE_GATE=PASS`).
+- Still deferred rather than guessed: `Heros severus` remains fail-closed because hobby “severum” material commonly refers to H. efasciatus; `Hypostomus plecostomus` remains identity-sensitive in hobby usage; `Peckoltia compta` remains unpromoted pending stronger complete husbandry authority.
+- No UI component/page, Vision, Production promote, main merge, or applied DB change occurred.
+
 ## CURRENT OVERRIDE — 2026-09-28 Batch 4 staging manifest follow-up
 
 - CI ownership fix head: `ed5c9a85ee570cf9128c586656827bd6fb3d89eb`.
