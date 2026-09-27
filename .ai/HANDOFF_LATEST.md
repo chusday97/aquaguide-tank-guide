@@ -1,3 +1,10 @@
+## HANDOFF — 2026-09-28 Gymnotus runtime identity correction
+
+- Functional checkpoint `5b0c7e8a1313c54da88348e9edd180f2fc429a47`.
+- `sp_0120` runtime presentation now identifies `Gymnotus carapo` as `圭亚那裸背电鳗` / `Banded knifefish`, explicitly weakly electric and distinct from high-voltage true electric eels. Unsupported `会电击同类和室友` copy is no longer exposed at runtime. Reviewed 648 L space and small-fish predation authority remain unchanged.
+- Correction is object-scoped and scientific-name guarded. The raw local-fish-data-v1 seed/snapshot remains immutable; checksum unchanged `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- Full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-28 Exact duplicate candidate-add normalization
 
 - Functional checkpoint `ce6609b95b17524b06d90e1f671bd898c1eac1a7`.

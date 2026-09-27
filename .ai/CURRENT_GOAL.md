@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-28 Gymnotus carapo runtime identity corrected
+
+- Functional head: `5b0c7e8a1313c54da88348e9edd180f2fc429a47` (`fix(catalog): correct Gymnotus runtime identity`).
+- `sp_0120` remains the same stable catalogue object and scientific taxon (`Gymnotus carapo`), but the legacy user-facing seed name `电鳗 (观赏型)` and claim `会电击同类和室友` were identified as misleading. Reviewed authority already correctly models Gymnotus carapo / Banded knifefish as a large weakly electric, nocturnal small-fish predator.
+- Added an object-scoped, fail-closed runtime identity correction. Chinese runtime name is now `圭亚那裸背电鳗`; English is `Banded knifefish`. Copy explicitly distinguishes its weak electric organ discharges from high-voltage true electric eels, removes the unsupported shock-tankmate claim, and aligns the visible minimum tank guidance to the reviewed 648 L / 180 cm space authority.
+- Correction applies only when catalog key `sp_0120` AND scientific name `Gymnotus carapo` match. A reused/mismatched key fails closed and is not relabelled.
+- Runtime fallback, published API and Git product-care hydration apply the correction; search remains discoverable by corrected common name and by `Gymnotus carapo`. Existing reviewed Species Knowledge and Compatibility authority are unchanged and retained.
+- Historical `local-fish-data-v1` seed is not rewritten. Catalogue snapshot builder explicitly serializes the raw seed, and the snapshot checksum remains unchanged at `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`. No catalogue key, version, DB row or migration was changed.
+- New release-gate regression verifies runtime identity, English/Chinese search names, reviewed provenance, fail-closed taxon mismatch, compatibility authority retention, and immutable snapshot behavior. Targeted tests + Batch3 + TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI component/page, Vision, DB application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-28 Exact duplicate candidate-add normalization validated
 
 - Functional head: `ce6609b95b17524b06d90e1f671bd898c1eac1a7` (`fix(compatibility): normalize exact duplicate additions`).
