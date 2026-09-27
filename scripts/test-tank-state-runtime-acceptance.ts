@@ -198,7 +198,7 @@ console.log('Recovery trajectory acceptance passed: intervene -> watch, reviewed
   assert.equal(evidence.interventionEffects[0].outcome,'improved_after_action');
   assert.match(evidence.interventionEffects[0].summary,/时间先后相关/);
   assert.equal(evidence.interventionEffects[0].summary.includes('导致恢复'),false);
-  assert.ok(items[0]?.nextStep.includes('措施记录：'));
+  assert.match(items[0]?.nextStep || '',/措施判断：措施后伴随改善/);
   assert.ok(items[0]?.nextStep.includes('时间先后相关'));
 }
 
@@ -214,7 +214,7 @@ console.log('Recovery trajectory acceptance passed: intervene -> watch, reviewed
   const {evidence,items}=run(tank,records);
   assert.equal(evidence.result.state,'intervene');
   assert.equal(evidence.interventionEffects[0].outcome,'problem_persisted_after_action');
-  assert.match(items[0]?.nextStep || '',/措施后复查/);
+  assert.match(items[0]?.nextStep || '',/措施判断：措施后问题仍持续/);
   assert.match(items[0]?.nextStep || '',/没有足够证据认为该措施已经控制住问题/);
 }
 
@@ -242,7 +242,8 @@ console.log('Intervention evidence integration passed: action-followup associati
     record('2026-09-26T07:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
   ]);
   assert.equal(mixed.evidence.interventionEffects[0].outcome,'mixed_after_action');
-  assert.match(mixed.items[0]?.nextStep || '',/证据不足以判断.*是否伴随持续改善/);
+  assert.match(mixed.items[0]?.nextStep || '',/措施判断：措施后结果混合/);
+  assert.match(mixed.items[0]?.nextStep || '',/暂不能判断该措施是否有效/);
 }
 
 console.log('Intervention presentation outcomes passed: follow-up guidance is actionable and causality-safe');
@@ -261,7 +262,7 @@ console.log('Intervention presentation outcomes passed: follow-up guidance is ac
   ];
   const {evidence,items}=run(tank,records);
   assert.deepEqual(evidence.interventionEffects.map(item=>item.outcome),['problem_persisted_after_action','improved_after_action']);
-  assert.match(items[0]?.nextStep || '',/措施过程：/);
+  assert.match(items[0]?.nextStep || '',/措施判断：前一措施未控制，后续措施后伴随改善/);
   assert.match(items[0]?.nextStep || '',/增加遮挡.*仍有异常/);
   assert.match(items[0]?.nextStep || '',/临时隔离.*相关正常复查/);
   assert.match(items[0]?.nextStep || '',/不能证明.*唯一原因/);
@@ -364,7 +365,7 @@ console.log('Object-scoped recovery and intervention presentation passed');
   assert.match(items[0]?.nextStep || '',/依据已审核直接配对规则自动关联/);
   assert.match(items[0]?.nextStep || '',/针对风险：追鳍 \/ 长鳍冲突/);
   assert.match(items[0]?.nextStep || '',/已审核原因：/);
-  assert.match(items[0]?.nextStep || '',/已审核风险建议：/);
+  assert.match(items[0]?.nextStep || '',/已审核调整建议：/);
 }
 
 // Ambiguous target set matching two independent direct reviewed pairs must fail closed instead of guessing.
@@ -460,3 +461,51 @@ console.log('Intervention target risk passed: reviewed pair risk -> stable categ
 }
 
 console.log('Structured intervention decision summary passed: judgment, reason, adjustment, outcome, and target risk');
+
+
+// A local intervention can improve its target pair while another independent reviewed direct conflict remains in the same tank.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0446',2],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]);
+  const summary=buildTankInterventionDecisionSummary(evidence,fishData);
+  assert.equal(summary?.interventionOutcome,'improved_after_action');
+  assert.equal(summary?.reviewedDirectConflictScope,'one_of_multiple_current_reviewed_direct_conflicts');
+  assert.equal(summary?.judgment,'目标风险措施后伴随改善，但整缸仍有其他已审核直接冲突');
+  assert.equal(summary?.remainingReviewedDirectRisks.length,1);
+  assert.deepEqual(new Set(summary?.remainingReviewedDirectRisks[0].speciesIds),new Set(['sp_0446','sp_0431']));
+  assert.equal(summary?.remainingReviewedDirectRisks[0].category,'predation');
+  assert.equal(summary?.remainingReviewedDirectRisks[0].label,'捕食风险');
+  assert.match(summary?.reason || '',/天使鱼（神仙鱼） × 红绿灯|红绿灯 × 天使鱼（神仙鱼）/);
+  assert.match(summary?.reason || '',/捕食风险/);
+  assert.match(summary?.adjustment || '',/不要把局部改善当成整缸安全/);
+  assert.match(items[0]?.nextStep || '',/措施判断：目标风险措施后伴随改善，但整缸仍有其他已审核直接冲突/);
+  assert.match(items[0]?.nextStep || '',/天使鱼（神仙鱼） × 红绿灯|红绿灯 × 天使鱼（神仙鱼）/);
+}
+
+// When the target pair is the only current high-confidence reviewed direct conflict, scope is explicit but still not called whole-tank safe.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const evidence=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]).evidence;
+  const summary=buildTankInterventionDecisionSummary(evidence,fishData);
+  assert.equal(summary?.reviewedDirectConflictScope,'only_current_reviewed_direct_conflict');
+  assert.deepEqual(summary?.remainingReviewedDirectRisks,[]);
+  assert.equal(summary?.judgment,'措施后伴随改善');
+  assert.match(summary?.reason || '',/不等于整缸不存在其他推导风险、参数风险或未来复发/);
+}
+
+console.log('Partial reviewed-direct risk coverage passed: local improvement never implies whole-tank safety');

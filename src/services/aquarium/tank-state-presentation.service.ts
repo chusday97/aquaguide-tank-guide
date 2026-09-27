@@ -1,6 +1,9 @@
 import type { Aquarium, Fish } from '../../types';
 import type { CurrentTankStateEvidence } from './tank-state-evidence.service';
-import { summarizeTankInterventionSequence } from './tank-intervention-evidence.service';
+import {
+  listCurrentReviewedDirectConflicts,
+  summarizeTankInterventionSequence,
+} from './tank-intervention-evidence.service';
 
 export type CurrentTankRiskItem = {
   group: '容量风险' | '水质参数冲突' | '混养风险' | '信息不足';
@@ -25,6 +28,15 @@ export type TankInterventionDecisionSummary = {
     label: string;
     reviewedRiskType: string;
   };
+  reviewedDirectConflictScope: 'only_current_reviewed_direct_conflict' | 'one_of_multiple_current_reviewed_direct_conflicts' | 'unknown';
+  remainingReviewedDirectRisks: Array<{
+    speciesIds: [string, string];
+    speciesNames: [string, string];
+    verdict: 'caution' | 'not_recommended';
+    category: NonNullable<CurrentTankStateEvidence['interventions'][number]['targetRisk']>['category'];
+    label: string;
+    reviewedRiskType: string;
+  }>;
 };
 
 const stockedSubjects = (aquarium: Aquarium, speciesCatalog: Fish[]) => aquarium.fishes.flatMap(record => {
@@ -64,6 +76,45 @@ const interventionObjectText = (
   return parts.length > 0 ? `${intervention.label}（${parts.join('；')}）` : intervention.label;
 };
 
+const reviewedDirectConflictCoverage = (
+  evidence: CurrentTankStateEvidence,
+  intervention: CurrentTankStateEvidence['interventions'][number],
+  speciesCatalog: Fish[],
+) => {
+  const current = listCurrentReviewedDirectConflicts(evidence.compatibilityDecision);
+  const targetIds = intervention.conflictSpeciesIds || [];
+  const targetKey = targetIds.length === 2 ? [...targetIds].sort().join('::') : null;
+  if (!targetKey || !intervention.targetRisk) {
+    return {
+      scope: 'unknown' as const,
+      remaining: [],
+      text: '',
+    };
+  }
+  const remaining = current.filter(item => [...item.speciesIds].sort().join('::') !== targetKey);
+  const normalized = remaining.map(item => ({
+    speciesIds: item.speciesIds,
+    speciesNames: item.speciesIds.map(id => speciesName(id, speciesCatalog)) as [string, string],
+    verdict: item.verdict,
+    category: item.risk.category,
+    label: item.risk.label,
+    reviewedRiskType: item.risk.reviewedRiskType,
+  }));
+  if (remaining.length === 0) {
+    return {
+      scope: 'only_current_reviewed_direct_conflict' as const,
+      remaining: normalized,
+      text: '当前没有发现另一组独立的高置信已审核直接配对冲突；这仍不等于整缸不存在其他推导风险、参数风险或未来复发。',
+    };
+  }
+  const labels = normalized.map(item => `${item.speciesNames.join(' × ')}（${item.label}）`).join('；');
+  return {
+    scope: 'one_of_multiple_current_reviewed_direct_conflicts' as const,
+    remaining: normalized,
+    text: `这次措施只覆盖当前一部分已审核直接冲突；整缸仍有 ${remaining.length} 组独立风险未覆盖：${labels}。`,
+  };
+};
+
 export const buildTankInterventionDecisionSummary = (
   evidence: CurrentTankStateEvidence,
   speciesCatalog: Fish[],
@@ -74,29 +125,39 @@ export const buildTankInterventionDecisionSummary = (
   const risk = latest.intervention.targetRisk;
   const riskReason = risk ? `针对「${risk.label}」的已审核依据：${risk.reason}` : '';
   const reviewedMitigation = risk?.mitigation?.[0] ? `已审核调整建议：${risk.mitigation[0]}` : '';
+  const coverage = reviewedDirectConflictCoverage(evidence, latest.intervention, speciesCatalog);
 
   if (sequence) {
-    const judgment = sequence.pattern === 'escalated_then_improved'
+    const baseJudgment = sequence.pattern === 'escalated_then_improved'
       ? '前一措施未控制，后续措施后伴随改善'
       : sequence.pattern === 'relapsed_after_improvement'
         ? '曾改善后复发'
         : '连续多个措施仍未控制住问题';
+    const judgment = coverage.scope === 'one_of_multiple_current_reviewed_direct_conflicts'
+      ? `${baseJudgment}，但整缸仍有其他已审核直接冲突`
+      : baseJudgment;
     return {
       judgment,
-      reason: [sequence.summary, riskReason].filter(Boolean).join(' '),
-      adjustment: [sequence.nextStep, reviewedMitigation].filter(Boolean).join(' '),
+      reason: [sequence.summary, riskReason, coverage.text].filter(Boolean).join(' '),
+      adjustment: [sequence.nextStep, reviewedMitigation, coverage.scope === 'one_of_multiple_current_reviewed_direct_conflicts' ? '继续逐项处理剩余 reviewed direct 冲突，不要把局部改善当成整缸安全。' : ''].filter(Boolean).join(' '),
       interventionOutcome: 'sequence',
       targetRisk: risk ? { category: risk.category, label: risk.label, reviewedRiskType: risk.reviewedRiskType } : undefined,
+      reviewedDirectConflictScope: coverage.scope,
+      remainingReviewedDirectRisks: coverage.remaining,
     };
   }
 
-  const judgment = latest.outcome === 'improved_after_action'
+  const baseJudgment = latest.outcome === 'improved_after_action'
     ? '措施后伴随改善'
     : latest.outcome === 'problem_persisted_after_action'
       ? '措施后问题仍持续'
       : latest.outcome === 'mixed_after_action'
         ? '措施后结果混合'
         : '措施效果证据不足';
+  const judgment = latest.outcome === 'improved_after_action'
+    && coverage.scope === 'one_of_multiple_current_reviewed_direct_conflicts'
+    ? '目标风险措施后伴随改善，但整缸仍有其他已审核直接冲突'
+    : baseJudgment;
   const adjustment = latest.outcome === 'improved_after_action'
     ? `暂时保留「${interventionObjectText(latest.intervention, speciesCatalog)}」，继续结构化复查；异常复发时重新升级处理。`
     : latest.outcome === 'problem_persisted_after_action'
@@ -106,54 +167,21 @@ export const buildTankInterventionDecisionSummary = (
         : '先补足至少 2 次与措施对象相关的结构化复查，再评价措施效果。';
   return {
     judgment,
-    reason: [latest.summary, riskReason].filter(Boolean).join(' '),
-    adjustment: [adjustment, reviewedMitigation].filter(Boolean).join(' '),
+    reason: [latest.summary, riskReason, coverage.text].filter(Boolean).join(' '),
+    adjustment: [adjustment, reviewedMitigation, coverage.scope === 'one_of_multiple_current_reviewed_direct_conflicts' ? '继续逐项处理剩余 reviewed direct 冲突，不要把局部改善当成整缸安全。' : ''].filter(Boolean).join(' '),
     interventionOutcome: latest.outcome,
     targetRisk: risk ? { category: risk.category, label: risk.label, reviewedRiskType: risk.reviewedRiskType } : undefined,
+    reviewedDirectConflictScope: coverage.scope,
+    remainingReviewedDirectRisks: coverage.remaining,
   };
 };
 
 const interventionEffectGuidance = (evidence: CurrentTankStateEvidence, speciesCatalog: Fish[]) => {
-  const sequence = summarizeTankInterventionSequence(evidence.interventionEffects);
-  if (sequence) {
-    const involved = sequence.interventionIds
-      .map(id => evidence.interventionEffects.find(item => item.intervention.interventionId === id)?.intervention)
-      .filter((item): item is CurrentTankStateEvidence['interventions'][number] => Boolean(item));
-    const objectTrail = involved
-      .filter(item => (item.targets?.length || 0) > 0 || (item.conflictSpeciesIds?.length || 0) > 0 || item.recordedReason)
-      .map(item => interventionObjectText(item, speciesCatalog));
-    return {
-      text: `措施过程：${sequence.summary}${objectTrail.length > 0 ? ` 对象记录：${objectTrail.join('；')}。` : ''}`,
-      next: sequence.nextStep,
-    };
-  }
-  const latest = latestInterventionEffect(evidence);
-  if (!latest) return null;
-  const actionLabel = interventionObjectText(latest.intervention, speciesCatalog);
-  const reviewedMitigation = latest.intervention.targetRisk?.mitigation?.[0]
-    ? ` 已审核风险建议：${latest.intervention.targetRisk.mitigation[0]}`
-    : '';
-  if (latest.outcome === 'improved_after_action') {
-    return {
-      text: `措施记录：${latest.summary}`,
-      next: `暂时保留「${actionLabel}」这一已执行措施，并继续结构化复查；如果异常复发，不把之前的改善当成该措施必然有效。${reviewedMitigation}`,
-    };
-  }
-  if (latest.outcome === 'problem_persisted_after_action') {
-    return {
-      text: `措施后复查：${latest.summary}`,
-      next: `不要重复依赖「${actionLabel}」作为唯一处理；重新核对当前异常，必要时升级为隔离、分缸或环境检查。${reviewedMitigation}`,
-    };
-  }
-  if (latest.outcome === 'mixed_after_action') {
-    return {
-      text: `措施后复查：${latest.summary}`,
-      next: `先保持其他条件尽量稳定，再补充结构化复查；当前证据不足以判断「${actionLabel}」是否伴随持续改善。${reviewedMitigation}`,
-    };
-  }
+  const summary = buildTankInterventionDecisionSummary(evidence, speciesCatalog);
+  if (!summary) return null;
   return {
-    text: `措施复查不足：${latest.summary}`,
-    next: `先补足与「${actionLabel}」相关的至少 2 次结构化复查，再评价措施后的变化。${reviewedMitigation}`,
+    text: `措施判断：${summary.judgment}。${summary.reason}`,
+    next: summary.adjustment,
   };
 };
 

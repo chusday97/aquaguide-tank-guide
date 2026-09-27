@@ -38,6 +38,12 @@ export type TankInterventionRisk = {
   source: 'reviewed_pair_rule';
 };
 
+export type TankReviewedDirectConflict = {
+  speciesIds: [string, string];
+  verdict: 'caution' | 'not_recommended';
+  risk: TankInterventionRisk;
+};
+
 export type TankIntervention = {
   interventionId: string;
   type: TankInterventionType;
@@ -285,6 +291,32 @@ const riskFromReviewedPairRule = (leftId: string, rightId: string): TankInterven
     evidenceIds: reviewed.citations.map(item => item.id),
     source: 'reviewed_pair_rule',
   };
+};
+
+export const listCurrentReviewedDirectConflicts = (
+  decision: CompatibilityDecision | null,
+): TankReviewedDirectConflict[] => {
+  if (!decision) return [];
+  const unique = new Map<string, TankReviewedDirectConflict>();
+  decision.pairResults.forEach(pair => {
+    if (pair.status === 'compatible') return;
+    const reviewed = getReviewedPairRule(pair.speciesA.id, pair.speciesB.id);
+    if (!reviewed
+      || reviewed.reviewStatus !== 'reviewed'
+      || reviewed.confidence !== 'high'
+      || reviewed.basis !== 'pair_rule'
+      || !['not_recommended', 'caution'].includes(reviewed.verdict)) return;
+    const risk = riskFromReviewedPairRule(pair.speciesA.id, pair.speciesB.id);
+    if (!risk) return;
+    const speciesIds = [...reviewed.speciesIds] as [string, string];
+    const key = [...speciesIds].sort().join('::');
+    unique.set(key, {
+      speciesIds,
+      verdict: reviewed.verdict as 'caution' | 'not_recommended',
+      risk,
+    });
+  });
+  return [...unique.values()];
 };
 
 export const attachReviewedConflictPairsToInterventions = (
