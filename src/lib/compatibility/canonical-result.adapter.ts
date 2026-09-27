@@ -123,14 +123,40 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   },
 };
 
+const SINGLETON_RULE_CODES = new Set(['single_housing_required']);
+
+const ruleSpecificity = (rule: TankCompatibilityRule) => (
+  rule.affectedSpeciesIds.length * 10
+  + rule.citations.length * 5
+  + (rule.confidence === 'high' ? 2 : rule.confidence === 'medium' ? 1 : 0)
+  + (rule.reviewStatus === 'reviewed' ? 1 : 0)
+);
+
 const uniqueRules = (rules: TankCompatibilityRule[]) => {
   const seen = new Set<string>();
-  return rules.filter(rule => {
+  const singletonIndex = new Map<string, number>();
+  const output: TankCompatibilityRule[] = [];
+  for (const rule of rules) {
+    if (SINGLETON_RULE_CODES.has(rule.code)) {
+      const existingIndex = singletonIndex.get(rule.code);
+      if (existingIndex == null) {
+        singletonIndex.set(rule.code, output.length);
+        output.push(rule);
+      } else if (ruleSpecificity(rule) > ruleSpecificity(output[existingIndex])) {
+        // Canonical Domain rules establish the status; when the legacy evidence
+        // bridge has the same candidate-level semantic rule with exact species
+        // provenance, retain the richer reviewed evidence instead of duplicating
+        // the same user-facing reason.
+        output[existingIndex] = rule;
+      }
+      continue;
+    }
     const key = `${rule.code}::${rule.evidence}`;
-    if (seen.has(key)) return false;
+    if (seen.has(key)) continue;
     seen.add(key);
-    return true;
-  });
+    output.push(rule);
+  }
+  return output;
 };
 
 const LEGACY_SOFT_CAPACITY_CODES = new Set(['bioload_over_limit', 'bioload_near_limit']);
