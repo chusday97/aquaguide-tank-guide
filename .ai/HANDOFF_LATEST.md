@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-28 Exact catalog duplicate runtime boundary
+
+- Functional checkpoint `e48452920d749fdc5b26bca257f5e2c59c45b11e`.
+- Current Tank State now collapses only explicitly classified exact duplicate catalogue rows before compatibility evaluation, sums their quantities, and exposes collapse provenance. This removes fake self-pairs without deleting or migrating legacy catalogue IDs.
+- 14 non-plant exact duplicate groups are currently registered and release-gated against the live catalogue snapshot. Same scientific name alone is insufficient: distinct trade/catalogue objects remain separate.
+- Candidate-add semantics remain intentionally untouched pending a dedicated audit. Identity-bound trade-name uncertainty remains fail-closed.
+- Full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-27 Partial reviewed-risk coverage
 
 - Functional checkpoint `c5e1d7333694a5933fb1bb2857fe8667f285e106`.

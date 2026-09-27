@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-28 Exact catalog duplicate runtime boundary validated
+
+- Functional head: `e48452920d749fdc5b26bca257f5e2c59c45b11e` (`feat(tank-state): collapse exact catalog duplicates`).
+- A runtime bug was reproduced where duplicate catalogue IDs for the same exact row could be evaluated as two different species, producing fake self-compatibility findings (for example `sp_0038` + `sp_0130`, both 马口鱼 / Opsariichthys bidens).
+- Added an explicit catalogue-row duplicate authority with 14 current non-plant exact duplicate groups. This is intentionally NOT a generic scientific-name canonicalizer. Groups are admitted only when the current catalogue rows match on user-facing identity and core husbandry fields.
+- Current Tank State existing-stock evaluation collapses those explicit duplicate IDs to one canonical catalogue row, sums quantities, records `catalogDuplicateCollapses` provenance, and therefore cannot create a compatibility pair between exact duplicate aliases. Presentation subject quantities use the same exact-alias boundary.
+- Same-scientific-name but distinct catalogue/trade objects remain separate. Guard cases include `sp_0048` 大刺鳅 vs `sp_0131` 刺鳅, `sp_0103` 金龙鱼 vs `sp_0116` 亚洲龙鱼(青龙), and `sp_0114` 红莲灯 vs `sp_0469` 喷火灯.
+- No catalogue rows were deleted or rewritten. Existing IDs/history remain valid. Candidate-add flow is deliberately unchanged and requires a separate audit before applying alias semantics there. Existing unresolved identity boundaries (Crystal Shrimp, zebra nerite trade identity, mini-parrot) remain unchanged.
+- New release-gate test verifies registry/catalog parity, exactness of all 14 groups, explicit non-collapse examples, quantity merge, fake self-pair removal, and preservation of distinct trade objects.
+- Targeted tests + runtime acceptance + TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, DB migration/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-27 Partial reviewed-risk coverage hardened
 
 - Functional head: `c5e1d7333694a5933fb1bb2857fe8667f285e106` (`feat(tank-state): keep remaining reviewed risks visible`).
