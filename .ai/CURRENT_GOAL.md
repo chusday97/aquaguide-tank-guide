@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-09-27 Intervention risk decision contract validated
+
+- Functional head: `19e38ac9687eee703c29741e43730004f177ef1d` (`feat(tank-state): expose intervention risk decisions`).
+- Reviewed direct conflict pairs now carry a stable intervention target-risk contract instead of only raw pair IDs. Risk semantics retain both the raw reviewed `riskType` and a normalized product category/label.
+- Current mappings include direct pair risks such as `fin_nipping_long_fin_conflict -> fin_nipping / 追鳍 / 长鳍冲突` and `predation_threat -> predation / 捕食风险`; broader water/space fallback categories are deterministic by reviewed riskType, not presentation-copy parsing.
+- `targetRisk` retains reviewed reason, mitigation, evidence IDs and source provenance. Explicit conflict-pair records can receive reviewed risk semantics when that exact pair has a direct reviewed pair rule; unsupported explicit pairs remain explicit but do not gain invented risk semantics.
+- Presentation can show `针对风险`, `已审核原因`, and the first bounded reviewed mitigation. Auto-associated pair provenance remains visibly marked as automatic reviewed-rule association.
+- Added exported `buildTankInterventionDecisionSummary(...)` so downstream consumers can use structured `judgment`, `reason`, `adjustment`, `interventionOutcome`, and optional `targetRisk` without parsing long copy.
+- Structured judgment covers single-action outcomes and multi-action sequence outcomes while preserving causality limits.
+- Targeted runtime acceptance + TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority mutation, DB artifact/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-27 Reviewed conflict-pair auto-link validated
 
 - Functional head: `2811b027367ef6543da92f846fafc0478e0eb6f6` (`feat(tank-state): auto-link reviewed conflict pairs`).

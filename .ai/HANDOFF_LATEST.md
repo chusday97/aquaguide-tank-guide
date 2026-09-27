@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-27 Intervention risk decision contract
+
+- Functional checkpoint `19e38ac9687eee703c29741e43730004f177ef1d`.
+- Interventions linked to reviewed direct conflict pairs now expose stable risk semantics: normalized category/label plus raw reviewed riskType, reason, mitigation, evidence IDs and provenance.
+- Added structured Tank intervention decision output: `judgment -> reason -> adjustment -> interventionOutcome -> targetRisk`, avoiding downstream parsing of long user-facing copy.
+- Unsupported/ambiguous/weak pair evidence remains fail-closed; explicit unsupported conflict pairs stay explicit without invented risk semantics.
+- Targeted acceptance and full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-27 Reviewed conflict-pair auto-link
 
 - Functional checkpoint `2811b027367ef6543da92f846fafc0478e0eb6f6`.
