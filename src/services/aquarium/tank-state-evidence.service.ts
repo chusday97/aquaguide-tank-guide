@@ -2,6 +2,7 @@ import type { Aquarium, Fish } from '../../types';
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import { evaluateCompatibilityDecision, type CompatibilityItem } from '../../modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
+import { getExactCatalogDuplicateCanonicalId } from '../../data/catalogDuplicateAliases';
 import {
   attachReviewedConflictPairsToInterventions,
   buildTankInterventionsFromDiagnosisRecords,
@@ -244,8 +245,15 @@ export const getCurrentCombinationAgeDays = (aquarium: Aquarium, now = new Date(
   return Math.max(0, Math.floor((now.getTime() - startMs) / (24 * 60 * 60 * 1000)));
 };
 
+export type CatalogDuplicateCollapse = {
+  canonicalId: string;
+  sourceSpeciesIds: string[];
+  combinedQuantity: number;
+};
+
 export type CurrentTankStateEvidence = {
   compatibilityDecision: CompatibilityDecision | null;
+  catalogDuplicateCollapses: CatalogDuplicateCollapse[];
   priors: TankPriorRisk[];
   hardConstraints: TankHardConstraint[];
   observations: TankObservation[];
@@ -253,6 +261,38 @@ export type CurrentTankStateEvidence = {
   interventionEffects: TankInterventionEffect[];
   cohabitationDays: number;
   result: TankStateResult;
+};
+
+const collapseExistingCatalogDuplicates = (
+  items: CompatibilityItem[],
+  speciesCatalog: Fish[],
+): { items: CompatibilityItem[]; collapses: CatalogDuplicateCollapse[] } => {
+  const buckets = new Map<string, CompatibilityItem[]>();
+  for (const item of items) {
+    const canonicalId = getExactCatalogDuplicateCanonicalId(item.species.id);
+    const bucket = buckets.get(canonicalId) || [];
+    bucket.push(item);
+    buckets.set(canonicalId, bucket);
+  }
+
+  const collapses: CatalogDuplicateCollapse[] = [];
+  const normalized = Array.from(buckets.entries()).map(([canonicalId, bucket]) => {
+    if (bucket.length === 1) return bucket[0];
+    const canonicalSpecies = speciesCatalog.find(species => species.id === canonicalId) || bucket[0].species;
+    const combinedQuantity = bucket.reduce((sum, item) => sum + Math.max(1, Number(item.quantity) || 1), 0);
+    collapses.push({
+      canonicalId,
+      sourceSpeciesIds: [...new Set(bucket.map(item => item.species.id))],
+      combinedQuantity,
+    });
+    return {
+      species: canonicalSpecies,
+      quantity: combinedQuantity,
+      origin: 'existing' as const,
+    };
+  });
+
+  return { items: normalized, collapses };
 };
 
 export const deriveCurrentTankState = ({
@@ -273,8 +313,9 @@ export const deriveCurrentTankState = ({
     })
     .filter((item): item is { species: Fish; quantity: number; origin: 'existing' } => Boolean(item));
 
-  const compatibilityDecision = items.length > 0
-    ? evaluateCompatibilityDecision({ tank: aquarium, items })
+  const { items: normalizedItems, collapses: catalogDuplicateCollapses } = collapseExistingCatalogDuplicates(items, speciesCatalog);
+  const compatibilityDecision = normalizedItems.length > 0
+    ? evaluateCompatibilityDecision({ tank: aquarium, items: normalizedItems })
     : null;
   const priors = compatibilityDecision ? buildTankPriorsFromCompatibilityDecision(compatibilityDecision) : [];
   const hardConstraints = compatibilityDecision ? buildTankHardConstraintsFromCompatibilityDecision(compatibilityDecision) : [];
@@ -291,5 +332,5 @@ export const deriveCurrentTankState = ({
     now: now.toISOString(),
   });
 
-  return { compatibilityDecision, priors, hardConstraints, observations, interventions, interventionEffects, cohabitationDays, result };
+  return { compatibilityDecision, catalogDuplicateCollapses, priors, hardConstraints, observations, interventions, interventionEffects, cohabitationDays, result };
 };

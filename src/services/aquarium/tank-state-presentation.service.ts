@@ -4,6 +4,7 @@ import {
   listCurrentReviewedDirectConflicts,
   summarizeTankInterventionSequence,
 } from './tank-intervention-evidence.service';
+import { getExactCatalogDuplicateCanonicalId } from '../../data/catalogDuplicateAliases';
 
 export type CurrentTankRiskItem = {
   group: '容量风险' | '水质参数冲突' | '混养风险' | '信息不足';
@@ -39,10 +40,20 @@ export type TankInterventionDecisionSummary = {
   }>;
 };
 
-const stockedSubjects = (aquarium: Aquarium, speciesCatalog: Fish[]) => aquarium.fishes.flatMap(record => {
-  const species = speciesCatalog.find(item => item.id === record.fishId);
-  return species ? [{ id: species.id, name: species.name, quantity: Math.max(1, record.quantity || 1) }] : [];
-});
+const stockedSubjects = (aquarium: Aquarium, speciesCatalog: Fish[]) => {
+  const byCanonicalId = new Map<string, { id: string; name: string; quantity: number }>();
+  aquarium.fishes.forEach(record => {
+    const canonicalId = getExactCatalogDuplicateCanonicalId(record.fishId);
+    const species = speciesCatalog.find(item => item.id === canonicalId)
+      || speciesCatalog.find(item => item.id === record.fishId);
+    if (!species) return;
+    const existing = byCanonicalId.get(canonicalId);
+    const quantity = Math.max(1, record.quantity || 1);
+    if (existing) existing.quantity += quantity;
+    else byCanonicalId.set(canonicalId, { id: canonicalId, name: species.name, quantity });
+  });
+  return [...byCanonicalId.values()];
+};
 
 const recoveryProgressText = (result: CurrentTankStateEvidence['result']) => {
   const recovery = result.recovery;

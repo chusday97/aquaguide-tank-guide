@@ -32,6 +32,7 @@ const gates = [
   ['Platinum Snakehead Remaining Pairs', 'npm', ['run', 'test:platinum-snakehead-remaining-pairs']],
   ['Identity Bound Catalog Bridges', 'npm', ['run', 'test:identity-bound-catalog-bridges']],
   ['Catalog Identity Boundaries', 'npm', ['run', 'test:catalog-identity-boundaries']],
+  ['Catalog Exact Duplicate Aliases', 'npm', ['run', 'test:catalog-exact-duplicate-aliases']],
   ['Knowledge Evidence Ceilings', 'npm', ['run', 'test:knowledge-evidence-ceilings']],
   ['Compatibility Pair Evidence Ceilings', 'npm', ['run', 'test:compatibility-pair-evidence-ceilings']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],
