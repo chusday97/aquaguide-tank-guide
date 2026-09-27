@@ -36,6 +36,7 @@ const gates = [
   ['Catalog Exact Duplicate Aliases', 'npm', ['run', 'test:catalog-exact-duplicate-aliases']],
   ['Catalog Identity Corrections', 'npm', ['run', 'test:catalog-identity-corrections']],
   ['Admin Catalog Build', 'npm', ['run', 'build:seo-admin']],
+  ['Business Admin Staging Preflight', 'npm', ['run', 'test:business-admin-staging-preflight']],
   ['Knowledge Evidence Ceilings', 'npm', ['run', 'test:knowledge-evidence-ceilings']],
   ['Compatibility Pair Evidence Ceilings', 'npm', ['run', 'test:compatibility-pair-evidence-ceilings']],
   ['Tank State', 'npm', ['run', 'test:p0-tank-state']],

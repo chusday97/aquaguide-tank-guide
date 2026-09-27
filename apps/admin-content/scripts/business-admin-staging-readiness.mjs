@@ -31,6 +31,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609250002_compatibility_priority_batch2_profiles.sql',
   '202609260001_compatibility_priority_batch3_profiles.sql',
   '202609260002_compatibility_angelfish_neon_pair.sql',
+  '202609280001_compatibility_priority_batch4_profiles.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
