@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-27 Reviewed conflict-pair auto-link validated
+
+- Functional head: `2811b027367ef6543da92f846fafc0478e0eb6f6` (`feat(tank-state): auto-link reviewed conflict pairs`).
+- Species-targeted local interventions can now auto-associate a current compatibility conflict pair when the target maps to exactly one reviewed direct pair rule in the current tank.
+- Auto-link is intentionally fail-closed: the reviewed pair must be `reviewStatus=reviewed`, `confidence=high`, `basis=pair_rule`, have verdict `not_recommended` or `caution`, be present in the current CompatibilityDecision pair results, and include at least one target species.
+- If multiple qualifying direct pairs match the selected targets, no pair is auto-linked. `rule_inference`, medium-confidence evidence, compatible pairs, whole-tank/non-local actions, and missing targets are not auto-linked.
+- Explicit user-recorded `interventionConflictSpeciesIds` always wins and is marked `conflictPairSource=explicit`; automatic links are marked `reviewed_pair_rule` and retain citation IDs.
+- Presentation labels auto-derived pair provenance as `依据已审核直接配对规则自动关联`; it does not disguise inference as user-entered data.
+- Targeted tests cover unique direct match, ambiguous two-pair match, reviewed rule-inference rejection, and explicit override. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority mutation, DB artifact/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-26 Species-scoped intervention provenance validated
 
 - Functional head: `c9029a93834f3b90283b42fe81bdca35b550794d` (`feat(tank-state): scope intervention evidence by species`).

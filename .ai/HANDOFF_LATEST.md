@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-27 Reviewed conflict-pair auto-link
+
+- Functional checkpoint `2811b027367ef6543da92f846fafc0478e0eb6f6`.
+- Tank State can auto-link an intervention target to a current conflict pair only when exactly one high-confidence reviewed direct pair rule qualifies.
+- Ambiguous candidates and weaker/inferred pair evidence remain unset rather than guessed. Explicit user conflict-pair records always override automatic association.
+- Auto-derived provenance retains evidence IDs and is visibly labeled as an automatic reviewed-rule association.
+- Targeted runtime acceptance and full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-26 Species-scoped intervention provenance
 
 - Functional checkpoint `c9029a93834f3b90283b42fe81bdca35b550794d`.
