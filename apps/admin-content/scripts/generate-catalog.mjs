@@ -24,8 +24,8 @@ if (!sourceAvailable) {
 }
 
 const source = await readFile(sourcePath, 'utf8');
-const match = source.match(/export const fishData: Fish\[\] = ([\s\S]*);\s*$/);
-if (!match) throw new Error('Unable to locate fishData catalog payload.');
+const match = source.match(/export const (?:catalogSeedFishData|fishData): Fish\[\] = (\[[\s\S]*?\n\]);/);
+if (!match) throw new Error('Unable to locate static fishData catalogue seed payload.');
 
 const fishData = JSON.parse(match[1]);
 const catalog = fishData.map((item) => ({

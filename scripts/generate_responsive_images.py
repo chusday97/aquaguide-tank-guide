@@ -27,8 +27,11 @@ def save_variant(source: Path, output: Path, max_size: int, quality: int) -> Non
 def resolved_species_sources() -> dict[str, Path]:
     sources = {path.stem: path for path in SPECIES_SOURCE.glob("sp_*.png")}
     fish_data_text = (ROOT / "src" / "data" / "fishData.ts").read_text(encoding="utf-8")
-    data_start = fish_data_text.index("= [") + 2
-    records = json.loads(fish_data_text[data_start:fish_data_text.rindex("]") + 1])
+    import re
+    match = re.search(r"export const (?:catalogSeedFishData|fishData): Fish\[] = (\[.*?\n\]);", fish_data_text, flags=re.S)
+    if not match:
+        raise RuntimeError("Could not parse static fishData catalogue seed")
+    records = json.loads(match.group(1))
     for record in records:
         image_path = str(record.get("image", "")).split("?", 1)[0].lstrip("/")
         source = PUBLIC / image_path
