@@ -1,3 +1,11 @@
+## HANDOFF — 2026-09-28 Exact duplicate candidate-add normalization
+
+- Functional checkpoint `ce6609b95b17524b06d90e1f671bd898c1eac1a7`.
+- Exact catalogue aliases now behave identically during candidate-add review; alias selections canonicalize and quantities merge instead of creating fake cross-species compatibility warnings.
+- Local addition execution appends to an existing alias row while preserving its historical catalogue key. Compatibility preview excludes aliases of already owned/active species.
+- Distinct trade/catalogue objects still do not collapse. Cloud DB/RPC storage keys remain untouched.
+- Full backend release gate PASS. No UI/Vision/DB/Production/main changes.
+
 ## HANDOFF — 2026-09-28 Exact catalog duplicate runtime boundary
 
 - Functional checkpoint `e48452920d749fdc5b26bca257f5e2c59c45b11e`.

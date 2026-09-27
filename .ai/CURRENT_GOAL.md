@@ -1,3 +1,16 @@
+## CURRENT OVERRIDE — 2026-09-28 Exact duplicate candidate-add normalization validated
+
+- Functional head: `ce6609b95b17524b06d90e1f671bd898c1eac1a7` (`fix(compatibility): normalize exact duplicate additions`).
+- Candidate-add review now uses the same explicit exact-catalog-duplicate authority as current Tank State. Selecting either member of an exact duplicate group canonicalizes to the same addition item and produces the same compatibility result.
+- This fixes the reproduced case where an existing `sp_0038` 马口鱼 plus candidate `sp_0130` (the duplicate row for the same catalogue object) previously surfaced an extra false `single_housing` warning compared with adding canonical `sp_0038`.
+- Multiple selected alias rows merge into one canonical planned addition with summed quantity. Existing tank rows are canonicalized/summed for compatibility review, so alias differences do not create fake cross-species checks.
+- Local `executeSpeciesAddition` matches existing rows by exact-alias canonical ID and appends the batch to the historical stored row/key instead of creating a second livestock row. It intentionally preserves the stored legacy `fishId`.
+- Compatibility preview filters/deduplicates by exact-alias canonical ID, so a duplicate catalogue row is not recommended as a new species when an alias is already stocked or active.
+- Same-scientific-name but distinct trade/catalogue objects remain independent additions.
+- Cloud/Supabase catalogue keys and RPC storage semantics were NOT changed; no DB migration or data rewrite was introduced. This change normalizes review/planning/local execution only.
+- Targeted duplicate-addition tests, compatibility suite, Core Flow V1 and TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, DB migration/application, Production promote, or main merge changed.
+
 ## CURRENT OVERRIDE — 2026-09-28 Exact catalog duplicate runtime boundary validated
 
 - Functional head: `e48452920d749fdc5b26bca257f5e2c59c45b11e` (`feat(tank-state): collapse exact catalog duplicates`).
