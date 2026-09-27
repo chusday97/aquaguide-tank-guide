@@ -5,6 +5,7 @@ import type { DiagnosisRecord } from '../src/modules/diagnosis/diagnosis.types';
 import { deriveCurrentTankState } from '../src/services/aquarium/tank-state-evidence.service';
 import {
   buildCurrentTankRiskItems,
+  buildTankInterventionDecisionSummary,
   getCurrentTankRiskLevel,
 } from '../src/services/aquarium/tank-state-presentation.service';
 
@@ -354,8 +355,16 @@ console.log('Object-scoped recovery and intervention presentation passed');
   assert.deepEqual(new Set(evidence.interventions[0].conflictSpeciesIds),new Set(['sp_0439','sp_0436']));
   assert.equal(evidence.interventions[0].conflictPairSource,'reviewed_pair_rule');
   assert.ok((evidence.interventions[0].conflictPairEvidenceIds?.length || 0) >= 2);
+  assert.equal(evidence.interventions[0].targetRisk?.category,'fin_nipping');
+  assert.equal(evidence.interventions[0].targetRisk?.label,'追鳍 / 长鳍冲突');
+  assert.equal(evidence.interventions[0].targetRisk?.reviewedRiskType,'fin_nipping_long_fin_conflict');
+  assert.match(evidence.interventions[0].targetRisk?.reason || '',/孔雀鱼.*虎皮|虎皮.*孔雀鱼/);
+  assert.ok((evidence.interventions[0].targetRisk?.mitigation.length || 0) >= 1);
   assert.match(items[0]?.nextStep || '',/虎皮鱼 × 孔雀鱼|孔雀鱼 × 虎皮鱼/);
   assert.match(items[0]?.nextStep || '',/依据已审核直接配对规则自动关联/);
+  assert.match(items[0]?.nextStep || '',/针对风险：追鳍 \/ 长鳍冲突/);
+  assert.match(items[0]?.nextStep || '',/已审核原因：/);
+  assert.match(items[0]?.nextStep || '',/已审核风险建议：/);
 }
 
 // Ambiguous target set matching two independent direct reviewed pairs must fail closed instead of guessing.
@@ -370,6 +379,7 @@ console.log('Object-scoped recovery and intervention presentation passed');
   ]);
   assert.equal(evidence.interventions[0].conflictSpeciesIds,undefined);
   assert.equal(evidence.interventions[0].conflictPairSource,undefined);
+  assert.equal(evidence.interventions[0].targetRisk,undefined);
 }
 
 // Reviewed rule-inference is not treated as a direct pair fact for automatic provenance.
@@ -383,6 +393,7 @@ console.log('Object-scoped recovery and intervention presentation passed');
   ]);
   assert.equal(evidence.interventions[0].conflictSpeciesIds,undefined);
   assert.equal(evidence.interventions[0].conflictPairSource,undefined);
+  assert.equal(evidence.interventions[0].targetRisk,undefined);
 }
 
 // Explicit user-recorded conflict pair always wins over automatic reviewed-pair inference.
@@ -398,6 +409,54 @@ console.log('Object-scoped recovery and intervention presentation passed');
   assert.deepEqual(evidence.interventions[0].conflictSpeciesIds,['sp_0436','sp_0431']);
   assert.equal(evidence.interventions[0].conflictPairSource,'explicit');
   assert.equal(evidence.interventions[0].conflictPairEvidenceIds,undefined);
+  assert.equal(evidence.interventions[0].targetRisk,undefined);
+}
+
+// Explicit user-recorded pair still receives reviewed risk semantics when that exact pair has direct reviewed evidence.
+{
+  const tank = aquarium([['sp_0446',2],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'分缸',
+      interventionTargetSpeciesIds:'sp_0431',
+      interventionConflictSpeciesIds:'sp_0446,sp_0431',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+  ]);
+  assert.equal(evidence.interventions[0].conflictPairSource,'explicit');
+  assert.equal(evidence.interventions[0].targetRisk?.category,'predation');
+  assert.equal(evidence.interventions[0].targetRisk?.label,'捕食风险');
+  assert.equal(evidence.interventions[0].targetRisk?.reviewedRiskType,'predation_threat');
+  assert.match(items[0]?.nextStep || '',/针对风险：捕食风险/);
+  assert.match(items[0]?.nextStep || '',/已审核原因：/);
 }
 
 console.log('Reviewed conflict-pair auto association passed: unique direct evidence only; ambiguity and inference fail closed');
+console.log('Intervention target risk passed: reviewed pair risk -> stable category, cause, mitigation, and provenance');
+
+
+// Structured contract: judgment -> reason -> adjustment -> outcome is available without parsing long presentation text.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const evidence = run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]).evidence;
+  const summary = buildTankInterventionDecisionSummary(evidence,fishData);
+  assert.equal(summary?.judgment,'措施后伴随改善');
+  assert.equal(summary?.interventionOutcome,'improved_after_action');
+  assert.equal(summary?.targetRisk?.category,'fin_nipping');
+  assert.equal(summary?.targetRisk?.label,'追鳍 / 长鳍冲突');
+  assert.match(summary?.reason || '',/已审核依据/);
+  assert.match(summary?.reason || '',/孔雀鱼.*虎皮|虎皮.*孔雀鱼/);
+  assert.match(summary?.adjustment || '',/已审核调整建议/);
+  assert.match(summary?.adjustment || '',/分缸|长期混养|非追鳍/);
+}
+
+console.log('Structured intervention decision summary passed: judgment, reason, adjustment, outcome, and target risk');

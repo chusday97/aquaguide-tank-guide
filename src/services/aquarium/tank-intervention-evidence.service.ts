@@ -19,6 +19,25 @@ export type TankInterventionTarget = {
   quantity?: number;
 };
 
+export type TankInterventionRiskCategory =
+  | 'fin_nipping'
+  | 'predation'
+  | 'territory_aggression'
+  | 'group_size'
+  | 'water_parameter'
+  | 'space'
+  | 'other';
+
+export type TankInterventionRisk = {
+  category: TankInterventionRiskCategory;
+  label: string;
+  reviewedRiskType: string;
+  reason: string;
+  mitigation: string[];
+  evidenceIds: string[];
+  source: 'reviewed_pair_rule';
+};
+
 export type TankIntervention = {
   interventionId: string;
   type: TankInterventionType;
@@ -31,6 +50,7 @@ export type TankIntervention = {
   conflictSpeciesIds?: string[];
   conflictPairSource?: 'explicit' | 'reviewed_pair_rule';
   conflictPairEvidenceIds?: string[];
+  targetRisk?: TankInterventionRisk;
   recordedReason?: string;
 };
 
@@ -236,13 +256,48 @@ export const buildTankInterventionsFromDiagnosisRecords = (
     });
 };
 
+const normalizeReviewedPairRisk = (riskType: string): Pick<TankInterventionRisk, 'category' | 'label'> => {
+  switch (riskType) {
+    case 'fin_nipping_long_fin_conflict':
+      return { category: 'fin_nipping', label: '追鳍 / 长鳍冲突' };
+    case 'predation_threat':
+      return { category: 'predation', label: '捕食风险' };
+    case 'behavior_and_territory_conflict':
+      return { category: 'territory_aggression', label: '领地 / 攻击冲突' };
+    case 'group_size_and_shared_water_window':
+      return { category: 'group_size', label: '群体数量 / 共同水体条件' };
+    default:
+      if (/water|temperature|ph|hardness|salinity/i.test(riskType)) return { category: 'water_parameter', label: '水体参数冲突' };
+      if (/space|volume|tank_size/i.test(riskType)) return { category: 'space', label: '空间 / 容量风险' };
+      return { category: 'other', label: '其他已审核混养风险' };
+  }
+};
+
+const riskFromReviewedPairRule = (leftId: string, rightId: string): TankInterventionRisk | undefined => {
+  const reviewed = getReviewedPairRule(leftId, rightId);
+  if (!reviewed || reviewed.reviewStatus !== 'reviewed' || reviewed.basis !== 'pair_rule') return undefined;
+  const normalized = normalizeReviewedPairRisk(reviewed.riskType);
+  return {
+    ...normalized,
+    reviewedRiskType: reviewed.riskType,
+    reason: reviewed.reason,
+    mitigation: [...reviewed.mitigation],
+    evidenceIds: reviewed.citations.map(item => item.id),
+    source: 'reviewed_pair_rule',
+  };
+};
+
 export const attachReviewedConflictPairsToInterventions = (
   interventions: TankIntervention[],
   decision: CompatibilityDecision | null,
 ): TankIntervention[] => {
   if (!decision) return interventions;
   return interventions.map(intervention => {
-    if ((intervention.conflictSpeciesIds?.length || 0) > 0) return intervention;
+    if ((intervention.conflictSpeciesIds?.length || 0) > 0) {
+      const ids = intervention.conflictSpeciesIds || [];
+      const targetRisk = ids.length === 2 ? riskFromReviewedPairRule(ids[0], ids[1]) : undefined;
+      return targetRisk ? { ...intervention, targetRisk } : intervention;
+    }
     if (!LOCAL_INTERVENTION_TYPES.has(intervention.type) || intervention.targetScope !== 'species_specific') return intervention;
     const targetIds = intervention.targets?.map(item => item.speciesId) || [];
     if (targetIds.length === 0) return intervention;
@@ -259,9 +314,10 @@ export const attachReviewedConflictPairsToInterventions = (
       return [{
         pairIds: [...reviewed.speciesIds] as string[],
         evidenceIds: reviewed.citations.map(item => item.id),
+        targetRisk: riskFromReviewedPairRule(pair.speciesA.id, pair.speciesB.id)!,
       }];
     });
-    const unique = new Map<string, { pairIds: string[]; evidenceIds: string[] }>();
+    const unique = new Map<string, { pairIds: string[]; evidenceIds: string[]; targetRisk: TankInterventionRisk }>();
     candidates.forEach(candidate => unique.set([...candidate.pairIds].sort().join('::'), candidate));
     if (unique.size !== 1) return intervention;
     const [candidate] = unique.values();
@@ -270,6 +326,7 @@ export const attachReviewedConflictPairsToInterventions = (
       conflictSpeciesIds: candidate.pairIds,
       conflictPairSource: 'reviewed_pair_rule' as const,
       conflictPairEvidenceIds: candidate.evidenceIds,
+      targetRisk: candidate.targetRisk,
     };
   });
 };
