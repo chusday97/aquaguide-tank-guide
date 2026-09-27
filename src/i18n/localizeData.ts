@@ -210,6 +210,21 @@ export const englishTranslations: Record<string, SpeciesTranslation> = {
       specialNotes: "",
     }
   },
+  "sp_0120": {
+    name: "Banded knifefish",
+    description: "A weakly electric knifefish that uses low-strength electric organ discharges for electrolocation and communication; it is not a high-voltage electric eel. It is nocturnal, predatory toward small fish, and requires a large aquarium with ample cover.",
+    diet: "Carnivore: high-protein pellets plus frozen shrimp and fish. Feed juveniles small portions daily and adults several times per week.",
+    housingReason: "Conspecific territoriality and predation on small fish make solitary planning the default. Large, robust tankmates that cannot be swallowed are not automatically excluded, but space, behavior and water conditions must be checked individually.",
+    feedingProfile: {
+      feedingType: "Carnivore",
+      recommendedFoods: "High-protein pellets + frozen shrimp + frozen fish",
+      feedingFrequency: "Juveniles: small daily portions; adults: several times per week",
+      portionRule: "Feed conservatively and remove uneaten food",
+      feedingLayer: "Bottom / Midwater",
+      avoidFoods: "Unknown-source live feeders; long-term single high-fat foods",
+      specialNotes: "Avoid housing with fish small enough to be swallowed.",
+    }
+  },
   "sp_0459": {
     name: "Grass Shrimp",
     description: "The most classic algae-eating shrimp. Efficiently cleans hair algae and brown diatoms in aquariums. Slightly more resilient than crystal shrimp.",

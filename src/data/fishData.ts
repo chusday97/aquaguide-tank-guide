@@ -1,6 +1,7 @@
 import { Fish } from '../types';
+import { applyCatalogIdentityCorrection } from './catalogIdentityCorrections';
 
-export const fishData: Fish[] = [
+export const catalogSeedFishData: Fish[] = [
   {
     "id": "sp_0001",
     "name": "极火虾",
@@ -19156,3 +19157,5 @@ export const fishData: Fish[] = [
     }
   }
 ];
+
+export const fishData: Fish[] = catalogSeedFishData.map(fish => applyCatalogIdentityCorrection(fish, 'zh-CN'));

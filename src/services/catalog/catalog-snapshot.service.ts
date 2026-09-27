@@ -1,5 +1,5 @@
 import { catalogSnapshotSchema, type CatalogSnapshot, type CatalogManifest } from '../../../packages/contracts/src';
-import { fishData } from '../../data/fishData';
+import { catalogSeedFishData as fishData } from '../../data/fishData';
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { Fish } from '../../types';
 import { speciesProfileFromFish } from './species-profile.adapter';
