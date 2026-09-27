@@ -1,3 +1,12 @@
+## HANDOFF — 2026-09-28 Priority Compatibility Knowledge Batch 4
+
+- Functional head `7619a8b03904e55baba8ded7669f3268cce11b39`.
+- Exact reviewed promotions: `sp_0105` Ornate Bichir, `sp_0117` Silver Arowana, `sp_0018` Chindongo socolofi. Runtime coverage is now 52 reviewed Compatibility profiles / 88 reviewed Species Knowledge objects; pair rules remain 22.
+- Key boundaries: Ornate Bichir has small-fish predation but no absolute solitary rule; Silver Arowana is solitary + predatory but has no invented reviewed fixed minimum tank number; Chindongo gets territorial/harem + hard-water/space authority but no invented universal minimum group size.
+- Canonical result bridge now collapses duplicate candidate-level `single_housing_required` output and preserves the richer exact-species reviewed evidence. Distinct pair-context rules are not globally deduped.
+- Static HOLD owner `202609280001_compatibility_priority_batch4_profiles.sql` added but NOT applied. Snapshot: 486 species / 82 evidence sources / checksum `6486bc3150b80c9309958b959e5616fe99d09c2c6b7f1d2df6e9cf2c4efeffa1`.
+- Targeted tests and full backend release gate PASS. No UI/Vision/Production/main/DB-authority change.
+
 ## HANDOFF — 2026-09-28 Gymnotus build contract follow-up
 
 - Runtime identity correction: `5b0c7e8a1313c54da88348e9edd180f2fc429a47`; build parser/gate fix: `a42d492009eaaee779e7a918709610a0d73b8586`.

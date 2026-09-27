@@ -1,3 +1,17 @@
+## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 4
+
+- Functional checkpoint: `7619a8b03904e55baba8ded7669f3268cce11b39` (`feat(compatibility): add priority knowledge batch 4`).
+- Promoted three exact catalogue objects into reviewed runtime Species Knowledge + Compatibility authority: `sp_0105` 大花恐龙 / `Polypterus ornatipinnis`, `sp_0117` 银龙鱼 / `Osteoglossum bicirrhosum`, and `sp_0018` 蓝王子 / `Chindongo socolofi`. No sibling, ornamental, trade-form, or generic scientific-name inheritance was introduced.
+- `sp_0105`: reviewed freshwater 25–28°C, pH 6–8, dGH 5–25; 60 cm TL; 180 cm / ~648 L planning; explicit `small_fish` predation. It is NOT promoted to `solitary_required`, so its documented tendency to be solitary does not become an absolute ban on all large heterospecific tankmates.
+- `sp_0117`: reviewed freshwater 20–30°C, pH 5–7.5, dGH 2–15; 90 cm TL; surface predator; `small_fish` predation + `solitary_required`. No reviewed numeric minimum volume/length is invented: the legacy 800 L catalogue text remains outside reviewed minimum-space authority because the exact source does not supply a defensible fixed threshold.
+- `sp_0018`: reviewed Malawi hard-water range 24–28°C, pH 7.6–8.8, dGH 10–25; territorial / harem context; ~154 L / 90 cm planning with rockwork. “One male with several females” is NOT converted into a universal `minimumGroupSize`.
+- While validating silver arowana, a real duplicate-result bug was reproduced: Domain authority emitted generic `single_housing_required` and the reviewed evidence bridge emitted the same semantic candidate-level rule again. Canonical result dedupe now treats only `single_housing_required` as a singleton and retains the more specific reviewed rule with affected species + citation; other same-code pair risks remain independently representable.
+- Coverage after Batch 4: 486 catalog objects; 52 reviewed Compatibility profiles (49 → 52); 88 runtime reviewed Species Knowledge objects (85 → 88); 22 reviewed pair rules; 82 total evidence sources. Snapshot checksum is now `6486bc3150b80c9309958b959e5616fe99d09c2c6b7f1d2df6e9cf2c4efeffa1`, expected because reviewed Compatibility authority is part of the snapshot. Raw historical catalogue seed rows were not rewritten.
+- Repository-only `supabase/migrations/202609280001_compatibility_priority_batch4_profiles.sql` owns the three new reviewed Profiles and evidence links. It is a static HOLD artifact only: DB application / DB authority switch remain unauthorized and were not executed.
+- New Batch 4 regression verifies exact knowledge/profile promotion, predation, space, hard-water/territory boundaries, non-overgeneralization, and singleton-rule dedupe. Compatibility admin ownership, catalog snapshot, core compatibility, actionable-result contract, TypeScript, Admin build, and full `npm run test:backend-release-gate` all PASS (`BACKEND_RELEASE_GATE=PASS`).
+- Deferred rather than guessed: `Hypostomus plecostomus` and `Heros severus` remain unpromoted due identity/taxonomic hobby-name ambiguity; `Peckoltia compta` remains unpromoted pending stronger exact husbandry authority.
+- No UI component/page, Vision, Production promote, main merge, or applied DB change occurred.
+
 ## CURRENT OVERRIDE — 2026-09-28 Gymnotus build contract follow-up
 
 - Runtime identity functional head remains `5b0c7e8a1313c54da88348e9edd180f2fc429a47`; build-contract fix head is `a42d492009eaaee779e7a918709610a0d73b8586`.
