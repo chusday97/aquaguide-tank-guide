@@ -7,7 +7,7 @@ import {
 } from '../src/data/catalogIdentityCorrections';
 import { englishTranslations } from '../src/i18n/localizeData';
 import { getKnowledgeSource } from '../src/modules/knowledge/knowledgeSources';
-import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
+import { buildSpeciesKnowledgeProfile, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { buildLocalCatalogSnapshot } from '../src/services/catalog/catalog-snapshot.service';
 import { getSearchSuggestions } from '../src/services/search/search-suggestions.service';
@@ -98,6 +98,38 @@ const scientificSearch = getSearchSuggestions({
 assert.equal(scientificSearch.suggestions[0]?.targetId, 'sp_0120');
 assert.equal(scientificSearch.suggestions[0]?.label, 'Banded knifefish');
 
+// Legacy category/housing mistakes for three exact freshwater cichlid objects are corrected only at runtime.
+const freshwaterCichlidCorrections = [
+  { id: 'sp_0054', scientificName: 'Hemichromis bimaculatus', seedCategory: '硬景/底床', sources: ['batch09-fishbase-hemichromis-bimaculatus', 'seriouslyfish-hemichromis-bimaculatus'] },
+  { id: 'sp_0057', scientificName: 'Altolamprologus calvus', seedCategory: '海水鱼', sources: ['batch09-fishbase-altolamprologus-calvus', 'seriouslyfish-altolamprologus-calvus'] },
+  { id: 'sp_0058', scientificName: 'Neolamprologus multifasciatus', seedCategory: '海水鱼', sources: ['batch09-fishbase-neolamprologus-multifasciatus', 'seriouslyfish-neolamprologus-multifasciatus'] },
+] as const;
+for (const spec of freshwaterCichlidCorrections) {
+  const legacy = catalogSeedFishData.find(item => item.id === spec.id);
+  const corrected = fishData.find(item => item.id === spec.id);
+  assert.ok(legacy && corrected, `${spec.id} seed/runtime row missing`);
+  assert.equal(legacy.scientificName, spec.scientificName);
+  assert.equal(legacy.category, spec.seedCategory, `${spec.id} historical seed must remain immutable`);
+  assert.equal(corrected.category, '慈鲷/斗鱼', `${spec.id} runtime category must be freshwater cichlid`);
+  assert.equal(buildSpeciesKnowledgeProfile(corrected).facts.waterType, 'freshwater');
+  assert.doesNotMatch(corrected.housingReason, /海水生物|珊瑚缸|造景或植物类|不会主动攻击鱼虾/);
+
+  const exactCorrection = getCatalogIdentityCorrection(spec.id);
+  assert.ok(exactCorrection, `${spec.id} identity correction missing`);
+  assert.deepEqual(exactCorrection.sourceIds, [...spec.sources]);
+  for (const sourceId of exactCorrection.sourceIds) {
+    const source = getKnowledgeSource(sourceId);
+    assert.ok(source, `${spec.id} identity correction source missing: ${sourceId}`);
+    assert.equal(source.reviewStatus, 'reviewed');
+  }
+
+  const mismatchedTaxon = { ...legacy, scientificName: `Wrongus ${spec.id}` };
+  const failClosed = applyCatalogIdentityCorrection(mismatchedTaxon, 'zh-CN');
+  assert.equal(failClosed.category, legacy.category, `${spec.id} correction must fail closed on taxon mismatch`);
+  assert.equal(failClosed.housingReason, legacy.housingReason, `${spec.id} correction must not patch a reused key with the wrong taxon`);
+}
+assert.equal(catalogIdentityCorrections.filter(item => ['sp_0054','sp_0057','sp_0058'].includes(item.catalogKey)).length, 3);
+
 // The immutable local catalogue snapshot still serializes the legacy seed rather than runtime corrections.
 const snapshot = await buildLocalCatalogSnapshot();
 const snapshotSpecies = snapshot.species.find(item => item.id === 'sp_0120');
@@ -107,6 +139,11 @@ assert.equal(snapshotSpecies.name, '电鳗 (观赏型)');
 assert.match(snapshotSpecies.description, /会电击同类和室友/);
 assert.equal(snapshotSpecies.tankSizeText, '至少 320 升');
 assert.equal(snapshotSpecies.scientificName, 'Gymnotus carapo');
+for (const spec of freshwaterCichlidCorrections) {
+  const rawSnapshotRow = snapshot.species.find(item => item.id === spec.id);
+  assert.ok(rawSnapshotRow, `${spec.id} snapshot row missing`);
+  assert.equal(rawSnapshotRow.category, spec.seedCategory, `${spec.id} immutable snapshot must keep the historical seed category`);
+}
 
-console.log('catalog identity correction passed: Gymnotus runtime identity corrected, reviewed authority retained, legacy catalog snapshot unchanged');
+console.log('catalog identity correction passed: Gymnotus identity + three freshwater-cichlid category corrections are object-scoped; reviewed authority retained; legacy snapshot unchanged');
 console.log(`catalog identity correction snapshot checksum: ${snapshot.manifest.checksumSha256}`);

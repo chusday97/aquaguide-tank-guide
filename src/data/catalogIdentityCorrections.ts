@@ -6,8 +6,8 @@ export type CatalogIdentityCorrection = {
   reviewedAt: string;
   sourceIds: string[];
   rationale: string;
-  zhCN: Partial<Pick<Fish, 'name' | 'description' | 'tankSize' | 'housingMode' | 'housingReason'>>;
-  en: Partial<Pick<Fish, 'name' | 'description' | 'tankSize' | 'housingMode' | 'housingReason'>>;
+  zhCN: Partial<Pick<Fish, 'name' | 'category' | 'description' | 'tankSize' | 'housingMode' | 'housingReason'>>;
+  en: Partial<Pick<Fish, 'name' | 'category' | 'description' | 'tankSize' | 'housingMode' | 'housingReason'>>;
 };
 
 /**
@@ -20,6 +20,72 @@ export type CatalogIdentityCorrection = {
  * provenance. Published catalogue snapshots remain immutable.
  */
 export const catalogIdentityCorrections: CatalogIdentityCorrection[] = [
+  {
+    catalogKey: 'sp_0054',
+    expectedScientificName: 'Hemichromis bimaculatus',
+    reviewedAt: '2026-09-28',
+    sourceIds: ['batch09-fishbase-hemichromis-bimaculatus', 'seriouslyfish-hemichromis-bimaculatus'],
+    rationale: 'Legacy row classifies a freshwater cichlid as hardscape/substrate and gives hardscape housing copy. The exact taxon is a territorial freshwater jewel cichlid.',
+    zhCN: {
+      category: '慈鲷/斗鱼',
+      description: '西非淡水慈鲷，具有明显领地性，繁殖期攻击性会显著上升；不适合作为普通社区鱼随意混养。',
+      tankSize: '至少 108 升（建议缸长 120 cm）',
+      housingMode: '谨慎混养',
+      housingReason: '需要足够领地和躲避结构；繁殖期尤其应避免与无关鱼只拥挤混养。若搭配异种，应选择体型和性情合适、无法轻易被压制的对象。',
+    },
+    en: {
+      name: 'Jewel cichlid',
+      category: '慈鲷/斗鱼',
+      description: 'A territorial West African freshwater cichlid whose aggression can increase sharply during breeding. It is not a general community fish.',
+      tankSize: 'At least 108 L (120 cm tank length recommended)',
+      housingMode: '谨慎混养',
+      housingReason: 'Provide clear territories and cover. Breeding fish can become highly aggressive, so community combinations require deliberate selection and enough space.',
+    },
+  },
+  {
+    catalogKey: 'sp_0057',
+    expectedScientificName: 'Altolamprologus calvus',
+    reviewedAt: '2026-09-28',
+    sourceIds: ['batch09-fishbase-altolamprologus-calvus', 'seriouslyfish-altolamprologus-calvus'],
+    rationale: 'Legacy row classifies this Lake Tanganyika freshwater cichlid as marine and gives generic marine/coral housing copy.',
+    zhCN: {
+      category: '慈鲷/斗鱼',
+      description: '坦噶尼喀湖淡水慈鲷，适应碱性硬水和岩石洞穴环境，会捕食鱼卵、鱼苗及能入口的小鱼。',
+      tankSize: '大型岩石缸；暂无审核固定最低体积',
+      housingMode: '谨慎混养',
+      housingReason: '可进入规划良好的坦湖混养缸，但应避开能被吞食的小鱼以及过于凶猛、喧闹的同缸鱼，并提供充足岩洞和领地。',
+    },
+    en: {
+      name: 'Calvus cichlid',
+      category: '慈鲷/斗鱼',
+      description: 'A freshwater Lake Tanganyika cichlid for hard, alkaline water and rocky cave habitats. It preys on eggs, fry and small fish it can swallow.',
+      tankSize: 'Large rockwork aquarium; no reviewed fixed minimum volume',
+      housingMode: '谨慎混养',
+      housingReason: 'Suitable for a carefully planned Tanganyikan community with robust tankmates too large to swallow; avoid very aggressive or boisterous companions and provide ample caves.',
+    },
+  },
+  {
+    catalogKey: 'sp_0058',
+    expectedScientificName: 'Neolamprologus multifasciatus',
+    reviewedAt: '2026-09-28',
+    sourceIds: ['batch09-fishbase-neolamprologus-multifasciatus', 'seriouslyfish-neolamprologus-multifasciatus'],
+    rationale: 'Legacy row classifies this Lake Tanganyika freshwater shell-dweller as marine and gives generic marine/coral housing copy.',
+    zhCN: {
+      category: '慈鲷/斗鱼',
+      description: '坦噶尼喀湖淡水壳居慈鲷，围绕螺壳建立并防守小型领地；需要细沙和数量多于鱼只的空壳。',
+      tankSize: '至少 40 升（成对）；群落需更大空间',
+      housingMode: '谨慎混养',
+      housingReason: '会积极防守壳区，但可与主要活动在其他水层的合适坦湖鱼搭配；应留出壳区间距并提供充足空壳。',
+    },
+    en: {
+      name: 'Multifasciatus shell-dweller',
+      category: '慈鲷/斗鱼',
+      description: 'A freshwater Lake Tanganyika shell-dwelling cichlid that defends small territories around shells. It needs sand and more empty shells than fish.',
+      tankSize: 'At least 40 L for a pair; colonies need more space',
+      housingMode: '谨慎混养',
+      housingReason: 'It vigorously defends shell territories but can coexist with suitable Tanganyikan species occupying other zones when shell spacing and cover are sufficient.',
+    },
+  },
   {
     catalogKey: 'sp_0120',
     expectedScientificName: 'Gymnotus carapo',
