@@ -1,3 +1,9 @@
+## HANDOFF — 2026-09-28 Batch 4 staging manifest follow-up
+
+- CI fix `ed5c9a85ee570cf9128c586656827bd6fb3d89eb`: Batch 4 HOLD migration is now registered in `BUSINESS_ADMIN_AUTHORITY_MIGRATIONS`.
+- The remote failure was manifest parity only, not DB execution or product logic. Business Admin Staging Preflight is now part of the local backend release gate; targeted preflight and updated full gate PASS.
+- DB application remains HOLD.
+
 ## HANDOFF — 2026-09-28 Priority Compatibility Knowledge Batch 4
 
 - Functional head `7619a8b03904e55baba8ded7669f3268cce11b39`.

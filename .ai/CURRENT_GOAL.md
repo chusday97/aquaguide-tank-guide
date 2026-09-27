@@ -1,3 +1,11 @@
+## CURRENT OVERRIDE — 2026-09-28 Batch 4 staging manifest follow-up
+
+- CI ownership fix head: `ed5c9a85ee570cf9128c586656827bd6fb3d89eb`.
+- First remote Admin validate after Batch 4 failed only because `202609280001_compatibility_priority_batch4_profiles.sql` was present on disk but absent from `BUSINESS_ADMIN_AUTHORITY_MIGRATIONS`; the Staging preflight expected list therefore lagged the repository migration set. No migration was executed and no DB state failed.
+- Registered the Batch 4 HOLD migration in the Business Admin staging migration manifest and added `Business Admin Staging Preflight` to the local backend release gate.
+- Targeted staging preflight + Compatibility Admin ownership + TypeScript PASS; updated full `npm run test:backend-release-gate` again returns `BACKEND_RELEASE_GATE=PASS`.
+- DB application / DB authority switch remain on HOLD; no UI, Vision, Production or main merge change.
+
 ## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 4
 
 - Functional checkpoint: `7619a8b03904e55baba8ded7669f3268cce11b39` (`feat(compatibility): add priority knowledge batch 4`).
