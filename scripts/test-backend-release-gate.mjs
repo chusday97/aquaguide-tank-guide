@@ -28,6 +28,7 @@ const gates = [
   ['Priority Compatibility Knowledge Batch 3', 'node', ['--import', 'tsx', 'scripts/test-priority-compatibility-knowledge-batch3.ts']],
   ['Priority Compatibility Knowledge Batch 4', 'node', ['--import', 'tsx', 'scripts/test-priority-compatibility-knowledge-batch4.ts']],
   ['Priority Compatibility Knowledge Batch 5', 'node', ['--import', 'tsx', 'scripts/test-priority-compatibility-knowledge-batch5.ts']],
+  ['Priority Compatibility Knowledge Batch 6', 'node', ['--import', 'tsx', 'scripts/test-priority-compatibility-knowledge-batch6.ts']],
   ['Gold Ram Compatibility Authority', 'npm', ['run', 'test:gold-ram-compatibility-authority']],
   ['Platinum Snakehead Catalog Bridge', 'npm', ['run', 'test:platinum-snakehead-catalog-bridge']],
   ['Platinum Snakehead Small Fish Pairs', 'npm', ['run', 'test:platinum-snakehead-small-fish-pairs']],
