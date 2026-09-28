@@ -76,8 +76,8 @@ const reviewedFreshwater = fishData.find(fish => fish.id === 'sp_0431');
 assert.ok(reviewedFreshwater, 'core flow compatible fixture requires an explicitly reviewed freshwater species');
 
 const compatible = evaluateTankCompatibility({
-  tank: makeTank(),
-  existingSpecies: [{ species: reviewedFreshwater, record: { quantity: 6 } }],
+  tank: makeTank({ dimensions: { length: '90', width: '40', height: '40' } }),
+  existingSpecies: [{ species: reviewedFreshwater, record: { quantity: 8 } }],
   candidateSpecies: reviewedFreshwater,
 });
 assert.equal(compatible.status, 'compatible');

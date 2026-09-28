@@ -106,6 +106,17 @@ export const applyApprovedCatalogFieldReviews = (
   let next = profile;
   for (const review of reviews.filter(item => item.status === 'reviewed' && item.resolution === 'supported' && item.citationIds.length > 0)) {
     if (!isCatalogFieldReviewValueValid(review)) continue;
+    const factEvidence: SpeciesFactEvidence = {
+      field: review.field,
+      citationIds: review.citationIds,
+      reviewStatus: review.status,
+      confidence: review.confidence,
+    };
+    next = {
+      ...next,
+      evidenceSourceIds: Array.from(new Set([...(next.evidenceSourceIds ?? []), ...review.citationIds])),
+      factEvidence: [...(next.factEvidence ?? []).filter(item => item.field !== review.field), factEvidence],
+    };
     const value = review.proposedValue;
     if (review.field === 'identity' && typeof value === 'object' && value !== null) {
       const candidate = value as { scientificName?: unknown; baseSpeciesKey?: unknown; variantKey?: unknown };
@@ -136,18 +147,6 @@ export const applyApprovedCatalogFieldReviews = (
       const modes = ['solitary', 'pair', 'group', 'colony', 'variable', 'unknown'];
       const socialMode = modes.includes(String(candidate.mode)) ? candidate.mode as SpeciesProfile['socialMode'] : 'unknown';
       next = { ...next, socialMode, minimumGroupSize: finiteOrNull(candidate.minimumGroupSize) };
-    }
-    if (review.field === 'territoriality' || review.field === 'predation' || review.field === 'breeding_behavior') {
-      const factEvidence: SpeciesFactEvidence = {
-        field: review.field,
-        citationIds: review.citationIds,
-        reviewStatus: review.status,
-        confidence: review.confidence,
-      };
-      next = {
-        ...next,
-        factEvidence: [...(next.factEvidence ?? []).filter(item => item.field !== review.field), factEvidence],
-      };
     }
   }
   return next;

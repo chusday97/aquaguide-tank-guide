@@ -41,9 +41,31 @@ export const requireIdempotencyKey = (request: ApiRequest) => {
   return key;
 };
 
-export const getRequestHash = (request: ApiRequest) => createHash('sha256')
+const getLegacyRequestHash = (request: ApiRequest) => createHash('sha256')
   .update(JSON.stringify({ method: request.method, path: request.baseUrl + request.path, body: request.body || null }))
   .digest('hex');
+
+const getNormalizedQuery = (request: ApiRequest) => {
+  const source = request.originalUrl || request.url || '';
+  const queryIndex = source.indexOf('?');
+  if (queryIndex < 0) return '';
+  const params = new URLSearchParams(source.slice(queryIndex + 1));
+  params.sort();
+  return params.toString();
+};
+
+export const getRequestHash = (request: ApiRequest) => {
+  const query = getNormalizedQuery(request);
+  if (!query) return getLegacyRequestHash(request);
+  return createHash('sha256')
+    .update(JSON.stringify({
+      method: request.method,
+      path: request.baseUrl + request.path,
+      query,
+      body: request.body || null,
+    }))
+    .digest('hex');
+};
 
 export const deterministicUuid = (source: string) => {
   const hex = createHash('sha256').update(source).digest('hex').slice(0, 32).split('');
@@ -72,7 +94,7 @@ export const beginIdempotentWrite = async (request: ApiRequest): Promise<Idempot
     .maybeSingle();
   if (error) throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', '暂时无法确认写入状态。');
   if (!data) return { key, hash };
-  if (data.request_hash !== hash) {
+  if (data.request_hash !== hash && data.request_hash !== getLegacyRequestHash(request)) {
     throw new ApiError(409, 'DUPLICATE_RESOURCE', '这个幂等键已经用于另一项操作。');
   }
   return {

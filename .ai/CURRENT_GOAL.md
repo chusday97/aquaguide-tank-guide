@@ -1,3 +1,293 @@
+## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 6
+
+- Functional checkpoint: `d618792aada7bee29ce4dc9df32b5e42d2f0fef6` (`feat(compatibility): add priority knowledge batch 6`).
+- Promoted four exact catalog objects into reviewed Species Knowledge + Compatibility authority after exact-species husbandry review: `sp_0128` Beaufortia kweichowensis, `sp_0134` Iriatherina werneri, `sp_0135` Pseudomugil furcatus, `sp_0136` Sphaerichthys osphromenoides. No sibling/trade-form inheritance is authorized.
+- `sp_0128` 吸鳅: reviewed 16–24°C / pH 6.5–8.0 / dGH 2–15, high-oxygen/current context, minimum group 6, 60 cm / ~54 L planning. Real engine: 1 fish => `caution / minimum_group_not_met`; 6 fish at 27°C => `not_recommended / temperature conflict`.
+- `sp_0134` 燕子美人: reviewed 22–30°C / pH 5–8 / dGH 1–12, minimum group 6 (10+ preferred), explicit long-fin / slow-swimming fin-nip vulnerability. Tiger barb pairing => `caution / fin_nipping_target_vulnerability`, not a fabricated predation block.
+- `sp_0135` 霓虹燕子: reviewed 24–28°C / pH 7–8 / dGH 15–30, minimum group 8 (10+ preferred), peaceful group context. 7 fish => caution; 8 fish => compatible under an otherwise matching test tank.
+- `sp_0136` 巧克力曼龙: reviewed 26–31°C / pH 4–6.5 / dGH 0–3 for wild-type planning, minimum group 6, slow-swimming/easily-outcompeted context. Direct fin-nip vulnerability was deliberately NOT asserted because the exact source supports slow/outcompeted behavior rather than an explicit nipping claim. Pairing with hard-water `P. furcatus` surfaces pH conflict.
+- `sp_0127` Botia almorhae remains explicitly fail-closed: aquarium-trade yo-yo/Pakistani loach identity is materially ambiguous in the reviewed husbandry source, so no exact reviewed runtime Knowledge or Compatibility profile is promoted. Regression locks this boundary.
+- Coverage after Batch 6: 486 catalog objects; 59 reviewed Compatibility profiles (55 → 59); 95 runtime reviewed Species Knowledge objects (91 → 95); 22 reviewed pair rules; 89 evidence sources. Snapshot checksum: `ebdcee50e73012737cd8693f3219e6c46ee77c876a90e34b918c76ca8a32e735`.
+- Repository-only `supabase/migrations/202609280003_compatibility_priority_batch6_profiles.sql` owns the four new Profiles/evidence links and is registered in Business Admin staging readiness. DB application / DB authority switch remain HOLD; nothing was applied.
+- Targeted Batch 6 behavior regression, Compatibility Admin ownership, Business Admin staging preflight, Catalog Snapshot, core Compatibility, Actionable Result, TypeScript, API/bundle checks, and full `npm run test:backend-release-gate` PASS after final evidence tightening (`BACKEND_RELEASE_GATE=PASS`).
+- Frozen scope unchanged: no UI page/component, Vision, Production promote, main merge, or applied DB change.
+
+## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 5 + freshwater-cichlid runtime correction
+
+- Functional checkpoint: `0826a5ee6a2c6aedc76796d81e56ad4c11507c10` (`feat(compatibility): add priority knowledge batch 5`).
+- Before expanding authority, three legacy catalogue-row errors were reproduced and corrected at runtime with exact catalog-key + scientific-name guards while preserving historical `local-fish-data-v1` seed rows: `sp_0054` Hemichromis bimaculatus was mislabeled `硬景/底床`; `sp_0057` Altolamprologus calvus and `sp_0058` Neolamprologus multifasciatus were mislabeled `海水鱼`. All three are now runtime `慈鲷/斗鱼` and resolve to freshwater.
+- `sp_0054` 红宝石鱼 / Hemichromis bimaculatus: reviewed freshwater 22–28°C, pH 6.0–7.8, dGH 4–18; 15 cm SL; 120 cm / ~108 L planning; territorial + breeding-defense authority. Normal territorial overlap is caution, not an automatic hard block; breeding aggression remains a contextual risk.
+- `sp_0057` 珍珠虎 / Altolamprologus calvus: reviewed Tanganyika freshwater 24–27°C, pH 7.5–9.0, dGH 8–20; 13.8 cm SL; territorial predator with explicit `small_fish` predation. Exact source does not provide a defensible fixed minimum aquarium number, so legacy `120 L` is removed from runtime reviewed-looking copy and is NOT promoted into `minVolumeLiters` / `minTankLengthCm`.
+- `sp_0058` 九间贝 / Neolamprologus multifasciatus: reviewed Tanganyika freshwater 24–27°C, pH 7.5–9.0, dGH 8–25; 4.5 cm SL; shell-territorial colony context; pair planning ~40 L / 45 cm, sand + more shells than fish. Colony/sex-ratio guidance is NOT converted into a universal `minimumGroupSize`.
+- Runtime acceptance: Jewel Cichlid + another reviewed territorial cichlid => `caution / territorial_conflict`; Calvus + Neon Tetra => `not_recommended / predation_risk`; Calvus alone in an 80 cm test tank does not receive a fabricated legacy 120 L reviewed warning; a too-small Multifasciatus tank receives volume + length caution without an invented group-size warning.
+- Coverage after Batch 5: 486 catalog objects; 55 reviewed Compatibility profiles (52 → 55); 91 runtime reviewed Species Knowledge objects (88 → 91); 22 reviewed pair rules; 85 evidence sources. Snapshot checksum: `4045fa1c6a8e28de2aaa7d6450342b1225c5d72d700c036be90ed719e9d37ce8`. Historical seed rows remain unchanged.
+- Repository-only `supabase/migrations/202609280002_compatibility_priority_batch5_profiles.sql` owns the three new Profiles and evidence links. It is registered in `BUSINESS_ADMIN_AUTHORITY_MIGRATIONS` but remains a static HOLD artifact; no migration was applied and no DB authority switch occurred.
+- Catalog identity correction regression now covers the three freshwater-cichlid corrections, source provenance, exact-taxon fail-closed behavior, runtime freshwater classification, and immutable historical snapshot fields.
+- Batch 5 targeted regression, Compatibility Admin ownership, Business Admin Staging Preflight, catalog snapshot, core Compatibility, actionable-result contract, TypeScript, Admin build, and full `npm run test:backend-release-gate` all PASS (`BACKEND_RELEASE_GATE=PASS`).
+- Still deferred rather than guessed: `Heros severus` remains fail-closed because hobby “severum” material commonly refers to H. efasciatus; `Hypostomus plecostomus` remains identity-sensitive in hobby usage; `Peckoltia compta` remains unpromoted pending stronger complete husbandry authority.
+- No UI component/page, Vision, Production promote, main merge, or applied DB change occurred.
+
+## CURRENT OVERRIDE — 2026-09-28 Batch 4 staging manifest follow-up
+
+- CI ownership fix head: `ed5c9a85ee570cf9128c586656827bd6fb3d89eb`.
+- First remote Admin validate after Batch 4 failed only because `202609280001_compatibility_priority_batch4_profiles.sql` was present on disk but absent from `BUSINESS_ADMIN_AUTHORITY_MIGRATIONS`; the Staging preflight expected list therefore lagged the repository migration set. No migration was executed and no DB state failed.
+- Registered the Batch 4 HOLD migration in the Business Admin staging migration manifest and added `Business Admin Staging Preflight` to the local backend release gate.
+- Targeted staging preflight + Compatibility Admin ownership + TypeScript PASS; updated full `npm run test:backend-release-gate` again returns `BACKEND_RELEASE_GATE=PASS`.
+- DB application / DB authority switch remain on HOLD; no UI, Vision, Production or main merge change.
+
+## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 4
+
+- Functional checkpoint: `7619a8b03904e55baba8ded7669f3268cce11b39` (`feat(compatibility): add priority knowledge batch 4`).
+- Promoted three exact catalogue objects into reviewed runtime Species Knowledge + Compatibility authority: `sp_0105` 大花恐龙 / `Polypterus ornatipinnis`, `sp_0117` 银龙鱼 / `Osteoglossum bicirrhosum`, and `sp_0018` 蓝王子 / `Chindongo socolofi`. No sibling, ornamental, trade-form, or generic scientific-name inheritance was introduced.
+- `sp_0105`: reviewed freshwater 25–28°C, pH 6–8, dGH 5–25; 60 cm TL; 180 cm / ~648 L planning; explicit `small_fish` predation. It is NOT promoted to `solitary_required`, so its documented tendency to be solitary does not become an absolute ban on all large heterospecific tankmates.
+- `sp_0117`: reviewed freshwater 20–30°C, pH 5–7.5, dGH 2–15; 90 cm TL; surface predator; `small_fish` predation + `solitary_required`. No reviewed numeric minimum volume/length is invented: the legacy 800 L catalogue text remains outside reviewed minimum-space authority because the exact source does not supply a defensible fixed threshold.
+- `sp_0018`: reviewed Malawi hard-water range 24–28°C, pH 7.6–8.8, dGH 10–25; territorial / harem context; ~154 L / 90 cm planning with rockwork. “One male with several females” is NOT converted into a universal `minimumGroupSize`.
+- While validating silver arowana, a real duplicate-result bug was reproduced: Domain authority emitted generic `single_housing_required` and the reviewed evidence bridge emitted the same semantic candidate-level rule again. Canonical result dedupe now treats only `single_housing_required` as a singleton and retains the more specific reviewed rule with affected species + citation; other same-code pair risks remain independently representable.
+- Coverage after Batch 4: 486 catalog objects; 52 reviewed Compatibility profiles (49 → 52); 88 runtime reviewed Species Knowledge objects (85 → 88); 22 reviewed pair rules; 82 total evidence sources. Snapshot checksum is now `6486bc3150b80c9309958b959e5616fe99d09c2c6b7f1d2df6e9cf2c4efeffa1`, expected because reviewed Compatibility authority is part of the snapshot. Raw historical catalogue seed rows were not rewritten.
+- Repository-only `supabase/migrations/202609280001_compatibility_priority_batch4_profiles.sql` owns the three new reviewed Profiles and evidence links. It is a static HOLD artifact only: DB application / DB authority switch remain unauthorized and were not executed.
+- New Batch 4 regression verifies exact knowledge/profile promotion, predation, space, hard-water/territory boundaries, non-overgeneralization, and singleton-rule dedupe. Compatibility admin ownership, catalog snapshot, core compatibility, actionable-result contract, TypeScript, Admin build, and full `npm run test:backend-release-gate` all PASS (`BACKEND_RELEASE_GATE=PASS`).
+- Deferred rather than guessed: `Hypostomus plecostomus` and `Heros severus` remain unpromoted due identity/taxonomic hobby-name ambiguity; `Peckoltia compta` remains unpromoted pending stronger exact husbandry authority.
+- No UI component/page, Vision, Production promote, main merge, or applied DB change occurred.
+
+## CURRENT OVERRIDE — 2026-09-28 Gymnotus build contract follow-up
+
+- Runtime identity functional head remains `5b0c7e8a1313c54da88348e9edd180f2fc429a47`; build-contract fix head is `a42d492009eaaee779e7a918709610a0d73b8586`.
+- Remote CI/Vercel exposed a build-only regression after introducing `catalogSeedFishData`: Admin `generate-catalog.mjs` still parsed `export const fishData = [...]` via a greedy text regex and attempted to JSON.parse the runtime correction expression. Product runtime logic itself had passed the full backend gate, but the complete Production build was not covered by that gate.
+- Fixed Admin catalogue generation and responsive-image static seed readers to explicitly parse `catalogSeedFishData` while remaining backward-compatible with legacy `fishData`. Generated Admin catalogue remains 486 rows and no generated catalogue diff was produced.
+- Added `Admin Catalog Build` to `test:backend-release-gate`, closing the local-vs-Vercel blind spot. `npm run build:seo-admin` PASS, full `npm run build` PASS, and the updated full backend release gate PASS.
+- Historical `local-fish-data-v1` snapshot checksum remains unchanged: `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- No UI component/page, Vision, DB migration/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-28 Gymnotus carapo runtime identity corrected
+
+- Functional head: `5b0c7e8a1313c54da88348e9edd180f2fc429a47` (`fix(catalog): correct Gymnotus runtime identity`).
+- `sp_0120` remains the same stable catalogue object and scientific taxon (`Gymnotus carapo`), but the legacy user-facing seed name `电鳗 (观赏型)` and claim `会电击同类和室友` were identified as misleading. Reviewed authority already correctly models Gymnotus carapo / Banded knifefish as a large weakly electric, nocturnal small-fish predator.
+- Added an object-scoped, fail-closed runtime identity correction. Chinese runtime name is now `圭亚那裸背电鳗`; English is `Banded knifefish`. Copy explicitly distinguishes its weak electric organ discharges from high-voltage true electric eels, removes the unsupported shock-tankmate claim, and aligns the visible minimum tank guidance to the reviewed 648 L / 180 cm space authority.
+- Correction applies only when catalog key `sp_0120` AND scientific name `Gymnotus carapo` match. A reused/mismatched key fails closed and is not relabelled.
+- Runtime fallback, published API and Git product-care hydration apply the correction; search remains discoverable by corrected common name and by `Gymnotus carapo`. Existing reviewed Species Knowledge and Compatibility authority are unchanged and retained.
+- Historical `local-fish-data-v1` seed is not rewritten. Catalogue snapshot builder explicitly serializes the raw seed, and the snapshot checksum remains unchanged at `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`. No catalogue key, version, DB row or migration was changed.
+- New release-gate regression verifies runtime identity, English/Chinese search names, reviewed provenance, fail-closed taxon mismatch, compatibility authority retention, and immutable snapshot behavior. Targeted tests + Batch3 + TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI component/page, Vision, DB application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-28 Exact duplicate candidate-add normalization validated
+
+- Functional head: `ce6609b95b17524b06d90e1f671bd898c1eac1a7` (`fix(compatibility): normalize exact duplicate additions`).
+- Candidate-add review now uses the same explicit exact-catalog-duplicate authority as current Tank State. Selecting either member of an exact duplicate group canonicalizes to the same addition item and produces the same compatibility result.
+- This fixes the reproduced case where an existing `sp_0038` 马口鱼 plus candidate `sp_0130` (the duplicate row for the same catalogue object) previously surfaced an extra false `single_housing` warning compared with adding canonical `sp_0038`.
+- Multiple selected alias rows merge into one canonical planned addition with summed quantity. Existing tank rows are canonicalized/summed for compatibility review, so alias differences do not create fake cross-species checks.
+- Local `executeSpeciesAddition` matches existing rows by exact-alias canonical ID and appends the batch to the historical stored row/key instead of creating a second livestock row. It intentionally preserves the stored legacy `fishId`.
+- Compatibility preview filters/deduplicates by exact-alias canonical ID, so a duplicate catalogue row is not recommended as a new species when an alias is already stocked or active.
+- Same-scientific-name but distinct trade/catalogue objects remain independent additions.
+- Cloud/Supabase catalogue keys and RPC storage semantics were NOT changed; no DB migration or data rewrite was introduced. This change normalizes review/planning/local execution only.
+- Targeted duplicate-addition tests, compatibility suite, Core Flow V1 and TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, DB migration/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-28 Exact catalog duplicate runtime boundary validated
+
+- Functional head: `e48452920d749fdc5b26bca257f5e2c59c45b11e` (`feat(tank-state): collapse exact catalog duplicates`).
+- A runtime bug was reproduced where duplicate catalogue IDs for the same exact row could be evaluated as two different species, producing fake self-compatibility findings (for example `sp_0038` + `sp_0130`, both 马口鱼 / Opsariichthys bidens).
+- Added an explicit catalogue-row duplicate authority with 14 current non-plant exact duplicate groups. This is intentionally NOT a generic scientific-name canonicalizer. Groups are admitted only when the current catalogue rows match on user-facing identity and core husbandry fields.
+- Current Tank State existing-stock evaluation collapses those explicit duplicate IDs to one canonical catalogue row, sums quantities, records `catalogDuplicateCollapses` provenance, and therefore cannot create a compatibility pair between exact duplicate aliases. Presentation subject quantities use the same exact-alias boundary.
+- Same-scientific-name but distinct catalogue/trade objects remain separate. Guard cases include `sp_0048` 大刺鳅 vs `sp_0131` 刺鳅, `sp_0103` 金龙鱼 vs `sp_0116` 亚洲龙鱼(青龙), and `sp_0114` 红莲灯 vs `sp_0469` 喷火灯.
+- No catalogue rows were deleted or rewritten. Existing IDs/history remain valid. Candidate-add flow is deliberately unchanged and requires a separate audit before applying alias semantics there. Existing unresolved identity boundaries (Crystal Shrimp, zebra nerite trade identity, mini-parrot) remain unchanged.
+- New release-gate test verifies registry/catalog parity, exactness of all 14 groups, explicit non-collapse examples, quantity merge, fake self-pair removal, and preservation of distinct trade objects.
+- Targeted tests + runtime acceptance + TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, DB migration/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-27 Partial reviewed-risk coverage hardened
+
+- Functional head: `c5e1d7333694a5933fb1bb2857fe8667f285e106` (`feat(tank-state): keep remaining reviewed risks visible`).
+- Intervention decisions now distinguish target-risk improvement from whole-tank safety. A local action can be followed by improvement for its target pair while other independent reviewed direct conflicts remain active in the same tank.
+- Added structured `reviewedDirectConflictScope` with values `only_current_reviewed_direct_conflict`, `one_of_multiple_current_reviewed_direct_conflicts`, or `unknown`, plus `remainingReviewedDirectRisks[]` containing pair IDs/names, verdict and normalized reviewed risk semantics.
+- If an improved action covers only one of several current high-confidence reviewed direct pair conflicts, judgment becomes `目标风险措施后伴随改善，但整缸仍有其他已审核直接冲突`; reason lists the remaining reviewed pairs and adjustment explicitly says not to treat local improvement as whole-tank safety.
+- Even when the target pair is the only current high-confidence reviewed direct conflict, copy explicitly says this does not prove absence of inferred risks, parameter risks, or future relapse.
+- User-facing intervention guidance is now generated from the same structured `buildTankInterventionDecisionSummary(...)` contract, removing a second independent long-copy decision path and reducing presentation/logic drift.
+- Targeted runtime badcase uses Tiger Barb + Guppy + Angelfish + Neon Tetra: guppy-targeted isolation can improve the fin-nipping pair while Angelfish × Neon predation remains surfaced as an independent reviewed risk.
+- Targeted runtime/recovery/typecheck PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority mutation, DB artifact/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-27 Intervention risk decision contract validated
+
+- Functional head: `19e38ac9687eee703c29741e43730004f177ef1d` (`feat(tank-state): expose intervention risk decisions`).
+- Reviewed direct conflict pairs now carry a stable intervention target-risk contract instead of only raw pair IDs. Risk semantics retain both the raw reviewed `riskType` and a normalized product category/label.
+- Current mappings include direct pair risks such as `fin_nipping_long_fin_conflict -> fin_nipping / 追鳍 / 长鳍冲突` and `predation_threat -> predation / 捕食风险`; broader water/space fallback categories are deterministic by reviewed riskType, not presentation-copy parsing.
+- `targetRisk` retains reviewed reason, mitigation, evidence IDs and source provenance. Explicit conflict-pair records can receive reviewed risk semantics when that exact pair has a direct reviewed pair rule; unsupported explicit pairs remain explicit but do not gain invented risk semantics.
+- Presentation can show `针对风险`, `已审核原因`, and the first bounded reviewed mitigation. Auto-associated pair provenance remains visibly marked as automatic reviewed-rule association.
+- Added exported `buildTankInterventionDecisionSummary(...)` so downstream consumers can use structured `judgment`, `reason`, `adjustment`, `interventionOutcome`, and optional `targetRisk` without parsing long copy.
+- Structured judgment covers single-action outcomes and multi-action sequence outcomes while preserving causality limits.
+- Targeted runtime acceptance + TypeScript PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority mutation, DB artifact/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-27 Reviewed conflict-pair auto-link validated
+
+- Functional head: `2811b027367ef6543da92f846fafc0478e0eb6f6` (`feat(tank-state): auto-link reviewed conflict pairs`).
+- Species-targeted local interventions can now auto-associate a current compatibility conflict pair when the target maps to exactly one reviewed direct pair rule in the current tank.
+- Auto-link is intentionally fail-closed: the reviewed pair must be `reviewStatus=reviewed`, `confidence=high`, `basis=pair_rule`, have verdict `not_recommended` or `caution`, be present in the current CompatibilityDecision pair results, and include at least one target species.
+- If multiple qualifying direct pairs match the selected targets, no pair is auto-linked. `rule_inference`, medium-confidence evidence, compatible pairs, whole-tank/non-local actions, and missing targets are not auto-linked.
+- Explicit user-recorded `interventionConflictSpeciesIds` always wins and is marked `conflictPairSource=explicit`; automatic links are marked `reviewed_pair_rule` and retain citation IDs.
+- Presentation labels auto-derived pair provenance as `依据已审核直接配对规则自动关联`; it does not disguise inference as user-entered data.
+- Targeted tests cover unique direct match, ambiguous two-pair match, reviewed rule-inference rejection, and explicit override. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority mutation, DB artifact/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-26 Species-scoped intervention provenance validated
+
+- Functional head: `c9029a93834f3b90283b42fe81bdca35b550794d` (`feat(tank-state): scope intervention evidence by species`).
+- Structured Tank observations can now carry optional object provenance: `subjectSpeciesIds`, `scope`, and `sourceDiagnosisId`. Legacy unscoped records remain supported.
+- Executed interventions can now carry `targets[{speciesId, quantity}]`, `conflictSpeciesIds`, `targetScope`, and a recorded reason. These remain stored inside existing diagnosis `answers`, so no DB schema/migration is required.
+- Object-level effect attribution is now conservative: local actions (hiding, temporary isolation, separate tank, reduce stocking) with explicit targets only consume follow-up observations for the same target species. A normal check on another species cannot be credited to the targeted action.
+- Recovery is object-aware too: species-specific normal observations cannot clear a different species' incident or a whole-tank incident. Explicit whole-tank recovery may clear a species-specific incident; legacy unscoped incidents keep legacy behavior.
+- User-facing presentation resolves target IDs to species names and can show quantity, conflict pair, and recorded reason, e.g. `临时隔离（对象：孔雀鱼 4只；关联冲突：虎皮鱼 × 孔雀鱼）`.
+- Targeted tests cover wrong-species follow-up, same-species follow-up, whole-tank environmental action, species-scoped recovery, and object-readable presentation. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-26 Multi-intervention sequence reasoning validated
+
+- Functional head: `abd4c1f1b7c66a9c2c07ef0f33bba7b34601b643` (`feat(tank-state): summarize intervention sequences`).
+- Multi-action intervention histories are now summarized as a sequence instead of showing only the latest action.
+- Three explicit patterns are covered: `escalated_then_improved`, `relapsed_after_improvement`, and `multiple_actions_not_controlled`.
+- Example: if added hiding is followed by persistent chasing, then temporary isolation is followed by two relevant normal confirmations, the result keeps both facts: the first action did not control the problem; the later action was followed by improvement. It still does not claim the later action caused recovery.
+- If a prior action was followed by improvement but a later action window contains renewed abnormal evidence, the result says the problem relapsed and the earlier improvement did not prove long-term resolution.
+- If multiple evaluated actions each retain abnormal follow-up, the result advises stopping same-level repetition and re-evaluating cause / escalating the intervention path.
+- Insufficient-followup actions are not misclassified as failed actions and do not participate in strong sequence patterns until they have relevant follow-up evidence.
+- Multi-action service tests and runtime presentation tests PASS; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-26 Intervention outcome evidence validated
+
+- Functional head: `4cdf7620197b72521b69d675e6f1bc710e628e2f` (`feat(tank-state): track intervention outcomes`).
+- Added structured Tank intervention evidence for executed actions only: add hiding, temporary isolation, separate tank, increase aeration, water change, filter check, temperature adjustment, reduce stocking, or explicit other. Suggested actions and free text are not treated as proof that an action happened.
+- Each intervention is evaluated against only relevant post-action observations inside a 7-day follow-up window. Outcomes are `improved_after_action`, `problem_persisted_after_action`, `mixed_after_action`, or `insufficient_followup`.
+- Causal safety: even when two relevant normal confirmations follow an action, copy says the improvement is temporally associated and does not claim the action caused recovery.
+- Attribution hardening: a newer executed intervention closes the earlier intervention's evidence window, so recovery after isolation is not also credited back to an earlier hiding-space change.
+- User-facing guidance now differs by outcome: retain-and-monitor after associated improvement; stop relying on the action alone if the problem persists; stabilize conditions and recheck for mixed results; collect at least two relevant structured follow-ups when evidence is insufficient.
+- Tank Intervention Evidence is part of `test:backend-release-gate`; targeted intervention/runtime tests PASS and full `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-26 Tank recovery progress contract validated
+
+- Functional head: `937012fe5fd162494760f93f81921bc840f03edb` (`feat(tank-state): expose recovery progress`).
+- Tank State now exposes optional structured `recovery` progress: `phase`, `confirmations`, `targetConfirmations`, and `remainingConfirmations`.
+- Recovery thresholds are explicit: `0–1/2 = confirming` (incident not yet cleared), `2/3 = recovering` (downgraded to recovery-watch), `3/3 = confirmed` (this incident is recovered).
+- `3/3 confirmed` clears only the concrete incident. It does not clear reviewed static compatibility priors; a reviewed high predation/aggression/territory combination can therefore remain `watch` even after the incident reaches 3/3.
+- Presentation no longer says vague “1–2 more checks”: it uses the runtime counter, e.g. `2/3 次，还差 1 次`, and distinguishes “本次异常已恢复” from “组合本身仍需观察”.
+- Relapse resets the relevant incident progress and current relapse signals still outrank historical summaries.
+- Recovery Acceptance and Runtime Acceptance both PASS with structured progress assertions; full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI, Vision, catalog/evidence authority, DB artifact/application, Production promote, or main merge changed.
+
+## CURRENT OVERRIDE — 2026-09-26 Recovery / relapse ordering hardened
+
+- Functional head: `b81cef2efa3d9d0afb720daf879811fc2d988374` (`fix(tank-state): prioritize relapse signals`).
+- Recovery trajectory validated: corroborated chasing+hiding stays `intervene` after only one normal follow-up, becomes `watch` after two confirming normal follow-ups, and a reviewed high-risk pair remains `watch` after three normal confirmations rather than being erased.
+- Fixed relapse ordering: a new current `persistent_chasing` signal after apparent recovery now outranks the historical unresolved-pressure fallback, remains in `activeSignals`, and returns medium-confidence `watch` via AQ-STATE-006.
+- Existing Tank State Recovery Acceptance also passes 10 escalation→recovery→relapse scenarios.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`. No UI, Vision, DB application, DB authority switch, Production promote, or main merge.
+
+## CURRENT OVERRIDE — 2026-09-26 Runtime tank-state acceptance validated
+
+- Functional head: `0af0e000c2551feeaff89492b783fecd6dfc514f` (`fix(tank-state): preserve reviewed runtime risk`).
+- Added a 9-case runtime acceptance suite that combines reviewed static compatibility with actual structured tank observations.
+- Product correction: a reviewed high predation/aggression/territory prior plus one recent normal patrol now remains `watch / observe`; one normal observation cannot turn a red reviewed combination into `stable / no_action`.
+- Scope remains precise: high space guidance plus normal current behavior may still be stable; medium behavior priors plus normal evidence may still be stable. The new persistence rule is limited to reviewed high predation/aggression/territory risk.
+- Current environmental correction: no-common-temperature / active target-temperature blockers now become Tank State hard constraints with `intervene / adjust`; freshwater-vs-marine remains `urgent`. Normal behavior cannot clear either current environmental constraint.
+- Presentation actions are signal-specific: respiratory distress points to aeration/surface agitation + filter/temperature/water checks; injury points to stopping further harm and stable isolation; chasing+hiding points to conflict reduction and separation if persistent.
+- Tank State Engine is now 13/13; Tank Evidence Adapter PASS; `Tank State Runtime Acceptance` is included in `test:backend-release-gate`.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`. Catalog/evidence authority is unchanged at 486 species / 49 reviewed Profiles / 22 reviewed Pair Rules / 79 evidence sources.
+- No UI, Vision, DB migration application, DB authority switch, Production promote, or main merge.
+
+## CURRENT OVERRIDE — 2026-09-26 Complex 5–8 species compatibility acceptance validated
+
+- Functional head: `a64b366dbccf5ef1f63cddbd8835d7cddb48bdc1` (`fix(compatibility): rank complex tank risks`).
+- Real-tank acceptance now covers 11 scenarios total: the original six 3–4 species cases plus five 6–8 species cases.
+- Complex red verdicts now rank user-facing blockers by biological severity: water-type/predation first, then temperature, then solitary/social conflicts, instead of blindly preserving an incidental aggregate summary.
+- A seven-species multi-conflict fixture now presents Angelfish × Neon predation first, no-common-temperature second, and Tiger Barb × Guppy fin-nipping third.
+- Multiple `group_requirement_gap` rules are no longer truncated by the three-action presentation cap. Six simultaneous deficits are compressed into one complete current→minimum action line.
+- Direct reviewed Pair Rule evidence language is now risk-type aware: predation Pair Rules retain laboratory-to-husbandry limitations; non-predation Pair Rules use direct husbandry wording and are not mislabeled as predation experiments.
+- `test:compatibility-evidence-coverage` was aligned with the reviewed predation-pressure contract and added to `test:backend-release-gate`.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`. Catalog remains 486 species / 49 reviewed Profiles / 22 reviewed Pair Rules / 79 evidence sources; checksum remains `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- No UI, Vision, DB application, DB authority switch, Production promote, or main merge.
+
+## CURRENT OVERRIDE — 2026-09-26 Real-tank actionable compatibility acceptance validated
+
+- Functional head: `0acf8e9316cd1872b437305c5493230ca213573d` (`fix(compatibility): harden real tank conclusions`).
+- Six 3–4 species real-tank acceptance cases are now part of the backend release gate: safe community, no-common-temperature hard block, Angelfish × Neon predation, three simultaneous under-grouped species, long-term space pressure, and whole-tank cumulative load.
+- Product correction: `predation_vulnerability_context` no longer turns every ordinary fish + prey-vulnerable species into a caution. It now requires actual reviewed predation pressure. The safe reviewed community fixture therefore returns `compatible` / green.
+- Action correction: multiple under-grouped species now receive per-species numeric instructions, e.g. `金三角灯 4 → 8`, `红眼灯 4 → 6`, `熊猫鼠 3 → 6`, instead of one generic “补足群体” sentence.
+- Hard-block correction: red results derive adjustments from blocking rules only; lower-severity warnings no longer displace the action needed to resolve the blocker.
+- Pair authority: exact `sp_0446` Pterophyllum scalare × `sp_0431` Paracheirodon innesi is now a reviewed `not_recommended / predation_threat` Pair Rule with direct Angelfish/Neon husbandry evidence. Generic `very_small_fish` remains fail-closed for other Small catalog objects.
+- Reviewed Compatibility remains 49 Profiles; reviewed Pair Rules increased `21 → 22`; catalog remains 486; evidence sources increased `78 → 79`. Catalog snapshot checksum: `ebde097a8d086d947ad2b2de511ad36cad9988a1a5b396b9687e497beb4faaf0`.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`, including `Compatibility Actionable Result` and `Compatibility Real Tank Acceptance`.
+- Repository-only `202609260002_compatibility_angelfish_neon_pair.sql` owns the new Pair Rule as a static HOLD artifact. It has not been applied; no DB authority switch occurred.
+- UI/Vision/Production/main remain unchanged.
+
+## CURRENT OVERRIDE — 2026-09-26 Actionable compatibility result contract validated
+
+- Functional head: `f28999d9901653833acba69cf4b5c142400c8d60` (`feat(compatibility): add actionable result contract`).
+- Every Compatibility presentation now exposes an explicit three-part product contract: `verdict` (status + label + semantic indicator), `reasons`, and `adjustments`.
+- Semantic indicator mapping is stable and UI-agnostic: compatible=`green`, caution=`yellow`, not_recommended=`red`, insufficient_data=`gray`.
+- Adjustments are derived from active risk codes (water type, temperature, pH, space, group size, territoriality, breeding, predation, solitary requirements, fin-nipping, bioload, or missing evidence) instead of generic advice when a concrete action is available.
+- Whole-tank-only risks remain first in `reasons` when they are the canonical decision summary; duplicate reasons from the same risk dimension are collapsed.
+- `buildCompatibilityPresentation()` consumes the same contract, so downstream product surfaces no longer need to reconstruct reason/action semantics independently.
+- New `Compatibility Actionable Result` regression covers green/yellow/red indicators, compatible/caution/block cases, and a 3-species whole-tank bioload case. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- No UI/Vision files changed, no DB migration changed/applied, no Production promote, no main merge.
+
+## CURRENT OVERRIDE — 2026-09-26 Priority compatibility knowledge batch 3 validated
+
+- Functional head: `b597790b7f672e32246c1af92a3c85c0de4f6cf0` (`feat(knowledge): promote compatibility batch three`).
+- Exact runtime promotions: `sp_0181` Gnathonemus petersii, `sp_0139` Piaractus brachypomus, `sp_0140` Serrasalmus rhombeus, `sp_0120` Gymnotus carapo, `sp_0138` Leporinus fasciatus.
+- Runtime reviewed Compatibility/Species Knowledge catalog objects increased `80 → 85`; direct reviewed Profile records `44 → 49`; evidence sources `73 → 78`. Catalog remains 486.
+- Batch 3 adds large-space and predation authority while explicitly avoiding false universal territorial/group requirements where sources only support conspecific or context-dependent behavior.
+- Catalog snapshot checksum: `499cff3a1ccbe2edf7d19d155eec9e31fd0371cd42812f179b7afa8a7f6e047a`. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- Repository-only `202609260001_compatibility_priority_batch3_profiles.sql` is a static HOLD owner only; it has not been applied. No DB authority switch, UI/Vision change, Production promote, or main merge occurred.
+
+## CURRENT OVERRIDE — 2026-09-25 Priority compatibility knowledge batch 2 validated
+
+- Functional head: `f90a57fdf8afc93e5e4c4a89f97ffcc12c81de36` (`feat(knowledge): promote compatibility batch two`).
+- Exact runtime promotions: `sp_0043` 圆尾斗鱼 / Macropodus ocellatus, `sp_0044` 黑叉尾斗鱼 / Macropodus spechti, `sp_0062` 红眼灯 / Moenkhausia sanctaefilomenae, `sp_0119` 古代蝴蝶鱼 / Pantodon buchholzi, `sp_0125` Hypancistrus inspector.
+- Runtime reviewed Compatibility/Species Knowledge catalog objects increased `75 → 80`; direct reviewed Profile records `39 → 44`; evidence sources `68 → 73`. Catalog remains 486.
+- Batch 2 models breeding-only Macropodus defense contextually rather than as permanent territoriality; Red-eye Tetra gets reviewed six-fish shoal/fin-nipping pressure; Pantodon gets small-fish predation; H. inspector gets 120 cm / ~243 L space authority without inventing a minimum group size.
+- Catalog snapshot checksum: `a7469f42a52100c98a9a2bf103c60c1c8b7cd0e734f899e1aa306e8d8763086a`. Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`.
+- CI ownership is included in the same checkpoint via repository-only `202609250002_compatibility_priority_batch2_profiles.sql`; DB application / authority switch remain HOLD and this file has not been applied.
+- UI/Vision/Production/main remain unchanged. NEXT: continue only with exact-species, source-audited small batches and keep identity-ambiguous trade forms fail-closed.
+
+## CURRENT OVERRIDE — 2026-09-25 Priority compatibility knowledge batch 1 validated
+
+- Functional head: `410434765bc9c64e5e513f4748b321094c2768d3` (`feat(knowledge): promote five compatibility species`).
+- Exact catalog objects promoted from Phase-2 completion-only evidence into runtime Compatibility authority: sp_0015 接吻鱼 / Helostoma temminkii, sp_0059 天堂鱼 / Macropodus opercularis, sp_0199 珍珠麒麟 / Badis badis, sp_0200 变色鱼(喷火麒麟) / Dario dario, sp_0019 埃及神仙 / Pterophyllum altum.
+- Promotion is object-specific and source-bounded. Commercial/ornamental variants do not silently inherit this authority; sp_0234 remains fail-closed in regression coverage.
+- Coverage counters: direct reviewed Compatibility profile records 34 → 39; catalog objects resolving to reviewed runtime Compatibility/Species Knowledge 70 → 75.
+- Evidence-source count: 68; catalog remains 486 objects; snapshot checksum `22e5de3d94a7985e325602ead8af5b2ff04943d4943981c33175c7c063a55ee8`.
+- Representative runtime behavior: Altum + small fish can hard-block on reviewed predation; Paradise Fish at 27°C hard-blocks on temperature; Kissing Gourami surfaces reviewed 150 cm / ~304 L long-term space pressure.
+- Full `npm run test:backend-release-gate`: `BACKEND_RELEASE_GATE=PASS`, including the new Priority Compatibility Knowledge Batch gate.
+- Frozen scope unchanged: no UI/Vision behavior changes, no DB migration application/authority switch, no Production promote, no main merge.
+- CI ownership closure: repository-only `202609250001_compatibility_priority_batch1_profiles.sql` owns these 5 reviewed Profiles; it is a static HOLD artifact only and has not been applied.
+- NEXT: continue evidence-first promotion from the priority queue in small auditable batches; never bulk-enable Phase-2 completion records.
+
+## CURRENT OVERRIDE — 2026-09-25 Backend candidate synchronized at whole-tank aggregation
+
+- Canonical integration worktree: `/Users/chuchu/aquaguide-backend-integration-20260922` on `integration/backend-main-20260922`.
+- Validated functional head: `9be6e49c8e0d64dda57f57c22c4ae0eb8e891b89` (`fix(compatibility): lead with whole-tank risk summary`), built on `2b191896...` whole-tank aggregation. The branch is synchronized with `origin/integration/backend-main-20260922`; an authority-only docs checkpoint may follow this functional SHA.
+- Compatibility decision path now keeps pairwise explanations and adds a 3+ species whole-tank pass through the same canonical domain engine, so cumulative constraints such as bioload/shared tank conditions are retained in the overall verdict.
+- Regression proof: a 63 L, three-species fixture has no pairwise bioload warning but the whole-tank pass raises `bioload_screening_elevated`; the overall verdict remains `caution`.
+- Full `npm run test:backend-release-gate` PASS at this head, including the new `Multi-species Tank Aggregate` gate; catalog snapshot remains 486 species / 63 evidence sources / checksum `589854390f89442e606efbce33f99900062648ab4ae4f871521be8ab155cc942`.
+- PR #154 remains OPEN / non-draft / MERGEABLE and contains validated functional head `9be6e49c...`; CI is re-triggered on each pushed checkpoint. No main merge has occurred.
+- Frozen scope remains unchanged: no UI/Vision changes in this iteration; no DB migration application, DB authority switch, Care indexing change, or Production promote.
+- NEXT: product-level badcase acceptance of direct user conclusions on real multi-species scenarios. Do not merge main, deploy Production, or apply migrations without separate authorization.
+
+## CURRENT OVERRIDE — 2026-09-22 Backend integration candidate READY
+
+- GitHub CI exposed two reviewed Profile DB-authority ownership gaps (sp_0016, sp_0475); repository-only migration 202609220001_compatibility_gold_ram_rhodeus_profiles.sql now owns them. No DB migration has been applied.
+- CI-required repository-only compatibility migration SQL is present as a static contract artifact; **no migration has been applied and DB authority remains HOLD**.
+- Candidate branch: `integration/backend-main-20260922`
+- Candidate implementation chain: `afc8ad2e` (selective backend integration) → `cb15eb6b` (reviewed Profile migration ownership) → `018c52ba` (Business Admin staging migration plan).
+- Base: `origin/main@be0fdef9`
+- Full integration backend gate: `BACKEND_RELEASE_GATE=PASS`
+- Golden Path contract: 5 journeys, no partial end-to-end gap.
+- Frozen scope verified absent from behavior changes: Vision/image recognition and UI remain unchanged; DB migration **application**, DB authority switch, Care indexing and Production changes remain HOLD. Repository-only SQL artifacts are present for contract/authority ownership only.
+- Current-main presentation semantics are intentionally preserved. `src/services/compatibility/compatibility-presentation.service.ts` and `scripts/test-compatibility-presentation.ts` remain main versions; backend user-conclusion testing retains engine/safety assertions but does not override frozen display copy.
+- Main build behavior is preserved: business API bundle is generated before project typecheck; main `postbuild`/Vercel pruning logic remains authoritative.
+- Draft PR #154 is pushed for review: https://github.com/chusday97/aquaguide-tank-guide/pull/154 . GitHub CI is green at implementation tip `018c52ba`. Do not merge to main, deploy Production, or apply DB changes without a separate decision.
+- Integration evidence: `docs/BACKEND_RELEASE_INTEGRATION_CHECKLIST_20260922.md` and `docs/BACKEND_INTEGRATION_FILE_MANIFEST_20260922.*`.
+
 ## CURRENT OVERRIDE — 2026-09-16 RC1 Production release CLOSED
 Aqua RC1 is released and final Production browser smoke is PASS.
 

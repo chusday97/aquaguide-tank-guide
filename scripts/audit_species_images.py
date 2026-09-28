@@ -498,7 +498,7 @@ KNOWN_MANUAL_ISSUES_BY_KEY = {
 
 def load_fish_data() -> list[dict]:
     text = FISH_DATA_TS.read_text(encoding="utf-8")
-    match = re.search(r"export const fishData: Fish\[] = (\[.*\]);", text, flags=re.S)
+    match = re.search(r"export const (?:catalogSeedFishData|fishData): Fish\[] = (\[.*?\n\]);", text, flags=re.S)
     if not match:
         raise RuntimeError(f"Could not parse fish data from {FISH_DATA_TS}")
     return json.loads(match.group(1))

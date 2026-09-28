@@ -1,0 +1,17 @@
+import assert from 'node:assert/strict';
+import { fishData } from '../src/data/fishData';
+import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
+import { getCompatibilityPresentation } from '../src/services/compatibility/compatibility-presentation.service';
+import type { Aquarium } from '../src/types';
+const byId=(id:string)=>{const fish=fishData.find(x=>x.id===id);assert.ok(fish,'missing '+id);return fish;};
+const tank=(l:number,w:number,h:number,t:number):Aquarium=>({id:'contract',name:'contract',fishes:[],dimensions:{length:String(l),width:String(w),height:String(h)},waterType:'Freshwater',targetTemperature:String(t),equipment:{filter:'桶滤',heater:true,oxygen:true,light:'普通灯'}});
+const compatible=getCompatibilityPresentation(evaluateCompatibilityDecision({tank:tank(90,40,40,24),items:[{species:byId('sp_0431'),quantity:10}]}));
+assert.deepEqual(compatible.verdict,{status:'compatible',label:'当前条件适合',indicator:'green'}); assert.ok(compatible.reasons.length>=1); assert.match(compatible.adjustments[0],/无需先做兼容性调整/);
+const caution=getCompatibilityPresentation(evaluateCompatibilityDecision({tank:tank(70,30,40,24),items:[{species:byId('sp_0431'),quantity:7}]}));
+assert.deepEqual(caution.verdict,{status:'caution',label:'调整后可尝试',indicator:'yellow'}); assert.equal(caution.reasons.length,1); assert.match(caution.reasons[0],/最低群体数量/); assert.deepEqual(caution.adjustments,['先补足群体数量：红绿灯：当前 7 → 至少 8 只/条。补足后重新核对空间与整缸负荷。']);
+const blocked=getCompatibilityPresentation(evaluateCompatibilityDecision({tank:tank(120,50,40,24),items:[{species:byId('sp_0431'),quantity:10},{species:byId('sp_0049'),quantity:1}]}));
+assert.deepEqual(blocked.verdict,{status:'not_recommended',label:'不建议一起饲养',indicator:'red'}); assert.match(blocked.reasons[0],/捕食|吞食/); assert.ok(blocked.adjustments.some(x=>/分缸|更换/.test(x)));
+const items=[['sp_0011',10],['sp_0012',10],['sp_0013',10]].map(([id,q])=>({species:byId(String(id)),quantity:Number(q)}));
+const multi=getCompatibilityPresentation(evaluateCompatibilityDecision({tank:tank(60,30,35,25),items}));
+assert.equal(multi.verdict.indicator,'yellow'); assert.match(multi.reasons[0],/负荷/); assert.ok(multi.adjustments.some(x=>/降低整缸总负荷|升级过滤/.test(x)));
+console.log('compatibility actionable result contract passed: verdict + reasons + adjustments + semantic indicator');

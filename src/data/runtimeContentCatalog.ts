@@ -4,6 +4,7 @@ import { apiRequest } from '../services/api/api-client';
 import { fishData as seedFishData } from './fishData';
 import { careTopicsData as seedCareTopicsData, type CareTopic } from './careTopicsData';
 import { loadGitRuntimeAuthoritySnapshot } from './gitRuntimeAuthority';
+import { applyCatalogIdentityCorrection } from './catalogIdentityCorrections';
 
 type ContentBootstrapResponse = {
   species: SpeciesDetailDto[];
@@ -36,13 +37,13 @@ const cloneCareTopic = (topic: CareTopic): CareTopic => ({
   diagnoseWhen: [...topic.diagnoseWhen],
   keywords: [...topic.keywords],
 });
-const toFish = (detail: SpeciesDetailDto, fallback?: Fish): Fish => {
+const toFish = (detail: SpeciesDetailDto, fallback?: Fish, locale: RuntimeContentLocale = 'zh-CN'): Fish => {
   const feeding = detail.feedingProfile as Partial<NonNullable<Fish['feedingProfile']>> | undefined;
   const image = detail.assets.find(asset => asset.variant === 'detail')?.url
     || detail.thumbnail?.url
     || fallback?.image
     || '';
-  return {
+  return applyCatalogIdentityCorrection({
     id: detail.catalogKey,
     name: detail.name,
     scientificName: detail.scientificName,
@@ -78,10 +79,15 @@ const toFish = (detail: SpeciesDetailDto, fallback?: Fish): Fish => {
     housingMode: detail.housingMode,
     housingReason: detail.housingReason,
     isCustom: fallback?.isCustom,
-  };
+  }, locale);
 };
 
-const toFishFromGitSnapshot = (input: RuntimeAuthoritySpeciesInput, assets: Array<{ variant: string; url: string }>, fallback?: Fish): Fish => ({
+const toFishFromGitSnapshot = (
+  input: RuntimeAuthoritySpeciesInput,
+  assets: Array<{ variant: string; url: string }>,
+  fallback?: Fish,
+  locale: RuntimeContentLocale = 'zh-CN',
+): Fish => applyCatalogIdentityCorrection({
   id: input.catalogKey,
   name: input.name,
   scientificName: input.scientificName,
@@ -100,7 +106,7 @@ const toFishFromGitSnapshot = (input: RuntimeAuthoritySpeciesInput, assets: Arra
   housingMode: input.housingMode,
   housingReason: input.housingReason,
   isCustom: input.isCustom,
-});
+}, locale);
 const toCareTopicFromGitSnapshot = (input: RuntimeAuthorityCareInput, assets: Array<{ variant: string; url: string }>, fallback?: CareTopic): CareTopic => ({
   id: input.catalogKey,
   title: input.title,
@@ -152,15 +158,15 @@ let runtimeContentStatus: RuntimeContentStatus = {
   speciesFallback: runtimeFishData.length,
   careFallback: runtimeCareTopicsData.length,
 };
-const mergeSpecies = (published: SpeciesDetailDto[]) => {
+const mergeSpecies = (published: SpeciesDetailDto[], locale: RuntimeContentLocale) => {
   const publishedByKey = new Map(published.map(item => [item.catalogKey, item]));
   const seedKeys = new Set(seedFishData.map(item => item.id));
   const merged = seedFishData.map(seed => {
     const detail = publishedByKey.get(seed.id);
-    return detail ? toFish(detail, seed) : cloneFish(seed);
+    return detail ? toFish(detail, seed, locale) : cloneFish(seed);
   });
   for (const detail of published) {
-    if (!seedKeys.has(detail.catalogKey)) merged.push(toFish(detail));
+    if (!seedKeys.has(detail.catalogKey)) merged.push(toFish(detail, undefined, locale));
   }
   return merged;
 };
@@ -178,7 +184,7 @@ const mergeCare = (published: CareArticleDetailDto[]) => {
   return merged;
 };
 
-const applyGitProductCareSnapshot = (snapshot: Awaited<ReturnType<typeof loadGitRuntimeAuthoritySnapshot>>) => {
+const applyGitProductCareSnapshot = (snapshot: Awaited<ReturnType<typeof loadGitRuntimeAuthoritySnapshot>>, locale: RuntimeContentLocale) => {
   if (!snapshot || snapshot.generatedAt === null) return false;
   if (snapshot.productCare.species.length === 0 && snapshot.productCare.careArticles.length === 0) return false;
   const speciesByKey = new Map(snapshot.productCare.species.map(item => [item.input.catalogKey, item]));
@@ -187,9 +193,9 @@ const applyGitProductCareSnapshot = (snapshot: Awaited<ReturnType<typeof loadGit
   const seedCareKeys = new Set(seedCareTopicsData.map(item => item.id));
   const species = seedFishData.map(seed => {
     const item = speciesByKey.get(seed.id);
-    return item ? toFishFromGitSnapshot(item.input, item.assets, seed) : cloneFish(seed);
+    return item ? toFishFromGitSnapshot(item.input, item.assets, seed, locale) : cloneFish(seed);
   });
-  for (const item of snapshot.productCare.species) if (!seedSpeciesKeys.has(item.input.catalogKey)) species.push(toFishFromGitSnapshot(item.input, item.assets));
+  for (const item of snapshot.productCare.species) if (!seedSpeciesKeys.has(item.input.catalogKey)) species.push(toFishFromGitSnapshot(item.input, item.assets, undefined, locale));
   const care = seedCareTopicsData.map(seed => {
     const item = careByKey.get(seed.id);
     return item ? toCareTopicFromGitSnapshot(item.input, item.assets, seed) : cloneCareTopic(seed);
@@ -242,7 +248,7 @@ export const hydratePublishedContentCatalog = async (
 ) => {
   try {
     const gitSnapshot = await loadGitRuntimeAuthoritySnapshot();
-    if (applyGitProductCareSnapshot(gitSnapshot)) return getRuntimeContentStatus();
+    if (applyGitProductCareSnapshot(gitSnapshot, locale)) return getRuntimeContentStatus();
     const payload = await apiRequest<ContentBootstrapResponse>(`/content-bootstrap?locale=${encodeURIComponent(locale)}`, {
       authenticated: false,
       signal: AbortSignal.timeout(5000),
@@ -257,7 +263,7 @@ export const hydratePublishedContentCatalog = async (
     payload.species.forEach(item => publishedSpeciesKeys.add(item.catalogKey));
     payload.careArticles.forEach(item => publishedCareKeys.add(item.catalogKey));
 
-    const mergedSpecies = mergeSpecies(payload.species);
+    const mergedSpecies = mergeSpecies(payload.species, locale);
     const mergedCare = mergeCare(payload.careArticles);
     runtimeFishData.splice(0, runtimeFishData.length, ...mergedSpecies);
     runtimeCareTopicsData.splice(0, runtimeCareTopicsData.length, ...mergedCare);

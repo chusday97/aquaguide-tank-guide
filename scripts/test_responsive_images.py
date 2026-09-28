@@ -19,8 +19,11 @@ def assert_image(path: Path, max_size: int, max_bytes: int | None = None) -> Non
 
 def main() -> None:
     fish_data_text = (ROOT / "src" / "data" / "fishData.ts").read_text(encoding="utf-8")
-    data_start = fish_data_text.index("= [") + 2
-    records = json.loads(fish_data_text[data_start:fish_data_text.rindex("]") + 1])
+    import re
+    match = re.search(r"export const (?:catalogSeedFishData|fishData): Fish\[] = (\[.*?\n\]);", fish_data_text, flags=re.S)
+    if not match:
+        raise RuntimeError("Could not parse static fishData catalogue seed")
+    records = json.loads(match.group(1))
     species_ids = {record["id"] for record in records if (PUBLIC / str(record.get("image", "")).split("?", 1)[0].lstrip("/")).exists()}
     species_ids.update(path.stem for path in (PUBLIC / "species-image-overrides").glob("sp_*.png"))
     species_ids.update("_".join(path.name.split("_", 2)[:2]) for path in (PUBLIC / "species-display").glob("sp_*_display_white.png"))

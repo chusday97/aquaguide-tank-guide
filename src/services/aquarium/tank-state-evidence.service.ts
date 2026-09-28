@@ -2,6 +2,14 @@ import type { Aquarium, Fish } from '../../types';
 import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
 import { evaluateCompatibilityDecision, type CompatibilityItem } from '../../modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
+import { getExactCatalogDuplicateCanonicalId } from '../../data/catalogDuplicateAliases';
+import {
+  attachReviewedConflictPairsToInterventions,
+  buildTankInterventionsFromDiagnosisRecords,
+  evaluateTankInterventionEffects,
+  type TankIntervention,
+  type TankInterventionEffect,
+} from './tank-intervention-evidence.service';
 import {
   evaluateTankState,
   type TankHardConstraint,
@@ -12,7 +20,15 @@ import {
   type TankStateResult,
 } from '../../../packages/domain-rules/src';
 
-const HARD_CONSTRAINT_CODES = new Set(['water_type_mismatch', 'species_water_type_conflict']);
+const HARD_CONSTRAINT_CODES = new Set([
+  'water_type_mismatch',
+  'species_water_type_conflict',
+  'temperature_range_conflict',
+  'temperature_no_overlap',
+  'tank_temperature_conflict',
+  'temperature_mismatch',
+]);
+const URGENT_HARD_CONSTRAINT_CODES = new Set(['water_type_mismatch', 'species_water_type_conflict']);
 
 const riskKindMap: Partial<Record<CompatibilityRiskType, TankPriorRiskKind>> = {
   water_type: 'water_type',
@@ -25,11 +41,24 @@ const riskKindMap: Partial<Record<CompatibilityRiskType, TankPriorRiskKind>> = {
   equipment: 'equipment',
 };
 
-const normalizeObservation = (code: TankObservationCode, record: DiagnosisRecord): TankObservation => ({
-  code,
-  observedAt: record.createdAt,
-  evidence: `${record.problemType}：${record.resultSummary || record.answers?.behavior || record.answers?.aggression || code}`,
-});
+const parseSpeciesIds = (value: string | undefined) => (
+  [...new Set((value || '').split(',').map(item => item.trim()).filter(Boolean))]
+);
+
+const normalizeObservation = (code: TankObservationCode, record: DiagnosisRecord): TankObservation => {
+  const subjectSpeciesIds = parseSpeciesIds(record.answers?.targetSpeciesIds);
+  const explicitScope = record.answers?.targetScope;
+  return {
+    code,
+    observedAt: record.createdAt,
+    evidence: `${record.problemType}：${record.resultSummary || record.answers?.behavior || record.answers?.aggression || code}`,
+    subjectSpeciesIds: subjectSpeciesIds.length > 0 ? subjectSpeciesIds : undefined,
+    scope: explicitScope === 'whole_tank'
+      ? 'whole_tank'
+      : subjectSpeciesIds.length > 0 ? 'species_specific' : undefined,
+    sourceDiagnosisId: record.diagnosisId,
+  };
+};
 
 const includesOne = (value: string | undefined, options: string[]) => Boolean(value && options.some(option => value.includes(option)));
 
@@ -62,8 +91,10 @@ export const buildTankObservationsFromDiagnosisRecords = (
       if (answers.behavior === '正常游动和进食') {
         add(record, 'normal_activity');
         add(record, 'normal_feeding');
+        add(record, 'no_persistent_chasing');
+        add(record, 'no_hiding_pressure');
       }
-      if (answers.breathing === '正常') add(record, 'normal_activity');
+      if (answers.breathing === '正常') add(record, 'normal_breathing');
       if (includesOne(answers.behavior, ['追咬打架'])) add(record, 'persistent_chasing');
       if (includesOne(answers.behavior, ['持续躲藏'])) add(record, 'hiding_pressure');
       if (includesOne(answers.behavior, ['拒食'])) add(record, 'appetite_drop');
@@ -78,6 +109,7 @@ export const buildTankObservationsFromDiagnosisRecords = (
     if (record.problemType === '躲藏不动') {
       if (includesOne(answers.hiding, ['长时间躲藏', '趴底不动'])) add(record, 'hiding_pressure');
       if (includesOne(answers.chasing, ['明显追咬'])) add(record, 'persistent_chasing');
+      if (answers.chasing === '没有') add(record, 'no_persistent_chasing');
     }
 
     if (record.problemType === '拒食') {
@@ -87,12 +119,15 @@ export const buildTankObservationsFromDiagnosisRecords = (
         add(record, 'feeding_exclusion');
       } else if (includesOne(answers.chasing, ['明显追咬'])) {
         add(record, 'persistent_chasing');
+      } else if (answers.chasing === '没有') {
+        add(record, 'no_persistent_chasing');
       }
     }
 
     if (['鱼浮头 / 呼吸急促', '鱼只异常'].includes(record.problemType)) {
       const respiratoryAnswer = answers.gasping || answers.symptom || answers.fishBehavior;
       if (includesOne(respiratoryAnswer, ['经常浮头', '呼吸明显急促', '急促呼吸', '浮头喘气'])) add(record, 'respiratory_distress');
+      if (respiratoryAnswer === '没有') add(record, 'normal_breathing');
     }
 
     if (['死亡 / 异常死亡', '死亡处理'].includes(record.problemType)) {
@@ -105,7 +140,7 @@ export const buildTankObservationsFromDiagnosisRecords = (
 
   const seen = new Set<string>();
   return observations.filter(item => {
-    const key = `${item.observedAt}::${item.code}`;
+    const key = `${item.observedAt}::${item.code}::${item.scope || 'unknown'}::${(item.subjectSpeciesIds || []).slice().sort().join(',')}`;
     if (seen.has(key)) return false;
     seen.add(key);
     return true;
@@ -187,7 +222,7 @@ export const buildTankHardConstraintsFromCompatibilityDecision = (decision: Comp
     .map(rule => ({
       code: rule.code,
       active: true,
-      severity: 'urgent' as const,
+      severity: URGENT_HARD_CONSTRAINT_CODES.has(rule.code) ? 'urgent' as const : 'intervene' as const,
       evidence: rule.evidence,
     }))
 );
@@ -198,20 +233,66 @@ export const getCurrentCombinationAgeDays = (aquarium: Aquarium, now = new Date(
       ? record.batches.map(batch => batch.entryDate)
       : [record.entryDate]
   )).filter(Boolean);
-  const latestEntryMs = Math.max(...entryDates.map(value => Date.parse(value)).filter(Number.isFinite));
-  const fallbackMs = aquarium.startedAt ? Date.parse(aquarium.startedAt) : Number.NaN;
+  const nowMs = now.getTime();
+  const eligibleEntryMs = entryDates
+    .map(value => Date.parse(value))
+    .filter(value => Number.isFinite(value) && value <= nowMs);
+  const latestEntryMs = eligibleEntryMs.length > 0 ? Math.max(...eligibleEntryMs) : Number.NaN;
+  const parsedFallbackMs = aquarium.startedAt ? Date.parse(aquarium.startedAt) : Number.NaN;
+  const fallbackMs = Number.isFinite(parsedFallbackMs) && parsedFallbackMs <= nowMs ? parsedFallbackMs : Number.NaN;
   const startMs = Number.isFinite(latestEntryMs) ? latestEntryMs : fallbackMs;
   if (!Number.isFinite(startMs)) return 0;
   return Math.max(0, Math.floor((now.getTime() - startMs) / (24 * 60 * 60 * 1000)));
 };
 
+export type CatalogDuplicateCollapse = {
+  canonicalId: string;
+  sourceSpeciesIds: string[];
+  combinedQuantity: number;
+};
+
 export type CurrentTankStateEvidence = {
   compatibilityDecision: CompatibilityDecision | null;
+  catalogDuplicateCollapses: CatalogDuplicateCollapse[];
   priors: TankPriorRisk[];
   hardConstraints: TankHardConstraint[];
   observations: TankObservation[];
+  interventions: TankIntervention[];
+  interventionEffects: TankInterventionEffect[];
   cohabitationDays: number;
   result: TankStateResult;
+};
+
+const collapseExistingCatalogDuplicates = (
+  items: CompatibilityItem[],
+  speciesCatalog: Fish[],
+): { items: CompatibilityItem[]; collapses: CatalogDuplicateCollapse[] } => {
+  const buckets = new Map<string, CompatibilityItem[]>();
+  for (const item of items) {
+    const canonicalId = getExactCatalogDuplicateCanonicalId(item.species.id);
+    const bucket = buckets.get(canonicalId) || [];
+    bucket.push(item);
+    buckets.set(canonicalId, bucket);
+  }
+
+  const collapses: CatalogDuplicateCollapse[] = [];
+  const normalized = Array.from(buckets.entries()).map(([canonicalId, bucket]) => {
+    if (bucket.length === 1) return bucket[0];
+    const canonicalSpecies = speciesCatalog.find(species => species.id === canonicalId) || bucket[0].species;
+    const combinedQuantity = bucket.reduce((sum, item) => sum + Math.max(1, Number(item.quantity) || 1), 0);
+    collapses.push({
+      canonicalId,
+      sourceSpeciesIds: [...new Set(bucket.map(item => item.species.id))],
+      combinedQuantity,
+    });
+    return {
+      species: canonicalSpecies,
+      quantity: combinedQuantity,
+      origin: 'existing' as const,
+    };
+  });
+
+  return { items: normalized, collapses };
 };
 
 export const deriveCurrentTankState = ({
@@ -232,12 +313,16 @@ export const deriveCurrentTankState = ({
     })
     .filter((item): item is { species: Fish; quantity: number; origin: 'existing' } => Boolean(item));
 
-  const compatibilityDecision = items.length > 0
-    ? evaluateCompatibilityDecision({ tank: aquarium, items })
+  const { items: normalizedItems, collapses: catalogDuplicateCollapses } = collapseExistingCatalogDuplicates(items, speciesCatalog);
+  const compatibilityDecision = normalizedItems.length > 0
+    ? evaluateCompatibilityDecision({ tank: aquarium, items: normalizedItems })
     : null;
   const priors = compatibilityDecision ? buildTankPriorsFromCompatibilityDecision(compatibilityDecision) : [];
   const hardConstraints = compatibilityDecision ? buildTankHardConstraintsFromCompatibilityDecision(compatibilityDecision) : [];
   const observations = buildTankObservationsFromDiagnosisRecords(diagnosisRecords, aquarium.id);
+  const rawInterventions = buildTankInterventionsFromDiagnosisRecords(diagnosisRecords, aquarium.id, now);
+  const interventions = attachReviewedConflictPairsToInterventions(rawInterventions, compatibilityDecision);
+  const interventionEffects = evaluateTankInterventionEffects({ interventions, observations, now });
   const cohabitationDays = getCurrentCombinationAgeDays(aquarium, now);
   const result = evaluateTankState({
     priors,
@@ -247,5 +332,5 @@ export const deriveCurrentTankState = ({
     now: now.toISOString(),
   });
 
-  return { compatibilityDecision, priors, hardConstraints, observations, cohabitationDays, result };
+  return { compatibilityDecision, catalogDuplicateCollapses, priors, hardConstraints, observations, interventions, interventionEffects, cohabitationDays, result };
 };

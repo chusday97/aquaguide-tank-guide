@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import { fishData } from '../src/data/fishData';
+import { getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
+import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
+import type { Aquarium } from '../src/types';
+const byId=(id:string)=>{const fish=fishData.find(item=>item.id===id);assert.ok(fish,'missing catalog fish '+id);return fish;};
+const tank=(temperature:number,length=120,width=45,height=45):Aquarium=>({id:'batch2',name:'batch2',fishes:[],dimensions:{length:String(length),width:String(width),height:String(height)},waterType:'Freshwater',targetTemperature:String(temperature),equipment:{filter:'桶滤',heater:true,oxygen:true,light:'普通灯'}});
+for(const id of ['sp_0043','sp_0044','sp_0062','sp_0119','sp_0125']){assert.ok(getReviewedSpeciesKnowledgeForFish(byId(id)),id+' runtime knowledge missing');assert.ok(getReviewedCompatibilityProfileForFish(byId(id)),id+' runtime profile missing');}
+const roundtailHot=evaluateTankCompatibility({tank:tank(26,90,35,40),candidateSpecies:byId('sp_0043'),candidateQuantity:2});
+assert.equal(roundtailHot.status,'not_recommended');assert.ok(roundtailHot.blockingRules.some(rule=>rule.code.includes('temperature')));
+const blackParadise=evaluateTankCompatibility({tank:tank(25,90,35,40),candidateSpecies:byId('sp_0044'),candidateQuantity:2});
+assert.ok(!blackParadise.blockingRules.some(rule=>rule.code==='territorial_conflict'),'breeding-only defense must not become permanent territorial block');
+const redEye4=evaluateTankCompatibility({tank:tank(24),candidateSpecies:byId('sp_0062'),candidateQuantity:4});
+assert.equal(redEye4.status,'caution');assert.ok(redEye4.warningRules.some(rule=>['group_requirement_gap','minimum_group_not_met','fin_nipping_group_pressure'].includes(rule.code)));
+const redEye6=evaluateTankCompatibility({tank:tank(24),candidateSpecies:byId('sp_0062'),candidateQuantity:6});
+assert.ok(!redEye6.warningRules.some(rule=>['group_requirement_gap','minimum_group_not_met','fin_nipping_group_pressure'].includes(rule.code)));
+const butterfly=evaluateTankCompatibility({tank:tank(26),existingSpecies:[{species:byId('sp_0431'),record:{quantity:10}}],candidateSpecies:byId('sp_0119'),candidateQuantity:1});
+assert.equal(butterfly.status,'not_recommended');assert.ok(butterfly.blockingRules.some(rule=>rule.code==='predation_risk'));
+const snowball=evaluateTankCompatibility({tank:tank(26,90,35,40),candidateSpecies:byId('sp_0125'),candidateQuantity:1});
+assert.notEqual(snowball.status,'compatible');assert.ok([...snowball.warningRules,...snowball.blockingRules].some(rule=>/tank_(volume|length)|volume_too_small|space/.test(rule.code)));assert.ok(!snowball.warningRules.some(rule=>rule.code.includes('group')),'do not invent a minimum group size for H. inspector');
+console.log('priority compatibility knowledge batch2 passed: cool-water, breeding-context, shoal/fin-nip, predation, and space rules');

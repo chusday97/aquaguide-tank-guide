@@ -1,0 +1,511 @@
+import assert from 'node:assert/strict';
+import { fishData } from '../src/data/fishData';
+import type { Aquarium } from '../src/types';
+import type { DiagnosisRecord } from '../src/modules/diagnosis/diagnosis.types';
+import { deriveCurrentTankState } from '../src/services/aquarium/tank-state-evidence.service';
+import {
+  buildCurrentTankRiskItems,
+  buildTankInterventionDecisionSummary,
+  getCurrentTankRiskLevel,
+} from '../src/services/aquarium/tank-state-presentation.service';
+
+const NOW = new Date('2026-09-26T08:00:00.000Z');
+const species = (id:string) => {
+  const found=fishData.find(item=>item.id===id);
+  assert.ok(found,`missing species ${id}`);
+  return found;
+};
+const record=(createdAt:string,problemType:string,answers:Record<string,string>,resultSummary='用户结构化记录'):DiagnosisRecord=>({
+  diagnosisId:`${createdAt}-${problemType}`,
+  createdAt,
+  aquariumId:'tank-runtime',
+  problemType,
+  answers,
+  resultSummary,
+  riskLevel:'低风险',
+  riskCode:'low',
+  suggestedActions:[],
+  missingInfo:[],
+  followUpNotes:[],
+});
+const aquarium=(items:Array<[string,number]>,overrides:Partial<Aquarium>={}):Aquarium=>({
+  id:'tank-runtime',
+  name:'运行中混养验收缸',
+  waterType:'Freshwater',
+  targetTemperature:'25',
+  dimensions:{length:'150',width:'50',height:'50'},
+  equipment:{filter:'桶滤',heater:true,oxygen:true,light:'普通灯'},
+  fishes:items.map(([fishId,quantity],index)=>({id:`stock-${index}`,fishId,quantity,entryDate:'2026-09-01T08:00:00.000Z'})),
+  startedAt:'2026-08-01T08:00:00.000Z',
+  ...overrides,
+});
+const run=(tank:Aquarium,records:DiagnosisRecord[])=>{
+  const evidence=deriveCurrentTankState({aquarium:tank,speciesCatalog:fishData,diagnosisRecords:records,now:NOW});
+  const items=buildCurrentTankRiskItems({aquarium:tank,speciesCatalog:fishData,evidence});
+  return {evidence,items};
+};
+const normal=[record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'})];
+
+// 1) A reviewed red predation pair does not become green/no-action after one normal patrol.
+{
+  const {evidence,items}=run(aquarium([['sp_0446',2],['sp_0431',12]]),normal);
+  assert.equal(evidence.compatibilityDecision?.status,'not_recommended');
+  assert.equal(evidence.hardConstraints.length,0,'predation remains an observation-sensitive high prior, not an environmental hard constraint');
+  assert.equal(evidence.result.state,'watch');
+  assert.equal(evidence.result.primaryAction,'observe');
+  assert.match(evidence.result.summary,/不能把一次正常观察当成已经安全/);
+  assert.equal(items.length,1);
+  assert.equal(items[0].severity,'warning');
+  assert.equal(getCurrentTankRiskLevel(evidence),'low');
+}
+
+// 2) A reviewed red fin-nipping pair behaves the same: normal now != safe long term.
+{
+  const {evidence,items}=run(aquarium([['sp_0439',8],['sp_0436',8]]),normal);
+  assert.equal(evidence.compatibilityDecision?.status,'not_recommended');
+  assert.equal(evidence.result.state,'watch');
+  assert.ok(evidence.priors.some(item=>item.level==='high' && item.kind==='aggression'));
+  assert.match(items[0]?.nextStep || '',/持续追逐|长期躲藏|摄食受压/);
+}
+
+// 3) A genuinely safe reviewed community can still become stable after normal current observations.
+{
+  const {evidence,items}=run(aquarium([['sp_0012',8],['sp_0431',10],['sp_0443',6]]),normal);
+  assert.equal(evidence.compatibilityDecision?.status,'compatible');
+  assert.equal(evidence.result.state,'stable');
+  assert.equal(evidence.result.primaryAction,'no_action');
+  assert.deepEqual(items,[]);
+}
+
+// 4) A single chasing observation is still watch, not an automatic forced separation.
+{
+  const {evidence,items}=run(aquarium([['sp_0439',8],['sp_0436',8]]),[
+    record('2026-09-25T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+  ]);
+  assert.equal(evidence.result.state,'watch');
+  assert.ok(evidence.result.activeSignals.includes('persistent_chasing'));
+  assert.equal(items[0]?.severity,'warning');
+}
+
+// 5) Chasing plus sustained hiding is corroborated current evidence and must trigger adjustment.
+{
+  const {evidence,items}=run(aquarium([['sp_0439',8],['sp_0436',8]]),[
+    record('2026-09-25T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-25T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏'}),
+  ]);
+  assert.equal(evidence.result.state,'intervene');
+  assert.ok(evidence.result.activeSignals.includes('persistent_chasing'));
+  assert.ok(evidence.result.activeSignals.includes('hiding_pressure'));
+  assert.match(items[0]?.title || '',/追咬已造成持续压力/);
+  assert.ok(items[0]?.actionSteps.some(step=>/隔离|分缸/.test(step)));
+}
+
+// 6) Injury requires an explicit stop-harm action rather than generic "observe more" copy.
+{
+  const {evidence,items}=run(aquarium([['sp_0439',8],['sp_0436',8]]),[
+    record('2026-09-25T08:00:00.000Z','追咬打架',{aggression:'咬伤鳍条'}),
+  ]);
+  assert.equal(evidence.result.state,'intervene');
+  assert.ok(evidence.result.activeSignals.includes('injury'));
+  assert.match(items[0]?.title || '',/受伤/);
+  assert.match(items[0]?.nextStep || '',/隔离/);
+}
+
+// 7) Respiratory distress outranks compatibility and returns concrete aeration/water checks.
+{
+  const {evidence,items}=run(aquarium([['sp_0012',8],['sp_0431',10],['sp_0443',6]]),[
+    record('2026-09-25T08:00:00.000Z','鱼浮头 / 呼吸急促',{gasping:'呼吸明显急促'}),
+  ]);
+  assert.equal(evidence.compatibilityDecision?.status,'compatible');
+  assert.equal(evidence.result.state,'urgent');
+  assert.equal(getCurrentTankRiskLevel(evidence),'high');
+  assert.match(items[0]?.title || '',/呼吸急促|浮头/);
+  assert.ok(items[0]?.actionSteps.some(step=>/曝气|水面扰动/.test(step)));
+  assert.ok(items[0]?.actionSteps.some(step=>/水质/.test(step)));
+}
+
+// 8) A no-common-temperature combination remains an active current constraint despite normal behavior.
+{
+  const {evidence,items}=run(aquarium([['sp_0434',8],['sp_0447',5]],{targetTemperature:'25'}),normal);
+  assert.equal(evidence.compatibilityDecision?.status,'not_recommended');
+  assert.ok(evidence.hardConstraints.some(item=>item.code.includes('temperature')));
+  assert.equal(evidence.result.state,'intervene');
+  assert.equal(evidence.result.primaryAction,'adjust');
+  assert.match(items[0]?.title || '',/水温/);
+  assert.match(items[0]?.nextStep || '',/折中水温|分到独立稳定环境/);
+}
+
+// 9) An old normal patrol cannot be used as current evidence to clear a reviewed high-risk pair.
+{
+  const stale=[record('2026-09-10T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'})];
+  const {evidence}=run(aquarium([['sp_0446',2],['sp_0431',12]]),stale);
+  assert.equal(evidence.result.state,'watch');
+  assert.equal(evidence.result.confidence,'low');
+  assert.match(evidence.result.summary,/缺少足够近期现实观察/);
+}
+
+
+
+// Recovery trajectory: current relapse signals outrank unresolved historical pressure.
+{
+  const base = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-22T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏'}),
+  ];
+  const oneNormal = [...base, record('2026-09-24T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'})];
+  const twoNormals = [...oneNormal, record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'})];
+  const threeNormals = [
+    ...base,
+    record('2026-09-23T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+  ];
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const a = run(tank,base).evidence.result;
+  const b = run(tank,oneNormal).evidence.result;
+  const c = run(tank,twoNormals).evidence.result;
+  const d = run(tank,threeNormals).evidence.result;
+  const relapse = run(tank,[...threeNormals,record('2026-09-26T07:00:00.000Z','追咬打架',{aggression:'明显追咬'})]).evidence.result;
+  assert.equal(a.state,'intervene');
+  assert.equal(b.state,'intervene','one normal follow-up is not enough to clear corroborated behavior pressure');
+  assert.equal(c.state,'watch');
+  assert.ok(c.matchedRules.includes('AQ-STATE-010'));
+  assert.equal(d.state,'watch','reviewed high-risk pair remains watch even after three normal confirmations');
+  assert.ok(d.matchedRules.includes('AQ-STATE-009'));
+  assert.deepEqual(d.recovery,{phase:'confirmed',confirmations:3,targetConfirmations:3,remainingConfirmations:0});
+  assert.equal(relapse.state,'watch');
+  assert.equal(relapse.confidence,'medium','a new current chase must outrank unresolved historical-pressure fallback');
+  assert.ok(relapse.activeSignals.includes('persistent_chasing'));
+  assert.ok(relapse.matchedRules.includes('AQ-STATE-006'));
+  assert.deepEqual(relapse.recovery,{phase:'confirming',confirmations:0,targetConfirmations:2,remainingConfirmations:2});
+}
+
+console.log('Recovery trajectory acceptance passed: intervene -> watch, reviewed risk retained, relapse stays active');
+
+// Intervention evidence integration: executed action + follow-up is visible without claiming causality.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-22T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏'}),
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'增加遮挡',interventionNote:'增加沉木形成视线遮挡'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{breathing:'正常',behavior:'正常游动和进食'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.equal(evidence.interventions.length,1);
+  assert.equal(evidence.interventionEffects.length,1);
+  assert.equal(evidence.interventionEffects[0].outcome,'improved_after_action');
+  assert.match(evidence.interventionEffects[0].summary,/时间先后相关/);
+  assert.equal(evidence.interventionEffects[0].summary.includes('导致恢复'),false);
+  assert.match(items[0]?.nextStep || '',/措施判断：措施后伴随改善/);
+  assert.ok(items[0]?.nextStep.includes('时间先后相关'));
+}
+
+// Intervention evidence integration: a repeated problem after the action must remain visible as not controlled.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-24T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-24T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏',chasing:'明显追咬'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.equal(evidence.result.state,'intervene');
+  assert.equal(evidence.interventionEffects[0].outcome,'problem_persisted_after_action');
+  assert.match(items[0]?.nextStep || '',/措施判断：措施后问题仍持续/);
+  assert.match(items[0]?.nextStep || '',/没有足够证据认为该措施已经控制住问题/);
+}
+
+console.log('Intervention evidence integration passed: action-followup association is visible and causality-safe');
+
+
+// Intervention presentation outcomes: every effect state must tell the user what to do next.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const base = [record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬'})];
+
+  const insufficient = run(tank,[
+    ...base,
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+  ]);
+  assert.equal(insufficient.evidence.interventionEffects[0].outcome,'insufficient_followup');
+  assert.match(insufficient.items[0]?.nextStep || '',/至少 2 次结构化复查/);
+
+  const mixed = run(tank,[
+    ...base,
+    record('2026-09-23T08:00:00.000Z','巡检',{interventionType:'临时隔离'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-26T07:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+  ]);
+  assert.equal(mixed.evidence.interventionEffects[0].outcome,'mixed_after_action');
+  assert.match(mixed.items[0]?.nextStep || '',/措施判断：措施后结果混合/);
+  assert.match(mixed.items[0]?.nextStep || '',/暂不能判断该措施是否有效/);
+}
+
+console.log('Intervention presentation outcomes passed: follow-up guidance is actionable and causality-safe');
+
+
+// Multi-intervention presentation: failed first action + improved escalation must preserve both steps.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-19T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-20T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-21T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-22T08:00:00.000Z','巡检',{interventionType:'临时隔离'}),
+    record('2026-09-23T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.deepEqual(evidence.interventionEffects.map(item=>item.outcome),['problem_persisted_after_action','improved_after_action']);
+  assert.match(items[0]?.nextStep || '',/措施判断：前一措施未控制，后续措施后伴随改善/);
+  assert.match(items[0]?.nextStep || '',/增加遮挡.*仍有异常/);
+  assert.match(items[0]?.nextStep || '',/临时隔离.*相关正常复查/);
+  assert.match(items[0]?.nextStep || '',/不能证明.*唯一原因/);
+}
+
+// Multi-intervention presentation: improvement followed by a new abnormal action window is treated as relapse.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const records = [
+    record('2026-09-18T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-19T08:00:00.000Z','巡检',{interventionType:'增加遮挡'}),
+    record('2026-09-20T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-21T08:00:00.000Z','巡检',{behavior:'正常游动和进食'}),
+    record('2026-09-22T08:00:00.000Z','巡检',{interventionType:'临时隔离'}),
+    record('2026-09-23T08:00:00.000Z','追咬打架',{aggression:'明显追咬'}),
+    record('2026-09-23T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏'}),
+  ];
+  const {evidence,items}=run(tank,records);
+  assert.deepEqual(evidence.interventionEffects.map(item=>item.outcome),['improved_after_action','problem_persisted_after_action']);
+  assert.equal(evidence.result.state,'intervene');
+  assert.match(items[0]?.nextStep || '',/曾记录到相关正常复查/);
+  assert.match(items[0]?.nextStep || '',/此前的改善不能视为问题已经长期解决/);
+}
+
+console.log('Multi-intervention presentation passed: failed→improved and improved→relapsed histories remain visible');
+
+
+// Object-scoped recovery: normal checks on another species cannot clear guppy-specific chasing/hiding pressure.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const incident = [
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-22T09:00:00.000Z','躲藏不动',{hiding:'长时间躲藏',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ];
+  const wrongTarget = run(tank,[
+    ...incident,
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+  ]).evidence.result;
+  assert.equal(wrongTarget.state,'intervene');
+  assert.ok(wrongTarget.activeSignals.includes('persistent_chasing'));
+  assert.ok(wrongTarget.activeSignals.includes('hiding_pressure'));
+
+  const correctTarget = run(tank,[
+    ...incident,
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]).evidence.result;
+  assert.equal(correctTarget.state,'watch');
+  assert.ok(correctTarget.matchedRules.includes('AQ-STATE-010'));
+  assert.equal(correctTarget.recovery?.confirmations,2);
+}
+
+// Targeted intervention presentation resolves species IDs to names and preserves quantity + conflict provenance.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','追咬打架',{aggression:'明显追咬',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-22T09:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+      interventionConflictSpeciesIds:'sp_0439,sp_0436',
+      interventionReason:'虎皮鱼持续追咬孔雀鱼',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]);
+  assert.deepEqual(evidence.interventions[0].targets,[{speciesId:'sp_0436',quantity:4}]);
+  assert.equal(evidence.interventionEffects[0].outcome,'improved_after_action');
+  assert.match(items[0]?.nextStep || '',/孔雀鱼 4只/);
+  assert.match(items[0]?.nextStep || '',/虎皮鱼 × 孔雀鱼/);
+  assert.match(items[0]?.nextStep || '',/虎皮鱼持续追咬孔雀鱼/);
+}
+
+console.log('Object-scoped recovery and intervention presentation passed');
+
+
+// Unique reviewed high-confidence direct pair is auto-associated with a species-targeted local action.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]);
+  assert.deepEqual(new Set(evidence.interventions[0].conflictSpeciesIds),new Set(['sp_0439','sp_0436']));
+  assert.equal(evidence.interventions[0].conflictPairSource,'reviewed_pair_rule');
+  assert.ok((evidence.interventions[0].conflictPairEvidenceIds?.length || 0) >= 2);
+  assert.equal(evidence.interventions[0].targetRisk?.category,'fin_nipping');
+  assert.equal(evidence.interventions[0].targetRisk?.label,'追鳍 / 长鳍冲突');
+  assert.equal(evidence.interventions[0].targetRisk?.reviewedRiskType,'fin_nipping_long_fin_conflict');
+  assert.match(evidence.interventions[0].targetRisk?.reason || '',/孔雀鱼.*虎皮|虎皮.*孔雀鱼/);
+  assert.ok((evidence.interventions[0].targetRisk?.mitigation.length || 0) >= 1);
+  assert.match(items[0]?.nextStep || '',/虎皮鱼 × 孔雀鱼|孔雀鱼 × 虎皮鱼/);
+  assert.match(items[0]?.nextStep || '',/依据已审核直接配对规则自动关联/);
+  assert.match(items[0]?.nextStep || '',/针对风险：追鳍 \/ 长鳍冲突/);
+  assert.match(items[0]?.nextStep || '',/已审核原因：/);
+  assert.match(items[0]?.nextStep || '',/已审核调整建议：/);
+}
+
+// Ambiguous target set matching two independent direct reviewed pairs must fail closed instead of guessing.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0446',2],['sp_0431',10]]);
+  const {evidence}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'分缸',
+      interventionTargetSpeciesIds:'sp_0436,sp_0431',
+      interventionTargetQuantities:'4,6',
+    }),
+  ]);
+  assert.equal(evidence.interventions[0].conflictSpeciesIds,undefined);
+  assert.equal(evidence.interventions[0].conflictPairSource,undefined);
+  assert.equal(evidence.interventions[0].targetRisk,undefined);
+}
+
+// Reviewed rule-inference is not treated as a direct pair fact for automatic provenance.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0021',2]]);
+  const {evidence}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'增加遮挡',
+      interventionTargetSpeciesIds:'sp_0439',
+    }),
+  ]);
+  assert.equal(evidence.interventions[0].conflictSpeciesIds,undefined);
+  assert.equal(evidence.interventions[0].conflictPairSource,undefined);
+  assert.equal(evidence.interventions[0].targetRisk,undefined);
+}
+
+// Explicit user-recorded conflict pair always wins over automatic reviewed-pair inference.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const {evidence}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionConflictSpeciesIds:'sp_0436,sp_0431',
+    }),
+  ]);
+  assert.deepEqual(evidence.interventions[0].conflictSpeciesIds,['sp_0436','sp_0431']);
+  assert.equal(evidence.interventions[0].conflictPairSource,'explicit');
+  assert.equal(evidence.interventions[0].conflictPairEvidenceIds,undefined);
+  assert.equal(evidence.interventions[0].targetRisk,undefined);
+}
+
+// Explicit user-recorded pair still receives reviewed risk semantics when that exact pair has direct reviewed evidence.
+{
+  const tank = aquarium([['sp_0446',2],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'分缸',
+      interventionTargetSpeciesIds:'sp_0431',
+      interventionConflictSpeciesIds:'sp_0446,sp_0431',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0431'}),
+  ]);
+  assert.equal(evidence.interventions[0].conflictPairSource,'explicit');
+  assert.equal(evidence.interventions[0].targetRisk?.category,'predation');
+  assert.equal(evidence.interventions[0].targetRisk?.label,'捕食风险');
+  assert.equal(evidence.interventions[0].targetRisk?.reviewedRiskType,'predation_threat');
+  assert.match(items[0]?.nextStep || '',/针对风险：捕食风险/);
+  assert.match(items[0]?.nextStep || '',/已审核原因：/);
+}
+
+console.log('Reviewed conflict-pair auto association passed: unique direct evidence only; ambiguity and inference fail closed');
+console.log('Intervention target risk passed: reviewed pair risk -> stable category, cause, mitigation, and provenance');
+
+
+// Structured contract: judgment -> reason -> adjustment -> outcome is available without parsing long presentation text.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0431',10]]);
+  const evidence = run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]).evidence;
+  const summary = buildTankInterventionDecisionSummary(evidence,fishData);
+  assert.equal(summary?.judgment,'措施后伴随改善');
+  assert.equal(summary?.interventionOutcome,'improved_after_action');
+  assert.equal(summary?.targetRisk?.category,'fin_nipping');
+  assert.equal(summary?.targetRisk?.label,'追鳍 / 长鳍冲突');
+  assert.match(summary?.reason || '',/已审核依据/);
+  assert.match(summary?.reason || '',/孔雀鱼.*虎皮|虎皮.*孔雀鱼/);
+  assert.match(summary?.adjustment || '',/已审核调整建议/);
+  assert.match(summary?.adjustment || '',/分缸|长期混养|非追鳍/);
+}
+
+console.log('Structured intervention decision summary passed: judgment, reason, adjustment, outcome, and target risk');
+
+
+// A local intervention can improve its target pair while another independent reviewed direct conflict remains in the same tank.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8],['sp_0446',2],['sp_0431',10]]);
+  const {evidence,items}=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+      interventionTargetQuantities:'4',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]);
+  const summary=buildTankInterventionDecisionSummary(evidence,fishData);
+  assert.equal(summary?.interventionOutcome,'improved_after_action');
+  assert.equal(summary?.reviewedDirectConflictScope,'one_of_multiple_current_reviewed_direct_conflicts');
+  assert.equal(summary?.judgment,'目标风险措施后伴随改善，但整缸仍有其他已审核直接冲突');
+  assert.equal(summary?.remainingReviewedDirectRisks.length,1);
+  assert.deepEqual(new Set(summary?.remainingReviewedDirectRisks[0].speciesIds),new Set(['sp_0446','sp_0431']));
+  assert.equal(summary?.remainingReviewedDirectRisks[0].category,'predation');
+  assert.equal(summary?.remainingReviewedDirectRisks[0].label,'捕食风险');
+  assert.match(summary?.reason || '',/天使鱼（神仙鱼） × 红绿灯|红绿灯 × 天使鱼（神仙鱼）/);
+  assert.match(summary?.reason || '',/捕食风险/);
+  assert.match(summary?.adjustment || '',/不要把局部改善当成整缸安全/);
+  assert.match(items[0]?.nextStep || '',/措施判断：目标风险措施后伴随改善，但整缸仍有其他已审核直接冲突/);
+  assert.match(items[0]?.nextStep || '',/天使鱼（神仙鱼） × 红绿灯|红绿灯 × 天使鱼（神仙鱼）/);
+}
+
+// When the target pair is the only current high-confidence reviewed direct conflict, scope is explicit but still not called whole-tank safe.
+{
+  const tank = aquarium([['sp_0439',8],['sp_0436',8]]);
+  const evidence=run(tank,[
+    record('2026-09-22T08:00:00.000Z','巡检',{
+      interventionType:'临时隔离',
+      interventionTargetSpeciesIds:'sp_0436',
+    }),
+    record('2026-09-24T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+    record('2026-09-25T08:00:00.000Z','巡检',{behavior:'正常游动和进食',targetScope:'single_species',targetSpeciesIds:'sp_0436'}),
+  ]).evidence;
+  const summary=buildTankInterventionDecisionSummary(evidence,fishData);
+  assert.equal(summary?.reviewedDirectConflictScope,'only_current_reviewed_direct_conflict');
+  assert.deepEqual(summary?.remainingReviewedDirectRisks,[]);
+  assert.equal(summary?.judgment,'措施后伴随改善');
+  assert.match(summary?.reason || '',/不等于整缸不存在其他推导风险、参数风险或未来复发/);
+}
+
+console.log('Partial reviewed-direct risk coverage passed: local improvement never implies whole-tank safety');

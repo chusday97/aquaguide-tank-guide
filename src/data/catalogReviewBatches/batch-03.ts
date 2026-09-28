@@ -22,6 +22,37 @@ const fields = [
   'social_behavior', 'territoriality', 'predation', 'breeding_behavior',
 ] as const;
 
+const koiBettaPhenotypeSource: CatalogEvidenceSource = {
+  id: 'batch03-sciadv-betta-mosaic-koi',
+  title: 'The genetic architecture of phenotypic diversity in the Betta fish (Betta splendens)',
+  publisher: 'Science Advances',
+  url: 'https://doi.org/10.1126/sciadv.abm4955',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
+const identityBoundarySources: Record<string, CatalogEvidenceSource[]> = {
+  sp_0002: [
+    {
+      id: 'identity-zootaxa-caridina-logemanni',
+      title: 'To “bee” or not to be—on some ornamental shrimp from Guangdong Province, Southern China and Hong Kong SAR, with descriptions of three new species',
+      publisher: 'Zootaxa',
+      url: 'https://doi.org/10.11646/zootaxa.3889.2.1',
+      sourceType: 'peer_reviewed',
+      reviewStatus: 'reviewed',
+    },
+    {
+      id: 'identity-worms-caridina-logemanni',
+      title: 'Caridina logemanni Klotz & von Rintelen, 2014',
+      publisher: 'World Register of Marine Species / DecaNet',
+      url: 'https://www.marinespecies.org/aphia.php?id=877335&p=taxdetails',
+      sourceType: 'professional_association',
+      reviewStatus: 'reviewed',
+    },
+  ],
+  sp_0258: [koiBettaPhenotypeSource],
+};
+
 type Seed = {
   speciesId: string;
   commonName: string;
@@ -60,7 +91,7 @@ const seeds: Seed[] = [
   {
     speciesId: 'sp_0475', commonName: '高体鳑鲏', scientificName: 'Rhodeus ocellatus',
     baseSpeciesKey: 'Rhodeus ocellatus', sourceId: 'batch03-fishbase-rhodeus-ocellatus',
-    sourceTitle: 'Rhodeus ocellatus species summary', sourceUrl: 'https://www.fishbase.se/summary/Rhodeus-ocellatus.html', water: 'freshwater',
+    sourceTitle: 'Rhodeus ocellatus species summary', sourceUrl: 'https://www.fishbase.se/summary/Rhodeus-ocellatus.html',
   },
   {
     speciesId: 'sp_0459', commonName: '黑壳虾', scientificName: 'Neocaridina davidi wild type',
@@ -94,6 +125,7 @@ const seeds: Seed[] = [
 
 const unknownReason = (seed: Seed, field: string) => {
   if (field === 'identity' && seed.identityUnknown) return seed.identityUnknown;
+  if (field === 'water' && seed.speciesId === 'sp_0475') return 'FishBase 同时记录 freshwater 与 brackish；当前单值 waterType 无法无损表达双水体记录，因此保持 unknown。';
   if (field === 'water' && !seed.water) return '现有物种来源未同时确认观赏贸易名对应的完整水体阶段需求。';
   if (field === 'ph') return '该来源未给出可直接用于本产品混养判断的审定 pH 区间。';
   if (field === 'temperature') return '该来源未给出可直接用于本产品混养判断的审定水温区间。';
@@ -122,6 +154,10 @@ const verifiedFieldValues: Record<string, Partial<Record<typeof fields[number], 
     temperature: { min: 4, max: 22 },
     adult_size: { min: null, max: 100 },
   },
+  sp_0475: {
+    temperature: { min: 18, max: 24 },
+    adult_size: { min: null, max: 9.2 },
+  },
   sp_0258: {
     temperature: { min: 24, max: 30 },
     ph: { min: 6, max: 8 },
@@ -139,6 +175,23 @@ const verifiedFieldValues: Record<string, Partial<Record<typeof fields[number], 
 };
 
 const makeReview = (seed: Seed, field: typeof fields[number]): CatalogFieldReview => {
+  if (field === 'identity' && seed.speciesId === 'sp_0258') {
+    return {
+      speciesId: seed.speciesId,
+      field,
+      proposedValue: {
+        scientificName: 'Betta splendens var. Koi',
+        baseSpeciesKey: 'Betta splendens',
+        variantKey: 'Koi',
+      },
+      status: 'reviewed',
+      resolution: 'supported',
+      confidence: 'medium',
+      citationIds: [koiBettaPhenotypeSource.id],
+      conflictNotes: ['Koi/candy is a named mosaic commercial phenotype within domesticated Betta splendens, not a separate taxon; identity support does not promote variant-specific husbandry or social behavior.'],
+      reviewedAt: '2026-09-22T00:00:00+08:00',
+    };
+  }
   const verifiedValue = verifiedFieldValues[seed.speciesId]?.[field];
   if (verifiedValue !== undefined) {
     return {
@@ -189,7 +242,7 @@ export const catalogReviewBatch03: CatalogReviewBatch03Entry[] = seeds.map(seed 
       seed.sourceId.includes('usfws') || seed.sourceId.includes('itis') ? 'government' :
         seed.sourceId.includes('obis') ? 'professional_association' : 'curated_husbandry',
     reviewStatus: 'reviewed',
-  }],
+  }, ...(identityBoundarySources[seed.speciesId] || [])],
   fieldReviews: fields.map(field => makeReview(seed, field)),
 }));
 
@@ -202,10 +255,12 @@ export const catalogReviewBatch03VerifiedSourceIds: string[] = [
   'batch03-fishbase-amatitlania-nigrofasciata',
   'batch03-fishbase-channa-asiatica',
   'batch03-fishbase-channa-argus',
+  'batch03-fishbase-rhodeus-ocellatus',
   'batch03-fishbase-betta-splendens',
   'batch03-uf-ifas-neocaridina-davidi',
   'batch03-usfws-neocaridina-davidi-red-morphs',
   'batch03-obis-neritina-natalensis',
+  'batch03-sciadv-betta-mosaic-koi',
 ];
 
 if (catalogReviewBatch03.length !== 10 || catalogReviewBatch03FieldReviews.length !== 100) {

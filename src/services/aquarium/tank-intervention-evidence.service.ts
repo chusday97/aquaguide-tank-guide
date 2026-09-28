@@ -1,0 +1,497 @@
+import type { DiagnosisRecord } from '../../modules/diagnosis/diagnosis.types';
+import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
+import { getReviewedPairRule } from '../../data/compatibilityEvidence';
+import type { TankObservation, TankObservationCode } from '../../../packages/domain-rules/src';
+
+export type TankInterventionType =
+  | 'add_hiding'
+  | 'temporary_isolation'
+  | 'separate_tank'
+  | 'increase_aeration'
+  | 'water_change'
+  | 'filter_check'
+  | 'temperature_adjustment'
+  | 'reduce_stocking'
+  | 'other';
+
+export type TankInterventionTarget = {
+  speciesId: string;
+  quantity?: number;
+};
+
+export type TankInterventionRiskCategory =
+  | 'fin_nipping'
+  | 'predation'
+  | 'territory_aggression'
+  | 'group_size'
+  | 'water_parameter'
+  | 'space'
+  | 'other';
+
+export type TankInterventionRisk = {
+  category: TankInterventionRiskCategory;
+  label: string;
+  reviewedRiskType: string;
+  reason: string;
+  mitigation: string[];
+  evidenceIds: string[];
+  source: 'reviewed_pair_rule';
+};
+
+export type TankReviewedDirectConflict = {
+  speciesIds: [string, string];
+  verdict: 'caution' | 'not_recommended';
+  risk: TankInterventionRisk;
+};
+
+export type TankIntervention = {
+  interventionId: string;
+  type: TankInterventionType;
+  label: string;
+  performedAt: string;
+  note?: string;
+  sourceDiagnosisId: string;
+  targetScope?: 'whole_tank' | 'species_specific';
+  targets?: TankInterventionTarget[];
+  conflictSpeciesIds?: string[];
+  conflictPairSource?: 'explicit' | 'reviewed_pair_rule';
+  conflictPairEvidenceIds?: string[];
+  targetRisk?: TankInterventionRisk;
+  recordedReason?: string;
+};
+
+export type TankInterventionOutcome =
+  | 'improved_after_action'
+  | 'problem_persisted_after_action'
+  | 'mixed_after_action'
+  | 'insufficient_followup';
+
+export type TankInterventionEffect = {
+  intervention: TankIntervention;
+  outcome: TankInterventionOutcome;
+  followupObservationCount: number;
+  normalConfirmationCount: number;
+  abnormalObservationCount: number;
+  evaluationWindowEnd?: string;
+  evidence: string[];
+  /** Always correlation-safe: never states that the action caused the outcome. */
+  summary: string;
+};
+
+export type TankInterventionSequencePattern =
+  | 'escalated_then_improved'
+  | 'relapsed_after_improvement'
+  | 'multiple_actions_not_controlled';
+
+export type TankInterventionSequenceSummary = {
+  pattern: TankInterventionSequencePattern;
+  summary: string;
+  nextStep: string;
+  interventionIds: string[];
+};
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const FOLLOWUP_WINDOW_DAYS = 7;
+
+const interventionLabels: Record<TankInterventionType, string> = {
+  add_hiding: '增加遮挡 / 躲避空间',
+  temporary_isolation: '临时隔离',
+  separate_tank: '分缸',
+  increase_aeration: '加强曝气 / 水面扰动',
+  water_change: '换水',
+  filter_check: '检查 / 恢复过滤',
+  temperature_adjustment: '调整水温',
+  reduce_stocking: '减少生物数量 / 降低负荷',
+  other: '其他已执行措施',
+};
+
+const interventionAliases: Record<string, TankInterventionType> = {
+  add_hiding: 'add_hiding',
+  '增加遮挡': 'add_hiding',
+  '增加躲避': 'add_hiding',
+  '增加躲避空间': 'add_hiding',
+  temporary_isolation: 'temporary_isolation',
+  '临时隔离': 'temporary_isolation',
+  '隔离': 'temporary_isolation',
+  separate_tank: 'separate_tank',
+  '分缸': 'separate_tank',
+  increase_aeration: 'increase_aeration',
+  '加强曝气': 'increase_aeration',
+  '加强供氧': 'increase_aeration',
+  '增加水面扰动': 'increase_aeration',
+  water_change: 'water_change',
+  '换水': 'water_change',
+  filter_check: 'filter_check',
+  '检查过滤': 'filter_check',
+  '恢复过滤': 'filter_check',
+  temperature_adjustment: 'temperature_adjustment',
+  '调整水温': 'temperature_adjustment',
+  reduce_stocking: 'reduce_stocking',
+  '减少数量': 'reduce_stocking',
+  '降低负荷': 'reduce_stocking',
+  other: 'other',
+  '其他': 'other',
+};
+
+const relevantSignals: Record<TankInterventionType, {
+  normal: TankObservationCode[];
+  abnormal: TankObservationCode[];
+}> = {
+  add_hiding: {
+    normal: ['no_persistent_chasing', 'no_hiding_pressure', 'normal_feeding', 'normal_activity', 'no_injury'],
+    abnormal: ['persistent_chasing', 'hiding_pressure', 'feeding_exclusion', 'appetite_drop', 'injury', 'severe_injury'],
+  },
+  temporary_isolation: {
+    normal: ['no_persistent_chasing', 'no_hiding_pressure', 'normal_feeding', 'normal_activity', 'no_injury'],
+    abnormal: ['persistent_chasing', 'hiding_pressure', 'feeding_exclusion', 'appetite_drop', 'injury', 'severe_injury'],
+  },
+  separate_tank: {
+    normal: ['no_persistent_chasing', 'no_hiding_pressure', 'normal_feeding', 'normal_activity', 'no_injury'],
+    abnormal: ['persistent_chasing', 'hiding_pressure', 'feeding_exclusion', 'appetite_drop', 'injury', 'severe_injury'],
+  },
+  increase_aeration: {
+    normal: ['normal_breathing'],
+    abnormal: ['respiratory_distress', 'multiple_deaths'],
+  },
+  water_change: {
+    normal: ['normal_breathing', 'normal_activity', 'normal_feeding'],
+    abnormal: ['cloudy_water', 'odor', 'respiratory_distress', 'multiple_deaths'],
+  },
+  filter_check: {
+    normal: ['normal_breathing', 'normal_activity'],
+    abnormal: ['cloudy_water', 'odor', 'respiratory_distress', 'multiple_deaths'],
+  },
+  temperature_adjustment: {
+    normal: ['normal_breathing', 'normal_activity', 'normal_feeding'],
+    abnormal: ['respiratory_distress', 'appetite_drop', 'multiple_deaths'],
+  },
+  reduce_stocking: {
+    normal: ['normal_breathing', 'normal_activity', 'normal_feeding', 'no_persistent_chasing', 'no_hiding_pressure'],
+    abnormal: ['respiratory_distress', 'persistent_chasing', 'hiding_pressure', 'feeding_exclusion', 'multiple_deaths'],
+  },
+  other: {
+    normal: ['normal_breathing', 'normal_activity', 'normal_feeding', 'no_persistent_chasing', 'no_hiding_pressure', 'no_injury'],
+    abnormal: ['respiratory_distress', 'persistent_chasing', 'hiding_pressure', 'feeding_exclusion', 'appetite_drop', 'injury', 'severe_injury', 'multiple_deaths', 'cloudy_water', 'odor'],
+  },
+};
+
+const parseTime = (value: string | undefined) => {
+  const parsed = value ? Date.parse(value) : Number.NaN;
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const parseInterventionType = (value: string | undefined): TankInterventionType | null => {
+  if (!value) return null;
+  return interventionAliases[value.trim()] || null;
+};
+
+const parseCsv = (value: string | undefined) => (
+  [...new Set((value || '').split(',').map(item => item.trim()).filter(Boolean))]
+);
+
+const parsePositiveInt = (value: string | undefined) => {
+  if (!value || !/^\d+$/.test(value.trim())) return undefined;
+  const parsed = Number(value);
+  return Number.isSafeInteger(parsed) && parsed > 0 ? parsed : undefined;
+};
+
+const parseTargets = (record: DiagnosisRecord): TankInterventionTarget[] => {
+  const speciesIds = parseCsv(record.answers?.interventionTargetSpeciesIds || record.answers?.targetSpeciesIds);
+  const quantities = (record.answers?.interventionTargetQuantities || '')
+    .split(',')
+    .map(item => parsePositiveInt(item));
+  return speciesIds.map((speciesId, index) => ({ speciesId, quantity: quantities[index] }));
+};
+
+const LOCAL_INTERVENTION_TYPES = new Set<TankInterventionType>([
+  'add_hiding', 'temporary_isolation', 'separate_tank', 'reduce_stocking',
+]);
+
+const observationMatchesTarget = (observation: TankObservation, intervention: TankIntervention) => {
+  if (!LOCAL_INTERVENTION_TYPES.has(intervention.type)) return true;
+  const targetIds = intervention.targets?.map(item => item.speciesId) || [];
+  if (targetIds.length === 0) return true; // legacy action: preserve existing behavior
+  const observedIds = observation.subjectSpeciesIds || [];
+  if (observation.scope === 'whole_tank' || observedIds.length === 0) return false;
+  const targetSet = new Set(targetIds);
+  return observedIds.some(id => targetSet.has(id));
+};
+
+export const buildTankInterventionsFromDiagnosisRecords = (
+  records: DiagnosisRecord[],
+  aquariumId: string,
+  now = new Date(),
+): TankIntervention[] => {
+  const nowMs = now.getTime();
+  const interventions = records.flatMap(record => {
+    if (record.aquariumId !== aquariumId) return [];
+    const type = parseInterventionType(record.answers?.interventionType);
+    if (!type) return [];
+    const explicitAt = record.answers?.interventionAt;
+    const performedAt = explicitAt && parseTime(explicitAt) !== null ? explicitAt : record.createdAt;
+    const performedMs = parseTime(performedAt);
+    if (performedMs === null || performedMs > nowMs) return [];
+    const targets = parseTargets(record);
+    const conflictSpeciesIds = parseCsv(record.answers?.interventionConflictSpeciesIds);
+    const requestedScope = record.answers?.interventionTargetScope || record.answers?.targetScope;
+    const targetScope = requestedScope === 'whole_tank'
+      ? 'whole_tank' as const
+      : targets.length > 0 ? 'species_specific' as const : undefined;
+    return [{
+      interventionId: `${record.diagnosisId}:${type}:${performedAt}`,
+      type,
+      label: interventionLabels[type],
+      performedAt,
+      note: record.answers?.interventionNote?.trim() || undefined,
+      sourceDiagnosisId: record.diagnosisId,
+      targetScope,
+      targets: targets.length > 0 ? targets : undefined,
+      conflictSpeciesIds: conflictSpeciesIds.length > 0 ? conflictSpeciesIds : undefined,
+      conflictPairSource: conflictSpeciesIds.length > 0 ? 'explicit' as const : undefined,
+      recordedReason: record.answers?.interventionReason?.trim() || undefined,
+    } satisfies TankIntervention];
+  });
+
+  const seen = new Set<string>();
+  return interventions
+    .sort((a, b) => Date.parse(a.performedAt) - Date.parse(b.performedAt))
+    .filter(item => {
+      if (seen.has(item.interventionId)) return false;
+      seen.add(item.interventionId);
+      return true;
+    });
+};
+
+const normalizeReviewedPairRisk = (riskType: string): Pick<TankInterventionRisk, 'category' | 'label'> => {
+  switch (riskType) {
+    case 'fin_nipping_long_fin_conflict':
+      return { category: 'fin_nipping', label: '追鳍 / 长鳍冲突' };
+    case 'predation_threat':
+      return { category: 'predation', label: '捕食风险' };
+    case 'behavior_and_territory_conflict':
+      return { category: 'territory_aggression', label: '领地 / 攻击冲突' };
+    case 'group_size_and_shared_water_window':
+      return { category: 'group_size', label: '群体数量 / 共同水体条件' };
+    default:
+      if (/water|temperature|ph|hardness|salinity/i.test(riskType)) return { category: 'water_parameter', label: '水体参数冲突' };
+      if (/space|volume|tank_size/i.test(riskType)) return { category: 'space', label: '空间 / 容量风险' };
+      return { category: 'other', label: '其他已审核混养风险' };
+  }
+};
+
+const riskFromReviewedPairRule = (leftId: string, rightId: string): TankInterventionRisk | undefined => {
+  const reviewed = getReviewedPairRule(leftId, rightId);
+  if (!reviewed || reviewed.reviewStatus !== 'reviewed' || reviewed.basis !== 'pair_rule') return undefined;
+  const normalized = normalizeReviewedPairRisk(reviewed.riskType);
+  return {
+    ...normalized,
+    reviewedRiskType: reviewed.riskType,
+    reason: reviewed.reason,
+    mitigation: [...reviewed.mitigation],
+    evidenceIds: reviewed.citations.map(item => item.id),
+    source: 'reviewed_pair_rule',
+  };
+};
+
+export const listCurrentReviewedDirectConflicts = (
+  decision: CompatibilityDecision | null,
+): TankReviewedDirectConflict[] => {
+  if (!decision) return [];
+  const unique = new Map<string, TankReviewedDirectConflict>();
+  decision.pairResults.forEach(pair => {
+    if (pair.status === 'compatible') return;
+    const reviewed = getReviewedPairRule(pair.speciesA.id, pair.speciesB.id);
+    if (!reviewed
+      || reviewed.reviewStatus !== 'reviewed'
+      || reviewed.confidence !== 'high'
+      || reviewed.basis !== 'pair_rule'
+      || !['not_recommended', 'caution'].includes(reviewed.verdict)) return;
+    const risk = riskFromReviewedPairRule(pair.speciesA.id, pair.speciesB.id);
+    if (!risk) return;
+    const speciesIds = [...reviewed.speciesIds] as [string, string];
+    const key = [...speciesIds].sort().join('::');
+    unique.set(key, {
+      speciesIds,
+      verdict: reviewed.verdict as 'caution' | 'not_recommended',
+      risk,
+    });
+  });
+  return [...unique.values()];
+};
+
+export const attachReviewedConflictPairsToInterventions = (
+  interventions: TankIntervention[],
+  decision: CompatibilityDecision | null,
+): TankIntervention[] => {
+  if (!decision) return interventions;
+  return interventions.map(intervention => {
+    if ((intervention.conflictSpeciesIds?.length || 0) > 0) {
+      const ids = intervention.conflictSpeciesIds || [];
+      const targetRisk = ids.length === 2 ? riskFromReviewedPairRule(ids[0], ids[1]) : undefined;
+      return targetRisk ? { ...intervention, targetRisk } : intervention;
+    }
+    if (!LOCAL_INTERVENTION_TYPES.has(intervention.type) || intervention.targetScope !== 'species_specific') return intervention;
+    const targetIds = intervention.targets?.map(item => item.speciesId) || [];
+    if (targetIds.length === 0) return intervention;
+    const targetSet = new Set(targetIds);
+    const candidates = decision.pairResults.flatMap(pair => {
+      const pairIds = [pair.speciesA.id, pair.speciesB.id];
+      if (!pairIds.some(id => targetSet.has(id)) || pair.status === 'compatible') return [];
+      const reviewed = getReviewedPairRule(pair.speciesA.id, pair.speciesB.id);
+      if (!reviewed
+        || reviewed.reviewStatus !== 'reviewed'
+        || reviewed.confidence !== 'high'
+        || reviewed.basis !== 'pair_rule'
+        || !['not_recommended', 'caution'].includes(reviewed.verdict)) return [];
+      return [{
+        pairIds: [...reviewed.speciesIds] as string[],
+        evidenceIds: reviewed.citations.map(item => item.id),
+        targetRisk: riskFromReviewedPairRule(pair.speciesA.id, pair.speciesB.id)!,
+      }];
+    });
+    const unique = new Map<string, { pairIds: string[]; evidenceIds: string[]; targetRisk: TankInterventionRisk }>();
+    candidates.forEach(candidate => unique.set([...candidate.pairIds].sort().join('::'), candidate));
+    if (unique.size !== 1) return intervention;
+    const [candidate] = unique.values();
+    return {
+      ...intervention,
+      conflictSpeciesIds: candidate.pairIds,
+      conflictPairSource: 'reviewed_pair_rule' as const,
+      conflictPairEvidenceIds: candidate.evidenceIds,
+      targetRisk: candidate.targetRisk,
+    };
+  });
+};
+
+const observationAfterIntervention = (
+  observation: TankObservation,
+  intervention: TankIntervention,
+  nowMs: number,
+  nextInterventionAt?: string,
+) => {
+  const observedMs = parseTime(observation.observedAt);
+  const interventionMs = parseTime(intervention.performedAt);
+  const nextInterventionMs = parseTime(nextInterventionAt);
+  if (observedMs === null || interventionMs === null) return false;
+  return observedMs > interventionMs
+    && observedMs <= nowMs
+    && observedMs - interventionMs <= FOLLOWUP_WINDOW_DAYS * DAY_MS
+    // Once another action is performed, later observations are confounded by
+    // that newer action and must not be attributed back to the earlier one.
+    && (nextInterventionMs === null || observedMs < nextInterventionMs);
+};
+
+const uniqueObservationDates = (items: TankObservation[]) => (
+  new Set(items.map(item => item.observedAt)).size
+);
+
+export const evaluateTankInterventionEffects = ({
+  interventions,
+  observations,
+  now = new Date(),
+}: {
+  interventions: TankIntervention[];
+  observations: TankObservation[];
+  now?: Date;
+}): TankInterventionEffect[] => {
+  const nowMs = now.getTime();
+  return interventions.map((intervention, index) => {
+    const nextInterventionAt = interventions[index + 1]?.performedAt;
+    const scope = relevantSignals[intervention.type];
+    const normalSet = new Set<TankObservationCode>(scope.normal);
+    const abnormalSet = new Set<TankObservationCode>(scope.abnormal);
+    const followups = observations.filter(item => (
+      observationAfterIntervention(item, intervention, nowMs, nextInterventionAt)
+      && observationMatchesTarget(item, intervention)
+    ));
+    const normal = followups.filter(item => normalSet.has(item.code));
+    const abnormal = followups.filter(item => abnormalSet.has(item.code));
+    const normalConfirmationCount = uniqueObservationDates(normal);
+    const abnormalObservationCount = uniqueObservationDates(abnormal);
+
+    let outcome: TankInterventionOutcome;
+    if (abnormalObservationCount > 0 && normalConfirmationCount >= 2) outcome = 'mixed_after_action';
+    else if (abnormalObservationCount > 0) outcome = 'problem_persisted_after_action';
+    else if (normalConfirmationCount >= 2) outcome = 'improved_after_action';
+    else outcome = 'insufficient_followup';
+
+    const summary = outcome === 'improved_after_action'
+      ? `记录到「${intervention.label}」之后有 ${normalConfirmationCount} 次相关正常复查，且同一观察窗口内没有记录到对应异常；只能说明时间先后相关，不能据此确认因果关系。`
+      : outcome === 'problem_persisted_after_action'
+        ? `记录到「${intervention.label}」之后仍出现 ${abnormalObservationCount} 次相关异常，说明目前没有足够证据认为该措施已经控制住问题。`
+        : outcome === 'mixed_after_action'
+          ? `记录到「${intervention.label}」之后既有正常复查，也仍有相关异常；结果混合，暂不能判断该措施是否有效。`
+          : `「${intervention.label}」之后的相关复查不足；先补充至少 2 次结构化复查，再判断是否伴随改善。`;
+
+    return {
+      intervention,
+      outcome,
+      followupObservationCount: followups.length,
+      normalConfirmationCount,
+      abnormalObservationCount,
+      evaluationWindowEnd: nextInterventionAt,
+      evidence: [...normal, ...abnormal]
+        .sort((a, b) => Date.parse(a.observedAt) - Date.parse(b.observedAt))
+        .map(item => item.evidence || item.code),
+      summary,
+    };
+  });
+};
+
+
+const outcomeIsNotControlled = (outcome: TankInterventionOutcome) => (
+  outcome === 'problem_persisted_after_action' || outcome === 'mixed_after_action'
+);
+
+/**
+ * Summarizes a multi-action trajectory without ranking actions or claiming causality.
+ * Only action windows with actual follow-up evidence participate in trajectory patterns.
+ */
+export const summarizeTankInterventionSequence = (
+  effects: TankInterventionEffect[],
+): TankInterventionSequenceSummary | null => {
+  if (effects.length < 2) return null;
+  const ordered = [...effects].sort((left, right) => (
+    Date.parse(left.intervention.performedAt) - Date.parse(right.intervention.performedAt)
+  ));
+  const evaluated = ordered.filter(item => item.outcome !== 'insufficient_followup');
+  if (evaluated.length < 2) return null;
+
+  const latest = evaluated[evaluated.length - 1];
+  const earlier = evaluated.slice(0, -1);
+  const earlierNotControlled = earlier.filter(item => outcomeIsNotControlled(item.outcome));
+  const earlierImproved = earlier.filter(item => item.outcome === 'improved_after_action');
+
+  if (latest.outcome === 'improved_after_action' && earlierNotControlled.length > 0) {
+    const failedLabels = earlierNotControlled.map(item => `「${item.intervention.label}」`).join('、');
+    return {
+      pattern: 'escalated_then_improved',
+      summary: `${failedLabels}后的复查仍有异常；之后执行「${latest.intervention.label}」后记录到 ${latest.normalConfirmationCount} 次相关正常复查，且该动作自己的观察窗口内没有记录到对应异常。这里只能说明后一个动作之后伴随改善，不能证明它是唯一原因。`,
+      nextStep: `暂时保留「${latest.intervention.label}」并继续复查；不要重新依赖前面没有控制住问题的措施作为唯一处理。`,
+      interventionIds: evaluated.map(item => item.intervention.interventionId),
+    };
+  }
+
+  if (outcomeIsNotControlled(latest.outcome) && earlierImproved.length > 0) {
+    const improvedLabels = earlierImproved.map(item => `「${item.intervention.label}」`).join('、');
+    return {
+      pattern: 'relapsed_after_improvement',
+      summary: `${improvedLabels}之后曾记录到相关正常复查，但后续在「${latest.intervention.label}」的观察窗口内再次出现相关异常；此前的改善不能视为问题已经长期解决。`,
+      nextStep: '按当前最新异常重新处理，并保留前后措施与复查记录；不要因为之前曾改善就降低这次复发的处理级别。',
+      interventionIds: evaluated.map(item => item.intervention.interventionId),
+    };
+  }
+
+  const notControlled = evaluated.filter(item => outcomeIsNotControlled(item.outcome));
+  if (notControlled.length >= 2 && latest.outcome !== 'improved_after_action') {
+    const labels = notControlled.map(item => `「${item.intervention.label}」`).join('、');
+    return {
+      pattern: 'multiple_actions_not_controlled',
+      summary: `${labels}各自的观察窗口内都仍记录到相关异常；目前没有足够证据认为这些已执行措施已经把问题控制住。`,
+      nextStep: '停止继续重复同一层级的处理，重新核对异常来源；行为冲突可升级稳定隔离/分缸，环境异常则重新检查水质、供氧、过滤和温度。',
+      interventionIds: evaluated.map(item => item.intervention.interventionId),
+    };
+  }
+
+  return null;
+};

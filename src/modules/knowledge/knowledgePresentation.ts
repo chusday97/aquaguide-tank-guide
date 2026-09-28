@@ -9,10 +9,13 @@ export const buildCompatibilityPresentation = (decision: CompatibilityDecision) 
   const primaryReason = primaryPair?.primaryReason;
   return {
     title: presentation.headline,
+    verdict: presentation.verdict,
+    reasons: presentation.reasons,
+    adjustments: presentation.adjustments,
     summary: decision.summary,
     primaryPairLabel: primaryPair ? `${primaryPair.speciesA.name} × ${primaryPair.speciesB.name}` : '',
     primaryReason: primaryReason?.evidence || '',
-    actions: decision.suggestions.slice(0, 3),
+    actions: presentation.adjustments,
     otherPairs: decision.pairResults
       .filter(pair => pair.pairId !== primaryPair?.pairId)
       .map(pair => ({

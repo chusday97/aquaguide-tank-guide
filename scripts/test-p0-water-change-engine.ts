@@ -86,6 +86,20 @@ const cases = [
       assert.ok(result.matchedRules.includes('AQ-WATER-003'));
     },
   },
+  {
+    name: 'BC-TIME-002 out-of-order and duplicate history resolves to latest completed date',
+    run: () => {
+      const result = evaluateWaterChangeDecision({
+        baselineDays: 7,
+        today: '2026-08-23',
+        history: ['2026-08-10', '2026-08-20', '2026-08-10', '2026-08-18', '2026-09-01'],
+      });
+      assert.equal(result.latestChangeDate, '2026-08-20');
+      assert.equal(result.nextBaselineDate, '2026-08-27');
+      assert.equal(result.scheduleStatus, 'not_due');
+      assert.ok(result.matchedRules.includes('AQ-WATER-003'));
+    },
+  },
 ];
 
 let failed = 0;

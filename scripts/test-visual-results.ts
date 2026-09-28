@@ -68,9 +68,9 @@ const compatibilityModel = buildCompatibilityVisualResult({
 });
 
 assert.equal(compatibilityModel.status, 'insufficient_data');
-assert.equal(compatibilityModel.title, '现在还不能可靠判断', '新手首屏必须先给可理解的最终状态');
+assert.equal(compatibilityModel.title, '暂时无法判断', '新手首屏必须先给固定、直接的最终状态');
 assert.ok(compatibilityModel.currentAction.startsWith('先别急着加'), '新手首屏必须直接告诉用户现在该做什么');
-assert.ok(compatibilityModel.detailSections.some(section => section.title === '为什么这样判断'), '专业解释必须下沉到可展开依据层');
+assert.ok(compatibilityModel.detailSections.some(section => section.title === '查看依据'), '专业解释必须下沉到可展开依据层');
 assert.equal(compatibilityModel.subjects[0]?.id, focus.id, '明确指定的关注物种必须保持为视觉中心');
 assert.equal(compatibilityModel.subjects.length, species.length, '关联对象不能被适配器丢失');
 assert.ok(compatibilityModel.subjects.some(item => item.id === predator.id && item.status === 'insufficient_data'));

@@ -7,6 +7,7 @@ import {
   type TankCompatibilityStatus,
 } from '../compatibility/compatibility.service';
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
+import { getExactCatalogDuplicateCanonicalId } from '../../data/catalogDuplicateAliases';
 
 export type SpeciesAdditionItem = {
   fishId: string;
@@ -71,10 +72,12 @@ export const normalizeSpeciesAdditionItems = (items: SpeciesAdditionItem[], spec
 
   items.forEach(item => {
     if (!knownIds.has(item.fishId)) return;
+    const canonicalId = getExactCatalogDuplicateCanonicalId(item.fishId);
+    if (!knownIds.has(canonicalId)) return;
     const quantity = Math.max(1, Math.round(Number(item.quantity) || 1));
-    const existing = grouped.get(item.fishId);
-    grouped.set(item.fishId, {
-      fishId: item.fishId,
+    const existing = grouped.get(canonicalId);
+    grouped.set(canonicalId, {
+      fishId: canonicalId,
       quantity: (existing?.quantity || 0) + quantity,
       entryDate: item.entryDate || existing?.entryDate,
     });
@@ -116,9 +119,15 @@ export const assessSpeciesAddition = ({
   if (normalizedItems.length === 0) return null;
 
   const catalogById = new Map(speciesCatalog.map(fish => [fish.id, fish]));
-  const existingFromTank = aquarium.fishes.flatMap(record => {
-    const species = catalogById.get(record.fishId);
-    return species ? [{ species, record: { quantity: Math.max(1, record.quantity || 1) } }] : [];
+  const existingBuckets = new Map<string, number>();
+  aquarium.fishes.forEach(record => {
+    const canonicalId = getExactCatalogDuplicateCanonicalId(record.fishId);
+    if (!catalogById.has(canonicalId)) return;
+    existingBuckets.set(canonicalId, (existingBuckets.get(canonicalId) || 0) + Math.max(1, record.quantity || 1));
+  });
+  const existingFromTank = [...existingBuckets.entries()].flatMap(([canonicalId, quantity]) => {
+    const species = catalogById.get(canonicalId);
+    return species ? [{ species, record: { quantity } }] : [];
   });
 
   const evaluations = normalizedItems.flatMap(item => {
@@ -195,7 +204,9 @@ export const executeSpeciesAddition = ({
     if (item.id !== aquarium.id) return item;
     const nextFishes = [...item.fishes];
     review.items.forEach(addition => {
-      const existingIndex = nextFishes.findIndex(record => record.fishId === addition.fishId);
+      const existingIndex = nextFishes.findIndex(record => (
+        getExactCatalogDuplicateCanonicalId(record.fishId) === addition.fishId
+      ));
       if (existingIndex >= 0) {
         const entryDate = addition.entryDate ? new Date(addition.entryDate).toISOString() : now;
         nextFishes[existingIndex] = appendSpeciesBatch(nextFishes[existingIndex], {

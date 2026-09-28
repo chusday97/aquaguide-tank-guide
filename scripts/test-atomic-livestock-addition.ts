@@ -96,4 +96,30 @@ assert.equal(state.batches.size, 1, 'retry must keep one batch');
 assert.equal(state.operations.size, 1, 'retry must keep one idempotency result');
 assert.equal([...state.batches.values()][0].quantity, 2);
 
-console.log('atomic livestock addition verified: executable failure injection rolls back parent and replay keeps one batch');
+assert.throws(
+  () => executeAtomicAddition(state, { ...input, requestHash: 'b'.repeat(64) }),
+  /DUPLICATE_OPERATION_KEY/,
+  'reusing one operation id with a different payload must fail closed',
+);
+assert.equal(state.parents.size, 1);
+assert.equal(state.batches.size, 1);
+assert.equal(state.operations.size, 1);
+
+const concurrentState = emptyState();
+const concurrentInput = {
+  operationId: 'double-click:sp_0001',
+  requestHash: 'c'.repeat(64),
+  parentId: 'parent-concurrent',
+  batchId: 'batch-concurrent',
+  quantity: 3,
+};
+const concurrentResults = await Promise.all([
+  Promise.resolve().then(() => executeAtomicAddition(concurrentState, concurrentInput)),
+  Promise.resolve().then(() => executeAtomicAddition(concurrentState, concurrentInput)),
+]);
+assert.deepEqual(concurrentResults, ['parent-concurrent', 'parent-concurrent']);
+assert.equal(concurrentState.parents.size, 1, 'double click must keep one parent record');
+assert.equal(concurrentState.batches.size, 1, 'double click must keep one batch record');
+assert.equal(concurrentState.operations.size, 1, 'double click must keep one idempotency record');
+
+console.log('atomic livestock addition verified: rollback, replay, conflicting idempotency payload and double-click convergence');

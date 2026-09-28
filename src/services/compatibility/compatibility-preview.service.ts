@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type TankCompatibilityStatus } from './compatibility.service';
+import { getExactCatalogDuplicateCanonicalId } from '../../data/catalogDuplicateAliases';
 
 type CurrentLivestock = Array<{ species: Fish; record: { quantity?: number } }>;
 
@@ -23,10 +24,20 @@ export const getCompatibilityPreviewSpecies = ({
     // livestock/recommendation set; planning candidates must be user-selected.
     if (currentLivestock.length === 0) return [];
 
-    const ownedIds = new Set(currentLivestock.map(item => item.species.id));
-    const evaluated = candidateSpecies
-      .filter(fish => !activeSpeciesIds.includes(fish.id))
-      .filter(fish => !ownedIds.has(fish.id))
+    const candidateById = new Map(candidateSpecies.map(fish => [fish.id, fish]));
+    const ownedCanonicalIds = new Set(currentLivestock.map(item => getExactCatalogDuplicateCanonicalId(item.species.id)));
+    const activeCanonicalIds = new Set(activeSpeciesIds.map(getExactCatalogDuplicateCanonicalId));
+    const seenCandidateCanonicalIds = new Set<string>();
+    const normalizedCandidates = candidateSpecies.flatMap(fish => {
+      const canonicalId = getExactCatalogDuplicateCanonicalId(fish.id);
+      if (seenCandidateCanonicalIds.has(canonicalId)) return [];
+      seenCandidateCanonicalIds.add(canonicalId);
+      const canonical = candidateById.get(canonicalId) || fish;
+      return [canonical];
+    });
+    const evaluated = normalizedCandidates
+      .filter(fish => !activeCanonicalIds.has(getExactCatalogDuplicateCanonicalId(fish.id)))
+      .filter(fish => !ownedCanonicalIds.has(getExactCatalogDuplicateCanonicalId(fish.id)))
       .map(fish => ({
         fish,
         evaluation: evaluateTankCompatibility({
@@ -47,9 +58,19 @@ export const getCompatibilityPreviewSpecies = ({
     return [];
   }
 
-  const preferred = Array.from(new Set(preferredSpeciesIds))
+  const activeCanonicalIds = new Set(activeSpeciesIds.map(getExactCatalogDuplicateCanonicalId));
+  const candidateById = new Map(candidateSpecies.map(fish => [fish.id, fish]));
+  const dedupe = (items: Fish[]) => {
+    const seen = new Set<string>();
+    return items.flatMap(fish => {
+      const canonicalId = getExactCatalogDuplicateCanonicalId(fish.id);
+      if (seen.has(canonicalId) || activeCanonicalIds.has(canonicalId)) return [];
+      seen.add(canonicalId);
+      return [candidateById.get(canonicalId) || fish];
+    });
+  };
+  const preferred = dedupe(Array.from(new Set(preferredSpeciesIds))
     .map(id => candidateSpecies.find(fish => fish.id === id))
-    .filter((fish): fish is Fish => Boolean(fish))
-    .filter(fish => !activeSpeciesIds.includes(fish.id));
-  return (preferred.length > 0 ? preferred : fallbackSpecies.filter(fish => !activeSpeciesIds.includes(fish.id))).slice(0, 8);
+    .filter((fish): fish is Fish => Boolean(fish)));
+  return (preferred.length > 0 ? preferred : dedupe(fallbackSpecies)).slice(0, 8);
 };
