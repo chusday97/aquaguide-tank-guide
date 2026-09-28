@@ -1,5 +1,5 @@
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
-import { buildBeginnerCompatibilityAction } from './compatibility-action.service';
+import { buildBeginnerCompatibilityAction, prioritizeCompatibilityRules } from './compatibility-action.service';
 
 export type CompatibilityDimension =
   | 'water_type'
@@ -94,7 +94,7 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     confirmedFindings.push(ruleText(rule, '已完成该项核对。'));
   };
   decision.passedRules.forEach(addConfirmed);
-  decision.warningRules.forEach(rule => {
+  prioritizeCompatibilityRules(decision.warningRules).forEach(rule => {
     addConfirmed(rule);
     if (cautionRuleCodes.has(rule.code)) return;
     cautionRuleCodes.add(rule.code);
@@ -124,9 +124,9 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
   const beginnerAction = buildBeginnerCompatibilityAction(decision);
   const primaryReason = beginnerAction.primaryReason;
   const secondaryReason = firstDistinctText(primaryReason, [
-    ...decision.blockingRules.map(rule => ruleText(rule, '')),
-    ...decision.warningRules.map(rule => ruleText(rule, '')),
-    ...decision.missingData.map(rule => ruleText(rule, '')),
+    ...prioritizeCompatibilityRules(decision.blockingRules).map(rule => ruleText(rule, '')),
+    ...prioritizeCompatibilityRules(decision.warningRules).map(rule => ruleText(rule, '')),
+    ...prioritizeCompatibilityRules(decision.missingData).map(rule => ruleText(rule, '')),
     ...decision.passedRules.map(rule => ruleText(rule, '')),
   ]);
   const directFields = {

@@ -6,6 +6,8 @@ import type {
   TankCompatibilityStatus,
 } from '../tankCompatibilityEngine';
 
+const SOFT_CAPACITY_DISCLAIMER = '该数值只用于粗略筛查，不代表硬性安全上限。';
+
 const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   compatibility_clear: {
     code: 'compatibility_clear', title: '未发现明确阻断', evidence: '已审核事实与当前环境没有发现明确的阻断规则。', severity: 'info', basis: 'rule_inference', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
@@ -217,7 +219,9 @@ export const applyCanonicalCompatibilityDecision = (
   ].map(rule => ({
     ...rule,
     title: '容量/负荷参考提醒',
-    evidence: `${rule.evidence} 该数值只用于粗略筛查，不代表硬性安全上限。`,
+    evidence: rule.evidence.includes(SOFT_CAPACITY_DISCLAIMER)
+      ? rule.evidence
+      : `${rule.evidence} ${SOFT_CAPACITY_DISCLAIMER}`,
     severity: 'medium' as const,
     confidence: 'low' as const,
   }));

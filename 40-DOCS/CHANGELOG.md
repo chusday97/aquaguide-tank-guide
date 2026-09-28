@@ -2,6 +2,8 @@
 
 ## [Unreleased]
 
+- Fixed: multi-species Compatibility decisions now merge a canonical whole-tank evaluation with pairwise results, surface cumulative tank-only constraints such as bioload in both user-facing and structured reason outputs, keep aggregate `status` aligned with `metadata.domainStatus`, and avoid duplicate soft-capacity disclaimers; beginner actions now use deterministic multi-risk priority (observed reality → predation/fin damage → territory → group structure → pH → space → bioload) so the first reason and next action target the most important intervention instead of array order. Regression coverage proves that reducing the combined stocking plan removes the load warning and improves the verdict.
+
 - Added: unified browser API origin resolution with explicit `VITE_API_BASE_URL` override, Vercel fallback for the known custom production host, same-origin defaults, normalized paths, and local-admin same-origin isolation; added a Node contract test.
 
 - Fixed: 固化 reviewed Species Knowledge 的 exact direct → reviewed base → legacy 优先级与 matrix-only `reviewed_unknown` fail-closed 边界；补齐 Vision 默认模型、GLM 旧环境变量兼容、multimodal payload 与 429/5xx/timeout fallback 的无真实 credential contract tests。

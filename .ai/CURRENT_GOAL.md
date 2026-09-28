@@ -1,3 +1,14 @@
+## CURRENT OVERRIDE — 2026-09-28 Multi-species Compatibility conclusion hardening
+
+- Active working tree remains `/Users/chuchu/aquaguide-admin-content-v0` on `backend/convergence-20260922`; starting HEAD for this checkpoint is `af11e033a3ceb4571b27364a42c3364a21183618`.
+- Current scoped change is backend/domain-only Compatibility hardening. **Do not resume image-recognition work and do not perform broad UI changes.** Existing DB/infra and Production holds remain unchanged.
+- For 3+ selected species, the canonical decision must combine all pairwise results with a whole-tank evaluation so cumulative constraints such as total bioload are not lost. Aggregate `status` and `metadata.domainStatus` must stay aligned.
+- User-facing conclusion contract is now explicit: **判断 → 主要原因 → 可执行调整方式**. Risk ordering is deterministic so lower-priority capacity hints cannot hide observed problems, hard incompatibility, predation/fin damage, territorial pressure, group-size gaps, pH conflict, space pressure, or finally cumulative bioload.
+- Unknown/unreviewed evidence remains fail-closed. Do not invent a green compatibility result to fill knowledge gaps, and do not convert soft capacity screening into a hard biological prohibition.
+- Regression evidence: multi-species hard conflict, cumulative-load caution, improved verdict after reducing quantity, reason/action priority, visual-result mapping, project TypeScript, and the full `test:backend-release-gate` are PASS on this working tree.
+- Repository topology remains unsafe for a blind merge: the clean integration worktree is `/Users/chuchu/aquaguide-backend-integration-20260922` at `integration/backend-main-20260922@d817eb13`, while this branch and that integration line have diverged substantially. Reconcile only reviewed slices.
+- NEXT: create a local checkpoint for this Compatibility slice, then selectively reconcile it with the integration line. No Production, DB migration, Vision, or broad UI action is authorized by this checkpoint.
+
 ## CURRENT OVERRIDE — 2026-09-22 Backend convergence / release integration
 
 Current working authority is `backend/convergence-20260922@c0dba9399dd8e6e0b212c732918f39157ecf9d8a` (`fix(vision): stage catalog recognition by category`). The worktree is clean and tracks `origin/backend/convergence-20260922`.

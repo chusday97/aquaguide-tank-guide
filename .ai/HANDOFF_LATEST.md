@@ -1,3 +1,14 @@
+## HANDOFF — 2026-09-28 Multi-species Compatibility checkpoint
+
+- Active worktree: `/Users/chuchu/aquaguide-admin-content-v0`, branch `backend/convergence-20260922`, starting HEAD `af11e033a3ceb4571b27364a42c3364a21183618`.
+- Scope completed for this checkpoint: canonical multi-species decisions merge pairwise compatibility with a 3+ species whole-tank evaluation; cumulative tank-only risks now reach structured reasons and the user-facing conclusion.
+- The product conclusion is preserved as **judgement + reason + adjustment**. Deterministic priority keeps observed reality and high-impact biological conflicts ahead of softer pH/space/bioload guidance.
+- Regression PASS: `scripts/test-compatibility-user-conclusion.ts`, `scripts/test-visual-results.ts`, `npm run lint`, and full `npm run test:backend-release-gate` (`BACKEND_RELEASE_GATE=PASS`).
+- Full release-gate evidence also passed Tank State, Tank Evidence, Water Change, Care, Core Flow, API boundary/contracts, Catalog, API typecheck, project typecheck, and Vercel business bundle.
+- Separate clean integration worktree is `/Users/chuchu/aquaguide-backend-integration-20260922` at `integration/backend-main-20260922@d817eb13`; it is not the same branch. The two lines diverge from merge-base `437fe83f` and must not be wholesale merged/rebased.
+- User freeze remains: no image-recognition continuation and no broad UI changes. DB/infra and Production remain untouched.
+- NEXT: preserve this as a local Compatibility checkpoint, then perform selective reconciliation into the integration line rather than duplicating or overwriting validated logic.
+
 ## HANDOFF — 2026-09-22 Backend convergence ready for integration audit
 
 - Current branch/HEAD: `backend/convergence-20260922@c0dba9399dd8e6e0b212c732918f39157ecf9d8a`; upstream is `origin/backend/convergence-20260922`; worktree clean before this authority update.

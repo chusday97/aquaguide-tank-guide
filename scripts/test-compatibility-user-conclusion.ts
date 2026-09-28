@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
+import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getCompatibilityPresentation } from '../src/services/compatibility/compatibility-presentation.service';
 import type { Aquarium } from '../src/types';
 import type { CompatibilityDecision } from '../src/modules/knowledge/knowledge.types';
@@ -93,4 +94,57 @@ assert.equal(predationPresentation.headline, '不建议');
 assert.match(predationPresentation.primaryReason, /捕食|吞食/);
 assert.match(predationPresentation.primaryActionText, /不要|先不要/);
 
-console.log('compatibility user conclusion contract passed: status-specific actions, reviewed-unknown safety, and user-facing dedupe');
+const multiSpeciesConflict = evaluateCompatibilityDecision({
+  tank: tank(120, 50, 40, 24),
+  items: [
+    { species: byId('sp_0049'), quantity: 1 },
+    { species: byId('sp_0431'), quantity: 10 },
+    { species: byId('sp_0443'), quantity: 6 },
+  ],
+});
+assert.equal(multiSpeciesConflict.pairResults.length, 3);
+assert.equal(multiSpeciesConflict.status, 'not_recommended');
+assert.equal(multiSpeciesConflict.metadata.domainStatus, multiSpeciesConflict.status);
+assert.ok(multiSpeciesConflict.blockingRules.some(rule => rule.code === 'predation_risk'));
+assert.ok(multiSpeciesConflict.blockedReasons.some(reason => reason.sourceRule.code === 'predation_risk'));
+const multiSpeciesConflictPresentation = getCompatibilityPresentation(multiSpeciesConflict);
+assert.equal(multiSpeciesConflictPresentation.headline, '不建议');
+assert.match(multiSpeciesConflictPresentation.primaryReason, /捕食|吞食/);
+assert.match(multiSpeciesConflictPresentation.primaryActionText, /不要|先不要/);
+
+const cumulativeLoadItems = ['sp_0012', 'sp_0431', 'sp_0443'].map(id => ({
+  species: byId(id),
+  quantity: 12,
+}));
+const cumulativeLoadDecision = evaluateCompatibilityDecision({
+  tank: tank(60, 30, 35, 24),
+  items: cumulativeLoadItems,
+});
+assert.equal(cumulativeLoadDecision.pairResults.length, 3);
+assert.equal(cumulativeLoadDecision.status, 'caution');
+assert.equal(cumulativeLoadDecision.metadata.domainStatus, cumulativeLoadDecision.status);
+assert.ok(cumulativeLoadDecision.warningRules.some(rule => rule.code === 'bioload_over_limit'));
+assert.ok(cumulativeLoadDecision.adjustableReasons.some(reason => reason.riskType === 'bioload'));
+const cumulativeLoadLimitRule = cumulativeLoadDecision.warningRules.find(rule => rule.code === 'bioload_over_limit');
+assert.ok(cumulativeLoadLimitRule);
+assert.equal(
+  cumulativeLoadLimitRule.evidence.split('该数值只用于粗略筛查，不代表硬性安全上限。').length - 1,
+  1,
+);
+const cumulativeLoadPresentation = getCompatibilityPresentation(cumulativeLoadDecision);
+assert.equal(cumulativeLoadPresentation.headline, '有条件可以');
+assert.match(cumulativeLoadPresentation.primaryReason, /负荷|负载/);
+assert.match(cumulativeLoadPresentation.primaryActionText, /数量|过滤|加入/);
+
+const reducedLoadDecision = evaluateCompatibilityDecision({
+  tank: tank(60, 30, 35, 24),
+  items: cumulativeLoadItems.map(item => ({ ...item, quantity: 8 })),
+});
+assert.equal(reducedLoadDecision.status, 'compatible');
+assert.equal(reducedLoadDecision.metadata.domainStatus, reducedLoadDecision.status);
+assert.ok(reducedLoadDecision.warningRules.every(rule => !rule.code.includes('bioload')));
+const reducedLoadPresentation = getCompatibilityPresentation(reducedLoadDecision);
+assert.equal(reducedLoadPresentation.headline, '可以养');
+assert.match(reducedLoadPresentation.primaryActionText, /可以按当前计划加入/);
+
+console.log('compatibility user conclusion contract passed: direct actions, multi-species aggregation, adjustment improvement, and user-facing dedupe');
