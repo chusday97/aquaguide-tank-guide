@@ -1,3 +1,12 @@
+## HANDOFF — 2026-09-28 Priority Compatibility Knowledge Batch 6
+
+- Functional head `d618792aada7bee29ce4dc9df32b5e42d2f0fef6`.
+- Added exact reviewed runtime authority for Beaufortia kweichowensis / Iriatherina werneri / Pseudomugil furcatus / Sphaerichthys osphromenoides. Coverage: 59 Compatibility profiles / 95 reviewed Species Knowledge / 22 pair rules / 89 evidence sources. Snapshot checksum `ebdcee50e73012737cd8693f3219e6c46ee77c876a90e34b918c76ca8a32e735`.
+- New behavioral boundaries now exercised by the engine: cool-water + group requirements, long-fin fin-nip vulnerability, hard-water minimum group, soft-acid slow-swimmer group context.
+- Botia almorhae remains fail-closed because the aquarium-trade identity is ambiguous; regression explicitly prevents silent promotion.
+- Static HOLD migration `202609280003_compatibility_priority_batch6_profiles.sql` is staged in repository only and NOT applied.
+- Final targeted tests + full backend release gate PASS after removing an unsupported Chocolate Gourami fin-nip-specific inference. No UI/Vision/Production/main/DB-authority change.
+
 ## HANDOFF — 2026-09-28 Batch 5 + freshwater-cichlid runtime correction
 
 - Functional head `0826a5ee6a2c6aedc76796d81e56ad4c11507c10`.

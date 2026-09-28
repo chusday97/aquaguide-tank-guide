@@ -1,3 +1,17 @@
+## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 6
+
+- Functional checkpoint: `d618792aada7bee29ce4dc9df32b5e42d2f0fef6` (`feat(compatibility): add priority knowledge batch 6`).
+- Promoted four exact catalog objects into reviewed Species Knowledge + Compatibility authority after exact-species husbandry review: `sp_0128` Beaufortia kweichowensis, `sp_0134` Iriatherina werneri, `sp_0135` Pseudomugil furcatus, `sp_0136` Sphaerichthys osphromenoides. No sibling/trade-form inheritance is authorized.
+- `sp_0128` 吸鳅: reviewed 16–24°C / pH 6.5–8.0 / dGH 2–15, high-oxygen/current context, minimum group 6, 60 cm / ~54 L planning. Real engine: 1 fish => `caution / minimum_group_not_met`; 6 fish at 27°C => `not_recommended / temperature conflict`.
+- `sp_0134` 燕子美人: reviewed 22–30°C / pH 5–8 / dGH 1–12, minimum group 6 (10+ preferred), explicit long-fin / slow-swimming fin-nip vulnerability. Tiger barb pairing => `caution / fin_nipping_target_vulnerability`, not a fabricated predation block.
+- `sp_0135` 霓虹燕子: reviewed 24–28°C / pH 7–8 / dGH 15–30, minimum group 8 (10+ preferred), peaceful group context. 7 fish => caution; 8 fish => compatible under an otherwise matching test tank.
+- `sp_0136` 巧克力曼龙: reviewed 26–31°C / pH 4–6.5 / dGH 0–3 for wild-type planning, minimum group 6, slow-swimming/easily-outcompeted context. Direct fin-nip vulnerability was deliberately NOT asserted because the exact source supports slow/outcompeted behavior rather than an explicit nipping claim. Pairing with hard-water `P. furcatus` surfaces pH conflict.
+- `sp_0127` Botia almorhae remains explicitly fail-closed: aquarium-trade yo-yo/Pakistani loach identity is materially ambiguous in the reviewed husbandry source, so no exact reviewed runtime Knowledge or Compatibility profile is promoted. Regression locks this boundary.
+- Coverage after Batch 6: 486 catalog objects; 59 reviewed Compatibility profiles (55 → 59); 95 runtime reviewed Species Knowledge objects (91 → 95); 22 reviewed pair rules; 89 evidence sources. Snapshot checksum: `ebdcee50e73012737cd8693f3219e6c46ee77c876a90e34b918c76ca8a32e735`.
+- Repository-only `supabase/migrations/202609280003_compatibility_priority_batch6_profiles.sql` owns the four new Profiles/evidence links and is registered in Business Admin staging readiness. DB application / DB authority switch remain HOLD; nothing was applied.
+- Targeted Batch 6 behavior regression, Compatibility Admin ownership, Business Admin staging preflight, Catalog Snapshot, core Compatibility, Actionable Result, TypeScript, API/bundle checks, and full `npm run test:backend-release-gate` PASS after final evidence tightening (`BACKEND_RELEASE_GATE=PASS`).
+- Frozen scope unchanged: no UI page/component, Vision, Production promote, main merge, or applied DB change.
+
 ## CURRENT OVERRIDE — 2026-09-28 Priority Compatibility Knowledge Batch 5 + freshwater-cichlid runtime correction
 
 - Functional checkpoint: `0826a5ee6a2c6aedc76796d81e56ad4c11507c10` (`feat(compatibility): add priority knowledge batch 5`).

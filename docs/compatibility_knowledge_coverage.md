@@ -12,7 +12,7 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 411
-- Reviewed compatibility profiles: 55
+- Reviewed compatibility profiles: 59
 - Reviewed pair rules: 22
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
