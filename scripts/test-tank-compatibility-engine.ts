@@ -332,6 +332,33 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'duplicate existing species rows are merged before quantity-sensitive domain rules',
+    run: () => {
+      const neon = fishData.find(item => item.id === 'sp_0431');
+      if (!neon) return false;
+      const tank = makeTank({ dimensions: { length: '80', width: '35', height: '40' }, targetTemperature: '24' });
+      const merged = evaluateLegacyTankCompatibility({
+        tank,
+        existingSpecies: [{ species: neon, record: { quantity: 8 } }],
+        candidateSpecies: neon,
+        candidateQuantity: 1,
+      });
+      const split = evaluateLegacyTankCompatibility({
+        tank,
+        existingSpecies: [
+          { species: neon, record: { quantity: 4 } },
+          { species: neon, record: { quantity: 4 } },
+        ],
+        candidateSpecies: neon,
+        candidateQuantity: 1,
+      });
+      return merged.status === 'compatible'
+        && split.status === merged.status
+        && JSON.stringify(split.metadata.domainRuleCodes) === JSON.stringify(merged.metadata.domainRuleCodes)
+        && split.warningRules.every(rule => !['minimum_group_not_met', 'group_requirement_gap'].includes(rule.code));
+    },
+  },
+  {
     name: 'user-confirmed stable tank context is explicit and non-mutating',
     run: () => {
       const tank = makeTank();

@@ -20,6 +20,27 @@ const getQuantity = (value?: number) => {
   return Number.isFinite(parsed) && parsed > 0 ? Math.round(parsed) : 1;
 };
 
+const normalizeCompatibilityItems = (items: CompatibilityItem[]) => {
+  const bySpeciesId = new Map<string, CompatibilityItem>();
+  items.forEach(item => {
+    const speciesId = item.species?.id;
+    if (!speciesId) return;
+    const current = bySpeciesId.get(speciesId);
+    if (!current) {
+      bySpeciesId.set(speciesId, { ...item, quantity: getQuantity(item.quantity) });
+      return;
+    }
+    bySpeciesId.set(speciesId, {
+      ...current,
+      quantity: getQuantity(current.quantity) + getQuantity(item.quantity),
+      origin: current.origin === 'candidate' || item.origin === 'candidate'
+        ? 'candidate'
+        : current.origin || item.origin,
+    });
+  });
+  return Array.from(bySpeciesId.values());
+};
+
 const uniqueRules = (rules: TankCompatibilityRule[]) => {
   const seen = new Set<string>();
   return rules.filter(rule => {
@@ -271,7 +292,7 @@ export const evaluateCompatibilityDecision = ({
   tank,
   items,
 }: EvaluateCompatibilityDecisionInput): CompatibilityDecision => {
-  const normalized = items.filter(item => item.species?.id);
+  const normalized = normalizeCompatibilityItems(items);
   const pairResults: PairCompatibilityResult[] = [];
 
   for (let indexA = 0; indexA < normalized.length; indexA += 1) {

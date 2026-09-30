@@ -181,23 +181,40 @@ const reviewedRuleEvidence: CompatibilityEvidenceDto = {
 
 const normalizeExistingSpecies = (
   existingSpecies: EvaluateTankCompatibilityInput['existingSpecies'] = [],
-) => existingSpecies
-  .map(item => {
-    if (!item || typeof item !== 'object') return null;
-    if ('species' in item) {
-      const species = (item as { species?: Fish | null }).species || null;
-      if (!species?.id) return null;
-      const record = (item as { record?: { quantity?: number; batches?: AquariumSpeciesBatch[] } | null }).record;
-      return {
-        species,
-        quantity: getQuantity(record?.quantity),
-        batches: Array.isArray(record?.batches) ? record.batches : [],
-      };
+) => {
+  const normalized = existingSpecies
+    .map(item => {
+      if (!item || typeof item !== 'object') return null;
+      if ('species' in item) {
+        const species = (item as { species?: Fish | null }).species || null;
+        if (!species?.id) return null;
+        const record = (item as { record?: { quantity?: number; batches?: AquariumSpeciesBatch[] } | null }).record;
+        return {
+          species,
+          quantity: getQuantity(record?.quantity),
+          batches: Array.isArray(record?.batches) ? record.batches : [],
+        };
+      }
+      const species = item as Fish;
+      return species?.id ? { species, quantity: 1, batches: [] as AquariumSpeciesBatch[] } : null;
+    })
+    .filter((item): item is { species: Fish; quantity: number; batches: AquariumSpeciesBatch[] } => Boolean(item?.species?.id));
+
+  const bySpeciesId = new Map<string, { species: Fish; quantity: number; batches: AquariumSpeciesBatch[] }>();
+  normalized.forEach(item => {
+    const current = bySpeciesId.get(item.species.id);
+    if (!current) {
+      bySpeciesId.set(item.species.id, item);
+      return;
     }
-    const species = item as Fish;
-    return species?.id ? { species, quantity: 1, batches: [] as AquariumSpeciesBatch[] } : null;
-  })
-  .filter((item): item is { species: Fish; quantity: number; batches: AquariumSpeciesBatch[] } => Boolean(item?.species?.id));
+    bySpeciesId.set(item.species.id, {
+      species: current.species,
+      quantity: current.quantity + item.quantity,
+      batches: [...current.batches, ...item.batches],
+    });
+  });
+  return Array.from(bySpeciesId.values());
+};
 
 const parseRange = (value?: string) => {
   const matches = value?.match(/(\d+(?:\.\d+)?)/g);

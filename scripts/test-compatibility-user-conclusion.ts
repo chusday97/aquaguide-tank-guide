@@ -147,4 +147,30 @@ const reducedLoadPresentation = getCompatibilityPresentation(reducedLoadDecision
 assert.equal(reducedLoadPresentation.headline, '可以养');
 assert.match(reducedLoadPresentation.primaryActionText, /可以按当前计划加入/);
 
-console.log('compatibility user conclusion contract passed: direct actions, multi-species aggregation, adjustment improvement, and user-facing dedupe');
+const mergedDuplicateSpecies = evaluateCompatibilityDecision({
+  tank: tank(80, 35, 40, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 8 },
+    { species: byId('sp_0443'), quantity: 6 },
+  ],
+});
+const splitDuplicateSpecies = evaluateCompatibilityDecision({
+  tank: tank(80, 35, 40, 24),
+  items: [
+    { species: byId('sp_0431'), quantity: 4 },
+    { species: byId('sp_0431'), quantity: 4 },
+    { species: byId('sp_0443'), quantity: 6 },
+  ],
+});
+assert.equal(mergedDuplicateSpecies.status, 'compatible');
+assert.equal(splitDuplicateSpecies.status, mergedDuplicateSpecies.status);
+assert.deepEqual(
+  splitDuplicateSpecies.pairResults.map(pair => pair.pairId),
+  mergedDuplicateSpecies.pairResults.map(pair => pair.pairId),
+);
+assert.ok(splitDuplicateSpecies.warningRules.every(rule => (
+  rule.code !== 'minimum_group_not_met' && rule.code !== 'group_requirement_gap'
+)));
+assert.equal(splitDuplicateSpecies.metadata.domainStatus, splitDuplicateSpecies.status);
+
+console.log('compatibility user conclusion contract passed: direct actions, multi-species aggregation, duplicate-species normalization, adjustment improvement, and user-facing dedupe');
