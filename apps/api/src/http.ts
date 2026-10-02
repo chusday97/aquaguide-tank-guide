@@ -15,6 +15,50 @@ export class ApiError extends Error {
   }
 }
 
+
+const DEFAULT_CORS_ORIGINS = new Set([
+  'https://aquaguide.chusday.dpdns.org',
+  'https://aqua-tank-guide.vercel.app',
+]);
+
+const corsOrigins = () => {
+  const configured = (process.env.API_CORS_ORIGINS || '')
+    .split(',')
+    .map(value => value.trim())
+    .filter(Boolean);
+  return new Set([...DEFAULT_CORS_ORIGINS, ...configured]);
+};
+
+const CORS_ALLOW_HEADERS = [
+  'Accept',
+  'Authorization',
+  'Content-Type',
+  'Idempotency-Key',
+  'X-AquaGuide-Locale',
+  'X-Request-Id',
+].join(', ');
+
+const CORS_ALLOW_METHODS = 'GET,HEAD,POST,PATCH,PUT,DELETE,OPTIONS';
+
+export const businessCorsMiddleware: RequestHandler = (request, response, next) => {
+  const origin = request.header('origin')?.trim();
+  if (!origin) return next();
+
+  if (!corsOrigins().has(origin)) {
+    if (request.method === 'OPTIONS') return response.sendStatus(403);
+    return next();
+  }
+
+  response.setHeader('Access-Control-Allow-Origin', origin);
+  response.setHeader('Vary', 'Origin');
+  response.setHeader('Access-Control-Allow-Methods', CORS_ALLOW_METHODS);
+  response.setHeader('Access-Control-Allow-Headers', CORS_ALLOW_HEADERS);
+  response.setHeader('Access-Control-Max-Age', '600');
+
+  if (request.method === 'OPTIONS') return response.sendStatus(204);
+  return next();
+};
+
 export const requestIdMiddleware: RequestHandler = (request, response, next) => {
   const requestId = request.header('x-request-id')?.trim() || randomUUID();
   (request as ApiRequest).requestId = requestId;

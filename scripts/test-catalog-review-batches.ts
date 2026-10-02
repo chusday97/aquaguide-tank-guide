@@ -41,6 +41,9 @@ assert.ok(catalogContentVerifiedSourceIds.size <= sources.length, 'verified sour
 const runtimeApprovedFields = reviews.filter(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))).length;
 const miniParrotApprovedFields = reviews.filter(review => review.speciesId === 'sp_0021' && review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))).map(review => review.field).sort();
 assert.deepEqual(miniParrotApprovedFields, ['adult_size']);
-assert.equal(catalogContentVerifiedSourceIds.size, 32);
-assert.equal(runtimeApprovedFields, 99);
+const rhodeusApprovedFields = getApprovedCatalogFieldReviews('sp_0475').map(review => review.field).sort();
+assert.deepEqual(rhodeusApprovedFields, ['adult_size', 'identity', 'temperature']);
+assert.equal(getApprovedCatalogFieldReviews('sp_0475').some(review => review.field === 'water'), false, 'Rhodeus freshwater+brackish source must not collapse into a single freshwater runtime fact');
+assert.equal(catalogContentVerifiedSourceIds.size, 33);
+assert.equal(runtimeApprovedFields, 102);
 console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: catalogContentVerifiedSourceIds.size, runtimeApprovedFields }, null, 2));

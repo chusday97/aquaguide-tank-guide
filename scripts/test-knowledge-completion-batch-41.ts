@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import { fishData } from '../src/data/fishData';
+import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKnowledge';
+import { phase2Batch41Authority, phase2Batch41Knowledge, phase2Batch41Subjects } from '../src/modules/knowledge/phase2Batch41Authority';
+
+for (const id of Object.keys(phase2Batch41Subjects)) {
+  assert.ok(fishData.some(fish => fish.id === id));
+  assert.ok(getReviewedSpeciesKnowledge(id));
+  assert.equal(phase2Batch41Knowledge[id].environment?.evidence.confidence, 'unknown');
+  assert.equal(phase2Batch41Authority[id].feeding.status, 'reviewed_unknown');
+  assert.equal(phase2Batch41Authority[id].care.status, 'reviewed_unknown');
+  assert.ok(phase2Batch41Authority[id].feeding.citationIds.length);
+  assert.ok(phase2Batch41Authority[id].care.citationIds.length);
+}
+console.log(`knowledge completion batch 41 contract: PASS (${Object.keys(phase2Batch41Subjects).length} direct records)`);

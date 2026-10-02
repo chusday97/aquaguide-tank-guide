@@ -1,3 +1,25 @@
+## HANDOFF — 2026-09-28 Multi-species Compatibility checkpoint
+
+- Active worktree: `/Users/chuchu/aquaguide-admin-content-v0`, branch `backend/convergence-20260922`, starting HEAD `af11e033a3ceb4571b27364a42c3364a21183618`.
+- Scope completed for this checkpoint: canonical multi-species decisions merge pairwise compatibility with a 3+ species whole-tank evaluation; cumulative tank-only risks now reach structured reasons and the user-facing conclusion.
+- The product conclusion is preserved as **judgement + reason + adjustment**. Deterministic priority keeps observed reality and high-impact biological conflicts ahead of softer pH/space/bioload guidance.
+- Regression PASS: `scripts/test-compatibility-user-conclusion.ts`, `scripts/test-visual-results.ts`, `npm run lint`, and full `npm run test:backend-release-gate` (`BACKEND_RELEASE_GATE=PASS`).
+- Full release-gate evidence also passed Tank State, Tank Evidence, Water Change, Care, Core Flow, API boundary/contracts, Catalog, API typecheck, project typecheck, and Vercel business bundle.
+- Separate clean integration worktree is `/Users/chuchu/aquaguide-backend-integration-20260922` at `integration/backend-main-20260922@d817eb13`; it is not the same branch. The two lines diverge from merge-base `437fe83f` and must not be wholesale merged/rebased.
+- User freeze remains: no image-recognition continuation and no broad UI changes. DB/infra and Production remain untouched.
+- NEXT: preserve this as a local Compatibility checkpoint, then perform selective reconciliation into the integration line rather than duplicating or overwriting validated logic.
+
+## HANDOFF — 2026-09-22 Backend convergence ready for integration audit
+
+- Current branch/HEAD: `backend/convergence-20260922@c0dba9399dd8e6e0b212c732918f39157ecf9d8a`; upstream is `origin/backend/convergence-20260922`; worktree clean before this authority update.
+- Backend scope is converged and release-gated: knowledge/evidence authority, Compatibility, Tank State/Tank Evidence, Water Change, Care/Core Flow, API boundary, Catalog and TypeScript gates have passed in the convergence line.
+- Launch cohort has no ordinary unresolved research item: remaining unknowns are explicit evidence ceilings or identity boundaries and must not be converted to guessed facts.
+- User froze **image recognition** and **UI modification** on 2026-09-22. Do not continue Vision tuning or UI work during integration. Existing Vision/UI branch history is retained for audit, not automatically selected for main.
+- DB/infra holds remain unchanged: 15 Compatibility migrations are repository-only; DB-authority switch and Care indexing/noindex changes remain HOLD; Production must not be changed in this phase.
+- Integration risk: `origin/main...HEAD` = `13 main-only / 104 backend-only`; merge-base `437fe83fcfe282551806f573b3ca06f5bea37cc3`. This branch is not safe for a blind merge/rebase.
+- Diff audit confirms mixed scope: backend contracts/authority/tests/docs + frozen Vision files + `src/pages/Aquarium.tsx` + repository migration material. Integration must be selective and preserve current main behavior.
+- Source of truth for the next step: `docs/BACKEND_RELEASE_INTEGRATION_CHECKLIST_20260922.md`. Run that checklist before any main merge or Production action.
+
 ## HANDOFF — 2026-09-16 RC1 Production release CLOSED
 Production is now `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production). Final Production smoke is PASS.
 
@@ -379,3 +401,28 @@ Expand target vulnerability only where reviewed husbandry evidence supports it, 
 ## Main convergence checkpoint — corrupt active authority write guard
 - Current main now fails closed for both reads and writes when durable active authority is corrupt.
 - Product Recovery authority, Compatibility V7, 27/5 runtime baseline, and the 24-taxon reviewed matrix remain unchanged.
+## Compatibility Core checkpoint — 2026-09-16 (Oscar authority)
+
+- Rhodeus ocellatus review correction is committed as `72036acc` (`fix(catalog): preserve Rhodeus brackish provenance`); FishBase freshwater + brackish remains water `unknown` in the single-valued catalog schema.
+- Added scoped reviewed Oscar authority for `sp_0451 Astronotus ocellatus`: FishBase ecology + Seriously Fish citations support freshwater, predatory behavior, and `predationTargets: ['small_fish']`; no universal “all small species” or direct-pair extrapolation was added.
+- Added Species Knowledge V2 authority for `sp_0451`, preserving unknown sex/reproduction fields and provenance for environment, social behavior, and adult size.
+- Updated compatibility regression coverage to require Oscar source IDs and prove a medium-sized comparison fish is not universally blocked by the small-fish rule.
+- Matrix: `435 / 21 insufficient / 185 blocked / 217 caution / 12 compatible` before; `435 / 0 insufficient / 198 blocked / 221 caution / 16 compatible` after. The reduction is from reviewed, source-scoped trait authority; Oscar + direct zebrafish pair remains a reviewed `pair_rule`.
+- Test evidence: catalog review batches, catalog review contract, Species Knowledge V2, compatibility engine, launch matrix, evidence coverage, coverage scorecard, Domain, Service, and `lint` passed. `tsx` CLI wrappers for `test:species-knowledge`, `test:compatibility`, and `test:compatibility-evidence-coverage` hit sandbox IPC `EPERM`; equivalent `node --import tsx` commands passed.
+- No UI files, migration, push, or Vercel action performed. Remaining launch-cohort `insufficient_data`: none; broader 411-species coverage remains intentionally fail-closed outside reviewed authority.
+## 2026-09-16 — 486-species Knowledge Completion Program, Phase 1
+
+- Scope changed to a provenance-first 486-object completion program. Phase 1 is matrix/backlog only; no new Profile, Species Knowledge, migration, or batch authority data was written.
+- Generated `docs/species_knowledge_completion_matrix.json` and `.csv` plus `docs/species_knowledge_research_backlog.json`/`.md` from the current catalog and reviewed runtime authority.
+- Matrix contract: 486 unique catalog objects, five applicable knowledge fields (`feeding`, `environment`, `space`, `social`, `care`), explicit statuses, and 40 ranked research candidates.
+- Status counts: feeding `0 supported / 0 unknown / 0 inherited / 75 N/A / 213 needs_research / 198 template_only`; environment `21 / 0 / 0 / 11 / 454 / 0`; space `30 / 0 / 32 / 11 / 413 / 0`; social `30 / 0 / 38 / 75 / 343 / 0`; care `387 / 0 / 0 / 11 / 0 / 88`.
+- Priority uses only explicit gap states, launch-cohort membership as an operational commonness proxy, and compatibility/temperament risk. No user-frequency telemetry was inferred.
+- `sp_0016`, `sp_0224`, and `sp_0475` are the first three backlog candidates. They remain unchanged and require source-by-source human review before authority writes.
+- Validation: `npm run knowledge:completion-matrix` and `npm run test:knowledge-completion-matrix` pass. Existing `docs/species_knowledge_audit.csv` has a pre-existing user modification and was preserved.
+## 2026-09-16 — Additive ownership repair after Phase 1
+
+- Added `supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql` for existing reviewed Profiles `sp_0433`, `sp_0013`, and `sp_0451` only.
+- Migration owns Profile rows, seven citation records, exact Profile drift guards, and exact evidence-link drift guards; historical migrations remain unchanged.
+- Extended `test:compatibility-admin-contract` to require this owner and preserve the explicit post-recovery ownership map. Equivalent `node --import tsx` Admin contract and `lint` pass.
+- This does not add any new missing-species knowledge. Phase 2 backlog research remains source-gated and unstarted.
+- Matrix conflict registry now records Oscar temperature disagreement (`FishBase 22–25°C` vs `Seriously Fish 20–28°C`) as `reviewed_conflict`: catalog runtime keeps its reviewed 22–25°C value, broader source remains husbandry guidance, and only non-overlap can be a hard Domain incompatibility.

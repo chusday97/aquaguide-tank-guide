@@ -4,6 +4,7 @@ import type {
   SpeciesRecognitionResult,
 } from '../../../packages/contracts/src/index';
 import { apiRequest, AquaGuideApiError } from '../api/api-client';
+import { resolveApiV1Url } from '../api/api-origin';
 
 type RecognitionResponse = SpeciesRecognitionResult & { modelName?: string };
 
@@ -32,7 +33,7 @@ export const recognizeSpeciesImage = async (
 ) => {
   let response: Response;
   try {
-    response = await fetch('/api/v1/ai/species-recognition', {
+    response = await fetch(resolveApiV1Url('/ai/species-recognition'), {
       method: 'POST',
       headers: {
         'Content-Type': file.type,

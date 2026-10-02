@@ -15,6 +15,7 @@ export type HypothesisLikelihood = z.infer<typeof hypothesisLikelihoodSchema>;
 export type DiagnosisUrgency = z.infer<typeof diagnosisUrgencySchema>;
 
 export const rawVisionCandidateSchema = z.object({
+  catalogKey: recognitionCatalogKeySchema.optional(),
   commonName: z.string().trim().min(1).max(120),
   scientificName: z.string().trim().min(1).max(160).optional(),
   confidenceBand: confidenceBandSchema,
@@ -22,6 +23,7 @@ export const rawVisionCandidateSchema = z.object({
 });
 
 export interface RawVisionCandidate {
+  catalogKey?: string;
   commonName: string;
   scientificName?: string;
   confidenceBand: ConfidenceBand;
@@ -33,7 +35,6 @@ export const speciesRecognitionResultSchema = z.object({
   imageFingerprint: z.string().regex(/^[a-f0-9]{64}$/),
   status: recognitionStatusSchema,
   candidates: z.array(rawVisionCandidateSchema.extend({
-    catalogKey: recognitionCatalogKeySchema.optional(),
     matchType: z.enum(['exact', 'alias', 'fuzzy', 'none']),
   })).max(3),
   requiresConfirmation: z.literal(true),
