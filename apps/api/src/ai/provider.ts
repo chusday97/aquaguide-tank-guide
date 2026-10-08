@@ -166,6 +166,13 @@ const runVisionWithFallback = async <T>(
   } catch (error) {
     const fallbackModel = apiConfig.visionFallbackModel;
     if (!fallbackModel || fallbackModel === apiConfig.visionModel || !shouldUseVisionFallback(error)) throw error;
+    const providerError = error instanceof ProviderError ? error : undefined;
+    console.warn('Aqua Vision primary model fallback', {
+      primaryModel: apiConfig.visionModel,
+      fallbackModel,
+      reason: providerError?.reason || 'unknown',
+      statusCode: providerError?.statusCode,
+    });
     return { payload: await run(fallbackModel), modelName: fallbackModel };
   }
 };
