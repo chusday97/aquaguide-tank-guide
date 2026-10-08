@@ -72,7 +72,7 @@ const catalogKeyGuppy = mapVisionCandidateToCatalog({
 }, fishData);
 assert.equal(catalogKeyGuppy.fish?.scientificName, 'Poecilia reticulata', 'valid catalogKey must resolve directly to catalog authority');
 assert.equal(catalogKeyGuppy.matchType, 'exact');
-const { deriveUnreconciledRecognitionStatus, reconcileVisionCandidatesToCatalog, recognitionCatalogSizeForCategory } = await import('../apps/api/src/routes/species-ai.ts');
+const { deriveUnreconciledRecognitionStatus, reconcileVisionCandidatesToCatalog, recognitionCatalogSizeForCategory, recognitionCatalogHasCandidateForCategory } = await import('../apps/api/src/routes/species-ai.ts');
 assert.equal(deriveUnreconciledRecognitionStatus([]), 'unmatched');
 assert.equal(deriveUnreconciledRecognitionStatus([{ confidenceBand: 'high' }]), 'ambiguous', 'provider confidence alone must never claim a catalog match');
 const reconciled = reconcileVisionCandidatesToCatalog([
@@ -86,7 +86,10 @@ assert.equal(reconciled[0].scientificName, 'Poecilia reticulata');
 assert.equal(reconciled[0].matchType, 'exact');
 assert.equal(recognitionCatalogSizeForCategory('灯科鱼') > 0, true);
 assert.equal(recognitionCatalogSizeForCategory('灯科鱼') < 100, true, 'stage two must use a bounded category shortlist instead of the full catalog');
-assert.equal(recognitionCatalogSizeForCategory('鱼类') < fishData.length, true, 'largest category must still be smaller than the full catalog');
+assert.equal(recognitionCatalogSizeForCategory('鱼类') < fishData.length, true, 'broad freshwater-fish routing must still stay smaller than the full catalog');
+assert.equal(recognitionCatalogHasCandidateForCategory('鱼类', 'sp_0431'), true, 'broad 鱼类 routing must not exclude the reviewed neon tetra catalog row');
+assert.equal(recognitionCatalogHasCandidateForCategory('鱼类', 'sp_0135'), true, 'broad 鱼类 routing must retain generic fish rows too');
+assert.equal(recognitionCatalogHasCandidateForCategory('鱼类', 'sp_0155'), true, 'broad 鱼类 routing must retain tetra variants');
 
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
 let failureMode: '429' | '5xx' | 'timeout' | 'invalid_response' = '429';

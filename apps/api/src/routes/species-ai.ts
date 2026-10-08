@@ -21,12 +21,29 @@ const rateBuckets = new Map<string, { startedAt: number; count: number }>();
 const recognitionCatalog = fishData.filter(item => item.category !== '硬景/底床');
 const recognitionCatalogByKey = new Map(recognitionCatalog.map(item => [item.id, item]));
 const recognitionCategories = [...new Set(recognitionCatalog.map(item => item.category).filter((value): value is string => Boolean(value)))];
-const recognitionCatalogPromptFor = (category: string) => recognitionCatalog
-  .filter(item => item.category === category)
+
+// 鱼类 is a broad legacy bucket while several freshwater fish families have their
+// own catalog categories. If stage one returns the broad bucket, keep those specific
+// freshwater families in stage two so coarse classification cannot exclude the
+// correct species before closed-set recognition begins.
+const recognitionCategoryRouting: Record<string, readonly string[]> = {
+  '鱼类': ['鱼类', '灯科鱼', '慈鲷/斗鱼', '鲶鱼/异型'],
+};
+
+const recognitionCatalogForCategory = (category: string) => {
+  const routedCategories = recognitionCategoryRouting[category] || [category];
+  const allowed = new Set(routedCategories);
+  return recognitionCatalog.filter(item => item.category && allowed.has(item.category));
+};
+
+const recognitionCatalogPromptFor = (category: string) => recognitionCatalogForCategory(category)
   .map(item => [item.id, item.name, item.scientificName || '', item.category || ''].join('|'))
   .join('\n');
 
-export const recognitionCatalogSizeForCategory = (category: string) => recognitionCatalog.filter(item => item.category === category).length;
+export const recognitionCatalogSizeForCategory = (category: string) => recognitionCatalogForCategory(category).length;
+export const recognitionCatalogHasCandidateForCategory = (category: string, catalogKey: string) => (
+  recognitionCatalogForCategory(category).some(item => item.id === catalogKey)
+);
 
 const checkRateLimit = (request: express.Request) => {
   const key = request.ip || 'unknown';
