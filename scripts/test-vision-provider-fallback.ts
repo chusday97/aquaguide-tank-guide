@@ -72,7 +72,7 @@ const catalogKeyGuppy = mapVisionCandidateToCatalog({
 }, fishData);
 assert.equal(catalogKeyGuppy.fish?.scientificName, 'Poecilia reticulata', 'valid catalogKey must resolve directly to catalog authority');
 assert.equal(catalogKeyGuppy.matchType, 'exact');
-const { deriveUnreconciledRecognitionStatus, reconcileVisionCandidatesToCatalog, recognitionCatalogSizeForCategory, recognitionCatalogHasCandidateForCategory, broadFreshwaterFishRefinementCategories, resolveRecognitionCategory } = await import('../apps/api/src/routes/species-ai.ts');
+const { deriveUnreconciledRecognitionStatus, reconcileVisionCandidatesToCatalog, recognitionCatalogSizeForCategory, recognitionCatalogHasCandidateForCategory, broadFreshwaterFishRefinementCategories, resolveRecognitionCategory, capFallbackVisionConfidence } = await import('../apps/api/src/routes/species-ai.ts');
 assert.equal(deriveUnreconciledRecognitionStatus([]), 'unmatched');
 assert.equal(deriveUnreconciledRecognitionStatus([{ confidenceBand: 'high' }]), 'ambiguous', 'provider confidence alone must never claim a catalog match');
 const reconciled = reconcileVisionCandidatesToCatalog([
@@ -94,6 +94,9 @@ assert.deepEqual([...broadFreshwaterFishRefinementCategories], ['灯科鱼', '�
 assert.equal(resolveRecognitionCategory('鱼类', '灯科鱼'), '灯科鱼');
 assert.equal(resolveRecognitionCategory('鱼类', '其他鱼类'), '鱼类');
 assert.equal(resolveRecognitionCategory('海水鱼', '灯科鱼'), '海水鱼');
+const fallbackSafetySample = [{ confidenceBand: 'high' as const, catalogKey: 'sp_0431' }];
+assert.equal(capFallbackVisionConfidence(fallbackSafetySample, 'glm-4v-flash', 'glm-4v-flash')[0]?.confidenceBand, 'medium', 'weak fallback must never preserve high confidence');
+assert.equal(capFallbackVisionConfidence(fallbackSafetySample, 'glm-4.1v-thinking-flash', 'glm-4v-flash')[0]?.confidenceBand, 'high', 'primary reasoning model confidence must remain unchanged');
 
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
 let failureMode: '429' | '5xx' | 'timeout' | 'invalid_response' = '429';

@@ -91,6 +91,18 @@ export const reconcileVisionCandidatesToCatalog = (candidates: Array<ReturnType<
   }).slice(0, 3);
 };
 
+export const capFallbackVisionConfidence = <T extends { confidenceBand: 'high' | 'medium' | 'low' }>(
+  candidates: T[],
+  modelName: string,
+  fallbackModel = apiConfig.visionFallbackModel,
+) => {
+  if (!fallbackModel || modelName !== fallbackModel) return candidates;
+  return candidates.map(candidate => ({
+    ...candidate,
+    confidenceBand: candidate.confidenceBand === 'high' ? 'medium' as const : candidate.confidenceBand,
+  }));
+};
+
 export const speciesAiRouter = Router();
 
 speciesAiRouter.post(
@@ -144,7 +156,11 @@ speciesAiRouter.post(
       failureReason = providerFailure(error);
     }
 
-    const reconciledCandidates = reconcileVisionCandidatesToCatalog(candidates);
+    const reconciledCandidates = capFallbackVisionConfidence(
+      reconcileVisionCandidatesToCatalog(candidates),
+      modelName,
+    );
+    if (modelName === apiConfig.visionFallbackModel) source = 'fallback';
     return sendData(request, response, {
       recognitionId: randomUUID(),
       imageFingerprint,
