@@ -117,12 +117,22 @@ speciesAiRouter.post(
       const imageDataUrl = `data:image/webp;base64,${normalized.toString('base64')}`;
       const categoryResult = await requestVisionCatalogCategory(imageDataUrl, locale, recognitionCategories);
       modelName = categoryResult.modelName;
-      let recognitionCategory = categoryResult.payload.category;
+      const initialCategory = categoryResult.payload.category;
+      let refinedCategory: string | undefined;
+      let recognitionCategory = initialCategory;
       if (recognitionCategory === '鱼类') {
         const refinement = await requestVisionCatalogCategory(imageDataUrl, locale, broadFreshwaterFishRefinementCategories);
         modelName = refinement.modelName;
-        recognitionCategory = resolveRecognitionCategory(recognitionCategory, refinement.payload.category);
+        refinedCategory = refinement.payload.category;
+        recognitionCategory = resolveRecognitionCategory(recognitionCategory, refinedCategory);
       }
+      console.info('Aqua Vision category routing', {
+        modelName,
+        initialCategory,
+        refinedCategory,
+        recognitionCategory,
+        shortlistSize: recognitionCatalogSizeForCategory(recognitionCategory),
+      });
       const shortlistPrompt = recognitionCatalogPromptFor(recognitionCategory);
       if (!shortlistPrompt) throw new ProviderError('invalid_response', 'Vision category had no catalog candidates.');
       const vision = await requestVisionCandidates(imageDataUrl, locale, shortlistPrompt);
