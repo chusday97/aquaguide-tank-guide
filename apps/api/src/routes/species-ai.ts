@@ -45,6 +45,12 @@ export const recognitionCatalogHasCandidateForCategory = (category: string, cata
   recognitionCatalogForCategory(category).some(item => item.id === catalogKey)
 );
 
+export const broadFreshwaterFishRefinementCategories = ['灯科鱼', '慈鲷/斗鱼', '鲶鱼/异型', '其他鱼类'] as const;
+export const resolveRecognitionCategory = (initialCategory: string, refinedCategory?: string) => {
+  if (initialCategory !== '鱼类' || !refinedCategory) return initialCategory;
+  return refinedCategory === '其他鱼类' ? '鱼类' : refinedCategory;
+};
+
 const checkRateLimit = (request: express.Request) => {
   const key = request.ip || 'unknown';
   const now = Date.now();
@@ -111,7 +117,13 @@ speciesAiRouter.post(
       const imageDataUrl = `data:image/webp;base64,${normalized.toString('base64')}`;
       const categoryResult = await requestVisionCatalogCategory(imageDataUrl, locale, recognitionCategories);
       modelName = categoryResult.modelName;
-      const shortlistPrompt = recognitionCatalogPromptFor(categoryResult.payload.category);
+      let recognitionCategory = categoryResult.payload.category;
+      if (recognitionCategory === '鱼类') {
+        const refinement = await requestVisionCatalogCategory(imageDataUrl, locale, broadFreshwaterFishRefinementCategories);
+        modelName = refinement.modelName;
+        recognitionCategory = resolveRecognitionCategory(recognitionCategory, refinement.payload.category);
+      }
+      const shortlistPrompt = recognitionCatalogPromptFor(recognitionCategory);
       if (!shortlistPrompt) throw new ProviderError('invalid_response', 'Vision category had no catalog candidates.');
       const vision = await requestVisionCandidates(imageDataUrl, locale, shortlistPrompt);
       modelName = vision.modelName;

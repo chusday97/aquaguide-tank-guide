@@ -121,7 +121,7 @@ const visionCategoryRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en',
   messages: [
     {
       role: 'system',
-      content: 'Classify only the visible aquarium organism into exactly one allowed Aqua catalog category. Return one JSON object only. Do not identify the species yet.',
+      content: 'Classify only the visible aquarium organism into exactly one allowed Aqua catalog category. Return one JSON object only. Do not identify the species yet. Prefer the most specific allowed category supported by visible morphology. Treat broad catch-all categories such as 鱼类 or other fish as a fallback only when no more specific allowed fish family is supportable.',
     },
     {
       role: 'user',
