@@ -132,6 +132,8 @@ try {
     assert.equal(calls[1].response_format, undefined, 'legacy GLM-4V fallback stays on prompt-enforced JSON for compatibility');
     assert.equal(calls.every(call => Array.isArray(call.messages) && (call.messages as unknown[]).some(message => JSON.stringify(message).includes('image_url'))), true);
     assert.equal(calls.every(call => JSON.stringify(call.messages).includes(consistentGuppy.fish!.id)), true, 'every vision model attempt must receive the constrained Aqua catalog');
+    assert.equal(calls.some(call => JSON.stringify(call.messages).includes('Treat commonName as an identifier only')), true, 'vision prompt must forbid appearance inference from trade/common names');
+    assert.equal(calls.some(call => JSON.stringify(call.messages).includes('scientificName')), true, 'vision prompt must require scientific identity validation');
   }
   failureMode = '429';
   calls.length = 0;

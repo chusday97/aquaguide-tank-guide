@@ -94,6 +94,9 @@ const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: 
         'You are doing closed-set recognition against AQUA_CATALOG, not open-ended species naming.',
         'Every candidate MUST use a catalogKey that appears verbatim in AQUA_CATALOG. Never invent a catalogKey or species outside the catalog.',
         'Copy commonName and scientificName from the selected catalog row; if no catalog row is visually supportable, return an empty candidates array.',
+        'Treat commonName as an identifier only. Never infer color, pattern, body shape, or species identity from words in a trade/common name.',
+        'Validate the visible animal against the scientificName identity and visible morphology. If the scientific identity conflicts with the image, do not select that row even when its commonName sounds visually plausible.',
+        'Visual evidence must be diagnostic enough to distinguish the selected row from close catalog alternatives. Generic color words alone are not sufficient for high confidence.',
         'Use high confidence only when visible diagnostic features strongly support one catalog identity; otherwise use medium or low.',
       ].join(' '),
     },
@@ -103,8 +106,8 @@ const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: 
         {
           type: 'text',
           text: (locale === 'en'
-            ? 'Choose only from AQUA_CATALOG. Return JSON only: {"candidates":[{"catalogKey":"sp_0000","commonName":"exact catalog name","scientificName":"exact catalog scientific name","confidenceBand":"high|medium|low","visualEvidence":["visible feature"]}]}. Return at most 3 catalog candidates. If the image does not support any listed identity, return {"candidates":[]}. Closely related species, cultivars, variants, blurry images, or multiple subjects must remain medium/low confidence and may return multiple alternatives. Do not diagnose health.'
-            : '只能从 AQUA_CATALOG 中选择。只返回 JSON：{"candidates":[{"catalogKey":"sp_0000","commonName":"目录中的准确名称","scientificName":"目录中的准确学名","confidenceBand":"high|medium|low","visualEvidence":["可见特征"]}]}。最多返回 3 个目录候选；若图片不足以支持任何目录物种，返回 {"candidates":[]}。近缘种、品系/变种、图片模糊或多主体时必须降低置信度，并可返回多个备选。不要判断健康或疾病。')
+            ? 'Choose only from AQUA_CATALOG. Return JSON only: {"candidates":[{"catalogKey":"sp_0000","commonName":"exact catalog name","scientificName":"exact catalog scientific name","confidenceBand":"high|medium|low","visualEvidence":["visible diagnostic feature"]}]}. Return at most 3 catalog candidates. Ignore visual implications of common/trade names and verify morphology against the scientific identity. If the image does not support any listed identity, return {"candidates":[]}. Closely related species, cultivars, variants, blurry images, or multiple subjects must remain medium/low confidence and may return multiple alternatives. Do not diagnose health.'
+            : '只能从 AQUA_CATALOG 中选择。只返回 JSON：{"candidates":[{"catalogKey":"sp_0000","commonName":"目录中的准确名称","scientificName":"目录中的准确学名","confidenceBand":"high|medium|low","visualEvidence":["可区分候选的可见特征"]}]}。中文商品名只作为标识，不得根据名字里的颜色、花纹或俗称猜外观；必须按 scientificName 对应物种的可见形态核对。若学名对应形态与图片冲突，不得选择该行。最多返回 3 个目录候选；若图片不足以支持任何目录物种，返回 {"candidates":[]}。近缘种、品系/变种、图片模糊或多主体时必须降低置信度，并可返回多个备选。不要判断健康或疾病。')
             + `\n\nAQUA_CATALOG (catalogKey|commonName|scientificName|category):\n${catalogOptions}`,
         },
         { type: 'image_url', image_url: { url: imageDataUrl } },
