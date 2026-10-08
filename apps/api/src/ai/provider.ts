@@ -79,11 +79,15 @@ const fetchJsonResponse = async (
 };
 
 const supportsVisionJsonMode = (model: string) => /^glm-4\.6v/i.test(model);
+const isVisionReasoningModel = (model: string) => /^glm-4\.1v-thinking/i.test(model);
+const visionMaxTokens = (model: string, compact = false) => (
+  isVisionReasoningModel(model) ? (compact ? 900 : 1800) : (compact ? 120 : 700)
+);
 
 const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: string, catalogOptions: string) => ({
   stream: false,
   temperature: 0,
-  max_tokens: 700,
+  max_tokens: visionMaxTokens(model),
   ...(supportsVisionJsonMode(model) ? { response_format: { type: 'json_object' as const } } : {}),
   messages: [
     {
@@ -119,7 +123,7 @@ const visionRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: 
 const visionCategoryRequestBody = (imageDataUrl: string, locale: 'zh-CN' | 'en', model: string, categories: readonly string[]) => ({
   stream: false,
   temperature: 0,
-  max_tokens: 120,
+  max_tokens: visionMaxTokens(model, true),
   ...(supportsVisionJsonMode(model) ? { response_format: { type: 'json_object' as const } } : {}),
   messages: [
     {
