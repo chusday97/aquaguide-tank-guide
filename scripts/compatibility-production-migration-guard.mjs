@@ -115,6 +115,16 @@ const run=(cmd,args,options={})=>{
  return r.stdout.trim();
 };
 export const readLinkedProjectRef=()=>readFileSync(join(root,'supabase','.temp','project-ref'),'utf8').trim();
+export const validateProductionCodeCompatibility=()=>{
+ const critical=['apps/api/src/routes/content.ts','src/data/compatibilityEvidence.ts','src/services/compatibility/compatibility.service.ts'];
+ const changed=run('git',['diff','--name-only','origin/release/production..origin/main','--',...critical]).split(/\r?\n/).filter(Boolean);
+ if(changed.length) throw new Error(`Production Compatibility runtime drifted in critical files: ${changed.join(', ')}`);
+ const releaseLoader=run('git',['show','origin/release/production:apps/api/src/compatibility-authority.ts']);
+ const mainLoader=run('git',['show','origin/main:apps/api/src/compatibility-authority.ts']);
+ const normalize=value=>value.replace(/if \(!exactCoverage\) throw new ApiError\(409, 'MIGRATION_REJECTED', [^\n]+\);/,"if (!exactCoverage) throw new ApiError(409, 'MIGRATION_REJECTED', '<normalized-message>');");
+ if(normalize(releaseLoader)!==normalize(mainLoader)) throw new Error('Production Compatibility authority loader differs from main beyond the approved error-message-only delta.');
+ return {releaseBranch:'origin/release/production',runtimeCompatible:true,allowedDelta:'MIGRATION_REJECTED message only'};
+};
 export const assertGitStateForCommit=()=>{
  const branch=run('git',['branch','--show-current']);
  const head=run('git',['rev-parse','HEAD']);
@@ -142,11 +152,12 @@ if(isMain){
  const commit=process.argv.includes('--commit');
  const writeArg=process.argv.find(x=>x.startsWith('--write-sql='));
  const {fingerprint,authority}=validateLocalChain();
+ const productionCodeCompatibility=validateProductionCodeCompatibility();
  const linkedRef=readLinkedProjectRef();
  if(linkedRef!==PRODUCTION_PROJECT_REF) throw new Error(`Linked Supabase ref mismatch: ${linkedRef}`);
  const live=queryLivePreflight(); validateLivePreflight(live);
  const bundle=buildBundleSql();
- const plan={mode:commit?'commit-requested':'dry-run',projectRef:linkedRef,migrationCount:MIGRATIONS.length,fingerprint,expectedAuthority:{profiles:authority.profiles.length,pairRules:authority.pairRules.length,stageRisks:authority.stageRisks.length},startState:live,heldMigrationExcluded:HELD_MIGRATION,atomicBundleBytes:Buffer.byteLength(bundle),mutationAuthorized:false};
+ const plan={mode:commit?'commit-requested':'dry-run',projectRef:linkedRef,migrationCount:MIGRATIONS.length,fingerprint,expectedAuthority:{profiles:authority.profiles.length,pairRules:authority.pairRules.length,stageRisks:authority.stageRisks.length},startState:live,heldMigrationExcluded:HELD_MIGRATION,productionCodeCompatibility,atomicBundleBytes:Buffer.byteLength(bundle),mutationAuthorized:false};
  if(writeArg){const path=writeArg.slice('--write-sql='.length);writeFileSync(path,bundle);plan.bundlePath=path;}
  if(!commit){console.log(JSON.stringify(plan,null,2));process.exit(0);}
  if(process.env.AQUAGUIDE_COMPATIBILITY_PRODUCTION_CONFIRM!==CONFIRM_TOKEN) throw new Error(`Commit denied: set AQUAGUIDE_COMPATIBILITY_PRODUCTION_CONFIRM=${CONFIRM_TOKEN}`);

@@ -1,10 +1,11 @@
 import assert from 'node:assert/strict';
-import {MIGRATIONS,HELD_MIGRATION,EXPECTED_CHAIN_FINGERPRINT,PRODUCTION_PROJECT_REF,calculateChainFingerprint,validateLocalChain,buildBundleSql,validateLivePreflight,getAuthorityKeys} from './compatibility-production-migration-guard.mjs';
+import {MIGRATIONS,HELD_MIGRATION,EXPECTED_CHAIN_FINGERPRINT,PRODUCTION_PROJECT_REF,calculateChainFingerprint,validateLocalChain,buildBundleSql,validateLivePreflight,getAuthorityKeys,validateProductionCodeCompatibility} from './compatibility-production-migration-guard.mjs';
 assert.equal(PRODUCTION_PROJECT_REF,'ydiygvhuqpogmqlcvgob');
 assert.equal(MIGRATIONS.length,22); assert.ok(!MIGRATIONS.includes(HELD_MIGRATION));
 assert.equal(calculateChainFingerprint(),EXPECTED_CHAIN_FINGERPRINT);
 const local=validateLocalChain(); assert.deepEqual([local.authority.profiles.length,local.authority.pairRules.length,local.authority.stageRisks.length],[34,21,1]);
 assert.deepEqual(getAuthorityKeys().stageRisks,['sp_0436:conspecific_fry_predation']);
+const productionCode=validateProductionCodeCompatibility(); assert.equal(productionCode.runtimeCompatible,true);
 const bundle=buildBundleSql();
 assert.equal((bundle.match(/^begin;$/gmi)||[]).length,1); assert.equal((bundle.match(/^commit;$/gmi)||[]).length,1);
 assert.ok(bundle.includes('POSTCHECK: reviewed profile key set mismatch')); assert.ok(bundle.includes('POSTCHECK: reviewed pair key set mismatch')); assert.ok(bundle.includes('POSTCHECK: reviewed stage-risk key set mismatch'));
