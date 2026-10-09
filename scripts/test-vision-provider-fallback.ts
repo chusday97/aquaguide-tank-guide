@@ -140,16 +140,18 @@ try {
   }
   failureMode = '429';
   calls.length = 0;
-  const { requestVisionCatalogCategory } = await import('../apps/api/src/ai/provider.ts');
+  const { requestVisionCatalogCategoryWithFallbackModel } = await import('../apps/api/src/ai/provider.ts');
   const originalCategoryFetch = globalThis.fetch;
   globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body || '{}')) as { model?: string; stream?: unknown; response_format?: unknown; messages?: unknown };
     calls.push(body);
     return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ category: '鱼类' }) } }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }) as typeof fetch;
-  const categoryResult = await requestVisionCatalogCategory('data:image/webp;base64,AA==', 'zh-CN', ['鱼类', '灯科鱼']);
+  const categoryResult = await requestVisionCatalogCategoryWithFallbackModel('data:image/webp;base64,AA==', 'zh-CN', ['鱼类', '灯科鱼']);
   assert.equal(categoryResult.payload.category, '鱼类');
-  assert.equal(calls.length, 1, 'category stage should use one primary call when valid');
+  assert.equal(categoryResult.modelName, 'glm-4v-flash');
+  assert.equal(calls.length, 1, 'category routing should spend exactly one cheap-model call');
+  assert.deepEqual(calls.map(call => call.model), ['glm-4v-flash'], 'category routing must not consume scarce primary-model quota');
   assert.equal(JSON.stringify(calls[0].messages).includes('鱼类 | 灯科鱼'), true);
   globalThis.fetch = originalCategoryFetch;
   console.log('vision provider/config contract verified without real credentials: defaults, GLM aliases, multimodal payload, and 429/5xx/timeout fallback');

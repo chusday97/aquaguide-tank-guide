@@ -12,7 +12,7 @@ import { buildSpeciesDiagnosisStep } from '../../../../packages/domain-rules/src
 import { apiConfig } from '../config';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
-import { ProviderError, requestSymptomObservations, requestVisionCandidates, requestVisionCatalogCategory } from '../ai/provider';
+import { ProviderError, requestSymptomObservations, requestVisionCandidates, requestVisionCatalogCategoryWithFallbackModel } from '../ai/provider';
 import { fishData } from '../../../../src/data/fishData';
 
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
@@ -127,13 +127,13 @@ speciesAiRouter.post(
         .webp({ quality: 84 })
         .toBuffer();
       const imageDataUrl = `data:image/webp;base64,${normalized.toString('base64')}`;
-      const categoryResult = await requestVisionCatalogCategory(imageDataUrl, locale, recognitionCategories);
+      const categoryResult = await requestVisionCatalogCategoryWithFallbackModel(imageDataUrl, locale, recognitionCategories);
       modelName = categoryResult.modelName;
       const initialCategory = categoryResult.payload.category;
       let refinedCategory: string | undefined;
       let recognitionCategory = initialCategory;
       if (recognitionCategory === '鱼类') {
-        const refinement = await requestVisionCatalogCategory(imageDataUrl, locale, broadFreshwaterFishRefinementCategories);
+        const refinement = await requestVisionCatalogCategoryWithFallbackModel(imageDataUrl, locale, broadFreshwaterFishRefinementCategories);
         modelName = refinement.modelName;
         refinedCategory = refinement.payload.category;
         recognitionCategory = resolveRecognitionCategory(recognitionCategory, refinedCategory);

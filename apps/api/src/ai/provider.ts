@@ -199,6 +199,28 @@ export const requestVisionCatalogCategory = (
   },
 );
 
+
+export const requestVisionCatalogCategoryWithFallbackModel = async (
+  imageDataUrl: string,
+  locale: 'zh-CN' | 'en',
+  allowedCategories: readonly string[],
+) => {
+  const model = apiConfig.visionFallbackModel || apiConfig.visionModel;
+  const payload = await fetchJsonResponse(
+    apiConfig.visionBaseUrl,
+    apiConfig.visionApiKey,
+    model,
+    apiConfig.visionTimeoutMs,
+    visionCategoryRequestBody(imageDataUrl, locale, model, allowedCategories),
+    1,
+  );
+  const category = (payload as { category?: unknown })?.category;
+  if (typeof category !== 'string' || !allowedCategories.includes(category)) {
+    throw new ProviderError('invalid_response', 'Vision category was invalid.');
+  }
+  return { payload: { category }, modelName: model };
+};
+
 export const requestVisionCandidates = (imageDataUrl: string, locale: 'zh-CN' | 'en', catalogOptions = '') => runVisionWithFallback(
   model => visionRequestBody(imageDataUrl, locale, model, catalogOptions),
   payload => {
