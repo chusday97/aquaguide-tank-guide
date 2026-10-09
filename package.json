@@ -298,6 +298,7 @@
     "readiness:compatibility-production": "node --import tsx scripts/compatibility-production-readiness.mjs",
     "test:compatibility-production-readiness": "node scripts/test-compatibility-production-readiness.mjs",
     "plan:compatibility-production-migrations": "node --import tsx scripts/compatibility-production-migration-guard.mjs",
+    "simulate:compatibility-production-migrations": "node --import tsx scripts/compatibility-production-migration-guard.mjs --simulate",
     "test:compatibility-production-migration-guard": "node --import tsx scripts/test-compatibility-production-migration-guard.mjs",
     "verify:compatibility-production-post-migration": "node --import tsx scripts/compatibility-production-post-migration-verifier.mjs",
     "test:compatibility-production-post-migration-verifier": "node --import tsx scripts/test-compatibility-production-post-migration-verifier.mjs"

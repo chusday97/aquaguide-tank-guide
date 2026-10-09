@@ -8,12 +8,12 @@ import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence
 export const PRODUCTION_PROJECT_REF='ydiygvhuqpogmqlcvgob';
 export const START_MIGRATION_COUNT=26;
 export const START_LATEST_VERSION='20260816160129';
-export const CONFIRM_TOKEN='EXECUTE_23_COMPATIBILITY_RELEASE_MIGRATIONS';
-export const EXPECTED_CHAIN_FINGERPRINT='ed34fdde8c7a7d48b8435bcede48b6857e6f5897e9557c5dc2c9d021636c4b46';
+export const CONFIRM_TOKEN='EXECUTE_25_COMPATIBILITY_RELEASE_MIGRATIONS';
+export const EXPECTED_CHAIN_FINGERPRINT='fa6c2698a4997ca8e995ed646b37728e3edcc2aea30caabfe1ead9785089af19';
 export const HELD_MIGRATION='202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql';
 export const PREREQUISITE_MIGRATIONS=['202609040001_product_care_publication_snapshots.sql'];
 export const COMPATIBILITY_MIGRATIONS=[
-'202609040002_compatibility_profile_revisions.sql','202609040003_compatibility_pair_rule_revisions.sql','202609040004_compatibility_revision_review_gate.sql','202609050001_compatibility_reviewed_baseline_reconciliation.sql','202609050002_compatibility_versioned_publish.sql','202609110001_compatibility_v3_profile_authority.sql','202609120001_compatibility_recovery_baseline.sql','202609120002_compatibility_harlequin_baseline.sql','202609120003_compatibility_black_skirt_baseline.sql','202609120004_compatibility_cherry_barb_baseline.sql','202609120005_compatibility_ember_tetra_baseline.sql','202609120006_compatibility_denison_barb_baseline.sql','202609120007_compatibility_congo_tetra_baseline.sql','202609120008_compatibility_pearl_gourami_baseline.sql','202609120009_compatibility_agassizii_baseline.sql','202609120010_compatibility_ramirezi_baseline.sql','202609120011_compatibility_discus_baseline.sql','202609120012_compatibility_pygmy_cory_baseline.sql','202609120013_compatibility_sewellia_baseline.sql','202609120014_compatibility_clown_loach_baseline.sql','202609120015_compatibility_red_rainbowfish_baseline.sql','202609160001_compatibility_rummy_oto_oscar_baseline.sql'];
+'202609040002_compatibility_profile_revisions.sql','202609040003_compatibility_pair_rule_revisions.sql','202609040004_compatibility_revision_review_gate.sql','202609050001_compatibility_reviewed_baseline_reconciliation.sql','202609050002_compatibility_versioned_publish.sql','202609110001_compatibility_v3_profile_authority.sql','202609120001_compatibility_recovery_baseline.sql','202609120002_compatibility_harlequin_baseline.sql','202609120003_compatibility_black_skirt_baseline.sql','202609120004_compatibility_cherry_barb_baseline.sql','202609120005_compatibility_ember_tetra_baseline.sql','202609120006_compatibility_denison_barb_baseline.sql','202609120007_compatibility_congo_tetra_baseline.sql','202609120008_compatibility_pearl_gourami_baseline.sql','202609120009_compatibility_agassizii_baseline.sql','202609120010_compatibility_ramirezi_baseline.sql','202609120011_compatibility_discus_baseline.sql','202609120012_compatibility_pygmy_cory_baseline.sql','202609120013_compatibility_sewellia_baseline.sql','202609120014_compatibility_clown_loach_baseline.sql','202609120015_compatibility_red_rainbowfish_baseline.sql','202610090002_compatibility_rummy_evidence_legacy_bridge.sql','202609160001_compatibility_rummy_oto_oscar_baseline.sql','202610090003_compatibility_runtime_authority_reconciliation.sql'];
 export const MIGRATIONS=[...PREREQUISITE_MIGRATIONS,...COMPATIBILITY_MIGRATIONS];
 
 const root=resolve(import.meta.dirname,'..');
@@ -36,12 +36,17 @@ export const calculateChainFingerprint=()=>sha256(MIGRATIONS.map(name=>{
  return `${name}\0${sha256(content)}`;
 }).join('\n'));
 export const validateLocalChain=()=>{
- const active=readdirSync(migrationsDir).filter(n=>/^202609(?:040002|040003|040004|050001|050002|110001|1200(?:0[1-9]|1[0-5])|160001)_compatibility.*\.sql$/.test(n)).sort();
- if(JSON.stringify(active)!==JSON.stringify(COMPATIBILITY_MIGRATIONS)) throw new Error(`Compatibility migration whitelist drifted. expected=${COMPATIBILITY_MIGRATIONS.length} actual=${active.length}`);
+ const active=readdirSync(migrationsDir).filter(n=>/^(?:202609(?:040002|040003|040004|050001|050002|110001|1200(?:0[1-9]|1[0-5])|160001)|20261009000[23])_compatibility.*\.sql$/.test(n)).sort();
+ const expectedActive=[...COMPATIBILITY_MIGRATIONS].sort();
+ if(JSON.stringify(active)!==JSON.stringify(expectedActive)) throw new Error(`Compatibility migration whitelist drifted. expected=${COMPATIBILITY_MIGRATIONS.length} actual=${active.length}`);
  for(const prerequisite of PREREQUISITE_MIGRATIONS){
   if(!readdirSync(migrationsDir).includes(prerequisite)) throw new Error(`Required prerequisite migration is missing: ${prerequisite}`);
  }
  if(MIGRATIONS[0]!==PREREQUISITE_MIGRATIONS[0]) throw new Error('Publication prerequisite must be first in the guarded release bundle.');
+ const bridgeIndex=MIGRATIONS.indexOf('202610090002_compatibility_rummy_evidence_legacy_bridge.sql');
+ const immutableRummyIndex=MIGRATIONS.indexOf('202609160001_compatibility_rummy_oto_oscar_baseline.sql');
+ const reconcileIndex=MIGRATIONS.indexOf('202610090003_compatibility_runtime_authority_reconciliation.sql');
+ if(!(bridgeIndex>=0 && bridgeIndex<immutableRummyIndex && immutableRummyIndex<reconcileIndex)) throw new Error('Rummy bridge / immutable historical migration / runtime reconciliation order drifted.');
  const prerequisiteIndex=MIGRATIONS.indexOf(PREREQUISITE_MIGRATIONS[0]);
  for(const name of COMPATIBILITY_MIGRATIONS){
   const sql=readFileSync(join(migrationsDir,name),'utf8');
@@ -69,7 +74,8 @@ const stripEmbeddedTransaction=(name,sql)=>{
 const migrationVersion=name=>name.split('_',1)[0];
 const migrationName=name=>name.replace(/^\d+_/,'').replace(/\.sql$/,'');
 
-export const buildBundleSql=()=>{
+export const buildBundleSql=({finalize='commit'}={})=>{
+ if(!['commit','rollback'].includes(finalize)) throw new Error(`Unsupported bundle finalizer: ${finalize}`);
  const {authority}=validateLocalChain();
  const lines=['begin;'];
  lines.push(`do $$ begin
@@ -105,7 +111,7 @@ begin
  if actual_profiles <> ${sqlTextArray(authority.profiles)} then raise exception 'POSTCHECK: reviewed profile key set mismatch'; end if;
  select coalesce(array_agg(pair_key order by pair_key),'{}'::text[]) into actual_pairs from (select least(sa.catalog_key,sb.catalog_key)||'__'||greatest(sa.catalog_key,sb.catalog_key) pair_key from public.species_pair_compatibility_rules r join public.species sa on sa.id=r.species_a_id join public.species sb on sb.id=r.species_b_id where r.review_status='reviewed' and r.deleted_at is null) x;
  if actual_pairs <> ${sqlTextArray(authority.pairRules)} then raise exception 'POSTCHECK: reviewed pair key set mismatch'; end if;
- select coalesce(array_agg(s.catalog_key||':'||r.risk_type order by s.catalog_key,r.risk_type),'{}'::text[]) into actual_stage_risks from public.species_compatibility_profile_stage_risks r join public.species s on s.id=r.species_id where r.review_status='reviewed' and r.deleted_at is null;
+ select coalesce(array_agg(s.catalog_key||':'||r.risk_type order by s.catalog_key,r.risk_type),'{}'::text[]) into actual_stage_risks from public.species_compatibility_profile_stage_risks r join public.species_compatibility_profiles p on p.id=r.profile_id join public.species s on s.id=p.species_id where r.review_status='reviewed' and r.deleted_at is null;
  if actual_stage_risks <> ${sqlTextArray(authority.stageRisks)} then raise exception 'POSTCHECK: reviewed stage-risk key set mismatch'; end if;
  if (select count(*) from public.evidence_sources where review_status='reviewed' and deleted_at is null) <= 0 then raise exception 'POSTCHECK: reviewed evidence missing'; end if;
  if not exists (select 1 from public.compatibility_authority_state where singleton=true) then raise exception 'POSTCHECK: authority singleton missing'; end if;
@@ -118,7 +124,7 @@ begin
  if (select count(*) from public.species_assets) <> 0 then raise exception 'POSTCHECK: species assets changed'; end if;
  if (select count(*) from public.care_article_assets) <> 0 then raise exception 'POSTCHECK: care assets changed'; end if;
 end $$;`);
- lines.push('commit;');
+ lines.push(`${finalize};`);
  return `${lines.join('\n\n')}\n`;
 };
 
@@ -147,6 +153,11 @@ export const assertGitStateForCommit=()=>{
  if(head!==originMain) throw new Error(`Commit requires HEAD == origin/main; ${head} != ${originMain}`);
  if(dirty) throw new Error('Commit requires a clean worktree.');
 };
+export const assertGitStateForSimulation=()=>{
+ const dirty=run('git',['status','--porcelain']);
+ if(dirty) throw new Error('Simulation requires a clean worktree so the executed bundle is reproducible.');
+ return {branch:run('git',['branch','--show-current']),head:run('git',['rev-parse','HEAD'])};
+};
 export const queryLivePreflight=()=>{
  const sql=`select (select count(*) from supabase_migrations.schema_migrations)::int migration_count,(select max(version) from supabase_migrations.schema_migrations) latest_version,(to_regclass('public.content_publications') is not null) content_publications_exists,(select count(*) from public.species where deleted_at is null)::int species,(select count(*) from public.species_feeding_profiles where deleted_at is null)::int feeding,(select count(*) from public.care_articles where deleted_at is null)::int care,(select count(*) from public.care_article_steps where deleted_at is null)::int care_steps,(select count(*) from public.species_compatibility_profiles)::int profiles,(select count(*) from public.species_pair_compatibility_rules)::int pair_rules,(select count(*) from public.evidence_sources)::int evidence,(to_regclass('public.compatibility_authority_state') is not null) authority_state_exists,(to_regclass('public.species_compatibility_profile_stage_risks') is not null) stage_risks_exists;`;
  const rows=JSON.parse(run('supabase',['db','query','--linked','--output-format','json',sql]));
@@ -163,19 +174,27 @@ export const validateLivePreflight=live=>{
 const isMain=import.meta.url===`file://${process.argv[1]}`;
 if(isMain){
  const commit=process.argv.includes('--commit');
+ const simulate=process.argv.includes('--simulate');
+ if(commit&&simulate) throw new Error('Choose exactly one of --commit or --simulate.');
  const writeArg=process.argv.find(x=>x.startsWith('--write-sql='));
  const {fingerprint,authority}=validateLocalChain();
  const productionCodeCompatibility=validateProductionCodeCompatibility();
  const linkedRef=readLinkedProjectRef();
  if(linkedRef!==PRODUCTION_PROJECT_REF) throw new Error(`Linked Supabase ref mismatch: ${linkedRef}`);
  const live=queryLivePreflight(); validateLivePreflight(live);
- const bundle=buildBundleSql();
- const plan={mode:commit?'commit-requested':'dry-run',projectRef:linkedRef,migrationCount:MIGRATIONS.length,prerequisiteMigrations:PREREQUISITE_MIGRATIONS,compatibilityMigrationCount:COMPATIBILITY_MIGRATIONS.length,fingerprint,expectedAuthority:{profiles:authority.profiles.length,pairRules:authority.pairRules.length,stageRisks:authority.stageRisks.length},startState:live,heldMigrationExcluded:HELD_MIGRATION,productionCodeCompatibility,atomicBundleBytes:Buffer.byteLength(bundle),mutationAuthorized:false};
+ const bundle=buildBundleSql({finalize:simulate?'rollback':'commit'});
+ const plan={mode:commit?'commit-requested':simulate?'simulate-requested':'dry-run',projectRef:linkedRef,migrationCount:MIGRATIONS.length,prerequisiteMigrations:PREREQUISITE_MIGRATIONS,compatibilityMigrationCount:COMPATIBILITY_MIGRATIONS.length,fingerprint,expectedAuthority:{profiles:authority.profiles.length,pairRules:authority.pairRules.length,stageRisks:authority.stageRisks.length},startState:live,heldMigrationExcluded:HELD_MIGRATION,productionCodeCompatibility,atomicBundleBytes:Buffer.byteLength(bundle),mutationAuthorized:false};
  if(writeArg){const path=writeArg.slice('--write-sql='.length);writeFileSync(path,bundle);plan.bundlePath=path;}
- if(!commit){console.log(JSON.stringify(plan,null,2));process.exit(0);}
+ if(!commit&&!simulate){console.log(JSON.stringify(plan,null,2));process.exit(0);}
+ const dir=mkdtempSync(join(tmpdir(),'aqua-compat-migrations-')); const file=join(dir,'compatibility-production-bundle.sql');
+ if(simulate){
+  const gitState=assertGitStateForSimulation();
+  try{writeFileSync(file,bundle);run('supabase',['db','query','--linked','--file',file]);}finally{rmSync(dir,{recursive:true,force:true});}
+  console.log(JSON.stringify({...plan,mode:'simulated-rollback',gitState,mutationAuthorized:false},null,2));
+  process.exit(0);
+ }
  if(process.env.AQUAGUIDE_COMPATIBILITY_PRODUCTION_CONFIRM!==CONFIRM_TOKEN) throw new Error(`Commit denied: set AQUAGUIDE_COMPATIBILITY_PRODUCTION_CONFIRM=${CONFIRM_TOKEN}`);
  assertGitStateForCommit();
- const dir=mkdtempSync(join(tmpdir(),'aqua-compat-migrations-')); const file=join(dir,'compatibility-production-bundle.sql');
  try{writeFileSync(file,bundle);run('supabase',['db','query','--linked','--file',file]);}finally{rmSync(dir,{recursive:true,force:true});}
  console.log(JSON.stringify({...plan,mode:'committed',mutationAuthorized:true},null,2));
 }
