@@ -290,7 +290,9 @@
     "test:platinum-snakehead-remaining-pairs": "node --import tsx scripts/test-platinum-snakehead-remaining-pairs.ts",
     "test:compatibility-pair-evidence-ceilings": "node --import tsx scripts/test-compatibility-pair-evidence-ceilings.ts",
     "readiness:user-site": "node scripts/user-site-release-readiness.mjs",
-    "test:user-site-readiness": "node scripts/test-user-site-release-readiness.mjs"
+    "test:user-site-readiness": "node scripts/test-user-site-release-readiness.mjs",
+    "readiness:production-preflight": "node scripts/production-promotion-preflight.mjs",
+    "test:production-preflight": "node scripts/test-production-promotion-preflight.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
