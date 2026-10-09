@@ -331,7 +331,27 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451']);
+const heldProfileOwnerMigration = readFileSync('supabase/migrations/202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql', 'utf8');
+assert.match(heldProfileOwnerMigration, /HOLD \/ REPOSITORY-ONLY OWNERSHIP ARTIFACT/);
+assert.match(heldProfileOwnerMigration, /raise exception 'HOLD: repository-only compatibility profile owner; do not apply without explicit DB-authority approval'/);
+for (const expected of [
+  'sp_0016',
+  'seriouslyfish-mikrogeophagus-ramirezi',
+  'fishbase-mikrogeophagus-ramirezi',
+  'peaceful, breeding_defense',
+  'water, temperature, ph, adult_size, social_behavior, breeding_behavior',
+  'sp_0475',
+  'batch03-fishbase-rhodeus-ocellatus',
+  'jstage-rhodeus-ocellatus-schooling',
+  'minimum_group_size: 3',
+  'water, temperature, adult_size, social_behavior',
+]) {
+  assert.equal(heldProfileOwnerMigration.includes(expected), true, 'held Profile owner migration must freeze ' + expected);
+}
+assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile drift:/g) || []).length, 2);
+assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile evidence drift:/g) || []).length, 2);
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 
