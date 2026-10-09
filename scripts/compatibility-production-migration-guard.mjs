@@ -8,11 +8,13 @@ import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence
 export const PRODUCTION_PROJECT_REF='ydiygvhuqpogmqlcvgob';
 export const START_MIGRATION_COUNT=26;
 export const START_LATEST_VERSION='20260816160129';
-export const CONFIRM_TOKEN='EXECUTE_22_COMPATIBILITY_MIGRATIONS';
-export const EXPECTED_CHAIN_FINGERPRINT='6c8a22eadda625599a275cc8184ad3c07fdadafcb222331eaac840aa5f32f26c';
+export const CONFIRM_TOKEN='EXECUTE_23_COMPATIBILITY_RELEASE_MIGRATIONS';
+export const EXPECTED_CHAIN_FINGERPRINT='ed34fdde8c7a7d48b8435bcede48b6857e6f5897e9557c5dc2c9d021636c4b46';
 export const HELD_MIGRATION='202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql';
-export const MIGRATIONS=[
+export const PREREQUISITE_MIGRATIONS=['202609040001_product_care_publication_snapshots.sql'];
+export const COMPATIBILITY_MIGRATIONS=[
 '202609040002_compatibility_profile_revisions.sql','202609040003_compatibility_pair_rule_revisions.sql','202609040004_compatibility_revision_review_gate.sql','202609050001_compatibility_reviewed_baseline_reconciliation.sql','202609050002_compatibility_versioned_publish.sql','202609110001_compatibility_v3_profile_authority.sql','202609120001_compatibility_recovery_baseline.sql','202609120002_compatibility_harlequin_baseline.sql','202609120003_compatibility_black_skirt_baseline.sql','202609120004_compatibility_cherry_barb_baseline.sql','202609120005_compatibility_ember_tetra_baseline.sql','202609120006_compatibility_denison_barb_baseline.sql','202609120007_compatibility_congo_tetra_baseline.sql','202609120008_compatibility_pearl_gourami_baseline.sql','202609120009_compatibility_agassizii_baseline.sql','202609120010_compatibility_ramirezi_baseline.sql','202609120011_compatibility_discus_baseline.sql','202609120012_compatibility_pygmy_cory_baseline.sql','202609120013_compatibility_sewellia_baseline.sql','202609120014_compatibility_clown_loach_baseline.sql','202609120015_compatibility_red_rainbowfish_baseline.sql','202609160001_compatibility_rummy_oto_oscar_baseline.sql'];
+export const MIGRATIONS=[...PREREQUISITE_MIGRATIONS,...COMPATIBILITY_MIGRATIONS];
 
 const root=resolve(import.meta.dirname,'..');
 const migrationsDir=join(root,'supabase','migrations');
@@ -35,8 +37,17 @@ export const calculateChainFingerprint=()=>sha256(MIGRATIONS.map(name=>{
 }).join('\n'));
 export const validateLocalChain=()=>{
  const active=readdirSync(migrationsDir).filter(n=>/^202609(?:040002|040003|040004|050001|050002|110001|1200(?:0[1-9]|1[0-5])|160001)_compatibility.*\.sql$/.test(n)).sort();
- if(JSON.stringify(active)!==JSON.stringify(MIGRATIONS)) throw new Error(`Compatibility migration whitelist drifted. expected=${MIGRATIONS.length} actual=${active.length}`);
- if(active.includes(HELD_MIGRATION)) throw new Error('Held migration entered active whitelist.');
+ if(JSON.stringify(active)!==JSON.stringify(COMPATIBILITY_MIGRATIONS)) throw new Error(`Compatibility migration whitelist drifted. expected=${COMPATIBILITY_MIGRATIONS.length} actual=${active.length}`);
+ for(const prerequisite of PREREQUISITE_MIGRATIONS){
+  if(!readdirSync(migrationsDir).includes(prerequisite)) throw new Error(`Required prerequisite migration is missing: ${prerequisite}`);
+ }
+ if(MIGRATIONS[0]!==PREREQUISITE_MIGRATIONS[0]) throw new Error('Publication prerequisite must be first in the guarded release bundle.');
+ const prerequisiteIndex=MIGRATIONS.indexOf(PREREQUISITE_MIGRATIONS[0]);
+ for(const name of COMPATIBILITY_MIGRATIONS){
+  const sql=readFileSync(join(migrationsDir,name),'utf8');
+  if(sql.includes('public.content_publications') && prerequisiteIndex>=MIGRATIONS.indexOf(name)) throw new Error(`Missing ordered content_publications prerequisite before ${name}`);
+ }
+ if(active.includes(HELD_MIGRATION)||MIGRATIONS.includes(HELD_MIGRATION)) throw new Error('Held migration entered active whitelist.');
  if(!readdirSync(heldDir).includes(HELD_MIGRATION)) throw new Error('Held Compatibility migration is missing from held-migrations.');
  const fingerprint=calculateChainFingerprint();
  if(fingerprint!==EXPECTED_CHAIN_FINGERPRINT) throw new Error(`Compatibility migration fingerprint drifted: ${fingerprint}`);
@@ -45,11 +56,11 @@ export const validateLocalChain=()=>{
  return {fingerprint,authority};
 };
 const stripEmbeddedTransaction=(name,sql)=>{
- if(name!=='202609110001_compatibility_v3_profile_authority.sql') return sql.trim();
  const lines=sql.split(/\r?\n/);
  const beginIndexes=lines.map((line,index)=>line.trim().toLowerCase()==='begin;'?index:-1).filter(index=>index>=0);
  const commitIndexes=lines.map((line,index)=>line.trim().toLowerCase()==='commit;'?index:-1).filter(index=>index>=0);
- if(beginIndexes.length!==1||commitIndexes.length!==1) throw new Error(`Expected exactly one embedded BEGIN/COMMIT in ${name}; got ${beginIndexes.length}/${commitIndexes.length}`);
+ if(beginIndexes.length===0&&commitIndexes.length===0) return sql.trim();
+ if(beginIndexes.length!==1||commitIndexes.length!==1) throw new Error(`Expected zero or one embedded BEGIN/COMMIT in ${name}; got ${beginIndexes.length}/${commitIndexes.length}`);
  const removed=new Set([...beginIndexes,...commitIndexes]);
  const stripped=lines.filter((_,index)=>!removed.has(index)).join('\n').trim();
  if(/^\s*(begin|commit);/im.test(stripped)) throw new Error(`Unexpected nested transaction remains in ${name}`);
@@ -64,6 +75,7 @@ export const buildBundleSql=()=>{
  lines.push(`do $$ begin
  if (select count(*) from supabase_migrations.schema_migrations) <> ${START_MIGRATION_COUNT} then raise exception 'ABORT: migration count drift'; end if;
  if (select max(version) from supabase_migrations.schema_migrations) <> ${q(START_LATEST_VERSION)} then raise exception 'ABORT: latest migration drift'; end if;
+ if to_regclass('public.content_publications') is not null then raise exception 'ABORT: content_publications prerequisite unexpectedly exists'; end if;
  if (select count(*) from public.species where deleted_at is null) <> 486 then raise exception 'ABORT: species baseline drift'; end if;
  if (select count(*) from public.species_feeding_profiles where deleted_at is null) <> 486 then raise exception 'ABORT: feeding baseline drift'; end if;
  if (select count(*) from public.care_articles where deleted_at is null) <> 41 then raise exception 'ABORT: care baseline drift'; end if;
@@ -82,6 +94,7 @@ end $$;`);
  lines.push(`do $$ declare
  actual_profiles text[]; actual_pairs text[]; actual_stage_risks text[];
 begin
+ if to_regclass('public.content_publications') is null then raise exception 'POSTCHECK: content_publications prerequisite missing'; end if;
  if not exists (select 1 from information_schema.columns where table_schema='public' and table_name='species_compatibility_profiles' and column_name='required_facts') then raise exception 'POSTCHECK: required_facts missing'; end if;
  if not exists (select 1 from information_schema.columns where table_schema='public' and table_name='species_compatibility_profiles' and column_name='stocking_guidance') then raise exception 'POSTCHECK: stocking_guidance missing'; end if;
  if not exists (select 1 from information_schema.columns where table_schema='public' and table_name='species_pair_compatibility_rules' and column_name='basis') then raise exception 'POSTCHECK: pair basis missing'; end if;
@@ -135,13 +148,13 @@ export const assertGitStateForCommit=()=>{
  if(dirty) throw new Error('Commit requires a clean worktree.');
 };
 export const queryLivePreflight=()=>{
- const sql=`select (select count(*) from supabase_migrations.schema_migrations)::int migration_count,(select max(version) from supabase_migrations.schema_migrations) latest_version,(select count(*) from public.species where deleted_at is null)::int species,(select count(*) from public.species_feeding_profiles where deleted_at is null)::int feeding,(select count(*) from public.care_articles where deleted_at is null)::int care,(select count(*) from public.care_article_steps where deleted_at is null)::int care_steps,(select count(*) from public.species_compatibility_profiles)::int profiles,(select count(*) from public.species_pair_compatibility_rules)::int pair_rules,(select count(*) from public.evidence_sources)::int evidence,(to_regclass('public.compatibility_authority_state') is not null) authority_state_exists,(to_regclass('public.species_compatibility_profile_stage_risks') is not null) stage_risks_exists;`;
+ const sql=`select (select count(*) from supabase_migrations.schema_migrations)::int migration_count,(select max(version) from supabase_migrations.schema_migrations) latest_version,(to_regclass('public.content_publications') is not null) content_publications_exists,(select count(*) from public.species where deleted_at is null)::int species,(select count(*) from public.species_feeding_profiles where deleted_at is null)::int feeding,(select count(*) from public.care_articles where deleted_at is null)::int care,(select count(*) from public.care_article_steps where deleted_at is null)::int care_steps,(select count(*) from public.species_compatibility_profiles)::int profiles,(select count(*) from public.species_pair_compatibility_rules)::int pair_rules,(select count(*) from public.evidence_sources)::int evidence,(to_regclass('public.compatibility_authority_state') is not null) authority_state_exists,(to_regclass('public.species_compatibility_profile_stage_risks') is not null) stage_risks_exists;`;
  const rows=JSON.parse(run('supabase',['db','query','--linked','--output-format','json',sql]));
  if(!Array.isArray(rows)||rows.length!==1) throw new Error('Unexpected Supabase preflight response.');
  return rows[0];
 };
 export const validateLivePreflight=live=>{
- const expected={migration_count:26,latest_version:START_LATEST_VERSION,species:486,feeding:486,care:41,care_steps:128,profiles:0,pair_rules:0,evidence:0,authority_state_exists:false,stage_risks_exists:false};
+ const expected={migration_count:26,latest_version:START_LATEST_VERSION,content_publications_exists:false,species:486,feeding:486,care:41,care_steps:128,profiles:0,pair_rules:0,evidence:0,authority_state_exists:false,stage_risks_exists:false};
  const drift=Object.entries(expected).filter(([k,v])=>live[k]!==v);
  if(drift.length) throw new Error(`Production preflight drift: ${drift.map(([k,v])=>`${k}=${live[k]} expected=${v}`).join(', ')}`);
  return expected;
@@ -157,7 +170,7 @@ if(isMain){
  if(linkedRef!==PRODUCTION_PROJECT_REF) throw new Error(`Linked Supabase ref mismatch: ${linkedRef}`);
  const live=queryLivePreflight(); validateLivePreflight(live);
  const bundle=buildBundleSql();
- const plan={mode:commit?'commit-requested':'dry-run',projectRef:linkedRef,migrationCount:MIGRATIONS.length,fingerprint,expectedAuthority:{profiles:authority.profiles.length,pairRules:authority.pairRules.length,stageRisks:authority.stageRisks.length},startState:live,heldMigrationExcluded:HELD_MIGRATION,productionCodeCompatibility,atomicBundleBytes:Buffer.byteLength(bundle),mutationAuthorized:false};
+ const plan={mode:commit?'commit-requested':'dry-run',projectRef:linkedRef,migrationCount:MIGRATIONS.length,prerequisiteMigrations:PREREQUISITE_MIGRATIONS,compatibilityMigrationCount:COMPATIBILITY_MIGRATIONS.length,fingerprint,expectedAuthority:{profiles:authority.profiles.length,pairRules:authority.pairRules.length,stageRisks:authority.stageRisks.length},startState:live,heldMigrationExcluded:HELD_MIGRATION,productionCodeCompatibility,atomicBundleBytes:Buffer.byteLength(bundle),mutationAuthorized:false};
  if(writeArg){const path=writeArg.slice('--write-sql='.length);writeFileSync(path,bundle);plan.bundlePath=path;}
  if(!commit){console.log(JSON.stringify(plan,null,2));process.exit(0);}
  if(process.env.AQUAGUIDE_COMPATIBILITY_PRODUCTION_CONFIRM!==CONFIRM_TOKEN) throw new Error(`Commit denied: set AQUAGUIDE_COMPATIBILITY_PRODUCTION_CONFIRM=${CONFIRM_TOKEN}`);

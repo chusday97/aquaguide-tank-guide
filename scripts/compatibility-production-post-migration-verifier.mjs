@@ -27,11 +27,13 @@ const query=sql=>{
 export const classifyState=state=>{
   const pre=state.migration_count===START_MIGRATION_COUNT
     && state.latest_version===START_LATEST_VERSION
-    && state.profiles===0 && state.pair_rules===0 && state.evidence===0
+    && state.content_publications_exists===false
+     && state.profiles===0 && state.pair_rules===0 && state.evidence===0
     && state.authority_state_exists===false && state.stage_risks_exists===false;
   if(pre) return 'NOT_MIGRATED';
   const post=state.migration_count===FINAL_MIGRATION_COUNT
     && state.latest_version===FINAL_VERSION
+    && state.content_publications_exists===true
     && state.authority_state_exists===true && state.stage_risks_exists===true;
   return post?'VERIFY_POST_MIGRATION':'BLOCKED_STATE_DRIFT';
 };
@@ -78,6 +80,7 @@ export const validateDetailedState=(state,detail)=>{
 export const readState=()=>query(`select
  (select count(*) from supabase_migrations.schema_migrations)::int migration_count,
  (select max(version) from supabase_migrations.schema_migrations) latest_version,
+ (to_regclass('public.content_publications') is not null) content_publications_exists,
  (select count(*) from public.species where deleted_at is null)::int species,
  (select count(*) from public.species_feeding_profiles where deleted_at is null)::int feeding,
  (select count(*) from public.care_articles where deleted_at is null)::int care,

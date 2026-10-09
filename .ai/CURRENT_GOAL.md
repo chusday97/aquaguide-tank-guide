@@ -1,3 +1,13 @@
+## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery
+
+- Active release-recovery branch: `codex/compatibility-production-prereq-20261009`, based on `main@201f200a`.
+- Highest-priority task is to finish the **safe Production Compatibility authority migration**, not UI work and not image recognition.
+- A first 22-file guarded Production attempt failed atomically with `42P01` because `public.content_publications` was missing. Immediate verification proved full rollback; Production remains on 26 migrations with business counts unchanged.
+- Root cause is now explicit: `202609040001_product_care_publication_snapshots.sql` is a required prerequisite for the Compatibility versioned-publish migration. The corrected guarded bundle is exactly 1 prerequisite + 22 Compatibility migrations = 23, expected post-release migration count 49.
+- The release must remain a single outer transaction; unrelated Catalog/SEO/content-audit migrations and held migration `202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql` remain excluded.
+- Current validation PASS: guard contract, post-migration verifier contract, Production dry-run, read-only Production state verifier and diff check.
+- NEXT: focused PR -> merge to clean/synced `main` -> repeat dry-run/tests -> guarded 23-file Production commit -> immediate post-migration verification. Do not retry from a dirty/non-main/unsynced worktree and do not use plain `supabase db push`.
+
 ## CURRENT OVERRIDE — 2026-09-28 Multi-species Compatibility conclusion hardening
 
 - Active working tree remains `/Users/chuchu/aquaguide-admin-content-v0` on `backend/convergence-20260922`; starting HEAD for this checkpoint is `af11e033a3ceb4571b27364a42c3364a21183618`.
