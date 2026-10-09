@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {MIGRATIONS,HELD_MIGRATION,EXPECTED_CHAIN_FINGERPRINT,PRODUCTION_PROJECT_REF,calculateChainFingerprint,validateLocalChain,buildBundleSql,validateLivePreflight,getAuthorityKeys} from './compatibility-production-migration-guard.mjs';
+assert.equal(PRODUCTION_PROJECT_REF,'ydiygvhuqpogmqlcvgob');
+assert.equal(MIGRATIONS.length,22); assert.ok(!MIGRATIONS.includes(HELD_MIGRATION));
+assert.equal(calculateChainFingerprint(),EXPECTED_CHAIN_FINGERPRINT);
+const local=validateLocalChain(); assert.deepEqual([local.authority.profiles.length,local.authority.pairRules.length,local.authority.stageRisks.length],[34,21,1]);
+assert.deepEqual(getAuthorityKeys().stageRisks,['sp_0436:conspecific_fry_predation']);
+const bundle=buildBundleSql();
+assert.equal((bundle.match(/^begin;$/gmi)||[]).length,1); assert.equal((bundle.match(/^commit;$/gmi)||[]).length,1);
+assert.ok(bundle.includes('POSTCHECK: reviewed profile key set mismatch')); assert.ok(bundle.includes('POSTCHECK: reviewed pair key set mismatch')); assert.ok(bundle.includes('POSTCHECK: reviewed stage-risk key set mismatch'));
+assert.ok(bundle.includes('supabase_migrations.schema_migrations')); assert.ok(!bundle.includes(HELD_MIGRATION));
+const good={migration_count:26,latest_version:'20260816160129',species:486,feeding:486,care:41,care_steps:128,profiles:0,pair_rules:0,evidence:0,authority_state_exists:false,stage_risks_exists:false};
+assert.doesNotThrow(()=>validateLivePreflight(good)); assert.throws(()=>validateLivePreflight({...good,migration_count:27}),/Production preflight drift/);
+console.log('Compatibility Production migration guard verified: exact 22-file atomic plan, 34/21/1 postchecks, held migration excluded.');
