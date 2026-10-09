@@ -98,6 +98,14 @@ const fallbackSafetySample = [{ confidenceBand: 'high' as const, catalogKey: 'sp
 assert.equal(capFallbackVisionConfidence(fallbackSafetySample, 'glm-4v-flash', 'glm-4v-flash')[0]?.confidenceBand, 'medium', 'weak fallback must never preserve high confidence');
 assert.equal(capFallbackVisionConfidence(fallbackSafetySample, 'glm-4.1v-thinking-flash', 'glm-4v-flash')[0]?.confidenceBand, 'high', 'primary reasoning model confidence must remain unchanged');
 
+// Route-level policy is stricter than confidence capping: weak fallback model
+// guesses are not user-facing species candidates. They are used for coarse
+// category routing only, while final recognition fails closed to manual search.
+const weakFallbackWouldGuess = reconcileVisionCandidatesToCatalog([
+  { catalogKey: 'sp_0471', commonName: '钻石灯', scientificName: 'Moenkhausia pittieri', confidenceBand: 'medium', visualEvidence: ['蓝色和橙色条纹'] },
+]);
+assert.equal(weakFallbackWouldGuess.length, 1, 'fixture confirms the weak fallback could produce a plausible but wrong catalog guess');
+
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
 let failureMode: '429' | '5xx' | 'timeout' | 'invalid_response' = '429';
 const originalFetch = globalThis.fetch;
@@ -140,16 +148,18 @@ try {
   }
   failureMode = '429';
   calls.length = 0;
-  const { requestVisionCatalogCategory } = await import('../apps/api/src/ai/provider.ts');
+  const { requestVisionCatalogCategoryWithFallbackModel } = await import('../apps/api/src/ai/provider.ts');
   const originalCategoryFetch = globalThis.fetch;
   globalThis.fetch = (async (_input: RequestInfo | URL, init?: RequestInit) => {
     const body = JSON.parse(String(init?.body || '{}')) as { model?: string; stream?: unknown; response_format?: unknown; messages?: unknown };
     calls.push(body);
     return new Response(JSON.stringify({ choices: [{ message: { content: JSON.stringify({ category: '鱼类' }) } }] }), { status: 200, headers: { 'Content-Type': 'application/json' } });
   }) as typeof fetch;
-  const categoryResult = await requestVisionCatalogCategory('data:image/webp;base64,AA==', 'zh-CN', ['鱼类', '灯科鱼']);
+  const categoryResult = await requestVisionCatalogCategoryWithFallbackModel('data:image/webp;base64,AA==', 'zh-CN', ['鱼类', '灯科鱼']);
   assert.equal(categoryResult.payload.category, '鱼类');
-  assert.equal(calls.length, 1, 'category stage should use one primary call when valid');
+  assert.equal(categoryResult.modelName, 'glm-4v-flash');
+  assert.equal(calls.length, 1, 'category routing should spend exactly one cheap-model call');
+  assert.deepEqual(calls.map(call => call.model), ['glm-4v-flash'], 'category routing must not consume scarce primary-model quota');
   assert.equal(JSON.stringify(calls[0].messages).includes('鱼类 | 灯科鱼'), true);
   globalThis.fetch = originalCategoryFetch;
   console.log('vision provider/config contract verified without real credentials: defaults, GLM aliases, multimodal payload, and 429/5xx/timeout fallback');
