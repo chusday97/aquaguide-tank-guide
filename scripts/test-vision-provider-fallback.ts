@@ -98,6 +98,14 @@ const fallbackSafetySample = [{ confidenceBand: 'high' as const, catalogKey: 'sp
 assert.equal(capFallbackVisionConfidence(fallbackSafetySample, 'glm-4v-flash', 'glm-4v-flash')[0]?.confidenceBand, 'medium', 'weak fallback must never preserve high confidence');
 assert.equal(capFallbackVisionConfidence(fallbackSafetySample, 'glm-4.1v-thinking-flash', 'glm-4v-flash')[0]?.confidenceBand, 'high', 'primary reasoning model confidence must remain unchanged');
 
+// Route-level policy is stricter than confidence capping: weak fallback model
+// guesses are not user-facing species candidates. They are used for coarse
+// category routing only, while final recognition fails closed to manual search.
+const weakFallbackWouldGuess = reconcileVisionCandidatesToCatalog([
+  { catalogKey: 'sp_0471', commonName: '钻石灯', scientificName: 'Moenkhausia pittieri', confidenceBand: 'medium', visualEvidence: ['蓝色和橙色条纹'] },
+]);
+assert.equal(weakFallbackWouldGuess.length, 1, 'fixture confirms the weak fallback could produce a plausible but wrong catalog guess');
+
 const calls: Array<{ model?: string; stream?: unknown; response_format?: unknown; messages?: unknown }> = [];
 let failureMode: '429' | '5xx' | 'timeout' | 'invalid_response' = '429';
 const originalFetch = globalThis.fetch;

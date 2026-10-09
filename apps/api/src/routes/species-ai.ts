@@ -156,10 +156,12 @@ speciesAiRouter.post(
       failureReason = providerFailure(error);
     }
 
-    const reconciledCandidates = capFallbackVisionConfidence(
-      reconcileVisionCandidatesToCatalog(candidates),
-      modelName,
-    );
+    const reconciledCandidates = modelName === apiConfig.visionFallbackModel
+      ? []
+      : capFallbackVisionConfidence(
+        reconcileVisionCandidatesToCatalog(candidates),
+        modelName,
+      );
     if (modelName === apiConfig.visionFallbackModel) source = 'fallback';
     return sendData(request, response, {
       recognitionId: randomUUID(),
