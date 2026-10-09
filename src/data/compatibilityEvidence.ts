@@ -6,6 +6,7 @@ import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
   waterType?: 'freshwater' | 'saltwater' | 'brackish';
+  waterTypes?: Array<'freshwater' | 'saltwater' | 'brackish'>;
   behaviorTraits: string[];
   minimumGroupSize?: number;
   predationTargets: string[];
@@ -71,6 +72,47 @@ const neriteHusbandrySource: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const rummyNoseSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-petitella-rhodostoma',
+  title: 'Hemigrammus rhodostomus / Petitella rhodostoma (Rummy-nose tetra)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/hemigrammus-rhodostomus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const rummyNoseFishBase: EvidenceSourceDto = {
+  id: 'fishbase-petitella-rhodostoma',
+  title: 'Petitella rhodostoma species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Hemigrammus-rhodostomus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const otocinclusFishBase: EvidenceSourceDto = {
+  id: 'fishbase-otocinclus-vittatus',
+  title: 'Otocinclus vittatus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Otocinclus-vittatus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const otocinclusAquariumCoop: EvidenceSourceDto = {
+  id: 'aquariumcoop-otocinclus-catfish',
+  title: 'Care Guide for Otocinclus Catfish',
+  publisher: 'Aquarium Co-Op',
+  url: 'https://www.aquariumcoop.com/blogs/aquarium/otocinclus-catfish',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+const otocinclusScotCat: EvidenceSourceDto = {
+  id: 'scotcat-otocinclus-vittatus',
+  title: 'Otocinclus vittatus Regan, 1904',
+  publisher: 'ScotCat',
+  url: 'https://www.scotcat.com/loricariidae/otocinclus_vittatus.htm',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const tigerBarbStudy: EvidenceSourceDto = {
   id: 'tiger-barb-group-size-study',
   title: 'The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria',
@@ -95,6 +137,24 @@ const smallSnakeheadAssessment: EvidenceSourceDto = {
   publisher: 'U.S. Fish and Wildlife Service',
   url: 'https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Small-Snakehead.pdf',
   sourceType: 'government',
+  reviewStatus: 'reviewed',
+};
+
+const northernSnakeheadFwsAssessment: EvidenceSourceDto = {
+  id: 'northern-snakehead-fws-erss-2024',
+  title: 'Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk',
+  publisher: 'U.S. Fish and Wildlife Service',
+  url: 'https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk',
+  sourceType: 'government',
+  reviewStatus: 'reviewed',
+};
+
+const northernSnakeheadDietStudy: EvidenceSourceDto = {
+  id: 'northern-snakehead-usgs-diet-2012',
+  title: 'Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA',
+  publisher: 'U.S. Geological Survey / Ecology of Freshwater Fish',
+  url: 'https://pubs.usgs.gov/publication/70168483',
+  sourceType: 'peer_reviewed',
   reviewStatus: 'reviewed',
 };
 
@@ -549,6 +609,42 @@ const oscarZebrafishDevelopmentStudy: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const oscarFishBaseEcology: EvidenceSourceDto = {
+  id: 'fishbase-astronotus-ocellatus-ecology',
+  title: 'Astronotus ocellatus ecology summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/Ecology/Astronotus_ocellatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const oscarSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-astronotus-ocellatus',
+  title: 'Astronotus ocellatus (Oscar)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/astronotus-ocellatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const rhodeusFishBase: EvidenceSourceDto = {
+  id: 'batch03-fishbase-rhodeus-ocellatus',
+  title: 'Rhodeus ocellatus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Rhodeus-ocellatus.html',
+  sourceType: 'professional_association',
+  reviewStatus: 'reviewed',
+};
+
+const rhodeusSchoolingStudy: EvidenceSourceDto = {
+  id: 'jstage-rhodeus-ocellatus-schooling',
+  title: 'Characteristics of Schooling Behavior by the Group Size of Rose Bitterling in the Experimental Water Tank',
+  publisher: 'Nippon Suisan Gakkaishi / J-STAGE',
+  url: 'https://doi.org/10.2331/suisan.51.1977',
+  sourceType: 'peer_reviewed',
+  reviewStatus: 'reviewed',
+};
+
 const channaRhodeusInformationDynamicsStudy: EvidenceSourceDto = {
   id: 'channa-rhodeus-information-dynamics-study',
   title: 'Information Dynamics in the Interaction between a Prey and a Predator Fish',
@@ -623,6 +719,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [ramireziSeriouslyFish, ramireziFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
   },
+  sp_0016: {
+    speciesId: 'sp_0016',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [ramireziSeriouslyFish, ramireziFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
+  },
   sp_0017: {
     speciesId: 'sp_0017',
     waterType: 'freshwater',
@@ -688,6 +794,27 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'high',
     reviewStatus: 'reviewed',
     citations: [blackSkirtSeriouslyFish, blackSkirtFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0433: {
+    speciesId: 'sp_0433',
+    waterType: 'freshwater',
+    behaviorTraits: ['shoaling', 'peaceful'],
+    minimumGroupSize: 10,
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [rummyNoseSeriouslyFish, rummyNoseFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0013: {
+    speciesId: 'sp_0013',
+    waterType: 'freshwater',
+    behaviorTraits: ['peaceful', 'bottom_dwelling'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [otocinclusFishBase, otocinclusAquariumCoop, otocinclusScotCat],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
   },
   sp_0468: {
@@ -853,6 +980,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   sp_0436: {
     speciesId: 'sp_0436',
     waterType: 'freshwater',
+    waterTypes: ['freshwater', 'brackish'],
     behaviorTraits: ['shoaling'],
     minimumGroupSize: 5,
     predationTargets: [],
@@ -860,6 +988,18 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [guppyFishBase, guppyShoalingStudy],
     requiredFacts: ['water', 'temperature', 'social_behavior', 'breeding_behavior'],
+  },
+  sp_0475: {
+    speciesId: 'sp_0475',
+    waterType: 'freshwater',
+    waterTypes: ['freshwater', 'brackish'],
+    behaviorTraits: ['schooling'],
+    minimumGroupSize: 3,
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [rhodeusFishBase, rhodeusSchoolingStudy],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
   },
   sp_0446: {
     speciesId: 'sp_0446',
@@ -870,6 +1010,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [angelfishSeriouslyFish, angelfishExtensionGuide],
     requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior', 'territoriality', 'predation'],
+  },
+  sp_0451: {
+    speciesId: 'sp_0451',
+    waterType: 'freshwater',
+    behaviorTraits: ['predatory'],
+    predationTargets: ['small_fish'],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [oscarFishBaseEcology, oscarSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'adult_size', 'predation'],
   },
 };
 
@@ -956,7 +1106,76 @@ const stageRiskProfiles: Record<string, ReviewedStageRiskProfile> = {
   },
 };
 
+const platinumSnakeheadSmallFishIds = [
+  'sp_0431',
+  'sp_0434',
+  'sp_0436',
+  'sp_0435',
+  'sp_0439',
+  'sp_0010',
+  'sp_0011',
+  'sp_0437',
+  'sp_0012',
+  'sp_0468',
+  'sp_0443',
+  'sp_0013',
+] as const;
+
+const platinumSnakeheadSmallFishPairRules: ReviewedPairRule[] = platinumSnakeheadSmallFishIds.map(speciesId => ({
+  speciesIds: ['sp_0224', speciesId],
+  verdict: 'not_recommended',
+  riskType: 'predation_threat',
+  reason: '白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。',
+  mitigation: ['不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。', '不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。'],
+  basis: 'rule_inference',
+  confidence: 'medium',
+  reviewStatus: 'reviewed',
+  affectedSpeciesIds: ['sp_0224', speciesId],
+  citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+}));
+
+const platinumSnakeheadAdditionalPredationPairRules: ReviewedPairRule[] = [
+  {
+    speciesIds: ['sp_0224', 'sp_0438'],
+    verdict: 'not_recommended',
+    riskType: 'predation_threat',
+    reason: '白金雷龙对象已审核到 Channa argus Platinum，最大体长约 100 cm；红剑鱼 reviewed 最大体长约 14 cm。USGS 物种资料记录成体 Channa argus 可捕食达到自身约 33% 体长的鱼，因此 14 cm 红剑鱼明显落在已记录捕食尺寸窗口内。该结论是物种捕食生态 + reviewed 体型的规则推断。',
+    mitigation: ['不要把白金雷龙与红剑鱼作为长期同缸组合；优先物理分缸。', '不要把幼体阶段暂时体型接近理解为成年后仍安全。'],
+    basis: 'rule_inference',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0224', 'sp_0438'],
+    citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+  },
+  {
+    speciesIds: ['sp_0224', 'sp_0021'],
+    verdict: 'not_recommended',
+    riskType: 'predation_threat',
+    reason: '迷你鹦鹉鱼 catalog object 的商业品系 taxon 仍未完全解析，但对象级最大体长约 10 cm 已审核通过。USGS 记录成体 Channa argus 可捕食达到自身约 33% 体长的鱼；10 cm 级鱼明显落在白金雷龙 reviewed 最大约 100 cm 所对应的捕食尺寸窗口内。该结论只依赖“鱼类 + reviewed 对象级体型”，不把基础种行为自动提升为该商业品系。',
+    mitigation: ['不要把白金雷龙与迷你鹦鹉鱼作为长期同缸组合；优先物理分缸。', '不要用商业品系身份尚未完全解析来反推捕食风险不存在。'],
+    basis: 'rule_inference',
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    affectedSpeciesIds: ['sp_0224', 'sp_0021'],
+    citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+  },
+  ...(['sp_0459', 'sp_0001'] as const).map(speciesId => ({
+    speciesIds: ['sp_0224', speciesId] as [string, string],
+    verdict: 'not_recommended' as const,
+    riskType: 'predation_threat',
+    reason: '黑壳虾/极火虾对象均有 reviewed Neocaridina davidi 身份与约 4 cm 最大体长 authority。USGS Channa argus 物种资料记录成体猎物包括 crayfish，并指出成体剩余非鱼类食物中包含 crustaceans；风险评估也把 surface-dwelling crayfish and shrimp 列为可能受影响的甲壳类。对 4 cm 级淡水虾，存在足够的捕食威胁，不应作为长期同缸安全组合。',
+    mitigation: ['不要把白金雷龙与该小型淡水虾作为长期同缸组合；优先物理分缸。', '不要把水草躲避物或短期未捕食理解为风险已消失。'],
+    basis: 'rule_inference' as const,
+    confidence: 'medium' as const,
+    reviewStatus: 'reviewed' as const,
+    affectedSpeciesIds: ['sp_0224', speciesId],
+    citations: [northernSnakeheadFwsAssessment, northernSnakeheadDietStudy],
+  })),
+];
+
 const pairRules: ReviewedPairRule[] = [
+  ...platinumSnakeheadSmallFishPairRules,
+  ...platinumSnakeheadAdditionalPredationPairRules,
   {
     speciesIds: ['sp_0439', 'sp_0436'],
     verdict: 'not_recommended',

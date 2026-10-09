@@ -17,7 +17,7 @@ const eligibleSpecies = fishData.filter(species => !['plant', 'hardscape'].inclu
 const reviewedIds = getCompatibilityEvidenceAudit().reviewedSpeciesIds;
 const reviewedPairRules = getCompatibilityEvidenceAudit().reviewedPairRules;
 const prioritySpecies = eligibleSpecies.filter(species => priorityNames.includes(species.name));
-const reviewedPrioritySpecies = prioritySpecies.filter(species => Boolean(getReviewedCompatibilityProfile(species.id)));
+const reviewedPrioritySpecies = prioritySpecies.filter(species => Boolean(getReviewedCompatibilityProfileForFish(species)));
 
 const tank: Aquarium = {
   id: 'compatibility-coverage-scorecard',
@@ -50,7 +50,7 @@ for (const existing of prioritySpecies) {
     if (!pair) continue;
     priorityDirections += 1;
     directionStatuses[pair.status] = (directionStatuses[pair.status] || 0) + 1;
-    if (pair.status === 'compatible' || pair.status === 'caution') {
+    if (pair.status !== 'insufficient_data') {
       recordablePriorityDirections += 1;
       assert.ok(getReviewedCompatibilityProfileForFish(existing), `recordable priority pair is missing reviewed evidence for ${existing.name}`);
       assert.ok(getReviewedCompatibilityProfileForFish(candidate), `recordable priority pair is missing reviewed evidence for ${candidate.name}`);

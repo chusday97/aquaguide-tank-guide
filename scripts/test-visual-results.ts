@@ -68,9 +68,9 @@ const compatibilityModel = buildCompatibilityVisualResult({
 });
 
 assert.equal(compatibilityModel.status, 'insufficient_data');
-assert.equal(compatibilityModel.title, '现在还不能可靠判断', '新手首屏必须先给可理解的最终状态');
+assert.equal(compatibilityModel.title, '暂时无法判断', '新手首屏必须先给固定、直接的最终状态');
 assert.ok(compatibilityModel.currentAction.startsWith('先别急着加'), '新手首屏必须直接告诉用户现在该做什么');
-assert.ok(compatibilityModel.detailSections.some(section => section.title === '为什么这样判断'), '专业解释必须下沉到可展开依据层');
+assert.ok(compatibilityModel.detailSections.some(section => section.title === '查看依据'), '专业解释必须下沉到可展开依据层');
 assert.equal(compatibilityModel.subjects[0]?.id, focus.id, '明确指定的关注物种必须保持为视觉中心');
 assert.equal(compatibilityModel.subjects.length, species.length, '关联对象不能被适配器丢失');
 assert.ok(compatibilityModel.subjects.some(item => item.id === predator.id && item.status === 'insufficient_data'));
@@ -108,6 +108,46 @@ const softCapacityAction = buildBeginnerCompatibilityAction(actionDecision(
 assert.equal(softCapacityAction.headline, '可以尝试，但别一次加太多');
 assert.ok(softCapacityAction.immediateAction.includes('不要只因为低于一个参考水体值就立刻换缸'));
 assert.ok(softCapacityAction.observeAfterAction?.includes('3–7 天'));
+
+const phBeforeBioloadAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['bioload_screening_high', 'ph_range_conflict'],
+  {
+    warningRules: [
+      makeRule('bioload_screening_high', '当前粗粒度负荷筛查偏高。'),
+      makeRule('ph_range_conflict', '两种鱼没有明确的共同 pH 区间。'),
+    ],
+  },
+));
+assert.equal(phBeforeBioloadAction.headline, '先确认实际水质');
+assert.equal(phBeforeBioloadAction.primaryReason, '两种鱼没有明确的共同 pH 区间。');
+assert.match(phBeforeBioloadAction.immediateAction, /先测一次当前稳定 pH/);
+
+const observedBeforeBioloadAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['bioload_screening_high', 'observed_intervention'],
+  {
+    warningRules: [
+      makeRule('bioload_screening_high', '当前粗粒度负荷筛查偏高。'),
+      makeRule('observed_intervention', '已记录持续追逐或进食排除。', 'high'),
+    ],
+  },
+));
+assert.equal(observedBeforeBioloadAction.headline, '先处理已经发生的问题');
+assert.equal(observedBeforeBioloadAction.primaryReason, '已记录持续追逐或进食排除。');
+
+const finNippingBeforeTerritoryAction = buildBeginnerCompatibilityAction(actionDecision(
+  'caution',
+  ['territorial_pressure_context', 'fin_nipping_target_vulnerability'],
+  {
+    warningRules: [
+      makeRule('territorial_pressure_context', '一方有领地压迫风险。'),
+      makeRule('fin_nipping_target_vulnerability', '一方追鳍，另一方鳍型脆弱。'),
+    ],
+  },
+));
+assert.equal(finNippingBeforeTerritoryAction.headline, '先不要把追鳍鱼和脆弱鳍型直接混养');
+assert.equal(finNippingBeforeTerritoryAction.primaryReason, '一方追鳍，另一方鳍型脆弱。');
 
 const predationVulnerabilityAction = buildBeginnerCompatibilityAction(actionDecision(
   'caution',

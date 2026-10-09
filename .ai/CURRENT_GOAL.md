@@ -1,3 +1,27 @@
+## CURRENT OVERRIDE — 2026-09-28 Multi-species Compatibility conclusion hardening
+
+- Active working tree remains `/Users/chuchu/aquaguide-admin-content-v0` on `backend/convergence-20260922`; starting HEAD for this checkpoint is `af11e033a3ceb4571b27364a42c3364a21183618`.
+- Current scoped change is backend/domain-only Compatibility hardening. **Do not resume image-recognition work and do not perform broad UI changes.** Existing DB/infra and Production holds remain unchanged.
+- For 3+ selected species, the canonical decision must combine all pairwise results with a whole-tank evaluation so cumulative constraints such as total bioload are not lost. Aggregate `status` and `metadata.domainStatus` must stay aligned.
+- User-facing conclusion contract is now explicit: **判断 → 主要原因 → 可执行调整方式**. Risk ordering is deterministic so lower-priority capacity hints cannot hide observed problems, hard incompatibility, predation/fin damage, territorial pressure, group-size gaps, pH conflict, space pressure, or finally cumulative bioload.
+- Unknown/unreviewed evidence remains fail-closed. Do not invent a green compatibility result to fill knowledge gaps, and do not convert soft capacity screening into a hard biological prohibition.
+- Regression evidence: multi-species hard conflict, cumulative-load caution, improved verdict after reducing quantity, reason/action priority, visual-result mapping, project TypeScript, and the full `test:backend-release-gate` are PASS on this working tree.
+- Repository topology remains unsafe for a blind merge: the clean integration worktree is `/Users/chuchu/aquaguide-backend-integration-20260922` at `integration/backend-main-20260922@d817eb13`, while this branch and that integration line have diverged substantially. Reconcile only reviewed slices.
+- NEXT: create a local checkpoint for this Compatibility slice, then selectively reconcile it with the integration line. No Production, DB migration, Vision, or broad UI action is authorized by this checkpoint.
+
+## CURRENT OVERRIDE — 2026-09-22 Backend convergence / release integration
+
+Current working authority is `backend/convergence-20260922@c0dba9399dd8e6e0b212c732918f39157ecf9d8a` (`fix(vision): stage catalog recognition by category`). The worktree is clean and tracks `origin/backend/convergence-20260922`.
+
+- Product backend convergence is complete for the current scope: Compatibility/launch-cohort knowledge authority, Tank State, Tank Evidence, Water Change, Care/Core Flow contracts, API/Catalog/type checks and the backend release gate are green.
+- Latest validated backend checkpoint before the current Vision experiments: `wc_ckpt_6a508295ea1940b2a64a348c34de2cd7` (`Aqua product acceptance + vision fail-closed`).
+- Launch-cohort knowledge work is closed by evidence: supported facts are promoted only where direct reviewed authority exists; remaining unknowns are explicit evidence ceilings or catalog identity boundaries and must stay fail-closed.
+- **USER FREEZE 2026-09-22:** do not continue image-recognition development and do not modify UI. Existing Vision commits remain in this branch history but are not the next task and must not drive release integration decisions.
+- **DB / infra HOLD remains:** do not apply the 15 Compatibility migrations, do not switch DB authority, do not change Care indexing/noindex policy, and do not expose Local Admin or mutate Production without separate authorization.
+- `origin/main...HEAD` is currently diverged: main-only 13 commits, backend-only 104 commits; merge-base `437fe83fcfe282551806f573b3ca06f5bea37cc3`. Do **not** blind merge/rebase this branch into main.
+- Branch diff contains backend authority/tests/docs plus frozen Vision files, one UI file (`src/pages/Aquarium.tsx`) and repository-only DB migration content. Formal integration must classify/select changes and preserve main-only commits.
+- NEXT: release-integration audit only — produce/execute the backend release checklist, reconcile main-only changes, separate frozen Vision/UI/DB scope, and merge only after the candidate diff is explainable and all backend gates pass. Production remains untouched.
+
 ## CURRENT OVERRIDE — 2026-09-16 RC1 Production release CLOSED
 Aqua RC1 is released and final Production browser smoke is PASS.
 

@@ -82,6 +82,20 @@ assert.deepEqual(overlaid.factEvidence?.find(item => item.field === 'territorial
   reviewStatus: 'reviewed',
   confidence: 'high',
 });
+assert.deepEqual(overlaid.evidenceSourceIds, ['reviewed-source']);
+const reviewedTemperature = catalogFieldReviewSchema.parse({
+  ...reviewedBehavior,
+  field: 'temperature',
+  proposedValue: { min: 20, max: 25 },
+  confidence: 'medium',
+});
+const temperatureOverlay = applyApprovedCatalogFieldReviews(profile, [reviewedTemperature]);
+assert.equal(temperatureOverlay.waterTemperatureMinC, 20);
+assert.equal(temperatureOverlay.waterTemperatureMaxC, 25);
+assert.deepEqual(temperatureOverlay.evidenceSourceIds, ['reviewed-source']);
+assert.deepEqual(temperatureOverlay.factEvidence?.find(item => item.field === 'temperature'), {
+  field: 'temperature', citationIds: ['reviewed-source'], reviewStatus: 'reviewed', confidence: 'medium',
+});
 
 const temporaryDirectory = await mkdtemp(join(tmpdir(), 'catalog-review-contract-'));
 const invalidCitationInput = join(temporaryDirectory, 'invalid-citation.json');

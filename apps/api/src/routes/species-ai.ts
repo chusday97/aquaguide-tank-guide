@@ -12,11 +12,44 @@ import { buildSpeciesDiagnosisStep } from '../../../../packages/domain-rules/src
 import { apiConfig } from '../config';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
-import { ProviderError, requestSymptomObservations, requestVisionCandidates } from '../ai/provider';
+import { ProviderError, requestSymptomObservations, requestVisionCandidates, requestVisionCatalogCategory } from '../ai/provider';
+import { fishData } from '../../../../src/data/fishData';
 
 const allowedImageTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
 const sessionMisses = new Map<string, number>();
 const rateBuckets = new Map<string, { startedAt: number; count: number }>();
+const recognitionCatalog = fishData.filter(item => item.category !== '硬景/底床');
+const recognitionCatalogByKey = new Map(recognitionCatalog.map(item => [item.id, item]));
+const recognitionCategories = [...new Set(recognitionCatalog.map(item => item.category).filter((value): value is string => Boolean(value)))];
+
+// 鱼类 is a broad legacy bucket while several freshwater fish families have their
+// own catalog categories. If stage one returns the broad bucket, keep those specific
+// freshwater families in stage two so coarse classification cannot exclude the
+// correct species before closed-set recognition begins.
+const recognitionCategoryRouting: Record<string, readonly string[]> = {
+  '鱼类': ['鱼类', '灯科鱼', '慈鲷/斗鱼', '鲶鱼/异型'],
+};
+
+const recognitionCatalogForCategory = (category: string) => {
+  const routedCategories = recognitionCategoryRouting[category] || [category];
+  const allowed = new Set(routedCategories);
+  return recognitionCatalog.filter(item => item.category && allowed.has(item.category));
+};
+
+const recognitionCatalogPromptFor = (category: string) => recognitionCatalogForCategory(category)
+  .map(item => [item.id, item.name, item.scientificName || '', item.category || ''].join('|'))
+  .join('\n');
+
+export const recognitionCatalogSizeForCategory = (category: string) => recognitionCatalogForCategory(category).length;
+export const recognitionCatalogHasCandidateForCategory = (category: string, catalogKey: string) => (
+  recognitionCatalogForCategory(category).some(item => item.id === catalogKey)
+);
+
+export const broadFreshwaterFishRefinementCategories = ['灯科鱼', '慈鲷/斗鱼', '鲶鱼/异型', '其他鱼类'] as const;
+export const resolveRecognitionCategory = (initialCategory: string, refinedCategory?: string) => {
+  if (initialCategory !== '鱼类' || !refinedCategory) return initialCategory;
+  return refinedCategory === '其他鱼类' ? '鱼类' : refinedCategory;
+};
 
 const checkRateLimit = (request: express.Request) => {
   const key = request.ip || 'unknown';
@@ -37,6 +70,39 @@ const checkRateLimit = (request: express.Request) => {
 
 const providerFailure = (error: unknown) => error instanceof ProviderError ? error.reason : 'network' as const;
 
+export const deriveUnreconciledRecognitionStatus = (candidates: readonly unknown[]) => candidates.length === 0 ? 'unmatched' as const : 'ambiguous' as const;
+
+export const reconcileVisionCandidatesToCatalog = (candidates: Array<ReturnType<typeof rawVisionCandidateSchema.parse>>) => {
+  const seen = new Set<string>();
+  return candidates.flatMap(candidate => {
+    const catalogKey = candidate.catalogKey;
+    if (!catalogKey || seen.has(catalogKey)) return [];
+    const species = recognitionCatalogByKey.get(catalogKey);
+    if (!species) return [];
+    seen.add(catalogKey);
+    return [{
+      catalogKey: species.id,
+      commonName: species.name,
+      ...(species.scientificName?.trim() ? { scientificName: species.scientificName } : {}),
+      confidenceBand: candidate.confidenceBand,
+      visualEvidence: candidate.visualEvidence,
+      matchType: 'exact' as const,
+    }];
+  }).slice(0, 3);
+};
+
+export const capFallbackVisionConfidence = <T extends { confidenceBand: 'high' | 'medium' | 'low' }>(
+  candidates: T[],
+  modelName: string,
+  fallbackModel = apiConfig.visionFallbackModel,
+) => {
+  if (!fallbackModel || modelName !== fallbackModel) return candidates;
+  return candidates.map(candidate => ({
+    ...candidate,
+    confidenceBand: candidate.confidenceBand === 'high' ? 'medium' as const : candidate.confidenceBand,
+  }));
+};
+
 export const speciesAiRouter = Router();
 
 speciesAiRouter.post(
@@ -52,6 +118,7 @@ speciesAiRouter.post(
     let candidates: Array<ReturnType<typeof rawVisionCandidateSchema.parse>> = [];
     let source: 'model' | 'fallback' = 'model';
     let failureReason: 'not_configured' | 'timeout' | 'network' | 'invalid_response' | undefined;
+    let modelName = apiConfig.visionModel || 'unconfigured';
 
     try {
       const normalized = await sharp(request.body)
@@ -59,26 +126,51 @@ speciesAiRouter.post(
         .resize({ width: 1536, height: 1536, fit: 'inside', withoutEnlargement: true })
         .webp({ quality: 84 })
         .toBuffer();
-      const raw = await requestVisionCandidates(`data:image/webp;base64,${normalized.toString('base64')}`, locale) as { candidates?: unknown };
-      const parsed = rawVisionCandidateSchema.array().max(3).safeParse(raw.candidates);
-      if (!parsed.success) throw new ProviderError('invalid_response', 'Vision candidates were invalid.');
-      candidates = parsed.data;
+      const imageDataUrl = `data:image/webp;base64,${normalized.toString('base64')}`;
+      const categoryResult = await requestVisionCatalogCategory(imageDataUrl, locale, recognitionCategories);
+      modelName = categoryResult.modelName;
+      const initialCategory = categoryResult.payload.category;
+      let refinedCategory: string | undefined;
+      let recognitionCategory = initialCategory;
+      if (recognitionCategory === '鱼类') {
+        const refinement = await requestVisionCatalogCategory(imageDataUrl, locale, broadFreshwaterFishRefinementCategories);
+        modelName = refinement.modelName;
+        refinedCategory = refinement.payload.category;
+        recognitionCategory = resolveRecognitionCategory(recognitionCategory, refinedCategory);
+      }
+      console.info('Aqua Vision category routing', {
+        modelName,
+        initialCategory,
+        refinedCategory,
+        recognitionCategory,
+        shortlistSize: recognitionCatalogSizeForCategory(recognitionCategory),
+      });
+      const shortlistPrompt = recognitionCatalogPromptFor(recognitionCategory);
+      if (!shortlistPrompt) throw new ProviderError('invalid_response', 'Vision category had no catalog candidates.');
+      const vision = await requestVisionCandidates(imageDataUrl, locale, shortlistPrompt);
+      modelName = vision.modelName;
+      candidates = vision.payload.candidates;
     } catch (error) {
       if (error instanceof Error && error.message.includes('Input buffer')) throw new ApiError(400, 'VALIDATION_ERROR', '图片无法读取，请换一张清晰图片。');
       source = 'fallback';
       failureReason = providerFailure(error);
     }
 
+    const reconciledCandidates = capFallbackVisionConfidence(
+      reconcileVisionCandidatesToCatalog(candidates),
+      modelName,
+    );
+    if (modelName === apiConfig.visionFallbackModel) source = 'fallback';
     return sendData(request, response, {
       recognitionId: randomUUID(),
       imageFingerprint,
-      status: candidates.length === 0 ? 'unmatched' : candidates.length === 1 && candidates[0].confidenceBand === 'high' ? 'matched' : 'ambiguous',
-      candidates: candidates.map(candidate => ({ ...candidate, matchType: 'none' as const })),
+      status: deriveUnreconciledRecognitionStatus(reconciledCandidates),
+      candidates: reconciledCandidates,
       requiresConfirmation: true as const,
       source,
       ...(failureReason ? { failureReason } : {}),
       generatedAt: new Date().toISOString(),
-      modelName: apiConfig.visionModel || 'unconfigured',
+      modelName,
     });
   }),
 );

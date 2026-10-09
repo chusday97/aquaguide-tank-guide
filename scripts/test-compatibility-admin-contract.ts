@@ -296,6 +296,15 @@ for (const source of redRainbowfishProfile.citations) assert.equal(redRainbowfis
 assert.equal((redRainbowfishMigration.match(/Compatibility red rainbowfish profile drift:/g) || []).length, 1);
 assert.equal((redRainbowfishMigration.match(/Compatibility red rainbowfish profile evidence drift:/g) || []).length, 1);
 
+const rummyOtoOscarMigration = readFileSync('supabase/migrations/202609160001_compatibility_rummy_oto_oscar_baseline.sql', 'utf8');
+assert.match(rummyOtoOscarMigration, /Compatibility rummy\/oto\/oscar baseline is partial or not fully published/);
+for (const profile of audit.reviewedProfiles.filter(item => ['sp_0433', 'sp_0013', 'sp_0451'].includes(item.speciesId))) {
+  assert.equal(rummyOtoOscarMigration.includes(profile.speciesId), true, `rummy/oto/oscar migration must own Profile ${profile.speciesId}`);
+  for (const source of profile.citations) assert.equal(rummyOtoOscarMigration.includes(source.id), true, `rummy/oto/oscar migration must include source ${source.id}`);
+}
+assert.equal((rummyOtoOscarMigration.match(/Compatibility rummy-oto-oscar profile drift:/g) || []).length, 3);
+assert.equal((rummyOtoOscarMigration.match(/Compatibility rummy-oto-oscar profile evidence drift:/g) || []).length, 3);
+
 const additiveCompatibilityMigrations = [
   '202609120002_compatibility_harlequin_baseline.sql',
   '202609120003_compatibility_black_skirt_baseline.sql',
@@ -322,7 +331,27 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133']);
+const heldProfileOwnerMigration = readFileSync('supabase/held-migrations/202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql', 'utf8');
+assert.match(heldProfileOwnerMigration, /HOLD \/ REPOSITORY-ONLY OWNERSHIP ARTIFACT/);
+assert.match(heldProfileOwnerMigration, /raise exception 'HOLD: repository-only compatibility profile owner; do not apply without explicit DB-authority approval'/);
+for (const expected of [
+  'sp_0016',
+  'seriouslyfish-mikrogeophagus-ramirezi',
+  'fishbase-mikrogeophagus-ramirezi',
+  'peaceful, breeding_defense',
+  'water, temperature, ph, adult_size, social_behavior, breeding_behavior',
+  'sp_0475',
+  'batch03-fishbase-rhodeus-ocellatus',
+  'jstage-rhodeus-ocellatus-schooling',
+  'minimum_group_size: 3',
+  'water, temperature, adult_size, social_behavior',
+]) {
+  assert.equal(heldProfileOwnerMigration.includes(expected), true, 'held Profile owner migration must freeze ' + expected);
+}
+assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile drift:/g) || []).length, 2);
+assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile evidence drift:/g) || []).length, 2);
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

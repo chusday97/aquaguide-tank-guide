@@ -122,6 +122,23 @@ assert.equal(missing.addPolicy, 'complete_information');
 assert.equal(missing.decisionReadiness, 'unknown');
 assert.deepEqual(missing.ruleCodes.slice(-1), ['reviewed_pair_rule']);
 
+const scopedPredatorVsSmallFish = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'scoped-predator', behaviorTraits: ['predatory'], predationTargets: ['small_fish'], lifeType: 'fish', size: 'Large' }],
+  candidateSpecies: { ...base, id: 'small-fish-prey', lifeType: 'fish', size: 'Small' },
+});
+assert.equal(scopedPredatorVsSmallFish.status, 'not_recommended');
+assert.ok(scopedPredatorVsSmallFish.ruleCodes.includes('predation_risk'));
+
+const scopedPredatorVsSmallInvertebrate = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'scoped-predator', behaviorTraits: ['predatory'], predationTargets: ['small_fish'], lifeType: 'fish', size: 'Large' }],
+  candidateSpecies: { ...base, id: 'small-shrimp', lifeType: 'invertebrate', size: 'Small' },
+});
+assert.equal(scopedPredatorVsSmallInvertebrate.ruleCodes.includes('predation_risk'), false);
+
 const territorialCaution = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 25 },

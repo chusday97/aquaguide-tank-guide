@@ -1,0 +1,517 @@
+# Codex Handoff — Compatibility Core — 2026-09-16
+
+## Worktree / branch
+- Worktree: `/Users/chuchu/aquaguide-compat-core`
+- Branch: `agent/compatibility-core-20260916`
+- Current committed HEAD: `bd3ab012` (`feat(knowledge): add phase2 batch01 authority`), based on the requested `53323ca2` baseline.
+- DO NOT work in `/Users/chuchu/aquaguide-ui-redesign` or the old admin worktree.
+- Default policy: local work + local commits only. DO NOT push or trigger Vercel unless the user explicitly approves a key milestone.
+
+## Current goal — Knowledge Completion Program Phase 2
+The launch matrix is closed and must not be expanded in this phase. Baseline runtime result at `53323ca2`:
+- 435 unordered pairs
+- 0 insufficient_data
+- 198 not_recommended
+- 221 caution
+- 16 compatible
+- deterministic + symmetric
+
+Phase 2 Batch 1 is limited to direct, source-backed Knowledge authority for exactly:
+- `sp_0016` 金波子 / `Mikrogeophagus ramirezi var. Gold`
+- `sp_0224` 白金雷龙 / `Channa argus var. Platinum`
+- `sp_0475` 高体鳑鲏 / `Rhodeus ocellatus`
+
+Do not overwrite the user-owned `docs/species_knowledge_audit.csv`. Its pre-existing SHA-256 is
+`d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+Do not use legacy fishData, template text, names, or automatic base-species inheritance as evidence.
+
+## Important scope distinction
+- Catalog objects: 486
+- Compatibility-eligible species: 411
+- Reviewed Compatibility Profiles: 31
+- Broad catalog coverage is intentionally incomplete and fail-closed.
+- Do NOT interpret the remaining 380 eligible species without full reviewed profiles as a requirement to finish all species now.
+- Current launch closure target is only the remaining `sp_0451` Oscar authority and any regressions exposed while integrating it.
+
+## Existing checkpoints
+- `bd3ab012` feat(knowledge): add Phase 2 Batch 1 direct authority and completion matrix evidence.
+- `53323ca2` docs(knowledge): record reviewed source conflicts; launch matrix is 0 insufficient.
+- `72036acc` fix(catalog): preserve Rhodeus brackish provenance.
+- `aa9706c5` fix(compatibility): close Oscar evidence authority.
+- `d225bb86` feat(knowledge): add 486 species completion matrix.
+- `68cc5c5c` fix(compatibility): add reviewed profile migration ownership.
+
+## Phase 2 evidence decisions
+- Gold ram: Aquarium Industries explicitly names gold rams as a Mikrogeophagus ramirezi colour variant and supports feeding, 24–28°C, pH 5.0–7.2, 4–6 cm, and breeding-period aggression. These are direct variant-aware claims, not automatic inheritance.
+- Platinum snakehead: no reliable Platinum-specific feeding, environment, social, space, or care source was found. Direct reviewed-unknown blocks fallback inheritance; no Compatibility Profile is created.
+- Rhodeus ocellatus: FishBase supports freshwater + brackish, 18–24°C, 9.2 cm SL and mussel-associated reproduction; J-STAGE supports 22–28°C reproductive temperature response. Water remains unknown in the single-value runtime schema, and no generic community behavior or feeding claim is promoted.
+- No new launch pair rules or Compatibility Profiles are authorized by this batch.
+- Runtime compatibility keeps the pre-existing reviewed Channa/Ram compatibility fallback where required for the frozen launch matrix; the completion matrix reads the three Phase 2 direct records and reports no inherited status for them. This is an explicit runtime compatibility boundary, not evidence completion by inheritance.
+
+## Existing checkpoints (historical)
+- `e617b2d6` fix(compatibility): align reviewed authority resolution
+- `b3602a9f` feat(compatibility): review rummy-nose and otocinclus authority
+- `ed0c2725` fix(compatibility): consume reviewed catalog facts
+- `bb3e01b0` fix(catalog): preserve reviewed field provenance
+- `13ffcedd` fix(compatibility): scope reviewed predation targets
+
+## Current uncommitted work — preserve it
+`git status --short` currently includes:
+- `M scripts/test-catalog-review-batches.ts`
+- `M src/data/catalogReviewBatches/batch-03.ts`
+
+This is the reviewed correction for `sp_0475` 高体鳑鲏 / `Rhodeus ocellatus`.
+Do NOT discard/reset it.
+
+Source verification found FishBase supports:
+- identity: Rhodeus ocellatus
+- temperature: 18–24°C
+- adult size: 9.2 cm SL
+
+FishBase currently indicates freshwater + brackish. The current catalog water schema is single-valued, so DO NOT simplify that evidence to freshwater-only. Keep water unknown until the model can express the source faithfully.
+
+## Non-negotiable evidence boundaries
+1. Fail closed. Missing general behavior evidence must stay insufficient_data.
+2. Do not infer compatibility from legacy `fishData` prose, temperament, category, feeding templates, or Google-search URLs.
+3. Reviewed Species Knowledge / reviewed Catalog field values override legacy catalog values.
+4. Direct pair evidence outranks trait inference.
+5. Do NOT generalize one pair experiment into a universal species trait unless the source itself supports that scope.
+6. `predationTargets` is now wired through Domain / legacy / Species Fit.
+   - `small_fish` means small FISH, not small shrimp/snails.
+   - `very_small_fish` has no audited numeric threshold; do not silently map all `Small` fish to it.
+7. Ramirezi ornamental variants are explicitly protected by regression: do NOT auto-inherit standard-species authority unless separately reviewed.
+8. A reviewed environmental field does not make the entire species behavior profile reviewed.
+
+## Oscar / sp_0451 current evidence
+Existing Catalog Review has verified FishBase support for:
+- identity: `Astronotus ocellatus`
+- water: freshwater
+- temperature: 22–25°C
+- adult size: max 45.7 cm
+
+Current generic social behavior / territoriality / generic predation fields remain unknown in Catalog Review.
+
+Existing direct reviewed pair evidence:
+- `sp_0451` Oscar + `sp_0435` Zebrafish = `not_recommended`
+- Sources are peer-reviewed predator-response studies using Astronotus ocellatus and Danio rerio.
+- This pair rule is already implemented. Do NOT extrapolate it to every small fish merely to reduce insufficient count.
+
+The correct next task is to find and verify source(s) that support an appropriately scoped GENERAL Oscar compatibility/behavior profile, or retain insufficient for combinations outside proven scope.
+If adding a general profile, every promoted claim must have source support and citations. Prefer primary / professional / authoritative husbandry sources; avoid unsupported hobby summaries.
+
+## Current matrix audit
+Run `npm run test:compatibility-launch-matrix` to verify the frozen launch baseline:
+`435 unordered pairs, 0 insufficient, 198 blocked, 221 caution, 16 compatible`.
+Phase 2 must not add launch species, pair rules, or generalized predator claims.
+
+## Required tests before local checkpoint
+At minimum run:
+- `npm run test:catalog-review-batches`
+- `npm run test:catalog-review`
+- `npm run test:species-knowledge`
+- `npm run test:compatibility`
+- `npm run test:compatibility-launch-matrix`
+- `npm run test:compatibility-evidence-coverage`
+- `npm run test:compatibility-coverage-scorecard`
+- `npm run test:domain-compatibility`
+- `npm run test:compatibility-service`
+- `npm run lint`
+
+Do not weaken tests to make the matrix greener. If reviewed evidence changes a fixture (e.g. reviewed temperature supersedes stale catalog temperature), update the fixture only when the reviewed authority actually justifies it.
+
+## Success criteria for this handoff
+1. Finish and verify the current uncommitted Rhodeus review correction first.
+2. Audit Oscar evidence and integrate only defensible reviewed facts.
+3. Reduce `insufficient_data` only when evidence supports the new conclusion.
+4. Keep pair decisions symmetric and deterministic.
+5. Keep evidence IDs / factEvidence provenance attached to every reviewed field used in runtime decisions.
+6. Make local checkpoint commit(s), but DO NOT push.
+7. Report exact changed files, exact matrix before/after, tests, remaining insufficients, and why any remaining gaps must stay fail-closed.
+
+## Phase 2 Batch 02 checkpoint — 2026-09-16
+- Completed ten direct, source-linked Knowledge records: `sp_0006`, `sp_0035`, `sp_0430`, `sp_0457`, `sp_0003`, `sp_0029`, `sp_0004`, `sp_0032`, `sp_0021`, and `sp_0036`.
+- Sources reviewed: Raffles Bulletin of Zoology for `Geosesarma dennerle`; Australian Government/Australian Museum freshwater-mollusc account for `Anentome helena`; ITIS for `Caridina dennerli`; WoRMS for `Vittina turrita`; FishBase for `Amatitlania nigrofasciata`.
+- All five applicable Knowledge completion fields are direct `reviewed_unknown` for this batch. No unsupported feeding, care, stocking, social, water, or variant claim was promoted. Existing mini-parrot Compatibility authority remains unchanged; no new profile, pair rule, migration, or launch object was created.
+- Matrix before → after: feeding `needs_research 212→206`, `template_only 196→192`, `reviewed_unknown 2→12`; environment `needs_research 451→441`, `reviewed_unknown 1→11`; space `needs_research 410→400`, `reviewed_unknown 1→11`; social `needs_research 340→331`, `reviewed_unknown 2→12`, `inherited_reviewed 38→37`; care `template_only 88→79`, `reviewed_supported 385→384`, `reviewed_unknown 2→12`. The small care supported delta reflects the existing protected audit CSV state and was not a rewrite of that CSV.
+- Frozen launch gate after the batch: 435 unordered pairs, 0 insufficient, 198 blocked, 221 caution, 16 compatible, deterministic and symmetric.
+- Gates: batch-02 contract PASS; matrix PASS; Species Knowledge PASS; catalog review and batch contracts PASS; Compatibility PASS; launch matrix PASS; evidence coverage PASS; coverage scorecard PASS; Domain PASS; Compatibility Service PASS; runtime authority PASS; regression gate PASS; admin contract PASS; lint PASS. Exact `tsx` launcher commands were attempted but hit pre-existing EPERM IPC failures; equivalent `node --import tsx` commands passed. `npm run build:web` hit the pre-existing sandbox EPERM Vite cache path; `--configLoader runner` then exposed the existing ESM `__dirname` config limitation.
+- Protected CSV SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next exact candidates: `sp_0052` 月光鼠 / `Corydoras hastatus`, `sp_0112` 蓝眼灯 / `Poropanchax normani`, `sp_0115` 琥珀灯 / `Hyphessobrycon amapaensis`, then `sp_0141` 甜心柠檬灯 (variant). Continue fail-closed if direct evidence is not available.
+
+## Phase 2 Batch 03 checkpoint preparation — 2026-09-16
+- Completed ten direct Knowledge records: `sp_0052`, `sp_0112`, `sp_0115`, `sp_0141`, `sp_0143`, `sp_0144`, `sp_0145`, `sp_0154`, `sp_0155`, and `sp_0167`.
+- FishBase directly supports `sp_0052` (`Gastrodermus hastatus`) freshwater, 25–28°C, pH 6–8, 2.4 cm SL and small-school behavior; `sp_0112` (`Poropanchax normani`) freshwater, 22–26°C, pH 6.5–7.2 and 4.5 cm TL; and `sp_0115` (`Hyphessobrycon amapaensis`) freshwater and 3.0 cm SL. Other fields remain reviewed-unknown.
+- Seven commercial variants were searched against their base-species FishBase records, but no variant-specific authority was found. All five completion fields remain direct `reviewed_unknown`; no base-species inheritance is used.
+- Matrix before → after: feeding `needs_research 206→196`, `reviewed_unknown 12→22`; environment `needs_research 441→431`, `reviewed_supported 23→26`, `reviewed_unknown 11→18`; space `needs_research 400→390`, `reviewed_unknown 11→18`; social `needs_research 331→321`, `reviewed_unknown 12→21`; care `template_only 79→69`, `reviewed_unknown 12→22`.
+- No Compatibility Profile, pair rule, launch object, or production/schema change was made. Frozen launch gate remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Added `phase2Batch03Authority.ts`, its contract test, source registrations, matrix/backlog integration, and living documentation. Protected CSV was not staged or modified; SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Passing gates: Batch 01/02/03 contracts, Species Knowledge via `node --import tsx`, Knowledge Matrix, Catalog batch contract, Compatibility engine/evidence/scorecard, Domain, Compatibility Service, regression, admin, runtime authority, lint, and launch matrix. Direct `tsx` commands and Vite build remain blocked by pre-existing EPERM IPC/cache restrictions. Catalog review contract passes; its imported review diagnostic reports the pre-existing protected-CSV completeness mismatch without changing that file.
+- Next exact candidates after this batch are the regenerated research backlog ranks 1 onward; continue source-first and fail-closed.
+
+## Phase 2 Batch 04 checkpoint preparation — 2026-09-16
+- Completed ten direct reviewed-unknown Knowledge records: `sp_0170`, `sp_0204`, `sp_0205`, `sp_0206`, `sp_0212`, `sp_0225`, `sp_0226`, `sp_0231`, `sp_0232`, and `sp_0244`.
+- All are commercial variants. FishBase base-species records were reviewed as negative evidence for variant-specific authority; no feeding, environment, space, social, care, or sex claim was inherited or promoted.
+- Matrix Batch 03 → Batch 04: feeding `needs_research 196→186`, `reviewed_unknown 22→32`; environment `needs_research 431→421`, `reviewed_unknown 18→28`; space `needs_research 390→380`, `reviewed_unknown 18→28`; social `needs_research 321→311`, `reviewed_unknown 21→31`; care `template_only 69→59`, `reviewed_unknown 22→32`.
+- Batch 04 contract, matrix contract, and lint pass. Protected CSV SHA-256 remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`; no Compatibility or launch state changed.
+
+## Session stop record — 2026-09-16
+
+## Phase 2 Batch 05 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0245`, `sp_0246`, `sp_0255`, `sp_0287`, `sp_0339`, `sp_0358`, `sp_0360`, `sp_0362`, `sp_0375`, and `sp_0002`.
+- Sources reviewed were FishBase base-species pages and an ITIS taxonomic record; no variant-specific authority was found, so no fields inherit from base species.
+- Batch 04 → Batch 05: feeding `needs_research 186→176`, environment `needs_research 421→411`, space `needs_research 380→371`, social `needs_research 311→302`, care `template_only 59→49`; each field gained 10 `reviewed_unknown` records, with one inherited-space count changing due the protected CSV state.
+- Batch contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+
+- Exact HEAD remains `cdccdc038ebaced006d323076b3666ba3ffe01cc`.
+- Batch 02 changes are uncommitted because Git could not create the worktree index lock at `/Users/chuchu/aquaguide-preview-current/.git/worktrees/aquaguide-compat-core/index.lock` (`Operation not permitted`). No commit was created, nothing was pushed, and no user-owned work was discarded.
+- Stop reason: required local checkpoint commit is unavailable under the session filesystem boundary; the exact `tsx` and Vite build gates are also blocked by the pre-existing cross-worktree dependency/cache boundary. Equivalent TypeScript test invocations passed as recorded above.
+
+## Phase 2 Batch 06 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0005`, `sp_0051`, `sp_0018`, `sp_0019`, `sp_0023`, `sp_0024`, `sp_0026`, `sp_0033`, `sp_0034`, and `sp_0042`. Existing reviewed authority for `sp_0049` was detected and excluded to prevent regression.
+- Batch contract, matrix contract, and lint pass. No Compatibility or launch change; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+
+## Phase 2 Batch 07 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0054`, `sp_0055`, `sp_0056`, `sp_0057`, `sp_0058`, `sp_0062`, `sp_0069`, `sp_0070`, `sp_0121`, and `sp_0122`.
+- FishBase species summaries were reviewed for the exact named taxa where available. The records provide partial ecology/taxonomy facts, but not a complete object-specific aquarium authority for the contract fields; catalog variants (`Cichlasoma var.`, `Cyprinus carpio var.`, and `Cyprinus carpio var. Longfin`) were not allowed to inherit base-species facts.
+- Matrix Batch 06 → Batch 07: feeding `needs_research 169→159`, `reviewed_unknown 52→62`; environment `needs_research 401→391`, `reviewed_unknown 48→58`; space `needs_research 361→351`, `reviewed_unknown 48→58`; social `needs_research 292→282`, `reviewed_unknown 51→61`; care `reviewed_supported 377→367`, `reviewed_unknown 52→62`.
+- Batch 07 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint, excluding any object that already has direct Knowledge or Compatibility authority.
+
+## Phase 2 Batch 08 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0123`, `sp_0125`, `sp_0129`, `sp_0146`, `sp_0152`, `sp_0157`, `sp_0158`, `sp_0163`, `sp_0173`, and `sp_0174`.
+- FishBase species summaries were searched for the named base taxa. Commercial variants were kept fail-closed: no base-species feeding, environment, space, social, care, or sex facts were inherited into a variant object.
+- Matrix Batch 07 → Batch 08: feeding `needs_research 159→150`, `reviewed_unknown 62→72`; environment `needs_research 391→381`, `reviewed_unknown 58→68`; space `needs_research 351→341`, `reviewed_unknown 58→68`; social `needs_research 282→272`, `reviewed_unknown 61→71`; care `reviewed_supported 367→358`, `reviewed_unknown 62→72`.
+- Batch 08 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+- Regression fix after Batch 16: preserved existing runtime Neocaridina davidi Red authority for `sp_0001` while keeping its direct completion record matrix-only, so Species Detail and frozen Compatibility behavior remain unchanged.
+- Regression fix after Batch 15: preserved the existing runtime Neritina natalensis authority for `sp_0428` while keeping its direct completion record matrix-only, restoring the frozen launch matrix and duplicate-catalog evidence consistency.
+
+## Phase 2 Batch 09 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0175`, `sp_0176`, `sp_0177`, `sp_0178`, `sp_0182`, `sp_0187`, `sp_0201`, `sp_0202`, `sp_0207`, and `sp_0208`.
+- FishBase/FAO professional sources were reviewed for the named base taxa. Four angelfish variants, the White Black Skirt variant, Balloon variant, and catalog L-number objects remain fail-closed; no base-species facts were inherited into variants or uncertain catalog taxa.
+- Matrix Batch 08 → Batch 09: feeding `needs_research 150→140`, `reviewed_unknown 72→82`; environment `needs_research 381→371`, `reviewed_unknown 68→78`; space `needs_research 341→331`, `reviewed_unknown 68→78`; social `needs_research 272→262`, `reviewed_unknown 71→81`; care `reviewed_supported 358→348`, `reviewed_unknown 72→82`.
+- Batch 09 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 10 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0211`, `sp_0214`, `sp_0217`, `sp_0218`, `sp_0219`, `sp_0220`, `sp_0221`, `sp_0227`, `sp_0228`, and `sp_0235`.
+- FishBase/FAO professional sources were searched for the named base taxa. Commercial variants remain fail-closed; no base-species feeding, environment, space, social, care, or sex facts were inherited into a variant object.
+- Matrix Batch 09 → Batch 10: feeding `needs_research 140→130`, `reviewed_unknown 82→92`; environment `needs_research 371→361`, `reviewed_unknown 78→88`; space `needs_research 321→311`, `reviewed_unknown 78→88`; social `needs_research 262→252`, `reviewed_unknown 81→91`; care `reviewed_supported 348→338`, `reviewed_unknown 82→92`.
+- Batch 10 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 11 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0236`, `sp_0240`, `sp_0241`, `sp_0243`, `sp_0247`, `sp_0249`, `sp_0250`, `sp_0251`, `sp_0256`, and `sp_0257`.
+- FishBase/FAO professional sources were searched for the named base taxa. Commercial color, fin, balloon, and hybrid-like catalog variants remain fail-closed; no base-species facts were inherited into variants.
+- Matrix Batch 10 → Batch 11: feeding `needs_research 130→123`, `reviewed_unknown 92→102`; environment `needs_research 361→351`, `reviewed_unknown 88→98`; space `needs_research 311→301`, `reviewed_unknown 88→98`; social `needs_research 252→242`, `reviewed_unknown 91→101`.
+- Batch 11 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 12 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0263`, `sp_0264`, `sp_0265`, `sp_0266`, `sp_0270`, `sp_0271`, `sp_0272`, `sp_0273`, `sp_0282`, and `sp_0288`.
+- FishBase/FAO professional sources were searched for the named base taxa. Albino, color, long-fin, gold, and platinum commercial variants remain fail-closed; no base-species facts were inherited into variants.
+- Matrix Batch 11 → Batch 12: feeding `needs_research 123→113`, `reviewed_unknown 102→112`; environment `needs_research 351→341`, `reviewed_unknown 98→108`; space `needs_research 301→291`, `reviewed_unknown 98→108`; social `needs_research 242→232`, `reviewed_unknown 101→111`.
+- Batch 12 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 13 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0289`, `sp_0290`, `sp_0291`, `sp_0294`, `sp_0338`, `sp_0340`, `sp_0341`, `sp_0359`, `sp_0363`, and `sp_0364`.
+- FishBase species summaries and the USGS Aphyocharax anisitsi fact sheet were reviewed for the named base taxa. GloFish, albino, balloon, long-fin, and color variants remain fail-closed; no base-species feeding, environment, space, social, care, or sex facts were inherited into a variant object.
+- Matrix Batch 12 → Batch 13: feeding `needs_research 113→108`, `template_only 185→180`, `reviewed_unknown 112→122`; environment `needs_research 341→331`, `reviewed_unknown 108→118`; space `needs_research 291→291`, `reviewed_unknown 108→118`; social `needs_research 232→222`, `reviewed_unknown 111→121`; care `reviewed_supported 321→316`, `template_only 42→37`, `reviewed_unknown 112→122`.
+- Batch 13 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 14 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0372`, `sp_0373`, `sp_0374`, `sp_0376`, `sp_0388`, `sp_0393`, `sp_0394`, `sp_0399`, `sp_0414`, and `sp_0415`.
+- FishBase species summaries were reviewed for the named taxa. Balloon, color, fin, marine catalog, and uncertain Geophagus variants remain fail-closed; no base-species facts were inherited into a variant object.
+- Matrix Batch 13 → Batch 14: feeding `needs_research 108→98`, `reviewed_unknown 122→132`; environment `needs_research 331→321`, `reviewed_unknown 118→128`; space `needs_research 291→281`, `reviewed_unknown 118→128`; social `needs_research 222→212`, `reviewed_unknown 121→131`; care `reviewed_supported 316→306`, `reviewed_unknown 122→132`.
+- Batch 14 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 15 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0416`, `sp_0417`, `sp_0419`, `sp_0421`, `sp_0428`, `sp_0429`, `sp_0449`, `sp_0450`, `sp_0452`, and `sp_0456`.
+- FishBase species summaries were reviewed for the named taxa. Commercial variants and duplicate catalog objects remain fail-closed; no base-species feeding, environment, space, social, care, or sex facts were inherited into a variant/object record.
+- Matrix Batch 14 → Batch 15: feeding `needs_research 98→91`, `template_only 180→177`, `reviewed_unknown 132→142`; environment `needs_research 321→311`, `reviewed_unknown 128→138`; space `needs_research 281→272`, `reviewed_unknown 128→138`, `inherited_reviewed 31→30`; social `needs_research 212→203`, `reviewed_unknown 131→141`, `inherited_reviewed 36→35`; care `reviewed_supported 306→300`, `template_only 37→33`, `reviewed_unknown 132→142`.
+- Batch 15 contract, matrix contract, and lint pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 16 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0001`, `sp_0007`, `sp_0008`, `sp_0009`, `sp_0015`, `sp_0022`, `sp_0038`, `sp_0043`, `sp_0044`, and `sp_0047`.
+- FishBase professional species records were reviewed for the named taxa. The Red shrimp variant and non-fish/freshwater/marine species remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 15 → Batch 16: feeding `needs_research 91→91`, `template_only 177→167`, `reviewed_unknown 142→152`; environment `needs_research 311→301`, `reviewed_unknown 138→148`; space `needs_research 272→263`, `reviewed_unknown 138→148`, `inherited_reviewed 30→29`; social `needs_research 203→194`, `reviewed_unknown 141→151`, `inherited_reviewed 35→34`; care `reviewed_supported 300→291`, `template_only 33→32`, `reviewed_unknown 142→152`.
+- Batch 16 contract, matrix contract, lint, launch matrix, and Compatibility evidence coverage pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 47 checkpoint preparation — 2026-09-17
+- Completed eight direct reviewed-unknown records: `sp_0017`, `sp_0440`, `sp_0448`, `sp_0469`, `sp_0020`, `sp_0045`, `sp_0126`, and `sp_0133`. These are the remaining eight real completion-gap objects; the regenerated backlog contains additional no-gap/follow-up rows, so no artificial objects were added just to reach ten.
+- FishBase professional species summaries were reviewed for the named taxa. Evidence was insufficient for object-specific feeding, environment, space, social, or care authority, so all five fields remain direct reviewed-unknown; no template, name inference, legacy fishData, or base-species inheritance was promoted.
+- Matrix Batch 46 → Batch 47: feeding `needs_research 4→0`, `reviewed_unknown 402→410`; care `reviewed_unknown 466→474`, with existing runtime-supported profiles preserved outside the matrix; environment, space, and social counts unchanged. The completion matrix has no remaining feeding gap, while environment retains ten needs-research rows.
+- Batch 47 contract, matrix contract, Species Detail assertions, Launch Compatibility, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, and `sp_0446`; continue with the latest backlog and retain the 40-item queue contract.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 48–49 checkpoint preparation — 2026-09-17
+- Completed nine direct reviewed-unknown environment records in Batch 48: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, and `sp_0446`; then completed the final one-object environment gap in Batch 49: `sp_0455`.
+- Existing FishBase/professional source registrations were reviewed. Evidence was insufficient for complete object-specific environment authority, so these records remain direct reviewed-unknown; no template, name inference, legacy fishData, or base-species inheritance was promoted.
+- Matrix after Batch 49 has zero `needs_research` and zero `template_only` rows across feeding, environment, space, social, and care. Environment changed `needs_research 10→0` and `reviewed_unknown 439→449`; all other dimensions remain unchanged from Batch 47.
+- Batch 48/49 contracts, matrix contract, Species Detail, Compatibility, admin gates, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- `npm run test:catalog-review` still reports the known protected-CSV citation/field diagnostics while its contract passes. `npm run build:web` remains blocked by the known Vite temp-cache `EPERM`; neither issue was caused by these batches.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed. All completion gaps are closed.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 46 checkpoint preparation — 2026-09-17
+- Completed thirteen direct reviewed-unknown records: `sp_0355`, `sp_0356`, `sp_0357`, `sp_0477`, `sp_0478`, `sp_0479`, `sp_0480`, `sp_0481`, `sp_0482`, `sp_0483`, `sp_0484`, `sp_0485`, and `sp_0486`.
+- Tropica professional plant records were reviewed for the named objects. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 426→439`, space `reviewed_unknown 426→439` with `needs_research 13→0`, and care `reviewed_unknown 453→466`; no feeding or social status changed.
+- Batch 46 contract, matrix contract, Species Detail assertions, Launch Compatibility, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, and `sp_0446`; the 40-item queue also retains reviewed-unknown follow-up candidates.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 45 checkpoint preparation — 2026-09-17
+- Completed fifteen direct reviewed-unknown records: `sp_0304`, `sp_0305`, `sp_0306`, `sp_0307`, `sp_0308`, `sp_0309`, `sp_0310`, `sp_0311`, `sp_0312`, `sp_0313`, `sp_0314`, `sp_0315`, `sp_0316`, `sp_0317`, and `sp_0354`.
+- Tropica professional plant records were reviewed for the named objects and variants. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 411→426`, space `reviewed_unknown 411→426`, and care `reviewed_unknown 438→453`; no feeding or social status changed.
+- Backlog generation retains reviewed-unknown candidates to keep the contractually required 40-item research queue after the unresolved gap pool falls below 40.
+- Batch 45 contract, matrix contract, Species Detail assertions, Launch Compatibility, and lint pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then `sp_0355`, `sp_0356`, and `sp_0357`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 44 checkpoint preparation — 2026-09-17
+- Completed fifteen direct reviewed-unknown records: `sp_0094`, `sp_0095`, `sp_0096`, `sp_0097`, `sp_0098`, `sp_0099`, `sp_0100`, `sp_0101`, `sp_0102`, `sp_0298`, `sp_0299`, `sp_0300`, `sp_0301`, `sp_0302`, and `sp_0303`.
+- Tropica professional plant records were reviewed for the named objects and variants. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 396→411`, space `reviewed_unknown 396→411`, and care `reviewed_unknown 423→438`; no feeding or social status changed.
+- Batch 44 contract, matrix contract, Species Detail assertions, and launch matrix pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then `sp_0304`, `sp_0305`, and `sp_0306`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 43 checkpoint preparation — 2026-09-17
+- Completed fifteen direct reviewed-unknown records: `sp_0078`, `sp_0079`, `sp_0080`, `sp_0081`, `sp_0082`, `sp_0083`, `sp_0084`, `sp_0085`, `sp_0086`, `sp_0087`, `sp_0088`, `sp_0090`, `sp_0091`, `sp_0092`, and `sp_0093`.
+- Tropica professional plant records were reviewed for the named objects. No nearby cultivar or genus description was promoted as complete object-specific environment/space/care authority.
+- Matrix now reports environment `reviewed_unknown 381→396`, space `reviewed_unknown 381→396`, and care `reviewed_unknown 408→423`; no feeding or social status changed.
+- Batch 43 contract, matrix contract, Species Detail assertions, and launch matrix pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then `sp_0094`, `sp_0095`, and `sp_0096`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 42 checkpoint preparation — 2026-09-17
+- Completed eleven direct reviewed-unknown records: `sp_0261`, `sp_0262`, `sp_0389`, `sp_0390`, `sp_0391`, `sp_0071`, `sp_0072`, `sp_0073`, `sp_0074`, `sp_0075`, and `sp_0076`.
+- FishBase and Tropica professional records were reviewed for the named Betta variants and plants. Variant records remain independent from Betta splendens base evidence; no unsupported feeding, care, environment, space, or social claim was promoted.
+- Matrix now reports feeding `reviewed_unknown 397→402`, environment `reviewed_unknown 370→381`, space `reviewed_unknown 370→381`, social `reviewed_unknown 373→378`, and care `reviewed_unknown 397→408`; existing Betta runtime authority was preserved with narrow branches.
+- Batch 42 contract, matrix contract, Species Detail assertions, and launch matrix pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then the next unprocessed backlog objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 41 checkpoint preparation — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0437`, `sp_0438`, `sp_0447`, `sp_0451`, `sp_0444`, `sp_0468`, `sp_0053`, `sp_0114`, `sp_0259`, and `sp_0260`.
+- FishBase professional species records were reviewed for the named taxa. Existing ornamental variants were kept independent from their base species; no unsupported feeding, care, environment, space, or social claim was promoted.
+- Matrix now reports feeding `reviewed_unknown 387→397`, environment `reviewed_unknown 368→370`, space `reviewed_unknown 368→370`, social `reviewed_unknown 371→373`, and care `reviewed_unknown 387→397`; existing runtime profiles were preserved with narrow Species Detail branches.
+- Batch 41 contract, matrix contract, Species Detail assertions, launch matrix, and protected CSV SHA checks pass. Launch Compatibility remains `435 unordered pairs / 0 insufficient / 198 blocked / 221 caution / 16 compatible`, deterministic and symmetric.
+- Protected CSV remains unchanged at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`. No Compatibility profile, pair rule, schema, migration, push, or deployment changed.
+- Next regenerated backlog candidates with remaining gaps: `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0439`, `sp_0443`, `sp_0446`, then the next unprocessed backlog objects; the Batch 41 objects are now excluded from the feeding/care gap queue.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
+## Phase 2 Batch 40 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0398`, `sp_0455`, `sp_0027`, `sp_0010`, `sp_0011`, `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, and `sp_0435`.
+- FishBase, California Academy of Sciences, professional aquarium, and institutional records were reviewed. Evidence did not establish complete object-specific feeding/care authority; duplicate and variant objects remain independently represented and no template, name inference, or base-species inheritance was promoted as completion evidence.
+- Existing Species Detail/Compatibility runtime boundaries were preserved for duplicate Neritina, shrimp variants, Black Tetra, Platy, Corydoras, Neon/Cardinal Tetra, White Cloud, and Zebra Danio objects through narrow runtime branches.
+- Final matrix after Batch 40: feeding `reviewed_unknown 382→387`, `needs_research 14→10`, `template_only 14→13`; environment `reviewed_supported 26→26`, `reviewed_unknown 366→368`, `needs_research 83→81`; space `reviewed_supported 35→36`, `reviewed_unknown 366→368`, `inherited_reviewed 10→7`, `needs_research 64→64`; social `reviewed_supported 32→33`, `reviewed_unknown 369→371`, `inherited_reviewed 10→7`, `needs_research 0→0`; care `reviewed_supported 88→86`, `reviewed_unknown 382→387`, `template_only 5→2`.
+- Batch 40 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, `sp_0435`, `sp_0436`, `sp_0437`, `sp_0438`, `sp_0439`, and `sp_0443`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
+## Phase 2 Batch 39 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0239`, `sp_0274`, `sp_0275`, `sp_0276`, `sp_0277`, `sp_0278`, `sp_0279`, `sp_0342`, `sp_0396`, and `sp_0397`.
+- Professional aquarium and taxonomic records were reviewed for the named shrimp lines. Evidence did not establish complete object-specific feeding/care authority; each ornamental line remains independent and no template, name inference, or base-species inheritance was promoted as completion evidence.
+- Existing Species Detail/Compatibility runtime boundaries for the reviewed shrimp variants were preserved through narrow runtime branches while matrix completion remained object-specific.
+- Matrix after Batch 39: feeding `reviewed_unknown 372→382`, `needs_research 24→14`; environment `reviewed_unknown 356→366`, `needs_research 93→83`; space `reviewed_unknown 356→366`, `inherited_reviewed 20→10`, `needs_research 64→64`; social `reviewed_unknown 359→369`, `inherited_reviewed 20→10`, `needs_research 0→0`; care `reviewed_supported 88→88`, `reviewed_unknown 372→382`, `template_only 15→5`.
+- Batch 39 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0398`, `sp_0455`, `sp_0027`, `sp_0010`, `sp_0011`, `sp_0014`, `sp_0431`, `sp_0432`, `sp_0434`, and `sp_0435`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
+## Phase 2 Batch 38 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0446`, `sp_0013`, `sp_0028`, `sp_0030`, `sp_0031`, `sp_0164`, `sp_0165`, `sp_0166`, `sp_0223`, and `sp_0238`.
+- FishBase, ScienceDirect, and professional aquarium husbandry records were reviewed. Evidence did not establish complete object-specific feeding/care authority; ornamental variants remain independent and no template, name inference, or base-species inheritance was promoted as completion evidence.
+- Existing Species Detail/Compatibility runtime profiles for angelfish, Otocinclus, Channa asiatica Albino, and shrimp variants were preserved through narrow runtime branches while matrix completion remained object-specific.
+- Matrix after Batch 38: feeding `reviewed_unknown 362→372`, `needs_research 31→24`, `template_only 17→14`; environment `reviewed_unknown 348→356`, `needs_research 101→93`; space `reviewed_unknown 348→356`, `inherited_reviewed 27→20`, `needs_research 65→64`; social `reviewed_unknown 351→359`, `inherited_reviewed 28→20`, `needs_research 0→0`; care `reviewed_supported 90→88`, `reviewed_unknown 362→372`, `template_only 23→15`.
+- Batch 38 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0239`, `sp_0274`, `sp_0275`, `sp_0276`, `sp_0277`, `sp_0278`, `sp_0279`, `sp_0342`, `sp_0396`, and `sp_0397`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
+## Phase 2 Batch 37 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0473`, `sp_0474`, `sp_0476`, `sp_0012`, `sp_0147`, `sp_0148`, `sp_0222`, `sp_0258`, `sp_0433`, and `sp_0434`.
+- FishBase and professional institutional records were reviewed for the named taxa. The evidence did not establish complete object-specific feeding/care authority; variants remain independent and no template, name inference, or base-species inheritance was promoted as completion evidence.
+- Existing Species Detail/Compatibility runtime profiles for Cherry Barb, Blue/White/Jellybean parrot variants, Koi Betta, Rummy-nose Tetra, and White Cloud Mountain Minnow were preserved through narrow runtime branches while matrix completion remained object-specific.
+- Matrix after Batch 37: feeding `reviewed_unknown 352→362`, `needs_research 36→31`, `template_only 22→17`; environment `reviewed_unknown 341→348`, `needs_research 108→101`; space `reviewed_unknown 341→348`, `needs_research 71→65`; social `reviewed_unknown 344→351`, `inherited_reviewed 32→28`, `needs_research 3→0`; care `reviewed_supported 98→90`, `reviewed_unknown 352→362`, `template_only 25→23`.
+- Batch 37 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0446`, `sp_0013`, `sp_0028`, `sp_0030`, `sp_0031`, `sp_0164`, `sp_0165`, `sp_0166`, `sp_0223`, and `sp_0238`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+
+## Phase 2 Batch 36 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0461`, `sp_0462`, `sp_0463`, `sp_0464`, `sp_0465`, `sp_0466`, `sp_0467`, `sp_0470`, `sp_0471`, and `sp_0472`.
+- Professional taxonomy/species records were reviewed through NCBI Taxonomy, CITES Species+, Taylor & Francis, and FishBase. The records did not establish complete object-specific feeding/care authority, so no reviewed_supported claim, template, name inference, or base-species inheritance was promoted.
+- Matrix after Batch 36: feeding `reviewed_unknown 342→352`, `template_only 32→22`; environment `reviewed_unknown 331→341`, `needs_research 118→108`; space `reviewed_unknown 331→341`, `needs_research 81→71`; social `reviewed_unknown 334→344`, `needs_research 13→3`; care `reviewed_supported 108→98`, `reviewed_unknown 342→352`.
+- Batch 36 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, admin/domain/runtime regression gates, and lint pass. Catalog review retains the pre-existing protected-CSV citation/field failures; build retains the known Vite temp-file `EPERM`. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog begins with `sp_0473`, `sp_0474`, `sp_0476`, `sp_0012`, `sp_0147`, `sp_0148`, `sp_0222`, `sp_0258`, `sp_0433`, and `sp_0434`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 24 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0445`, `sp_0453`, `sp_0459`, `sp_0037`, `sp_0041`, `sp_0046`, `sp_0063`, `sp_0064`, `sp_0065`, and `sp_0066`.
+- FishBase professional species records were reviewed for Trichopodus, Pterois, Neocaridina, Acheilognathus, Abbottina, Aphyocypris, and Carassius catalog objects. Species records and goldfish/commercial variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Batch 24 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions must pass before the checkpoint commit. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment is part of this batch.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+
+## Phase 2 Batch 25 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0067`, `sp_0068`, `sp_0077`, `sp_0089`, `sp_0111`, `sp_0124`, `sp_0142`, `sp_0149`, `sp_0150`, and `sp_0159`.
+- FishBase, Texas A&M AquaPlant, and Kew professional records were reviewed for goldfish variants, aquatic plants, Sawbwa, Ancistrus, and Poecilia objects. Variant and genus-level records remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 24 → Batch 25: feeding `reviewed_unknown 232→242`, `needs_research 84→74`; environment `reviewed_unknown 228→238`, `needs_research 221→211`; space `reviewed_unknown 228→238`, `needs_research 184→174`; social `reviewed_unknown 231→241`, `needs_research 115→105`; care `reviewed_unknown 232→242`, `reviewed_supported 212→202`.
+- Batch 25 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 26 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0160`, `sp_0161`, `sp_0162`, `sp_0168`, `sp_0169`, `sp_0180`, `sp_0188`, `sp_0189`, `sp_0190`, and `sp_0196`.
+- FishBase professional records were reviewed for Ancistrus, Poecilia, Carassius, Lysmata, Thor, and Sahyadria/Dawkinsia objects. Commercial variants and marine invertebrates remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 25 → Batch 26: feeding `reviewed_unknown 242→252`, `needs_research 74→64`; environment `reviewed_unknown 238→248`, `needs_research 211→201`; space `reviewed_unknown 238→248`, `needs_research 174→164`; social `reviewed_unknown 241→251`, `needs_research 105→95`; care `reviewed_unknown 242→252`, `reviewed_supported 202→192`.
+- Batch 26 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 27 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0203`, `sp_0209`, `sp_0213`, `sp_0215`, `sp_0230`, `sp_0237`, `sp_0253`, `sp_0254`, `sp_0280`, and `sp_0281`.
+- FishBase professional records were reviewed for Poecilia, Crossocheilus, Sahyadria/Dawkinsia, and Ancistrus catalog variants. Commercial and color/fin variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 26 → Batch 27: feeding `reviewed_unknown 252→262`, `needs_research 64→54`; environment `reviewed_unknown 248→258`, `needs_research 201→191`; space `reviewed_unknown 248→258`, `needs_research 164→154`; social `reviewed_unknown 251→261`, `needs_research 95→85`; care `reviewed_unknown 252→262`, `reviewed_supported 192→182`.
+- Batch 27 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 28 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0292`, `sp_0293`, `sp_0348`, `sp_0349`, `sp_0350`, `sp_0351`, `sp_0385`, `sp_0386`, `sp_0387`, and `sp_0392`.
+- FishBase professional records were reviewed for Poecilia, Carassius, and Ancistrus catalog variants. Commercial, color, body-shape, and fin variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 27 → Batch 28: feeding `reviewed_unknown 262→272`, `needs_research 54→44`; environment `reviewed_unknown 258→268`, `needs_research 191→181`; space `reviewed_unknown 258→268`, `needs_research 154→144`; social `reviewed_unknown 261→271`, `needs_research 85→75`; care `reviewed_unknown 262→272`, `reviewed_supported 182→172`.
+- Batch 28 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 29 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0395`, `sp_0418`, `sp_0025`, `sp_0039`, `sp_0040`, `sp_0060`, `sp_0061`, `sp_0106`, `sp_0107`, and `sp_0113`.
+- FishBase professional records were reviewed for Crossocheilus, Ancistrus, Pterapogon, Pseudogastromyzon, Cobitis, Sphaerichthys, Semaprochilodus, Erpetoichthys, and Epiplatys objects. Species and commercial-variant records remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 28 → Batch 29: feeding `reviewed_unknown 272→282`, `needs_research 44→42`; environment `reviewed_unknown 268→278`, `needs_research 181→171`; space `reviewed_unknown 268→278`, `needs_research 144→134`; social `reviewed_unknown 271→281`, `needs_research 75→65`; care `reviewed_unknown 272→282`, `reviewed_supported 172→162`.
+- Batch 29 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 30 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0128`, `sp_0132`, `sp_0134`, `sp_0135`, `sp_0136`, `sp_0137`, `sp_0153`, `sp_0171`, `sp_0172`, and `sp_0186`.
+- FishBase professional records were reviewed for Beaufortia, Parambassis, Iriatherina, Pseudomugil, Sphaerichthys, Semaprochilodus, Trichopodus, Tanichthys, and Chaetodon objects. Species and catalog variants remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 29 → Batch 30: feeding `reviewed_unknown 282→292`, `needs_research 42→42`; environment `reviewed_unknown 278→288`, `needs_research 171→161`; space `reviewed_unknown 278→288`, `needs_research 134→124`; social `reviewed_unknown 281→291`, `needs_research 65→55`; care `reviewed_unknown 282→292`, `reviewed_supported 162→152`.
+- Batch 30 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility authority, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## Phase 2 Batch 31 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0014`, `sp_0049`, `sp_0431`, `sp_0432`, `sp_0436`, `sp_0443`, `sp_0435`, `sp_0191`, `sp_0192`, and `sp_0193`.
+- FishBase professional records were reviewed for the seven freshwater fish; WoRMS professional taxonomy endpoints were registered for the three marine invertebrate objects. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted; no template, name inference, or variant/base inheritance was used.
+- Matrix now reports feeding `reviewed_unknown 292→302`, environment `reviewed_unknown 288→292`, space `reviewed_unknown 288→292`, social `reviewed_unknown 291→295`, and care `reviewed_unknown 292→302`; existing runtime Species Detail authority was preserved for objects with historical profiles.
+- Batch 31 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, lint, and build/catalog gates were run. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0194`, `sp_0195`, `sp_0210`, `sp_0233`, `sp_0252`, `sp_0267`, `sp_0295`, `sp_0320`, `sp_0324`, and `sp_0326`.
+
+## Phase 2 Batch 32 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0194`, `sp_0195`, `sp_0210`, `sp_0233`, `sp_0252`, `sp_0267`, `sp_0295`, `sp_0320`, `sp_0324`, and `sp_0326`.
+- FishBase was reviewed for the Pangio kuhlii variant and related fish variant objects; WoRMS professional taxonomy was reviewed/registered for Protula, Astropecten, Sarcophyton, Actinodiscus, and Trachyphyllia objects. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted; no template, name inference, or base-species inheritance was used.
+- Matrix now reports feeding `reviewed_unknown 302→312`, environment `reviewed_unknown 292→302`, space `reviewed_unknown 292→302`, social `reviewed_unknown 295→305`, and care `reviewed_unknown 302→312`; no Compatibility authority or launch pair was changed.
+- Batch 32 contract, matrix contract, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0327`, `sp_0328`, `sp_0329`, `sp_0330`, `sp_0331`, `sp_0332`, `sp_0335`, `sp_0336`, `sp_0337`, and `sp_0361`.
+
+## Phase 2 Batch 33 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0327`, `sp_0328`, `sp_0329`, `sp_0330`, `sp_0331`, `sp_0332`, `sp_0335`, `sp_0336`, `sp_0337`, and `sp_0361`.
+- WoRMS professional taxonomy was reviewed for the marine invertebrate/coral objects, including accepted taxon records for `Sabellastarte spectabilis`, `Fromia milleporella`, and `Tubastraea faulkneri`; FishBase was reviewed for the Tanichthys albonubes variant. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted.
+- Matrix now reports feeding `reviewed_unknown 312→322`, environment `reviewed_unknown 302→312`, space `reviewed_unknown 302→312`, social `reviewed_unknown 305→315`, and care `reviewed_unknown 312→322`; no template, name inference, or base-species inheritance was used.
+- Batch 33 contract, matrix contract, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0366`, `sp_0367`, `sp_0369`, `sp_0371`, `sp_0377`, `sp_0378`, `sp_0380`, `sp_0381`, `sp_0383`, and `sp_0403`.
+
+## Phase 2 Batch 34 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0366`, `sp_0367`, `sp_0369`, `sp_0371`, `sp_0377`, `sp_0378`, `sp_0380`, `sp_0381`, `sp_0383`, and `sp_0403`.
+- FishBase was reviewed for the `Synchiropus splendidus` variant; WoRMS professional taxonomy was reviewed/registered for the Zoanthus, Micromussa, Haliclona, Aurelia, Phyllorhiza, Cassiopea, and Cotylorhiza objects. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted.
+- Matrix now reports feeding `reviewed_unknown 322→332`, environment `reviewed_unknown 312→322`, space `reviewed_unknown 312→322`, social `reviewed_unknown 315→325`, and care `reviewed_unknown 322→332`; no template, name inference, or base-species inheritance was used.
+- Batch 34 contract, matrix contract, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0404`, `sp_0405`, `sp_0406`, `sp_0413`, `sp_0426`, `sp_0427`, `sp_0439`, `sp_0454`, `sp_0458`, and `sp_0460`.
+
+## Phase 2 Batch 35 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records from the regenerated latest backlog: `sp_0404`, `sp_0405`, `sp_0406`, `sp_0413`, `sp_0426`, `sp_0427`, `sp_0439`, `sp_0454`, `sp_0458`, and `sp_0460`.
+- WoRMS professional taxonomy was reviewed for the Trachyphyllia and Tubastraea variants; FishBase was reviewed for Synchiropus, Pangio, Tanichthys, Caridina, Puntigrus, Kryptopterus, and Trachemys objects. Evidence was insufficient for complete object-specific feeding/care claims, so no `reviewed_supported` facts were promoted; variants did not inherit base evidence.
+- Matrix now reports feeding `reviewed_unknown 332→342`, environment `reviewed_unknown 322→331`, space `reviewed_unknown 322→331`, social `reviewed_unknown 325→334`, and care `reviewed_unknown 332→342`; existing Tiger Barb Species Detail runtime authority was preserved.
+- Batch 35 contract, matrix contract, launch matrix, Compatibility evidence coverage, Species Detail assertions, lint, and build/catalog gates were run. Launch Compatibility remains frozen at `435 pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`; protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next regenerated backlog candidates: `sp_0461`, `sp_0462`, `sp_0463`, `sp_0464`, `sp_0465`, `sp_0466`, `sp_0467`, `sp_0470`, `sp_0471`, and `sp_0472`.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 23 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0402`, `sp_0407`, `sp_0408`, `sp_0409`, `sp_0410`, `sp_0411`, `sp_0412`, `sp_0420`, `sp_0441`, and `sp_0442`.
+- FishBase and WoRMS professional taxonomic records were reviewed for the named anemone, arowana, stingray, snakehead, gourami, and algae-eater objects. Commercial variants remain fail-closed where object-specific husbandry authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 22 → Batch 23: feeding `needs_research 91→91`, `template_only 107→97`, `reviewed_unknown 212→222`; environment `needs_research 241→231`, `reviewed_unknown 208→218`; space `needs_research 203→193`, `reviewed_unknown 208→218`; social `needs_research 134→124`, `reviewed_unknown 211→221`; care `reviewed_supported 231→221`, `reviewed_unknown 212→222`.
+- Batch 23 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 22 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0333`, `sp_0334`, `sp_0365`, `sp_0368`, `sp_0370`, `sp_0379`, `sp_0382`, `sp_0384`, `sp_0400`, and `sp_0401`.
+- FishBase and WoRMS professional taxonomic records were reviewed for the named anemone, jellyfish, coral, and marine variant objects. Commercial variants and marine invertebrates remain fail-closed where object-specific husbandry authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 21 → Batch 22: feeding `needs_research 91→91`, `template_only 117→107`, `reviewed_unknown 202→212`; environment `needs_research 251→241`, `reviewed_unknown 198→208`; space `needs_research 213→203`, `reviewed_unknown 198→208`; social `needs_research 144→134`, `reviewed_unknown 201→211`; care `reviewed_supported 241→231`, `reviewed_unknown 202→212`.
+- Batch 22 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 21 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0285`, `sp_0286`, `sp_0296`, `sp_0297`, `sp_0318`, `sp_0319`, `sp_0321`, `sp_0322`, `sp_0323`, and `sp_0325`.
+- FishBase and WoRMS professional taxonomic records were reviewed for the named snakehead, marine catalog variants, corals, and anemone objects. Commercial variants and marine invertebrates remain fail-closed where object-specific husbandry authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 20 → Batch 21: feeding `needs_research 91→91`, `template_only 127→117`, `reviewed_unknown 192→202`; environment `needs_research 261→251`, `reviewed_unknown 188→198`; space `needs_research 223→213`, `reviewed_unknown 188→198`; social `needs_research 154→144`, `reviewed_unknown 191→201`; care `reviewed_supported 251→241`, `reviewed_unknown 192→202`.
+- Batch 21 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 20 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0200`, `sp_0216`, `sp_0229`, `sp_0234`, `sp_0242`, `sp_0248`, `sp_0268`, `sp_0269`, `sp_0283`, and `sp_0284`.
+- FishBase professional species records were reviewed for Dario, Channa, Gyrinocheilus, Scleropages, Osphronemus, and Trichopodus taxa. Commercial variants remain fail-closed; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 19 → Batch 20: feeding `needs_research 91→91`, `template_only 137→127`, `reviewed_unknown 182→192`; environment `needs_research 271→261`, `reviewed_unknown 178→188`; space `needs_research 233→223`, `reviewed_unknown 178→188`; social `needs_research 164→154`, `reviewed_unknown 181→191`; care `reviewed_supported 261→251`, `reviewed_unknown 182→192`.
+- Batch 20 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 19 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0151`, `sp_0156`, `sp_0179`, `sp_0181`, `sp_0183`, `sp_0184`, `sp_0185`, `sp_0197`, `sp_0198`, and `sp_0199`.
+- FishBase professional species records were reviewed for the named taxa, including marine angelfish/triggerfish, freshwater labyrinth fish, knifefish, and cichlids. Commercial variants remain fail-closed; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 18 → Batch 19: feeding `needs_research 91→91`, `template_only 147→137`, `reviewed_unknown 172→182`; environment `needs_research 281→271`, `reviewed_unknown 168→178`; space `needs_research 243→233`, `reviewed_unknown 168→178`; social `needs_research 174→164`, `reviewed_unknown 171→181`; care `reviewed_supported 271→261`, `reviewed_unknown 172→182`.
+- Batch 19 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 18 checkpoint — 2026-09-17
+- Completed ten direct reviewed-unknown records: `sp_0117`, `sp_0118`, `sp_0119`, `sp_0120`, `sp_0127`, `sp_0130`, `sp_0131`, `sp_0138`, `sp_0139`, and `sp_0140`.
+- FishBase professional species records were reviewed for the named taxa, including Arowana, freshwater butterflyfish, knifefish, loach, and characins. Records remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 17 → Batch 18: feeding `needs_research 91→91`, `template_only 157→147`, `reviewed_unknown 162→172`; environment `needs_research 291→281`, `reviewed_unknown 158→168`; space `needs_research 253→243`, `reviewed_unknown 158→168`; social `needs_research 184→174`, `reviewed_unknown 161→171`; care `reviewed_supported 281→271`, `reviewed_unknown 162→172`.
+- Batch 18 contract, matrix contract, lint, launch matrix, Compatibility evidence coverage, and Species Detail assertions pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+## Phase 2 Batch 17 checkpoint — 2026-09-16
+- Completed ten direct reviewed-unknown records: `sp_0048`, `sp_0050`, `sp_0059`, `sp_0103`, `sp_0104`, `sp_0105`, `sp_0108`, `sp_0109`, `sp_0110`, and `sp_0116`.
+- FishBase professional species records were reviewed for the named taxa. Snakehead, arowana, bichir, and other large-fish objects remain fail-closed where object-specific aquarium authority was insufficient; no template, name inference, or base-species inheritance was promoted.
+- Matrix Batch 16 → Batch 17: feeding `needs_research 91→91`, `template_only 167→157`, `reviewed_unknown 152→162`; environment `needs_research 301→291`, `reviewed_unknown 148→158`; space `needs_research 263→253`, `reviewed_unknown 148→158`; social `needs_research 194→184`, `reviewed_unknown 151→161`; care `reviewed_supported 291→281`, `reviewed_unknown 152→162`.
+- Batch 17 contract, matrix contract, lint, launch matrix, and Compatibility evidence coverage pass. No Compatibility profile, pair rule, launch state, schema, migration, push, or deployment changed. Protected CSV SHA remains `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
+- Next batch must use the regenerated research backlog after this checkpoint and continue excluding existing direct Knowledge/Compatibility objects.
+
+## VISIBLE_CODEX_CHAT_NEXT_PROMPT
+Continue AquaGuide Knowledge Completion Program from the local Batch 6 checkpoint in `/Users/chuchu/aquaguide-compat-core` on branch `agent/compatibility-core-20260916`. Use the latest research backlog for the next 10–15 uncompleted catalog objects, use source-first evidence, preserve strict variant boundaries, regenerate the matrix/backlog, run the full required gates, create one local commit per passing batch excluding the protected CSV, and update this handoff. Never push, merge, deploy, migrate production, or weaken evidence standards.
+
+## Runtime Closure — 2026-09-17
+- Knowledge Completion is frozen at 486 catalog objects with zero `needs_research`, zero `template_only`, and zero rows with gap fields. Do not start another research batch; `reviewed_unknown` remains a valid final state.
+- Aquarium factual-flow behavior passes with an isolated AquaGuide preview: empty-tank creation preserves unknown facts, planning does not write livestock, wishlist remains livestock-free, explicit real-stock recording persists, and the legacy `add-species` route maps to planning.
+- Addition intent contract now matches the accepted “已经实际入缸，记录下来” semantics; planned addition, compatibility preview, wishlist, and real stocking remain distinct.
+- Identification UI contracts now match the accepted current copy: `拍照识别`, `已确认物种`, `发现异常？检查健康状态`, `健康状态检查`, `查看当前判断`, `查看依据与建议`, and `健康判断暂仅支持鱼类`. Mobile fallback, urgent triage, English desktop, and encyclopedia entry pass against the isolated local preview.
+- Diagnosis contract passes 14 scenarios. AI remains extraction-only; deterministic rules own urgency, red flags, questions, hypotheses, safe actions, and prohibited actions.
+- Compatibility remains frozen and verified: `435 unordered pairs / 0 insufficient / 198 not_recommended / 221 caution / 16 compatible`, deterministic and symmetric. No pair rule or launch cohort changed.
+- `apps/api/src/config.ts` retains GLM defaults (`https://open.bigmodel.cn/api/paas/v4`, `glm-4.6v-flash`); the Vision adapter has no `response_format` override and schema/failure fallback contracts pass through the local no-secret browser flow. No real secret was read or printed.
+- Known environment limitations: direct `tsx` scripts fail with the pre-existing IPC pipe `EPERM`; equivalent `node --import tsx` runs pass. `npm run build:web` remains blocked by the pre-existing Vite `.vite-temp` `EPERM`. The protected audit CSV remains untouched and at SHA-256 `d5f3d1b92e85c58c1f17c5f2cf1cd5335fa24819c9b82258037ad886bbb09e1c`.
