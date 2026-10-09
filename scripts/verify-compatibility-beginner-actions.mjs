@@ -86,7 +86,7 @@ try {
     assert.match((await calculator.textContent()) || '', /按当前粗粒度体型与数量筛查，负荷有所升高/);
 
     await calculator.getByRole('button', { name: '是，符合', exact: true }).click();
-    await calculator.getByRole('heading', { name: '可以混养', exact: true }).waitFor();
+    await calculator.getByRole('heading', { name: '可以养', exact: true }).waitFor();
     const stableText = (await calculator.textContent()) || '';
     assert.doesNotMatch(stableText, /按当前粗粒度体型与数量筛查，负荷有所升高/);
     const evidenceToggle = calculator.locator('[data-disclosure-purpose="secondary_evidence"]').first();
@@ -101,7 +101,7 @@ try {
     const { page, calculator } = await openCompatibility({ state, candidateId: 'sp_0436' });
     await calculator.getByText('虎皮鱼', { exact: true }).first().waitFor();
     await setQuantity(calculator, '孔雀鱼', 5);
-    await calculator.getByRole('heading', { name: '不建议混养', exact: true }).waitFor();
+    await calculator.getByRole('heading', { name: '不建议', exact: true }).waitFor();
     const resultText = (await calculator.textContent()) || '';
     assert.match(resultText, /先不要把这组生物放在一起/);
     assert.match(resultText, /长鳍|追鳍/);
@@ -117,8 +117,9 @@ try {
     const { page, calculator } = await openCompatibility({ state, candidateId: 'sp_0001' });
     await calculator.getByText('白云金丝', { exact: true }).first().waitFor();
     await setQuantity(calculator, '极火虾', 6);
-    await calculator.getByRole('heading', { name: '先确认鱼不会把虾当食物', exact: true }).waitFor();
+    await calculator.getByRole('heading', { name: '有条件可以', exact: true }).waitFor();
     const fishShrimpText = (await calculator.textContent()) || '';
+    assert.match(fishShrimpText, /先确认鱼不会把虾当食物/);
     assert.match(fishShrimpText, /不要直接按“性情温和”判断安全/);
     assert.doesNotMatch(fishShrimpText, /可以混养/);
     await page.close();

@@ -81,11 +81,16 @@ const riskPriority: CompatibilityRiskType[] = [
 ];
 
 const inferRiskType = (rule: TankCompatibilityRule): CompatibilityRiskType => {
-  if (rule.code.includes('bioload')) return 'bioload';
+  const code = rule.code.toLowerCase();
+  if (code.includes('bioload')) return 'bioload';
+  // Structured rule codes are stronger authority than free-text evidence.
+  // Citation wording must not relabel a fin-nipping rule as predation.
+  if (code.includes('fin_nipping') || code.includes('attack') || code.includes('aggression')) return 'aggression';
+  if (code.includes('predation') || code.includes('prey')) return 'predation';
   const text = `${rule.code} ${rule.title} ${rule.evidence}`;
   if (/water|水体|海水|淡水/.test(text)) return 'water_type';
-  if (/predation|捕食|吞食|体型/.test(text)) return 'predation';
   if (/attack|攻击|追咬|追鳍|fin_nipping|性情/.test(text)) return 'aggression';
+  if (/predation|捕食|吞食|体型/.test(text)) return 'predation';
   if (/territor|领地|单养/.test(text)) return 'territory';
   if (/equipment|过滤|加热|设备/.test(text)) return 'equipment';
   if (/space|volume|tank|容量|空间|躲避|缸/.test(text)) return 'space';

@@ -10,7 +10,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, locale: 'zh-CN' });
   await page.goto(`${baseUrl}/identify`, { waitUntil: 'networkidle' });
   await page.locator('input[type=file]').setInputFiles(fixture);
-  await page.getByText('暂时无法识别，可以手动搜索物种。').waitFor({ timeout: 20_000 });
+  await page.getByRole('alert').getByText('图片识别没有完成，请重试或手动搜索。').waitFor({ timeout: 20_000 });
   await page.getByLabel('没有合适候选？手动搜索物种库').fill('孔雀鱼');
   await page.getByRole('option', { name: /孔雀鱼/ }).first().click();
   await page.locator('[data-selected-species-summary="true"]').getByRole('button', { name: '确认是它' }).click();
