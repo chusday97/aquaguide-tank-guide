@@ -237,7 +237,10 @@ export const applyCanonicalCompatibilityDecision = (
     ? 'not_recommended'
     : decision.status;
 
-  const reviewedPairBlocking = decision.status === 'not_recommended' && decision.ruleCodes.includes('reviewed_pair_rule')
+  const concreteReviewedPairBlocking = legacyHardBlocks.filter(rule => rule.code.startsWith('pair_rule_'));
+  const reviewedPairBlocking = decision.status === 'not_recommended'
+    && decision.ruleCodes.includes('reviewed_pair_rule')
+    && concreteReviewedPairBlocking.length === 0
     ? domainRules.filter(rule => rule.code === 'reviewed_pair_rule')
     : [];
   const domainBlockingWithoutGenericPair = domainBlockingRules.filter(rule => rule.code !== 'reviewed_pair_rule');

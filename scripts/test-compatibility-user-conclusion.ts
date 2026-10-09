@@ -94,6 +94,21 @@ assert.equal(predationPresentation.headline, '不建议');
 assert.match(predationPresentation.primaryReason, /捕食|吞食/);
 assert.match(predationPresentation.primaryActionText, /不要|先不要/);
 
+const tigerGuppyDecision = evaluateCompatibilityDecision({
+  tank: tank(100, 40, 30, 24),
+  items: [
+    { species: byId('sp_0439'), quantity: 8, origin: 'existing' },
+    { species: byId('sp_0436'), quantity: 5, origin: 'candidate' },
+  ],
+});
+assert.equal(tigerGuppyDecision.status, 'not_recommended');
+const tigerGuppyPair = tigerGuppyDecision.pairResults[0];
+assert.ok(tigerGuppyPair?.primaryReason);
+assert.equal(tigerGuppyPair.primaryReason.riskType, 'aggression');
+assert.equal(tigerGuppyPair.primaryReason.sourceRule.code, 'pair_rule_fin_nipping_long_fin_conflict');
+assert.match(tigerGuppyPair.primaryReason.evidence, /追鳍|长鳍/);
+assert.doesNotMatch(tigerGuppyPair.primaryReason.evidence, /捕食风险实验支持/);
+
 const multiSpeciesConflict = evaluateCompatibilityDecision({
   tank: tank(120, 50, 40, 24),
   items: [

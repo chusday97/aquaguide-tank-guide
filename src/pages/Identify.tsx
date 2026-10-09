@@ -283,6 +283,9 @@ export default function Identify() {
     } catch (error) {
       if (error instanceof DOMException && error.name === 'AbortError') return;
       const message = t('identify.recognitionFailed');
+      setRecognition(null);
+      setCandidates([]);
+      setStage('candidates');
       setErrorMessage(message);
       showToast(message, 'error');
     } finally {
