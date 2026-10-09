@@ -331,7 +331,7 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const heldProfileOwnerMigration = readFileSync('supabase/migrations/202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql', 'utf8');
+const heldProfileOwnerMigration = readFileSync('supabase/held-migrations/202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql', 'utf8');
 assert.match(heldProfileOwnerMigration, /HOLD \/ REPOSITORY-ONLY OWNERSHIP ARTIFACT/);
 assert.match(heldProfileOwnerMigration, /raise exception 'HOLD: repository-only compatibility profile owner; do not apply without explicit DB-authority approval'/);
 for (const expected of [
