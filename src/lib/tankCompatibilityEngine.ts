@@ -33,6 +33,7 @@ import {
 } from '../../packages/domain-rules/src';
 import { estimateBioloadUnits } from '../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
+import { LOCAL_CATALOG_VERSION } from '../data/catalogVersion';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
@@ -131,7 +132,6 @@ export type EvaluateTankCompatibilityInput = {
 };
 
 const SPECIES_DATA_VERSION = 'local-fish-data-v1+compatibility-evidence-v2-stage-risk';
-const CATALOG_VERSION = 'local-fish-data-v1';
 
 const asRule = (
   code: string,
@@ -845,7 +845,7 @@ export const evaluateTankCompatibility = (input: EvaluateTankCompatibilityInput)
       return batch ? [[item.species.id, { lifeStage: batch.lifeStage, reproductiveState: batch.reproductiveState }]] : [];
     })),
     explicitPairStatus,
-    catalogVersion: CATALOG_VERSION,
+    catalogVersion: LOCAL_CATALOG_VERSION,
   };
   const domainDecision = evaluateCompatibility(domainInput);
   return applyCanonicalCompatibilityDecision({

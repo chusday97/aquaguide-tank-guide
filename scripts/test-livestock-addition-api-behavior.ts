@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { ApiError } from '../apps/api/src/http';
 import { readPublishedCatalogDecision } from '../apps/api/src/routes/aquariums';
+import { LOCAL_CATALOG_VERSION } from '../src/data/catalogVersion';
 
 type Result = { data: any; error: any };
 
@@ -12,61 +13,81 @@ const query = (result: Result) => {
 };
 
 type CatalogClient = Parameters<typeof readPublishedCatalogDecision>[0]['client'];
-const clientFor = (tables: Record<string, Result>) => ({
-  from: (table: string) => query(tables[table] || { data: [], error: null }),
+const clientForAquarium = (aquarium: any, error: any = null) => ({
+  from: (table: string) => {
+    assert.equal(table, 'aquariums', 'planned-addition compatibility must read only user tank facts from Supabase');
+    return query({ data: aquarium, error });
+  },
 }) as unknown as CatalogClient;
 
-const release = { version_key: 'catalog-v1' };
-const aquarium = {
-  water_type: 'Freshwater', length_cm: 60, width_cm: 40, height_cm: 40, target_temperature_c: 25,
-  aquarium_species: [{ species_catalog_key: 'existing', quantity: 2, deleted_at: null }],
-};
-const speciesRows = [
-  { id: 'existing-db', catalog_key: 'existing', water_type: 'Freshwater', water_temperature_min_c: 22, water_temperature_max_c: 28, ph_min: 6, ph_max: 8, status: 'published' },
-  { id: 'candidate-db', catalog_key: 'candidate', water_type: 'Freshwater', water_temperature_min_c: 22, water_temperature_max_c: 28, ph_min: 6, ph_max: 8, status: 'published' },
-];
-const reviewed = [{ species_id: 'existing-db' }, { species_id: 'candidate-db' }];
-
-const baseTables = () => ({
-  catalog_releases: { data: release, error: null },
-  aquariums: { data: aquarium, error: null },
-  species: { data: speciesRows, error: null },
-  species_reference_links: { data: reviewed, error: null },
-  species_pair_compatibility_rules: { data: null, error: null },
+const baseAquarium = (speciesCatalogKey?: string) => ({
+  water_type: 'Freshwater',
+  length_cm: 60,
+  width_cm: 40,
+  height_cm: 40,
+  target_temperature_c: 25,
+  aquarium_species: speciesCatalogKey
+    ? [{ species_catalog_key: speciesCatalogKey, quantity: 5, deleted_at: null }]
+    : [],
 });
 
 const expectApiError = async (run: () => Promise<unknown>, status: number, code: string) => {
   await assert.rejects(run, (error: unknown) => error instanceof ApiError && error.status === status && error.code === code);
 };
 
-const compatible = await readPublishedCatalogDecision({ client: clientFor(baseTables()), aquariumId: 'tank-1', speciesCatalogKey: 'candidate', catalogVersion: 'catalog-v1' });
-assert.equal(compatible.status, 'compatible');
-assert.equal(compatible.addPolicy, 'allow');
+const emptyTankDecision = await readPublishedCatalogDecision({
+  client: clientForAquarium(baseAquarium()),
+  aquariumId: 'tank-1',
+  speciesCatalogKey: 'sp_0436',
+  catalogVersion: LOCAL_CATALOG_VERSION,
+});
+assert.notEqual(emptyTankDecision.status, 'not_recommended');
 
 await expectApiError(
-  () => readPublishedCatalogDecision({ client: clientFor(baseTables()), aquariumId: 'tank-1', speciesCatalogKey: 'candidate', catalogVersion: 'stale' }),
+  () => readPublishedCatalogDecision({
+    client: clientForAquarium(baseAquarium()),
+    aquariumId: 'tank-1',
+    speciesCatalogKey: 'sp_0436',
+    catalogVersion: 'stale-catalog',
+  }),
   409,
   'VERSION_CONFLICT',
 );
 
-const unknownTables = baseTables();
-unknownTables.species = { data: speciesRows.map(row => row.catalog_key === 'candidate' ? { ...row, water_type: 'unknown' } : row), error: null };
-const insufficient = await readPublishedCatalogDecision({ client: clientFor(unknownTables), aquariumId: 'tank-1', speciesCatalogKey: 'candidate', catalogVersion: 'catalog-v1' });
-assert.equal(insufficient.status, 'insufficient_data');
-assert.equal(insufficient.addPolicy, 'complete_information');
-
-const blockedTables = baseTables();
-blockedTables.species_pair_compatibility_rules = { data: { verdict: 'not_recommended' }, error: null };
-const blocked = await readPublishedCatalogDecision({ client: clientFor(blockedTables), aquariumId: 'tank-1', speciesCatalogKey: 'candidate', catalogVersion: 'catalog-v1' });
-assert.equal(blocked.status, 'not_recommended');
-assert.equal(blocked.addPolicy, 'block');
-
-const missingReleaseTables = baseTables();
-missingReleaseTables.catalog_releases = { data: null, error: null };
 await expectApiError(
-  () => readPublishedCatalogDecision({ client: clientFor(missingReleaseTables), aquariumId: 'tank-1', speciesCatalogKey: 'candidate', catalogVersion: 'catalog-v1' }),
-  503,
+  () => readPublishedCatalogDecision({
+    client: clientForAquarium(baseAquarium()),
+    aquariumId: 'tank-1',
+    speciesCatalogKey: 'not-in-reviewed-catalog',
+    catalogVersion: LOCAL_CATALOG_VERSION,
+  }),
+  400,
   'COMPATIBILITY_INFORMATION_REQUIRED',
 );
 
-console.log('livestock addition API behavior verified: version, missing data, pair block and published catalog gates');
+await expectApiError(
+  () => readPublishedCatalogDecision({
+    client: clientForAquarium(baseAquarium('legacy-unmapped-species')),
+    aquariumId: 'tank-1',
+    speciesCatalogKey: 'sp_0436',
+    catalogVersion: LOCAL_CATALOG_VERSION,
+  }),
+  400,
+  'COMPATIBILITY_INFORMATION_REQUIRED',
+);
+
+// Reviewed authority badcase: Tiger Barb (sp_0439) + Guppy (sp_0436)
+// must remain blocked by fin-nipping / long-fin conflict without DB knowledge tables.
+const blocked = await readPublishedCatalogDecision({
+  client: clientForAquarium(baseAquarium('sp_0439')),
+  aquariumId: 'tank-1',
+  speciesCatalogKey: 'sp_0436',
+  catalogVersion: LOCAL_CATALOG_VERSION,
+});
+assert.equal(blocked.status, 'not_recommended');
+assert.equal(blocked.addPolicy, 'block');
+assert.ok(blocked.ruleCodes.includes('reviewed_pair_rule'));
+assert.ok(blocked.ruleCodes.includes('fin_nipping_target_vulnerability'));
+assert.ok(!blocked.ruleCodes.some(code => code.includes('predation')));
+
+console.log('livestock addition API behavior verified: Git catalog version, unknown species, unresolved tank species and reviewed pair block');
