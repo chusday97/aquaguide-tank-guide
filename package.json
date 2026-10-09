@@ -288,7 +288,9 @@
     "test:compatibility-symmetry": "node --import tsx scripts/test-compatibility-symmetry.ts",
     "test:platinum-snakehead-small-fish-pairs": "node --import tsx scripts/test-platinum-snakehead-small-fish-pairs.ts",
     "test:platinum-snakehead-remaining-pairs": "node --import tsx scripts/test-platinum-snakehead-remaining-pairs.ts",
-    "test:compatibility-pair-evidence-ceilings": "node --import tsx scripts/test-compatibility-pair-evidence-ceilings.ts"
+    "test:compatibility-pair-evidence-ceilings": "node --import tsx scripts/test-compatibility-pair-evidence-ceilings.ts",
+    "readiness:user-site": "node scripts/user-site-release-readiness.mjs",
+    "test:user-site-readiness": "node scripts/test-user-site-release-readiness.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
