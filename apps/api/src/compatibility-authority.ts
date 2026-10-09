@@ -126,7 +126,7 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
     && [...expectedProfileKeys].every(key => profileKeys.has(key))
     && [...expectedPairKeys].every(key => pairKeys.has(key))
     && [...expectedStageRiskKeys].every(key => stageRiskKeys.has(key));
-  if (!exactCoverage) throw new ApiError(409, 'MIGRATION_REJECTED', 'Reviewed Compatibility DB baseline 尚未完成 7 Profiles / 4 Pair Rules / canonical Stage Risk 全量对齐。');
+  if (!exactCoverage) throw new ApiError(409, 'MIGRATION_REJECTED', `Reviewed Compatibility DB baseline 尚未完成 ${expectedProfileKeys.size} Profiles / ${expectedPairKeys.size} Pair Rules / ${expectedStageRiskKeys.size} Stage Risk 全量对齐。`);
   return { profiles, pairRules, authority: 'reviewed-db', counts: { profiles: profiles.length, pairRules: pairRules.length } };
 };
 const speciesDetailToFish = (detail: SpeciesDetailDto): Fish => ({
