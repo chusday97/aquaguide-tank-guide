@@ -296,7 +296,9 @@
     "sync:runtime-compatibility-authority": "node --import tsx scripts/sync-runtime-compatibility-authority.ts",
     "test:content-import-target-guard": "node --import tsx scripts/test-content-import-target-guard.ts",
     "readiness:compatibility-production": "node --import tsx scripts/compatibility-production-readiness.mjs",
-    "test:compatibility-production-readiness": "node scripts/test-compatibility-production-readiness.mjs"
+    "test:compatibility-production-readiness": "node scripts/test-compatibility-production-readiness.mjs",
+    "plan:compatibility-production-migrations": "node --import tsx scripts/compatibility-production-migration-guard.mjs",
+    "test:compatibility-production-migration-guard": "node --import tsx scripts/test-compatibility-production-migration-guard.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
