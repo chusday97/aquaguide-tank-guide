@@ -1,3 +1,18 @@
+## 2026-10-09 — Compatibility Production prerequisite guard
+
+### Fixed
+
+- Corrected the Production Compatibility release bundle after an atomically rolled-back `42P01` failure exposed a missing `public.content_publications` prerequisite.
+- Added `202609040001_product_care_publication_snapshots.sql` ahead of the exact 22 Compatibility migrations, producing a deterministic 23-file guarded bundle.
+- Generalized embedded `BEGIN/COMMIT` stripping so both the publication prerequisite and Compatibility authority migration execute under one outer transaction.
+- Added preflight/postcheck/verifier coverage for the prerequisite table and updated the expected post-release migration count from 48 to 49.
+- Kept unrelated Catalog/SEO/content-audit migrations and the held 2026-10-09 Compatibility migration out of the release bundle.
+
+### Validation
+
+- Production stayed unchanged after the failed attempt: 26 migrations; 486 species; 486 feeding profiles; 41 care articles; 128 care steps; Compatibility authority still unapplied.
+- Guard test PASS; post-migration verifier contract PASS; Production dry-run PASS with fingerprint `ed34fdde8c7a7d48b8435bcede48b6857e6f5897e9557c5dc2c9d021636c4b46`; read-only verifier reports `NOT_MIGRATED`.
+
 # AI Changelog
 
 ## 2026-09-08 — Action foundation verification

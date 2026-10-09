@@ -1,3 +1,16 @@
+## 2026-10-09 — Production Compatibility prerequisite recovery
+
+- Start baseline: `main@201f200a` (PR #165 merged), Production Supabase `ydiygvhuqpogmqlcvgob`.
+- Production preflight is still the unchanged legacy baseline: 26 migrations, latest `20260816160129`, 486 species, 486 feeding profiles, 41 care articles, 128 care steps, 0 Compatibility profiles/pair rules/evidence, and no `content_publications` / authority-state / stage-risk tables.
+- One guarded 22-Compatibility-migration Production attempt was made on 2026-10-09. It failed inside the outer transaction with PostgreSQL `42P01` because `public.content_publications` did not exist. Immediate post-migration verification proved complete rollback; no Production business data or migration history changed.
+- Root cause: the release whitelist omitted required non-Compatibility prerequisite `202609040001_product_care_publication_snapshots.sql`, which must precede `202609050002_compatibility_versioned_publish.sql`.
+- Dependency audit found no evidence that unrelated Catalog/SEO migrations or `202609050003_content_publication_audit_history.sql` are required for this Compatibility release. Live Production already has the other referenced base tables/functions/publication columns.
+- Recovery branch: `codex/compatibility-production-prereq-20261009`. The guarded release is now 1 explicit prerequisite + the exact original 22 Compatibility migrations = 23 migrations, fingerprint `ed34fdde8c7a7d48b8435bcede48b6857e6f5897e9557c5dc2c9d021636c4b46`.
+- Embedded migration transaction wrappers are stripped so the release remains one atomic outer transaction. Preflight requires `content_publications` absent; in-transaction postcheck and the post-migration verifier both require it present after success.
+- PASS: migration-guard contract, post-migration verifier contract, Production dry-run, Production read-only verifier (`NOT_MIGRATED`), and diff check. Held migration `202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql` remains excluded.
+- NEXT SAFE STEP: merge the focused prerequisite fix to `main`; on clean/synced `main`, rerun the same tests + Production dry-run; only then retry the guarded 23-file Production transaction and immediately run the post-migration verifier.
+- Do not use plain `supabase db push` for this release: the guarded release intentionally applies only the explicit prerequisite + Compatibility subset and excludes unrelated chronological migrations.
+
 ## LIVE STATUS — 2026-09-16 RC1 released / closed
 - Production: `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` / `93549ddf1cad0855a7c479e4a696cdde7e66f06c`, READY / production.
 - Production API health: PASS (200, `ok=true`).
