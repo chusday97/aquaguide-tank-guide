@@ -97,5 +97,6 @@ console.log(JSON.stringify({
   historicalPullRequest: state.historicalPullRequest,
   localPreview: state.localPreview,
   dirty: Boolean(dirty),
-  releaseReady: false,
+  releaseReady: null,
+  releaseReadySource: 'npm run readiness:user-site',
 }, null, 2));
