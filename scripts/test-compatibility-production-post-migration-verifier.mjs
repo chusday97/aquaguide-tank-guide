@@ -3,7 +3,7 @@ import { classifyState,validateDetailedState } from './compatibility-production-
 import { getAuthorityKeys } from './compatibility-production-migration-guard.mjs';
 const pre={migration_count:26,latest_version:'20260816160129',content_publications_exists:false,species:486,feeding:486,care:41,care_steps:128,species_assets:0,care_assets:0,profiles:0,pair_rules:0,evidence:0,authority_state_exists:false,stage_risks_exists:false};
 assert.equal(classifyState(pre),'NOT_MIGRATED');
-const post={...pre,migration_count:49,latest_version:'202609160001',content_publications_exists:true,profiles:34,pair_rules:21,evidence:20,authority_state_exists:true,stage_risks_exists:true};
+const post={...pre,migration_count:51,latest_version:'202610090003',content_publications_exists:true,profiles:34,pair_rules:21,evidence:61,authority_state_exists:true,stage_risks_exists:true};
 assert.equal(classifyState(post),'VERIFY_POST_MIGRATION');
 assert.equal(classifyState({...pre,migration_count:27}),'BLOCKED_STATE_DRIFT');
 assert.equal(classifyState({...pre,content_publications_exists:true}),'BLOCKED_STATE_DRIFT');
