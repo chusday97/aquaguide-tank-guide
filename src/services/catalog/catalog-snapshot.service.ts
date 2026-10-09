@@ -5,8 +5,9 @@ import type { Fish } from '../../types';
 import { speciesProfileFromFish } from './species-profile.adapter';
 import { applyApprovedCatalogFieldReviews } from '../../data/catalogFieldReviews';
 import { resolveApiV1Url } from '../api/api-origin';
+import { LOCAL_CATALOG_VERSION } from '../../data/catalogVersion';
 
-export const LOCAL_CATALOG_VERSION = 'local-fish-data-v1';
+export { LOCAL_CATALOG_VERSION } from '../../data/catalogVersion';
 const LOCAL_SNAPSHOT_URL = `https://catalog.invalid/releases/${LOCAL_CATALOG_VERSION}/catalog.snapshot.json`;
 
 export type CatalogLoadResult = {

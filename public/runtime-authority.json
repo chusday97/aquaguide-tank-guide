@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "authority": "local-file-git",
-  "generatedAt": "2026-09-13T15:00:50.884Z",
+  "generatedAt": "2026-10-09T08:33:40.259Z",
   "source": {
     "businessUpdatedAt": null,
     "compatibilityUpdatedAt": null,
@@ -138,6 +138,46 @@
       },
       {
         "catalogKey": "sp_0448",
+        "behaviorTraits": [
+          "peaceful",
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi (Ram)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/12305",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0016",
         "behaviorTraits": [
           "peaceful",
           "breeding_defense"
@@ -481,6 +521,94 @@
             "title": "Gymnocorymbus ternetzi (Black tetra) species summary",
             "publisher": "FishBase",
             "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0433",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "minimumGroupSize": 10,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "seriouslyfish-petitella-rhodostoma",
+            "title": "Hemigrammus rhodostomus / Petitella rhodostoma (Rummy-nose tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/hemigrammus-rhodostomus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-petitella-rhodostoma",
+            "title": "Petitella rhodostoma species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Hemigrammus-rhodostomus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0013",
+        "behaviorTraits": [
+          "peaceful",
+          "bottom_dwelling"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-otocinclus-vittatus",
+            "title": "Otocinclus vittatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Otocinclus-vittatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "aquariumcoop-otocinclus-catfish",
+            "title": "Care Guide for Otocinclus Catfish",
+            "publisher": "Aquarium Co-Op",
+            "url": "https://www.aquariumcoop.com/blogs/aquarium/otocinclus-catfish",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "scotcat-otocinclus-vittatus",
+            "title": "Otocinclus vittatus Regan, 1904",
+            "publisher": "ScotCat",
+            "url": "https://www.scotcat.com/loricariidae/otocinclus_vittatus.htm",
             "sourceType": "curated_husbandry",
             "reviewStatus": "reviewed",
             "version": 1
@@ -1074,6 +1202,44 @@
         "version": 1
       },
       {
+        "catalogKey": "sp_0475",
+        "behaviorTraits": [
+          "schooling"
+        ],
+        "minimumGroupSize": 3,
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch03-fishbase-rhodeus-ocellatus",
+            "title": "Rhodeus ocellatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Rhodeus-ocellatus.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "jstage-rhodeus-ocellatus-schooling",
+            "title": "Characteristics of Schooling Behavior by the Group Size of Rose Bitterling in the Experimental Water Tank",
+            "publisher": "Nippon Suisan Gakkaishi / J-STAGE",
+            "url": "https://doi.org/10.2331/suisan.51.1977",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
         "catalogKey": "sp_0446",
         "behaviorTraits": [
           "territorial",
@@ -1114,9 +1280,640 @@
         ],
         "stageRiskRules": [],
         "version": 1
+      },
+      {
+        "catalogKey": "sp_0451",
+        "behaviorTraits": [
+          "predatory"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-astronotus-ocellatus-ecology",
+            "title": "Astronotus ocellatus ecology summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/Ecology/Astronotus_ocellatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-astronotus-ocellatus",
+            "title": "Astronotus ocellatus (Oscar)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/astronotus-ocellatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
       }
     ],
     "pairRules": [
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0431"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0434"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0436"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0435"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0439"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0010",
+          "sp_0224"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0011",
+          "sp_0224"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0437"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0012",
+          "sp_0224"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0468"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0443"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0013",
+          "sp_0224"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙 catalog object 已通过 reviewed identity 映射到 Channa argus 的 Platinum 品系。FWS 2024 将 Channa argus 明确描述为 piscivorous；USGS 2012 胃内容物研究中超过 97% 为鱼类。当前规则仅用于 catalog size=Small 的鱼类对象，属于“物种捕食生态 + 小型鱼体型”的规则推断，不外推到中大型鱼、虾或螺。",
+        "mitigation": [
+          "不要把白金雷龙与该小型鱼作为长期同缸组合；优先物理分缸。",
+          "不要把暂时体型接近、躲避物或短期未追逐理解为已消除捕食风险。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0438"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "白金雷龙对象已审核到 Channa argus Platinum，最大体长约 100 cm；红剑鱼 reviewed 最大体长约 14 cm。USGS 物种资料记录成体 Channa argus 可捕食达到自身约 33% 体长的鱼，因此 14 cm 红剑鱼明显落在已记录捕食尺寸窗口内。该结论是物种捕食生态 + reviewed 体型的规则推断。",
+        "mitigation": [
+          "不要把白金雷龙与红剑鱼作为长期同缸组合；优先物理分缸。",
+          "不要把幼体阶段暂时体型接近理解为成年后仍安全。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0021",
+          "sp_0224"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "迷你鹦鹉鱼 catalog object 的商业品系 taxon 仍未完全解析，但对象级最大体长约 10 cm 已审核通过。USGS 记录成体 Channa argus 可捕食达到自身约 33% 体长的鱼；10 cm 级鱼明显落在白金雷龙 reviewed 最大约 100 cm 所对应的捕食尺寸窗口内。该结论只依赖“鱼类 + reviewed 对象级体型”，不把基础种行为自动提升为该商业品系。",
+        "mitigation": [
+          "不要把白金雷龙与迷你鹦鹉鱼作为长期同缸组合；优先物理分缸。",
+          "不要用商业品系身份尚未完全解析来反推捕食风险不存在。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0224",
+          "sp_0459"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "黑壳虾/极火虾对象均有 reviewed Neocaridina davidi 身份与约 4 cm 最大体长 authority。USGS Channa argus 物种资料记录成体猎物包括 crayfish，并指出成体剩余非鱼类食物中包含 crustaceans；风险评估也把 surface-dwelling crayfish and shrimp 列为可能受影响的甲壳类。对 4 cm 级淡水虾，存在足够的捕食威胁，不应作为长期同缸安全组合。",
+        "mitigation": [
+          "不要把白金雷龙与该小型淡水虾作为长期同缸组合；优先物理分缸。",
+          "不要把水草躲避物或短期未捕食理解为风险已消失。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
+      {
+        "catalogKeys": [
+          "sp_0001",
+          "sp_0224"
+        ],
+        "verdict": "not_recommended",
+        "riskType": "predation_threat",
+        "reason": "黑壳虾/极火虾对象均有 reviewed Neocaridina davidi 身份与约 4 cm 最大体长 authority。USGS Channa argus 物种资料记录成体猎物包括 crayfish，并指出成体剩余非鱼类食物中包含 crustaceans；风险评估也把 surface-dwelling crayfish and shrimp 列为可能受影响的甲壳类。对 4 cm 级淡水虾，存在足够的捕食威胁，不应作为长期同缸安全组合。",
+        "mitigation": [
+          "不要把白金雷龙与该小型淡水虾作为长期同缸组合；优先物理分缸。",
+          "不要把水草躲避物或短期未捕食理解为风险已消失。"
+        ],
+        "basis": "rule_inference",
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "northern-snakehead-fws-erss-2024",
+            "title": "Ecological Risk Screening Summary - Northern Snakehead (Channa argus) - High Risk",
+            "publisher": "U.S. Fish and Wildlife Service",
+            "url": "https://www.fws.gov/media/ecological-risk-screening-summary-northern-snakehead-channa-argus-high-risk",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "northern-snakehead-usgs-diet-2012",
+            "title": "Diet of non-native northern snakehead (Channa argus) compared to three co-occurring predators in the lower Potomac River, USA",
+            "publisher": "U.S. Geological Survey / Ecology of Freshwater Fish",
+            "url": "https://pubs.usgs.gov/publication/70168483",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "version": 1
+      },
       {
         "catalogKeys": [
           "sp_0436",
@@ -1304,8 +2101,8 @@
       }
     ],
     "counts": {
-      "profiles": 29,
-      "pairRules": 5
+      "profiles": 34,
+      "pairRules": 21
     }
   }
 }
