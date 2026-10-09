@@ -293,7 +293,8 @@
     "test:user-site-readiness": "node scripts/test-user-site-release-readiness.mjs",
     "readiness:production-preflight": "node scripts/production-promotion-preflight.mjs",
     "test:production-preflight": "node scripts/test-production-promotion-preflight.mjs",
-    "sync:runtime-compatibility-authority": "node --import tsx scripts/sync-runtime-compatibility-authority.ts"
+    "sync:runtime-compatibility-authority": "node --import tsx scripts/sync-runtime-compatibility-authority.ts",
+    "test:content-import-target-guard": "node --import tsx scripts/test-content-import-target-guard.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
