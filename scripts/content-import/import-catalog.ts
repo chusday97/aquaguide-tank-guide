@@ -8,6 +8,7 @@ import { fishData } from '../../src/data/fishData';
 import { getSpeciesVisualSources } from '../../src/lib/speciesVisual';
 import { deterministicUuid } from '../../apps/api/src/data-utils';
 import { getAdminSupabase } from '../../apps/api/src/supabase';
+import { assertContentImportCommitTarget } from './target-guard';
 
 const root = resolve(import.meta.dirname, '../..');
 const shouldCommit = process.argv.includes('--commit');
@@ -337,6 +338,8 @@ if (!shouldCommit) {
   console.log(JSON.stringify({ mode: 'dry-run', status: contentStatus, metadataOnly, ...summary }, null, 2));
   console.log('预检通过。使用 --commit 才会写入已配置的 Supabase 项目。');
 } else {
+  const targetProjectRef = assertContentImportCommitTarget();
+  console.log(`Content import target verified: ${targetProjectRef}`);
   const client = getAdminSupabase();
   const speciesAssetUpdates = await importSpecies(client);
   const careAssetUpdates = await importCareArticles(client);
