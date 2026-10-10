@@ -1,6 +1,7 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'biology-2026-mini-parrot-taxonomy-boundary': { id: 'biology-2026-mini-parrot-taxonomy-boundary', title: 'Comparison of Morphological Characteristics, Histological Tissue Structures, and Intestinal Function Among Eight Ornamental Fish Species Under Identical Aquaculture Conditions', publisher: 'Biology', url: 'https://www.mdpi.com/2079-7737/15/13/1043', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
   'sciadv-betta-phenotypic-diversity': { id: 'sciadv-betta-phenotypic-diversity', title: 'The genetic architecture of phenotypic diversity in the Betta fish (Betta splendens)', publisher: 'Science Advances', url: 'https://doi.org/10.1126/sciadv.abm4955', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
   'ygcen-betta-behavior-variation-2022': { id: 'ygcen-betta-behavior-variation-2022', title: 'Variation in nest building, aggression, learning, and steroid hormone levels in Betta splendens', publisher: 'General and Comparative Endocrinology', url: 'https://doi.org/10.1016/j.ygcen.2022.114044', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
   'uf-ifas-neocaridina-davidi': { id: 'uf-ifas-neocaridina-davidi', title: 'Cherry Shrimp Neocaridina davidi', publisher: 'UF/IFAS Extension', url: 'https://ask.ifas.ufl.edu/publication/IN1301', sourceType: 'professional_association', reviewStatus: 'reviewed' },

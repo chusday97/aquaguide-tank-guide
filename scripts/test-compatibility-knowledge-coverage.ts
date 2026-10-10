@@ -107,6 +107,16 @@ assert.equal(candyKoiGap.evidence_ceiling.code, 'variant_social_not_established'
 assert.equal(candyKoiGap.evidence_ceiling.field, 'social');
 assert.match(candyKoiGap.resolution_note, /Koi\/candy|mosaic/i);
 assert.equal(report.evidence_ceiling_species_gap_count, 1);
+assert.equal(report.research_actionable_species_count, 0);
+assert.equal(report.terminal_species_hold_count, 5);
+assert.deepEqual(queue.actionable_species_queue, []);
+assert.deepEqual(
+  queue.terminal_species_holds.map(item => item.species_id).sort(),
+  ['sp_0002', 'sp_0021', 'sp_0224', 'sp_0258', 'sp_0428'],
+);
+for (const item of queue.terminal_species_holds) {
+  assert.equal(item.research_disposition, 'terminal_unknown_hold');
+}
 
 if (queue.pair_gaps.length > 0) {
   assert.ok(queue.species_gaps.some(item => item.blocked_pair_count > 0), 'pair gaps must feed species-level unlock impact');
@@ -148,6 +158,13 @@ for (const [key, code] of [
 }
 assert.equal(report.evidence_ceiling_pair_gap_count, 3);
 assert.equal(report.boundary_blocked_pair_gap_count, 0);
+assert.equal(report.research_actionable_pair_count, 0);
+assert.equal(report.terminal_pair_hold_count, 3);
+assert.deepEqual(queue.actionable_pair_queue, []);
+assert.equal(queue.terminal_pair_holds.length, 3);
+for (const item of queue.terminal_pair_holds) {
+  assert.equal(item.research_disposition, 'terminal_unknown_hold');
+}
 
 assert.equal(queue.uses_real_user_telemetry, false);
 console.log('compatibility knowledge coverage contract passed: deterministic coverage, fail-closed unknowns, and actionable gap queues');

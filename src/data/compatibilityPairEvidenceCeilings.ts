@@ -9,6 +9,7 @@ export type CompatibilityPairEvidenceCeiling = {
   sourceIds: string[];
   note: string;
   reviewedAt: string;
+  researchDisposition?: 'terminal_unknown_hold';
 };
 
 const keyOf = (leftId: string, rightId: string) => [leftId, rightId].sort().join('::');
@@ -25,6 +26,7 @@ const ceilings: CompatibilityPairEvidenceCeiling[] = [
     ],
     note: 'Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions.',
     reviewedAt: '2026-09-22',
+    researchDisposition: 'terminal_unknown_hold',
   },
   {
     speciesIds: ['sp_0224', 'sp_0428'],
@@ -36,6 +38,7 @@ const ceilings: CompatibilityPairEvidenceCeiling[] = [
     ],
     note: 'Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods.',
     reviewedAt: '2026-09-22',
+    researchDisposition: 'terminal_unknown_hold',
   },
   {
     speciesIds: ['sp_0224', 'sp_0451'],
@@ -48,6 +51,7 @@ const ceilings: CompatibilityPairEvidenceCeiling[] = [
     ],
     note: 'USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted.',
     reviewedAt: '2026-09-22',
+    researchDisposition: 'terminal_unknown_hold',
   },
 ];
 

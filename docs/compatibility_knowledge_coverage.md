@@ -20,6 +20,10 @@
 - Evidence-research-only pair gaps: 0
 - Evidence-ceiling pair gaps: 3
 - Boundary-blocked pair gaps: 0
+- Research-actionable species: 0
+- Terminal reviewed-unknown species holds: 5
+- Research-actionable pairs: 0
+- Terminal reviewed-unknown pair holds: 3
 
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
@@ -31,17 +35,22 @@
 
 ## Highest-priority species gaps
 
-1. 白金雷龙 (sp_0224) — social, compatibility_profile — variant_authority_review [variant_authority_not_promotable, variant_husbandry_not_established] — unlocks 3 insufficient pairs — score 26
-2. 水晶虾 (sp_0002) — environment, space, social — identity_review [trade_name_taxon_ambiguous] — unlocks 1 insufficient pairs — score 25
-3. 斑马螺 (sp_0428) — environment, space, social — identity_review [accepted_taxon_alias_trade_ambiguous] — unlocks 1 insufficient pairs — score 25
-4. 迷你鹦鹉鱼 (sp_0021) — environment, social — identity_review [commercial_hybrid_identity_unresolved] — unlocks 0 insufficient pairs — score 19
-5. 糖果KOI斗鱼 (sp_0258) — social — evidence_ceiling [variant_social_not_established] — unlocks 0 insufficient pairs — score 15
+No launch-cohort species requires another ordinary research pass.
 
 ## Highest-priority pair gaps
 
-1. 水晶虾 × 白金雷龙 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — evidence_ceiling [trade_name_taxon_ambiguous, variant_authority_not_promotable, variant_husbandry_not_established] — score 29
-2. 白金雷龙 × 斑马螺 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — evidence_ceiling [accepted_taxon_alias_trade_ambiguous, variant_authority_not_promotable, variant_husbandry_not_established] — score 29
-3. 白金雷龙 × 地图鱼 — missing: behavior_evidence_unreviewed, species_evidence_unreviewed — evidence_ceiling [variant_authority_not_promotable, variant_husbandry_not_established] — score 29
+No launch-cohort pair requires another ordinary research pass; remaining insufficient pairs are terminal reviewed holds until materially new evidence appears.
+
+## Terminal reviewed-unknown holds
+
+1. 白金雷龙 (sp_0224) — variant_authority_review — Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.
+2. 水晶虾 (sp_0002) — identity_review — “水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。
+3. 斑马螺 (sp_0428) — identity_review — Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。
+4. 迷你鹦鹉鱼 (sp_0021) — identity_review — “迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。
+5. 糖果KOI斗鱼 (sp_0258) — evidence_ceiling — Koi/candy is a reviewed mosaic commercial phenotype of domesticated Betta splendens, but published aggression work shows substantial individual/strain variation and does not establish a Koi-specific stable social mode. Keep social authority fail-closed instead of promoting the base-species profile by color-name alone.
+P1. 水晶虾 × 白金雷龙 — evidence_ceiling — Channa argus has reviewed crustacean-predation evidence, but the catalog trade object “水晶虾/Crystal Shrimp” is not securely mapped to one taxon and lacks object-level reviewed size/behavior authority. Do not promote a hard pair verdict from base-species or generic shrimp assumptions.
+P2. 白金雷龙 × 斑马螺 — evidence_ceiling — Reviewed Channa argus sources support strong piscivory and some crustacean prey, but do not establish gastropod/snail predation. Zebra-nerite trade identity is also taxonomically ambiguous. Crustacean evidence must not be extrapolated to gastropods.
+P3. 白金雷龙 × 地图鱼 — evidence_ceiling — USGS records adult Channa argus taking fish up to roughly one-third of its body length. Platinum snakehead reviewed maximum is about 100 cm, while Oscar reviewed maximum is about 45.7 cm, outside that supported prey-size window. No direct Channa argus × Astronotus ocellatus pair authority is reviewed, so neither safety nor predation risk is promoted.
 
 ## Research workflow
 

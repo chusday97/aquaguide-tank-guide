@@ -21,6 +21,7 @@ for (const [key, code] of expected) {
   assert.equal(ceiling.code, code);
   assert.ok(ceiling.sourceIds.length > 0);
   assert.ok(ceiling.note.length > 40);
+  assert.equal(ceiling.researchDisposition, 'terminal_unknown_hold');
 
   const left = byId.get(leftId);
   const right = byId.get(rightId);
