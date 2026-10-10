@@ -721,6 +721,24 @@ const commonPlecoFishBase: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const blackParadiseFishBase: EvidenceSourceDto = {
+  id: 'fishbase-macropodus-spechti',
+  title: 'Macropodus spechti species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.org/summary/Macropodus-spechti.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const blackParadiseSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-macropodus-spechti',
+  title: 'Macropodus spechti (Black Paradise Fish)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/macropodus-spechti',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const roundtailParadiseFishBase: EvidenceSourceDto = {
   id: 'fishbase-macropodus-ocellatus',
   title: 'Macropodus ocellatus species summary',
@@ -770,6 +788,17 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [roundtailParadiseFishBase, roundtailParadiseSeriouslyFish],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'territoriality', 'breeding_behavior'],
+  },
+
+  sp_0044: {
+    speciesId: 'sp_0044',
+    waterType: 'freshwater',
+    behaviorTraits: ['breeding_defense'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [blackParadiseFishBase, blackParadiseSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior', 'breeding_behavior'],
   },
 
   sp_0133: {

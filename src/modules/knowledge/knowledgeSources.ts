@@ -993,6 +993,22 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'curated_husbandry',
     reviewStatus: 'reviewed',
   },
+  'fishbase-macropodus-spechti': {
+    id: 'fishbase-macropodus-spechti',
+    title: 'Macropodus spechti species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.org/summary/Macropodus-spechti.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'seriouslyfish-macropodus-spechti': {
+    id: 'seriouslyfish-macropodus-spechti',
+    title: 'Macropodus spechti (Black Paradise Fish)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/macropodus-spechti',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
 };
 export const getKnowledgeSource = (sourceId: string) => knowledgeSources[sourceId];
 

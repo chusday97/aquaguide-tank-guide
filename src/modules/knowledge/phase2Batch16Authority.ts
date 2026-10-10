@@ -112,6 +112,58 @@ const fireRedShrimpKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 };
 
 
+const blackParadiseFishKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  ...makeKnowledge(phase2Batch16Subjects.sp_0044),
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 20, max: 30 },
+    phRange: { min: 6, max: 8 },
+    hardnessDgh: { min: 5, max: 20 },
+    notes: [
+      'Seriously Fish gives aquarium conditions of 20–30°C, pH 6.0–8.0 and 5–20 dGH.',
+      'FishBase independently confirms Macropodus spechti as a freshwater species and records pH 6.5–7.8; the broader direct aquarium range is retained for compatibility planning.',
+    ],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch18-fishbase-macropodus-spechti', 'seriouslyfish-macropodus-spechti'],
+      reviewedAt: '2026-10-11',
+      note: 'Object-specific environment authority from FishBase plus direct aquarium husbandry.',
+    },
+  },
+  socialBehavior: {
+    mode: 'variable',
+    territoriality: 'medium',
+    predationRisk: 'low',
+    summary: '通常相对温和，繁殖期领地行为会增强；可成对或成群饲养，但不据此设未经来源支持的最低群体数。',
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['seriouslyfish-macropodus-spechti'],
+      reviewedAt: '2026-10-11',
+      note: 'Seriously Fish directly states the species is relatively peaceful unless breeding and may be maintained as a pair or group.',
+    },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 8, measurement: 'SL' },
+    minVolumeLiters: 72,
+    minTankLengthCm: 80,
+    activityLevel: 'medium',
+    needsCover: true,
+    spaceNotes: [
+      'Seriously Fish reports up to 80 mm SL and recommends at least an 80 × 30 cm base, approximately 72 L, for a single pair.',
+      'No maximum stocking count is inferred from the pair recommendation.',
+    ],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['seriouslyfish-macropodus-spechti'],
+      reviewedAt: '2026-10-11',
+      note: 'Direct aquarium-space and adult-size authority from the same species account.',
+    },
+  },
+};
+
 const roundtailParadiseFishKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   ...makeKnowledge(phase2Batch16Subjects.sp_0043),
   environment: {
@@ -169,7 +221,8 @@ export const phase2Batch16Knowledge = Object.fromEntries(Object.entries(phase2Ba
   id === 'sp_0001' ? fireRedShrimpKnowledge
     : id === 'sp_0015' ? kissingGouramiKnowledge
       : id === 'sp_0043' ? roundtailParadiseFishKnowledge
-        : makeKnowledge(subject),
+        : id === 'sp_0044' ? blackParadiseFishKnowledge
+          : makeKnowledge(subject),
 ])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch16Authority = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [id, {
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },

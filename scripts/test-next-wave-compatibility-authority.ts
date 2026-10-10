@@ -11,11 +11,13 @@ for (const sourceId of [
   'fishbase-hypostomus-plecostomus',
   'fishbase-macropodus-ocellatus',
   'seriouslyfish-macropodus-ocellatus',
+  'fishbase-macropodus-spechti',
+  'seriouslyfish-macropodus-spechti',
 ]) {
   assert.equal(resolveKnowledgeSources([sourceId]).length, 1, `knowledge source must resolve: ${sourceId}`);
 }
 
-for (const id of ['sp_0019', 'sp_0026', 'sp_0043']) {
+for (const id of ['sp_0019', 'sp_0026', 'sp_0043', 'sp_0044']) {
   const fish = fishData.find(item => item.id === id);
   assert.ok(fish, `catalog fish missing: ${id}`);
   assert.ok(getReviewedSpeciesKnowledgeForFish(fish), `runtime Species Knowledge must resolve after Compatibility promotion: ${id}`);
@@ -55,10 +57,23 @@ const roundtailProfile = getReviewedCompatibilityProfile('sp_0043');
 assert.ok(roundtailProfile?.behaviorTraits.includes('breeding_defense'));
 assert.ok(roundtailProfile?.behaviorTraits.includes('territorial'));
 
+const blackParadise = getReviewedSpeciesKnowledge('sp_0044');
+assert.deepEqual(blackParadise?.environment?.temperatureRangeC, { min: 20, max: 30 });
+assert.deepEqual(blackParadise?.environment?.phRange, { min: 6, max: 8 });
+assert.equal(blackParadise?.spaceAndGrowth?.minVolumeLiters, 72);
+assert.equal(blackParadise?.spaceAndGrowth?.minTankLengthCm, 80);
+assert.equal(blackParadise?.socialBehavior?.mode, 'variable');
+assert.equal(blackParadise?.socialBehavior?.territoriality, 'medium');
+
+const blackParadiseProfile = getReviewedCompatibilityProfile('sp_0044');
+assert.deepEqual(blackParadiseProfile?.behaviorTraits, ['breeding_defense']);
+assert.equal(blackParadiseProfile?.minimumGroupSize, undefined);
+assert.deepEqual(blackParadiseProfile?.predationTargets, []);
+
 const smallFish = fishData.find(fish => fish.id === 'sp_0431');
 const altumFish = fishData.find(fish => fish.id === 'sp_0019');
 assert.ok(smallFish && altumFish);
 const predation = evaluateSpeciesCombination([altumFish, smallFish]);
 assert.notEqual(predation.status, 'compatible', 'Altum + very small fish must not be treated as unconditionally compatible');
 
-console.log('next-wave compatibility authority passed: altum + common pleco + roundtail paradise fish');
+console.log('next-wave compatibility authority passed: altum + common pleco + roundtail paradise fish + black paradise fish');
