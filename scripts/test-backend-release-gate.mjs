@@ -3,6 +3,7 @@ import { spawnSync } from 'node:child_process';
 const gates = [
   ['Species Knowledge', 'npm', ['run', 'test:species-knowledge']],
   ['Fire Red Shrimp Knowledge', 'npm', ['run', 'test:fire-red-shrimp-knowledge-authority']],
+  ['Kissing Gourami Authority', 'npm', ['run', 'test:kissing-gourami-compatibility-authority']],
   ['Wild Neocaridina Knowledge', 'npm', ['run', 'test:wild-neocaridina-knowledge-authority']],
   ['Pearl Red Snakehead Knowledge', 'npm', ['run', 'test:pearl-red-snakehead-knowledge-authority']],
   ['Neon Tetra Environment', 'npm', ['run', 'test:neon-tetra-environment-authority']],

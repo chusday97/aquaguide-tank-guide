@@ -331,6 +331,17 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
+const kissingGouramiMigration = readFileSync('supabase/migrations/20261010095813_compatibility_kissing_gourami_authority.sql', 'utf8');
+const kissingGouramiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0015');
+assert.ok(kissingGouramiProfile, '20261010095813 must own the reviewed kissing-gourami profile.');
+assert.equal(kissingGouramiMigration.includes("catalog_key='sp_0015'"), true, 'kissing-gourami migration must target sp_0015.');
+for (const source of kissingGouramiProfile.citations) {
+  assert.equal(kissingGouramiMigration.includes(source.id), true, 'kissing-gourami migration must include source ' + source.id);
+}
+assert.match(kissingGouramiMigration, /expected 35 reviewed Compatibility profiles/, 'kissing-gourami migration must freeze the post-release profile count.');
+assert.match(kissingGouramiMigration, /sp_0015 profile drift/, 'kissing-gourami migration must include an exact Profile drift guard.');
+assert.match(kissingGouramiMigration, /sp_0015 source links drift/, 'kissing-gourami migration must include evidence-link drift guard.');
+
 const heldProfileOwnerMigration = readFileSync('supabase/held-migrations/202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql', 'utf8');
 assert.match(heldProfileOwnerMigration, /HOLD \/ REPOSITORY-ONLY OWNERSHIP ARTIFACT/);
 assert.match(heldProfileOwnerMigration, /raise exception 'HOLD: repository-only compatibility profile owner; do not apply without explicit DB-authority approval'/);
@@ -351,7 +362,7 @@ for (const expected of [
 assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile drift:/g) || []).length, 2);
 assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile evidence drift:/g) || []).length, 2);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475']);
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

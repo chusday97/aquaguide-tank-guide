@@ -820,64 +820,22 @@
         "care"
       ],
       "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
+        "feeding": "reviewed_supported",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
+        "care": "reviewed_supported"
       },
       "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
+      "reviewed_unknown_fields": [],
+      "reviewed_unknown_resolutions": [],
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
+      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -1199,28 +1157,28 @@
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "commercial_hybrid_identity_unresolved",
-          "note": "“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。"
+          "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。"
         },
         {
           "field": "environment",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "commercial_hybrid_identity_unresolved",
-          "note": "“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。"
+          "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。"
         },
         {
           "field": "social",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "commercial_hybrid_identity_unresolved",
-          "note": "“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。"
+          "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。"
         },
         {
           "field": "care",
           "mode": "do_not_repeat_ordinary_research",
           "reason": "catalog_identity_boundary",
           "code": "commercial_hybrid_identity_unresolved",
-          "note": "“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。"
+          "note": "“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。"
         }
       ],
       "direct_species_knowledge": true,
@@ -33404,40 +33362,40 @@
   ],
   "status_counts": {
     "feeding": {
-      "reviewed_supported": 25,
-      "reviewed_unknown": 386,
+      "reviewed_supported": 26,
+      "reviewed_unknown": 385,
       "inherited_reviewed": 0,
       "not_applicable": 75,
       "needs_research": 0,
       "template_only": 0
     },
     "environment": {
-      "reviewed_supported": 40,
-      "reviewed_unknown": 435,
+      "reviewed_supported": 41,
+      "reviewed_unknown": 434,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
       "template_only": 0
     },
     "space": {
-      "reviewed_supported": 42,
-      "reviewed_unknown": 433,
+      "reviewed_supported": 43,
+      "reviewed_unknown": 432,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
       "template_only": 0
     },
     "social": {
-      "reviewed_supported": 37,
-      "reviewed_unknown": 374,
+      "reviewed_supported": 38,
+      "reviewed_unknown": 373,
       "inherited_reviewed": 0,
       "not_applicable": 75,
       "needs_research": 0,
       "template_only": 0
     },
     "care": {
-      "reviewed_supported": 25,
-      "reviewed_unknown": 450,
+      "reviewed_supported": 26,
+      "reviewed_unknown": 449,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,

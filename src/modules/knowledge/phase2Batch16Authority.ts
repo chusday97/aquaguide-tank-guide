@@ -22,6 +22,56 @@ const makeKnowledge = (subject: Subject): SpeciesKnowledgeProfile['knowledge'] =
   socialBehavior: { mode: 'unknown', summary: '来源不足以确认稳定水族箱社会模式。', evidence: evidence(subject, 'social behavior') },
   spaceAndGrowth: { activityLevel: 'unknown', evidence: evidence(subject, 'space and growth') },
 });
+const kissingGouramiKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  ...makeKnowledge(phase2Batch16Subjects.sp_0015),
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 22, max: 28 },
+    phRange: { min: 6, max: 8 },
+    notes: [
+      'FishBase records freshwater habitat, 22–28°C and pH 6–8.',
+      'Seriously Fish describes slow-moving or standing habitats and gives a broader 22–30°C aquarium range; the narrower FishBase temperature range is retained for compatibility planning.',
+    ],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch18-fishbase-helostoma-temminkii', 'seriouslyfish-helostoma-temminkii'],
+      reviewedAt: '2026-10-10',
+      note: 'Object-specific environmental authority from FishBase plus curated aquarium husbandry.',
+    },
+  },
+  socialBehavior: {
+    mode: 'variable',
+    territoriality: 'medium',
+    predationRisk: 'low',
+    summary: '成体并非必须群居；空间不足时可对同类或相似体型鱼表现攻击，“接吻”至少部分与社会支配有关。可在足够大的缸中群养，但不设未经证据支持的最低群体数。',
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['seriouslyfish-helostoma-temminkii'],
+      reviewedAt: '2026-10-10',
+      note: 'Seriously Fish directly describes conditional aggression, dominance-related kissing and non-obligate adult grouping.',
+    },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 30, measurement: 'TL' },
+    minVolumeLiters: 304,
+    minTankLengthCm: 150,
+    activityLevel: 'medium',
+    spaceNotes: [
+      'FishBase reports up to 30 cm TL and at least 150 cm aquarium length.',
+      'Seriously Fish recommends a long-term base of at least 150 × 45 cm, approximately 304 L.',
+    ],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch18-fishbase-helostoma-temminkii', 'seriouslyfish-helostoma-temminkii'],
+      reviewedAt: '2026-10-10',
+      note: 'Reviewed adult-size and aquarium-space authority; no maximum stocking count is inferred.',
+    },
+  },
+};
+
 const fireRedShrimpKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   ...makeKnowledge(phase2Batch16Subjects.sp_0001),
   environment: {
@@ -63,7 +113,9 @@ const fireRedShrimpKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
 
 export const phase2Batch16Knowledge = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [
   id,
-  id === 'sp_0001' ? fireRedShrimpKnowledge : makeKnowledge(subject),
+  id === 'sp_0001' ? fireRedShrimpKnowledge
+    : id === 'sp_0015' ? kissingGouramiKnowledge
+      : makeKnowledge(subject),
 ])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch16Authority = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [id, {
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },
@@ -83,5 +135,19 @@ Object.assign(phase2Batch16Authority.sp_0001!, {
     status: 'reviewed_supported',
     citationIds: ['lajar-neocaridina-davidi-culture-2024', 'uf-ifas-neocaridina-davidi'],
     factEvidence: 'A peer-reviewed aquarium experiment explicitly included the fire-red/red Neocaridina davidi phenotype in previously cycled 40-L freshwater tanks with filtration/aeration, sand and plants, monitored water chemistry, 28 ± 2°C and weekly 30% water renewal. These are demonstrated culture conditions, not universal optimum or minimum claims.',
+  },
+} satisfies Partial<Record<'feeding' | 'care', Phase2Batch16FieldAuthority>>);
+
+
+Object.assign(phase2Batch16Authority.sp_0015!, {
+  feeding: {
+    status: 'reviewed_supported',
+    citationIds: ['batch18-fishbase-helostoma-temminkii', 'seriouslyfish-helostoma-temminkii'],
+    factEvidence: 'FishBase records plants, green algae, zooplankton and aquatic insects in the diet. Seriously Fish describes specialised microphagous filter-feeding plus algae/microorganism grazing and recommends suitably small dried, vegetable-rich, live and frozen foods; no rigid feeding frequency is inferred.',
+  },
+  care: {
+    status: 'reviewed_supported',
+    citationIds: ['seriouslyfish-helostoma-temminkii'],
+    factEvidence: 'Seriously Fish provides direct long-term husbandry guidance: at least 150 × 45 cm (~304 L), efficient filtration without excessive flow, open swimming space, access to atmospheric air, and regular 30–50% weekly water changes. These are reviewed care requirements, not a generic template.',
   },
 } satisfies Partial<Record<'feeding' | 'care', Phase2Batch16FieldAuthority>>);

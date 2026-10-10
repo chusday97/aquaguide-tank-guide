@@ -289,6 +289,80 @@ for (const item of pairGaps) {
   pairGapImpact.set(rightId, (pairGapImpact.get(rightId) || 0) + 1);
 }
 
+const eligibleSpeciesIds = new Set(eligibleSpecies.map(fish => fish.id));
+const researchLeverageFor = (row: CompletionRow) => {
+  const scientific = String(row.scientific_name || '').trim();
+  const stableBinomial = /^[A-Z][a-z-]+\s+[a-z][a-z-]+$/.test(scientific);
+  const lifeTypeWeight = row.life_type === 'fish' ? 3 : row.life_type === 'invertebrate' ? 2 : 1;
+  return {
+    stable_taxon: stableBinomial,
+    life_type_weight: lifeTypeWeight,
+    score_bonus: (stableBinomial ? 3 : 0) + lifeTypeWeight,
+  };
+};
+
+const nextWaveCandidates = rows
+  .filter(row => row.commonness_proxy !== 'launch_cohort' && eligibleSpeciesIds.has(row.species_id))
+  .map(row => {
+    const fish = fishById.get(row.species_id);
+    const criticalUnknown = criticalFields.filter(field => (
+      row.applicable_fields.includes(field) && row.field_status[field] !== 'reviewed_supported'
+    ));
+    const directProfile = Boolean(getReviewedCompatibilityProfile(row.species_id));
+    const effectiveProfile = fish ? Boolean(getReviewedCompatibilityProfileForFish(fish)) : false;
+    const gapKinds = [
+      ...criticalUnknown,
+      ...(effectiveProfile ? [] : ['compatibility_profile']),
+    ];
+    const boundaryCodes = speciesBoundaryCodes(row);
+    const identityBoundary = getCatalogIdentityBoundary(row.species_id);
+    const evidenceCeiling = getKnowledgeEvidenceCeiling(row.species_id);
+    const researchDisposition = (
+      identityBoundary?.researchDisposition
+      || evidenceCeiling?.researchDisposition
+      || 'actionable'
+    );
+    const leverage = researchLeverageFor(row);
+    const baseScore = Number(row.priority_score || 0)
+      + criticalUnknown.length * 4
+      + (effectiveProfile ? 0 : 5)
+      + (row.risk_proxy === 'elevated' ? 2 : 0);
+    const score = baseScore + leverage.score_bonus;
+    return {
+      species_id: row.species_id,
+      common_name: row.common_name,
+      scientific_name: row.scientific_name,
+      commonness_proxy: row.commonness_proxy,
+      risk_proxy: row.risk_proxy,
+      base_score: baseScore,
+      research_leverage: leverage,
+      score,
+      gap_kinds: gapKinds,
+      field_status: Object.fromEntries(criticalFields.map(field => [field, row.field_status[field] || 'missing'])),
+      compatibility_profile: directProfile ? 'direct_reviewed' : effectiveProfile ? 'inherited_reviewed' : 'none',
+      boundary_codes: boundaryCodes,
+      research_disposition: researchDisposition,
+      resolution_mode: boundaryResolution(boundaryCodes),
+      priority_basis: 'catalog priority proxy + compatibility-critical gap + non-launch next wave',
+    };
+  })
+  .filter(item => item.gap_kinds.length > 0 && item.research_disposition === 'actionable')
+  .sort((left, right) => (
+    right.score - left.score
+    || left.species_id.localeCompare(right.species_id)
+  ));
+
+const seenResearchTaxa = new Set<string>();
+const nextWaveSpeciesQueue = nextWaveCandidates
+  .filter(item => {
+    const taxonKey = String(item.scientific_name || '').trim().toLowerCase();
+    if (!taxonKey) return true;
+    if (seenResearchTaxa.has(taxonKey)) return false;
+    seenResearchTaxa.add(taxonKey);
+    return true;
+  })
+  .slice(0, 25);
+
 const speciesGaps = speciesGapCandidates.map(item => {
   const blockedPairCount = pairGapImpact.get(item.species_id) || 0;
   return {
@@ -332,6 +406,7 @@ const report = {
   priority_pair_gap_count: pairGaps.length,
   research_actionable_pair_count: actionablePairQueue.length,
   terminal_pair_hold_count: terminalPairHolds.length,
+  next_wave_species_count: nextWaveSpeciesQueue.length,
   evidence_research_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_research').length,
   evidence_ceiling_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_ceiling').length,
   boundary_blocked_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
@@ -359,6 +434,7 @@ const gapQueue = {
   terminal_species_holds: terminalSpeciesHolds,
   actionable_pair_queue: actionablePairQueue,
   terminal_pair_holds: terminalPairHolds,
+  next_wave_species_queue: nextWaveSpeciesQueue,
 };
 
 writeFileSync('docs/compatibility_knowledge_coverage.json', JSON.stringify(report, null, 2) + '\n');
@@ -391,6 +467,7 @@ markdown.push('- Research-actionable species: ' + report.research_actionable_spe
 markdown.push('- Terminal reviewed-unknown species holds: ' + report.terminal_species_hold_count);
 markdown.push('- Research-actionable pairs: ' + report.research_actionable_pair_count);
 markdown.push('- Terminal reviewed-unknown pair holds: ' + report.terminal_pair_hold_count);
+markdown.push('- Next-wave research candidates: ' + report.next_wave_species_count);
 markdown.push('');
 markdown.push('| Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |');
 markdown.push('| --- | ---: | ---: | ---: | ---: |');
@@ -412,6 +489,14 @@ actionablePairQueue.slice(0, 20).forEach((item, index) => {
   markdown.push(String(index + 1) + '. ' + item.species_a_name + ' × ' + item.species_b_name + ' — missing: ' + ((item.missing_codes as string[]).join(', ') || 'unspecified') + ' — ' + item.resolution_mode + (Array.isArray(item.boundary_codes) && item.boundary_codes.length ? ' [' + (item.boundary_codes as string[]).join(', ') + ']' : '') + ' — score ' + item.score);
 });
 if (actionablePairQueue.length === 0) markdown.push('No launch-cohort pair requires another ordinary research pass; remaining insufficient pairs are terminal reviewed holds until materially new evidence appears.');
+markdown.push('');
+markdown.push('## Next-wave species research queue');
+markdown.push('');
+nextWaveSpeciesQueue.forEach((item, index) => {
+  markdown.push(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + ') — ' + item.gap_kinds.join(', ') + ' — score ' + item.score);
+});
+if (nextWaveSpeciesQueue.length === 0) markdown.push('No non-launch eligible species currently requires ordinary research.');
+
 markdown.push('');
 markdown.push('## Terminal reviewed-unknown holds');
 markdown.push('');
@@ -447,3 +532,7 @@ actionablePairQueue.slice(0, 15).forEach((item, index) => {
   console.log(String(index + 1) + '. ' + item.species_a_name + ' x ' + item.species_b_name + ': ' + (item.missing_codes as string[]).join(', ') + ' score=' + item.score);
 });
 console.log('TERMINAL_HOLDS species=' + terminalSpeciesHolds.length + ' pairs=' + terminalPairHolds.length);
+console.log('NEXT_WAVE_SPECIES');
+nextWaveSpeciesQueue.slice(0, 15).forEach((item, index) => {
+  console.log(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + '): ' + item.gap_kinds.join(', ') + ' score=' + item.score);
+});

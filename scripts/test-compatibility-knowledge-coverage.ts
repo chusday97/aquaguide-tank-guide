@@ -166,5 +166,19 @@ for (const item of queue.terminal_pair_holds) {
   assert.equal(item.research_disposition, 'terminal_unknown_hold');
 }
 
+assert.equal(report.next_wave_species_count, queue.next_wave_species_queue.length);
+assert.ok(queue.next_wave_species_queue.length > 0 && queue.next_wave_species_queue.length <= 25);
+const nextWaveTaxa = new Set();
+for (const item of queue.next_wave_species_queue) {
+  assert.equal(item.research_disposition, 'actionable');
+  assert.notEqual(item.commonness_proxy, 'launch_cohort');
+  assert.ok(Array.isArray(item.gap_kinds) && item.gap_kinds.length > 0);
+  assert.ok(item.research_leverage && Number.isInteger(item.research_leverage.life_type_weight));
+  const taxonKey = String(item.scientific_name || '').trim().toLowerCase();
+  if (taxonKey) {
+    assert.equal(nextWaveTaxa.has(taxonKey), false, 'next-wave queue must dedupe identical scientific taxa');
+    nextWaveTaxa.add(taxonKey);
+  }
+}
 assert.equal(queue.uses_real_user_telemetry, false);
-console.log('compatibility knowledge coverage contract passed: deterministic coverage, fail-closed unknowns, and actionable gap queues');
+console.log('compatibility knowledge coverage contract passed: deterministic coverage, fail-closed unknowns, terminal holds, and next-wave actionable queue');

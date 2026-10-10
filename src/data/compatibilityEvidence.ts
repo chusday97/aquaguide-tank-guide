@@ -113,6 +113,24 @@ const otocinclusScotCat: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const kissingGouramiFishBase: EvidenceSourceDto = {
+  id: 'fishbase-helostoma-temminkii',
+  title: 'Helostoma temminkii (Kissing gourami) species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Helostoma-temminckii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const kissingGouramiSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-helostoma-temminkii',
+  title: 'Helostoma temminkii (Kissing Gourami)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/helostoma-temminkii',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const tigerBarbStudy: EvidenceSourceDto = {
   id: 'tiger-barb-group-size-study',
   title: 'The effect of group size on the behaviour and welfare of four fish species commonly kept in home aquaria',
@@ -922,6 +940,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [convictCichlidTerritoryStudy],
     requiredFacts: ['water', 'temperature', 'territoriality', 'breeding_behavior'],
+  },
+  sp_0015: {
+    speciesId: 'sp_0015',
+    waterType: 'freshwater',
+    behaviorTraits: ['interspecific_aggression'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [kissingGouramiFishBase, kissingGouramiSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality'],
   },
   sp_0049: {
     speciesId: 'sp_0049',
