@@ -111,11 +111,65 @@ const fireRedShrimpKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
   },
 };
 
+
+const roundtailParadiseFishKnowledge: SpeciesKnowledgeProfile['knowledge'] = {
+  ...makeKnowledge(phase2Batch16Subjects.sp_0043),
+  environment: {
+    waterType: 'freshwater',
+    temperatureRangeC: { min: 10, max: 22 },
+    phRange: { min: 6, max: 7.5 },
+    hardnessDgh: { min: 5, max: 20 },
+    notes: [
+      'Seriously Fish gives aquarium conditions of 10–22°C, pH 6.0–7.5 and 5–20 dGH.',
+      'FishBase records a broader natural thermal envelope of roughly 4–25°C; the narrower aquarium range is retained for compatibility planning.',
+    ],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch18-fishbase-macropodus-ocellatus', 'seriouslyfish-macropodus-ocellatus'],
+      reviewedAt: '2026-10-10',
+      note: 'Object-specific environment authority from FishBase plus direct aquarium husbandry.',
+    },
+  },
+  socialBehavior: {
+    mode: 'variable',
+    territoriality: 'medium',
+    predationRisk: 'low',
+    summary: '繁殖期雄鱼会明显护域；在空间足够、布置充分的缸中可以群养，因此不应把该物种永久标记为“必须单养”。',
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['seriouslyfish-macropodus-ocellatus'],
+      reviewedAt: '2026-10-10',
+      note: 'Seriously Fish directly states breeding males are territorial while groups can be maintained in a suitably sized, well-decorated aquarium.',
+    },
+  },
+  spaceAndGrowth: {
+    adultLengthCm: { max: 8.6, measurement: 'TL' },
+    minVolumeLiters: 72,
+    minTankLengthCm: 80,
+    activityLevel: 'medium',
+    needsCover: true,
+    spaceNotes: [
+      'FishBase reports up to 8.6 cm TL.',
+      'Seriously Fish recommends at least an 80 × 30 cm base, approximately 72 L, for a single pair.',
+    ],
+    evidence: {
+      confidence: 'verified',
+      reviewStatus: 'reviewed',
+      sourceIds: ['batch18-fishbase-macropodus-ocellatus', 'seriouslyfish-macropodus-ocellatus'],
+      reviewedAt: '2026-10-10',
+      note: 'Reviewed adult-size and aquarium-space authority.',
+    },
+  },
+};
+
 export const phase2Batch16Knowledge = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [
   id,
   id === 'sp_0001' ? fireRedShrimpKnowledge
     : id === 'sp_0015' ? kissingGouramiKnowledge
-      : makeKnowledge(subject),
+      : id === 'sp_0043' ? roundtailParadiseFishKnowledge
+        : makeKnowledge(subject),
 ])) as Record<string, SpeciesKnowledgeProfile['knowledge']>;
 export const phase2Batch16Authority = Object.fromEntries(Object.entries(phase2Batch16Subjects).map(([id, subject]) => [id, {
   feeding: { status: 'reviewed_unknown', citationIds: [subject.source], factEvidence: `${subject.title} does not establish object-specific feeding authority.` },
