@@ -630,36 +630,6 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0019",
-      "common_name": "埃及神仙",
-      "scientific_name": "Pterophyllum altum",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
       "species_id": "sp_0022",
       "common_name": "红利",
       "scientific_name": "Lutjanus kasmira",
@@ -750,36 +720,6 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0026",
-      "common_name": "清道夫",
-      "scientific_name": "Hypostomus plecostomus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
       "species_id": "sp_0038",
       "common_name": "马口鱼",
       "scientific_name": "Opsariichthys bidens",
@@ -813,66 +753,6 @@
       "species_id": "sp_0042",
       "common_name": "麦穗鱼",
       "scientific_name": "Pseudorasbora parva",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0043",
-      "common_name": "圆尾斗鱼",
-      "scientific_name": "Macropodus ocellatus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0044",
-      "common_name": "黑叉尾斗鱼",
-      "scientific_name": "Macropodus spechti",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1323,6 +1203,126 @@
       "species_id": "sp_0110",
       "common_name": "蓝月光雷龙",
       "scientific_name": "Channa lorti",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0117",
+      "common_name": "银龙鱼",
+      "scientific_name": "Osteoglossum bicirrhosum",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0118",
+      "common_name": "黑龙鱼",
+      "scientific_name": "Osteoglossum ferreirai",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0119",
+      "common_name": "古代蝴蝶鱼",
+      "scientific_name": "Pantodon buchholzi",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0120",
+      "common_name": "电鳗 (观赏型)",
+      "scientific_name": "Gymnotus carapo",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,

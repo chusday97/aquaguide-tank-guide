@@ -12,7 +12,7 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 411
-- Reviewed compatibility profiles: 35
+- Reviewed compatibility profiles: 39
 - Reviewed pair rules: 21
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
@@ -45,30 +45,30 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 ## Next-wave species research queue
 
 1. 蓝王子 (sp_0018) — environment, space, social, compatibility_profile — score 33
-2. 埃及神仙 (sp_0019) — environment, space, social, compatibility_profile — score 33
-3. 红利 (sp_0022) — environment, space, social, compatibility_profile — score 33
-4. 黄倒吊 (sp_0023) — environment, space, social, compatibility_profile — score 33
-5. 蓝倒吊 (sp_0024) — environment, space, social, compatibility_profile — score 33
-6. 清道夫 (sp_0026) — environment, space, social, compatibility_profile — score 33
-7. 马口鱼 (sp_0038) — environment, space, social, compatibility_profile — score 33
-8. 麦穗鱼 (sp_0042) — environment, space, social, compatibility_profile — score 33
-9. 圆尾斗鱼 (sp_0043) — environment, space, social, compatibility_profile — score 33
-10. 黑叉尾斗鱼 (sp_0044) — environment, space, social, compatibility_profile — score 33
-11. 长臀鮠 (sp_0047) — environment, space, social, compatibility_profile — score 33
-12. 大刺鳅 (sp_0048) — environment, space, social, compatibility_profile — score 33
-13. 巴卡雷龙 (sp_0050) — environment, space, social, compatibility_profile — score 33
-14. 光唇鱼 (sp_0051) — environment, space, social, compatibility_profile — score 33
-15. 红宝石鱼 (sp_0054) — environment, space, social, compatibility_profile — score 33
-16. 菠萝鱼 (sp_0056) — environment, space, social, compatibility_profile — score 33
-17. 珍珠虎 (sp_0057) — environment, space, social, compatibility_profile — score 33
-18. 九间贝 (sp_0058) — environment, space, social, compatibility_profile — score 33
-19. 天堂鱼 (sp_0059) — environment, space, social, compatibility_profile — score 33
-20. 红眼灯 (sp_0062) — environment, space, social, compatibility_profile — score 33
-21. 金龙鱼 (sp_0103) — environment, space, social, compatibility_profile — score 33
-22. 恐龙鱼 (大花) (sp_0105) — environment, space, social, compatibility_profile — score 33
-23. 彩虹雷龙 (sp_0108) — environment, space, social, compatibility_profile — score 33
-24. 眼镜蛇雷龙 (sp_0109) — environment, space, social, compatibility_profile — score 33
-25. 蓝月光雷龙 (sp_0110) — environment, space, social, compatibility_profile — score 33
+2. 红利 (sp_0022) — environment, space, social, compatibility_profile — score 33
+3. 黄倒吊 (sp_0023) — environment, space, social, compatibility_profile — score 33
+4. 蓝倒吊 (sp_0024) — environment, space, social, compatibility_profile — score 33
+5. 马口鱼 (sp_0038) — environment, space, social, compatibility_profile — score 33
+6. 麦穗鱼 (sp_0042) — environment, space, social, compatibility_profile — score 33
+7. 长臀鮠 (sp_0047) — environment, space, social, compatibility_profile — score 33
+8. 大刺鳅 (sp_0048) — environment, space, social, compatibility_profile — score 33
+9. 巴卡雷龙 (sp_0050) — environment, space, social, compatibility_profile — score 33
+10. 光唇鱼 (sp_0051) — environment, space, social, compatibility_profile — score 33
+11. 红宝石鱼 (sp_0054) — environment, space, social, compatibility_profile — score 33
+12. 菠萝鱼 (sp_0056) — environment, space, social, compatibility_profile — score 33
+13. 珍珠虎 (sp_0057) — environment, space, social, compatibility_profile — score 33
+14. 九间贝 (sp_0058) — environment, space, social, compatibility_profile — score 33
+15. 天堂鱼 (sp_0059) — environment, space, social, compatibility_profile — score 33
+16. 红眼灯 (sp_0062) — environment, space, social, compatibility_profile — score 33
+17. 金龙鱼 (sp_0103) — environment, space, social, compatibility_profile — score 33
+18. 恐龙鱼 (大花) (sp_0105) — environment, space, social, compatibility_profile — score 33
+19. 彩虹雷龙 (sp_0108) — environment, space, social, compatibility_profile — score 33
+20. 眼镜蛇雷龙 (sp_0109) — environment, space, social, compatibility_profile — score 33
+21. 蓝月光雷龙 (sp_0110) — environment, space, social, compatibility_profile — score 33
+22. 银龙鱼 (sp_0117) — environment, space, social, compatibility_profile — score 33
+23. 黑龙鱼 (sp_0118) — environment, space, social, compatibility_profile — score 33
+24. 古代蝴蝶鱼 (sp_0119) — environment, space, social, compatibility_profile — score 33
+25. 电鳗 (观赏型) (sp_0120) — environment, space, social, compatibility_profile — score 33
 
 ## Terminal reviewed-unknown holds
 
