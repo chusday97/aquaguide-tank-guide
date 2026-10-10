@@ -24,6 +24,7 @@
 - Terminal reviewed-unknown species holds: 5
 - Research-actionable pairs: 0
 - Terminal reviewed-unknown pair holds: 3
+- Next-wave research candidates: 25
 
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
@@ -40,6 +41,34 @@ No launch-cohort species requires another ordinary research pass.
 ## Highest-priority pair gaps
 
 No launch-cohort pair requires another ordinary research pass; remaining insufficient pairs are terminal reviewed holds until materially new evidence appears.
+
+## Next-wave species research queue
+
+1. 接吻鱼 (sp_0015) — environment, space, social, compatibility_profile — score 33
+2. 蓝王子 (sp_0018) — environment, space, social, compatibility_profile — score 33
+3. 埃及神仙 (sp_0019) — environment, space, social, compatibility_profile — score 33
+4. 红利 (sp_0022) — environment, space, social, compatibility_profile — score 33
+5. 黄倒吊 (sp_0023) — environment, space, social, compatibility_profile — score 33
+6. 蓝倒吊 (sp_0024) — environment, space, social, compatibility_profile — score 33
+7. 清道夫 (sp_0026) — environment, space, social, compatibility_profile — score 33
+8. 马口鱼 (sp_0038) — environment, space, social, compatibility_profile — score 33
+9. 麦穗鱼 (sp_0042) — environment, space, social, compatibility_profile — score 33
+10. 圆尾斗鱼 (sp_0043) — environment, space, social, compatibility_profile — score 33
+11. 黑叉尾斗鱼 (sp_0044) — environment, space, social, compatibility_profile — score 33
+12. 长臀鮠 (sp_0047) — environment, space, social, compatibility_profile — score 33
+13. 大刺鳅 (sp_0048) — environment, space, social, compatibility_profile — score 33
+14. 巴卡雷龙 (sp_0050) — environment, space, social, compatibility_profile — score 33
+15. 光唇鱼 (sp_0051) — environment, space, social, compatibility_profile — score 33
+16. 红宝石鱼 (sp_0054) — environment, space, social, compatibility_profile — score 33
+17. 菠萝鱼 (sp_0056) — environment, space, social, compatibility_profile — score 33
+18. 珍珠虎 (sp_0057) — environment, space, social, compatibility_profile — score 33
+19. 九间贝 (sp_0058) — environment, space, social, compatibility_profile — score 33
+20. 天堂鱼 (sp_0059) — environment, space, social, compatibility_profile — score 33
+21. 红眼灯 (sp_0062) — environment, space, social, compatibility_profile — score 33
+22. 金龙鱼 (sp_0103) — environment, space, social, compatibility_profile — score 33
+23. 恐龙鱼 (大花) (sp_0105) — environment, space, social, compatibility_profile — score 33
+24. 彩虹雷龙 (sp_0108) — environment, space, social, compatibility_profile — score 33
+25. 眼镜蛇雷龙 (sp_0109) — environment, space, social, compatibility_profile — score 33
 
 ## Terminal reviewed-unknown holds
 
