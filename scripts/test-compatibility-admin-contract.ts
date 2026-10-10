@@ -362,7 +362,18 @@ for (const expected of [
 assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile drift:/g) || []).length, 2);
 assert.equal((heldProfileOwnerMigration.match(/Compatibility held-profile evidence drift:/g) || []).length, 2);
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015']);
+const nextWaveFreshwaterMigration = readFileSync('supabase/migrations/20261010151338_compatibility_next_wave_freshwater_authority.sql', 'utf8');
+const nextWaveFreshwaterProfileIds = ['sp_0019', 'sp_0026', 'sp_0043'];
+const nextWaveFreshwaterProfiles = audit.reviewedProfiles.filter(profile => nextWaveFreshwaterProfileIds.includes(profile.speciesId));
+assert.equal(nextWaveFreshwaterProfiles.length, nextWaveFreshwaterProfileIds.length, '20261010151338 must own exactly the three next-wave freshwater Profiles.');
+for (const profile of nextWaveFreshwaterProfiles) {
+  assert.equal(nextWaveFreshwaterMigration.includes(profile.speciesId), true, `next-wave freshwater migration must include Profile ${profile.speciesId}`);
+  for (const source of profile.citations) {
+    assert.equal(nextWaveFreshwaterMigration.includes(source.id), true, `next-wave freshwater migration must include Profile source ${source.id}`);
+  }
+}
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 
