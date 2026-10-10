@@ -28,6 +28,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609160001_compatibility_rummy_oto_oscar_baseline.sql',
   '202610090002_compatibility_rummy_evidence_legacy_bridge.sql',
   '202610090003_compatibility_runtime_authority_reconciliation.sql',
+  '20261010095813_compatibility_kissing_gourami_authority.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
