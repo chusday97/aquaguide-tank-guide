@@ -13,7 +13,7 @@ species_id,common_name,scientific_name,life_type,category,feeding_status,environ
 "sp_0012","樱桃灯","Puntius titteya","fish","灯科鱼","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","","launch_cohort","elevated","9"
 "sp_0013","小精灵","Otocinclus vittatus","fish","鲶鱼/异型","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","","launch_cohort","elevated","9"
 "sp_0014","咖啡鼠","Corydoras aeneus","fish","鲶鱼/异型","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","","launch_cohort","elevated","9"
-"sp_0015","接吻鱼","Helostoma temminkii","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","8"
+"sp_0015","接吻鱼","Helostoma temminkii","fish","鱼类","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","","catalog_only","elevated","3"
 "sp_0016","金波子","Mikrogeophagus ramirezi var. Gold","fish","慈鲷/斗鱼","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_supported","","launch_cohort","elevated","9"
 "sp_0017","阿卡西短鲷","Apistogramma agassizii","fish","慈鲷/斗鱼","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","catalog_only","elevated","5"
 "sp_0018","蓝王子","Chindongo socolofi","fish","慈鲷/斗鱼","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","8"
