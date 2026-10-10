@@ -58,8 +58,12 @@
     }
   },
   "priority_species_gap_count": 5,
+  "research_actionable_species_count": 0,
+  "terminal_species_hold_count": 5,
   "evidence_ceiling_species_gap_count": 1,
   "priority_pair_gap_count": 3,
+  "research_actionable_pair_count": 0,
+  "terminal_pair_hold_count": 3,
   "evidence_research_pair_gap_count": 0,
   "evidence_ceiling_pair_gap_count": 3,
   "boundary_blocked_pair_gap_count": 0,

@@ -11,6 +11,7 @@ export type CatalogIdentityBoundary = {
   sourceIds: string[];
   note: string;
   reviewedAt: string;
+  researchDisposition?: 'terminal_unknown_hold';
 };
 
 export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> = {
@@ -22,6 +23,7 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
     sourceIds: ['batch03-itis-caridina-cantonensis', 'identity-zootaxa-caridina-logemanni', 'identity-worms-caridina-logemanni'],
     note: '“水晶虾/Crystal”是贸易层名称。2014 年分类修订描述了 Caridina logemanni，且现代数据库接受该种，但当前 catalog object 没有批次级来源证明所有“水晶虾”均对应同一 taxon，因此不把贸易名强制映射到单一物种。',
     reviewedAt: '2026-09-22',
+    researchDisposition: 'terminal_unknown_hold',
   },
   sp_0428: {
     speciesId: 'sp_0428',
@@ -31,15 +33,17 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
     sourceIds: ['batch03-obis-neritina-natalensis'],
     note: 'Neritina natalensis 的接受名可确认到 Vittina natalensis；但“斑马螺/zebra nerite”贸易名可用于多个 nerite taxon。接受学名修订不能自动证明用户所指贸易个体就是 V. natalensis。',
     reviewedAt: '2026-09-22',
+    researchDisposition: 'terminal_unknown_hold',
   },
   sp_0021: {
     speciesId: 'sp_0021',
     code: 'commercial_hybrid_identity_unresolved',
     resolvedGranularity: 'commercial_lineage_only',
     candidateTaxa: ['Amatitlania nigrofasciata lineage', 'commercial parrot/convict hybrid lineage'],
-    sourceIds: ['batch03-fishbase-amatitlania-nigrofasciata'],
-    note: '“迷你鹦鹉鱼”是商业品系名，现有 reviewed source 只能确认 Amatitlania nigrofasciata 基础种资料，不能确认该贸易名的稳定亲本组合或独立 taxon；继续禁止把基础种全部字段自动提升为品系 authority。',
-    reviewedAt: '2026-09-22',
+    sourceIds: ['batch03-fishbase-amatitlania-nigrofasciata', 'biology-2026-mini-parrot-taxonomy-boundary'],
+    note: '“迷你鹦鹉鱼”是商业品系名。2026 年同行评审研究将 platinum/sapphire mini parrot cichlid 作为人工杂交观赏品系，并明确指出尚无系统分类研究确认其有效属种归属；因此当前只能保留 commercial-lineage 级身份，继续禁止把 Amatitlania nigrofasciata 基础种全部字段自动提升为该商业品系 authority。',
+    reviewedAt: '2026-10-10',
+    researchDisposition: 'terminal_unknown_hold',
   },
 };
 

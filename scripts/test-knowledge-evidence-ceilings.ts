@@ -21,6 +21,7 @@ for (const ceilings of Object.values(knowledgeEvidenceCeilings)) {
   for (const ceiling of ceilings) {
     assert.ok(ceiling.note.length > 40);
     assert.ok(ceiling.sourceIds.length > 0);
+    assert.equal(ceiling.researchDisposition, 'terminal_unknown_hold');
     for (const sourceId of ceiling.sourceIds) {
       assert.equal(resolveKnowledgeSources([sourceId]).length, 1, `${ceiling.speciesId}/${ceiling.field} ceiling source ${sourceId} must be registered`);
     }

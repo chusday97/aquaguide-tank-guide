@@ -11,6 +11,7 @@ export type KnowledgeEvidenceCeiling = {
   sourceIds: string[];
   note: string;
   reviewedAt: string;
+  researchDisposition?: 'terminal_unknown_hold';
 };
 
 export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[]> = {
@@ -22,6 +23,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       sourceIds: ['batch03-fishbase-channa-argus', 'northern-snakehead-fws-erss-2024', 'northern-snakehead-usgs-diet-2012'],
       note: 'Reviewed Channa argus sources establish the base species ecology, predation risk and diet, but targeted review did not establish a Platinum-morph-specific stable social profile. Do not promote base-species behavior to the ornamental morph without an explicit reviewed bridge.',
       reviewedAt: '2026-09-22',
+      researchDisposition: 'terminal_unknown_hold',
     },
     {
       speciesId: 'sp_0224',
@@ -30,6 +32,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       sourceIds: ['batch03-fishbase-channa-argus', 'northern-snakehead-usgs-diet-2012'],
       note: 'Reviewed sources establish Channa argus feeding ecology, but no reviewed source establishes Platinum-morph-specific feeding authority. Keep this field fail-closed rather than converting base-species diet evidence into a morph husbandry recommendation.',
       reviewedAt: '2026-09-22',
+      researchDisposition: 'terminal_unknown_hold',
     },
     {
       speciesId: 'sp_0224',
@@ -38,6 +41,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       sourceIds: ['batch03-fishbase-channa-argus', 'northern-snakehead-fws-erss-2024'],
       note: 'Reviewed Channa argus sources do not establish a Platinum-morph-specific aquarium care protocol. Existing base-species temperature, size and ecological evidence remains useful context but is not promoted into morph-specific care authority.',
       reviewedAt: '2026-09-22',
+      researchDisposition: 'terminal_unknown_hold',
     },
   ],
   sp_0258: [
@@ -51,6 +55,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       ],
       note: 'Koi/candy is a reviewed mosaic commercial phenotype of domesticated Betta splendens, but published aggression work shows substantial individual/strain variation and does not establish a Koi-specific stable social mode. Keep social authority fail-closed instead of promoting the base-species profile by color-name alone.',
       reviewedAt: '2026-09-22',
+      researchDisposition: 'terminal_unknown_hold',
     },
     {
       speciesId: 'sp_0258',
@@ -59,6 +64,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       sourceIds: ['sciadv-betta-phenotypic-diversity'],
       note: 'The Koi/candy phenotype identity is reviewed, but no reviewed source establishes a Koi-specific feeding protocol. Base-species Betta feeding guidance is not promoted to the commercial phenotype without an explicit reviewed bridge.',
       reviewedAt: '2026-09-22',
+      researchDisposition: 'terminal_unknown_hold',
     },
     {
       speciesId: 'sp_0258',
@@ -67,6 +73,7 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       sourceIds: ['sciadv-betta-phenotypic-diversity'],
       note: 'The Koi/candy phenotype identity is reviewed, but no reviewed source establishes Koi-specific husbandry beyond the explicitly bridged water, temperature, pH and adult-size fields. Keep broader care authority fail-closed.',
       reviewedAt: '2026-09-22',
+      researchDisposition: 'terminal_unknown_hold',
     },
   ],
 };

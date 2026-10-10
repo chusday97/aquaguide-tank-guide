@@ -176,6 +176,11 @@ const speciesGapCandidates = launchRows.map(row => {
       note: evidenceCeiling.note,
       reviewed_at: evidenceCeiling.reviewedAt,
     } : null,
+    research_disposition: (
+      identityBoundary?.researchDisposition
+      || evidenceCeiling?.researchDisposition
+      || 'actionable'
+    ),
     resolution_mode: boundaryResolution(boundaryCodes),
     resolution_note: boundaryCodes.includes('multi_water_type_not_representable')
       ? 'Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.'
@@ -263,6 +268,7 @@ for (const item of pairGaps) {
     note: pairEvidenceCeiling.note,
     reviewed_at: pairEvidenceCeiling.reviewedAt,
   } : null;
+  item.research_disposition = pairEvidenceCeiling?.researchDisposition || 'actionable';
   item.resolution_mode = pairEvidenceCeiling
     ? 'evidence_ceiling'
     : boundaryCodes.length > 0
@@ -297,6 +303,11 @@ const speciesGaps = speciesGapCandidates.map(item => {
   || left.species_id.localeCompare(right.species_id)
 ));
 
+const actionableSpeciesQueue = speciesGaps.filter(item => item.research_disposition === 'actionable');
+const terminalSpeciesHolds = speciesGaps.filter(item => item.research_disposition === 'terminal_unknown_hold');
+const actionablePairQueue = pairGaps.filter(item => item.research_disposition === 'actionable');
+const terminalPairHolds = pairGaps.filter(item => item.research_disposition === 'terminal_unknown_hold');
+
 const report = {
   schema_version: 1,
   completion_boundary: 'Completion means every catalog object reached a reviewed terminal state. reviewed_unknown is valid completion, not evidence for a positive compatibility claim.',
@@ -315,8 +326,12 @@ const report = {
   compatibility_critical_fields: ['environment', 'space', 'social', 'compatibility_profile', 'pair_evidence'],
   field_coverage: fieldCoverage,
   priority_species_gap_count: speciesGaps.length,
+  research_actionable_species_count: actionableSpeciesQueue.length,
+  terminal_species_hold_count: terminalSpeciesHolds.length,
   evidence_ceiling_species_gap_count: speciesGaps.filter(item => item.resolution_mode === 'evidence_ceiling').length,
   priority_pair_gap_count: pairGaps.length,
+  research_actionable_pair_count: actionablePairQueue.length,
+  terminal_pair_hold_count: terminalPairHolds.length,
   evidence_research_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_research').length,
   evidence_ceiling_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'evidence_ceiling').length,
   boundary_blocked_pair_gap_count: pairGaps.filter(item => item.resolution_mode === 'boundary_blocked').length,
@@ -340,6 +355,10 @@ const gapQueue = {
   uses_real_user_telemetry: false,
   species_gaps: speciesGaps,
   pair_gaps: pairGaps,
+  actionable_species_queue: actionableSpeciesQueue,
+  terminal_species_holds: terminalSpeciesHolds,
+  actionable_pair_queue: actionablePairQueue,
+  terminal_pair_holds: terminalPairHolds,
 };
 
 writeFileSync('docs/compatibility_knowledge_coverage.json', JSON.stringify(report, null, 2) + '\n');
@@ -368,6 +387,10 @@ markdown.push('- Current insufficient pair gaps: ' + report.priority_pair_gap_co
 markdown.push('- Evidence-research-only pair gaps: ' + report.evidence_research_pair_gap_count);
 markdown.push('- Evidence-ceiling pair gaps: ' + report.evidence_ceiling_pair_gap_count);
 markdown.push('- Boundary-blocked pair gaps: ' + report.boundary_blocked_pair_gap_count);
+markdown.push('- Research-actionable species: ' + report.research_actionable_species_count);
+markdown.push('- Terminal reviewed-unknown species holds: ' + report.terminal_species_hold_count);
+markdown.push('- Research-actionable pairs: ' + report.research_actionable_pair_count);
+markdown.push('- Terminal reviewed-unknown pair holds: ' + report.terminal_pair_hold_count);
 markdown.push('');
 markdown.push('| Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |');
 markdown.push('| --- | ---: | ---: | ---: | ---: |');
@@ -378,17 +401,28 @@ for (const field of allFields) {
 markdown.push('');
 markdown.push('## Highest-priority species gaps');
 markdown.push('');
-speciesGaps.slice(0, 20).forEach((item, index) => {
+actionableSpeciesQueue.slice(0, 20).forEach((item, index) => {
   markdown.push(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + ') — ' + item.gap_kinds.join(', ') + ' — ' + item.resolution_mode + (item.boundary_codes.length ? ' [' + item.boundary_codes.join(', ') + ']' : '') + ' — unlocks ' + item.blocked_pair_count + ' insufficient pairs — score ' + item.score);
 });
-if (speciesGaps.length === 0) markdown.push('No launch-cohort species gaps.');
+if (actionableSpeciesQueue.length === 0) markdown.push('No launch-cohort species requires another ordinary research pass.');
 markdown.push('');
 markdown.push('## Highest-priority pair gaps');
 markdown.push('');
-pairGaps.slice(0, 20).forEach((item, index) => {
+actionablePairQueue.slice(0, 20).forEach((item, index) => {
   markdown.push(String(index + 1) + '. ' + item.species_a_name + ' × ' + item.species_b_name + ' — missing: ' + ((item.missing_codes as string[]).join(', ') || 'unspecified') + ' — ' + item.resolution_mode + (Array.isArray(item.boundary_codes) && item.boundary_codes.length ? ' [' + (item.boundary_codes as string[]).join(', ') + ']' : '') + ' — score ' + item.score);
 });
-if (pairGaps.length === 0) markdown.push('No launch-cohort pair currently returns insufficient_data.');
+if (actionablePairQueue.length === 0) markdown.push('No launch-cohort pair requires another ordinary research pass; remaining insufficient pairs are terminal reviewed holds until materially new evidence appears.');
+markdown.push('');
+markdown.push('## Terminal reviewed-unknown holds');
+markdown.push('');
+terminalSpeciesHolds.forEach((item, index) => {
+  markdown.push(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + ') — ' + item.resolution_mode + ' — ' + item.resolution_note);
+});
+terminalPairHolds.forEach((item, index) => {
+  markdown.push('P' + String(index + 1) + '. ' + item.species_a_name + ' × ' + item.species_b_name + ' — ' + item.resolution_mode + ' — ' + item.resolution_note);
+});
+if (terminalSpeciesHolds.length === 0 && terminalPairHolds.length === 0) markdown.push('No terminal reviewed-unknown holds.');
+
 markdown.push('');
 markdown.push('## Research workflow');
 markdown.push('');
@@ -405,10 +439,11 @@ writeFileSync('docs/compatibility_knowledge_coverage.md', markdown.join('\n') + 
 
 console.log(JSON.stringify(report, null, 2));
 console.log('TOP_SPECIES_GAPS');
-speciesGaps.slice(0, 15).forEach((item, index) => {
+actionableSpeciesQueue.slice(0, 15).forEach((item, index) => {
   console.log(String(index + 1) + '. ' + item.common_name + ' (' + item.species_id + '): ' + item.gap_kinds.join(', ') + ' mode=' + item.resolution_mode + ' boundaries=' + item.boundary_codes.join(',') + ' blocked_pairs=' + item.blocked_pair_count + ' score=' + item.score);
 });
 console.log('TOP_PAIR_GAPS');
-pairGaps.slice(0, 15).forEach((item, index) => {
+actionablePairQueue.slice(0, 15).forEach((item, index) => {
   console.log(String(index + 1) + '. ' + item.species_a_name + ' x ' + item.species_b_name + ': ' + (item.missing_codes as string[]).join(', ') + ' score=' + item.score);
 });
+console.log('TERMINAL_HOLDS species=' + terminalSpeciesHolds.length + ' pairs=' + terminalPairHolds.length);
