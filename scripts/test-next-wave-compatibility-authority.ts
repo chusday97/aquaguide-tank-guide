@@ -1,8 +1,14 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
-import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKnowledge';
+import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
+
+for (const id of ['sp_0019', 'sp_0026', 'sp_0043']) {
+  const fish = fishData.find(item => item.id === id);
+  assert.ok(fish, `catalog fish missing: ${id}`);
+  assert.ok(getReviewedSpeciesKnowledgeForFish(fish), `runtime Species Knowledge must resolve after Compatibility promotion: ${id}`);
+}
 
 const altum = getReviewedSpeciesKnowledge('sp_0019');
 assert.equal(altum?.environment?.waterType, 'freshwater');
