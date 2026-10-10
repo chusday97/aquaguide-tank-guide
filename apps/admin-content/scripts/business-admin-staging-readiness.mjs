@@ -26,6 +26,8 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202609120014_compatibility_clown_loach_baseline.sql',
   '202609120015_compatibility_red_rainbowfish_baseline.sql',
   '202609160001_compatibility_rummy_oto_oscar_baseline.sql',
+  '202610090002_compatibility_rummy_evidence_legacy_bridge.sql',
+  '202610090003_compatibility_runtime_authority_reconciliation.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
