@@ -21,17 +21,36 @@ const sqlQuery = sql => JSON.parse(run('supabase', ['db', 'query', '--linked', '
 const linkedRef = () => readFileSync(join(root, 'supabase', '.temp', 'project-ref'), 'utf8').trim();
 
 const fetchBootstrap = async (baseUrl, locale) => {
-  const url = new URL('/api/v1/content-bootstrap', baseUrl);
-  url.searchParams.set('locale', locale);
-  url.searchParams.set('_backfill_probe', Date.now().toString());
-  const response = await fetch(url, { headers: { accept: 'application/json' } });
-  if (!response.ok) throw new Error(`bootstrap ${locale} failed: HTTP ${response.status}`);
-  const body = await response.json();
-  if (!body?.data) throw new Error(`bootstrap ${locale} response missing data envelope`);
-  return body.data;
+  let lastError;
+  for (let attempt = 1; attempt <= 3; attempt += 1) {
+    try {
+      const url = new URL('/api/v1/content-bootstrap', baseUrl);
+      url.searchParams.set('locale', locale);
+      url.searchParams.set('_backfill_probe', `${Date.now()}-${attempt}`);
+      const response = await fetch(url, { headers: { accept: 'application/json' } });
+      if (!response.ok) throw new Error(`bootstrap ${locale} failed: HTTP ${response.status}`);
+      const body = await response.json();
+      if (!body?.data) throw new Error(`bootstrap ${locale} response missing data envelope`);
+      return body.data;
+    } catch (error) {
+      lastError = error;
+      if (attempt < 3) await new Promise(resolve => setTimeout(resolve, attempt * 500));
+    }
+  }
+  throw lastError;
 };
 
-const stableHash = value => createHash('sha256').update(JSON.stringify(value)).digest('hex');
+const canonicalize = value => {
+  if (Array.isArray(value)) return value.map(canonicalize);
+  if (value && typeof value === 'object') {
+    return Object.fromEntries(
+      Object.keys(value).sort().map(key => [key, canonicalize(value[key])]),
+    );
+  }
+  return value;
+};
+
+const stableHash = value => createHash('sha256').update(JSON.stringify(canonicalize(value))).digest('hex');
 
 const pgLiteral = value => `'${String(value).replaceAll("'", "''")}'`;
 const jsonbLiteral = value => `${pgLiteral(JSON.stringify(value))}::jsonb`;
