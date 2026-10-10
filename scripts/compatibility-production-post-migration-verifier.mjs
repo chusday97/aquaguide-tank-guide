@@ -11,8 +11,8 @@ import {
 } from './compatibility-production-migration-guard.mjs';
 
 const root=resolve(import.meta.dirname,'..');
-const FINAL_VERSION=MIGRATIONS.at(-1).split('_',1)[0];
-const FINAL_MIGRATION_COUNT=START_MIGRATION_COUNT+MIGRATIONS.length;
+export const CURRENT_PRODUCTION_LATEST_VERSION='20261010101020';
+export const CURRENT_PRODUCTION_MIGRATION_COUNT=52;
 const run=(cmd,args)=>{
   const r=spawnSync(cmd,args,{cwd:root,encoding:'utf8'});
   if(r.status!==0) throw new Error(`${cmd} ${args.join(' ')} failed: ${r.stderr||r.stdout}`);
@@ -31,8 +31,8 @@ export const classifyState=state=>{
      && state.profiles===0 && state.pair_rules===0 && state.evidence===0
     && state.authority_state_exists===false && state.stage_risks_exists===false;
   if(pre) return 'NOT_MIGRATED';
-  const post=state.migration_count===FINAL_MIGRATION_COUNT
-    && state.latest_version===FINAL_VERSION
+  const post=state.migration_count===CURRENT_PRODUCTION_MIGRATION_COUNT
+    && state.latest_version===CURRENT_PRODUCTION_LATEST_VERSION
     && state.content_publications_exists===true
     && state.authority_state_exists===true && state.stage_risks_exists===true;
   return post?'VERIFY_POST_MIGRATION':'BLOCKED_STATE_DRIFT';

@@ -331,9 +331,9 @@ for (const migrationName of additiveCompatibilityMigrations) {
   assert.equal(assertedShape[4], insertedShape[3], `${migrationName} drift assertion must match inserted requiredFacts.`);
 }
 
-const kissingGouramiMigration = readFileSync('supabase/migrations/20261010095813_compatibility_kissing_gourami_authority.sql', 'utf8');
+const kissingGouramiMigration = readFileSync('supabase/migrations/20261010101020_compatibility_kissing_gourami_authority.sql', 'utf8');
 const kissingGouramiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0015');
-assert.ok(kissingGouramiProfile, '20261010095813 must own the reviewed kissing-gourami profile.');
+assert.ok(kissingGouramiProfile, '20261010101020 must own the reviewed kissing-gourami profile.');
 assert.equal(kissingGouramiMigration.includes("catalog_key='sp_0015'"), true, 'kissing-gourami migration must target sp_0015.');
 for (const source of kissingGouramiProfile.citations) {
   assert.equal(kissingGouramiMigration.includes(source.id), true, 'kissing-gourami migration must include source ' + source.id);
