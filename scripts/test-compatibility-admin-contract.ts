@@ -373,9 +373,9 @@ for (const profile of nextWaveFreshwaterProfiles) {
   }
 }
 
-const blackParadiseMigration = readFileSync('supabase/migrations/20261010163113_compatibility_macropodus_spechti_authority.sql', 'utf8');
+const blackParadiseMigration = readFileSync('supabase/migrations/20261010164051_compatibility_macropodus_spechti_authority.sql', 'utf8');
 const blackParadiseProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0044');
-assert.ok(blackParadiseProfile, '20261010163113 must own the reviewed Macropodus spechti profile.');
+assert.ok(blackParadiseProfile, '20261010164051 must own the reviewed Macropodus spechti profile.');
 assert.equal(blackParadiseMigration.includes("catalog_key='sp_0044'"), true, 'Macropodus spechti migration must target sp_0044.');
 for (const source of blackParadiseProfile.citations) {
   assert.equal(blackParadiseMigration.includes(source.id), true, 'Macropodus spechti migration must include source ' + source.id);

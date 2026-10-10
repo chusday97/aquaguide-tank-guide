@@ -30,7 +30,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202610090003_compatibility_runtime_authority_reconciliation.sql',
   '20261010101020_compatibility_kissing_gourami_authority.sql',
   '20261010151338_compatibility_next_wave_freshwater_authority.sql',
-  '20261010163113_compatibility_macropodus_spechti_authority.sql',
+  '20261010164051_compatibility_macropodus_spechti_authority.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
