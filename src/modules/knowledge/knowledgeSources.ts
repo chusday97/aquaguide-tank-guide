@@ -952,6 +952,47 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
     sourceType: 'government',
     reviewStatus: 'reviewed',
   },
+
+  'fishbase-pterophyllum-altum': {
+    id: 'fishbase-pterophyllum-altum',
+    title: 'Pterophyllum altum species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/pterophyllum-altum.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'seriouslyfish-pterophyllum-altum': {
+    id: 'seriouslyfish-pterophyllum-altum',
+    title: 'Pterophyllum altum (Altum Angel)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/pterophyllum-altum',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-hypostomus-plecostomus': {
+    id: 'fishbase-hypostomus-plecostomus',
+    title: 'Hypostomus plecostomus species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.org/summary/3057',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'fishbase-macropodus-ocellatus': {
+    id: 'fishbase-macropodus-ocellatus',
+    title: 'Macropodus ocellatus species summary',
+    publisher: 'FishBase',
+    url: 'https://www.fishbase.se/summary/Macropodus-ocellatus.html',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
+  'seriouslyfish-macropodus-ocellatus': {
+    id: 'seriouslyfish-macropodus-ocellatus',
+    title: 'Macropodus ocellatus (Roundtail Paradise Fish)',
+    publisher: 'Seriously Fish',
+    url: 'https://www.seriouslyfish.com/species/macropodus-ocellatus',
+    sourceType: 'curated_husbandry',
+    reviewStatus: 'reviewed',
+  },
 };
 export const getKnowledgeSource = (sourceId: string) => knowledgeSources[sourceId];
 

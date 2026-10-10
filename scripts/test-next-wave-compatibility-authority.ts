@@ -2,7 +2,18 @@ import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
+import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
+
+for (const sourceId of [
+  'fishbase-pterophyllum-altum',
+  'seriouslyfish-pterophyllum-altum',
+  'fishbase-hypostomus-plecostomus',
+  'fishbase-macropodus-ocellatus',
+  'seriouslyfish-macropodus-ocellatus',
+]) {
+  assert.equal(resolveKnowledgeSources([sourceId]).length, 1, `knowledge source must resolve: ${sourceId}`);
+}
 
 for (const id of ['sp_0019', 'sp_0026', 'sp_0043']) {
   const fish = fishData.find(item => item.id === id);
