@@ -693,7 +693,85 @@ const makeEmberTetraProfile = (speciesId: string): ReviewedCompatibilityProfile 
   requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
 });
 
+
+const altumAngelfishFishBase: EvidenceSourceDto = {
+  id: 'fishbase-pterophyllum-altum',
+  title: 'Pterophyllum altum species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/pterophyllum-altum.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const altumAngelfishSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-pterophyllum-altum',
+  title: 'Pterophyllum altum (Altum Angel)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/pterophyllum-altum',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const commonPlecoFishBase: EvidenceSourceDto = {
+  id: 'fishbase-hypostomus-plecostomus',
+  title: 'Hypostomus plecostomus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.org/summary/3057',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const roundtailParadiseFishBase: EvidenceSourceDto = {
+  id: 'fishbase-macropodus-ocellatus',
+  title: 'Macropodus ocellatus species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Macropodus-ocellatus.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const roundtailParadiseSeriouslyFish: EvidenceSourceDto = {
+  id: 'seriouslyfish-macropodus-ocellatus',
+  title: 'Macropodus ocellatus (Roundtail Paradise Fish)',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/macropodus-ocellatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  sp_0019: {
+    speciesId: 'sp_0019',
+    waterType: 'freshwater',
+    behaviorTraits: ['small_fish_predation'],
+    predationTargets: ['very_small_fish'],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [altumAngelfishFishBase, altumAngelfishSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'predation'],
+  },
+  sp_0026: {
+    speciesId: 'sp_0026',
+    waterType: 'freshwater',
+    waterTypes: ['freshwater', 'brackish'],
+    behaviorTraits: ['bottom_dwelling'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [commonPlecoFishBase],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size'],
+  },
+  sp_0043: {
+    speciesId: 'sp_0043',
+    waterType: 'freshwater',
+    behaviorTraits: ['breeding_defense', 'territorial'],
+    predationTargets: [],
+    confidence: 'high',
+    reviewStatus: 'reviewed',
+    citations: [roundtailParadiseFishBase, roundtailParadiseSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'territoriality', 'breeding_behavior'],
+  },
+
   sp_0133: {
     speciesId: 'sp_0133',
     waterType: 'freshwater',
