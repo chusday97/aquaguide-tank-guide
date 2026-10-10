@@ -29,6 +29,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '202610090002_compatibility_rummy_evidence_legacy_bridge.sql',
   '202610090003_compatibility_runtime_authority_reconciliation.sql',
   '20261010101020_compatibility_kissing_gourami_authority.sql',
+  '20261010151338_compatibility_next_wave_freshwater_authority.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
