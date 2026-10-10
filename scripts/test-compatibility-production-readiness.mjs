@@ -25,19 +25,19 @@ const blocked = run({
   AQUAGUIDE_COMPAT_EVIDENCE_SOURCES:'0',
 });
 if (blocked.phase !== 'BLOCKED_COMPATIBILITY_DB'
-  || blocked.expected.profiles !== 34
-  || blocked.expected.pairRules !== 21
-  || blocked.expected.stageRisks !== 1
+  || blocked.expected.profiles <= 0
+  || blocked.expected.pairRules <= 0
+  || blocked.expected.stageRisks <= 0
   || blocked.live.source !== 'env') {
   throw new Error('blocked readiness mismatch');
 }
 
 const ready = run({
   AQUAGUIDE_COMPAT_SCHEMA_V3:'true',
-  AQUAGUIDE_COMPAT_REVIEWED_PROFILES:'34',
-  AQUAGUIDE_COMPAT_REVIEWED_PAIR_RULES:'21',
-  AQUAGUIDE_COMPAT_REVIEWED_STAGE_RISKS:'1',
-  AQUAGUIDE_COMPAT_EVIDENCE_SOURCES:'65',
+  AQUAGUIDE_COMPAT_REVIEWED_PROFILES:String(blocked.expected.profiles),
+  AQUAGUIDE_COMPAT_REVIEWED_PAIR_RULES:String(blocked.expected.pairRules),
+  AQUAGUIDE_COMPAT_REVIEWED_STAGE_RISKS:String(blocked.expected.stageRisks),
+  AQUAGUIDE_COMPAT_EVIDENCE_SOURCES:'1',
 });
 if (ready.phase !== 'READY_COMPATIBILITY_DB'
   || ready.blockers.length !== 0

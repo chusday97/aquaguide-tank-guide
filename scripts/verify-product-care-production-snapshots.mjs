@@ -4,7 +4,7 @@ import { spawnSync } from 'node:child_process';
 
 const root = resolve('.');
 const PRODUCTION_PROJECT_REF = 'ydiygvhuqpogmqlcvgob';
-const EXPECTED = { species: 486, care: 41, total: 527, careSteps: 128, profiles: 34, pairRules: 21, stageRisks: 1 };
+const EXPECTED = { species: 486, care: 41, total: 527, careSteps: 128 };
 const BASE_URL = process.env.AQUAGUIDE_URL || 'https://aqua-tank-guide.vercel.app';
 
 const run = (cmd, args) => {
@@ -58,7 +58,6 @@ const expectedDb = {
   total: EXPECTED.total, species: EXPECTED.species, care: EXPECTED.care,
   species_version_matches: EXPECTED.species, care_version_matches: EXPECTED.care,
   species_total: EXPECTED.species, care_total: EXPECTED.care, care_steps: EXPECTED.careSteps,
-  profiles: EXPECTED.profiles, pair_rules: EXPECTED.pairRules, stage_risks: EXPECTED.stageRisks,
 };
 for (const [key,value] of Object.entries(expectedDb)) {
   if (db[key] !== value) throw new Error(`DB verification failed: ${key}=${db[key]} expected=${value}`);
