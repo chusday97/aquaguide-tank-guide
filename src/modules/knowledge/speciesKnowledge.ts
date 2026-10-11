@@ -50,6 +50,7 @@ import { phase2Batch47Knowledge } from './phase2Batch47Authority';
 import { marineReleaseGateKnowledge } from './marineReleaseGateAuthority';
 import { freshwaterReleaseGateKnowledge } from './freshwaterReleaseGateAuthority';
 import { opsariichthysBidensKnowledge } from './opsariichthysBidensAuthority';
+import { pseudorasboraParvaKnowledge } from './pseudorasboraParvaAuthority';
 import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
 
 export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
@@ -897,6 +898,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...marineReleaseGateKnowledge,
   ...freshwaterReleaseGateKnowledge,
   ...opsariichthysBidensKnowledge,
+  ...pseudorasboraParvaKnowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1933,6 +1935,11 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // Opsariichthys bidens now has direct reviewed Species Knowledge aligned
   // with its reviewed Compatibility profile; it is no longer completion-only.
   if (fish.id === 'sp_0038') {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Pseudorasbora parva now has direct reviewed Species Knowledge aligned
+  // with its reviewed Compatibility profile; it is no longer completion-only.
+  if (fish.id === 'sp_0042') {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }
   // Phase 2 completion records are direct evidence for the matrix and

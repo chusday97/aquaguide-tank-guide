@@ -5,6 +5,7 @@ import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy
 import { lutjanusKasmiraFishBase, zebrasomaFlavescensFishBase, paracanthurusHepatusFishBase } from './catalogReviewBatches/next-wave-marine-01';
 import { chindongoSocolofiFishBase, chindongoSocolofiSeriouslyFish } from './catalogReviewBatches/next-wave-freshwater-01';
 import { opsariichthysBidensFishBase, opsariichthysBidensDietStudy, opsariichthysBidensEnrichmentStudy } from './catalogReviewBatches/next-wave-freshwater-02';
+import { pseudorasboraParvaFishBase, pseudorasboraParvaSpawningCompetitionStudy, pseudorasboraParvaShoalingStudy } from './catalogReviewBatches/next-wave-freshwater-03';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -781,6 +782,17 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [commonPlecoFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size'],
+  },
+  sp_0042: {
+    speciesId: 'sp_0042',
+    waterType: 'freshwater',
+    waterTypes: ['freshwater', 'brackish'],
+    behaviorTraits: ['shoaling', 'breeding_defense'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [pseudorasboraParvaFishBase, pseudorasboraParvaSpawningCompetitionStudy, pseudorasboraParvaShoalingStudy],
+    requiredFacts: ['water', 'adult_size', 'social_behavior', 'breeding_behavior'],
   },
   sp_0043: {
     speciesId: 'sp_0043',
