@@ -53,7 +53,10 @@ import { opsariichthysBidensKnowledge } from './opsariichthysBidensAuthority';
 import { pseudorasboraParvaKnowledge } from './pseudorasboraParvaAuthority';
 import { nextWaveFreshwaterBatchKnowledge } from './nextWaveFreshwaterBatchAuthority';
 import { nextWaveUnifiedBatchKnowledge } from './nextWaveUnifiedBatchAuthority';
+import { nextWaveUnified03ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-03';
+import { nextWaveUnified04ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified03BatchKnowledge } from './nextWaveUnified03BatchAuthority';
+import { nextWaveUnified04BatchKnowledge } from './nextWaveUnified04BatchAuthority';
 import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
 
 export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
@@ -905,6 +908,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...nextWaveFreshwaterBatchKnowledge,
   ...nextWaveUnifiedBatchKnowledge,
   ...nextWaveUnified03BatchKnowledge,
+  ...nextWaveUnified04BatchKnowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1958,14 +1962,12 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   if (['sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181'].includes(fish.id)) {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }
-  // Unified next25 wave promotes direct reviewed runtime Knowledge for the
-  // 22 catalog objects that now have reviewed Compatibility Profiles. Keep
-  // the three identity/type holds out of this allowlist.
-  if ([
-    'sp_0103','sp_0117','sp_0118','sp_0121','sp_0122','sp_0123','sp_0125','sp_0129',
-    'sp_0140','sp_0183','sp_0184','sp_0185','sp_0187','sp_0197','sp_0198','sp_0199',
-    'sp_0200','sp_0202','sp_0218','sp_0441','sp_0449','sp_0450',
-  ].includes(fish.id)) {
+  // Unified reviewed batches expose their released Profile IDs from the
+  // batch authority itself; runtime resolution must not duplicate ID lists.
+  if (
+    nextWaveUnified03ProfileIds.includes(fish.id)
+    || nextWaveUnified04ProfileIds.includes(fish.id as (typeof nextWaveUnified04ProfileIds)[number])
+  ) {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }
   // Phase 2 completion records are direct evidence for the matrix and

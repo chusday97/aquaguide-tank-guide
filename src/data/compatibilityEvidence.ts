@@ -18,6 +18,7 @@ import {
 
 import { nextWaveUnified02Sources } from './catalogReviewBatches/next-wave-unified-02';
 import { nextWaveUnified03DirectSubjects, nextWaveUnified03RequiredFacts } from './catalogReviewBatches/next-wave-unified-03';
+import { nextWaveUnified04Sources } from './catalogReviewBatches/next-wave-unified-04';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1432,6 +1433,86 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     citations: [oscarFishBaseEcology, oscarSeriouslyFish],
     requiredFacts: ['water', 'temperature', 'adult_size', 'predation'],
   },
+};
+
+const wave04BridgeProfile = (
+  speciesId: string,
+  baseSpeciesId: string,
+  variantCitation: EvidenceSourceDto,
+): ReviewedCompatibilityProfile => {
+  const base = profiles[baseSpeciesId];
+  if (!base) throw new Error('Missing reviewed Compatibility bridge base: ' + baseSpeciesId);
+  return {
+    ...base,
+    speciesId,
+    behaviorTraits: [...base.behaviorTraits],
+    predationTargets: [...base.predationTargets],
+    citations: [variantCitation, ...base.citations],
+    requiredFacts: base.requiredFacts ? [...base.requiredFacts] : undefined,
+  };
+};
+
+profiles.sp_0116 = wave04BridgeProfile('sp_0116', 'sp_0103', nextWaveUnified04Sources.scleropagesGreen);
+profiles.sp_0104 = wave04BridgeProfile('sp_0104', 'sp_0103', nextWaveUnified04Sources.scleropagesRed);
+profiles.sp_0146 = wave04BridgeProfile('sp_0146', 'sp_0448', nextWaveUnified04Sources.ramPlatinum);
+profiles.sp_0157 = wave04BridgeProfile('sp_0157', 'sp_0448', nextWaveUnified04Sources.ramBlue);
+profiles.sp_0151 = wave04BridgeProfile('sp_0151', 'sp_0010', nextWaveUnified04Sources.blackTetraColor);
+
+profiles.sp_0452 = {
+  speciesId: 'sp_0452',
+  waterType: 'saltwater',
+  behaviorTraits: ['pair_living', 'anemone_association', 'male_egg_guarding'],
+  predationTargets: [],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [nextWaveUnified04Sources.amphiprionFishBase],
+  requiredFacts: ['water', 'adult_size', 'social_behavior', 'breeding_behavior'],
+};
+
+profiles.sp_0453 = {
+  speciesId: 'sp_0453',
+  waterType: 'saltwater',
+  behaviorTraits: ['solitary', 'predatory', 'venomous_spines'],
+  predationTargets: ['small_fish'],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [nextWaveUnified04Sources.pteroisFishBase],
+  requiredFacts: ['water', 'adult_size', 'social_behavior', 'predation'],
+};
+
+profiles.sp_0069 = {
+  speciesId: 'sp_0069',
+  waterType: 'freshwater',
+  behaviorTraits: ['group_living', 'pond_scale', 'very_large_space_requirement'],
+  minimumGroupSize: 5,
+  predationTargets: [],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [nextWaveUnified04Sources.carpVar],
+  requiredFacts: ['water', 'tank_size', 'social_behavior'],
+};
+
+profiles.sp_0070 = {
+  speciesId: 'sp_0070',
+  waterType: 'freshwater',
+  behaviorTraits: ['group_living', 'pond_scale', 'very_large_space_requirement'],
+  minimumGroupSize: 5,
+  predationTargets: [],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [nextWaveUnified04Sources.carpLongfin],
+  requiredFacts: ['water', 'tank_size', 'social_behavior'],
+};
+
+profiles.sp_0156 = {
+  speciesId: 'sp_0156',
+  waterType: 'freshwater',
+  behaviorTraits: ['variable_temperament', 'male_territoriality', 'breeding_aggression'],
+  predationTargets: [],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [nextWaveUnified04Sources.trichopodusPlatinum, nextWaveUnified04Sources.trichopodusSeriouslyFish],
+  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'breeding_behavior'],
 };
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {

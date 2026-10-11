@@ -369,7 +369,31 @@ assert.equal(ramireziKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 54);
 assert.equal(ramireziKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 60);
 assert.equal(ramireziKnowledge.knowledge.reproduction?.mode, 'substrate_spawner');
 assert.equal(ramireziKnowledge.knowledge.reproduction?.parentalCare, 'fry_guarding');
-assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0157', scientificName: 'Mikrogeophagus ramirezi var. Blue' }), undefined, 'Ramirezi ornamental variants must not inherit standard-species authority automatically');
+const reviewedBlueRam = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0157', scientificName: 'Mikrogeophagus ramirezi var. Blue' });
+assert.ok(reviewedBlueRam, 'Explicitly reviewed Blue Ram variant bridge must resolve reviewed Knowledge');
+assert.equal(reviewedBlueRam.environment?.waterType, 'freshwater');
+assert.deepEqual(reviewedBlueRam.environment?.temperatureRangeC, { min: 27, max: 30 });
+assert.deepEqual(reviewedBlueRam.environment?.phRange, { min: 4, max: 7 });
+assert.equal(reviewedBlueRam.socialBehavior?.mode, 'pair');
+assert.equal(reviewedBlueRam.socialBehavior?.minimumGroupSize, undefined);
+assert.equal(reviewedBlueRam.spaceAndGrowth?.adultLengthCm?.max, 4.2);
+assert.ok(
+  reviewedBlueRam.environment?.evidence.sourceIds.includes('batch10-fishbase-mikrogeophagus-ramirezi-blue'),
+  'Blue Ram bridge must carry its variant-specific reviewed identity source',
+);
+
+const reviewedPlatinumRam = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0146', scientificName: 'Mikrogeophagus ramirezi var. Platinum' });
+assert.ok(reviewedPlatinumRam, 'Explicitly reviewed Platinum Ram variant bridge must resolve reviewed Knowledge');
+assert.ok(
+  reviewedPlatinumRam.environment?.evidence.sourceIds.includes('batch10-fishbase-mikrogeophagus-ramirezi-platinum'),
+  'Platinum Ram bridge must carry its variant-specific reviewed identity source',
+);
+
+assert.equal(
+  getReviewedSpeciesKnowledgeForFish({ id: 'sp_0219', scientificName: 'Mikrogeophagus ramirezi var. Gold Balloon' }),
+  undefined,
+  'Unreviewed Ramirezi ornamental variants must not inherit standard-species authority automatically',
+);
 const ramireziSources = resolveKnowledgeSources(ramireziKnowledge.knowledge.environment?.evidence.sourceIds || []);
 assert.equal(ramireziSources.length, 2);
 assert.ok(ramireziSources.some(source => source.publisher === 'Seriously Fish'));

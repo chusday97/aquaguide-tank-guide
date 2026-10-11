@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence.ts';
+import { buildCompatibilityProfileRolloutKeysets } from '../src/data/compatibilityAuthorityRollout.ts';
 
 export const PRODUCTION_PROJECT_REF = 'ydiygvhuqpogmqlcvgob';
 
@@ -38,10 +39,15 @@ const sha256 = value => createHash('sha256').update(value).digest('hex');
 
 export const getAuthorityKeys = () => {
   const audit = getCompatibilityEvidenceAudit();
+  const allProfileKeys = audit.reviewedProfiles.map(item => item.speciesId);
+  const predecessorTarget = buildCompatibilityProfileRolloutKeysets(allProfileKeys).predecessorTarget;
   return {
-    profiles: audit.reviewedProfiles.map(item => item.speciesId).sort(),
+    // This guard owns PR #188 only: freeze the exact 85-key predecessor authority.
+    // Stacked wave04 (95 Profiles) has its own migration contract and must not
+    // silently broaden the currently authorized Production migration bundle.
+    profiles: [...predecessorTarget].sort(),
     pairRules: audit.reviewedPairRules.map(item => [...item.speciesIds].sort().join('__')).sort(),
-    stageRisks: audit.reviewedStageRiskProfiles.map(item => `${item.speciesId}:${item.riskType}`).sort(),
+    stageRisks: audit.reviewedStageRiskProfiles.map(item => item.speciesId + ':' + item.riskType).sort(),
   };
 };
 

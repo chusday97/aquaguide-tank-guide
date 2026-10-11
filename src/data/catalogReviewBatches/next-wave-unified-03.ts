@@ -131,6 +131,8 @@ export const nextWaveUnified03DirectSubjects: NextWaveUnified03Subject[] = [
   { speciesId: 'sp_0450', scientificName: 'Andinoacara pulcher', waterType: 'freshwater', sources: [S.andinoacaraFishBase, S.andinoacaraSeriouslyFish], temperature: { min: 22, max: 28 }, ph: { min: 6.5, max: 8 }, adultSizeMaxCm: 15, tankLengthCm: 120, socialMode: 'pair', socialNote: 'Pair-oriented and relatively peaceful for its size; males defend the spawning site during parental care.', territorialityTraits: ['breeding_territoriality'], behaviorTraits: ['pair_living', 'breeding_territoriality', 'relatively_peaceful_cichlid'], confidence: 'high' },
 ];
 
+export const nextWaveUnified03ProfileIds = nextWaveUnified03DirectSubjects.map(subject => subject.speciesId);
+
 const supported = (
   speciesId: string,
   field: CatalogFieldReview['field'],

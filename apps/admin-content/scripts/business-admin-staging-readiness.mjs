@@ -38,6 +38,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '20261011170000_compatibility_next_wave_freshwater_batch_authority.sql',
   '20261011213000_compatibility_unified_next_wave_batch_authority.sql',
   '20261011234500_compatibility_unified_next25_authority.sql',
+  '20261012001500_compatibility_unified_wave04_authority.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [

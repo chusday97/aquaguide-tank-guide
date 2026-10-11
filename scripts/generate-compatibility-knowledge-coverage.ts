@@ -2,6 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getCatalogIdentityBoundary, type CatalogIdentityBoundaryCode } from '../src/data/catalogIdentityBoundaries';
+import { getCompatibilityDomainBoundary, type CompatibilityDomainBoundaryCode } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling, type KnowledgeEvidenceCeilingCode } from '../src/data/knowledgeEvidenceCeilings';
 import { getCompatibilityPairEvidenceCeiling } from '../src/data/compatibilityPairEvidenceCeilings';
 import {
@@ -54,6 +55,7 @@ type GapBoundaryCode =
   | 'multi_water_type_not_representable'
   | 'variant_authority_not_promotable'
   | CatalogIdentityBoundaryCode
+  | CompatibilityDomainBoundaryCode
   | KnowledgeEvidenceCeilingCode
   | 'catalog_identity_unresolved';
 
@@ -91,6 +93,10 @@ const speciesBoundaryCodes = (row: CompletionRow): GapBoundaryCode[] => {
   if (evidenceCeiling && row.field_status[evidenceCeiling.field] !== 'reviewed_supported') {
     codes.push(evidenceCeiling.code);
   }
+  const domainBoundary = getCompatibilityDomainBoundary(row.species_id);
+  if (domainBoundary) {
+    codes.push(domainBoundary.code);
+  }
 
   const identityReview = getCatalogFieldReviews(row.species_id).find(review => (
     review.field === 'identity'
@@ -122,6 +128,9 @@ const boundaryResolution = (codes: GapBoundaryCode[]) => {
   if (codes.includes('variant_husbandry_not_established')) {
     return 'evidence_ceiling';
   }
+  if (codes.includes('life_type_not_supported_by_fish_compatibility_domain')) {
+    return 'domain_expansion_required';
+  }
   if (
     codes.includes('catalog_identity_unresolved')
     || codes.includes('trade_name_taxon_ambiguous')
@@ -147,6 +156,7 @@ const speciesGapCandidates = launchRows.map(row => {
   ];
   const boundaryCodes = speciesBoundaryCodes(row);
   const identityBoundary = getCatalogIdentityBoundary(row.species_id);
+  const domainBoundary = getCompatibilityDomainBoundary(row.species_id);
   const evidenceCeiling = getKnowledgeEvidenceCeiling(row.species_id);
   const score = Number(row.priority_score || 0)
     + criticalUnknown.length * 4
@@ -176,8 +186,16 @@ const speciesGapCandidates = launchRows.map(row => {
       note: evidenceCeiling.note,
       reviewed_at: evidenceCeiling.reviewedAt,
     } : null,
+    compatibility_domain_boundary: domainBoundary ? {
+      code: domainBoundary.code,
+      life_type: domainBoundary.lifeType,
+      source_ids: domainBoundary.sourceIds,
+      note: domainBoundary.note,
+      reviewed_at: domainBoundary.reviewedAt,
+    } : null,
     research_disposition: (
       identityBoundary?.researchDisposition
+      || domainBoundary?.researchDisposition
       || evidenceCeiling?.researchDisposition
       || 'actionable'
     ),
@@ -186,9 +204,11 @@ const speciesGapCandidates = launchRows.map(row => {
       ? 'Reviewed evidence supports more than one water type while the current Compatibility profile accepts only one; do not force a single value.'
       : boundaryCodes.includes('variant_authority_not_promotable')
         ? 'Base-species evidence exists, but current reviewed policy forbids automatic promotion to this ornamental variant; require direct variant evidence or an explicit reviewed bridge.'
-        : identityBoundary
-          ? identityBoundary.note
-          : evidenceCeiling
+        : domainBoundary
+          ? domainBoundary.note
+          : identityBoundary
+            ? identityBoundary.note
+            : evidenceCeiling
             ? evidenceCeiling.note
             : boundaryCodes.includes('catalog_identity_unresolved')
             ? 'The catalog trade-name/object identity is not securely mapped to a reviewed taxon. Resolve identity before promoting husbandry or compatibility evidence.'
@@ -316,9 +336,11 @@ const nextWaveCandidates = rows
     ];
     const boundaryCodes = speciesBoundaryCodes(row);
     const identityBoundary = getCatalogIdentityBoundary(row.species_id);
+    const domainBoundary = getCompatibilityDomainBoundary(row.species_id);
     const evidenceCeiling = getKnowledgeEvidenceCeiling(row.species_id);
     const researchDisposition = (
       identityBoundary?.researchDisposition
+      || domainBoundary?.researchDisposition
       || evidenceCeiling?.researchDisposition
       || 'actionable'
     );

@@ -1,3 +1,16 @@
+## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
+
+1. Production unchanged: 60 / 63 / 21 / 1 / 116.
+2. Predecessor PR #188 remains the only candidate for the next Production promotion: 61 / 85 / 21 / 1 / 160.
+3. DONE: wave04 original 25 candidates processed as one unified batch: 10 reviewed fish Profiles + explicit fail-closed identity/domain boundaries.
+4. DONE: non-fish duplicate taxon catalog IDs sp_0035 and sp_0457 are also domain-held so the generator cannot requeue the same unsupported taxon under a second ID.
+5. DONE: stacked runtime contract accepts exact 63 / 85 / 95 Profile generations only.
+6. DONE: stacked migration candidate 20261012001500 requires 85/160 and targets 95/171; it is not valid against current Production.
+7. CURRENT: finish full backend release gate, clean checkpoint, and stacked PR readiness.
+8. NEXT ACTIVE 25: sp_0158, sp_0163, sp_0173, sp_0174, sp_0175, sp_0176, sp_0177, sp_0178, sp_0179, sp_0182, sp_0201, sp_0207, sp_0208, sp_0214, sp_0216, sp_0217, sp_0219, sp_0220, sp_0221, sp_0227, sp_0228, sp_0229, sp_0234, sp_0235, sp_0236.
+9. HOLD: do not execute wave04 migration, merge its stacked PR, or deploy it to Production before #188 has been promoted and verified.
+10. Production guard for #188 stays frozen at 60/63/116 -> 61/85/160; wave04 has a separate stacked migration contract.
+
 ## CURRENT RELEASE QUEUE — 2026-10-11 unified next-25 candidate
 
 1. DONE: prior Production closure is stable at 60 / 63 / 21 / 1 / 116.

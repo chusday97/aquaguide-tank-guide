@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 
-assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0334', 'sp_0428']);
+assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0055', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0334', 'sp_0428']);
 
 const crystal = getCatalogIdentityBoundary('sp_0002');
 assert.equal(crystal?.code, 'trade_name_taxon_ambiguous');
@@ -22,6 +22,11 @@ assert.equal(mini?.resolvedGranularity, 'commercial_lineage_only');
 assert.equal(mini?.researchDisposition, 'terminal_unknown_hold');
 assert.ok(mini?.sourceIds.includes('biology-2026-mini-parrot-taxonomy-boundary'));
 
+
+const parrotHybrid = getCatalogIdentityBoundary('sp_0055');
+assert.equal(parrotHybrid?.code, 'commercial_hybrid_identity_unresolved');
+assert.equal(parrotHybrid?.resolvedGranularity, 'commercial_lineage_only');
+assert.equal(parrotHybrid?.researchDisposition, 'terminal_unknown_hold');
 
 const unresolvedSnakehead = getCatalogIdentityBoundary('sp_0110');
 assert.equal(unresolvedSnakehead?.code, 'catalog_scientific_name_unresolved');

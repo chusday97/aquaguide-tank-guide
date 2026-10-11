@@ -8,7 +8,7 @@ import {
   resetRuntimeCompatibilityEvidenceForTest,
 } from '../src/data/runtimeCompatibilityEvidence';
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
-import { compatibilityProductionRolloutPendingProfileIds } from '../src/data/compatibilityNextWaveBatch';
+import { buildCompatibilityProfileRolloutKeysets } from '../src/data/compatibilityAuthorityRollout';
 
 const audit = getCompatibilityEvidenceAudit();
 const toCitation = (source: (typeof audit.reviewedProfiles)[number]['citations'][number]) => ({
@@ -89,8 +89,10 @@ applyReviewedCompatibilityBootstrap({
 assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', 'partial DB authority must fail closed');
 assert.deepEqual(signature(), staticSignature, 'partial DB authority must not change Compatibility decisions');
 
-const rolloutPending = new Set<string>(compatibilityProductionRolloutPendingProfileIds);
-const currentProductionProfiles = bootstrap.profiles.filter(profile => !rolloutPending.has(profile.catalogKey));
+const rolloutKeysets = buildCompatibilityProfileRolloutKeysets(bootstrap.profiles.map(profile => profile.catalogKey));
+const profilesFor = (keys: ReadonlySet<string>) => bootstrap.profiles.filter(profile => keys.has(profile.catalogKey));
+
+const currentProductionProfiles = profilesFor(rolloutKeysets.currentProduction);
 assert.equal(currentProductionProfiles.length, 63);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
@@ -101,6 +103,30 @@ const currentProductionStatus = getRuntimeCompatibilityStatus();
 assert.equal(currentProductionStatus.source, 'reviewed-db', 'exact 63-Profile Production baseline must stay usable during rollout');
 assert.equal(currentProductionStatus.profiles, 63);
 assert.equal(currentProductionStatus.pairRules, bootstrap.pairRules.length);
+
+resetRuntimeCompatibilityEvidenceForTest();
+
+const predecessorProfiles = profilesFor(rolloutKeysets.predecessorTarget);
+assert.equal(predecessorProfiles.length, 85);
+applyReviewedCompatibilityBootstrap({
+  ...bootstrap,
+  profiles: predecessorProfiles,
+  counts: { profiles: predecessorProfiles.length, pairRules: bootstrap.pairRules.length },
+});
+const predecessorStatus = getRuntimeCompatibilityStatus();
+assert.equal(predecessorStatus.source, 'reviewed-db', 'exact 85-Profile predecessor target must stay usable during stacked rollout');
+assert.equal(predecessorStatus.profiles, 85);
+assert.equal(predecessorStatus.pairRules, bootstrap.pairRules.length);
+
+resetRuntimeCompatibilityEvidenceForTest();
+
+const invalidIntermediateProfiles = bootstrap.profiles.slice(0, 73);
+applyReviewedCompatibilityBootstrap({
+  ...bootstrap,
+  profiles: invalidIntermediateProfiles,
+  counts: { profiles: invalidIntermediateProfiles.length, pairRules: bootstrap.pairRules.length },
+});
+assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', '73-Profile intermediate state must fail closed');
 
 resetRuntimeCompatibilityEvidenceForTest();
 
