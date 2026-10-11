@@ -6,6 +6,7 @@ import { execFileSync } from 'node:child_process';
 import { selectCompatibilityLaunchCohort } from '../src/data/compatibility-launch-cohort';
 import {
   applyApprovedCatalogFieldReviews,
+  applyCatalogReviewDecisionBoundary,
   catalogFieldReviewSchema,
   getApprovedCatalogFieldReviews,
   isCatalogFieldReviewValueValid,
@@ -75,6 +76,15 @@ const invalidBehavior = { ...reviewedBehavior, proposedValue: { traits: [''] } }
 assert.equal(isCatalogFieldReviewValueValid(invalidBehavior), false);
 const profile = speciesProfileFromFish(cohort[0]);
 assert.equal(applyApprovedCatalogFieldReviews(profile, [reviewedUnknown]).factEvidence?.some(item => item.field === 'territoriality'), false);
+const unknownTemperature = catalogFieldReviewSchema.parse({
+  ...reviewedUnknown,
+  field: 'temperature',
+});
+const decisionBounded = applyCatalogReviewDecisionBoundary({ ...profile, id: 'sp_0047', catalogKey: 'sp_0047' }, [{ ...unknownTemperature, speciesId: 'sp_0047' }]);
+assert.equal(decisionBounded.waterTemperatureMinC, null);
+assert.equal(decisionBounded.waterTemperatureMaxC, null);
+assert.notEqual(profile.waterTemperatureMinC, null, 'fixture must prove a legacy value existed before the reviewed-unknown decision boundary');
+
 const overlaid = applyApprovedCatalogFieldReviews(profile, [reviewedBehavior]);
 assert.deepEqual(overlaid.factEvidence?.find(item => item.field === 'territoriality'), {
   field: 'territoriality',

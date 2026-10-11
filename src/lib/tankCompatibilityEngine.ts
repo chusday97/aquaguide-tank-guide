@@ -16,7 +16,7 @@ import {
 } from '../data/runtimeCompatibilityRegistry';
 import type { CompatibilityEvidenceDto } from '../../packages/contracts/src';
 import { speciesProfileFromFish } from '../services/catalog/species-profile.adapter';
-import { applyApprovedCatalogFieldReviews } from '../data/catalogFieldReviews';
+import { applyCatalogReviewDecisionBoundary } from '../data/catalogFieldReviews';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../modules/knowledge/speciesKnowledge';
 import {
   COMPATIBILITY_RULE_VERSION,
@@ -273,7 +273,7 @@ const dedupeRules = (rules: TankCompatibilityRule[]) => {
 };
 
 const catalogProfileForCompatibility = (fish: Fish) => (
-  applyApprovedCatalogFieldReviews(speciesProfileFromFish(fish))
+  applyCatalogReviewDecisionBoundary(speciesProfileFromFish(fish))
 );
 
 const profileRange = (min: number | null, max: number | null) => (
@@ -678,6 +678,16 @@ const evaluateLegacyTankCompatibility = ({
       '群体数量未达到已审核建议',
       `${candidateSpecies.name} 当前模拟合计 ${totalCandidateSpeciesQuantity} 只/条，已审核 minimumGroupSize 为 ${reviewedMinimumGroupSize}。`,
       'medium',
+      evidenceFromProfile(candidateSpecies, provider),
+    ));
+  }
+
+  if (candidateProfile?.behaviorTraits.includes('species_tank_required') && currentSpecies.some(item => item.id !== candidateSpecies.id)) {
+    blockingRules.push(asRule(
+      'species_tank_required',
+      '建议物种缸',
+      `${candidateSpecies.name} 的已审核资料明确建议物种专缸；这不等同于必须单只饲养，但不应作为异种社区缸候选。`,
+      'high',
       evidenceFromProfile(candidateSpecies, provider),
     ));
   }

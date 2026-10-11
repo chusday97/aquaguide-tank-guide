@@ -3,7 +3,19 @@ import { getKnowledgeEvidenceCeiling, knowledgeEvidenceCeilings } from '../src/d
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKnowledge';
 
-assert.deepEqual(Object.keys(knowledgeEvidenceCeilings).sort(), ['sp_0224', 'sp_0258']);
+assert.deepEqual(Object.keys(knowledgeEvidenceCeilings).sort(), ['sp_0047', 'sp_0224', 'sp_0258']);
+
+const yellowCatfishSocial = getKnowledgeEvidenceCeiling('sp_0047', 'social');
+assert.equal(yellowCatfishSocial?.code, 'species_social_not_established');
+assert.deepEqual(yellowCatfishSocial?.sourceIds, [
+  'batch18-fishbase-tachysurus-fulvidraco',
+  'fws-tachysurus-fulvidraco-erss',
+]);
+assert.match(yellowCatfishSocial?.note || '', /prey-size threshold|community\/social mode/i);
+const yellowCatfishKnowledge = getReviewedSpeciesKnowledge('sp_0047');
+assert.equal(yellowCatfishKnowledge?.socialBehavior?.mode, 'unknown');
+assert.equal(yellowCatfishKnowledge?.socialBehavior?.evidence.reviewStatus, 'reviewed');
+assert.equal(yellowCatfishKnowledge?.socialBehavior?.evidence.confidence, 'unknown');
 
 const koiSocial = getKnowledgeEvidenceCeiling('sp_0258', 'social');
 assert.equal(koiSocial?.code, 'variant_social_not_established');
@@ -36,4 +48,4 @@ assert.equal(knowledge?.socialBehavior?.evidence.confidence, 'unknown');
 assert.deepEqual(knowledge?.socialBehavior?.evidence.sourceIds, koiSocial?.sourceIds);
 assert.match(knowledge?.socialBehavior?.evidence.note || '', /evidence ceiling/i);
 
-console.log('knowledge evidence ceilings passed: ornamental-variant fields remain explicitly fail-closed after targeted research');
+console.log('knowledge evidence ceilings passed: variant and species-specific terminal holds remain explicitly fail-closed after targeted research');

@@ -12,6 +12,7 @@ import { nextWaveMarine01FieldReviews, nextWaveMarine01VerifiedSourceIds } from 
 import { nextWaveFreshwater01FieldReviews, nextWaveFreshwater01VerifiedSourceIds } from './catalogReviewBatches/next-wave-freshwater-01';
 import { nextWaveFreshwater02FieldReviews, nextWaveFreshwater02VerifiedSourceIds } from './catalogReviewBatches/next-wave-freshwater-02';
 import { nextWaveFreshwater03FieldReviews, nextWaveFreshwater03VerifiedSourceIds } from './catalogReviewBatches/next-wave-freshwater-03';
+import { nextWaveFreshwater04FieldReviews, nextWaveFreshwater04VerifiedSourceIds } from './catalogReviewBatches/next-wave-freshwater-04';
 
 /** Source-controlled field review record. Drafts never enter runtime Catalog. */
 export const catalogFieldReviewSchema = z.object({
@@ -85,6 +86,7 @@ export const catalogFieldReviews: CatalogFieldReview[] = [
   ...nextWaveFreshwater01FieldReviews,
   ...nextWaveFreshwater02FieldReviews,
   ...nextWaveFreshwater03FieldReviews,
+  ...nextWaveFreshwater04FieldReviews,
 ];
 
 /** Source content must be read and verified before any field can overlay runtime data. */
@@ -97,6 +99,7 @@ export const catalogContentVerifiedSourceIds = new Set([
   ...nextWaveFreshwater01VerifiedSourceIds,
   ...nextWaveFreshwater02VerifiedSourceIds,
   ...nextWaveFreshwater03VerifiedSourceIds,
+  ...nextWaveFreshwater04VerifiedSourceIds,
 ]);
 
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);
@@ -163,6 +166,30 @@ export const applyApprovedCatalogFieldReviews = (
       const socialMode = modes.includes(String(candidate.mode)) ? candidate.mode as SpeciesProfile['socialMode'] : 'unknown';
       next = { ...next, socialMode, minimumGroupSize: finiteOrNull(candidate.minimumGroupSize) };
     }
+  }
+  return next;
+};
+
+
+export const compatibilityDecisionBoundarySpeciesIds = new Set([
+  'sp_0047', 'sp_0048', 'sp_0050', 'sp_0051',
+  'sp_0054', 'sp_0056', 'sp_0057', 'sp_0058',
+]);
+
+export const applyCatalogReviewDecisionBoundary = (
+  profile: SpeciesProfile,
+  reviews: CatalogFieldReview[] = getCatalogFieldReviews(profile.id),
+): SpeciesProfile => {
+  let next = applyApprovedCatalogFieldReviews(profile, reviews);
+  if (!compatibilityDecisionBoundarySpeciesIds.has(profile.id)) return next;
+  for (const review of reviews) {
+    if (review.status !== 'reviewed' || review.resolution !== 'unknown' || !isCatalogFieldReviewValueValid(review)) continue;
+    if (review.field === 'water') next = { ...next, waterType: 'unknown' };
+    if (review.field === 'temperature') next = { ...next, waterTemperatureMinC: null, waterTemperatureMaxC: null };
+    if (review.field === 'ph') next = { ...next, phMin: null, phMax: null };
+    if (review.field === 'adult_size') next = { ...next, adultLengthMinCm: null, adultLengthMaxCm: null };
+    if (review.field === 'tank_size') next = { ...next, minTankLiters: null, minTankLengthCm: null };
+    if (review.field === 'social_behavior') next = { ...next, socialMode: 'unknown', minimumGroupSize: null };
   }
   return next;
 };
