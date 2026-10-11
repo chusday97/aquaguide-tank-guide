@@ -40,7 +40,7 @@ species_id,common_name,scientific_name,life_type,category,feeding_status,environ
 "sp_0039","方氏拟腹吸鳅","Pseudogastromyzon fangi","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"
 "sp_0040","中华花鳅","Cobitis sinensis","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"
 "sp_0041","棒花鱼","Abbottina rivularis","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"
-"sp_0042","麦穗鱼","Pseudorasbora parva","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","8"
+"sp_0042","麦穗鱼","Pseudorasbora parva","fish","鱼类","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","catalog_only","elevated","5"
 "sp_0043","圆尾斗鱼","Macropodus ocellatus","fish","慈鲷/斗鱼","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","catalog_only","elevated","5"
 "sp_0044","黑叉尾斗鱼","Macropodus spechti","fish","慈鲷/斗鱼","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","catalog_only","elevated","5"
 "sp_0045","越南爬岩鳅","Sewellia lineolata","fish","鱼类","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","catalog_only","elevated","5"

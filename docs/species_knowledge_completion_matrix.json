@@ -2546,43 +2546,19 @@
       ],
       "field_status": {
         "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported",
         "care": "reviewed_unknown"
       },
       "gap_fields": [],
       "reviewed_unknown_fields": [
         "feeding",
-        "environment",
-        "space",
-        "social",
         "care"
       ],
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
           "mode": "targeted_source_expansion",
           "reason": "reviewed_unknown_no_explicit_ceiling",
           "code": null,
@@ -2598,11 +2574,11 @@
       ],
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
+      "direct_compatibility_profile": true,
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 5,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -33162,24 +33138,24 @@
       "template_only": 0
     },
     "environment": {
-      "reviewed_supported": 50,
-      "reviewed_unknown": 425,
+      "reviewed_supported": 51,
+      "reviewed_unknown": 424,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
       "template_only": 0
     },
     "space": {
-      "reviewed_supported": 52,
-      "reviewed_unknown": 423,
+      "reviewed_supported": 53,
+      "reviewed_unknown": 422,
       "inherited_reviewed": 0,
       "not_applicable": 11,
       "needs_research": 0,
       "template_only": 0
     },
     "social": {
-      "reviewed_supported": 46,
-      "reviewed_unknown": 365,
+      "reviewed_supported": 47,
+      "reviewed_unknown": 364,
       "inherited_reviewed": 0,
       "not_applicable": 75,
       "needs_research": 0,
