@@ -4,6 +4,7 @@ import type { CompatibilityLifeStage, Fish } from '../types';
 import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy';
 import { lutjanusKasmiraFishBase, zebrasomaFlavescensFishBase, paracanthurusHepatusFishBase } from './catalogReviewBatches/next-wave-marine-01';
 import { chindongoSocolofiFishBase, chindongoSocolofiSeriouslyFish } from './catalogReviewBatches/next-wave-freshwater-01';
+import { opsariichthysBidensFishBase, opsariichthysBidensDietStudy, opsariichthysBidensEnrichmentStudy } from './catalogReviewBatches/next-wave-freshwater-02';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1016,6 +1017,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [chindongoSocolofiFishBase, chindongoSocolofiSeriouslyFish],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality'],
+  },
+  sp_0038: {
+    speciesId: 'sp_0038',
+    waterType: 'freshwater',
+    behaviorTraits: ['predatory', 'interspecific_aggression', 'dominance_hierarchy'],
+    predationTargets: ['small_fish'],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [opsariichthysBidensFishBase, opsariichthysBidensDietStudy, opsariichthysBidensEnrichmentStudy],
+    requiredFacts: ['water', 'adult_size', 'social_behavior', 'predation'],
   },
   sp_0022: {
     speciesId: 'sp_0022',
