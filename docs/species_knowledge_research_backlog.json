@@ -1204,172 +1204,6 @@
     },
     {
       "rank": 16,
-      "species_id": "sp_0059",
-      "common_name": "天堂鱼",
-      "scientific_name": "Macropodus opercularis",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 17,
-      "species_id": "sp_0062",
-      "common_name": "红眼灯",
-      "scientific_name": "Moenkhausia sanctaefilomenae",
-      "life_type": "fish",
-      "category": "灯科鱼",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 18,
       "species_id": "sp_0069",
       "common_name": "红白锦鲤",
       "scientific_name": "Cyprinus carpio var.",
@@ -1452,7 +1286,7 @@
       ]
     },
     {
-      "rank": 19,
+      "rank": 17,
       "species_id": "sp_0070",
       "common_name": "蝴蝶鲤",
       "scientific_name": "Cyprinus carpio var. Longfin",
@@ -1535,7 +1369,7 @@
       ]
     },
     {
-      "rank": 20,
+      "rank": 18,
       "species_id": "sp_0103",
       "common_name": "金龙鱼",
       "scientific_name": "Scleropages formosus",
@@ -1618,7 +1452,7 @@
       ]
     },
     {
-      "rank": 21,
+      "rank": 19,
       "species_id": "sp_0104",
       "common_name": "红龙鱼",
       "scientific_name": "Scleropages formosus var. Red",
@@ -1701,256 +1535,7 @@
       ]
     },
     {
-      "rank": 22,
-      "species_id": "sp_0105",
-      "common_name": "恐龙鱼 (大花)",
-      "scientific_name": "Polypterus ornatipinnis",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 23,
-      "species_id": "sp_0108",
-      "common_name": "彩虹雷龙",
-      "scientific_name": "Channa bleheri",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 24,
-      "species_id": "sp_0109",
-      "common_name": "眼镜蛇雷龙",
-      "scientific_name": "Channa aurantimaculata",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 25,
+      "rank": 20,
       "species_id": "sp_0110",
       "common_name": "蓝月光雷龙",
       "scientific_name": "Channa lorti",
@@ -2033,7 +1618,7 @@
       ]
     },
     {
-      "rank": 26,
+      "rank": 21,
       "species_id": "sp_0116",
       "common_name": "亚洲龙鱼 (青龙)",
       "scientific_name": "Scleropages formosus",
@@ -2116,7 +1701,7 @@
       ]
     },
     {
-      "rank": 27,
+      "rank": 22,
       "species_id": "sp_0117",
       "common_name": "银龙鱼",
       "scientific_name": "Osteoglossum bicirrhosum",
@@ -2199,7 +1784,7 @@
       ]
     },
     {
-      "rank": 28,
+      "rank": 23,
       "species_id": "sp_0118",
       "common_name": "黑龙鱼",
       "scientific_name": "Osteoglossum ferreirai",
@@ -2282,90 +1867,7 @@
       ]
     },
     {
-      "rank": 29,
-      "species_id": "sp_0119",
-      "common_name": "古代蝴蝶鱼",
-      "scientific_name": "Pantodon buchholzi",
-      "life_type": "fish",
-      "category": "鱼类",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 30,
+      "rank": 24,
       "species_id": "sp_0120",
       "common_name": "电鳗 (观赏型)",
       "scientific_name": "Gymnotus carapo",
@@ -2448,7 +1950,7 @@
       ]
     },
     {
-      "rank": 31,
+      "rank": 25,
       "species_id": "sp_0121",
       "common_name": "黑斑马异型 (L134)",
       "scientific_name": "Peckoltia compta",
@@ -2531,7 +2033,7 @@
       ]
     },
     {
-      "rank": 32,
+      "rank": 26,
       "species_id": "sp_0122",
       "common_name": "金线绿皮异型 (L190)",
       "scientific_name": "Panaque nigrolineatus",
@@ -2614,7 +2116,7 @@
       ]
     },
     {
-      "rank": 33,
+      "rank": 27,
       "species_id": "sp_0123",
       "common_name": "女王异型 (L165)",
       "scientific_name": "Pterygoplichthys gibbiceps",
@@ -2697,7 +2199,7 @@
       ]
     },
     {
-      "rank": 34,
+      "rank": 28,
       "species_id": "sp_0125",
       "common_name": "雪球异型 (L102)",
       "scientific_name": "Hypancistrus inspector",
@@ -2780,90 +2282,7 @@
       ]
     },
     {
-      "rank": 35,
-      "species_id": "sp_0127",
-      "common_name": "巴基斯坦鼠",
-      "scientific_name": "Botia almorhae",
-      "life_type": "fish",
-      "category": "鲶鱼/异型",
-      "applicable_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "field_status": {
-        "feeding": "reviewed_unknown",
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown",
-        "care": "reviewed_unknown"
-      },
-      "gap_fields": [],
-      "reviewed_unknown_fields": [
-        "feeding",
-        "environment",
-        "space",
-        "social",
-        "care"
-      ],
-      "reviewed_unknown_resolutions": [
-        {
-          "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        },
-        {
-          "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
-        }
-      ],
-      "direct_species_knowledge": true,
-      "inherited_species_knowledge": false,
-      "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "priority_score": 8,
-      "source_conflicts": [],
-      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
-      "research_reason": [
-        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
-        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
-      ]
-    },
-    {
-      "rank": 36,
+      "rank": 29,
       "species_id": "sp_0129",
       "common_name": "宽鳍鱲 (溪流之王)",
       "scientific_name": "Zacco platypus",
@@ -2946,10 +2365,591 @@
       ]
     },
     {
+      "rank": 30,
+      "species_id": "sp_0140",
+      "common_name": "黑斑水虎",
+      "scientific_name": "Serrasalmus rhombeus",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 31,
+      "species_id": "sp_0146",
+      "common_name": "白金波子",
+      "scientific_name": "Mikrogeophagus ramirezi var. Platinum",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 32,
+      "species_id": "sp_0147",
+      "common_name": "蓝宝鹦鹉鱼",
+      "scientific_name": "Amatitlania nigrofasciata var. Blue",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": true,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 33,
+      "species_id": "sp_0148",
+      "common_name": "雪玉鹦鹉鱼",
+      "scientific_name": "Amatitlania nigrofasciata var. White",
+      "life_type": "fish",
+      "category": "慈鲷/斗鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": true,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 34,
+      "species_id": "sp_0151",
+      "common_name": "彩色天使鱼（彩色裙鱼）",
+      "scientific_name": "Gymnocorymbus ternetzi var. Color morph",
+      "life_type": "fish",
+      "category": "灯科鱼",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 35,
+      "species_id": "sp_0156",
+      "common_name": "白金蓝曼龙",
+      "scientific_name": "Trichopodus trichopterus var. Platinum",
+      "life_type": "fish",
+      "category": "鱼类",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
+      "rank": 36,
+      "species_id": "sp_0157",
+      "common_name": "蓝宝石短鲷",
+      "scientific_name": "Mikrogeophagus ramirezi var. Blue",
+      "life_type": "fish",
+      "category": "硬景/底床",
+      "applicable_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "field_status": {
+        "feeding": "reviewed_unknown",
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown",
+        "care": "reviewed_unknown"
+      },
+      "gap_fields": [],
+      "reviewed_unknown_fields": [
+        "feeding",
+        "environment",
+        "space",
+        "social",
+        "care"
+      ],
+      "reviewed_unknown_resolutions": [
+        {
+          "field": "feeding",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "environment",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "space",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "social",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        },
+        {
+          "field": "care",
+          "mode": "targeted_source_expansion",
+          "reason": "reviewed_unknown_no_explicit_ceiling",
+          "code": null,
+          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+        }
+      ],
+      "direct_species_knowledge": true,
+      "inherited_species_knowledge": false,
+      "direct_compatibility_profile": false,
+      "inherited_compatibility_profile": false,
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "priority_score": 8,
+      "source_conflicts": [],
+      "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence.",
+      "research_reason": [
+        "feeding:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "environment:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "space:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "social:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)",
+        "care:reviewed_unknown(targeted_source_expansion;reviewed_unknown_no_explicit_ceiling)"
+      ]
+    },
+    {
       "rank": 37,
-      "species_id": "sp_0130",
-      "common_name": "马口鱼",
-      "scientific_name": "Opsariichthys bidens",
+      "species_id": "sp_0158",
+      "common_name": "红苹果剑尾",
+      "scientific_name": "Xiphophorus hellerii var.",
       "life_type": "fish",
       "category": "鱼类",
       "applicable_fields": [
@@ -3030,9 +3030,9 @@
     },
     {
       "rank": 38,
-      "species_id": "sp_0131",
-      "common_name": "刺鳅",
-      "scientific_name": "Mastacembelus armatus",
+      "species_id": "sp_0163",
+      "common_name": "鸿运当头锦鲤",
+      "scientific_name": "Cyprinus carpio var. Kohaku",
       "life_type": "fish",
       "category": "鱼类",
       "applicable_fields": [
@@ -3113,11 +3113,11 @@
     },
     {
       "rank": 39,
-      "species_id": "sp_0138",
-      "common_name": "黑带好汉",
-      "scientific_name": "Leporinus fasciatus",
-      "life_type": "fish",
-      "category": "鱼类",
+      "species_id": "sp_0164",
+      "common_name": "黑金刚米虾",
+      "scientific_name": "Neocaridina davidi var. Black",
+      "life_type": "invertebrate",
+      "category": "虾螺蟹",
       "applicable_fields": [
         "feeding",
         "environment",
@@ -3180,7 +3180,7 @@
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
       "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
+      "inherited_compatibility_profile": true,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "priority_score": 8,
@@ -3196,11 +3196,11 @@
     },
     {
       "rank": 40,
-      "species_id": "sp_0139",
-      "common_name": "淡水白鲳",
-      "scientific_name": "Piaractus brachypomus",
-      "life_type": "fish",
-      "category": "鱼类",
+      "species_id": "sp_0165",
+      "common_name": "黄金背米虾",
+      "scientific_name": "Neocaridina davidi var. Yellow Line",
+      "life_type": "invertebrate",
+      "category": "虾螺蟹",
       "applicable_fields": [
         "feeding",
         "environment",
@@ -3263,7 +3263,7 @@
       "direct_species_knowledge": true,
       "inherited_species_knowledge": false,
       "direct_compatibility_profile": false,
-      "inherited_compatibility_profile": false,
+      "inherited_compatibility_profile": true,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "priority_score": 8,

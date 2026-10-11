@@ -1,3 +1,12 @@
+## CURRENT RELEASE QUEUE — 2026-10-11 Unified Compatibility next-wave
+
+1. DONE locally: unified batch authority, exact-taxon bridges, sp_0127 identity hold, generated coverage/matrix, 52→63 rollout window, one-file Production migration guard.
+2. DONE locally: BACKEND_RELEASE_GATE=PASS; release target remains 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 reviewed evidence.
+3. CURRENT: form a clean Git checkpoint and run real Production rollback simulation only; do not persist DB writes.
+4. NEXT: push PR, require remote CI/Vercel Preview green, then deploy zero-downtime runtime while Production DB remains at exact 52 Profiles.
+5. HOLD: actual 20261011213000 Production DB commit requires explicit Production migration authorization; generic “推进” is insufficient.
+6. AFTER authorized DB commit: verify exact 60 migrations / 63 Profiles / 116 evidence and live reviewed-db bootstrap, then remove the temporary 52/63 rollout window in a cleanup PR.
+
 ## CURRENT RELEASE QUEUE — 2026-09-16 RC1 CLOSED
 - DONE: code-only Production promote of validated candidate `93549ddf`.
 - DONE: verify Production deployment/SHA and API health.

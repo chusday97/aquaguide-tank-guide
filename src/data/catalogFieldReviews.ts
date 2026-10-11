@@ -13,6 +13,7 @@ import { nextWaveFreshwater01FieldReviews, nextWaveFreshwater01VerifiedSourceIds
 import { nextWaveFreshwater02FieldReviews, nextWaveFreshwater02VerifiedSourceIds } from './catalogReviewBatches/next-wave-freshwater-02';
 import { nextWaveFreshwater03FieldReviews, nextWaveFreshwater03VerifiedSourceIds } from './catalogReviewBatches/next-wave-freshwater-03';
 import { nextWaveFreshwater04FieldReviews, nextWaveFreshwater04VerifiedSourceIds } from './catalogReviewBatches/next-wave-freshwater-04';
+import { nextWaveUnified02FieldReviews, nextWaveUnified02VerifiedSourceIds } from './catalogReviewBatches/next-wave-unified-02';
 
 /** Source-controlled field review record. Drafts never enter runtime Catalog. */
 export const catalogFieldReviewSchema = z.object({
@@ -87,6 +88,7 @@ export const catalogFieldReviews: CatalogFieldReview[] = [
   ...nextWaveFreshwater02FieldReviews,
   ...nextWaveFreshwater03FieldReviews,
   ...nextWaveFreshwater04FieldReviews,
+  ...nextWaveUnified02FieldReviews,
 ];
 
 /** Source content must be read and verified before any field can overlay runtime data. */
@@ -100,6 +102,7 @@ export const catalogContentVerifiedSourceIds = new Set([
   ...nextWaveFreshwater02VerifiedSourceIds,
   ...nextWaveFreshwater03VerifiedSourceIds,
   ...nextWaveFreshwater04VerifiedSourceIds,
+  ...nextWaveUnified02VerifiedSourceIds,
 ]);
 
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);
@@ -172,8 +175,9 @@ export const applyApprovedCatalogFieldReviews = (
 
 
 export const compatibilityDecisionBoundarySpeciesIds = new Set([
-  'sp_0047', 'sp_0048', 'sp_0050', 'sp_0051',
-  'sp_0054', 'sp_0056', 'sp_0057', 'sp_0058',
+  'sp_0047', 'sp_0048', 'sp_0050', 'sp_0051', 'sp_0054', 'sp_0056', 'sp_0057', 'sp_0058',
+  'sp_0059', 'sp_0062', 'sp_0105', 'sp_0108', 'sp_0109', 'sp_0119',
+  'sp_0130', 'sp_0131', 'sp_0138', 'sp_0139', 'sp_0181',
 ]);
 
 export const applyCatalogReviewDecisionBoundary = (

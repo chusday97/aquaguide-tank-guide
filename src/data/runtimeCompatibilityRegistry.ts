@@ -9,6 +9,7 @@ import {
   type ReviewedPairRule,
   type ReviewedStageRiskProfile,
 } from './compatibilityEvidence';
+import { exactStringSet, getCompatibilityProfileRolloutGeneration } from './compatibilityAuthorityRollout';
 
 export type CompatibilityBootstrapResponse = {
   profiles: ReviewedCompatibilityProfileDto[];
@@ -140,8 +141,8 @@ const exactBaselineCoverage = (payload: CompatibilityBootstrapResponse) => {
   const profileKeys = payload.profiles.map(profile => profile.catalogKey);
   const pairKeys = payload.pairRules.map(rule => pairKey(...rule.catalogKeys));
   if (new Set(profileKeys).size !== profileKeys.length || new Set(pairKeys).size !== pairKeys.length) return false;
-  if (profileKeys.length !== staticProfileKeys.size || pairKeys.length !== staticPairKeys.size) return false;
-  if (!profileKeys.every(key => staticProfileKeys.has(key)) || !pairKeys.every(key => staticPairKeys.has(key))) return false;
+  if (getCompatibilityProfileRolloutGeneration(profileKeys, staticProfileKeys) === null) return false;
+  if (!exactStringSet(new Set(pairKeys), staticPairKeys)) return false;
   if (!payload.profiles.every(profile => (
     profile.reviewStatus === 'reviewed'
     && reviewedCitations(profile.citations)

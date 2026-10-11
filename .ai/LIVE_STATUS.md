@@ -1,3 +1,13 @@
+# CURRENT OVERRIDE — 2026-10-11 Unified Compatibility next-wave
+
+- Production baseline before this candidate remains exact 59 migrations / 52 Profiles / 21 Pair Rules / 1 Stage Risk / 98 reviewed evidence at runtime/main/release SHA db2bd1a8.
+- Candidate branch codex/compatibility-unified-nextwave-20261011 adds one unified batch: 9 direct reviewed species authorities + 2 exact-taxon catalog bridges; sp_0127 is moved out of research queue by an explicit trade-name identity terminal hold.
+- Static target is exact 63 Profiles / 21 Pair Rules / 1 Stage Risk; one additive migration 20261011213000_compatibility_unified_next_wave_batch_authority.sql targets 60 migrations / 63 Profiles / 116 reviewed evidence.
+- Zero-downtime runtime accepts only the exact current 52-key Profile baseline or exact 63-key target; 51/53/62 and same-count wrong-key baselines fail closed.
+- Generated Compatibility queue has rolled forward to the next 25 candidates; no species-by-species release entrypoints are allowed.
+- Validation: Catalog identity boundaries, runtime authority, rollout window, unified next-wave, completion matrix, knowledge coverage, API/root typecheck and full BACKEND_RELEASE_GATE=PASS.
+- HOLD: Production DB migration is not authorized by generic “推进”. Only rollback simulation / code release preparation may proceed until explicit Production migration authorization.
+
 ## 2026-10-09 — Production Compatibility prerequisite recovery
 
 - Start baseline: `main@201f200a` (PR #165 merged), Production Supabase `ydiygvhuqpogmqlcvgob`.

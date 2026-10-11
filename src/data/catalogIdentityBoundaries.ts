@@ -45,6 +45,16 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
     reviewedAt: '2026-10-10',
     researchDisposition: 'terminal_unknown_hold',
   },
+  sp_0127: {
+    speciesId: 'sp_0127',
+    code: 'trade_name_taxon_ambiguous',
+    resolvedGranularity: 'trade_name_only',
+    candidateTaxa: ['Botia almorhae sensu stricto', 'Botia lohachata', 'Botia sp. Kosi', 'Botia sp. Teesta', 'aquarium-trade hybrids'],
+    sourceIds: ['batch20-fishbase-botia-almorhae', 'seriouslyfish-botia-almorhae-trade-boundary'],
+    note: '“巴基斯坦鼠/Yoyo loach”是贸易层名称。Reviewed husbandry authority 明确指出 B. almorhae sensu stricto 未必进入过观赏贸易，市场个体还可能来自 B. lohachata、Kosi/Teesta 未定种或杂交来源；因此当前 catalog object 不能安全提升为单一 taxon Compatibility authority。',
+    reviewedAt: '2026-10-11',
+    researchDisposition: 'terminal_unknown_hold',
+  },
 };
 
 export const getCatalogIdentityBoundary = (speciesId: string) => catalogIdentityBoundaries[speciesId];

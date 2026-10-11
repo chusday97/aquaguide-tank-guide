@@ -52,6 +52,7 @@ import { freshwaterReleaseGateKnowledge } from './freshwaterReleaseGateAuthority
 import { opsariichthysBidensKnowledge } from './opsariichthysBidensAuthority';
 import { pseudorasboraParvaKnowledge } from './pseudorasboraParvaAuthority';
 import { nextWaveFreshwaterBatchKnowledge } from './nextWaveFreshwaterBatchAuthority';
+import { nextWaveUnifiedBatchKnowledge } from './nextWaveUnifiedBatchAuthority';
 import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
 
 export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
@@ -901,6 +902,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...opsariichthysBidensKnowledge,
   ...pseudorasboraParvaKnowledge,
   ...nextWaveFreshwaterBatchKnowledge,
+  ...nextWaveUnifiedBatchKnowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1947,6 +1949,11 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // Next-wave freshwater batch has direct reviewed runtime Knowledge. These
   // objects must not remain hidden behind their Phase 2 completion-only records.
   if (['sp_0047','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058'].includes(fish.id)) {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Unified next-wave batch promotes direct reviewed Knowledge for nine species
+  // and exact-taxon bridges for two duplicate catalog objects.
+  if (['sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181'].includes(fish.id)) {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }
   // Phase 2 completion records are direct evidence for the matrix and
