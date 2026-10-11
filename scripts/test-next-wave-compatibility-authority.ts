@@ -1,79 +1,127 @@
 import assert from 'node:assert/strict';
-import { fishData } from '../src/data/fishData';
+import { readFileSync } from 'node:fs';
+
+import './test-next-wave-marine-01';
+import './test-next-wave-freshwater-01';
+import './test-next-wave-freshwater-02';
+import './test-next-wave-freshwater-03';
+import './test-next-wave-freshwater-04';
+
+import { compatibilityReleasedSpeciesIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
+import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
-import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
-import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
-import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
+import { fishData } from '../src/data/fishData';
+import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 
-for (const sourceId of [
-  'fishbase-pterophyllum-altum',
-  'seriouslyfish-pterophyllum-altum',
-  'fishbase-hypostomus-plecostomus',
-  'fishbase-macropodus-ocellatus',
-  'seriouslyfish-macropodus-ocellatus',
-  'fishbase-macropodus-spechti',
-  'seriouslyfish-macropodus-spechti',
-]) {
-  assert.equal(resolveKnowledgeSources([sourceId]).length, 1, `knowledge source must resolve: ${sourceId}`);
+const gapQueue = JSON.parse(readFileSync('docs/compatibility_knowledge_gap_queue.json', 'utf8'));
+const coverage = JSON.parse(readFileSync('docs/compatibility_knowledge_coverage.json', 'utf8'));
+
+const assertUnique = (values: readonly string[], label: string) => {
+  assert.equal(new Set(values).size, values.length, label + ' must not contain duplicates');
+};
+
+assert.equal(compatibilityUnifiedNextWave.policy.progression, 'batch_only');
+assert.equal(compatibilityUnifiedNextWave.policy.validation, 'single_manifest_single_release_gate');
+assert.equal(compatibilityUnifiedNextWave.policy.pendingBehavior, 'fail_closed');
+
+assertUnique(compatibilityReleasedSpeciesIds, 'released Compatibility species');
+assertUnique(compatibilityUnifiedNextWave.activeQueueSpeciesIds, 'active next-wave queue');
+
+for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
+  const migration = readFileSync(batch.migrationOwner, 'utf8');
+  for (const member of batch.members) {
+    assert.equal(
+      migration.includes(member.speciesId),
+      true,
+      batch.batchId + ' migration owner must include ' + member.speciesId,
+    );
+
+    const fish = fishData.find(item => item.id === member.speciesId);
+    assert.ok(fish, 'released catalog species missing: ' + member.speciesId);
+    assert.ok(
+      getReviewedSpeciesKnowledgeForFish(fish),
+      'released species must resolve runtime Species Knowledge: ' + member.speciesId,
+    );
+
+    const profile = getReviewedCompatibilityProfile(member.speciesId);
+    if (member.expectProfile) {
+      assert.ok(profile, 'released species must resolve reviewed Compatibility Profile: ' + member.speciesId);
+      for (const source of profile.citations) {
+        assert.equal(
+          migration.includes(source.id),
+          true,
+          batch.batchId + ' migration owner must include Profile source ' + source.id,
+        );
+      }
+    } else {
+      assert.equal(profile, undefined, 'explicit hold species must remain without direct Compatibility Profile: ' + member.speciesId);
+      const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
+      assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
+      assert.ok(
+        getKnowledgeEvidenceCeiling(member.speciesId, evidenceCeilingField),
+        'profile hold must retain an explicit reviewed evidence ceiling: ' + member.speciesId,
+      );
+    }
+
+    if (batch.requireReviewedCatalogFields) {
+      const fieldReviews = getCatalogFieldReviews(member.speciesId);
+      assert.equal(
+        fieldReviews.some(review => review.status === 'reviewed'),
+        true,
+        'review-generation batch species must retain reviewed catalog field authority: ' + member.speciesId,
+      );
+    }
+  }
 }
 
-for (const id of ['sp_0019', 'sp_0026', 'sp_0043', 'sp_0044']) {
-  const fish = fishData.find(item => item.id === id);
-  assert.ok(fish, `catalog fish missing: ${id}`);
-  assert.ok(getReviewedSpeciesKnowledgeForFish(fish), `runtime Species Knowledge must resolve after Compatibility promotion: ${id}`);
+const generatedActiveQueue = (gapQueue.next_wave_species_queue || []).map(
+  (item: { species_id: string }) => item.species_id,
+);
+assert.deepEqual(
+  generatedActiveQueue,
+  [...compatibilityUnifiedNextWave.activeQueueSpeciesIds],
+  'generated next-wave queue must exactly match the source-controlled unified batch manifest',
+);
+assert.equal(coverage.next_wave_species_count, compatibilityUnifiedNextWave.activeQueueSpeciesIds.length);
+
+for (const speciesId of compatibilityUnifiedNextWave.activeQueueSpeciesIds) {
+  const fish = fishData.find(item => item.id === speciesId);
+  assert.ok(fish, 'active next-wave catalog species missing: ' + speciesId);
+  assert.equal(
+    getReviewedCompatibilityProfile(speciesId),
+    undefined,
+    'active next-wave species must remain fail-closed until promoted by a reviewed batch: ' + speciesId,
+  );
 }
 
-const altum = getReviewedSpeciesKnowledge('sp_0019');
-assert.equal(altum?.environment?.waterType, 'freshwater');
-assert.deepEqual(altum?.environment?.temperatureRangeC, { min: 27, max: 31 });
-assert.deepEqual(altum?.environment?.phRange, { min: 4.8, max: 6.2 });
-assert.equal(altum?.spaceAndGrowth?.adultLengthCm?.max, 18);
-assert.equal(altum?.socialBehavior?.predationRisk, 'medium');
+const generatedTerminalSpecies = (gapQueue.terminal_species_holds || []).map(
+  (item: { species_id: string }) => item.species_id,
+);
+assert.deepEqual(
+  new Set(generatedTerminalSpecies),
+  new Set(compatibilityUnifiedNextWave.terminalHoldSpeciesIds),
+  'terminal species holds must stay explicit and fail-closed',
+);
 
-const altumProfile = getReviewedCompatibilityProfile('sp_0019');
-assert.ok(altumProfile?.behaviorTraits.includes('small_fish_predation'));
-assert.deepEqual(altumProfile?.predationTargets, ['very_small_fish']);
+const generatedTerminalPairs = (gapQueue.terminal_pair_holds || []).map(
+  (item: { species_a_id: string; species_b_id: string }) =>
+    [item.species_a_id, item.species_b_id].sort().join('__'),
+);
+assert.deepEqual(
+  new Set(generatedTerminalPairs),
+  new Set(compatibilityUnifiedNextWave.terminalHoldPairKeys),
+  'terminal pair holds must stay explicit and fail-closed',
+);
 
-const pleco = getReviewedSpeciesKnowledge('sp_0026');
-assert.deepEqual(pleco?.environment?.waterTypes, ['freshwater', 'brackish']);
-assert.deepEqual(pleco?.environment?.temperatureRangeC, { min: 20, max: 28 });
-assert.equal(pleco?.spaceAndGrowth?.adultLengthCm?.max, 25);
-assert.equal(pleco?.socialBehavior?.mode, 'unknown');
-assert.equal(pleco?.socialBehavior?.evidence.confidence, 'unknown');
+assert.equal(coverage.terminal_species_hold_count, compatibilityUnifiedNextWave.terminalHoldSpeciesIds.length);
+assert.equal(coverage.terminal_pair_hold_count, compatibilityUnifiedNextWave.terminalHoldPairKeys.length);
+assert.equal(coverage.research_actionable_species_count, 0);
+assert.equal(coverage.research_actionable_pair_count, 0);
 
-const plecoProfile = getReviewedCompatibilityProfile('sp_0026');
-assert.deepEqual(plecoProfile?.waterTypes, ['freshwater', 'brackish']);
-assert.ok(plecoProfile?.behaviorTraits.includes('bottom_dwelling'));
-assert.equal(plecoProfile?.behaviorTraits.includes('territorial'), false);
-
-const roundtail = getReviewedSpeciesKnowledge('sp_0043');
-assert.deepEqual(roundtail?.environment?.temperatureRangeC, { min: 10, max: 22 });
-assert.equal(roundtail?.spaceAndGrowth?.minVolumeLiters, 72);
-assert.equal(roundtail?.spaceAndGrowth?.minTankLengthCm, 80);
-assert.equal(roundtail?.socialBehavior?.mode, 'variable');
-assert.equal(roundtail?.socialBehavior?.territoriality, 'medium');
-
-const roundtailProfile = getReviewedCompatibilityProfile('sp_0043');
-assert.ok(roundtailProfile?.behaviorTraits.includes('breeding_defense'));
-assert.ok(roundtailProfile?.behaviorTraits.includes('territorial'));
-
-const blackParadise = getReviewedSpeciesKnowledge('sp_0044');
-assert.deepEqual(blackParadise?.environment?.temperatureRangeC, { min: 20, max: 30 });
-assert.deepEqual(blackParadise?.environment?.phRange, { min: 6, max: 8 });
-assert.equal(blackParadise?.spaceAndGrowth?.minVolumeLiters, 72);
-assert.equal(blackParadise?.spaceAndGrowth?.minTankLengthCm, 80);
-assert.equal(blackParadise?.socialBehavior?.mode, 'variable');
-assert.equal(blackParadise?.socialBehavior?.territoriality, 'medium');
-
-const blackParadiseProfile = getReviewedCompatibilityProfile('sp_0044');
-assert.deepEqual(blackParadiseProfile?.behaviorTraits, ['breeding_defense']);
-assert.equal(blackParadiseProfile?.minimumGroupSize, undefined);
-assert.deepEqual(blackParadiseProfile?.predationTargets, []);
-
-const smallFish = fishData.find(fish => fish.id === 'sp_0431');
-const altumFish = fishData.find(fish => fish.id === 'sp_0019');
-assert.ok(smallFish && altumFish);
-const predation = evaluateSpeciesCombination([altumFish, smallFish]);
-assert.notEqual(predation.status, 'compatible', 'Altum + very small fish must not be treated as unconditionally compatible');
-
-console.log('next-wave compatibility authority passed: altum + common pleco + roundtail paradise fish + black paradise fish');
+console.log(
+  'unified next-wave authority passed: '
+  + compatibilityReleasedSpeciesIds.length + ' released batch species / '
+  + compatibilityUnifiedNextWave.activeQueueSpeciesIds.length + ' active queued / '
+  + compatibilityUnifiedNextWave.terminalHoldSpeciesIds.length + ' terminal species holds',
+);
