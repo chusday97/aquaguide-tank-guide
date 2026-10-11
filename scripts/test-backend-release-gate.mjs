@@ -18,6 +18,8 @@ const gates = [
   ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],
   ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
+  ['Compatibility Rollout Window', 'npm', ['run', 'test:compatibility-rollout-window']],
+  ['Runtime Compatibility Authority', 'npm', ['run', 'test:runtime-compatibility-authority']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],
