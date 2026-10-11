@@ -2,7 +2,6 @@ import { COMPATIBILITY_RULE_VERSION } from '../packages/domain-rules/src';
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence';
-import { compatibilityProductionRolloutPendingProfileIds } from '../src/data/compatibilityNextWaveBatch';
 import {
   applyReviewedCompatibilityBootstrap,
   getRuntimeCompatibilityStatus,
@@ -81,20 +80,6 @@ assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback');
 assert.equal(staticSignature.status, 'caution');
 assert.equal(staticSignature.ruleVersion, COMPATIBILITY_RULE_VERSION);
 assert.equal(staticSignature.authorityVersion, 'tank-compatibility-v3-reviewed-evidence');
-const rolloutPending = new Set<string>(compatibilityProductionRolloutPendingProfileIds);
-const currentProductionProfiles = bootstrap.profiles.filter(profile => !rolloutPending.has(profile.catalogKey));
-assert.equal(currentProductionProfiles.length, 52);
-applyReviewedCompatibilityBootstrap({
-  ...bootstrap,
-  profiles: currentProductionProfiles,
-  counts: { profiles: currentProductionProfiles.length, pairRules: bootstrap.pairRules.length },
-});
-const currentProductionStatus = getRuntimeCompatibilityStatus();
-assert.equal(currentProductionStatus.source, 'reviewed-db', 'exact 52-Profile Production baseline must stay usable during rollout');
-assert.equal(currentProductionStatus.profiles, 52);
-assert.equal(currentProductionStatus.pairRules, bootstrap.pairRules.length);
-
-resetRuntimeCompatibilityEvidenceForTest();
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: bootstrap.profiles.slice(0, -1),

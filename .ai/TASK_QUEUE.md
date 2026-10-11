@@ -1,3 +1,11 @@
+## CURRENT RELEASE QUEUE — 2026-10-11 after 63-profile Production migration
+
+1. DONE: Production DB is exact 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence.
+2. DONE: live runtime is reviewed-db 63/21 with no recent Vercel runtime errors.
+3. DONE: temporary 52/63 zero-downtime rollout window removed; strict exact-63 runtime validation restored and full BACKEND_RELEASE_GATE=PASS.
+4. CURRENT: merge/deploy the strict-63 cleanup, then continue the next 25-species Compatibility queue as one unified evidence batch.
+5. DO NOT rerun the completed 20261011213000 migration guard as a commit path; rebuild the guard before any future Production migration.
+
 ## CURRENT RELEASE QUEUE — 2026-10-11 Unified Compatibility next-wave
 
 1. DONE locally: unified batch authority, exact-taxon bridges, sp_0127 identity hold, generated coverage/matrix, 52→63 rollout window, one-file Production migration guard.

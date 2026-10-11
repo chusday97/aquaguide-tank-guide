@@ -1,3 +1,12 @@
+# CURRENT OVERRIDE — 2026-10-11 Compatibility Production 63-profile closure
+
+- Production DB migration 20261011213000_compatibility_unified_next_wave_batch_authority.sql is committed and verified.
+- Exact live authority is now 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 reviewed evidence.
+- Live /api/v1/compatibility-bootstrap returns HTTP 200 / reviewed-db / 63 Profiles / 21 Pair Rules.
+- Temporary 52-to-63 rollout support has been removed; runtime now accepts only the exact 63-key reviewed Profile baseline.
+- The completed migration guard is historical and MUST NOT be rerun as a future commit guard. Any next batch must rebuild its start state from 60 / 63 / 21 / 1 / 116.
+- Remaining Compatibility work continues as unified batch coverage, never species-by-species.
+
 # CURRENT OVERRIDE — 2026-10-11 Unified Compatibility next-wave
 
 - Production baseline before this candidate remains exact 59 migrations / 52 Profiles / 21 Pair Rules / 1 Stage Risk / 98 reviewed evidence at runtime/main/release SHA db2bd1a8.

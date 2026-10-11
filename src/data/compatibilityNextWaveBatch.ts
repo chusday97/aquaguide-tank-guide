@@ -130,19 +130,6 @@ export const compatibilityUnifiedNextWave = {
   ] as const,
 } as const;
 
-export const compatibilityProductionRolloutPendingProfileIds = [
-  'sp_0059',
-  'sp_0062',
-  'sp_0105',
-  'sp_0108',
-  'sp_0109',
-  'sp_0119',
-  'sp_0130',
-  'sp_0131',
-  'sp_0138',
-  'sp_0139',
-  'sp_0181',
-] as const;
 
 export const compatibilityReleasedSpeciesIds = compatibilityUnifiedNextWave.releasedBatches.flatMap(batch =>
   batch.members.map(member => member.speciesId),
