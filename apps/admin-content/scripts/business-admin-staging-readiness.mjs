@@ -32,6 +32,7 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '20261010151338_compatibility_next_wave_freshwater_authority.sql',
   '20261010164051_compatibility_macropodus_spechti_authority.sql',
   '20261011020543_compatibility_next_wave_marine_authority.sql',
+  '20261011111500_compatibility_chindongo_socolofi_authority.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [
