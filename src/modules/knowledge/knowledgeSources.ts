@@ -1,6 +1,21 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
+import { nextWaveUnified02Sources } from '../../data/catalogReviewBatches/next-wave-unified-02';
+
+const nextWaveUnified02KnowledgeSources = Object.fromEntries([
+  nextWaveUnified02Sources.macropodusSeriouslyFish,
+  nextWaveUnified02Sources.moenkhausiaSeriouslyFish,
+  nextWaveUnified02Sources.polypterusSeriouslyFish,
+  nextWaveUnified02Sources.channaBleheriSeriouslyFish,
+  nextWaveUnified02Sources.channaAurantimaculataSeriouslyFish,
+  nextWaveUnified02Sources.pantodonSeriouslyFish,
+  nextWaveUnified02Sources.leporinusSeriouslyFish,
+  nextWaveUnified02Sources.piaractusSeriouslyFish,
+  nextWaveUnified02Sources.gnathonemusSeriouslyFish,
+  nextWaveUnified02Sources.botiaSeriouslyFish,
+].map(source => [source.id, source]));
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  ...nextWaveUnified02KnowledgeSources,
   'fws-tachysurus-fulvidraco-erss': { id: 'fws-tachysurus-fulvidraco-erss', title: 'Ecological Risk Screening Summary: Yellow Catfish (Tachysurus fulvidraco)', publisher: 'U.S. Fish and Wildlife Service', url: 'https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Yellow-Catfish.pdf', sourceType: 'government', reviewStatus: 'reviewed' },
   'seriouslyfish-mastacembelus-armatus': { id: 'seriouslyfish-mastacembelus-armatus', title: 'Mastacembelus armatus (Tyre-Track Eel)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/mastacembelus-armatus', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'seriouslyfish-channa-barca': { id: 'seriouslyfish-channa-barca', title: 'Channa barca', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/channa-barca', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },

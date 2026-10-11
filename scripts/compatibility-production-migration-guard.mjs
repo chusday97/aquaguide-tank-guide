@@ -7,29 +7,26 @@ import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence
 
 export const PRODUCTION_PROJECT_REF = 'ydiygvhuqpogmqlcvgob';
 
-export const START_MIGRATION_COUNT = 55;
-export const START_LATEST_VERSION = '20261011020543';
-export const START_REVIEWED_PROFILES = 42;
+export const START_MIGRATION_COUNT = 59;
+export const START_LATEST_VERSION = '20261011170000';
+export const START_REVIEWED_PROFILES = 52;
 export const START_REVIEWED_PAIR_RULES = 21;
 export const START_REVIEWED_STAGE_RISKS = 1;
-export const START_REVIEWED_EVIDENCE = 77;
+export const START_REVIEWED_EVIDENCE = 98;
 
-export const TARGET_MIGRATION_COUNT = 59;
-export const TARGET_LATEST_VERSION = '20261011170000';
-export const TARGET_REVIEWED_PROFILES = 52;
+export const TARGET_MIGRATION_COUNT = 60;
+export const TARGET_LATEST_VERSION = '20261011213000';
+export const TARGET_REVIEWED_PROFILES = 63;
 export const TARGET_REVIEWED_PAIR_RULES = 21;
 export const TARGET_REVIEWED_STAGE_RISKS = 1;
-export const TARGET_REVIEWED_EVIDENCE = 98;
+export const TARGET_REVIEWED_EVIDENCE = 116;
 
-export const CONFIRM_TOKEN = 'EXECUTE_4_COMPATIBILITY_BATCH_MIGRATIONS';
-export const EXPECTED_CHAIN_FINGERPRINT = '68fe64bf9815573cc6435c039dc444b6ef312d14a52e1df7c1a3127650469aab';
+export const CONFIRM_TOKEN = 'EXECUTE_UNIFIED_COMPATIBILITY_BATCH_MIGRATION';
+export const EXPECTED_CHAIN_FINGERPRINT = '957cdcffae08fdfdc23737fb74a5d680bb4b1c33402f79c60777807758b7efd1';
 export const HELD_MIGRATION = '202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql';
 export const PREREQUISITE_MIGRATIONS = [];
 export const COMPATIBILITY_MIGRATIONS = [
-  '20261011111500_compatibility_chindongo_socolofi_authority.sql',
-  '20261011124500_compatibility_opsariichthys_bidens_authority.sql',
-  '20261011162500_compatibility_pseudorasbora_parva_authority.sql',
-  '20261011170000_compatibility_next_wave_freshwater_batch_authority.sql',
+  '20261011213000_compatibility_unified_next_wave_batch_authority.sql',
 ];
 export const MIGRATIONS = [...COMPATIBILITY_MIGRATIONS];
 
@@ -56,15 +53,12 @@ export const calculateChainFingerprint = () => sha256(
 );
 
 const expectedTransitions = [
-  { name: COMPATIBILITY_MIGRATIONS[0], preProfiles: 42, postProfiles: 43, preEvidence: 77, postEvidence: 79 },
-  { name: COMPATIBILITY_MIGRATIONS[1], preProfiles: 43, postProfiles: 44, preEvidence: 79, postEvidence: 82 },
-  { name: COMPATIBILITY_MIGRATIONS[2], preProfiles: 44, postProfiles: 45, preEvidence: 82, postEvidence: 85 },
-  { name: COMPATIBILITY_MIGRATIONS[3], preProfiles: 45, postProfiles: 52, preEvidence: 85, postEvidence: 98 },
+  { name: COMPATIBILITY_MIGRATIONS[0], preProfiles: 52, postProfiles: 63, preEvidence: 98, postEvidence: 116 },
 ];
 
 export const validateLocalChain = () => {
-  if (MIGRATIONS.length !== 4 || new Set(MIGRATIONS).size !== MIGRATIONS.length) {
-    throw new Error('Incremental Compatibility release must contain exactly four unique migrations.');
+  if (MIGRATIONS.length !== 1 || new Set(MIGRATIONS).size !== MIGRATIONS.length) {
+    throw new Error('Incremental Compatibility release must contain exactly one unique migration.');
   }
   if (MIGRATIONS.includes(HELD_MIGRATION)) throw new Error('Held migration entered incremental release bundle.');
 
