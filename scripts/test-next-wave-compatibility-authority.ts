@@ -10,6 +10,7 @@ import './test-next-wave-freshwater-04';
 import { compatibilityReleasedSpeciesIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { fishData } from '../src/data/fishData';
@@ -29,6 +30,7 @@ assert.equal(compatibilityUnifiedNextWave.policy.pendingBehavior, 'fail_closed')
 assertUnique(compatibilityReleasedSpeciesIds, 'released Compatibility species');
 assertUnique(compatibilityUnifiedNextWave.activeQueueSpeciesIds, 'active next-wave queue');
 assertUnique(compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds, 'identity-boundary holds');
+assertUnique(compatibilityUnifiedNextWave.domainBoundaryHoldSpeciesIds, 'compatibility-domain holds');
 
 for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
   const migration = readFileSync(batch.migrationOwner, 'utf8');
@@ -106,6 +108,17 @@ for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpecies
   );
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.ok(boundary, 'identity-boundary hold must resolve an explicit boundary: ' + speciesId);
+  assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
+}
+
+for (const speciesId of compatibilityUnifiedNextWave.domainBoundaryHoldSpeciesIds) {
+  assert.equal(
+    getReviewedCompatibilityProfile(speciesId),
+    undefined,
+    'compatibility-domain hold must remain without a fish Compatibility Profile: ' + speciesId,
+  );
+  const boundary = getCompatibilityDomainBoundary(speciesId);
+  assert.ok(boundary, 'compatibility-domain hold must resolve an explicit boundary: ' + speciesId);
   assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
 }
 

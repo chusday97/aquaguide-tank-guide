@@ -1,3 +1,18 @@
+# CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate
+
+- Production remains exact 60 migrations / latest 20261011213000 / 63 reviewed Profiles / 21 Pair Rules / 1 Stage Risk / 116 reviewed evidence.
+- Predecessor PR #188 remains open and unmerged. Its target is 61 migrations / latest 20261011234500 / 85 Profiles / 21 Pair Rules / 1 Stage Risk / 160 evidence.
+- This stacked branch adds 10 reviewed fish Profiles and explicit fail-closed identity/domain holds. Static target is 95 Profiles / 21 Pair Rules / 1 Stage Risk.
+- Stacked migration candidate: supabase/migrations/20261012001500_compatibility_unified_wave04_authority.sql.
+- Wave04 migration prerequisite is exact predecessor 85 Profiles / 160 evidence. It is NOT executable against current Production 63/116.
+- Wave04 target is 62 migrations / latest 20261012001500 / 95 Profiles / 21 Pair Rules / 1 Stage Risk / 171 reviewed evidence.
+- Runtime rollout accepts only exact 63 Production, exact 85 predecessor, or exact 95 stacked-target Profile keysets. Intermediate/mismatched sets fail closed.
+- Current wave classification: 10 fish Profiles; sp_0055 identity hold; 16 non-fish catalog objects are explicit Compatibility-domain holds, including duplicate catalog IDs sp_0035 and sp_0457.
+- The #188 Production guard is deliberately frozen at 60/63/116 -> 61/85/160 and must not silently broaden to wave04.
+- No Production DB mutation, Production deploy, or merge is authorized under generic “推进”.
+- UI and image-recognition work remain out of scope.
+- Compatibility coverage continues as unified batches, never species-by-species.
+
 # CURRENT OVERRIDE — 2026-10-11 unified Compatibility next-25 candidate
 
 - Production remains exact 60 migrations / latest 20261011213000 / 63 reviewed Profiles / 21 Pair Rules / 1 Stage Risk / 116 reviewed evidence.

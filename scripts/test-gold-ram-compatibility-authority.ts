@@ -26,10 +26,26 @@ assert.equal(
 
 const platinum = fishData.find(fish => fish.id === 'sp_0146');
 assert.ok(platinum, 'platinum ram catalog object must exist');
+const platinumProfile = getReviewedCompatibilityProfile('sp_0146');
+assert.ok(platinumProfile, 'explicitly reviewed Platinum Ram bridge must resolve direct Compatibility authority');
+assert.ok(
+  platinumProfile.citations.some(source => source.id === 'batch10-fishbase-mikrogeophagus-ramirezi-platinum'),
+  'Platinum Ram bridge must carry its own reviewed variant identity citation',
+);
+
+const blue = fishData.find(fish => fish.id === 'sp_0157');
+assert.ok(blue, 'blue ram catalog object must exist');
+const blueProfile = getReviewedCompatibilityProfile('sp_0157');
+assert.ok(blueProfile, 'explicitly reviewed Blue Ram bridge must resolve direct Compatibility authority');
+assert.ok(
+  blueProfile.citations.some(source => source.id === 'batch10-fishbase-mikrogeophagus-ramirezi-blue'),
+  'Blue Ram bridge must carry its own reviewed variant identity citation',
+);
+
 assert.equal(
-  getReviewedCompatibilityProfile('sp_0146'),
+  getReviewedCompatibilityProfile('sp_0219'),
   undefined,
-  'adding direct gold-ram authority must not silently grant direct authority to other ornamental variants',
+  'unreviewed balloon Ramirezi variants must not receive direct Compatibility authority by base-species inheritance',
 );
 
 const pandaCory = fishData.find(fish => fish.id === 'sp_0443');
@@ -41,4 +57,4 @@ assert.notEqual(
   'gold ram + panda cory must no longer fail only because gold ram lacked reviewed Compatibility authority',
 );
 
-console.log('gold ram Compatibility authority passed: direct reviewed profile and no silent variant promotion');
+console.log('gold ram Compatibility authority passed: explicit reviewed variant bridges plus no silent promotion for unreviewed balloon variants');

@@ -18,6 +18,16 @@ export type CatalogIdentityBoundary = {
 };
 
 export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> = {
+  sp_0055: {
+    speciesId: 'sp_0055',
+    code: 'commercial_hybrid_identity_unresolved',
+    resolvedGranularity: 'commercial_lineage_only',
+    candidateTaxa: ['ornamental parrot-cichlid hybrid lineage', 'Cichlasoma spp. trade attribution is not a resolved taxon'],
+    sourceIds: ['batch09-fishbase-cichlasoma-var'],
+    note: '“金刚鹦鹉鱼”是商业观赏杂交/品系名称，而 catalog scientificName 仅为 “Cichlasoma var.”。现有来源不能把该商业对象安全映射到单一有效 taxon，因此不能继承任一 Cichlasoma 物种的行为或混养 authority。',
+    reviewedAt: '2026-10-11',
+    researchDisposition: 'terminal_unknown_hold',
+  },
   sp_0002: {
     speciesId: 'sp_0002',
     code: 'trade_name_taxon_ambiguous',

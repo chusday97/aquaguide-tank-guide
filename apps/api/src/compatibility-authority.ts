@@ -130,8 +130,9 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
   if (!exactCoverage) throw new ApiError(
     409,
     'MIGRATION_REJECTED',
-    'Reviewed Compatibility DB baseline 必须精确匹配滚动发布基线 '
-      + rolloutProfileKeysets.currentProduction.size + ' 或目标 '
+    'Reviewed Compatibility DB baseline 必须精确匹配滚动发布代际 '
+      + rolloutProfileKeysets.currentProduction.size + ' / '
+      + rolloutProfileKeysets.predecessorTarget.size + ' / '
       + rolloutProfileKeysets.target.size + ' Profiles / '
       + expectedPairKeys.size + ' Pair Rules / '
       + expectedStageRiskKeys.size + ' Stage Risk。',

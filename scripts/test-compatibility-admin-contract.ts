@@ -484,7 +484,24 @@ assert.match(unifiedNext25Migration, /expected 160 reviewed evidence sources/, '
 assert.match(unifiedNext25Migration, /expected 44 unified-next25 profile-source links/, 'unified next25 migration must guard all source links.');
 assert.match(unifiedNext25Migration, /identity\/type holds must remain without Compatibility profile/, 'unified next25 migration must preserve the three identity/type holds.');
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058','sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181','sp_0103','sp_0117','sp_0118','sp_0121','sp_0122','sp_0123','sp_0125','sp_0129','sp_0140','sp_0183','sp_0184','sp_0185','sp_0187','sp_0197','sp_0198','sp_0199','sp_0200','sp_0202','sp_0218','sp_0441','sp_0449','sp_0450']);
+const unifiedWave04Migration = readFileSync('supabase/migrations/20261012001500_compatibility_unified_wave04_authority.sql', 'utf8');
+const unifiedWave04ProfileIds = ['sp_0116','sp_0452','sp_0453','sp_0069','sp_0070','sp_0104','sp_0146','sp_0151','sp_0156','sp_0157'];
+for (const speciesId of unifiedWave04ProfileIds) {
+  const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
+  assert.ok(profile, 'unified wave04 migration must own reviewed profile ' + speciesId);
+  assert.equal(unifiedWave04Migration.includes("'" + speciesId + "'"), true, 'unified wave04 migration must target ' + speciesId);
+  for (const source of profile.citations) {
+    assert.equal(unifiedWave04Migration.includes(source.id), true, 'unified wave04 migration must include source ' + source.id);
+  }
+}
+assert.match(unifiedWave04Migration, /expected predecessor 85 reviewed Compatibility profiles/, 'wave04 migration must lock predecessor Profile authority.');
+assert.match(unifiedWave04Migration, /expected predecessor 160 reviewed evidence sources/, 'wave04 migration must lock predecessor evidence authority.');
+assert.match(unifiedWave04Migration, /expected 95 reviewed Compatibility profiles/, 'wave04 migration must freeze target Profile authority.');
+assert.match(unifiedWave04Migration, /expected 171 reviewed evidence sources/, 'wave04 migration must freeze target evidence authority.');
+assert.match(unifiedWave04Migration, /expected 21 wave04 profile-source links/, 'wave04 migration must guard the full citation-link set.');
+assert.match(unifiedWave04Migration, /identity\/domain holds must remain without fish Compatibility profiles/, 'wave04 migration must preserve identity/domain holds.');
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058','sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181','sp_0103','sp_0117','sp_0118','sp_0121','sp_0122','sp_0123','sp_0125','sp_0129','sp_0140','sp_0183','sp_0184','sp_0185','sp_0187','sp_0197','sp_0198','sp_0199','sp_0200','sp_0202','sp_0218','sp_0441','sp_0449','sp_0450','sp_0116','sp_0452','sp_0453','sp_0069','sp_0070','sp_0104','sp_0146','sp_0151','sp_0156','sp_0157']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 
