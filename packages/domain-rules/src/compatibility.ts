@@ -326,6 +326,12 @@ export const evaluateCompatibility = ({
         && candidateSpecies.swimmingZone === 'bottom') {
         ruleCodes.push('shared_bottom_zone_context');
       }
+      if (existing.id !== candidateSpecies.id && (
+        existing.behaviorTraits?.includes('species_tank_required')
+        || candidateSpecies.behaviorTraits?.includes('species_tank_required')
+      )) {
+        raise('not_recommended', 'species_tank_required');
+      }
       if (existing.behaviorTraits?.includes('solitary_required') || candidateSpecies.behaviorTraits?.includes('solitary_required')) {
         raise('not_recommended', 'single_housing_required');
       }

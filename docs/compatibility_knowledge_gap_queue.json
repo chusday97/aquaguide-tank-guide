@@ -600,246 +600,6 @@
   ],
   "next_wave_species_queue": [
     {
-      "species_id": "sp_0047",
-      "common_name": "长臀鮠",
-      "scientific_name": "Pseudobagrus fulvidraco",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0048",
-      "common_name": "大刺鳅",
-      "scientific_name": "Mastacembelus armatus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0050",
-      "common_name": "巴卡雷龙",
-      "scientific_name": "Channa barca",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0051",
-      "common_name": "光唇鱼",
-      "scientific_name": "Acrossocheilus fasciatus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0054",
-      "common_name": "红宝石鱼",
-      "scientific_name": "Hemichromis bimaculatus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0056",
-      "common_name": "菠萝鱼",
-      "scientific_name": "Heros severus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0057",
-      "common_name": "珍珠虎",
-      "scientific_name": "Altolamprologus calvus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0058",
-      "common_name": "九间贝",
-      "scientific_name": "Neolamprologus multifasciatus",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
-      },
-      "score": 33,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
       "species_id": "sp_0059",
       "common_name": "天堂鱼",
       "scientific_name": "Macropodus opercularis",
@@ -1323,6 +1083,246 @@
       "species_id": "sp_0129",
       "common_name": "宽鳍鱲 (溪流之王)",
       "scientific_name": "Zacco platypus",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0130",
+      "common_name": "马口鱼",
+      "scientific_name": "Opsariichthys bidens",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0131",
+      "common_name": "刺鳅",
+      "scientific_name": "Mastacembelus armatus",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0138",
+      "common_name": "黑带好汉",
+      "scientific_name": "Leporinus fasciatus",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0139",
+      "common_name": "淡水白鲳",
+      "scientific_name": "Piaractus brachypomus",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0140",
+      "common_name": "黑斑水虎",
+      "scientific_name": "Serrasalmus rhombeus",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0181",
+      "common_name": "象鼻鱼",
+      "scientific_name": "Gnathonemus petersii",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0183",
+      "common_name": "红纹拟鳞鲀 (红尾炮弹)",
+      "scientific_name": "Xanthichthys mento",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
+      },
+      "score": 33,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0184",
+      "common_name": "黄头仙",
+      "scientific_name": "Centropyge heraldi",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,

@@ -433,7 +433,24 @@ assert.match(pseudorasboraMigration, /expected 85 reviewed evidence sources/, 'P
 assert.match(pseudorasboraMigration, /sp_0042 profile drift/, 'Pseudorasbora parva migration must include an exact Profile drift guard.');
 assert.match(pseudorasboraMigration, /sp_0042 source links drift/, 'Pseudorasbora parva migration must include evidence-link drift guard.');
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042']);
+const freshwaterBatchMigration = readFileSync('supabase/migrations/20261011170000_compatibility_next_wave_freshwater_batch_authority.sql', 'utf8');
+const freshwaterBatchIds = ['sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058'];
+for (const speciesId of freshwaterBatchIds) {
+  const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
+  assert.ok(profile, 'freshwater batch migration must own reviewed profile ' + speciesId);
+  assert.equal(freshwaterBatchMigration.includes("'" + speciesId + "'"), true, 'freshwater batch migration must target ' + speciesId);
+  for (const source of profile.citations) {
+    assert.equal(freshwaterBatchMigration.includes(source.id), true, 'freshwater batch migration must include source ' + source.id);
+  }
+}
+assert.equal(audit.reviewedProfiles.some(profile => profile.speciesId === 'sp_0047'), false, 'sp_0047 must remain outside reviewed Compatibility profiles at its evidence ceiling.');
+assert.match(freshwaterBatchMigration, /expected 45 reviewed Compatibility profiles/, 'freshwater batch migration must lock its prerequisite profile count.');
+assert.match(freshwaterBatchMigration, /expected 52 reviewed Compatibility profiles/, 'freshwater batch migration must freeze the post-release profile count.');
+assert.match(freshwaterBatchMigration, /expected 98 reviewed evidence sources/, 'freshwater batch migration must freeze the post-release evidence count.');
+assert.match(freshwaterBatchMigration, /batch profile drift/, 'freshwater batch migration must include exact Profile drift guards.');
+assert.match(freshwaterBatchMigration, /13 batch profile-source links/, 'freshwater batch migration must guard the full evidence-link set.');
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 

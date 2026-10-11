@@ -1,6 +1,7 @@
 export type KnowledgeEvidenceCeilingCode =
   | 'variant_social_not_established'
-  | 'variant_husbandry_not_established';
+  | 'variant_husbandry_not_established'
+  | 'species_social_not_established';
 
 export type KnowledgeEvidenceField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
 
@@ -15,6 +16,17 @@ export type KnowledgeEvidenceCeiling = {
 };
 
 export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[]> = {
+  sp_0047: [
+    {
+      speciesId: 'sp_0047',
+      field: 'social',
+      code: 'species_social_not_established',
+      sourceIds: ['batch18-fishbase-tachysurus-fulvidraco', 'fws-tachysurus-fulvidraco-erss'],
+      note: 'Targeted review established accepted identity, freshwater environment, aquarium planning temperature, adult size and male nest guarding, but did not establish a stable household community/social mode or a defensible prey-size threshold for occasional fish consumption. Keep positive community compatibility fail-closed instead of repeating ordinary source search.',
+      reviewedAt: '2026-10-11',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+  ],
   sp_0224: [
     {
       speciesId: 'sp_0224',
