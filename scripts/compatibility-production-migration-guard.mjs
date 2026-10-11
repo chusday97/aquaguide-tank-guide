@@ -7,26 +7,26 @@ import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence
 
 export const PRODUCTION_PROJECT_REF = 'ydiygvhuqpogmqlcvgob';
 
-export const START_MIGRATION_COUNT = 59;
-export const START_LATEST_VERSION = '20261011170000';
-export const START_REVIEWED_PROFILES = 52;
+export const START_MIGRATION_COUNT = 60;
+export const START_LATEST_VERSION = '20261011213000';
+export const START_REVIEWED_PROFILES = 63;
 export const START_REVIEWED_PAIR_RULES = 21;
 export const START_REVIEWED_STAGE_RISKS = 1;
-export const START_REVIEWED_EVIDENCE = 98;
+export const START_REVIEWED_EVIDENCE = 116;
 
-export const TARGET_MIGRATION_COUNT = 60;
-export const TARGET_LATEST_VERSION = '20261011213000';
-export const TARGET_REVIEWED_PROFILES = 63;
+export const TARGET_MIGRATION_COUNT = 61;
+export const TARGET_LATEST_VERSION = '20261011234500';
+export const TARGET_REVIEWED_PROFILES = 85;
 export const TARGET_REVIEWED_PAIR_RULES = 21;
 export const TARGET_REVIEWED_STAGE_RISKS = 1;
-export const TARGET_REVIEWED_EVIDENCE = 116;
+export const TARGET_REVIEWED_EVIDENCE = 160;
 
-export const CONFIRM_TOKEN = 'EXECUTE_UNIFIED_COMPATIBILITY_BATCH_MIGRATION';
-export const EXPECTED_CHAIN_FINGERPRINT = '957cdcffae08fdfdc23737fb74a5d680bb4b1c33402f79c60777807758b7efd1';
+export const CONFIRM_TOKEN = 'EXECUTE_UNIFIED_COMPATIBILITY_NEXT25_MIGRATION';
+export const EXPECTED_CHAIN_FINGERPRINT = 'd035142a6587f74c1266d5f770e56f20f50b0872f4871a3a6e91f77f8942e343';
 export const HELD_MIGRATION = '202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql';
 export const PREREQUISITE_MIGRATIONS = [];
 export const COMPATIBILITY_MIGRATIONS = [
-  '20261011213000_compatibility_unified_next_wave_batch_authority.sql',
+  '20261011234500_compatibility_unified_next25_authority.sql',
 ];
 export const MIGRATIONS = [...COMPATIBILITY_MIGRATIONS];
 
@@ -53,7 +53,7 @@ export const calculateChainFingerprint = () => sha256(
 );
 
 const expectedTransitions = [
-  { name: COMPATIBILITY_MIGRATIONS[0], preProfiles: 52, postProfiles: 63, preEvidence: 98, postEvidence: 116 },
+  { name: COMPATIBILITY_MIGRATIONS[0], preProfiles: 63, postProfiles: 85, preEvidence: 116, postEvidence: 160 },
 ];
 
 export const validateLocalChain = () => {

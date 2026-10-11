@@ -19,6 +19,7 @@ const gates = [
   ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
   ['Runtime Compatibility Authority', 'npm', ['run', 'test:runtime-compatibility-authority']],
+  ['Compatibility Rollout Window', 'npm', ['run', 'test:compatibility-rollout-window']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],

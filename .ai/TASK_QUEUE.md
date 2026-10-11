@@ -1,3 +1,14 @@
+## CURRENT RELEASE QUEUE — 2026-10-11 unified next-25 candidate
+
+1. DONE: prior Production closure is stable at 60 / 63 / 21 / 1 / 116.
+2. DONE: current 25-object wave classified and implemented as 22 direct reviewed Profiles + 3 fail-closed identity/type holds.
+3. DONE: candidate static authority is 85 Profiles / 21 Pair Rules / 1 Stage Risk with 44 new evidence sources; target Production evidence count is 160.
+4. DONE: exact 63→85 zero-downtime rollout contract prepared; intermediate/mismatched Profile keysets fail closed.
+5. CURRENT: finish full local release validation, Production read-only preflight, and feature-branch PR readiness.
+6. NEXT ACTIVE 25: sp_0116, sp_0452, sp_0453, sp_0006, sp_0430, sp_0007, sp_0008, sp_0009, sp_0318, sp_0319, sp_0321, sp_0322, sp_0323, sp_0325, sp_0379, sp_0382, sp_0384, sp_0055, sp_0069, sp_0070, sp_0104, sp_0146, sp_0151, sp_0156, sp_0157.
+7. HOLD: do not merge/deploy this candidate or execute 20261011234500 against Production under generic “推进”.
+8. Any future Production commit must use the rebuilt 60/63/21/1/116 → 61/85/21/1/160 guard and requires explicit authorization.
+
 ## CURRENT RELEASE QUEUE — 2026-10-11 after 63-profile Production migration
 
 1. DONE: Production DB is exact 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence.

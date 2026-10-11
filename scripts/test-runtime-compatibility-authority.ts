@@ -8,6 +8,7 @@ import {
   resetRuntimeCompatibilityEvidenceForTest,
 } from '../src/data/runtimeCompatibilityEvidence';
 import { evaluateSpeciesCombination } from '../src/lib/tankCompatibilityEngine';
+import { compatibilityProductionRolloutPendingProfileIds } from '../src/data/compatibilityNextWaveBatch';
 
 const audit = getCompatibilityEvidenceAudit();
 const toCitation = (source: (typeof audit.reviewedProfiles)[number]['citations'][number]) => ({
@@ -87,6 +88,21 @@ applyReviewedCompatibilityBootstrap({
 });
 assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', 'partial DB authority must fail closed');
 assert.deepEqual(signature(), staticSignature, 'partial DB authority must not change Compatibility decisions');
+
+const rolloutPending = new Set<string>(compatibilityProductionRolloutPendingProfileIds);
+const currentProductionProfiles = bootstrap.profiles.filter(profile => !rolloutPending.has(profile.catalogKey));
+assert.equal(currentProductionProfiles.length, 63);
+applyReviewedCompatibilityBootstrap({
+  ...bootstrap,
+  profiles: currentProductionProfiles,
+  counts: { profiles: currentProductionProfiles.length, pairRules: bootstrap.pairRules.length },
+});
+const currentProductionStatus = getRuntimeCompatibilityStatus();
+assert.equal(currentProductionStatus.source, 'reviewed-db', 'exact 63-Profile Production baseline must stay usable during rollout');
+assert.equal(currentProductionStatus.profiles, 63);
+assert.equal(currentProductionStatus.pairRules, bootstrap.pairRules.length);
+
+resetRuntimeCompatibilityEvidenceForTest();
 
 const changedPairRules = bootstrap.pairRules.map(rule => (
   rule.catalogKeys.includes('sp_0431') && rule.catalogKeys.includes('sp_0432')

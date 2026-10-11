@@ -9,6 +9,7 @@ import './test-next-wave-freshwater-04';
 
 import { compatibilityReleasedSpeciesIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
+import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { fishData } from '../src/data/fishData';
@@ -27,6 +28,7 @@ assert.equal(compatibilityUnifiedNextWave.policy.pendingBehavior, 'fail_closed')
 
 assertUnique(compatibilityReleasedSpeciesIds, 'released Compatibility species');
 assertUnique(compatibilityUnifiedNextWave.activeQueueSpeciesIds, 'active next-wave queue');
+assertUnique(compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds, 'identity-boundary holds');
 
 for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
   const migration = readFileSync(batch.migrationOwner, 'utf8');
@@ -93,6 +95,18 @@ for (const speciesId of compatibilityUnifiedNextWave.activeQueueSpeciesIds) {
     undefined,
     'active next-wave species must remain fail-closed until promoted by a reviewed batch: ' + speciesId,
   );
+}
+
+
+for (const speciesId of compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds) {
+  assert.equal(
+    getReviewedCompatibilityProfile(speciesId),
+    undefined,
+    'identity-boundary hold must remain without a direct Compatibility Profile: ' + speciesId,
+  );
+  const boundary = getCatalogIdentityBoundary(speciesId);
+  assert.ok(boundary, 'identity-boundary hold must resolve an explicit boundary: ' + speciesId);
+  assert.equal(boundary.researchDisposition, 'terminal_unknown_hold');
 }
 
 const generatedTerminalSpecies = (gapQueue.terminal_species_holds || []).map(

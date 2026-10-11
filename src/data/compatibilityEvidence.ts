@@ -17,6 +17,7 @@ import {
 } from './catalogReviewBatches/next-wave-freshwater-04';
 
 import { nextWaveUnified02Sources } from './catalogReviewBatches/next-wave-unified-02';
+import { nextWaveUnified03DirectSubjects, nextWaveUnified03RequiredFacts } from './catalogReviewBatches/next-wave-unified-03';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -772,7 +773,21 @@ const roundtailParadiseSeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const nextWaveUnified03Profiles = Object.fromEntries(
+  nextWaveUnified03DirectSubjects.map(subject => [subject.speciesId, {
+    speciesId: subject.speciesId,
+    waterType: subject.waterType,
+    behaviorTraits: subject.behaviorTraits,
+    predationTargets: subject.predationTargets ?? [],
+    confidence: subject.confidence,
+    reviewStatus: 'reviewed',
+    citations: subject.sources,
+    requiredFacts: nextWaveUnified03RequiredFacts(subject),
+  } satisfies ReviewedCompatibilityProfile]),
+) as Record<string, ReviewedCompatibilityProfile>;
+
 const profiles: Record<string, ReviewedCompatibilityProfile> = {
+  ...nextWaveUnified03Profiles,
   sp_0019: {
     speciesId: 'sp_0019',
     waterType: 'freshwater',

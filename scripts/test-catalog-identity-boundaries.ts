@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 
-assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0127', 'sp_0428']);
+assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0334', 'sp_0428']);
 
 const crystal = getCatalogIdentityBoundary('sp_0002');
 assert.equal(crystal?.code, 'trade_name_taxon_ambiguous');
@@ -21,6 +21,22 @@ assert.equal(mini?.code, 'commercial_hybrid_identity_unresolved');
 assert.equal(mini?.resolvedGranularity, 'commercial_lineage_only');
 assert.equal(mini?.researchDisposition, 'terminal_unknown_hold');
 assert.ok(mini?.sourceIds.includes('biology-2026-mini-parrot-taxonomy-boundary'));
+
+
+const unresolvedSnakehead = getCatalogIdentityBoundary('sp_0110');
+assert.equal(unresolvedSnakehead?.code, 'catalog_scientific_name_unresolved');
+assert.equal(unresolvedSnakehead?.resolvedGranularity, 'scientific_name_unresolved');
+assert.equal(unresolvedSnakehead?.researchDisposition, 'terminal_unknown_hold');
+
+const electricEelMismatch = getCatalogIdentityBoundary('sp_0120');
+assert.equal(electricEelMismatch?.code, 'catalog_common_name_identity_mismatch');
+assert.equal(electricEelMismatch?.resolvedGranularity, 'catalog_name_mismatch');
+assert.ok(electricEelMismatch?.candidateTaxa.includes('Gymnotus carapo'));
+
+const anemoneTypeMismatch = getCatalogIdentityBoundary('sp_0334');
+assert.equal(anemoneTypeMismatch?.code, 'catalog_object_type_mismatch');
+assert.equal(anemoneTypeMismatch?.resolvedGranularity, 'object_type_mismatch');
+assert.ok(anemoneTypeMismatch?.candidateTaxa.some(value => value.includes('Stichodactyla gigantea')));
 
 const pakistaniLoach = getCatalogIdentityBoundary('sp_0127');
 assert.equal(pakistaniLoach?.code, 'trade_name_taxon_ambiguous');

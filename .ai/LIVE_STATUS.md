@@ -1,3 +1,15 @@
+# CURRENT OVERRIDE — 2026-10-11 unified Compatibility next-25 candidate
+
+- Production remains exact 60 migrations / latest 20261011213000 / 63 reviewed Profiles / 21 Pair Rules / 1 Stage Risk / 116 reviewed evidence.
+- Current branch candidate advances the prior 25-object queue as one unified batch: 22 direct reviewed Compatibility Profiles plus 3 terminal identity/type holds (sp_0110, sp_0120, sp_0334).
+- Candidate target is 61 migrations / latest 20261011234500 / 85 reviewed Profiles / 21 Pair Rules / 1 Stage Risk / 160 reviewed evidence.
+- The exact zero-downtime runtime window is prepared for only the exact 63-key current Production Profile set or exact 85-key target; every intermediate or mismatched keyset fails closed.
+- Migration candidate: supabase/migrations/20261011234500_compatibility_unified_next25_authority.sql.
+- Production DB migration is NOT executed. Generic “推进” does not authorize persistent Production DB mutation.
+- This branch must not merge/deploy to Production under the current generic instruction; explicit release/migration authorization is still required.
+- UI and image-recognition work remain out of scope.
+- Compatibility coverage continues as unified batches, never species-by-species.
+
 # CURRENT OVERRIDE — 2026-10-11 Compatibility Production 63-profile closure
 
 - Production DB migration 20261011213000_compatibility_unified_next_wave_batch_authority.sql is committed and verified.

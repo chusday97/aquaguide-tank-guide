@@ -600,8 +600,8 @@
   ],
   "next_wave_species_queue": [
     {
-      "species_id": "sp_0103",
-      "common_name": "金龙鱼",
+      "species_id": "sp_0116",
+      "common_name": "亚洲龙鱼 (青龙)",
       "scientific_name": "Scleropages formosus",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
@@ -630,9 +630,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0110",
-      "common_name": "蓝月光雷龙",
-      "scientific_name": "Channa lorti",
+      "species_id": "sp_0452",
+      "common_name": "公子小丑",
+      "scientific_name": "Amphiprion ocellaris",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -660,9 +660,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0117",
-      "common_name": "银龙鱼",
-      "scientific_name": "Osteoglossum bicirrhosum",
+      "species_id": "sp_0453",
+      "common_name": "长鼻狮子鱼",
+      "scientific_name": "Pterois volitans",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -690,18 +690,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0118",
-      "common_name": "黑龙鱼",
-      "scientific_name": "Osteoglossum ferreirai",
+      "species_id": "sp_0006",
+      "common_name": "恶魔蟹",
+      "scientific_name": "Geosesarma dennerle",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 2,
+        "score_bonus": 5
       },
-      "score": 33,
+      "score": 32,
       "gap_kinds": [
         "environment",
         "space",
@@ -720,18 +720,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0120",
-      "common_name": "电鳗 (观赏型)",
-      "scientific_name": "Gymnotus carapo",
+      "species_id": "sp_0430",
+      "common_name": "杀手螺",
+      "scientific_name": "Anentome helena",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 2,
+        "score_bonus": 5
       },
-      "score": 33,
+      "score": 32,
       "gap_kinds": [
         "environment",
         "space",
@@ -750,18 +750,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0121",
-      "common_name": "黑斑马异型 (L134)",
-      "scientific_name": "Peckoltia compta",
+      "species_id": "sp_0007",
+      "common_name": "六角恐龙",
+      "scientific_name": "Ambystoma mexicanum",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -780,18 +780,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0122",
-      "common_name": "金线绿皮异型 (L190)",
-      "scientific_name": "Panaque nigrolineatus",
+      "species_id": "sp_0008",
+      "common_name": "东方蝾螈",
+      "scientific_name": "Cynops orientalis",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -810,18 +810,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0123",
-      "common_name": "女王异型 (L165)",
-      "scientific_name": "Pterygoplichthys gibbiceps",
+      "species_id": "sp_0009",
+      "common_name": "角蛙",
+      "scientific_name": "Ceratophrys ornata",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -840,18 +840,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0125",
-      "common_name": "雪球异型 (L102)",
-      "scientific_name": "Hypancistrus inspector",
+      "species_id": "sp_0318",
+      "common_name": "气泡珊瑚",
+      "scientific_name": "Plerogyra sinuosa",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -870,18 +870,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0129",
-      "common_name": "宽鳍鱲 (溪流之王)",
-      "scientific_name": "Zacco platypus",
+      "species_id": "sp_0319",
+      "common_name": "火炬珊瑚",
+      "scientific_name": "Euphyllia glabrescens",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -900,18 +900,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0140",
-      "common_name": "黑斑水虎",
-      "scientific_name": "Serrasalmus rhombeus",
+      "species_id": "sp_0321",
+      "common_name": "草皮珊瑚",
+      "scientific_name": "Pachyclavularia violacea",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -930,18 +930,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0183",
-      "common_name": "红纹拟鳞鲀 (红尾炮弹)",
-      "scientific_name": "Xanthichthys mento",
+      "species_id": "sp_0322",
+      "common_name": "蛙卵珊瑚",
+      "scientific_name": "Euphyllia divisas",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -960,18 +960,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0184",
-      "common_name": "黄头仙",
-      "scientific_name": "Centropyge heraldi",
+      "species_id": "sp_0323",
+      "common_name": "尼罗河珊瑚",
+      "scientific_name": "Catalaphyllia jardinei",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -990,18 +990,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0185",
-      "common_name": "蓝环神仙",
-      "scientific_name": "Pomacanthus annularis",
+      "species_id": "sp_0325",
+      "common_name": "紫点海葵",
+      "scientific_name": "Heteractis crispa",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -1020,18 +1020,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0187",
-      "common_name": "蓝魔鬼",
-      "scientific_name": "Chrysiptera cyanea",
+      "species_id": "sp_0379",
+      "common_name": "大西洋海刺水母",
+      "scientific_name": "Chrysaora quinquecirrha",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -1050,18 +1050,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0197",
-      "common_name": "蓝宝石雷龙",
-      "scientific_name": "Channa stewartii",
+      "species_id": "sp_0382",
+      "common_name": "黑星海刺水母",
+      "scientific_name": "Chrysaora melanaster",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -1080,18 +1080,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0198",
-      "common_name": "红宝石雷龙",
-      "scientific_name": "Channa diplogramma",
+      "species_id": "sp_0384",
+      "common_name": "天草水母",
+      "scientific_name": "Sanderia malayensis",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
         "stable_taxon": true,
-        "life_type_weight": 3,
-        "score_bonus": 6
+        "life_type_weight": 1,
+        "score_bonus": 4
       },
-      "score": 33,
+      "score": 31,
       "gap_kinds": [
         "environment",
         "space",
@@ -1110,18 +1110,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0199",
-      "common_name": "珍珠麒麟",
-      "scientific_name": "Badis badis",
+      "species_id": "sp_0055",
+      "common_name": "金刚鹦鹉鱼",
+      "scientific_name": "Cichlasoma var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",
@@ -1140,18 +1140,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0200",
-      "common_name": "变色鱼 (喷火麒麟)",
-      "scientific_name": "Dario dario",
+      "species_id": "sp_0069",
+      "common_name": "红白锦鲤",
+      "scientific_name": "Cyprinus carpio var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",
@@ -1170,18 +1170,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0202",
-      "common_name": "黄金美洲豹异型 (L014)",
-      "scientific_name": "Scobinancistrus aureatus",
+      "species_id": "sp_0070",
+      "common_name": "蝴蝶鲤",
+      "scientific_name": "Cyprinus carpio var. Longfin",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",
@@ -1200,18 +1200,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0218",
-      "common_name": "血心灯",
-      "scientific_name": "Hyphessobrycon erythrostigma",
+      "species_id": "sp_0104",
+      "common_name": "红龙鱼",
+      "scientific_name": "Scleropages formosus var. Red",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",
@@ -1230,18 +1230,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0334",
-      "common_name": "长须地毯",
-      "scientific_name": "Stichodactyla gigantea",
+      "species_id": "sp_0146",
+      "common_name": "白金波子",
+      "scientific_name": "Mikrogeophagus ramirezi var. Platinum",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",
@@ -1260,18 +1260,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0441",
-      "common_name": "金苔鼠",
-      "scientific_name": "Gyrinocheilus aymonieri",
+      "species_id": "sp_0151",
+      "common_name": "彩色天使鱼（彩色裙鱼）",
+      "scientific_name": "Gymnocorymbus ternetzi var. Color morph",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",
@@ -1290,18 +1290,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0449",
-      "common_name": "非洲王子",
-      "scientific_name": "Labidochromis caeruleus",
+      "species_id": "sp_0156",
+      "common_name": "白金蓝曼龙",
+      "scientific_name": "Trichopodus trichopterus var. Platinum",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",
@@ -1320,18 +1320,18 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0450",
-      "common_name": "蓝宝石鱼",
-      "scientific_name": "Andinoacara pulcher",
+      "species_id": "sp_0157",
+      "common_name": "蓝宝石短鲷",
+      "scientific_name": "Mikrogeophagus ramirezi var. Blue",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
       "research_leverage": {
-        "stable_taxon": true,
+        "stable_taxon": false,
         "life_type_weight": 3,
-        "score_bonus": 6
+        "score_bonus": 3
       },
-      "score": 33,
+      "score": 30,
       "gap_kinds": [
         "environment",
         "space",

@@ -467,7 +467,24 @@ assert.match(unifiedNextWaveMigration, /unified-batch profile drift/, 'unified n
 assert.match(unifiedNextWaveMigration, /23 unified-batch profile-source links/, 'unified next-wave migration must guard the full evidence-link set.');
 assert.match(unifiedNextWaveMigration, /sp_0127 identity hold must remain without Compatibility profile/, 'unified next-wave migration must preserve the sp_0127 identity hold.');
 
-const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058','sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181']);
+const unifiedNext25Migration = readFileSync('supabase/migrations/20261011234500_compatibility_unified_next25_authority.sql', 'utf8');
+const unifiedNext25ProfileIds = ['sp_0103','sp_0117','sp_0118','sp_0121','sp_0122','sp_0123','sp_0125','sp_0129','sp_0140','sp_0183','sp_0184','sp_0185','sp_0187','sp_0197','sp_0198','sp_0199','sp_0200','sp_0202','sp_0218','sp_0441','sp_0449','sp_0450'];
+for (const speciesId of unifiedNext25ProfileIds) {
+  const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
+  assert.ok(profile, 'unified next25 migration must own reviewed profile ' + speciesId);
+  assert.equal(unifiedNext25Migration.includes("'" + speciesId + "'"), true, 'unified next25 migration must target ' + speciesId);
+  for (const source of profile.citations) {
+    assert.equal(unifiedNext25Migration.includes(source.id), true, 'unified next25 migration must include source ' + source.id);
+  }
+}
+assert.match(unifiedNext25Migration, /expected 63 reviewed Compatibility profiles/, 'unified next25 migration must lock its prerequisite profile count.');
+assert.match(unifiedNext25Migration, /expected 85 reviewed Compatibility profiles/, 'unified next25 migration must freeze the post-release profile count.');
+assert.match(unifiedNext25Migration, /expected 116 reviewed evidence sources/, 'unified next25 migration must lock its prerequisite evidence count.');
+assert.match(unifiedNext25Migration, /expected 160 reviewed evidence sources/, 'unified next25 migration must freeze the post-release evidence count.');
+assert.match(unifiedNext25Migration, /expected 44 unified-next25 profile-source links/, 'unified next25 migration must guard all source links.');
+assert.match(unifiedNext25Migration, /identity\/type holds must remain without Compatibility profile/, 'unified next25 migration must preserve the three identity/type holds.');
+
+const expansionOwnedIds = new Set(['sp_0468','sp_0010','sp_0012','sp_0114','sp_0469','sp_0440','sp_0020','sp_0444','sp_0017','sp_0448','sp_0447','sp_0053','sp_0045','sp_0126','sp_0133','sp_0433','sp_0013','sp_0451','sp_0016','sp_0475','sp_0015','sp_0019','sp_0026','sp_0043','sp_0044','sp_0022','sp_0023','sp_0024','sp_0018','sp_0038','sp_0042','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058','sp_0059','sp_0062','sp_0105','sp_0108','sp_0109','sp_0119','sp_0130','sp_0131','sp_0138','sp_0139','sp_0181','sp_0103','sp_0117','sp_0118','sp_0121','sp_0122','sp_0123','sp_0125','sp_0129','sp_0140','sp_0183','sp_0184','sp_0185','sp_0187','sp_0197','sp_0198','sp_0199','sp_0200','sp_0202','sp_0218','sp_0441','sp_0449','sp_0450']);
 const unexpectedExpansionProfiles = audit.reviewedProfiles.filter(profile => !historicalProfileKeys.includes(profile.speciesId) && !recoveryV1ProfileKeys.includes(profile.speciesId) && !expansionOwnedIds.has(profile.speciesId));
 assert.equal(unexpectedExpansionProfiles.length, 0, 'every post-recovery reviewed Profile must have an explicit additive migration owner.');
 
