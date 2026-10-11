@@ -49,6 +49,7 @@ import { phase2Batch46Knowledge } from './phase2Batch46Authority';
 import { phase2Batch47Knowledge } from './phase2Batch47Authority';
 import { marineReleaseGateKnowledge } from './marineReleaseGateAuthority';
 import { freshwaterReleaseGateKnowledge } from './freshwaterReleaseGateAuthority';
+import { opsariichthysBidensKnowledge } from './opsariichthysBidensAuthority';
 import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
 
 export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
@@ -895,6 +896,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...phase2Batch47Knowledge,
   ...marineReleaseGateKnowledge,
   ...freshwaterReleaseGateKnowledge,
+  ...opsariichthysBidensKnowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1926,6 +1928,11 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
   // Blue prince now has direct reviewed Species Knowledge aligned with
   // its reviewed Compatibility profile; it is no longer completion-only.
   if (fish.id === 'sp_0018') {
+    return reviewedKnowledgeBySpeciesId[fish.id];
+  }
+  // Opsariichthys bidens now has direct reviewed Species Knowledge aligned
+  // with its reviewed Compatibility profile; it is no longer completion-only.
+  if (fish.id === 'sp_0038') {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }
   // Phase 2 completion records are direct evidence for the matrix and

@@ -1,6 +1,9 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'fishbase-opsariichthys-bidens': { id: 'fishbase-opsariichthys-bidens', title: 'Opsariichthys bidens species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Opsariichthys-bidens', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'doi-opsariichthys-bidens-ontogeny-diet': { id: 'doi-opsariichthys-bidens-ontogeny-diet', title: 'The relationship between ontogeny, morphology, and diet in the Chinese hook snout carp (Opsariichthys bidens)', publisher: 'Ichthyological Research', url: 'https://doi.org/10.1007/s10228-005-0316-0', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
+  'doi-opsariichthys-bidens-enrichment-2024': { id: 'doi-opsariichthys-bidens-enrichment-2024', title: 'Effects of Environmental Enrichment on the Growth, Gonadal Development, and Welfare of the Chinese Hooksnout Carp (Opsariichthys bidens)', publisher: 'Fishes', url: 'https://doi.org/10.3390/fishes9090339', sourceType: 'peer_reviewed', reviewStatus: 'reviewed' },
   'fishbase-chindongo-socolofi': { id: 'fishbase-chindongo-socolofi', title: 'Chindongo socolofi species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Chindongo-socolofi', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'seriouslyfish-pseudotropheus-socolofi': { id: 'seriouslyfish-pseudotropheus-socolofi', title: 'Pseudotropheus socolofi (Powder Blue Cichlid)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/pseudotropheus-socolofi', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'fishbase-lutjanus-kasmira': { id: 'fishbase-lutjanus-kasmira', title: 'Lutjanus kasmira species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Lutjanus-kasmira', sourceType: 'professional_association', reviewStatus: 'reviewed' },
