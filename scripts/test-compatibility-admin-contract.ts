@@ -384,10 +384,10 @@ assert.match(blackParadiseMigration, /expected 39 reviewed Compatibility profile
 assert.match(blackParadiseMigration, /sp_0044 profile drift/, 'Macropodus spechti migration must include an exact Profile drift guard.');
 assert.match(blackParadiseMigration, /sp_0044 source links drift/, 'Macropodus spechti migration must include evidence-link drift guard.');
 
-const nextWaveMarineMigration = readFileSync('supabase/migrations/20261011094800_compatibility_next_wave_marine_authority.sql', 'utf8');
+const nextWaveMarineMigration = readFileSync('supabase/migrations/20261011020543_compatibility_next_wave_marine_authority.sql', 'utf8');
 const nextWaveMarineProfileIds = ['sp_0022', 'sp_0023', 'sp_0024'];
 const nextWaveMarineProfiles = audit.reviewedProfiles.filter(profile => nextWaveMarineProfileIds.includes(profile.speciesId));
-assert.equal(nextWaveMarineProfiles.length, nextWaveMarineProfileIds.length, '20261011094800 must own exactly the three next-wave marine Profiles.');
+assert.equal(nextWaveMarineProfiles.length, nextWaveMarineProfileIds.length, '20261011020543 must own exactly the three next-wave marine Profiles.');
 for (const profile of nextWaveMarineProfiles) {
   assert.equal(nextWaveMarineMigration.includes(profile.speciesId), true, 'next-wave marine migration must include Profile ' + profile.speciesId);
   for (const source of profile.citations) {
