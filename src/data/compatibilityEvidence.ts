@@ -3,6 +3,7 @@ import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages
 import type { CompatibilityLifeStage, Fish } from '../types';
 import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy';
 import { lutjanusKasmiraFishBase, zebrasomaFlavescensFishBase, paracanthurusHepatusFishBase } from './catalogReviewBatches/next-wave-marine-01';
+import { chindongoSocolofiFishBase, chindongoSocolofiSeriouslyFish } from './catalogReviewBatches/next-wave-freshwater-01';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1005,6 +1006,16 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [pygmyCorySeriouslyFish, pygmyCoryFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0018: {
+    speciesId: 'sp_0018',
+    waterType: 'freshwater',
+    behaviorTraits: ['territorial_males', 'rock_associated_territory', 'mbuna'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [chindongoSocolofiFishBase, chindongoSocolofiSeriouslyFish],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality'],
   },
   sp_0022: {
     speciesId: 'sp_0022',

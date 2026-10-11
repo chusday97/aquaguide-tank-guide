@@ -1,6 +1,8 @@
 import type { EvidenceSourceDto } from '../../../packages/contracts/src';
 
 const knowledgeSources: Record<string, EvidenceSourceDto> = {
+  'fishbase-chindongo-socolofi': { id: 'fishbase-chindongo-socolofi', title: 'Chindongo socolofi species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Chindongo-socolofi', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
+  'seriouslyfish-pseudotropheus-socolofi': { id: 'seriouslyfish-pseudotropheus-socolofi', title: 'Pseudotropheus socolofi (Powder Blue Cichlid)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/pseudotropheus-socolofi', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'fishbase-lutjanus-kasmira': { id: 'fishbase-lutjanus-kasmira', title: 'Lutjanus kasmira species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Lutjanus-kasmira', sourceType: 'professional_association', reviewStatus: 'reviewed' },
   'fishbase-zebrasoma-flavescens': { id: 'fishbase-zebrasoma-flavescens', title: 'Zebrasoma flavescens species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/6018', sourceType: 'professional_association', reviewStatus: 'reviewed' },
   'fishbase-paracanthurus-hepatus': { id: 'fishbase-paracanthurus-hepatus', title: 'Paracanthurus hepatus species summary', publisher: 'FishBase', url: 'https://www.fishbase.se/summary/Paracanthurus-hepatus.html', sourceType: 'professional_association', reviewStatus: 'reviewed' },
