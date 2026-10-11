@@ -2,6 +2,7 @@ import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages
 import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
 import type { CompatibilityLifeStage, Fish } from '../types';
 import { getBaseSpeciesScientificName } from '../modules/species/speciesTaxonomy';
+import { lutjanusKasmiraFishBase, zebrasomaFlavescensFishBase, paracanthurusHepatusFishBase } from './catalogReviewBatches/next-wave-marine-01';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1004,6 +1005,36 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     reviewStatus: 'reviewed',
     citations: [pygmyCorySeriouslyFish, pygmyCoryFishBase],
     requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'],
+  },
+  sp_0022: {
+    speciesId: 'sp_0022',
+    waterType: 'saltwater',
+    behaviorTraits: ['group_living'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [lutjanusKasmiraFishBase],
+    requiredFacts: ['water', 'adult_size', 'social_behavior'],
+  },
+  sp_0023: {
+    speciesId: 'sp_0023',
+    waterType: 'saltwater',
+    behaviorTraits: ['variable_social'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [zebrasomaFlavescensFishBase],
+    requiredFacts: ['water', 'adult_size', 'social_behavior'],
+  },
+  sp_0024: {
+    speciesId: 'sp_0024',
+    waterType: 'saltwater',
+    behaviorTraits: ['group_living'],
+    predationTargets: [],
+    confidence: 'medium',
+    reviewStatus: 'reviewed',
+    citations: [paracanthurusHepatusFishBase],
+    requiredFacts: ['water', 'adult_size', 'social_behavior'],
   },
   sp_0014: {
     speciesId: 'sp_0014',
