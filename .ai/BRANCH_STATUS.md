@@ -1,6 +1,6 @@
-## TOP CURRENT BRANCH — 2026-10-12 wave11
+## TOP CURRENT BRANCH — 2026-10-12 wave12
 
-- `codex/compatibility-next25-wave11-20261012` was created from exact clean pushed wave10 HEAD `966ae1c52e0bdbfbf5a62bbea7b26fea15bc20ea`.
+- `codex/compatibility-next25-wave12-20261012` was created from exact clean pushed wave11 HEAD `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
 - Scope is evidence/backend documentation only: one 25-object authority batch, ornamental identity boundaries, variant evidence ceilings, regenerated knowledge/coverage artifacts, and contract tests.
 - Outcome is 0 new Profiles / 0 new DB evidence / 25 fail-closed terminal outcomes. No Supabase migration, Production mutation, deploy, merge, UI, or Vision change.
 - Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; Production remains 60 / 63 / 21 / 1 / 116.

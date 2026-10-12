@@ -1,10 +1,10 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave11
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave12
 
-- Active branch: `codex/compatibility-next25-wave11-20261012`, based exactly on pushed wave10 `966ae1c52e0bdbfbf5a62bbea7b26fea15bc20ea`.
-- Processed the exact generated 25 wave11 objects as one batch: 0 Profiles / 12 identity terminal holds / 13 ornamental-variant social evidence ceilings.
-- The 12 identity holds are split into 6 incomplete scientific names, 3 unresolved parent taxa, and 3 exact commercial-variant identities lacking a reviewed bridge; base-species inheritance remains prohibited.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave11 adds no DB authority and therefore no migration.
-- Coverage regeneration remains enabled and now exposes wave12, again dominated by ornamental/trade variants that require exact identity or inheritance review.
+- Active branch: `codex/compatibility-next25-wave12-20261012`, based exactly on pushed wave11 `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
+- Processed the exact generated 25 wave12 objects as one batch: 0 Profiles / 15 identity terminal holds / 10 ornamental-variant social evidence ceilings.
+- The 15 identity holds are split into 6 incomplete scientific names, 1 unresolved parent taxon, and 8 exact commercial-variant identities lacking a reviewed bridge; base-species inheritance remains prohibited.
+- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave12 adds no DB authority and therefore no migration.
+- Coverage regeneration remains enabled and now exposes wave13; it continues ornamental/trade variants and also surfaces a Palythoa non-fish object for domain closure.
 - Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

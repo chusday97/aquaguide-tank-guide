@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave12 closes another generated 25-object ornamental-fish queue as one batch: 15 identity terminal holds and 10 variant social evidence ceilings; no unsupported Profile or base-species inheritance was introduced.
+- Changed: Variant closure continues to distinguish incomplete scientific names, unresolved parent taxa and exact commercial-lineage gaps from object-reviewed-but-socially-unknown records; regenerated coverage advances to wave13 while static DB authority stays 100 Profiles / 176 evidence with no new migration.
+
 - Added: Compatibility wave11 closes the generated 25-object ornamental-fish queue as one batch: 12 identity terminal holds and 13 variant social evidence ceilings; no unsupported Profile or mother/base-species inheritance was introduced.
 - Changed: Variant closure now distinguishes incomplete scientific names, unresolved genus-level parents and exact commercial-lineage identity gaps from objects whose identity is reviewed but social Compatibility authority remains unknown; regenerated coverage advances to wave12 while static DB authority stays 100 Profiles / 176 evidence with no new migration.
 

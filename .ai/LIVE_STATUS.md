@@ -1,9 +1,9 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave11
+## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave12
 
-- Branch: `codex/compatibility-next25-wave11-20261012` from exact pushed wave10 HEAD `966ae1c52e0bdbfbf5a62bbea7b26fea15bc20ea`.
-- Wave11 classified all 25 generated objects atomically: 0 Profiles, 12 identity holds, and 13 ornamental-variant social evidence ceilings; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Identity closure distinguishes incomplete `var.` scientific names, genus-only unresolved parents, and named commercial variants backed only by base-species authority instead of collapsing all of them into generic missing evidence.
-- Regenerated coverage exposes wave12: `sp_0066, sp_0144, sp_0150, sp_0203, sp_0204, sp_0205, sp_0206, sp_0209, sp_0210, sp_0212, sp_0213, sp_0215, sp_0222, sp_0223, sp_0225, sp_0226, sp_0230, sp_0231, sp_0232, sp_0233, sp_0237, sp_0244, sp_0245, sp_0246, sp_0252`.
+- Branch: `codex/compatibility-next25-wave12-20261012` from exact pushed wave11 HEAD `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
+- Wave12 classified all 25 generated objects atomically: 0 Profiles, 15 identity holds, and 10 ornamental-variant social evidence ceilings; static authority remains 100 / 21 / 1 / 176 and no migration was created.
+- Identity closure again distinguishes incomplete `var.` scientific names, genus-only parent ambiguity, and named ornamental lineages backed only by base-species authority; reviewed object records without social authority remain explicit evidence ceilings.
+- Regenerated coverage exposes wave13: `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
 - Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

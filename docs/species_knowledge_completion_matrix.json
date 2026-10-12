@@ -3944,38 +3944,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Carassius auratus var.” without a variant identifier. The Red Cap catalog-object review does not repair the incomplete scientific identity or authorize base-goldfish Compatibility inheritance."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Carassius auratus var.” without a variant identifier. The Red Cap catalog-object review does not repair the incomplete scientific identity or authorize base-goldfish Compatibility inheritance."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Carassius auratus var.” without a variant identifier. The Red Cap catalog-object review does not repair the incomplete scientific identity or authorize base-goldfish Compatibility inheritance."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Carassius auratus var.” without a variant identifier. The Red Cap catalog-object review does not repair the incomplete scientific identity or authorize base-goldfish Compatibility inheritance."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Carassius auratus var.” without a variant identifier. The Red Cap catalog-object review does not repair the incomplete scientific identity or authorize base-goldfish Compatibility inheritance."
         }
       ],
       "direct_species_knowledge": true,
@@ -3984,7 +3984,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -8646,38 +8646,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source describes only Poecilia reticulata, explicitly not the Blue Grass commercial variant. Exact variant identity remains unresolved."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source describes only Poecilia reticulata, explicitly not the Blue Grass commercial variant. Exact variant identity remains unresolved."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source describes only Poecilia reticulata, explicitly not the Blue Grass commercial variant. Exact variant identity remains unresolved."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source describes only Poecilia reticulata, explicitly not the Blue Grass commercial variant. Exact variant identity remains unresolved."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source describes only Poecilia reticulata, explicitly not the Blue Grass commercial variant. Exact variant identity remains unresolved."
         }
       ],
       "direct_species_knowledge": true,
@@ -8686,7 +8686,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -9093,10 +9093,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Carassius auratus Oranda Short Tail variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -9112,7 +9112,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -12716,10 +12716,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Poecilia sphenops Green variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -12735,7 +12735,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -12770,38 +12770,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Black Diamond commercial variant."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Black Diamond commercial variant."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Black Diamond commercial variant."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Black Diamond commercial variant."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Black Diamond commercial variant."
         }
       ],
       "direct_species_knowledge": true,
@@ -12810,7 +12810,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -12845,38 +12845,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Purple Emperor commercial variant."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Purple Emperor commercial variant."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Purple Emperor commercial variant."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Purple Emperor commercial variant."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” while the reviewed source covers only the base species and does not identify the Purple Emperor commercial variant."
         }
       ],
       "direct_species_knowledge": true,
@@ -12885,7 +12885,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -12920,38 +12920,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The catalog names a Diamond ornamental variant, but the reviewed source describes only the base species and does not identify that commercial lineage. No reviewed identity bridge supports Compatibility inheritance."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The catalog names a Diamond ornamental variant, but the reviewed source describes only the base species and does not identify that commercial lineage. No reviewed identity bridge supports Compatibility inheritance."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The catalog names a Diamond ornamental variant, but the reviewed source describes only the base species and does not identify that commercial lineage. No reviewed identity bridge supports Compatibility inheritance."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The catalog names a Diamond ornamental variant, but the reviewed source describes only the base species and does not identify that commercial lineage. No reviewed identity bridge supports Compatibility inheritance."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The catalog names a Diamond ornamental variant, but the reviewed source describes only the base species and does not identify that commercial lineage. No reviewed identity bridge supports Compatibility inheritance."
         }
       ],
       "direct_species_knowledge": true,
@@ -12960,7 +12960,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -13142,10 +13142,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Poecilia latipinna Blood variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -13161,7 +13161,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -13196,38 +13196,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Pangio kuhlii var.” without a stable variant identifier. The reviewed catalog-object record does not establish a taxonomically precise lineage suitable for Compatibility inheritance."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Pangio kuhlii var.” without a stable variant identifier. The reviewed catalog-object record does not establish a taxonomically precise lineage suitable for Compatibility inheritance."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Pangio kuhlii var.” without a stable variant identifier. The reviewed catalog-object record does not establish a taxonomically precise lineage suitable for Compatibility inheritance."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Pangio kuhlii var.” without a stable variant identifier. The reviewed catalog-object record does not establish a taxonomically precise lineage suitable for Compatibility inheritance."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “Pangio kuhlii var.” without a stable variant identifier. The reviewed catalog-object record does not establish a taxonomically precise lineage suitable for Compatibility inheritance."
         }
       ],
       "direct_species_knowledge": true,
@@ -13236,7 +13236,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -13346,38 +13346,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source covers only the base species. The exact ornamental identity remains unresolved."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source covers only the base species. The exact ornamental identity remains unresolved."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source covers only the base species. The exact ornamental identity remains unresolved."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source covers only the base species. The exact ornamental identity remains unresolved."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "The catalog scientific name ends at “var.” and the reviewed source covers only the base species. The exact ornamental identity remains unresolved."
         }
       ],
       "direct_species_knowledge": true,
@@ -13386,7 +13386,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -13442,10 +13442,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Crossocheilus langei Gold variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -13461,7 +13461,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -13568,10 +13568,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Sahyadria denisonii Longfin variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -13587,7 +13587,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14069,10 +14069,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Amatitlania nigrofasciata Jellybean variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -14088,7 +14088,7 @@
       "inherited_compatibility_profile": true,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 7,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14144,10 +14144,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Channa asiatica Albino variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -14163,7 +14163,7 @@
       "inherited_compatibility_profile": true,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 7,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14257,38 +14257,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Longfin commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Longfin commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Longfin commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Longfin commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Longfin commercial variant. Base-species inheritance is prohibited."
         }
       ],
       "direct_species_knowledge": true,
@@ -14297,7 +14297,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14332,38 +14332,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Platinum commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Platinum commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Platinum commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Platinum commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Hemigrammus bleheri but explicitly does not identify the Platinum commercial variant. Base-species inheritance is prohibited."
         }
       ],
       "direct_species_knowledge": true,
@@ -14372,7 +14372,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14632,38 +14632,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "The catalog parent remains Ancistrus sp. rather than a species-level taxon. The Gold Longfin catalog-object review does not resolve the underlying species, so species-level Compatibility inheritance remains unsafe."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "The catalog parent remains Ancistrus sp. rather than a species-level taxon. The Gold Longfin catalog-object review does not resolve the underlying species, so species-level Compatibility inheritance remains unsafe."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "The catalog parent remains Ancistrus sp. rather than a species-level taxon. The Gold Longfin catalog-object review does not resolve the underlying species, so species-level Compatibility inheritance remains unsafe."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "The catalog parent remains Ancistrus sp. rather than a species-level taxon. The Gold Longfin catalog-object review does not resolve the underlying species, so species-level Compatibility inheritance remains unsafe."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "The catalog parent remains Ancistrus sp. rather than a species-level taxon. The Gold Longfin catalog-object review does not resolve the underlying species, so species-level Compatibility inheritance remains unsafe."
         }
       ],
       "direct_species_knowledge": true,
@@ -14672,7 +14672,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14707,38 +14707,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras panda but does not identify the Albino commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras panda but does not identify the Albino commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras panda but does not identify the Albino commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras panda but does not identify the Albino commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras panda but does not identify the Albino commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         }
       ],
       "direct_species_knowledge": true,
@@ -14747,7 +14747,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14782,38 +14782,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras aeneus but does not identify the Platinum commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras aeneus but does not identify the Platinum commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras aeneus but does not identify the Platinum commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras aeneus but does not identify the Platinum commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source covers Corydoras aeneus but does not identify the Platinum commercial variant. No reviewed bridge supports exact-variant Compatibility inheritance."
         }
       ],
       "direct_species_knowledge": true,
@@ -14822,7 +14822,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -14878,10 +14878,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Trichopodus leerii Albino Balloon variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -14897,7 +14897,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -15178,10 +15178,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Poecilia latipinna High Fin Red variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -15197,7 +15197,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -15682,38 +15682,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes Poecilia reticulata but does not identify the Yellow Grass commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes Poecilia reticulata but does not identify the Yellow Grass commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes Poecilia reticulata but does not identify the Yellow Grass commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes Poecilia reticulata but does not identify the Yellow Grass commercial variant. Base-species inheritance is prohibited."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes Poecilia reticulata but does not identify the Yellow Grass commercial variant. Base-species inheritance is prohibited."
         }
       ],
       "direct_species_knowledge": true,
@@ -15722,7 +15722,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -15757,38 +15757,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         }
       ],
       "direct_species_knowledge": true,
@@ -15797,7 +15797,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -15832,38 +15832,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Albino Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Albino Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Albino Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Albino Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "The reviewed source describes the base species and explicitly notes that the Albino Kohaku variant is not identified. Keep the exact commercial lineage unresolved."
         }
       ],
       "direct_species_knowledge": true,
@@ -15872,7 +15872,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 0,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -16303,10 +16303,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "variant_social_not_established",
+          "note": "Synodontis nigriventris White variant review is already reviewed for this catalog object, but environment, space and social behavior remain reviewed_unknown and the review does not promote base-species inheritance. No reviewed bridge establishes a variant-specific household social mode, so positive Compatibility remains fail-closed."
         },
         {
           "field": "care",
@@ -16322,7 +16322,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
