@@ -610,9 +610,9 @@
   ],
   "next_wave_species_queue": [
     {
-      "species_id": "sp_0240",
-      "common_name": "白金神仙 (长鳍)",
-      "scientific_name": "Pterophyllum scalare var. Platinum Longfin",
+      "species_id": "sp_0296",
+      "common_name": "红利鱼 (改良)",
+      "scientific_name": "Lutjanus kasmira var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -640,9 +640,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0241",
-      "common_name": "大理石神仙 (球形)",
-      "scientific_name": "Pterophyllum scalare var. Marble Balloon",
+      "species_id": "sp_0297",
+      "common_name": "黄金草莓鱼 (海水)",
+      "scientific_name": "Pseudochromis sp. Gold",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -670,9 +670,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0242",
-      "common_name": "红眼白子金龙",
-      "scientific_name": "Scleropages formosus var. Albino",
+      "species_id": "sp_0338",
+      "common_name": "白金西非凤凰",
+      "scientific_name": "Pelvicachromis pulcher var. Albino",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -700,9 +700,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0243",
-      "common_name": "球形血鹦鹉",
-      "scientific_name": "Cichlasoma var. Blood Parrot Balloon",
+      "species_id": "sp_0340",
+      "common_name": "球形红十字灯",
+      "scientific_name": "Aphyocharax anisitsi var. Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -730,9 +730,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0247",
-      "common_name": "蓝钻神仙 (球形)",
-      "scientific_name": "Pterophyllum scalare var. Blue Balloon",
+      "species_id": "sp_0341",
+      "common_name": "长鳍白金黑裙",
+      "scientific_name": "Gymnocorymbus ternetzi var. Longfin White",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -760,9 +760,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0248",
-      "common_name": "黄金战舰",
-      "scientific_name": "Osphronemus goramy var. Gold",
+      "species_id": "sp_0359",
+      "common_name": "红眼蓝钻灯",
+      "scientific_name": "Boehlkea fredcochui var. Blue",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -790,9 +790,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0256",
-      "common_name": "红眼白子黑裙鱼",
-      "scientific_name": "Gymnocorymbus ternetzi var. Albino Red Eye",
+      "species_id": "sp_0372",
+      "common_name": "球形蓝宝石鱼",
+      "scientific_name": "Andinoacara pulcher var. Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -820,9 +820,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0257",
-      "common_name": "黄金斑马异型 (L134改良)",
-      "scientific_name": "Peckoltia compta var. Gold",
+      "species_id": "sp_0373",
+      "common_name": "球形红宝石鱼",
+      "scientific_name": "Hemichromis bimaculatus var. Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -850,9 +850,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0263",
-      "common_name": "雪中红慈鲷",
-      "scientific_name": "Maylandia estherae var. Albino",
+      "species_id": "sp_0374",
+      "common_name": "球形地图鱼",
+      "scientific_name": "Astronotus ocellatus var. Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -880,9 +880,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0264",
-      "common_name": "白金阿里慈鲷",
-      "scientific_name": "Sciaenochromis fryeri var. White",
+      "species_id": "sp_0376",
+      "common_name": "黄金斑马异型 (L134改良版)",
+      "scientific_name": "Peckoltia compta var. Super Gold",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -910,9 +910,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0265",
-      "common_name": "血中红慈鲷",
-      "scientific_name": "Nimbochromis livingstonii var.",
+      "species_id": "sp_0388",
+      "common_name": "血钻神仙 (改良)",
+      "scientific_name": "Pterophyllum scalare var. Super Red",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -940,368 +940,8 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0266",
-      "common_name": "黄金珍珠虎 (改良)",
-      "scientific_name": "Altolamprologus calvus var. Gold",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0268",
-      "common_name": "球形蓝曼龙",
-      "scientific_name": "Trichopodus trichopterus var. Blue Balloon",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0269",
-      "common_name": "球形金曼龙",
-      "scientific_name": "Trichopodus trichopterus var. Gold Balloon",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0270",
-      "common_name": "白子红眼关刀",
-      "scientific_name": "Geophagus surinamensis var. Albino",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0271",
-      "common_name": "白子红宝石",
-      "scientific_name": "Hemichromis bimaculatus var. Albino",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0272",
-      "common_name": "长鳍神仙 (黑)",
-      "scientific_name": "Pterophyllum scalare var. Black Longfin",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0273",
-      "common_name": "血钻短鲷",
-      "scientific_name": "Apistogramma cacatuoides var. Super Red",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0282",
-      "common_name": "黄金达摩 (改良)",
-      "scientific_name": "Parancistrus aurantiacus var. Gold",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0283",
-      "common_name": "血红龙",
-      "scientific_name": "Scleropages formosus var. Super Red",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0284",
-      "common_name": "白金龙鱼",
-      "scientific_name": "Scleropages formosus var. Silver Platinum",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0285",
-      "common_name": "黄金眼镜蛇雷龙 (改良)",
-      "scientific_name": "Channa aurantimaculata var. Gold",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0286",
-      "common_name": "幻彩蓝雷龙 (改良)",
-      "scientific_name": "Channa andrao var. Super Blue",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 27,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 30,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0288",
-      "common_name": "白金黑裙鱼 (长鳍)",
+      "species_id": "sp_0393",
+      "common_name": "大帆白金红裙",
       "scientific_name": "Gymnocorymbus ternetzi var. Platinum Longfin",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
@@ -1330,9 +970,369 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0294",
-      "common_name": "红眼白子红裙 (球形)",
-      "scientific_name": "Gymnocorymbus ternetzi var. Albino Balloon",
+      "species_id": "sp_0394",
+      "common_name": "荧光橙经鱼",
+      "scientific_name": "Gymnocorymbus ternetzi var. Glo Orange",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0399",
+      "common_name": "白金蓝魔鬼 (海水)",
+      "scientific_name": "Chrysiptera cyanea var. Platinum",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0407",
+      "common_name": "血红龙 (A级)",
+      "scientific_name": "Scleropages formosus var. Blood Red A",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0408",
+      "common_name": "金头过背金龙",
+      "scientific_name": "Scleropages formosus var. Gold Head",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0409",
+      "common_name": "白子黑白魟",
+      "scientific_name": "Potamotrygon leopoldi var. Albino",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0410",
+      "common_name": "皇冠黑白魟 (点位改良)",
+      "scientific_name": "Potamotrygon leopoldi var. Eclipse",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0411",
+      "common_name": "蓝宝石雷龙 (特级选育)",
+      "scientific_name": "Channa stewartii var. Karbi Anglong",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0412",
+      "common_name": "幻彩红雷龙 (改良)",
+      "scientific_name": "Channa andrao var. Red",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0414",
+      "common_name": "白金黑帝魔 (长鳍)",
+      "scientific_name": "Geophagus sp. var. Longfin Platinum",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0415",
+      "common_name": "红眼白子红剑 (高鳍)",
+      "scientific_name": "Xiphophorus hellerii var. High Fin",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0416",
+      "common_name": "球形蓝宝石鱼 (特级)",
+      "scientific_name": "Andinoacara pulcher var. Super Balloon",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0417",
+      "common_name": "血钻波子 (球形)",
+      "scientific_name": "Mikrogeophagus ramirezi var. Super Red Balloon",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 27,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 30,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0420",
+      "common_name": "球形金曼龙 (大规格)",
+      "scientific_name": "Trichopodus trichopterus var. Balloon Gold XL",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,

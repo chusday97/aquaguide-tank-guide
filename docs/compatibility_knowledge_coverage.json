@@ -7,7 +7,7 @@
   "catalog_objects": 486,
   "completion_matrix_objects": 486,
   "compatibility_eligible_species": 411,
-  "reviewed_compatibility_profiles": 99,
+  "reviewed_compatibility_profiles": 100,
   "reviewed_pair_rules": 21,
   "reviewed_stage_risk_profiles": 1,
   "launch_cohort_species": 30,
@@ -34,21 +34,21 @@
     },
     "environment": {
       "applicable": 475,
-      "reviewed_supported": 106,
-      "reviewed_unknown": 369,
-      "supported_pct": 22.3
-    },
-    "space": {
-      "applicable": 475,
       "reviewed_supported": 107,
       "reviewed_unknown": 368,
       "supported_pct": 22.5
     },
+    "space": {
+      "applicable": 475,
+      "reviewed_supported": 108,
+      "reviewed_unknown": 367,
+      "supported_pct": 22.7
+    },
     "social": {
       "applicable": 411,
-      "reviewed_supported": 101,
-      "reviewed_unknown": 310,
-      "supported_pct": 24.6
+      "reviewed_supported": 102,
+      "reviewed_unknown": 309,
+      "supported_pct": 24.8
     },
     "care": {
       "applicable": 475,
