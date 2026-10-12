@@ -26,6 +26,7 @@ const gates = [
   ['Compatibility Unified Wave07 Authority', 'npm', ['run', 'test:compatibility-unified-wave07-authority']],
   ['Compatibility Unified Wave08 Authority', 'npm', ['run', 'test:compatibility-unified-wave08-authority']],
   ['Compatibility Unified Wave09 Authority', 'npm', ['run', 'test:compatibility-unified-wave09-authority']],
+  ['Compatibility Unified Wave10 Authority', 'npm', ['run', 'test:compatibility-unified-wave10-authority']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],

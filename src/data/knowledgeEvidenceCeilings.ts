@@ -1,5 +1,6 @@
 import { nextWaveUnified08EvidenceCeilings } from './catalogReviewBatches/next-wave-unified-08';
 import { nextWaveUnified09EvidenceCeilings } from './catalogReviewBatches/next-wave-unified-09';
+import { nextWaveUnified10EvidenceCeilings } from './catalogReviewBatches/next-wave-unified-10';
 
 export type KnowledgeEvidenceCeilingCode =
   | 'variant_social_not_established'
@@ -25,6 +26,11 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
     researchDisposition: 'terminal_unknown_hold' as const,
   }]])),
   ...Object.fromEntries(nextWaveUnified09EvidenceCeilings.map(outcome => [outcome.speciesId, [{
+    ...outcome,
+    reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }]])),
+  ...Object.fromEntries(nextWaveUnified10EvidenceCeilings.map(outcome => [outcome.speciesId, [{
     ...outcome,
     reviewedAt: '2026-10-12',
     researchDisposition: 'terminal_unknown_hold' as const,

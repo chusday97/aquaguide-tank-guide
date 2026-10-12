@@ -1,9 +1,10 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave09
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave10
 
-- Active branch: `codex/compatibility-next25-wave09-20261012`, based exactly on pushed wave08 `20de0e92f86df677b37fe6b525d31a10d0441ce9`.
-- Processed the exact generated 25 wave09 objects as one batch: 0 Profiles / 9 exact-fish evidence ceilings / 16 cross-taxa Compatibility-domain holds.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave09 adds no DB authority and therefore no migration.
-- Coverage regeneration remains enabled and now exposes wave10, dominated by shrimp/snail, coral/anemone, jellyfish and turtle domain-closure objects plus one Ranchu ornamental fish variant.
+- Active branch: `codex/compatibility-next25-wave10-20261012`, based exactly on pushed wave09 `0e9e2f5eebe9e46245450faaea6319e0e3faf1a4`.
+- Processed the exact generated 25 wave10 objects as one batch: 0 Profiles / 24 cross-taxa Compatibility-domain holds / 1 Ranchu variant social evidence ceiling.
+- Domain taxonomy now explicitly covers `marine_invertebrate` and `reptile` in addition to existing crustacean/mollusk, amphibian, coral/anemone and jellyfish holds.
+- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave10 adds no DB authority and therefore no migration.
+- Coverage regeneration remains enabled and now exposes wave11, dominated by ornamental/trade fish variants requiring identity or inheritance review.
 - Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

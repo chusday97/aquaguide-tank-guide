@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave10 closes the generated 25-object queue as one batch: 24 non-fish objects are explicit domain holds and Ranchu remains a variant social evidence ceiling; no unsupported Profile or base-species inheritance was introduced.
+- Changed: Compatibility domain taxonomy now includes `marine_invertebrate` for tube worms/sea stars and `reptile` for turtles, preventing catalog labels from routing those objects into fish social semantics; regenerated coverage advances to wave11 while static DB authority remains 100 Profiles / 176 evidence with no new migration.
+
 - Added: Compatibility wave09 closes the generated 25-object queue as one batch: 9 exact fish species remain explicit social evidence ceilings and 16 coral/anemone/shrimp/snail/crab objects are classified as cross-taxa domain holds outside the fish-profile runtime; no unsupported Profile was introduced.
 - Changed: Domain closure now explicitly catches catalog objects mislabeled as fish (including marine shrimp/crab and Tubastraea) without allowing catalog category to override reviewed life type; regenerated coverage advances to wave10 while static DB authority remains 100 Profiles / 176 evidence with no new migration.
 

@@ -1,8 +1,9 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave09
+## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave10
 
-- Branch: `codex/compatibility-next25-wave09-20261012` from exact pushed wave08 HEAD `20de0e92f86df677b37fe6b525d31a10d0441ce9`.
-- Wave09 classified all 25 generated objects atomically: 0 Profiles, 9 exact-fish evidence ceilings, and 16 cross-taxa domain holds; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Regenerated coverage exposes wave10: `sp_0029, sp_0032, sp_0033, sp_0454, sp_0456, sp_0192, sp_0193, sp_0194, sp_0195, sp_0326, sp_0328, sp_0331, sp_0369, sp_0377, sp_0378, sp_0380, sp_0381, sp_0383, sp_0461, sp_0462, sp_0463, sp_0464, sp_0465, sp_0466, sp_0063`.
+- Branch: `codex/compatibility-next25-wave10-20261012` from exact pushed wave09 HEAD `0e9e2f5eebe9e46245450faaea6319e0e3faf1a4`.
+- Wave10 classified all 25 generated objects atomically: 0 Profiles, 24 cross-taxa domain holds, and 1 Ranchu variant social evidence ceiling; static authority remains 100 / 21 / 1 / 176 and no migration was created.
+- Domain closure now includes marine polychaete/echinoderm and turtle/reptile life types instead of allowing those catalog objects into fish social-profile semantics.
+- Regenerated coverage exposes wave11: `sp_0064, sp_0065, sp_0124, sp_0141, sp_0142, sp_0143, sp_0145, sp_0147, sp_0148, sp_0149, sp_0152, sp_0153, sp_0154, sp_0155, sp_0159, sp_0160, sp_0161, sp_0167, sp_0168, sp_0169, sp_0170, sp_0171, sp_0172, sp_0180, sp_0196`.
 - Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

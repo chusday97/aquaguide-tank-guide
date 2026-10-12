@@ -1,12 +1,13 @@
 import { nextWaveUnified08DomainOutcomes } from './catalogReviewBatches/next-wave-unified-08';
 import { nextWaveUnified09DomainOutcomes } from './catalogReviewBatches/next-wave-unified-09';
+import { nextWaveUnified10DomainOutcomes } from './catalogReviewBatches/next-wave-unified-10';
 
 export type CompatibilityDomainBoundaryCode = 'life_type_not_supported_by_fish_compatibility_domain';
 
 export type CompatibilityDomainBoundary = {
   speciesId: string;
   code: CompatibilityDomainBoundaryCode;
-  lifeType: 'crustacean_or_mollusk' | 'amphibian' | 'coral_or_anemone' | 'jellyfish';
+  lifeType: 'crustacean_or_mollusk' | 'amphibian' | 'coral_or_anemone' | 'marine_invertebrate' | 'jellyfish' | 'reptile';
   sourceIds: string[];
   note: string;
   reviewedAt: string;
@@ -38,6 +39,12 @@ export const compatibilityDomainBoundaries: Record<string, CompatibilityDomainBo
     researchDisposition: 'terminal_unknown_hold' as const,
   }])),
   ...Object.fromEntries(nextWaveUnified09DomainOutcomes.map(outcome => [outcome.speciesId, {
+    ...outcome,
+    code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
+    reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }])),
+  ...Object.fromEntries(nextWaveUnified10DomainOutcomes.map(outcome => [outcome.speciesId, {
     ...outcome,
     code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
     reviewedAt: '2026-10-12',

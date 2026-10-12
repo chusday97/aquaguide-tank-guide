@@ -61,7 +61,7 @@ species_id,common_name,scientific_name,life_type,category,feeding_status,environ
 "sp_0060","巧克力曼龙","Sphaerichthys osphromenoides","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","4"
 "sp_0061","飞凤鱼","Semaprochilodus insignis","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","4"
 "sp_0062","红眼灯","Moenkhausia sanctaefilomenae","fish","灯科鱼","reviewed_unknown","reviewed_supported","reviewed_supported","reviewed_supported","reviewed_unknown","","catalog_only","elevated","5"
-"sp_0063","兰寿金鱼","Carassius auratus var. Ranchu","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"
+"sp_0063","兰寿金鱼","Carassius auratus var. Ranchu","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","4"
 "sp_0064","泰狮金鱼","Carassius auratus var. Oranda","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"
 "sp_0065","蝶尾金鱼","Carassius auratus var.","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"
 "sp_0066","鹤顶红金鱼","Carassius auratus var.","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"

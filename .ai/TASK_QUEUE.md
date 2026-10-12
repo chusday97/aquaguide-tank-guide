@@ -1,11 +1,12 @@
-## TOP CURRENT QUEUE — 2026-10-12 unified wave09
+## TOP CURRENT QUEUE — 2026-10-12 unified wave10
 
-1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 9 exact-fish evidence ceilings / 16 cross-taxa domain holds.
-2. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
-3. DONE: regenerate completion, backlog, and Compatibility coverage while preserving normal breadth expansion.
-4. DONE: cross-contract validation, full backend release gate, diff audit, clean checkpoint, and wave09 branch push are complete.
-5. NEXT ACTIVE 25: sp_0029, sp_0032, sp_0033, sp_0454, sp_0456, sp_0192, sp_0193, sp_0194, sp_0195, sp_0326, sp_0328, sp_0331, sp_0369, sp_0377, sp_0378, sp_0380, sp_0381, sp_0383, sp_0461, sp_0462, sp_0463, sp_0464, sp_0465, sp_0466, sp_0063.
-6. HOLD: no Production deploy, Production DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
+1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 24 cross-taxa domain holds / 1 Ranchu variant social evidence ceiling.
+2. DONE: extend domain taxonomy with marine_invertebrate and reptile while preserving fail-closed fish-profile boundaries.
+3. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
+4. DONE: regenerate completion and Compatibility coverage while preserving normal breadth expansion.
+5. DONE: focused contracts, cross-contract validation, full backend release gate, diff check, scope audit, clean checkpoint, and wave10 branch push are complete.
+6. NEXT ACTIVE 25: sp_0064, sp_0065, sp_0124, sp_0141, sp_0142, sp_0143, sp_0145, sp_0147, sp_0148, sp_0149, sp_0152, sp_0153, sp_0154, sp_0155, sp_0159, sp_0160, sp_0161, sp_0167, sp_0168, sp_0169, sp_0170, sp_0171, sp_0172, sp_0180, sp_0196.
+7. HOLD: no Production deploy, Production DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 
