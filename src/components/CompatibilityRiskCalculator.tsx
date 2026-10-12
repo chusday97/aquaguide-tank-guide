@@ -99,7 +99,8 @@ import { getCareTaxonomyPath, getLifeType } from '../modules/species/species.ser
 import { getSpeciesDisplayImage, getSpeciesImageClass, getSpeciesImageSurfaceClass } from '../lib/speciesVisual';
 import { getAquariumVolumeLiters, getCurrentLivestockForAquarium } from '../lib/speciesFitEngine';
 import { getTankCompatibilityAddPolicy, type TankCompatibilityResult, type TankCompatibilityStatus } from '../lib/tankCompatibilityEngine';
-import { evaluateCompatibilityDecision, type CompatibilityItem } from '../modules/knowledge/compatibilityKnowledge';
+import { evaluateCompatibilityDecision, evaluateCompatibilityDecisionWithAi, type CompatibilityItem } from '../modules/knowledge/compatibilityKnowledge';
+import type { AiAssistedCompatibilityResult } from '../services/compatibility/compatibility-ai.service';
 import type { CompatibilityDecision } from '../modules/knowledge/knowledge.types';
 import { VisualResultCard } from './visual-results/VisualResultCard';
 import { buildCompatibilityVisualResult } from './visual-results/visual-result.adapters';
@@ -107,7 +108,7 @@ import { recordTankCompatibility } from '../services/compatibility/compatibility
 import { trackSessionEvent } from '../services/analytics/session-events.service';
 import { getCompatibilityPreviewSpecies } from '../services/compatibility/compatibility-preview.service';
 import { addSpeciesFavorite } from '../services/favorites/favorites.service';
-import { getCompatibilityPresentation } from '../services/compatibility/compatibility-presentation.service';
+import { getCompatibilityPresentationWithAi } from '../services/compatibility/compatibility-presentation.service';
 import { applyCompatibilityStabilityConfirmation, type CompatibilityStabilityConfirmation } from '../services/compatibility/compatibility-stability.service';
 import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 
@@ -556,6 +557,9 @@ export function CompatibilityRiskCalculator({
   const [isAddingToAquarium, setIsAddingToAquarium] = useState(false);
   const [confirmingCautionAdd, setConfirmingCautionAdd] = useState(false);
   const [isClearConfirmOpen, setIsClearConfirmOpen] = useState(false);
+  const [runtimeReasoning, setRuntimeReasoning] = useState<AiAssistedCompatibilityResult | null>(null);
+  const [isRuntimeReasoningPending, setIsRuntimeReasoningPending] = useState(false);
+  const runtimeReasoningRequestRef = useRef(0);
   const [stabilityConfirmationByAquariumId, setStabilityConfirmationByAquariumId] = useState<Record<string, CompatibilityStabilityConfirmation>>({});
   const selectedAquarium = useMemo(() => (
     aquariums.find(aquarium => aquarium.id === (selectedAquariumId || activeAquariumId))
@@ -618,7 +622,49 @@ export function CompatibilityRiskCalculator({
     selectedAquarium,
     stabilityConfirmation,
   ), [selectedAquarium, stabilityConfirmation]);
-  const result = useMemo(() => calculateRisk(selectedItems, evaluationAquarium), [evaluationAquarium, selectedItems]);
+  const deterministicResult = useMemo(() => calculateRisk(selectedItems, evaluationAquarium), [evaluationAquarium, selectedItems]);
+  useEffect(() => {
+    const requestId = runtimeReasoningRequestRef.current + 1;
+    runtimeReasoningRequestRef.current = requestId;
+    setRuntimeReasoning(null);
+    if (selectedItems.length < 2) {
+      setIsRuntimeReasoningPending(false);
+      return;
+    }
+
+    setIsRuntimeReasoningPending(true);
+    void evaluateCompatibilityDecisionWithAi({
+      tank: evaluationAquarium,
+      items: selectedItems.map<CompatibilityItem>(item => ({
+        species: item.species,
+        quantity: item.quantity,
+        origin: currentQuantityBySpeciesId[item.species.id] ? 'existing' : 'candidate',
+      })),
+    }).then(({ reasoning }) => {
+      if (runtimeReasoningRequestRef.current !== requestId) return;
+      setRuntimeReasoning(reasoning);
+    }).catch(() => {
+      if (runtimeReasoningRequestRef.current !== requestId) return;
+      setRuntimeReasoning(null);
+    }).finally(() => {
+      if (runtimeReasoningRequestRef.current === requestId) setIsRuntimeReasoningPending(false);
+    });
+
+    return () => {
+      if (runtimeReasoningRequestRef.current === requestId) runtimeReasoningRequestRef.current += 1;
+    };
+  }, [currentQuantityBySpeciesId, evaluationAquarium, selectedItems]);
+  const result = useMemo(() => runtimeReasoning ? ({
+    ...deterministicResult,
+    level: runtimeReasoning.verdict,
+    reasons: runtimeReasoning.reasons.length > 0 ? runtimeReasoning.reasons : deterministicResult.reasons,
+    nextSteps: runtimeReasoning.adjustments.length > 0 ? runtimeReasoning.adjustments : deterministicResult.nextSteps,
+  }) : deterministicResult, [deterministicResult, runtimeReasoning]);
+  const evaluationSource = runtimeReasoning?.provenance.mode === 'ai_assisted'
+    ? 'model'
+    : runtimeReasoning?.provenance.mode === 'fallback'
+      ? 'fallback'
+      : 'rules';
   const recordedEvaluationKeyRef = useRef('');
   useEffect(() => {
     if (!selectedAquarium || selectedItems.length < 2 || !result.ruleResult || result.level === 'empty') return;
@@ -644,7 +690,7 @@ export function CompatibilityRiskCalculator({
       action: 'calculate',
       status: result.level,
       entry: 'full_compatibility',
-      source: 'rules',
+      source: evaluationSource,
       candidateCount: selectedItems.length,
     });
     result.decision?.pairResults.forEach(pair => {
@@ -652,13 +698,13 @@ export function CompatibilityRiskCalculator({
         action: 'evaluate_pair',
         status: pair.status,
         entry: 'full_compatibility',
-        source: 'rules',
+        source: evaluationSource,
         pairKey: `${pair.speciesA.id}__${pair.speciesB.id}`,
       });
     });
     recordTankCompatibility({ aquariumId: selectedAquarium.id, speciesIds: selectedItems.map(item => item.species.id), status: result.level });
     onEvaluationRecorded?.();
-  }, [onEvaluationRecorded, result.level, result.ruleResult, selectedAquarium, selectedItems]);
+  }, [evaluationSource, onEvaluationRecorded, result.level, result.ruleResult, selectedAquarium, selectedItems]);
   const meta = getRiskMeta(result.level);
   const riskConclusion = getRiskConclusion(result.level, selectedSpecies, result.reasons);
   const conflictTags = getConflictTags(selectedSpecies, result.reasons);
@@ -683,11 +729,12 @@ export function CompatibilityRiskCalculator({
       decision: result.decision,
       species: selectedSpecies,
       primaryActionLabel: getPrimaryResultButtonLabel(result.level),
+      runtimeReasoning,
     });
-  }, [result.decision, result.level, selectedSpecies]);
+  }, [result.decision, result.level, runtimeReasoning, selectedSpecies]);
   const compatibilityPresentation = useMemo(
-    () => result.decision ? getCompatibilityPresentation(result.decision) : null,
-    [result.decision],
+    () => result.decision ? getCompatibilityPresentationWithAi(result.decision, runtimeReasoning) : null,
+    [result.decision, runtimeReasoning],
   );
   const speciesActionGroups = useMemo(
     () => getSpeciesActionGroups(result, selectedSpecies, currentQuantityBySpeciesId),
@@ -786,7 +833,7 @@ export function CompatibilityRiskCalculator({
       : (isEn ? 'No species available to import from active tank.' : '当前鱼缸暂无可导入的活体生物。'));
   };
   const performAddToAquarium = async () => {
-    if (isAddingToAquarium) return;
+    if (isAddingToAquarium || isRuntimeReasoningPending) return;
     if (!selectedAquarium) {
       setResultFeedback('请先选择一个鱼缸，再添加生物。');
       return;
@@ -824,6 +871,10 @@ export function CompatibilityRiskCalculator({
     }
   };
   const handlePrimaryResultAction = () => {
+    if (isRuntimeReasoningPending) {
+      setResultFeedback(isEn ? 'Compatibility reasoning is still running.' : '正在完成综合判断，请稍后再操作。');
+      return;
+    }
     if (resultAddPolicy === 'block') {
       setIsClearConfirmOpen(true);
       return;
@@ -875,7 +926,7 @@ export function CompatibilityRiskCalculator({
           </div>
         </div>
         <span className="shrink-0 rounded-full border border-current/20 bg-white/70 px-2.5 py-1 text-[11px] font-black">
-          {statusLabel}
+          {isRuntimeReasoningPending ? (isEn ? 'Checking…' : '综合判断中…') : statusLabel}
         </span>
         </div>
       </div>
@@ -1144,7 +1195,7 @@ export function CompatibilityRiskCalculator({
                 <VisualResultCard
                   model={visualResultModel}
                   onPrimaryAction={handlePrimaryResultAction}
-                  actionPending={isAddingToAquarium}
+                  actionPending={isAddingToAquarium || isRuntimeReasoningPending}
                   className="mb-3"
                 />
               )}

@@ -9,9 +9,8 @@ import { getCurrentAquaGuideRepository } from '../services/repository/repository
 import { getAquariumNavigationSnapshot } from '../services/aquarium/aquarium-navigation.service';
 import { selectAquariumSnapshot } from '../services/aquarium/aquarium-selection.service';
 import { getCompatibilitySelection, setCompatibilitySelection } from '../services/compatibility/compatibility-selection.service';
-import { reviewSpeciesAdditions } from '../services/aquarium/species-addition.service';
+import { reviewSpeciesAdditionsWithAi } from '../services/aquarium/species-addition.service';
 import { recordExistingLivestock } from '../services/aquarium/livestock-recording.service';
-import { getTankCompatibilityAddPolicy } from '../services/compatibility/compatibility.service';
 import { taskRoutes } from '../services/navigation/task-routes';
 
 export default function Compatibility() {
@@ -70,8 +69,8 @@ export default function Compatibility() {
     const current = activeAquarium || selectAquariumSnapshot(await repository.getAquariums(), [getAquariumNavigationSnapshot().currentAquariumId]);
     if (!current) throw new Error(t('encyclopedia.noTankError'));
     const normalized = items.filter(item => fishData.some(fish => fish.id === item.fishId)).map(item => ({ fishId: item.fishId, quantity: Math.max(1, Number(item.quantity) || 1) }));
-    const review = reviewSpeciesAdditions({ aquarium: current, items: normalized, speciesCatalog: fishData });
-    if (!review || ['block', 'complete_information'].includes(getTankCompatibilityAddPolicy(review.status))) {
+    const review = await reviewSpeciesAdditionsWithAi({ aquarium: current, items: normalized, speciesCatalog: fishData });
+    if (!review || ['block', 'complete_information'].includes(review.policy)) {
       throw new Error(t('encyclopedia.addCombinationBlocked'));
     }
     const result = await recordExistingLivestock({ repository, aquarium: current, items: normalized, speciesCatalog: fishData, operationId: `compatibility:${crypto.randomUUID()}` });

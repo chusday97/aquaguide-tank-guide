@@ -1,12 +1,13 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility V4 AI-assisted dynamic reasoning
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility V4 product integration
 
-- Active branch: `codex/compatibility-v4-ai-reasoner-20261012`, based exactly on pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
-- Wave13 species batching is PAUSED. Current priority is runtime architecture: arbitrary reviewed species combinations should not require a pre-authored Pair Rule.
-- Compatibility V4 keeps deterministic Domain/Hard Rules and explicit reviewed Pair Rules authoritative, then optionally calls an AI reasoner over structured reviewed Species Knowledge (environment + social + space) for combination-level synthesis.
-- AI output is runtime synthesis, never reviewed authority. It cannot lower a deterministic caution/block, cannot override a reviewed Pair Rule, cannot cite evidence outside the provided reviewed allowlist, and provider/schema failures fail closed to `insufficient_data`.
-- V4 supports pair and 3+ species context through a new async application/knowledge-layer entry while preserving all existing synchronous callers.
-- Static authority is unchanged at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; no migration was added.
-- Production remains unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, UI, or Vision feature work is authorized.
+- Active branch: `codex/compatibility-v4-product-integration-20261012`, based exactly on pushed V4 reasoner HEAD `c973811b5a4dc31d1ad6a2538e069a3408178d61`.
+- Wave13 species batching remains PAUSED. Current priority is making V4 the real user-facing compatibility path rather than adding more pre-authored pair/species authority.
+- The Compatibility calculator now runs the async V4 decision for 2+ selected species, shows the V4 verdict/reasons/adjustments, guards stale requests, and blocks livestock mutation while reasoning is pending.
+- Species Detail keeps the deterministic evidence decision but overlays V4 runtime synthesis in its compatibility result card; AI text is not written into reviewed rule arrays.
+- All three real calculator write paths (standalone Compatibility, Aquarium, Encyclopedia) now re-run V4 immediately before livestock persistence. The final planned-addition policy takes the stricter of deterministic addition review and V4 verdict.
+- Provider/schema/fact-coverage failures remain fail-closed; deterministic hard blocks and reviewed Pair Rules still bypass AI. Runtime synthesis never becomes reviewed authority.
+- Static authority is unchanged at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; no migration or authority data was added.
+- Production remains unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery
 

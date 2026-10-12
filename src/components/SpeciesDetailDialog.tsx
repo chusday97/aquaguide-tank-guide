@@ -11,7 +11,8 @@ import { evaluateTankCompatibility, type TankCompatibilityResult } from '../lib/
 import { buildSpeciesKnowledgeProfile } from '../modules/knowledge/speciesKnowledge';
 import { getSpeciesHousingAuthority } from '../modules/knowledge/speciesHousingAuthority';
 import { resolveKnowledgeSources } from '../modules/knowledge/knowledgeSources';
-import { evaluateCompatibilityDecision } from '../modules/knowledge/compatibilityKnowledge';
+import { evaluateCompatibilityDecision, evaluateCompatibilityDecisionWithAi, type EvaluateCompatibilityDecisionInput } from '../modules/knowledge/compatibilityKnowledge';
+import type { AiAssistedCompatibilityResult } from '../services/compatibility/compatibility-ai.service';
 import { buildSpeciesCarePresentation } from '../modules/knowledge/speciesCarePresentation';
 import type { PreviewImage } from './common/ImagePreviewModal';
 import { AdaptiveDetailContent } from './common/AdaptiveDetailContent';
@@ -495,6 +496,8 @@ export function SpeciesDetailDialog({
   const [deathOperationId, setDeathOperationId] = useState('');
   const [deathError, setDeathError] = useState('');
   const [isRecordingDeath, setIsRecordingDeath] = useState(false);
+  const [compatibilityRuntimeReasoning, setCompatibilityRuntimeReasoning] = useState<AiAssistedCompatibilityResult | null>(null);
+  const compatibilityRuntimeRequestRef = useRef(0);
   const deathReasonRef = useRef<HTMLTextAreaElement | null>(null);
   const careSectionButtonRef = useRef<HTMLElement | null>(null);
   const selectedFit = useMemo(() => fish ? getSpeciesFitAssessment(fish, aquariumContext, t, isEn) : null, [fish, aquariumContext, isEn, t]);
@@ -589,21 +592,40 @@ export function SpeciesDetailDialog({
     spaceKnowledge?.evidence.sourceIds || [],
   ), [spaceKnowledge]);
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
-  const compatibilityDecision = useMemo(() => {
+  const compatibilityDecisionInput = useMemo<EvaluateCompatibilityDecisionInput | null>(() => {
     if (!fish || !aquariumContext) return null;
     const selectedQuantity = aquariumContext.fishes.find(item => item.fishId === fish.id)?.quantity || 1;
     const fishAlreadyInTank = aquariumContext.fishes.some(record => record.fishId === fish.id);
     const existingItems = getExistingLivestock(aquariumContext)
       .filter(item => item.fish.id !== fish.id)
       .map(item => ({ species: item.fish, quantity: item.aqFish.quantity, origin: 'existing' as const }));
-    return evaluateCompatibilityDecision({
+    return {
       tank: aquariumContext,
       items: [
         { species: fish, quantity: selectedQuantity, origin: fishAlreadyInTank ? 'existing' : 'candidate' },
         ...existingItems,
       ],
-    });
+    };
   }, [fish, aquariumContext]);
+  const compatibilityDecision = useMemo(() => (
+    compatibilityDecisionInput ? evaluateCompatibilityDecision(compatibilityDecisionInput) : null
+  ), [compatibilityDecisionInput]);
+  useEffect(() => {
+    const requestId = compatibilityRuntimeRequestRef.current + 1;
+    compatibilityRuntimeRequestRef.current = requestId;
+    setCompatibilityRuntimeReasoning(null);
+    if (!open || !compatibilityDecisionInput || compatibilityDecisionInput.items.length < 2) return;
+    void evaluateCompatibilityDecisionWithAi(compatibilityDecisionInput)
+      .then(({ reasoning }) => {
+        if (compatibilityRuntimeRequestRef.current === requestId) setCompatibilityRuntimeReasoning(reasoning);
+      })
+      .catch(() => {
+        if (compatibilityRuntimeRequestRef.current === requestId) setCompatibilityRuntimeReasoning(null);
+      });
+    return () => {
+      if (compatibilityRuntimeRequestRef.current === requestId) compatibilityRuntimeRequestRef.current += 1;
+    };
+  }, [compatibilityDecisionInput, open]);
   const compatibilityPairs = compatibilityDecision?.pairResults || [];
 
   const mainActionLabel = useMemo(() => {
@@ -640,8 +662,9 @@ export function SpeciesDetailDialog({
       focusSpeciesId: fish.id,
       primaryActionLabel: t('encyclopedia.compatibilityCalc'),
       primaryActionType: 'route',
+      runtimeReasoning: compatibilityRuntimeReasoning,
     });
-  }, [aquariumContext, compatibilityDecision, fish, t]);
+  }, [aquariumContext, compatibilityDecision, compatibilityRuntimeReasoning, fish, t]);
 
   const getMetricSettingsPanel = (metric: FitDimension) => {
     if (metric.type === 'space') return 'size' as const;

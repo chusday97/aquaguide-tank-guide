@@ -45,6 +45,7 @@ import {
 
 import {
   reviewSpeciesAdditions,
+  reviewSpeciesAdditionsWithAi,
 } from '../services/aquarium/species-addition.service';
 import { recordExistingLivestock } from '../services/aquarium/livestock-recording.service';
 import { getCurrentAquaGuideRepository } from '../services/repository/repository-provider';
@@ -1224,8 +1225,8 @@ export default function Encyclopedia() {
       throw new Error(t('encyclopedia.noAddableSpecies'));
     }
 
-    const review = reviewSpeciesAdditions({ aquarium: activeAquarium, items: normalizedItems, speciesCatalog: fishData });
-    const policy = review ? getTankCompatibilityAddPolicy(review.status) : null;
+    const review = await reviewSpeciesAdditionsWithAi({ aquarium: activeAquarium, items: normalizedItems, speciesCatalog: fishData });
+    const policy = review?.policy || null;
     if (!review || policy === 'block' || policy === 'complete_information') {
       throw new Error(policy === 'complete_information'
         ? t('encyclopedia.addInfoIncomplete')

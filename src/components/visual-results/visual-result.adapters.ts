@@ -4,7 +4,8 @@ import type { CompatibilityDecision, CompatibilityRiskType, PairCompatibilityRes
 import { getSpeciesDisplayImage } from '../../lib/speciesVisual';
 import type { TankCompatibilityStatus } from '../../lib/tankCompatibilityEngine';
 import type { VisualResultStatus, VisualResultSubject, VisualResultViewModel } from './visual-result.types';
-import { getCompatibilityPresentation } from '../../services/compatibility/compatibility-presentation.service';
+import { getCompatibilityPresentationWithAi } from '../../services/compatibility/compatibility-presentation.service';
+import type { AiAssistedCompatibilityResult } from '../../services/compatibility/compatibility-ai.service';
 import { buildBeginnerCompatibilityAction } from '../../services/compatibility/compatibility-action.service';
 
 const riskTypeLabels: Record<CompatibilityRiskType, string> = {
@@ -66,20 +67,23 @@ export function buildCompatibilityVisualResult({
   primaryActionLabel,
   primaryActionType = 'mutation',
   focusSpeciesId,
+  runtimeReasoning,
 }: {
   decision: CompatibilityDecision;
   species: Fish[];
   primaryActionLabel: string;
   primaryActionType?: VisualResultViewModel['primaryAction']['actionType'];
   focusSpeciesId?: string;
+  runtimeReasoning?: AiAssistedCompatibilityResult | null;
 }): VisualResultViewModel {
-  const presentation = getCompatibilityPresentation(decision);
+  const presentation = getCompatibilityPresentationWithAi(decision, runtimeReasoning);
   const beginnerAction = buildBeginnerCompatibilityAction(decision);
+  const runtimeStatus = runtimeReasoning?.verdict || decision.status;
   const primaryPair = decision.primaryConflict || decision.pairResults[0];
   const focus = species.find(item => item.id === focusSpeciesId)
     || primaryPair?.speciesB
     || species[species.length - 1];
-  const focusReason = primaryPair ? getPairReason(primaryPair) : decision.summary;
+  const focusReason = runtimeReasoning?.reasons[0] || (primaryPair ? getPairReason(primaryPair) : decision.summary);
   const related = species.filter(item => item.id !== focus?.id).map<VisualResultSubject>(item => {
     const pair = focus ? findPairForFocus(decision.pairResults, focus.id, item.id) : undefined;
     const reason = getPairReason(pair);
@@ -99,7 +103,7 @@ export function buildCompatibilityVisualResult({
     name: focus.name,
     image: getSpeciesDisplayImage(focus),
     role: 'focus',
-    status: decision.status,
+    status: runtimeStatus,
     shortReason: focusReason,
     badgeLabel: '当前关注',
     emphasis: getVisualEmphasis(focusReason),
@@ -107,15 +111,23 @@ export function buildCompatibilityVisualResult({
 
   const decisionReasonRules = [...decision.blockingRules, ...decision.warningRules, ...decision.missingData];
   const detailSections = [
+    ...(runtimeReasoning?.provenance.mode === 'ai_assisted'
+      ? [
+          { id: 'runtime-reasoning', title: '动态综合判断', items: runtimeReasoning.reasons },
+          { id: 'runtime-adjustments', title: '调整方式', items: runtimeReasoning.adjustments },
+        ]
+      : runtimeReasoning?.provenance.mode === 'fallback'
+        ? [{ id: 'runtime-fallback', title: '当前判断状态', items: runtimeReasoning.reasons }]
+        : []),
     { id: 'risks', title: presentation.detailsLabel, items: decisionReasonRules.map(rule => rule.evidence || rule.title) },
     { id: 'scope', title: '本次核对范围', items: presentation.coverageLabel ? [presentation.coverageLabel] : [] },
     { id: 'passed', title: '已确认没问题', items: decision.passedRules.map(rule => rule.title) },
   ].filter(section => section.items.length > 0);
 
   return {
-    status: decision.status,
+    status: runtimeStatus,
     presentationMode: presentation.mode,
-    statusLabel: beginnerAction.headline,
+    statusLabel: runtimeReasoning ? presentation.headline : beginnerAction.headline,
     coverageLabel: presentation.coverageLabel,
     title: presentation.headline,
     conclusion: presentation.primaryReason,

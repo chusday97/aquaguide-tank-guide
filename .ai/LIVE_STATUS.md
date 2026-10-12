@@ -1,11 +1,12 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility V4 AI-assisted runtime
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility V4 product integration
 
-- Branch: `codex/compatibility-v4-ai-reasoner-20261012` from exact pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
-- V4 adds a typed AI reasoning contract, OpenAI-compatible provider helper, `POST /api/v1/ai/compatibility-reason`, async compatibility application service, and knowledge-layer V4 entry for multi-species decisions.
-- Deterministic hard blocks and reviewed Pair Rules remain authoritative. AI sees only reviewed environment/social/space facts plus an evidence allowlist; unsupported evidence IDs, invalid output, missing required reviewed facts, or provider failure fail closed.
-- Focused V4 tests verify dynamic reasoning without a pre-authored pair, 3+ species context, deterministic precedence, reviewed-pair precedence, inadequate-fact bypass, provider failure, invalid schema, and hallucinated-evidence rejection.
-- Full backend release gate passes. Static authority remains 100 / 21 / 1 / 176; wave13 queue remains generated but PAUSED while V4 runtime integration is the active priority.
-- Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence.
+- Branch: `codex/compatibility-v4-product-integration-20261012` from exact pushed V4 reasoner HEAD `c973811b5a4dc31d1ad6a2538e069a3408178d61`.
+- Calculator display now uses async V4 runtime reasoning for 2+ species while preserving the deterministic CompatibilityDecision as the evidence substrate; stale responses are ignored and add actions are guarded during in-flight reasoning.
+- Species Detail compatibility results also consume V4 runtime reasoning without converting AI prose into deterministic/reviewed rule records.
+- Submit-time V4 revalidation is wired into standalone Compatibility, Aquarium, and Encyclopedia livestock-write callbacks through `reviewSpeciesAdditionsWithAi`; stricter deterministic status always wins.
+- Product-integration tests cover AI-raised block, provider fail-closed, deterministic hard-block bypass, runtime presentation, pending mutation guard, Species Detail wiring, and all three actual write paths.
+- The inactive `tank-state-evidence` derivation service has no direct page caller and was intentionally not modified just to inflate scope.
+- Static authority remains 100 / 21 / 1 / 176. Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence; wave13 remains PAUSED.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate
 

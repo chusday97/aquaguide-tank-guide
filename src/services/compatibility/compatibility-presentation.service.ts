@@ -1,5 +1,6 @@
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
 import { buildBeginnerCompatibilityAction, prioritizeCompatibilityRules } from './compatibility-action.service';
+import type { AiAssistedCompatibilityResult } from './compatibility-ai.service';
 
 export type CompatibilityDimension =
   | 'water_type'
@@ -165,6 +166,37 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     coverageLabel: null,
     primaryAction: 'save_to_wishlist',
     coverage,
+  };
+};
+
+export const getCompatibilityPresentationWithAi = (
+  decision: CompatibilityDecision,
+  reasoning?: AiAssistedCompatibilityResult | null,
+): CompatibilityPresentation => {
+  const deterministic = getCompatibilityPresentation(decision);
+  if (!reasoning || (reasoning.provenance.mode === 'deterministic_only' && reasoning.verdict === decision.status)) {
+    return deterministic;
+  }
+
+  const deterministicFindings = Array.from(new Set([
+    ...decision.passedRules.map(rule => rule.evidence || rule.title),
+    ...decision.warningRules.map(rule => rule.evidence || rule.title),
+  ].filter(Boolean))).slice(0, 5);
+  const runtimeReasons = Array.from(new Set(reasoning.reasons.filter(Boolean))).slice(0, 5);
+  const runtimePresentation = getCompatibilityPresentationForStatus({
+    status: reasoning.verdict,
+    hasConfirmedFacts: reasoning.evidenceIds.length > 0 || deterministicFindings.length > 0,
+    confirmedFindings: reasoning.verdict === 'compatible'
+      ? Array.from(new Set([...runtimeReasons, ...deterministicFindings])).slice(0, 5)
+      : deterministicFindings,
+    cautions: reasoning.verdict === 'compatible' ? [] : runtimeReasons,
+  });
+
+  return {
+    ...runtimePresentation,
+    primaryReason: runtimeReasons[0] || runtimePresentation.primaryReason,
+    secondaryReason: runtimeReasons[1] || runtimePresentation.secondaryReason,
+    primaryActionText: reasoning.adjustments[0] || runtimePresentation.primaryActionText,
   };
 };
 

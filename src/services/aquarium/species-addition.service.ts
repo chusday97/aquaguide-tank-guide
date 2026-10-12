@@ -7,6 +7,8 @@ import {
   type TankCompatibilityStatus,
 } from '../compatibility/compatibility.service';
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
+import { evaluateCompatibilityDecisionWithAi, type CompatibilityItem } from '../../modules/knowledge/compatibilityKnowledge';
+import type { AiAssistedCompatibilityResult, CompatibilityAiReasoner } from '../compatibility/compatibility-ai.service';
 
 export type SpeciesAdditionItem = {
   fishId: string;
@@ -26,6 +28,10 @@ export type SpeciesAdditionReview = {
   items: SpeciesAdditionItem[];
   evaluations: SpeciesAdditionEvaluation[];
   keyRules: TankCompatibilityRule[];
+};
+
+export type SpeciesAdditionAiReview = SpeciesAdditionReview & {
+  runtimeReasoning: AiAssistedCompatibilityResult;
 };
 
 export type SpeciesAdditionAssessment = Omit<SpeciesAdditionReview, 'policy'> & {
@@ -103,6 +109,52 @@ export const reviewSpeciesAdditions = ({
   return {
     ...assessment,
     policy: getSpeciesAdditionPolicy({ intent, status: assessment.status }),
+  };
+};
+
+export const reviewSpeciesAdditionsWithAi = async (
+  input: ReviewSpeciesAdditionsInput,
+  reasoner?: CompatibilityAiReasoner,
+): Promise<SpeciesAdditionAiReview | null> => {
+  const { aquarium, speciesCatalog, intent = 'planned_addition' } = input;
+  const deterministicReview = reviewSpeciesAdditions(input);
+  if (!deterministicReview) return null;
+
+  const catalogById = new Map(speciesCatalog.map(fish => [fish.id, fish]));
+  const compatibilityItems: CompatibilityItem[] = [
+    ...aquarium.fishes.flatMap(record => {
+      const species = catalogById.get(record.fishId);
+      return species ? [{
+        species,
+        quantity: Math.max(1, Number(record.quantity) || 1),
+        origin: 'existing' as const,
+      }] : [];
+    }),
+    ...deterministicReview.items.flatMap(item => {
+      const species = catalogById.get(item.fishId);
+      return species ? [{
+        species,
+        quantity: item.quantity,
+        origin: 'candidate' as const,
+      }] : [];
+    }),
+  ];
+
+  const { reasoning } = await evaluateCompatibilityDecisionWithAi({
+    tank: aquarium,
+    items: compatibilityItems,
+  }, reasoner);
+  const finalStatus = statusRank[deterministicReview.status] >= statusRank[reasoning.verdict]
+    ? deterministicReview.status
+    : reasoning.verdict;
+
+  return {
+    ...deterministicReview,
+    status: finalStatus,
+    policy: getSpeciesAdditionPolicy({ intent, status: finalStatus }),
+    runtimeReasoning: finalStatus === reasoning.verdict
+      ? reasoning
+      : { ...reasoning, verdict: finalStatus },
   };
 };
 

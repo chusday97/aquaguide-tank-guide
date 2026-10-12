@@ -87,6 +87,7 @@ import {
 } from '../lib/tankCompatibilityEngine';
 import {
   reviewSpeciesAdditions,
+  reviewSpeciesAdditionsWithAi,
   type SpeciesAdditionItem,
   type SpeciesAdditionReview,
 } from '../services/aquarium/species-addition.service';
@@ -2199,8 +2200,8 @@ export default function AquariumManager() {
       throw new Error(Boolean(i18n.language?.startsWith('en')) ? 'No species to add to the active aquarium.' : '没有可加入当前鱼缸的生物。');
     }
 
-    const review = reviewSpeciesAdditions({ aquarium: activeAquarium, items: normalizedItems, speciesCatalog: fishData });
-    const addPolicy = review ? getTankCompatibilityAddPolicy(review.status) : null;
+    const review = await reviewSpeciesAdditionsWithAi({ aquarium: activeAquarium, items: normalizedItems, speciesCatalog: fishData });
+    const addPolicy = review?.policy || null;
     if (!review || addPolicy === 'block' || addPolicy === 'complete_information') {
       throw new Error(addPolicy === 'complete_information'
         ? (Boolean(i18n.language?.startsWith('en')) ? 'Please complete aquarium details before adding.' : '请先补充鱼缸信息后再添加。')

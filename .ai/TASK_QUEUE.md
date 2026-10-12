@@ -1,14 +1,15 @@
-## TOP CURRENT QUEUE — 2026-10-12 Compatibility V4 AI reasoner
+## TOP CURRENT QUEUE — 2026-10-12 Compatibility V4 product integration
 
-1. DONE: preserve the existing deterministic Compatibility engine and add a separate async V4 application/knowledge-layer path.
-2. DONE: reuse the existing OpenAI-compatible provider; add a typed Compatibility AI contract and `POST /api/v1/ai/compatibility-reason`.
-3. DONE: AI input is restricted to reviewed environment/social/space facts and exact evidence IDs; model output is schema-validated and evidence IDs are allowlisted.
-4. DONE: deterministic hard blocks and explicit reviewed Pair Rules bypass AI; deterministic caution cannot be lowered; provider/validation failures fail closed to `insufficient_data`.
-5. DONE: verify pair reasoning without pre-authored Pair Rule, 3+ species context, hard-block precedence, Pair Rule precedence, inadequate-fact bypass, provider failure, malformed response, and unsupported evidence rejection.
-6. DONE: focused V4 test, API typecheck, project typecheck, diff check, and full `BACKEND_RELEASE_GATE=PASS`.
-7. PAUSED: wave13 generated queue remains `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`; do not resume mechanical batching until V4 runtime/product integration is reviewed.
-8. DONE: final scope audit, clean checkpoint, and V4 branch push are complete.
-9. HOLD: no Production deploy, Production DB mutation, migration, merge/main, UI, or Vision feature work.
+1. DONE: wire the real Compatibility calculator to async V4 reasoning while retaining deterministic rules as evidence authority.
+2. DONE: add race protection and mutation guards so users cannot add livestock while the current V4 request is unresolved.
+3. DONE: let visual presentation consume V4 verdict/reasons/adjustments without fabricating blocking/warning rules.
+4. DONE: wire Species Detail compatibility result to V4 runtime synthesis.
+5. DONE: add `reviewSpeciesAdditionsWithAi` and revalidate immediately before writes from Compatibility, Aquarium, and Encyclopedia.
+6. DONE: keep final planned-addition policy at the stricter of deterministic review and V4 verdict; provider/model failure fails closed.
+7. DONE: focused product-integration test + V4 reasoner + user conclusion + presentation + TypeScript/API + diff validation.
+8. DONE: full backend release gate and scope audit pass; clean product-integration checkpoint is committed and pushed.
+9. PAUSED: wave13 generated queue remains `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
+10. HOLD: no Production deploy, Production DB mutation, migration, merge/main, or Vision work.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

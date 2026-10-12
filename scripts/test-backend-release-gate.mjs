@@ -30,6 +30,7 @@ const gates = [
   ['Compatibility Unified Wave11 Authority', 'npm', ['run', 'test:compatibility-unified-wave11-authority']],
   ['Compatibility Unified Wave12 Authority', 'npm', ['run', 'test:compatibility-unified-wave12-authority']],
   ['Compatibility V4 AI Reasoner', 'npm', ['run', 'test:compatibility-v4-ai-reasoner']],
+  ['Compatibility V4 Product Integration', 'npm', ['run', 'test:compatibility-v4-product-integration']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],

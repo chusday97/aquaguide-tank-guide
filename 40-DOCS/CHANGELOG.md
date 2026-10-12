@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Changed: Compatibility V4 is now wired into real product flows: the calculator and Species Detail consume runtime synthesis, and standalone Compatibility, Aquarium, and Encyclopedia revalidate through V4 immediately before livestock persistence.
+- Safety: V4 requests are race-guarded, livestock mutation is blocked while reasoning is pending, submit-time policy uses the stricter deterministic/V4 verdict, and AI prose remains separate from reviewed rule evidence.
+
 - Added: Compatibility V4 introduces AI-assisted dynamic reasoning over structured reviewed species facts, including a typed contract, existing-provider integration, a bounded compatibility AI API route, async application/knowledge-layer entry points, and multi-species context support.
 - Safety: deterministic hard blocks and reviewed Pair Rules remain authoritative; AI cannot lower deterministic risk, cannot cite evidence outside the reviewed allowlist, and provider/schema/fact-coverage failures fail closed to `insufficient_data`.
 - Changed: wave13 mechanical species batching is paused while V4 runtime architecture is validated; static Compatibility authority remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence and no migration is added.
