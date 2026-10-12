@@ -50,7 +50,15 @@ compatibilityAiRouter.post('/ai/compatibility-reason', asyncRoute(async (request
       },
     });
   } catch (error) {
-    if (error instanceof ProviderError) throw providerApiError(error);
+    if (error instanceof ProviderError) {
+      console.warn('Compatibility AI provider failure', {
+        requestId: request.requestId,
+        reason: error.reason,
+        statusCode: error.statusCode,
+        model: apiConfig.aiModel,
+      });
+      throw providerApiError(error);
+    }
     throw error;
   }
 }));
