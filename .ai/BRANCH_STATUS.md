@@ -1,8 +1,8 @@
-## TOP CURRENT BRANCH — 2026-10-12 wave13
+## TOP CURRENT BRANCH — 2026-10-12 wave14
 
-- `codex/compatibility-next25-wave13-20261012` was created from exact clean pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
-- Scope is evidence/backend documentation only: one 25-object authority batch, 7 identity boundaries, 17 variant social evidence ceilings, one reviewed non-fish domain boundary, regenerated coverage artifacts, and contract tests.
-- `sp_0332 Palythoa sp.` is explicitly routed to `coral_or_anemone` because reviewed life type outranks its legacy fish category; exact ornamental variants remain fail-closed without reviewed inheritance bridges.
+- `codex/compatibility-next25-wave14-20261012` was created from exact clean pushed wave13 HEAD `6008c3c2c87353ca025716869233398250b45c7f`.
+- Scope is evidence/backend documentation only: one 25-object authority batch, 8 identity boundaries, 13 variant social evidence ceilings, 4 reviewed shrimp domain boundaries, regenerated coverage artifacts, and contract tests.
+- Reviewed shrimp identity routes `sp_0027`, `sp_0028`, `sp_0030`, and `sp_0031` to `crustacean_or_mollusk`; shrimp colony/molting/predation semantics are not encoded as fish social behavior.
 - Outcome is 0 new Profiles / 0 new DB evidence / 25 fail-closed terminal outcomes. No Supabase migration, Production mutation, deploy, merge, UI, or Vision change.
 - Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; Production remains 60 / 63 / 21 / 1 / 116.
 

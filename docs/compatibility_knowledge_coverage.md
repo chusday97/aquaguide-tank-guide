@@ -44,31 +44,31 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 
 ## Next-wave species research queue
 
-1. 水泡金鱼 (sp_0068) — environment, space, social, compatibility_profile — score 25
-2. 白金黑霓虹灯 (sp_0360) — environment, space, social, compatibility_profile — score 25
-3. 长鳍白云金丝 (改良) (sp_0361) — environment, space, social, compatibility_profile — score 25
-4. 荧光紫斑马 (sp_0363) — environment, space, social, compatibility_profile — score 25
-5. 荧光粉斑马 (sp_0364) — environment, space, social, compatibility_profile — score 25
-6. 五彩青蛙 (改良型) (sp_0366) — environment, space, social, compatibility_profile — score 25
-7. 白金黑霓虹灯 (球形) (sp_0375) — environment, space, social, compatibility_profile — score 25
-8. 雪白金金鱼 (改良) (sp_0385) — environment, space, social, compatibility_profile — score 25
-9. 黑金刚龙睛 (sp_0386) — environment, space, social, compatibility_profile — score 25
-10. 熊猫蝶尾 (极品) (sp_0387) — environment, space, social, compatibility_profile — score 25
-11. 白金半月斗鱼 (sp_0389) — environment, space, social — score 25
-12. 红白狮头斗鱼 (sp_0390) — environment, space, social — score 25
-13. 蓝龙将军斗鱼 (sp_0391) — environment, space, social — score 25
-14. 黄金胡子 (雪花型) (sp_0392) — environment, space, social, compatibility_profile — score 25
-15. 黄金大帆飞狐 (sp_0395) — environment, space, social, compatibility_profile — score 25
-16. 五彩青蛙 (大规格改良) (sp_0406) — environment, space, social, compatibility_profile — score 25
-17. 黄金眼镜蛇蛇鱼 (长鳍) (sp_0413) — environment, space, social, compatibility_profile — score 25
-18. 黄金大帆胡子 (红眼) (sp_0418) — environment, space, social, compatibility_profile — score 25
-19. 荧光橙斑马 (长鳍) (sp_0419) — environment, space, social, compatibility_profile — score 25
-20. 极地白云金丝 (sp_0426) — environment, space, social, compatibility_profile — score 25
-21. 观背青鳉 (sp_0474) — environment, space, social, compatibility_profile — score 25
-22. 极火虾 (sp_0027) — environment, space, social — score 24
-23. 水晶虾 (sp_0028) — environment, space, social — score 24
-24. 黄金米虾 (sp_0030) — environment, space, social — score 24
-25. 蓝丝绒米虾 (sp_0031) — environment, space, social — score 24
+1. 红草鱼 (sp_0162) — environment, space, social, compatibility_profile — score 25
+2. 兔螺 (sp_0034) — environment, space, social, compatibility_profile — score 24
+3. 豹点螺 (sp_0036) — environment, space, social, compatibility_profile — score 24
+4. 黑金刚米虾 (sp_0164) — environment, space, social — score 24
+5. 黄金背米虾 (sp_0165) — environment, space, social — score 24
+6. 极火米虾 (高等级) (sp_0166) — environment, space, social — score 24
+7. 黑金刚米虾 (极品) (sp_0238) — environment, space, social — score 24
+8. 血腥玛丽米虾 (sp_0239) — environment, space, social — score 24
+9. 红眼金苹果螺 (sp_0249) — environment, space, social, compatibility_profile — score 24
+10. 蓝珍珠神秘螺 (sp_0250) — environment, space, social, compatibility_profile — score 24
+11. 紫晶神秘螺 (sp_0251) — environment, space, social, compatibility_profile — score 24
+12. 黄金米虾 (极品) (sp_0274) — environment, space, social — score 24
+13. 血丝米虾 (sp_0275) — environment, space, social — score 24
+14. 蓝钻米虾 (sp_0276) — environment, space, social — score 24
+15. 红白水晶虾 (S级) (sp_0277) — environment, space, social — score 24
+16. 黑金刚水晶虾 (sp_0278) — environment, space, social — score 24
+17. 黄金背蓝丝绒虾 (sp_0279) — environment, space, social — score 24
+18. 黄金背蓝钻虾 (sp_0342) — environment, space, social — score 24
+19. 蓝珍珠米虾 (sp_0396) — environment, space, social — score 24
+20. 红白水晶虾 (SSS级) (sp_0397) — environment, space, social — score 24
+21. 黑金刚水晶虾 (多纹) (sp_0398) — environment, space, social — score 24
+22. 皮革珊瑚 (sp_0320) — environment, space, social, compatibility_profile — score 23
+23. 红菇珊瑚 (sp_0324) — environment, space, social, compatibility_profile — score 23
+24. 管虫 (五彩) (sp_0327) — environment, space, social, compatibility_profile — score 23
+25. 鹿角珊瑚 (SPS) (sp_0329) — environment, space, social, compatibility_profile — score 23
 
 ## Terminal reviewed-unknown holds
 

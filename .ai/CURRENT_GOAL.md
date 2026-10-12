@@ -1,12 +1,12 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave13
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave14
 
-- Active branch: `codex/compatibility-next25-wave13-20261012`, based exactly on pushed wave12 `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
-- Processed the exact generated 25 wave13 objects atomically: 0 Profiles / 7 identity terminal holds / 17 ornamental-variant social evidence ceilings / 1 non-fish Compatibility-domain hold.
-- Identity closure is explicit: 2 incomplete scientific names (`sp_0067`, `sp_0358`), 2 unresolved `Ancistrus sp.` parent taxa (`sp_0280`, `sp_0281`), and 3 exact commercial variants without reviewed identity bridges (`sp_0255`, `sp_0287`, `sp_0339`).
-- The 17 exact ornamental object reviews remain social evidence ceilings because reviewed object-level Compatibility facts are still unknown and no base-species inheritance bridge is authorized; this includes Betta, Glo Danio and fancy-goldfish variants.
-- Reviewed WoRMS identity for `sp_0332 Palythoa sp.` overrides the catalog “海水鱼” label and closes it as `coral_or_anemone`; fish-profile semantics are not applied.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave13 adds no DB authority and therefore no migration.
-- Regenerated coverage now exposes the exact wave14 25-object queue; normal breadth expansion remains active.
+- Active branch: `codex/compatibility-next25-wave14-20261012`, based exactly on pushed wave13 `6008c3c2c87353ca025716869233398250b45c7f`.
+- Processed the exact generated 25 wave14 objects atomically: 0 Profiles / 8 identity terminal holds / 13 ornamental-variant social evidence ceilings / 4 shrimp Compatibility-domain holds.
+- Identity closure is explicit: 5 incomplete scientific names (`sp_0068`, `sp_0360`, `sp_0361`, `sp_0366`, `sp_0474`), 2 unresolved `Ancistrus sp.` parent taxa (`sp_0392`, `sp_0418`), and 1 exact Balloon variant without a reviewed identity bridge (`sp_0375`).
+- The 13 exact ornamental object reviews remain social evidence ceilings because reviewed object-level Compatibility facts are still unknown and no base-species inheritance bridge is authorized; this includes Glo Danio, Betta, fancy goldfish, kuhli loach and other trade variants.
+- Four reviewed shrimp objects (`sp_0027`, `sp_0028`, `sp_0030`, `sp_0031`) are explicitly `crustacean_or_mollusk` domain holds. Variant identity detail does not move shrimp into fish-profile semantics.
+- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave14 adds no DB authority and therefore no migration.
+- Regenerated coverage now exposes the exact wave15 25-object queue, which shifts heavily toward shrimp/snail/coral cross-taxa boundary closure.
 - Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

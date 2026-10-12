@@ -1,10 +1,10 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave13
+## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave14
 
-- Branch: `codex/compatibility-next25-wave13-20261012` from exact pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
-- Wave13 classified all 25 generated objects atomically: 0 Profiles, 7 identity holds, 17 ornamental-variant social evidence ceilings, and 1 `Palythoa sp.` coral/anemone domain hold; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Identity closure distinguishes bare `var.` scientific names, genus-only `Ancistrus sp.` parents, and named variants whose professional source covers only the base species. Exact-object reviewed_unknown records remain evidence ceilings instead of inheriting mother/base-species Compatibility.
-- Reviewed life type wins over catalog category: `sp_0332` is held outside the fish-profile runtime even though its legacy catalog category says “海水鱼”.
-- Regenerated coverage exposes wave14: `sp_0068, sp_0360, sp_0361, sp_0363, sp_0364, sp_0366, sp_0375, sp_0385, sp_0386, sp_0387, sp_0389, sp_0390, sp_0391, sp_0392, sp_0395, sp_0406, sp_0413, sp_0418, sp_0419, sp_0426, sp_0474, sp_0027, sp_0028, sp_0030, sp_0031`.
+- Branch: `codex/compatibility-next25-wave14-20261012` from exact pushed wave13 HEAD `6008c3c2c87353ca025716869233398250b45c7f`.
+- Wave14 classified all 25 generated objects atomically: 0 Profiles, 8 identity holds, 13 ornamental-variant social evidence ceilings, and 4 shrimp `crustacean_or_mollusk` domain holds; static authority remains 100 / 21 / 1 / 176 and no migration was created.
+- Bare `var.` names and genus-only `Ancistrus sp.` parents remain identity boundaries; exact reviewed ornamental objects with unknown Compatibility facts remain evidence ceilings instead of inheriting mother/base-species authority.
+- Non-fish domain precedes fish-variant semantics: reviewed shrimp objects are held outside the fish-profile runtime even when their trade lineage is identifiable.
+- Regenerated coverage exposes wave15: `sp_0162, sp_0034, sp_0036, sp_0164, sp_0165, sp_0166, sp_0238, sp_0239, sp_0249, sp_0250, sp_0251, sp_0274, sp_0275, sp_0276, sp_0277, sp_0278, sp_0279, sp_0342, sp_0396, sp_0397, sp_0398, sp_0320, sp_0324, sp_0327, sp_0329`.
 - Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

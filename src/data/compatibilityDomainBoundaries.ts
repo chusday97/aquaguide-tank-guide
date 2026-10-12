@@ -2,6 +2,7 @@ import { nextWaveUnified08DomainOutcomes } from './catalogReviewBatches/next-wav
 import { nextWaveUnified09DomainOutcomes } from './catalogReviewBatches/next-wave-unified-09';
 import { nextWaveUnified10DomainOutcomes } from './catalogReviewBatches/next-wave-unified-10';
 import { nextWaveUnified13DomainOutcomes } from './catalogReviewBatches/next-wave-unified-13';
+import { nextWaveUnified14DomainOutcomes } from './catalogReviewBatches/next-wave-unified-14';
 
 export type CompatibilityDomainBoundaryCode = 'life_type_not_supported_by_fish_compatibility_domain';
 
@@ -52,6 +53,12 @@ export const compatibilityDomainBoundaries: Record<string, CompatibilityDomainBo
     researchDisposition: 'terminal_unknown_hold' as const,
   }])),
   ...Object.fromEntries(nextWaveUnified13DomainOutcomes.map(outcome => [outcome.speciesId, {
+    ...outcome,
+    code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
+    reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }])),
+  ...Object.fromEntries(nextWaveUnified14DomainOutcomes.map(outcome => [outcome.speciesId, {
     ...outcome,
     code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
     reviewedAt: '2026-10-12',

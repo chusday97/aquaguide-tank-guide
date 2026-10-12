@@ -1,11 +1,11 @@
-## TOP CURRENT QUEUE — 2026-10-12 unified wave13
+## TOP CURRENT QUEUE — 2026-10-12 unified wave14
 
-1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 7 identity holds / 17 ornamental-variant social evidence ceilings / 1 non-fish domain hold.
-2. DONE: enforce reviewed life type over catalog category for `sp_0332 Palythoa sp.`, and preserve the no-base-inheritance rule for Betta, Glo Danio, fancy goldfish, `Ancistrus sp.` and other ornamental variants.
+1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 8 identity holds / 13 ornamental-variant social evidence ceilings / 4 shrimp domain holds.
+2. DONE: preserve no-base-inheritance for fish trade variants and route reviewed shrimp objects to `crustacean_or_mollusk` before any fish-profile variant interpretation.
 3. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
-4. DONE: regenerate completion and Compatibility coverage and advance the exact active queue to wave14.
-5. DONE: focused contracts, cross-contract validation, full backend release gate, diff/scope audit and clean wave13 checkpoint validation all pass.
-6. NEXT ACTIVE 25: sp_0068, sp_0360, sp_0361, sp_0363, sp_0364, sp_0366, sp_0375, sp_0385, sp_0386, sp_0387, sp_0389, sp_0390, sp_0391, sp_0392, sp_0395, sp_0406, sp_0413, sp_0418, sp_0419, sp_0426, sp_0474, sp_0027, sp_0028, sp_0030, sp_0031.
+4. DONE: regenerate completion and Compatibility coverage and advance the exact active queue to wave15.
+5. DONE: focused contracts, cross-contract validation, full backend release gate, diff/scope audit and clean wave14 checkpoint validation all pass.
+6. NEXT ACTIVE 25: sp_0162, sp_0034, sp_0036, sp_0164, sp_0165, sp_0166, sp_0238, sp_0239, sp_0249, sp_0250, sp_0251, sp_0274, sp_0275, sp_0276, sp_0277, sp_0278, sp_0279, sp_0342, sp_0396, sp_0397, sp_0398, sp_0320, sp_0324, sp_0327, sp_0329.
 7. HOLD: no Production deploy, Production DB mutation, migration, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04

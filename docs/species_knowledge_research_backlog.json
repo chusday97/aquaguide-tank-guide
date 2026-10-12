@@ -3113,11 +3113,11 @@
     },
     {
       "rank": 39,
-      "species_id": "sp_0389",
-      "common_name": "白金半月斗鱼",
-      "scientific_name": "Betta splendens var. Platinum",
-      "life_type": "fish",
-      "category": "慈鲷/斗鱼",
+      "species_id": "sp_0396",
+      "common_name": "蓝珍珠米虾",
+      "scientific_name": "Neocaridina davidi var. Blue Pearl",
+      "life_type": "invertebrate",
+      "category": "虾螺蟹",
       "applicable_fields": [
         "feeding",
         "environment",
@@ -3196,11 +3196,11 @@
     },
     {
       "rank": 40,
-      "species_id": "sp_0390",
-      "common_name": "红白狮头斗鱼",
-      "scientific_name": "Betta splendens var. Kohaku Crown",
-      "life_type": "fish",
-      "category": "慈鲷/斗鱼",
+      "species_id": "sp_0397",
+      "common_name": "红白水晶虾 (SSS级)",
+      "scientific_name": "Caridina cantonensis var. Flower",
+      "life_type": "invertebrate",
+      "category": "虾螺蟹",
       "applicable_fields": [
         "feeding",
         "environment",

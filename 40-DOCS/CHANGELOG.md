@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave14 closes the generated 25-object queue as one batch: 8 identity terminal holds, 13 exact ornamental-variant social evidence ceilings, and 4 reviewed shrimp `crustacean_or_mollusk` domain holds; no unsupported Profile or base-species inheritance was introduced.
+- Changed: non-fish domain routing now explicitly takes precedence for the four reviewed shrimp objects while bare `var.` names and `Ancistrus sp.` parents stay identity-held; regenerated coverage advances to wave15 and static DB authority stays 100 Profiles / 176 evidence with no new migration.
+
 - Added: Compatibility wave13 closes the generated 25-object queue as one batch: 7 identity terminal holds, 17 exact ornamental-variant social evidence ceilings, and 1 `Palythoa sp.` coral/anemone domain hold; no unsupported Profile or base-species inheritance was introduced.
 - Changed: reviewed life type now explicitly closes the mislabeled `Palythoa sp.` object outside fish-profile semantics, while Betta/Glo Danio/fancy-goldfish and other named variants remain fail-closed without object-level Compatibility bridges; regenerated coverage advances to wave14 and static DB authority stays 100 Profiles / 176 evidence with no new migration.
 
