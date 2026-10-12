@@ -296,7 +296,10 @@ const compatibilityReasoningRequestBody = (
   ],
 });
 
-export const requestCompatibilityReasoning = async (context: CompatibilityAiReasoningRequest) => {
+export const requestCompatibilityReasoning = async (
+  context: CompatibilityAiReasoningRequest,
+  runtime?: { fallbackApiKey?: string },
+) => {
   const run = async (
     baseUrl: string,
     apiKey: string,
@@ -323,8 +326,9 @@ export const requestCompatibilityReasoning = async (context: CompatibilityAiReas
       modelName: apiConfig.aiModel,
     };
   } catch (error) {
-    const fallbackConfigured = Boolean(apiConfig.aiFallbackApiKey && apiConfig.aiFallbackModel);
-    const sameProvider = apiConfig.aiFallbackApiKey === apiConfig.aiApiKey
+    const fallbackApiKey = runtime?.fallbackApiKey || apiConfig.aiFallbackApiKey;
+    const fallbackConfigured = Boolean(fallbackApiKey && apiConfig.aiFallbackModel);
+    const sameProvider = fallbackApiKey === apiConfig.aiApiKey
       && apiConfig.aiFallbackBaseUrl === apiConfig.aiBaseUrl
       && apiConfig.aiFallbackModel === apiConfig.aiModel;
     if (!(error instanceof ProviderError) || !fallbackConfigured || sameProvider) throw error;
@@ -338,7 +342,7 @@ export const requestCompatibilityReasoning = async (context: CompatibilityAiReas
     return {
       payload: await run(
         apiConfig.aiFallbackBaseUrl,
-        apiConfig.aiFallbackApiKey,
+        fallbackApiKey,
         apiConfig.aiFallbackModel,
         apiConfig.aiFallbackTimeoutMs,
         1,

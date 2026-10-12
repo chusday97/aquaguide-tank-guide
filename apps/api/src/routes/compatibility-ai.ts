@@ -39,7 +39,12 @@ compatibilityAiRouter.post('/ai/compatibility-reason', asyncRoute(async (request
   }
 
   try {
-    const { payload, modelName } = await requestCompatibilityReasoning(parsed.data);
+    const runtimeOidcToken = apiConfig.aiFallbackUseVercelOidc
+      ? request.header('x-vercel-oidc-token') || undefined
+      : undefined;
+    const { payload, modelName } = await requestCompatibilityReasoning(parsed.data, {
+      fallbackApiKey: runtimeOidcToken,
+    });
     return sendData(request, response, {
       ...payload,
       provenance: {

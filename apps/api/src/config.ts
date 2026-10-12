@@ -19,6 +19,7 @@ export const buildApiConfig = (env: NodeJS.ProcessEnv = process.env) => ({
   aiBaseUrl: (env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, ''),
   aiModel: env.AI_MODEL || env.DEEPSEEK_MODEL || 'deepseek-v4-flash',
   aiTimeoutMs: Number(env.AI_TIMEOUT_MS || 20_000),
+  aiFallbackUseVercelOidc: env.AI_FALLBACK_USE_VERCEL_OIDC === 'true',
   // Compatibility V4 may opt into a separate text-provider fallback.
   // OIDC is explicit and deployment-scoped; Vision credentials remain isolated
   // unless a non-production environment deliberately enables that bridge.

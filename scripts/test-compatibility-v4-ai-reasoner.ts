@@ -198,6 +198,7 @@ const oidcFallbackEnabled = buildApiConfig({
 assert.equal(oidcFallbackEnabled.aiFallbackApiKey, 'vercel-oidc-token');
 assert.equal(oidcFallbackEnabled.aiFallbackBaseUrl, 'https://ai-gateway.vercel.sh/v1');
 assert.equal(oidcFallbackEnabled.aiFallbackModel, 'zai/glm-4.6v-flash');
+assert.equal(oidcFallbackEnabled.aiFallbackUseVercelOidc, true);
 const explicitFallbackWins = buildApiConfig({
   AI_FALLBACK_API_KEY: 'explicit-fallback-key',
   VERCEL_OIDC_TOKEN: 'vercel-oidc-token',
@@ -263,6 +264,54 @@ try {
   assert.equal(providerCalls, 2, 'HTTP 402 from the primary provider must try the explicitly configured fallback once');
   assert.equal(fallbackResult.modelName, 'glm-4.7-flash');
   assert.equal(fallbackResult.payload.verdict, 'caution');
+} finally {
+  globalThis.fetch = originalFetch;
+  Object.assign(apiConfig, originalProviderConfig);
+}
+
+let oidcProviderCalls = 0;
+try {
+  Object.assign(apiConfig, {
+    aiApiKey: 'primary-key',
+    aiBaseUrl: 'https://primary.example.test',
+    aiModel: 'primary-model',
+    aiTimeoutMs: 1000,
+    aiFallbackApiKey: '',
+    aiFallbackBaseUrl: 'https://ai-gateway.vercel.sh/v1',
+    aiFallbackModel: 'zai/glm-4.6v-flash',
+    aiFallbackTimeoutMs: 1000,
+  });
+  globalThis.fetch = async (input, init) => {
+    oidcProviderCalls += 1;
+    const url = String(input);
+    if (url.startsWith('https://primary.example.test')) {
+      return new Response(JSON.stringify({ error: 'payment required' }), { status: 402 });
+    }
+    assert.equal(url, 'https://ai-gateway.vercel.sh/v1/chat/completions');
+    assert.equal(new Headers(init?.headers).get('authorization'), 'Bearer request-oidc-token');
+    const gatewayRequest = JSON.parse(String(init?.body || '{}'));
+    assert.equal(gatewayRequest.model, 'zai/glm-4.6v-flash');
+    return new Response(JSON.stringify({
+      choices: [{
+        message: {
+          content: JSON.stringify({
+            verdict: 'caution',
+            reasons: ['request-scoped OIDC fallback returned reviewed-fact synthesis'],
+            adjustments: ['keep the reviewed caution controls'],
+            uncertainties: [],
+            confidence: 'medium',
+            evidenceIds: capturedPairRequest!.allowedEvidenceIds.slice(0, 1),
+          }),
+        },
+      }],
+    }), { status: 200, headers: { 'content-type': 'application/json' } });
+  };
+  const oidcResult = await requestCompatibilityReasoning(capturedPairRequest, {
+    fallbackApiKey: 'request-oidc-token',
+  });
+  assert.equal(oidcProviderCalls, 2, 'request-scoped OIDC must be used only after the primary provider fails');
+  assert.equal(oidcResult.modelName, 'zai/glm-4.6v-flash');
+  assert.equal(oidcResult.payload.verdict, 'caution');
 } finally {
   globalThis.fetch = originalFetch;
   Object.assign(apiConfig, originalProviderConfig);

@@ -14,17 +14,22 @@ import { catalogRouter } from './catalog';
 
 export const v1Router = Router();
 
-v1Router.get('/business-health', (request, response) => sendData(request, response, {
-  ok: true,
-  databaseConfigured: isBusinessDatabaseConfigured(),
-  architecture: 'web-api-supabase',
-  compatibilityAi: {
-    primaryModel: apiConfig.aiModel,
-    primaryConfigured: Boolean(apiConfig.aiApiKey),
-    fallbackModel: apiConfig.aiFallbackModel || null,
-    fallbackConfigured: Boolean(apiConfig.aiFallbackApiKey && apiConfig.aiFallbackModel),
-  },
-}));
+v1Router.get('/business-health', (request, response) => {
+  const runtimeOidcAvailable = apiConfig.aiFallbackUseVercelOidc
+    && Boolean(request.header('x-vercel-oidc-token'));
+  return sendData(request, response, {
+    ok: true,
+    databaseConfigured: isBusinessDatabaseConfigured(),
+    architecture: 'web-api-supabase',
+    compatibilityAi: {
+      primaryModel: apiConfig.aiModel,
+      primaryConfigured: Boolean(apiConfig.aiApiKey),
+      fallbackModel: apiConfig.aiFallbackModel || null,
+      fallbackConfigured: Boolean((apiConfig.aiFallbackApiKey || runtimeOidcAvailable) && apiConfig.aiFallbackModel),
+      fallbackUsesVercelOidc: apiConfig.aiFallbackUseVercelOidc,
+    },
+  });
+});
 
 v1Router.use(contentRouter);
 v1Router.use(catalogRouter);
