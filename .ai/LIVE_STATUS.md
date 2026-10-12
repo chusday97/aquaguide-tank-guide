@@ -1,3 +1,10 @@
+## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave07
+
+- Branch: `codex/compatibility-next25-wave07-20261012` from wave06 HEAD `48815c6890eed4826e93d6bb5f2cc598b2bf6362`.
+- Wave07 classified all 25 generated objects atomically: 0 Profiles, 25 identity/category terminal holds; static authority remains 100 / 21 / 1 / 176 and no migration was created.
+- Regenerated coverage exposes a new 25-object queue: `sp_0365, sp_0421, sp_0442, sp_0445, sp_0211, sp_0025, sp_0037, sp_0039, sp_0040, sp_0041, sp_0046, sp_0060, sp_0061, sp_0077, sp_0089, sp_0106, sp_0107, sp_0111, sp_0113, sp_0128, sp_0132, sp_0134, sp_0135, sp_0186, sp_0333`.
+- Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All wave04/05/06 stacked migrations remain repository-only and unauthorized for Production.
+
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate
 
 - Production remains exact 60 migrations / latest 20261011213000 / 63 reviewed Profiles / 21 Pair Rules / 1 Stage Risk / 116 reviewed evidence.

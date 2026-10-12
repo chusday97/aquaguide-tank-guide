@@ -1,3 +1,10 @@
+## TOP CURRENT BRANCH — 2026-10-12 wave07
+
+- `codex/compatibility-next25-wave07-20261012` was created from exact clean wave06 HEAD `48815c6890eed4826e93d6bb5f2cc598b2bf6362`.
+- Scope is evidence/backend documentation only: one 25-object authority batch, identity/category boundaries, regenerated knowledge/coverage artifacts, and contract tests.
+- Outcome is 0 new Profiles / 0 new evidence / 25 terminal holds. No Supabase migration, Production mutation, deploy, merge, UI, or Vision change.
+- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; Production remains 60 / 63 / 21 / 1 / 116.
+
 ## RC1 RELEASE CLOSURE — 2026-09-16
 - Production runtime: `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production).
 - Final Production validation: API health PASS; GP-001..GP-004 browser smoke PASS; no rollback.

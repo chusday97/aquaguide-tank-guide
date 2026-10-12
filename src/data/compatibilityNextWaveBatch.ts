@@ -6,7 +6,8 @@ export type CompatibilityReleaseMember = {
 
 export type CompatibilityReleaseBatch = {
   batchId: string;
-  migrationOwner: string;
+  migrationOwner?: string;
+  authorityOwner?: string;
   requireReviewedCatalogFields?: boolean;
   members: readonly CompatibilityReleaseMember[];
 };
@@ -204,15 +205,47 @@ export const compatibilityUnifiedNextWave = {
         { speciesId: 'sp_0294', expectProfile: false },
       ],
     },
+    {
+      batchId: 'unified-wave07-20261012',
+      authorityOwner: 'src/data/catalogReviewBatches/next-wave-unified-07.ts',
+      requireReviewedCatalogFields: true,
+      members: [
+        { speciesId: 'sp_0296', expectProfile: false },
+        { speciesId: 'sp_0297', expectProfile: false },
+        { speciesId: 'sp_0338', expectProfile: false },
+        { speciesId: 'sp_0340', expectProfile: false },
+        { speciesId: 'sp_0341', expectProfile: false },
+        { speciesId: 'sp_0359', expectProfile: false },
+        { speciesId: 'sp_0372', expectProfile: false },
+        { speciesId: 'sp_0373', expectProfile: false },
+        { speciesId: 'sp_0374', expectProfile: false },
+        { speciesId: 'sp_0376', expectProfile: false },
+        { speciesId: 'sp_0388', expectProfile: false },
+        { speciesId: 'sp_0393', expectProfile: false },
+        { speciesId: 'sp_0394', expectProfile: false },
+        { speciesId: 'sp_0399', expectProfile: false },
+        { speciesId: 'sp_0407', expectProfile: false },
+        { speciesId: 'sp_0408', expectProfile: false },
+        { speciesId: 'sp_0409', expectProfile: false },
+        { speciesId: 'sp_0410', expectProfile: false },
+        { speciesId: 'sp_0411', expectProfile: false },
+        { speciesId: 'sp_0412', expectProfile: false },
+        { speciesId: 'sp_0414', expectProfile: false },
+        { speciesId: 'sp_0415', expectProfile: false },
+        { speciesId: 'sp_0416', expectProfile: false },
+        { speciesId: 'sp_0417', expectProfile: false },
+        { speciesId: 'sp_0420', expectProfile: false },
+      ],
+    },
   ] satisfies readonly CompatibilityReleaseBatch[],
   activeQueueSpeciesIds: [
-    'sp_0296','sp_0297','sp_0338','sp_0340','sp_0341',
-    'sp_0359','sp_0372','sp_0373','sp_0374','sp_0376',
-    'sp_0388','sp_0393','sp_0394','sp_0399','sp_0407',
-    'sp_0408','sp_0409','sp_0410','sp_0411','sp_0412',
-    'sp_0414','sp_0415','sp_0416','sp_0417','sp_0420',
+    'sp_0365','sp_0421','sp_0442','sp_0445','sp_0211',
+    'sp_0025','sp_0037','sp_0039','sp_0040','sp_0041',
+    'sp_0046','sp_0060','sp_0061','sp_0077','sp_0089',
+    'sp_0106','sp_0107','sp_0111','sp_0113','sp_0128',
+    'sp_0132','sp_0134','sp_0135','sp_0186','sp_0333',
   ] as const,
-  identityBoundaryHoldSpeciesIds: ['sp_0055', 'sp_0110', 'sp_0120', 'sp_0158', 'sp_0163', 'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0179', 'sp_0182', 'sp_0201', 'sp_0208', 'sp_0216', 'sp_0217', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0229', 'sp_0234', 'sp_0235', 'sp_0236', 'sp_0240', 'sp_0241', 'sp_0242', 'sp_0243', 'sp_0247', 'sp_0248', 'sp_0256', 'sp_0257', 'sp_0263', 'sp_0264', 'sp_0265', 'sp_0266', 'sp_0268', 'sp_0269', 'sp_0270', 'sp_0271', 'sp_0272', 'sp_0273', 'sp_0282', 'sp_0284', 'sp_0285', 'sp_0286', 'sp_0288', 'sp_0294', 'sp_0334'] as const,
+  identityBoundaryHoldSpeciesIds: ['sp_0055', 'sp_0110', 'sp_0120', 'sp_0158', 'sp_0163', 'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0179', 'sp_0182', 'sp_0201', 'sp_0208', 'sp_0216', 'sp_0217', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0229', 'sp_0234', 'sp_0235', 'sp_0236', 'sp_0240', 'sp_0241', 'sp_0242', 'sp_0243', 'sp_0247', 'sp_0248', 'sp_0256', 'sp_0257', 'sp_0263', 'sp_0264', 'sp_0265', 'sp_0266', 'sp_0268', 'sp_0269', 'sp_0270', 'sp_0271', 'sp_0272', 'sp_0273', 'sp_0282', 'sp_0284', 'sp_0285', 'sp_0286', 'sp_0288', 'sp_0294', 'sp_0296', 'sp_0297', 'sp_0334', 'sp_0338', 'sp_0340', 'sp_0341', 'sp_0359', 'sp_0372', 'sp_0373', 'sp_0374', 'sp_0376', 'sp_0388', 'sp_0393', 'sp_0394', 'sp_0399', 'sp_0407', 'sp_0408', 'sp_0409', 'sp_0410', 'sp_0411', 'sp_0412', 'sp_0414', 'sp_0415', 'sp_0416', 'sp_0417', 'sp_0420'] as const,
   domainBoundaryHoldSpeciesIds: ['sp_0006', 'sp_0035', 'sp_0430', 'sp_0457', 'sp_0007', 'sp_0008', 'sp_0009', 'sp_0318', 'sp_0319', 'sp_0321', 'sp_0322', 'sp_0323', 'sp_0325', 'sp_0379', 'sp_0382', 'sp_0384'] as const,
   terminalHoldSpeciesIds: ['sp_0224', 'sp_0002', 'sp_0428', 'sp_0021', 'sp_0258'] as const,
   terminalHoldPairKeys: [

@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave07 processes the exact generated 25-object queue as one source-controlled batch and records 25 explicit identity/category `terminal_unknown_hold` outcomes; no base-species husbandry or social authority is promoted without a direct reviewed variant bridge.
+- Changed: Regenerated completion, backlog, and Compatibility coverage artifacts normally; static candidate authority remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence and a new 25-object next-wave queue remains available. No DB migration was added.
+
 - Added: Compatibility wave05 audits 25 catalog objects as one batch, promotes 4 evidence-backed fish Profiles and places 21 ambiguous commercial/variant/category objects behind explicit identity boundaries. The stacked repository-only migration requires exact 95 Profiles / 171 sources and targets exact 99 / 175 with 9 profile-source links; prior 63→85 and 85→95 guards remain unchanged.
 - Fixed: removed weak retail, forum, hobby-blog and duplicated citation rows from the wave05 candidate; exact rollout generations and a genuinely unreviewed Balloon Ram morph remain fail-closed.
 

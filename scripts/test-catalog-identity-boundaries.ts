@@ -3,7 +3,7 @@ import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 
-assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0055', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0158', 'sp_0163', 'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0179', 'sp_0182', 'sp_0201', 'sp_0208', 'sp_0216', 'sp_0217', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0229', 'sp_0234', 'sp_0235', 'sp_0236', 'sp_0240', 'sp_0241', 'sp_0242', 'sp_0243', 'sp_0247', 'sp_0248', 'sp_0256', 'sp_0257', 'sp_0263', 'sp_0264', 'sp_0265', 'sp_0266', 'sp_0268', 'sp_0269', 'sp_0270', 'sp_0271', 'sp_0272', 'sp_0273', 'sp_0282', 'sp_0284', 'sp_0285', 'sp_0286', 'sp_0288', 'sp_0294', 'sp_0334', 'sp_0428']);
+assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002','sp_0021','sp_0055','sp_0110','sp_0120','sp_0127','sp_0158','sp_0163','sp_0175','sp_0176','sp_0177','sp_0178','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0217','sp_0219','sp_0220','sp_0221','sp_0227','sp_0228','sp_0229','sp_0234','sp_0235','sp_0236','sp_0240','sp_0241','sp_0242','sp_0243','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0265','sp_0266','sp_0268','sp_0269','sp_0270','sp_0271','sp_0272','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294','sp_0296','sp_0297','sp_0334','sp_0338','sp_0340','sp_0341','sp_0359','sp_0372','sp_0373','sp_0374','sp_0376','sp_0388','sp_0393','sp_0394','sp_0399','sp_0407','sp_0408','sp_0409','sp_0410','sp_0411','sp_0412','sp_0414','sp_0415','sp_0416','sp_0417','sp_0420','sp_0428']);
 
 const crystal = getCatalogIdentityBoundary('sp_0002');
 assert.equal(crystal?.code, 'trade_name_taxon_ambiguous');
@@ -74,6 +74,14 @@ assert.equal(wave06Hybrid?.researchDisposition, 'terminal_unknown_hold');
 const wave06Malformed = getCatalogIdentityBoundary('sp_0265');
 assert.equal(wave06Malformed?.code, 'catalog_scientific_name_unresolved');
 assert.equal(wave06Malformed?.researchDisposition, 'terminal_unknown_hold');
+
+for (const speciesId of ['sp_0372','sp_0373','sp_0411','sp_0416']) {
+  assert.equal(getCatalogIdentityBoundary(speciesId)?.code, 'catalog_category_mismatch');
+}
+for (const speciesId of ['sp_0297','sp_0414']) {
+  assert.equal(getCatalogIdentityBoundary(speciesId)?.code, 'catalog_parent_taxon_unresolved');
+}
+assert.equal(getCatalogIdentityBoundary('sp_0296')?.code, 'catalog_scientific_name_unresolved');
 
 const superRedReview = getCatalogFieldReviews('sp_0283').find(review => review.field === 'identity');
 assert.equal(superRedReview?.resolution, 'supported');

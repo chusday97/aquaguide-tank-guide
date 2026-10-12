@@ -19542,38 +19542,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "Catalog scientificName 以空白 “var.” 结尾，无法确认“红利鱼 (改良)”代表哪个稳定变体；不得从 Lutjanus kasmira 母种继承 Compatibility authority。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "Catalog scientificName 以空白 “var.” 结尾，无法确认“红利鱼 (改良)”代表哪个稳定变体；不得从 Lutjanus kasmira 母种继承 Compatibility authority。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "Catalog scientificName 以空白 “var.” 结尾，无法确认“红利鱼 (改良)”代表哪个稳定变体；不得从 Lutjanus kasmira 母种继承 Compatibility authority。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "Catalog scientificName 以空白 “var.” 结尾，无法确认“红利鱼 (改良)”代表哪个稳定变体；不得从 Lutjanus kasmira 母种继承 Compatibility authority。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_scientific_name_unresolved",
+          "note": "Catalog scientificName 以空白 “var.” 结尾，无法确认“红利鱼 (改良)”代表哪个稳定变体；不得从 Lutjanus kasmira 母种继承 Compatibility authority。"
         }
       ],
       "direct_species_knowledge": true,
@@ -19582,7 +19582,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -19617,38 +19617,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Pseudochromis sp.，没有单一母种；Gold 贸易标签不足以确定 taxon 或继承任一拟雀鲷的水质、空间和社会边界。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Pseudochromis sp.，没有单一母种；Gold 贸易标签不足以确定 taxon 或继承任一拟雀鲷的水质、空间和社会边界。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Pseudochromis sp.，没有单一母种；Gold 贸易标签不足以确定 taxon 或继承任一拟雀鲷的水质、空间和社会边界。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Pseudochromis sp.，没有单一母种；Gold 贸易标签不足以确定 taxon 或继承任一拟雀鲷的水质、空间和社会边界。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Pseudochromis sp.，没有单一母种；Gold 贸易标签不足以确定 taxon 或继承任一拟雀鲷的水质、空间和社会边界。"
         }
       ],
       "direct_species_knowledge": true,
@@ -19657,7 +19657,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -22332,38 +22332,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -22372,7 +22372,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -22482,38 +22482,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -22522,7 +22522,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -22557,38 +22557,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -22597,7 +22597,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -23499,38 +23499,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -23539,7 +23539,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -24474,38 +24474,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -24514,7 +24514,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -24549,38 +24549,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -24589,7 +24589,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -24624,38 +24624,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -24664,7 +24664,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -24774,38 +24774,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -24814,7 +24814,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -25674,38 +25674,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -25714,7 +25714,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -26049,38 +26049,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -26089,7 +26089,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -26124,38 +26124,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -26164,7 +26164,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -26499,38 +26499,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -26539,7 +26539,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27099,38 +27099,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27139,7 +27139,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27174,38 +27174,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27214,7 +27214,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27249,38 +27249,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27289,7 +27289,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27324,38 +27324,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27364,7 +27364,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27399,38 +27399,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类贸易对象，但 catalog category 是“硬景/底床”；Karbi Anglong 标签也没有对象级 reviewed 桥接，类别与身份修正前保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27439,7 +27439,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27474,38 +27474,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27514,7 +27514,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27624,38 +27624,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Geophagus sp.，没有单一母种；Longfin Platinum 贸易标签不足以继承任一 Geophagus 物种的 Compatibility authority。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Geophagus sp.，没有单一母种；Longfin Platinum 贸易标签不足以继承任一 Geophagus 物种的 Compatibility authority。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Geophagus sp.，没有单一母种；Longfin Platinum 贸易标签不足以继承任一 Geophagus 物种的 Compatibility authority。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Geophagus sp.，没有单一母种；Longfin Platinum 贸易标签不足以继承任一 Geophagus 物种的 Compatibility authority。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_parent_taxon_unresolved",
+          "note": "Catalog 只解析到 Geophagus sp.，没有单一母种；Longfin Platinum 贸易标签不足以继承任一 Geophagus 物种的 Compatibility authority。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27664,7 +27664,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27699,38 +27699,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27739,7 +27739,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27774,38 +27774,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_category_mismatch",
+          "note": "Scientific name 指向鱼类变体，但 catalog category 是“硬景/底床”；精确 Super Balloon 对象也没有可提升的 reviewed 变体桥接，类别与身份修正前保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27814,7 +27814,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -27849,38 +27849,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -27889,7 +27889,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -28074,38 +28074,38 @@
       "reviewed_unknown_resolutions": [
         {
           "field": "feeding",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "environment",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "space",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         },
         {
           "field": "care",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "catalog_identity_boundary",
+          "code": "catalog_variant_identity_unresolved",
+          "note": "母种或近似 catalog 对象可以辨认，但既有 Phase 2 记录明确停在 reviewed_unknown；本轮没有同行评审、政府或等价对象级来源确认该精确贸易变体可继承母种 husbandry 或 social authority，因此保持 fail-closed。"
         }
       ],
       "direct_species_knowledge": true,
@@ -28114,7 +28114,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
-      "priority_score": 8,
+      "priority_score": 3,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },

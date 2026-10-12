@@ -33,12 +33,16 @@ assertUnique(compatibilityUnifiedNextWave.identityBoundaryHoldSpeciesIds, 'ident
 assertUnique(compatibilityUnifiedNextWave.domainBoundaryHoldSpeciesIds, 'compatibility-domain holds');
 
 for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
-  const migration = readFileSync(batch.migrationOwner, 'utf8');
+  const migrationOwner = 'migrationOwner' in batch ? batch.migrationOwner : undefined;
+  const authorityOwner = 'authorityOwner' in batch ? batch.authorityOwner : undefined;
+  const ownerPath = migrationOwner ?? authorityOwner;
+  assert.ok(ownerPath, batch.batchId + ' must declare a source-controlled authority owner');
+  const owner = readFileSync(ownerPath, 'utf8');
   for (const member of batch.members) {
     assert.equal(
-      migration.includes(member.speciesId),
+      owner.includes(member.speciesId),
       true,
-      batch.batchId + ' migration owner must include ' + member.speciesId,
+      batch.batchId + ' authority owner must include ' + member.speciesId,
     );
 
     const fish = fishData.find(item => item.id === member.speciesId);
@@ -53,10 +57,11 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
 
     const profile = getReviewedCompatibilityProfile(member.speciesId);
     if (member.expectProfile) {
+      assert.ok(migrationOwner, batch.batchId + ' Profile release must declare a DB migration owner');
       assert.ok(profile, 'released species must resolve reviewed Compatibility Profile: ' + member.speciesId);
       for (const source of profile.citations) {
         assert.equal(
-          migration.includes(source.id),
+          owner.includes(source.id),
           true,
           batch.batchId + ' migration owner must include Profile source ' + source.id,
         );

@@ -1,3 +1,5 @@
+import { nextWaveUnified07Outcomes } from './catalogReviewBatches/next-wave-unified-07';
+
 export type CatalogIdentityBoundaryCode =
   | 'trade_name_taxon_ambiguous'
   | 'accepted_taxon_alias_trade_ambiguous'
@@ -21,6 +23,18 @@ export type CatalogIdentityBoundary = {
 };
 
 export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> = {
+  ...Object.fromEntries(nextWaveUnified07Outcomes.map(outcome => [outcome.speciesId, {
+    ...outcome,
+    resolvedGranularity: outcome.code === 'catalog_category_mismatch'
+      ? 'catalog_category_mismatch' as const
+      : outcome.code === 'catalog_parent_taxon_unresolved'
+        ? 'parent_taxon_unresolved' as const
+        : outcome.code === 'catalog_scientific_name_unresolved'
+          ? 'scientific_name_unresolved' as const
+          : 'variant_identity_unresolved' as const,
+    reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }])),
   ...Object.fromEntries(([
     ['sp_0158', 'Xiphophorus hellerii ornamental red lineage', 'seriouslyfish-xiphophorus-hellerii'],
     ['sp_0163', 'Cyprinus carpio ornamental Kohaku lineage', 'batch09-fishbase-cyprinus-carpio-var'],

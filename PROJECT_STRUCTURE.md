@@ -28,6 +28,7 @@
 - `scripts/test-compatibility-stacked-wave05-migration.ts` / `supabase/migrations/20261012014500_compatibility_unified_wave05_authority.sql`：95/171 → 99/175 的精确堆叠 migration contract；仅为仓库候选，未执行任何 Production migration。
 - `src/data/catalogReviewBatches/next-wave-unified-06.ts` / `src/modules/knowledge/nextWaveUnified06BatchAuthority.ts`：wave06 的 25 对象统一审核结果；仅 `sp_0283` 通过同行评审 Super Red phenotype 身份桥接到已审核 `Scleropages formosus` authority，其余 24 个对象进入 identity/category fail-closed holds。
 - `scripts/test-compatibility-stacked-wave06-migration.ts` / `supabase/migrations/20261012023000_compatibility_unified_wave06_authority.sql`：99/175 → 100/176 的精确堆叠 migration contract；仅为仓库候选，未执行任何 Production migration。
+- `src/data/catalogReviewBatches/next-wave-unified-07.ts` / `scripts/test-compatibility-unified-wave07-authority.ts`：wave07 的 25 个观赏/贸易 catalog objects 统一审核结果；0 个 Profile、25 个 identity/category terminal holds，静态 DB authority 保持 100 Profiles / 176 evidence，因此没有新增 migration。
 - `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。

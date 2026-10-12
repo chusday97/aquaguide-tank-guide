@@ -1,3 +1,12 @@
+## TOP CURRENT QUEUE — 2026-10-12 unified wave07
+
+1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 25 terminal identity/category holds.
+2. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
+3. DONE: regenerate completion, backlog, and Compatibility coverage without disabling future breadth expansion.
+4. DONE: focused contracts, typecheck, full backend release gate, diff review, clean checkpoint, and branch push are complete.
+5. NEXT ACTIVE 25: sp_0365, sp_0421, sp_0442, sp_0445, sp_0211, sp_0025, sp_0037, sp_0039, sp_0040, sp_0041, sp_0046, sp_0060, sp_0061, sp_0077, sp_0089, sp_0106, sp_0107, sp_0111, sp_0113, sp_0128, sp_0132, sp_0134, sp_0135, sp_0186, sp_0333.
+6. HOLD: no Production deploy, Production DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
+
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 
 1. Production unchanged: 60 / 63 / 21 / 1 / 116.

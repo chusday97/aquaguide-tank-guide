@@ -44,31 +44,31 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 
 ## Next-wave species research queue
 
-1. 红利鱼 (改良) (sp_0296) — environment, space, social, compatibility_profile — score 30
-2. 黄金草莓鱼 (海水) (sp_0297) — environment, space, social, compatibility_profile — score 30
-3. 白金西非凤凰 (sp_0338) — environment, space, social, compatibility_profile — score 30
-4. 球形红十字灯 (sp_0340) — environment, space, social, compatibility_profile — score 30
-5. 长鳍白金黑裙 (sp_0341) — environment, space, social, compatibility_profile — score 30
-6. 红眼蓝钻灯 (sp_0359) — environment, space, social, compatibility_profile — score 30
-7. 球形蓝宝石鱼 (sp_0372) — environment, space, social, compatibility_profile — score 30
-8. 球形红宝石鱼 (sp_0373) — environment, space, social, compatibility_profile — score 30
-9. 球形地图鱼 (sp_0374) — environment, space, social, compatibility_profile — score 30
-10. 黄金斑马异型 (L134改良版) (sp_0376) — environment, space, social, compatibility_profile — score 30
-11. 血钻神仙 (改良) (sp_0388) — environment, space, social, compatibility_profile — score 30
-12. 大帆白金红裙 (sp_0393) — environment, space, social, compatibility_profile — score 30
-13. 荧光橙经鱼 (sp_0394) — environment, space, social, compatibility_profile — score 30
-14. 白金蓝魔鬼 (海水) (sp_0399) — environment, space, social, compatibility_profile — score 30
-15. 血红龙 (A级) (sp_0407) — environment, space, social, compatibility_profile — score 30
-16. 金头过背金龙 (sp_0408) — environment, space, social, compatibility_profile — score 30
-17. 白子黑白魟 (sp_0409) — environment, space, social, compatibility_profile — score 30
-18. 皇冠黑白魟 (点位改良) (sp_0410) — environment, space, social, compatibility_profile — score 30
-19. 蓝宝石雷龙 (特级选育) (sp_0411) — environment, space, social, compatibility_profile — score 30
-20. 幻彩红雷龙 (改良) (sp_0412) — environment, space, social, compatibility_profile — score 30
-21. 白金黑帝魔 (长鳍) (sp_0414) — environment, space, social, compatibility_profile — score 30
-22. 红眼白子红剑 (高鳍) (sp_0415) — environment, space, social, compatibility_profile — score 30
-23. 球形蓝宝石鱼 (特级) (sp_0416) — environment, space, social, compatibility_profile — score 30
-24. 血钻波子 (球形) (sp_0417) — environment, space, social, compatibility_profile — score 30
-25. 球形金曼龙 (大规格) (sp_0420) — environment, space, social, compatibility_profile — score 30
+1. 红利鱼 (长鳍型) (sp_0365) — environment, space, social, compatibility_profile — score 30
+2. 白金黑裙 (球形长鳍) (sp_0421) — environment, space, social, compatibility_profile — score 30
+3. 青苔鼠 (sp_0442) — environment, space, social, compatibility_profile — score 30
+4. 蓝曼龙 (sp_0445) — environment, space, social, compatibility_profile — score 30
+5. 大点火口 (sp_0211) — environment, space, social, compatibility_profile — score 29
+6. 泗水玫瑰 (sp_0025) — environment, space, social, compatibility_profile — score 28
+7. 大鳍鱊 (sp_0037) — environment, space, social, compatibility_profile — score 28
+8. 方氏拟腹吸鳅 (sp_0039) — environment, space, social, compatibility_profile — score 28
+9. 中华花鳅 (sp_0040) — environment, space, social, compatibility_profile — score 28
+10. 棒花鱼 (sp_0041) — environment, space, social, compatibility_profile — score 28
+11. 中华细鲫 (sp_0046) — environment, space, social, compatibility_profile — score 28
+12. 巧克力曼龙 (sp_0060) — environment, space, social, compatibility_profile — score 28
+13. 飞凤鱼 (sp_0061) — environment, space, social, compatibility_profile — score 28
+14. 绿菊 (sp_0077) — environment, space, social, compatibility_profile — score 28
+15. 大宝塔 (sp_0089) — environment, space, social, compatibility_profile — score 28
+16. 恐龙鱼 (草绳) (sp_0106) — environment, space, social, compatibility_profile — score 28
+17. 飞凤鱼 (国旗飞凤) (sp_0107) — environment, space, social, compatibility_profile — score 28
+18. 亚洲红鼻 (sp_0111) — environment, space, social, compatibility_profile — score 28
+19. 斑节鳉 (sp_0113) — environment, space, social, compatibility_profile — score 28
+20. 吸鳅 (中国爬岩鳅) (sp_0128) — environment, space, social, compatibility_profile — score 28
+21. 玻璃拉拉 (sp_0132) — environment, space, social, compatibility_profile — score 28
+22. 燕子美人 (sp_0134) — environment, space, social, compatibility_profile — score 28
+23. 霓虹燕子 (sp_0135) — environment, space, social, compatibility_profile — score 28
+24. 人字蝶 (sp_0186) — environment, space, social, compatibility_profile — score 28
+25. 蓝地毯海葵 (sp_0333) — environment, space, social, compatibility_profile — score 28
 
 ## Terminal reviewed-unknown holds
 
