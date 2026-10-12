@@ -317,4 +317,44 @@ try {
   Object.assign(apiConfig, originalProviderConfig);
 }
 
+try {
+  Object.assign(apiConfig, {
+    aiApiKey: 'primary-key',
+    aiBaseUrl: 'https://primary.example.test',
+    aiModel: 'primary-model',
+    aiTimeoutMs: 1000,
+    aiFallbackApiKey: '',
+    aiFallbackBaseUrl: 'https://ai-gateway.vercel.sh/v1',
+    aiFallbackModel: 'zai/glm-4.6v-flash',
+    aiFallbackTimeoutMs: 1000,
+  });
+  globalThis.fetch = async input => {
+    const url = String(input);
+    if (url.startsWith('https://primary.example.test')) {
+      return new Response(JSON.stringify({ error: { type: 'billing_error' } }), { status: 402 });
+    }
+    return new Response(JSON.stringify({
+      error: {
+        type: 'forbidden',
+        code: 'model_policy_denied',
+        message: 'this message must not be copied into ProviderError metadata',
+      },
+    }), { status: 403, headers: { 'content-type': 'application/json' } });
+  };
+  await assert.rejects(
+    () => requestCompatibilityReasoning(capturedPairRequest!, { fallbackApiKey: 'request-oidc-token' }),
+    error => {
+      assert.ok(error instanceof ProviderError);
+      assert.equal(error.statusCode, 403);
+      assert.equal(error.providerErrorType, 'forbidden');
+      assert.equal(error.providerErrorCode, 'model_policy_denied');
+      assert.doesNotMatch(error.message, /this message must not be copied/);
+      return true;
+    },
+  );
+} finally {
+  globalThis.fetch = originalFetch;
+  Object.assign(apiConfig, originalProviderConfig);
+}
+
 console.log('Compatibility V4 AI reasoner PASS: dynamic no-pair reasoning, 3+ species context, deterministic precedence, fail-closed provider behavior, and evidence allowlisting verified.');

@@ -60,6 +60,8 @@ compatibilityAiRouter.post('/ai/compatibility-reason', asyncRoute(async (request
         requestId: request.requestId,
         reason: error.reason,
         statusCode: error.statusCode,
+        providerErrorType: error.providerErrorType,
+        providerErrorCode: error.providerErrorCode,
         model: apiConfig.aiModel,
       });
       throw providerApiError(error);

@@ -8,10 +8,32 @@ export class ProviderError extends Error {
     public readonly reason: ProviderFailureReason,
     message: string,
     public readonly statusCode?: number,
+    public readonly providerErrorType?: string,
+    public readonly providerErrorCode?: string,
   ) {
     super(message);
   }
 }
+
+const safeProviderErrorToken = (value: unknown) => (
+  typeof value === 'string' && /^[A-Za-z0-9_.:-]{1,80}$/.test(value) ? value : undefined
+);
+
+const readSafeProviderErrorMetadata = async (response: Response) => {
+  try {
+    const payload = await response.clone().json() as {
+      error?: { type?: unknown; code?: unknown };
+      type?: unknown;
+      code?: unknown;
+    };
+    return {
+      providerErrorType: safeProviderErrorToken(payload.error?.type ?? payload.type),
+      providerErrorCode: safeProviderErrorToken(payload.error?.code ?? payload.code),
+    };
+  } catch {
+    return {};
+  }
+};
 
 const cleanJsonText = (value: string) => {
   const cleaned = value
@@ -52,7 +74,14 @@ const fetchJsonResponse = async (
       });
       if (!response.ok) {
         if (attempt < attempts - 1 && (response.status === 429 || response.status >= 500)) continue;
-        throw new ProviderError('network', `Provider returned HTTP ${response.status}.`, response.status);
+        const metadata = await readSafeProviderErrorMetadata(response);
+        throw new ProviderError(
+          'network',
+          `Provider returned HTTP ${response.status}.`,
+          response.status,
+          metadata.providerErrorType,
+          metadata.providerErrorCode,
+        );
       }
       const payload = await response.json() as { choices?: Array<{ message?: { content?: unknown } }> };
       const content = payload.choices?.[0]?.message?.content;
