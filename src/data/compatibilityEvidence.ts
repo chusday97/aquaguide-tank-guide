@@ -19,6 +19,7 @@ import {
 import { nextWaveUnified02Sources } from './catalogReviewBatches/next-wave-unified-02';
 import { nextWaveUnified03DirectSubjects, nextWaveUnified03RequiredFacts } from './catalogReviewBatches/next-wave-unified-03';
 import { nextWaveUnified04Sources } from './catalogReviewBatches/next-wave-unified-04';
+import { nextWaveUnified05Sources } from './catalogReviewBatches/next-wave-unified-05';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1512,6 +1513,32 @@ profiles.sp_0156 = {
   confidence: 'high',
   reviewStatus: 'reviewed',
   citations: [nextWaveUnified04Sources.trichopodusPlatinum, nextWaveUnified04Sources.trichopodusSeriouslyFish],
+  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'breeding_behavior'],
+};
+
+
+profiles.sp_0174 = wave04BridgeProfile('sp_0174', 'sp_0010', nextWaveUnified05Sources.tetraAlbinoWhite);
+profiles.sp_0207 = wave04BridgeProfile('sp_0207', 'sp_0010', nextWaveUnified05Sources.tetraAlbinoWhite);
+
+profiles.sp_0173 = {
+  speciesId: 'sp_0173',
+  waterType: 'freshwater',
+  behaviorTraits: ['predatory', 'very_large_open_water_predator', 'home_aquarium_unsuitable'],
+  predationTargets: ['small_fish'],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [nextWaveUnified05Sources.salminusFishBase, nextWaveUnified05Sources.salminusSeriouslyFish],
+  requiredFacts: ['water', 'adult_size', 'social_behavior', 'predation'],
+};
+
+profiles.sp_0214 = {
+  speciesId: 'sp_0214',
+  waterType: 'freshwater',
+  behaviorTraits: ['pair_living', 'breeding_defense', 'pair_parental_care'],
+  predationTargets: [],
+  confidence: 'high',
+  reviewStatus: 'reviewed',
+  citations: [nextWaveUnified05Sources.pelvicachromis],
   requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'breeding_behavior'],
 };
 

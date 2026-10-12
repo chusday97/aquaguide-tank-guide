@@ -40,12 +40,12 @@ const sha256 = value => createHash('sha256').update(value).digest('hex');
 export const getAuthorityKeys = () => {
   const audit = getCompatibilityEvidenceAudit();
   const allProfileKeys = audit.reviewedProfiles.map(item => item.speciesId);
-  const predecessorTarget = buildCompatibilityProfileRolloutKeysets(allProfileKeys).predecessorTarget;
+  const productionTarget = buildCompatibilityProfileRolloutKeysets(allProfileKeys).productionTarget;
   return {
     // This guard owns PR #188 only: freeze the exact 85-key predecessor authority.
     // Stacked wave04 (95 Profiles) has its own migration contract and must not
     // silently broaden the currently authorized Production migration bundle.
-    profiles: [...predecessorTarget].sort(),
+    profiles: [...productionTarget].sort(),
     pairRules: audit.reviewedPairRules.map(item => [...item.speciesIds].sort().join('__')).sort(),
     stageRisks: audit.reviewedStageRiskProfiles.map(item => item.speciesId + ':' + item.riskType).sort(),
   };

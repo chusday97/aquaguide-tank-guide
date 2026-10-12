@@ -610,9 +610,9 @@
   ],
   "next_wave_species_queue": [
     {
-      "species_id": "sp_0158",
-      "common_name": "红苹果剑尾",
-      "scientific_name": "Xiphophorus hellerii var.",
+      "species_id": "sp_0240",
+      "common_name": "白金神仙 (长鳍)",
+      "scientific_name": "Pterophyllum scalare var. Platinum Longfin",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -640,9 +640,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0163",
-      "common_name": "鸿运当头锦鲤",
-      "scientific_name": "Cyprinus carpio var. Kohaku",
+      "species_id": "sp_0241",
+      "common_name": "大理石神仙 (球形)",
+      "scientific_name": "Pterophyllum scalare var. Marble Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -670,9 +670,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0173",
-      "common_name": "黄金河虎",
-      "scientific_name": "Salminus brasiliensis var.",
+      "species_id": "sp_0242",
+      "common_name": "红眼白子金龙",
+      "scientific_name": "Scleropages formosus var. Albino",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -700,9 +700,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0174",
-      "common_name": "红眼白子红裙",
-      "scientific_name": "Gymnocorymbus ternetzi var. Albino",
+      "species_id": "sp_0243",
+      "common_name": "球形血鹦鹉",
+      "scientific_name": "Cichlasoma var. Blood Parrot Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -730,9 +730,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0175",
-      "common_name": "血钻神仙",
-      "scientific_name": "Pterophyllum scalare var. Red",
+      "species_id": "sp_0247",
+      "common_name": "蓝钻神仙 (球形)",
+      "scientific_name": "Pterophyllum scalare var. Blue Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -760,9 +760,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0176",
-      "common_name": "黑白大理石神仙",
-      "scientific_name": "Pterophyllum scalare var. Marble",
+      "species_id": "sp_0248",
+      "common_name": "黄金战舰",
+      "scientific_name": "Osphronemus goramy var. Gold",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -790,9 +790,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0177",
-      "common_name": "红眼蓝钻神仙",
-      "scientific_name": "Pterophyllum scalare var. Blue",
+      "species_id": "sp_0256",
+      "common_name": "红眼白子黑裙鱼",
+      "scientific_name": "Gymnocorymbus ternetzi var. Albino Red Eye",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -820,9 +820,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0178",
-      "common_name": "熊猫神仙",
-      "scientific_name": "Pterophyllum scalare var. Panda",
+      "species_id": "sp_0257",
+      "common_name": "黄金斑马异型 (L134改良)",
+      "scientific_name": "Peckoltia compta var. Gold",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -850,9 +850,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0179",
-      "common_name": "球形曼龙 (蓝/金)",
-      "scientific_name": "Trichopodus trichopterus var. Balloon",
+      "species_id": "sp_0263",
+      "common_name": "雪中红慈鲷",
+      "scientific_name": "Maylandia estherae var. Albino",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -880,9 +880,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0182",
-      "common_name": "蓝眼异型 (L191)",
-      "scientific_name": "Panaque sp. L191",
+      "species_id": "sp_0264",
+      "common_name": "白金阿里慈鲷",
+      "scientific_name": "Sciaenochromis fryeri var. White",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -910,9 +910,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0201",
-      "common_name": "黑白双星异型 (L240)",
-      "scientific_name": "Leporacanthicus cf. galaxias",
+      "species_id": "sp_0265",
+      "common_name": "血中红慈鲷",
+      "scientific_name": "Nimbochromis livingstonii var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -940,9 +940,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0207",
-      "common_name": "白金黑裙",
-      "scientific_name": "Gymnocorymbus ternetzi var. White",
+      "species_id": "sp_0266",
+      "common_name": "黄金珍珠虎 (改良)",
+      "scientific_name": "Altolamprologus calvus var. Gold",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -970,9 +970,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0208",
-      "common_name": "球形红十字",
-      "scientific_name": "Aphyocharax anisitsi var. Balloon",
+      "species_id": "sp_0268",
+      "common_name": "球形蓝曼龙",
+      "scientific_name": "Trichopodus trichopterus var. Blue Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1000,9 +1000,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0214",
-      "common_name": "白金西非凤凰",
-      "scientific_name": "Pelvicachromis pulcher var. Albino",
+      "species_id": "sp_0269",
+      "common_name": "球形金曼龙",
+      "scientific_name": "Trichopodus trichopterus var. Gold Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1030,9 +1030,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0216",
-      "common_name": "黄金雷龙",
-      "scientific_name": "Channa aurantimaculata var.",
+      "species_id": "sp_0270",
+      "common_name": "白子红眼关刀",
+      "scientific_name": "Geophagus surinamensis var. Albino",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1060,9 +1060,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0217",
-      "common_name": "白金黑地魔",
-      "scientific_name": "Geophagus sp. var. Platinum",
+      "species_id": "sp_0271",
+      "common_name": "白子红宝石",
+      "scientific_name": "Hemichromis bimaculatus var. Albino",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1090,9 +1090,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0219",
-      "common_name": "球形金波子",
-      "scientific_name": "Mikrogeophagus ramirezi var. Gold Balloon",
+      "species_id": "sp_0272",
+      "common_name": "长鳍神仙 (黑)",
+      "scientific_name": "Pterophyllum scalare var. Black Longfin",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1120,9 +1120,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0220",
-      "common_name": "白金波子 (球形)",
-      "scientific_name": "Mikrogeophagus ramirezi var. Platinum Balloon",
+      "species_id": "sp_0273",
+      "common_name": "血钻短鲷",
+      "scientific_name": "Apistogramma cacatuoides var. Super Red",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1150,9 +1150,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0221",
-      "common_name": "长鳍阿卡西短鲷",
-      "scientific_name": "Apistogramma agassizii var. Fire Red",
+      "species_id": "sp_0282",
+      "common_name": "黄金达摩 (改良)",
+      "scientific_name": "Parancistrus aurantiacus var. Gold",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1180,9 +1180,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0227",
-      "common_name": "长鳍红裙鱼",
-      "scientific_name": "Gymnocorymbus ternetzi var. Longfin",
+      "species_id": "sp_0283",
+      "common_name": "血红龙",
+      "scientific_name": "Scleropages formosus var. Super Red",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1210,9 +1210,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0228",
-      "common_name": "球形红裙鱼",
-      "scientific_name": "Gymnocorymbus ternetzi var. Balloon",
+      "species_id": "sp_0284",
+      "common_name": "白金龙鱼",
+      "scientific_name": "Scleropages formosus var. Silver Platinum",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1240,9 +1240,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0229",
-      "common_name": "白化金苔鼠",
-      "scientific_name": "Gyrinocheilus aymonieri var. Albino",
+      "species_id": "sp_0285",
+      "common_name": "黄金眼镜蛇雷龙 (改良)",
+      "scientific_name": "Channa aurantimaculata var. Gold",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1270,9 +1270,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0234",
-      "common_name": "黄金变色龙 (改良)",
-      "scientific_name": "Dario dario var. Gold",
+      "species_id": "sp_0286",
+      "common_name": "幻彩蓝雷龙 (改良)",
+      "scientific_name": "Channa andrao var. Super Blue",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1300,9 +1300,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0235",
-      "common_name": "白金黑帝王灯",
-      "scientific_name": "Nematobrycon palmeri var. Platinum",
+      "species_id": "sp_0288",
+      "common_name": "白金黑裙鱼 (长鳍)",
+      "scientific_name": "Gymnocorymbus ternetzi var. Platinum Longfin",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,
@@ -1330,9 +1330,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0236",
-      "common_name": "红眼白子红剑",
-      "scientific_name": "Xiphophorus hellerii var. Albino Red",
+      "species_id": "sp_0294",
+      "common_name": "红眼白子红裙 (球形)",
+      "scientific_name": "Gymnocorymbus ternetzi var. Albino Balloon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 27,

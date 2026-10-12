@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 
-assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0055', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0334', 'sp_0428']);
+assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0055', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0158', 'sp_0163', 'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0179', 'sp_0182', 'sp_0201', 'sp_0208', 'sp_0216', 'sp_0217', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0229', 'sp_0234', 'sp_0235', 'sp_0236', 'sp_0334', 'sp_0428']);
 
 const crystal = getCatalogIdentityBoundary('sp_0002');
 assert.equal(crystal?.code, 'trade_name_taxon_ambiguous');
@@ -50,6 +50,21 @@ assert.equal(pakistaniLoach?.researchDisposition, 'terminal_unknown_hold');
 assert.ok(pakistaniLoach?.candidateTaxa.includes('Botia almorhae sensu stricto'));
 assert.ok(pakistaniLoach?.candidateTaxa.includes('Botia lohachata'));
 assert.ok(pakistaniLoach?.sourceIds.includes('seriouslyfish-botia-almorhae-trade-boundary'));
+
+const categoryMismatch = getCatalogIdentityBoundary('sp_0176');
+assert.equal(categoryMismatch?.code, 'catalog_category_mismatch');
+assert.equal(categoryMismatch?.resolvedGranularity, 'catalog_category_mismatch');
+
+const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
+assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');
+assert.equal(parentTaxonHold?.resolvedGranularity, 'parent_taxon_unresolved');
+
+for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0177','sp_0178','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0221','sp_0227','sp_0228','sp_0229','sp_0234','sp_0235','sp_0236']) {
+  const boundary = getCatalogIdentityBoundary(speciesId);
+  assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
+  assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');
+  assert.equal(boundary?.researchDisposition, 'terminal_unknown_hold');
+}
 
 const koiReview = getCatalogFieldReviews('sp_0258').find(review => review.field === 'identity');
 assert.equal(koiReview?.resolution, 'supported');

@@ -12,7 +12,7 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 411
-- Reviewed compatibility profiles: 95
+- Reviewed compatibility profiles: 99
 - Reviewed pair rules: 21
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
@@ -29,9 +29,9 @@
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
 | feeding | 411 | 26 | 385 | 6.3% |
-| environment | 475 | 102 | 373 | 21.5% |
-| space | 475 | 103 | 372 | 21.7% |
-| social | 411 | 97 | 314 | 23.6% |
+| environment | 475 | 106 | 369 | 22.3% |
+| space | 475 | 107 | 368 | 22.5% |
+| social | 411 | 101 | 310 | 24.6% |
 | care | 475 | 26 | 449 | 5.5% |
 
 ## Highest-priority species gaps
@@ -44,31 +44,31 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 
 ## Next-wave species research queue
 
-1. 红苹果剑尾 (sp_0158) — environment, space, social, compatibility_profile — score 30
-2. 鸿运当头锦鲤 (sp_0163) — environment, space, social, compatibility_profile — score 30
-3. 黄金河虎 (sp_0173) — environment, space, social, compatibility_profile — score 30
-4. 红眼白子红裙 (sp_0174) — environment, space, social, compatibility_profile — score 30
-5. 血钻神仙 (sp_0175) — environment, space, social, compatibility_profile — score 30
-6. 黑白大理石神仙 (sp_0176) — environment, space, social, compatibility_profile — score 30
-7. 红眼蓝钻神仙 (sp_0177) — environment, space, social, compatibility_profile — score 30
-8. 熊猫神仙 (sp_0178) — environment, space, social, compatibility_profile — score 30
-9. 球形曼龙 (蓝/金) (sp_0179) — environment, space, social, compatibility_profile — score 30
-10. 蓝眼异型 (L191) (sp_0182) — environment, space, social, compatibility_profile — score 30
-11. 黑白双星异型 (L240) (sp_0201) — environment, space, social, compatibility_profile — score 30
-12. 白金黑裙 (sp_0207) — environment, space, social, compatibility_profile — score 30
-13. 球形红十字 (sp_0208) — environment, space, social, compatibility_profile — score 30
-14. 白金西非凤凰 (sp_0214) — environment, space, social, compatibility_profile — score 30
-15. 黄金雷龙 (sp_0216) — environment, space, social, compatibility_profile — score 30
-16. 白金黑地魔 (sp_0217) — environment, space, social, compatibility_profile — score 30
-17. 球形金波子 (sp_0219) — environment, space, social, compatibility_profile — score 30
-18. 白金波子 (球形) (sp_0220) — environment, space, social, compatibility_profile — score 30
-19. 长鳍阿卡西短鲷 (sp_0221) — environment, space, social, compatibility_profile — score 30
-20. 长鳍红裙鱼 (sp_0227) — environment, space, social, compatibility_profile — score 30
-21. 球形红裙鱼 (sp_0228) — environment, space, social, compatibility_profile — score 30
-22. 白化金苔鼠 (sp_0229) — environment, space, social, compatibility_profile — score 30
-23. 黄金变色龙 (改良) (sp_0234) — environment, space, social, compatibility_profile — score 30
-24. 白金黑帝王灯 (sp_0235) — environment, space, social, compatibility_profile — score 30
-25. 红眼白子红剑 (sp_0236) — environment, space, social, compatibility_profile — score 30
+1. 白金神仙 (长鳍) (sp_0240) — environment, space, social, compatibility_profile — score 30
+2. 大理石神仙 (球形) (sp_0241) — environment, space, social, compatibility_profile — score 30
+3. 红眼白子金龙 (sp_0242) — environment, space, social, compatibility_profile — score 30
+4. 球形血鹦鹉 (sp_0243) — environment, space, social, compatibility_profile — score 30
+5. 蓝钻神仙 (球形) (sp_0247) — environment, space, social, compatibility_profile — score 30
+6. 黄金战舰 (sp_0248) — environment, space, social, compatibility_profile — score 30
+7. 红眼白子黑裙鱼 (sp_0256) — environment, space, social, compatibility_profile — score 30
+8. 黄金斑马异型 (L134改良) (sp_0257) — environment, space, social, compatibility_profile — score 30
+9. 雪中红慈鲷 (sp_0263) — environment, space, social, compatibility_profile — score 30
+10. 白金阿里慈鲷 (sp_0264) — environment, space, social, compatibility_profile — score 30
+11. 血中红慈鲷 (sp_0265) — environment, space, social, compatibility_profile — score 30
+12. 黄金珍珠虎 (改良) (sp_0266) — environment, space, social, compatibility_profile — score 30
+13. 球形蓝曼龙 (sp_0268) — environment, space, social, compatibility_profile — score 30
+14. 球形金曼龙 (sp_0269) — environment, space, social, compatibility_profile — score 30
+15. 白子红眼关刀 (sp_0270) — environment, space, social, compatibility_profile — score 30
+16. 白子红宝石 (sp_0271) — environment, space, social, compatibility_profile — score 30
+17. 长鳍神仙 (黑) (sp_0272) — environment, space, social, compatibility_profile — score 30
+18. 血钻短鲷 (sp_0273) — environment, space, social, compatibility_profile — score 30
+19. 黄金达摩 (改良) (sp_0282) — environment, space, social, compatibility_profile — score 30
+20. 血红龙 (sp_0283) — environment, space, social, compatibility_profile — score 30
+21. 白金龙鱼 (sp_0284) — environment, space, social, compatibility_profile — score 30
+22. 黄金眼镜蛇雷龙 (改良) (sp_0285) — environment, space, social, compatibility_profile — score 30
+23. 幻彩蓝雷龙 (改良) (sp_0286) — environment, space, social, compatibility_profile — score 30
+24. 白金黑裙鱼 (长鳍) (sp_0288) — environment, space, social, compatibility_profile — score 30
+25. 红眼白子红裙 (球形) (sp_0294) — environment, space, social, compatibility_profile — score 30
 
 ## Terminal reviewed-unknown holds
 

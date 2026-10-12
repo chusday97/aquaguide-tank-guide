@@ -21,6 +21,7 @@ const gates = [
   ['Runtime Compatibility Authority', 'npm', ['run', 'test:runtime-compatibility-authority']],
   ['Compatibility Rollout Window', 'npm', ['run', 'test:compatibility-rollout-window']],
   ['Compatibility Stacked Wave04 Migration', 'npm', ['run', 'test:compatibility-stacked-wave04-migration']],
+  ['Compatibility Stacked Wave05 Migration', 'npm', ['run', 'test:compatibility-stacked-wave05-migration']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],

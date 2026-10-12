@@ -106,27 +106,48 @@ assert.equal(currentProductionStatus.pairRules, bootstrap.pairRules.length);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
-const predecessorProfiles = profilesFor(rolloutKeysets.predecessorTarget);
-assert.equal(predecessorProfiles.length, 85);
+const productionTargetProfiles = profilesFor(rolloutKeysets.productionTarget);
+assert.equal(productionTargetProfiles.length, 85);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
-  profiles: predecessorProfiles,
-  counts: { profiles: predecessorProfiles.length, pairRules: bootstrap.pairRules.length },
+  profiles: productionTargetProfiles,
+  counts: { profiles: productionTargetProfiles.length, pairRules: bootstrap.pairRules.length },
 });
-const predecessorStatus = getRuntimeCompatibilityStatus();
-assert.equal(predecessorStatus.source, 'reviewed-db', 'exact 85-Profile predecessor target must stay usable during stacked rollout');
-assert.equal(predecessorStatus.profiles, 85);
-assert.equal(predecessorStatus.pairRules, bootstrap.pairRules.length);
+const productionTargetStatus = getRuntimeCompatibilityStatus();
+assert.equal(productionTargetStatus.source, 'reviewed-db', 'exact 85-Profile Production target must stay usable during stacked rollout');
+assert.equal(productionTargetStatus.profiles, 85);
+assert.equal(productionTargetStatus.pairRules, bootstrap.pairRules.length);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
-const invalidIntermediateProfiles = bootstrap.profiles.slice(0, 73);
+const wave04TargetProfiles = profilesFor(rolloutKeysets.wave04Target);
+assert.equal(wave04TargetProfiles.length, 95);
+applyReviewedCompatibilityBootstrap({
+  ...bootstrap,
+  profiles: wave04TargetProfiles,
+  counts: { profiles: wave04TargetProfiles.length, pairRules: bootstrap.pairRules.length },
+});
+const wave04TargetStatus = getRuntimeCompatibilityStatus();
+assert.equal(wave04TargetStatus.source, 'reviewed-db', 'exact 95-Profile wave04 target must stay usable during wave05 rollout');
+assert.equal(wave04TargetStatus.profiles, 95);
+assert.equal(wave04TargetStatus.pairRules, bootstrap.pairRules.length);
+
+resetRuntimeCompatibilityEvidenceForTest();
+
+applyReviewedCompatibilityBootstrap(bootstrap);
+const wave05TargetStatus = getRuntimeCompatibilityStatus();
+assert.equal(wave05TargetStatus.source, 'reviewed-db', 'exact 99-Profile wave05 target must be usable');
+assert.equal(wave05TargetStatus.profiles, 99);
+
+resetRuntimeCompatibilityEvidenceForTest();
+
+const invalidIntermediateProfiles = bootstrap.profiles.slice(0, 96);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
   profiles: invalidIntermediateProfiles,
   counts: { profiles: invalidIntermediateProfiles.length, pairRules: bootstrap.pairRules.length },
 });
-assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', '73-Profile intermediate state must fail closed');
+assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', '96-Profile intermediate state must fail closed');
 
 resetRuntimeCompatibilityEvidenceForTest();
 

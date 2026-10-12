@@ -24,6 +24,8 @@
 - `src/services/catalog/species-profile.adapter.ts`：将旧 Fish 转换为 canonical SpeciesProfile；缺失水体保持 unknown，不做文本推断。
 - `src/data/compatibility-launch-cohort.ts`：确定性首批 30 种研究队列；仅用于审核排期，不授予混养决策资格。
 - `src/data/catalogFieldReviews.ts`：物种字段级审核记录、证据门禁和仅批准值的 Catalog 适配；草稿不会进入运行时。
+- `src/data/catalogReviewBatches/next-wave-unified-05.ts` / `src/modules/knowledge/nextWaveUnified05BatchAuthority.ts`：wave05 的 25 对象统一审核结果；4 个 evidence-backed Profile authority 与 21 个 identity/category fail-closed holds。
+- `scripts/test-compatibility-stacked-wave05-migration.ts` / `supabase/migrations/20261012014500_compatibility_unified_wave05_authority.sql`：95/171 → 99/175 的精确堆叠 migration contract；仅为仓库候选，未执行任何 Production migration。
 - `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。

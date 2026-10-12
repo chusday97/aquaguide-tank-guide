@@ -43,10 +43,13 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
 
     const fish = fishData.find(item => item.id === member.speciesId);
     assert.ok(fish, 'released catalog species missing: ' + member.speciesId);
-    assert.ok(
-      getReviewedSpeciesKnowledgeForFish(fish),
-      'released species must resolve runtime Species Knowledge: ' + member.speciesId,
-    );
+    const identityBoundary = getCatalogIdentityBoundary(member.speciesId);
+    if (!identityBoundary) {
+      assert.ok(
+        getReviewedSpeciesKnowledgeForFish(fish),
+        'released species must resolve runtime Species Knowledge: ' + member.speciesId,
+      );
+    }
 
     const profile = getReviewedCompatibilityProfile(member.speciesId);
     if (member.expectProfile) {
@@ -60,15 +63,19 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
       }
     } else {
       assert.equal(profile, undefined, 'explicit hold species must remain without direct Compatibility Profile: ' + member.speciesId);
-      const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
-      assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
-      assert.ok(
-        getKnowledgeEvidenceCeiling(member.speciesId, evidenceCeilingField),
-        'profile hold must retain an explicit reviewed evidence ceiling: ' + member.speciesId,
-      );
+      if (identityBoundary) {
+        assert.equal(identityBoundary.researchDisposition, 'terminal_unknown_hold');
+      } else {
+        const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
+        assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
+        assert.ok(
+          getKnowledgeEvidenceCeiling(member.speciesId, evidenceCeilingField),
+          'profile hold must retain an explicit reviewed evidence ceiling: ' + member.speciesId,
+        );
+      }
     }
 
-    if (batch.requireReviewedCatalogFields) {
+    if (batch.requireReviewedCatalogFields && !identityBoundary) {
       const fieldReviews = getCatalogFieldReviews(member.speciesId);
       assert.equal(
         fieldReviews.some(review => review.status === 'reviewed'),
