@@ -219,13 +219,15 @@ try {
     aiFallbackModel: 'glm-4.7-flash',
     aiFallbackTimeoutMs: 1000,
   });
-  globalThis.fetch = async input => {
+  globalThis.fetch = async (input, init) => {
     providerCalls += 1;
     const url = String(input);
     if (url.startsWith('https://primary.example.test')) {
       return new Response(JSON.stringify({ error: 'payment required' }), { status: 402 });
     }
     assert.match(url, /^https:\/\/fallback\.example\.test\/chat\/completions$/);
+    const fallbackRequest = JSON.parse(String(init?.body || '{}'));
+    assert.deepEqual(fallbackRequest.thinking, { type: 'disabled' }, 'GLM-4.7 fallback must disable thinking for bounded JSON synthesis latency');
     return new Response(JSON.stringify({
       choices: [{
         message: {

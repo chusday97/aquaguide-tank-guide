@@ -271,10 +271,14 @@ export const validateCompatibilityReasoningOutput = (
   return parsed.data;
 };
 
-const compatibilityReasoningRequestBody = (context: CompatibilityAiReasoningRequest) => ({
+const compatibilityReasoningRequestBody = (
+  context: CompatibilityAiReasoningRequest,
+  model?: string,
+) => ({
   temperature: 0,
   max_tokens: 900,
   response_format: { type: 'json_object' as const },
+  ...(/^glm-4\.7(?:-|$)/i.test(model || '') ? { thinking: { type: 'disabled' as const } } : {}),
   messages: [
     {
       role: 'system',
@@ -293,10 +297,22 @@ const compatibilityReasoningRequestBody = (context: CompatibilityAiReasoningRequ
 });
 
 export const requestCompatibilityReasoning = async (context: CompatibilityAiReasoningRequest) => {
-  const requestBody = compatibilityReasoningRequestBody(context);
-  const run = async (baseUrl: string, apiKey: string, model: string, timeoutMs: number) => (
+  const run = async (
+    baseUrl: string,
+    apiKey: string,
+    model: string,
+    timeoutMs: number,
+    maxAttempts = 2,
+  ) => (
     validateCompatibilityReasoningOutput(
-      await fetchJsonResponse(baseUrl, apiKey, model, timeoutMs, requestBody),
+      await fetchJsonResponse(
+        baseUrl,
+        apiKey,
+        model,
+        timeoutMs,
+        compatibilityReasoningRequestBody(context, model),
+        maxAttempts,
+      ),
       context.allowedEvidenceIds,
     )
   );
@@ -325,6 +341,7 @@ export const requestCompatibilityReasoning = async (context: CompatibilityAiReas
         apiConfig.aiFallbackApiKey,
         apiConfig.aiFallbackModel,
         apiConfig.aiFallbackTimeoutMs,
+        1,
       ),
       modelName: apiConfig.aiFallbackModel,
     };
