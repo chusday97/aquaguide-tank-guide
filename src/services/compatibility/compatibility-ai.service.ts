@@ -47,7 +47,9 @@ const defaultReasoner: CompatibilityAiReasoner = (request) => apiRequest<Compati
     method: 'POST',
     body: request,
     authenticated: 'optional',
-    signal: AbortSignal.timeout(8_000),
+    // Keep the browser budget slightly above the Preview fallback budget so
+    // the server can return an explicit AI result or fail-closed response.
+    signal: AbortSignal.timeout(15_000),
   },
 );
 
