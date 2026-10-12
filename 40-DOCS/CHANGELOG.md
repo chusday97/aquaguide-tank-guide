@@ -8,6 +8,8 @@
 
 - Changed: Compatibility V4 is now wired into real product flows: the calculator and Species Detail consume runtime synthesis, and standalone Compatibility, Aquarium, and Encyclopedia revalidate through V4 immediately before livestock persistence.
 - Safety: V4 requests are race-guarded, livestock mutation is blocked while reasoning is pending, submit-time policy uses the stricter deterministic/V4 verdict, and AI prose remains separate from reviewed rule evidence.
+- Validation: added a real Playwright V4 product smoke covering pending state, AI risk escalation, submit-time revalidation-before-persistence, provider failure, and Species Detail runtime synthesis; GP-002 stocking and full Species Detail UI regressions also pass.
+- Corrected: the Species Detail regression fixture for silver arowana + neon tetra now expects the current reviewed `not_recommended` predation conclusion instead of the historical `insufficient_data` state.
 
 - Added: Compatibility V4 introduces AI-assisted dynamic reasoning over structured reviewed species facts, including a typed contract, existing-provider integration, a bounded compatibility AI API route, async application/knowledge-layer entry points, and multi-species context support.
 - Safety: deterministic hard blocks and reviewed Pair Rules remain authoritative; AI cannot lower deterministic risk, cannot cite evidence outside the reviewed allowlist, and provider/schema/fact-coverage failures fail closed to `insufficient_data`.

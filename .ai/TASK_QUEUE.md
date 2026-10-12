@@ -8,8 +8,9 @@
 6. DONE: keep final planned-addition policy at the stricter of deterministic review and V4 verdict; provider/model failure fails closed.
 7. DONE: focused product-integration test + V4 reasoner + user conclusion + presentation + TypeScript/API + diff validation.
 8. DONE: full backend release gate and scope audit pass; clean product-integration checkpoint is committed and pushed.
-9. PAUSED: wave13 generated queue remains `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
-10. HOLD: no Production deploy, Production DB mutation, migration, merge/main, or Vision work.
+9. DONE: real rendered-browser validation passes for V4 pending guard, stricter AI verdict, submit-time revalidation before persistence, provider fail-closed, Species Detail synthesis, GP-002 stocking, and full Species Detail regression.
+10. PAUSED: wave13 generated queue remains `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
+11. HOLD: no Production deploy, Production DB mutation, migration, merge/main, or Vision work.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

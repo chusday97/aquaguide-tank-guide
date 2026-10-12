@@ -5,6 +5,7 @@
 - Species Detail compatibility results also consume V4 runtime reasoning without converting AI prose into deterministic/reviewed rule records.
 - Submit-time V4 revalidation is wired into standalone Compatibility, Aquarium, and Encyclopedia livestock-write callbacks through `reviewSpeciesAdditionsWithAi`; stricter deterministic status always wins.
 - Product-integration tests cover AI-raised block, provider fail-closed, deterministic hard-block bypass, runtime presentation, pending mutation guard, Species Detail wiring, and all three actual write paths.
+- Browser validation is also green: dedicated V4 Playwright smoke verifies pending/AI escalation/submit-time revalidation/fail-closed/detail synthesis; existing GP-002 stocking E2E and full Species Detail UI regressions pass after correcting one stale silver-arowana + neon-tetra expectation to the current reviewed `not_recommended` predation authority.
 - The inactive `tank-state-evidence` derivation service has no direct page caller and was intentionally not modified just to inflate scope.
 - Static authority remains 100 / 21 / 1 / 176. Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence; wave13 remains PAUSED.
 

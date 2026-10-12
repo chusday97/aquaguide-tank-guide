@@ -37,6 +37,7 @@
 - `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
 - `src/services/compatibility/compatibility-ai.service.ts` / `packages/contracts/src/compatibility-ai.ts` / `apps/api/src/routes/compatibility-ai.ts`：Compatibility V4 的 AI-assisted 动态组合层；先运行确定性规则，再仅用 reviewed environment/social/space facts 调用现有 OpenAI-compatible provider。Hard Rules 与 reviewed Pair Rules 永远优先，AI 不能降低风险，证据 ID 必须来自 allowlist，失败时 fail closed；支持 pair 与 3+ 物种上下文，不要求预先写完所有 Pair Rule。
 - `src/components/CompatibilityRiskCalculator.tsx` / `src/components/SpeciesDetailDialog.tsx` / `src/services/aquarium/species-addition.service.ts`：V4 产品接入层；计算器和物种详情展示 runtime synthesis，计算器在 AI pending 时阻止 mutation，实际入缸前由 `reviewSpeciesAdditionsWithAi` 再验一次；Compatibility / Aquarium / Encyclopedia 三条真实写入路径都使用该提交前门禁。
+- `scripts/verify-compatibility-v4-product-ui.mjs`：Compatibility V4 的真实浏览器产品回归；用本地 Vite + Playwright + 可控 AI route 验证 pending、防抢跑、AI 提高风险、提交前二次校验、provider fail-closed 与 Species Detail 展开后的 runtime synthesis。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。

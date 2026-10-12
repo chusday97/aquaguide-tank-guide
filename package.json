@@ -122,6 +122,7 @@
     "test:compatibility-unified-wave12-authority": "node --import tsx scripts/test-compatibility-unified-wave12-authority.ts",
     "test:compatibility-v4-ai-reasoner": "node --import tsx scripts/test-compatibility-v4-ai-reasoner.ts",
     "test:compatibility-v4-product-integration": "node --import tsx scripts/test-compatibility-v4-product-integration.ts",
+    "test:compatibility-v4-ui": "node scripts/verify-compatibility-v4-product-ui.mjs",
     "audit:images": "python3 scripts/audit_species_images.py",
     "audit:taxonomy": "tsx scripts/generate_taxonomy_review.ts",
     "audit:species-knowledge": "python3 scripts/audit_species_knowledge.py",

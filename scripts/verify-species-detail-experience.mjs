@@ -207,9 +207,12 @@ try {
       },
     },
     {
-      name: 'unreviewed predator data',
-      status: 'insufficient_data',
-      action: 'Complete Tank Setup',
+      name: 'reviewed predator risk',
+      // Silver arowana + neon tetra now has reviewed predation authority
+      // (including FishBase / Seriously Fish evidence), so this is an
+      // explicit block rather than the historical insufficient-data state.
+      status: 'not_recommended',
+      action: 'View current tank risks',
       state: {
         ...baseConfiguredState,
         aquariums: [{
