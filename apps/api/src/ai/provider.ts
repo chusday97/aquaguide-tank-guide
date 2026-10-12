@@ -67,6 +67,10 @@ const fetchJsonResponse = async (
         lastError = new ProviderError('timeout', 'Provider request timed out.');
       } else if (error instanceof ProviderError) {
         lastError = error;
+        const retryable = error.reason === 'timeout'
+          || error.reason === 'invalid_response'
+          || (error.reason === 'network' && (!error.statusCode || error.statusCode === 429 || error.statusCode >= 500));
+        if (!retryable) throw lastError;
       } else {
         lastError = new ProviderError('network', 'Provider request failed.');
       }
@@ -267,32 +271,62 @@ export const validateCompatibilityReasoningOutput = (
   return parsed.data;
 };
 
-export const requestCompatibilityReasoning = async (context: CompatibilityAiReasoningRequest) => {
-  const raw = await fetchJsonResponse(
-    apiConfig.aiBaseUrl,
-    apiConfig.aiApiKey,
-    apiConfig.aiModel,
-    apiConfig.aiTimeoutMs,
+const compatibilityReasoningRequestBody = (context: CompatibilityAiReasoningRequest) => ({
+  temperature: 0,
+  max_tokens: 900,
+  response_format: { type: 'json_object' as const },
+  messages: [
     {
-      temperature: 0,
-      max_tokens: 900,
-      response_format: { type: 'json_object' },
-      messages: [
-        {
-          role: 'system',
-          content: [
-            'You are AquaGuide Compatibility V4, a constrained runtime synthesis layer over reviewed aquarium facts.',
-            'Use ONLY the structured facts in the request. Do not use outside species knowledge, common-name assumptions, or unstated husbandry facts.',
-            'Deterministic hard blocks and explicit reviewed pair rules are authoritative and cannot be weakened or contradicted.',
-            'When facts do not support a reliable conclusion, return insufficient_data.',
-            'evidenceIds MUST be selected only from allowedEvidenceIds and must support the reasons you state.',
-            'Return exactly one JSON object with: verdict, reasons, adjustments, uncertainties, confidence, evidenceIds.',
-            'Keep reasons and adjustments direct and actionable: judgement -> reason -> adjustment.',
-          ].join(' '),
-        },
-        { role: 'user', content: JSON.stringify(context).slice(0, 18000) },
-      ],
+      role: 'system',
+      content: [
+        'You are AquaGuide Compatibility V4, a constrained runtime synthesis layer over reviewed aquarium facts.',
+        'Use ONLY the structured facts in the request. Do not use outside species knowledge, common-name assumptions, or unstated husbandry facts.',
+        'Deterministic hard blocks and explicit reviewed pair rules are authoritative and cannot be weakened or contradicted.',
+        'When facts do not support a reliable conclusion, return insufficient_data.',
+        'evidenceIds MUST be selected only from allowedEvidenceIds and must support the reasons you state.',
+        'Return exactly one JSON object with: verdict, reasons, adjustments, uncertainties, confidence, evidenceIds.',
+        'Keep reasons and adjustments direct and actionable: judgement -> reason -> adjustment.',
+      ].join(' '),
     },
+    { role: 'user', content: JSON.stringify(context).slice(0, 18000) },
+  ],
+});
+
+export const requestCompatibilityReasoning = async (context: CompatibilityAiReasoningRequest) => {
+  const requestBody = compatibilityReasoningRequestBody(context);
+  const run = async (baseUrl: string, apiKey: string, model: string, timeoutMs: number) => (
+    validateCompatibilityReasoningOutput(
+      await fetchJsonResponse(baseUrl, apiKey, model, timeoutMs, requestBody),
+      context.allowedEvidenceIds,
+    )
   );
-  return validateCompatibilityReasoningOutput(raw, context.allowedEvidenceIds);
+
+  try {
+    return {
+      payload: await run(apiConfig.aiBaseUrl, apiConfig.aiApiKey, apiConfig.aiModel, apiConfig.aiTimeoutMs),
+      modelName: apiConfig.aiModel,
+    };
+  } catch (error) {
+    const fallbackConfigured = Boolean(apiConfig.aiFallbackApiKey && apiConfig.aiFallbackModel);
+    const sameProvider = apiConfig.aiFallbackApiKey === apiConfig.aiApiKey
+      && apiConfig.aiFallbackBaseUrl === apiConfig.aiBaseUrl
+      && apiConfig.aiFallbackModel === apiConfig.aiModel;
+    if (!(error instanceof ProviderError) || !fallbackConfigured || sameProvider) throw error;
+
+    console.warn('Compatibility AI primary model fallback', {
+      primaryModel: apiConfig.aiModel,
+      fallbackModel: apiConfig.aiFallbackModel,
+      reason: error.reason,
+      statusCode: error.statusCode,
+    });
+    return {
+      payload: await run(
+        apiConfig.aiFallbackBaseUrl,
+        apiConfig.aiFallbackApiKey,
+        apiConfig.aiFallbackModel,
+        apiConfig.aiFallbackTimeoutMs,
+      ),
+      modelName: apiConfig.aiFallbackModel,
+    };
+  }
 };

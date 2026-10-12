@@ -39,12 +39,12 @@ compatibilityAiRouter.post('/ai/compatibility-reason', asyncRoute(async (request
   }
 
   try {
-    const output = await requestCompatibilityReasoning(parsed.data);
+    const { payload, modelName } = await requestCompatibilityReasoning(parsed.data);
     return sendData(request, response, {
-      ...output,
+      ...payload,
       provenance: {
         mode: 'ai_assisted' as const,
-        model: apiConfig.aiModel,
+        model: modelName,
         authorityVersion: parsed.data.authorityVersion,
         speciesIds: parsed.data.species.map(item => item.speciesId),
       },
