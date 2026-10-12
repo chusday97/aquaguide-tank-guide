@@ -1,9 +1,9 @@
-## TOP CURRENT BRANCH — 2026-10-12 wave12
+## TOP CURRENT BRANCH — 2026-10-12 Compatibility V4 AI reasoner
 
-- `codex/compatibility-next25-wave12-20261012` was created from exact clean pushed wave11 HEAD `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
-- Scope is evidence/backend documentation only: one 25-object authority batch, ornamental identity boundaries, variant evidence ceilings, regenerated knowledge/coverage artifacts, and contract tests.
-- Outcome is 0 new Profiles / 0 new DB evidence / 25 fail-closed terminal outcomes. No Supabase migration, Production mutation, deploy, merge, UI, or Vision change.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; Production remains 60 / 63 / 21 / 1 / 116.
+- `codex/compatibility-v4-ai-reasoner-20261012` was created from exact clean pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
+- Scope is Compatibility runtime/application/API contracts only: deterministic-first AI reasoning, reviewed-fact context building, provider validation, multi-species orchestration, tests, and authority docs.
+- No Compatibility Profile, Pair Rule, Stage Risk, evidence row, or Supabase migration was added. Static authority remains 100 / 21 / 1 / 176.
+- Production remains 60 / 63 / 21 / 1 / 116; no deploy, Production mutation, merge/main, UI, or Vision feature change is part of this branch.
 
 ## RC1 RELEASE CLOSURE — 2026-09-16
 - Production runtime: `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production).

@@ -1,5 +1,6 @@
 import type { Aquarium, Fish } from '../../types';
 import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
+import { resolveCompatibilityResultWithAi, type AiAssistedCompatibilityResult, type CompatibilityAiReasoner } from '../../services/compatibility/compatibility-ai.service';
 import type { CompatibilityDecisionReadiness } from '../../../packages/domain-rules/src';
 import { getReviewedCompatibilityProfileForFish, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
@@ -13,6 +14,11 @@ export type CompatibilityItem = {
 export type EvaluateCompatibilityDecisionInput = {
   tank?: Aquarium | null;
   items: CompatibilityItem[];
+};
+
+export type CompatibilityDecisionWithAi = {
+  deterministicDecision: CompatibilityDecision;
+  reasoning: AiAssistedCompatibilityResult;
 };
 
 const getQuantity = (value?: number) => {
@@ -163,6 +169,21 @@ const mergeDirectionalResults = (results: TankCompatibilityResult[]): TankCompat
     observedStatus: results.find(result => result.observedStatus)?.observedStatus,
     evidenceIds: Array.from(new Set(results.flatMap(result => result.evidenceIds || []))),
   };
+};
+
+export const evaluateCompatibilityDecisionWithAi = async (
+  input: EvaluateCompatibilityDecisionInput,
+  reasoner?: CompatibilityAiReasoner,
+): Promise<CompatibilityDecisionWithAi> => {
+  const deterministicDecision = evaluateCompatibilityDecision(input);
+  const normalized = normalizeCompatibilityItems(input.items);
+  const reasoning = await resolveCompatibilityResultWithAi(
+    deterministicDecision.aggregateResult,
+    normalized.map(item => ({ fish: item.species, quantity: getQuantity(item.quantity) })),
+    input.tank,
+    reasoner,
+  );
+  return { deterministicDecision, reasoning };
 };
 
 const annotatePairInference = (

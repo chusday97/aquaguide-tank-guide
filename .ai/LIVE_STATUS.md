@@ -1,10 +1,11 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave12
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility V4 AI-assisted runtime
 
-- Branch: `codex/compatibility-next25-wave12-20261012` from exact pushed wave11 HEAD `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
-- Wave12 classified all 25 generated objects atomically: 0 Profiles, 15 identity holds, and 10 ornamental-variant social evidence ceilings; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Identity closure again distinguishes incomplete `var.` scientific names, genus-only parent ambiguity, and named ornamental lineages backed only by base-species authority; reviewed object records without social authority remain explicit evidence ceilings.
-- Regenerated coverage exposes wave13: `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
-- Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
+- Branch: `codex/compatibility-v4-ai-reasoner-20261012` from exact pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
+- V4 adds a typed AI reasoning contract, OpenAI-compatible provider helper, `POST /api/v1/ai/compatibility-reason`, async compatibility application service, and knowledge-layer V4 entry for multi-species decisions.
+- Deterministic hard blocks and reviewed Pair Rules remain authoritative. AI sees only reviewed environment/social/space facts plus an evidence allowlist; unsupported evidence IDs, invalid output, missing required reviewed facts, or provider failure fail closed.
+- Focused V4 tests verify dynamic reasoning without a pre-authored pair, 3+ species context, deterministic precedence, reviewed-pair precedence, inadequate-fact bypass, provider failure, invalid schema, and hallucinated-evidence rejection.
+- Full backend release gate passes. Static authority remains 100 / 21 / 1 / 176; wave13 queue remains generated but PAUSED while V4 runtime integration is the active priority.
+- Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate
 

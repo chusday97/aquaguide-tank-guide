@@ -5,6 +5,7 @@ export * from './content-admin';
 export * from './care-seo';
 export * from './compatibility-admin';
 export * from './compatibility-runtime';
+export * from './compatibility-ai';
 export * from './runtime-authority';
 export * from './release-audit';
 export * from './localization';

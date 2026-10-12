@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+- Added: Compatibility V4 introduces AI-assisted dynamic reasoning over structured reviewed species facts, including a typed contract, existing-provider integration, a bounded compatibility AI API route, async application/knowledge-layer entry points, and multi-species context support.
+- Safety: deterministic hard blocks and reviewed Pair Rules remain authoritative; AI cannot lower deterministic risk, cannot cite evidence outside the reviewed allowlist, and provider/schema/fact-coverage failures fail closed to `insufficient_data`.
+- Changed: wave13 mechanical species batching is paused while V4 runtime architecture is validated; static Compatibility authority remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence and no migration is added.
+
 - Added: Compatibility wave12 closes another generated 25-object ornamental-fish queue as one batch: 15 identity terminal holds and 10 variant social evidence ceilings; no unsupported Profile or base-species inheritance was introduced.
 - Changed: Variant closure continues to distinguish incomplete scientific names, unresolved parent taxa and exact commercial-lineage gaps from object-reviewed-but-socially-unknown records; regenerated coverage advances to wave13 while static DB authority stays 100 Profiles / 176 evidence with no new migration.
 

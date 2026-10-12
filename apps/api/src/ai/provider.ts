@@ -1,4 +1,4 @@
-import { rawVisionCandidateSchema } from '../../../../packages/contracts/src/index';
+import { compatibilityAiModelOutputSchema, rawVisionCandidateSchema, type CompatibilityAiReasoningRequest } from '../../../../packages/contracts/src/index';
 import { apiConfig } from '../config';
 
 export type ProviderFailureReason = 'not_configured' | 'timeout' | 'network' | 'invalid_response';
@@ -253,3 +253,46 @@ export const requestSymptomObservations = (context: Record<string, unknown>) => 
     ],
   },
 );
+
+export const validateCompatibilityReasoningOutput = (
+  raw: unknown,
+  allowedEvidenceIds: readonly string[],
+) => {
+  const parsed = compatibilityAiModelOutputSchema.safeParse(raw);
+  if (!parsed.success) throw new ProviderError('invalid_response', 'Compatibility AI response did not match the required schema.');
+  const allowed = new Set(allowedEvidenceIds);
+  if (parsed.data.evidenceIds.some(id => !allowed.has(id))) {
+    throw new ProviderError('invalid_response', 'Compatibility AI returned unsupported evidence ids.');
+  }
+  return parsed.data;
+};
+
+export const requestCompatibilityReasoning = async (context: CompatibilityAiReasoningRequest) => {
+  const raw = await fetchJsonResponse(
+    apiConfig.aiBaseUrl,
+    apiConfig.aiApiKey,
+    apiConfig.aiModel,
+    apiConfig.aiTimeoutMs,
+    {
+      temperature: 0,
+      max_tokens: 900,
+      response_format: { type: 'json_object' },
+      messages: [
+        {
+          role: 'system',
+          content: [
+            'You are AquaGuide Compatibility V4, a constrained runtime synthesis layer over reviewed aquarium facts.',
+            'Use ONLY the structured facts in the request. Do not use outside species knowledge, common-name assumptions, or unstated husbandry facts.',
+            'Deterministic hard blocks and explicit reviewed pair rules are authoritative and cannot be weakened or contradicted.',
+            'When facts do not support a reliable conclusion, return insufficient_data.',
+            'evidenceIds MUST be selected only from allowedEvidenceIds and must support the reasons you state.',
+            'Return exactly one JSON object with: verdict, reasons, adjustments, uncertainties, confidence, evidenceIds.',
+            'Keep reasons and adjustments direct and actionable: judgement -> reason -> adjustment.',
+          ].join(' '),
+        },
+        { role: 'user', content: JSON.stringify(context).slice(0, 18000) },
+      ],
+    },
+  );
+  return validateCompatibilityReasoningOutput(raw, context.allowedEvidenceIds);
+};

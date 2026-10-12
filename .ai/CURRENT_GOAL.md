@@ -1,11 +1,12 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave12
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility V4 AI-assisted dynamic reasoning
 
-- Active branch: `codex/compatibility-next25-wave12-20261012`, based exactly on pushed wave11 `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
-- Processed the exact generated 25 wave12 objects as one batch: 0 Profiles / 15 identity terminal holds / 10 ornamental-variant social evidence ceilings.
-- The 15 identity holds are split into 6 incomplete scientific names, 1 unresolved parent taxon, and 8 exact commercial-variant identities lacking a reviewed bridge; base-species inheritance remains prohibited.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave12 adds no DB authority and therefore no migration.
-- Coverage regeneration remains enabled and now exposes wave13; it continues ornamental/trade variants and also surfaces a Palythoa non-fish object for domain closure.
-- Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge, UI, or Vision work is authorized.
+- Active branch: `codex/compatibility-v4-ai-reasoner-20261012`, based exactly on pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
+- Wave13 species batching is PAUSED. Current priority is runtime architecture: arbitrary reviewed species combinations should not require a pre-authored Pair Rule.
+- Compatibility V4 keeps deterministic Domain/Hard Rules and explicit reviewed Pair Rules authoritative, then optionally calls an AI reasoner over structured reviewed Species Knowledge (environment + social + space) for combination-level synthesis.
+- AI output is runtime synthesis, never reviewed authority. It cannot lower a deterministic caution/block, cannot override a reviewed Pair Rule, cannot cite evidence outside the provided reviewed allowlist, and provider/schema failures fail closed to `insufficient_data`.
+- V4 supports pair and 3+ species context through a new async application/knowledge-layer entry while preserving all existing synchronous callers.
+- Static authority is unchanged at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; no migration was added.
+- Production remains unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, UI, or Vision feature work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery
 
