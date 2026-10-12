@@ -11,12 +11,14 @@ import {
 } from '../src/data/compatibilityNextWaveBatch';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
+import { buildCompatibilityProfileRolloutKeysets } from '../src/data/compatibilityAuthorityRollout';
 
 const migrationPath = 'supabase/migrations/20261012001500_compatibility_unified_wave04_authority.sql';
 const migration = readFileSync(migrationPath, 'utf8');
 const audit = getCompatibilityEvidenceAudit();
 
-assert.equal(audit.reviewedProfiles.length, 95);
+assert.equal(audit.reviewedProfiles.length, 99);
+assert.equal(buildCompatibilityProfileRolloutKeysets(audit.reviewedProfiles.map(profile => profile.speciesId)).wave04Target.size, 95);
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 assert.equal(nextWaveUnified04ProfileIds.length, 10);

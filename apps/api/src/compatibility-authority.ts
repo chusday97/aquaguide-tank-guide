@@ -132,7 +132,8 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
     'MIGRATION_REJECTED',
     'Reviewed Compatibility DB baseline 必须精确匹配滚动发布代际 '
       + rolloutProfileKeysets.currentProduction.size + ' / '
-      + rolloutProfileKeysets.predecessorTarget.size + ' / '
+      + rolloutProfileKeysets.productionTarget.size + ' / '
+      + rolloutProfileKeysets.wave04Target.size + ' / '
       + rolloutProfileKeysets.target.size + ' Profiles / '
       + expectedPairKeys.size + ' Pair Rules / '
       + expectedStageRiskKeys.size + ' Stage Risk。',

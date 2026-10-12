@@ -2,6 +2,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave05 audits 25 catalog objects as one batch, promotes 4 evidence-backed fish Profiles and places 21 ambiguous commercial/variant/category objects behind explicit identity boundaries. The stacked repository-only migration requires exact 95 Profiles / 171 sources and targets exact 99 / 175 with 9 profile-source links; prior 63→85 and 85→95 guards remain unchanged.
+- Fixed: removed weak retail, forum, hobby-blog and duplicated citation rows from the wave05 candidate; exact rollout generations and a genuinely unreviewed Balloon Ram morph remain fail-closed.
+
 - Fixed: multi-species Compatibility decisions now merge a canonical whole-tank evaluation with pairwise results, surface cumulative tank-only constraints such as bioload in both user-facing and structured reason outputs, keep aggregate `status` aligned with `metadata.domainStatus`, and avoid duplicate soft-capacity disclaimers; beginner actions now use deterministic multi-risk priority (observed reality → predation/fin damage → territory → group structure → pH → space → bioload) so the first reason and next action target the most important intervention instead of array order. Regression coverage proves that reducing the combined stocking plan removes the load warning and improves the verdict.
 
 - Added: unified browser API origin resolution with explicit `VITE_API_BASE_URL` override, Vercel fallback for the known custom production host, same-origin defaults, normalized paths, and local-admin same-origin isolation; added a Node contract test.
