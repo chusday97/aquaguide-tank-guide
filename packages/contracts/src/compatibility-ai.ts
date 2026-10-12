@@ -16,6 +16,10 @@ const rangeSchema = z.object({
   max: z.number().finite().optional(),
 }).strict();
 
+const lengthRangeSchema = rangeSchema.extend({
+  measurement: z.enum(['SL', 'TL', 'unknown']).optional(),
+}).strict();
+
 export const compatibilityAiSpeciesFactSchema = z.object({
   speciesId: z.string().trim().min(1).max(160),
   name: z.string().trim().min(1).max(160),
@@ -45,7 +49,7 @@ export const compatibilityAiSpeciesFactSchema = z.object({
     evidenceIds: evidenceIdsSchema,
   }).strict(),
   spaceAndGrowth: z.object({
-    adultLengthCm: rangeSchema.optional(),
+    adultLengthCm: lengthRangeSchema.optional(),
     minVolumeLiters: z.number().positive().max(100000).optional(),
     minTankLengthCm: z.number().positive().max(10000).optional(),
     activityLevel: z.enum(['low', 'medium', 'high', 'unknown']).optional(),

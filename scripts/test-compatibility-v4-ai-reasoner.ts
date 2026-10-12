@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import type { CompatibilityAiReasoning, CompatibilityAiReasoningRequest } from '../packages/contracts/src';
+import { compatibilityAiReasoningRequestSchema, type CompatibilityAiReasoning, type CompatibilityAiReasoningRequest } from '../packages/contracts/src';
 import { fishData } from '../src/data/fishData';
 import { getReviewedPairRule } from '../src/data/compatibilityEvidence';
 import {
@@ -50,6 +50,8 @@ const pairReasoner: CompatibilityAiReasoner = async request => {
   pairCalls += 1;
   assert.deepEqual(request.species.map(item => item.speciesId).sort(), [blackSkirt.id, platy.id].sort());
   assert.ok(request.allowedEvidenceIds.length > 0, 'AI must receive reviewed evidence ids');
+  assert.equal(compatibilityAiReasoningRequestSchema.safeParse(request).success, true, 'generated V4 request must satisfy the real API contract');
+  assert.ok(request.species.every(item => item.spaceAndGrowth.adultLengthCm?.measurement), 'reviewed length measurement metadata must be preserved in the V4 contract');
   assert.ok(request.species.every(item => (
     item.environment.evidenceIds.length > 0
     && item.socialBehavior.evidenceIds.length > 0
