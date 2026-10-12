@@ -1,11 +1,13 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave12
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave13
 
-- Active branch: `codex/compatibility-next25-wave12-20261012`, based exactly on pushed wave11 `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
-- Processed the exact generated 25 wave12 objects as one batch: 0 Profiles / 15 identity terminal holds / 10 ornamental-variant social evidence ceilings.
-- The 15 identity holds are split into 6 incomplete scientific names, 1 unresolved parent taxon, and 8 exact commercial-variant identities lacking a reviewed bridge; base-species inheritance remains prohibited.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave12 adds no DB authority and therefore no migration.
-- Coverage regeneration remains enabled and now exposes wave13; it continues ornamental/trade variants and also surfaces a Palythoa non-fish object for domain closure.
-- Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge, UI, or Vision work is authorized.
+- Active branch: `codex/compatibility-next25-wave13-20261012`, based exactly on pushed wave12 `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
+- Processed the exact generated 25 wave13 objects atomically: 0 Profiles / 7 identity terminal holds / 17 ornamental-variant social evidence ceilings / 1 non-fish Compatibility-domain hold.
+- Identity closure is explicit: 2 incomplete scientific names (`sp_0067`, `sp_0358`), 2 unresolved `Ancistrus sp.` parent taxa (`sp_0280`, `sp_0281`), and 3 exact commercial variants without reviewed identity bridges (`sp_0255`, `sp_0287`, `sp_0339`).
+- The 17 exact ornamental object reviews remain social evidence ceilings because reviewed object-level Compatibility facts are still unknown and no base-species inheritance bridge is authorized; this includes Betta, Glo Danio and fancy-goldfish variants.
+- Reviewed WoRMS identity for `sp_0332 Palythoa sp.` overrides the catalog “海水鱼” label and closes it as `coral_or_anemone`; fish-profile semantics are not applied.
+- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave13 adds no DB authority and therefore no migration.
+- Regenerated coverage now exposes the exact wave14 25-object queue; normal breadth expansion remains active.
+- Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery
 

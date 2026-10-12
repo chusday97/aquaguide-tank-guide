@@ -1,9 +1,10 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave12
+## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave13
 
-- Branch: `codex/compatibility-next25-wave12-20261012` from exact pushed wave11 HEAD `4cafd89e888b96dcca36bfbaa401a37f4aa22b6a`.
-- Wave12 classified all 25 generated objects atomically: 0 Profiles, 15 identity holds, and 10 ornamental-variant social evidence ceilings; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Identity closure again distinguishes incomplete `var.` scientific names, genus-only parent ambiguity, and named ornamental lineages backed only by base-species authority; reviewed object records without social authority remain explicit evidence ceilings.
-- Regenerated coverage exposes wave13: `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
+- Branch: `codex/compatibility-next25-wave13-20261012` from exact pushed wave12 HEAD `0320cbf003fe646c092463b4251ae83d2c01cdfd`.
+- Wave13 classified all 25 generated objects atomically: 0 Profiles, 7 identity holds, 17 ornamental-variant social evidence ceilings, and 1 `Palythoa sp.` coral/anemone domain hold; static authority remains 100 / 21 / 1 / 176 and no migration was created.
+- Identity closure distinguishes bare `var.` scientific names, genus-only `Ancistrus sp.` parents, and named variants whose professional source covers only the base species. Exact-object reviewed_unknown records remain evidence ceilings instead of inheriting mother/base-species Compatibility.
+- Reviewed life type wins over catalog category: `sp_0332` is held outside the fish-profile runtime even though its legacy catalog category says “海水鱼”.
+- Regenerated coverage exposes wave14: `sp_0068, sp_0360, sp_0361, sp_0363, sp_0364, sp_0366, sp_0375, sp_0385, sp_0386, sp_0387, sp_0389, sp_0390, sp_0391, sp_0392, sp_0395, sp_0406, sp_0413, sp_0418, sp_0419, sp_0426, sp_0474, sp_0027, sp_0028, sp_0030, sp_0031`.
 - Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

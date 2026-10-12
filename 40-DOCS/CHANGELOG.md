@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave13 closes the generated 25-object queue as one batch: 7 identity terminal holds, 17 exact ornamental-variant social evidence ceilings, and 1 `Palythoa sp.` coral/anemone domain hold; no unsupported Profile or base-species inheritance was introduced.
+- Changed: reviewed life type now explicitly closes the mislabeled `Palythoa sp.` object outside fish-profile semantics, while Betta/Glo Danio/fancy-goldfish and other named variants remain fail-closed without object-level Compatibility bridges; regenerated coverage advances to wave14 and static DB authority stays 100 Profiles / 176 evidence with no new migration.
+
 - Added: Compatibility wave12 closes another generated 25-object ornamental-fish queue as one batch: 15 identity terminal holds and 10 variant social evidence ceilings; no unsupported Profile or base-species inheritance was introduced.
 - Changed: Variant closure continues to distinguish incomplete scientific names, unresolved parent taxa and exact commercial-lineage gaps from object-reviewed-but-socially-unknown records; regenerated coverage advances to wave13 while static DB authority stays 100 Profiles / 176 evidence with no new migration.
 

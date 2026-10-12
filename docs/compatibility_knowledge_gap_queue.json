@@ -610,8 +610,8 @@
   ],
   "next_wave_species_queue": [
     {
-      "species_id": "sp_0067",
-      "common_name": "珠鳞金鱼",
+      "species_id": "sp_0068",
+      "common_name": "水泡金鱼",
       "scientific_name": "Carassius auratus var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
@@ -640,9 +640,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0253",
-      "common_name": "红纹一眉道人",
-      "scientific_name": "Sahyadria denisonii var. Red Line",
+      "species_id": "sp_0360",
+      "common_name": "白金黑霓虹灯",
+      "scientific_name": "Hyphessobrycon herbertaxelrodi var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "base_score": 22,
@@ -670,9 +670,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0254",
-      "common_name": "白金黑线飞狐",
-      "scientific_name": "Crossocheilus langei var. Platinum",
+      "species_id": "sp_0361",
+      "common_name": "长鳍白云金丝 (改良)",
+      "scientific_name": "Tanichthys albonubes var.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "base_score": 22,
@@ -700,9 +700,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0255",
-      "common_name": "大帆红衣梦幻旗",
-      "scientific_name": "Hyphessobrycon sweglesi var. Longfin",
+      "species_id": "sp_0363",
+      "common_name": "荧光紫斑马",
+      "scientific_name": "Danio rerio var. Glo Purple",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "base_score": 22,
@@ -730,9 +730,189 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0259",
-      "common_name": "半月斗鱼 (蓝蝴蝶)",
-      "scientific_name": "Betta splendens var. Halfmoon",
+      "species_id": "sp_0364",
+      "common_name": "荧光粉斑马",
+      "scientific_name": "Danio rerio var. Glo Pink",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0366",
+      "common_name": "五彩青蛙 (改良型)",
+      "scientific_name": "Synchiropus splendidus var.",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0375",
+      "common_name": "白金黑霓虹灯 (球形)",
+      "scientific_name": "Hyphessobrycon herbertaxelrodi var. Balloon",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0385",
+      "common_name": "雪白金金鱼 (改良)",
+      "scientific_name": "Carassius auratus var. White Gold",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0386",
+      "common_name": "黑金刚龙睛",
+      "scientific_name": "Carassius auratus var. Black Moor",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0387",
+      "common_name": "熊猫蝶尾 (极品)",
+      "scientific_name": "Carassius auratus var. Panda Butterfly",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0389",
+      "common_name": "白金半月斗鱼",
+      "scientific_name": "Betta splendens var. Platinum",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 22,
@@ -759,9 +939,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0260",
-      "common_name": "狮王斗鱼 (红黑)",
-      "scientific_name": "Betta splendens var. Crowntail",
+      "species_id": "sp_0390",
+      "common_name": "红白狮头斗鱼",
+      "scientific_name": "Betta splendens var. Kohaku Crown",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 22,
@@ -788,9 +968,9 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0261",
-      "common_name": "大耳半月斗鱼",
-      "scientific_name": "Betta splendens var. Dumbo Halfmoon",
+      "species_id": "sp_0391",
+      "common_name": "蓝龙将军斗鱼",
+      "scientific_name": "Betta splendens var. Blue Dragon",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "elevated",
       "base_score": 22,
@@ -817,11 +997,11 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0262",
-      "common_name": "将军斗鱼 (蓝龙)",
-      "scientific_name": "Betta splendens var. Dragon",
+      "species_id": "sp_0392",
+      "common_name": "黄金胡子 (雪花型)",
+      "scientific_name": "Ancistrus sp. Snowflake Gold",
       "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
+      "risk_proxy": "standard",
       "base_score": 22,
       "research_leverage": {
         "stable_taxon": false,
@@ -829,6 +1009,246 @@
         "score_bonus": 3
       },
       "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0395",
+      "common_name": "黄金大帆飞狐",
+      "scientific_name": "Crossocheilus langei var. Gold Longfin",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0406",
+      "common_name": "五彩青蛙 (大规格改良)",
+      "scientific_name": "Synchiropus splendidus var. XL",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0413",
+      "common_name": "黄金眼镜蛇蛇鱼 (长鳍)",
+      "scientific_name": "Pangio kuhlii var. Longfin",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0418",
+      "common_name": "黄金大帆胡子 (红眼)",
+      "scientific_name": "Ancistrus sp. Albino Longfin",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0419",
+      "common_name": "荧光橙斑马 (长鳍)",
+      "scientific_name": "Danio rerio var. Glo Orange Longfin",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0426",
+      "common_name": "极地白云金丝",
+      "scientific_name": "Tanichthys albonubes var. Polar",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0474",
+      "common_name": "观背青鳉",
+      "scientific_name": "Oryzias latipes var.",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 3,
+        "score_bonus": 3
+      },
+      "score": 25,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0027",
+      "common_name": "极火虾",
+      "scientific_name": "Neocaridina davidi var. Red",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "elevated",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 2,
+        "score_bonus": 2
+      },
+      "score": 24,
       "gap_kinds": [
         "environment",
         "space",
@@ -846,515 +1266,90 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0267",
-      "common_name": "红头珍珠马甲",
-      "scientific_name": "Trichopodus leerii var. Red Head",
+      "species_id": "sp_0028",
+      "common_name": "水晶虾",
+      "scientific_name": "Caridina cantonensis var.",
       "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
+      "risk_proxy": "elevated",
       "base_score": 22,
       "research_leverage": {
         "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
+        "life_type_weight": 2,
+        "score_bonus": 2
       },
-      "score": 25,
+      "score": 24,
       "gap_kinds": [
         "environment",
         "space",
-        "social",
-        "compatibility_profile"
+        "social"
       ],
       "field_status": {
         "environment": "reviewed_unknown",
         "space": "reviewed_unknown",
         "social": "reviewed_unknown"
       },
-      "compatibility_profile": "none",
+      "compatibility_profile": "inherited_reviewed",
       "boundary_codes": [],
       "research_disposition": "actionable",
       "resolution_mode": "evidence_research",
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0280",
-      "common_name": "黄金胡子 (长鳍)",
-      "scientific_name": "Ancistrus sp. Gold Longfin",
+      "species_id": "sp_0030",
+      "common_name": "黄金米虾",
+      "scientific_name": "Neocaridina davidi var. Yellow",
       "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
+      "risk_proxy": "elevated",
       "base_score": 22,
       "research_leverage": {
         "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
+        "life_type_weight": 2,
+        "score_bonus": 2
       },
-      "score": 25,
+      "score": 24,
       "gap_kinds": [
         "environment",
         "space",
-        "social",
-        "compatibility_profile"
+        "social"
       ],
       "field_status": {
         "environment": "reviewed_unknown",
         "space": "reviewed_unknown",
         "social": "reviewed_unknown"
       },
-      "compatibility_profile": "none",
+      "compatibility_profile": "inherited_reviewed",
       "boundary_codes": [],
       "research_disposition": "actionable",
       "resolution_mode": "evidence_research",
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0281",
-      "common_name": "白金胡子 (大帆)",
-      "scientific_name": "Ancistrus sp. White Longfin",
+      "species_id": "sp_0031",
+      "common_name": "蓝丝绒米虾",
+      "scientific_name": "Neocaridina davidi var. Blue",
       "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
+      "risk_proxy": "elevated",
       "base_score": 22,
       "research_leverage": {
         "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
+        "life_type_weight": 2,
+        "score_bonus": 2
       },
-      "score": 25,
+      "score": 24,
       "gap_kinds": [
         "environment",
         "space",
-        "social",
-        "compatibility_profile"
+        "social"
       ],
       "field_status": {
         "environment": "reviewed_unknown",
         "space": "reviewed_unknown",
         "social": "reviewed_unknown"
       },
-      "compatibility_profile": "none",
+      "compatibility_profile": "inherited_reviewed",
       "boundary_codes": [],
       "research_disposition": "actionable",
       "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0287",
-      "common_name": "球形红鼻灯",
-      "scientific_name": "Hemigrammus bleheri var. Balloon",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0289",
-      "common_name": "荧光红斑马",
-      "scientific_name": "Danio rerio var. Glo Red",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0290",
-      "common_name": "荧光绿斑马",
-      "scientific_name": "Danio rerio var. Glo Green",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0291",
-      "common_name": "荧光橙斑马",
-      "scientific_name": "Danio rerio var. Glo Orange",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0292",
-      "common_name": "球形金玛丽",
-      "scientific_name": "Poecilia latipinna var. Gold Balloon",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0293",
-      "common_name": "球形黑玛丽",
-      "scientific_name": "Poecilia sphenops var. Black Balloon",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0295",
-      "common_name": "长鳍电光美人",
-      "scientific_name": "Melanotaenia praecox var. Longfin",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0332",
-      "common_name": "幻彩纽扣",
-      "scientific_name": "Palythoa sp.",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0339",
-      "common_name": "红眼金灯",
-      "scientific_name": "Hemigrammus rodwayi var. Gold",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0348",
-      "common_name": "红白虎头金鱼",
-      "scientific_name": "Carassius auratus var. Tigerhead",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0349",
-      "common_name": "蓝寿 (五花)",
-      "scientific_name": "Carassius auratus var. Calico Ranchu",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0350",
-      "common_name": "黑狮头金鱼",
-      "scientific_name": "Carassius auratus var. Black Oranda",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0351",
-      "common_name": "红白蝶尾",
-      "scientific_name": "Carassius auratus var. Butterfly Tail",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0358",
-      "common_name": "红尾玻璃灯 (改良)",
-      "scientific_name": "Prionobrama filigera var.",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 3,
-        "score_bonus": 3
-      },
-      "score": 25,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [
-        "catalog_identity_unresolved"
-      ],
-      "research_disposition": "actionable",
-      "resolution_mode": "identity_review",
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     }
   ]

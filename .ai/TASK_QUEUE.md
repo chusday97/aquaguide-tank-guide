@@ -1,12 +1,12 @@
-## TOP CURRENT QUEUE — 2026-10-12 unified wave12
+## TOP CURRENT QUEUE — 2026-10-12 unified wave13
 
-1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 15 identity holds / 10 ornamental-variant social evidence ceilings.
-2. DONE: separate incomplete scientific names, unresolved parent taxon, and unbridged commercial variants instead of inheriting base-species Compatibility authority.
+1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 7 identity holds / 17 ornamental-variant social evidence ceilings / 1 non-fish domain hold.
+2. DONE: enforce reviewed life type over catalog category for `sp_0332 Palythoa sp.`, and preserve the no-base-inheritance rule for Betta, Glo Danio, fancy goldfish, `Ancistrus sp.` and other ornamental variants.
 3. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
-4. DONE: regenerate completion and Compatibility coverage while preserving normal breadth expansion.
-5. DONE: focused contracts, cross-contract validation, full backend release gate, diff check, scope audit, clean checkpoint, and wave12 branch push are complete.
-6. NEXT ACTIVE 25: sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358.
-7. HOLD: no Production deploy, Production DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
+4. DONE: regenerate completion and Compatibility coverage and advance the exact active queue to wave14.
+5. DONE: focused contracts, cross-contract validation, full backend release gate, diff/scope audit and clean wave13 checkpoint validation all pass.
+6. NEXT ACTIVE 25: sp_0068, sp_0360, sp_0361, sp_0363, sp_0364, sp_0366, sp_0375, sp_0385, sp_0386, sp_0387, sp_0389, sp_0390, sp_0391, sp_0392, sp_0395, sp_0406, sp_0413, sp_0418, sp_0419, sp_0426, sp_0474, sp_0027, sp_0028, sp_0030, sp_0031.
+7. HOLD: no Production deploy, Production DB mutation, migration, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 
