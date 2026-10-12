@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { isBusinessDatabaseConfigured } from '../config';
+import { apiConfig, isBusinessDatabaseConfigured } from '../config';
 import { sendData } from '../http';
 import { contentRouter } from './content';
 import { aquariumsRouter } from './aquariums';
@@ -18,6 +18,12 @@ v1Router.get('/business-health', (request, response) => sendData(request, respon
   ok: true,
   databaseConfigured: isBusinessDatabaseConfigured(),
   architecture: 'web-api-supabase',
+  compatibilityAi: {
+    primaryModel: apiConfig.aiModel,
+    primaryConfigured: Boolean(apiConfig.aiApiKey),
+    fallbackModel: apiConfig.aiFallbackModel || null,
+    fallbackConfigured: Boolean(apiConfig.aiFallbackApiKey && apiConfig.aiFallbackModel),
+  },
 }));
 
 v1Router.use(contentRouter);
