@@ -1,9 +1,9 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave07
+## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave08
 
-- Active branch: `codex/compatibility-next25-wave07-20261012`, based exactly on wave06 `48815c6890eed4826e93d6bb5f2cc598b2bf6362`.
-- Process the generated 25 wave07 objects as one batch. Outcome: 0 Profiles / 25 explicit identity or category `terminal_unknown_hold` records because no object has a direct reviewed variant bridge.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; no wave07 DB migration is permitted or needed.
-- Regenerate coverage normally and retain the newly generated next-wave queue; do not globally disable breadth expansion.
+- Active branch: `codex/compatibility-next25-wave08-20261012`, based exactly on pushed wave07 `985d17f19b1c811bb222ff6f6523ae29077404e5`.
+- Processed the exact generated 25 wave08 objects as one batch: 0 Profiles / 7 identity-or-category holds / 17 exact-species evidence ceilings / 1 anemone Compatibility-domain hold.
+- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave08 adds no DB authority and therefore no migration.
+- Coverage regeneration remains enabled and now exposes the next 25-object wave09 queue; reviewed_unknown remains a valid fail-closed terminal state, never evidence for a positive compatibility claim.
 - Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

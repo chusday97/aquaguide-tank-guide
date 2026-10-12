@@ -1,4 +1,5 @@
 import { nextWaveUnified07Outcomes } from './catalogReviewBatches/next-wave-unified-07';
+import { nextWaveUnified08IdentityOutcomes } from './catalogReviewBatches/next-wave-unified-08';
 
 export type CatalogIdentityBoundaryCode =
   | 'trade_name_taxon_ambiguous'
@@ -32,6 +33,16 @@ export const catalogIdentityBoundaries: Record<string, CatalogIdentityBoundary> 
         : outcome.code === 'catalog_scientific_name_unresolved'
           ? 'scientific_name_unresolved' as const
           : 'variant_identity_unresolved' as const,
+    reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }])),
+  ...Object.fromEntries(nextWaveUnified08IdentityOutcomes.map(outcome => [outcome.speciesId, {
+    ...outcome,
+    resolvedGranularity: outcome.code === 'catalog_category_mismatch'
+      ? 'catalog_category_mismatch' as const
+      : outcome.code === 'catalog_scientific_name_unresolved'
+        ? 'scientific_name_unresolved' as const
+        : 'variant_identity_unresolved' as const,
     reviewedAt: '2026-10-12',
     researchDisposition: 'terminal_unknown_hold' as const,
   }])),

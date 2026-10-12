@@ -24,6 +24,7 @@ const gates = [
   ['Compatibility Stacked Wave05 Migration', 'npm', ['run', 'test:compatibility-stacked-wave05-migration']],
   ['Compatibility Stacked Wave06 Migration', 'npm', ['run', 'test:compatibility-stacked-wave06-migration']],
   ['Compatibility Unified Wave07 Authority', 'npm', ['run', 'test:compatibility-unified-wave07-authority']],
+  ['Compatibility Unified Wave08 Authority', 'npm', ['run', 'test:compatibility-unified-wave08-authority']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
   ['Compatibility Knowledge Coverage', 'npm', ['run', 'test:compatibility-knowledge-coverage']],

@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave08 closes the generated 25-object queue as one batch: 7 identity/category terminal holds, 17 exact-species evidence ceilings backed by prior reviewed-unknown professional reviews, and 1 sea-anemone domain hold; no unsupported Profile or base-species inheritance was introduced.
+- Changed: `species_social_not_established` is now represented as an explicit evidence-ceiling resolution mode, wave08 hold contracts are included in the backend release gate, and regenerated coverage advances to a fresh 25-object wave09 queue while static DB authority remains 100 Profiles / 176 evidence with no new migration.
+
 - Added: Compatibility wave07 processes the exact generated 25-object queue as one source-controlled batch and records 25 explicit identity/category `terminal_unknown_hold` outcomes; no base-species husbandry or social authority is promoted without a direct reviewed variant bridge.
 - Changed: Regenerated completion, backlog, and Compatibility coverage artifacts normally; static candidate authority remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence and a new 25-object next-wave queue remains available. No DB migration was added.
 

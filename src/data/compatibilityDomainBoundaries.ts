@@ -1,3 +1,5 @@
+import { nextWaveUnified08DomainOutcomes } from './catalogReviewBatches/next-wave-unified-08';
+
 export type CompatibilityDomainBoundaryCode = 'life_type_not_supported_by_fish_compatibility_domain';
 
 export type CompatibilityDomainBoundary = {
@@ -28,6 +30,12 @@ const boundary = (
 });
 
 export const compatibilityDomainBoundaries: Record<string, CompatibilityDomainBoundary> = {
+  ...Object.fromEntries(nextWaveUnified08DomainOutcomes.map(outcome => [outcome.speciesId, {
+    ...outcome,
+    code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
+    reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }])),
   sp_0035: boundary('sp_0035', 'crustacean_or_mollusk', ['batch04-raffles-geosesarma-dennerle'], 'Duplicate catalog object for Geosesarma dennerle; same reviewed domain boundary as sp_0006.'),
   sp_0006: boundary('sp_0006', 'crustacean_or_mollusk', ['batch04-raffles-geosesarma-dennerle'], 'Geosesarma dennerle is a crab. The current reviewed Compatibility engine is fish-profile based and does not yet model terrestrial/semi-terrestrial crab habitat, predation, or cohabitation semantics. Keep fail-closed until a cross-taxa domain is implemented.'),
   sp_0457: boundary('sp_0457', 'crustacean_or_mollusk', ['batch04-keys-anentome-helena'], 'Duplicate catalog object for Anentome helena; same reviewed domain boundary as sp_0430.'),

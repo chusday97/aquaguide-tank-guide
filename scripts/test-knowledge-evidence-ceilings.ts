@@ -3,7 +3,7 @@ import { getKnowledgeEvidenceCeiling, knowledgeEvidenceCeilings } from '../src/d
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKnowledge';
 
-assert.deepEqual(Object.keys(knowledgeEvidenceCeilings).sort(), ['sp_0047', 'sp_0224', 'sp_0258']);
+assert.deepEqual(Object.keys(knowledgeEvidenceCeilings).sort(), ['sp_0025','sp_0037','sp_0039','sp_0040','sp_0041','sp_0046','sp_0047','sp_0060','sp_0061','sp_0106','sp_0107','sp_0111','sp_0113','sp_0128','sp_0132','sp_0134','sp_0135','sp_0186','sp_0224','sp_0258']);
 
 const yellowCatfishSocial = getKnowledgeEvidenceCeiling('sp_0047', 'social');
 assert.equal(yellowCatfishSocial?.code, 'species_social_not_established');

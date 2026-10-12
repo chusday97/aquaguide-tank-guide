@@ -48,10 +48,12 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
     const fish = fishData.find(item => item.id === member.speciesId);
     assert.ok(fish, 'released catalog species missing: ' + member.speciesId);
     const identityBoundary = getCatalogIdentityBoundary(member.speciesId);
-    if (!identityBoundary) {
+    const domainBoundary = getCompatibilityDomainBoundary(member.speciesId);
+    const evidenceCeiling = getKnowledgeEvidenceCeiling(member.speciesId);
+    if (!identityBoundary && !domainBoundary && !evidenceCeiling) {
       assert.ok(
         getReviewedSpeciesKnowledgeForFish(fish),
-        'released species must resolve runtime Species Knowledge: ' + member.speciesId,
+        'released species without a fail-closed boundary must resolve runtime Species Knowledge: ' + member.speciesId,
       );
     }
 
@@ -70,6 +72,8 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
       assert.equal(profile, undefined, 'explicit hold species must remain without direct Compatibility Profile: ' + member.speciesId);
       if (identityBoundary) {
         assert.equal(identityBoundary.researchDisposition, 'terminal_unknown_hold');
+      } else if (domainBoundary) {
+        assert.equal(domainBoundary.researchDisposition, 'terminal_unknown_hold');
       } else {
         const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
         assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
@@ -80,7 +84,7 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
       }
     }
 
-    if (batch.requireReviewedCatalogFields && !identityBoundary) {
+    if (batch.requireReviewedCatalogFields && !identityBoundary && !domainBoundary) {
       const fieldReviews = getCatalogFieldReviews(member.speciesId);
       assert.equal(
         fieldReviews.some(review => review.status === 'reviewed'),
