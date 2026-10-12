@@ -231,9 +231,10 @@ try {
     await page.goto(`${baseUrl}/compatibility?species=sp_0011`, { waitUntil: 'domcontentloaded' });
     const drawer = page.locator('[data-surface="compatibility-checkout-drawer"]');
     await drawer.waitFor();
-    await page.waitForFunction(() => document.body.innerText.includes('兼容性 AI 暂时不可用'));
+    await page.waitForFunction(() => document.body.innerText.includes('动态混养判断服务暂时不可用'));
     const drawerText = await drawer.innerText();
-    assert.match(drawerText, /兼容性 AI 暂时不可用，已回退为资料不足。/);
+    assert.match(drawerText, /动态混养判断服务暂时不可用；已审核的明确风险仍然有效。/);
+    assert.match(drawerText, /暂时不要新增；稍后重试动态判断。/);
     assert.equal(await page.getByRole('button', { name: /确认风险后再记录|已经实际入缸，记录下来/ }).count(), 0);
     const persisted = await page.evaluate(({ targetTankId }) => {
       const stored = JSON.parse(localStorage.getItem('aquarium_app_state_v1') || '{}');

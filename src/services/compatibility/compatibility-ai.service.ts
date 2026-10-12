@@ -192,11 +192,14 @@ const fallbackReasoning = (
   result: TankCompatibilityResult,
   speciesIds: string[],
   reason: string,
+  action: string,
 ): AiAssistedCompatibilityResult => {
   if (result.status === 'not_recommended') return deterministicReasoning(result, speciesIds, 'deterministic_only');
+  const deterministicFallback = deterministicReasoning(result, speciesIds, 'fallback', reason);
   return {
-    ...deterministicReasoning(result, speciesIds, 'fallback', reason),
+    ...deterministicFallback,
     verdict: maxVerdict(result.status, 'insufficient_data'),
+    adjustments: Array.from(new Set([action, ...deterministicFallback.adjustments])).slice(0, 6),
     confidence: 'unknown',
   };
 };
@@ -243,7 +246,8 @@ export const resolveCompatibilityResultWithAi = async (
     return fallbackReasoning(
       deterministic,
       speciesIds,
-      '至少一个物种缺少 reviewed environment / social / space 事实，AI 不进行猜测。',
+      '当前缺少足够的已审核物种资料，系统不会猜测。',
+      '暂时不要新增；先补齐或核对物种资料后再判断。',
     );
   }
 
@@ -274,11 +278,11 @@ export const resolveCompatibilityResultWithAi = async (
     const raw = await reasoner(request);
     const parsed = compatibilityAiReasoningSchema.safeParse(raw);
     if (!parsed.success) {
-      return fallbackReasoning(deterministic, speciesIds, 'AI 返回格式无效，已回退为资料不足。');
+      return fallbackReasoning(deterministic, speciesIds, '动态判断暂时未能生成可靠结果。', '暂时不要新增；稍后重新判断。');
     }
     const allowed = new Set(allowedEvidenceIds);
     if (parsed.data.evidenceIds.some(id => !allowed.has(id))) {
-      return fallbackReasoning(deterministic, speciesIds, 'AI 引用了未提供的证据，已拒绝该结果并回退。');
+      return fallbackReasoning(deterministic, speciesIds, '动态判断结果未通过证据校验，系统已拒绝使用。', '暂时不要新增；稍后重新判断。');
     }
 
     const ai = parsed.data;
@@ -298,7 +302,7 @@ export const resolveCompatibilityResultWithAi = async (
       deterministic,
     };
   } catch {
-    return fallbackReasoning(deterministic, speciesIds, '兼容性 AI 暂时不可用，已回退为资料不足。');
+    return fallbackReasoning(deterministic, speciesIds, '动态混养判断服务暂时不可用；已审核的明确风险仍然有效。', '暂时不要新增；稍后重试动态判断。');
   }
 };
 

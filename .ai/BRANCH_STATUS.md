@@ -4,6 +4,7 @@
 - Scope is controlled product wiring: calculator async V4 state, AI-aware presentation, Species Detail compatibility result, submit-time V4 revalidation, focused tests, and authority docs. This is integration, not a UI redesign.
 - Follow-up browser evidence adds a self-contained Playwright V4 smoke and updates one stale Species Detail regression fixture; no runtime product logic or reviewed authority data is changed by that follow-up.
 - Provider-validation follow-up is limited to Compatibility V4 routing/config/tests: Preview confirms primary DeepSeek 402, direct GLM 429, and a request-scoped Vercel OIDC Gateway attempt rejected 403 `customer_verification_required`. The branch retains only default-off OIDC support plus safe provider error type/code observability; temporary Preview/project OIDC activation was disabled again after diagnosis. Production envs, Vision behavior, reviewed Compatibility authority, and migrations are unchanged.
+- Fail-closed product copy is now separated by cause: provider outage, missing reviewed facts, invalid model output, and untrusted evidence do not all masquerade as generic “资料不足”. Provider outage remains a blocked planned-addition state with retry guidance; browser smoke confirms no recording action is exposed.
 - No Compatibility Profile, Pair Rule, Stage Risk, evidence row, or Supabase migration was added. Static authority remains 100 / 21 / 1 / 176.
 - Production remains 60 / 63 / 21 / 1 / 116; no deploy, Production mutation, merge/main, or Vision change is part of this branch.
 

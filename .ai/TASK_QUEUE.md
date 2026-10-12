@@ -10,8 +10,9 @@
 8. DONE: full backend release gate and scope audit pass; clean product-integration checkpoint is committed and pushed.
 9. DONE: real rendered-browser validation passes for V4 pending guard, stricter AI verdict, submit-time revalidation before persistence, provider fail-closed, Species Detail synthesis, GP-002 stocking, and full Species Detail regression.
 10. BLOCKED (external): non-mock Preview V4 reached all configured provider paths, but none can currently return a model result: DeepSeek 402, direct GLM 429, Vercel AI Gateway OIDC 403 `customer_verification_required`. App/provider routing is validated and fail-closed; a successful real-AI Preview now requires provider/account verification or a separately authorized working credential.
-11. PAUSED: wave13 generated queue remains `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
-12. HOLD: no Production deploy, Production DB mutation, migration, merge/main, or Vision work.
+11. DONE: separate provider-outage UX from reviewed-data gaps; provider failure keeps planned additions blocked, preserves reviewed hard-risk authority, tells the user not to add yet / retry later, and exposes no recording action in real browser smoke.
+12. NEXT: wave13 can resume as an independent unified backend authority batch because V4 application-side work is complete; the external provider verification blocker must not be worked around or allowed to weaken reviewed authority. Queue remains `sp_0067, sp_0253, sp_0254, sp_0255, sp_0259, sp_0260, sp_0261, sp_0262, sp_0267, sp_0280, sp_0281, sp_0287, sp_0289, sp_0290, sp_0291, sp_0292, sp_0293, sp_0295, sp_0332, sp_0339, sp_0348, sp_0349, sp_0350, sp_0351, sp_0358`.
+13. HOLD: no Production deploy, Production DB mutation, migration, merge/main, or Vision work.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

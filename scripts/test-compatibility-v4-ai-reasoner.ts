@@ -130,6 +130,8 @@ const providerFailureResult = await evaluateSpeciesCombinationWithAi(
 );
 assert.equal(providerFailureResult.verdict, 'insufficient_data', 'provider failure must fail closed');
 assert.equal(providerFailureResult.provenance.mode, 'fallback');
+assert.equal(providerFailureResult.reasons[0], '动态混养判断服务暂时不可用；已审核的明确风险仍然有效。');
+assert.equal(providerFailureResult.adjustments[0], '暂时不要新增；稍后重试动态判断。');
 
 const malformedResult = await evaluateSpeciesCombinationWithAi(
   [blackSkirt, platy],
@@ -137,6 +139,8 @@ const malformedResult = await evaluateSpeciesCombinationWithAi(
 );
 assert.equal(malformedResult.verdict, 'insufficient_data', 'invalid model output must fail closed');
 assert.equal(malformedResult.provenance.mode, 'fallback');
+assert.equal(malformedResult.reasons[0], '动态判断暂时未能生成可靠结果。');
+assert.equal(malformedResult.adjustments[0], '暂时不要新增；稍后重新判断。');
 
 const unsupportedEvidenceResult = await evaluateSpeciesCombinationWithAi(
   [blackSkirt, platy],
@@ -144,6 +148,7 @@ const unsupportedEvidenceResult = await evaluateSpeciesCombinationWithAi(
 );
 assert.equal(unsupportedEvidenceResult.verdict, 'insufficient_data', 'unsupported evidence ids must fail closed');
 assert.equal(unsupportedEvidenceResult.provenance.mode, 'fallback');
+assert.equal(unsupportedEvidenceResult.reasons[0], '动态判断结果未通过证据校验，系统已拒绝使用。');
 
 let inadequateCalls = 0;
 const inadequateResult = await evaluateSpeciesCombinationWithAi(
@@ -156,6 +161,8 @@ const inadequateResult = await evaluateSpeciesCombinationWithAi(
 assert.equal(inadequateCalls, 0, 'inadequate reviewed fact blocks must not call AI');
 assert.equal(inadequateResult.verdict, 'insufficient_data');
 assert.equal(inadequateResult.provenance.mode, 'fallback');
+assert.equal(inadequateResult.reasons[0], '当前缺少足够的已审核物种资料，系统不会猜测。');
+assert.equal(inadequateResult.adjustments[0], '暂时不要新增；先补齐或核对物种资料后再判断。');
 
 const providerValidated = validateCompatibilityReasoningOutput({
   verdict: 'caution',

@@ -109,6 +109,16 @@ assert.ok(fallbackReview);
 assert.equal(fallbackReview.status, 'insufficient_data', 'provider failure must fail closed at submit time');
 assert.equal(fallbackReview.policy, 'complete_information');
 assert.equal(fallbackReview.runtimeReasoning.provenance.mode, 'fallback');
+assert.equal(fallbackReview.runtimeReasoning.reasons[0], '动态混养判断服务暂时不可用；已审核的明确风险仍然有效。');
+assert.equal(fallbackReview.runtimeReasoning.adjustments[0], '暂时不要新增；稍后重试动态判断。');
+const fallbackPresentation = getCompatibilityPresentationWithAi(
+  deterministicDecision,
+  fallbackReview.runtimeReasoning,
+);
+assert.equal(fallbackPresentation.headline, '暂时无法判断');
+assert.equal(fallbackPresentation.primaryReason, '动态混养判断服务暂时不可用；已审核的明确风险仍然有效。');
+assert.equal(fallbackPresentation.primaryActionText, '暂时不要新增；稍后重试动态判断。');
+assert.equal(fallbackPresentation.primaryAction, 'save_to_wishlist');
 
 let hardBlockCalls = 0;
 const hardBlockReview = await reviewSpeciesAdditionsWithAi({
