@@ -20,6 +20,7 @@ import { nextWaveUnified02Sources } from './catalogReviewBatches/next-wave-unifi
 import { nextWaveUnified03DirectSubjects, nextWaveUnified03RequiredFacts } from './catalogReviewBatches/next-wave-unified-03';
 import { nextWaveUnified04Sources } from './catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified05Sources } from './catalogReviewBatches/next-wave-unified-05';
+import { nextWaveUnified06Sources } from './catalogReviewBatches/next-wave-unified-06';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1519,6 +1520,7 @@ profiles.sp_0156 = {
 
 profiles.sp_0174 = wave04BridgeProfile('sp_0174', 'sp_0010', nextWaveUnified05Sources.tetraAlbinoWhite);
 profiles.sp_0207 = wave04BridgeProfile('sp_0207', 'sp_0010', nextWaveUnified05Sources.tetraAlbinoWhite);
+profiles.sp_0283 = wave04BridgeProfile('sp_0283', 'sp_0103', nextWaveUnified06Sources.scleropagesSuperRedPeerReviewed);
 
 profiles.sp_0173 = {
   speciesId: 'sp_0173',

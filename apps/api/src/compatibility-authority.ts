@@ -134,6 +134,7 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
       + rolloutProfileKeysets.currentProduction.size + ' / '
       + rolloutProfileKeysets.productionTarget.size + ' / '
       + rolloutProfileKeysets.wave04Target.size + ' / '
+      + rolloutProfileKeysets.wave05Target.size + ' / '
       + rolloutProfileKeysets.target.size + ' Profiles / '
       + expectedPairKeys.size + ' Pair Rules / '
       + expectedStageRiskKeys.size + ' Stage Risk。',

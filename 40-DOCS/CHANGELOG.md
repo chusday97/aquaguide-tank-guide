@@ -1,5 +1,9 @@
 # Changelog
 
+- Added: Compatibility unified wave06 audits 25 catalog objects as one batch; only `sp_0283` Super Red Asian Arowana is promoted through peer-reviewed phenotype identity into the reviewed `Scleropages formosus` authority, while the other 24 ornamental/hybrid/category-mismatched objects remain explicit fail-closed identity/category holds.
+- Added: Stacked wave06 Compatibility migration contract `20261012023000` requires exact wave05 predecessor 99 Profiles / 175 reviewed evidence and targets 100 Profiles / 176 evidence with 3 exact Profile-source links; Production remains untouched.
+- Changed: Compatibility runtime rollout generations are now exact 63 → 85 → 95 → 99 → 100 Profile keysets; intermediate or mismatched sets still fail closed, while the #188 Production guard remains frozen at 63 → 85.
+
 ## [Unreleased]
 
 - Added: Compatibility wave05 audits 25 catalog objects as one batch, promotes 4 evidence-backed fish Profiles and places 21 ambiguous commercial/variant/category objects behind explicit identity boundaries. The stacked repository-only migration requires exact 95 Profiles / 171 sources and targets exact 99 / 175 with 9 profile-source links; prior 63→85 and 85→95 guards remain unchanged.

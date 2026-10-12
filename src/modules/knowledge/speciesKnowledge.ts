@@ -56,9 +56,11 @@ import { nextWaveUnifiedBatchKnowledge } from './nextWaveUnifiedBatchAuthority';
 import { nextWaveUnified03ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-03';
 import { nextWaveUnified04ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified05ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-05';
+import { nextWaveUnified06ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-06';
 import { nextWaveUnified03BatchKnowledge } from './nextWaveUnified03BatchAuthority';
 import { nextWaveUnified04BatchKnowledge } from './nextWaveUnified04BatchAuthority';
 import { nextWaveUnified05BatchKnowledge } from './nextWaveUnified05BatchAuthority';
+import { nextWaveUnified06BatchKnowledge } from './nextWaveUnified06BatchAuthority';
 import { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId } from './phase2AuthorityRegistry';
 
 export { getPhase2Authority, phase2AuthorityBatchCount, phase2AuthorityBySpeciesId };
@@ -912,6 +914,7 @@ const reviewedKnowledgeBySpeciesId: Partial<Record<string, SpeciesKnowledgeProfi
   ...nextWaveUnified03BatchKnowledge,
   ...nextWaveUnified04BatchKnowledge,
   ...nextWaveUnified05BatchKnowledge,
+  ...nextWaveUnified06BatchKnowledge,
   sp_0016: goldRamPhase2Knowledge,
   sp_0224: platinumSnakeheadPhase2Knowledge,
   sp_0475: rosyBitterlingPhase2Knowledge,
@@ -1971,6 +1974,7 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     nextWaveUnified03ProfileIds.includes(fish.id)
     || nextWaveUnified04ProfileIds.includes(fish.id as (typeof nextWaveUnified04ProfileIds)[number])
     || nextWaveUnified05ProfileIds.includes(fish.id as (typeof nextWaveUnified05ProfileIds)[number])
+    || nextWaveUnified06ProfileIds.includes(fish.id as (typeof nextWaveUnified06ProfileIds)[number])
   ) {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }

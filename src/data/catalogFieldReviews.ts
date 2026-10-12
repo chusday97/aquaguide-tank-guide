@@ -17,6 +17,7 @@ import { nextWaveUnified02FieldReviews, nextWaveUnified02VerifiedSourceIds } fro
 import { nextWaveUnified03FieldReviews, nextWaveUnified03VerifiedSourceIds } from './catalogReviewBatches/next-wave-unified-03';
 import { nextWaveUnified04FieldReviews, nextWaveUnified04VerifiedSourceIds } from './catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified05FieldReviews, nextWaveUnified05VerifiedSourceIds } from './catalogReviewBatches/next-wave-unified-05';
+import { nextWaveUnified06FieldReviews, nextWaveUnified06VerifiedSourceIds } from './catalogReviewBatches/next-wave-unified-06';
 
 /** Source-controlled field review record. Drafts never enter runtime Catalog. */
 export const catalogFieldReviewSchema = z.object({
@@ -95,6 +96,7 @@ export const catalogFieldReviews: CatalogFieldReview[] = [
   ...nextWaveUnified03FieldReviews,
   ...nextWaveUnified04FieldReviews,
   ...nextWaveUnified05FieldReviews,
+  ...nextWaveUnified06FieldReviews,
 ];
 
 /** Source content must be read and verified before any field can overlay runtime data. */
@@ -112,6 +114,7 @@ export const catalogContentVerifiedSourceIds = new Set([
   ...nextWaveUnified03VerifiedSourceIds,
   ...nextWaveUnified04VerifiedSourceIds,
   ...nextWaveUnified05VerifiedSourceIds,
+  ...nextWaveUnified06VerifiedSourceIds,
 ]);
 
 export const getCatalogFieldReviews = (speciesId: string) => catalogFieldReviews.filter(item => item.speciesId === speciesId);

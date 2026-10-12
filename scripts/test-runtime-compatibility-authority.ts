@@ -134,10 +134,23 @@ assert.equal(wave04TargetStatus.pairRules, bootstrap.pairRules.length);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
-applyReviewedCompatibilityBootstrap(bootstrap);
+const wave05TargetProfiles = profilesFor(rolloutKeysets.wave05Target);
+assert.equal(wave05TargetProfiles.length, 99);
+applyReviewedCompatibilityBootstrap({
+  ...bootstrap,
+  profiles: wave05TargetProfiles,
+  counts: { profiles: wave05TargetProfiles.length, pairRules: bootstrap.pairRules.length },
+});
 const wave05TargetStatus = getRuntimeCompatibilityStatus();
-assert.equal(wave05TargetStatus.source, 'reviewed-db', 'exact 99-Profile wave05 target must be usable');
+assert.equal(wave05TargetStatus.source, 'reviewed-db', 'exact 99-Profile wave05 target must remain usable during wave06 rollout');
 assert.equal(wave05TargetStatus.profiles, 99);
+
+resetRuntimeCompatibilityEvidenceForTest();
+
+applyReviewedCompatibilityBootstrap(bootstrap);
+const wave06TargetStatus = getRuntimeCompatibilityStatus();
+assert.equal(wave06TargetStatus.source, 'reviewed-db', 'exact 100-Profile wave06 target must be usable');
+assert.equal(wave06TargetStatus.profiles, 100);
 
 resetRuntimeCompatibilityEvidenceForTest();
 

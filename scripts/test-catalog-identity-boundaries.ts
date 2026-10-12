@@ -1,8 +1,9 @@
 import assert from 'node:assert/strict';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { catalogIdentityBoundaries, getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
+import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 
-assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0055', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0158', 'sp_0163', 'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0179', 'sp_0182', 'sp_0201', 'sp_0208', 'sp_0216', 'sp_0217', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0229', 'sp_0234', 'sp_0235', 'sp_0236', 'sp_0334', 'sp_0428']);
+assert.deepEqual(Object.keys(catalogIdentityBoundaries).sort(), ['sp_0002', 'sp_0021', 'sp_0055', 'sp_0110', 'sp_0120', 'sp_0127', 'sp_0158', 'sp_0163', 'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0179', 'sp_0182', 'sp_0201', 'sp_0208', 'sp_0216', 'sp_0217', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0229', 'sp_0234', 'sp_0235', 'sp_0236', 'sp_0240', 'sp_0241', 'sp_0242', 'sp_0243', 'sp_0247', 'sp_0248', 'sp_0256', 'sp_0257', 'sp_0263', 'sp_0264', 'sp_0265', 'sp_0266', 'sp_0268', 'sp_0269', 'sp_0270', 'sp_0271', 'sp_0272', 'sp_0273', 'sp_0282', 'sp_0284', 'sp_0285', 'sp_0286', 'sp_0288', 'sp_0294', 'sp_0334', 'sp_0428']);
 
 const crystal = getCatalogIdentityBoundary('sp_0002');
 assert.equal(crystal?.code, 'trade_name_taxon_ambiguous');
@@ -59,7 +60,27 @@ const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
 assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');
 assert.equal(parentTaxonHold?.resolvedGranularity, 'parent_taxon_unresolved');
 
-for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0177','sp_0178','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0221','sp_0227','sp_0228','sp_0229','sp_0234','sp_0235','sp_0236']) {
+for (const speciesId of ['sp_0241','sp_0266','sp_0271']) {
+  const boundary = getCatalogIdentityBoundary(speciesId);
+  assert.equal(boundary?.code, 'catalog_category_mismatch');
+  assert.equal(boundary?.resolvedGranularity, 'catalog_category_mismatch');
+  assert.equal(boundary?.researchDisposition, 'terminal_unknown_hold');
+}
+
+const wave06Hybrid = getCatalogIdentityBoundary('sp_0243');
+assert.equal(wave06Hybrid?.code, 'commercial_hybrid_identity_unresolved');
+assert.equal(wave06Hybrid?.researchDisposition, 'terminal_unknown_hold');
+
+const wave06Malformed = getCatalogIdentityBoundary('sp_0265');
+assert.equal(wave06Malformed?.code, 'catalog_scientific_name_unresolved');
+assert.equal(wave06Malformed?.researchDisposition, 'terminal_unknown_hold');
+
+const superRedReview = getCatalogFieldReviews('sp_0283').find(review => review.field === 'identity');
+assert.equal(superRedReview?.resolution, 'supported');
+assert.equal(getCatalogIdentityBoundary('sp_0283'), undefined);
+assert.ok(getReviewedCompatibilityProfile('sp_0283'));
+
+for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0177','sp_0178','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0221','sp_0227','sp_0228','sp_0229','sp_0234','sp_0235','sp_0236','sp_0240','sp_0242','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0272','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');
