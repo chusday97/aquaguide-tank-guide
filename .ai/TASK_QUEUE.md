@@ -1,11 +1,11 @@
-## TOP CURRENT QUEUE — 2026-10-12 unified wave10
+## TOP CURRENT QUEUE — 2026-10-12 unified wave11
 
-1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 24 cross-taxa domain holds / 1 Ranchu variant social evidence ceiling.
-2. DONE: extend domain taxonomy with marine_invertebrate and reptile while preserving fail-closed fish-profile boundaries.
+1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 12 identity holds / 13 ornamental-variant social evidence ceilings.
+2. DONE: separate incomplete scientific names, unresolved parent taxa, and unbridged commercial variants instead of inheriting base-species Compatibility authority.
 3. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
 4. DONE: regenerate completion and Compatibility coverage while preserving normal breadth expansion.
-5. DONE: focused contracts, cross-contract validation, full backend release gate, diff check, scope audit, clean checkpoint, and wave10 branch push are complete.
-6. NEXT ACTIVE 25: sp_0064, sp_0065, sp_0124, sp_0141, sp_0142, sp_0143, sp_0145, sp_0147, sp_0148, sp_0149, sp_0152, sp_0153, sp_0154, sp_0155, sp_0159, sp_0160, sp_0161, sp_0167, sp_0168, sp_0169, sp_0170, sp_0171, sp_0172, sp_0180, sp_0196.
+5. DONE: focused contracts, cross-contract validation, full backend release gate, diff check, scope audit, clean checkpoint, and wave11 branch push are complete.
+6. NEXT ACTIVE 25: sp_0066, sp_0144, sp_0150, sp_0203, sp_0204, sp_0205, sp_0206, sp_0209, sp_0210, sp_0212, sp_0213, sp_0215, sp_0222, sp_0223, sp_0225, sp_0226, sp_0230, sp_0231, sp_0232, sp_0233, sp_0237, sp_0244, sp_0245, sp_0246, sp_0252.
 7. HOLD: no Production deploy, Production DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04

@@ -1,9 +1,9 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave10
+## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave11
 
-- Branch: `codex/compatibility-next25-wave10-20261012` from exact pushed wave09 HEAD `0e9e2f5eebe9e46245450faaea6319e0e3faf1a4`.
-- Wave10 classified all 25 generated objects atomically: 0 Profiles, 24 cross-taxa domain holds, and 1 Ranchu variant social evidence ceiling; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Domain closure now includes marine polychaete/echinoderm and turtle/reptile life types instead of allowing those catalog objects into fish social-profile semantics.
-- Regenerated coverage exposes wave11: `sp_0064, sp_0065, sp_0124, sp_0141, sp_0142, sp_0143, sp_0145, sp_0147, sp_0148, sp_0149, sp_0152, sp_0153, sp_0154, sp_0155, sp_0159, sp_0160, sp_0161, sp_0167, sp_0168, sp_0169, sp_0170, sp_0171, sp_0172, sp_0180, sp_0196`.
+- Branch: `codex/compatibility-next25-wave11-20261012` from exact pushed wave10 HEAD `966ae1c52e0bdbfbf5a62bbea7b26fea15bc20ea`.
+- Wave11 classified all 25 generated objects atomically: 0 Profiles, 12 identity holds, and 13 ornamental-variant social evidence ceilings; static authority remains 100 / 21 / 1 / 176 and no migration was created.
+- Identity closure distinguishes incomplete `var.` scientific names, genus-only unresolved parents, and named commercial variants backed only by base-species authority instead of collapsing all of them into generic missing evidence.
+- Regenerated coverage exposes wave12: `sp_0066, sp_0144, sp_0150, sp_0203, sp_0204, sp_0205, sp_0206, sp_0209, sp_0210, sp_0212, sp_0213, sp_0215, sp_0222, sp_0223, sp_0225, sp_0226, sp_0230, sp_0231, sp_0232, sp_0233, sp_0237, sp_0244, sp_0245, sp_0246, sp_0252`.
 - Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

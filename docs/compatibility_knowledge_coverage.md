@@ -44,31 +44,31 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 
 ## Next-wave species research queue
 
-1. 泰狮金鱼 (sp_0064) — environment, space, social, compatibility_profile — score 25
-2. 蝶尾金鱼 (sp_0065) — environment, space, social, compatibility_profile — score 25
-3. 蓝眼胡子 (sp_0124) — environment, space, social, compatibility_profile — score 25
-4. 甜心柠檬灯 (sp_0141) — environment, space, social, compatibility_profile — score 25
-5. 球鱼 (玛丽变种) (sp_0142) — environment, space, social, compatibility_profile — score 25
-6. 红草尾孔雀鱼 (sp_0143) — environment, space, social, compatibility_profile — score 25
-7. 大耳孔雀鱼 (sp_0145) — environment, space, social, compatibility_profile — score 25
-8. 蓝宝鹦鹉鱼 (sp_0147) — environment, space, social — score 25
-9. 雪玉鹦鹉鱼 (sp_0148) — environment, space, social — score 25
-10. 熊猫金鱼 (sp_0149) — environment, space, social, compatibility_profile — score 25
-11. 荧光斑马鱼 (sp_0152) — environment, space, social, compatibility_profile — score 25
-12. 球形珍珠马甲 (sp_0153) — environment, space, social, compatibility_profile — score 25
-13. 红鼻灯 (改良) (sp_0154) — environment, space, social, compatibility_profile — score 25
-14. 长鳍红绿灯 (sp_0155) — environment, space, social, compatibility_profile — score 25
-15. 黄金胡子 (异型变种) (sp_0159) — environment, space, social, compatibility_profile — score 25
-16. 大帆白金胡子 (sp_0160) — environment, space, social, compatibility_profile — score 25
-17. 巧克力皮球 (sp_0161) — environment, space, social, compatibility_profile — score 25
-18. 球形红鼻剪刀 (sp_0167) — environment, space, social, compatibility_profile — score 25
-19. 金玛丽 (sp_0168) — environment, space, social, compatibility_profile — score 25
-20. 银玛丽 (sp_0169) — environment, space, social, compatibility_profile — score 25
-21. 黑金刚孔雀鱼 (sp_0170) — environment, space, social, compatibility_profile — score 25
-22. 白玉金丝鱼 (sp_0171) — environment, space, social, compatibility_profile — score 25
-23. 长鳍白云金丝 (sp_0172) — environment, space, social, compatibility_profile — score 25
-24. 龙睛金鱼 (sp_0180) — environment, space, social, compatibility_profile — score 25
-25. 一眉道人 (黄金型) (sp_0196) — environment, space, social, compatibility_profile — score 25
+1. 鹤顶红金鱼 (sp_0066) — environment, space, social, compatibility_profile — score 25
+2. 蓝草尾孔雀鱼 (sp_0144) — environment, space, social, compatibility_profile — score 25
+3. 短尾狮头金鱼 (sp_0150) — environment, space, social, compatibility_profile — score 25
+4. 绿赏皮球 (sp_0203) — environment, space, social, compatibility_profile — score 25
+5. 黑金刚红鼻剪刀 (sp_0204) — environment, space, social, compatibility_profile — score 25
+6. 紫艳红莲灯 (sp_0205) — environment, space, social, compatibility_profile — score 25
+7. 电光红绿灯 (sp_0206) — environment, space, social, compatibility_profile — score 25
+8. 血玛丽鱼 (sp_0209) — environment, space, social, compatibility_profile — score 25
+9. 黄金眼镜蛇蛇鱼 (sp_0210) — environment, space, social, compatibility_profile — score 25
+10. 蓝眼金灯 (sp_0212) — environment, space, social, compatibility_profile — score 25
+11. 黑线飞狐 (金型) (sp_0213) — environment, space, social, compatibility_profile — score 25
+12. 长鳍一眉道人 (sp_0215) — environment, space, social, compatibility_profile — score 25
+13. 蓝宝鹦鹉 (球形) (sp_0222) — environment, space, social — score 25
+14. 红眼白子雷龙 (sp_0223) — environment, space, social — score 25
+15. 大帆红鼻剪刀 (sp_0225) — environment, space, social, compatibility_profile — score 25
+16. 白金红鼻剪刀 (sp_0226) — environment, space, social, compatibility_profile — score 25
+17. 大帆黄金胡子 (sp_0230) — environment, space, social, compatibility_profile — score 25
+18. 红眼白子熊猫鼠 (sp_0231) — environment, space, social, compatibility_profile — score 25
+19. 白金咖啡鼠 (sp_0232) — environment, space, social, compatibility_profile — score 25
+20. 球形珍珠马甲 (红眼) (sp_0233) — environment, space, social, compatibility_profile — score 25
+21. 高鳍红玛丽 (sp_0237) — environment, space, social, compatibility_profile — score 25
+22. 黄金草尾孔雀 (sp_0244) — environment, space, social, compatibility_profile — score 25
+23. 红白剑尾孔雀 (sp_0245) — environment, space, social, compatibility_profile — score 25
+24. 白子红白孔雀 (sp_0246) — environment, space, social, compatibility_profile — score 25
+25. 白金反游猫 (sp_0252) — environment, space, social, compatibility_profile — score 25
 
 ## Terminal reviewed-unknown holds
 

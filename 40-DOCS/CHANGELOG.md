@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave11 closes the generated 25-object ornamental-fish queue as one batch: 12 identity terminal holds and 13 variant social evidence ceilings; no unsupported Profile or mother/base-species inheritance was introduced.
+- Changed: Variant closure now distinguishes incomplete scientific names, unresolved genus-level parents and exact commercial-lineage identity gaps from objects whose identity is reviewed but social Compatibility authority remains unknown; regenerated coverage advances to wave12 while static DB authority stays 100 Profiles / 176 evidence with no new migration.
+
 - Added: Compatibility wave10 closes the generated 25-object queue as one batch: 24 non-fish objects are explicit domain holds and Ranchu remains a variant social evidence ceiling; no unsupported Profile or base-species inheritance was introduced.
 - Changed: Compatibility domain taxonomy now includes `marine_invertebrate` for tube worms/sea stars and `reptile` for turtles, preventing catalog labels from routing those objects into fish social semantics; regenerated coverage advances to wave11 while static DB authority remains 100 Profiles / 176 evidence with no new migration.
 
