@@ -189,6 +189,22 @@ const fallbackEnabled = buildApiConfig({
 });
 assert.equal(fallbackEnabled.aiFallbackApiKey, 'vision-only-key');
 assert.equal(fallbackEnabled.aiFallbackModel, 'glm-4.7-flash');
+const oidcFallbackEnabled = buildApiConfig({
+  VERCEL_OIDC_TOKEN: 'vercel-oidc-token',
+  AI_FALLBACK_USE_VERCEL_OIDC: 'true',
+  AI_FALLBACK_BASE_URL: 'https://ai-gateway.vercel.sh/v1',
+  AI_FALLBACK_MODEL: 'zai/glm-4.6v-flash',
+});
+assert.equal(oidcFallbackEnabled.aiFallbackApiKey, 'vercel-oidc-token');
+assert.equal(oidcFallbackEnabled.aiFallbackBaseUrl, 'https://ai-gateway.vercel.sh/v1');
+assert.equal(oidcFallbackEnabled.aiFallbackModel, 'zai/glm-4.6v-flash');
+const explicitFallbackWins = buildApiConfig({
+  AI_FALLBACK_API_KEY: 'explicit-fallback-key',
+  VERCEL_OIDC_TOKEN: 'vercel-oidc-token',
+  AI_FALLBACK_USE_VERCEL_OIDC: 'true',
+  AI_FALLBACK_MODEL: 'zai/glm-4.6v-flash',
+});
+assert.equal(explicitFallbackWins.aiFallbackApiKey, 'explicit-fallback-key', 'explicit fallback credentials must win over OIDC');
 
 let capturedPairRequest: CompatibilityAiReasoningRequest | null = null;
 await evaluateSpeciesCombinationWithAi([blackSkirt, platy], async request => {

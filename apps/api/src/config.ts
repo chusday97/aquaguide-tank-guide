@@ -19,10 +19,11 @@ export const buildApiConfig = (env: NodeJS.ProcessEnv = process.env) => ({
   aiBaseUrl: (env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, ''),
   aiModel: env.AI_MODEL || env.DEEPSEEK_MODEL || 'deepseek-v4-flash',
   aiTimeoutMs: Number(env.AI_TIMEOUT_MS || 20_000),
-  // Compatibility V4 may opt into a separate text-provider fallback. Reusing
-  // the existing GLM credential is deliberately explicit so Vision remains
-  // independent unless a non-production environment enables the bridge.
+  // Compatibility V4 may opt into a separate text-provider fallback.
+  // OIDC is explicit and deployment-scoped; Vision credentials remain isolated
+  // unless a non-production environment deliberately enables that bridge.
   aiFallbackApiKey: env.AI_FALLBACK_API_KEY
+    || (env.AI_FALLBACK_USE_VERCEL_OIDC === 'true' ? (env.VERCEL_OIDC_TOKEN || '') : '')
     || (env.AI_FALLBACK_USE_VISION_CREDENTIALS === 'true' ? (env.VISION_API_KEY || env.GLM_API_KEY || '') : ''),
   aiFallbackBaseUrl: (env.AI_FALLBACK_BASE_URL || 'https://open.bigmodel.cn/api/paas/v4').replace(/\/$/, ''),
   aiFallbackModel: env.AI_FALLBACK_MODEL || '',

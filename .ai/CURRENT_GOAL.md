@@ -7,6 +7,7 @@
 - All three real calculator write paths (standalone Compatibility, Aquarium, Encyclopedia) now re-run V4 immediately before livestock persistence. The final planned-addition policy takes the stricter of deterministic addition review and V4 verdict.
 - Provider/schema/fact-coverage failures remain fail-closed; deterministic hard blocks and reviewed Pair Rules still bypass AI. Runtime synthesis never becomes reviewed authority.
 - Real Playwright product smoke now verifies the rendered V4 flow end to end: pending guard, AI risk escalation, submit-time revalidation before persistence, provider fail-closed behavior, and Species Detail V4 synthesis inside the expandable Compatibility section.
+- Real Preview provider validation found the current primary DeepSeek path failing with HTTP 402 and the direct GLM credential fallback failing with HTTP 429. The branch is therefore adding an explicit Preview-only Vercel AI Gateway fallback authenticated by `VERCEL_OIDC_TOKEN`; default/Production behavior stays unchanged and failures still fail closed.
 - Static authority is unchanged at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; no migration or authority data was added.
 - Production remains unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, or Vision work is authorized.
 

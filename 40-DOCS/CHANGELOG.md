@@ -10,6 +10,8 @@
 - Safety: V4 requests are race-guarded, livestock mutation is blocked while reasoning is pending, submit-time policy uses the stricter deterministic/V4 verdict, and AI prose remains separate from reviewed rule evidence.
 - Validation: added a real Playwright V4 product smoke covering pending state, AI risk escalation, submit-time revalidation-before-persistence, provider failure, and Species Detail runtime synthesis; GP-002 stocking and full Species Detail UI regressions also pass.
 - Corrected: the Species Detail regression fixture for silver arowana + neon tetra now expects the current reviewed `not_recommended` predation conclusion instead of the historical `insufficient_data` state.
+- Added: Compatibility V4 can explicitly use Vercel deployment OIDC as a fallback credential when `AI_FALLBACK_USE_VERCEL_OIDC=true`; explicit fallback API keys still take precedence and the option is default-off.
+- Preview validation: a real reviewed-facts request reached the deployed Compatibility V4 endpoint; DeepSeek returned 402 and the direct GLM fallback returned 429, confirming fail-closed behavior and motivating the Preview-only Gateway fallback without changing reviewed authority or Production.
 
 - Added: Compatibility V4 introduces AI-assisted dynamic reasoning over structured reviewed species facts, including a typed contract, existing-provider integration, a bounded compatibility AI API route, async application/knowledge-layer entry points, and multi-species context support.
 - Safety: deterministic hard blocks and reviewed Pair Rules remain authoritative; AI cannot lower deterministic risk, cannot cite evidence outside the reviewed allowlist, and provider/schema/fact-coverage failures fail closed to `insufficient_data`.

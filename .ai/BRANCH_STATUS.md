@@ -3,6 +3,7 @@
 - `codex/compatibility-v4-product-integration-20261012` was created from exact clean pushed V4 reasoner HEAD `c973811b5a4dc31d1ad6a2538e069a3408178d61`.
 - Scope is controlled product wiring: calculator async V4 state, AI-aware presentation, Species Detail compatibility result, submit-time V4 revalidation, focused tests, and authority docs. This is integration, not a UI redesign.
 - Follow-up browser evidence adds a self-contained Playwright V4 smoke and updates one stale Species Detail regression fixture; no runtime product logic or reviewed authority data is changed by that follow-up.
+- Provider-validation follow-up is limited to Compatibility V4 routing/config/tests: direct Preview calls confirmed primary 402 and direct GLM fallback 429, so this branch adds an explicit default-off Vercel OIDC fallback suitable for Preview; it does not alter Production envs, Vision behavior, reviewed Compatibility authority, or migrations.
 - No Compatibility Profile, Pair Rule, Stage Risk, evidence row, or Supabase migration was added. Static authority remains 100 / 21 / 1 / 176.
 - Production remains 60 / 63 / 21 / 1 / 116; no deploy, Production mutation, merge/main, or Vision change is part of this branch.
 
