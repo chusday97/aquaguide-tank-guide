@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave09 closes the generated 25-object queue as one batch: 9 exact fish species remain explicit social evidence ceilings and 16 coral/anemone/shrimp/snail/crab objects are classified as cross-taxa domain holds outside the fish-profile runtime; no unsupported Profile was introduced.
+- Changed: Domain closure now explicitly catches catalog objects mislabeled as fish (including marine shrimp/crab and Tubastraea) without allowing catalog category to override reviewed life type; regenerated coverage advances to wave10 while static DB authority remains 100 Profiles / 176 evidence with no new migration.
+
 - Added: Compatibility wave08 closes the generated 25-object queue as one batch: 7 identity/category terminal holds, 17 exact-species evidence ceilings backed by prior reviewed-unknown professional reviews, and 1 sea-anemone domain hold; no unsupported Profile or base-species inheritance was introduced.
 - Changed: `species_social_not_established` is now represented as an explicit evidence-ceiling resolution mode, wave08 hold contracts are included in the backend release gate, and regenerated coverage advances to a fresh 25-object wave09 queue while static DB authority remains 100 Profiles / 176 evidence with no new migration.
 

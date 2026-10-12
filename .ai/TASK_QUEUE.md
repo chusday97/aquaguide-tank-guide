@@ -1,10 +1,10 @@
-## TOP CURRENT QUEUE — 2026-10-12 unified wave08
+## TOP CURRENT QUEUE — 2026-10-12 unified wave09
 
-1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 7 identity-category holds / 17 exact-species evidence ceilings / 1 domain hold.
+1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 9 exact-fish evidence ceilings / 16 cross-taxa domain holds.
 2. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
 3. DONE: regenerate completion, backlog, and Compatibility coverage while preserving normal breadth expansion.
-4. DONE: cross-contract validation, full backend release gate, diff audit, clean checkpoint, and wave08 branch push are complete.
-5. NEXT ACTIVE 25: sp_0136, sp_0137, sp_0336, sp_0362, sp_0368, sp_0370, sp_0400, sp_0401, sp_0402, sp_0458, sp_0467, sp_0470, sp_0471, sp_0472, sp_0473, sp_0003, sp_0004, sp_0005, sp_0188, sp_0189, sp_0190, sp_0191, sp_0427, sp_0429, sp_0476.
+4. DONE: cross-contract validation, full backend release gate, diff audit, clean checkpoint, and wave09 branch push are complete.
+5. NEXT ACTIVE 25: sp_0029, sp_0032, sp_0033, sp_0454, sp_0456, sp_0192, sp_0193, sp_0194, sp_0195, sp_0326, sp_0328, sp_0331, sp_0369, sp_0377, sp_0378, sp_0380, sp_0381, sp_0383, sp_0461, sp_0462, sp_0463, sp_0464, sp_0465, sp_0466, sp_0063.
 6. HOLD: no Production deploy, Production DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04

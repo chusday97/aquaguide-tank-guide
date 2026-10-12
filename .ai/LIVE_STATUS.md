@@ -1,8 +1,8 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave08
+## TOP CURRENT OVERRIDE — 2026-10-12 unified Compatibility wave09
 
-- Branch: `codex/compatibility-next25-wave08-20261012` from exact pushed wave07 HEAD `985d17f19b1c811bb222ff6f6523ae29077404e5`.
-- Wave08 classified all 25 generated objects atomically: 0 Profiles, 7 identity/category holds, 17 exact-species evidence ceilings, and 1 sea-anemone domain hold; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Regenerated coverage exposes wave09: `sp_0136, sp_0137, sp_0336, sp_0362, sp_0368, sp_0370, sp_0400, sp_0401, sp_0402, sp_0458, sp_0467, sp_0470, sp_0471, sp_0472, sp_0473, sp_0003, sp_0004, sp_0005, sp_0188, sp_0189, sp_0190, sp_0191, sp_0427, sp_0429, sp_0476`.
+- Branch: `codex/compatibility-next25-wave09-20261012` from exact pushed wave08 HEAD `20de0e92f86df677b37fe6b525d31a10d0441ce9`.
+- Wave09 classified all 25 generated objects atomically: 0 Profiles, 9 exact-fish evidence ceilings, and 16 cross-taxa domain holds; static authority remains 100 / 21 / 1 / 176 and no migration was created.
+- Regenerated coverage exposes wave10: `sp_0029, sp_0032, sp_0033, sp_0454, sp_0456, sp_0192, sp_0193, sp_0194, sp_0195, sp_0326, sp_0328, sp_0331, sp_0369, sp_0377, sp_0378, sp_0380, sp_0381, sp_0383, sp_0461, sp_0462, sp_0463, sp_0464, sp_0465, sp_0466, sp_0063`.
 - Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

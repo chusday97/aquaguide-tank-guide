@@ -8139,10 +8139,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Sphaerichthys osphromenoides species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -8158,7 +8158,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -8214,10 +8214,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Semaprochilodus insignis species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -8233,7 +8233,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -23745,10 +23745,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Hemigrammus rodwayi species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -23764,7 +23764,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -30006,10 +30006,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Kryptopterus vitreolus species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -30025,7 +30025,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -30639,10 +30639,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Hyphessobrycon megalopterus species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -30658,7 +30658,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -30798,10 +30798,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Hyphessobrycon herbertaxelrodi species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -30817,7 +30817,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -30873,10 +30873,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Moenkhausia pittieri species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -30892,7 +30892,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -30948,10 +30948,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Thayeria boehlkei species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -30967,7 +30967,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },
@@ -31023,10 +31023,10 @@
         },
         {
           "field": "social",
-          "mode": "targeted_source_expansion",
-          "reason": "reviewed_unknown_no_explicit_ceiling",
-          "code": null,
-          "note": "The reviewed source used so far does not establish this field, but no evidence ceiling is recorded. Expand to a different field-specific authority (for example husbandry, ecology, behavior, feeding, or care literature) instead of repeating the same source class; do not infer a positive fact from legacy/template data."
+          "mode": "do_not_repeat_ordinary_research",
+          "reason": "explicit_evidence_ceiling",
+          "code": "species_social_not_established",
+          "note": "Nannostomus beckfordi species review is already reviewed but does not establish a stable household aquarium social mode, defensible community compatibility rule, or sufficiently complete environment/space/social authority for a positive Compatibility Profile. Keep this exact catalog object fail-closed until stronger object-level reviewed evidence is added."
         },
         {
           "field": "care",
@@ -31042,7 +31042,7 @@
       "inherited_compatibility_profile": false,
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "priority_score": 5,
+      "priority_score": 4,
       "source_conflicts": [],
       "evidence_boundary": "No legacy fishData prose, template text, or base-species inheritance is treated as species-specific reviewed evidence."
     },

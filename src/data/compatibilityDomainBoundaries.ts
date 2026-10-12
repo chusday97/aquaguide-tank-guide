@@ -1,4 +1,5 @@
 import { nextWaveUnified08DomainOutcomes } from './catalogReviewBatches/next-wave-unified-08';
+import { nextWaveUnified09DomainOutcomes } from './catalogReviewBatches/next-wave-unified-09';
 
 export type CompatibilityDomainBoundaryCode = 'life_type_not_supported_by_fish_compatibility_domain';
 
@@ -31,6 +32,12 @@ const boundary = (
 
 export const compatibilityDomainBoundaries: Record<string, CompatibilityDomainBoundary> = {
   ...Object.fromEntries(nextWaveUnified08DomainOutcomes.map(outcome => [outcome.speciesId, {
+    ...outcome,
+    code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
+    reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }])),
+  ...Object.fromEntries(nextWaveUnified09DomainOutcomes.map(outcome => [outcome.speciesId, {
     ...outcome,
     code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
     reviewedAt: '2026-10-12',
