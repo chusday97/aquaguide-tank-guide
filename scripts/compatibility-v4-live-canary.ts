@@ -26,6 +26,7 @@ export type CompatibilityV4LiveCanaryCase = {
     reason: string | null;
     suggestedVerdict: string | null;
     confidence: string | null;
+    model: string | null;
     providerCalls: number;
   };
   latencyMs: number;
@@ -43,6 +44,7 @@ export type CompatibilityV4LiveCanaryReport = {
     configured: boolean;
     host: string | null;
     model: string;
+    fallbackModels: string[];
     timeoutMs: number;
   };
   outcome:
@@ -64,6 +66,7 @@ export type CompatibilityV4LiveCanaryReport = {
     skippedAi: number;
     acceptedReviewedCases: number;
     finalDecisionMutations: number;
+    modelsUsed: string[];
   };
 };
 
@@ -166,6 +169,7 @@ export const runCompatibilityV4LiveCanary = async (
         reason: shadow.ai.reason || null,
         suggestedVerdict: shadow.ai.suggestedVerdict || null,
         confidence: shadow.ai.confidence || null,
+        model: shadow.provenance.model || null,
         providerCalls,
       },
       latencyMs,
@@ -187,6 +191,7 @@ export const runCompatibilityV4LiveCanary = async (
       item.deterministic.decisionReadiness === 'reviewed' && item.ai.status === 'accepted'
     )).length,
     finalDecisionMutations: cases.filter(item => !item.finalDecision.unchanged).length,
+    modelsUsed: [...new Set(cases.map(item => item.ai.model).filter((model): model is string => Boolean(model)))],
   };
 
   const unavailableReasons = new Set(
@@ -214,6 +219,7 @@ export const runCompatibilityV4LiveCanary = async (
       configured: providerConfigured,
       host: readiness.host,
       model: readiness.model,
+      fallbackModels: readiness.fallbackModels,
       timeoutMs: readiness.timeoutMs,
     },
     outcome,

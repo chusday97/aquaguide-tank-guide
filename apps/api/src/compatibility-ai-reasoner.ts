@@ -34,6 +34,7 @@ export type CompatibilityAiProviderReadiness = {
   configured: boolean;
   host: string | null;
   model: string;
+  fallbackModels: string[];
   timeoutMs: number;
 };
 
@@ -53,11 +54,12 @@ const providerHost = (baseUrl: string) => {
 };
 
 export const buildCompatibilityAiProviderReadiness = (
-  config: Pick<typeof apiConfig, 'aiApiKey' | 'aiBaseUrl' | 'compatibilityAiModel' | 'aiTimeoutMs'>,
+  config: Pick<typeof apiConfig, 'aiApiKey' | 'aiBaseUrl' | 'compatibilityAiModel' | 'compatibilityAiFallbackModels' | 'aiTimeoutMs'>,
 ): CompatibilityAiProviderReadiness => ({
   configured: Boolean(config.aiApiKey && config.aiBaseUrl && config.compatibilityAiModel),
   host: providerHost(config.aiBaseUrl),
   model: config.compatibilityAiModel,
+  fallbackModels: [...config.compatibilityAiFallbackModels],
   timeoutMs: config.aiTimeoutMs,
 });
 

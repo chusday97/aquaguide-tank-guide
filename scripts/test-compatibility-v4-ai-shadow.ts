@@ -30,12 +30,14 @@ const configuredReadiness = buildCompatibilityAiProviderReadiness({
   aiApiKey: 'fixture-secret-never-returned',
   aiBaseUrl: 'https://api.fixture.example/v1',
   compatibilityAiModel: 'fixture-model',
+  compatibilityAiFallbackModels: ['fixture-fallback-a', 'fixture-fallback-b'],
   aiTimeoutMs: 4321,
 });
 assert.deepEqual(configuredReadiness, {
   configured: true,
   host: 'api.fixture.example',
   model: 'fixture-model',
+  fallbackModels: ['fixture-fallback-a', 'fixture-fallback-b'],
   timeoutMs: 4321,
 });
 assert.equal(JSON.stringify(configuredReadiness).includes('fixture-secret-never-returned'), false);
@@ -44,6 +46,7 @@ const unconfiguredReadiness = buildCompatibilityAiProviderReadiness({
   aiApiKey: '',
   aiBaseUrl: 'https://api.fixture.example/v1',
   compatibilityAiModel: 'fixture-model',
+  compatibilityAiFallbackModels: [],
   aiTimeoutMs: 4321,
 });
 assert.equal(unconfiguredReadiness.configured, false);

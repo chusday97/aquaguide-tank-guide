@@ -17,6 +17,7 @@ const unavailableProvider: CompatibilityAiReasoningProvider = Object.assign(
       configured: false,
       host: 'api.fixture.invalid',
       model: 'fixture-unconfigured',
+      fallbackModels: [],
       timeoutMs: 1,
     }),
   },
@@ -96,6 +97,11 @@ assert.equal(configured.summary.skippedAi, 1);
 assert.equal(configured.summary.unavailableAi, 0);
 assert.equal(configured.summary.acceptedReviewedCases, 3);
 assert.equal(configured.summary.finalDecisionMutations, 0);
+assert.deepEqual(configured.summary.modelsUsed, ['v4-live-canary-fixture']);
+assert.deepEqual(
+  configured.cases.filter(item => item.ai.status === 'accepted').map(item => item.ai.model),
+  ['v4-live-canary-fixture', 'v4-live-canary-fixture', 'v4-live-canary-fixture'],
+);
 assert.deepEqual(
   configured.cases.map(item => item.finalDecision.status),
   configured.cases.map(item => item.deterministic.status),
