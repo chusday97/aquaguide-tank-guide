@@ -1,0 +1,225 @@
+{
+  "schemaVersion": 1,
+  "promptVersion": "compatibility-v4-shadow-v1",
+  "tank": {
+    "dimensionsCm": [
+      120,
+      50,
+      50
+    ],
+    "waterType": "Freshwater",
+    "targetTemperatureC": 25
+  },
+  "invariants": [
+    "Deterministic finalDecision is never mutated by shadow AI.",
+    "Reviewed hard blocks cannot be weakened by AI.",
+    "Incomplete deterministic authority skips the AI provider.",
+    "AI output must remain grounded in allow-listed deterministic rule/evidence authority."
+  ],
+  "cases": [
+    {
+      "caseId": "V4-SHADOW-3SP-COMPATIBLE",
+      "description": "Three small freshwater species pass deterministic reviewed authority; AI may be more conservative but cannot replace the compatible final decision.",
+      "species": [
+        {
+          "id": "sp_0114",
+          "name": "红莲灯",
+          "role": "existing",
+          "quantity": 8
+        },
+        {
+          "id": "sp_0469",
+          "name": "喷火灯",
+          "role": "existing",
+          "quantity": 8
+        },
+        {
+          "id": "sp_0012",
+          "name": "樱桃灯",
+          "role": "candidate",
+          "quantity": 6
+        }
+      ],
+      "deterministic": {
+        "status": "compatible",
+        "decisionReadiness": "reviewed",
+        "ruleCodes": [
+          "compatibility_clear"
+        ],
+        "evidenceIds": [
+          "seriouslyfish-puntius-titteya",
+          "fishbase-puntius-titteya",
+          "seriouslyfish-hyphessobrycon-amandae",
+          "fishbase-hyphessobrycon-amandae"
+        ]
+      },
+      "ai": {
+        "status": "accepted",
+        "attemptedVerdict": "caution",
+        "acceptedVerdict": "caution",
+        "reason": null,
+        "providerCalls": 1
+      },
+      "finalDecision": {
+        "status": "compatible",
+        "unchanged": true
+      }
+    },
+    {
+      "caseId": "V4-SHADOW-3SP-CAUTION",
+      "description": "Three-species tank produces a reviewed caution from predation-vulnerability context; AI may rank the risk more conservatively but final remains caution.",
+      "species": [
+        {
+          "id": "sp_0114",
+          "name": "红莲灯",
+          "role": "existing",
+          "quantity": 8
+        },
+        {
+          "id": "sp_0469",
+          "name": "喷火灯",
+          "role": "existing",
+          "quantity": 8
+        },
+        {
+          "id": "sp_0013",
+          "name": "小精灵",
+          "role": "candidate",
+          "quantity": 1
+        }
+      ],
+      "deterministic": {
+        "status": "caution",
+        "decisionReadiness": "reviewed",
+        "ruleCodes": [
+          "predation_vulnerability_context"
+        ],
+        "evidenceIds": [
+          "fishbase-otocinclus-vittatus",
+          "aquariumcoop-otocinclus-catfish",
+          "scotcat-otocinclus-vittatus",
+          "seriouslyfish-hyphessobrycon-amandae",
+          "fishbase-hyphessobrycon-amandae"
+        ]
+      },
+      "ai": {
+        "status": "accepted",
+        "attemptedVerdict": "not_recommended",
+        "acceptedVerdict": "not_recommended",
+        "reason": null,
+        "providerCalls": 1
+      },
+      "finalDecision": {
+        "status": "caution",
+        "unchanged": true
+      }
+    },
+    {
+      "caseId": "V4-SHADOW-3SP-BLOCKED",
+      "description": "Reviewed three-species combination contains territorial and temperature hard conflicts; an optimistic AI override must be rejected.",
+      "species": [
+        {
+          "id": "sp_0199",
+          "name": "珍珠麒麟",
+          "role": "existing",
+          "quantity": 1
+        },
+        {
+          "id": "sp_0200",
+          "name": "变色鱼 (喷火麒麟)",
+          "role": "existing",
+          "quantity": 1
+        },
+        {
+          "id": "sp_0448",
+          "name": "荷兰凤凰",
+          "role": "candidate",
+          "quantity": 1
+        }
+      ],
+      "deterministic": {
+        "status": "not_recommended",
+        "decisionReadiness": "reviewed",
+        "ruleCodes": [
+          "territorial_pressure_context",
+          "temperature_range_conflict",
+          "tank_temperature_conflict"
+        ],
+        "evidenceIds": [
+          "seriouslyfish-mikrogeophagus-ramirezi",
+          "fishbase-mikrogeophagus-ramirezi",
+          "batch21-fishbase-badis-badis",
+          "seriouslyfish-badis-badis",
+          "batch22-fishbase-dario-dario",
+          "seriouslyfish-dario-dario"
+        ]
+      },
+      "ai": {
+        "status": "rejected",
+        "attemptedVerdict": "compatible",
+        "acceptedVerdict": null,
+        "reason": "provider_output_conflicts_with_deterministic_authority",
+        "providerCalls": 1
+      },
+      "finalDecision": {
+        "status": "not_recommended",
+        "unchanged": true
+      }
+    },
+    {
+      "caseId": "V4-SHADOW-3SP-INSUFFICIENT",
+      "description": "Candidate lacks promotable exact reviewed authority; AI provider must not run and deterministic insufficient-data decision stays final.",
+      "species": [
+        {
+          "id": "sp_0114",
+          "name": "红莲灯",
+          "role": "existing",
+          "quantity": 8
+        },
+        {
+          "id": "sp_0469",
+          "name": "喷火灯",
+          "role": "existing",
+          "quantity": 8
+        },
+        {
+          "id": "sp_0112",
+          "name": "蓝眼灯",
+          "role": "candidate",
+          "quantity": 1
+        }
+      ],
+      "deterministic": {
+        "status": "insufficient_data",
+        "decisionReadiness": "unknown",
+        "ruleCodes": [
+          "species_evidence_unreviewed",
+          "water_type_unknown",
+          "candidate_water_type_missing"
+        ],
+        "evidenceIds": [
+          "seriouslyfish-hyphessobrycon-amandae",
+          "fishbase-hyphessobrycon-amandae"
+        ]
+      },
+      "ai": {
+        "status": "skipped",
+        "attemptedVerdict": null,
+        "acceptedVerdict": null,
+        "reason": "deterministic_decision_not_fully_reviewed",
+        "providerCalls": 0
+      },
+      "finalDecision": {
+        "status": "insufficient_data",
+        "unchanged": true
+      }
+    }
+  ],
+  "summary": {
+    "totalCases": 4,
+    "acceptedAi": 2,
+    "rejectedAi": 1,
+    "skippedAi": 1,
+    "finalDecisionMutations": 0
+  }
+}

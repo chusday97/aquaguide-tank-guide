@@ -42,6 +42,7 @@
 - `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
 - `apps/api/src/compatibility-ai-reasoner.ts` / `scripts/test-compatibility-v4-ai-shadow.ts`：Compatibility V4 server-side AI shadow layer；仅在 fully reviewed exact authority 下运行，模型输出必须使用 allow-listed rule/evidence authority，任何 hard-block weakening / unknown evidence / invalid schema / timeout 都不能改变 deterministic final decision。
 - `GET /aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey`：authenticated shadow endpoint，复用 server-side AI provider config，返回 deterministic `finalDecision` + 独立 AI assessment + provenance；当前不接 UI、不参与入缸确认 authority。
+- `scripts/compatibility-v4-shadow-eval-fixtures.ts` / `generate-compatibility-v4-shadow-eval.ts` / `test-compatibility-v4-shadow-eval.ts` / `docs/compatibility_v4_shadow_eval.{json,md}`：固定 4 个真实三物种 runtime 状态，持续验证 AI accepted/rejected/skipped 行为与 deterministic final decision 不可变；当前基线 2 accepted / 1 rejected / 1 skipped / 0 mutations。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。

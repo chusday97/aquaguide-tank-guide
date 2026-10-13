@@ -5,8 +5,10 @@
 3. DONE: add authenticated aquarium shadow endpoint while preserving existing deterministic confirmation/addition flow.
 4. DONE: add focused adversarial tests for reviewed assist, hard-block optimism, invented evidence, incomplete authority and provider timeout; API/project typechecks pass.
 5. DONE: full backend release gate and scope validation pass; finalize one clean V4 shadow checkpoint and push.
-6. NEXT: after shadow checkpoint, build regression/evaluation traces for real 3+ species combinations before considering any user-visible AI reasoning.
-7. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
+6. DONE: build deterministic regression/evaluation traces for four real 3-species states (compatible / caution / blocked / insufficient); 2 AI outputs accepted, 1 rejected, 1 skipped, 0 final-decision mutations.
+7. DONE: full backend release gate + scope validation pass; finalize one clean V4 shadow-eval checkpoint and push.
+8. NEXT: add a controlled live-provider canary/evaluation layer before any user-visible AI reasoning, keeping deterministic final authority unchanged.
+9. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

@@ -1,9 +1,9 @@
-## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 AI shadow
+## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 shadow eval
 
-- `codex/compatibility-v4-ai-shadow-20261013` was created from exact clean pushed wave16 HEAD `7fe10f42f29f27b7bb4ec09ed3154416aed4765b`.
-- Scope is backend/shadow only: generic JSON provider export, Compatibility AI reasoner, authenticated aquarium shadow endpoint, adversarial contract test and architecture docs.
+- `codex/compatibility-v4-shadow-eval-20261013` was created from exact clean pushed V4 shadow HEAD `9b0eab9ab518811e128702769c3d02a8f3a775ca`.
+- Scope is regression/eval only: real 3-species fixture definitions, deterministic generated JSON/Markdown traces, test contract and release-gate wiring.
+- Four runtime states are covered: reviewed compatible, reviewed caution, reviewed not_recommended, and unknown insufficient_data. AI fixture behavior is accepted/rejected/skipped as expected with zero final-decision mutations.
 - No Compatibility Profile/Pair/Stage authority changes, no migration files, no UI changes and no Production mutation.
-- Deterministic decision remains the only final authority; AI output is separate, grounded, optional and fail-soft.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116.
 
 ## RC1 RELEASE CLOSURE — 2026-09-16

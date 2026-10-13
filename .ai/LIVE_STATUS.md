@@ -5,7 +5,8 @@
 - Eligibility is strict: deterministic readiness reviewed + exact reviewed Profiles + runtime reviewed Species Knowledge for every participant. Otherwise AI is skipped.
 - Grounding guard accepts only input rule codes/evidence IDs; optimistic hard-block overrides, invented authority, invalid schema and provider failures cannot alter `finalDecision`.
 - API route is authenticated and shadow-only. Text AI reuses server `AI_* / DEEPSEEK_*` configuration; no API key is exposed client-side.
-- Focused V4 tests and API/project typechecks pass. Full backend release gate remains the current closeout task.
+- V4 shadow checkpoint is pushed at `9b0eab9ab518811e128702769c3d02a8f3a775ca`; full backend gate and hygiene passed.
+- Current eval branch adds reproducible real 3-species traces for compatible/caution/blocked/insufficient states. Deterministic fixture provider result is 2 accepted / 1 rejected / 1 skipped / 0 final-decision mutations; artifacts live in `docs/compatibility_v4_shadow_eval.{json,md}`.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116 and is untouched.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate
