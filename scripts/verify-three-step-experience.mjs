@@ -88,18 +88,40 @@ try {
     const { page, errors } = await openPage('/aquarium?action=add-species');
     const dialog = page.getByRole('dialog');
     const search = dialog.getByPlaceholder('搜索鱼、虾、螺或学名');
-    await search.fill('孔雀鱼');
-    await dialog.getByRole('button').filter({ hasText: '孔雀鱼' }).first().click();
+
+    await search.fill('红草尾孔雀鱼');
+    await dialog.getByRole('button').filter({ hasText: '红草尾孔雀鱼' }).first().click();
     await search.fill('公子小丑');
     await dialog.getByRole('button').filter({ hasText: '公子小丑' }).first().click();
     await dialog.getByRole('button', { name: '查看规划判断', exact: true }).click();
-    await dialog.getByText('加入后风险判定', { exact: true }).waitFor();
+
+    const firstResult = dialog.locator('[data-add-fish-compatibility-result]');
+    await firstResult.waitFor();
+    assert(await firstResult.getAttribute('data-compatibility-judgment') === '不建议', '淡水缸 + 公子小丑应直接给出不建议');
+    assert(await firstResult.getByText('为什么', { exact: true }).count() === 1, '混养结果缺少“为什么”');
+    assert(await firstResult.getByText('怎么做', { exact: true }).count() === 1, '混养结果缺少“怎么做”');
+    assert(await firstResult.getByText('查看依据', { exact: true }).count() === 1, '混养结果缺少折叠依据');
     assert(await search.count() === 0, '混养复核屏仍叠加显示生物选择长列表');
+
+    await dialog.getByRole('button', { name: '返回调整', exact: true }).click();
+    await search.waitFor();
+    assert(await firstResult.count() === 0, '返回调整后旧混养结果仍残留在选择屏');
+
+    await search.fill('公子小丑');
+    await dialog.getByRole('button').filter({ hasText: '公子小丑' }).first().click();
+    await search.fill('长鳍红绿灯');
+    await dialog.getByRole('button').filter({ hasText: '长鳍红绿灯' }).first().click();
+    await dialog.getByRole('button', { name: '查看规划判断', exact: true }).click();
+
+    const secondResult = dialog.locator('[data-add-fish-compatibility-result]');
+    await secondResult.waitFor();
+    assert(await secondResult.getAttribute('data-compatibility-judgment') === '暂时无法判断', '调整组合后应重新计算，而不是沿用上一次“不建议”结果');
+    assert(await secondResult.getByText('查看依据', { exact: true }).count() === 1, '重新计算后的依据入口缺失');
     assert(errors.length === 0, `添加生物发生页面错误：${errors.join('；')}`);
     await page.close();
   }
 
-  console.log('三步交互浏览器验收通过：每日检查、养护自查、添加生物均进入独立结果屏。');
+  console.log('三步交互浏览器验收通过：每日检查、养护自查、添加生物支持判断 → 返回调整 → 重新计算，且结果依据默认折叠。');
 } finally {
   await browser.close();
 }

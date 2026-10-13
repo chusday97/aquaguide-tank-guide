@@ -54,6 +54,9 @@ assert.match(cardSource, /addFishAssessmentView\?\.main\.why/);
 assert.match(cardSource, /addFishAssessmentView\?\.main\.howTo/);
 assert.match(cardSource, /<details/);
 assert.match(cardSource, /查看依据/);
+assert.match(cardSource, /data-add-fish-compatibility-result/);
+assert.match(cardSource, /border-emerald-100 bg-emerald-50/);
+assert.match(cardSource, /已结合当前鱼缸/);
 
 const defaultResultEnd = cardSource.indexOf('<details');
 assert.ok(defaultResultEnd > 0);
@@ -65,6 +68,15 @@ const riskFooterEnd = aquariumSource.indexOf("!addFishSuccess && addFishCompatib
 assert.ok(riskFooterStart >= 0 && riskFooterEnd > riskFooterStart);
 const riskFooterSource = aquariumSource.slice(riskFooterStart, riskFooterEnd);
 assert.doesNotMatch(riskFooterSource, /aquaguide:feature-preview|AI 建议|AI advice/);
+
+const resetMatch = aquariumSource.match(/const resetAddFishAssessmentState = \(\) => \{([\s\S]*?)\n  \};/);
+assert.ok(resetMatch, 'add-species adjustment flow needs a single assessment reset helper');
+assert.match(resetMatch[1], /addFishAssessmentRequestRef\.current \+= 1/);
+assert.match(resetMatch[1], /setIsAddFishAssessmentLoading\(false\)/);
+assert.match(resetMatch[1], /setAddFishProductAssessment\(null\)/);
+assert.match(resetMatch[1], /setAddFishCompatibilityReview\(null\)/);
+assert.equal((aquariumSource.match(/setAddFishCompatibilityReview\(null\);/g) || []).length, 1, 'all exits/edits must clear review through the reset helper so stale async explanations cannot revive');
+assert.match(aquariumSource, /if \(addFishCompatibilityReview\) \{\s*resetAddFishAssessmentState\(\);\s*return;/s);
 
 const serviceSource = readFileSync(new URL('../src/services/compatibility/compatibility-assessment.service.ts', import.meta.url), 'utf8');
 assert.match(serviceSource, /if \(mode !== 'cloud'\) return fallback/);

@@ -38,7 +38,9 @@
 36. DONE: add 20-case real-catalog user-readability audit (5 per status). All main sentences pass the user-language contract; reviewed risk states have concrete actions; insufficient-data cases fail closed and never call AI. Live Qwen product samples also show concise caution and not-recommended output after the gate.
 37. DONE: user explicitly continued after the readable-result checkpoint; authorize only minimal Compatibility result-card wiring, not a broader UI redesign.
 38. DONE: add-species planning now uses the whole-tank `CompatibilityDecision` as the single overall status/policy, renders `main: judgment / why / howTo` by default, moves per-species/rule/AI support behind `查看依据`, and removes the obsolete fake `AI 建议` preview action. Local/Preview returns deterministic readable output immediately; authenticated cloud may enrich only through the read-only whole-tank endpoint when its deterministic authority status exactly matches local. New `test:compatibility-result-card`, API/project typechecks, focused Compatibility tests and `BACKEND_RELEASE_GATE=PASS` all pass.
-39. HOLD: do not point Preview at Production Supabase and do not Production deploy/DB-mutate/merge-main in this checkpoint. After separate Production promotion authorization, perform only a read-only Compatibility AI smoke test against an existing aquarium.
+39. DONE: real add-species user path now accepts `判断 → 返回调整 → 修改组合 → 重新计算`. A single assessment reset invalidates in-flight explanation requests and clears all result/loading state, browser E2E verifies a `不建议` combination can be adjusted into a fresh `暂时无法判断` result without stale carry-over, and compatible/caution/insufficient/not-recommended cards now have distinct result tones.
+40. HOLD: do not point Preview at Production Supabase and do not Production deploy/DB-mutate/merge-main in this checkpoint. After separate Production promotion authorization, perform only a read-only Compatibility AI smoke test against an existing aquarium.
+
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

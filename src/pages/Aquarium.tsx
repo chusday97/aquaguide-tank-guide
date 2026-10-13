@@ -1212,6 +1212,12 @@ export default function AquariumManager() {
   const [addFishProductAssessment, setAddFishProductAssessment] = useState<CompatibilityAssessmentUiModel | null>(null);
   const [isAddFishAssessmentLoading, setIsAddFishAssessmentLoading] = useState(false);
   const addFishAssessmentRequestRef = useRef(0);
+  const resetAddFishAssessmentState = () => {
+    addFishAssessmentRequestRef.current += 1;
+    setIsAddFishAssessmentLoading(false);
+    setAddFishProductAssessment(null);
+    setAddFishCompatibilityReview(null);
+  };
   const [addFishDatePicker, setAddFishDatePicker] = useState<{ fishId: string; month: Date } | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -2013,10 +2019,7 @@ export default function AquariumManager() {
     addFishOperationIdRef.current = `livestock-add:${crypto.randomUUID()}`;
     setAddFishSuccess(null);
     setAddFishDatePicker(null);
-    setAddFishCompatibilityReview(null);
-    setAddFishProductAssessment(null);
-    setIsAddFishAssessmentLoading(false);
-    addFishAssessmentRequestRef.current += 1;
+    resetAddFishAssessmentState();
     setFishSearchTerm('');
     setAddFishCategory('all');
     setSelectedAddFishItems(selectedFish
@@ -2083,7 +2086,7 @@ export default function AquariumManager() {
           entryDate: item.entryDate || format(new Date(), 'yyyy-MM-dd'),
         };
       });
-      setAddFishCompatibilityReview(null);
+      resetAddFishAssessmentState();
       setAddFishSuccess({ aquariumName: result.aquarium.name, items: successItems, result });
       if (result.failedItems.length === 0) addFishOperationIdRef.current = '';
       setSelectedAddFishItems(result.failedItems.map(item => ({
@@ -2154,7 +2157,7 @@ export default function AquariumManager() {
       addFishCompatibilityReview.items.forEach(item => next.add(item.fishId));
       syncWishlistFishIds(next);
       setIsAddFishOpen(false);
-      setAddFishCompatibilityReview(null);
+      resetAddFishAssessmentState();
       setTankActionMessage(Boolean(i18n.language?.startsWith('en')) ? 'Saved to your wishlist. Revisit this mix after more review.' : '已加入种草清单，资料完善后可以再回来判断。');
       return;
     }
@@ -2285,7 +2288,7 @@ export default function AquariumManager() {
     setAddFishSuccess(null);
     setFishSearchTerm('');
     setAddFishDatePicker(null);
-    setAddFishCompatibilityReview(null);
+    resetAddFishAssessmentState();
   };
 
   const handleUpdateEntryDate = (fishId: string, newDate: string) => {
@@ -2429,7 +2432,7 @@ export default function AquariumManager() {
     addFishOperationIdRef.current = `livestock-add:${crypto.randomUUID()}`;
     setAddFishSuccess(null);
     setAddFishDatePicker(null);
-    setAddFishCompatibilityReview(null);
+    resetAddFishAssessmentState();
     setFishSearchTerm('');
     setAddFishCategory('all');
     setSelectedAddFishItems(templateFish.map(({ fish, quantity }) => ({ fishId: fish.id, quantity, entryDate })));
@@ -3718,7 +3721,7 @@ export default function AquariumManager() {
     return dateValue === todayAddFishDate ? `今天 · ${formatted}` : formatted;
   };
   const updateSelectedAddFishItem = (fishId: string, patch: Partial<{ quantity: number; entryDate: string }>) => {
-    setAddFishCompatibilityReview(null);
+    resetAddFishAssessmentState();
     addFishOperationIdRef.current = '';
     setSelectedAddFishItems(prev => prev.map(item => (
       item.fishId === fishId
@@ -3729,7 +3732,7 @@ export default function AquariumManager() {
   const toggleSelectedAddFish = (fish: Fish) => {
     setAddFishSuccess(null);
     setAddFishDatePicker(null);
-    setAddFishCompatibilityReview(null);
+    resetAddFishAssessmentState();
     addFishOperationIdRef.current = '';
     setSelectedAddFishItems(prev => {
       if (prev.some(item => item.fishId === fish.id)) {
@@ -6313,7 +6316,7 @@ export default function AquariumManager() {
                   setSelectedAddFishItems([]);
                   setAddFishSuccess(null);
                   setAddFishDatePicker(null);
-                  setAddFishCompatibilityReview(null);
+                  resetAddFishAssessmentState();
                 }
               }}>
         <AdaptiveTaskContent className="bg-bg md:max-w-[680px]">
@@ -6417,13 +6420,19 @@ export default function AquariumManager() {
                   </div>
                 </div>
               ) : addFishCompatibilityReview ? (
-                <section className={`grid gap-3 rounded-[20px] border p-4 shadow-sm ${
-                  addFishCompatibilityReview.status === 'not_recommended'
-                    ? 'border-red-200 bg-red-50'
-                    : addFishCompatibilityReview.status === 'insufficient_data'
-                      ? 'border-sky-100 bg-sky-50'
-                      : 'border-amber-100 bg-amber-50'
-                }`}>
+                <section
+                  data-add-fish-compatibility-result
+                  data-compatibility-judgment={addFishAssessmentView?.main.judgment || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
+                  className={`grid gap-3 rounded-[20px] border p-4 shadow-sm ${
+                    addFishCompatibilityReview.status === 'not_recommended'
+                      ? 'border-red-200 bg-red-50'
+                      : addFishCompatibilityReview.status === 'insufficient_data'
+                        ? 'border-sky-100 bg-sky-50'
+                        : addFishCompatibilityReview.status === 'compatible'
+                          ? 'border-emerald-100 bg-emerald-50'
+                          : 'border-amber-100 bg-amber-50'
+                  }`}
+                >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <div className="text-[11px] font-black text-ink/45">{isEn ? 'Compatibility result' : '混养判断'}</div>
@@ -6438,7 +6447,9 @@ export default function AquariumManager() {
                       )}
                     </div>
                     <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-ink/55 shadow-sm">
-                      {addFishCompatibilityReview.evaluations.length} 种生物
+                      {activeAquarium.fishes.length > 0
+                        ? `规划新增 ${addFishCompatibilityReview.evaluations.length} 种 · 已结合当前鱼缸`
+                        : `规划 ${addFishCompatibilityReview.evaluations.length} 种`}
                     </span>
                   </div>
 
@@ -6533,7 +6544,7 @@ export default function AquariumManager() {
                     <button
                       key={category.id}
                       type="button"
-                      onClick={() => { setAddFishCategory(category.id); setAddFishCompatibilityReview(null); }}
+                      onClick={() => { setAddFishCategory(category.id); resetAddFishAssessmentState(); }}
                       className={`min-h-11 rounded-[14px] border px-2 py-2 text-[11px] font-black transition-colors ${addFishCategory === category.id ? 'border-emerald-400 bg-emerald-50 text-emerald-800' : 'border-border bg-white text-ink/55'}`}
                     >
                       <span className="block">{isEn ? category.en : category.zh}</span>
@@ -6555,7 +6566,7 @@ export default function AquariumManager() {
                             setFishSearchTerm(e.target.value);
                             setAddFishSuccess(null);
                             setAddFishDatePicker(null);
-                            setAddFishCompatibilityReview(null);
+                            resetAddFishAssessmentState();
                           }}
                 />
               </div>
@@ -6650,7 +6661,7 @@ export default function AquariumManager() {
                                     <button
                                       type="button"
                                       onClick={() => {
-                                        setAddFishCompatibilityReview(null);
+                                        resetAddFishAssessmentState();
                                         addFishOperationIdRef.current = '';
                                         setSelectedAddFishItems(prev => prev.filter(selected => selected.fishId !== item.fishId));
                                       }}
@@ -6816,7 +6827,7 @@ export default function AquariumManager() {
                         disabled={isAddFishSaving}
                         onClick={() => {
                           if (addFishCompatibilityReview) {
-                            setAddFishCompatibilityReview(null);
+                            resetAddFishAssessmentState();
                             return;
                           }
                           setIsAddFishOpen(false);
