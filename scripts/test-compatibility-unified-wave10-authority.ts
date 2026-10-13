@@ -42,7 +42,7 @@ assert.equal(nextWaveUnified10DomainOutcomes.length, 24);
 assert.equal(nextWaveUnified10EvidenceCeilings.length, 1);
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 100);
+assert.equal(audit.reviewedProfiles.length, 101);
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

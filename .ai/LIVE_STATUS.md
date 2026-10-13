@@ -1,11 +1,12 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 unified Compatibility wave15
+## TOP CURRENT OVERRIDE — 2026-10-13 unified Compatibility wave16 completion
 
-- Branch: `codex/compatibility-next25-wave15-20261013` from exact pushed wave14 HEAD `2bf868d1cd7e449c078f5ad3e8030ed99a55cc73`.
-- Wave15 classified all 25 generated objects atomically: 0 Profiles, 1 identity hold, and 24 non-fish domain holds; static authority remains 100 / 21 / 1 / 176 and no migration was created.
-- Reviewed non-fish domain now covers the incoming shrimp, snails, corals/corallimorphs and `Sabellastarte` tube worm; legacy catalog labels cannot move those objects into fish-profile semantics.
-- Promotion-queue semantics were tightened: species with a direct or effective reviewed Profile remain visible in research/gap reporting but are excluded from `next_wave_species_queue`, preventing duplicate promotion work.
-- Regenerated coverage exposes wave16 with 12 profile-less objects: `sp_0330, sp_0335, sp_0337, sp_0367, sp_0371, sp_0403, sp_0404, sp_0405, sp_0460, sp_0112, sp_0115, sp_0052`.
-- Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. All stacked wave04/05/06 migrations remain repository-only and unauthorized for Production.
+- Branch: `codex/compatibility-next12-wave16-20261013` from exact pushed wave15 HEAD `fa06b507442dca2a5be16002d96adb17c7d96681`.
+- Wave16 closes the final 12 generated promotion objects: 1 reviewed Profile (`sp_0052`), 2 exact-species social evidence ceilings, and 9 coral/sponge/turtle domain holds.
+- Static authority is now 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 reviewed evidence. The new stacked migration is repository-only and guards exact predecessor 100/176 → target 101/177 with one Profile-source link.
+- Runtime rollout accepts only exact Profile generations 63 / 85 / 95 / 99 / 100 / 101; mismatched/intermediate keysets continue to fail closed.
+- `sp_0052` is no longer completion-only: its direct reviewed Phase-2 knowledge is available to runtime/V4 because the Profile has now been explicitly promoted.
+- Regenerated `next_wave_species_queue` is empty. Remaining gaps are terminal/evidence ceilings or enrichment gaps, not unprocessed promotion candidates.
+- Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No stacked migration from wave04/05/06/16 has been executed in Production.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate
 

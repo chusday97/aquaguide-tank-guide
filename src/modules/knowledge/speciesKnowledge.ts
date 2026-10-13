@@ -57,6 +57,7 @@ import { nextWaveUnified03ProfileIds } from '../../data/catalogReviewBatches/nex
 import { nextWaveUnified04ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-04';
 import { nextWaveUnified05ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-05';
 import { nextWaveUnified06ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-06';
+import { nextWaveUnified16ProfileIds } from '../../data/catalogReviewBatches/next-wave-unified-16';
 import { nextWaveUnified03BatchKnowledge } from './nextWaveUnified03BatchAuthority';
 import { nextWaveUnified04BatchKnowledge } from './nextWaveUnified04BatchAuthority';
 import { nextWaveUnified05BatchKnowledge } from './nextWaveUnified05BatchAuthority';
@@ -1975,6 +1976,7 @@ export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scie
     || nextWaveUnified04ProfileIds.includes(fish.id as (typeof nextWaveUnified04ProfileIds)[number])
     || nextWaveUnified05ProfileIds.includes(fish.id as (typeof nextWaveUnified05ProfileIds)[number])
     || nextWaveUnified06ProfileIds.includes(fish.id as (typeof nextWaveUnified06ProfileIds)[number])
+    || nextWaveUnified16ProfileIds.includes(fish.id as (typeof nextWaveUnified16ProfileIds)[number])
   ) {
     return reviewedKnowledgeBySpeciesId[fish.id];
   }

@@ -3,6 +3,7 @@ import {
   compatibilityStackedWave04PendingProfileIds,
   compatibilityStackedWave05PendingProfileIds,
   compatibilityStackedWave06PendingProfileIds,
+  compatibilityStackedWave16PendingProfileIds,
 } from './compatibilityNextWaveBatch';
 
 export type CompatibilityProfileRolloutGeneration =
@@ -10,6 +11,7 @@ export type CompatibilityProfileRolloutGeneration =
   | 'production-target'
   | 'wave04-target'
   | 'wave05-target'
+  | 'wave06-target'
   | 'target';
 
 export const exactStringSet = (
@@ -23,8 +25,9 @@ export const buildCompatibilityProfileRolloutKeysets = (targetKeys: Iterable<str
   const wave04Pending = new Set<string>(compatibilityStackedWave04PendingProfileIds);
   const wave05Pending = new Set<string>(compatibilityStackedWave05PendingProfileIds);
   const wave06Pending = new Set<string>(compatibilityStackedWave06PendingProfileIds);
+  const wave16Pending = new Set<string>(compatibilityStackedWave16PendingProfileIds);
 
-  const generations = [productionPending, wave04Pending, wave05Pending, wave06Pending];
+  const generations = [productionPending, wave04Pending, wave05Pending, wave06Pending, wave16Pending];
   for (const pending of generations) {
     for (const speciesId of pending) {
       if (!target.has(speciesId)) {
@@ -42,12 +45,16 @@ export const buildCompatibilityProfileRolloutKeysets = (targetKeys: Iterable<str
     }
   }
 
-  const wave05Target = new Set([...target].filter(key => !wave06Pending.has(key)));
+  const wave06Target = new Set([...target].filter(key => !wave16Pending.has(key)));
+  const wave05Target = new Set([...wave06Target].filter(key => !wave06Pending.has(key)));
   const wave04Target = new Set([...wave05Target].filter(key => !wave05Pending.has(key)));
   const productionTarget = new Set([...wave04Target].filter(key => !wave04Pending.has(key)));
   const currentProduction = new Set([...productionTarget].filter(key => !productionPending.has(key)));
 
-  if (target.size - wave05Target.size !== wave06Pending.size) {
+  if (target.size - wave06Target.size !== wave16Pending.size) {
+    throw new Error('Compatibility rollout keysets do not form the expected wave16 delta.');
+  }
+  if (wave06Target.size - wave05Target.size !== wave06Pending.size) {
     throw new Error('Compatibility rollout keysets do not form the expected wave06 delta.');
   }
   if (wave05Target.size - wave04Target.size !== wave05Pending.size) {
@@ -60,7 +67,7 @@ export const buildCompatibilityProfileRolloutKeysets = (targetKeys: Iterable<str
     throw new Error('Compatibility rollout keysets do not form the expected Production delta.');
   }
 
-  return { currentProduction, productionTarget, wave04Target, wave05Target, target };
+  return { currentProduction, productionTarget, wave04Target, wave05Target, wave06Target, target };
 };
 
 export const getCompatibilityProfileRolloutGeneration = (
@@ -70,6 +77,7 @@ export const getCompatibilityProfileRolloutGeneration = (
   const actual = new Set(actualKeys);
   const expected = buildCompatibilityProfileRolloutKeysets(targetKeys);
   if (exactStringSet(actual, expected.target)) return 'target';
+  if (exactStringSet(actual, expected.wave06Target)) return 'wave06-target';
   if (exactStringSet(actual, expected.wave05Target)) return 'wave05-target';
   if (exactStringSet(actual, expected.wave04Target)) return 'wave04-target';
   if (exactStringSet(actual, expected.productionTarget)) return 'production-target';

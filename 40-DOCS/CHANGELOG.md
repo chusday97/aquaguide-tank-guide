@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave16 closes the final 12 promotion candidates: `sp_0052 Corydoras hastatus` becomes the 101st reviewed Profile from exact FishBase freshwater/temperature/pH/adult-size/small-shoal authority, `sp_0112`/`sp_0115` remain exact-species social evidence ceilings, and 9 coral/sponge/turtle objects become non-fish domain holds.
+- Added: repository-only migration `20261013153000_compatibility_unified_wave16_authority.sql` guards exact 100 Profiles / 176 evidence → 101 / 177 with one new source, one Profile and one source link; Production is untouched.
+- Changed: rollout generations are exact 63 → 85 → 95 → 99 → 100 → 101, `sp_0052` runtime Species Knowledge is explicitly promoted, and regenerated `next_wave_species_queue` is now empty; remaining gaps are enrichment or terminal holds rather than unprocessed promotion candidates.
+
 - Added: Compatibility wave15 closes the generated 25-object queue as one batch: 1 bare-`var.` goldfish identity terminal hold and 24 non-fish domain holds across shrimp/snails, coral/corallimorph taxa and one marine tube worm; no unsupported fish Profile was introduced.
 - Changed: `next_wave_species_queue` now excludes species that already have a direct or effective reviewed Compatibility Profile while retaining their remaining field gaps in research reporting; regenerated wave16 contains 12 profile-less promotion candidates and static DB authority remains 100 Profiles / 176 evidence with no migration.
 

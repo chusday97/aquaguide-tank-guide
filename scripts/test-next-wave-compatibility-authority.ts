@@ -35,9 +35,10 @@ assertUnique(compatibilityUnifiedNextWave.domainBoundaryHoldSpeciesIds, 'compati
 for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
   const migrationOwner = 'migrationOwner' in batch ? batch.migrationOwner : undefined;
   const authorityOwner = 'authorityOwner' in batch ? batch.authorityOwner : undefined;
-  const ownerPath = migrationOwner ?? authorityOwner;
+  const ownerPath = authorityOwner ?? migrationOwner;
   assert.ok(ownerPath, batch.batchId + ' must declare a source-controlled authority owner');
   const owner = readFileSync(ownerPath, 'utf8');
+  const migration = migrationOwner ? readFileSync(migrationOwner, 'utf8') : owner;
   for (const member of batch.members) {
     assert.equal(
       owner.includes(member.speciesId),
@@ -63,7 +64,7 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
       assert.ok(profile, 'released species must resolve reviewed Compatibility Profile: ' + member.speciesId);
       for (const source of profile.citations) {
         assert.equal(
-          owner.includes(source.id),
+          migration.includes(source.id),
           true,
           batch.batchId + ' migration owner must include Profile source ' + source.id,
         );

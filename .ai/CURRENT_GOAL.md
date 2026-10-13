@@ -1,11 +1,11 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility unified wave15
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility unified wave16 completion
 
-- Active branch: `codex/compatibility-next25-wave15-20261013`, based exactly on pushed wave14 `2bf868d1cd7e449c078f5ad3e8030ed99a55cc73`.
-- Processed the exact generated 25 wave15 objects atomically: 0 Profiles / 1 identity terminal hold / 24 non-fish Compatibility-domain holds.
-- The only fish object, `sp_0162 Carassius auratus var.`, remains `catalog_scientific_name_unresolved`; its exact ornamental review does not repair the bare `var.` identity or authorize generic goldfish inheritance.
-- All remaining 24 objects are explicitly non-fish: shrimp/snails route to `crustacean_or_mollusk`, soft/stony/corallimorph taxa to `coral_or_anemone`, and `sp_0327 Sabellastarte` to `marine_invertebrate`.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave15 adds no DB authority and therefore no migration.
-- Coverage generation now keeps direct/effective reviewed Profiles out of the promotion queue while preserving their remaining field gaps in the gap report. After that correction the exact wave16 active queue is 12 objects, not 15.
+- Active branch: `codex/compatibility-next12-wave16-20261013`, based exactly on pushed wave15 `fa06b507442dca2a5be16002d96adb17c7d96681`.
+- Processed the final generated 12 promotion candidates atomically: 1 new reviewed Profile (`sp_0052 Corydoras hastatus`) / 2 exact-species social evidence ceilings (`sp_0112`, `sp_0115`) / 9 non-fish domain holds.
+- `sp_0052` is promoted from completion-only evidence into runtime Species Knowledge and Compatibility authority using reviewed FishBase freshwater / 25–28°C / pH 6–8 / 2.4 cm / small-shoal facts. No numeric group minimum is invented.
+- Repository static candidate advances to 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 reviewed evidence. Repository-only migration candidate: `supabase/migrations/20261013153000_compatibility_unified_wave16_authority.sql` (100/176 → 101/177); it has NOT been run in Production.
+- Rollout generations are now exact 63 → 85 → 95 → 99 → 100 → 101; the historical wave06 100-key state remains valid while 101 is the latest repository target.
+- Coverage regeneration returns `next_wave_species_count = 0`: the current Compatibility promotion queue is complete. Remaining reviewed_unknown/terminal holds stay in gap reporting rather than being falsely promoted.
 - Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

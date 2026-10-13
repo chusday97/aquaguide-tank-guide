@@ -83,10 +83,10 @@ assert.equal(staticSignature.ruleVersion, COMPATIBILITY_RULE_VERSION);
 assert.equal(staticSignature.authorityVersion, 'tank-compatibility-v3-reviewed-evidence');
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
-  profiles: bootstrap.profiles.slice(0, -1),
-  counts: { profiles: bootstrap.profiles.length - 1, pairRules: bootstrap.pairRules.length },
+  profiles: bootstrap.profiles.slice(0, -3),
+  counts: { profiles: bootstrap.profiles.length - 3, pairRules: bootstrap.pairRules.length },
 });
-assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', 'partial DB authority must fail closed');
+assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', 'invalid 98-Profile partial DB authority must fail closed');
 assert.deepEqual(signature(), staticSignature, 'partial DB authority must not change Compatibility decisions');
 
 const rolloutKeysets = buildCompatibilityProfileRolloutKeysets(bootstrap.profiles.map(profile => profile.catalogKey));
@@ -147,10 +147,23 @@ assert.equal(wave05TargetStatus.profiles, 99);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
-applyReviewedCompatibilityBootstrap(bootstrap);
+const wave06TargetProfiles = profilesFor(rolloutKeysets.wave06Target);
+assert.equal(wave06TargetProfiles.length, 100);
+applyReviewedCompatibilityBootstrap({
+  ...bootstrap,
+  profiles: wave06TargetProfiles,
+  counts: { profiles: wave06TargetProfiles.length, pairRules: bootstrap.pairRules.length },
+});
 const wave06TargetStatus = getRuntimeCompatibilityStatus();
-assert.equal(wave06TargetStatus.source, 'reviewed-db', 'exact 100-Profile wave06 target must be usable');
+assert.equal(wave06TargetStatus.source, 'reviewed-db', 'exact 100-Profile wave06 target must remain usable during wave16 rollout');
 assert.equal(wave06TargetStatus.profiles, 100);
+
+resetRuntimeCompatibilityEvidenceForTest();
+
+applyReviewedCompatibilityBootstrap(bootstrap);
+const targetStatus = getRuntimeCompatibilityStatus();
+assert.equal(targetStatus.source, 'reviewed-db', 'exact 101-Profile repository target must be usable');
+assert.equal(targetStatus.profiles, 101);
 
 resetRuntimeCompatibilityEvidenceForTest();
 

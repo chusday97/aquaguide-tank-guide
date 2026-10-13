@@ -1,10 +1,10 @@
-## TOP CURRENT BRANCH — 2026-10-13 wave15
+## TOP CURRENT BRANCH — 2026-10-13 wave16
 
-- `codex/compatibility-next25-wave15-20261013` was created from exact clean pushed wave14 HEAD `2bf868d1cd7e449c078f5ad3e8030ed99a55cc73`.
-- Scope is evidence/backend documentation only: one 25-object authority batch, 1 identity boundary, 24 reviewed non-fish domain boundaries, regenerated coverage artifacts, promotion-queue filtering and contract tests.
-- Outcome is 0 new Profiles / 0 new DB evidence / 25 fail-closed terminal outcomes. No Supabase migration, Production mutation, deploy, merge, UI, or Vision change.
-- The generator now excludes direct/effective reviewed Profiles from the promotion queue while retaining their unresolved field gaps in research reporting; active wave16 is 12 profile-less objects.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; Production remains 60 / 63 / 21 / 1 / 116.
+- `codex/compatibility-next12-wave16-20261013` was created from exact clean pushed wave15 HEAD `fa06b507442dca2a5be16002d96adb17c7d96681`.
+- Scope is Compatibility backend authority only: 1 new reviewed Profile/source, 2 species social ceilings, 9 non-fish domain boundaries, rollout/keyset contracts, repository-only migration, regenerated coverage and docs.
+- Static candidate advances to 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 evidence; rollout preserves exact 100-profile wave06 state as a legal predecessor and adds 101 as latest target.
+- Promotion queue is empty after regeneration. The branch adds one Supabase migration file because DB authority genuinely increases, but does not execute it or mutate Production.
+- Production remains 60 / 63 / 21 / 1 / 116; no deploy, merge/main, UI, or Vision change.
 
 ## RC1 RELEASE CLOSURE — 2026-09-16
 - Production runtime: `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production).

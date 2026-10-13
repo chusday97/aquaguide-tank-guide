@@ -1,12 +1,12 @@
-## TOP CURRENT QUEUE — 2026-10-13 unified wave15
+## TOP CURRENT QUEUE — 2026-10-13 unified wave16 completion
 
-1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 1 identity hold / 24 non-fish domain holds.
-2. DONE: route shrimp/snails to `crustacean_or_mollusk`, corals/corallimorphs to `coral_or_anemone`, and the tube worm to `marine_invertebrate`; keep the lone bare-`var.` goldfish identity-held.
-3. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
-4. DONE: correct promotion-queue semantics so direct/effective reviewed Profiles stay in gap reporting but cannot be requeued for promotion.
-5. DONE: focused contracts, cross-contract validation, full backend release gate and diff/scope validation all pass; finalize one clean wave15 checkpoint and push.
-6. NEXT ACTIVE 12: sp_0330, sp_0335, sp_0337, sp_0367, sp_0371, sp_0403, sp_0404, sp_0405, sp_0460, sp_0112, sp_0115, sp_0052.
-7. HOLD: no Production deploy, Production DB mutation, migration, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
+1. DONE: classify the final active 12 objects: 1 reviewed Profile / 2 exact-species social evidence ceilings / 9 non-fish domain holds.
+2. DONE: promote `sp_0052` with exact reviewed FishBase facts and runtime Species Knowledge; do not invent a numeric shoal minimum.
+3. DONE: add repository-only stacked wave16 migration 100/176 → 101/177 and exact rollout generation 100 (`wave06-target`) → 101 (`target`).
+4. DONE: regenerate coverage; `next_wave_species_queue` is now empty and current promotion breadth expansion is complete.
+5. DONE: focused contracts, cross-contract validation, full backend release gate and scope validation all pass; finalize one clean wave16 checkpoint and push.
+6. NEXT: no active promotion batch. Remaining work is enrichment/terminal-hold review or separately authorized Production promotion, not another mechanical wave.
+7. HOLD: do not execute wave16 or any stacked migration in Production; no Production deploy, DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

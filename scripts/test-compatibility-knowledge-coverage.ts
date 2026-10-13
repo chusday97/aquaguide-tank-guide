@@ -167,7 +167,7 @@ for (const item of queue.terminal_pair_holds) {
 }
 
 assert.equal(report.next_wave_species_count, queue.next_wave_species_queue.length);
-assert.ok(queue.next_wave_species_queue.length > 0 && queue.next_wave_species_queue.length <= 25);
+assert.ok(queue.next_wave_species_queue.length <= 25, 'next-wave promotion queue may be empty when all current promotion candidates are terminally classified');
 const nextWaveTaxa = new Set();
 for (const item of queue.next_wave_species_queue) {
   assert.equal(item.research_disposition, 'actionable');
@@ -181,4 +181,4 @@ for (const item of queue.next_wave_species_queue) {
   }
 }
 assert.equal(queue.uses_real_user_telemetry, false);
-console.log('compatibility knowledge coverage contract passed: deterministic coverage, fail-closed unknowns, terminal holds, and next-wave actionable queue');
+console.log('compatibility knowledge coverage contract passed: deterministic coverage, fail-closed unknowns, terminal holds, and bounded/complete promotion queue');

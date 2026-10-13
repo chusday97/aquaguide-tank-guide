@@ -12,7 +12,7 @@
 
 - Catalog objects: 486
 - Compatibility-eligible species: 411
-- Reviewed compatibility profiles: 100
+- Reviewed compatibility profiles: 101
 - Reviewed pair rules: 21
 - Reviewed stage-risk profiles: 1
 - Launch-cohort species: 30
@@ -24,7 +24,7 @@
 - Terminal reviewed-unknown species holds: 5
 - Research-actionable pairs: 0
 - Terminal reviewed-unknown pair holds: 3
-- Next-wave research candidates: 12
+- Next-wave research candidates: 0
 
 | Field | Applicable | Reviewed supported | Reviewed unknown | Supported coverage |
 | --- | ---: | ---: | ---: | ---: |
@@ -44,18 +44,7 @@ No launch-cohort pair requires another ordinary research pass; remaining insuffi
 
 ## Next-wave species research queue
 
-1. 纽扣珊瑚 (动物之森) (sp_0330) — environment, space, social, compatibility_profile — score 23
-2. 丁香珊瑚 (sp_0335) — environment, space, social, compatibility_profile — score 23
-3. 千手珊瑚 (sp_0337) — environment, space, social, compatibility_profile — score 23
-4. 雪花纽扣珊瑚 (sp_0367) — environment, space, social, compatibility_profile — score 23
-5. 蓝海绵 (sp_0371) — environment, space, social, compatibility_profile — score 23
-6. 黄金纽扣珊瑚 (大规格) (sp_0403) — environment, space, social, compatibility_profile — score 23
-7. 紫晶八字脑珊瑚 (sp_0404) — environment, space, social, compatibility_profile — score 23
-8. 红炮仗花珊瑚 (sp_0405) — environment, space, social, compatibility_profile — score 23
-9. 巴西龟 (sp_0460) — environment, space, social, compatibility_profile — score 23
-10. 蓝眼灯 (sp_0112) — social, compatibility_profile — score 18
-11. 琥珀灯 (sp_0115) — social, compatibility_profile — score 18
-12. 月光鼠 (sp_0052) — compatibility_profile — score 13
+No non-launch eligible species currently requires ordinary research.
 
 ## Terminal reviewed-unknown holds
 
