@@ -1,0 +1,240 @@
+import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../../packages/contracts/src';
+import { fishData } from '../../data/fishData';
+import { getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
+import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
+import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
+import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../../modules/knowledge/speciesKnowledge';
+import { getLifeType } from '../../modules/species/species.service';
+import type { Fish } from '../../types';
+
+export type CompatibilityCoreField = typeof GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS[number];
+export type CompatibilityFieldCoverageStatus = 'reviewed_supported' | 'reviewed_neutral_or_negative' | 'reviewed_unknown' | 'needs_research' | 'missing_identity_or_domain' | 'not_applicable';
+export type CompatibilityResearchDisposition = 'ready' | 'targeted_source_expansion' | 'terminal_hold' | 'domain_extension_required' | 'not_applicable';
+export type CompatibilityFieldCoverageCell = {
+  status: CompatibilityFieldCoverageStatus;
+  disposition: CompatibilityResearchDisposition;
+  evidenceIds: string[];
+  authoritySource: 'catalog_field_review' | 'species_knowledge' | 'compatibility_profile' | 'identity_boundary' | 'domain_boundary' | 'evidence_ceiling' | 'none';
+  reasonCode: string | null;
+};
+export type CompatibilityFieldCoverageRow = {
+  speciesId: string;
+  name: string;
+  scientificName: string;
+  lifeType: ReturnType<typeof getLifeType>;
+  reviewedProfile: 'direct' | 'inherited' | 'none';
+  genericOnboardingReady: boolean;
+  authoritativeFieldCount: number;
+  actionableGapCount: number;
+  terminalGapCount: number;
+  fields: Record<CompatibilityCoreField, CompatibilityFieldCoverageCell>;
+};
+export type CompatibilityFieldCoverageSummary = {
+  speciesCount: number;
+  coreFields: CompatibilityCoreField[];
+  genericOnboardingReadySpecies: number;
+  coreFieldCompleteSpecies: number;
+  oneFieldGapSpecies: number;
+  runtimeReviewedProfileSpecies: number;
+  domainOrIdentityHeldSpecies: number;
+  fieldCounts: Record<CompatibilityCoreField, Record<CompatibilityFieldCoverageStatus, number>>;
+  fieldActionableGaps: Array<{ field: CompatibilityCoreField; count: number }>;
+};
+export type CompatibilityFieldBacklogItem = {
+  rank: number;
+  speciesId: string;
+  name: string;
+  scientificName: string;
+  field: CompatibilityCoreField;
+  status: 'reviewed_unknown' | 'needs_research';
+  priorityScore: number;
+  reason: 'missing_reviewed_authority' | 'reviewed_unknown_targeted_expansion';
+};
+
+const coreFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityCoreField[];
+const positiveNumber = (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value > 0;
+const finiteRange = (min: unknown, max: unknown) => typeof min === 'number' && Number.isFinite(min) && typeof max === 'number' && Number.isFinite(max) && min <= max;
+const unique = (items: string[]) => Array.from(new Set(items.filter(Boolean)));
+const reviewedFieldReviews = (speciesId: string, field: CompatibilityCoreField) => getCatalogFieldReviews(speciesId)
+  .filter(review => review.field === field && review.status === 'reviewed' && isCatalogFieldReviewValueValid(review));
+
+const supportedValueStatus = (review: CatalogFieldReview): CompatibilityFieldCoverageStatus => {
+  if (review.resolution === 'unknown') return 'reviewed_unknown';
+  const value = review.proposedValue;
+  if (review.field === 'water') return value === 'unknown' ? 'reviewed_unknown' : 'reviewed_supported';
+  if (review.field === 'temperature' || review.field === 'ph') {
+    const range = value as { min?: unknown; max?: unknown };
+    return finiteRange(range?.min, range?.max) ? 'reviewed_supported' : 'reviewed_unknown';
+  }
+  if (review.field === 'adult_size') {
+    const range = value as { min?: unknown; max?: unknown };
+    return positiveNumber(range?.min) || positiveNumber(range?.max) ? 'reviewed_supported' : 'reviewed_unknown';
+  }
+  if (review.field === 'tank_size') {
+    const tank = value as { liters?: unknown; lengthCm?: unknown };
+    return positiveNumber(tank?.liters) || positiveNumber(tank?.lengthCm) ? 'reviewed_supported' : 'reviewed_unknown';
+  }
+  if (review.field === 'social_behavior') {
+    const social = value as { mode?: unknown; minimumGroupSize?: unknown };
+    return social?.mode === 'unknown' && !positiveNumber(social?.minimumGroupSize) ? 'reviewed_unknown' : 'reviewed_supported';
+  }
+  if (review.field === 'territoriality') {
+    const traits = (value as { traits?: unknown })?.traits;
+    return Array.isArray(traits) && traits.length === 0 ? 'reviewed_neutral_or_negative' : 'reviewed_supported';
+  }
+  if (review.field === 'predation') {
+    const targets = (value as { targets?: unknown })?.targets;
+    return Array.isArray(targets) && targets.length === 0 ? 'reviewed_neutral_or_negative' : 'reviewed_supported';
+  }
+  return 'reviewed_supported';
+};
+
+const knowledgeCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell | null => {
+  const knowledge = getReviewedSpeciesKnowledge(fish.id) ?? getReviewedSpeciesKnowledgeForFish(fish);
+  if (!knowledge) return null;
+  if (field === 'water' || field === 'temperature' || field === 'ph') {
+    const section = knowledge.environment;
+    if (section?.evidence.reviewStatus !== 'reviewed') return null;
+    if (field === 'water') {
+      const types = section.waterTypes?.length ? section.waterTypes : section.waterType && section.waterType !== 'unknown' ? [section.waterType] : [];
+      if (!types.length) return { status: 'reviewed_unknown', disposition: 'targeted_source_expansion', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: 'reviewed_environment_water_unknown' };
+    }
+    if (field === 'temperature' && !finiteRange(section.temperatureRangeC?.min, section.temperatureRangeC?.max)) return null;
+    if (field === 'ph' && !finiteRange(section.phRange?.min, section.phRange?.max)) return null;
+    return { status: 'reviewed_supported', disposition: 'ready', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: null };
+  }
+  if (field === 'adult_size' || field === 'tank_size') {
+    const section = knowledge.spaceAndGrowth;
+    if (section?.evidence.reviewStatus !== 'reviewed') return null;
+    if (field === 'adult_size' && !positiveNumber(section.adultLengthCm?.min) && !positiveNumber(section.adultLengthCm?.max)) return null;
+    if (field === 'tank_size' && !positiveNumber(section.minVolumeLiters) && !positiveNumber(section.minTankLengthCm)) return null;
+    return { status: 'reviewed_supported', disposition: 'ready', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: null };
+  }
+  const section = knowledge.socialBehavior;
+  if (section?.evidence.reviewStatus !== 'reviewed') return null;
+  if (field === 'social_behavior') {
+    if (section.mode === 'unknown' && !positiveNumber(section.minimumGroupSize)) return { status: 'reviewed_unknown', disposition: 'targeted_source_expansion', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: 'reviewed_social_mode_unknown' };
+    return { status: 'reviewed_supported', disposition: 'ready', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: null };
+  }
+  if (field === 'territoriality') {
+    if (section.territoriality === 'unknown' || section.territoriality == null) return null;
+    return { status: section.territoriality === 'none' ? 'reviewed_neutral_or_negative' : 'reviewed_supported', disposition: 'ready', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: null };
+  }
+  if (field === 'predation') {
+    const risk = section.predationRisk;
+    const vulnerability = section.predationVulnerability;
+    if ((risk === 'unknown' || risk == null) && (vulnerability === 'unknown' || vulnerability == null)) return null;
+    const neutral = (risk === 'none' || risk == null) && (vulnerability === 'none' || vulnerability == null);
+    return { status: neutral ? 'reviewed_neutral_or_negative' : 'reviewed_supported', disposition: 'ready', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: null };
+  }
+  return null;
+};
+
+const profileCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell | null => {
+  const profile = getReviewedCompatibilityProfileForFish(fish);
+  if (!profile?.requiredFacts?.includes(field)) return null;
+  const evidenceIds = profile.citations.map(citation => citation.id);
+  if (field === 'water') {
+    const types = profile.waterTypes?.length ? profile.waterTypes : profile.waterType ? [profile.waterType] : [];
+    return types.length
+      ? { status: 'reviewed_supported', disposition: 'ready', evidenceIds, authoritySource: 'compatibility_profile', reasonCode: null }
+      : { status: 'reviewed_unknown', disposition: 'targeted_source_expansion', evidenceIds, authoritySource: 'compatibility_profile', reasonCode: 'reviewed_profile_water_unknown' };
+  }
+  if (field === 'social_behavior') {
+    const positive = profile.minimumGroupSize != null || profile.behaviorTraits.some(trait => /shoal|school|group|solitary|pair|social|species_tank/i.test(trait));
+    return { status: positive ? 'reviewed_supported' : 'reviewed_neutral_or_negative', disposition: 'ready', evidenceIds, authoritySource: 'compatibility_profile', reasonCode: null };
+  }
+  if (field === 'territoriality') {
+    const positive = profile.behaviorTraits.some(trait => /territor|aggress|rival|defense|cave|resource/i.test(trait));
+    return { status: positive ? 'reviewed_supported' : 'reviewed_neutral_or_negative', disposition: 'ready', evidenceIds, authoritySource: 'compatibility_profile', reasonCode: null };
+  }
+  if (field === 'predation') {
+    const positive = profile.predationTargets.length > 0 || profile.behaviorTraits.some(trait => /predat|prey/i.test(trait));
+    return { status: positive ? 'reviewed_supported' : 'reviewed_neutral_or_negative', disposition: 'ready', evidenceIds, authoritySource: 'compatibility_profile', reasonCode: null };
+  }
+  return null;
+};
+
+const evidenceCeilingForField = (fish: Fish, field: CompatibilityCoreField) => {
+  const mapped = field === 'water' || field === 'temperature' || field === 'ph' ? 'environment' : field === 'adult_size' || field === 'tank_size' ? 'space' : 'social';
+  return getKnowledgeEvidenceCeilings(fish.id).find(item => item.field === mapped);
+};
+
+const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell => {
+  const lifeType = getLifeType(fish);
+  if (lifeType === 'hardscape') return { status: 'not_applicable', disposition: 'not_applicable', evidenceIds: [], authoritySource: 'domain_boundary', reasonCode: 'hardscape_not_livestock' };
+  if (lifeType !== 'fish') return { status: 'missing_identity_or_domain', disposition: 'domain_extension_required', evidenceIds: [], authoritySource: 'domain_boundary', reasonCode: `unsupported_compatibility_domain_${lifeType}` };
+  const identityBoundary = getCatalogIdentityBoundary(fish.id);
+  if (identityBoundary) return { status: 'missing_identity_or_domain', disposition: 'terminal_hold', evidenceIds: identityBoundary.sourceIds, authoritySource: 'identity_boundary', reasonCode: identityBoundary.code };
+
+  const exactReviews = reviewedFieldReviews(fish.id, field);
+  const supported = exactReviews.find(review => review.resolution === 'supported');
+  if (supported) {
+    const status = supportedValueStatus(supported);
+    return { status, disposition: status === 'reviewed_unknown' ? 'targeted_source_expansion' : 'ready', evidenceIds: supported.citationIds, authoritySource: 'catalog_field_review', reasonCode: status === 'reviewed_unknown' ? 'reviewed_supported_record_contains_unknown_value' : null };
+  }
+  const unknown = exactReviews.find(review => review.resolution === 'unknown');
+  if (unknown) {
+    const ceiling = evidenceCeilingForField(fish, field);
+    return { status: 'reviewed_unknown', disposition: ceiling ? 'terminal_hold' : 'targeted_source_expansion', evidenceIds: unique([...(unknown.citationIds || []), ...(ceiling?.sourceIds || [])]), authoritySource: ceiling ? 'evidence_ceiling' : 'catalog_field_review', reasonCode: ceiling?.code ?? 'reviewed_field_unknown' };
+  }
+  const knowledge = knowledgeCell(fish, field);
+  if (knowledge) {
+    const ceiling = knowledge.status === 'reviewed_unknown' ? evidenceCeilingForField(fish, field) : undefined;
+    return ceiling ? { ...knowledge, disposition: 'terminal_hold', evidenceIds: unique([...knowledge.evidenceIds, ...ceiling.sourceIds]), authoritySource: 'evidence_ceiling', reasonCode: ceiling.code } : knowledge;
+  }
+  const profile = profileCell(fish, field);
+  if (profile) return profile;
+  const ceiling = evidenceCeilingForField(fish, field);
+  if (ceiling) return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: ceiling.sourceIds, authoritySource: 'evidence_ceiling', reasonCode: ceiling.code };
+  return { status: 'needs_research', disposition: 'targeted_source_expansion', evidenceIds: [], authoritySource: 'none', reasonCode: 'missing_reviewed_field_authority' };
+};
+
+const isAuthoritative = (status: CompatibilityFieldCoverageStatus) => status === 'reviewed_supported' || status === 'reviewed_neutral_or_negative';
+const fieldWeights: Record<CompatibilityCoreField, number> = { water: 100, temperature: 100, ph: 85, adult_size: 95, tank_size: 90, social_behavior: 100, territoriality: 100, predation: 100 };
+
+export const buildCompatibilityCoreFieldCoverage = () => {
+  const rows: CompatibilityFieldCoverageRow[] = fishData.map(fish => {
+    const directProfile = getReviewedCompatibilityProfile(fish.id);
+    const resolvedProfile = getReviewedCompatibilityProfileForFish(fish);
+    const fields = Object.fromEntries(coreFields.map(field => [field, fieldCell(fish, field)])) as Record<CompatibilityCoreField, CompatibilityFieldCoverageCell>;
+    const authoritativeFieldCount = coreFields.filter(field => isAuthoritative(fields[field].status)).length;
+    const actionableGapCount = coreFields.filter(field => fields[field].disposition === 'targeted_source_expansion').length;
+    const terminalGapCount = coreFields.filter(field => ['terminal_hold', 'domain_extension_required'].includes(fields[field].disposition)).length;
+    const declared = new Set(resolvedProfile?.requiredFacts || []);
+    const genericOnboardingReady = getLifeType(fish) === 'fish' && !getCatalogIdentityBoundary(fish.id) && Boolean(resolvedProfile)
+      && coreFields.every(field => declared.has(field) && isAuthoritative(fields[field].status));
+    return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
+  });
+
+  const fieldCounts = Object.fromEntries(coreFields.map(field => {
+    const counts: Record<CompatibilityFieldCoverageStatus, number> = { reviewed_supported: 0, reviewed_neutral_or_negative: 0, reviewed_unknown: 0, needs_research: 0, missing_identity_or_domain: 0, not_applicable: 0 };
+    for (const row of rows) counts[row.fields[field].status] += 1;
+    return [field, counts];
+  })) as CompatibilityFieldCoverageSummary['fieldCounts'];
+
+  const summary: CompatibilityFieldCoverageSummary = {
+    speciesCount: rows.length,
+    coreFields,
+    genericOnboardingReadySpecies: rows.filter(row => row.genericOnboardingReady).length,
+    coreFieldCompleteSpecies: rows.filter(row => row.lifeType === 'fish' && row.authoritativeFieldCount === coreFields.length).length,
+    oneFieldGapSpecies: rows.filter(row => row.lifeType === 'fish' && row.authoritativeFieldCount === coreFields.length - 1).length,
+    runtimeReviewedProfileSpecies: rows.filter(row => row.reviewedProfile !== 'none').length,
+    domainOrIdentityHeldSpecies: rows.filter(row => coreFields.some(field => row.fields[field].status === 'missing_identity_or_domain')).length,
+    fieldCounts,
+    fieldActionableGaps: coreFields.map(field => ({ field, count: rows.filter(row => row.fields[field].disposition === 'targeted_source_expansion').length }))
+      .sort((a, b) => b.count - a.count || b.field.localeCompare(a.field)),
+  };
+
+  const backlogRaw = rows.flatMap(row => coreFields.flatMap(field => {
+    const cell = row.fields[field];
+    if (cell.disposition !== 'targeted_source_expansion' || (cell.status !== 'reviewed_unknown' && cell.status !== 'needs_research')) return [];
+    const priorityScore = fieldWeights[field] + row.authoritativeFieldCount * 8 + (row.reviewedProfile !== 'none' ? 25 : 0) + (cell.status === 'reviewed_unknown' ? 10 : 0);
+    return [{ speciesId: row.speciesId, name: row.name, scientificName: row.scientificName, field, status: cell.status, priorityScore, reason: cell.status === 'reviewed_unknown' ? 'reviewed_unknown_targeted_expansion' as const : 'missing_reviewed_authority' as const }];
+  }));
+  const backlog: CompatibilityFieldBacklogItem[] = backlogRaw
+    .sort((a, b) => b.priorityScore - a.priorityScore || a.speciesId.localeCompare(b.speciesId) || a.field.localeCompare(b.field))
+    .map((item, index) => ({ rank: index + 1, ...item }));
+  return { rows, summary, backlog };
+};

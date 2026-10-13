@@ -253,6 +253,8 @@
     "catalog:publish": "node --import tsx scripts/publish-catalog-snapshot.ts",
     "test:domain-compatibility": "node --import tsx scripts/test-domain-compatibility.ts",
     "test:compatibility-generic-species-onboarding": "node --import tsx scripts/test-compatibility-generic-species-onboarding.ts",
+    "generate:compatibility-core-field-coverage": "node --import tsx scripts/generate-compatibility-core-field-coverage.ts",
+    "test:compatibility-core-field-coverage": "node --import tsx scripts/test-compatibility-core-field-coverage.ts",
     "test:compatibility-service": "node --import tsx scripts/test-compatibility-service-authority.ts",
     "test:compatibility-v4-ai-shadow": "node --import tsx scripts/test-compatibility-v4-ai-shadow.ts",
     "generate:compatibility-v4-shadow-eval": "node --import tsx scripts/generate-compatibility-v4-shadow-eval.ts",
