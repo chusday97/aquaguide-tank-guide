@@ -335,6 +335,7 @@ const currentTankProduct = buildCompatibilityProductAssessment(
   'current_tank',
 );
 assert.equal(currentTankProduct.assessmentMode, 'current_tank');
+assert.equal(currentTankProduct.schemaVersion, 1);
 assert.equal(currentTankProduct.details.authority.addPolicy, 'allow');
 assert.equal(currentTankProduct.details.presentation.primaryAction, 'none');
 assert.equal(currentTankProduct.main.judgment, '有条件可以');

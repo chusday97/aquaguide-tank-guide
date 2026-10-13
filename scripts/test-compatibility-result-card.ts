@@ -2,7 +2,12 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { reviewSpeciesAdditions } from '../src/services/aquarium/species-addition.service';
-import { buildLocalCompatibilityAssessment } from '../src/services/compatibility/compatibility-assessment.service';
+import {
+  adaptRemoteCompatibilityAssessmentForPlan,
+  buildLocalCompatibilityAssessment,
+  type RemoteCompatibilityAssessment,
+} from '../src/services/compatibility/compatibility-assessment.service';
+import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION } from '../src/services/compatibility/compatibility-product-contract';
 import type { Aquarium } from '../src/types';
 
 const aquarium: Aquarium = {
@@ -42,6 +47,53 @@ assert.ok(local.main.why.length >= 1 && local.main.why.length <= 2);
 assert.ok(local.main.howTo.length >= 1 && local.main.howTo.length <= 2);
 assert.equal(local.details.label, '查看依据');
 assert.equal(local.details.authorityStatus, review.status);
+assert.equal(local.assessmentMode, 'planned_addition');
+
+const remoteFixture: RemoteCompatibilityAssessment = {
+  schemaVersion: COMPATIBILITY_PRODUCT_SCHEMA_VERSION,
+  assessmentMode: 'planned_addition',
+  main: local.main,
+  details: {
+    label: '查看依据',
+    reasons: [{ text: 'fixture reason', ruleCodes: ['predation_vulnerability_context'] }],
+    adjustments: [],
+    uncertainties: [],
+    explanation: {
+      source: 'deterministic_fallback',
+      aiStatus: 'skipped',
+      model: null,
+    },
+    authority: {
+      status: review.status,
+      finalSource: 'deterministic',
+    },
+  },
+};
+const adaptedRemote = adaptRemoteCompatibilityAssessmentForPlan(remoteFixture, review.decision);
+assert.ok(adaptedRemote);
+assert.equal(adaptedRemote.assessmentMode, 'planned_addition');
+assert.equal(adaptedRemote.details.authorityStatus, review.status);
+assert.equal(
+  adaptRemoteCompatibilityAssessmentForPlan({ ...remoteFixture, schemaVersion: 2 as any }, review.decision),
+  null,
+  'unknown response schema versions must fail closed to the local deterministic result',
+);
+assert.equal(
+  adaptRemoteCompatibilityAssessmentForPlan({ ...remoteFixture, assessmentMode: 'current_tank' }, review.decision),
+  null,
+  'planned-addition UI must not consume a current-tank response',
+);
+assert.equal(
+  adaptRemoteCompatibilityAssessmentForPlan({
+    ...remoteFixture,
+    details: {
+      ...remoteFixture.details,
+      authority: { ...remoteFixture.details.authority, status: 'compatible' },
+    },
+  }, review.decision),
+  null,
+  'remote deterministic authority must exactly match the local whole-tank decision',
+);
 
 const aquariumSource = readFileSync(new URL('../src/pages/Aquarium.tsx', import.meta.url), 'utf8');
 const cardStart = aquariumSource.indexOf(') : addFishCompatibilityReview ? (');
@@ -81,6 +133,8 @@ assert.match(aquariumSource, /if \(addFishCompatibilityReview\) \{\s*resetAddFis
 const serviceSource = readFileSync(new URL('../src/services/compatibility/compatibility-assessment.service.ts', import.meta.url), 'utf8');
 assert.match(serviceSource, /if \(mode !== 'cloud'\) return fallback/);
 assert.match(serviceSource, /compatibility-assessment/);
+assert.match(serviceSource, /schemaVersion !== COMPATIBILITY_PRODUCT_SCHEMA_VERSION/);
+assert.match(serviceSource, /assessmentMode !== 'planned_addition'/);
 assert.match(serviceSource, /remote\.details\.authority\.status !== decision\.status/);
 assert.doesNotMatch(serviceSource, /method:\s*['"](POST|PATCH|PUT|DELETE)['"]/);
 assert.doesNotMatch(serviceSource, /\.insert\(|\.update\(|\.delete\(|\.upsert\(/);

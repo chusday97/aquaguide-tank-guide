@@ -3,6 +3,8 @@ import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.ty
 import type { SpeciesAdditionItem } from '../aquarium/species-addition.service';
 import { apiRequest } from '../api/api-client';
 import { resolveRepositoryMode } from '../repository/repository-provider';
+import type { CompatibilityAssessmentMode } from './compatibility-action.service';
+import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION, type CompatibilityProductSchemaVersion } from './compatibility-product-contract';
 import {
   buildCompatibilityReadableConclusion,
   type CompatibilityReadableConclusion,
@@ -14,6 +16,7 @@ type GroundedItem = {
 };
 
 export type CompatibilityAssessmentUiModel = {
+  assessmentMode: 'planned_addition';
   main: CompatibilityReadableConclusion;
   source: 'cloud_ai' | 'cloud_deterministic' | 'local_deterministic';
   details: {
@@ -27,7 +30,9 @@ export type CompatibilityAssessmentUiModel = {
   };
 };
 
-type RemoteAssessment = {
+export type RemoteCompatibilityAssessment = {
+  schemaVersion: CompatibilityProductSchemaVersion;
+  assessmentMode: CompatibilityAssessmentMode;
   main: CompatibilityReadableConclusion;
   details: {
     label: '查看依据';
@@ -47,6 +52,7 @@ type RemoteAssessment = {
 };
 
 const localAssessment = (decision: CompatibilityDecision): CompatibilityAssessmentUiModel => ({
+  assessmentMode: 'planned_addition',
   main: buildCompatibilityReadableConclusion(decision),
   source: 'local_deterministic',
   details: {
@@ -60,13 +66,41 @@ const localAssessment = (decision: CompatibilityDecision): CompatibilityAssessme
   },
 });
 
-const isValidMain = (main: RemoteAssessment['main']) => (
+const isValidMain = (main: RemoteCompatibilityAssessment['main']) => (
   ['可以养', '有条件可以', '不建议', '暂时无法判断'].includes(main?.judgment)
   && Array.isArray(main?.why)
   && main.why.length > 0
   && Array.isArray(main?.howTo)
   && main.howTo.length > 0
 );
+
+export const adaptRemoteCompatibilityAssessmentForPlan = (
+  remote: RemoteCompatibilityAssessment,
+  decision: CompatibilityDecision,
+): CompatibilityAssessmentUiModel | null => {
+  if (remote?.schemaVersion !== COMPATIBILITY_PRODUCT_SCHEMA_VERSION) return null;
+  if (remote?.assessmentMode !== 'planned_addition') return null;
+  if (!isValidMain(remote.main)) return null;
+  if (remote.details?.authority?.finalSource !== 'deterministic') return null;
+  if (remote.details.authority.status !== decision.status) return null;
+
+  return {
+    assessmentMode: 'planned_addition',
+    main: remote.main,
+    source: remote.details.explanation?.source === 'ai_grounded'
+      ? 'cloud_ai'
+      : 'cloud_deterministic',
+    details: {
+      label: '查看依据',
+      reasons: Array.isArray(remote.details.reasons) ? remote.details.reasons : [],
+      adjustments: Array.isArray(remote.details.adjustments) ? remote.details.adjustments : [],
+      uncertainties: Array.isArray(remote.details.uncertainties) ? remote.details.uncertainties : [],
+      model: remote.details.explanation?.model || null,
+      aiStatus: remote.details.explanation?.aiStatus || null,
+      authorityStatus: remote.details.authority.status,
+    },
+  };
+};
 
 export const buildLocalCompatibilityAssessment = (
   decision: CompatibilityDecision,
@@ -95,28 +129,10 @@ export const loadCompatibilityAssessmentForPlan = async ({
   plannedItems.forEach(item => query.append('planned', `${item.fishId}:${Math.max(1, Math.round(item.quantity || 1))}`));
 
   try {
-    const remote = await apiRequest<RemoteAssessment>(
+    const remote = await apiRequest<RemoteCompatibilityAssessment>(
       `/aquariums/${encodeURIComponent(aquariumId)}/compatibility-assessment?${query.toString()}`,
     );
-    if (!isValidMain(remote.main)) return fallback;
-    if (remote.details?.authority?.finalSource !== 'deterministic') return fallback;
-    if (remote.details.authority.status !== decision.status) return fallback;
-
-    return {
-      main: remote.main,
-      source: remote.details.explanation?.source === 'ai_grounded'
-        ? 'cloud_ai'
-        : 'cloud_deterministic',
-      details: {
-        label: '查看依据',
-        reasons: Array.isArray(remote.details.reasons) ? remote.details.reasons : [],
-        adjustments: Array.isArray(remote.details.adjustments) ? remote.details.adjustments : [],
-        uncertainties: Array.isArray(remote.details.uncertainties) ? remote.details.uncertainties : [],
-        model: remote.details.explanation?.model || null,
-        aiStatus: remote.details.explanation?.aiStatus || null,
-        authorityStatus: remote.details.authority.status,
-      },
-    };
+    return adaptRemoteCompatibilityAssessmentForPlan(remote, decision) || fallback;
   } catch {
     return fallback;
   }

@@ -9,6 +9,7 @@ import {
   type CompatibilityAiShadowResult,
 } from '../apps/api/src/compatibility-ai-reasoner';
 import { buildCompatibilityProductAssessment } from '../apps/api/src/compatibility-ai-product';
+import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION } from '../src/services/compatibility/compatibility-product-contract';
 import {
   parseCompatibilityPlannedItems,
   readPublishedCatalogCombinationContext,
@@ -82,6 +83,8 @@ assert.equal(cautionShadow.ai.status, 'accepted');
 assert.equal(cautionShadow.finalDecision.status, 'caution');
 
 const product = buildCompatibilityProductAssessment(cautionDecision, cautionShadow);
+assert.equal(product.schemaVersion, COMPATIBILITY_PRODUCT_SCHEMA_VERSION);
+assert.equal(product.assessmentMode, 'planned_addition');
 assert.equal(product.main.judgment, '有条件可以');
 assert.ok(product.main.why.length > 0);
 assert.ok(product.main.howTo.length > 0);
@@ -92,6 +95,15 @@ assert.equal(product.details.authority.finalSource, 'deterministic');
 assert.equal(product.details.authority.status, 'caution');
 assert.ok(product.details.reasons.length > 0);
 assert.ok(product.details.adjustments.length > 0);
+
+assert.throws(
+  () => buildCompatibilityProductAssessment(
+    { ...cautionDecision, status: 'compatible' },
+    cautionShadow,
+  ),
+  /COMPATIBILITY_AUTHORITY_STATUS_MISMATCH/,
+  'product builder must fail closed if wrapper status diverges from canonical aggregate authority',
+);
 
 const conservativeShadow: CompatibilityAiShadowResult = {
   ...cautionShadow,
@@ -200,6 +212,7 @@ assert.ok(productRouteStart >= 0 && productRouteEnd > productRouteStart);
 const productRouteSource = routeSource.slice(productRouteStart, productRouteEnd);
 assert.match(productRouteSource, /createCompatibilityAiCombinationAssessment/);
 assert.match(productRouteSource, /buildCompatibilityProductAssessment/);
+assert.match(productRouteSource, /assessmentMode/);
 assert.doesNotMatch(productRouteSource, /\.insert\(|\.update\(|\.delete\(|\.upsert\(/);
 
 console.log('Compatibility V4 product assessment PASS: on-demand whole-tank aggregation, grounded AI explanation, deterministic authority fallback, fail-closed unknowns and read-only API contract.');

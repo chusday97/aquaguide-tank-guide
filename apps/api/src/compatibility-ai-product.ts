@@ -2,6 +2,7 @@ import type { CompatibilityDecision } from '../../../src/modules/knowledge/knowl
 import { prioritizeDistinctCompatibilityRules, type CompatibilityAssessmentMode } from '../../../src/services/compatibility/compatibility-action.service';
 import { getCompatibilityPresentation } from '../../../src/services/compatibility/compatibility-presentation.service';
 import { getCompatibilityDecision } from '../../../src/services/compatibility/compatibility.service';
+import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION, type CompatibilityProductSchemaVersion } from '../../../src/services/compatibility/compatibility-product-contract';
 import {
   buildCompatibilityReadableConclusion,
   type CompatibilityReadableConclusion,
@@ -14,6 +15,7 @@ export type CompatibilityProductGroundedItem = {
 };
 
 export type CompatibilityProductAssessment = {
+  schemaVersion: CompatibilityProductSchemaVersion;
   assessmentMode: CompatibilityAssessmentMode;
   main: CompatibilityReadableConclusion;
   details: {
@@ -96,6 +98,9 @@ export const buildCompatibilityProductAssessment = (
     decision.aggregateResult,
     assessmentMode === 'current_tank' ? 'record_existing' : 'planned_addition',
   );
+  if (decision.status !== finalDecision.status) {
+    throw new Error(`COMPATIBILITY_AUTHORITY_STATUS_MISMATCH:${decision.status}:${finalDecision.status}`);
+  }
   const presentation = getCompatibilityPresentation(decision, assessmentMode);
   const aiNarrativeMatchesAuthority = shadow.ai.status === 'accepted'
     && shadow.ai.suggestedVerdict === finalDecision.status;
@@ -116,11 +121,8 @@ export const buildCompatibilityProductAssessment = (
       }))).slice(0, 5)
       : [];
 
-  const authoritativeDecision = decision.status === finalDecision.status
-    ? decision
-    : { ...decision, status: finalDecision.status };
   const main = buildCompatibilityReadableConclusion(
-    authoritativeDecision,
+    decision,
     aiNarrativeMatchesAuthority
       ? { reasons: shadow.ai.reasons, adjustments: shadow.ai.adjustments }
       : {},
@@ -128,6 +130,7 @@ export const buildCompatibilityProductAssessment = (
   );
 
   return {
+    schemaVersion: COMPATIBILITY_PRODUCT_SCHEMA_VERSION,
     assessmentMode,
     main,
     details: {
