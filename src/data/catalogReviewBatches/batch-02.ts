@@ -30,11 +30,13 @@ const verifiedIdentitySources: Record<string, string> = {
 
 /** Seriously Fish pages re-opened and content-verified for the 2026-10-13 high-yield pass. */
 const verifiedHusbandrySources: Record<string, string> = {
+  'sp_0012': 'seriouslyfish-puntius-titteya',
   'sp_0014': 'seriouslyfish-corydoras-aeneus',
   'sp_0443': 'seriouslyfish-corydoras-panda',
   'sp_0444': 'seriouslyfish-trichopodus-leerii',
   'sp_0446': 'seriouslyfish-pterophyllum-scalare',
   'sp_0447': 'seriouslyfish-symphysodon-aequifasciatus',
+  'sp_0468': 'seriouslyfish-trigonostigma-heteromorpha',
 };
 
 const species: readonly BatchSpecies[] = [
@@ -123,6 +125,10 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
     if (breeding) Object.assign(breeding, supported(item.id, 'breeding_behavior', { traits: ['Both parents guard eggs attached to aquatic vegetation.'] }, citations, 'high'));
   }
   const husbandryCitation = verifiedHusbandrySources[item.id] ? [verifiedHusbandrySources[item.id]!] : citations;
+  if (item.id === 'sp_0012') {
+    const predation = reviews.find(review => review.field === 'predation');
+    if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: [] }, husbandryCitation, ['Seriously Fish describes a very peaceful community fish kept with other small cyprinids and tetras; its recorded prey are invertebrates/zooplankton rather than fish.']));
+  }
   if (item.id === 'sp_0014') {
     const tank = reviews.find(review => review.field === 'tank_size');
     const social = reviews.find(review => review.field === 'social_behavior');
@@ -147,6 +153,10 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
     if (adultSize) Object.assign(adultSize, supportedHighYield(item.id, 'adult_size', { min: null, max: 15 }, husbandryCitation, ['Seriously Fish records 150 mm standard length; body height is not substituted for standard length.']));
     if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: ['small_fish'] }, husbandryCitation, ['The source explicitly warns that angelfish may eat small fish such as tetras.']));
   }
+  if (item.id === 'sp_0468') {
+    const predation = reviews.find(review => review.field === 'predation');
+    if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: [] }, husbandryCitation, ['Seriously Fish describes a very peaceful community fish suitable with other small cyprinids and tetras; the diet is limited to small invertebrate/zooplankton prey, so no fish-predation target is promoted.']));
+  }
   if (item.id === 'sp_0447') {
     const tank = reviews.find(review => review.field === 'tank_size');
     if (tank) Object.assign(tank, supportedHighYield(item.id, 'tank_size', { liters: 255, lengthCm: 120 }, husbandryCitation, ['The source gives roughly 120 × 45 × 45 cm / 255 L for a few juveniles or a breeding pair; no group-size extrapolation is added.']));
@@ -165,6 +175,8 @@ const seriouslyFishSource = (id: string, title: string, url: string): CatalogEvi
 });
 
 export const catalogReviewBatch02Sources: CatalogEvidenceSource[] = [
+  seriouslyFishSource('seriouslyfish-puntius-titteya', 'Puntius titteya (Cherry Barb) husbandry profile', 'https://www.seriouslyfish.com/species/puntius-titteya'),
+  seriouslyFishSource('seriouslyfish-trigonostigma-heteromorpha', 'Trigonostigma heteromorpha (Harlequin Rasbora) husbandry profile', 'https://www.seriouslyfish.com/species/trigonostigma-heteromorpha'),
   source('batch-02-fishbase-puntius-titteya', 'Puntius titteya species summary', 'https://www.fishbase.se/summary/Puntius-titteya.html'),
   source('batch-02-worms-puntius-titteya', 'Puntius titteya taxon record', 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=102183'),
   source('batch-02-fishbase-trigonostigma-heteromorpha', 'Trigonostigma heteromorpha species summary', 'https://www.fishbase.se/summary/Trigonostigma-heteromorpha.html'),

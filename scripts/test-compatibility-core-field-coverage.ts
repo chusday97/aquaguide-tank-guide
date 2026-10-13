@@ -16,8 +16,8 @@ assert.deepEqual(summary.coreFields, fields);
 assert.ok(summary.runtimeReviewedProfileSpecies >= 101);
 assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpecies);
 assert.ok(summary.oneFieldGapSpecies > 0);
-assert.ok(summary.genericOnboardingReadySpecies >= 28, 'High-yield source-first coverage should preserve at least 28 fully sourced generic-ready profiles');
-for (const speciesId of ['sp_0017','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0214','sp_0440','sp_0448','sp_0469']) {
+assert.ok(summary.genericOnboardingReadySpecies >= 30, 'High-yield source-first coverage should preserve at least 30 fully sourced generic-ready profiles');
+for (const speciesId of ['sp_0017','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0184','sp_0214','sp_0218','sp_0440','sp_0448','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
   const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
@@ -54,6 +54,16 @@ assert.equal(rowOf('sp_0140')?.fields.ph.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0140')?.fields.predation.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0181')?.fields.territoriality.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0449')?.fields.territoriality.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0012')?.fields.predation.status, 'reviewed_neutral_or_negative');
+assert.equal(rowOf('sp_0468')?.fields.predation.status, 'reviewed_neutral_or_negative');
+assert.equal(rowOf('sp_0139')?.fields.predation.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0184')?.genericOnboardingReady, true);
+for (const field of ['temperature', 'ph', 'adult_size', 'predation'] as const) assert.ok(['reviewed_supported', 'reviewed_neutral_or_negative'].includes(rowOf('sp_0184')?.fields[field].status ?? ''));
+assert.equal(rowOf('sp_0218')?.genericOnboardingReady, true);
+assert.equal(rowOf('sp_0218')?.fields.territoriality.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0218')?.fields.predation.status, 'reviewed_neutral_or_negative');
+assert.equal(rowOf('sp_0187')?.fields.adult_size.status, 'reviewed_unknown', 'do not promote new Chrysiptera adult-size authority from the migration-owned AI-generated page');
+assert.equal(rowOf('sp_0187')?.fields.tank_size.status, 'reviewed_unknown', 'do not promote new Chrysiptera tank-size authority from the migration-owned AI-generated page');
 
 const approvedValue = (speciesId: string, field: string) => getApprovedCatalogFieldReviews(speciesId).find(review => review.field === field)?.proposedValue;
 assert.deepEqual(approvedValue('sp_0014', 'tank_size'), { liters: 72, lengthCm: 80 });
@@ -61,6 +71,11 @@ assert.deepEqual(approvedValue('sp_0014', 'social_behavior'), { mode: 'group', m
 assert.deepEqual(approvedValue('sp_0443', 'social_behavior'), { mode: 'group', minimumGroupSize: 6 });
 assert.deepEqual(approvedValue('sp_0451', 'tank_size'), { liters: 540, lengthCm: 150 });
 assert.deepEqual(approvedValue('sp_0181', 'social_behavior'), { mode: 'group', minimumGroupSize: 5 });
+assert.deepEqual(approvedValue('sp_0062', 'social_behavior'), { mode: 'group', minimumGroupSize: 6 });
+assert.deepEqual(approvedValue('sp_0184', 'temperature'), { min: 24, max: 28 });
+assert.deepEqual(approvedValue('sp_0184', 'ph'), { min: 8.1, max: 8.4 });
+assert.deepEqual(approvedValue('sp_0184', 'adult_size'), { min: null, max: 10 });
+assert.deepEqual(approvedValue('sp_0218', 'social_behavior'), { mode: 'group', minimumGroupSize: 8 });
 for (const field of fields) {
   assert.equal(Object.values(summary.fieldCounts[field]).reduce((sum, value) => sum + value, 0), rows.length);
 }

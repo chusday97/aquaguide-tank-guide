@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 15,
+  "totalPackets": 18,
   "packets": [
     {
       "speciesId": "sp_0018",
@@ -326,6 +326,20 @@
       "resolutionConstraint": "Existing reviewed source does not record a numeric aquarium base. Do not invent a minimum from adult size or the legacy catalog."
     },
     {
+      "speciesId": "sp_0012",
+      "name": "樱桃灯",
+      "scientificName": "Puntius titteya",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch-02-fishbase-puntius-titteya"
+      ],
+      "existingSources": [],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
       "speciesId": "sp_0105",
       "name": "恐龙鱼 (大花)",
       "scientificName": "Polypterus ornatipinnis",
@@ -349,6 +363,36 @@
           "title": "Polypterus ornatapinnis (Ornate Bichir)",
           "publisher": "Seriously Fish",
           "url": "https://www.seriouslyfish.com/species/polypterus-ornatapinnis",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0139",
+      "name": "淡水白鲳",
+      "scientificName": "Piaractus brachypomus",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch20-fishbase-piaractus-brachypomus",
+        "seriouslyfish-piaractus-brachypomus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch20-fishbase-piaractus-brachypomus",
+          "title": "Piaractus brachypomus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Piaractus-brachypomus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-piaractus-brachypomus",
+          "title": "Piaractus brachypomus (Red-bellied Pacu)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/piaractus-brachypomus",
           "reviewStatus": "reviewed"
         }
       ],
@@ -392,6 +436,20 @@
       "currentReasonCode": "reviewed_field_unknown",
       "existingEvidenceIds": [
         "batch03-fishbase-astronotus-ocellatus"
+      ],
+      "existingSources": [],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0468",
+      "name": "金三角灯",
+      "scientificName": "Trigonostigma heteromorpha",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch-02-fishbase-trigonostigma-heteromorpha"
       ],
       "existingSources": [],
       "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",

@@ -202,8 +202,8 @@ const directSubjects: DirectSubject[] = [
     fishBase: nextWaveUnified02Sources.moenkhausiaFishBase,
     husbandry: nextWaveUnified02Sources.moenkhausiaSeriouslyFish,
     temperature: { min: 22, max: 26 }, ph: { min: 6, max: 8 }, adultSizeMaxCm: 7, tankLengthCm: 90, tankLiters: 103,
-    socialMode: 'group',
-    socialNote: 'The species is a shoaling fish. No universal numeric minimum group size is inferred.',
+    socialMode: 'group', minimumGroupSize: 6,
+    socialNote: 'The exact-taxon husbandry source recommends a shoal of at least 6–8; the enforced minimum uses the lower reviewed bound.',
   },
   {
     speciesId: 'sp_0105', scientificName: 'Polypterus ornatipinnis',
@@ -261,6 +261,7 @@ const directSubjects: DirectSubject[] = [
     temperature: { min: 23, max: 28 }, ph: { min: 4.8, max: 7.5 }, adultSizeMaxCm: 88, tankLengthCm: 300, tankLiters: 2430,
     socialMode: 'group',
     socialNote: 'The species is peaceful and group-living. No numeric minimum group count is promoted.',
+    predationTargets: ['small_fish'],
   },
   {
     speciesId: 'sp_0181', scientificName: 'Gnathonemus petersii',

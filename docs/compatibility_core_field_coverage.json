@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 28,
-  "coreFieldCompleteSpecies": 30,
-  "oneFieldGapSpecies": 15,
+  "genericOnboardingReadySpecies": 30,
+  "coreFieldCompleteSpecies": 32,
+  "oneFieldGapSpecies": 18,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -26,25 +26,25 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 77,
+      "reviewed_supported": 78,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 27,
+      "reviewed_unknown": 26,
       "needs_research": 83,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 72,
+      "reviewed_supported": 73,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 32,
+      "reviewed_unknown": 31,
       "needs_research": 83,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 91,
+      "reviewed_supported": 92,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 14,
+      "reviewed_unknown": 13,
       "needs_research": 82,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -66,17 +66,17 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 51,
+      "reviewed_supported": 52,
       "reviewed_neutral_or_negative": 7,
-      "reviewed_unknown": 124,
+      "reviewed_unknown": 123,
       "needs_research": 5,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 40,
-      "reviewed_neutral_or_negative": 8,
-      "reviewed_unknown": 135,
+      "reviewed_supported": 41,
+      "reviewed_neutral_or_negative": 12,
+      "reviewed_unknown": 130,
       "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -89,15 +89,15 @@
     },
     {
       "field": "ph",
-      "count": 115
+      "count": 114
     },
     {
       "field": "temperature",
-      "count": 110
+      "count": 109
     },
     {
       "field": "adult_size",
-      "count": 96
+      "count": 95
     },
     {
       "field": "water",
@@ -105,11 +105,11 @@
     },
     {
       "field": "territoriality",
-      "count": 56
+      "count": 55
     },
     {
       "field": "predation",
-      "count": 55
+      "count": 50
     },
     {
       "field": "social_behavior",
@@ -915,8 +915,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -983,13 +983,13 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-puntius-titteya"
+            "seriouslyfish-puntius-titteya"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -11083,8 +11083,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -11154,14 +11154,13 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-piaractus-brachypomus",
             "seriouslyfish-piaractus-brachypomus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -14855,9 +14854,9 @@
       "scientificName": "Centropyge heraldi",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 4,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -14871,34 +14870,34 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch21-fishbase-centropyge-heraldi",
             "reeflings-centropyge-heraldi"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch21-fishbase-centropyge-heraldi",
             "reeflings-centropyge-heraldi"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch21-fishbase-centropyge-heraldi",
             "reeflings-centropyge-heraldi"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "tank_size": {
           "status": "reviewed_supported",
@@ -14928,14 +14927,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-centropyge-heraldi",
             "reeflings-centropyge-heraldi"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -17609,9 +17607,9 @@
       "scientificName": "Hyphessobrycon erythrostigma",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -17673,24 +17671,22 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch12-fishbase-hyphessobrycon-erythrostigma",
             "seriouslyfish-megalamphodus-erythrostigma"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch12-fishbase-hyphessobrycon-erythrostigma",
             "seriouslyfish-megalamphodus-erythrostigma"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -36968,8 +36964,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -37036,13 +37032,13 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-trigonostigma-heteromorpha"
+            "seriouslyfish-trigonostigma-heteromorpha"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
