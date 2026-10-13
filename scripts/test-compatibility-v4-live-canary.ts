@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { classifyProviderHttpFailure, ProviderError } from '../apps/api/src/ai/provider';
 import type { CompatibilityAiReasoningProvider } from '../apps/api/src/compatibility-ai-reasoner';
 import {
   runCompatibilityV4LiveCanary,
@@ -34,6 +35,25 @@ assert.equal(unavailableProviderCalls, 0);
 assert.equal(unavailable.summary.unavailableAi, 3);
 assert.equal(unavailable.summary.skippedAi, 1);
 assert.equal(unavailable.summary.finalDecisionMutations, 0);
+
+assert.equal(
+  classifyProviderHttpFailure(403, { error: { code: 'AllocationQuota.FreeTierOnly' } }),
+  'quota_exhausted',
+);
+assert.equal(classifyProviderHttpFailure(403, { error: { code: 'access_denied' } }), 'access_denied');
+assert.equal(classifyProviderHttpFailure(429, { error: { code: 'rate_limit' } }), 'rate_limited');
+
+const quotaBlocked = await runCompatibilityV4LiveCanary({
+  providerConfigured: true,
+  generatedAt: '2026-10-13T00:00:00.000Z',
+  provider: async () => {
+    throw new ProviderError('quota_exhausted', 'fixture quota exhausted', 403);
+  },
+});
+assert.equal(quotaBlocked.outcome, 'blocked_provider_quota');
+assert.equal(quotaBlocked.summary.unavailableAi, 3);
+assert.equal(quotaBlocked.summary.skippedAi, 1);
+assert.equal(quotaBlocked.summary.finalDecisionMutations, 0);
 assert.equal(
   unavailable.cases.find(item => item.caseId === 'V4-LIVE-3SP-INSUFFICIENT')?.ai.providerCalls,
   0,

@@ -1,7 +1,7 @@
 import { rawVisionCandidateSchema } from '../../../../packages/contracts/src/index';
 import { apiConfig } from '../config';
 
-export type ProviderFailureReason = 'not_configured' | 'timeout' | 'network' | 'invalid_response';
+export type ProviderFailureReason = 'not_configured' | 'quota_exhausted' | 'access_denied' | 'rate_limited' | 'timeout' | 'network' | 'invalid_response';
 
 export class ProviderError extends Error {
   constructor(
@@ -12,6 +12,31 @@ export class ProviderError extends Error {
     super(message);
   }
 }
+
+const providerErrorCode = (payload: unknown) => {
+  if (!payload || typeof payload !== 'object') return '';
+  const error = 'error' in payload ? (payload as { error?: unknown }).error : undefined;
+  if (!error || typeof error !== 'object') return '';
+  const code = 'code' in error ? (error as { code?: unknown }).code : undefined;
+  return typeof code === 'string' ? code : '';
+};
+
+export const classifyProviderHttpFailure = (
+  status: number,
+  payload: unknown,
+): ProviderFailureReason => {
+  const code = providerErrorCode(payload).toLowerCase();
+  if (
+    status === 402
+    || code.includes('quota')
+    || code.includes('allocationquota')
+    || code.includes('free_tier')
+    || code.includes('freetier')
+  ) return 'quota_exhausted';
+  if (status === 401 || status === 403) return 'access_denied';
+  if (status === 429) return 'rate_limited';
+  return 'network';
+};
 
 const cleanJsonText = (value: string) => {
   const cleaned = value
@@ -51,8 +76,15 @@ export const fetchJsonResponse = async (
         signal: controller.signal,
       });
       if (!response.ok) {
-        if (attempt < attempts - 1 && (response.status === 429 || response.status >= 500)) continue;
-        throw new ProviderError('network', `Provider returned HTTP ${response.status}.`, response.status);
+        let payload: unknown;
+        try {
+          payload = await response.clone().json();
+        } catch {
+          payload = undefined;
+        }
+        const reason = classifyProviderHttpFailure(response.status, payload);
+        if (attempt < attempts - 1 && (reason === 'rate_limited' || response.status >= 500)) continue;
+        throw new ProviderError(reason, `Provider returned HTTP ${response.status}.`, response.status);
       }
       const payload = await response.json() as { choices?: Array<{ message?: { content?: unknown } }> };
       const content = payload.choices?.[0]?.message?.content;

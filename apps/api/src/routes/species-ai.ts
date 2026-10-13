@@ -69,6 +69,12 @@ const checkRateLimit = (request: express.Request) => {
 };
 
 const providerFailure = (error: unknown) => error instanceof ProviderError ? error.reason : 'network' as const;
+const legacyProviderFailure = (error: unknown) => {
+  const reason = providerFailure(error);
+  return reason === 'quota_exhausted' || reason === 'access_denied' || reason === 'rate_limited'
+    ? 'network' as const
+    : reason;
+};
 
 export const deriveUnreconciledRecognitionStatus = (candidates: readonly unknown[]) => candidates.length === 0 ? 'unmatched' as const : 'ambiguous' as const;
 
@@ -153,7 +159,7 @@ speciesAiRouter.post(
     } catch (error) {
       if (error instanceof Error && error.message.includes('Input buffer')) throw new ApiError(400, 'VALIDATION_ERROR', '图片无法读取，请换一张清晰图片。');
       source = 'fallback';
-      failureReason = providerFailure(error);
+      failureReason = legacyProviderFailure(error);
     }
 
     const reconciledCandidates = modelName === apiConfig.visionFallbackModel
@@ -260,7 +266,7 @@ speciesAiRouter.post('/ai/species-diagnosis/step', asyncRoute(async (request, re
     observations = validated.data;
   } catch (error) {
     source = 'fallback';
-    const reason = providerFailure(error);
+    const reason = legacyProviderFailure(error);
     failureReason = reason === 'invalid_response' ? 'invalid_json' : reason;
   }
   return sendData(request, response, buildSpeciesDiagnosisStep(parsed.data, observations, source, failureReason));

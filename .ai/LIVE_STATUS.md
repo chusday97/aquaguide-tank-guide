@@ -1,14 +1,16 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 provider readiness
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian quota diagnostics
 
-- Branch: `codex/compatibility-v4-provider-readiness-20261013` from exact pushed live-canary HEAD `85bd12750dd5338a52de7c554d32a12f2bc0ad51`.
+- Branch: `codex/compatibility-v4-provider-quota-20261013` from exact pushed provider-readiness HEAD `94f42f36861dd192261b2b0fd5fd5394b61479bc`.
 - New server service `apps/api/src/compatibility-ai-reasoner.ts` adds model-assisted combination reasoning without changing deterministic authority.
 - Eligibility is strict: deterministic readiness reviewed + exact reviewed Profiles + runtime reviewed Species Knowledge for every participant. Otherwise AI is skipped.
 - Grounding guard accepts only input rule codes/evidence IDs; optimistic hard-block overrides, invented authority, invalid schema and provider failures cannot alter `finalDecision`.
 - API route is authenticated and shadow-only. Text AI reuses server `AI_* / DEEPSEEK_*` configuration; no API key is exposed client-side.
 - V4 shadow checkpoint is pushed at `9b0eab9ab518811e128702769c3d02a8f3a775ca`; full backend gate and hygiene passed.
 - Shadow-eval checkpoint is pushed at `295659e28ebe83b2270cb437d5f4e7571e885d10`; deterministic fixture provider result is 2 accepted / 1 rejected / 1 skipped / 0 final-decision mutations.
-- Provider readiness is now explicit and secret-free. Default Compatibility shadow preflights readiness and returns `unavailable/not_configured` without invoking the provider when no key exists; current canary result is `providerCalls=0`, 3 unavailable reviewed cases, 1 skipped insufficient case, 0 mutations.
-- Authenticated `/api/v1/aquariums/compatibility-ai-readiness` exposes only configured/host/model/timeout so a deployed Preview can be diagnosed without pulling secrets locally.
+- Aqua local `.env.local` now has a valid Bailian text-provider configuration copied without exposing the secret: DashScope compatible endpoint + `qwen-plus`; `/models` auth check is HTTP 200.
+- Real chat calls are blocked by `AllocationQuota.FreeTierOnly` / access policy, not by networking or key validity. `qwen-plus` and four Flash probes all return free-quota exhaustion; legacy Turbo/small instruct probes are also denied.
+- Generic provider now classifies `quota_exhausted`, `access_denied` and `rate_limited` separately. Real canary outcome is `blocked_provider_quota` with 3 unavailable reviewed cases / 1 skipped insufficient case / 0 final-decision mutations.
+- WebCodex host has no Vercel token/auth file, so deployment-level env remains unchanged; no secret was printed or tracked.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116 and is untouched.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

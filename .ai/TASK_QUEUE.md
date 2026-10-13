@@ -12,8 +12,13 @@
 10. DONE: full backend release gate + scope validation pass; finalize and push one clean live-canary checkpoint.
 11. DONE: add secret-free provider readiness preflight + authenticated readiness endpoint; unconfigured runtime now produces `providerCalls=0` before fail-closed `not_configured`.
 12. DONE: API boundary/business contracts, full backend release gate and scope validation pass; finalize and push one clean provider-readiness checkpoint.
-13. NEXT: deploy to a separately authorized Preview or configure a server-side provider key, then run the true external-model canary before any user-visible AI explanation wiring.
-14. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
+13. DONE: reuse the existing Bailian key locally for Aqua without exposing/tracking it; configure DashScope compatible endpoint + `qwen-plus`; `/models` authentication returns HTTP 200.
+14. DONE: run true external-model probes and canary; account is blocked by `AllocationQuota.FreeTierOnly`, so real canary is `blocked_provider_quota` with 0 final-decision mutations.
+15. DONE: classify provider quota/access/rate-limit failures explicitly instead of reporting them as generic network errors.
+16. DONE: full backend release gate + scope validation pass; finalize and push one clean Bailian-quota diagnostic checkpoint.
+17. EXTERNAL BLOCKER: Bailian must add usable text quota or disable the account's free-tier-only restriction before a true model-quality canary can pass.
+18. EXTERNAL BLOCKER: WebCodex has no Vercel auth/token, so remote Preview/Production AI env cannot be written from this channel yet.
+19. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

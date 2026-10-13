@@ -1,8 +1,9 @@
-## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 provider readiness
+## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian quota diagnostics
 
-- `codex/compatibility-v4-provider-readiness-20261013` was created from exact clean pushed live-canary HEAD `85bd12750dd5338a52de7c554d32a12f2bc0ad51`.
-- Scope is backend diagnostics/safety only: secret-free provider readiness builder, default-provider preflight, authenticated readiness endpoint, canary call-count semantics and API contracts/docs.
-- Current WebCodex has no supported provider credential. Default-provider execution returns `blocked_not_configured` with `providerCalls=0`; no external request is attempted and all deterministic final decisions remain unchanged.
+- `codex/compatibility-v4-provider-quota-20261013` was created from exact clean pushed provider-readiness HEAD `94f42f36861dd192261b2b0fd5fd5394b61479bc`.
+- Scope is provider diagnostics only: generic HTTP failure classification, canary outcome classification, legacy species-AI compatibility mapping, tests/docs and a real local Bailian canary run.
+- Existing Bailian credential is configured only in ignored Aqua `.env.local`; `/models` authenticates successfully and no secret is printed/tracked. Real text calls are blocked by account quota policy (`AllocationQuota.FreeTierOnly`).
+- Real canary reports `blocked_provider_quota`; deterministic final decisions remain unchanged. WebCodex has no Vercel auth/token, so remote deployment env is untouched.
 - No Compatibility Profile/Pair/Stage authority changes, no migration files, no UI changes and no Production mutation.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116.
 

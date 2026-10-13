@@ -48,6 +48,9 @@ export type CompatibilityV4LiveCanaryReport = {
   outcome:
     | 'pass_guarded'
     | 'blocked_not_configured'
+    | 'blocked_provider_quota'
+    | 'blocked_provider_access'
+    | 'blocked_provider_rate_limit'
     | 'fail_authority_mutation'
     | 'fail_provider_unavailable'
     | 'fail_model_quality';
@@ -186,9 +189,19 @@ export const runCompatibilityV4LiveCanary = async (
     finalDecisionMutations: cases.filter(item => !item.finalDecision.unchanged).length,
   };
 
+  const unavailableReasons = new Set(
+    cases
+      .filter(item => item.ai.status === 'unavailable')
+      .map(item => item.ai.reason)
+      .filter((reason): reason is string => Boolean(reason)),
+  );
+
   let outcome: CompatibilityV4LiveCanaryReport['outcome'];
   if (summary.finalDecisionMutations > 0) outcome = 'fail_authority_mutation';
   else if (!providerConfigured) outcome = 'blocked_not_configured';
+  else if (unavailableReasons.has('quota_exhausted')) outcome = 'blocked_provider_quota';
+  else if (unavailableReasons.has('access_denied')) outcome = 'blocked_provider_access';
+  else if (unavailableReasons.has('rate_limited')) outcome = 'blocked_provider_rate_limit';
   else if (summary.unavailableAi > 0) outcome = 'fail_provider_unavailable';
   else if (summary.acceptedReviewedCases < 2) outcome = 'fail_model_quality';
   else outcome = 'pass_guarded';
