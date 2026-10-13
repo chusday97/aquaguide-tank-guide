@@ -1,8 +1,9 @@
-## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 shadow eval
+## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 live canary
 
-- `codex/compatibility-v4-shadow-eval-20261013` was created from exact clean pushed V4 shadow HEAD `9b0eab9ab518811e128702769c3d02a8f3a775ca`.
-- Scope is regression/eval only: real 3-species fixture definitions, deterministic generated JSON/Markdown traces, test contract and release-gate wiring.
-- Four runtime states are covered: reviewed compatible, reviewed caution, reviewed not_recommended, and unknown insufficient_data. AI fixture behavior is accepted/rejected/skipped as expected with zero final-decision mutations.
+- `codex/compatibility-v4-live-canary-20261013` was created from exact clean pushed shadow-eval HEAD `295659e28ebe83b2270cb437d5f4e7571e885d10`.
+- Scope is canary/eval only: live-provider runner, guarded outcome classification, per-case latency/provider metadata, secret-free ignored artifact, contract test and docs.
+- Current WebCodex has no supported provider credential. Default-provider execution therefore returns `blocked_not_configured`; 3 reviewed cases are unavailable, the insufficient-data case skips AI, and all 4 deterministic final decisions remain unchanged.
+- The release gate uses an injected provider contract only and never triggers a paid/external model request. A true live request remains an explicit environment/configuration action.
 - No Compatibility Profile/Pair/Stage authority changes, no migration files, no UI changes and no Production mutation.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116.
 

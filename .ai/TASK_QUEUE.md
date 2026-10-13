@@ -7,8 +7,11 @@
 5. DONE: full backend release gate and scope validation pass; finalize one clean V4 shadow checkpoint and push.
 6. DONE: build deterministic regression/evaluation traces for four real 3-species states (compatible / caution / blocked / insufficient); 2 AI outputs accepted, 1 rejected, 1 skipped, 0 final-decision mutations.
 7. DONE: full backend release gate + scope validation pass; finalize one clean V4 shadow-eval checkpoint and push.
-8. NEXT: add a controlled live-provider canary/evaluation layer before any user-visible AI reasoning, keeping deterministic final authority unchanged.
-9. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
+8. DONE: add controlled live-provider canary/evaluation layer with latency/provider metadata, guarded readiness outcome, secret-free artifact output, and deterministic authority invariants.
+9. DONE: execute current WebCodex default-provider canary; provider credentials are absent, outcome is `blocked_not_configured`, 3 reviewed cases unavailable / 1 insufficient skipped / 0 final-decision mutations.
+10. DONE: full backend release gate + scope validation pass; finalize and push one clean live-canary checkpoint.
+11. NEXT: a true external-model canary requires an explicitly configured server-side provider key; only after that passes should user-visible AI explanation wiring be considered.
+12. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

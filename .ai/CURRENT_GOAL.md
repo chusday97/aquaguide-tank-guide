@@ -7,6 +7,7 @@
 - Provider output is strict JSON and must use only allow-listed rule codes/evidence IDs. Hard-block weakening, caution→compatible upgrades, insufficient-data overrides, invented evidence, schema failure and provider failure are rejected/fail-soft.
 - Authenticated shadow endpoint: `GET /aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey?catalogVersion=...`. It returns deterministic `finalDecision`, separate AI assessment and provenance.
 - Added deterministic 3-species shadow eval artifacts covering reviewed compatible / caution / not_recommended plus unknown insufficient_data. Current result: 4 cases, AI accepted 2 / rejected 1 / skipped 1, and 0 final-decision mutations.
+- Added controlled live-provider canary harness using the same four real cases. Current WebCodex environment has no supported AI provider key, so the real default-provider run is explicitly `blocked_not_configured`: 3 reviewed cases unavailable, 1 insufficient case skipped, 0 final-decision mutations, and no external model request was made.
 - Static candidate remains 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 evidence. Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence; no Production mutation/deploy, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery
