@@ -77,7 +77,9 @@ export const catalogReviewBatch04FieldReviews: CatalogFieldReview[] = [
   }, [kissingGouramiSeriouslyFish.id], [
     'The source says territorial boundaries are possible but not confirmed, so the reviewed claim is scoped to aggression/dominance rather than permanent territoriality.',
   ]),
-  unknown('predation', 'Sources indicate it cannot prey on fishes larger than a few millimetres, but no reviewed prey-size rule is promoted for this product.'),
+  supported('predation', { targets: ['very_small_fish'] }, [kissingGouramiSeriouslyFish.id], [
+    'Seriously Fish limits fish predation to prey only a few millimetres long. Compatibility keeps this as very_small_fish and intentionally does not map it to the coarse Small size class.',
+  ]),
   unknown('breeding_behavior', 'Spawning biology is described, but no compatibility-relevant parental aggression or guarding rule is supported.'),
 ];
 

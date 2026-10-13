@@ -52,6 +52,19 @@ export type CompatibilityFieldBacklogItem = {
   reason: 'missing_reviewed_authority' | 'reviewed_unknown_targeted_expansion';
 };
 
+export type CompatibilityFastLaneResearchPacket = {
+  speciesId: string;
+  name: string;
+  scientificName: string;
+  missingField: CompatibilityCoreField;
+  currentStatus: 'reviewed_unknown' | 'needs_research';
+  currentReasonCode: string | null;
+  existingEvidenceIds: string[];
+  existingSources: Array<{ id: string; title: string; publisher: string; url: string; reviewStatus: string }>;
+  neededEvidenceType: string;
+  resolutionConstraint: string;
+};
+
 const coreFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityCoreField[];
 const positiveNumber = (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value > 0;
 const finiteRange = (min: unknown, max: unknown) => typeof min === 'number' && Number.isFinite(min) && typeof max === 'number' && Number.isFinite(max) && min <= max;
@@ -194,6 +207,32 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
 const isAuthoritative = (status: CompatibilityFieldCoverageStatus) => status === 'reviewed_supported' || status === 'reviewed_neutral_or_negative';
 const fieldWeights: Record<CompatibilityCoreField, number> = { water: 100, temperature: 100, ph: 85, adult_size: 95, tank_size: 90, social_behavior: 100, territoriality: 100, predation: 100 };
 
+const fastLaneEvidenceNeed: Record<CompatibilityCoreField, string> = {
+  water: 'Direct reviewed source establishing freshwater / brackish / saltwater applicability for this exact taxon.',
+  temperature: 'Direct reviewed long-term husbandry temperature range for this exact taxon; do not substitute collection or experiment temperatures.',
+  ph: 'Direct reviewed long-term husbandry pH range for this exact taxon.',
+  adult_size: 'Direct reviewed adult-size measurement or biological maximum with measurement basis.',
+  tank_size: 'Direct reviewed numeric minimum aquarium length/footprint or volume for this exact taxon.',
+  social_behavior: 'Direct reviewed social-mode or group-requirement evidence with the scope needed for aquarium planning.',
+  territoriality: 'Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.',
+  predation: 'Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.',
+};
+
+const fastLaneSpecialConstraint: Record<string, string> = {
+  sp_0050: 'Existing reviewed sources describe only public installations / the very largest private aquaria and do not provide a numeric minimum footprint. Do not convert the legacy 640 L text into authority.',
+  sp_0198: 'Existing reviewed source does not record a numeric aquarium base. Do not invent a minimum from adult size or the legacy catalog.',
+  sp_0197: 'The current reviewed wave explicitly did not establish a generic small-fish predation rule. A new direct prey-scope source is required.',
+  sp_0199: 'If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed.',
+  sp_0200: 'If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed.',
+};
+
+const defaultFastLaneConstraint = (field: CompatibilityCoreField) => {
+  if (field === 'predation') return 'Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source.';
+  if (field === 'territoriality') return 'Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence.';
+  if (field === 'tank_size') return 'A qualitative “large aquarium” statement is not a numeric minimum; keep reviewed_unknown until a direct numeric source exists.';
+  return 'Promote only an exact-taxon reviewed fact with source provenance; otherwise keep reviewed_unknown.';
+};
+
 export const buildCompatibilityCoreFieldCoverage = () => {
   const rows: CompatibilityFieldCoverageRow[] = fishData.map(fish => {
     const directProfile = getReviewedCompatibilityProfile(fish.id);
@@ -237,4 +276,34 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     .sort((a, b) => b.priorityScore - a.priorityScore || a.speciesId.localeCompare(b.speciesId) || a.field.localeCompare(b.field))
     .map((item, index) => ({ rank: index + 1, ...item }));
   return { rows, summary, backlog };
+};
+
+export const buildCompatibilityFastLaneResearchPackets = (): CompatibilityFastLaneResearchPacket[] => {
+  const { rows } = buildCompatibilityCoreFieldCoverage();
+  return rows.flatMap(row => {
+    if (row.lifeType !== 'fish' || row.authoritativeFieldCount !== coreFields.length - 1) return [];
+    const missingField = coreFields.find(field => !isAuthoritative(row.fields[field].status));
+    if (!missingField) return [];
+    const cell = row.fields[missingField];
+    if (cell.disposition !== 'targeted_source_expansion' || (cell.status !== 'reviewed_unknown' && cell.status !== 'needs_research')) return [];
+    const fish = fishData.find(item => item.id === row.speciesId);
+    const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
+    const evidenceIds = cell.evidenceIds.length > 0 ? cell.evidenceIds : (profile?.citations.map(source => source.id) ?? []);
+    const evidenceSet = new Set(evidenceIds);
+    const existingSources = (profile?.citations ?? [])
+      .filter(source => evidenceSet.has(source.id))
+      .map(source => ({ id: source.id, title: source.title, publisher: source.publisher, url: source.url, reviewStatus: source.reviewStatus }));
+    return [{
+      speciesId: row.speciesId,
+      name: row.name,
+      scientificName: row.scientificName,
+      missingField,
+      currentStatus: cell.status,
+      currentReasonCode: cell.reasonCode,
+      existingEvidenceIds: evidenceIds,
+      existingSources,
+      neededEvidenceType: fastLaneEvidenceNeed[missingField],
+      resolutionConstraint: fastLaneSpecialConstraint[row.speciesId] ?? defaultFastLaneConstraint(missingField),
+    }];
+  }).sort((a, b) => a.missingField.localeCompare(b.missingField) || a.speciesId.localeCompare(b.speciesId));
 };

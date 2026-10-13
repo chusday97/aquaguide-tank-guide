@@ -1,10 +1,11 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
+import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets } from '../src/services/compatibility/compatibility-field-coverage.service';
 
 const root = new URL('../', import.meta.url).pathname;
 const outputDir = `${root}docs`;
 mkdirSync(outputDir, { recursive: true });
 const report = buildCompatibilityCoreFieldCoverage();
+const fastLanePackets = buildCompatibilityFastLaneResearchPackets();
 
 writeFileSync(`${outputDir}/compatibility_core_field_coverage.json`, JSON.stringify({ generatedFrom: 'source-controlled reviewed authority', ...report.summary, rows: report.rows }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_core_field_backlog.json`, JSON.stringify({
@@ -12,6 +13,12 @@ writeFileSync(`${outputDir}/compatibility_core_field_backlog.json`, JSON.stringi
   policy: 'field-oriented gaps only; no ordinary Pair Rule generation; terminal identity/evidence/domain holds excluded',
   totalItems: report.backlog.length,
   items: report.backlog,
+}, null, 2) + '\n');
+writeFileSync(`${outputDir}/compatibility_fast_lane_research_packets.json`, JSON.stringify({
+  generatedFrom: 'compatibility_core_field_coverage.json',
+  policy: 'only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority',
+  totalPackets: fastLanePackets.length,
+  packets: fastLanePackets,
 }, null, 2) + '\n');
 
 const header = ['species_id','name','scientific_name','life_type','reviewed_profile','generic_onboarding_ready','authoritative_field_count','actionable_gap_count','terminal_gap_count',...report.summary.coreFields];
@@ -28,6 +35,7 @@ console.log(JSON.stringify({
   ready: report.summary.genericOnboardingReadySpecies,
   coreFieldComplete: report.summary.coreFieldCompleteSpecies,
   oneFieldGap: report.summary.oneFieldGapSpecies,
+  fastLaneResearchPackets: fastLanePackets.length,
   runtimeReviewedProfiles: report.summary.runtimeReviewedProfileSpecies,
   domainOrIdentityHeldSpecies: report.summary.domainOrIdentityHeldSpecies,
   actionableBacklog: report.backlog.length,

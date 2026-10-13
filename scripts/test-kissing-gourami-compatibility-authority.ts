@@ -16,7 +16,8 @@ const approved = new Map(getApprovedCatalogFieldReviews('sp_0015').map(review =>
 for (const field of ['identity','water','temperature','ph','adult_size','tank_size','social_behavior','territoriality'] as const) {
   assert.equal(approved.has(field), true, `${field} must be reviewed-supported`);
 }
-assert.equal(approved.has('predation'), false);
+assert.equal(approved.has('predation'), true);
+assert.deepEqual(approved.get('predation')?.proposedValue, { targets: ['very_small_fish'] });
 assert.equal(approved.has('breeding_behavior'), false);
 
 const profile = applyApprovedCatalogFieldReviews(fish as any);
@@ -35,11 +36,12 @@ const compatibility = getReviewedCompatibilityProfile('sp_0015');
 assert.ok(compatibility);
 assert.deepEqual(compatibility.behaviorTraits, ['interspecific_aggression']);
 assert.equal(compatibility.minimumGroupSize, undefined);
-assert.deepEqual(compatibility.predationTargets, []);
+assert.deepEqual(compatibility.predationTargets, ['very_small_fish']);
+assert.equal(compatibility.requiredFacts?.includes('predation'), true);
 assert.equal(compatibility.confidence, 'medium');
 assert.deepEqual(
   compatibility.citations.map(source => source.id).sort(),
   ['fishbase-helostoma-temminkii','seriouslyfish-helostoma-temminkii'],
 );
 
-console.log('kissing gourami authority passed: reviewed environment/space/social facts plus scoped aggression profile');
+console.log('kissing gourami authority passed: reviewed environment/space/social facts plus few-millimetre prey scope and scoped aggression profile');

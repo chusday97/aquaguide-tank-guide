@@ -181,6 +181,7 @@ type DirectSubject = {
   socialNote: string;
   territorialityTraits?: string[];
   predationTargets?: string[];
+  predationCitationIds?: string[];
 };
 
 const directSubjects: DirectSubject[] = [
@@ -192,6 +193,8 @@ const directSubjects: DirectSubject[] = [
     socialMode: 'pair',
     socialNote: 'Pair-oriented housing is supported, with male territorial aggression especially around breeding.',
     territorialityTraits: ['territorial_males', 'breeding_aggression'],
+    predationTargets: ['small_fish'],
+    predationCitationIds: [nextWaveUnified02Sources.macropodusFishBase.id],
   },
   {
     speciesId: 'sp_0062', scientificName: 'Moenkhausia sanctaefilomenae',
@@ -308,7 +311,7 @@ const directReviews = directSubjects.flatMap(subject => {
       ? supported(subject.speciesId, 'territoriality', { traits: subject.territorialityTraits }, [subject.husbandry.id], [], 'medium')
       : unknown(subject.speciesId, 'territoriality', 'The reviewed sources do not establish a stable territoriality rule that should affect compatibility decisions.', sourceIds),
     subject.predationTargets?.length
-      ? supported(subject.speciesId, 'predation', { targets: subject.predationTargets }, [subject.husbandry.id], [], 'medium')
+      ? supported(subject.speciesId, 'predation', { targets: subject.predationTargets }, subject.predationCitationIds ?? [subject.husbandry.id], [], 'medium')
       : unknown(subject.speciesId, 'predation', 'The reviewed sources do not establish a compatibility-relevant fish predation target.', sourceIds),
     unknown(subject.speciesId, 'breeding_behavior', 'The reviewed sources are not used to enforce a separate breeding-context compatibility rule in this wave.', sourceIds),
   ];

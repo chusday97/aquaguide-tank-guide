@@ -1,0 +1,501 @@
+{
+  "generatedFrom": "compatibility_core_field_coverage.json",
+  "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
+  "totalPackets": 17,
+  "packets": [
+    {
+      "speciesId": "sp_0018",
+      "name": "蓝王子",
+      "scientificName": "Chindongo socolofi",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "fishbase-chindongo-socolofi",
+        "seriouslyfish-pseudotropheus-socolofi"
+      ],
+      "existingSources": [
+        {
+          "id": "fishbase-chindongo-socolofi",
+          "title": "Chindongo socolofi species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Chindongo-socolofi",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-pseudotropheus-socolofi",
+          "title": "Pseudotropheus socolofi (Powder Blue Cichlid)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/pseudotropheus-socolofi",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0054",
+      "name": "红宝石鱼",
+      "scientificName": "Hemichromis bimaculatus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch09-fishbase-hemichromis-bimaculatus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch09-fishbase-hemichromis-bimaculatus",
+          "title": "Rubricatochromis bimaculatus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Rubricatochromis-bimaculatus.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0056",
+      "name": "菠萝鱼",
+      "scientificName": "Heros severus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch09-fishbase-heros-severus",
+        "fishipedia-heros-severus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch09-fishbase-heros-severus",
+          "title": "Heros severus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Heros-severus.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "fishipedia-heros-severus",
+          "title": "Heros severus fish sheet",
+          "publisher": "Fishipedia",
+          "url": "https://www.fishi-pedia.com/fishes/heros-severus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0058",
+      "name": "九间贝",
+      "scientificName": "Neolamprologus multifasciatus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch09-fishbase-neolamprologus-multifasciatus",
+        "fishipedia-neolamprologus-multifasciatus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch09-fishbase-neolamprologus-multifasciatus",
+          "title": "Neolamprologus multifasciatus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Neolamprologus-multifasciatus.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "fishipedia-neolamprologus-multifasciatus",
+          "title": "Neolamprologus multifasciatus fish sheet",
+          "publisher": "Fishipedia",
+          "url": "https://www.fishi-pedia.com/fishes/neolamprologus-multifasciatus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0121",
+      "name": "黑斑马异型 (L134)",
+      "scientificName": "Peckoltia compta",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch09-fishbase-peckoltia-compta",
+        "aquaristatlas-peckoltia-compta"
+      ],
+      "existingSources": [
+        {
+          "id": "batch09-fishbase-peckoltia-compta",
+          "title": "Peckoltia compta species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Peckoltia-compta",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "aquaristatlas-peckoltia-compta",
+          "title": "Leopard Frog Pleco (Peckoltia compta) Care Guide",
+          "publisher": "Aquarist Atlas",
+          "url": "https://www.aquaristatlas.com/plecos/peckoltia-compta/",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0122",
+      "name": "金线绿皮异型 (L190)",
+      "scientificName": "Panaque nigrolineatus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch09-fishbase-panaque-nigrolineatus",
+        "aquaristatlas-panaque-nigrolineatus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch09-fishbase-panaque-nigrolineatus",
+          "title": "Panaque nigrolineatus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Panaque-nigrolineatus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "aquaristatlas-panaque-nigrolineatus",
+          "title": "Royal Pleco (Panaque nigrolineatus) Care Guide",
+          "publisher": "Aquarist Atlas",
+          "url": "https://www.aquaristatlas.com/plecos/panaque-nigrolineatus/",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0123",
+      "name": "女王异型 (L165)",
+      "scientificName": "Pterygoplichthys gibbiceps",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch10-fishbase-pterygoplichthys-gibbiceps",
+        "aquaristatlas-pterygoplichthys-gibbiceps"
+      ],
+      "existingSources": [
+        {
+          "id": "batch10-fishbase-pterygoplichthys-gibbiceps",
+          "title": "Pterygoplichthys gibbiceps species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Pterygoplichthys-gibbiceps",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "aquaristatlas-pterygoplichthys-gibbiceps",
+          "title": "Sailfin Pleco (Pterygoplichthys gibbiceps) Care Guide",
+          "publisher": "Aquarist Atlas",
+          "url": "https://www.aquaristatlas.com/plecos/pterygoplichthys-gibbiceps/",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0156",
+      "name": "白金蓝曼龙",
+      "scientificName": "Trichopodus trichopterus var. Platinum",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch21-fishbase-trichopodus-trichopterus-platinum",
+        "seriouslyfish-trichopodus-trichopterus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch21-fishbase-trichopodus-trichopterus-platinum",
+          "title": "Trichopodus trichopterus Platinum variant review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Trichopodus-trichopterus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-trichopodus-trichopterus",
+          "title": "Trichopodus trichopterus (Three-spot Gourami)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/trichopodus-trichopterus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0197",
+      "name": "蓝宝石雷龙",
+      "scientificName": "Channa stewartii",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch21-fishbase-channa-stewartii",
+        "seriouslyfish-channa-stewartii"
+      ],
+      "existingSources": [
+        {
+          "id": "batch21-fishbase-channa-stewartii",
+          "title": "Channa stewartii species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Channa-stewartii",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-channa-stewartii",
+          "title": "Channa genus review: Channa stewartii subsection",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/genus/channa",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "The current reviewed wave explicitly did not establish a generic small-fish predation rule. A new direct prey-scope source is required."
+    },
+    {
+      "speciesId": "sp_0199",
+      "name": "珍珠麒麟",
+      "scientificName": "Badis badis",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch21-fishbase-badis-badis",
+        "seriouslyfish-badis-badis"
+      ],
+      "existingSources": [
+        {
+          "id": "batch21-fishbase-badis-badis",
+          "title": "Badis badis species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Badis-badis",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-badis-badis",
+          "title": "Badis badis (Blue Perch)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/badis-badis",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed."
+    },
+    {
+      "speciesId": "sp_0200",
+      "name": "变色鱼 (喷火麒麟)",
+      "scientificName": "Dario dario",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch22-fishbase-dario-dario",
+        "seriouslyfish-dario-dario"
+      ],
+      "existingSources": [
+        {
+          "id": "batch22-fishbase-dario-dario",
+          "title": "Dario dario species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Dario-dario",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-dario-dario",
+          "title": "Dario dario (Scarlet Badis)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/dario-dario",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed."
+    },
+    {
+      "speciesId": "sp_0202",
+      "name": "黄金美洲豹异型 (L014)",
+      "scientificName": "Scobinancistrus aureatus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch11-fishbase-scobinancistrus-aureatus",
+        "atlarium-scobinancistrus-aureatus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch11-fishbase-scobinancistrus-aureatus",
+          "title": "Scobinancistrus aureatus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Scobinancistrus-aureatus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "atlarium-scobinancistrus-aureatus",
+          "title": "Scobinancistrus aureatus species guide",
+          "publisher": "Atlarium",
+          "url": "https://atlarium.bio/en/catalog/fish/scobinancistrus-aureatus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0214",
+      "name": "白金西非凤凰",
+      "scientificName": "Pelvicachromis pulcher var. Albino",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "wave05-seriouslyfish-pelvicachromis-pulcher"
+      ],
+      "existingSources": [
+        {
+          "id": "wave05-seriouslyfish-pelvicachromis-pulcher",
+          "title": "Pelvicachromis pulcher (Kribensis)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/pelvicachromis-pulcher",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0440",
+      "name": "一眉道人",
+      "scientificName": "Sahyadria denisonii",
+      "missingField": "predation",
+      "currentStatus": "needs_research",
+      "currentReasonCode": "missing_reviewed_field_authority",
+      "existingEvidenceIds": [
+        "seriouslyfish-sahyadria-denisonii",
+        "fishbase-sahyadria-denisonii"
+      ],
+      "existingSources": [
+        {
+          "id": "seriouslyfish-sahyadria-denisonii",
+          "title": "Sahyadria denisonii (Red-line Torpedo Barb)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/sahyadria-denisonii",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "fishbase-sahyadria-denisonii",
+          "title": "Dawkinsia denisonii (Denison barb) species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Sahyadria-denisonii.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0050",
+      "name": "巴卡雷龙",
+      "scientificName": "Channa barca",
+      "missingField": "tank_size",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch19-fishbase-channa-barca",
+        "seriouslyfish-channa-barca"
+      ],
+      "existingSources": [
+        {
+          "id": "batch19-fishbase-channa-barca",
+          "title": "Channa barca species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Channa-barca.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-channa-barca",
+          "title": "Channa barca",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/channa-barca",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed numeric minimum aquarium length/footprint or volume for this exact taxon.",
+      "resolutionConstraint": "Existing reviewed sources describe only public installations / the very largest private aquaria and do not provide a numeric minimum footprint. Do not convert the legacy 640 L text into authority."
+    },
+    {
+      "speciesId": "sp_0198",
+      "name": "红宝石雷龙",
+      "scientificName": "Channa diplogramma",
+      "missingField": "tank_size",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch21-fishbase-channa-diplogramma",
+        "seriouslyfish-channa-diplogramma"
+      ],
+      "existingSources": [
+        {
+          "id": "batch21-fishbase-channa-diplogramma",
+          "title": "Channa diplogramma species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Channa-diplogramma",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-channa-diplogramma",
+          "title": "Channa diplogramma",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/channa-diplogramma",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed numeric minimum aquarium length/footprint or volume for this exact taxon.",
+      "resolutionConstraint": "Existing reviewed source does not record a numeric aquarium base. Do not invent a minimum from adult size or the legacy catalog."
+    },
+    {
+      "speciesId": "sp_0105",
+      "name": "恐龙鱼 (大花)",
+      "scientificName": "Polypterus ornatipinnis",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch19-fishbase-polypterus-ornatipinnis",
+        "seriouslyfish-polypterus-ornatapinnis"
+      ],
+      "existingSources": [
+        {
+          "id": "batch19-fishbase-polypterus-ornatipinnis",
+          "title": "Polypterus ornatipinnis species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Polypterus-ornatipinnis.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-polypterus-ornatapinnis",
+          "title": "Polypterus ornatapinnis (Ornate Bichir)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/polypterus-ornatapinnis",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    }
+  ]
+}

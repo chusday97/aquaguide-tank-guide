@@ -1,3 +1,4 @@
+import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../packages/contracts/src';
 import type { CompatibilityEvidenceDto, EvidenceSourceDto } from '../../packages/contracts/src';
 import type { CompatibilityRequiredFact, StockingGuidance } from '../../packages/domain-rules/src';
 import type { CompatibilityLifeStage, Fish } from '../types';
@@ -1128,11 +1129,11 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     speciesId: 'sp_0059',
     waterType: 'freshwater',
     behaviorTraits: ['pair_living', 'territorial_males', 'breeding_aggression'],
-    predationTargets: [],
+    predationTargets: ['small_fish'],
     confidence: 'high',
     reviewStatus: 'reviewed',
     citations: [nextWaveUnified02Sources.macropodusFishBase, nextWaveUnified02Sources.macropodusSeriouslyFish],
-    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality'],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation'],
   },
   sp_0062: {
     speciesId: 'sp_0062',
@@ -1332,11 +1333,11 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     speciesId: 'sp_0015',
     waterType: 'freshwater',
     behaviorTraits: ['interspecific_aggression'],
-    predationTargets: [],
+    predationTargets: ['very_small_fish'],
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [kissingGouramiFishBase, kissingGouramiSeriouslyFish],
-    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality'],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation'],
   },
   sp_0049: {
     speciesId: 'sp_0049',
@@ -1437,6 +1438,17 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     requiredFacts: ['water', 'temperature', 'adult_size', 'predation'],
   },
 };
+
+const GENERIC_FACT_SYNC_PROFILE_IDS = new Set([
+  'sp_0017', 'sp_0020', 'sp_0045', 'sp_0048', 'sp_0053', 'sp_0114',
+  'sp_0126', 'sp_0131', 'sp_0133', 'sp_0448', 'sp_0469',
+]);
+
+for (const speciesId of GENERIC_FACT_SYNC_PROFILE_IDS) {
+  const profile = profiles[speciesId];
+  if (!profile) throw new Error(`Missing reviewed Compatibility profile for generic fact sync: ${speciesId}`);
+  profile.requiredFacts = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS];
+}
 
 const wave04BridgeProfile = (
   speciesId: string,

@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 5,
-  "coreFieldCompleteSpecies": 18,
-  "oneFieldGapSpecies": 21,
+  "genericOnboardingReadySpecies": 20,
+  "coreFieldCompleteSpecies": 22,
+  "oneFieldGapSpecies": 17,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -74,9 +74,9 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 34,
-      "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 148,
+      "reviewed_supported": 37,
+      "reviewed_neutral_or_negative": 1,
+      "reviewed_unknown": 144,
       "needs_research": 5,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -105,7 +105,7 @@
     },
     {
       "field": "predation",
-      "count": 69
+      "count": 65
     },
     {
       "field": "territoriality",
@@ -1169,9 +1169,9 @@
       "scientificName": "Helostoma temminkii",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1239,14 +1239,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch04-fishbase-helostoma-temminkii",
             "batch04-seriouslyfish-helostoma-temminkii"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -1341,7 +1340,7 @@
       "scientificName": "Apistogramma agassizii",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -1606,7 +1605,7 @@
       "scientificName": "Phenacogrammus interruptus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -3556,7 +3555,7 @@
       "scientificName": "Sewellia lineolata",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -3811,7 +3810,7 @@
       "scientificName": "Mastacembelus armatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -4238,7 +4237,7 @@
       "scientificName": "Corydoras pygmaeus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -4765,9 +4764,9 @@
       "scientificName": "Macropodus opercularis",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4836,14 +4835,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-macropodus-opercularis",
-            "seriouslyfish-macropodus-opercularis"
+            "batch19-fishbase-macropodus-opercularis"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -8930,7 +8928,7 @@
       "scientificName": "Hyphessobrycon amandae",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -9998,7 +9996,7 @@
       "scientificName": "Chromobotia macracanthus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -10437,7 +10435,7 @@
       "scientificName": "Mastacembelus armatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -10600,7 +10598,7 @@
       "scientificName": "Glossolepis incisus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -34858,9 +34856,9 @@
       "scientificName": "Gyrinocheilus aymonieri",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -34931,14 +34929,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-gyrinocheilus-aymonieri",
             "seriouslyfish-gyrinocheilus-aymonieri"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -35466,7 +35463,7 @@
       "scientificName": "Mikrogeophagus ramirezi",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -35650,9 +35647,9 @@
       "scientificName": "Andinoacara pulcher",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35723,14 +35720,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch17-fishbase-andinoacara-pulcher",
             "seriouslyfish-andinoacara-pulcher"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -37062,7 +37058,7 @@
       "scientificName": "Hyphessobrycon amandae",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
