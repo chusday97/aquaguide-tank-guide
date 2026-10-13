@@ -65,6 +65,8 @@ Live probes confirmed both Qwen 3.x models are callable when Compatibility sends
 
 The default real V4 canary now reports `pass_guarded` on `qwen3.7-flash-2026-07-15`: all three reviewed states (compatible / caution / not recommended) are accepted, the insufficient-data state is skipped before AI, there are zero unavailable/rejected cases, and final-decision mutations remain zero. A forced unsupported-primary canary also reaches `pass_guarded`, proving the ordered failover path can recover through the configured fallback models without mutating deterministic authority.
 
+The report now exposes the configured fallback list and actual `model` provenance for each case, with aggregate `modelsUsed`. The normal run records only `qwen3.7-flash-2026-07-15`; a forced invalid primary visibly recovered through `qwen3.8-27b` and `deepseek-v4.1-flash`. This removes the previous ambiguity where a passing fallback canary still displayed only the configured primary model.
+
 WebCodex Vercel CLI auth is now verified for the linked `aquaguide` project. `AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`, `AI_TIMEOUT_MS`, `COMPATIBILITY_AI_MODEL`, and `COMPATIBILITY_AI_FALLBACK_MODELS` have been written to both Preview and Production environment scopes without exposing the secret. These values apply to new deployments; this checkpoint does not perform a Production redeploy.
 
 A remote Preview-only acceptance probe also confirms that the deployed Vercel runtime can call the configured Bailian workspace: `qwen3.7-flash-2026-07-15` completed with HTTP 200 in about 4.1 seconds and returned the required guarded judgment plus non-empty reason/action arrays. The temporary probe file was removed immediately after validation and is not committed product surface.
