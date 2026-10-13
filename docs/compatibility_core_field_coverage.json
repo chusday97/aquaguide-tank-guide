@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 20,
-  "coreFieldCompleteSpecies": 22,
-  "oneFieldGapSpecies": 17,
+  "genericOnboardingReadySpecies": 27,
+  "coreFieldCompleteSpecies": 29,
+  "oneFieldGapSpecies": 10,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -50,9 +50,9 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 58,
+      "reviewed_supported": 59,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 42,
+      "reviewed_unknown": 41,
       "needs_research": 87,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -75,9 +75,9 @@
     },
     "predation": {
       "reviewed_supported": 37,
-      "reviewed_neutral_or_negative": 1,
-      "reviewed_unknown": 144,
-      "needs_research": 5,
+      "reviewed_neutral_or_negative": 7,
+      "reviewed_unknown": 139,
+      "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     }
@@ -85,7 +85,7 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 129
+      "count": 128
     },
     {
       "field": "ph",
@@ -104,11 +104,11 @@
       "count": 87
     },
     {
-      "field": "predation",
-      "count": 65
+      "field": "territoriality",
+      "count": 59
     },
     {
-      "field": "territoriality",
+      "field": "predation",
       "count": 59
     },
     {
@@ -3981,9 +3981,9 @@
       "scientificName": "Channa barca",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4024,14 +4024,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-channa-barca",
             "seriouslyfish-channa-barca"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -9550,9 +9549,9 @@
       "scientificName": "Peckoltia compta",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -9623,14 +9622,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-peckoltia-compta",
             "aquaristatlas-peckoltia-compta"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -9640,9 +9638,9 @@
       "scientificName": "Panaque nigrolineatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -9713,14 +9711,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-panaque-nigrolineatus",
             "aquaristatlas-panaque-nigrolineatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -9730,9 +9727,9 @@
       "scientificName": "Pterygoplichthys gibbiceps",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -9803,14 +9800,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch10-fishbase-pterygoplichthys-gibbiceps",
             "aquaristatlas-pterygoplichthys-gibbiceps"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -16108,9 +16104,9 @@
       "scientificName": "Dario dario",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -16181,14 +16177,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch22-fishbase-dario-dario",
             "seriouslyfish-dario-dario"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -17284,9 +17279,9 @@
       "scientificName": "Pelvicachromis pulcher var. Albino",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -17353,13 +17348,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
             "wave05-seriouslyfish-pelvicachromis-pulcher"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -34766,9 +34761,9 @@
       "scientificName": "Sahyadria denisonii",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -34842,11 +34837,14 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-sahyadria-denisonii",
+            "fishbase-sahyadria-denisonii"
+          ],
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         }
       }
     },

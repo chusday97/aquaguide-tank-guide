@@ -60,7 +60,9 @@ reviews.push(
   supported('sp_0214', 'tank_size', { liters: 71, lengthCm: 60 }, [S.pelvicachromis.id]),
   supported('sp_0214', 'social_behavior', { mode: 'pair', minimumGroupSize: null }, [S.pelvicachromis.id]),
   supported('sp_0214', 'territoriality', { traits: ['male_breeding_territory_defense'] }, [S.pelvicachromis.id]),
-  unknown('sp_0214', 'predation', 'No fish-predation rule is supported.', [S.pelvicachromis.id]),
+  supported('sp_0214', 'predation', { targets: [] }, [S.pelvicachromis.id], [
+    'Seriously Fish recommends P. pulcher for a general community aquarium and explicitly lists small characins, barbs, danios and rasboras among suitable tankmates. This supports no generic fish-predation target; breeding territoriality remains modeled separately.',
+  ]),
   supported('sp_0214', 'breeding_behavior', { traits: ['pair_parental_care', 'male_breeding_territory_defense'] }, [S.pelvicachromis.id]),
 );
 

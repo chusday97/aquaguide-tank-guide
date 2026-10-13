@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 17,
+  "totalPackets": 10,
   "packets": [
     {
       "speciesId": "sp_0018",
@@ -116,96 +116,6 @@
       "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
     },
     {
-      "speciesId": "sp_0121",
-      "name": "黑斑马异型 (L134)",
-      "scientificName": "Peckoltia compta",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch09-fishbase-peckoltia-compta",
-        "aquaristatlas-peckoltia-compta"
-      ],
-      "existingSources": [
-        {
-          "id": "batch09-fishbase-peckoltia-compta",
-          "title": "Peckoltia compta species review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Peckoltia-compta",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "aquaristatlas-peckoltia-compta",
-          "title": "Leopard Frog Pleco (Peckoltia compta) Care Guide",
-          "publisher": "Aquarist Atlas",
-          "url": "https://www.aquaristatlas.com/plecos/peckoltia-compta/",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0122",
-      "name": "金线绿皮异型 (L190)",
-      "scientificName": "Panaque nigrolineatus",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch09-fishbase-panaque-nigrolineatus",
-        "aquaristatlas-panaque-nigrolineatus"
-      ],
-      "existingSources": [
-        {
-          "id": "batch09-fishbase-panaque-nigrolineatus",
-          "title": "Panaque nigrolineatus species review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Panaque-nigrolineatus",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "aquaristatlas-panaque-nigrolineatus",
-          "title": "Royal Pleco (Panaque nigrolineatus) Care Guide",
-          "publisher": "Aquarist Atlas",
-          "url": "https://www.aquaristatlas.com/plecos/panaque-nigrolineatus/",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0123",
-      "name": "女王异型 (L165)",
-      "scientificName": "Pterygoplichthys gibbiceps",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch10-fishbase-pterygoplichthys-gibbiceps",
-        "aquaristatlas-pterygoplichthys-gibbiceps"
-      ],
-      "existingSources": [
-        {
-          "id": "batch10-fishbase-pterygoplichthys-gibbiceps",
-          "title": "Pterygoplichthys gibbiceps species review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Pterygoplichthys-gibbiceps",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "aquaristatlas-pterygoplichthys-gibbiceps",
-          "title": "Sailfin Pleco (Pterygoplichthys gibbiceps) Care Guide",
-          "publisher": "Aquarist Atlas",
-          "url": "https://www.aquaristatlas.com/plecos/pterygoplichthys-gibbiceps/",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
       "speciesId": "sp_0156",
       "name": "白金蓝曼龙",
       "scientificName": "Trichopodus trichopterus var. Platinum",
@@ -296,36 +206,6 @@
       "resolutionConstraint": "If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed."
     },
     {
-      "speciesId": "sp_0200",
-      "name": "变色鱼 (喷火麒麟)",
-      "scientificName": "Dario dario",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch22-fishbase-dario-dario",
-        "seriouslyfish-dario-dario"
-      ],
-      "existingSources": [
-        {
-          "id": "batch22-fishbase-dario-dario",
-          "title": "Dario dario species review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Dario-dario",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "seriouslyfish-dario-dario",
-          "title": "Dario dario (Scarlet Badis)",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/dario-dario",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed."
-    },
-    {
       "speciesId": "sp_0202",
       "name": "黄金美洲豹异型 (L014)",
       "scientificName": "Scobinancistrus aureatus",
@@ -354,88 +234,6 @@
       ],
       "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
       "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0214",
-      "name": "白金西非凤凰",
-      "scientificName": "Pelvicachromis pulcher var. Albino",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "wave05-seriouslyfish-pelvicachromis-pulcher"
-      ],
-      "existingSources": [
-        {
-          "id": "wave05-seriouslyfish-pelvicachromis-pulcher",
-          "title": "Pelvicachromis pulcher (Kribensis)",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/pelvicachromis-pulcher",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0440",
-      "name": "一眉道人",
-      "scientificName": "Sahyadria denisonii",
-      "missingField": "predation",
-      "currentStatus": "needs_research",
-      "currentReasonCode": "missing_reviewed_field_authority",
-      "existingEvidenceIds": [
-        "seriouslyfish-sahyadria-denisonii",
-        "fishbase-sahyadria-denisonii"
-      ],
-      "existingSources": [
-        {
-          "id": "seriouslyfish-sahyadria-denisonii",
-          "title": "Sahyadria denisonii (Red-line Torpedo Barb)",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/sahyadria-denisonii",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "fishbase-sahyadria-denisonii",
-          "title": "Dawkinsia denisonii (Denison barb) species summary",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Sahyadria-denisonii.html",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0050",
-      "name": "巴卡雷龙",
-      "scientificName": "Channa barca",
-      "missingField": "tank_size",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch19-fishbase-channa-barca",
-        "seriouslyfish-channa-barca"
-      ],
-      "existingSources": [
-        {
-          "id": "batch19-fishbase-channa-barca",
-          "title": "Channa barca species summary",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Channa-barca.html",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "seriouslyfish-channa-barca",
-          "title": "Channa barca",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/channa-barca",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed numeric minimum aquarium length/footprint or volume for this exact taxon.",
-      "resolutionConstraint": "Existing reviewed sources describe only public installations / the very largest private aquaria and do not provide a numeric minimum footprint. Do not convert the legacy 640 L text into authority."
     },
     {
       "speciesId": "sp_0198",

@@ -1441,13 +1441,13 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
 
 const GENERIC_FACT_SYNC_PROFILE_IDS = new Set([
   'sp_0017', 'sp_0020', 'sp_0045', 'sp_0048', 'sp_0053', 'sp_0114',
-  'sp_0126', 'sp_0131', 'sp_0133', 'sp_0448', 'sp_0469',
+  'sp_0050', 'sp_0126', 'sp_0131', 'sp_0133', 'sp_0440', 'sp_0448', 'sp_0469',
 ]);
 
 for (const speciesId of GENERIC_FACT_SYNC_PROFILE_IDS) {
   const profile = profiles[speciesId];
   if (!profile) throw new Error(`Missing reviewed Compatibility profile for generic fact sync: ${speciesId}`);
-  profile.requiredFacts = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS];
+  profile.requiredFacts = Array.from(new Set([...(profile.requiredFacts ?? []), ...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS]));
 }
 
 const wave04BridgeProfile = (
@@ -1564,7 +1564,7 @@ profiles.sp_0214 = {
   confidence: 'high',
   reviewStatus: 'reviewed',
   citations: [nextWaveUnified05Sources.pelvicachromis],
-  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'breeding_behavior'],
+  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation', 'breeding_behavior'],
 };
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {

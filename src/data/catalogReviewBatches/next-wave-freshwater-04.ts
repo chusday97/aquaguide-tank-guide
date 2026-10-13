@@ -182,7 +182,9 @@ export const nextWaveFreshwater04FieldReviews: CatalogFieldReview[] = [
   supported('sp_0050', 'adult_size', { min: null, max: 105 }, [channaBarcaFishBase.id], [
     'FishBase maximum total length is retained as the biological ceiling; Seriously Fish reports approximately 900 mm standard length.',
   ]),
-  unknown('sp_0050', 'tank_size', 'Seriously Fish restricts the species to public installations or the very largest private aquaria but does not provide a numeric minimum footprint for Channa barca.'),
+  supported('sp_0050', 'tank_size', { liters: null, lengthCm: 200 }, [channaBarcaSeriouslyFish.id], [
+    'The current Seriously Fish profile explicitly rates Channa barca as needing a tank at least 2 m long. The aquarium-size section remains qualitative, so only the 200 cm minimum length is promoted and no volume is inferred.',
+  ], 'medium'),
   supported('sp_0050', 'social_behavior', { mode: 'pair', minimumGroupSize: null }, [channaBarcaSeriouslyFish.id], [
     'The same source says species-specific aquarium and notes that even established pairs can become violent; pair is a social form, not a safety guarantee.',
   ], 'medium'),

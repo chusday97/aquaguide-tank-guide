@@ -15,8 +15,8 @@ assert.deepEqual(summary.coreFields, fields);
 assert.ok(summary.runtimeReviewedProfileSpecies >= 101);
 assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpecies);
 assert.ok(summary.oneFieldGapSpecies > 0);
-assert.ok(summary.genericOnboardingReadySpecies >= 20, 'Fast Lane should preserve at least 20 fully sourced generic-ready profiles');
-for (const speciesId of ['sp_0017','sp_0020','sp_0045','sp_0048','sp_0053','sp_0114','sp_0126','sp_0131','sp_0133','sp_0448','sp_0469']) {
+assert.ok(summary.genericOnboardingReadySpecies >= 27, 'Fast Lane should preserve at least 27 fully sourced generic-ready profiles');
+for (const speciesId of ['sp_0017','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0114','sp_0126','sp_0131','sp_0133','sp_0214','sp_0440','sp_0448','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
   const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
@@ -32,6 +32,11 @@ assert.equal(rows.find(row => row.speciesId === 'sp_0015')?.fields.predation.sta
 assert.equal(rows.find(row => row.speciesId === 'sp_0059')?.fields.predation.status, 'reviewed_supported');
 assert.equal(rows.find(row => row.speciesId === 'sp_0441')?.fields.predation.status, 'reviewed_neutral_or_negative');
 assert.equal(rows.find(row => row.speciesId === 'sp_0450')?.fields.predation.status, 'reviewed_supported');
+assert.equal(rows.find(row => row.speciesId === 'sp_0050')?.fields.tank_size.status, 'reviewed_supported');
+assert.equal(rows.find(row => row.speciesId === 'sp_0214')?.fields.predation.status, 'reviewed_neutral_or_negative');
+for (const speciesId of ['sp_0121','sp_0122','sp_0123','sp_0200','sp_0440']) {
+  assert.equal(rows.find(row => row.speciesId === speciesId)?.fields.predation.status, 'reviewed_neutral_or_negative', `${speciesId} should only close predation from reviewed diet + tankmate/community evidence`);
+}
 for (const field of fields) {
   assert.equal(Object.values(summary.fieldCounts[field]).reduce((sum, value) => sum + value, 0), rows.length);
 }
