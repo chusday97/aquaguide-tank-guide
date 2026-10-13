@@ -94,6 +94,11 @@ import { recordExistingLivestock, type RecordExistingResult } from '../services/
 import { createAquariumDraft, getAquariumSetupStatus, normalizeAquariumRecord } from '../services/aquarium/aquarium-setup.service';
 import { getSpeciesFavoriteIds, setSpeciesFavoriteIds, subscribeToFavorites } from '../services/favorites/favorites.service';
 import { getCompatibilityPresentationForStatus } from '../services/compatibility/compatibility-presentation.service';
+import {
+  buildLocalCompatibilityAssessment,
+  loadCompatibilityAssessmentForPlan,
+  type CompatibilityAssessmentUiModel,
+} from '../services/compatibility/compatibility-assessment.service';
 import { useToast } from '../components/common/ToastProvider';
 import { useWorkspaceNavigation } from '../components/layout/WorkspaceNavigationProvider';
 import type { WorkspaceNavigationContext } from '../types/navigation';
@@ -1204,6 +1209,9 @@ export default function AquariumManager() {
     result: RecordExistingResult;
   } | null>(null);
   const [addFishCompatibilityReview, setAddFishCompatibilityReview] = useState<SpeciesAdditionReview | null>(null);
+  const [addFishProductAssessment, setAddFishProductAssessment] = useState<CompatibilityAssessmentUiModel | null>(null);
+  const [isAddFishAssessmentLoading, setIsAddFishAssessmentLoading] = useState(false);
+  const addFishAssessmentRequestRef = useRef(0);
   const [addFishDatePicker, setAddFishDatePicker] = useState<{ fishId: string; month: Date } | null>(null);
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const [calendarMonth, setCalendarMonth] = useState(new Date());
@@ -1701,18 +1709,10 @@ export default function AquariumManager() {
 
   const activeAquarium = aquariums.find(a => a.id === activeId);
 
-  const addFishReviewPresentation = useMemo(() => {
-    if (!addFishCompatibilityReview) return null;
-    const confirmedFindings = addFishCompatibilityReview.evaluations.flatMap(evaluation => [
-      ...evaluation.result.passedRules,
-      ...evaluation.result.warningRules,
-    ]).map(rule => rule.evidence || rule.title);
-    return getCompatibilityPresentationForStatus({
-      status: addFishCompatibilityReview.status,
-      hasConfirmedFacts: confirmedFindings.length > 0,
-      confirmedFindings,
-    });
-  }, [addFishCompatibilityReview]);
+  const addFishAssessmentView = useMemo(() => (
+    addFishProductAssessment
+    || (addFishCompatibilityReview ? buildLocalCompatibilityAssessment(addFishCompatibilityReview.decision) : null)
+  ), [addFishCompatibilityReview, addFishProductAssessment]);
 
   const addFishEvaluationPresentations = useMemo(() => {
     if (!addFishCompatibilityReview) return new Map<string, ReturnType<typeof getCompatibilityPresentationForStatus>>();
@@ -2014,6 +2014,9 @@ export default function AquariumManager() {
     setAddFishSuccess(null);
     setAddFishDatePicker(null);
     setAddFishCompatibilityReview(null);
+    setAddFishProductAssessment(null);
+    setIsAddFishAssessmentLoading(false);
+    addFishAssessmentRequestRef.current += 1;
     setFishSearchTerm('');
     setAddFishCategory('all');
     setSelectedAddFishItems(selectedFish
@@ -2122,6 +2125,21 @@ export default function AquariumManager() {
       return;
     }
     setAddFishCompatibilityReview(review);
+    setAddFishProductAssessment(buildLocalCompatibilityAssessment(review.decision));
+
+    const assessmentRequestId = addFishAssessmentRequestRef.current + 1;
+    addFishAssessmentRequestRef.current = assessmentRequestId;
+    setIsAddFishAssessmentLoading(true);
+    void loadCompatibilityAssessmentForPlan({
+      aquariumId: activeAquarium.id,
+      plannedItems: review.items,
+      decision: review.decision,
+    }).then(assessment => {
+      if (addFishAssessmentRequestRef.current !== assessmentRequestId) return;
+      setAddFishProductAssessment(assessment);
+    }).finally(() => {
+      if (addFishAssessmentRequestRef.current === assessmentRequestId) setIsAddFishAssessmentLoading(false);
+    });
   };
 
   const handleConfirmAddFishAfterReview = async () => {
@@ -6407,59 +6425,89 @@ export default function AquariumManager() {
                       : 'border-amber-100 bg-amber-50'
                 }`}>
                   <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="text-[11px] font-black text-ink/45">{isEn ? 'Post-addition Risk Assessment' : '加入后风险判定'}</div>
-                      <div className={`mt-1 font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[28px] leading-tight text-red-700' : 'text-lg text-ink'}`}>
-                        {addFishCompatibilityReview.status === 'not_recommended'
-                          ? (isEn ? 'Not recommended to add' : '不建议加入')
-                          : addFishReviewPresentation?.headline || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
+                    <div className="min-w-0">
+                      <div className="text-[11px] font-black text-ink/45">{isEn ? 'Compatibility result' : '混养判断'}</div>
+                      <div className={`mt-1 font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[28px] leading-tight text-red-700' : addFishCompatibilityReview.status === 'compatible' ? 'text-xl text-emerald-800' : 'text-xl text-ink'}`}>
+                        {addFishAssessmentView?.main.judgment || getTankCompatibilityStatusLabel(addFishCompatibilityReview.status)}
                       </div>
-                      <p className={`mt-2 leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[14px] font-black text-red-800' : 'text-[12px] font-bold text-ink/62'}`}>
-                        {addFishCompatibilityReview.status === 'not_recommended'
-                          ? '当前规划命中阻断风险，不建议实际加入；这不会删除现实中已经存在的记录。'
-                          : addFishCompatibilityReview.status === 'insufficient_data'
-                            ? '这组规划暂未开放完整建议，可先查看物种养护或加入种草清单。'
-                            : addFishCompatibilityReview.status === 'caution'
-                              ? '存在需要注意的条件；确认理解后，只有实际入缸时才记录。'
-                              : '当前规划允许继续；只有实际入缸后才记录到鱼缸。'}
-                      </p>
+                      {isAddFishAssessmentLoading && (
+                        <div className="mt-1 flex items-center gap-1.5 text-[10px] font-bold text-ink/42">
+                          <Loader2 className="h-3 w-3 animate-spin" />
+                          {isEn ? 'Adding supporting explanation…' : '正在补充说明…'}
+                        </div>
+                      )}
                     </div>
                     <span className="shrink-0 rounded-full bg-white px-2.5 py-1 text-[10px] font-black text-ink/55 shadow-sm">
                       {addFishCompatibilityReview.evaluations.length} 种生物
                     </span>
                   </div>
 
-                  <div className="grid gap-2">
-                    {addFishCompatibilityReview.evaluations.map(evaluation => (
-                      <div key={evaluation.fish.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[14px] bg-white/82 px-3 py-2 shadow-sm">
-                        {(() => {
-                          const presentation = addFishEvaluationPresentations.get(evaluation.fish.id);
-                          return (
-                            <>
-                              <span className="min-w-0">
-                                <span className="block truncate text-[12px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
-                                <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.mode === 'confirmed_facts' ? '当前可确认部分条件' : presentation?.mode === 'unavailable' ? '暂未开放这组混养建议' : evaluation.result.summary}</span>
-                              </span>
-                              <span className="shrink-0 text-[10px] font-black text-ink/60">{presentation?.headline || getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
-                            </>
-                          );
-                        })()}
-                      </div>
-                    ))}
-                  </div>
-
-                  {addFishCompatibilityReview.keyRules.length > 0 && addFishCompatibilityReview.status !== 'insufficient_data' && (
-                    <div className={`rounded-[16px] p-4 ${addFishCompatibilityReview.status === 'not_recommended' ? 'border-2 border-red-200 bg-white' : 'bg-white/72'}`}>
-                      <div className={`font-black ${addFishCompatibilityReview.status === 'not_recommended' ? 'text-[15px] text-red-700' : 'text-[11px] text-ink'}`}>{isEn ? 'Key Reasons' : '不建议混养的原因'}</div>
+                  <div className="grid gap-3 rounded-[16px] bg-white/82 p-4 shadow-sm">
+                    <div>
+                      <div className="text-[11px] font-black text-ink/48">{isEn ? 'Why' : '为什么'}</div>
                       <div className="mt-2 grid gap-1.5">
-                        {addFishCompatibilityReview.keyRules.slice(0, 3).map(rule => (
-                          <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className={`leading-relaxed ${addFishCompatibilityReview.status === 'not_recommended' ? 'rounded-[12px] bg-red-50 px-3 py-2 text-[14px] font-bold text-red-900' : 'text-[11px] font-medium text-ink/62'}`}>
-                            <span className={addFishCompatibilityReview.status === 'not_recommended' ? 'font-black text-red-800' : 'font-black text-ink/72'}>{rule.title}：</span>{rule.evidence}
-                          </div>
+                        {(addFishAssessmentView?.main.why || []).map((text, index) => (
+                          <p key={`compatibility-why-${index}`} className="text-[13px] font-bold leading-6 text-ink/78">{text}</p>
                         ))}
                       </div>
                     </div>
-                  )}
+                    <div className="border-t border-ink/8 pt-3">
+                      <div className="text-[11px] font-black text-ink/48">{isEn ? 'What to do' : '怎么做'}</div>
+                      <div className="mt-2 grid gap-1.5">
+                        {(addFishAssessmentView?.main.howTo || []).map((text, index) => (
+                          <p key={`compatibility-how-${index}`} className="text-[13px] font-black leading-6 text-ink">{text}</p>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <details className="rounded-[16px] bg-white/72 px-4 py-3">
+                    <summary className="cursor-pointer text-[12px] font-black text-ink/65">
+                      {isEn ? 'View evidence' : addFishAssessmentView?.details.label || '查看依据'}
+                    </summary>
+                    <div className="mt-3 grid gap-3 border-t border-ink/8 pt-3">
+                      <div className="grid gap-2">
+                        {addFishCompatibilityReview.evaluations.map(evaluation => (
+                          <div key={evaluation.fish.id} className="grid grid-cols-[1fr_auto] items-center gap-3 rounded-[12px] bg-bg/70 px-3 py-2">
+                            {(() => {
+                              const presentation = addFishEvaluationPresentations.get(evaluation.fish.id);
+                              return (
+                                <>
+                                  <span className="min-w-0">
+                                    <span className="block truncate text-[11px] font-black text-ink">{getSpeciesNameLocalized(evaluation.fish, isEn)} x {evaluation.quantity}</span>
+                                    <span className="mt-0.5 block truncate text-[10px] font-bold text-ink/45">{presentation?.mode === 'confirmed_facts' ? '当前可确认部分条件' : presentation?.mode === 'unavailable' ? '暂未开放这组混养建议' : evaluation.result.summary}</span>
+                                  </span>
+                                  <span className="shrink-0 text-[10px] font-black text-ink/55">{presentation?.headline || getTankCompatibilityStatusLabel(evaluation.result.status)}</span>
+                                </>
+                              );
+                            })()}
+                          </div>
+                        ))}
+                      </div>
+                      {addFishCompatibilityReview.keyRules.length > 0 && (
+                        <div className="grid gap-1.5">
+                          {addFishCompatibilityReview.keyRules.slice(0, 4).map(rule => (
+                            <div key={`${rule.code}-${rule.title}-${rule.evidence}`} className="text-[11px] font-medium leading-5 text-ink/62">
+                              <span className="font-black text-ink/72">{rule.title}：</span>{rule.evidence}
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                      {addFishAssessmentView?.details.reasons?.length ? (
+                        <div className="grid gap-1.5 rounded-[12px] bg-violet-50/70 px-3 py-2">
+                          <div className="text-[10px] font-black text-violet-800">{isEn ? 'Supporting explanation' : '补充依据'}</div>
+                          {addFishAssessmentView.details.reasons.slice(0, 3).map((item, index) => (
+                            <div key={`assessment-detail-${index}`} className="text-[11px] font-medium leading-5 text-violet-950/75">{item.text}</div>
+                          ))}
+                        </div>
+                      ) : null}
+                      <div className="text-[9px] font-bold text-ink/35">
+                        {addFishAssessmentView?.source === 'cloud_ai'
+                          ? (isEn ? 'Deterministic decision + AI-assisted explanation' : '规则判断 + AI 辅助解释')
+                          : (isEn ? 'Deterministic compatibility decision' : '规则判断')}
+                      </div>
+                    </div>
+                  </details>
                 </section>
               ) : (
                 <>
@@ -6750,12 +6798,9 @@ export default function AquariumManager() {
           </div>
                   {!addFishSuccess && addFishCompatibilityReview?.status === 'not_recommended' && (
                     <DialogFooter className="shrink-0 border-t border-red-100 bg-white/98 px-4 py-3 shadow-[0_-10px_24px_rgba(127,29,29,0.08)]">
-                      <div className="grid w-full gap-2 sm:grid-cols-3">
+                      <div className="grid w-full gap-2 sm:grid-cols-2">
                         <Button type="button" variant="outline" disabled={isAddFishSaving} onClick={() => setAddFishCompatibilityReview(null)} className="h-11 rounded-full text-sm font-black">
                           {isEn ? 'Go back & adjust' : '返回调整'}
-                        </Button>
-                        <Button type="button" variant="outline" disabled={isAddFishSaving} onClick={() => window.dispatchEvent(new CustomEvent('aquaguide:feature-preview', { detail: { feature: 'ai-risk' } }))} className="h-11 rounded-full border-violet-200 bg-violet-50 text-sm font-black text-violet-800">
-                          {isEn ? 'AI advice' : 'AI 建议'}
                         </Button>
                         <Button type="button" disabled={isAddFishSaving} onClick={() => setIsRiskOverrideConfirmOpen(true)} className="h-11 rounded-full bg-red-700 text-sm font-black text-white hover:bg-red-800">
                           {isEn ? 'Add anyway' : '仍要加入'}

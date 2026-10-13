@@ -7,6 +7,8 @@ import {
   type TankCompatibilityStatus,
 } from '../compatibility/compatibility.service';
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
+import { evaluateCompatibilityDecision } from '../../modules/knowledge/compatibilityKnowledge';
+import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
 
 export type SpeciesAdditionItem = {
   fishId: string;
@@ -26,6 +28,7 @@ export type SpeciesAdditionReview = {
   items: SpeciesAdditionItem[];
   evaluations: SpeciesAdditionEvaluation[];
   keyRules: TankCompatibilityRule[];
+  decision: CompatibilityDecision;
 };
 
 export type SpeciesAdditionAssessment = Omit<SpeciesAdditionReview, 'policy'> & {
@@ -58,13 +61,6 @@ export type SpeciesAdditionExecution = {
   reason?: 'no_valid_species' | 'confirmation_required' | 'missing_information' | 'blocked';
 };
 
-const statusRank: Record<TankCompatibilityStatus, number> = {
-  compatible: 0,
-  caution: 1,
-  insufficient_data: 2,
-  not_recommended: 3,
-};
-
 export const normalizeSpeciesAdditionItems = (items: SpeciesAdditionItem[], speciesCatalog: Fish[]) => {
   const knownIds = new Set(speciesCatalog.map(fish => fish.id));
   const grouped = new Map<string, SpeciesAdditionItem>();
@@ -83,13 +79,11 @@ export const normalizeSpeciesAdditionItems = (items: SpeciesAdditionItem[], spec
   return Array.from(grouped.values());
 };
 
-const getRulesForStatus = (evaluation: SpeciesAdditionEvaluation) => {
-  if (evaluation.result.status === 'not_recommended') return evaluation.result.blockingRules;
-  if (evaluation.result.status === 'insufficient_data') return evaluation.result.missingData;
-  if (evaluation.result.status === 'caution') {
-    return [...evaluation.result.warningRules, ...evaluation.result.missingData];
-  }
-  return [];
+const getRulesForDecision = (decision: CompatibilityDecision) => {
+  if (decision.status === 'not_recommended') return decision.blockingRules;
+  if (decision.status === 'insufficient_data') return decision.missingData;
+  if (decision.status === 'caution') return [...decision.warningRules, ...decision.missingData];
+  return decision.passedRules;
 };
 
 export const reviewSpeciesAdditions = ({
@@ -120,6 +114,18 @@ export const assessSpeciesAddition = ({
     const species = catalogById.get(record.fishId);
     return species ? [{ species, record: { quantity: Math.max(1, record.quantity || 1) } }] : [];
   });
+  const wholeTankItems = [
+    ...existingFromTank.map(item => ({
+      species: item.species,
+      quantity: item.record.quantity,
+      origin: 'existing' as const,
+    })),
+    ...normalizedItems.flatMap(item => {
+      const species = catalogById.get(item.fishId);
+      return species ? [{ species, quantity: item.quantity, origin: 'candidate' as const }] : [];
+    }),
+  ];
+  const decision = evaluateCompatibilityDecision({ tank: aquarium, items: wholeTankItems });
 
   const evaluations = normalizedItems.flatMap(item => {
     const fish = catalogById.get(item.fishId);
@@ -143,23 +149,20 @@ export const assessSpeciesAddition = ({
   });
 
   if (evaluations.length === 0) return null;
-  const status = evaluations.reduce<TankCompatibilityStatus>((current, evaluation) => (
-    statusRank[evaluation.result.status] > statusRank[current] ? evaluation.result.status : current
-  ), 'compatible');
-  const keyRules = evaluations
-    .flatMap(getRulesForStatus)
+  const keyRules = getRulesForDecision(decision)
     .filter((rule, index, rules) => rules.findIndex(candidate => (
       `${candidate.code}-${candidate.title}-${candidate.evidence}` === `${rule.code}-${rule.title}-${rule.evidence}`
     )) === index)
     .slice(0, 4);
 
   return {
-    status,
+    status: decision.status,
     items: normalizedItems,
     evaluations,
     keyRules,
-    warnings: evaluations.flatMap(item => item.result.warningRules),
-    missingInformation: evaluations.flatMap(item => item.result.missingData),
+    decision,
+    warnings: decision.warningRules,
+    missingInformation: decision.missingData,
   };
 };
 

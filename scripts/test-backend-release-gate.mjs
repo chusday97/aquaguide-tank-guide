@@ -23,6 +23,7 @@ const gates = [
   ['Compatibility V4 Live Canary Contract', 'npm', ['run', 'test:compatibility-v4-live-canary']],
   ['Compatibility V4 Product Assessment', 'npm', ['run', 'test:compatibility-v4-product-assessment']],
   ['Compatibility V4 User Readability', 'npm', ['run', 'test:compatibility-v4-user-readability']],
+  ['Compatibility Result Card', 'npm', ['run', 'test:compatibility-result-card']],
   ['Runtime Compatibility Authority', 'npm', ['run', 'test:runtime-compatibility-authority']],
   ['Compatibility Rollout Window', 'npm', ['run', 'test:compatibility-rollout-window']],
   ['Compatibility Stacked Wave04 Migration', 'npm', ['run', 'test:compatibility-stacked-wave04-migration']],
