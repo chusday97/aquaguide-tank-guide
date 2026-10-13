@@ -1,5 +1,5 @@
 import type { CompatibilityDecision } from '../../../src/modules/knowledge/knowledge.types';
-import { prioritizeDistinctCompatibilityRules } from '../../../src/services/compatibility/compatibility-action.service';
+import { prioritizeDistinctCompatibilityRules, type CompatibilityAssessmentMode } from '../../../src/services/compatibility/compatibility-action.service';
 import { getCompatibilityPresentation } from '../../../src/services/compatibility/compatibility-presentation.service';
 import { getCompatibilityDecision } from '../../../src/services/compatibility/compatibility.service';
 import {
@@ -14,6 +14,7 @@ export type CompatibilityProductGroundedItem = {
 };
 
 export type CompatibilityProductAssessment = {
+  assessmentMode: CompatibilityAssessmentMode;
   main: CompatibilityReadableConclusion;
   details: {
     label: '查看依据';
@@ -67,8 +68,15 @@ const deterministicAdjustments = (
   decision: CompatibilityDecision,
   presentation: ReturnType<typeof getCompatibilityPresentation>,
   ruleCodes: string[],
+  assessmentMode: CompatibilityAssessmentMode,
 ): CompatibilityProductGroundedItem[] => {
   if (decision.status === 'compatible') return [];
+  if (assessmentMode === 'current_tank') {
+    return [{
+      text: presentation.primaryActionText,
+      ruleCodes: ruleCodes.slice(0, 8),
+    }];
+  }
   const suggestions = uniqueItems(
     decision.suggestions.map(text => ({ text, ruleCodes: ruleCodes.slice(0, 8) })),
   ).slice(0, 5);
@@ -82,9 +90,13 @@ const deterministicAdjustments = (
 export const buildCompatibilityProductAssessment = (
   decision: CompatibilityDecision,
   shadow: CompatibilityAiShadowResult,
+  assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityProductAssessment => {
-  const finalDecision = getCompatibilityDecision(decision.aggregateResult, 'planned_addition');
-  const presentation = getCompatibilityPresentation(decision);
+  const finalDecision = getCompatibilityDecision(
+    decision.aggregateResult,
+    assessmentMode === 'current_tank' ? 'record_existing' : 'planned_addition',
+  );
+  const presentation = getCompatibilityPresentation(decision, assessmentMode);
   const aiNarrativeMatchesAuthority = shadow.ai.status === 'accepted'
     && shadow.ai.suggestedVerdict === finalDecision.status;
 
@@ -94,7 +106,7 @@ export const buildCompatibilityProductAssessment = (
     : deterministicReasonItems;
   const adjustments = aiNarrativeMatchesAuthority
     ? uniqueItems(shadow.ai.adjustments).slice(0, 5)
-    : deterministicAdjustments(decision, presentation, finalDecision.ruleCodes);
+    : deterministicAdjustments(decision, presentation, finalDecision.ruleCodes, assessmentMode);
   const uncertainties = aiNarrativeMatchesAuthority
     ? uniqueItems(shadow.ai.uncertainties).slice(0, 5)
     : decision.status === 'insufficient_data'
@@ -112,9 +124,11 @@ export const buildCompatibilityProductAssessment = (
     aiNarrativeMatchesAuthority
       ? { reasons: shadow.ai.reasons, adjustments: shadow.ai.adjustments }
       : {},
+    assessmentMode,
   );
 
   return {
+    assessmentMode,
     main,
     details: {
       label: '查看依据',

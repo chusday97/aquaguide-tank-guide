@@ -275,7 +275,14 @@ export const readPublishedCatalogCombinationContext = async ({
   }>();
   for (const row of existingRows) {
     const species = catalogByKey.get(row.species_catalog_key)!;
-    const quantity = Number(row.quantity) > 0 ? Number(row.quantity) : 1;
+    const quantity = Number(row.quantity);
+    if (!Number.isInteger(quantity) || quantity <= 0) {
+      throw new ApiError(
+        400,
+        'COMPATIBILITY_INFORMATION_REQUIRED',
+        '鱼缸中存在无效的生物数量，请先修正记录后再判断。',
+      );
+    }
     const current = combined.get(species.id);
     combined.set(species.id, {
       species,
@@ -407,12 +414,16 @@ aquariumsRouter.get('/aquariums/:id/compatibility-assessment', asyncRoute(async 
     catalogVersion,
     plannedItems,
   });
+  const assessmentMode = context.items.some(item => item.plannedQuantity > 0)
+    ? 'planned_addition' as const
+    : 'current_tank' as const;
   const shadow = await createCompatibilityAiCombinationAssessment({
     deterministicResult: context.decision.aggregateResult,
     tank: context.tank,
     items: context.items,
+    assessmentMode,
   });
-  const assessment = buildCompatibilityProductAssessment(context.decision, shadow);
+  const assessment = buildCompatibilityProductAssessment(context.decision, shadow, assessmentMode);
   return sendData(request, response, {
     ...assessment,
     species: context.items.map(item => ({

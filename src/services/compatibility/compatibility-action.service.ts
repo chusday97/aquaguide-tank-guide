@@ -16,6 +16,8 @@ export type BeginnerCompatibilityAction = {
   detailsLabel: string;
 };
 
+export type CompatibilityAssessmentMode = 'planned_addition' | 'current_tank';
+
 const HARD_BLOCK_CODES = new Set([
   'water_type_conflict',
   'species_water_type_conflict',
@@ -159,7 +161,7 @@ const codesOf = (decision: CompatibilityDecision) => new Set([
   ...decision.missingData.map(rule => rule.code),
 ]);
 
-export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision): BeginnerCompatibilityAction => {
+const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision): BeginnerCompatibilityAction => {
   const codes = codesOf(decision);
   const blockingRules = prioritizeDistinctCompatibilityRules(decision.blockingRules);
   const warningRules = prioritizeDistinctCompatibilityRules(decision.warningRules);
@@ -312,4 +314,131 @@ export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision
     observeAfterAction: '加入后 3–7 天继续观察追咬、拒食和呼吸异常。',
     detailsLabel: '为什么可以？',
   };
+};
+
+const buildCurrentTankCompatibilityAction = (
+  decision: CompatibilityDecision,
+  plannedAction: BeginnerCompatibilityAction,
+): BeginnerCompatibilityAction => {
+  const codes = codesOf(decision);
+
+  if (decision.status === 'not_recommended') {
+    return {
+      ...plannedAction,
+      headline: '当前组合需要尽快调整',
+      immediateAction: '尽快分隔明确冲突的物种，先处理阻断风险，再重新判断当前组合。',
+      observeAfterAction: null,
+    };
+  }
+
+  if (decision.status === 'insufficient_data') {
+    return {
+      ...plannedAction,
+      headline: '当前组合还不能可靠判断',
+      immediateAction: '先补齐最关键的缺失信息，再重新判断当前组合是否需要调整。',
+      observeAfterAction: null,
+    };
+  }
+
+  if (decision.status === 'compatible') {
+    return {
+      ...plannedAction,
+      headline: '当前组合可以继续维持',
+      immediateAction: '保持当前配置，不需要为了这次判断额外调整鱼缸。',
+      observeAfterAction: '继续观察追咬、拒食、呼吸和长期躲藏是否保持稳定。',
+    };
+  }
+
+  if (codes.has('observed_intervention') || codes.has('observed_emergency')) {
+    return {
+      ...plannedAction,
+      headline: '先处理已经发生的问题',
+      immediateAction: '优先处理持续追逐、进食受阻或应激异常；必要时立即分隔。',
+      observeAfterAction: '处理后确认追逐、躲藏和进食恢复稳定，再重新评估当前组合。',
+    };
+  }
+  if (codes.has('predation_vulnerability_context')) {
+    return {
+      ...plannedAction,
+      headline: '先确认当前捕食风险是否可控',
+      immediateAction: '先确认成体体型、口裂和实际追食行为，并给脆弱一方保留密集躲避与可分隔方案。',
+      observeAfterAction: '重点看持续追逐、啄咬、长期躲藏和数量异常减少；出现任一情况就分隔。',
+    };
+  }
+  if (codes.has('fin_nipping_target_vulnerability')) {
+    return {
+      ...plannedAction,
+      headline: '当前追鳍组合需要调整',
+      immediateAction: '优先分隔或更换其中一方；不要把短期没追咬当成长期安全。',
+      observeAfterAction: '重点看持续追逐、鳍条破损、躲藏和进食受阻；持续异常就分隔。',
+    };
+  }
+  if (Array.from(codes).some(code => TERRITORIAL_CODES.has(code))) {
+    return {
+      ...plannedAction,
+      headline: '先处理当前领地压迫风险',
+      immediateAction: '增加可用空间、遮挡和退让路线，并准备可立即分隔的方案。',
+      observeAfterAction: '重点看持续追逐、堵在角落、进食受阻和长期躲藏；持续异常就分隔。',
+    };
+  }
+  if (codes.has('fin_nipping_group_pressure')) {
+    return {
+      ...plannedAction,
+      headline: '先把当前群体数量补够',
+      immediateAction: '先满足追鳍物种的同种最低群体要求，再重新评估当前混养压力。',
+      observeAfterAction: '群体调整后观察 3–7 天；若仍持续追鳍、躲藏、破鳍或抢食，就分隔。',
+    };
+  }
+  if (codes.has('minimum_group_not_met') || codes.has('group_requirement_gap')) {
+    const minimumGroupSize = decision.stockingGuidance?.recommendedMin;
+    return {
+      ...plannedAction,
+      headline: '当前群体数量需要调整',
+      immediateAction: minimumGroupSize
+        ? `把该物种调整到至少 ${minimumGroupSize} 条/只，再观察是否正常群游和进食。`
+        : '按该物种的最低群体数量调整到位，再观察是否正常群游和进食。',
+      observeAfterAction: '调整后观察 3–7 天，确认结群、进食和躲藏状态恢复稳定。',
+    };
+  }
+  if (Array.from(codes).some(code => PH_CODES.has(code))) {
+    return {
+      ...plannedAction,
+      headline: '先确认当前实际水质',
+      immediateAction: '测一次当前稳定 pH，并确认现有组合是否有可长期维持的共同区间。',
+      observeAfterAction: '水质稳定后继续观察进食、体色、呼吸和应激表现。',
+    };
+  }
+  if (Array.from(codes).some(code => SPACE_CODES.has(code))) {
+    return {
+      ...plannedAction,
+      headline: '当前空间余量需要调整',
+      immediateAction: '先按成体需求核对缸长和可用空间；空间偏紧就减少现有数量或升级空间。',
+      observeAfterAction: '调整后继续观察游动受限、抢位、躲藏和进食是否正常。',
+    };
+  }
+  if (Array.from(codes).some(code => BIOLOAD_CODES.has(code) || SOFT_CAPACITY_CODES.has(code))) {
+    return {
+      ...plannedAction,
+      headline: '当前负荷偏高，需要调整',
+      immediateAction: '先降低当前总负荷，并确认过滤与维护能力能稳定承受现有数量。',
+      observeAfterAction: '调整后 3–7 天重点看呼吸、进食和明显水质波动是否恢复稳定。',
+    };
+  }
+
+  return {
+    ...plannedAction,
+    headline: '当前组合有条件可维持',
+    immediateAction: '先处理最重要的可调整条件，再重新评估当前组合。',
+    observeAfterAction: '调整后继续观察追咬、躲藏、拒食和呼吸异常。',
+  };
+};
+
+export const buildBeginnerCompatibilityAction = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode = 'planned_addition',
+): BeginnerCompatibilityAction => {
+  const plannedAction = buildPlannedAdditionCompatibilityAction(decision);
+  return mode === 'current_tank'
+    ? buildCurrentTankCompatibilityAction(decision, plannedAction)
+    : plannedAction;
 };

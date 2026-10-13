@@ -3,6 +3,7 @@ import {
   buildBeginnerCompatibilityAction,
   getCompatibilityRuleFamily,
   prioritizeDistinctCompatibilityRules,
+  type CompatibilityAssessmentMode,
 } from './compatibility-action.service';
 
 type ReadableRule = {
@@ -51,7 +52,10 @@ export const isCompatibilityUserReadableText = (
   return true;
 };
 
-const plainRuleText = (rule: ReadableRule): string => {
+const plainRuleText = (
+  rule: ReadableRule,
+  assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
+): string => {
   const code = rule.code;
 
   if (code === 'compatibility_clear') return '目前已审核的水体、温度、空间和行为条件里，没有发现明确冲突。';
@@ -74,7 +78,9 @@ const plainRuleText = (rule: ReadableRule): string => {
     return '追鳍物种数量不足时，更容易把骚扰压力转移到同缸其他生物。';
   }
   if (code === 'minimum_group_not_met' || code === 'group_requirement_gap') {
-    return '这种生物需要成群生活，当前计划数量偏少。';
+    return assessmentMode === 'current_tank'
+      ? '这种生物需要成群生活，当前数量偏少。'
+      : '这种生物需要成群生活，当前计划数量偏少。';
   }
   if (code === 'territorial_pressure_context' || code === 'territorial_conflict' || code === 'breeding_territory_active') {
     return '它们会争夺相近活动区域，守地或繁殖时更容易互相压迫。';
@@ -142,9 +148,14 @@ const primaryRulesFor = (decision: CompatibilityDecision): ReadableRule[] => {
   ];
 };
 
-const defaultReason = (decision: CompatibilityDecision) => {
+const defaultReason = (
+  decision: CompatibilityDecision,
+  assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
+) => {
   if (decision.status === 'compatible') return '目前没有发现明确的混养冲突。';
-  if (decision.status === 'caution') return '当前有可以处理的风险，调整后再加入会更稳妥。';
+  if (decision.status === 'caution') return assessmentMode === 'current_tank'
+    ? '当前组合有可以处理的风险，需要先调整。'
+    : '当前有可以处理的风险，调整后再加入会更稳妥。';
   if (decision.status === 'not_recommended') return '当前存在明确的混养风险。';
   return '关键资料还不够，暂时不能给出可靠结论。';
 };
@@ -156,8 +167,21 @@ const ruleCodes = (decision: CompatibilityDecision) => new Set([
   ...decision.missingData.map(rule => rule.code),
 ]);
 
-const blockingActionFor = (rule: ReadableRule) => {
+const blockingActionFor = (
+  rule: ReadableRule,
+  assessmentMode: CompatibilityAssessmentMode,
+) => {
   const family = getCompatibilityRuleFamily(rule.code);
+  if (assessmentMode === 'current_tank') {
+    if (family === 'water_type') return '尽快分缸；分别按淡水或海水需求饲养。';
+    if (family === 'predation') return '尽快分隔存在捕食关系的物种，并重新调整现有组合。';
+    if (family === 'housing') return '按单养方案分开饲养，或重新调整现有组合。';
+    if (family === 'temperature') return '不要硬取中间温度；分缸，或调整成温度需求更接近的组合。';
+    if (family === 'aggression') return '先分隔持续冲突的物种，确认恢复稳定后再重新评估。';
+    if (family === 'territory') return '增加遮挡和退让空间；如果持续压迫就分缸。';
+    if (family === 'space') return '先减少现有数量或升级鱼缸空间，再重新评估。';
+    return '先分隔或调整高风险组合，再重新判断当前鱼缸。';
+  }
   if (family === 'water_type') return '不要放在同一缸；分别按淡水或海水需求饲养，或更换其中一种。';
   if (family === 'predation') return '不要直接混养；更换体型更接近、没有明显捕食关系的混养对象。';
   if (family === 'housing') return '按单养方案处理，或更换更适合混养的物种。';
@@ -171,17 +195,21 @@ const blockingActionFor = (rule: ReadableRule) => {
 const deterministicActionsFor = (
   decision: CompatibilityDecision,
   fallback: string,
+  assessmentMode: CompatibilityAssessmentMode,
 ): string[] => {
   const codes = ruleCodes(decision);
 
   if (decision.status === 'not_recommended') {
-    const actions = prioritizeDistinctCompatibilityRules(decision.blockingRules).map(blockingActionFor);
+    const actions = prioritizeDistinctCompatibilityRules(decision.blockingRules)
+      .map(rule => blockingActionFor(rule, assessmentMode));
     return actions.length > 0 ? actions : [fallback];
   }
 
   if (decision.status === 'insufficient_data') {
     if (codes.has('species_evidence_unreviewed')) {
-      return ['先不要加入；等关键混养资料审核完整后再重新判断。'];
+      return [assessmentMode === 'current_tank'
+        ? '等关键混养资料审核完整后，再重新判断当前组合是否需要调整。'
+        : '先不要加入；等关键混养资料审核完整后再重新判断。'];
     }
     if (codes.has('tank_water_type_missing') || codes.has('water_type_unknown') || codes.has('candidate_water_type_missing')) {
       return ['先确认双方需要的水体类型，再重新判断是否适合同缸。'];
@@ -189,7 +217,9 @@ const deterministicActionsFor = (
     if (codes.has('tank_temperature_missing') || codes.has('temperature_range_missing')) {
       return ['先补充当前稳定水温和物种适温范围，再重新判断。'];
     }
-    return ['先不要加入；补齐缺失信息后再重新判断。'];
+    return [assessmentMode === 'current_tank'
+      ? '先补齐缺失信息，再重新判断当前组合是否需要调整。'
+      : '先不要加入；补齐缺失信息后再重新判断。'];
   }
 
   return [fallback];
@@ -198,21 +228,22 @@ const deterministicActionsFor = (
 export const buildCompatibilityReadableConclusion = (
   decision: CompatibilityDecision,
   aiNarrative: CompatibilityReadableAiNarrative = {},
+  assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
 ): CompatibilityReadableConclusion => {
-  const action = buildBeginnerCompatibilityAction(decision);
-  const deterministicWhy = primaryRulesFor(decision).map(plainRuleText);
+  const action = buildBeginnerCompatibilityAction(decision, assessmentMode);
+  const deterministicWhy = primaryRulesFor(decision).map(rule => plainRuleText(rule, assessmentMode));
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
   const why = uniqueReadable(
     decision.status === 'compatible'
-      ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision), ...aiWhy, ...deterministicWhy.slice(1)]
-      : [...deterministicWhy, ...aiWhy, action.primaryReason || defaultReason(decision)],
+      ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision, assessmentMode), ...aiWhy, ...deterministicWhy.slice(1)]
+      : [...deterministicWhy, ...aiWhy, action.primaryReason || defaultReason(decision, assessmentMode)],
     'reason',
   ).slice(0, 2);
 
   const aiActions = decision.status === 'compatible'
     ? []
     : (aiNarrative.adjustments || []).map(item => item.text);
-  const deterministicActions = deterministicActionsFor(decision, action.immediateAction);
+  const deterministicActions = deterministicActionsFor(decision, action.immediateAction, assessmentMode);
   const howTo = uniqueReadable([
     ...deterministicActions,
     ...aiActions,
@@ -221,7 +252,7 @@ export const buildCompatibilityReadableConclusion = (
 
   return {
     judgment: JUDGMENT[decision.status],
-    why: why.length > 0 ? why : [defaultReason(decision)],
+    why: why.length > 0 ? why : [defaultReason(decision, assessmentMode)],
     howTo: howTo.length > 0 ? howTo : ['先保持当前方案不变，补齐信息后再重新判断。'],
   };
 };

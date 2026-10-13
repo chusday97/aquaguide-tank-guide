@@ -1,5 +1,5 @@
 import type { CompatibilityDecision, CompatibilityRiskType } from '../../modules/knowledge/knowledge.types';
-import { buildBeginnerCompatibilityAction, prioritizeCompatibilityRules } from './compatibility-action.service';
+import { buildBeginnerCompatibilityAction, prioritizeCompatibilityRules, type CompatibilityAssessmentMode } from './compatibility-action.service';
 
 export type CompatibilityDimension =
   | 'water_type'
@@ -79,7 +79,10 @@ const firstDistinctText = (primaryReason: string, values: string[]) => (
 );
 
 
-export const getCompatibilityPresentation = (decision: CompatibilityDecision): CompatibilityPresentation => {
+export const getCompatibilityPresentation = (
+  decision: CompatibilityDecision,
+  assessmentMode: CompatibilityAssessmentMode = 'planned_addition',
+): CompatibilityPresentation => {
   const confirmed = new Set<CompatibilityDimension>();
   const confirmedFindings: string[] = [];
   const cautions: string[] = [];
@@ -121,7 +124,7 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     ? `本次已核对：${confirmedDimensions.map(dimension => dimensionLabels[dimension]).join('、') || '部分环境条件'}`
     : null;
 
-  const beginnerAction = buildBeginnerCompatibilityAction(decision);
+  const beginnerAction = buildBeginnerCompatibilityAction(decision, assessmentMode);
   const primaryReason = beginnerAction.primaryReason;
   const secondaryReason = firstDistinctText(primaryReason, [
     ...prioritizeCompatibilityRules(decision.blockingRules).map(rule => ruleText(rule, '')),
@@ -141,10 +144,26 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     return { mode: 'verdict', ...directFields, confirmedFindings, cautions, coverageLabel, primaryAction: 'none', coverage };
   }
   if (decision.status === 'caution') {
-    return { mode: 'verdict', ...directFields, confirmedFindings, cautions, coverageLabel, primaryAction: 'confirm_addition', coverage };
+    return {
+      mode: 'verdict',
+      ...directFields,
+      confirmedFindings,
+      cautions,
+      coverageLabel,
+      primaryAction: assessmentMode === 'current_tank' ? 'none' : 'confirm_addition',
+      coverage,
+    };
   }
   if (decision.status === 'compatible') {
-    return { mode: 'verdict', ...directFields, confirmedFindings, cautions, coverageLabel, primaryAction: 'add_to_tank', coverage };
+    return {
+      mode: 'verdict',
+      ...directFields,
+      confirmedFindings,
+      cautions,
+      coverageLabel,
+      primaryAction: assessmentMode === 'current_tank' ? 'none' : 'add_to_tank',
+      coverage,
+    };
   }
   if (coverageLevel === 'partial') {
     return {
@@ -153,7 +172,7 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
       confirmedFindings: Array.from(new Set(confirmedFindings)).slice(0, 5),
       cautions: Array.from(new Set(cautions)).slice(0, 3),
       coverageLabel,
-      primaryAction: 'save_to_wishlist',
+      primaryAction: assessmentMode === 'current_tank' ? 'none' : 'save_to_wishlist',
       coverage,
     };
   }
@@ -163,7 +182,7 @@ export const getCompatibilityPresentation = (decision: CompatibilityDecision): C
     confirmedFindings: [],
     cautions: [],
     coverageLabel: null,
-    primaryAction: 'save_to_wishlist',
+    primaryAction: assessmentMode === 'current_tank' ? 'none' : 'save_to_wishlist',
     coverage,
   };
 };

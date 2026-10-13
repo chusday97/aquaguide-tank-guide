@@ -10,8 +10,9 @@ import {
 } from '../../../src/services/compatibility/compatibility.service';
 import { getReviewedCompatibilityProfile } from '../../../src/data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../../../src/modules/knowledge/speciesKnowledge';
+import type { CompatibilityAssessmentMode } from '../../../src/services/compatibility/compatibility-action.service';
 
-export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v2';
+export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v3-current-tank-context';
 
 const verdictSchema = z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']);
 const groundedItemSchema = z.object({
@@ -85,7 +86,19 @@ export type CompatibilityAiCombinationInput = {
   deterministicResult: TankCompatibilityResult;
   tank?: Aquarium | null;
   items: CompatibilityAiCombinationItem[];
+  assessmentMode?: CompatibilityAssessmentMode;
 };
+
+const assessmentModeFor = (input: CompatibilityAiCombinationInput): CompatibilityAssessmentMode => (
+  input.assessmentMode
+  || (input.items.some(item => item.origin === 'planned' || item.origin === 'mixed' || (item.plannedQuantity || 0) > 0)
+    ? 'planned_addition'
+    : 'current_tank')
+);
+
+const decisionIntentFor = (mode: CompatibilityAssessmentMode) => (
+  mode === 'current_tank' ? 'record_existing' as const : 'planned_addition' as const
+);
 
 export type CompatibilityAiShadowResult = {
   mode: 'shadow';
@@ -236,7 +249,8 @@ const promptsFor = (
   speciesFacts: NonNullable<ReturnType<typeof reviewedKnowledgeSnapshot>>[],
 ) => {
   const result = input.deterministicResult;
-  const finalDecision = getCompatibilityDecision(result);
+  const assessmentMode = assessmentModeFor(input);
+  const finalDecision = getCompatibilityDecision(result, decisionIntentFor(assessmentMode));
   const system = [
     'You are AquaGuide Compatibility V4 in SHADOW mode.',
     'You are not the final authority. Deterministic hard rules and reviewed pair authority remain final.',
@@ -246,13 +260,18 @@ const promptsFor = (
     'If INPUT contains a hard/blocking rule or final verdict not_recommended, suggestedVerdict must remain not_recommended.',
     'If final verdict is caution, never upgrade it to compatible.',
     'For caution or not_recommended decisions, adjustments MUST contain at least one grounded actionable item.',
-    'For not_recommended, a valid action is to not add the candidate under the current plan, grounded in the blocking/conflict rule; do not invent a new threshold or biological fact.',
+    assessmentMode === 'current_tank'
+      ? 'All listed items are already in the aquarium. Do not tell the user not to add a candidate. For not_recommended/caution, explain grounded actions for the current combination such as separate, reduce, adjust, confirm or monitor only when supported by supplied rules.'
+      : 'For not_recommended, a valid action is to not add the candidate under the current plan, grounded in the blocking/conflict rule; do not invent a new threshold or biological fact.',
     'For caution, give at least one concrete mitigation directly supported by the supplied caution rule.',
     'Ground every reason/adjustment/uncertainty in ruleCodes supplied by INPUT.',
     'Return one JSON object only.',
   ].join(' ');
   const user = JSON.stringify({
-    task: 'Explain combination-level risk and actionable adjustments without changing deterministic authority.',
+    task: assessmentMode === 'current_tank'
+      ? 'Explain the current whole-tank compatibility state and grounded actions for species already present, without changing deterministic authority.'
+      : 'Explain combination-level risk and actionable adjustments for the planned addition without changing deterministic authority.',
+    assessmentMode,
     requiredOutput: {
       suggestedVerdict: 'compatible|caution|not_recommended|insufficient_data',
       reasons: [{ text: 'grounded explanation', ruleCodes: ['exact_input_rule_code'] }],
@@ -366,7 +385,8 @@ export const createCompatibilityAiCombinationAssessment = async (
   input: CompatibilityAiCombinationInput,
   provider: CompatibilityAiReasoningProvider = openAiCompatibleCompatibilityReasoningProvider,
 ): Promise<CompatibilityAiShadowResult> => {
-  const finalDecision = getCompatibilityDecision(input.deterministicResult);
+  const assessmentMode = assessmentModeFor(input);
+  const finalDecision = getCompatibilityDecision(input.deterministicResult, decisionIntentFor(assessmentMode));
   const baseProvenance = {
     promptVersion: COMPATIBILITY_AI_PROMPT_VERSION,
     authorityVersion: input.deterministicResult.metadata.authorityVersion,
@@ -524,6 +544,7 @@ export const createCompatibilityAiShadowAssessment = async (
 ): Promise<CompatibilityAiShadowResult> => createCompatibilityAiCombinationAssessment({
   deterministicResult: input.deterministicResult,
   tank: input.tank,
+  assessmentMode: 'planned_addition',
   items: [
     ...input.existingSpecies.map(item => ({
       species: item.species,
