@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { apiConfig } from './config';
-import { fetchJsonResponse, ProviderError } from './ai/provider';
+import { fetchJsonResponse, ProviderError, textJsonRequestExtrasForModel } from './ai/provider';
 import type { Aquarium, Fish } from '../../../src/types';
 import {
   getCompatibilityDecision,
@@ -53,11 +53,11 @@ const providerHost = (baseUrl: string) => {
 };
 
 export const buildCompatibilityAiProviderReadiness = (
-  config: Pick<typeof apiConfig, 'aiApiKey' | 'aiBaseUrl' | 'aiModel' | 'aiTimeoutMs'>,
+  config: Pick<typeof apiConfig, 'aiApiKey' | 'aiBaseUrl' | 'compatibilityAiModel' | 'aiTimeoutMs'>,
 ): CompatibilityAiProviderReadiness => ({
-  configured: Boolean(config.aiApiKey && config.aiBaseUrl && config.aiModel),
+  configured: Boolean(config.aiApiKey && config.aiBaseUrl && config.compatibilityAiModel),
   host: providerHost(config.aiBaseUrl),
-  model: config.aiModel,
+  model: config.compatibilityAiModel,
   timeoutMs: config.aiTimeoutMs,
 });
 
@@ -253,34 +253,71 @@ const promptsFor = (
   return { system, user };
 };
 
-export const compatibilityAiRequestExtrasForModel = (model: string) => (
-  /(^|\/)deepseek-v4(?:\.1)?(?:-|$)/i.test(model)
-    ? { enable_thinking: false as const }
-    : {}
+export const compatibilityAiRequestExtrasForModel = (model: string) => textJsonRequestExtrasForModel(model);
+
+export const buildCompatibilityAiModelPool = (
+  primaryModel: string,
+  fallbackModels: readonly string[] = [],
+) => [...new Set([primaryModel, ...fallbackModels].map(model => model.trim()).filter(Boolean))];
+
+export const shouldFallbackCompatibilityAiModel = (error: unknown) => (
+  error instanceof ProviderError
+  && (
+    error.reason === 'quota_exhausted'
+    || error.reason === 'access_denied'
+    || error.reason === 'rate_limited'
+    || error.reason === 'timeout'
+    || error.reason === 'invalid_response'
+    || (error.reason === 'network' && typeof error.statusCode === 'number')
+  )
 );
 
 export const openAiCompatibleCompatibilityReasoningProvider: CompatibilityAiReasoningProvider = Object.assign(
-  async ({ system, user }: { system: string; user: string }) => ({
-    model: apiConfig.aiModel,
-    output: await fetchJsonResponse(
-      apiConfig.aiBaseUrl,
-      apiConfig.aiApiKey,
-      apiConfig.aiModel,
-      apiConfig.aiTimeoutMs,
-      {
-        stream: false,
-        temperature: 0.1,
-        max_tokens: 1200,
-        ...compatibilityAiRequestExtrasForModel(apiConfig.aiModel),
-        response_format: { type: 'json_object' },
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user },
-        ],
-      },
-      1,
-    ),
-  }),
+  async ({ system, user }: { system: string; user: string }) => {
+    const models = buildCompatibilityAiModelPool(
+      apiConfig.compatibilityAiModel,
+      apiConfig.compatibilityAiFallbackModels,
+    );
+    let lastError: unknown;
+
+    for (let index = 0; index < models.length; index += 1) {
+      const model = models[index]!;
+      try {
+        const output = await fetchJsonResponse(
+          apiConfig.aiBaseUrl,
+          apiConfig.aiApiKey,
+          model,
+          apiConfig.aiTimeoutMs,
+          {
+            stream: false,
+            temperature: 0.1,
+            max_tokens: 1200,
+            ...compatibilityAiRequestExtrasForModel(model),
+            response_format: { type: 'json_object' },
+            messages: [
+              { role: 'system', content: system },
+              { role: 'user', content: user },
+            ],
+          },
+          1,
+        );
+        return { model, output };
+      } catch (error) {
+        lastError = error;
+        const hasFallback = index < models.length - 1;
+        if (!hasFallback || !shouldFallbackCompatibilityAiModel(error)) throw error;
+        const providerError = error instanceof ProviderError ? error : undefined;
+        console.warn('Aqua Compatibility AI model fallback', {
+          fromModel: model,
+          toModel: models[index + 1],
+          reason: providerError?.reason || 'unknown',
+          statusCode: providerError?.statusCode,
+        });
+      }
+    }
+
+    throw lastError instanceof Error ? lastError : new ProviderError('not_configured', 'No Compatibility AI model is configured.');
+  },
   { readiness: getCompatibilityAiProviderReadiness },
 );
 

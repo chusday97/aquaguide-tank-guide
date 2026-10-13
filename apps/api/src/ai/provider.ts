@@ -51,6 +51,12 @@ const cleanJsonText = (value: string) => {
     : cleaned;
 };
 
+export const textJsonRequestExtrasForModel = (model: string) => (
+  /(^|\/)(?:deepseek-v4(?:\.1)?|qwen3(?:\.\d+)?)(?:-|$)/i.test(model)
+    ? { enable_thinking: false as const }
+    : {}
+);
+
 export const fetchJsonResponse = async (
   baseUrl: string,
   apiKey: string,
@@ -271,6 +277,7 @@ export const requestSymptomObservations = (context: Record<string, unknown>) => 
   {
     temperature: 0,
     max_tokens: 500,
+    ...textJsonRequestExtrasForModel(apiConfig.aiModel),
     response_format: { type: 'json_object' },
     messages: [
       {

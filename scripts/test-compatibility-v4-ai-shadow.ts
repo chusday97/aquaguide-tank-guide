@@ -5,8 +5,10 @@ import type { Aquarium } from '../src/types';
 import { evaluateTankCompatibility } from '../src/services/compatibility/compatibility.service';
 import {
   COMPATIBILITY_AI_PROMPT_VERSION,
+  buildCompatibilityAiModelPool,
   buildCompatibilityAiProviderReadiness,
   compatibilityAiRequestExtrasForModel,
+  shouldFallbackCompatibilityAiModel,
   createCompatibilityAiShadowAssessment,
   type CompatibilityAiReasoningProvider,
 } from '../apps/api/src/compatibility-ai-reasoner';
@@ -27,7 +29,7 @@ const normanLampEye = fish('sp_0112');
 const configuredReadiness = buildCompatibilityAiProviderReadiness({
   aiApiKey: 'fixture-secret-never-returned',
   aiBaseUrl: 'https://api.fixture.example/v1',
-  aiModel: 'fixture-model',
+  compatibilityAiModel: 'fixture-model',
   aiTimeoutMs: 4321,
 });
 assert.deepEqual(configuredReadiness, {
@@ -41,7 +43,7 @@ assert.equal(JSON.stringify(configuredReadiness).includes('fixture-secret-never-
 const unconfiguredReadiness = buildCompatibilityAiProviderReadiness({
   aiApiKey: '',
   aiBaseUrl: 'https://api.fixture.example/v1',
-  aiModel: 'fixture-model',
+  compatibilityAiModel: 'fixture-model',
   aiTimeoutMs: 4321,
 });
 assert.equal(unconfiguredReadiness.configured, false);
@@ -54,7 +56,27 @@ assert.deepEqual(
   compatibilityAiRequestExtrasForModel('vanchin/deepseek-v4.1-flash'),
   { enable_thinking: false },
 );
+assert.deepEqual(
+  compatibilityAiRequestExtrasForModel('qwen3.8-27b'),
+  { enable_thinking: false },
+);
+assert.deepEqual(
+  compatibilityAiRequestExtrasForModel('qwen3.7-flash-2026-07-15'),
+  { enable_thinking: false },
+);
 assert.deepEqual(compatibilityAiRequestExtrasForModel('qwen-plus'), {});
+assert.deepEqual(
+  buildCompatibilityAiModelPool('qwen3.7-flash-2026-07-15', [
+    'qwen3.8-27b',
+    'deepseek-v4.1-flash',
+    'qwen3.8-27b',
+  ]),
+  ['qwen3.7-flash-2026-07-15', 'qwen3.8-27b', 'deepseek-v4.1-flash'],
+);
+assert.equal(shouldFallbackCompatibilityAiModel(new ProviderError('quota_exhausted', 'quota', 403)), true);
+assert.equal(shouldFallbackCompatibilityAiModel(new ProviderError('timeout', 'timeout')), true);
+assert.equal(shouldFallbackCompatibilityAiModel(new ProviderError('network', 'transport')), false);
+assert.equal(shouldFallbackCompatibilityAiModel(new ProviderError('network', 'unsupported model', 404)), true);
 
 const tank: Aquarium = {
   id: 'v4-shadow-tank',

@@ -8,6 +8,10 @@ const rootDir = path.resolve(currentDir, '../../..');
 dotenv.config({ path: path.join(rootDir, '.env.local') });
 dotenv.config({ path: path.join(rootDir, '.env') });
 
+const parseModelList = (value?: string) => [...new Set(
+  (value || '').split(',').map(item => item.trim()).filter(Boolean),
+)];
+
 export const buildApiConfig = (env: NodeJS.ProcessEnv = process.env) => ({
   port: Number(env.PORT || env.API_PORT || 8787),
   supabaseUrl: env.SUPABASE_URL || env.VITE_SUPABASE_URL || '',
@@ -19,6 +23,8 @@ export const buildApiConfig = (env: NodeJS.ProcessEnv = process.env) => ({
   aiBaseUrl: (env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || 'https://api.deepseek.com').replace(/\/$/, ''),
   aiModel: env.AI_MODEL || env.DEEPSEEK_MODEL || 'deepseek-v4-flash',
   aiTimeoutMs: Number(env.AI_TIMEOUT_MS || 20_000),
+  compatibilityAiModel: env.COMPATIBILITY_AI_MODEL || env.AI_MODEL || env.DEEPSEEK_MODEL || 'deepseek-v4-flash',
+  compatibilityAiFallbackModels: parseModelList(env.COMPATIBILITY_AI_FALLBACK_MODELS),
   // VISION_* is the AquaGuide contract. GLM_* remains accepted for older
   // deployments that configured the provider before the names were scoped.
   visionApiKey: env.VISION_API_KEY || env.GLM_API_KEY || '',

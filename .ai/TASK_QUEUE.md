@@ -20,8 +20,12 @@
 18. DONE: diagnose DeepSeek V4 default thinking as the `invalid_response` cause; add Compatibility-only `enable_thinking=false` adapter without weakening strict schema or deterministic authority.
 19. DONE: true external-model canary passes guarded: 3 reviewed accepted / 1 insufficient skipped / 0 final-decision mutations.
 20. DONE: full backend release gate + scope validation pass; finalize and push one clean Bailian DeepSeek checkpoint.
-21. EXTERNAL BLOCKER: WebCodex has no Vercel auth/token, so remote Preview/Production AI env cannot be written from this channel yet.
-22. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
+21. DONE: re-probe current Bailian free-quota models; `qwen3.7-flash-2026-07-15` and `qwen3.8-27b` pass guarded when thinking is disabled, while `kimi-k3` is not callable through the current workspace model endpoint.
+22. DONE: add Compatibility-specific ordered model pool and failover; local order is `qwen3.7-flash-2026-07-15` → `qwen3.8-27b` → `deepseek-v4.1-flash` so the earliest-expiring free quota is consumed first.
+23. DONE: default Qwen Flash canary and forced unsupported-primary fallback canary both return `pass_guarded` with 3 reviewed accepted / 1 insufficient skipped / 0 final-decision mutations; API typecheck and focused shadow/canary tests pass.
+24. DONE: verify WebCodex Vercel CLI auth and write the Bailian credential/base URL, generic text model, timeout, Compatibility primary model, and ordered fallbacks to both Preview and Production environment scopes without exposing secrets.
+25. DONE: full backend release gate passes after the free-quota model-pool changes, including API/business contracts, business bundle and project typecheck.
+26. HOLD: environment changes apply to new deployments; no Production redeploy/DB mutation, merge/main, UI, or Vision work is authorized by this checkpoint. Validate a Preview deployment before any Production promotion.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { classifyProviderHttpFailure, ProviderError } from '../apps/api/src/ai/provider';
+import { classifyProviderHttpFailure, ProviderError, textJsonRequestExtrasForModel } from '../apps/api/src/ai/provider';
 import type { CompatibilityAiReasoningProvider } from '../apps/api/src/compatibility-ai-reasoner';
 import {
   runCompatibilityV4LiveCanary,
@@ -42,6 +42,10 @@ assert.equal(
 );
 assert.equal(classifyProviderHttpFailure(403, { error: { code: 'access_denied' } }), 'access_denied');
 assert.equal(classifyProviderHttpFailure(429, { error: { code: 'rate_limit' } }), 'rate_limited');
+assert.deepEqual(textJsonRequestExtrasForModel('qwen3.7-flash-2026-07-15'), { enable_thinking: false });
+assert.deepEqual(textJsonRequestExtrasForModel('qwen3.8-27b'), { enable_thinking: false });
+assert.deepEqual(textJsonRequestExtrasForModel('deepseek-v4.1-flash'), { enable_thinking: false });
+assert.deepEqual(textJsonRequestExtrasForModel('kimi-k3'), {});
 
 const quotaBlocked = await runCompatibilityV4LiveCanary({
   providerConfigured: true,

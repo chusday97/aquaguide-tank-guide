@@ -1,4 +1,4 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian free-quota model pool
 
 - Active branch: `codex/compatibility-v4-bailian-deepseek-20261013`, based exactly on pushed quota-diagnostics `bc7b724a210b134e7dd98b2dd34e5bf62573f901`.
 - The mechanical promotion queue is complete (`next_wave_species_count = 0`), so current work moves from breadth expansion to AI-assisted combination reasoning.
@@ -7,10 +7,11 @@
 - Provider output is strict JSON and must use only allow-listed rule codes/evidence IDs. Hard-block weakening, caution→compatible upgrades, insufficient-data overrides, invented evidence, schema failure and provider failure are rejected/fail-soft.
 - Authenticated shadow endpoint: `GET /aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey?catalogVersion=...`. It returns deterministic `finalDecision`, separate AI assessment and provenance.
 - Added deterministic 3-species shadow eval artifacts covering reviewed compatible / caution / not_recommended plus unknown insufficient_data. Current result: 4 cases, AI accepted 2 / rejected 1 / skipped 1, and 0 final-decision mutations.
-- Existing local Bailian key is reused only through ignored Aqua `.env.local`; Aqua now points to the existing Beijing workspace OpenAI-compatible endpoint and uses `deepseek-v4.1-flash` with a 20s timeout. The key is never printed or committed.
-- Qwen Flash/Plus probes remain quota-blocked, but workspace `deepseek-v4.1-flash` returns HTTP 200. Bailian DeepSeek V4 defaults to thinking mode, which exhausted the original output budget; Compatibility now sends `enable_thinking=false` only for DeepSeek V4 requests so strict JSON remains intact without weakening validation.
-- Real 4-case canary now returns `pass_guarded`: 3 reviewed cases accepted, 1 insufficient case skipped, 0 unavailable/rejected, and 0 final-decision mutations. Suggested verdicts match compatible / caution / not_recommended deterministic authority.
-- Authenticated secret-free readiness endpoint remains `GET /api/v1/aquariums/compatibility-ai-readiness`; no credential is exposed. WebCodex still has no Vercel CLI auth/token, so remote Vercel env has not been modified.
+- Existing local Bailian credential is reused only through ignored Aqua `.env.local`; the key is never printed or committed. Compatibility is now isolated from the global text model with `COMPATIBILITY_AI_MODEL` plus ordered `COMPATIBILITY_AI_FALLBACK_MODELS`.
+- Current local pool is `qwen3.7-flash-2026-07-15` → `qwen3.8-27b` → `deepseek-v4.1-flash`. The soonest-expiring Qwen Flash quota is consumed first; quota/access/rate-limit/timeout/invalid-response/model-HTTP failures automatically advance to the next model.
+- Qwen 3.x and DeepSeek V4 Compatibility requests send `enable_thinking=false`; live canaries prove both Qwen 3.x models pass guarded under the strict JSON contract. `kimi-k3` remains excluded because the current workspace endpoint rejects that model code despite visible account quota.
+- Real 4-case default canary on `qwen3.7-flash-2026-07-15` returns `pass_guarded`: 3 reviewed accepted, 1 insufficient skipped, 0 unavailable/rejected, 0 final-decision mutations. A forced unsupported-primary canary also returns `pass_guarded`, proving automatic failover preserves deterministic authority.
+- Authenticated secret-free readiness endpoint remains `GET /api/v1/aquariums/compatibility-ai-readiness`; no credential is exposed. Vercel CLI auth is now verified and the Bailian key/base URL plus generic and Compatibility-specific model settings are configured for both Preview and Production scopes. They take effect on new deployments; no Production redeploy is authorized/performed in this checkpoint.
 - Static candidate remains 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 evidence. Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence; no Production mutation/deploy, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

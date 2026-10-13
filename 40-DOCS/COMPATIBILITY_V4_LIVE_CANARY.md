@@ -29,7 +29,8 @@ The command uses the existing server-side text provider contract:
 
 - `AI_API_KEY` or `DEEPSEEK_API_KEY`
 - `AI_BASE_URL` / `DEEPSEEK_BASE_URL`
-- `AI_MODEL` / `DEEPSEEK_MODEL`
+- `COMPATIBILITY_AI_MODEL` (falls back to `AI_MODEL` / `DEEPSEEK_MODEL`)
+- `COMPATIBILITY_AI_FALLBACK_MODELS` (optional comma-separated ordered fallbacks)
 - `AI_TIMEOUT_MS`
 
 No browser credential is introduced.
@@ -58,10 +59,10 @@ A rejected model output remains observable but cannot weaken deterministic autho
 
 ## Current WebCodex observation — 2026-10-13
 
-A pre-existing local Bailian `DASHSCOPE_API_KEY` is securely reused for Aqua as ignored `AI_API_KEY`. Aqua now uses the existing Beijing workspace OpenAI-compatible endpoint plus `AI_MODEL=deepseek-v4.1-flash` and a 20-second timeout. The secret is not printed or committed.
+A pre-existing local Bailian credential is securely reused through ignored `.env.local`; the secret is never printed or committed. Compatibility now has its own model pool instead of inheriting one global text model: primary `qwen3.7-flash-2026-07-15`, then `qwen3.8-27b`, then `deepseek-v4.1-flash`, with the existing Beijing workspace OpenAI-compatible endpoint and a 20-second per-model timeout.
 
-Qwen Flash/Plus probes in this workspace remain quota-blocked, but `deepseek-v4.1-flash` returns HTTP 200. DeepSeek V4 defaults to thinking mode; with the prior output budget that produced `finish_reason=length` and no final `content`. Compatibility therefore sends `enable_thinking=false` only for DeepSeek V4 models. A strict JSON schema probe then returned `finish_reason=stop` with exactly `suggestedVerdict`, `reasons`, `adjustments`, `uncertainties`, `confidence`, and `evidenceIds`.
+Live probes confirmed both Qwen 3.x models are callable when Compatibility sends `enable_thinking=false`; without that adapter they exhausted the 20-second budget. The same non-thinking adapter remains enabled for DeepSeek V4. `kimi-k3` shows account quota but is not in the active pool because the current workspace endpoint returns an immediate provider-level failure for that model code.
 
-The real V4 canary now reports `pass_guarded`: all three reviewed states (compatible / caution / not recommended) are accepted, the insufficient-data state is skipped before AI, there are zero unavailable/rejected cases, and final-decision mutations remain zero. Reviewed-case latency is roughly 6.7–7.4 seconds in the current local run.
+The default real V4 canary now reports `pass_guarded` on `qwen3.7-flash-2026-07-15`: all three reviewed states (compatible / caution / not recommended) are accepted, the insufficient-data state is skipped before AI, there are zero unavailable/rejected cases, and final-decision mutations remain zero. A forced unsupported-primary canary also reaches `pass_guarded`, proving the ordered failover path can recover through the configured fallback models without mutating deterministic authority.
 
-The WebCodex host has a linked Vercel project but no Vercel CLI auth/token, so these AI environment variables have not been written to remote Preview or Production.
+WebCodex Vercel CLI auth is now verified for the linked `aquaguide` project. `AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`, `AI_TIMEOUT_MS`, `COMPATIBILITY_AI_MODEL`, and `COMPATIBILITY_AI_FALLBACK_MODELS` have been written to both Preview and Production environment scopes without exposing the secret. These values apply to new deployments; this checkpoint does not perform a Production redeploy.
