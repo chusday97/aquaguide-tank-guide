@@ -77,6 +77,7 @@ for (const route of [
   '/aquariums',
   '/aquariums/compatibility-ai-readiness',
   '/aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey',
+  '/aquariums/:id/compatibility-assessment',
   '/aquariums/:id/species',
   '/aquariums/:id/species/:recordId/batches',
   '/aquariums/:id/species/:recordId/batches/:batchId/split',

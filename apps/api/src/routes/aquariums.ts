@@ -37,7 +37,13 @@ import type { DomainSpeciesFact } from '../../../../packages/domain-rules/src';
 import { fishData } from '../../../../src/data/fishData';
 import { LOCAL_CATALOG_VERSION } from '../../../../src/data/catalogVersion';
 import { evaluateTankCompatibility, getCompatibilityDecision } from '../../../../src/services/compatibility/compatibility.service';
-import { createCompatibilityAiShadowAssessment, getCompatibilityAiProviderReadiness } from '../compatibility-ai-reasoner';
+import { evaluateCompatibilityDecision } from '../../../../src/modules/knowledge/compatibilityKnowledge';
+import {
+  createCompatibilityAiCombinationAssessment,
+  createCompatibilityAiShadowAssessment,
+  getCompatibilityAiProviderReadiness,
+} from '../compatibility-ai-reasoner';
+import { buildCompatibilityProductAssessment } from '../compatibility-ai-product';
 import type { Aquarium } from '../../../../src/types';
 
 type DbRow = Record<string, any>;
@@ -174,6 +180,130 @@ export const readPublishedCatalogDecision = async (
   input: Parameters<typeof readPublishedCatalogCompatibilityContext>[0],
 ) => (await readPublishedCatalogCompatibilityContext(input)).decision;
 
+export type PlannedCompatibilityItem = {
+  speciesCatalogKey: string;
+  quantity: number;
+};
+
+export const parseCompatibilityPlannedItems = (value: unknown): PlannedCompatibilityItem[] => {
+  const raw = (Array.isArray(value) ? value : [value])
+    .flatMap(item => typeof item === 'string' ? item.split(',') : [])
+    .map(item => item.trim())
+    .filter(Boolean);
+  if (raw.length > 12) {
+    throw new ApiError(400, 'VALIDATION_ERROR', '一次最多评估 12 个规划物种。');
+  }
+  const grouped = new Map<string, number>();
+  for (const token of raw) {
+    const separator = token.lastIndexOf(':');
+    const speciesCatalogKey = (separator >= 0 ? token.slice(0, separator) : token).trim();
+    const quantityRaw = separator >= 0 ? token.slice(separator + 1).trim() : '1';
+    const quantity = Number(quantityRaw);
+    if (!speciesCatalogKey || !Number.isInteger(quantity) || quantity < 1 || quantity > 500) {
+      throw new ApiError(400, 'VALIDATION_ERROR', '规划物种参数无效，请使用 speciesCatalogKey:quantity。');
+    }
+    grouped.set(speciesCatalogKey, (grouped.get(speciesCatalogKey) || 0) + quantity);
+  }
+  return Array.from(grouped, ([speciesCatalogKey, quantity]) => ({ speciesCatalogKey, quantity }));
+};
+
+export const readPublishedCatalogCombinationContext = async ({
+  client,
+  aquariumId,
+  catalogVersion,
+  plannedItems,
+}: {
+  client: Pick<ReturnType<typeof userClientFor>, 'from'>;
+  aquariumId: string;
+  catalogVersion: string;
+  plannedItems: PlannedCompatibilityItem[];
+}) => {
+  if (catalogVersion !== LOCAL_CATALOG_VERSION) {
+    throw new ApiError(409, 'VERSION_CONFLICT', '混养复核使用的 Catalog 已过期，请刷新后重新判断。');
+  }
+
+  const { data: aquarium, error: aquariumError } = await client
+    .from('aquariums')
+    .select('water_type,length_cm,width_cm,height_cm,target_temperature_c,aquarium_species(species_catalog_key,quantity,deleted_at)')
+    .eq('id', aquariumId)
+    .is('deleted_at', null)
+    .maybeSingle();
+  if (aquariumError || !aquarium) {
+    throw new ApiError(
+      aquariumError ? 503 : 404,
+      aquariumError ? 'COMPATIBILITY_INFORMATION_REQUIRED' : 'NOT_FOUND',
+      aquariumError ? '鱼缸事实暂时无法用于混养复核。' : '没有找到这个鱼缸。',
+    );
+  }
+
+  const catalogByKey = new Map(fishData.map(species => [species.id, species]));
+  const existingRows = (aquarium.aquarium_species || [])
+    .filter((item: DbRow) => !item.deleted_at && typeof item.species_catalog_key === 'string');
+  const unresolvedExisting = existingRows.find((item: DbRow) => !catalogByKey.has(item.species_catalog_key));
+  if (unresolvedExisting) {
+    throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '鱼缸中存在未能映射到当前 Catalog 的物种，请先确认物种信息。');
+  }
+  const unresolvedPlanned = plannedItems.find(item => !catalogByKey.has(item.speciesCatalogKey));
+  if (unresolvedPlanned) {
+    throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '规划列表中存在不在当前 Catalog 的物种，请刷新后重新判断。');
+  }
+
+  const waterType = normalizeCatalogWaterType(aquarium.water_type);
+  const length = Number(aquarium.length_cm);
+  const width = Number(aquarium.width_cm);
+  const height = Number(aquarium.height_cm);
+  const tank: Aquarium = {
+    id: aquariumId,
+    name: 'server-compatibility-combination-check',
+    fishes: [],
+    ...(waterType === 'freshwater' ? { waterType: 'Freshwater' as const } : {}),
+    ...(waterType === 'saltwater' ? { waterType: 'Saltwater' as const } : {}),
+    ...(length > 0 && width > 0 && height > 0 ? {
+      dimensions: { length: String(length), width: String(width), height: String(height) },
+    } : {}),
+    ...(aquarium.target_temperature_c != null ? { targetTemperature: String(aquarium.target_temperature_c) } : {}),
+  };
+
+  const combined = new Map<string, { species: (typeof fishData)[number]; quantity: number; origin: 'existing' | 'planned' }>();
+  for (const row of existingRows) {
+    const species = catalogByKey.get(row.species_catalog_key)!;
+    const quantity = Number(row.quantity) > 0 ? Number(row.quantity) : 1;
+    const current = combined.get(species.id);
+    combined.set(species.id, {
+      species,
+      quantity: (current?.quantity || 0) + quantity,
+      origin: current?.origin || 'existing',
+    });
+  }
+  for (const planned of plannedItems) {
+    const species = catalogByKey.get(planned.speciesCatalogKey)!;
+    const current = combined.get(species.id);
+    combined.set(species.id, {
+      species,
+      quantity: (current?.quantity || 0) + planned.quantity,
+      origin: 'planned',
+    });
+  }
+  const items = Array.from(combined.values());
+  if (items.length === 0) {
+    throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前鱼缸和规划列表都没有可评估物种。');
+  }
+  if (items.length > 24) {
+    throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前组合超过单次评估上限，请分批复核。');
+  }
+
+  const decision = evaluateCompatibilityDecision({
+    tank,
+    items: items.map(item => ({
+      species: item.species,
+      quantity: item.quantity,
+      origin: item.origin === 'planned' ? 'candidate' : 'existing',
+    })),
+  });
+
+  return { tank, items, decision };
+};
+
 export const aquariumsRouter = Router();
 aquariumsRouter.use((request, response, next) => (
   request.path.startsWith('/aquariums') ? requireAuth(request, response, next) : next()
@@ -249,6 +379,33 @@ aquariumsRouter.get('/aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey',
     candidateSpecies: context.candidateSpecies,
   });
   return sendData(request, response, shadow);
+}));
+
+aquariumsRouter.get('/aquariums/:id/compatibility-assessment', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const catalogVersion = typeof request.query.catalogVersion === 'string' ? request.query.catalogVersion : '';
+  const plannedItems = parseCompatibilityPlannedItems(request.query.planned);
+  const context = await readPublishedCatalogCombinationContext({
+    client: userClientFor(request),
+    aquariumId,
+    catalogVersion,
+    plannedItems,
+  });
+  const shadow = await createCompatibilityAiCombinationAssessment({
+    deterministicResult: context.decision.aggregateResult,
+    tank: context.tank,
+    items: context.items,
+  });
+  const assessment = buildCompatibilityProductAssessment(context.decision, shadow);
+  return sendData(request, response, {
+    ...assessment,
+    species: context.items.map(item => ({
+      catalogKey: item.species.id,
+      name: item.species.name,
+      quantity: item.quantity,
+      origin: item.origin,
+    })),
+  });
 }));
 
 aquariumsRouter.patch('/aquariums/:id', asyncRoute(async (request, response) => {

@@ -31,7 +31,10 @@
 29. DONE: add fallback/output observability to the live canary: configured fallbacks, actual model, grounded reasons, actionable adjustments, uncertainties, provider calls and repair count are visible per case. Forced unsupported-primary validation passes through Qwen 3.8 with 0 final-decision mutations.
 30. DONE: harden DB-independent acceptance using the exact production deterministic engine + shadow reasoner. Real Qwen run passes 3 reviewed states + 1 insufficient state; all reviewed cases have reasons, both risk cases have actionable adjustments, missing/schema defects get at most one bounded repair, and final-decision mutations are 0.
 31. DONE: verify Compatibility AI route remains GET/read-only with a static no-write contract; full backend release gate returns `BACKEND_RELEASE_GATE=PASS` after V2 changes.
-32. HOLD: do not point Preview at Production Supabase and do not Production deploy/DB-mutate/merge-main in this checkpoint. After separate Production promotion authorization, perform only a read-only Compatibility AI smoke test against an existing aquarium.
+32. DONE: generalize the Compatibility AI reasoner from a single candidate to an arbitrary runtime combination while preserving the legacy single-candidate wrapper and all deterministic guards.
+33. DONE: add product-facing `GET /aquariums/:id/compatibility-assessment` for current tank + optional planned additions. The endpoint computes pair + whole-tank aggregate on demand; it does not require prebuilt species combinations and performs no writes.
+34. DONE: add product assessment contract: output judgment / reasons / adjustments / uncertainties / nextAction / AI provenance / deterministic authority; AI prose is used only when the AI verdict exactly equals the deterministic final status, otherwise deterministic fallback is shown. Unknown authority remains fail-closed. Focused contracts, real Qwen live canary, Business API contract and full backend release gate all pass.
+35. HOLD: do not point Preview at Production Supabase and do not Production deploy/DB-mutate/merge-main in this checkpoint. After separate Production promotion authorization, perform only a read-only Compatibility AI smoke test against an existing aquarium.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

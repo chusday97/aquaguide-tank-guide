@@ -73,6 +73,18 @@ export type CompatibilityAiShadowInput = {
   candidateQuantity?: number;
 };
 
+export type CompatibilityAiCombinationItem = {
+  species: Fish;
+  quantity: number;
+  origin: 'existing' | 'planned';
+};
+
+export type CompatibilityAiCombinationInput = {
+  deterministicResult: TankCompatibilityResult;
+  tank?: Aquarium | null;
+  items: CompatibilityAiCombinationItem[];
+};
+
 export type CompatibilityAiShadowResult = {
   mode: 'shadow';
   finalDecision: CanonicalCompatibilityDecision;
@@ -218,7 +230,7 @@ const tankSnapshot = (tank?: Aquarium | null) => {
 };
 
 const promptsFor = (
-  input: CompatibilityAiShadowInput,
+  input: CompatibilityAiCombinationInput,
   speciesFacts: NonNullable<ReturnType<typeof reviewedKnowledgeSnapshot>>[],
 ) => {
   const result = input.deterministicResult;
@@ -256,10 +268,11 @@ const promptsFor = (
     },
     tank: tankSnapshot(input.tank),
     species: speciesFacts,
-    quantities: {
-      existing: input.existingSpecies.map(item => ({ catalogKey: item.species.id, quantity: item.quantity })),
-      candidate: { catalogKey: input.candidateSpecies.id, quantity: input.candidateQuantity || 1 },
-    },
+    quantities: input.items.map(item => ({
+      catalogKey: item.species.id,
+      quantity: item.quantity,
+      origin: item.origin,
+    })),
     allowedRuleCodes: [...allowedRuleCodes(result)],
     allowedEvidenceIds: [...allowedEvidenceIds(result)],
   }, null, 2);
@@ -345,8 +358,8 @@ const emptyAi = (
   uncertainties: [],
 });
 
-export const createCompatibilityAiShadowAssessment = async (
-  input: CompatibilityAiShadowInput,
+export const createCompatibilityAiCombinationAssessment = async (
+  input: CompatibilityAiCombinationInput,
   provider: CompatibilityAiReasoningProvider = openAiCompatibleCompatibilityReasoningProvider,
 ): Promise<CompatibilityAiShadowResult> => {
   const finalDecision = getCompatibilityDecision(input.deterministicResult);
@@ -368,7 +381,7 @@ export const createCompatibilityAiShadowAssessment = async (
     };
   }
 
-  const species = [...input.existingSpecies.map(item => item.species), input.candidateSpecies];
+  const species = input.items.map(item => item.species);
   const speciesFacts = species.map(reviewedKnowledgeSnapshot);
   if (speciesFacts.some(item => !item)) {
     return {
@@ -500,3 +513,23 @@ export const createCompatibilityAiShadowAssessment = async (
     };
   }
 };
+
+export const createCompatibilityAiShadowAssessment = async (
+  input: CompatibilityAiShadowInput,
+  provider: CompatibilityAiReasoningProvider = openAiCompatibleCompatibilityReasoningProvider,
+): Promise<CompatibilityAiShadowResult> => createCompatibilityAiCombinationAssessment({
+  deterministicResult: input.deterministicResult,
+  tank: input.tank,
+  items: [
+    ...input.existingSpecies.map(item => ({
+      species: item.species,
+      quantity: item.quantity,
+      origin: 'existing' as const,
+    })),
+    {
+      species: input.candidateSpecies,
+      quantity: input.candidateQuantity || 1,
+      origin: 'planned' as const,
+    },
+  ],
+}, provider);
