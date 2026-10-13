@@ -75,6 +75,8 @@ const apiRepositorySource = readFileSync(resolve(import.meta.dirname, '../src/se
 
 for (const route of [
   '/aquariums',
+  '/aquariums/compatibility-ai-readiness',
+  '/aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey',
   '/aquariums/:id/species',
   '/aquariums/:id/species/:recordId/batches',
   '/aquariums/:id/species/:recordId/batches/:batchId/split',
@@ -91,6 +93,10 @@ for (const route of [
 ]) {
   assert.equal(routes.includes(route), true, `${route} route must exist`);
 }
+assert.ok(
+  routes.indexOf("aquariumsRouter.get('/aquariums/compatibility-ai-readiness'") < routes.indexOf("aquariumsRouter.get('/aquariums/:id'"),
+  'static compatibility AI readiness route must be registered before the dynamic aquarium id route',
+);
 assert.match(routes, /registerFavoriteRoutes\('species'\)/);
 assert.match(routes, /registerFavoriteRoutes\('care'\)/);
 assert.match(routes, /这个物种已有多个批次，请调整具体批次的数量/);

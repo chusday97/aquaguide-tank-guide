@@ -5,6 +5,7 @@ import type { Aquarium } from '../src/types';
 import { evaluateTankCompatibility } from '../src/services/compatibility/compatibility.service';
 import {
   COMPATIBILITY_AI_PROMPT_VERSION,
+  buildCompatibilityAiProviderReadiness,
   createCompatibilityAiShadowAssessment,
   type CompatibilityAiReasoningProvider,
 } from '../apps/api/src/compatibility-ai-reasoner';
@@ -21,6 +22,28 @@ const topmouth = fish('sp_0042');
 const reviewedA = fish('sp_0431');
 const reviewedB = fish('sp_0432');
 const normanLampEye = fish('sp_0112');
+
+const configuredReadiness = buildCompatibilityAiProviderReadiness({
+  aiApiKey: 'fixture-secret-never-returned',
+  aiBaseUrl: 'https://api.fixture.example/v1',
+  aiModel: 'fixture-model',
+  aiTimeoutMs: 4321,
+});
+assert.deepEqual(configuredReadiness, {
+  configured: true,
+  host: 'api.fixture.example',
+  model: 'fixture-model',
+  timeoutMs: 4321,
+});
+assert.equal(JSON.stringify(configuredReadiness).includes('fixture-secret-never-returned'), false);
+
+const unconfiguredReadiness = buildCompatibilityAiProviderReadiness({
+  aiApiKey: '',
+  aiBaseUrl: 'https://api.fixture.example/v1',
+  aiModel: 'fixture-model',
+  aiTimeoutMs: 4321,
+});
+assert.equal(unconfiguredReadiness.configured, false);
 
 const tank: Aquarium = {
   id: 'v4-shadow-tank',
@@ -168,6 +191,8 @@ assert.equal(unavailable.finalDecision.status, 'caution');
 
 const routeSource = readFileSync('apps/api/src/routes/aquariums.ts', 'utf8');
 assert.match(routeSource, /compatibility-ai-shadow/);
+assert.match(routeSource, /compatibility-ai-readiness/);
+assert.match(routeSource, /getCompatibilityAiProviderReadiness/);
 assert.match(routeSource, /readPublishedCatalogCompatibilityContext/);
 assert.match(routeSource, /createCompatibilityAiShadowAssessment/);
 

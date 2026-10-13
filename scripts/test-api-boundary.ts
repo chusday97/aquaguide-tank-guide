@@ -37,6 +37,11 @@ try {
   assert.equal(protectedResponse.status, 401);
   assert.equal(protectedPayload.error.code, 'AUTH_REQUIRED');
 
+  const compatibilityReadinessResponse = await fetch(baseUrl + '/api/v1/aquariums/compatibility-ai-readiness');
+  const compatibilityReadinessPayload = await compatibilityReadinessResponse.json();
+  assert.equal(compatibilityReadinessResponse.status, 401);
+  assert.equal(compatibilityReadinessPayload.error.code, 'AUTH_REQUIRED');
+
   const profileResponse = await fetch(`${baseUrl}/api/v1/profile`);
   const profilePayload = await profileResponse.json();
   assert.equal(profileResponse.status, 401);

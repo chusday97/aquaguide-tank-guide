@@ -34,7 +34,14 @@ The command uses the existing server-side text provider contract:
 
 No browser credential is introduced.
 
-If no provider key is configured, the canary outcome is `blocked_not_configured`. Reviewed cases return `ai.status=unavailable` with `not_configured`; the insufficient-data case still skips the provider entirely. This is a valid fail-closed environment result, not a successful live-model evaluation.
+A secret-free authenticated diagnostic is also available at:
+
+`GET /api/v1/aquariums/compatibility-ai-readiness`
+
+It returns only `mode`, `configured`, provider host, model and timeout. It never returns an API key or authorization header.
+
+
+If no provider key is configured, the canary outcome is `blocked_not_configured`. Reviewed cases return `ai.status=unavailable` with `not_configured` before any provider invocation; the insufficient-data case still skips AI entirely. This is a valid fail-closed environment result, not a successful live-model evaluation.
 
 ## Readiness rule
 
@@ -51,4 +58,4 @@ A rejected model output remains observable but cannot weaken deterministic autho
 
 The current WebCodex execution environment has no configured supported AI/DeepSeek/GLM/Qwen/OpenAI/Kimi/Anthropic key. Therefore no external model request was made during this checkpoint.
 
-The canary harness itself was executed and correctly returned `blocked_not_configured`; all four deterministic final decisions remained unchanged.
+The canary harness itself was executed and correctly returned `blocked_not_configured`; `providerCalls=0`, all four deterministic final decisions remained unchanged, and no external request was attempted.

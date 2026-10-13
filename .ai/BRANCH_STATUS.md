@@ -1,9 +1,8 @@
-## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 live canary
+## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 provider readiness
 
-- `codex/compatibility-v4-live-canary-20261013` was created from exact clean pushed shadow-eval HEAD `295659e28ebe83b2270cb437d5f4e7571e885d10`.
-- Scope is canary/eval only: live-provider runner, guarded outcome classification, per-case latency/provider metadata, secret-free ignored artifact, contract test and docs.
-- Current WebCodex has no supported provider credential. Default-provider execution therefore returns `blocked_not_configured`; 3 reviewed cases are unavailable, the insufficient-data case skips AI, and all 4 deterministic final decisions remain unchanged.
-- The release gate uses an injected provider contract only and never triggers a paid/external model request. A true live request remains an explicit environment/configuration action.
+- `codex/compatibility-v4-provider-readiness-20261013` was created from exact clean pushed live-canary HEAD `85bd12750dd5338a52de7c554d32a12f2bc0ad51`.
+- Scope is backend diagnostics/safety only: secret-free provider readiness builder, default-provider preflight, authenticated readiness endpoint, canary call-count semantics and API contracts/docs.
+- Current WebCodex has no supported provider credential. Default-provider execution returns `blocked_not_configured` with `providerCalls=0`; no external request is attempted and all deterministic final decisions remain unchanged.
 - No Compatibility Profile/Pair/Stage authority changes, no migration files, no UI changes and no Production mutation.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116.
 

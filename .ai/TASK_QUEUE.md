@@ -10,8 +10,10 @@
 8. DONE: add controlled live-provider canary/evaluation layer with latency/provider metadata, guarded readiness outcome, secret-free artifact output, and deterministic authority invariants.
 9. DONE: execute current WebCodex default-provider canary; provider credentials are absent, outcome is `blocked_not_configured`, 3 reviewed cases unavailable / 1 insufficient skipped / 0 final-decision mutations.
 10. DONE: full backend release gate + scope validation pass; finalize and push one clean live-canary checkpoint.
-11. NEXT: a true external-model canary requires an explicitly configured server-side provider key; only after that passes should user-visible AI explanation wiring be considered.
-12. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
+11. DONE: add secret-free provider readiness preflight + authenticated readiness endpoint; unconfigured runtime now produces `providerCalls=0` before fail-closed `not_configured`.
+12. DONE: API boundary/business contracts, full backend release gate and scope validation pass; finalize and push one clean provider-readiness checkpoint.
+13. NEXT: deploy to a separately authorized Preview or configure a server-side provider key, then run the true external-model canary before any user-visible AI explanation wiring.
+14. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

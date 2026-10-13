@@ -37,7 +37,7 @@ import type { DomainSpeciesFact } from '../../../../packages/domain-rules/src';
 import { fishData } from '../../../../src/data/fishData';
 import { LOCAL_CATALOG_VERSION } from '../../../../src/data/catalogVersion';
 import { evaluateTankCompatibility, getCompatibilityDecision } from '../../../../src/services/compatibility/compatibility.service';
-import { createCompatibilityAiShadowAssessment } from '../compatibility-ai-reasoner';
+import { createCompatibilityAiShadowAssessment, getCompatibilityAiProviderReadiness } from '../compatibility-ai-reasoner';
 import type { Aquarium } from '../../../../src/types';
 
 type DbRow = Record<string, any>;
@@ -216,6 +216,13 @@ aquariumsRouter.post('/aquariums', asyncRoute(async (request, response) => {
   await finishIdempotentWrite(request, idempotency, 'aquarium', id, 201);
   return sendData(request, response, mapAquarium(data), 201);
 }));
+
+aquariumsRouter.get('/aquariums/compatibility-ai-readiness', (request, response) => (
+  sendData(request, response, {
+    mode: 'shadow',
+    ...getCompatibilityAiProviderReadiness(),
+  })
+));
 
 aquariumsRouter.get('/aquariums/:id', asyncRoute(async (request, response) => {
   const id = parseId(request.params.id, '鱼缸标识');

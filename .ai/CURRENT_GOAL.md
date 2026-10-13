@@ -1,13 +1,14 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 AI shadow
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 provider readiness
 
-- Active branch: `codex/compatibility-v4-ai-shadow-20261013`, based exactly on pushed wave16 `7fe10f42f29f27b7bb4ec09ed3154416aed4765b`.
+- Active branch: `codex/compatibility-v4-provider-readiness-20261013`, based exactly on pushed live-canary `85bd12750dd5338a52de7c554d32a12f2bc0ad51`.
 - The mechanical promotion queue is complete (`next_wave_species_count = 0`), so current work moves from breadth expansion to AI-assisted combination reasoning.
 - Added server-only Compatibility V4 shadow reasoner. Authority remains `deterministic hard rules / reviewed Pair Rules > AI`; AI cannot change the final compatibility decision.
 - AI runs only for `decisionReadiness=reviewed` combinations whose participating objects all have exact reviewed Profiles plus runtime reviewed Species Knowledge. Missing authority skips the provider instead of guessing.
 - Provider output is strict JSON and must use only allow-listed rule codes/evidence IDs. Hard-block weakening, caution→compatible upgrades, insufficient-data overrides, invented evidence, schema failure and provider failure are rejected/fail-soft.
 - Authenticated shadow endpoint: `GET /aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey?catalogVersion=...`. It returns deterministic `finalDecision`, separate AI assessment and provenance.
 - Added deterministic 3-species shadow eval artifacts covering reviewed compatible / caution / not_recommended plus unknown insufficient_data. Current result: 4 cases, AI accepted 2 / rejected 1 / skipped 1, and 0 final-decision mutations.
-- Added controlled live-provider canary harness using the same four real cases. Current WebCodex environment has no supported AI provider key, so the real default-provider run is explicitly `blocked_not_configured`: 3 reviewed cases unavailable, 1 insufficient case skipped, 0 final-decision mutations, and no external model request was made.
+- Added controlled live-provider canary harness using the same four real cases. Provider readiness is now preflighted before invocation: current WebCodex default-provider run is `blocked_not_configured` with 3 reviewed unavailable / 1 insufficient skipped / `providerCalls=0` / 0 final-decision mutations.
+- Added authenticated secret-free readiness endpoint `GET /api/v1/aquariums/compatibility-ai-readiness`; it exposes only configured/host/model/timeout and never returns credentials.
 - Static candidate remains 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 evidence. Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence; no Production mutation/deploy, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

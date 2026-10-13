@@ -1,7 +1,6 @@
-import { apiConfig } from '../apps/api/src/config';
 import {
   createCompatibilityAiShadowAssessment,
-  openAiCompatibleCompatibilityReasoningProvider,
+  getCompatibilityAiProviderReadiness,
   type CompatibilityAiReasoningProvider,
 } from '../apps/api/src/compatibility-ai-reasoner';
 import { fishData } from '../src/data/fishData';
@@ -89,14 +88,6 @@ const getFish = (id: string): Fish => {
 
 const quantityFor = (fish: Fish) => Math.max(1, getReviewedCompatibilityProfile(fish.id)?.minimumGroupSize || 1);
 
-const providerHost = (baseUrl: string) => {
-  try {
-    return new URL(baseUrl).host;
-  } catch {
-    return null;
-  }
-};
-
 type CanaryOptions = {
   provider?: CompatibilityAiReasoningProvider;
   providerConfigured?: boolean;
@@ -106,10 +97,8 @@ type CanaryOptions = {
 export const runCompatibilityV4LiveCanary = async (
   options: CanaryOptions = {},
 ): Promise<CompatibilityV4LiveCanaryReport> => {
-  const provider = options.provider || openAiCompatibleCompatibilityReasoningProvider;
-  const providerConfigured = options.providerConfigured ?? Boolean(
-    apiConfig.aiApiKey && apiConfig.aiBaseUrl && apiConfig.aiModel,
-  );
+  const readiness = getCompatibilityAiProviderReadiness();
+  const providerConfigured = options.providerConfigured ?? readiness.configured;
   const cases: CompatibilityV4LiveCanaryCase[] = [];
 
   for (const fixture of fixtures) {
@@ -127,12 +116,19 @@ export const runCompatibilityV4LiveCanary = async (
     });
 
     let providerCalls = 0;
-    const measuredProvider: CompatibilityAiReasoningProvider = async input => {
-      providerCalls += 1;
-      return provider(input);
-    };
-    const startedAt = performance.now();
-    const shadow = await createCompatibilityAiShadowAssessment({
+    let measuredProvider: CompatibilityAiReasoningProvider | undefined;
+    if (options.provider) {
+      const provider = options.provider;
+      measuredProvider = Object.assign(
+        async (input: { system: string; user: string }) => {
+          providerCalls += 1;
+          return provider(input);
+        },
+        provider.readiness ? { readiness: provider.readiness } : {},
+      );
+    }
+
+    const assessmentInput = {
       deterministicResult: deterministic,
       tank,
       existingSpecies: [
@@ -141,7 +137,12 @@ export const runCompatibilityV4LiveCanary = async (
       ],
       candidateSpecies: species[2],
       candidateQuantity: quantities[2],
-    }, measuredProvider);
+    };
+    const startedAt = performance.now();
+    const shadow = measuredProvider
+      ? await createCompatibilityAiShadowAssessment(assessmentInput, measuredProvider)
+      : await createCompatibilityAiShadowAssessment(assessmentInput);
+    if (!measuredProvider && providerConfigured && shadow.ai.status !== 'skipped') providerCalls = 1;
     const latencyMs = Math.max(0, Math.round(performance.now() - startedAt));
 
     cases.push({
@@ -198,9 +199,9 @@ export const runCompatibilityV4LiveCanary = async (
     generatedAt: options.generatedAt || new Date().toISOString(),
     provider: {
       configured: providerConfigured,
-      host: providerHost(apiConfig.aiBaseUrl),
-      model: apiConfig.aiModel,
-      timeoutMs: apiConfig.aiTimeoutMs,
+      host: readiness.host,
+      model: readiness.model,
+      timeoutMs: readiness.timeoutMs,
     },
     outcome,
     cases,

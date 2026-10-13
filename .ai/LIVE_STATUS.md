@@ -1,13 +1,14 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 AI shadow
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 provider readiness
 
-- Branch: `codex/compatibility-v4-ai-shadow-20261013` from exact pushed wave16 HEAD `7fe10f42f29f27b7bb4ec09ed3154416aed4765b`.
+- Branch: `codex/compatibility-v4-provider-readiness-20261013` from exact pushed live-canary HEAD `85bd12750dd5338a52de7c554d32a12f2bc0ad51`.
 - New server service `apps/api/src/compatibility-ai-reasoner.ts` adds model-assisted combination reasoning without changing deterministic authority.
 - Eligibility is strict: deterministic readiness reviewed + exact reviewed Profiles + runtime reviewed Species Knowledge for every participant. Otherwise AI is skipped.
 - Grounding guard accepts only input rule codes/evidence IDs; optimistic hard-block overrides, invented authority, invalid schema and provider failures cannot alter `finalDecision`.
 - API route is authenticated and shadow-only. Text AI reuses server `AI_* / DEEPSEEK_*` configuration; no API key is exposed client-side.
 - V4 shadow checkpoint is pushed at `9b0eab9ab518811e128702769c3d02a8f3a775ca`; full backend gate and hygiene passed.
 - Shadow-eval checkpoint is pushed at `295659e28ebe83b2270cb437d5f4e7571e885d10`; deterministic fixture provider result is 2 accepted / 1 rejected / 1 skipped / 0 final-decision mutations.
-- Current branch adds a real-provider canary runner. Supported provider credentials are absent in this WebCodex environment, so the observed default-provider outcome is `blocked_not_configured` with 3 unavailable reviewed cases, 1 skipped insufficient-data case, and 0 final-decision mutations. Canary output is written under ignored `.artifacts/readiness/` and never stores the API key.
+- Provider readiness is now explicit and secret-free. Default Compatibility shadow preflights readiness and returns `unavailable/not_configured` without invoking the provider when no key exists; current canary result is `providerCalls=0`, 3 unavailable reviewed cases, 1 skipped insufficient case, 0 mutations.
+- Authenticated `/api/v1/aquariums/compatibility-ai-readiness` exposes only configured/host/model/timeout so a deployed Preview can be diagnosed without pulling secrets locally.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116 and is untouched.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate

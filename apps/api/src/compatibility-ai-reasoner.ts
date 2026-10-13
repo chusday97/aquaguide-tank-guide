@@ -30,10 +30,38 @@ export const compatibilityAiProviderOutputSchema = z.object({
 
 export type CompatibilityAiProviderOutput = z.infer<typeof compatibilityAiProviderOutputSchema>;
 
-export type CompatibilityAiReasoningProvider = (input: {
+export type CompatibilityAiProviderReadiness = {
+  configured: boolean;
+  host: string | null;
+  model: string;
+  timeoutMs: number;
+};
+
+export type CompatibilityAiReasoningProvider = ((input: {
   system: string;
   user: string;
-}) => Promise<{ model: string; output: unknown }>;
+}) => Promise<{ model: string; output: unknown }>) & {
+  readiness?: () => CompatibilityAiProviderReadiness;
+};
+
+const providerHost = (baseUrl: string) => {
+  try {
+    return new URL(baseUrl).host;
+  } catch {
+    return null;
+  }
+};
+
+export const buildCompatibilityAiProviderReadiness = (
+  config: Pick<typeof apiConfig, 'aiApiKey' | 'aiBaseUrl' | 'aiModel' | 'aiTimeoutMs'>,
+): CompatibilityAiProviderReadiness => ({
+  configured: Boolean(config.aiApiKey && config.aiBaseUrl && config.aiModel),
+  host: providerHost(config.aiBaseUrl),
+  model: config.aiModel,
+  timeoutMs: config.aiTimeoutMs,
+});
+
+export const getCompatibilityAiProviderReadiness = () => buildCompatibilityAiProviderReadiness(apiConfig);
 
 export type CompatibilityAiShadowInput = {
   deterministicResult: TankCompatibilityResult;
@@ -225,26 +253,29 @@ const promptsFor = (
   return { system, user };
 };
 
-export const openAiCompatibleCompatibilityReasoningProvider: CompatibilityAiReasoningProvider = async ({ system, user }) => ({
-  model: apiConfig.aiModel,
-  output: await fetchJsonResponse(
-    apiConfig.aiBaseUrl,
-    apiConfig.aiApiKey,
-    apiConfig.aiModel,
-    apiConfig.aiTimeoutMs,
-    {
-      stream: false,
-      temperature: 0.1,
-      max_tokens: 1200,
-      response_format: { type: 'json_object' },
-      messages: [
-        { role: 'system', content: system },
-        { role: 'user', content: user },
-      ],
-    },
-    1,
-  ),
-});
+export const openAiCompatibleCompatibilityReasoningProvider: CompatibilityAiReasoningProvider = Object.assign(
+  async ({ system, user }: { system: string; user: string }) => ({
+    model: apiConfig.aiModel,
+    output: await fetchJsonResponse(
+      apiConfig.aiBaseUrl,
+      apiConfig.aiApiKey,
+      apiConfig.aiModel,
+      apiConfig.aiTimeoutMs,
+      {
+        stream: false,
+        temperature: 0.1,
+        max_tokens: 1200,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user },
+        ],
+      },
+      1,
+    ),
+  }),
+  { readiness: getCompatibilityAiProviderReadiness },
+);
 
 const emptyAi = (
   status: CompatibilityAiShadowResult['ai']['status'],
@@ -287,6 +318,16 @@ export const createCompatibilityAiShadowAssessment = async (
       finalDecision,
       ai: emptyAi('skipped', 'missing_exact_reviewed_profile_or_runtime_knowledge'),
       provenance: baseProvenance,
+    };
+  }
+
+  const providerReadiness = provider.readiness?.();
+  if (providerReadiness && !providerReadiness.configured) {
+    return {
+      mode: 'shadow',
+      finalDecision,
+      ai: emptyAi('unavailable', 'not_configured'),
+      provenance: { ...baseProvenance, model: providerReadiness.model },
     };
   }
 

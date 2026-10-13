@@ -1,21 +1,36 @@
 import assert from 'node:assert/strict';
-import { ProviderError } from '../apps/api/src/ai/provider';
+import type { CompatibilityAiReasoningProvider } from '../apps/api/src/compatibility-ai-reasoner';
 import {
   runCompatibilityV4LiveCanary,
   type CompatibilityV4LiveCanaryReport,
 } from './compatibility-v4-live-canary';
 
+let unavailableProviderCalls = 0;
+const unavailableProvider: CompatibilityAiReasoningProvider = Object.assign(
+  async () => {
+    unavailableProviderCalls += 1;
+    throw new Error('unconfigured provider must never be invoked');
+  },
+  {
+    readiness: () => ({
+      configured: false,
+      host: 'api.fixture.invalid',
+      model: 'fixture-unconfigured',
+      timeoutMs: 1,
+    }),
+  },
+);
+
 const unavailable = await runCompatibilityV4LiveCanary({
   providerConfigured: false,
   generatedAt: '2026-10-13T00:00:00.000Z',
-  provider: async () => {
-    throw new ProviderError('not_configured', 'fixture provider is intentionally unavailable');
-  },
+  provider: unavailableProvider,
 });
 
 assert.equal(unavailable.outcome, 'blocked_not_configured');
 assert.equal(unavailable.summary.totalCases, 4);
-assert.equal(unavailable.summary.providerCalls, 3, 'insufficient-data fixture must skip provider invocation');
+assert.equal(unavailable.summary.providerCalls, 0, 'unconfigured provider must be preflighted before invocation');
+assert.equal(unavailableProviderCalls, 0);
 assert.equal(unavailable.summary.unavailableAi, 3);
 assert.equal(unavailable.summary.skippedAi, 1);
 assert.equal(unavailable.summary.finalDecisionMutations, 0);
