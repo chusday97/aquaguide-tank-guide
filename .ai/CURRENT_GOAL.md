@@ -1,6 +1,6 @@
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian free-quota model pool
 
-- Active branch: `codex/compatibility-v4-bailian-deepseek-20261013`, based exactly on pushed quota-diagnostics `bc7b724a210b134e7dd98b2dd34e5bf62573f901`.
+- Active branch: `codex/compatibility-v4-bailian-deepseek-20261013`; current pushed head is `f43bb75c0262f71971eeca8a495e7fe50d8148c2` (`fix(compatibility): use Bailian free-quota model pool`).
 - The mechanical promotion queue is complete (`next_wave_species_count = 0`), so current work moves from breadth expansion to AI-assisted combination reasoning.
 - Added server-only Compatibility V4 shadow reasoner. Authority remains `deterministic hard rules / reviewed Pair Rules > AI`; AI cannot change the final compatibility decision.
 - AI runs only for `decisionReadiness=reviewed` combinations whose participating objects all have exact reviewed Profiles plus runtime reviewed Species Knowledge. Missing authority skips the provider instead of guessing.
@@ -12,6 +12,9 @@
 - Qwen 3.x and DeepSeek V4 Compatibility requests send `enable_thinking=false`; live canaries prove both Qwen 3.x models pass guarded under the strict JSON contract. `kimi-k3` remains excluded because the current workspace endpoint rejects that model code despite visible account quota.
 - Real 4-case default canary on `qwen3.7-flash-2026-07-15` returns `pass_guarded`: 3 reviewed accepted, 1 insufficient skipped, 0 unavailable/rejected, 0 final-decision mutations. A forced unsupported-primary canary also returns `pass_guarded`, proving automatic failover preserves deterministic authority.
 - Authenticated secret-free readiness endpoint remains `GET /api/v1/aquariums/compatibility-ai-readiness`; no credential is exposed. Vercel CLI auth is now verified and the Bailian key/base URL plus generic and Compatibility-specific model settings are configured for both Preview and Production scopes. They take effect on new deployments; no Production redeploy is authorized/performed in this checkpoint.
+- Remote Vercel provider acceptance is now proven on a temporary Preview-only canary and the temporary source was removed afterward: `qwen3.7-flash-2026-07-15` returned HTTP 200 in ~4.1s, preserved guarded `caution`, and produced 3 reasons + 4 actionable adjustments. No key/value secret was returned or committed.
+- The Git Preview itself is healthy (`/` HTTP 200), but `/api/v1/business-health` reports `databaseConfigured=false`. Supabase account discovery shows only the AquaGuide primary project plus an unrelated IceGlide staging project, and AquaGuide has no non-default database branch. Therefore an authenticated real-user Preview flow cannot be validated without either provisioning a dedicated AquaGuide non-Production database/branch or unsafely pointing Preview at Production; the latter is forbidden.
+- Production promotion remains blocked on this infrastructure gap. Do not attach Preview to Production Supabase and do not create a paid Supabase project/branch without explicit cost confirmation.
 - Static candidate remains 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 evidence. Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence; no Production mutation/deploy, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

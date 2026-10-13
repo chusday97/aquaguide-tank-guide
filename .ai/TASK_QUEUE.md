@@ -25,7 +25,10 @@
 23. DONE: default Qwen Flash canary and forced unsupported-primary fallback canary both return `pass_guarded` with 3 reviewed accepted / 1 insufficient skipped / 0 final-decision mutations; API typecheck and focused shadow/canary tests pass.
 24. DONE: verify WebCodex Vercel CLI auth and write the Bailian credential/base URL, generic text model, timeout, Compatibility primary model, and ordered fallbacks to both Preview and Production environment scopes without exposing secrets.
 25. DONE: full backend release gate passes after the free-quota model-pool changes, including API/business contracts, business bundle and project typecheck.
-26. HOLD: environment changes apply to new deployments; no Production redeploy/DB mutation, merge/main, UI, or Vision work is authorized by this checkpoint. Validate a Preview deployment before any Production promotion.
+26. DONE: validate the remote Vercel→Bailian path with a temporary Preview-only canary; primary `qwen3.7-flash-2026-07-15` succeeds with HTTP 200 in ~4.1s and returns guarded judgment + reasons + actionable adjustments. Temporary canary source is removed and working tree restored clean.
+27. DONE: validate the Git Preview shell and API health; root is HTTP 200, but `/api/v1/business-health` reports `databaseConfigured=false`.
+28. BLOCKER: Supabase discovery finds no AquaGuide non-Production project/branch (only the primary AquaGuide project and unrelated IceGlide staging). Full authenticated Preview E2E therefore cannot run safely yet.
+29. HOLD: do not point Preview at Production Supabase, do not create a paid Supabase project/branch without explicit cost confirmation, and do not Production redeploy/DB-mutate/merge-main until a safe non-Production DB path exists and the authenticated Compatibility AI flow passes there.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 
