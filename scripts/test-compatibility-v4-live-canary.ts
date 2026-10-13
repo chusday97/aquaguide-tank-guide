@@ -77,7 +77,9 @@ const fixtureProvider = async ({ user }: { system: string; user: string }) => {
     output: {
       suggestedVerdict: deterministicStatus,
       reasons: [{ text: 'Grounded fixture canary response.', ruleCodes: [ruleCode] }],
-      adjustments: [],
+      adjustments: deterministicStatus === 'compatible'
+        ? []
+        : [{ text: 'Grounded fixture action.', ruleCodes: [ruleCode] }],
       uncertainties: [],
       confidence: 'medium',
       evidenceIds: parsed.allowedEvidenceIds || [],
@@ -97,14 +99,26 @@ assert.equal(configured.summary.skippedAi, 1);
 assert.equal(configured.summary.unavailableAi, 0);
 assert.equal(configured.summary.acceptedReviewedCases, 3);
 assert.equal(configured.summary.finalDecisionMutations, 0);
+assert.equal(configured.summary.reviewedCasesWithReasons, 3);
+assert.equal(configured.summary.reviewedRiskCasesWithAdjustments, 2);
+assert.equal(configured.summary.providerCalls, 3);
 assert.deepEqual(configured.summary.modelsUsed, ['v4-live-canary-fixture']);
 assert.deepEqual(
   configured.cases.filter(item => item.ai.status === 'accepted').map(item => item.ai.model),
   ['v4-live-canary-fixture', 'v4-live-canary-fixture', 'v4-live-canary-fixture'],
 );
+assert.equal(configured.cases.every(item => item.ai.repairCount === 0), true);
 assert.deepEqual(
   configured.cases.map(item => item.finalDecision.status),
   configured.cases.map(item => item.deterministic.status),
+);
+const configuredReviewed = configured.cases.filter(item => item.deterministic.decisionReadiness === 'reviewed');
+assert.equal(configuredReviewed.every(item => item.ai.reasons.length > 0), true);
+assert.equal(
+  configuredReviewed
+    .filter(item => item.deterministic.status === 'caution' || item.deterministic.status === 'not_recommended')
+    .every(item => item.ai.adjustments.length > 0),
+  true,
 );
 
 const assertNoSecretField = (report: CompatibilityV4LiveCanaryReport) => {

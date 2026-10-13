@@ -1,6 +1,7 @@
 import {
   createCompatibilityAiShadowAssessment,
   getCompatibilityAiProviderReadiness,
+  openAiCompatibleCompatibilityReasoningProvider,
   type CompatibilityAiReasoningProvider,
 } from '../apps/api/src/compatibility-ai-reasoner';
 import { fishData } from '../src/data/fishData';
@@ -26,7 +27,11 @@ export type CompatibilityV4LiveCanaryCase = {
     reason: string | null;
     suggestedVerdict: string | null;
     confidence: string | null;
+    reasons: Array<{ text: string; ruleCodes: string[] }>;
+    adjustments: Array<{ text: string; ruleCodes: string[] }>;
+    uncertainties: Array<{ text: string; ruleCodes: string[] }>;
     model: string | null;
+    repairCount: number;
     providerCalls: number;
   };
   latencyMs: number;
@@ -67,6 +72,8 @@ export type CompatibilityV4LiveCanaryReport = {
     acceptedReviewedCases: number;
     finalDecisionMutations: number;
     modelsUsed: string[];
+    reviewedCasesWithReasons: number;
+    reviewedRiskCasesWithAdjustments: number;
   };
 };
 
@@ -122,17 +129,14 @@ export const runCompatibilityV4LiveCanary = async (
     });
 
     let providerCalls = 0;
-    let measuredProvider: CompatibilityAiReasoningProvider | undefined;
-    if (options.provider) {
-      const provider = options.provider;
-      measuredProvider = Object.assign(
-        async (input: { system: string; user: string }) => {
-          providerCalls += 1;
-          return provider(input);
-        },
-        provider.readiness ? { readiness: provider.readiness } : {},
-      );
-    }
+    const baseProvider = options.provider || openAiCompatibleCompatibilityReasoningProvider;
+    const measuredProvider: CompatibilityAiReasoningProvider = Object.assign(
+      async (input: { system: string; user: string }) => {
+        providerCalls += 1;
+        return baseProvider(input);
+      },
+      baseProvider.readiness ? { readiness: baseProvider.readiness } : {},
+    );
 
     const assessmentInput = {
       deterministicResult: deterministic,
@@ -145,10 +149,7 @@ export const runCompatibilityV4LiveCanary = async (
       candidateQuantity: quantities[2],
     };
     const startedAt = performance.now();
-    const shadow = measuredProvider
-      ? await createCompatibilityAiShadowAssessment(assessmentInput, measuredProvider)
-      : await createCompatibilityAiShadowAssessment(assessmentInput);
-    if (!measuredProvider && providerConfigured && shadow.ai.status !== 'skipped') providerCalls = 1;
+    const shadow = await createCompatibilityAiShadowAssessment(assessmentInput, measuredProvider);
     const latencyMs = Math.max(0, Math.round(performance.now() - startedAt));
 
     cases.push({
@@ -169,7 +170,11 @@ export const runCompatibilityV4LiveCanary = async (
         reason: shadow.ai.reason || null,
         suggestedVerdict: shadow.ai.suggestedVerdict || null,
         confidence: shadow.ai.confidence || null,
+        reasons: shadow.ai.reasons,
+        adjustments: shadow.ai.adjustments,
+        uncertainties: shadow.ai.uncertainties,
         model: shadow.provenance.model || null,
+        repairCount: shadow.provenance.repairCount,
         providerCalls,
       },
       latencyMs,
@@ -192,6 +197,17 @@ export const runCompatibilityV4LiveCanary = async (
     )).length,
     finalDecisionMutations: cases.filter(item => !item.finalDecision.unchanged).length,
     modelsUsed: [...new Set(cases.map(item => item.ai.model).filter((model): model is string => Boolean(model)))],
+    reviewedCasesWithReasons: cases.filter(item => (
+      item.deterministic.decisionReadiness === 'reviewed'
+      && item.ai.status === 'accepted'
+      && item.ai.reasons.length > 0
+    )).length,
+    reviewedRiskCasesWithAdjustments: cases.filter(item => (
+      item.deterministic.decisionReadiness === 'reviewed'
+      && (item.deterministic.status === 'caution' || item.deterministic.status === 'not_recommended')
+      && item.ai.status === 'accepted'
+      && item.ai.adjustments.length > 0
+    )).length,
   };
 
   const unavailableReasons = new Set(
@@ -208,7 +224,9 @@ export const runCompatibilityV4LiveCanary = async (
   else if (unavailableReasons.has('access_denied')) outcome = 'blocked_provider_access';
   else if (unavailableReasons.has('rate_limited')) outcome = 'blocked_provider_rate_limit';
   else if (summary.unavailableAi > 0) outcome = 'fail_provider_unavailable';
-  else if (summary.acceptedReviewedCases < 2) outcome = 'fail_model_quality';
+  else if (summary.acceptedReviewedCases < 3) outcome = 'fail_model_quality';
+  else if (summary.reviewedCasesWithReasons < 3) outcome = 'fail_model_quality';
+  else if (summary.reviewedRiskCasesWithAdjustments < 2) outcome = 'fail_model_quality';
   else outcome = 'pass_guarded';
 
   return {

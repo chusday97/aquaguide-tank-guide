@@ -131,6 +131,7 @@ assert.equal(accepted.ai.suggestedVerdict, 'not_recommended');
 assert.equal(accepted.finalDecision.status, 'caution', 'shadow AI must never mutate deterministic final decision');
 assert.equal(accepted.provenance.model, 'fixture-model');
 assert.equal(accepted.provenance.promptVersion, COMPATIBILITY_AI_PROMPT_VERSION);
+assert.equal(accepted.provenance.repairCount, 0);
 assert.match(capturedSystem, /Use ONLY facts, rules, evidence IDs and tank context included in INPUT/);
 assert.match(capturedUser, /sp_0431/);
 assert.match(capturedUser, /reviewed_pair_rule/);
@@ -168,6 +169,7 @@ const rejectedOptimism = await createCompatibilityAiShadowAssessment({
 assert.equal(rejectedOptimism.ai.status, 'rejected');
 assert.equal(rejectedOptimism.ai.reason, 'provider_output_conflicts_with_deterministic_authority');
 assert.equal(rejectedOptimism.finalDecision.status, 'not_recommended');
+assert.equal(rejectedOptimism.provenance.repairCount, 0);
 
 const inventedEvidenceProvider: CompatibilityAiReasoningProvider = async () => ({
   model: 'fixture-model',
@@ -190,6 +192,35 @@ const rejectedEvidence = await createCompatibilityAiShadowAssessment({
 assert.equal(rejectedEvidence.ai.status, 'rejected');
 assert.equal(rejectedEvidence.ai.reason, 'provider_output_uses_unknown_authority');
 assert.equal(rejectedEvidence.finalDecision.status, 'caution');
+
+let adjustmentRepairCalls = 0;
+const missingAdjustmentProvider: CompatibilityAiReasoningProvider = async () => {
+  adjustmentRepairCalls += 1;
+  return {
+    model: 'fixture-model',
+    output: {
+      suggestedVerdict: 'caution',
+      reasons: [{ text: '有风险，需要保持保守结论。', ruleCodes: ['reviewed_pair_rule'] }],
+      adjustments: adjustmentRepairCalls === 1
+        ? []
+        : [{ text: '按已审核规则调整混养计划。', ruleCodes: ['reviewed_pair_rule'] }],
+      uncertainties: [],
+      confidence: 'medium',
+      evidenceIds: reviewedCaution.evidenceIds || [],
+    },
+  };
+};
+const repairedAdjustment = await createCompatibilityAiShadowAssessment({
+  deterministicResult: reviewedCaution,
+  tank,
+  existingSpecies: [{ species: reviewedA, quantity: 5 }],
+  candidateSpecies: reviewedB,
+}, missingAdjustmentProvider);
+assert.equal(repairedAdjustment.ai.status, 'accepted');
+assert.equal(repairedAdjustment.ai.adjustments.length, 1);
+assert.equal(repairedAdjustment.provenance.repairCount, 1);
+assert.equal(adjustmentRepairCalls, 2);
+assert.equal(repairedAdjustment.finalDecision.status, 'caution');
 
 const incomplete = evaluateTankCompatibility({
   tank,
@@ -231,5 +262,10 @@ assert.match(routeSource, /compatibility-ai-readiness/);
 assert.match(routeSource, /getCompatibilityAiProviderReadiness/);
 assert.match(routeSource, /readPublishedCatalogCompatibilityContext/);
 assert.match(routeSource, /createCompatibilityAiShadowAssessment/);
+const shadowRouteStart = routeSource.indexOf("aquariumsRouter.get('/aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey'");
+const shadowRouteEnd = routeSource.indexOf("aquariumsRouter.patch('/aquariums/:id'", shadowRouteStart);
+assert.ok(shadowRouteStart >= 0 && shadowRouteEnd > shadowRouteStart, 'shadow route source must be discoverable');
+const shadowRouteSource = routeSource.slice(shadowRouteStart, shadowRouteEnd);
+assert.doesNotMatch(shadowRouteSource, /\.insert\(|\.update\(|\.delete\(|\.upsert\(/, 'Compatibility AI shadow route must remain read-only');
 
 console.log('Compatibility V4 AI shadow PASS: reviewed combinations can be assisted; hard blocks, incomplete authority, invented evidence and provider failure cannot change deterministic decisions.');

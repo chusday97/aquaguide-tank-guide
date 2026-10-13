@@ -27,9 +27,11 @@
 25. DONE: full backend release gate passes after the free-quota model-pool changes, including API/business contracts, business bundle and project typecheck.
 26. DONE: validate the remote Vercel→Bailian path with a temporary Preview-only canary; primary `qwen3.7-flash-2026-07-15` succeeds with HTTP 200 in ~4.1s and returns guarded judgment + reasons + actionable adjustments. Temporary canary source is removed and working tree restored clean.
 27. DONE: validate the Git Preview shell and API health; root is HTTP 200, but `/api/v1/business-health` reports `databaseConfigured=false`.
-28. BLOCKER: Supabase discovery finds no AquaGuide non-Production project/branch (only the primary AquaGuide project and unrelated IceGlide staging). Full authenticated Preview E2E therefore cannot run safely yet.
-29. DONE: add fallback observability to readiness/live canary: expose ordered fallback models plus actual model used per case and aggregate `modelsUsed`; default canary uses Qwen 3.7 Flash, forced failover visibly uses Qwen 3.8 and DeepSeek V4. Full backend release gate passes.
-30. HOLD: do not point Preview at Production Supabase, do not create a paid Supabase project/branch without explicit cost confirmation, and do not Production redeploy/DB-mutate/merge-main until a safe non-Production DB path exists and the authenticated Compatibility AI flow passes there.
+28. DONE / ACCEPTED GAP: no AquaGuide non-Production DB is available. Do not treat this as a Compatibility AI blocker. Preview login + Supabase user-data loading remains untested in Preview, while DB-independent acceptance must cover the same production compatibility engine/reasoner with real reviewed species data.
+29. DONE: add fallback/output observability to the live canary: configured fallbacks, actual model, grounded reasons, actionable adjustments, uncertainties, provider calls and repair count are visible per case. Forced unsupported-primary validation passes through Qwen 3.8 with 0 final-decision mutations.
+30. DONE: harden DB-independent acceptance using the exact production deterministic engine + shadow reasoner. Real Qwen run passes 3 reviewed states + 1 insufficient state; all reviewed cases have reasons, both risk cases have actionable adjustments, missing/schema defects get at most one bounded repair, and final-decision mutations are 0.
+31. DONE: verify Compatibility AI route remains GET/read-only with a static no-write contract; full backend release gate returns `BACKEND_RELEASE_GATE=PASS` after V2 changes.
+32. HOLD: do not point Preview at Production Supabase and do not Production deploy/DB-mutate/merge-main in this checkpoint. After separate Production promotion authorization, perform only a read-only Compatibility AI smoke test against an existing aquarium.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

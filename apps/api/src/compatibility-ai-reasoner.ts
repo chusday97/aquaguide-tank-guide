@@ -11,7 +11,7 @@ import {
 import { getReviewedCompatibilityProfile } from '../../../src/data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../../../src/modules/knowledge/speciesKnowledge';
 
-export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v1';
+export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v2';
 
 const verdictSchema = z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']);
 const groundedItemSchema = z.object({
@@ -92,6 +92,7 @@ export type CompatibilityAiShadowResult = {
     ruleVersion: string;
     evidenceIds: string[];
     model?: string;
+    repairCount: number;
   };
 };
 
@@ -201,6 +202,12 @@ const violatesDeterministicAuthority = (
   return false;
 };
 
+const requiresActionableAdjustment = (deterministic: TankCompatibilityResult) => (
+  deterministic.metadata.domainStatus === 'caution'
+  || deterministic.metadata.domainStatus === 'not_recommended'
+  || deterministic.blockingRules.length > 0
+);
+
 const tankSnapshot = (tank?: Aquarium | null) => {
   if (!tank) return null;
   return {
@@ -224,6 +231,9 @@ const promptsFor = (
     'If INPUT says insufficient_data, suggestedVerdict must remain insufficient_data.',
     'If INPUT contains a hard/blocking rule or final verdict not_recommended, suggestedVerdict must remain not_recommended.',
     'If final verdict is caution, never upgrade it to compatible.',
+    'For caution or not_recommended decisions, adjustments MUST contain at least one grounded actionable item.',
+    'For not_recommended, a valid action is to not add the candidate under the current plan, grounded in the blocking/conflict rule; do not invent a new threshold or biological fact.',
+    'For caution, give at least one concrete mitigation directly supported by the supplied caution rule.',
     'Ground every reason/adjustment/uncertainty in ruleCodes supplied by INPUT.',
     'Return one JSON object only.',
   ].join(' ');
@@ -233,6 +243,7 @@ const promptsFor = (
       suggestedVerdict: 'compatible|caution|not_recommended|insufficient_data',
       reasons: [{ text: 'grounded explanation', ruleCodes: ['exact_input_rule_code'] }],
       adjustments: [{ text: 'grounded action', ruleCodes: ['exact_input_rule_code'] }],
+      adjustmentRequirement: 'non-empty when deterministic finalDecision is caution or not_recommended',
       uncertainties: [{ text: 'grounded uncertainty', ruleCodes: ['exact_input_rule_code'] }],
       confidence: 'low|medium|high',
       evidenceIds: ['only exact evidence IDs supplied in INPUT'],
@@ -345,6 +356,7 @@ export const createCompatibilityAiShadowAssessment = async (
     catalogVersion: input.deterministicResult.metadata.catalogVersion,
     ruleVersion: input.deterministicResult.metadata.ruleVersion,
     evidenceIds: [...allowedEvidenceIds(input.deterministicResult)],
+    repairCount: 0,
   };
 
   if (input.deterministicResult.metadata.decisionReadiness !== 'reviewed') {
@@ -379,23 +391,43 @@ export const createCompatibilityAiShadowAssessment = async (
 
   try {
     const { system, user } = promptsFor(input, speciesFacts as NonNullable<(typeof speciesFacts)[number]>[]);
-    const providerResult = await provider({ system, user });
-    const parsed = compatibilityAiProviderOutputSchema.safeParse(providerResult.output);
+    let providerResult = await provider({ system, user });
+    let parsed = compatibilityAiProviderOutputSchema.safeParse(providerResult.output);
+    let repairCount = 0;
+
+    const repair = async (reason: string) => {
+      repairCount += 1;
+      providerResult = await provider({
+        system: [
+          system,
+          'REPAIR PASS: Correct only format/required-action defects. Keep the same supplied authority and do not add outside knowledge.',
+          reason,
+          'Return exactly one JSON object with suggestedVerdict, reasons, adjustments, uncertainties, confidence, evidenceIds and no extra keys.',
+        ].join(' '),
+        user,
+      });
+      parsed = compatibilityAiProviderOutputSchema.safeParse(providerResult.output);
+    };
+
     if (!parsed.success) {
-      return {
-        mode: 'shadow',
-        finalDecision,
-        ai: emptyAi('rejected', 'provider_output_schema_invalid'),
-        provenance: { ...baseProvenance, model: providerResult.model },
-      };
+      await repair('The previous response did not match the exact required JSON schema.');
+      if (!parsed.success) {
+        return {
+          mode: 'shadow',
+          finalDecision,
+          ai: emptyAi('rejected', 'provider_output_schema_invalid'),
+          provenance: { ...baseProvenance, model: providerResult.model, repairCount },
+        };
+      }
     }
-    const output = parsed.data;
+
+    let output = parsed.data;
     if (hasUnknownGrounding(output, allowedRuleCodes(input.deterministicResult), allowedEvidenceIds(input.deterministicResult))) {
       return {
         mode: 'shadow',
         finalDecision,
         ai: emptyAi('rejected', 'provider_output_uses_unknown_authority'),
-        provenance: { ...baseProvenance, model: providerResult.model },
+        provenance: { ...baseProvenance, model: providerResult.model, repairCount },
       };
     }
     if (violatesDeterministicAuthority(input.deterministicResult, output.suggestedVerdict)) {
@@ -403,9 +435,48 @@ export const createCompatibilityAiShadowAssessment = async (
         mode: 'shadow',
         finalDecision,
         ai: emptyAi('rejected', 'provider_output_conflicts_with_deterministic_authority'),
-        provenance: { ...baseProvenance, model: providerResult.model },
+        provenance: { ...baseProvenance, model: providerResult.model, repairCount },
       };
     }
+
+    if (requiresActionableAdjustment(input.deterministicResult) && output.adjustments.length === 0 && repairCount === 0) {
+      await repair('The previous JSON omitted the required actionable adjustment for a caution/not_recommended decision.');
+      if (!parsed.success) {
+        return {
+          mode: 'shadow',
+          finalDecision,
+          ai: emptyAi('rejected', 'provider_output_schema_invalid'),
+          provenance: { ...baseProvenance, model: providerResult.model, repairCount },
+        };
+      }
+      output = parsed.data;
+      if (hasUnknownGrounding(output, allowedRuleCodes(input.deterministicResult), allowedEvidenceIds(input.deterministicResult))) {
+        return {
+          mode: 'shadow',
+          finalDecision,
+          ai: emptyAi('rejected', 'provider_output_uses_unknown_authority'),
+          provenance: { ...baseProvenance, model: providerResult.model, repairCount },
+        };
+      }
+      if (violatesDeterministicAuthority(input.deterministicResult, output.suggestedVerdict)) {
+        return {
+          mode: 'shadow',
+          finalDecision,
+          ai: emptyAi('rejected', 'provider_output_conflicts_with_deterministic_authority'),
+          provenance: { ...baseProvenance, model: providerResult.model, repairCount },
+        };
+      }
+    }
+
+    if (requiresActionableAdjustment(input.deterministicResult) && output.adjustments.length === 0) {
+      return {
+        mode: 'shadow',
+        finalDecision,
+        ai: emptyAi('rejected', 'provider_output_missing_actionable_adjustment'),
+        provenance: { ...baseProvenance, model: providerResult.model, repairCount },
+      };
+    }
+
     return {
       mode: 'shadow',
       finalDecision,
@@ -417,7 +488,7 @@ export const createCompatibilityAiShadowAssessment = async (
         uncertainties: output.uncertainties,
         confidence: output.confidence,
       },
-      provenance: { ...baseProvenance, model: providerResult.model },
+      provenance: { ...baseProvenance, model: providerResult.model, repairCount },
     };
   } catch (error) {
     const reason = error instanceof ProviderError ? error.reason : 'provider_failure';

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "promptVersion": "compatibility-v4-shadow-v1",
+  "promptVersion": "compatibility-v4-shadow-v2",
   "tank": {
     "dimensionsCm": [
       120,
