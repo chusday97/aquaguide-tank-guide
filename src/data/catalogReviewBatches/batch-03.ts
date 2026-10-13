@@ -31,6 +31,15 @@ const koiBettaPhenotypeSource: CatalogEvidenceSource = {
   reviewStatus: 'reviewed',
 };
 
+const oscarSeriouslyFishSource: CatalogEvidenceSource = {
+  id: 'seriouslyfish-astronotus-ocellatus',
+  title: 'Astronotus ocellatus (Oscar) husbandry profile',
+  publisher: 'Seriously Fish',
+  url: 'https://www.seriouslyfish.com/species/astronotus-ocellatus',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const identityBoundarySources: Record<string, CatalogEvidenceSource[]> = {
   sp_0002: [
     {
@@ -141,7 +150,11 @@ const unknownReason = (seed: Seed, field: string) => {
 const verifiedFieldValues: Record<string, Partial<Record<typeof fields[number], unknown>>> = {
   sp_0451: {
     temperature: { min: 22, max: 25 },
+    ph: { min: 6, max: 7.5 },
     adult_size: { min: null, max: 45.7 },
+    tank_size: { liters: 540, lengthCm: 150 },
+    social_behavior: { mode: 'pair', minimumGroupSize: null },
+    predation: { targets: ['small_fish'] },
   },
   sp_0021: {
     adult_size: { min: null, max: 10 },
@@ -174,6 +187,15 @@ const verifiedFieldValues: Record<string, Partial<Record<typeof fields[number], 
   },
 };
 
+const verifiedFieldSourceIds: Record<string, Partial<Record<typeof fields[number], string>>> = {
+  sp_0451: {
+    ph: oscarSeriouslyFishSource.id,
+    tank_size: oscarSeriouslyFishSource.id,
+    social_behavior: oscarSeriouslyFishSource.id,
+    predation: oscarSeriouslyFishSource.id,
+  },
+};
+
 const makeReview = (seed: Seed, field: typeof fields[number]): CatalogFieldReview => {
   if (field === 'identity' && seed.speciesId === 'sp_0258') {
     return {
@@ -194,10 +216,11 @@ const makeReview = (seed: Seed, field: typeof fields[number]): CatalogFieldRevie
   }
   const verifiedValue = verifiedFieldValues[seed.speciesId]?.[field];
   if (verifiedValue !== undefined) {
+    const citationId = verifiedFieldSourceIds[seed.speciesId]?.[field] ?? seed.sourceId;
     return {
       speciesId: seed.speciesId, field, proposedValue: verifiedValue, status: 'reviewed',
-      resolution: 'supported', confidence: 'medium', citationIds: [seed.sourceId],
-      conflictNotes: [], reviewedAt,
+      resolution: 'supported', confidence: 'medium', citationIds: [citationId],
+      conflictNotes: [], reviewedAt: citationId === oscarSeriouslyFishSource.id ? '2026-10-13T23:20:00+08:00' : reviewedAt,
     };
   }
   const isIdentitySupported = field === 'identity' && !seed.identityUnknown;
@@ -242,7 +265,7 @@ export const catalogReviewBatch03: CatalogReviewBatch03Entry[] = seeds.map(seed 
       seed.sourceId.includes('usfws') || seed.sourceId.includes('itis') ? 'government' :
         seed.sourceId.includes('obis') ? 'professional_association' : 'curated_husbandry',
     reviewStatus: 'reviewed',
-  }, ...(identityBoundarySources[seed.speciesId] || [])],
+  }, ...(seed.speciesId === 'sp_0451' ? [oscarSeriouslyFishSource] : []), ...(identityBoundarySources[seed.speciesId] || [])],
   fieldReviews: fields.map(field => makeReview(seed, field)),
 }));
 
@@ -261,6 +284,7 @@ export const catalogReviewBatch03VerifiedSourceIds: string[] = [
   'batch03-usfws-neocaridina-davidi-red-morphs',
   'batch03-obis-neritina-natalensis',
   'batch03-sciadv-betta-mosaic-koi',
+  'seriouslyfish-astronotus-ocellatus',
 ];
 
 if (catalogReviewBatch03.length !== 10 || catalogReviewBatch03FieldReviews.length !== 100) {

@@ -178,6 +178,7 @@ type DirectSubject = {
   tankLengthCm: number;
   tankLiters?: number;
   socialMode: 'pair' | 'group' | 'variable';
+  minimumGroupSize?: number;
   socialNote: string;
   territorialityTraits?: string[];
   predationTargets?: string[];
@@ -266,8 +267,9 @@ const directSubjects: DirectSubject[] = [
     fishBase: nextWaveUnified02Sources.gnathonemusFishBase,
     husbandry: nextWaveUnified02Sources.gnathonemusSeriouslyFish,
     temperature: { min: 23, max: 28 }, ph: { min: 6, max: 7.5 }, adultSizeMaxCm: 22.5, tankLengthCm: 120, tankLiters: 243,
-    socialMode: 'group',
-    socialNote: 'The species is peaceful and group-living; larger quarters are needed for a substantial group.',
+    socialMode: 'group', minimumGroupSize: 5,
+    socialNote: 'The species is peaceful toward heterospecifics but territorial; the source explicitly recommends at least five if keeping more than one to disperse conspecific aggression.',
+    territorialityTraits: ['conspecific_territoriality'],
   },
 ];
 
@@ -306,7 +308,7 @@ const directReviews = directSubjects.flatMap(subject => {
     supported(subject.speciesId, 'ph', subject.ph, [subject.husbandry.id]),
     supported(subject.speciesId, 'adult_size', { min: null, max: subject.adultSizeMaxCm }, sourceIds),
     supported(subject.speciesId, 'tank_size', { liters: subject.tankLiters ?? null, lengthCm: subject.tankLengthCm }, [subject.husbandry.id]),
-    supported(subject.speciesId, 'social_behavior', { mode: subject.socialMode, minimumGroupSize: null }, [subject.husbandry.id], [subject.socialNote], 'medium'),
+    supported(subject.speciesId, 'social_behavior', { mode: subject.socialMode, minimumGroupSize: subject.minimumGroupSize ?? null }, [subject.husbandry.id], [subject.socialNote], 'medium'),
     subject.territorialityTraits?.length
       ? supported(subject.speciesId, 'territoriality', { traits: subject.territorialityTraits }, [subject.husbandry.id], [], 'medium')
       : unknown(subject.speciesId, 'territoriality', 'The reviewed sources do not establish a stable territoriality rule that should affect compatibility decisions.', sourceIds),

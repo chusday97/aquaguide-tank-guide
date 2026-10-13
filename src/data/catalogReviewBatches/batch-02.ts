@@ -28,6 +28,15 @@ const verifiedIdentitySources: Record<string, string> = {
   'sp_0447': 'batch-02-gbif-symphysodon-aequifasciatus',
 };
 
+/** Seriously Fish pages re-opened and content-verified for the 2026-10-13 high-yield pass. */
+const verifiedHusbandrySources: Record<string, string> = {
+  'sp_0014': 'seriouslyfish-corydoras-aeneus',
+  'sp_0443': 'seriouslyfish-corydoras-panda',
+  'sp_0444': 'seriouslyfish-trichopodus-leerii',
+  'sp_0446': 'seriouslyfish-pterophyllum-scalare',
+  'sp_0447': 'seriouslyfish-symphysodon-aequifasciatus',
+};
+
 const species: readonly BatchSpecies[] = [
   { id: 'sp_0012', scientificName: 'Puntius titteya', baseSpeciesKey: 'Puntius titteya', temp: [23, 27], ph: [6, 8], size: [null, 5], sources: ['batch-02-fishbase-puntius-titteya'] },
   { id: 'sp_0468', scientificName: 'Trigonostigma heteromorpha', baseSpeciesKey: 'Trigonostigma heteromorpha', temp: [22, 25], ph: [5, 7], size: [null, 5], sources: ['batch-02-fishbase-trigonostigma-heteromorpha'] },
@@ -47,6 +56,10 @@ const unknown = (speciesId: string, field: CatalogFieldReview['field'], citation
 
 const supported = (speciesId: string, field: CatalogFieldReview['field'], proposedValue: unknown, citationIds: readonly string[], confidence: CatalogFieldReview['confidence'] = 'medium'): CatalogFieldReview => ({
   speciesId, field, proposedValue, status: 'reviewed', resolution: 'supported', confidence, citationIds: [...citationIds], conflictNotes: [], reviewedAt,
+});
+
+const supportedHighYield = (speciesId: string, field: CatalogFieldReview['field'], proposedValue: unknown, citationIds: readonly string[], conflictNotes: string[] = [], confidence: CatalogFieldReview['confidence'] = 'high'): CatalogFieldReview => ({
+  speciesId, field, proposedValue, status: 'reviewed', resolution: 'supported', confidence, citationIds: [...citationIds], conflictNotes, reviewedAt: '2026-10-13T23:20:00+08:00',
 });
 
 const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
@@ -109,6 +122,35 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
     if (tank) Object.assign(tank, supported(item.id, 'tank_size', { liters: null, lengthCm: 100 }, citations, 'high'));
     if (breeding) Object.assign(breeding, supported(item.id, 'breeding_behavior', { traits: ['Both parents guard eggs attached to aquatic vegetation.'] }, citations, 'high'));
   }
+  const husbandryCitation = verifiedHusbandrySources[item.id] ? [verifiedHusbandrySources[item.id]!] : citations;
+  if (item.id === 'sp_0014') {
+    const tank = reviews.find(review => review.field === 'tank_size');
+    const social = reviews.find(review => review.field === 'social_behavior');
+    if (tank) Object.assign(tank, supportedHighYield(item.id, 'tank_size', { liters: 72, lengthCm: 80 }, husbandryCitation, ['Seriously Fish gives 80 × 30 cm / about 72 L as the long-term-care minimum footprint.']));
+    if (social) Object.assign(social, supportedHighYield(item.id, 'social_behavior', { mode: 'group', minimumGroupSize: 4 }, husbandryCitation, ['The source explicitly recommends a group of at least 4–6; the enforced minimum is the lower bound only.']));
+  }
+  if (item.id === 'sp_0443') {
+    const tank = reviews.find(review => review.field === 'tank_size');
+    const social = reviews.find(review => review.field === 'social_behavior');
+    const predation = reviews.find(review => review.field === 'predation');
+    if (tank) Object.assign(tank, supportedHighYield(item.id, 'tank_size', { liters: 41, lengthCm: 45 }, husbandryCitation));
+    if (social) Object.assign(social, supportedHighYield(item.id, 'social_behavior', { mode: 'group', minimumGroupSize: 6 }, husbandryCitation));
+    if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: [] }, husbandryCitation, ['The source explicitly describes the species as very peaceful and lists small characins/cyprinids among suitable tankmates; no generic fish-predation target is promoted.']));
+  }
+  if (item.id === 'sp_0444') {
+    const territoriality = reviews.find(review => review.field === 'territoriality');
+    if (territoriality) Object.assign(territoriality, supportedHighYield(item.id, 'territoriality', { traits: ['male_conspecific_territoriality'] }, husbandryCitation, ['The source explicitly states that males are territorial with one another; no broader territoriality scope is inferred.']));
+  }
+  if (item.id === 'sp_0446') {
+    const adultSize = reviews.find(review => review.field === 'adult_size');
+    const predation = reviews.find(review => review.field === 'predation');
+    if (adultSize) Object.assign(adultSize, supportedHighYield(item.id, 'adult_size', { min: null, max: 15 }, husbandryCitation, ['Seriously Fish records 150 mm standard length; body height is not substituted for standard length.']));
+    if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: ['small_fish'] }, husbandryCitation, ['The source explicitly warns that angelfish may eat small fish such as tetras.']));
+  }
+  if (item.id === 'sp_0447') {
+    const tank = reviews.find(review => review.field === 'tank_size');
+    if (tank) Object.assign(tank, supportedHighYield(item.id, 'tank_size', { liters: 255, lengthCm: 120 }, husbandryCitation, ['The source gives roughly 120 × 45 × 45 cm / 255 L for a few juveniles or a breeding pair; no group-size extrapolation is added.']));
+  }
   return reviews;
 };
 
@@ -116,6 +158,10 @@ export const catalogReviewBatch02: CatalogFieldReview[] = species.flatMap(makeRe
 
 const source = (id: string, title: string, url: string, sourceType: CatalogEvidenceSource['sourceType'] = 'curated_husbandry'): CatalogEvidenceSource => ({
   id, title, publisher: id.includes('worms') ? 'WoRMS' : 'FishBase', url, sourceType, reviewStatus: 'reviewed',
+});
+
+const seriouslyFishSource = (id: string, title: string, url: string): CatalogEvidenceSource => ({
+  id, title, publisher: 'Seriously Fish', url, sourceType: 'curated_husbandry', reviewStatus: 'reviewed',
 });
 
 export const catalogReviewBatch02Sources: CatalogEvidenceSource[] = [
@@ -139,6 +185,11 @@ export const catalogReviewBatch02Sources: CatalogEvidenceSource[] = [
   source('batch-02-worms-pterophyllum-scalare', 'Pterophyllum scalare taxon record', 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=101224'),
   source('batch-02-fishbase-symphysodon-aequifasciatus', 'Symphysodon aequifasciatus species summary', 'https://www.fishbase.se/summary/Symphysodon-aequifasciatus.html'),
   source('batch-02-worms-symphysodon-aequifasciatus', 'Symphysodon aequifasciatus taxon record', 'https://www.marinespecies.org/aphia.php?p=taxdetails&id=101196'),
+  seriouslyFishSource('seriouslyfish-corydoras-aeneus', 'Osteogaster aenea / bronze cory husbandry profile', 'https://www.seriouslyfish.com/species/corydoras-aeneus'),
+  seriouslyFishSource('seriouslyfish-corydoras-panda', 'Hoplisoma panda / panda cory husbandry profile', 'https://www.seriouslyfish.com/species/corydoras-panda'),
+  seriouslyFishSource('seriouslyfish-trichopodus-leerii', 'Trichopodus leerii husbandry profile', 'https://www.seriouslyfish.com/species/trichopodus-leerii'),
+  seriouslyFishSource('seriouslyfish-pterophyllum-scalare', 'Pterophyllum scalare husbandry profile', 'https://www.seriouslyfish.com/species/pterophyllum-scalare'),
+  seriouslyFishSource('seriouslyfish-symphysodon-aequifasciatus', 'Symphysodon aequifasciatus husbandry profile', 'https://www.seriouslyfish.com/species/symphysodon-aequifasciatus'),
   {
     id: 'batch-02-gbif-hemigrammus-rhodostomus',
     title: 'Hemigrammus rhodostomus GBIF species record',
@@ -186,5 +237,6 @@ export const catalogReviewBatch02VerifiedSourceIds: string[] = [
   'batch-02-fishbase-corydoras-aeneus',
   'batch-02-fishbase-mikrogeophagus-ramirezi',
   'batch-02-fishbase-pterophyllum-scalare',
+  ...Object.values(verifiedHusbandrySources),
   ...Object.values(verifiedIdentitySources),
 ];

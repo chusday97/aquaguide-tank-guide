@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 10,
+  "totalPackets": 15,
   "packets": [
     {
       "speciesId": "sp_0018",
@@ -146,6 +146,36 @@
       "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
     },
     {
+      "speciesId": "sp_0181",
+      "name": "象鼻鱼",
+      "scientificName": "Gnathonemus petersii",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch21-fishbase-gnathonemus-petersii",
+        "seriouslyfish-gnathonemus-petersii"
+      ],
+      "existingSources": [
+        {
+          "id": "batch21-fishbase-gnathonemus-petersii",
+          "title": "Gnathonemus petersii species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Gnathonemus-petersii",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-gnathonemus-petersii",
+          "title": "Gnathonemus petersii (Elephantnose Fish)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/gnathonemus-petersii",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
       "speciesId": "sp_0197",
       "name": "蓝宝石雷龙",
       "scientificName": "Channa stewartii",
@@ -236,6 +266,36 @@
       "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
     },
     {
+      "speciesId": "sp_0449",
+      "name": "非洲王子",
+      "scientificName": "Labidochromis caeruleus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch17-fishbase-labidochromis-caeruleus",
+        "seriouslyfish-labidochromis-caeruleus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch17-fishbase-labidochromis-caeruleus",
+          "title": "Labidochromis caeruleus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Labidochromis-caeruleus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-labidochromis-caeruleus",
+          "title": "Labidochromis caeruleus",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/labidochromis-caeruleus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
       "speciesId": "sp_0198",
       "name": "红宝石雷龙",
       "scientificName": "Channa diplogramma",
@@ -292,6 +352,48 @@
           "reviewStatus": "reviewed"
         }
       ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0443",
+      "name": "熊猫鼠",
+      "scientificName": "Corydoras panda",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch-02-fishbase-corydoras-panda"
+      ],
+      "existingSources": [],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0446",
+      "name": "天使鱼（神仙鱼）",
+      "scientificName": "Pterophyllum scalare",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch-02-fishbase-pterophyllum-scalare"
+      ],
+      "existingSources": [],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0451",
+      "name": "地图鱼",
+      "scientificName": "Astronotus ocellatus",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch03-fishbase-astronotus-ocellatus"
+      ],
+      "existingSources": [],
       "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     }

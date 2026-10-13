@@ -6,13 +6,18 @@ import {
   REVIEWABLE_CATALOG_FIELDS,
 } from '../src/data/catalogFieldReviews';
 import { LAUNCH_COHORT_IDS } from '../src/data/compatibility-launch-cohort';
-import { catalogReviewBatch01FieldReviews, catalogReviewBatch01Sources } from '../src/data/catalogReviewBatches/batch-01';
-import { catalogReviewBatch02, catalogReviewBatch02Sources } from '../src/data/catalogReviewBatches/batch-02';
-import { catalogReviewBatch03FieldReviews, catalogReviewBatch03Sources } from '../src/data/catalogReviewBatches/batch-03';
-import { catalogContentVerifiedSourceIds, getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
+import { catalogReviewBatch01FieldReviews, catalogReviewBatch01Sources, catalogReviewBatch01VerifiedSourceIds } from '../src/data/catalogReviewBatches/batch-01';
+import { catalogReviewBatch02, catalogReviewBatch02Sources, catalogReviewBatch02VerifiedSourceIds } from '../src/data/catalogReviewBatches/batch-02';
+import { catalogReviewBatch03FieldReviews, catalogReviewBatch03Sources, catalogReviewBatch03VerifiedSourceIds } from '../src/data/catalogReviewBatches/batch-03';
+import { getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 
 const reviews = [...catalogReviewBatch01FieldReviews, ...catalogReviewBatch02, ...catalogReviewBatch03FieldReviews];
 const sources = [...catalogReviewBatch01Sources, ...catalogReviewBatch02Sources, ...catalogReviewBatch03Sources];
+const legacyVerifiedSourceIds = new Set([
+  ...catalogReviewBatch01VerifiedSourceIds,
+  ...catalogReviewBatch02VerifiedSourceIds,
+  ...catalogReviewBatch03VerifiedSourceIds,
+]);
 const citationOwners = new Map<string, Set<string>>();
 for (const review of reviews) for (const citationId of review.citationIds) {
   const owners = citationOwners.get(citationId) ?? new Set<string>();
@@ -37,13 +42,13 @@ for (const speciesId of LAUNCH_COHORT_IDS) {
 }
 const supported = reviews.filter(review => review.resolution === 'supported').length;
 const unknown = reviews.filter(review => review.resolution === 'unknown').length;
-assert.ok(catalogContentVerifiedSourceIds.size <= sources.length, 'verified source count cannot exceed source count');
-const runtimeApprovedFields = reviews.filter(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))).length;
-const miniParrotApprovedFields = reviews.filter(review => review.speciesId === 'sp_0021' && review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))).map(review => review.field).sort();
+assert.ok(legacyVerifiedSourceIds.size <= sources.length, 'legacy verified source count cannot exceed legacy source count');
+const runtimeApprovedFields = reviews.filter(review => review.resolution === 'supported' && review.citationIds.every(id => legacyVerifiedSourceIds.has(id))).length;
+const miniParrotApprovedFields = reviews.filter(review => review.speciesId === 'sp_0021' && review.resolution === 'supported' && review.citationIds.every(id => legacyVerifiedSourceIds.has(id))).map(review => review.field).sort();
 assert.deepEqual(miniParrotApprovedFields, ['adult_size']);
 const rhodeusApprovedFields = getApprovedCatalogFieldReviews('sp_0475').map(review => review.field).sort();
 assert.deepEqual(rhodeusApprovedFields, ['adult_size', 'identity', 'temperature']);
 assert.equal(getApprovedCatalogFieldReviews('sp_0475').some(review => review.field === 'water'), false, 'Rhodeus freshwater+brackish source must not collapse into a single freshwater runtime fact');
-assert.equal(catalogContentVerifiedSourceIds.size, 33);
-assert.equal(runtimeApprovedFields, 102);
-console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: catalogContentVerifiedSourceIds.size, runtimeApprovedFields }, null, 2));
+assert.equal(legacyVerifiedSourceIds.size, 40);
+assert.equal(runtimeApprovedFields, 115);
+console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: legacyVerifiedSourceIds.size, runtimeApprovedFields }, null, 2));
