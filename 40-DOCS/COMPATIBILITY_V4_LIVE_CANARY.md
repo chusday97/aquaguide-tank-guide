@@ -58,10 +58,10 @@ A rejected model output remains observable but cannot weaken deterministic autho
 
 ## Current WebCodex observation — 2026-10-13
 
-A pre-existing local Bailian `DASHSCOPE_API_KEY` was securely reused for Aqua as ignored `AI_API_KEY` with `AI_BASE_URL=https://dashscope.aliyuncs.com/compatible-mode/v1`, `AI_MODEL=qwen-plus`, and a 20-second timeout. The secret was not printed or committed. `GET /models` returned HTTP 200, confirming key and endpoint authentication.
+A pre-existing local Bailian `DASHSCOPE_API_KEY` is securely reused for Aqua as ignored `AI_API_KEY`. Aqua now uses the existing Beijing workspace OpenAI-compatible endpoint plus `AI_MODEL=deepseek-v4.1-flash` and a 20-second timeout. The secret is not printed or committed.
 
-Real chat probes were then attempted. `qwen-plus`, `qwen-flash`, `qwen3.5-flash`, `qwen3.6-flash`, and `qwen3.7-flash` returned HTTP 403 `AllocationQuota.FreeTierOnly`: the account's free text quota is exhausted while paid use is disabled. Legacy Turbo and a small Qwen instruct model were also access-denied.
+Qwen Flash/Plus probes in this workspace remain quota-blocked, but `deepseek-v4.1-flash` returns HTTP 200. DeepSeek V4 defaults to thinking mode; with the prior output budget that produced `finish_reason=length` and no final `content`. Compatibility therefore sends `enable_thinking=false` only for DeepSeek V4 models. A strict JSON schema probe then returned `finish_reason=stop` with exactly `suggestedVerdict`, `reasons`, `adjustments`, `uncertainties`, `confidence`, and `evidenceIds`.
 
-The real V4 canary now reports `blocked_provider_quota`: three reviewed cases are `unavailable/quota_exhausted`, the insufficient-data case is still skipped, and final-decision mutations remain zero.
+The real V4 canary now reports `pass_guarded`: all three reviewed states (compatible / caution / not recommended) are accepted, the insufficient-data state is skipped before AI, there are zero unavailable/rejected cases, and final-decision mutations remain zero. Reviewed-case latency is roughly 6.7–7.4 seconds in the current local run.
 
 The WebCodex host has a linked Vercel project but no Vercel CLI auth/token, so these AI environment variables have not been written to remote Preview or Production.

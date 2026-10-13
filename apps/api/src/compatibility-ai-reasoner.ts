@@ -253,6 +253,12 @@ const promptsFor = (
   return { system, user };
 };
 
+export const compatibilityAiRequestExtrasForModel = (model: string) => (
+  /(^|\/)deepseek-v4(?:\.1)?(?:-|$)/i.test(model)
+    ? { enable_thinking: false as const }
+    : {}
+);
+
 export const openAiCompatibleCompatibilityReasoningProvider: CompatibilityAiReasoningProvider = Object.assign(
   async ({ system, user }: { system: string; user: string }) => ({
     model: apiConfig.aiModel,
@@ -265,6 +271,7 @@ export const openAiCompatibleCompatibilityReasoningProvider: CompatibilityAiReas
         stream: false,
         temperature: 0.1,
         max_tokens: 1200,
+        ...compatibilityAiRequestExtrasForModel(apiConfig.aiModel),
         response_format: { type: 'json_object' },
         messages: [
           { role: 'system', content: system },

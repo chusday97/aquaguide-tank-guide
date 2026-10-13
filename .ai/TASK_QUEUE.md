@@ -16,9 +16,12 @@
 14. DONE: run true external-model probes and canary; account is blocked by `AllocationQuota.FreeTierOnly`, so real canary is `blocked_provider_quota` with 0 final-decision mutations.
 15. DONE: classify provider quota/access/rate-limit failures explicitly instead of reporting them as generic network errors.
 16. DONE: full backend release gate + scope validation pass; finalize and push one clean Bailian-quota diagnostic checkpoint.
-17. EXTERNAL BLOCKER: Bailian must add usable text quota or disable the account's free-tier-only restriction before a true model-quality canary can pass.
-18. EXTERNAL BLOCKER: WebCodex has no Vercel auth/token, so remote Preview/Production AI env cannot be written from this channel yet.
-19. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
+17. DONE: rediscover Bailian workspace-specific endpoint/model availability; Qwen remains quota-blocked but `deepseek-v4.1-flash` is callable with HTTP 200.
+18. DONE: diagnose DeepSeek V4 default thinking as the `invalid_response` cause; add Compatibility-only `enable_thinking=false` adapter without weakening strict schema or deterministic authority.
+19. DONE: true external-model canary passes guarded: 3 reviewed accepted / 1 insufficient skipped / 0 final-decision mutations.
+20. DONE: full backend release gate + scope validation pass; finalize and push one clean Bailian DeepSeek checkpoint.
+21. EXTERNAL BLOCKER: WebCodex has no Vercel auth/token, so remote Preview/Production AI env cannot be written from this channel yet.
+22. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

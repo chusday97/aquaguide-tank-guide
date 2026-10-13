@@ -6,6 +6,7 @@ import { evaluateTankCompatibility } from '../src/services/compatibility/compati
 import {
   COMPATIBILITY_AI_PROMPT_VERSION,
   buildCompatibilityAiProviderReadiness,
+  compatibilityAiRequestExtrasForModel,
   createCompatibilityAiShadowAssessment,
   type CompatibilityAiReasoningProvider,
 } from '../apps/api/src/compatibility-ai-reasoner';
@@ -44,6 +45,16 @@ const unconfiguredReadiness = buildCompatibilityAiProviderReadiness({
   aiTimeoutMs: 4321,
 });
 assert.equal(unconfiguredReadiness.configured, false);
+
+assert.deepEqual(
+  compatibilityAiRequestExtrasForModel('deepseek-v4.1-flash'),
+  { enable_thinking: false },
+);
+assert.deepEqual(
+  compatibilityAiRequestExtrasForModel('vanchin/deepseek-v4.1-flash'),
+  { enable_thinking: false },
+);
+assert.deepEqual(compatibilityAiRequestExtrasForModel('qwen-plus'), {});
 
 const tank: Aquarium = {
   id: 'v4-shadow-tank',

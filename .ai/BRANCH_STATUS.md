@@ -1,9 +1,9 @@
-## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian quota diagnostics
+## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 Bailian DeepSeek live provider
 
-- `codex/compatibility-v4-provider-quota-20261013` was created from exact clean pushed provider-readiness HEAD `94f42f36861dd192261b2b0fd5fd5394b61479bc`.
-- Scope is provider diagnostics only: generic HTTP failure classification, canary outcome classification, legacy species-AI compatibility mapping, tests/docs and a real local Bailian canary run.
-- Existing Bailian credential is configured only in ignored Aqua `.env.local`; `/models` authenticates successfully and no secret is printed/tracked. Real text calls are blocked by account quota policy (`AllocationQuota.FreeTierOnly`).
-- Real canary reports `blocked_provider_quota`; deterministic final decisions remain unchanged. WebCodex has no Vercel auth/token, so remote deployment env is untouched.
+- `codex/compatibility-v4-bailian-deepseek-20261013` was created from exact clean pushed quota-diagnostics HEAD `bc7b724a210b134e7dd98b2dd34e5bf62573f901`.
+- Scope is provider adaptation only: use the existing Bailian Beijing workspace endpoint + `deepseek-v4.1-flash`, disable DeepSeek V4 thinking for strict Compatibility JSON, add regression coverage and update live-canary authority/docs.
+- Real external model canary is `pass_guarded`: 3 reviewed cases accepted, 1 insufficient case skipped, 0 unavailable/rejected and 0 final-decision mutations. Deterministic authority remains final.
+- Existing Bailian credential is configured only in ignored Aqua `.env.local`; no secret is printed/tracked. WebCodex has no Vercel auth/token, so remote deployment env is untouched.
 - No Compatibility Profile/Pair/Stage authority changes, no migration files, no UI changes and no Production mutation.
 - Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116.
 
