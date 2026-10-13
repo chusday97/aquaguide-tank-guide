@@ -40,6 +40,8 @@
 - `src/data/catalogReviewBatches/next-wave-unified-16.ts` / `scripts/test-compatibility-unified-wave16-authority.ts` / `supabase/migrations/20261013153000_compatibility_unified_wave16_authority.sql`：最终 12 个 promotion candidates 收口；`sp_0052` 以 reviewed FishBase environment/size/social facts 晋升为第 101 个 Profile，`sp_0112/sp_0115` 为 social evidence ceilings，9 个珊瑚/海绵/龟对象为 non-fish domain holds；静态 DB authority 100/176 → 101/177，migration 仅为 repository candidate，未执行 Production。
 - `src/data/compatibilityAuthorityRollout.ts`：Profile rollout 合法代际更新为精确 63 → 85 → 95 → 99 → 100 → 101；100 作为 `wave06-target` 保留，101 为最新 `target`，其他中间/错配 keyset fail closed。
 - `src/services/compatibility/compatibility.service.ts`：混养结果、组合判断和添加策略的统一应用入口；Domain Rules 负责最终状态/策略，旧引擎仅保留证据详情，页面入口待解除 UI freeze 后迁移。
+- `apps/api/src/compatibility-ai-reasoner.ts` / `scripts/test-compatibility-v4-ai-shadow.ts`：Compatibility V4 server-side AI shadow layer；仅在 fully reviewed exact authority 下运行，模型输出必须使用 allow-listed rule/evidence authority，任何 hard-block weakening / unknown evidence / invalid schema / timeout 都不能改变 deterministic final decision。
+- `GET /aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey`：authenticated shadow endpoint，复用 server-side AI provider config，返回 deterministic `finalDecision` + 独立 AI assessment + provenance；当前不接 UI、不参与入缸确认 authority。
 - `scripts/build-catalog-snapshot.ts` / `scripts/validate-catalog-snapshot.ts` / `scripts/publish-catalog-snapshot.ts`：Catalog 产物构建、校验与仅生成待发布目录的受控发布命令。
 - `scripts/verify-mobile-aquarium-priorities.mjs`：验证手机页头、高频操作、首页推荐边界与图鉴模式工具栏。
 - `scripts/assert_taxonomy_rules.ts` / `scripts/generate_taxonomy_review.ts`：486 条物种来源分类、生命类型、角色、水体和筛选标签的确定性门禁与人工复核报告。

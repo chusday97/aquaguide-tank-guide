@@ -37,6 +37,7 @@ import type { DomainSpeciesFact } from '../../../../packages/domain-rules/src';
 import { fishData } from '../../../../src/data/fishData';
 import { LOCAL_CATALOG_VERSION } from '../../../../src/data/catalogVersion';
 import { evaluateTankCompatibility, getCompatibilityDecision } from '../../../../src/services/compatibility/compatibility.service';
+import { createCompatibilityAiShadowAssessment } from '../compatibility-ai-reasoner';
 import type { Aquarium } from '../../../../src/types';
 
 type DbRow = Record<string, any>;
@@ -89,7 +90,7 @@ export const normalizeCatalogWaterType = (value: unknown): DomainSpeciesFact['wa
   return normalized === 'freshwater' || normalized === 'saltwater' || normalized === 'brackish' ? normalized : 'unknown';
 };
 
-export const readPublishedCatalogDecision = async ({
+export const readPublishedCatalogCompatibilityContext = async ({
   client,
   aquariumId,
   speciesCatalogKey,
@@ -147,17 +148,31 @@ export const readPublishedCatalogDecision = async ({
     ...(aquarium.target_temperature_c != null ? { targetTemperature: String(aquarium.target_temperature_c) } : {}),
   };
 
+  const existingSpecies = existingRows.map((item: DbRow) => ({
+    species: catalogByKey.get(item.species_catalog_key)!,
+    quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1,
+  }));
   const result = evaluateTankCompatibility({
     tank,
-    existingSpecies: existingRows.map((item: DbRow) => ({
-      species: catalogByKey.get(item.species_catalog_key)!,
-      record: { quantity: Number(item.quantity) > 0 ? Number(item.quantity) : 1 },
+    existingSpecies: existingSpecies.map(item => ({
+      species: item.species,
+      record: { quantity: item.quantity },
     })),
     candidateSpecies,
     intent: 'planned_addition',
   });
-  return getCompatibilityDecision(result, 'planned_addition');
+  return {
+    tank,
+    candidateSpecies,
+    existingSpecies,
+    result,
+    decision: getCompatibilityDecision(result, 'planned_addition'),
+  };
 };
+
+export const readPublishedCatalogDecision = async (
+  input: Parameters<typeof readPublishedCatalogCompatibilityContext>[0],
+) => (await readPublishedCatalogCompatibilityContext(input)).decision;
 
 export const aquariumsRouter = Router();
 aquariumsRouter.use((request, response, next) => (
@@ -209,6 +224,24 @@ aquariumsRouter.get('/aquariums/:id', asyncRoute(async (request, response) => {
   if (error) throwDatabaseError(error, '鱼缸数据暂时无法加载。');
   if (!data) throw new ApiError(404, 'NOT_FOUND', '没有找到这个鱼缸。');
   return sendData(request, response, mapAquarium(data));
+}));
+
+aquariumsRouter.get('/aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey', asyncRoute(async (request, response) => {
+  const aquariumId = parseId(request.params.id, '鱼缸标识');
+  const catalogVersion = typeof request.query.catalogVersion === 'string' ? request.query.catalogVersion : '';
+  const context = await readPublishedCatalogCompatibilityContext({
+    client: userClientFor(request),
+    aquariumId,
+    speciesCatalogKey: request.params.speciesCatalogKey,
+    catalogVersion,
+  });
+  const shadow = await createCompatibilityAiShadowAssessment({
+    deterministicResult: context.result,
+    tank: context.tank,
+    existingSpecies: context.existingSpecies,
+    candidateSpecies: context.candidateSpecies,
+  });
+  return sendData(request, response, shadow);
 }));
 
 aquariumsRouter.patch('/aquariums/:id', asyncRoute(async (request, response) => {

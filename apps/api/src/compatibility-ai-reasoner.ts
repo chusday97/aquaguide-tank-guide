@@ -1,0 +1,344 @@
+import { z } from 'zod';
+import { apiConfig } from './config';
+import { fetchJsonResponse, ProviderError } from './ai/provider';
+import type { Aquarium, Fish } from '../../../src/types';
+import {
+  getCompatibilityDecision,
+  type CanonicalCompatibilityDecision,
+  type TankCompatibilityResult,
+  type TankCompatibilityStatus,
+} from '../../../src/services/compatibility/compatibility.service';
+import { getReviewedCompatibilityProfile } from '../../../src/data/compatibilityEvidence';
+import { getReviewedSpeciesKnowledgeForFish } from '../../../src/modules/knowledge/speciesKnowledge';
+
+export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v1';
+
+const verdictSchema = z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']);
+const groundedItemSchema = z.object({
+  text: z.string().trim().min(1).max(360),
+  ruleCodes: z.array(z.string().trim().min(1)).max(8),
+}).strict();
+
+export const compatibilityAiProviderOutputSchema = z.object({
+  suggestedVerdict: verdictSchema,
+  reasons: z.array(groundedItemSchema).min(1).max(8),
+  adjustments: z.array(groundedItemSchema).max(8),
+  uncertainties: z.array(groundedItemSchema).max(8),
+  confidence: z.enum(['low', 'medium', 'high']),
+  evidenceIds: z.array(z.string().trim().min(1)).max(48),
+}).strict();
+
+export type CompatibilityAiProviderOutput = z.infer<typeof compatibilityAiProviderOutputSchema>;
+
+export type CompatibilityAiReasoningProvider = (input: {
+  system: string;
+  user: string;
+}) => Promise<{ model: string; output: unknown }>;
+
+export type CompatibilityAiShadowInput = {
+  deterministicResult: TankCompatibilityResult;
+  tank?: Aquarium | null;
+  existingSpecies: Array<{ species: Fish; quantity: number }>;
+  candidateSpecies: Fish;
+  candidateQuantity?: number;
+};
+
+export type CompatibilityAiShadowResult = {
+  mode: 'shadow';
+  finalDecision: CanonicalCompatibilityDecision;
+  ai: {
+    status: 'accepted' | 'skipped' | 'unavailable' | 'rejected';
+    reason?: string;
+    suggestedVerdict?: TankCompatibilityStatus;
+    reasons: Array<{ text: string; ruleCodes: string[] }>;
+    adjustments: Array<{ text: string; ruleCodes: string[] }>;
+    uncertainties: Array<{ text: string; ruleCodes: string[] }>;
+    confidence?: 'low' | 'medium' | 'high';
+  };
+  provenance: {
+    promptVersion: string;
+    authorityVersion: string;
+    catalogVersion: string;
+    ruleVersion: string;
+    evidenceIds: string[];
+    model?: string;
+  };
+};
+
+const reviewedKnowledgeSnapshot = (species: Fish) => {
+  const profile = getReviewedCompatibilityProfile(species.id);
+  const knowledge = getReviewedSpeciesKnowledgeForFish(species);
+  if (!profile || !knowledge) return null;
+  const reviewedField = <T extends { evidence?: { reviewStatus?: string; sourceIds?: string[] } } | undefined>(field: T) => (
+    field?.evidence?.reviewStatus === 'reviewed' ? field : undefined
+  );
+  const environment = reviewedField(knowledge.environment);
+  const social = reviewedField(knowledge.socialBehavior);
+  const space = reviewedField(knowledge.spaceAndGrowth);
+  return {
+    catalogKey: species.id,
+    commonName: species.name,
+    scientificName: species.scientificName,
+    compatibilityProfile: {
+      waterType: profile.waterType,
+      waterTypes: profile.waterTypes,
+      behaviorTraits: profile.behaviorTraits,
+      minimumGroupSize: profile.minimumGroupSize,
+      predationTargets: profile.predationTargets,
+      confidence: profile.confidence,
+      requiredFacts: profile.requiredFacts || [],
+      evidenceIds: profile.citations.map(item => item.id),
+    },
+    reviewedKnowledge: {
+      environment: environment ? {
+        waterType: environment.waterType,
+        waterTypes: environment.waterTypes,
+        temperatureRangeC: environment.temperatureRangeC,
+        phRange: environment.phRange,
+        hardnessDgh: environment.hardnessDgh,
+        sourceIds: environment.evidence.sourceIds,
+      } : undefined,
+      social: social ? {
+        mode: social.mode,
+        minimumGroupSize: social.minimumGroupSize,
+        recommendedGroupSize: social.recommendedGroupSize,
+        swimmingZone: social.swimmingZone,
+        territoriality: social.territoriality,
+        finNipping: social.finNipping,
+        finNipVulnerability: social.finNipVulnerability,
+        swimmingPace: social.swimmingPace,
+        predationRisk: social.predationRisk,
+        predationVulnerability: social.predationVulnerability,
+        summary: social.summary,
+        sourceIds: social.evidence.sourceIds,
+      } : undefined,
+      space: space ? {
+        adultLengthCm: space.adultLengthCm,
+        minVolumeLiters: space.minVolumeLiters,
+        minTankLengthCm: space.minTankLengthCm,
+        activityLevel: space.activityLevel,
+        swimmingZone: space.swimmingZone,
+        needsCover: space.needsCover,
+        needsHidingPlaces: space.needsHidingPlaces,
+        sourceIds: space.evidence.sourceIds,
+      } : undefined,
+    },
+  };
+};
+
+const ruleSnapshot = (result: TankCompatibilityResult) => (
+  [...result.blockingRules, ...result.warningRules, ...result.missingData, ...result.passedRules]
+    .map(rule => ({
+      code: rule.code,
+      title: rule.title,
+      evidence: rule.evidence,
+      severity: rule.severity,
+      reviewStatus: rule.reviewStatus,
+      confidence: rule.confidence,
+      affectedSpeciesIds: rule.affectedSpeciesIds,
+      evidenceIds: rule.citations.map(item => item.id),
+    }))
+);
+
+const allowedRuleCodes = (result: TankCompatibilityResult) => new Set([
+  ...result.metadata.domainRuleCodes,
+  ...ruleSnapshot(result).map(rule => rule.code),
+]);
+
+const allowedEvidenceIds = (result: TankCompatibilityResult) => new Set([
+  ...(result.evidenceIds || []),
+  ...ruleSnapshot(result).flatMap(rule => rule.evidenceIds),
+]);
+
+const hasUnknownGrounding = (
+  output: CompatibilityAiProviderOutput,
+  rules: ReadonlySet<string>,
+  evidence: ReadonlySet<string>,
+) => {
+  if (output.evidenceIds.some(id => !evidence.has(id))) return true;
+  return [...output.reasons, ...output.adjustments, ...output.uncertainties]
+    .some(item => item.ruleCodes.some(code => !rules.has(code)));
+};
+
+const violatesDeterministicAuthority = (
+  deterministic: TankCompatibilityResult,
+  suggested: TankCompatibilityStatus,
+) => {
+  if (deterministic.blockingRules.length > 0) return suggested !== 'not_recommended';
+  if (deterministic.metadata.domainStatus === 'not_recommended') return suggested !== 'not_recommended';
+  if (deterministic.metadata.domainStatus === 'insufficient_data') return suggested !== 'insufficient_data';
+  if (deterministic.metadata.domainStatus === 'caution') return suggested === 'compatible';
+  return false;
+};
+
+const tankSnapshot = (tank?: Aquarium | null) => {
+  if (!tank) return null;
+  return {
+    waterType: tank.waterType,
+    dimensions: tank.dimensions,
+    targetTemperature: tank.targetTemperature,
+  };
+};
+
+const promptsFor = (
+  input: CompatibilityAiShadowInput,
+  speciesFacts: NonNullable<ReturnType<typeof reviewedKnowledgeSnapshot>>[],
+) => {
+  const result = input.deterministicResult;
+  const finalDecision = getCompatibilityDecision(result);
+  const system = [
+    'You are AquaGuide Compatibility V4 in SHADOW mode.',
+    'You are not the final authority. Deterministic hard rules and reviewed pair authority remain final.',
+    'Use ONLY facts, rules, evidence IDs and tank context included in INPUT. Do not use outside biological knowledge.',
+    'Do not invent missing species facts, thresholds, group sizes, interactions, citations or evidence IDs.',
+    'If INPUT says insufficient_data, suggestedVerdict must remain insufficient_data.',
+    'If INPUT contains a hard/blocking rule or final verdict not_recommended, suggestedVerdict must remain not_recommended.',
+    'If final verdict is caution, never upgrade it to compatible.',
+    'Ground every reason/adjustment/uncertainty in ruleCodes supplied by INPUT.',
+    'Return one JSON object only.',
+  ].join(' ');
+  const user = JSON.stringify({
+    task: 'Explain combination-level risk and actionable adjustments without changing deterministic authority.',
+    requiredOutput: {
+      suggestedVerdict: 'compatible|caution|not_recommended|insufficient_data',
+      reasons: [{ text: 'grounded explanation', ruleCodes: ['exact_input_rule_code'] }],
+      adjustments: [{ text: 'grounded action', ruleCodes: ['exact_input_rule_code'] }],
+      uncertainties: [{ text: 'grounded uncertainty', ruleCodes: ['exact_input_rule_code'] }],
+      confidence: 'low|medium|high',
+      evidenceIds: ['only exact evidence IDs supplied in INPUT'],
+    },
+    deterministicAuthority: {
+      finalDecision,
+      riskLevel: result.riskLevel,
+      summary: result.summary,
+      rules: ruleSnapshot(result),
+    },
+    tank: tankSnapshot(input.tank),
+    species: speciesFacts,
+    quantities: {
+      existing: input.existingSpecies.map(item => ({ catalogKey: item.species.id, quantity: item.quantity })),
+      candidate: { catalogKey: input.candidateSpecies.id, quantity: input.candidateQuantity || 1 },
+    },
+    allowedRuleCodes: [...allowedRuleCodes(result)],
+    allowedEvidenceIds: [...allowedEvidenceIds(result)],
+  }, null, 2);
+  return { system, user };
+};
+
+export const openAiCompatibleCompatibilityReasoningProvider: CompatibilityAiReasoningProvider = async ({ system, user }) => ({
+  model: apiConfig.aiModel,
+  output: await fetchJsonResponse(
+    apiConfig.aiBaseUrl,
+    apiConfig.aiApiKey,
+    apiConfig.aiModel,
+    apiConfig.aiTimeoutMs,
+    {
+      stream: false,
+      temperature: 0.1,
+      max_tokens: 1200,
+      response_format: { type: 'json_object' },
+      messages: [
+        { role: 'system', content: system },
+        { role: 'user', content: user },
+      ],
+    },
+    1,
+  ),
+});
+
+const emptyAi = (
+  status: CompatibilityAiShadowResult['ai']['status'],
+  reason: string,
+): CompatibilityAiShadowResult['ai'] => ({
+  status,
+  reason,
+  reasons: [],
+  adjustments: [],
+  uncertainties: [],
+});
+
+export const createCompatibilityAiShadowAssessment = async (
+  input: CompatibilityAiShadowInput,
+  provider: CompatibilityAiReasoningProvider = openAiCompatibleCompatibilityReasoningProvider,
+): Promise<CompatibilityAiShadowResult> => {
+  const finalDecision = getCompatibilityDecision(input.deterministicResult);
+  const baseProvenance = {
+    promptVersion: COMPATIBILITY_AI_PROMPT_VERSION,
+    authorityVersion: input.deterministicResult.metadata.authorityVersion,
+    catalogVersion: input.deterministicResult.metadata.catalogVersion,
+    ruleVersion: input.deterministicResult.metadata.ruleVersion,
+    evidenceIds: [...allowedEvidenceIds(input.deterministicResult)],
+  };
+
+  if (input.deterministicResult.metadata.decisionReadiness !== 'reviewed') {
+    return {
+      mode: 'shadow',
+      finalDecision,
+      ai: emptyAi('skipped', 'deterministic_decision_not_fully_reviewed'),
+      provenance: baseProvenance,
+    };
+  }
+
+  const species = [...input.existingSpecies.map(item => item.species), input.candidateSpecies];
+  const speciesFacts = species.map(reviewedKnowledgeSnapshot);
+  if (speciesFacts.some(item => !item)) {
+    return {
+      mode: 'shadow',
+      finalDecision,
+      ai: emptyAi('skipped', 'missing_exact_reviewed_profile_or_runtime_knowledge'),
+      provenance: baseProvenance,
+    };
+  }
+
+  try {
+    const { system, user } = promptsFor(input, speciesFacts as NonNullable<(typeof speciesFacts)[number]>[]);
+    const providerResult = await provider({ system, user });
+    const parsed = compatibilityAiProviderOutputSchema.safeParse(providerResult.output);
+    if (!parsed.success) {
+      return {
+        mode: 'shadow',
+        finalDecision,
+        ai: emptyAi('rejected', 'provider_output_schema_invalid'),
+        provenance: { ...baseProvenance, model: providerResult.model },
+      };
+    }
+    const output = parsed.data;
+    if (hasUnknownGrounding(output, allowedRuleCodes(input.deterministicResult), allowedEvidenceIds(input.deterministicResult))) {
+      return {
+        mode: 'shadow',
+        finalDecision,
+        ai: emptyAi('rejected', 'provider_output_uses_unknown_authority'),
+        provenance: { ...baseProvenance, model: providerResult.model },
+      };
+    }
+    if (violatesDeterministicAuthority(input.deterministicResult, output.suggestedVerdict)) {
+      return {
+        mode: 'shadow',
+        finalDecision,
+        ai: emptyAi('rejected', 'provider_output_conflicts_with_deterministic_authority'),
+        provenance: { ...baseProvenance, model: providerResult.model },
+      };
+    }
+    return {
+      mode: 'shadow',
+      finalDecision,
+      ai: {
+        status: 'accepted',
+        suggestedVerdict: output.suggestedVerdict,
+        reasons: output.reasons,
+        adjustments: output.adjustments,
+        uncertainties: output.uncertainties,
+        confidence: output.confidence,
+      },
+      provenance: { ...baseProvenance, model: providerResult.model },
+    };
+  } catch (error) {
+    const reason = error instanceof ProviderError ? error.reason : 'provider_failure';
+    return {
+      mode: 'shadow',
+      finalDecision,
+      ai: emptyAi('unavailable', reason),
+      provenance: baseProvenance,
+    };
+  }
+};

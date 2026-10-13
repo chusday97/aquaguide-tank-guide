@@ -6,6 +6,10 @@
 
 ## [Unreleased]
 
+- Added: Compatibility V4 AI shadow reasoner and authenticated aquarium shadow endpoint. AI receives only deterministic rules, exact reviewed Profile/Species Knowledge facts, tank context and allow-listed evidence; it returns structured reasons/adjustments/uncertainties with provenance.
+- Safety: deterministic compatibility remains final. Hard-block weakening, caution→compatible upgrades, insufficient-data overrides, invented rule/evidence authority, invalid provider schema and provider timeout/failure are rejected or skipped without breaking the deterministic result.
+- Added: `40-DOCS/COMPATIBILITY_V4_AI_SHADOW.md` and adversarial `test:compatibility-v4-ai-shadow`; no Compatibility DB authority, Production data, UI or Vision scope changed.
+
 - Added: Compatibility wave16 closes the final 12 promotion candidates: `sp_0052 Corydoras hastatus` becomes the 101st reviewed Profile from exact FishBase freshwater/temperature/pH/adult-size/small-shoal authority, `sp_0112`/`sp_0115` remain exact-species social evidence ceilings, and 9 coral/sponge/turtle objects become non-fish domain holds.
 - Added: repository-only migration `20261013153000_compatibility_unified_wave16_authority.sql` guards exact 100 Profiles / 176 evidence → 101 / 177 with one new source, one Profile and one source link; Production is untouched.
 - Changed: rollout generations are exact 63 → 85 → 95 → 99 → 100 → 101, `sp_0052` runtime Species Knowledge is explicitly promoted, and regenerated `next_wave_species_queue` is now empty; remaining gaps are enrichment or terminal holds rather than unprocessed promotion candidates.

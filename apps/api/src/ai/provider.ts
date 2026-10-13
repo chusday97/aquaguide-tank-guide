@@ -26,7 +26,7 @@ const cleanJsonText = (value: string) => {
     : cleaned;
 };
 
-const fetchJsonResponse = async (
+export const fetchJsonResponse = async (
   baseUrl: string,
   apiKey: string,
   model: string,

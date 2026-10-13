@@ -1,10 +1,10 @@
-## TOP CURRENT BRANCH — 2026-10-13 wave16
+## TOP CURRENT BRANCH — 2026-10-13 Compatibility V4 AI shadow
 
-- `codex/compatibility-next12-wave16-20261013` was created from exact clean pushed wave15 HEAD `fa06b507442dca2a5be16002d96adb17c7d96681`.
-- Scope is Compatibility backend authority only: 1 new reviewed Profile/source, 2 species social ceilings, 9 non-fish domain boundaries, rollout/keyset contracts, repository-only migration, regenerated coverage and docs.
-- Static candidate advances to 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 evidence; rollout preserves exact 100-profile wave06 state as a legal predecessor and adds 101 as latest target.
-- Promotion queue is empty after regeneration. The branch adds one Supabase migration file because DB authority genuinely increases, but does not execute it or mutate Production.
-- Production remains 60 / 63 / 21 / 1 / 116; no deploy, merge/main, UI, or Vision change.
+- `codex/compatibility-v4-ai-shadow-20261013` was created from exact clean pushed wave16 HEAD `7fe10f42f29f27b7bb4ec09ed3154416aed4765b`.
+- Scope is backend/shadow only: generic JSON provider export, Compatibility AI reasoner, authenticated aquarium shadow endpoint, adversarial contract test and architecture docs.
+- No Compatibility Profile/Pair/Stage authority changes, no migration files, no UI changes and no Production mutation.
+- Deterministic decision remains the only final authority; AI output is separate, grounded, optional and fail-soft.
+- Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116.
 
 ## RC1 RELEASE CLOSURE — 2026-09-16
 - Production runtime: `93549ddf1cad0855a7c479e4a696cdde7e66f06c` via `dpl_4uP6Jv7zei6wCpeKkCPfiBb7buNd` (READY / production).

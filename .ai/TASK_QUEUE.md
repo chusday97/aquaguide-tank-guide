@@ -1,12 +1,12 @@
-## TOP CURRENT QUEUE — 2026-10-13 unified wave16 completion
+## TOP CURRENT QUEUE — 2026-10-13 Compatibility V4 AI shadow
 
-1. DONE: classify the final active 12 objects: 1 reviewed Profile / 2 exact-species social evidence ceilings / 9 non-fish domain holds.
-2. DONE: promote `sp_0052` with exact reviewed FishBase facts and runtime Species Knowledge; do not invent a numeric shoal minimum.
-3. DONE: add repository-only stacked wave16 migration 100/176 → 101/177 and exact rollout generation 100 (`wave06-target`) → 101 (`target`).
-4. DONE: regenerate coverage; `next_wave_species_queue` is now empty and current promotion breadth expansion is complete.
-5. DONE: focused contracts, cross-contract validation, full backend release gate and scope validation all pass; finalize one clean wave16 checkpoint and push.
-6. NEXT: no active promotion batch. Remaining work is enrichment/terminal-hold review or separately authorized Production promotion, not another mechanical wave.
-7. HOLD: do not execute wave16 or any stacked migration in Production; no Production deploy, DB mutation, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
+1. DONE: stop mechanical species waves after promotion queue reaches zero.
+2. DONE: add server-side AI shadow reasoner with strict JSON schema, rule/evidence allow-lists and deterministic authority clamp.
+3. DONE: add authenticated aquarium shadow endpoint while preserving existing deterministic confirmation/addition flow.
+4. DONE: add focused adversarial tests for reviewed assist, hard-block optimism, invented evidence, incomplete authority and provider timeout; API/project typechecks pass.
+5. DONE: full backend release gate and scope validation pass; finalize one clean V4 shadow checkpoint and push.
+6. NEXT: after shadow checkpoint, build regression/evaluation traces for real 3+ species combinations before considering any user-visible AI reasoning.
+7. HOLD: AI cannot create biological authority or change final verdict; no Production deploy/DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 

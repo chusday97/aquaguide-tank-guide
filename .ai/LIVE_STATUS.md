@@ -1,12 +1,12 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 unified Compatibility wave16 completion
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 AI shadow
 
-- Branch: `codex/compatibility-next12-wave16-20261013` from exact pushed wave15 HEAD `fa06b507442dca2a5be16002d96adb17c7d96681`.
-- Wave16 closes the final 12 generated promotion objects: 1 reviewed Profile (`sp_0052`), 2 exact-species social evidence ceilings, and 9 coral/sponge/turtle domain holds.
-- Static authority is now 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 reviewed evidence. The new stacked migration is repository-only and guards exact predecessor 100/176 → target 101/177 with one Profile-source link.
-- Runtime rollout accepts only exact Profile generations 63 / 85 / 95 / 99 / 100 / 101; mismatched/intermediate keysets continue to fail closed.
-- `sp_0052` is no longer completion-only: its direct reviewed Phase-2 knowledge is available to runtime/V4 because the Profile has now been explicitly promoted.
-- Regenerated `next_wave_species_queue` is empty. Remaining gaps are terminal/evidence ceilings or enrichment gaps, not unprocessed promotion candidates.
-- Production is unchanged at 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No stacked migration from wave04/05/06/16 has been executed in Production.
+- Branch: `codex/compatibility-v4-ai-shadow-20261013` from exact pushed wave16 HEAD `7fe10f42f29f27b7bb4ec09ed3154416aed4765b`.
+- New server service `apps/api/src/compatibility-ai-reasoner.ts` adds model-assisted combination reasoning without changing deterministic authority.
+- Eligibility is strict: deterministic readiness reviewed + exact reviewed Profiles + runtime reviewed Species Knowledge for every participant. Otherwise AI is skipped.
+- Grounding guard accepts only input rule codes/evidence IDs; optimistic hard-block overrides, invented authority, invalid schema and provider failures cannot alter `finalDecision`.
+- API route is authenticated and shadow-only. Text AI reuses server `AI_* / DEEPSEEK_*` configuration; no API key is exposed client-side.
+- Focused V4 tests and API/project typechecks pass. Full backend release gate remains the current closeout task.
+- Static candidate remains 101 / 21 / 1 / 177; Production remains 60 / 63 / 21 / 1 / 116 and is untouched.
 
 # CURRENT OVERRIDE — 2026-10-11 stacked Compatibility wave04 candidate
 

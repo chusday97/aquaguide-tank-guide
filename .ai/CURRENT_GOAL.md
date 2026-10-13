@@ -1,12 +1,12 @@
-## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility unified wave16 completion
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 AI shadow
 
-- Active branch: `codex/compatibility-next12-wave16-20261013`, based exactly on pushed wave15 `fa06b507442dca2a5be16002d96adb17c7d96681`.
-- Processed the final generated 12 promotion candidates atomically: 1 new reviewed Profile (`sp_0052 Corydoras hastatus`) / 2 exact-species social evidence ceilings (`sp_0112`, `sp_0115`) / 9 non-fish domain holds.
-- `sp_0052` is promoted from completion-only evidence into runtime Species Knowledge and Compatibility authority using reviewed FishBase freshwater / 25–28°C / pH 6–8 / 2.4 cm / small-shoal facts. No numeric group minimum is invented.
-- Repository static candidate advances to 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 reviewed evidence. Repository-only migration candidate: `supabase/migrations/20261013153000_compatibility_unified_wave16_authority.sql` (100/176 → 101/177); it has NOT been run in Production.
-- Rollout generations are now exact 63 → 85 → 95 → 99 → 100 → 101; the historical wave06 100-key state remains valid while 101 is the latest repository target.
-- Coverage regeneration returns `next_wave_species_count = 0`: the current Compatibility promotion queue is complete. Remaining reviewed_unknown/terminal holds stay in gap reporting rather than being falsely promoted.
-- Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, UI, or Vision work is authorized.
+- Active branch: `codex/compatibility-v4-ai-shadow-20261013`, based exactly on pushed wave16 `7fe10f42f29f27b7bb4ec09ed3154416aed4765b`.
+- The mechanical promotion queue is complete (`next_wave_species_count = 0`), so current work moves from breadth expansion to AI-assisted combination reasoning.
+- Added server-only Compatibility V4 shadow reasoner. Authority remains `deterministic hard rules / reviewed Pair Rules > AI`; AI cannot change the final compatibility decision.
+- AI runs only for `decisionReadiness=reviewed` combinations whose participating objects all have exact reviewed Profiles plus runtime reviewed Species Knowledge. Missing authority skips the provider instead of guessing.
+- Provider output is strict JSON and must use only allow-listed rule codes/evidence IDs. Hard-block weakening, caution→compatible upgrades, insufficient-data overrides, invented evidence, schema failure and provider failure are rejected/fail-soft.
+- Authenticated shadow endpoint: `GET /aquariums/:id/compatibility-ai-shadow/:speciesCatalogKey?catalogVersion=...`. It returns deterministic `finalDecision`, separate AI assessment and provenance.
+- Static candidate remains 101 Profiles / 21 Pair Rules / 1 Stage Risk / 177 evidence. Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence; no Production mutation/deploy, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery
 
