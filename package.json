@@ -259,6 +259,7 @@
     "canary:compatibility-v4-live": "node --import tsx scripts/run-compatibility-v4-live-canary.ts",
     "test:compatibility-v4-live-canary": "node --import tsx scripts/test-compatibility-v4-live-canary.ts",
     "test:compatibility-v4-product-assessment": "node --import tsx scripts/test-compatibility-v4-product-assessment.ts",
+    "test:compatibility-v4-user-readability": "node --import tsx scripts/test-compatibility-v4-user-readability.ts",
     "test:catalog-release-contract": "node --import tsx scripts/test-catalog-release-contract.ts",
     "test:p0-tank-state": "tsx scripts/test-p0-tank-state-engine.ts",
     "test:p0-tank-evidence": "tsx scripts/test-p0-tank-evidence-adapter.ts",

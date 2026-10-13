@@ -1,6 +1,10 @@
 import type { CompatibilityDecision } from '../../../src/modules/knowledge/knowledge.types';
 import { getCompatibilityPresentation } from '../../../src/services/compatibility/compatibility-presentation.service';
 import { getCompatibilityDecision } from '../../../src/services/compatibility/compatibility.service';
+import {
+  buildCompatibilityReadableConclusion,
+  type CompatibilityReadableConclusion,
+} from '../../../src/services/compatibility/compatibility-readable-copy.service';
 import type { CompatibilityAiShadowResult } from './compatibility-ai-reasoner';
 
 export type CompatibilityProductGroundedItem = {
@@ -9,28 +13,26 @@ export type CompatibilityProductGroundedItem = {
 };
 
 export type CompatibilityProductAssessment = {
-  judgment: {
-    status: CompatibilityAiShadowResult['finalDecision']['status'];
-    headline: ReturnType<typeof getCompatibilityPresentation>['headline'];
-    summary: string;
-  };
-  reasons: CompatibilityProductGroundedItem[];
-  adjustments: CompatibilityProductGroundedItem[];
-  uncertainties: CompatibilityProductGroundedItem[];
-  nextAction: string;
-  presentation: ReturnType<typeof getCompatibilityPresentation>;
-  explanation: {
-    source: 'ai_grounded' | 'deterministic_fallback';
-    aiStatus: CompatibilityAiShadowResult['ai']['status'];
-    aiReason: string | null;
-    confidence: CompatibilityAiShadowResult['ai']['confidence'] | null;
-    suggestedVerdict: CompatibilityAiShadowResult['ai']['suggestedVerdict'] | null;
-    model: string | null;
-    repairCount: number;
-    narrativeAccepted: boolean;
-  };
-  authority: CompatibilityAiShadowResult['finalDecision'] & {
-    finalSource: 'deterministic';
+  main: CompatibilityReadableConclusion;
+  details: {
+    label: '查看依据';
+    reasons: CompatibilityProductGroundedItem[];
+    adjustments: CompatibilityProductGroundedItem[];
+    uncertainties: CompatibilityProductGroundedItem[];
+    presentation: ReturnType<typeof getCompatibilityPresentation>;
+    explanation: {
+      source: 'ai_grounded' | 'deterministic_fallback';
+      aiStatus: CompatibilityAiShadowResult['ai']['status'];
+      aiReason: string | null;
+      confidence: CompatibilityAiShadowResult['ai']['confidence'] | null;
+      suggestedVerdict: CompatibilityAiShadowResult['ai']['suggestedVerdict'] | null;
+      model: string | null;
+      repairCount: number;
+      narrativeAccepted: boolean;
+    };
+    authority: CompatibilityAiShadowResult['finalDecision'] & {
+      finalSource: 'deterministic';
+    };
   };
 };
 
@@ -100,30 +102,38 @@ export const buildCompatibilityProductAssessment = (
       }))).slice(0, 5)
       : [];
 
+  const authoritativeDecision = decision.status === finalDecision.status
+    ? decision
+    : { ...decision, status: finalDecision.status };
+  const main = buildCompatibilityReadableConclusion(
+    authoritativeDecision,
+    aiNarrativeMatchesAuthority
+      ? { reasons: shadow.ai.reasons, adjustments: shadow.ai.adjustments }
+      : {},
+  );
+
   return {
-    judgment: {
-      status: finalDecision.status,
-      headline: presentation.headline,
-      summary: decision.summary,
-    },
-    reasons,
-    adjustments,
-    uncertainties,
-    nextAction: presentation.primaryActionText,
-    presentation,
-    explanation: {
-      source: aiNarrativeMatchesAuthority ? 'ai_grounded' : 'deterministic_fallback',
-      aiStatus: shadow.ai.status,
-      aiReason: shadow.ai.reason || null,
-      confidence: shadow.ai.confidence || null,
-      suggestedVerdict: shadow.ai.suggestedVerdict || null,
-      model: shadow.provenance.model || null,
-      repairCount: shadow.provenance.repairCount,
-      narrativeAccepted: aiNarrativeMatchesAuthority,
-    },
-    authority: {
-      ...finalDecision,
-      finalSource: 'deterministic',
+    main,
+    details: {
+      label: '查看依据',
+      reasons,
+      adjustments,
+      uncertainties,
+      presentation,
+      explanation: {
+        source: aiNarrativeMatchesAuthority ? 'ai_grounded' : 'deterministic_fallback',
+        aiStatus: shadow.ai.status,
+        aiReason: shadow.ai.reason || null,
+        confidence: shadow.ai.confidence || null,
+        suggestedVerdict: shadow.ai.suggestedVerdict || null,
+        model: shadow.provenance.model || null,
+        repairCount: shadow.provenance.repairCount,
+        narrativeAccepted: aiNarrativeMatchesAuthority,
+      },
+      authority: {
+        ...finalDecision,
+        finalSource: 'deterministic',
+      },
     },
   };
 };

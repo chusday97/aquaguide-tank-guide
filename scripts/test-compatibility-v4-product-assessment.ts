@@ -82,14 +82,16 @@ assert.equal(cautionShadow.ai.status, 'accepted');
 assert.equal(cautionShadow.finalDecision.status, 'caution');
 
 const product = buildCompatibilityProductAssessment(cautionDecision, cautionShadow);
-assert.equal(product.judgment.status, 'caution');
-assert.equal(product.judgment.headline, '有条件可以');
-assert.equal(product.explanation.source, 'ai_grounded');
-assert.equal(product.explanation.narrativeAccepted, true);
-assert.equal(product.authority.finalSource, 'deterministic');
-assert.equal(product.authority.status, product.judgment.status);
-assert.ok(product.reasons.length > 0);
-assert.ok(product.adjustments.length > 0);
+assert.equal(product.main.judgment, '有条件可以');
+assert.ok(product.main.why.length > 0);
+assert.ok(product.main.howTo.length > 0);
+assert.equal(product.details.label, '查看依据');
+assert.equal(product.details.explanation.source, 'ai_grounded');
+assert.equal(product.details.explanation.narrativeAccepted, true);
+assert.equal(product.details.authority.finalSource, 'deterministic');
+assert.equal(product.details.authority.status, 'caution');
+assert.ok(product.details.reasons.length > 0);
+assert.ok(product.details.adjustments.length > 0);
 
 const conservativeShadow: CompatibilityAiShadowResult = {
   ...cautionShadow,
@@ -103,10 +105,11 @@ const conservativeShadow: CompatibilityAiShadowResult = {
   },
 };
 const conservativeProduct = buildCompatibilityProductAssessment(cautionDecision, conservativeShadow);
-assert.equal(conservativeProduct.judgment.status, 'caution');
-assert.equal(conservativeProduct.explanation.source, 'deterministic_fallback');
-assert.equal(conservativeProduct.explanation.narrativeAccepted, false);
-assert.notEqual(conservativeProduct.reasons[0]?.text, 'AI 更保守，但不能覆盖最终判断。');
+assert.equal(conservativeProduct.main.judgment, '有条件可以');
+assert.equal(conservativeProduct.details.explanation.source, 'deterministic_fallback');
+assert.equal(conservativeProduct.details.explanation.narrativeAccepted, false);
+assert.notEqual(conservativeProduct.details.reasons[0]?.text, 'AI 更保守，但不能覆盖最终判断。');
+assert.equal(conservativeProduct.main.why.includes('AI 更保守，但不能覆盖最终判断。'), false);
 
 const insufficientDecision = evaluateCompatibilityDecision({
   tank,
@@ -133,10 +136,12 @@ const skippedShadow = await createCompatibilityAiCombinationAssessment({
 assert.equal(skippedProviderCalls, 0);
 assert.equal(skippedShadow.ai.status, 'skipped');
 const insufficientProduct = buildCompatibilityProductAssessment(insufficientDecision, skippedShadow);
-assert.equal(insufficientProduct.judgment.status, 'insufficient_data');
-assert.equal(insufficientProduct.explanation.source, 'deterministic_fallback');
-assert.equal(insufficientProduct.authority.finalSource, 'deterministic');
-assert.ok(insufficientProduct.uncertainties.length > 0);
+assert.equal(insufficientProduct.main.judgment, '暂时无法判断');
+assert.equal(insufficientProduct.details.explanation.source, 'deterministic_fallback');
+assert.equal(insufficientProduct.details.authority.finalSource, 'deterministic');
+assert.ok(insufficientProduct.details.uncertainties.length > 0);
+assert.ok(insufficientProduct.main.why.some(text => /资料|确认|缺少|审核/.test(text)));
+assert.ok(insufficientProduct.main.howTo.length > 0);
 
 assert.deepEqual(
   parseCompatibilityPlannedItems(['sp_0013:1', 'sp_0469:4', 'sp_0469:2']),

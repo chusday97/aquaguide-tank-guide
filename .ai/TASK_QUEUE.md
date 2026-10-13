@@ -34,7 +34,9 @@
 32. DONE: generalize the Compatibility AI reasoner from a single candidate to an arbitrary runtime combination while preserving the legacy single-candidate wrapper and all deterministic guards.
 33. DONE: add product-facing `GET /aquariums/:id/compatibility-assessment` for current tank + optional planned additions. The endpoint computes pair + whole-tank aggregate on demand; it does not require prebuilt species combinations and performs no writes.
 34. DONE: add product assessment contract: output judgment / reasons / adjustments / uncertainties / nextAction / AI provenance / deterministic authority; AI prose is used only when the AI verdict exactly equals the deterministic final status, otherwise deterministic fallback is shown. Unknown authority remains fail-closed. Focused contracts, real Qwen live canary, Business API contract and full backend release gate all pass.
-35. HOLD: do not point Preview at Production Supabase and do not Production deploy/DB-mutate/merge-main in this checkpoint. After separate Production promotion authorization, perform only a read-only Compatibility AI smoke test against an existing aquarium.
+35. DONE: split the product response into `main` and `details`. `main` exposes only `判断 / 为什么 / 怎么做`; rule codes, evidence IDs, model/confidence and provenance stay behind `查看依据`. Add a readability gate that rejects technical, snake_case, system-oriented or overly long AI prose from the default result.
+36. DONE: add 20-case real-catalog user-readability audit (5 per status). All main sentences pass the user-language contract; reviewed risk states have concrete actions; insufficient-data cases fail closed and never call AI. Live Qwen product samples also show concise caution and not-recommended output after the gate.
+37. HOLD: do not point Preview at Production Supabase and do not Production deploy/DB-mutate/merge-main in this checkpoint. After separate Production promotion authorization, perform only a read-only Compatibility AI smoke test against an existing aquarium.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04
 
