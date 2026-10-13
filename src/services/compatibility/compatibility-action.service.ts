@@ -103,6 +103,24 @@ const RULE_PRIORITY: Record<string, number> = {
 
 type PrioritizableRule = { code: string; title?: string; evidence?: string; severity?: string };
 
+export const getCompatibilityRuleFamily = (code: string) => {
+  const normalized = code.toLowerCase();
+  if (normalized.includes('water_type')) return 'water_type';
+  if (normalized.includes('predation') || normalized.includes('prey')) return 'predation';
+  if (normalized.includes('species_tank') || normalized.includes('single_housing')) return 'housing';
+  if (normalized.includes('temperature')) return 'temperature';
+  if (normalized.includes('fin_nipping') || normalized.includes('attack') || normalized.includes('aggression')) return 'aggression';
+  if (normalized.includes('territor')) return 'territory';
+  if (normalized.includes('ph_') || normalized === 'ph' || normalized.includes('ph_range')) return 'ph';
+  if (normalized.includes('minimum_group') || normalized.includes('group_requirement') || normalized.includes('school')) return 'group_size';
+  if (normalized.includes('volume') || normalized.includes('length') || normalized.includes('space')) return 'space';
+  if (normalized.includes('bioload')) return 'bioload';
+  if (normalized.includes('observed_')) return 'observed';
+  if (normalized.includes('equipment') || normalized.includes('filter') || normalized.includes('heater') || normalized.includes('oxygen')) return 'equipment';
+  if (normalized.includes('unreviewed') || normalized.includes('unknown') || normalized.includes('missing')) return 'missing_information';
+  return normalized;
+};
+
 const severityPriority = (severity?: string) => (
   severity === 'high' ? 0 : severity === 'medium' ? 1 : severity === 'low' ? 2 : 3
 );
@@ -117,6 +135,16 @@ export const prioritizeCompatibilityRules = <T extends PrioritizableRule>(rules:
     ))
     .map(item => item.rule)
 );
+
+export const prioritizeDistinctCompatibilityRules = <T extends PrioritizableRule>(rules: T[]): T[] => {
+  const seenFamilies = new Set<string>();
+  return prioritizeCompatibilityRules(rules).filter(rule => {
+    const family = getCompatibilityRuleFamily(rule.code);
+    if (seenFamilies.has(family)) return false;
+    seenFamilies.add(family);
+    return true;
+  });
+};
 
 const firstText = (rules: Array<{ title?: string; evidence?: string }>, fallback: string) => (
   rules.find(rule => rule.evidence || rule.title)?.evidence
@@ -133,9 +161,9 @@ const codesOf = (decision: CompatibilityDecision) => new Set([
 
 export const buildBeginnerCompatibilityAction = (decision: CompatibilityDecision): BeginnerCompatibilityAction => {
   const codes = codesOf(decision);
-  const blockingRules = prioritizeCompatibilityRules(decision.blockingRules);
-  const warningRules = prioritizeCompatibilityRules(decision.warningRules);
-  const missingData = prioritizeCompatibilityRules(decision.missingData);
+  const blockingRules = prioritizeDistinctCompatibilityRules(decision.blockingRules);
+  const warningRules = prioritizeDistinctCompatibilityRules(decision.warningRules);
+  const missingData = prioritizeDistinctCompatibilityRules(decision.missingData);
   const hasHardBlock = Array.from(codes).some(code => HARD_BLOCK_CODES.has(code));
   const hasSoftCapacityConcern = Array.from(codes).some(code => SOFT_CAPACITY_CODES.has(code));
   const hasSpaceConcern = Array.from(codes).some(code => SPACE_CODES.has(code));

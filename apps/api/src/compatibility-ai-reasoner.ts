@@ -76,7 +76,9 @@ export type CompatibilityAiShadowInput = {
 export type CompatibilityAiCombinationItem = {
   species: Fish;
   quantity: number;
-  origin: 'existing' | 'planned';
+  origin: 'existing' | 'planned' | 'mixed';
+  existingQuantity?: number;
+  plannedQuantity?: number;
 };
 
 export type CompatibilityAiCombinationInput = {
@@ -272,6 +274,8 @@ const promptsFor = (
       catalogKey: item.species.id,
       quantity: item.quantity,
       origin: item.origin,
+      existingQuantity: item.existingQuantity ?? (item.origin === 'existing' ? item.quantity : 0),
+      plannedQuantity: item.plannedQuantity ?? (item.origin === 'planned' ? item.quantity : 0),
     })),
     allowedRuleCodes: [...allowedRuleCodes(result)],
     allowedEvidenceIds: [...allowedEvidenceIds(result)],
@@ -525,11 +529,15 @@ export const createCompatibilityAiShadowAssessment = async (
       species: item.species,
       quantity: item.quantity,
       origin: 'existing' as const,
+      existingQuantity: item.quantity,
+      plannedQuantity: 0,
     })),
     {
       species: input.candidateSpecies,
       quantity: input.candidateQuantity || 1,
       origin: 'planned' as const,
+      existingQuantity: 0,
+      plannedQuantity: input.candidateQuantity || 1,
     },
   ],
 }, provider);

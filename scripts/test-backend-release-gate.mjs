@@ -22,6 +22,7 @@ const gates = [
   ['Compatibility V4 Shadow Eval', 'npm', ['run', 'test:compatibility-v4-shadow-eval']],
   ['Compatibility V4 Live Canary Contract', 'npm', ['run', 'test:compatibility-v4-live-canary']],
   ['Compatibility V4 Product Assessment', 'npm', ['run', 'test:compatibility-v4-product-assessment']],
+  ['Compatibility Complex Whole Tank', 'npm', ['run', 'test:compatibility-complex-whole-tank']],
   ['Compatibility V4 User Readability', 'npm', ['run', 'test:compatibility-v4-user-readability']],
   ['Compatibility Result Card', 'npm', ['run', 'test:compatibility-result-card']],
   ['Runtime Compatibility Authority', 'npm', ['run', 'test:runtime-compatibility-authority']],

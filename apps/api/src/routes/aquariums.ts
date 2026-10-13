@@ -202,7 +202,11 @@ export const parseCompatibilityPlannedItems = (value: unknown): PlannedCompatibi
     if (!speciesCatalogKey || !Number.isInteger(quantity) || quantity < 1 || quantity > 500) {
       throw new ApiError(400, 'VALIDATION_ERROR', '规划物种参数无效，请使用 speciesCatalogKey:quantity。');
     }
-    grouped.set(speciesCatalogKey, (grouped.get(speciesCatalogKey) || 0) + quantity);
+    const combinedQuantity = (grouped.get(speciesCatalogKey) || 0) + quantity;
+    if (combinedQuantity > 500) {
+      throw new ApiError(400, 'VALIDATION_ERROR', '同一规划物种的合计数量不能超过 500。');
+    }
+    grouped.set(speciesCatalogKey, combinedQuantity);
   }
   return Array.from(grouped, ([speciesCatalogKey, quantity]) => ({ speciesCatalogKey, quantity }));
 };
@@ -264,15 +268,19 @@ export const readPublishedCatalogCombinationContext = async ({
     ...(aquarium.target_temperature_c != null ? { targetTemperature: String(aquarium.target_temperature_c) } : {}),
   };
 
-  const combined = new Map<string, { species: (typeof fishData)[number]; quantity: number; origin: 'existing' | 'planned' }>();
+  const combined = new Map<string, {
+    species: (typeof fishData)[number];
+    existingQuantity: number;
+    plannedQuantity: number;
+  }>();
   for (const row of existingRows) {
     const species = catalogByKey.get(row.species_catalog_key)!;
     const quantity = Number(row.quantity) > 0 ? Number(row.quantity) : 1;
     const current = combined.get(species.id);
     combined.set(species.id, {
       species,
-      quantity: (current?.quantity || 0) + quantity,
-      origin: current?.origin || 'existing',
+      existingQuantity: (current?.existingQuantity || 0) + quantity,
+      plannedQuantity: current?.plannedQuantity || 0,
     });
   }
   for (const planned of plannedItems) {
@@ -280,11 +288,19 @@ export const readPublishedCatalogCombinationContext = async ({
     const current = combined.get(species.id);
     combined.set(species.id, {
       species,
-      quantity: (current?.quantity || 0) + planned.quantity,
-      origin: 'planned',
+      existingQuantity: current?.existingQuantity || 0,
+      plannedQuantity: (current?.plannedQuantity || 0) + planned.quantity,
     });
   }
-  const items = Array.from(combined.values());
+  const items = Array.from(combined.values()).map(item => ({
+    ...item,
+    quantity: item.existingQuantity + item.plannedQuantity,
+    origin: item.existingQuantity > 0 && item.plannedQuantity > 0
+      ? 'mixed' as const
+      : item.plannedQuantity > 0
+        ? 'planned' as const
+        : 'existing' as const,
+  }));
   if (items.length === 0) {
     throw new ApiError(400, 'COMPATIBILITY_INFORMATION_REQUIRED', '当前鱼缸和规划列表都没有可评估物种。');
   }
@@ -297,7 +313,7 @@ export const readPublishedCatalogCombinationContext = async ({
     items: items.map(item => ({
       species: item.species,
       quantity: item.quantity,
-      origin: item.origin === 'planned' ? 'candidate' : 'existing',
+      origin: item.origin === 'existing' ? 'existing' : 'candidate',
     })),
   });
 
@@ -404,6 +420,8 @@ aquariumsRouter.get('/aquariums/:id/compatibility-assessment', asyncRoute(async 
       name: item.species.name,
       quantity: item.quantity,
       origin: item.origin,
+      existingQuantity: item.existingQuantity,
+      plannedQuantity: item.plannedQuantity,
     })),
   });
 }));

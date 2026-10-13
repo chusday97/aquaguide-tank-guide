@@ -1,7 +1,8 @@
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
 import {
   buildBeginnerCompatibilityAction,
-  prioritizeCompatibilityRules,
+  getCompatibilityRuleFamily,
+  prioritizeDistinctCompatibilityRules,
 } from './compatibility-action.service';
 
 type ReadableRule = {
@@ -132,12 +133,12 @@ const uniqueReadable = (values: string[], kind: 'reason' | 'action') => {
 };
 
 const primaryRulesFor = (decision: CompatibilityDecision): ReadableRule[] => {
-  if (decision.status === 'not_recommended') return prioritizeCompatibilityRules(decision.blockingRules);
-  if (decision.status === 'caution') return prioritizeCompatibilityRules(decision.warningRules);
-  if (decision.status === 'insufficient_data') return prioritizeCompatibilityRules(decision.missingData);
+  if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules);
+  if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules);
+  if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData);
   return [
     { code: 'compatibility_clear', title: '当前没有发现明确混养冲突。' },
-    ...prioritizeCompatibilityRules(decision.passedRules).filter(rule => rule.code !== 'compatibility_clear'),
+    ...prioritizeDistinctCompatibilityRules(decision.passedRules).filter(rule => rule.code !== 'compatibility_clear'),
   ];
 };
 
@@ -155,42 +156,43 @@ const ruleCodes = (decision: CompatibilityDecision) => new Set([
   ...decision.missingData.map(rule => rule.code),
 ]);
 
-const primaryDeterministicAction = (
+const blockingActionFor = (rule: ReadableRule) => {
+  const family = getCompatibilityRuleFamily(rule.code);
+  if (family === 'water_type') return '不要放在同一缸；分别按淡水或海水需求饲养，或更换其中一种。';
+  if (family === 'predation') return '不要直接混养；更换体型更接近、没有明显捕食关系的混养对象。';
+  if (family === 'housing') return '按单养方案处理，或更换更适合混养的物种。';
+  if (family === 'temperature') return '不要为了兼顾双方硬取中间温度；分缸，或更换温度需求更接近的物种。';
+  if (family === 'aggression') return '不要直接混养；优先更换冲突物种，或先准备可靠分隔方案。';
+  if (family === 'territory') return '先不要继续加入；重新规划领地和躲避空间，无法缓解就分缸。';
+  if (family === 'space') return '先不要按当前方案加入；先减少数量或更换更合适的鱼缸方案。';
+  return '先不要混养；更换其中一种或分缸后，再重新判断。';
+};
+
+const deterministicActionsFor = (
   decision: CompatibilityDecision,
   fallback: string,
-) => {
+): string[] => {
   const codes = ruleCodes(decision);
 
   if (decision.status === 'not_recommended') {
-    if (Array.from(codes).some(code => code.includes('water_type_conflict'))) {
-      return '不要放在同一缸；分别按淡水或海水需求饲养，或更换其中一种。';
-    }
-    if (Array.from(codes).some(code => code.includes('temperature') && (code.includes('conflict') || code.includes('no_overlap')))) {
-      return '不要为了兼顾双方硬取中间温度；分缸，或更换温度需求更接近的物种。';
-    }
-    if (codes.has('predation_risk')) {
-      return '不要直接混养；更换体型更接近、没有明显捕食关系的混养对象。';
-    }
-    if (codes.has('species_tank_required') || codes.has('single_housing_required')) {
-      return '按单养方案处理，或更换更适合混养的物种。';
-    }
-    return '先不要混养；更换其中一种或分缸后，再重新判断。';
+    const actions = prioritizeDistinctCompatibilityRules(decision.blockingRules).map(blockingActionFor);
+    return actions.length > 0 ? actions : [fallback];
   }
 
   if (decision.status === 'insufficient_data') {
     if (codes.has('species_evidence_unreviewed')) {
-      return '先不要加入；等关键混养资料审核完整后再重新判断。';
+      return ['先不要加入；等关键混养资料审核完整后再重新判断。'];
     }
     if (codes.has('tank_water_type_missing') || codes.has('water_type_unknown') || codes.has('candidate_water_type_missing')) {
-      return '先确认双方需要的水体类型，再重新判断是否适合同缸。';
+      return ['先确认双方需要的水体类型，再重新判断是否适合同缸。'];
     }
     if (codes.has('tank_temperature_missing') || codes.has('temperature_range_missing')) {
-      return '先补充当前稳定水温和物种适温范围，再重新判断。';
+      return ['先补充当前稳定水温和物种适温范围，再重新判断。'];
     }
-    return '先不要加入；补齐缺失信息后再重新判断。';
+    return ['先不要加入；补齐缺失信息后再重新判断。'];
   }
 
-  return fallback;
+  return [fallback];
 };
 
 export const buildCompatibilityReadableConclusion = (
@@ -200,17 +202,19 @@ export const buildCompatibilityReadableConclusion = (
   const action = buildBeginnerCompatibilityAction(decision);
   const deterministicWhy = primaryRulesFor(decision).map(plainRuleText);
   const aiWhy = (aiNarrative.reasons || []).map(item => item.text);
-  const why = uniqueReadable([
-    deterministicWhy[0] || action.primaryReason || defaultReason(decision),
-    ...aiWhy,
-    ...deterministicWhy.slice(1),
-  ], 'reason').slice(0, 2);
+  const why = uniqueReadable(
+    decision.status === 'compatible'
+      ? [deterministicWhy[0] || action.primaryReason || defaultReason(decision), ...aiWhy, ...deterministicWhy.slice(1)]
+      : [...deterministicWhy, ...aiWhy, action.primaryReason || defaultReason(decision)],
+    'reason',
+  ).slice(0, 2);
 
   const aiActions = decision.status === 'compatible'
     ? []
     : (aiNarrative.adjustments || []).map(item => item.text);
+  const deterministicActions = deterministicActionsFor(decision, action.immediateAction);
   const howTo = uniqueReadable([
-    primaryDeterministicAction(decision, action.immediateAction),
+    ...deterministicActions,
     ...aiActions,
     ...(action.observeAfterAction ? [action.observeAfterAction] : []),
   ], 'action').slice(0, 2);

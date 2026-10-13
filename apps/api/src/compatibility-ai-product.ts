@@ -1,4 +1,5 @@
 import type { CompatibilityDecision } from '../../../src/modules/knowledge/knowledge.types';
+import { prioritizeDistinctCompatibilityRules } from '../../../src/services/compatibility/compatibility-action.service';
 import { getCompatibilityPresentation } from '../../../src/services/compatibility/compatibility-presentation.service';
 import { getCompatibilityDecision } from '../../../src/services/compatibility/compatibility.service';
 import {
@@ -55,7 +56,7 @@ const fallbackRules = (decision: CompatibilityDecision) => {
 
 const deterministicReasons = (decision: CompatibilityDecision): CompatibilityProductGroundedItem[] => (
   uniqueItems(
-    fallbackRules(decision).map(rule => ({
+    prioritizeDistinctCompatibilityRules(fallbackRules(decision)).map(rule => ({
       text: rule.evidence || rule.title,
       ruleCodes: [rule.code],
     })),
@@ -87,16 +88,17 @@ export const buildCompatibilityProductAssessment = (
   const aiNarrativeMatchesAuthority = shadow.ai.status === 'accepted'
     && shadow.ai.suggestedVerdict === finalDecision.status;
 
+  const deterministicReasonItems = deterministicReasons(decision);
   const reasons = aiNarrativeMatchesAuthority
-    ? uniqueItems(shadow.ai.reasons).slice(0, 5)
-    : deterministicReasons(decision);
+    ? uniqueItems([...deterministicReasonItems.slice(0, 4), ...shadow.ai.reasons]).slice(0, 5)
+    : deterministicReasonItems;
   const adjustments = aiNarrativeMatchesAuthority
     ? uniqueItems(shadow.ai.adjustments).slice(0, 5)
     : deterministicAdjustments(decision, presentation, finalDecision.ruleCodes);
   const uncertainties = aiNarrativeMatchesAuthority
     ? uniqueItems(shadow.ai.uncertainties).slice(0, 5)
     : decision.status === 'insufficient_data'
-      ? uniqueItems(decision.missingData.map(rule => ({
+      ? uniqueItems(prioritizeDistinctCompatibilityRules(decision.missingData).map(rule => ({
         text: rule.evidence || rule.title,
         ruleCodes: [rule.code],
       }))).slice(0, 5)

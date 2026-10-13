@@ -9,6 +9,7 @@ import {
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
 import { evaluateCompatibilityDecision } from '../../modules/knowledge/compatibilityKnowledge';
 import type { CompatibilityDecision } from '../../modules/knowledge/knowledge.types';
+import { prioritizeDistinctCompatibilityRules } from '../compatibility/compatibility-action.service';
 
 export type SpeciesAdditionItem = {
   fishId: string;
@@ -149,7 +150,7 @@ export const assessSpeciesAddition = ({
   });
 
   if (evaluations.length === 0) return null;
-  const keyRules = getRulesForDecision(decision)
+  const keyRules = prioritizeDistinctCompatibilityRules(getRulesForDecision(decision))
     .filter((rule, index, rules) => rules.findIndex(candidate => (
       `${candidate.code}-${candidate.title}-${candidate.evidence}` === `${rule.code}-${rule.title}-${rule.evidence}`
     )) === index)
