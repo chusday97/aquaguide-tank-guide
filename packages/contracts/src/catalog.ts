@@ -49,6 +49,24 @@ export const compatibilityRequiredFactSchema = z.enum([
   'breeding_behavior',
 ]);
 
+/**
+ * Minimum reviewed fact families required before a brand-new species can join
+ * the generic Compatibility authority without any hand-authored Pair Rule.
+ * Breeding behavior remains an optional stage-specific extension; when it is
+ * declared as required, Domain still validates it through the same fail-closed
+ * required-fact contract.
+ */
+export const GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS = [
+  'water',
+  'temperature',
+  'ph',
+  'adult_size',
+  'tank_size',
+  'social_behavior',
+  'territoriality',
+  'predation',
+] as const;
+
 export const speciesFactEvidenceSchema = z.object({
   field: speciesFactKeySchema,
   citationIds: z.array(z.string()),

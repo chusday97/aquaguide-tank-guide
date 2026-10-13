@@ -7,13 +7,26 @@ export type BeginnerCompatibilityVerdict =
   | 'do_not_mix'
   | 'need_information';
 
-export type BeginnerCompatibilityAction = {
+type BeginnerCompatibilityActionCore = {
   verdict: BeginnerCompatibilityVerdict;
   headline: string;
   immediateAction: string;
   primaryReason: string;
   observeAfterAction: string | null;
   detailsLabel: string;
+};
+
+export type CompatibilityActionAuthorityLevel =
+  | 'hard_rule'
+  | 'reviewed_parameter'
+  | 'risk_management'
+  | 'information_required';
+
+export type BeginnerCompatibilityAction = BeginnerCompatibilityActionCore & {
+  authorityLevel: CompatibilityActionAuthorityLevel;
+  sourceRuleCodes: string[];
+  evidenceIds: string[];
+  stopCondition: string | null;
 };
 
 export type CompatibilityAssessmentMode = 'planned_addition' | 'current_tank';
@@ -161,7 +174,7 @@ const codesOf = (decision: CompatibilityDecision) => new Set([
   ...decision.missingData.map(rule => rule.code),
 ]);
 
-const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision): BeginnerCompatibilityAction => {
+const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision): BeginnerCompatibilityActionCore => {
   const codes = codesOf(decision);
   const blockingRules = prioritizeDistinctCompatibilityRules(decision.blockingRules);
   const warningRules = prioritizeDistinctCompatibilityRules(decision.warningRules);
@@ -249,7 +262,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         headline: '先把群体数量补够，再混养',
         immediateAction: '当前不是“少养几条更安全”：先满足追鳍物种的同种最低群体要求，再考虑加入其他鱼。',
         primaryReason: firstText(warningRules.filter(rule => rule.code === 'fin_nipping_group_pressure'), '该物种有追鳍倾向，群体不足时对同缸鱼的骚扰压力更难管理。'),
-        observeAfterAction: '群体调整后继续观察 3–7 天；如果仍有持续追鳍、躲藏、破鳍或抢食，再暂停新增并考虑分隔。',
+        observeAfterAction: '群体调整后持续观察；如果仍有持续追鳍、躲藏、破鳍或抢食，再暂停新增并考虑分隔。',
         detailsLabel: '为什么先补群体？',
       };
     }
@@ -262,7 +275,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
           ? `不要只加 1–2 条；把该物种规划到至少 ${minimumGroupSize} 条/只，再观察是否正常群游和进食。`
           : '不要只加 1–2 条；按该物种的最低群体数量规划到位，再观察是否正常群游和进食。',
         primaryReason: firstText(warningRules.filter(rule => rule.code === 'minimum_group_not_met' || rule.code === 'group_requirement_gap'), '该物种需要达到最低群体数量；少量个体长期饲养并不一定更保守。'),
-        observeAfterAction: '加入后 3–7 天观察是否正常结群、进食，以及是否长期躲藏或被排挤。',
+        observeAfterAction: '加入后持续观察是否正常结群、进食，以及是否长期躲藏或被排挤。',
         detailsLabel: '为什么数量不能太少？',
       };
     }
@@ -292,7 +305,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         headline: '可以尝试，但别一次加太多',
         immediateAction: '先降低本次新增数量，并确认过滤与维护能承受新增负荷；不要一次把计划数量全部加入，也不要只因为低于一个参考水体值就立刻换缸。',
         primaryReason: firstText(warningRules.filter(rule => BIOLOAD_CODES.has(rule.code)), '当前主要是累计负荷偏高，不是明确的生物学禁配。'),
-        observeAfterAction: '加入后 3–7 天重点看呼吸、进食和明显水质波动；如果一直稳定，再决定是否继续增加。',
+        observeAfterAction: '加入后持续观察呼吸、进食和明显水质波动；确认持续稳定后再决定是否继续增加。',
         detailsLabel: '为什么只是有条件？',
       };
     }
@@ -301,7 +314,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
       headline: '可以，但有条件',
       immediateAction: '先处理下面最重要的可调整条件，再少量加入。',
       primaryReason: firstText(warningRules, decision.summary || '当前存在需要管理的风险。'),
-      observeAfterAction: '加入后 3–7 天观察追咬、躲藏、拒食和呼吸异常；出现持续异常就停止继续加鱼。',
+      observeAfterAction: '加入后持续观察追咬、躲藏、拒食和呼吸异常；出现持续异常就停止继续加鱼。',
       detailsLabel: '为什么有条件？',
     };
   }
@@ -311,15 +324,15 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
     headline: '可以混养',
     immediateAction: '可以按当前计划加入；不需要为了这次判断额外调整鱼缸。',
     primaryReason: firstText(decision.passedRules, decision.summary || '当前没有发现明确阻断。'),
-    observeAfterAction: '加入后 3–7 天继续观察追咬、拒食和呼吸异常。',
+    observeAfterAction: '加入后持续观察追咬、拒食和呼吸异常。',
     detailsLabel: '为什么可以？',
   };
 };
 
 const buildCurrentTankCompatibilityAction = (
   decision: CompatibilityDecision,
-  plannedAction: BeginnerCompatibilityAction,
-): BeginnerCompatibilityAction => {
+  plannedAction: BeginnerCompatibilityActionCore,
+): BeginnerCompatibilityActionCore => {
   const codes = codesOf(decision);
 
   if (decision.status === 'not_recommended') {
@@ -386,7 +399,7 @@ const buildCurrentTankCompatibilityAction = (
       ...plannedAction,
       headline: '先把当前群体数量补够',
       immediateAction: '先满足追鳍物种的同种最低群体要求，再重新评估当前混养压力。',
-      observeAfterAction: '群体调整后观察 3–7 天；若仍持续追鳍、躲藏、破鳍或抢食，就分隔。',
+      observeAfterAction: '群体调整后持续观察；若仍持续追鳍、躲藏、破鳍或抢食，就分隔。',
     };
   }
   if (codes.has('minimum_group_not_met') || codes.has('group_requirement_gap')) {
@@ -397,7 +410,7 @@ const buildCurrentTankCompatibilityAction = (
       immediateAction: minimumGroupSize
         ? `把该物种调整到至少 ${minimumGroupSize} 条/只，再观察是否正常群游和进食。`
         : '按该物种的最低群体数量调整到位，再观察是否正常群游和进食。',
-      observeAfterAction: '调整后观察 3–7 天，确认结群、进食和躲藏状态恢复稳定。',
+      observeAfterAction: '调整后持续观察，确认结群、进食和躲藏状态恢复稳定。',
     };
   }
   if (Array.from(codes).some(code => PH_CODES.has(code))) {
@@ -421,7 +434,7 @@ const buildCurrentTankCompatibilityAction = (
       ...plannedAction,
       headline: '当前负荷偏高，需要调整',
       immediateAction: '先降低当前总负荷，并确认过滤与维护能力能稳定承受现有数量。',
-      observeAfterAction: '调整后 3–7 天重点看呼吸、进食和明显水质波动是否恢复稳定。',
+      observeAfterAction: '调整后持续观察呼吸、进食和明显水质波动是否恢复稳定。',
     };
   }
 
@@ -433,12 +446,51 @@ const buildCurrentTankCompatibilityAction = (
   };
 };
 
+const actionSourceRules = (decision: CompatibilityDecision) => {
+  if (decision.status === 'not_recommended') return prioritizeDistinctCompatibilityRules(decision.blockingRules).slice(0, 2);
+  if (decision.status === 'caution') return prioritizeDistinctCompatibilityRules(decision.warningRules).slice(0, 2);
+  if (decision.status === 'insufficient_data') return prioritizeDistinctCompatibilityRules(decision.missingData).slice(0, 2);
+  return prioritizeDistinctCompatibilityRules(decision.passedRules).slice(0, 2);
+};
+
+const actionAuthorityLevel = (decision: CompatibilityDecision, sourceCodes: string[]): CompatibilityActionAuthorityLevel => {
+  if (decision.status === 'insufficient_data') return 'information_required';
+  if (sourceCodes.some(code => HARD_BLOCK_CODES.has(code))) return 'hard_rule';
+  if (sourceCodes.some(code => code === 'minimum_group_not_met' || code === 'group_requirement_gap')
+    && decision.stockingGuidance?.recommendedMin != null) return 'reviewed_parameter';
+  return 'risk_management';
+};
+
+const stopConditionFor = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode,
+): string | null => {
+  if (decision.status === 'not_recommended') return mode === 'current_tank'
+    ? '明确冲突消除前保持分隔，不要按原组合继续维持。'
+    : '明确阻断风险消除前，不要执行当前混养计划。';
+  if (decision.status === 'insufficient_data') return mode === 'current_tank'
+    ? '关键资料补齐并重新评估前，不要据此继续扩大当前组合。'
+    : '关键资料补齐并重新评估前，不要新增。';
+  if (decision.status === 'caution') return '若出现持续追逐、受伤、拒食、长期躲藏或呼吸异常，停止新增并分隔冲突个体后重新评估。';
+  return '若出现持续追逐、受伤、拒食或呼吸异常，停止继续新增并重新评估。';
+};
+
 export const buildBeginnerCompatibilityAction = (
   decision: CompatibilityDecision,
   mode: CompatibilityAssessmentMode = 'planned_addition',
 ): BeginnerCompatibilityAction => {
   const plannedAction = buildPlannedAdditionCompatibilityAction(decision);
-  return mode === 'current_tank'
+  const core = mode === 'current_tank'
     ? buildCurrentTankCompatibilityAction(decision, plannedAction)
     : plannedAction;
+  const sourceRules = actionSourceRules(decision);
+  const sourceRuleCodes = sourceRules.map(rule => rule.code);
+  const ruleEvidenceIds = sourceRules.flatMap(rule => (rule.citations || []).map(source => source.id));
+  return {
+    ...core,
+    authorityLevel: actionAuthorityLevel(decision, sourceRuleCodes),
+    sourceRuleCodes,
+    evidenceIds: Array.from(new Set(ruleEvidenceIds.length > 0 ? ruleEvidenceIds : (decision.evidenceIds || []))),
+    stopCondition: stopConditionFor(decision, mode),
+  };
 };

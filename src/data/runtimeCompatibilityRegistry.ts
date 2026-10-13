@@ -1,9 +1,10 @@
+import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../packages/contracts/src';
 import type {
   ReviewedCompatibilityPairRuleDto,
   ReviewedCompatibilityProfileDto,
   ReviewedCompatibilityStageRiskRuleDto,
 } from '../../packages/contracts/src';
-import { exactStringSet, getCompatibilityProfileRolloutGeneration } from './compatibilityAuthorityRollout';
+import { exactStringSet, getCompatibilityProfileAuthorityGeneration } from './compatibilityAuthorityRollout';
 import {
   getCompatibilityEvidenceAudit,
   type ReviewedCompatibilityProfile,
@@ -139,10 +140,16 @@ const reviewedCitations = (citations: Array<{ reviewStatus?: string }>) => (
 );
 const exactBaselineCoverage = (payload: CompatibilityBootstrapResponse) => {
   const profileKeys = payload.profiles.map(profile => profile.catalogKey);
+  const profileKeySet = new Set(profileKeys);
   const pairKeys = payload.pairRules.map(rule => pairKey(...rule.catalogKeys));
-  if (new Set(profileKeys).size !== profileKeys.length || new Set(pairKeys).size !== pairKeys.length) return false;
-  if (getCompatibilityProfileRolloutGeneration(profileKeys, staticProfileKeys) === null) return false;
-  if (!exactStringSet(new Set(pairKeys), staticPairKeys)) return false;
+  const pairKeySet = new Set(pairKeys);
+  if (profileKeySet.size !== profileKeys.length || pairKeySet.size !== pairKeys.length) return false;
+  const authorityGeneration = getCompatibilityProfileAuthorityGeneration(profileKeys, staticProfileKeys);
+  if (authorityGeneration === null) return false;
+  const postTargetSuperset = authorityGeneration === 'post-target-superset';
+  if (postTargetSuperset) {
+    if (![...staticPairKeys].every(key => pairKeySet.has(key))) return false;
+  } else if (!exactStringSet(pairKeySet, staticPairKeys)) return false;
   if (!payload.profiles.every(profile => (
     profile.reviewStatus === 'reviewed'
     && reviewedCitations(profile.citations)
@@ -150,7 +157,17 @@ const exactBaselineCoverage = (payload: CompatibilityBootstrapResponse) => {
     && Array.isArray(profile.stageRiskRules)
     && profile.stageRiskRules.every(rule => rule.reviewStatus === 'reviewed' && reviewedCitations(rule.citations))
   ))) return false;
-  return payload.pairRules.every(rule => rule.reviewStatus === 'reviewed' && reviewedCitations(rule.citations));
+  if (postTargetSuperset) {
+    const extraProfiles = payload.profiles.filter(profile => !staticProfileKeys.has(profile.catalogKey));
+    if (!extraProfiles.every(profile => GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS.every(fact => profile.requiredFacts.includes(fact)))) return false;
+  }
+  return payload.pairRules.every(rule => {
+    const key = pairKey(...rule.catalogKeys);
+    const isBaselineRule = staticPairKeys.has(key);
+    return rule.reviewStatus === 'reviewed'
+      && reviewedCitations(rule.citations)
+      && (!postTargetSuperset || isBaselineRule || rule.catalogKeys.every(catalogKey => profileKeySet.has(catalogKey)));
+  });
 };
 
 const toRuntimeProfile = (profile: ReviewedCompatibilityProfileDto): ReviewedCompatibilityProfile => ({

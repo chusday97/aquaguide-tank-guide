@@ -14,6 +14,10 @@ export type CompatibilityProfileRolloutGeneration =
   | 'wave06-target'
   | 'target';
 
+export type CompatibilityProfileAuthorityGeneration =
+  | CompatibilityProfileRolloutGeneration
+  | 'post-target-superset';
+
 export const exactStringSet = (
   actual: ReadonlySet<string>,
   expected: ReadonlySet<string>,
@@ -82,5 +86,23 @@ export const getCompatibilityProfileRolloutGeneration = (
   if (exactStringSet(actual, expected.wave04Target)) return 'wave04-target';
   if (exactStringSet(actual, expected.productionTarget)) return 'production-target';
   if (exactStringSet(actual, expected.currentProduction)) return 'current-production';
+  return null;
+};
+
+/**
+ * Keeps every currently authorised rollout generation exact/fail-closed, then
+ * allows monotonic Profile growth once the full repository target has landed.
+ * This is the key scalability contract: a reviewed new species may add one
+ * Profile without requiring a new hard-coded rollout generation.
+ */
+export const getCompatibilityProfileAuthorityGeneration = (
+  actualKeys: Iterable<string>,
+  targetKeys: Iterable<string>,
+): CompatibilityProfileAuthorityGeneration | null => {
+  const rollout = getCompatibilityProfileRolloutGeneration(actualKeys, targetKeys);
+  if (rollout) return rollout;
+  const actual = new Set(actualKeys);
+  const target = new Set(targetKeys);
+  if (actual.size > target.size && [...target].every(key => actual.has(key))) return 'post-target-superset';
   return null;
 };

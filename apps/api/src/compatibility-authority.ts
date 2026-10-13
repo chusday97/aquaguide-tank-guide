@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import type { SupabaseClient } from '@supabase/supabase-js';
+import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../../packages/contracts/src';
 import type {
   CompatibilityStageRiskRuleInput,
   ReviewedCompatibilityPairRuleDto,
@@ -12,7 +13,7 @@ import { fishData as seedFishData } from '../../../src/data/fishData';
 import type { CompatibilityEvidenceProvider, TankCompatibilityResult } from '../../../src/services/compatibility/compatibility.service';
 import { evaluateTankCompatibility } from '../../../src/services/compatibility/compatibility.service';
 import { getCompatibilityEvidenceAudit, type ReviewedCompatibilityProfile, type ReviewedPairRule, type ReviewedStageRiskProfile } from '../../../src/data/compatibilityEvidence';
-import { buildCompatibilityProfileRolloutKeysets, exactStringSet, getCompatibilityProfileRolloutGeneration } from '../../../src/data/compatibilityAuthorityRollout';
+import { buildCompatibilityProfileRolloutKeysets, exactStringSet, getCompatibilityProfileAuthorityGeneration } from '../../../src/data/compatibilityAuthorityRollout';
 import { mapSpeciesDetail } from './content-mappers';
 import { type PublicationSnapshotPayload, speciesPublicationSelect } from './content-publications';
 import { ApiError } from './http';
@@ -123,14 +124,27 @@ export const loadReviewedCompatibilityAuthority = async (client: SupabaseClient)
   const profileKeys = new Set(profiles.map(profile => profile.catalogKey));
   const pairKeys = new Set(pairRules.map(rule => pairKey(...rule.catalogKeys)));
   const stageRiskKeys = new Set(profiles.flatMap(profile => profile.stageRiskRules.map(rule => rule.ruleKey)));
-  const profileRolloutGeneration = getCompatibilityProfileRolloutGeneration(profileKeys, expectedProfileKeys);
-  const exactCoverage = profileRolloutGeneration !== null
-    && exactStringSet(pairKeys, expectedPairKeys)
-    && exactStringSet(stageRiskKeys, expectedStageRiskKeys);
+  const profileAuthorityGeneration = getCompatibilityProfileAuthorityGeneration(profileKeys, expectedProfileKeys);
+  const postTargetSuperset = profileAuthorityGeneration === 'post-target-superset';
+  const extraProfilesReady = !postTargetSuperset || profiles
+    .filter(profile => !expectedProfileKeys.has(profile.catalogKey))
+    .every(profile => GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS.every(fact => profile.requiredFacts.includes(fact)));
+  const pairCoverage = postTargetSuperset
+    ? [...expectedPairKeys].every(key => pairKeys.has(key))
+      && pairRules.every(rule => expectedPairKeys.has(pairKey(...rule.catalogKeys)) || rule.catalogKeys.every(key => profileKeys.has(key)))
+    : exactStringSet(pairKeys, expectedPairKeys);
+  const stageRiskCoverage = postTargetSuperset
+    ? [...expectedStageRiskKeys].every(key => stageRiskKeys.has(key))
+    : exactStringSet(stageRiskKeys, expectedStageRiskKeys);
+  const exactCoverage = profileAuthorityGeneration !== null
+    && extraProfilesReady
+    && pairCoverage
+    && stageRiskCoverage;
   if (!exactCoverage) throw new ApiError(
     409,
     'MIGRATION_REJECTED',
-    'Reviewed Compatibility DB baseline 必须精确匹配滚动发布代际 '
+    'Reviewed Compatibility DB authority 必须匹配当前滚动发布代际，或在完整 target 基线上仅追加满足通用接入契约的 reviewed Profiles；'
+      + '当前基线为 '
       + rolloutProfileKeysets.currentProduction.size + ' / '
       + rolloutProfileKeysets.productionTarget.size + ' / '
       + rolloutProfileKeysets.wave04Target.size + ' / '

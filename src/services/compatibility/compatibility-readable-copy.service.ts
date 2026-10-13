@@ -106,6 +106,21 @@ const plainRuleText = (
   if (code === 'observed_emergency' || code === 'observed_intervention') {
     return '当前鱼缸已经出现需要优先处理的追逐、进食或应激异常。';
   }
+  if (code.startsWith('required_fact_') && code.endsWith('_missing')) {
+    const fact = code.slice('required_fact_'.length, -'_missing'.length);
+    const labels: Record<string, string> = {
+      water: '水体类型',
+      temperature: '长期适温范围',
+      ph: '长期酸碱范围',
+      adult_size: '成体体型',
+      tank_size: '最低空间需求',
+      social_behavior: '社会行为',
+      territoriality: '领地行为',
+      predation: '捕食关系',
+      breeding_behavior: '繁殖期行为',
+    };
+    return `这个物种的${labels[fact] || '关键混养资料'}还没有达到可靠判断要求。`;
+  }
   if (code === 'species_evidence_unreviewed') {
     return '其中有物种的关键混养资料还没有审核完整。';
   }
@@ -206,6 +221,11 @@ const deterministicActionsFor = (
   }
 
   if (decision.status === 'insufficient_data') {
+    if ([...codes].some(code => code.startsWith('required_fact_') && code.endsWith('_missing'))) {
+      return [assessmentMode === 'current_tank'
+        ? '先补齐缺失的物种核心资料，再重新判断当前组合。'
+        : '先不要加入；补齐缺失的物种核心资料后再重新判断。'];
+    }
     if (codes.has('species_evidence_unreviewed')) {
       return [assessmentMode === 'current_tank'
         ? '等关键混养资料审核完整后，再重新判断当前组合是否需要调整。'

@@ -8,6 +8,7 @@ import { estimateWaterProfile } from '../src/lib/waterProfileEstimate';
 import { getCompatibilityPreviewSpecies } from '../src/services/compatibility/compatibility-preview.service';
 import { applyCompatibilityStabilityConfirmation } from '../src/services/compatibility/compatibility-stability.service';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
+import { COMPATIBILITY_RULE_VERSION } from '../packages/domain-rules/src';
 
 const makeFish = (overrides: Partial<Fish> = {}): Fish => ({
   id: 'peaceful-small-fish',
@@ -58,7 +59,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         candidateSpecies: makeFish(),
       });
       return result.metadata.catalogVersion === 'local-fish-data-v1'
-        && result.metadata.ruleVersion === 'compatibility-domain-v7-ph-edge-overlap'
+        && result.metadata.ruleVersion === COMPATIBILITY_RULE_VERSION
         && result.metadata.domainRuleCodes.length > 0
         && ['compatible', 'caution', 'not_recommended', 'insufficient_data'].includes(result.metadata.domainStatus);
     },

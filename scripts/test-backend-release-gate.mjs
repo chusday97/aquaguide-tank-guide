@@ -17,6 +17,7 @@ const gates = [
   ['Compatibility Symmetry', 'npm', ['run', 'test:compatibility-symmetry']],
   ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],
   ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
+  ['Generic Species Onboarding', 'npm', ['run', 'test:compatibility-generic-species-onboarding']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
   ['Compatibility V4 AI Shadow', 'npm', ['run', 'test:compatibility-v4-ai-shadow']],
   ['Compatibility V4 Shadow Eval', 'npm', ['run', 'test:compatibility-v4-shadow-eval']],

@@ -8,6 +8,12 @@ export type ObservedCoexistenceStatus = 'stable' | 'observe' | 'intervene' | 'em
 export type CompatibilityRequiredFact = 'water' | 'temperature' | 'ph' | 'adult_size' | 'tank_size' | 'social_behavior' | 'territoriality' | 'predation' | 'breeding_behavior';
 export type BehaviorRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
 
+export type CompatibilityTraitReadiness = {
+  ready: boolean;
+  requiredFacts: CompatibilityRequiredFact[];
+  missingFacts: CompatibilityRequiredFact[];
+};
+
 export type CompatibilityIndividualContext = {
   lifeStage: 'unknown' | 'juvenile' | 'adult' | 'fry' | 'subadult';
   reproductiveState: 'unknown' | 'not_applicable' | 'normal' | 'pregnant_or_gravid' | 'in_labor_or_spawning' | 'postpartum_recovery';
@@ -104,7 +110,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v7-ph-edge-overlap';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v8-generic-profile-readiness';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -186,6 +192,32 @@ const supportsTankWaterType = (species: DomainSpeciesFact, tankWaterType?: Domai
   return supported.includes(tankWaterType);
 };
 
+const hasPositiveNumber = (value?: number | null) => value != null && Number.isFinite(value) && value > 0;
+const hasFiniteRange = (min?: number | null, max?: number | null) => (
+  min != null && max != null && Number.isFinite(min) && Number.isFinite(max) && min <= max
+);
+
+const requiredFactAvailable = (species: DomainSpeciesFact, fact: CompatibilityRequiredFact) => {
+  if (fact === 'water') return supportedWaterTypes(species).length > 0;
+  if (fact === 'temperature') return hasFiniteRange(species.temperatureMinC, species.temperatureMaxC);
+  if (fact === 'ph') return hasFiniteRange(species.phMin, species.phMax);
+  if (fact === 'adult_size') return hasPositiveNumber(species.adultLengthMaxCm) || hasPositiveNumber(species.adultLengthMinCm);
+  if (fact === 'tank_size') return hasPositiveNumber(species.minTankLiters) || hasPositiveNumber(species.minTankLengthCm);
+  // Behaviour facts can be a reviewed negative/neutral finding. The reviewed
+  // Profile's requiredFacts declaration is therefore the authority that the
+  // fact family was assessed; absence of a positive risk flag must not be
+  // reinterpreted as missing evidence.
+  return true;
+};
+
+export const getCompatibilityTraitReadiness = (species: DomainSpeciesFact): CompatibilityTraitReadiness => {
+  const requiredFacts = [...new Set(species.compatibilityRequiredFacts || [])];
+  const missingFacts = species.reviewed
+    ? requiredFacts.filter(fact => !requiredFactAvailable(species, fact))
+    : requiredFacts;
+  return { ready: species.reviewed && missingFacts.length === 0, requiredFacts, missingFacts };
+};
+
 const rangesOverlap = (leftMin?: number | null, leftMax?: number | null, rightMin?: number | null, rightMax?: number | null) => {
   if (leftMin == null || leftMax == null || rightMin == null || rightMax == null) return null;
   return Math.max(leftMin, rightMin) <= Math.min(leftMax, rightMax);
@@ -243,6 +275,13 @@ export const evaluateCompatibility = ({
     && existingSpecies.every(species => species.reviewed)
     && Boolean(candidateSpecies?.reviewed);
   if (candidateSpecies && !allSpeciesReviewed) raise('insufficient_data', 'species_evidence_unreviewed');
+  const reviewedSpeciesReadiness = [
+    ...existingSpecies,
+    ...(candidateSpecies ? [candidateSpecies] : []),
+  ].filter(species => species.reviewed).map(getCompatibilityTraitReadiness);
+  const missingRequiredFacts = Array.from(new Set(reviewedSpeciesReadiness.flatMap(item => item.missingFacts)));
+  for (const fact of missingRequiredFacts) raise('insufficient_data', `required_fact_${fact}_missing`);
+  const allRequiredTraitsReady = reviewedSpeciesReadiness.every(item => item.ready);
 
   if (candidateSpecies && existingSpecies.length > 0) {
     for (const existing of existingSpecies) {
@@ -462,12 +501,12 @@ export const evaluateCompatibility = ({
   // Preserve hard safety blocks (water/temperature/predation/single-housing)
   // even when evidence is incomplete, but never upgrade an unreviewed
   // combination into a positive planning result.
-  const finalStatus: CompatibilityDecisionStatus = candidateSpecies && !allSpeciesReviewed && statusRank[status] < statusRank.insufficient_data
+  const finalStatus: CompatibilityDecisionStatus = candidateSpecies && (!allSpeciesReviewed || !allRequiredTraitsReady) && statusRank[status] < statusRank.insufficient_data
     ? 'insufficient_data'
     : status;
   const decisionReadiness: CompatibilityDecisionReadiness = !allSpeciesReviewed
     ? 'unknown'
-    : isInsufficientData(finalStatus)
+    : !allRequiredTraitsReady || isInsufficientData(finalStatus)
       ? 'partial'
       : 'reviewed';
 

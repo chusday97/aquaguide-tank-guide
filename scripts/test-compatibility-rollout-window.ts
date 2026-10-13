@@ -9,6 +9,7 @@ import {
 } from '../src/data/compatibilityNextWaveBatch';
 import {
   buildCompatibilityProfileRolloutKeysets,
+  getCompatibilityProfileAuthorityGeneration,
   getCompatibilityProfileRolloutGeneration,
 } from '../src/data/compatibilityAuthorityRollout';
 
@@ -30,6 +31,23 @@ assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.wave05Target],
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.wave04Target], targetIds), 'wave04-target');
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.productionTarget], targetIds), 'production-target');
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.currentProduction], targetIds), 'current-production');
+const futureProfile = 'sp_future_generic';
+assert.equal(getCompatibilityProfileAuthorityGeneration(targetIds, targetIds), 'target');
+assert.equal(
+  getCompatibilityProfileAuthorityGeneration([...targetIds, futureProfile], targetIds),
+  'post-target-superset',
+  'full target plus a new reviewed profile must not require a new hard-coded rollout generation',
+);
+assert.equal(
+  getCompatibilityProfileAuthorityGeneration([...targetIds.slice(1), futureProfile], targetIds),
+  null,
+  'a future profile must not hide a missing baseline profile',
+);
+assert.equal(
+  getCompatibilityProfileAuthorityGeneration([...keysets.productionTarget, futureProfile], targetIds),
+  null,
+  'future profile growth is allowed only after the complete repository target is present',
+);
 
 const current = [...keysets.currentProduction].sort();
 const production = [...keysets.productionTarget].sort();
@@ -85,4 +103,4 @@ for (const speciesId of wave16Pending) {
   assert.equal(keysets.wave06Target.has(speciesId), false);
 }
 
-console.log('Compatibility rollout window PASS: exact 63 / 85 / 95 / 99 / 100 / 101 Profile generations only; all intermediate and mismatched keysets fail closed.');
+console.log('Compatibility rollout window PASS: exact 63 / 85 / 95 / 99 / 100 / 101 rollout generations stay fail-closed, while complete-target authority can grow monotonically with reviewed new profiles.');
