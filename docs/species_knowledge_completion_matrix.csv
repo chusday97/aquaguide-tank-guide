@@ -160,7 +160,7 @@ species_id,common_name,scientific_name,life_type,category,feeding_status,environ
 "sp_0159","黄金胡子 (异型变种)","Ancistrus sp. Gold","fish","鲶鱼/异型","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0160","大帆白金胡子","Ancistrus sp. Longfin Platinum","fish","鲶鱼/异型","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0161","巧克力皮球","Poecilia sphenops var. Chocolate","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","4"
-"sp_0162","红草鱼","Carassius auratus var.","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","5"
+"sp_0162","红草鱼","Carassius auratus var.","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","standard","0"
 "sp_0163","鸿运当头锦鲤","Cyprinus carpio var. Kohaku","fish","鱼类","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","3"
 "sp_0164","黑金刚米虾","Neocaridina davidi var. Black","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","8"
 "sp_0165","黄金背米虾","Neocaridina davidi var. Yellow Line","invertebrate","虾螺蟹","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","reviewed_unknown","","catalog_only","elevated","8"

@@ -1,11 +1,11 @@
-## TOP CURRENT QUEUE — 2026-10-12 unified wave14
+## TOP CURRENT QUEUE — 2026-10-13 unified wave15
 
-1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 8 identity holds / 13 ornamental-variant social evidence ceilings / 4 shrimp domain holds.
-2. DONE: preserve no-base-inheritance for fish trade variants and route reviewed shrimp objects to `crustacean_or_mollusk` before any fish-profile variant interpretation.
+1. DONE: classify the exact incoming 25 objects as one batch: 0 Profiles / 1 identity hold / 24 non-fish domain holds.
+2. DONE: route shrimp/snails to `crustacean_or_mollusk`, corals/corallimorphs to `coral_or_anemone`, and the tube worm to `marine_invertebrate`; keep the lone bare-`var.` goldfish identity-held.
 3. DONE: preserve static authority at 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; add no migration.
-4. DONE: regenerate completion and Compatibility coverage and advance the exact active queue to wave15.
-5. DONE: focused contracts, cross-contract validation, full backend release gate, diff/scope audit and clean wave14 checkpoint validation all pass.
-6. NEXT ACTIVE 25: sp_0162, sp_0034, sp_0036, sp_0164, sp_0165, sp_0166, sp_0238, sp_0239, sp_0249, sp_0250, sp_0251, sp_0274, sp_0275, sp_0276, sp_0277, sp_0278, sp_0279, sp_0342, sp_0396, sp_0397, sp_0398, sp_0320, sp_0324, sp_0327, sp_0329.
+4. DONE: correct promotion-queue semantics so direct/effective reviewed Profiles stay in gap reporting but cannot be requeued for promotion.
+5. DONE: focused contracts, cross-contract validation, full backend release gate and diff/scope validation all pass; finalize one clean wave15 checkpoint and push.
+6. NEXT ACTIVE 12: sp_0330, sp_0335, sp_0337, sp_0367, sp_0371, sp_0403, sp_0404, sp_0405, sp_0460, sp_0112, sp_0115, sp_0052.
 7. HOLD: no Production deploy, Production DB mutation, migration, merge/main, UI, or Vision work. Generic “推进” is not Production authorization.
 
 ## CURRENT STACKED RELEASE QUEUE — 2026-10-11 wave04

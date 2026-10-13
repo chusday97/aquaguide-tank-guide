@@ -6,6 +6,9 @@
 
 ## [Unreleased]
 
+- Added: Compatibility wave15 closes the generated 25-object queue as one batch: 1 bare-`var.` goldfish identity terminal hold and 24 non-fish domain holds across shrimp/snails, coral/corallimorph taxa and one marine tube worm; no unsupported fish Profile was introduced.
+- Changed: `next_wave_species_queue` now excludes species that already have a direct or effective reviewed Compatibility Profile while retaining their remaining field gaps in research reporting; regenerated wave16 contains 12 profile-less promotion candidates and static DB authority remains 100 Profiles / 176 evidence with no migration.
+
 - Added: Compatibility wave14 closes the generated 25-object queue as one batch: 8 identity terminal holds, 13 exact ornamental-variant social evidence ceilings, and 4 reviewed shrimp `crustacean_or_mollusk` domain holds; no unsupported Profile or base-species inheritance was introduced.
 - Changed: non-fish domain routing now explicitly takes precedence for the four reviewed shrimp objects while bare `var.` names and `Ancistrus sp.` parents stay identity-held; regenerated coverage advances to wave15 and static DB authority stays 100 Profiles / 176 evidence with no new migration.
 

@@ -610,27 +610,295 @@
   ],
   "next_wave_species_queue": [
     {
-      "species_id": "sp_0162",
-      "common_name": "红草鱼",
-      "scientific_name": "Carassius auratus var.",
+      "species_id": "sp_0330",
+      "common_name": "纽扣珊瑚 (动物之森)",
+      "scientific_name": "Zoanthus sp.",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
       "base_score": 22,
       "research_leverage": {
         "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0335",
+      "common_name": "丁香珊瑚",
+      "scientific_name": "Clavularia sp.",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0337",
+      "common_name": "千手珊瑚",
+      "scientific_name": "Xenia sp.",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0367",
+      "common_name": "雪花纽扣珊瑚",
+      "scientific_name": "Zoanthus sp. Snowflake",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0371",
+      "common_name": "蓝海绵",
+      "scientific_name": "Haliclona sp. Blue",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0403",
+      "common_name": "黄金纽扣珊瑚 (大规格)",
+      "scientific_name": "Zoanthus sp. Gold Center",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0404",
+      "common_name": "紫晶八字脑珊瑚",
+      "scientific_name": "Trachyphyllia geoffroyi var. Purple",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0405",
+      "common_name": "红炮仗花珊瑚",
+      "scientific_name": "Tubastraea coccinea var. Red",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0460",
+      "common_name": "巴西龟",
+      "scientific_name": "Trachemys scripta elegans",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 22,
+      "research_leverage": {
+        "stable_taxon": false,
+        "life_type_weight": 1,
+        "score_bonus": 1
+      },
+      "score": 23,
+      "gap_kinds": [
+        "environment",
+        "space",
+        "social",
+        "compatibility_profile"
+      ],
+      "field_status": {
+        "environment": "reviewed_unknown",
+        "space": "reviewed_unknown",
+        "social": "reviewed_unknown"
+      },
+      "compatibility_profile": "none",
+      "boundary_codes": [],
+      "research_disposition": "actionable",
+      "resolution_mode": "evidence_research",
+      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
+    },
+    {
+      "species_id": "sp_0112",
+      "common_name": "蓝眼灯",
+      "scientific_name": "Poropanchax normani",
+      "commonness_proxy": "catalog_only",
+      "risk_proxy": "standard",
+      "base_score": 12,
+      "research_leverage": {
+        "stable_taxon": true,
         "life_type_weight": 3,
-        "score_bonus": 3
+        "score_bonus": 6
       },
-      "score": 25,
+      "score": 18,
       "gap_kinds": [
-        "environment",
-        "space",
         "social",
         "compatibility_profile"
       ],
       "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "none",
@@ -640,27 +908,25 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0034",
-      "common_name": "兔螺",
-      "scientific_name": "Tylomelania sp.",
+      "species_id": "sp_0115",
+      "common_name": "琥珀灯",
+      "scientific_name": "Hyphessobrycon amapaensis",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "base_score": 22,
+      "base_score": 12,
       "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
       },
-      "score": 24,
+      "score": 18,
       "gap_kinds": [
-        "environment",
-        "space",
         "social",
         "compatibility_profile"
       ],
       "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
         "social": "reviewed_unknown"
       },
       "compatibility_profile": "none",
@@ -670,675 +936,25 @@
       "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
     },
     {
-      "species_id": "sp_0036",
-      "common_name": "豹点螺",
-      "scientific_name": "Neritina turrita var.",
+      "species_id": "sp_0052",
+      "common_name": "月光鼠",
+      "scientific_name": "Corydoras hastatus",
       "commonness_proxy": "catalog_only",
       "risk_proxy": "standard",
-      "base_score": 22,
+      "base_score": 7,
       "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
+        "stable_taxon": true,
+        "life_type_weight": 3,
+        "score_bonus": 6
       },
-      "score": 24,
+      "score": 13,
       "gap_kinds": [
-        "environment",
-        "space",
-        "social",
         "compatibility_profile"
       ],
       "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [
-        "catalog_identity_unresolved"
-      ],
-      "research_disposition": "actionable",
-      "resolution_mode": "identity_review",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0164",
-      "common_name": "黑金刚米虾",
-      "scientific_name": "Neocaridina davidi var. Black",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0165",
-      "common_name": "黄金背米虾",
-      "scientific_name": "Neocaridina davidi var. Yellow Line",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0166",
-      "common_name": "极火米虾 (高等级)",
-      "scientific_name": "Neocaridina davidi var. Fire Red",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0238",
-      "common_name": "黑金刚米虾 (极品)",
-      "scientific_name": "Neocaridina davidi var. Full Black",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0239",
-      "common_name": "血腥玛丽米虾",
-      "scientific_name": "Neocaridina davidi var. Bloody Mary",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0249",
-      "common_name": "红眼金苹果螺",
-      "scientific_name": "Pomacea bridgesii var. Gold",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0250",
-      "common_name": "蓝珍珠神秘螺",
-      "scientific_name": "Pomacea bridgesii var. Blue",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0251",
-      "common_name": "紫晶神秘螺",
-      "scientific_name": "Pomacea bridgesii var. Purple",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0274",
-      "common_name": "黄金米虾 (极品)",
-      "scientific_name": "Neocaridina davidi var. Neon Gold",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0275",
-      "common_name": "血丝米虾",
-      "scientific_name": "Neocaridina davidi var. Rili",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0276",
-      "common_name": "蓝钻米虾",
-      "scientific_name": "Neocaridina davidi var. Deep Blue",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0277",
-      "common_name": "红白水晶虾 (S级)",
-      "scientific_name": "Caridina cantonensis var. S-Class",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0278",
-      "common_name": "黑金刚水晶虾",
-      "scientific_name": "Caridina cantonensis var. Black King Kong",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0279",
-      "common_name": "黄金背蓝丝绒虾",
-      "scientific_name": "Neocaridina davidi var. Blue Gold Back",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0342",
-      "common_name": "黄金背蓝钻虾",
-      "scientific_name": "Neocaridina davidi var. Blue Gold",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0396",
-      "common_name": "蓝珍珠米虾",
-      "scientific_name": "Neocaridina davidi var. Blue Pearl",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0397",
-      "common_name": "红白水晶虾 (SSS级)",
-      "scientific_name": "Caridina cantonensis var. Flower",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0398",
-      "common_name": "黑金刚水晶虾 (多纹)",
-      "scientific_name": "Caridina cantonensis var. Panda",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "elevated",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 2,
-        "score_bonus": 2
-      },
-      "score": 24,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "inherited_reviewed",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0320",
-      "common_name": "皮革珊瑚",
-      "scientific_name": "Sarcophyton sp.",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 1,
-        "score_bonus": 1
-      },
-      "score": 23,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0324",
-      "common_name": "红菇珊瑚",
-      "scientific_name": "Actinodiscus sp.",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 1,
-        "score_bonus": 1
-      },
-      "score": 23,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0327",
-      "common_name": "管虫 (五彩)",
-      "scientific_name": "Sabellastarte sp.",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 1,
-        "score_bonus": 1
-      },
-      "score": 23,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
-      },
-      "compatibility_profile": "none",
-      "boundary_codes": [],
-      "research_disposition": "actionable",
-      "resolution_mode": "evidence_research",
-      "priority_basis": "catalog priority proxy + compatibility-critical gap + non-launch next wave"
-    },
-    {
-      "species_id": "sp_0329",
-      "common_name": "鹿角珊瑚 (SPS)",
-      "scientific_name": "Acropora sp.",
-      "commonness_proxy": "catalog_only",
-      "risk_proxy": "standard",
-      "base_score": 22,
-      "research_leverage": {
-        "stable_taxon": false,
-        "life_type_weight": 1,
-        "score_bonus": 1
-      },
-      "score": 23,
-      "gap_kinds": [
-        "environment",
-        "space",
-        "social",
-        "compatibility_profile"
-      ],
-      "field_status": {
-        "environment": "reviewed_unknown",
-        "space": "reviewed_unknown",
-        "social": "reviewed_unknown"
+        "environment": "reviewed_supported",
+        "space": "reviewed_supported",
+        "social": "reviewed_supported"
       },
       "compatibility_profile": "none",
       "boundary_codes": [],

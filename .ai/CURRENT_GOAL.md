@@ -1,12 +1,11 @@
-## TOP CURRENT OVERRIDE — 2026-10-12 Compatibility unified wave14
+## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility unified wave15
 
-- Active branch: `codex/compatibility-next25-wave14-20261012`, based exactly on pushed wave13 `6008c3c2c87353ca025716869233398250b45c7f`.
-- Processed the exact generated 25 wave14 objects atomically: 0 Profiles / 8 identity terminal holds / 13 ornamental-variant social evidence ceilings / 4 shrimp Compatibility-domain holds.
-- Identity closure is explicit: 5 incomplete scientific names (`sp_0068`, `sp_0360`, `sp_0361`, `sp_0366`, `sp_0474`), 2 unresolved `Ancistrus sp.` parent taxa (`sp_0392`, `sp_0418`), and 1 exact Balloon variant without a reviewed identity bridge (`sp_0375`).
-- The 13 exact ornamental object reviews remain social evidence ceilings because reviewed object-level Compatibility facts are still unknown and no base-species inheritance bridge is authorized; this includes Glo Danio, Betta, fancy goldfish, kuhli loach and other trade variants.
-- Four reviewed shrimp objects (`sp_0027`, `sp_0028`, `sp_0030`, `sp_0031`) are explicitly `crustacean_or_mollusk` domain holds. Variant identity detail does not move shrimp into fish-profile semantics.
-- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave14 adds no DB authority and therefore no migration.
-- Regenerated coverage now exposes the exact wave15 25-object queue, which shifts heavily toward shrimp/snail/coral cross-taxa boundary closure.
+- Active branch: `codex/compatibility-next25-wave15-20261013`, based exactly on pushed wave14 `2bf868d1cd7e449c078f5ad3e8030ed99a55cc73`.
+- Processed the exact generated 25 wave15 objects atomically: 0 Profiles / 1 identity terminal hold / 24 non-fish Compatibility-domain holds.
+- The only fish object, `sp_0162 Carassius auratus var.`, remains `catalog_scientific_name_unresolved`; its exact ornamental review does not repair the bare `var.` identity or authorize generic goldfish inheritance.
+- All remaining 24 objects are explicitly non-fish: shrimp/snails route to `crustacean_or_mollusk`, soft/stony/corallimorph taxa to `coral_or_anemone`, and `sp_0327 Sabellastarte` to `marine_invertebrate`.
+- Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; wave15 adds no DB authority and therefore no migration.
+- Coverage generation now keeps direct/effective reviewed Profiles out of the promotion queue while preserving their remaining field gaps in the gap report. After that correction the exact wave16 active queue is 12 objects, not 15.
 - Production remains 60 migrations / 63 Profiles / 21 Pair Rules / 1 Stage Risk / 116 evidence. No Production deploy, DB mutation, merge/main, UI, or Vision work is authorized.
 
 ## CURRENT OVERRIDE — 2026-10-09 Production Compatibility safe migration recovery

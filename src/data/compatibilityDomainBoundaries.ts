@@ -3,6 +3,7 @@ import { nextWaveUnified09DomainOutcomes } from './catalogReviewBatches/next-wav
 import { nextWaveUnified10DomainOutcomes } from './catalogReviewBatches/next-wave-unified-10';
 import { nextWaveUnified13DomainOutcomes } from './catalogReviewBatches/next-wave-unified-13';
 import { nextWaveUnified14DomainOutcomes } from './catalogReviewBatches/next-wave-unified-14';
+import { nextWaveUnified15DomainOutcomes } from './catalogReviewBatches/next-wave-unified-15';
 
 export type CompatibilityDomainBoundaryCode = 'life_type_not_supported_by_fish_compatibility_domain';
 
@@ -62,6 +63,12 @@ export const compatibilityDomainBoundaries: Record<string, CompatibilityDomainBo
     ...outcome,
     code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
     reviewedAt: '2026-10-12',
+    researchDisposition: 'terminal_unknown_hold' as const,
+  }])),
+  ...Object.fromEntries(nextWaveUnified15DomainOutcomes.map(outcome => [outcome.speciesId, {
+    ...outcome,
+    code: 'life_type_not_supported_by_fish_compatibility_domain' as const,
+    reviewedAt: '2026-10-13',
     researchDisposition: 'terminal_unknown_hold' as const,
   }])),
   sp_0035: boundary('sp_0035', 'crustacean_or_mollusk', ['batch04-raffles-geosesarma-dennerle'], 'Duplicate catalog object for Geosesarma dennerle; same reviewed domain boundary as sp_0006.'),

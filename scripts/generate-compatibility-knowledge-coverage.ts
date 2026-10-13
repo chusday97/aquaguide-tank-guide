@@ -379,6 +379,7 @@ const nextWaveCandidates = rows
 
 const seenResearchTaxa = new Set<string>();
 const nextWaveSpeciesQueue = nextWaveCandidates
+  .filter(item => item.compatibility_profile === 'none')
   .filter(item => {
     const taxonKey = String(item.scientific_name || '').trim().toLowerCase();
     if (!taxonKey) return true;

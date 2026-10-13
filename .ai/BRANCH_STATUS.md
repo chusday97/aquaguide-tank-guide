@@ -1,9 +1,9 @@
-## TOP CURRENT BRANCH — 2026-10-12 wave14
+## TOP CURRENT BRANCH — 2026-10-13 wave15
 
-- `codex/compatibility-next25-wave14-20261012` was created from exact clean pushed wave13 HEAD `6008c3c2c87353ca025716869233398250b45c7f`.
-- Scope is evidence/backend documentation only: one 25-object authority batch, 8 identity boundaries, 13 variant social evidence ceilings, 4 reviewed shrimp domain boundaries, regenerated coverage artifacts, and contract tests.
-- Reviewed shrimp identity routes `sp_0027`, `sp_0028`, `sp_0030`, and `sp_0031` to `crustacean_or_mollusk`; shrimp colony/molting/predation semantics are not encoded as fish social behavior.
+- `codex/compatibility-next25-wave15-20261013` was created from exact clean pushed wave14 HEAD `2bf868d1cd7e449c078f5ad3e8030ed99a55cc73`.
+- Scope is evidence/backend documentation only: one 25-object authority batch, 1 identity boundary, 24 reviewed non-fish domain boundaries, regenerated coverage artifacts, promotion-queue filtering and contract tests.
 - Outcome is 0 new Profiles / 0 new DB evidence / 25 fail-closed terminal outcomes. No Supabase migration, Production mutation, deploy, merge, UI, or Vision change.
+- The generator now excludes direct/effective reviewed Profiles from the promotion queue while retaining their unresolved field gaps in research reporting; active wave16 is 12 profile-less objects.
 - Static candidate remains 100 Profiles / 21 Pair Rules / 1 Stage Risk / 176 evidence; Production remains 60 / 63 / 21 / 1 / 116.
 
 ## RC1 RELEASE CLOSURE — 2026-09-16
