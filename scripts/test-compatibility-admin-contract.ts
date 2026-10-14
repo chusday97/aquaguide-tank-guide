@@ -7,6 +7,63 @@ import { compatibilityPairRuleRevisionInputSchema, compatibilityProfileRevisionI
 const audit = getCompatibilityEvidenceAudit();
 const speciesIds = new Set(fishData.map(item => item.id));
 
+
+type ReviewedCompatibilityProfile = (typeof audit.reviewedProfiles)[number];
+
+const extractHistoricalProfileSourceIds = (migration: string, speciesId: string) => {
+  const escapedSpeciesId = speciesId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const driftSourceIds = new Set<string>();
+
+  for (const line of migration.split(/\r?\n/)) {
+    if (!line.includes(speciesId) || !/profile evidence drift/.test(line)) continue;
+    const arrayMatch = line.match(/<> ARRAY\[([^\]]*)\]::text\[\]/);
+    if (!arrayMatch) continue;
+    for (const sourceMatch of arrayMatch[1].matchAll(/'([^']+)'/g)) driftSourceIds.add(sourceMatch[1]);
+  }
+  if (driftSourceIds.size > 0) return [...driftSourceIds].sort();
+
+  const sourceIds = new Set<string>();
+  const expectedSourceBlocks = migration.match(/insert into [^;\n]*(?:expected_sources|profile_sources)[^;\n]* values[\s\S]*?;/gi) || [];
+  const tuplePattern = new RegExp(`\\('${escapedSpeciesId}'\\s*,\\s*'([^']+)'\\)`, 'g');
+  for (const block of expectedSourceBlocks) {
+    for (const match of block.matchAll(tuplePattern)) sourceIds.add(match[1]);
+  }
+  if (sourceIds.size > 0) return [...sourceIds].sort();
+
+  const expectedProfileBlocks = migration.match(/insert into [^;\n]*expected_profiles values[\s\S]*?;/gi) || [];
+  const profileTuplePattern = new RegExp(`\\(\\s*'${escapedSpeciesId}'[\\s\\S]*?\\)(?=\\s*,|\\s*;)`, 'g');
+  for (const block of expectedProfileBlocks) {
+    for (const tupleMatch of block.matchAll(profileTuplePattern)) {
+      const quoted = [...tupleMatch[0].matchAll(/'([^']+)'/g)].map(match => match[1]);
+      if (quoted.length > 1) sourceIds.add(quoted[quoted.length - 1]);
+    }
+  }
+  if (sourceIds.size > 0) return [...sourceIds].sort();
+
+  const sourceLinkStatements = migration
+    .split(';')
+    .filter(statement => statement.includes('insert into public.species_compatibility_profile_sources') && statement.includes(speciesId));
+  for (const statement of sourceLinkStatements) {
+    for (const match of statement.matchAll(/e\.source_key='([^']+)'/g)) sourceIds.add(match[1]);
+    for (const match of statement.matchAll(/e\.source_key in \(([^)]*)\)/g)) {
+      for (const sourceMatch of match[1].matchAll(/'([^']+)'/g)) sourceIds.add(sourceMatch[1]);
+    }
+  }
+  return [...sourceIds].sort();
+};
+const assertHistoricalProfileSourceOwnership = (
+  migration: string,
+  profile: ReviewedCompatibilityProfile,
+  label: string,
+) => {
+  const historicalSourceIds = extractHistoricalProfileSourceIds(migration, profile.speciesId);
+  assert.ok(historicalSourceIds.length > 0, `${label} must declare historical Profile sources for ${profile.speciesId}`);
+  const currentSourceIds = new Set(profile.citations.map(source => source.id));
+  for (const sourceId of historicalSourceIds) {
+    assert.equal(currentSourceIds.has(sourceId), true, `${label} historical Profile source must remain in current authority: ${profile.speciesId}/${sourceId}`);
+  }
+};
+
 assert.ok(audit.reviewedProfiles.length >= 14, 'reviewed behavior-profile baseline must not regress below the current recovery floor');
 assert.ok(audit.reviewedPairRules.length >= 5, 'reviewed pair-rule baseline must not regress below the current recovery floor');
 assert.deepEqual(new Set(audit.reviewedSpeciesIds), new Set(audit.reviewedProfiles.map(profile => profile.speciesId)));
@@ -150,7 +207,7 @@ assert.equal(recoveryV1Profiles.length, recoveryV1ProfileKeys.length, '202609120
 assert.equal(recoveryV1Pairs.length, recoveryV1PairKeys.length, '202609120001 pair ownership is immutable.');
 for (const profile of recoveryV1Profiles) {
   assert.equal(recoveryMigration.includes(profile.speciesId), true, `recovery v1 migration must include Profile ${profile.speciesId}`);
-  for (const source of profile.citations) assert.equal(recoveryMigration.includes(source.id), true, `recovery v1 migration must include Profile source ${source.id}`);
+  assertHistoricalProfileSourceOwnership(recoveryMigration, profile, 'historical migration');
 }
 for (const rule of recoveryV1Pairs) {
   for (const speciesId of rule.speciesIds) assert.equal(recoveryMigration.includes(speciesId), true, `recovery v1 migration must include Pair species ${speciesId}`);
@@ -166,7 +223,7 @@ assert.match(harlequinMigration, /Compatibility harlequin baseline is partial or
 const harlequinProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0468');
 assert.ok(harlequinProfile, '120002 must own the reviewed harlequin profile.');
 assert.equal(harlequinMigration.includes('sp_0468'), true);
-for (const source of harlequinProfile.citations) assert.equal(harlequinMigration.includes(source.id), true, `harlequin migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(harlequinMigration, harlequinProfile, 'historical migration');
 assert.equal((harlequinMigration.match(/Compatibility harlequin profile drift:/g) || []).length, 1);
 assert.equal((harlequinMigration.match(/Compatibility harlequin profile evidence drift:/g) || []).length, 1);
 
@@ -175,7 +232,7 @@ assert.match(blackSkirtMigration, /Compatibility black-skirt baseline is partial
 const blackSkirtProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0010');
 assert.ok(blackSkirtProfile, '120003 must own the reviewed black-skirt profile.');
 assert.equal(blackSkirtMigration.includes('sp_0010'), true);
-for (const source of blackSkirtProfile.citations) assert.equal(blackSkirtMigration.includes(source.id), true, `black-skirt migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(blackSkirtMigration, blackSkirtProfile, 'historical migration');
 assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile drift:/g) || []).length, 1);
 assert.equal((blackSkirtMigration.match(/Compatibility black-skirt profile evidence drift:/g) || []).length, 1);
 
@@ -184,7 +241,7 @@ assert.match(cherryBarbMigration, /Compatibility cherry-barb baseline is partial
 const cherryBarbProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0012');
 assert.ok(cherryBarbProfile, '120004 must own the reviewed cherry-barb profile.');
 assert.equal(cherryBarbMigration.includes('sp_0012'), true);
-for (const source of cherryBarbProfile.citations) assert.equal(cherryBarbMigration.includes(source.id), true, `cherry-barb migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(cherryBarbMigration, cherryBarbProfile, 'historical migration');
 assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile drift:/g) || []).length, 1);
 assert.equal((cherryBarbMigration.match(/Compatibility cherry-barb profile evidence drift:/g) || []).length, 1);
 
@@ -195,7 +252,7 @@ const emberTetraProfiles = audit.reviewedProfiles.filter(profile => emberTetraPr
 assert.equal(emberTetraProfiles.length, 2, '120005 must own both exact Ember-tetra catalog aliases.');
 for (const profile of emberTetraProfiles) {
   assert.equal(emberTetraMigration.includes(profile.speciesId), true, `ember-tetra migration must include Profile ${profile.speciesId}`);
-  for (const source of profile.citations) assert.equal(emberTetraMigration.includes(source.id), true, `ember-tetra migration must include source ${source.id}`);
+  assertHistoricalProfileSourceOwnership(emberTetraMigration, profile, 'historical migration');
 }
 const normalizeEmberProfile = (profile: (typeof emberTetraProfiles)[number]) => ({
   behaviorTraits: profile.behaviorTraits, minimumGroupSize: profile.minimumGroupSize, predationTargets: profile.predationTargets,
@@ -211,7 +268,7 @@ assert.match(denisonMigration, /Compatibility denison-barb baseline is partial o
 const denisonProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0440');
 assert.ok(denisonProfile, '120006 must own the reviewed Denison-barb profile.');
 assert.equal(denisonMigration.includes('sp_0440'), true);
-for (const source of denisonProfile.citations) assert.equal(denisonMigration.includes(source.id), true, `Denison-barb migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(denisonMigration, denisonProfile, 'historical migration');
 assert.equal((denisonMigration.match(/Compatibility denison-barb profile drift:/g) || []).length, 1);
 assert.equal((denisonMigration.match(/Compatibility denison-barb profile evidence drift:/g) || []).length, 1);
 
@@ -220,7 +277,7 @@ assert.match(congoTetraMigration, /Compatibility congo-tetra baseline is partial
 const congoTetraProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0020');
 assert.ok(congoTetraProfile, '120007 must own the reviewed Congo-tetra profile.');
 assert.equal(congoTetraMigration.includes('sp_0020'), true);
-for (const source of congoTetraProfile.citations) assert.equal(congoTetraMigration.includes(source.id), true, `Congo-tetra migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(congoTetraMigration, congoTetraProfile, 'historical migration');
 assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile drift:/g) || []).length, 1);
 assert.equal((congoTetraMigration.match(/Compatibility congo-tetra profile evidence drift:/g) || []).length, 1);
 
@@ -229,7 +286,7 @@ assert.match(pearlGouramiMigration, /Compatibility pearl-gourami baseline is par
 const pearlGouramiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0444');
 assert.ok(pearlGouramiProfile, '120008 must own the reviewed Pearl-gourami profile.');
 assert.equal(pearlGouramiMigration.includes('sp_0444'), true);
-for (const source of pearlGouramiProfile.citations) assert.equal(pearlGouramiMigration.includes(source.id), true, `Pearl-gourami migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(pearlGouramiMigration, pearlGouramiProfile, 'historical migration');
 assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile drift:/g) || []).length, 1);
 assert.equal((pearlGouramiMigration.match(/Compatibility pearl-gourami profile evidence drift:/g) || []).length, 1);
 
@@ -238,7 +295,7 @@ assert.match(agassiziiMigration, /Compatibility agassizii baseline is partial or
 const agassiziiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0017');
 assert.ok(agassiziiProfile, '120009 must own the reviewed Agassizii profile.');
 assert.equal(agassiziiMigration.includes('sp_0017'), true);
-for (const source of agassiziiProfile.citations) assert.equal(agassiziiMigration.includes(source.id), true, `Agassizii migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(agassiziiMigration, agassiziiProfile, 'historical migration');
 assert.equal((agassiziiMigration.match(/Compatibility agassizii profile drift:/g) || []).length, 1);
 assert.equal((agassiziiMigration.match(/Compatibility agassizii profile evidence drift:/g) || []).length, 1);
 
@@ -247,7 +304,7 @@ assert.match(ramireziMigration, /Compatibility ramirezi baseline is partial or n
 const ramireziProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0448');
 assert.ok(ramireziProfile, '120010 must own the reviewed Ramirezi profile.');
 assert.equal(ramireziMigration.includes('sp_0448'), true);
-for (const source of ramireziProfile.citations) assert.equal(ramireziMigration.includes(source.id), true, `Ramirezi migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(ramireziMigration, ramireziProfile, 'historical migration');
 assert.equal((ramireziMigration.match(/Compatibility ramirezi profile drift:/g) || []).length, 1);
 assert.equal((ramireziMigration.match(/Compatibility ramirezi profile evidence drift:/g) || []).length, 1);
 
@@ -256,7 +313,7 @@ assert.match(discusMigration, /Compatibility discus baseline is partial or not f
 const discusProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0447');
 assert.ok(discusProfile, '120011 must own the reviewed Discus profile.');
 assert.equal(discusMigration.includes('sp_0447'), true);
-for (const source of discusProfile.citations) assert.equal(discusMigration.includes(source.id), true, `Discus migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(discusMigration, discusProfile, 'historical migration');
 assert.equal((discusMigration.match(/Compatibility discus profile drift:/g) || []).length, 1);
 assert.equal((discusMigration.match(/Compatibility discus profile evidence drift:/g) || []).length, 1);
 
@@ -265,7 +322,7 @@ assert.match(pygmyCoryMigration, /Compatibility pygmy cory baseline is partial o
 const pygmyCoryProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0053');
 assert.ok(pygmyCoryProfile, '120012 must own the reviewed Pygmy-cory profile.');
 assert.equal(pygmyCoryMigration.includes('sp_0053'), true);
-for (const source of pygmyCoryProfile.citations) assert.equal(pygmyCoryMigration.includes(source.id), true, `Pygmy-cory migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(pygmyCoryMigration, pygmyCoryProfile, 'historical migration');
 assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile drift:/g) || []).length, 1);
 assert.equal((pygmyCoryMigration.match(/Compatibility pygmy cory profile evidence drift:/g) || []).length, 1);
 
@@ -274,7 +331,7 @@ assert.match(hillstreamMigration, /Compatibility hillstream loach baseline is pa
 const hillstreamProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0045');
 assert.ok(hillstreamProfile, '120013 must own the reviewed hillstream-loach profile.');
 assert.equal(hillstreamMigration.includes('sp_0045'), true);
-for (const source of hillstreamProfile.citations) assert.equal(hillstreamMigration.includes(source.id), true, `Hillstream-loach migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(hillstreamMigration, hillstreamProfile, 'historical migration');
 assert.equal((hillstreamMigration.match(/Compatibility hillstream loach profile drift:/g) || []).length, 1);
 assert.equal((hillstreamMigration.match(/Compatibility hillstream loach profile evidence drift:/g) || []).length, 1);
 
@@ -283,7 +340,7 @@ assert.match(clownLoachMigration, /Compatibility clown loach baseline is partial
 const clownLoachProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0126');
 assert.ok(clownLoachProfile, '120014 must own the reviewed Clown-loach profile.');
 assert.equal(clownLoachMigration.includes('sp_0126'), true);
-for (const source of clownLoachProfile.citations) assert.equal(clownLoachMigration.includes(source.id), true, `Clown-loach migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(clownLoachMigration, clownLoachProfile, 'historical migration');
 assert.equal((clownLoachMigration.match(/Compatibility clown loach profile drift:/g) || []).length, 1);
 assert.equal((clownLoachMigration.match(/Compatibility clown loach profile evidence drift:/g) || []).length, 1);
 
@@ -292,7 +349,7 @@ assert.match(redRainbowfishMigration, /Compatibility red rainbowfish baseline is
 const redRainbowfishProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0133');
 assert.ok(redRainbowfishProfile, '120015 must own the reviewed Red-rainbowfish profile.');
 assert.equal(redRainbowfishMigration.includes('sp_0133'), true);
-for (const source of redRainbowfishProfile.citations) assert.equal(redRainbowfishMigration.includes(source.id), true, `Red-rainbowfish migration must include source ${source.id}`);
+assertHistoricalProfileSourceOwnership(redRainbowfishMigration, redRainbowfishProfile, 'historical migration');
 assert.equal((redRainbowfishMigration.match(/Compatibility red rainbowfish profile drift:/g) || []).length, 1);
 assert.equal((redRainbowfishMigration.match(/Compatibility red rainbowfish profile evidence drift:/g) || []).length, 1);
 
@@ -300,7 +357,7 @@ const rummyOtoOscarMigration = readFileSync('supabase/migrations/202609160001_co
 assert.match(rummyOtoOscarMigration, /Compatibility rummy\/oto\/oscar baseline is partial or not fully published/);
 for (const profile of audit.reviewedProfiles.filter(item => ['sp_0433', 'sp_0013', 'sp_0451'].includes(item.speciesId))) {
   assert.equal(rummyOtoOscarMigration.includes(profile.speciesId), true, `rummy/oto/oscar migration must own Profile ${profile.speciesId}`);
-  for (const source of profile.citations) assert.equal(rummyOtoOscarMigration.includes(source.id), true, `rummy/oto/oscar migration must include source ${source.id}`);
+  assertHistoricalProfileSourceOwnership(rummyOtoOscarMigration, profile, 'historical migration');
 }
 assert.equal((rummyOtoOscarMigration.match(/Compatibility rummy-oto-oscar profile drift:/g) || []).length, 3);
 assert.equal((rummyOtoOscarMigration.match(/Compatibility rummy-oto-oscar profile evidence drift:/g) || []).length, 3);
@@ -335,9 +392,7 @@ const kissingGouramiMigration = readFileSync('supabase/migrations/20261010101020
 const kissingGouramiProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0015');
 assert.ok(kissingGouramiProfile, '20261010101020 must own the reviewed kissing-gourami profile.');
 assert.equal(kissingGouramiMigration.includes("catalog_key='sp_0015'"), true, 'kissing-gourami migration must target sp_0015.');
-for (const source of kissingGouramiProfile.citations) {
-  assert.equal(kissingGouramiMigration.includes(source.id), true, 'kissing-gourami migration must include source ' + source.id);
-}
+assertHistoricalProfileSourceOwnership(kissingGouramiMigration, kissingGouramiProfile, 'historical migration');
 assert.match(kissingGouramiMigration, /expected 35 reviewed Compatibility profiles/, 'kissing-gourami migration must freeze the post-release profile count.');
 assert.match(kissingGouramiMigration, /sp_0015 profile drift/, 'kissing-gourami migration must include an exact Profile drift guard.');
 assert.match(kissingGouramiMigration, /sp_0015 source links drift/, 'kissing-gourami migration must include evidence-link drift guard.');
@@ -368,18 +423,14 @@ const nextWaveFreshwaterProfiles = audit.reviewedProfiles.filter(profile => next
 assert.equal(nextWaveFreshwaterProfiles.length, nextWaveFreshwaterProfileIds.length, '20261010151338 must own exactly the three next-wave freshwater Profiles.');
 for (const profile of nextWaveFreshwaterProfiles) {
   assert.equal(nextWaveFreshwaterMigration.includes(profile.speciesId), true, `next-wave freshwater migration must include Profile ${profile.speciesId}`);
-  for (const source of profile.citations) {
-    assert.equal(nextWaveFreshwaterMigration.includes(source.id), true, `next-wave freshwater migration must include Profile source ${source.id}`);
-  }
+  assertHistoricalProfileSourceOwnership(nextWaveFreshwaterMigration, profile, 'historical migration');
 }
 
 const blackParadiseMigration = readFileSync('supabase/migrations/20261010164051_compatibility_macropodus_spechti_authority.sql', 'utf8');
 const blackParadiseProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0044');
 assert.ok(blackParadiseProfile, '20261010164051 must own the reviewed Macropodus spechti profile.');
 assert.equal(blackParadiseMigration.includes("catalog_key='sp_0044'"), true, 'Macropodus spechti migration must target sp_0044.');
-for (const source of blackParadiseProfile.citations) {
-  assert.equal(blackParadiseMigration.includes(source.id), true, 'Macropodus spechti migration must include source ' + source.id);
-}
+assertHistoricalProfileSourceOwnership(blackParadiseMigration, blackParadiseProfile, 'historical migration');
 assert.match(blackParadiseMigration, /expected 39 reviewed Compatibility profiles/, 'Macropodus spechti migration must freeze the post-release profile count.');
 assert.match(blackParadiseMigration, /sp_0044 profile drift/, 'Macropodus spechti migration must include an exact Profile drift guard.');
 assert.match(blackParadiseMigration, /sp_0044 source links drift/, 'Macropodus spechti migration must include evidence-link drift guard.');
@@ -390,9 +441,7 @@ const nextWaveMarineProfiles = audit.reviewedProfiles.filter(profile => nextWave
 assert.equal(nextWaveMarineProfiles.length, nextWaveMarineProfileIds.length, '20261011020543 must own exactly the three next-wave marine Profiles.');
 for (const profile of nextWaveMarineProfiles) {
   assert.equal(nextWaveMarineMigration.includes(profile.speciesId), true, 'next-wave marine migration must include Profile ' + profile.speciesId);
-  for (const source of profile.citations) {
-    assert.equal(nextWaveMarineMigration.includes(source.id), true, 'next-wave marine migration must include Profile source ' + source.id);
-  }
+  assertHistoricalProfileSourceOwnership(nextWaveMarineMigration, profile, 'historical migration');
 }
 assert.match(nextWaveMarineMigration, /expected 42 reviewed Compatibility profiles/, 'next-wave marine migration must freeze the post-release profile count.');
 assert.match(nextWaveMarineMigration, /expected 77 reviewed evidence sources/, 'next-wave marine migration must freeze the post-release evidence count.');
@@ -401,9 +450,7 @@ const bluePrinceMigration = readFileSync('supabase/migrations/20261011111500_com
 const bluePrinceProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0018');
 assert.ok(bluePrinceProfile, '20261011111500 must own the reviewed Chindongo socolofi profile.');
 assert.equal(bluePrinceMigration.includes("catalog_key='sp_0018'"), true, 'Chindongo socolofi migration must target sp_0018.');
-for (const source of bluePrinceProfile.citations) {
-  assert.equal(bluePrinceMigration.includes(source.id), true, 'Chindongo socolofi migration must include source ' + source.id);
-}
+assertHistoricalProfileSourceOwnership(bluePrinceMigration, bluePrinceProfile, 'historical migration');
 assert.match(bluePrinceMigration, /expected 43 reviewed Compatibility profiles/, 'Chindongo socolofi migration must freeze the post-release profile count.');
 assert.match(bluePrinceMigration, /expected 79 reviewed evidence sources/, 'Chindongo socolofi migration must freeze the post-release evidence count.');
 assert.match(bluePrinceMigration, /sp_0018 profile drift/, 'Chindongo socolofi migration must include an exact Profile drift guard.');
@@ -413,9 +460,7 @@ const opsariichthysMigration = readFileSync('supabase/migrations/20261011124500_
 const opsariichthysProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0038');
 assert.ok(opsariichthysProfile, '20261011124500 must own the reviewed Opsariichthys bidens profile.');
 assert.equal(opsariichthysMigration.includes("catalog_key='sp_0038'"), true, 'Opsariichthys bidens migration must target sp_0038.');
-for (const source of opsariichthysProfile.citations) {
-  assert.equal(opsariichthysMigration.includes(source.id), true, 'Opsariichthys bidens migration must include source ' + source.id);
-}
+assertHistoricalProfileSourceOwnership(opsariichthysMigration, opsariichthysProfile, 'historical migration');
 assert.match(opsariichthysMigration, /expected 44 reviewed Compatibility profiles/, 'Opsariichthys bidens migration must freeze the post-release profile count.');
 assert.match(opsariichthysMigration, /expected 82 reviewed evidence sources/, 'Opsariichthys bidens migration must freeze the post-release evidence count.');
 assert.match(opsariichthysMigration, /sp_0038 profile drift/, 'Opsariichthys bidens migration must include an exact Profile drift guard.');
@@ -425,9 +470,7 @@ const pseudorasboraMigration = readFileSync('supabase/migrations/20261011162500_
 const pseudorasboraProfile = audit.reviewedProfiles.find(profile => profile.speciesId === 'sp_0042');
 assert.ok(pseudorasboraProfile, '20261011162500 must own the reviewed Pseudorasbora parva profile.');
 assert.equal(pseudorasboraMigration.includes("catalog_key='sp_0042'"), true, 'Pseudorasbora parva migration must target sp_0042.');
-for (const source of pseudorasboraProfile.citations) {
-  assert.equal(pseudorasboraMigration.includes(source.id), true, 'Pseudorasbora parva migration must include source ' + source.id);
-}
+assertHistoricalProfileSourceOwnership(pseudorasboraMigration, pseudorasboraProfile, 'historical migration');
 assert.match(pseudorasboraMigration, /expected 45 reviewed Compatibility profiles/, 'Pseudorasbora parva migration must freeze the post-release profile count.');
 assert.match(pseudorasboraMigration, /expected 85 reviewed evidence sources/, 'Pseudorasbora parva migration must freeze the post-release evidence count.');
 assert.match(pseudorasboraMigration, /sp_0042 profile drift/, 'Pseudorasbora parva migration must include an exact Profile drift guard.');
@@ -439,9 +482,7 @@ for (const speciesId of freshwaterBatchIds) {
   const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
   assert.ok(profile, 'freshwater batch migration must own reviewed profile ' + speciesId);
   assert.equal(freshwaterBatchMigration.includes("'" + speciesId + "'"), true, 'freshwater batch migration must target ' + speciesId);
-  for (const source of profile.citations) {
-    assert.equal(freshwaterBatchMigration.includes(source.id), true, 'freshwater batch migration must include source ' + source.id);
-  }
+  assertHistoricalProfileSourceOwnership(freshwaterBatchMigration, profile, 'historical migration');
 }
 assert.equal(audit.reviewedProfiles.some(profile => profile.speciesId === 'sp_0047'), false, 'sp_0047 must remain outside reviewed Compatibility profiles at its evidence ceiling.');
 assert.match(freshwaterBatchMigration, /expected 45 reviewed Compatibility profiles/, 'freshwater batch migration must lock its prerequisite profile count.');
@@ -456,9 +497,7 @@ for (const speciesId of unifiedNextWaveProfileIds) {
   const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
   assert.ok(profile, 'unified next-wave migration must own reviewed profile ' + speciesId);
   assert.equal(unifiedNextWaveMigration.includes("'" + speciesId + "'"), true, 'unified next-wave migration must target ' + speciesId);
-  for (const source of profile.citations) {
-    assert.equal(unifiedNextWaveMigration.includes(source.id), true, 'unified next-wave migration must include source ' + source.id);
-  }
+  assertHistoricalProfileSourceOwnership(unifiedNextWaveMigration, profile, 'historical migration');
 }
 assert.match(unifiedNextWaveMigration, /expected 52 reviewed Compatibility profiles/, 'unified next-wave migration must lock its prerequisite profile count.');
 assert.match(unifiedNextWaveMigration, /expected 63 reviewed Compatibility profiles/, 'unified next-wave migration must freeze the post-release profile count.');
@@ -473,9 +512,7 @@ for (const speciesId of unifiedNext25ProfileIds) {
   const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
   assert.ok(profile, 'unified next25 migration must own reviewed profile ' + speciesId);
   assert.equal(unifiedNext25Migration.includes("'" + speciesId + "'"), true, 'unified next25 migration must target ' + speciesId);
-  for (const source of profile.citations) {
-    assert.equal(unifiedNext25Migration.includes(source.id), true, 'unified next25 migration must include source ' + source.id);
-  }
+  assertHistoricalProfileSourceOwnership(unifiedNext25Migration, profile, 'historical migration');
 }
 assert.match(unifiedNext25Migration, /expected 63 reviewed Compatibility profiles/, 'unified next25 migration must lock its prerequisite profile count.');
 assert.match(unifiedNext25Migration, /expected 85 reviewed Compatibility profiles/, 'unified next25 migration must freeze the post-release profile count.');
@@ -490,9 +527,7 @@ for (const speciesId of unifiedWave04ProfileIds) {
   const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
   assert.ok(profile, 'unified wave04 migration must own reviewed profile ' + speciesId);
   assert.equal(unifiedWave04Migration.includes("'" + speciesId + "'"), true, 'unified wave04 migration must target ' + speciesId);
-  for (const source of profile.citations) {
-    assert.equal(unifiedWave04Migration.includes(source.id), true, 'unified wave04 migration must include source ' + source.id);
-  }
+  assertHistoricalProfileSourceOwnership(unifiedWave04Migration, profile, 'historical migration');
 }
 assert.match(unifiedWave04Migration, /expected predecessor 85 reviewed Compatibility profiles/, 'wave04 migration must lock predecessor Profile authority.');
 assert.match(unifiedWave04Migration, /expected predecessor 160 reviewed evidence sources/, 'wave04 migration must lock predecessor evidence authority.');
@@ -507,7 +542,7 @@ for (const speciesId of unifiedWave05ProfileIds) {
   const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
   assert.ok(profile, 'unified wave05 migration must own reviewed profile ' + speciesId);
   assert.equal(unifiedWave05Migration.includes("'" + speciesId + "'"), true);
-  for (const source of profile.citations) assert.equal(unifiedWave05Migration.includes(source.id), true);
+  assertHistoricalProfileSourceOwnership(unifiedWave05Migration, profile, 'historical migration');
 }
 assert.match(unifiedWave05Migration, /expected predecessor 95 reviewed Compatibility profiles/);
 assert.match(unifiedWave05Migration, /expected predecessor 171 reviewed evidence sources/);
@@ -521,7 +556,7 @@ for (const speciesId of unifiedWave06ProfileIds) {
   const profile = audit.reviewedProfiles.find(item => item.speciesId === speciesId);
   assert.ok(profile, 'unified wave06 migration must own reviewed profile ' + speciesId);
   assert.equal(unifiedWave06Migration.includes("'" + speciesId + "'"), true);
-  for (const source of profile.citations) assert.equal(unifiedWave06Migration.includes(source.id), true);
+  assertHistoricalProfileSourceOwnership(unifiedWave06Migration, profile, 'historical migration');
 }
 assert.match(unifiedWave06Migration, /expected predecessor 99 reviewed Compatibility profiles/);
 assert.match(unifiedWave06Migration, /expected predecessor 175 reviewed evidence sources/);
@@ -533,7 +568,7 @@ const unifiedWave16Migration = readFileSync('supabase/migrations/20261013153000_
 const wave16Profile = audit.reviewedProfiles.find(item => item.speciesId === 'sp_0052');
 assert.ok(wave16Profile, 'wave16 migration must own reviewed profile sp_0052');
 assert.equal(unifiedWave16Migration.includes("'sp_0052'"), true);
-for (const source of wave16Profile.citations) assert.equal(unifiedWave16Migration.includes(source.id), true);
+assertHistoricalProfileSourceOwnership(unifiedWave16Migration, wave16Profile, 'historical migration');
 assert.match(unifiedWave16Migration, /expected predecessor 100 reviewed Compatibility profiles/);
 assert.match(unifiedWave16Migration, /expected predecessor 176 reviewed evidence sources/);
 assert.match(unifiedWave16Migration, /expected 101 reviewed Compatibility profiles/);
