@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "updatedAt": "2026-08-30",
+  "updatedAt": "2026-10-14",
   "canonicalBranch": "main",
   "canonicalRole": "single code source after source convergence; production is pinned separately until release gates pass",
   "sourceConvergenceBranch": "main",
@@ -10,9 +10,9 @@
     "vercel": {
       "status": "ACTIVE_FROZEN",
       "productionBranch": "release/production",
-      "verifiedSha": "c3f228cd1e987a9dc3df68f30f24a5df6343bf3e",
+      "verifiedSha": "8d33d56c5214f6a7a2e6a5b64b66158231b95011",
       "checkedAt": "2026-10-14",
-      "evidence": "Vercel live deployment read-back: current aliased Production deployment is release/production@c3f228cd; a same-SHA main production-target deployment had zero aliases"
+      "evidence": "Vercel live read-back: release/production@8d33d56c deployment dpl_6YfYui5M6jbbFaxhyyJ1J9AgQDHa is READY and owns aqua-tank-guide.vercel.app; Production health HTTP 200"
     },
     "cloudflare": {
       "status": "INACTIVE_LEGACY",
@@ -23,7 +23,7 @@
     }
   },
   "productionAnchor": {
-    "sha": "c3f228cd1e987a9dc3df68f30f24a5df6343bf3e",
+    "sha": "8d33d56c5214f6a7a2e6a5b64b66158231b95011",
     "source": "Vercel aliased production deployment metadata",
     "verifiedAt": "2026-10-14",
     "role": "rollback and production freeze anchor; no independent development"
@@ -33,15 +33,21 @@
   "visualFreeze": {
     "baselineCommit": "02457dd2ded7042cc67c55acfce3c9c4f238aa42",
     "evidenceDir": "/private/tmp/aquaguide-visual-matrix/ui-freeze-02457dd2",
-    "viewports": [390, 600, 1280],
-    "routes": ["/_preview/interactive"],
+    "viewports": [
+      390,
+      600,
+      1280
+    ],
+    "routes": [
+      "/_preview/interactive"
+    ],
     "policy": "Desktop layout adaptation may change only the approved workspace shell, page roots, responsive geometry and interactive preview. Backend, domain, service, repository, migration, assets, content and task behavior remain frozen. A new visual baseline is required after human acceptance."
   },
   "releaseBranch": "main",
   "canonicalBase": {
     "branch": "main",
-    "sha": "016dbca5807c77108858459d4da942ff5cc2a9c5",
-    "role": "GitHub default release base"
+    "sha": "8d33d56c5214f6a7a2e6a5b64b66158231b95011",
+    "role": "deployed business/runtime release base; canonical main may be ahead by a docs-only release-state checkpoint"
   },
   "productReference": {
     "branch": "codex/unified-rc-visual-v1",
@@ -69,11 +75,11 @@
   },
   "historicalPullRequest": 141,
   "supabaseDeployment": {
-    "status": "user_confirmed_deployed",
-    "parityStatus": "migration_required",
-    "confirmedAt": "2026-08-25",
-    "lastReadOnlyCheck": "2026-08-28",
-    "evidence": "docs/05-validation/SUPABASE_PARITY_REPORT.md"
+    "status": "deployed_verified",
+    "parityStatus": "compatibility_authority_current",
+    "confirmedAt": "2026-10-14",
+    "lastReadOnlyCheck": "2026-10-14",
+    "evidence": "Production post-verifier READY_COMPATIBILITY_PRODUCTION at migration 68 / Profiles 101 / Pair Rules 21 / Stage Risk 1 / Evidence 184"
   },
   "localPreview": "http://127.0.0.1:4319/_preview/interactive",
   "visualBaselinePreview": "http://127.0.0.1:4317/_preview/interactive",
