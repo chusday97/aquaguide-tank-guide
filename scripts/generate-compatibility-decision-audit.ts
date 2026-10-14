@@ -22,6 +22,7 @@ const readyIds = new Set(
   coverage.rows.filter(row => row.genericOnboardingReady).map(row => row.speciesId),
 );
 const readySpecies = fishData.filter(species => readyIds.has(species.id));
+const coverageRowsById = new Map(coverage.rows.map(row => [row.speciesId, row]));
 
 const baseTank: Aquarium = {
   id: 'compatibility-decision-audit',
@@ -47,6 +48,7 @@ const unknownReasons: Record<string, number> = {
   other: 0,
 };
 const unknownRuleCodes = new Map<string, number>();
+const unknownPairImpactBySpecies = new Map<string, number>();
 let fullyInformedPairs = 0;
 let fullyInformedUnknownPairs = 0;
 
@@ -70,6 +72,8 @@ for (let leftIndex = 0; leftIndex < fishDomainSpecies.length; leftIndex += 1) {
     if (fullyInformed) fullyInformedPairs += 1;
 
     if (decision.status === 'insufficient_data') {
+      unknownPairImpactBySpecies.set(left.id, (unknownPairImpactBySpecies.get(left.id) || 0) + 1);
+      unknownPairImpactBySpecies.set(right.id, (unknownPairImpactBySpecies.get(right.id) || 0) + 1);
       if (fullyInformed) fullyInformedUnknownPairs += 1;
       const plan = buildCompatibilityDecisionPlan(decision);
       const reason = plan.unknownReason || 'other';
@@ -78,6 +82,40 @@ for (let leftIndex = 0; leftIndex < fishDomainSpecies.length; leftIndex += 1) {
         unknownRuleCodes.set(rule.code, (unknownRuleCodes.get(rule.code) || 0) + 1);
       }
     }
+  }
+}
+
+const speciesImpactRows = [...unknownPairImpactBySpecies.entries()].map(([speciesId, unknownPairs]) => {
+  const species = fishData.find(item => item.id === speciesId);
+  const row = coverageRowsById.get(speciesId);
+  const actionableFields = Object.entries(row?.fields || {})
+    .filter(([, cell]) => cell.disposition === 'targeted_source_expansion')
+    .map(([field]) => field);
+  const terminalReasons = Array.from(new Set(
+    Object.values(row?.fields || {})
+      .filter(cell => ['terminal_hold', 'domain_extension_required'].includes(cell.disposition))
+      .map(cell => cell.reasonCode)
+      .filter((reason): reason is string => Boolean(reason)),
+  ));
+  return {
+    speciesId,
+    name: species?.name || speciesId,
+    scientificName: species?.scientificName || '',
+    unknownPairs,
+    actionableFields,
+    terminalReasons,
+  };
+});
+
+const highestLeverageEvidenceTargets = speciesImpactRows
+  .filter(item => item.actionableFields.length > 0 && item.terminalReasons.length === 0)
+  .sort((a, b) => b.unknownPairs - a.unknownPairs || a.actionableFields.length - b.actionableFields.length || a.speciesId.localeCompare(b.speciesId))
+  .slice(0, 20);
+
+const terminalReasonCounts = new Map<string, number>();
+for (const item of speciesImpactRows) {
+  for (const reason of item.terminalReasons) {
+    terminalReasonCounts.set(reason, (terminalReasonCounts.get(reason) || 0) + 1);
   }
 }
 
@@ -98,6 +136,13 @@ const report = {
   fullyInformedPairs,
   fullyInformedUnknownPairs,
   unknownReasons,
+  leverageQueues: {
+    policy: 'Prioritize exact-taxon evidence gaps that unlock the most UNKNOWN pairs; keep identity/domain holds in a separate queue.',
+    highestLeverageEvidenceTargets,
+    terminalReasonCounts: [...terminalReasonCounts.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .map(([reason, speciesCount]) => ({ reason, speciesCount })),
+  },
   topUnknownRuleCodes: [...unknownRuleCodes.entries()]
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
     .slice(0, 20)
