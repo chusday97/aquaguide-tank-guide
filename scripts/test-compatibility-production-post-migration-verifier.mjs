@@ -20,9 +20,9 @@ const current = {
   content_publications: 527,
   species_assets: 0,
   care_assets: 0,
-  profiles: 63,
+  profiles: 101,
   pair_rules: 21,
-  evidence: 116,
+  evidence: 177,
   stage_risks: 1,
   authority_state_exists: true,
   stage_risks_exists: true,
@@ -34,19 +34,19 @@ const post = {
   migration_count: TARGET_PRODUCTION_MIGRATION_COUNT,
   latest_version: TARGET_PRODUCTION_LATEST_VERSION,
   profiles: 101,
-  evidence: 177,
+  evidence: 180,
 };
 assert.equal(classifyState(post), 'VERIFY_POST_MIGRATION');
-assert.equal(classifyState({ ...current, migration_count: 61 }), 'BLOCKED_STATE_DRIFT');
-assert.equal(classifyState({ ...current, profiles: 64 }), 'BLOCKED_STATE_DRIFT');
-assert.equal(classifyState({ ...post, evidence: 176 }), 'BLOCKED_STATE_DRIFT');
+assert.equal(classifyState({ ...current, migration_count: 64 }), 'BLOCKED_STATE_DRIFT');
+assert.equal(classifyState({ ...current, profiles: 100 }), 'BLOCKED_STATE_DRIFT');
+assert.equal(classifyState({ ...post, evidence: 179 }), 'BLOCKED_STATE_DRIFT');
 
 const keys = getAuthorityKeys();
 const detail = {
   profile_keys: keys.profiles,
   pair_keys: keys.pairRules,
   stage_risk_keys: keys.stageRisks,
-  reviewed_evidence: 177,
+  reviewed_evidence: 180,
   authority_singleton: 1,
   tiger_guppy: {
     verdict: 'not_recommended',
@@ -70,11 +70,11 @@ const detail = {
 assert.equal(validateDetailedState(post, detail).ready, true);
 const bad = validateDetailedState(post, {
   ...detail,
-  reviewed_evidence: 176,
+  reviewed_evidence: 179,
   tiger_guppy: { ...detail.tiger_guppy, verdict: 'caution' },
 });
 assert.equal(bad.ready, false);
-assert.ok(bad.blockers.includes('reviewed_evidence:176/177'));
+assert.ok(bad.blockers.includes('reviewed_evidence:179/180'));
 assert.ok(bad.blockers.includes('tiger_guppy_verdict:caution'));
 
-console.log('Compatibility Production post-migration verifier contract PASS: current 60/63/116 state, target 65/101/177 state, exact authority/evidence validation.');
+console.log('Compatibility Production post-migration verifier contract PASS: current 65/101/177 patch baseline, target 66/101/180 state, exact authority/evidence validation.');

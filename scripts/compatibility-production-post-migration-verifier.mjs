@@ -2,28 +2,26 @@ import { spawnSync } from 'node:child_process';
 import { resolve } from 'node:path';
 import {
   PRODUCTION_PROJECT_REF,
-  START_LATEST_VERSION,
-  START_MIGRATION_COUNT,
-  START_REVIEWED_PROFILES,
-  START_REVIEWED_PAIR_RULES,
-  START_REVIEWED_STAGE_RISKS,
-  START_REVIEWED_EVIDENCE,
-  TARGET_LATEST_VERSION,
-  TARGET_MIGRATION_COUNT,
-  TARGET_REVIEWED_PROFILES,
-  TARGET_REVIEWED_PAIR_RULES,
-  TARGET_REVIEWED_STAGE_RISKS,
-  TARGET_REVIEWED_EVIDENCE,
+  START_LATEST_VERSION as FULL_CHAIN_START_LATEST_VERSION,
+  START_MIGRATION_COUNT as FULL_CHAIN_START_MIGRATION_COUNT,
+  START_REVIEWED_PROFILES as FULL_CHAIN_START_REVIEWED_PROFILES,
+  START_REVIEWED_PAIR_RULES as FULL_CHAIN_START_REVIEWED_PAIR_RULES,
+  START_REVIEWED_STAGE_RISKS as FULL_CHAIN_START_REVIEWED_STAGE_RISKS,
+  START_REVIEWED_EVIDENCE as FULL_CHAIN_START_REVIEWED_EVIDENCE,
   getAuthorityKeys,
   readLinkedProjectRef,
   validateProductionCodeCompatibility,
 } from './compatibility-production-migration-guard.mjs';
+import {
+  START as FAST_LANE_START,
+  TARGET as FAST_LANE_TARGET,
+} from './compatibility-fast-lane-production-patch-guard.mjs';
 
 const root = resolve(import.meta.dirname, '..');
-export const CURRENT_PRODUCTION_LATEST_VERSION = START_LATEST_VERSION;
-export const CURRENT_PRODUCTION_MIGRATION_COUNT = START_MIGRATION_COUNT;
-export const TARGET_PRODUCTION_LATEST_VERSION = TARGET_LATEST_VERSION;
-export const TARGET_PRODUCTION_MIGRATION_COUNT = TARGET_MIGRATION_COUNT;
+export const CURRENT_PRODUCTION_LATEST_VERSION = FAST_LANE_START.latestVersion;
+export const CURRENT_PRODUCTION_MIGRATION_COUNT = FAST_LANE_START.migrationCount;
+export const TARGET_PRODUCTION_LATEST_VERSION = FAST_LANE_TARGET.latestVersion;
+export const TARGET_PRODUCTION_MIGRATION_COUNT = FAST_LANE_TARGET.migrationCount;
 
 const run = (cmd, args) => {
   const result = spawnSync(cmd, args, { cwd: root, encoding: 'utf8' });
@@ -37,26 +35,35 @@ const query = sql => {
 };
 
 export const classifyState = state => {
-  const incrementalStart = state.migration_count === START_MIGRATION_COUNT
-    && state.latest_version === START_LATEST_VERSION
-    && state.content_publications_exists === true
-    && state.profiles === START_REVIEWED_PROFILES
-    && state.pair_rules === START_REVIEWED_PAIR_RULES
-    && state.evidence === START_REVIEWED_EVIDENCE
-    && state.stage_risks === START_REVIEWED_STAGE_RISKS
+  const schemaReady = state.content_publications_exists === true
     && state.authority_state_exists === true
     && state.stage_risks_exists === true;
-  if (incrementalStart) return 'READY_FOR_INCREMENTAL_MIGRATION';
 
-  const post = state.migration_count === TARGET_MIGRATION_COUNT
-    && state.latest_version === TARGET_LATEST_VERSION
-    && state.content_publications_exists === true
-    && state.profiles === TARGET_REVIEWED_PROFILES
-    && state.pair_rules === TARGET_REVIEWED_PAIR_RULES
-    && state.evidence === TARGET_REVIEWED_EVIDENCE
-    && state.stage_risks === TARGET_REVIEWED_STAGE_RISKS
-    && state.authority_state_exists === true
-    && state.stage_risks_exists === true;
+  const fullChainStart = state.migration_count === FULL_CHAIN_START_MIGRATION_COUNT
+    && state.latest_version === FULL_CHAIN_START_LATEST_VERSION
+    && state.profiles === FULL_CHAIN_START_REVIEWED_PROFILES
+    && state.pair_rules === FULL_CHAIN_START_REVIEWED_PAIR_RULES
+    && state.evidence === FULL_CHAIN_START_REVIEWED_EVIDENCE
+    && state.stage_risks === FULL_CHAIN_START_REVIEWED_STAGE_RISKS
+    && schemaReady;
+  if (fullChainStart) return 'READY_FOR_FULL_CHAIN_MIGRATION';
+
+  const fastLaneStart = state.migration_count === FAST_LANE_START.migrationCount
+    && state.latest_version === FAST_LANE_START.latestVersion
+    && state.profiles === FAST_LANE_START.profiles
+    && state.pair_rules === FAST_LANE_START.pairRules
+    && state.evidence === FAST_LANE_START.evidence
+    && state.stage_risks === FAST_LANE_START.stageRisks
+    && schemaReady;
+  if (fastLaneStart) return 'READY_FOR_INCREMENTAL_MIGRATION';
+
+  const post = state.migration_count === FAST_LANE_TARGET.migrationCount
+    && state.latest_version === FAST_LANE_TARGET.latestVersion
+    && state.profiles === FAST_LANE_TARGET.profiles
+    && state.pair_rules === FAST_LANE_TARGET.pairRules
+    && state.evidence === FAST_LANE_TARGET.evidence
+    && state.stage_risks === FAST_LANE_TARGET.stageRisks
+    && schemaReady;
   return post ? 'VERIFY_POST_MIGRATION' : 'BLOCKED_STATE_DRIFT';
 };
 
@@ -73,7 +80,7 @@ export const validateDetailedState = (state, detail) => {
   if (JSON.stringify(detail.profile_keys) !== JSON.stringify(expected.profiles)) blockers.push('profile_key_set_mismatch');
   if (JSON.stringify(detail.pair_keys) !== JSON.stringify(expected.pairRules)) blockers.push('pair_key_set_mismatch');
   if (JSON.stringify(detail.stage_risk_keys) !== JSON.stringify(expected.stageRisks)) blockers.push('stage_risk_key_set_mismatch');
-  if (detail.reviewed_evidence !== TARGET_REVIEWED_EVIDENCE) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${TARGET_REVIEWED_EVIDENCE}`);
+  if (detail.reviewed_evidence !== FAST_LANE_TARGET.evidence) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${FAST_LANE_TARGET.evidence}`);
   if (detail.authority_singleton !== 1) blockers.push(`authority_singleton:${detail.authority_singleton}/1`);
 
   const pair = detail.tiger_guppy;
@@ -107,7 +114,7 @@ export const validateDetailedState = (state, detail) => {
       profiles: expected.profiles.length,
       pairRules: expected.pairRules.length,
       stageRisks: expected.stageRisks.length,
-      evidenceSources: TARGET_REVIEWED_EVIDENCE,
+      evidenceSources: FAST_LANE_TARGET.evidence,
     },
   };
 };

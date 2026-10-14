@@ -1,9 +1,9 @@
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence.ts';
 import {
   PRODUCTION_PROJECT_REF,
-  TARGET_REVIEWED_EVIDENCE,
   readLinkedProjectRef,
 } from './compatibility-production-migration-guard.mjs';
+import { TARGET as FAST_LANE_TARGET } from './compatibility-fast-lane-production-patch-guard.mjs';
 import {
   readState,
   readDetailedState,
@@ -14,7 +14,7 @@ const expected = {
   profiles: audit.reviewedProfiles.length,
   pairRules: audit.reviewedPairRules.length,
   stageRisks: audit.reviewedStageRiskProfiles.length,
-  evidenceSources: TARGET_REVIEWED_EVIDENCE,
+  evidenceSources: FAST_LANE_TARGET.evidence,
 };
 
 const envInt = (name, fallback = 0) => {
