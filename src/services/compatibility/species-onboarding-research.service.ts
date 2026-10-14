@@ -61,9 +61,16 @@ export type CompatibilitySpeciesResearchPacket = {
   claims: CompatibilityResearchFieldClaim[];
 };
 
+export type CompatibilitySpeciesResearchInput = {
+  catalogKey: string;
+  scientificName: string;
+  commonName?: string;
+  targetFields?: CompatibilityOnboardingCoreField[];
+};
+
 export interface CompatibilitySpeciesResearchProvider {
   id: string;
-  research(input: { catalogKey: string; scientificName: string; commonName?: string }): Promise<CompatibilitySpeciesResearchPacket>;
+  research(input: CompatibilitySpeciesResearchInput): Promise<CompatibilitySpeciesResearchPacket>;
 }
 
 export type CompatibilitySpeciesIdentityResolution = {
@@ -548,27 +555,152 @@ export const assessCompatibilitySpeciesResearchPacket = (
   };
 };
 
-export const researchAndAssessCompatibilitySpeciesDetailed = async (
+const providerPacketContractReasonCodes = (
   provider: CompatibilitySpeciesResearchProvider,
-  input: { catalogKey: string; scientificName: string; commonName?: string },
+  input: CompatibilitySpeciesResearchInput,
+  packet: CompatibilitySpeciesResearchPacket,
 ) => {
-  const packet = await provider.research(input);
-  const assessment = assessCompatibilitySpeciesResearchPacket(packet);
-  const reasonCodes = [...assessment.reasonCodes];
+  const reasonCodes: string[] = [];
   if (packet.providerId !== provider.id) reasonCodes.push('provider_id_mismatch');
   if (packet.catalogKey !== input.catalogKey) reasonCodes.push('provider_catalog_key_mismatch');
   if (packet.scientificName.trim().toLowerCase() !== input.scientificName.trim().toLowerCase()) {
     reasonCodes.push('provider_scientific_name_mismatch');
   }
-  const finalAssessment = reasonCodes.length === assessment.reasonCodes.length
-    ? assessment
-    : {
-      ...assessment,
-      status: 'terminal_hold' as const,
-      reasonCodes: [...new Set(reasonCodes)],
-      candidateProfile: null,
+  return reasonCodes;
+};
+
+const withProviderContractGate = (
+  provider: CompatibilitySpeciesResearchProvider,
+  input: CompatibilitySpeciesResearchInput,
+  packet: CompatibilitySpeciesResearchPacket,
+  assessment: CompatibilitySpeciesOnboardingAssessment,
+) => {
+  const contractReasonCodes = providerPacketContractReasonCodes(provider, input, packet);
+  if (contractReasonCodes.length === 0) return assessment;
+  return {
+    ...assessment,
+    status: 'terminal_hold' as const,
+    reasonCodes: [...new Set([...assessment.reasonCodes, ...contractReasonCodes])],
+    candidateProfile: null,
+  };
+};
+
+const mergeResearchPackets = (
+  primary: CompatibilitySpeciesResearchPacket,
+  supplement: CompatibilitySpeciesResearchPacket,
+): CompatibilitySpeciesResearchPacket => {
+  const sources: CompatibilityResearchSource[] = [];
+  const seenSourceIds = new Set<string>();
+  const seenSourceUrls = new Set<string>();
+  for (const source of [...primary.sources, ...supplement.sources]) {
+    if (seenSourceIds.has(source.id) || seenSourceUrls.has(source.url)) continue;
+    seenSourceIds.add(source.id);
+    seenSourceUrls.add(source.url);
+    sources.push(source);
+  }
+
+  const claims: CompatibilityResearchFieldClaim[] = [];
+  const seenClaims = new Set<string>();
+  for (const claim of [...primary.claims, ...supplement.claims]) {
+    const key = [
+      claim.field,
+      claim.sourceId,
+      claim.evidenceKind,
+      stableValueKey(claim.proposedValue),
+    ].join('|');
+    if (seenClaims.has(key)) continue;
+    seenClaims.add(key);
+    claims.push(claim);
+  }
+
+  return {
+    ...primary,
+    packetId: primary.packetId + '+targeted+' + supplement.packetId,
+    sources,
+    claims,
+  };
+};
+
+const retryableResearchFields = (
+  assessment: CompatibilitySpeciesOnboardingAssessment,
+) => assessment.fieldResolutions
+  .filter(resolution => resolution.status === 'missing' || resolution.status === 'invalid_or_unverified')
+  .map(resolution => resolution.field);
+
+export const researchAndAssessCompatibilitySpeciesDetailed = async (
+  provider: CompatibilitySpeciesResearchProvider,
+  input: CompatibilitySpeciesResearchInput,
+) => {
+  const initialInput: CompatibilitySpeciesResearchInput = { ...input, targetFields: undefined };
+  const initialPacket = await provider.research(initialInput);
+  const initialAssessment = withProviderContractGate(
+    provider,
+    initialInput,
+    initialPacket,
+    assessCompatibilitySpeciesResearchPacket(initialPacket),
+  );
+
+  if (initialAssessment.status !== 'research_pending') {
+    return {
+      packet: initialPacket,
+      assessment: initialAssessment,
+      initialAssessment,
+      targetedRetry: {
+        attempted: false as const,
+        targetFields: [] as CompatibilityOnboardingCoreField[],
+      },
     };
-  return { packet, assessment: finalAssessment };
+  }
+
+  const targetFields = retryableResearchFields(initialAssessment);
+  if (targetFields.length === 0) {
+    return {
+      packet: initialPacket,
+      assessment: initialAssessment,
+      initialAssessment,
+      targetedRetry: {
+        attempted: false as const,
+        targetFields,
+      },
+    };
+  }
+
+  const targetedInput: CompatibilitySpeciesResearchInput = {
+    ...input,
+    targetFields,
+  };
+  const targetedPacket = await provider.research(targetedInput);
+  const targetedContractReasonCodes = providerPacketContractReasonCodes(provider, targetedInput, targetedPacket);
+  if (targetedContractReasonCodes.length > 0) {
+    return {
+      packet: initialPacket,
+      assessment: {
+        ...initialAssessment,
+        status: 'terminal_hold' as const,
+        reasonCodes: [...new Set([...initialAssessment.reasonCodes, ...targetedContractReasonCodes])],
+        candidateProfile: null,
+      },
+      initialAssessment,
+      targetedRetry: {
+        attempted: true as const,
+        targetFields,
+        packet: targetedPacket,
+      },
+    };
+  }
+
+  const packet = mergeResearchPackets(initialPacket, targetedPacket);
+  const assessment = assessCompatibilitySpeciesResearchPacket(packet);
+  return {
+    packet,
+    assessment,
+    initialAssessment,
+    targetedRetry: {
+      attempted: true as const,
+      targetFields,
+      packet: targetedPacket,
+    },
+  };
 };
 
 export const researchAndAssessCompatibilitySpecies = async (

@@ -8,6 +8,8 @@ import {
   getCompatibilitySpeciesResearchCapability,
   runCompatibilitySpeciesOnboardingPipeline,
   researchAndAssessCompatibilitySpecies,
+  researchAndAssessCompatibilitySpeciesDetailed,
+  type CompatibilityOnboardingCoreField,
   type CompatibilitySpeciesResearchPacket,
   type CompatibilitySpeciesResearchProvider,
 } from '../src/services/compatibility/species-onboarding-research.service';
@@ -100,6 +102,43 @@ const pipeline = await runCompatibilitySpeciesOnboardingPipeline(identityResolve
 assert.equal(pipeline.status, 'research_assessed');
 assert.equal(pipeline.identity.status, 'verified');
 assert.equal(pipeline.assessment?.status, 'ready_for_review');
+
+const targetedRetryCalls: Array<CompatibilityOnboardingCoreField[] | undefined> = [];
+const targetedRetryProvider: CompatibilitySpeciesResearchProvider = {
+  id: 'targeted-retry-provider',
+  research: async input => {
+    targetedRetryCalls.push(input.targetFields);
+    const targetFields = input.targetFields ?? [];
+    const selectedClaims = targetFields.length === 0
+      ? completePacket.claims.filter(claim => !['territoriality', 'predation'].includes(claim.field))
+      : completePacket.claims.filter(claim => targetFields.includes(claim.field));
+    return {
+      ...completePacket,
+      packetId: targetFields.length === 0 ? 'targeted-initial' : 'targeted-supplement',
+      providerId: 'targeted-retry-provider',
+      claims: selectedClaims,
+    };
+  },
+};
+const targetedRetry = await researchAndAssessCompatibilitySpeciesDetailed(targetedRetryProvider, {
+  catalogKey,
+  scientificName,
+  commonName: 'Red neon blue-eye',
+});
+assert.equal(targetedRetry.initialAssessment.status, 'research_pending');
+assert.equal(targetedRetry.assessment.status, 'ready_for_review');
+assert.equal(targetedRetry.targetedRetry.attempted, true);
+assert.deepEqual(
+  [...targetedRetry.targetedRetry.targetFields].sort(),
+  ['predation', 'territoriality'],
+  'second-pass research must request only fields that remained missing or unverified after the first pass',
+);
+assert.equal(targetedRetryCalls.length, 2, 'gap-targeted research must run at most one second pass');
+assert.equal(targetedRetryCalls[0], undefined);
+assert.deepEqual([...targetedRetryCalls[1]!].sort(), ['predation', 'territoriality']);
+assert.equal(targetedRetry.packet.sources.length, completePacket.sources.length, 'packet merge must dedupe already-seen sources');
+assert.equal(targetedRetry.packet.claims.length, completePacket.claims.length, 'packet merge must dedupe claims while adding targeted evidence');
+
 
 const identityHold = await runCompatibilitySpeciesOnboardingPipeline({
   id: 'blind-identity-provider',

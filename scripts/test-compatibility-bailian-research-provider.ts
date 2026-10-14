@@ -62,6 +62,8 @@ const html = [
 let searchCalls = 0;
 let extractionCalls = 0;
 let sourceFetchCalls = 0;
+let targetedSearchPrompts = 0;
+let targetedExtractionPrompts = 0;
 
 const mockFetch: typeof fetch = async (input, init) => {
   const url = new URL(String(input));
@@ -73,6 +75,14 @@ const mockFetch: typeof fetch = async (input, init) => {
       const options = body.search_options as Record<string, unknown>;
       assert.equal(options.forced_search, true);
       assert.equal(options.search_strategy, 'max');
+      const messages = body.messages as Array<{ role: string; content: string }>;
+      const user = messages.find(message => message.role === 'user')?.content || '';
+      if (user.includes('Target evidence fields:')) {
+        targetedSearchPrompts += 1;
+        assert.match(user, /Target evidence fields: territoriality, predation/);
+        assert.match(user, /territoriality: aquarium territoriality, aggression/);
+        assert.match(user, /predation: tankmate prey risk/);
+      }
       return new Response(JSON.stringify({
         choices: [{
           message: {
@@ -97,6 +107,10 @@ const mockFetch: typeof fetch = async (input, init) => {
     assert.ok(user.includes(scientificName));
     assert.match(user, /Do NOT use breeding\/reproduction group sizes/, 'social extraction must reject breeding cohort sizes as husbandry group minima');
     assert.match(user, /Diet statements alone produce no predation claim/, 'predation extraction must reject ordinary diet items as compatibility prey targets');
+    if (user.includes('targeted gap-closing pass')) {
+      targetedExtractionPrompts += 1;
+      assert.match(user, /Return claims ONLY for: territoriality, predation/);
+    }
 
     return new Response(JSON.stringify({
       choices: [{
@@ -163,6 +177,21 @@ const assessment = assessCompatibilitySpeciesResearchPacket(packet);
 assert.equal(assessment.status, 'ready_for_review');
 assert.equal(assessment.draftFieldReviews.length, 8);
 assert.equal(assessment.candidateProfile?.reviewStatus, 'draft');
+
+const targetedPacket = await provider.research({
+  catalogKey: 'blind_pseudomugil_luminatus',
+  scientificName,
+  commonName: 'Red neon blue-eye',
+  targetFields: ['territoriality', 'predation'],
+});
+assert.equal(targetedSearchPrompts, 1, 'targeted second pass must tell web search exactly which evidence gaps to close');
+assert.equal(targetedExtractionPrompts, 1, 'targeted second pass must restrict extraction to requested fields');
+assert.deepEqual(
+  [...new Set(targetedPacket.claims.map(claim => claim.field))].sort(),
+  ['predation', 'territoriality'],
+  'non-target claims returned by the model must be discarded deterministically',
+);
+
 
 let redirectExtractionCalls = 0;
 const redirectFetch: typeof fetch = async (input, init) => {
