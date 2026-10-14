@@ -6472,6 +6472,28 @@ export default function AquariumManager() {
                     </div>
                   </div>
 
+                  <div className="rounded-[16px] bg-white/72 px-4 py-3">
+                    {addFishAssessmentView?.decisionPlan && addFishAssessmentView.main.judgment !== '可以养' && (
+                      <div className="border-t border-ink/8 pt-3" data-compatibility-decision-plan>
+                        <div className="text-[11px] font-black text-ink/48">{isEn ? 'Decision plan' : '下一步决策'}</div>
+                        <div className="mt-2 grid gap-2">
+                          <div className="rounded-[12px] bg-bg/70 px-3 py-2">
+                            <div className="text-[10px] font-black text-ink/45">{isEn ? 'After adjustment' : '调整后'}</div>
+                            <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentView.decisionPlan.expectedAfterAdjustment}</p>
+                          </div>
+                          <div className="rounded-[12px] bg-bg/70 px-3 py-2">
+                            <div className="text-[10px] font-black text-ink/45">{isEn ? 'Review checkpoint' : '复查点'}</div>
+                            <p className="mt-1 text-[12px] font-bold leading-5 text-ink/72">{addFishAssessmentView.decisionPlan.reviewCheckpoint}</p>
+                          </div>
+                          <div className="rounded-[12px] bg-red-50/70 px-3 py-2">
+                            <div className="text-[10px] font-black text-red-700">{isEn ? 'Stop condition' : '停止条件'}</div>
+                            <p className="mt-1 text-[12px] font-bold leading-5 text-red-900/75">{addFishAssessmentView.decisionPlan.stopCondition}</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <details className="rounded-[16px] bg-white/72 px-4 py-3">
                     <summary className="cursor-pointer text-[12px] font-black text-ink/65">
                       {isEn ? 'View evidence' : addFishAssessmentView?.details.label || '查看依据'}

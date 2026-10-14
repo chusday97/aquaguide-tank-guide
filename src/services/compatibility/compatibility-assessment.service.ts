@@ -4,6 +4,10 @@ import type { SpeciesAdditionItem } from '../aquarium/species-addition.service';
 import { apiRequest } from '../api/api-client';
 import { resolveRepositoryMode } from '../repository/repository-provider';
 import type { CompatibilityAssessmentMode } from './compatibility-action.service';
+import {
+  buildCompatibilityDecisionPlan,
+  type CompatibilityDecisionPlan,
+} from './compatibility-decision-plan.service';
 import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION, type CompatibilityProductSchemaVersion } from './compatibility-product-contract';
 import {
   buildCompatibilityReadableConclusion,
@@ -19,6 +23,7 @@ export type CompatibilityAssessmentUiModel = {
   assessmentMode: 'planned_addition';
   main: CompatibilityReadableConclusion;
   source: 'cloud_ai' | 'cloud_deterministic' | 'local_deterministic';
+  decisionPlan: CompatibilityDecisionPlan;
   details: {
     label: '查看依据';
     reasons: GroundedItem[];
@@ -55,6 +60,7 @@ const localAssessment = (decision: CompatibilityDecision): CompatibilityAssessme
   assessmentMode: 'planned_addition',
   main: buildCompatibilityReadableConclusion(decision),
   source: 'local_deterministic',
+  decisionPlan: buildCompatibilityDecisionPlan(decision),
   details: {
     label: '查看依据',
     reasons: [],
@@ -90,6 +96,7 @@ export const adaptRemoteCompatibilityAssessmentForPlan = (
     source: remote.details.explanation?.source === 'ai_grounded'
       ? 'cloud_ai'
       : 'cloud_deterministic',
+    decisionPlan: buildCompatibilityDecisionPlan(decision),
     details: {
       label: '查看依据',
       reasons: Array.isArray(remote.details.reasons) ? remote.details.reasons : [],

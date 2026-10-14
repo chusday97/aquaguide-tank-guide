@@ -48,6 +48,12 @@ assert.ok(local.main.howTo.length >= 1 && local.main.howTo.length <= 2);
 assert.equal(local.details.label, '查看依据');
 assert.equal(local.details.authorityStatus, review.status);
 assert.equal(local.assessmentMode, 'planned_addition');
+assert.equal(local.decisionPlan.judgment, local.main.judgment);
+assert.equal(local.decisionPlan.verdict, 'add_with_conditions');
+assert.ok(local.decisionPlan.nextSteps.length >= 1);
+assert.ok(local.decisionPlan.expectedAfterAdjustment.length > 0);
+assert.ok(local.decisionPlan.reviewCheckpoint.length > 0);
+assert.ok(local.decisionPlan.stopCondition.length > 0);
 
 const remoteFixture: RemoteCompatibilityAssessment = {
   schemaVersion: COMPATIBILITY_PRODUCT_SCHEMA_VERSION,
@@ -104,6 +110,10 @@ const cardSource = aquariumSource.slice(cardStart, cardEnd);
 assert.match(cardSource, /addFishAssessmentView\?\.main\.judgment/);
 assert.match(cardSource, /addFishAssessmentView\?\.main\.why/);
 assert.match(cardSource, /addFishAssessmentView\?\.main\.howTo/);
+assert.match(cardSource, /data-compatibility-decision-plan/);
+assert.match(cardSource, /decisionPlan\.expectedAfterAdjustment/);
+assert.match(cardSource, /decisionPlan\.reviewCheckpoint/);
+assert.match(cardSource, /decisionPlan\.stopCondition/);
 assert.match(cardSource, /<details/);
 assert.match(cardSource, /查看依据/);
 assert.match(cardSource, /data-add-fish-compatibility-result/);

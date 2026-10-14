@@ -3,6 +3,10 @@ import { fishData } from '../src/data/fishData';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getCompatibilityPresentation } from '../src/services/compatibility/compatibility-presentation.service';
+import {
+  buildCompatibilityDecisionPlan,
+  isCompatibilityDecisionFullyInformed,
+} from '../src/services/compatibility/compatibility-decision-plan.service';
 import type { Aquarium } from '../src/types';
 import type { CompatibilityDecision } from '../src/modules/knowledge/knowledge.types';
 
@@ -94,6 +98,14 @@ assert.equal(predationPresentation.headline, '不建议');
 assert.match(predationPresentation.primaryReason, /捕食|吞食/);
 assert.match(predationPresentation.primaryActionText, /不要|先不要/);
 
+const predationPlan = buildCompatibilityDecisionPlan(channaWithNeon as unknown as CompatibilityDecision);
+assert.equal(predationPlan.judgment, '不建议');
+assert.equal(predationPlan.verdict, 'do_not_mix');
+assert.match(predationPlan.expectedAfterAdjustment, /消除阻断风险|更换|分隔/);
+assert.match(predationPlan.stopCondition, /不要执行当前混养计划|阻断风险/);
+assert.ok(predationPlan.evidence.sourceRuleCodes.includes('predation_risk'));
+assert.ok(predationPlan.nextSteps.length >= 1);
+
 const tigerGuppyDecision = evaluateCompatibilityDecision({
   tank: tank(100, 40, 30, 24),
   items: [
@@ -151,6 +163,13 @@ assert.equal(cumulativeLoadPresentation.headline, '有条件可以');
 assert.match(cumulativeLoadPresentation.primaryReason, /负荷|负载/);
 assert.match(cumulativeLoadPresentation.primaryActionText, /数量|过滤|加入/);
 
+const cumulativeLoadPlan = buildCompatibilityDecisionPlan(cumulativeLoadDecision);
+assert.equal(cumulativeLoadPlan.judgment, '有条件可以');
+assert.equal(cumulativeLoadPlan.verdict, 'add_with_conditions');
+assert.match(cumulativeLoadPlan.expectedAfterAdjustment, /重新评估/);
+assert.match(cumulativeLoadPlan.reviewCheckpoint, /观察|稳定/);
+assert.match(cumulativeLoadPlan.stopCondition, /持续追逐|受伤|拒食|呼吸异常/);
+
 const reducedLoadDecision = evaluateCompatibilityDecision({
   tank: tank(60, 30, 35, 24),
   items: cumulativeLoadItems.map(item => ({ ...item, quantity: 8 })),
@@ -161,6 +180,36 @@ assert.ok(reducedLoadDecision.warningRules.every(rule => !rule.code.includes('bi
 const reducedLoadPresentation = getCompatibilityPresentation(reducedLoadDecision);
 assert.equal(reducedLoadPresentation.headline, '可以养');
 assert.match(reducedLoadPresentation.primaryActionText, /可以按当前计划加入/);
+
+const reducedLoadPlan = buildCompatibilityDecisionPlan(reducedLoadDecision);
+assert.equal(reducedLoadPlan.judgment, '可以养');
+assert.equal(reducedLoadPlan.verdict, 'add');
+assert.equal(reducedLoadPlan.unknownReason, null);
+assert.equal(reducedLoadPlan.fullyInformed, isCompatibilityDecisionFullyInformed(reducedLoadDecision));
+if (isCompatibilityDecisionFullyInformed(reducedLoadDecision)) {
+  assert.notEqual(reducedLoadDecision.status, 'insufficient_data', 'fully informed compatibility decisions must never surface 暂时无法判断');
+}
+
+const impossibleUnknown = {
+  ...reducedLoadDecision,
+  status: 'insufficient_data',
+  aggregateResult: {
+    ...reducedLoadDecision.aggregateResult,
+    status: 'insufficient_data',
+  },
+  metadata: {
+    ...reducedLoadDecision.metadata,
+    domainStatus: 'insufficient_data',
+    decisionReadiness: 'reviewed',
+  },
+  missingData: [],
+} as unknown as CompatibilityDecision;
+assert.equal(isCompatibilityDecisionFullyInformed(impossibleUnknown), true);
+assert.throws(
+  () => buildCompatibilityDecisionPlan(impossibleUnknown),
+  /compatibility_invariant_fully_informed_cannot_be_unknown/,
+  'complete species facts + complete tank inputs must make 暂时无法判断 an invariant violation, not a normal product state',
+);
 
 const mergedDuplicateSpecies = evaluateCompatibilityDecision({
   tank: tank(80, 35, 40, 24),
