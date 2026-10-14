@@ -1,0 +1,88 @@
+{
+  "auditPolicy": {
+    "scope": "all unique fish-domain pairs under complete synthetic tank inputs",
+    "note": "The fixed large tank is a deterministic audit fixture, not a husbandry recommendation. Pair verdict distribution is diagnostic; the hard invariant is fully-informed UNKNOWN = 0."
+  },
+  "catalogObjects": 486,
+  "compatibilityDomainObjects": 411,
+  "fishDomainSpecies": 310,
+  "genericOnboardingReadySpecies": 53,
+  "genericReadyUniquePairs": 1378,
+  "fishPairs": 47895,
+  "statuses": {
+    "compatible": 730,
+    "caution": 1614,
+    "not_recommended": 16490,
+    "insufficient_data": 29061
+  },
+  "decisionCoveragePct": 39.32,
+  "fullyInformedPairs": 5995,
+  "fullyInformedUnknownPairs": 0,
+  "unknownReasons": {
+    "missing_user_input": 0,
+    "unresolved_identity": 22386,
+    "public_evidence_insufficient": 6675,
+    "missing_species_fact": 0,
+    "other": 0
+  },
+  "topUnknownRuleCodes": [
+    {
+      "code": "behavior_evidence_unreviewed",
+      "count": 58119
+    },
+    {
+      "code": "missing_ph",
+      "count": 46102
+    },
+    {
+      "code": "missing_hardness",
+      "count": 11446
+    },
+    {
+      "code": "candidate_water_type_missing",
+      "count": 477
+    },
+    {
+      "code": "water_type_unknown",
+      "count": 119
+    }
+  ],
+  "coreFieldBacklog": {
+    "actionableGaps": 606,
+    "fieldActionableGaps": [
+      {
+        "field": "tank_size",
+        "count": 116
+      },
+      {
+        "field": "ph",
+        "count": 112
+      },
+      {
+        "field": "temperature",
+        "count": 107
+      },
+      {
+        "field": "adult_size",
+        "count": 93
+      },
+      {
+        "field": "water",
+        "count": 85
+      },
+      {
+        "field": "territoriality",
+        "count": 41
+      },
+      {
+        "field": "predation",
+        "count": 36
+      },
+      {
+        "field": "social_behavior",
+        "count": 16
+      }
+    ],
+    "domainOrIdentityHeldSpecies": 290
+  }
+}
