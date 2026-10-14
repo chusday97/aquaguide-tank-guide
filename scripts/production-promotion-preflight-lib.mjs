@@ -42,7 +42,9 @@ export function evaluateProductionPromotionPreflight({
         ? [`Keep ${deferredMigrations} Admin/SEO/database-knowledge migrations in a separate review and authorization track; they are not a core user-site promotion blocker.`]
         : []),
       'Only after all core preflight blockers are cleared may release/production be fast-forwarded to the accepted main SHA.',
-      'Production deployment and any database migration remain separate explicit actions.',
+      'A main push may create a Vercel production-target build without production aliases; do not treat target=production alone as a cutover.',
+      'Production cutover is proven only when the release/production deployment for the accepted SHA owns the production alias (aqua-tank-guide.vercel.app).',
+      'Production deployment/alias cutover and any database migration remain separate explicit actions.',
     ],
   };
 }

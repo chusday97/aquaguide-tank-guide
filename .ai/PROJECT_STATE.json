@@ -10,9 +10,9 @@
     "vercel": {
       "status": "ACTIVE_FROZEN",
       "productionBranch": "release/production",
-      "verifiedSha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
-      "checkedAt": "2026-08-30",
-      "evidence": "Vercel project settings/API read-back"
+      "verifiedSha": "c3f228cd1e987a9dc3df68f30f24a5df6343bf3e",
+      "checkedAt": "2026-10-14",
+      "evidence": "Vercel live deployment read-back: current aliased Production deployment is release/production@c3f228cd; a same-SHA main production-target deployment had zero aliases"
     },
     "cloudflare": {
       "status": "INACTIVE_LEGACY",
@@ -23,9 +23,9 @@
     }
   },
   "productionAnchor": {
-    "sha": "ed0cf38025652db901ee81aa697ca55b1c1584b6",
-    "source": "Vercel production deployment metadata",
-    "verifiedAt": "2026-08-30",
+    "sha": "c3f228cd1e987a9dc3df68f30f24a5df6343bf3e",
+    "source": "Vercel aliased production deployment metadata",
+    "verifiedAt": "2026-10-14",
     "role": "rollback and production freeze anchor; no independent development"
   },
   "visualRecoveryBranch": "codex/main-visual-recovery-v1",

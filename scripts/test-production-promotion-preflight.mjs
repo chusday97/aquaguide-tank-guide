@@ -16,6 +16,8 @@ assert.deepEqual(r.blockers, []);
 assert.equal(r.promotionAuthorized, false);
 assert.equal(r.facts.deferredAdminMigrationCount, 34);
 assert.equal(r.separateWork.adminSeoDatabaseParity, 'DEFERRED_NOT_CORE_BLOCKER');
+assert.ok(r.requiredActions.some(item => item.includes('target=production alone')));
+assert.ok(r.requiredActions.some(item => item.includes('release/production deployment') && item.includes('aqua-tank-guide.vercel.app')));
 
 r = evaluateProductionPromotionPreflight({
   ...readyBase,
