@@ -2,11 +2,13 @@ import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../../packag
 import { fishData } from '../../data/fishData';
 import { catalogContentVerifiedSourceIds, getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
+import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../../modules/knowledge/speciesKnowledge';
 import { resolveKnowledgeSources } from '../../modules/knowledge/knowledgeSources';
 import { getLifeType } from '../../modules/species/species.service';
+import { getBaseSpeciesScientificName } from '../../modules/species/speciesTaxonomy';
 import type { Fish } from '../../types';
 
 export type CompatibilityCoreField = typeof GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS[number];
@@ -51,6 +53,30 @@ export type CompatibilityFieldBacklogItem = {
   status: 'reviewed_unknown' | 'needs_research';
   priorityScore: number;
   reason: 'missing_reviewed_authority' | 'reviewed_unknown_targeted_expansion';
+};
+
+export type CompatibilityTaxonResearchCatalogObject = {
+  speciesId: string;
+  name: string;
+  scientificName: string;
+  gaps: CompatibilityCoreField[];
+  isVariant: boolean;
+  isExactBaseTaxon: boolean;
+};
+
+export type CompatibilityTaxonResearchPlanItem = {
+  researchKey: string;
+  baseScientificName: string | null;
+  priorityScore: number;
+  catalogObjectCount: number;
+  exactObjectCount: number;
+  variantObjectCount: number;
+  unresolvedObjectCount: number;
+  combinedGapFields: CompatibilityCoreField[];
+  requiresVariantBridgeReview: boolean;
+  researchDisposition: 'exact_taxon_research' | 'base_taxon_candidate_research_with_variant_bridge' | 'identity_resolution_required';
+  promotionPolicy: string;
+  catalogObjects: CompatibilityTaxonResearchCatalogObject[];
 };
 
 export type CompatibilityFastLaneResearchPacket = {
@@ -176,6 +202,8 @@ const evidenceCeilingForField = (fish: Fish, field: CompatibilityCoreField) => {
 };
 
 const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell => {
+  const domainBoundary = getCompatibilityDomainBoundary(fish.id);
+  if (domainBoundary) return { status: 'missing_identity_or_domain', disposition: 'domain_extension_required', evidenceIds: domainBoundary.sourceIds, authoritySource: 'domain_boundary', reasonCode: domainBoundary.code };
   const lifeType = getLifeType(fish);
   if (lifeType === 'hardscape') return { status: 'not_applicable', disposition: 'not_applicable', evidenceIds: [], authoritySource: 'domain_boundary', reasonCode: 'hardscape_not_livestock' };
   if (lifeType !== 'fish') return { status: 'missing_identity_or_domain', disposition: 'domain_extension_required', evidenceIds: [], authoritySource: 'domain_boundary', reasonCode: `unsupported_compatibility_domain_${lifeType}` };
@@ -278,6 +306,99 @@ export const buildCompatibilityCoreFieldCoverage = () => {
     .sort((a, b) => b.priorityScore - a.priorityScore || a.speciesId.localeCompare(b.speciesId) || a.field.localeCompare(b.field))
     .map((item, index) => ({ rank: index + 1, ...item }));
   return { rows, summary, backlog };
+};
+
+export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearchPlanItem[] => {
+  const { backlog } = buildCompatibilityCoreFieldCoverage();
+  const bySpecies = new Map<string, {
+    speciesId: string;
+    name: string;
+    scientificName: string;
+    gaps: Set<CompatibilityCoreField>;
+    priorityScore: number;
+  }>();
+
+  for (const item of backlog) {
+    const current = bySpecies.get(item.speciesId) ?? {
+      speciesId: item.speciesId,
+      name: item.name,
+      scientificName: item.scientificName,
+      gaps: new Set<CompatibilityCoreField>(),
+      priorityScore: 0,
+    };
+    current.gaps.add(item.field);
+    current.priorityScore = Math.max(current.priorityScore, item.priorityScore);
+    bySpecies.set(item.speciesId, current);
+  }
+
+  const grouped = new Map<string, {
+    researchKey: string;
+    baseScientificName: string | null;
+    objects: CompatibilityTaxonResearchCatalogObject[];
+    gapFields: Set<CompatibilityCoreField>;
+    priorityScore: number;
+    unresolvedObjectCount: number;
+  }>();
+
+  for (const item of bySpecies.values()) {
+    const unresolvedIdentity = /\b(?:sp|spp|cf)\./i.test(item.scientificName);
+    const baseScientificName = unresolvedIdentity ? null : getBaseSpeciesScientificName(item.scientificName);
+    const researchKey = baseScientificName ?? `catalog:${item.speciesId}`;
+    const normalizedScientificName = item.scientificName.trim();
+    const isExactBaseTaxon = Boolean(baseScientificName && normalizedScientificName === baseScientificName);
+    const isVariant = Boolean(baseScientificName && normalizedScientificName !== baseScientificName);
+    const group = grouped.get(researchKey) ?? {
+      researchKey,
+      baseScientificName,
+      objects: [],
+      gapFields: new Set<CompatibilityCoreField>(),
+      priorityScore: 0,
+      unresolvedObjectCount: 0,
+    };
+    group.objects.push({
+      speciesId: item.speciesId,
+      name: item.name,
+      scientificName: item.scientificName,
+      gaps: coreFields.filter(field => item.gaps.has(field)),
+      isVariant,
+      isExactBaseTaxon,
+    });
+    for (const field of item.gaps) group.gapFields.add(field);
+    group.priorityScore = Math.max(group.priorityScore, item.priorityScore);
+    if (!baseScientificName) group.unresolvedObjectCount += 1;
+    grouped.set(researchKey, group);
+  }
+
+  return [...grouped.values()].map(group => {
+    const catalogObjects = [...group.objects].sort((a, b) => a.speciesId.localeCompare(b.speciesId));
+    const variantObjectCount = catalogObjects.filter(item => item.isVariant).length;
+    const exactObjectCount = catalogObjects.filter(item => item.isExactBaseTaxon).length;
+    const requiresVariantBridgeReview = variantObjectCount > 0;
+    const researchDisposition = group.unresolvedObjectCount > 0
+      ? 'identity_resolution_required' as const
+      : requiresVariantBridgeReview
+        ? 'base_taxon_candidate_research_with_variant_bridge' as const
+        : 'exact_taxon_research' as const;
+    const promotionPolicy = researchDisposition === 'identity_resolution_required'
+      ? 'Resolve catalog identity before source research. Do not promote evidence across an unresolved taxon.'
+      : requiresVariantBridgeReview
+        ? 'Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.'
+        : 'Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.';
+    return {
+      researchKey: group.researchKey,
+      baseScientificName: group.baseScientificName,
+      priorityScore: group.priorityScore,
+      catalogObjectCount: catalogObjects.length,
+      exactObjectCount,
+      variantObjectCount,
+      unresolvedObjectCount: group.unresolvedObjectCount,
+      combinedGapFields: coreFields.filter(field => group.gapFields.has(field)),
+      requiresVariantBridgeReview,
+      researchDisposition,
+      promotionPolicy,
+      catalogObjects,
+    };
+  }).sort((a, b) => b.priorityScore - a.priorityScore || a.researchKey.localeCompare(b.researchKey));
 };
 
 export const buildCompatibilityFastLaneResearchPackets = (): CompatibilityFastLaneResearchPacket[] => {

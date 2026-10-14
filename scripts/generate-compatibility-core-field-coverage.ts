@@ -1,11 +1,12 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
-import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets } from '../src/services/compatibility/compatibility-field-coverage.service';
+import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets, buildCompatibilityTaxonResearchPlan } from '../src/services/compatibility/compatibility-field-coverage.service';
 
 const root = new URL('../', import.meta.url).pathname;
 const outputDir = `${root}docs`;
 mkdirSync(outputDir, { recursive: true });
 const report = buildCompatibilityCoreFieldCoverage();
 const fastLanePackets = buildCompatibilityFastLaneResearchPackets();
+const taxonResearchPlan = buildCompatibilityTaxonResearchPlan();
 
 writeFileSync(`${outputDir}/compatibility_core_field_coverage.json`, JSON.stringify({ generatedFrom: 'source-controlled reviewed authority', ...report.summary, rows: report.rows }, null, 2) + '\n');
 writeFileSync(`${outputDir}/compatibility_core_field_backlog.json`, JSON.stringify({
@@ -19,6 +20,14 @@ writeFileSync(`${outputDir}/compatibility_fast_lane_research_packets.json`, JSON
   policy: 'only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority',
   totalPackets: fastLanePackets.length,
   packets: fastLanePackets,
+}, null, 2) + '\n');
+writeFileSync(`${outputDir}/compatibility_taxon_research_plan.json`, JSON.stringify({
+  generatedFrom: 'compatibility_core_field_backlog.json',
+  policy: 'deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging',
+  catalogObjects: new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId))).size,
+  totalResearchJobs: taxonResearchPlan.length,
+  variantBridgeJobs: taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length,
+  items: taxonResearchPlan,
 }, null, 2) + '\n');
 
 const header = ['species_id','name','scientific_name','life_type','reviewed_profile','generic_onboarding_ready','authoritative_field_count','actionable_gap_count','terminal_gap_count',...report.summary.coreFields];
@@ -39,5 +48,8 @@ console.log(JSON.stringify({
   runtimeReviewedProfiles: report.summary.runtimeReviewedProfileSpecies,
   domainOrIdentityHeldSpecies: report.summary.domainOrIdentityHeldSpecies,
   actionableBacklog: report.backlog.length,
+  taxonResearchJobs: taxonResearchPlan.length,
+  taxonResearchCatalogObjects: new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId))).size,
+  variantBridgeJobs: taxonResearchPlan.filter(item => item.requiresVariantBridgeReview).length,
   fieldActionableGaps: report.summary.fieldActionableGaps,
 }, null, 2));
