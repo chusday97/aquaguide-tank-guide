@@ -144,6 +144,261 @@ const fieldValueIsValid = (
   reviewedAt: new Date(0).toISOString(),
 });
 
+type NumericRange = { min: number | null; max: number | null };
+type TankMinimum = { liters: number | null; lengthCm: number | null };
+type SocialValue = {
+  mode: 'solitary' | 'pair' | 'group' | 'colony' | 'variable' | 'unknown';
+  minimumGroupSize: number | null;
+};
+type StringListValue = { traits?: string[]; targets?: string[] };
+
+const claimSourceIds = (claims: CompatibilityResearchFieldClaim[]) => (
+  [...new Set(claims.map(claim => claim.sourceId))]
+);
+
+const claimNotes = (claims: CompatibilityResearchFieldClaim[]) => (
+  claims.flatMap(claim => claim.note ? [claim.note] : [])
+);
+
+const conflictResolution = (
+  field: CompatibilityOnboardingCoreField,
+  claims: CompatibilityResearchFieldClaim[],
+  reason: string,
+): CompatibilityOnboardingFieldResolution => ({
+  field,
+  status: 'conflicted',
+  proposedValue: null,
+  sourceIds: claimSourceIds(claims),
+  notes: [reason, ...claimNotes(claims)],
+});
+
+const invalidResolution = (
+  field: CompatibilityOnboardingCoreField,
+  claims: CompatibilityResearchFieldClaim[],
+  reason: string,
+): CompatibilityOnboardingFieldResolution => ({
+  field,
+  status: 'invalid_or_unverified',
+  proposedValue: null,
+  sourceIds: claimSourceIds(claims),
+  notes: [reason, ...claimNotes(claims)],
+});
+
+const supportedResolution = (
+  packet: CompatibilitySpeciesResearchPacket,
+  field: CompatibilityOnboardingCoreField,
+  claims: CompatibilityResearchFieldClaim[],
+  proposedValue: unknown,
+  reconciliationNote?: string,
+): CompatibilityOnboardingFieldResolution => {
+  const sourceIds = claimSourceIds(claims);
+  if (!fieldValueIsValid(packet, field, proposedValue, sourceIds)) {
+    return invalidResolution(
+      field,
+      claims,
+      'The reconciled value does not satisfy the source-controlled Catalog field schema.',
+    );
+  }
+  return {
+    field,
+    status: 'supported',
+    proposedValue,
+    sourceIds,
+    notes: [
+      ...(reconciliationNote ? [reconciliationNote] : []),
+      ...claimNotes(claims),
+    ],
+  };
+};
+
+const numericSpreadIsMaterial = (values: number[]) => {
+  if (values.length < 2) return false;
+  const low = Math.min(...values);
+  const high = Math.max(...values);
+  return high - low > Math.max(1, Math.max(low, 0.1) * 0.1);
+};
+
+const unionStrings = (values: string[][]) => {
+  const seen = new Set<string>();
+  const result: string[] = [];
+  for (const value of values.flat()) {
+    const trimmed = value.trim();
+    if (!trimmed) continue;
+    const key = trimmed.toLocaleLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    result.push(trimmed);
+  }
+  return result;
+};
+
+const reconcileFieldClaims = (
+  packet: CompatibilitySpeciesResearchPacket,
+  field: CompatibilityOnboardingCoreField,
+  claims: CompatibilityResearchFieldClaim[],
+): CompatibilityOnboardingFieldResolution => {
+  const invalidClaims = claims.filter(claim => !fieldValueIsValid(
+    packet,
+    field,
+    claim.proposedValue,
+    [claim.sourceId],
+  ));
+  if (invalidClaims.length > 0) {
+    return invalidResolution(
+      field,
+      invalidClaims,
+      'At least one direct extracted claim has an invalid field value; automatic reconciliation remains fail-closed.',
+    );
+  }
+
+  if (field === 'water') {
+    const values = [...new Set(claims.map(claim => stableValueKey(claim.proposedValue)))];
+    if (values.length > 1) {
+      return conflictResolution(field, claims, 'Direct sources disagree on the water type.');
+    }
+    return supportedResolution(packet, field, claims, claims[0].proposedValue);
+  }
+
+  if (field === 'temperature' || field === 'ph') {
+    const ranges = claims.map(claim => claim.proposedValue as NumericRange);
+    const mins = ranges.flatMap(range => range.min === null ? [] : [range.min]);
+    const maxes = ranges.flatMap(range => range.max === null ? [] : [range.max]);
+    if (mins.length === 0 && maxes.length === 0) {
+      return invalidResolution(field, claims, 'Direct range claims contain no usable numeric boundary.');
+    }
+    const min = mins.length > 0 ? Math.max(...mins) : null;
+    const max = maxes.length > 0 ? Math.min(...maxes) : null;
+    if (min !== null && max !== null && min > max) {
+      return conflictResolution(
+        field,
+        claims,
+        'Direct husbandry ranges do not overlap; automatic onboarding must stop instead of inventing a compromise.',
+      );
+    }
+    return supportedResolution(
+      packet,
+      field,
+      claims,
+      { min, max },
+      claims.length > 1
+        ? 'Overlapping direct husbandry ranges were reconciled to their conservative shared intersection.'
+        : undefined,
+    );
+  }
+
+  if (field === 'adult_size') {
+    const ranges = claims.map(claim => claim.proposedValue as NumericRange);
+    const mins = ranges.flatMap(range => range.min === null ? [] : [range.min]);
+    const maxes = ranges.flatMap(range => range.max === null ? [] : [range.max]);
+    if (mins.length === 0 && maxes.length === 0) {
+      return invalidResolution(field, claims, 'Direct adult-size claims contain no usable numeric boundary.');
+    }
+    if (numericSpreadIsMaterial(mins) || numericSpreadIsMaterial(maxes)) {
+      return conflictResolution(
+        field,
+        claims,
+        'Direct adult-size measurements differ materially beyond the reconciliation tolerance.',
+      );
+    }
+    return supportedResolution(
+      packet,
+      field,
+      claims,
+      {
+        min: mins.length > 0 ? Math.min(...mins) : null,
+        max: maxes.length > 0 ? Math.max(...maxes) : null,
+      },
+      claims.length > 1
+        ? 'Near-equivalent adult-size measurements were reconciled conservatively to the widest supported range.'
+        : undefined,
+    );
+  }
+
+  if (field === 'tank_size') {
+    const minimums = claims.map(claim => claim.proposedValue as TankMinimum);
+    const liters = minimums.flatMap(value => value.liters === null ? [] : [value.liters]);
+    const lengths = minimums.flatMap(value => value.lengthCm === null ? [] : [value.lengthCm]);
+    if (liters.length === 0 && lengths.length === 0) {
+      return invalidResolution(field, claims, 'Direct tank-minimum claims contain no usable minimum.');
+    }
+    return supportedResolution(
+      packet,
+      field,
+      claims,
+      {
+        liters: liters.length > 0 ? Math.max(...liters) : null,
+        lengthCm: lengths.length > 0 ? Math.max(...lengths) : null,
+      },
+      claims.length > 1
+        ? 'Multiple explicit aquarium minimums were reconciled by keeping the most conservative supported minimum on each dimension.'
+        : undefined,
+    );
+  }
+
+  if (field === 'social_behavior') {
+    const values = claims.map(claim => claim.proposedValue as SocialValue);
+    const concreteModes = [...new Set(
+      values.map(value => value.mode).filter(mode => mode !== 'unknown'),
+    )];
+    if (concreteModes.length > 1) {
+      return conflictResolution(field, claims, 'Direct sources disagree on the normal social mode.');
+    }
+    const groupSizes = values.flatMap(value => value.minimumGroupSize === null ? [] : [value.minimumGroupSize]);
+    return supportedResolution(
+      packet,
+      field,
+      claims,
+      {
+        mode: concreteModes[0] ?? 'unknown',
+        minimumGroupSize: groupSizes.length > 0 ? Math.max(...groupSizes) : null,
+      },
+      claims.length > 1
+        ? 'Compatible social evidence was reconciled using the most conservative explicit minimum group size.'
+        : undefined,
+    );
+  }
+
+  if (field === 'territoriality' || field === 'predation') {
+    const key = field === 'territoriality' ? 'traits' : 'targets';
+    const lists = claims.map(claim => {
+      const value = claim.proposedValue as StringListValue;
+      return (value[key] ?? []) as string[];
+    });
+    const hasEmpty = lists.some(list => list.length === 0);
+    const hasNonEmpty = lists.some(list => list.length > 0);
+    if (hasEmpty && hasNonEmpty) {
+      return conflictResolution(
+        field,
+        claims,
+        field === 'territoriality'
+          ? 'Direct sources conflict between explicit non-territorial evidence and territorial traits.'
+          : 'Direct sources conflict between explicit no-fish-prey evidence and positive prey targets.',
+      );
+    }
+    const merged = unionStrings(lists);
+    return supportedResolution(
+      packet,
+      field,
+      claims,
+      { [key]: merged },
+      claims.length > 1 && merged.length > 0
+        ? 'Compatible direct risk evidence was merged without widening beyond the cited source statements.'
+        : undefined,
+    );
+  }
+
+  const values = new Map<string, unknown>();
+  for (const claim of claims) values.set(stableValueKey(claim.proposedValue), claim.proposedValue);
+  if (values.size > 1) {
+    return conflictResolution(
+      field,
+      claims,
+      'Direct content-verified sources disagree on the field value; automatic onboarding remains fail-closed.',
+    );
+  }
+  return supportedResolution(packet, field, claims, [...values.values()][0]);
+};
+
 const resolveField = (
   packet: CompatibilitySpeciesResearchPacket,
   field: CompatibilityOnboardingCoreField,
@@ -170,46 +425,7 @@ const resolveField = (
     };
   }
 
-  const values = new Map<string, { value: unknown; claims: CompatibilityResearchFieldClaim[] }>();
-  for (const claim of usable) {
-    const key = stableValueKey(claim.proposedValue);
-    const existing = values.get(key);
-    if (existing) existing.claims.push(claim);
-    else values.set(key, { value: claim.proposedValue, claims: [claim] });
-  }
-
-  if (values.size > 1) {
-    return {
-      field,
-      status: 'conflicted',
-      proposedValue: null,
-      sourceIds: [...new Set(usable.map(claim => claim.sourceId))],
-      notes: [
-        'Direct content-verified sources disagree on the field value; automatic onboarding must stop rather than select a convenient value.',
-        ...usable.flatMap(claim => claim.note ? [claim.note] : []),
-      ],
-    };
-  }
-
-  const only = [...values.values()][0];
-  const sourceIds = [...new Set(only.claims.map(claim => claim.sourceId))];
-  if (!fieldValueIsValid(packet, field, only.value, sourceIds)) {
-    return {
-      field,
-      status: 'invalid_or_unverified',
-      proposedValue: null,
-      sourceIds,
-      notes: ['The extracted value does not satisfy the source-controlled Catalog field schema.'],
-    };
-  }
-
-  return {
-    field,
-    status: 'supported',
-    proposedValue: only.value,
-    sourceIds,
-    notes: only.claims.flatMap(claim => claim.note ? [claim.note] : []),
-  };
+  return reconcileFieldClaims(packet, field, usable);
 };
 
 const supportedValue = <T>(

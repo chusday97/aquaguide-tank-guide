@@ -79,6 +79,7 @@ const mockFetch: typeof fetch = async (input, init) => {
             content: JSON.stringify({
               candidates: [
                 { url: sourceUrl },
+                { url: sourceUrl + '/' },
                 { url: 'https://shop.example.com/pseudomugil-luminatus' },
                 { url: 'http://127.0.0.1/internal' },
               ],
@@ -94,6 +95,8 @@ const mockFetch: typeof fetch = async (input, init) => {
     const user = messages.find(message => message.role === 'user')?.content || '';
     assert.ok(user.includes(sourceUrl));
     assert.ok(user.includes(scientificName));
+    assert.match(user, /Do NOT use breeding\/reproduction group sizes/, 'social extraction must reject breeding cohort sizes as husbandry group minima');
+    assert.match(user, /Diet statements alone produce no predation claim/, 'predation extraction must reject ordinary diet items as compatibility prey targets');
 
     return new Response(JSON.stringify({
       choices: [{
@@ -102,7 +105,7 @@ const mockFetch: typeof fetch = async (input, init) => {
             debugMetadata: 'must be stripped',
             claims: [
               { field: 'water', proposedValue: 'freshwater', sourceUrl, evidenceKind: 'direct', confidence: 1.0, note: 'Page directly states freshwater.', modelRationale: 'must be stripped' },
-              { field: 'temperature', proposedValue: { min: 24, max: 28 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
+              { field: 'temperature', proposedValue: { min: 24, max: 28 }, sourceUrl: sourceUrl + '/', evidenceKind: 'direct', confidence: 'high' },
               { field: 'ph', proposedValue: { min: 6.5, max: 7.5 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
               { field: 'adult_size', proposedValue: { min: null, max: 4 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
               { field: 'tank_size', proposedValue: { liters: 60, lengthCm: 60 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
@@ -141,7 +144,7 @@ const packet = await provider.research({
 });
 
 assert.equal(searchCalls, 1);
-assert.equal(sourceFetchCalls, 1, 'untrusted candidate domains must be filtered before fetch');
+assert.equal(sourceFetchCalls, 1, 'trusted trailing-slash variants must canonicalize before fetch while untrusted candidates are filtered');
 assert.equal(extractionCalls, 1);
 assert.equal(packet.identityStatus, 'verified');
 assert.equal(packet.sources.length, 1);

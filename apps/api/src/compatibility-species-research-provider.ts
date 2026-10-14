@@ -178,6 +178,14 @@ const safePublicSourceUrl = (raw: string) => {
   return classifyTrustedSource(url) ? url : null;
 };
 
+const canonicalSourceUrl = (raw: string) => {
+  const url = safePublicSourceUrl(raw);
+  if (!url) return null;
+  url.hash = '';
+  if (url.pathname.length > 1) url.pathname = url.pathname.replace(/\/+$/, '');
+  return url.toString();
+};
+
 const normalizeScientificName = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase();
 
 const trustedTemplateCandidates = (scientificName: string): string[] => {
@@ -350,13 +358,15 @@ const discoveryCandidates = async (
     // must remain usable when search is empty, malformed, unavailable, or slow.
   }
 
-  const deduped = [...new Set([
-    ...trustedCandidates,
-    ...modelCandidates,
-  ])];
-  return deduped
-    .filter(raw => safePublicSourceUrl(raw))
-    .slice(0, config.maxSearchCandidates);
+  const deduped: string[] = [];
+  const seen = new Set<string>();
+  for (const raw of [...trustedCandidates, ...modelCandidates]) {
+    const canonical = canonicalSourceUrl(raw);
+    if (!canonical || seen.has(canonical)) continue;
+    seen.add(canonical);
+    deduped.push(canonical);
+  }
+  return deduped.slice(0, config.maxSearchCandidates);
 };
 
 const decodeEntities = (value: string) => value
@@ -479,7 +489,7 @@ const fetchOneVerifiedDocumentDetailed = async (
     }
 
     const document = {
-      url: current.toString(),
+      url: canonicalSourceUrl(current.toString()) ?? current.toString(),
       title: contentType.includes('text/plain')
         ? scientificName + ' source'
         : htmlTitle(raw) || scientificName + ' source',
@@ -520,8 +530,9 @@ const verifiedDocumentsDetailed = async (
     const result = await fetchOneVerifiedDocumentDetailed(url, scientificName, config, fetchImpl);
     diagnostics.push(result.diagnostic);
     if (!result.document) continue;
-    if (documents.some(existing => existing.url === result.document?.url)) continue;
-    documents.push(result.document);
+    const canonicalUrl = canonicalSourceUrl(result.document.url) ?? result.document.url;
+    if (documents.some(existing => existing.url === canonicalUrl)) continue;
+    documents.push({ ...result.document, url: canonicalUrl });
     if (documents.length >= config.maxVerifiedSources) break;
   }
   return { documents, diagnostics };
@@ -544,9 +555,9 @@ const extractionPromptFor = (scientificName: string, documents: VerifiedDocument
   'water: "freshwater"|"saltwater"|"brackish".',
   'temperature/ph/adult_size: {"min":number|null,"max":number|null}. adult_size must be centimeters.',
   'tank_size: {"liters":number|null,"lengthCm":number|null}. Only explicit aquarium minimums; never infer from adult size.',
-  'social_behavior: {"mode":"solitary"|"pair"|"group"|"colony"|"variable"|"unknown","minimumGroupSize":number|null}. Only explicit social/group evidence.',
+  'social_behavior: {"mode":"solitary"|"pair"|"group"|"colony"|"variable"|"unknown","minimumGroupSize":number|null}. Only explicit normal husbandry/social grouping evidence qualifies. Do NOT use breeding/reproduction group sizes, grow-out cohorts, sampling groups, or statements such as raising N juveniles to find a breeding pair as minimumGroupSize.',
   'territoriality: {"traits":[string,...]}. Empty traits are allowed ONLY when the source directly supports non-territorial behavior; do not infer from "peaceful".',
-  'predation: {"targets":[string,...]}. Empty targets are allowed ONLY when direct tankmate/community evidence supports no generic fish-prey target; diet labels alone are insufficient.',
+  'predation: {"targets":[string,...]}. Targets are compatibility prey/tankmate risks only. Do NOT list zooplankton, algae, detritus, routine foods, or dietary prey unless the page explicitly says those animals are aquarium tankmates or animals at risk. Diet statements alone produce no predation claim. Empty targets are allowed ONLY when direct tankmate/community evidence supports no generic fish-prey target.',
   'Do not combine two sources into one claim. Do not invent numeric conversions except standard unit conversion to C/cm/L.',
   'If a source does not directly establish a field, omit that claim.',
   'SOURCE_DOCUMENTS:',
@@ -581,7 +592,10 @@ const extractedClaims = async (
   ],
 });
 
-const sourceIdFor = (url: string) => 'research-' + createHash('sha256').update(url).digest('hex').slice(0, 20);
+const sourceIdFor = (url: string) => 'research-' + createHash('sha256')
+  .update(canonicalSourceUrl(url) ?? url)
+  .digest('hex')
+  .slice(0, 20);
 
 const sourcesFromDocuments = (documents: VerifiedDocument[]): CompatibilityResearchSource[] => documents.map(document => ({
   id: sourceIdFor(document.url),
@@ -597,9 +611,11 @@ const claimsFromExtraction = (
   extraction: ExtractionOutput,
   documents: VerifiedDocument[],
 ): CompatibilityResearchFieldClaim[] => {
-  const documentByUrl = new Map(documents.map(document => [document.url, document] as const));
+  const documentByUrl = new Map(documents.map(document => [canonicalSourceUrl(document.url) ?? document.url, document] as const));
   return extraction.claims.flatMap(claim => {
-    const document = documentByUrl.get(claim.sourceUrl);
+    const canonicalClaimUrl = canonicalSourceUrl(claim.sourceUrl);
+    if (!canonicalClaimUrl) return [];
+    const document = documentByUrl.get(canonicalClaimUrl);
     if (!document) return [];
     const field = claim.field as CompatibilityOnboardingCoreField;
     return [{

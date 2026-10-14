@@ -193,24 +193,82 @@ assert.equal(missing.status, 'research_pending');
 assert.ok(missing.reasonCodes.includes('field_missing_tank_size'));
 assert.equal(missing.candidateProfile, null);
 
-const conflictPacket: CompatibilitySpeciesResearchPacket = {
+const reconciledPacket: CompatibilitySpeciesResearchPacket = {
   ...completePacket,
-  packetId: 'blind-packet-conflict',
+  packetId: 'blind-packet-reconciled',
   claims: [
     ...completePacket.claims,
+    {
+      field: 'temperature',
+      proposedValue: { min: 25, max: 29 },
+      sourceId: 'blind-source-b',
+      evidenceKind: 'direct',
+      confidence: 'high',
+    },
+    {
+      field: 'adult_size',
+      proposedValue: { min: 3.1, max: 4.6 },
+      sourceId: 'blind-source-a',
+      evidenceKind: 'direct',
+      confidence: 'high',
+    },
     {
       field: 'tank_size',
       proposedValue: { liters: 200, lengthCm: 100 },
       sourceId: 'blind-source-b',
       evidenceKind: 'direct',
       confidence: 'medium',
-      note: 'Independent direct source disagrees with the first numeric minimum.',
+    },
+    {
+      field: 'social_behavior',
+      proposedValue: { mode: 'group', minimumGroupSize: 8 },
+      sourceId: 'blind-source-b',
+      evidenceKind: 'direct',
+      confidence: 'medium',
+    },
+  ],
+};
+const reconciled = assessCompatibilitySpeciesResearchPacket(reconciledPacket);
+assert.equal(reconciled.status, 'ready_for_review');
+assert.deepEqual(
+  reconciled.fieldResolutions.find(field => field.field === 'temperature')?.proposedValue,
+  { min: 25, max: 28 },
+  'overlapping husbandry ranges must reconcile to the shared conservative intersection',
+);
+assert.deepEqual(
+  reconciled.fieldResolutions.find(field => field.field === 'adult_size')?.proposedValue,
+  { min: 3, max: 4.6 },
+  'near-equivalent adult measurements must widen conservatively instead of creating a false conflict',
+);
+assert.deepEqual(
+  reconciled.fieldResolutions.find(field => field.field === 'tank_size')?.proposedValue,
+  { liters: 200, lengthCm: 100 },
+  'aquarium minimums must keep the most conservative direct requirement',
+);
+assert.deepEqual(
+  reconciled.fieldResolutions.find(field => field.field === 'social_behavior')?.proposedValue,
+  { mode: 'group', minimumGroupSize: 8 },
+  'compatible group evidence must keep the largest explicit minimum group size',
+);
+
+const conflictPacket: CompatibilitySpeciesResearchPacket = {
+  ...completePacket,
+  packetId: 'blind-packet-conflict',
+  claims: [
+    ...completePacket.claims,
+    {
+      field: 'water',
+      proposedValue: 'saltwater',
+      sourceId: 'blind-source-b',
+      evidenceKind: 'direct',
+      confidence: 'high',
+      note: 'Independent direct source creates a genuine environmental contradiction.',
     },
   ],
 };
 const conflict = assessCompatibilitySpeciesResearchPacket(conflictPacket);
 assert.equal(conflict.status, 'terminal_hold');
-assert.ok(conflict.reasonCodes.includes('field_conflict_tank_size'));
+assert.ok(conflict.reasonCodes.includes('field_conflict_water'));
 assert.equal(conflict.candidateProfile, null);
 
 const unverifiedPacket: CompatibilitySpeciesResearchPacket = {
