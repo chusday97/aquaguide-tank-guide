@@ -13,15 +13,22 @@ import {
   validateProductionCodeCompatibility,
 } from './compatibility-production-migration-guard.mjs';
 import {
-  START as FAST_LANE_START,
-  TARGET as FAST_LANE_TARGET,
+  START as FAST_LANE_WAVE1_START,
 } from './compatibility-fast-lane-production-patch-guard.mjs';
+import {
+  START as FAST_LANE_WAVE2_START,
+  TARGET as FAST_LANE_WAVE2_TARGET,
+} from './compatibility-fast-lane-wave2-production-patch-guard.mjs';
+import {
+  START as FAST_LANE_WAVE3_START,
+  TARGET as FAST_LANE_WAVE3_TARGET,
+} from './compatibility-fast-lane-wave3-production-patch-guard.mjs';
 
 const root = resolve(import.meta.dirname, '..');
-export const CURRENT_PRODUCTION_LATEST_VERSION = FAST_LANE_START.latestVersion;
-export const CURRENT_PRODUCTION_MIGRATION_COUNT = FAST_LANE_START.migrationCount;
-export const TARGET_PRODUCTION_LATEST_VERSION = FAST_LANE_TARGET.latestVersion;
-export const TARGET_PRODUCTION_MIGRATION_COUNT = FAST_LANE_TARGET.migrationCount;
+export const CURRENT_PRODUCTION_LATEST_VERSION = FAST_LANE_WAVE2_START.latestVersion;
+export const CURRENT_PRODUCTION_MIGRATION_COUNT = FAST_LANE_WAVE2_START.migrationCount;
+export const TARGET_PRODUCTION_LATEST_VERSION = FAST_LANE_WAVE3_TARGET.latestVersion;
+export const TARGET_PRODUCTION_MIGRATION_COUNT = FAST_LANE_WAVE3_TARGET.migrationCount;
 
 const run = (cmd, args) => {
   const result = spawnSync(cmd, args, { cwd: root, encoding: 'utf8' });
@@ -48,21 +55,39 @@ export const classifyState = state => {
     && schemaReady;
   if (fullChainStart) return 'READY_FOR_FULL_CHAIN_MIGRATION';
 
-  const fastLaneStart = state.migration_count === FAST_LANE_START.migrationCount
-    && state.latest_version === FAST_LANE_START.latestVersion
-    && state.profiles === FAST_LANE_START.profiles
-    && state.pair_rules === FAST_LANE_START.pairRules
-    && state.evidence === FAST_LANE_START.evidence
-    && state.stage_risks === FAST_LANE_START.stageRisks
+  const wave1Start = state.migration_count === FAST_LANE_WAVE1_START.migrationCount
+    && state.latest_version === FAST_LANE_WAVE1_START.latestVersion
+    && state.profiles === FAST_LANE_WAVE1_START.profiles
+    && state.pair_rules === FAST_LANE_WAVE1_START.pairRules
+    && state.evidence === FAST_LANE_WAVE1_START.evidence
+    && state.stage_risks === FAST_LANE_WAVE1_START.stageRisks
     && schemaReady;
-  if (fastLaneStart) return 'READY_FOR_INCREMENTAL_MIGRATION';
+  if (wave1Start) return 'READY_FOR_FAST_LANE_WAVE1_MIGRATION';
 
-  const post = state.migration_count === FAST_LANE_TARGET.migrationCount
-    && state.latest_version === FAST_LANE_TARGET.latestVersion
-    && state.profiles === FAST_LANE_TARGET.profiles
-    && state.pair_rules === FAST_LANE_TARGET.pairRules
-    && state.evidence === FAST_LANE_TARGET.evidence
-    && state.stage_risks === FAST_LANE_TARGET.stageRisks
+  const wave2Start = state.migration_count === FAST_LANE_WAVE2_START.migrationCount
+    && state.latest_version === FAST_LANE_WAVE2_START.latestVersion
+    && state.profiles === FAST_LANE_WAVE2_START.profiles
+    && state.pair_rules === FAST_LANE_WAVE2_START.pairRules
+    && state.evidence === FAST_LANE_WAVE2_START.evidence
+    && state.stage_risks === FAST_LANE_WAVE2_START.stageRisks
+    && schemaReady;
+  if (wave2Start) return 'READY_FOR_FAST_LANE_WAVE2_MIGRATION';
+
+  const wave3Start = state.migration_count === FAST_LANE_WAVE3_START.migrationCount
+    && state.latest_version === FAST_LANE_WAVE3_START.latestVersion
+    && state.profiles === FAST_LANE_WAVE3_START.profiles
+    && state.pair_rules === FAST_LANE_WAVE3_START.pairRules
+    && state.evidence === FAST_LANE_WAVE3_START.evidence
+    && state.stage_risks === FAST_LANE_WAVE3_START.stageRisks
+    && schemaReady;
+  if (wave3Start) return 'READY_FOR_FAST_LANE_WAVE3_MIGRATION';
+
+  const post = state.migration_count === FAST_LANE_WAVE3_TARGET.migrationCount
+    && state.latest_version === FAST_LANE_WAVE3_TARGET.latestVersion
+    && state.profiles === FAST_LANE_WAVE3_TARGET.profiles
+    && state.pair_rules === FAST_LANE_WAVE3_TARGET.pairRules
+    && state.evidence === FAST_LANE_WAVE3_TARGET.evidence
+    && state.stage_risks === FAST_LANE_WAVE3_TARGET.stageRisks
     && schemaReady;
   return post ? 'VERIFY_POST_MIGRATION' : 'BLOCKED_STATE_DRIFT';
 };
@@ -80,7 +105,7 @@ export const validateDetailedState = (state, detail) => {
   if (JSON.stringify(detail.profile_keys) !== JSON.stringify(expected.profiles)) blockers.push('profile_key_set_mismatch');
   if (JSON.stringify(detail.pair_keys) !== JSON.stringify(expected.pairRules)) blockers.push('pair_key_set_mismatch');
   if (JSON.stringify(detail.stage_risk_keys) !== JSON.stringify(expected.stageRisks)) blockers.push('stage_risk_key_set_mismatch');
-  if (detail.reviewed_evidence !== FAST_LANE_TARGET.evidence) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${FAST_LANE_TARGET.evidence}`);
+  if (detail.reviewed_evidence !== FAST_LANE_WAVE3_TARGET.evidence) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${FAST_LANE_WAVE3_TARGET.evidence}`);
   if (detail.authority_singleton !== 1) blockers.push(`authority_singleton:${detail.authority_singleton}/1`);
 
   const pair = detail.tiger_guppy;
@@ -114,7 +139,7 @@ export const validateDetailedState = (state, detail) => {
       profiles: expected.profiles.length,
       pairRules: expected.pairRules.length,
       stageRisks: expected.stageRisks.length,
-      evidenceSources: FAST_LANE_TARGET.evidence,
+      evidenceSources: FAST_LANE_WAVE3_TARGET.evidence,
     },
   };
 };

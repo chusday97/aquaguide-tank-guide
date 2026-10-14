@@ -32,6 +32,9 @@ if (blocked.phase !== 'BLOCKED_COMPATIBILITY_DB'
   || blocked.live.source !== 'env') {
   throw new Error('blocked readiness mismatch');
 }
+if (blocked.expected.evidenceSources !== 184) {
+  throw new Error(`readiness must track final wave3 evidence target 184, got ${blocked.expected.evidenceSources}`);
+}
 
 const ready = run({
   AQUAGUIDE_COMPAT_SCHEMA_V3:'true',
