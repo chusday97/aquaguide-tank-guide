@@ -235,7 +235,7 @@ const reconciledPacket: CompatibilitySpeciesResearchPacket = {
     },
     {
       field: 'adult_size',
-      proposedValue: { min: 3.1, max: 4.6 },
+      proposedValue: { min: 3.1, max: 6.7 },
       sourceId: 'blind-source-a',
       evidenceKind: 'direct',
       confidence: 'high',
@@ -266,8 +266,8 @@ assert.deepEqual(
 );
 assert.deepEqual(
   reconciled.fieldResolutions.find(field => field.field === 'adult_size')?.proposedValue,
-  { min: 3, max: 4.6 },
-  'near-equivalent adult measurements must widen conservatively instead of creating a false conflict',
+  { min: 3, max: 6.7 },
+  'bounded adult-size variation must widen conservatively instead of creating a false conflict',
 );
 assert.deepEqual(
   reconciled.fieldResolutions.find(field => field.field === 'tank_size')?.proposedValue,
@@ -279,6 +279,25 @@ assert.deepEqual(
   { mode: 'group', minimumGroupSize: 8 },
   'compatible group evidence must keep the largest explicit minimum group size',
 );
+
+const adultOutlierPacket: CompatibilitySpeciesResearchPacket = {
+  ...completePacket,
+  packetId: 'blind-packet-adult-outlier',
+  claims: [
+    ...completePacket.claims,
+    {
+      field: 'adult_size',
+      proposedValue: { min: null, max: 20 },
+      sourceId: 'blind-source-a',
+      evidenceKind: 'direct',
+      confidence: 'high',
+      note: 'Independent exact-taxon source reports a radically larger adult maximum.',
+    },
+  ],
+};
+const adultOutlier = assessCompatibilitySpeciesResearchPacket(adultOutlierPacket);
+assert.equal(adultOutlier.status, 'terminal_hold');
+assert.ok(adultOutlier.reasonCodes.includes('field_conflict_adult_size'));
 
 const conflictPacket: CompatibilitySpeciesResearchPacket = {
   ...completePacket,

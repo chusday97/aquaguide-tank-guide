@@ -237,7 +237,7 @@ const numericSpreadIsMaterial = (values: number[]) => {
   if (values.length < 2) return false;
   const low = Math.min(...values);
   const high = Math.max(...values);
-  return high - low > Math.max(1, Math.max(low, 0.1) * 0.1);
+  return high - low > 2 && high > low * 1.5;
 };
 
 const unionStrings = (values: string[][]) => {
@@ -331,7 +331,7 @@ const reconcileFieldClaims = (
         max: maxes.length > 0 ? Math.max(...maxes) : null,
       },
       claims.length > 1
-        ? 'Near-equivalent adult-size measurements were reconciled conservatively to the widest supported range.'
+        ? 'Bounded direct adult-size variation was reconciled conservatively to the widest supported range; only large outliers remain conflicts.'
         : undefined,
     );
   }
