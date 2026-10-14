@@ -28,6 +28,28 @@ export type CompatibilityResearchFieldClaim = {
   note?: string;
 };
 
+export const isCompatibilityResearchClaimScopeEligible = (
+  claim: Pick<CompatibilityResearchFieldClaim, 'field' | 'note'>,
+) => {
+  const note = claim.note?.trim() || '';
+
+  if (claim.field === 'social_behavior') {
+    if (!note) return false;
+    const breedingOnlyContext = /\b(reproduction|reproductive|breeding|breed|spawn|spawning|grow(?:ing)? up|juvenile|young)\b/i.test(note)
+      || /find(?:ing)?\s+(?:a\s+)?(?:breeding\s+)?pair/i.test(note);
+    if (breedingOnlyContext) return false;
+  }
+
+  if (claim.field === 'predation') {
+    if (!note) return false;
+    const compatibilityContext = /tank\s*mate|community|aquarium|fit\s+(?:in|into)\s+.*mouth|mouth.*fit|swallow|attack|hunt|predat/i.test(note);
+    const dietOnlyContext = /\b(feed|feeds|feeding|diet|food|zooplankton|plankton|algae|detritus)\b/i.test(note);
+    if (dietOnlyContext && !compatibilityContext) return false;
+  }
+
+  return true;
+};
+
 export type CompatibilitySpeciesResearchPacket = {
   packetId: string;
   providerId: string;
@@ -410,7 +432,8 @@ const resolveField = (
     return claim.evidenceKind === 'direct'
       && Boolean(source?.contentVerified)
       && Boolean(source && catalogEvidenceSourceSchema.safeParse(source).success)
-      && source?.reviewStatus !== 'rejected';
+      && source?.reviewStatus !== 'rejected'
+      && isCompatibilityResearchClaimScopeEligible(claim);
   });
 
   if (usable.length === 0) {

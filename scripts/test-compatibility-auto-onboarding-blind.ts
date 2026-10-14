@@ -55,9 +55,9 @@ const completePacket: CompatibilitySpeciesResearchPacket = {
     { field: 'ph', proposedValue: { min: 6.5, max: 7.5 }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium' },
     { field: 'adult_size', proposedValue: { min: 3, max: 4.5 }, sourceId: 'blind-source-b', evidenceKind: 'direct', confidence: 'high' },
     { field: 'tank_size', proposedValue: { liters: 60, lengthCm: 60 }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium' },
-    { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 6 }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium' },
+    { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 6 }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium', note: 'Normal husbandry guidance recommends keeping at least six together.' },
     { field: 'territoriality', proposedValue: { traits: [] }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium' },
-    { field: 'predation', proposedValue: { targets: [] }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium' },
+    { field: 'predation', proposedValue: { targets: [] }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium', note: 'Community guidance directly states similarly sized tankmates are not treated as prey.' },
   ],
 };
 
@@ -193,6 +193,34 @@ assert.equal(missing.status, 'research_pending');
 assert.ok(missing.reasonCodes.includes('field_missing_tank_size'));
 assert.equal(missing.candidateProfile, null);
 
+const scopeRejectedPacket: CompatibilitySpeciesResearchPacket = {
+  ...completePacket,
+  packetId: 'blind-packet-scope-rejected',
+  claims: completePacket.claims.map(claim => {
+    if (claim.field === 'social_behavior') {
+      return {
+        ...claim,
+        proposedValue: { mode: 'group', minimumGroupSize: 10 },
+        note: 'Reproduction: grow up a group of 10 young fish to find a breeding pair.',
+      };
+    }
+    if (claim.field === 'predation') {
+      return {
+        ...claim,
+        proposedValue: { targets: ['zooplankton', 'detritus', 'small fish'] },
+        note: 'Feed on zooplankton, detritus and small fish.',
+      };
+    }
+    return claim;
+  }),
+};
+const scopeRejected = assessCompatibilitySpeciesResearchPacket(scopeRejectedPacket);
+assert.equal(scopeRejected.status, 'research_pending');
+assert.ok(scopeRejected.reasonCodes.includes('field_unverified_social_behavior'));
+assert.ok(scopeRejected.reasonCodes.includes('field_unverified_predation'));
+assert.equal(scopeRejected.candidateProfile, null);
+
+
 const reconciledPacket: CompatibilitySpeciesResearchPacket = {
   ...completePacket,
   packetId: 'blind-packet-reconciled',
@@ -225,6 +253,7 @@ const reconciledPacket: CompatibilitySpeciesResearchPacket = {
       sourceId: 'blind-source-b',
       evidenceKind: 'direct',
       confidence: 'medium',
+      note: 'Normal husbandry guidance recommends a group of at least eight.',
     },
   ],
 };

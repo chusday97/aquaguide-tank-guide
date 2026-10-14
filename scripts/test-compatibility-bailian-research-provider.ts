@@ -109,9 +109,11 @@ const mockFetch: typeof fetch = async (input, init) => {
               { field: 'ph', proposedValue: { min: 6.5, max: 7.5 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
               { field: 'adult_size', proposedValue: { min: null, max: 4 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
               { field: 'tank_size', proposedValue: { liters: 60, lengthCm: 60 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
-              { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 6 }, sourceUrl, evidenceKind: 'direct', confidence: 'high' },
+              { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 6 }, sourceUrl, evidenceKind: 'direct', confidence: 'high', note: 'Normal husbandry guidance: keep in a group of at least six.' },
+              { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 10 }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Reproduction: grow up a group of 10 young fish to find a breeding pair.' },
               { field: 'territoriality', proposedValue: { traits: [] }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Directly described as non-territorial.' },
               { field: 'predation', proposedValue: { targets: [] }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Direct community-fish prey exclusion.' },
+              { field: 'predation', proposedValue: { targets: ['zooplankton', 'detritus', 'small fish'] }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Feed on zooplankton, detritus and small fish.' },
               { field: 'water', proposedValue: 'freshwater', sourceUrl: 'https://www.fishbase.se/summary/fabricated-never-fetched', evidenceKind: 'direct', confidence: 'high' },
             ],
           }),
@@ -152,6 +154,8 @@ assert.equal(packet.sources[0].contentVerified, true);
 assert.equal(packet.sources[0].reviewStatus, 'draft');
 assert.equal(packet.sources[0].sourceType, 'curated_husbandry');
 assert.equal(packet.claims.length, 8, 'claim referencing a URL that was never fetched must be discarded');
+assert.equal(packet.claims.some(claim => claim.field === 'social_behavior' && (claim.proposedValue as { minimumGroupSize?: number }).minimumGroupSize === 10), false, 'breeding cohort size must be discarded before the review gate');
+assert.equal(packet.claims.some(claim => claim.field === 'predation' && (claim.proposedValue as { targets?: string[] }).targets?.includes('zooplankton')), false, 'diet-only prey lists must be discarded before the review gate');
 assert.equal(packet.claims.find(claim => claim.field === 'water')?.confidence, 'high', 'numeric model confidence must normalize to the canonical confidence enum');
 assert.equal(packet.claims.every(claim => claim.sourceId === packet.sources[0].id), true);
 
@@ -289,7 +293,7 @@ const fishipediaFallbackFetch: typeof fetch = async (input, init) => {
         { field: 'ph', proposedValue: { min: 4.8, max: 7.2 }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.96 },
         { field: 'adult_size', proposedValue: { min: 3, max: 4 }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.95 },
         { field: 'tank_size', proposedValue: { liters: 60, lengthCm: null }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.95 },
-        { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 10 }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.92 },
+        { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 10 }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.92, note: 'Normal husbandry guidance directly recommends a group of at least 10.' },
         { field: 'territoriality', proposedValue: { traits: [] }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.9, note: 'Source directly states Territorialité: Non.' },
       ] }) } }],
     }), { status: 200, headers: { 'content-type': 'application/json' } });

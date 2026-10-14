@@ -3,12 +3,13 @@ import { z } from 'zod';
 import './config';
 
 import type { CatalogEvidenceSource } from '../../../packages/contracts/src';
-import type {
-  CompatibilityOnboardingCoreField,
-  CompatibilityResearchFieldClaim,
-  CompatibilityResearchSource,
-  CompatibilitySpeciesResearchPacket,
-  CompatibilitySpeciesResearchProvider,
+import {
+  isCompatibilityResearchClaimScopeEligible,
+  type CompatibilityOnboardingCoreField,
+  type CompatibilityResearchFieldClaim,
+  type CompatibilityResearchSource,
+  type CompatibilitySpeciesResearchPacket,
+  type CompatibilitySpeciesResearchProvider,
 } from '../../../src/services/compatibility/species-onboarding-research.service';
 
 type FetchLike = typeof fetch;
@@ -613,6 +614,7 @@ const claimsFromExtraction = (
 ): CompatibilityResearchFieldClaim[] => {
   const documentByUrl = new Map(documents.map(document => [canonicalSourceUrl(document.url) ?? document.url, document] as const));
   return extraction.claims.flatMap(claim => {
+    if (!isCompatibilityResearchClaimScopeEligible(claim)) return [];
     const canonicalClaimUrl = canonicalSourceUrl(claim.sourceUrl);
     if (!canonicalClaimUrl) return [];
     const document = documentByUrl.get(canonicalClaimUrl);
