@@ -1,3 +1,13 @@
+## CURRENT CHECKPOINT — 2026-10-14 Compatibility research batch dry-run infrastructure (NOT RELEASED)
+
+- Active branch: `codex/compatibility-research-batch-dryrun-20261014`. This checkpoint is read-only research infrastructure: no reviewed authority write, Supabase mutation, Production migration, release-branch cutover, UI or Vision change.
+- Latest source-controlled coverage plan is **606 actionable core-field gaps collapsed into 75 base-taxon research jobs covering 129 catalog objects**: 55 exact-taxon jobs and 20 base-taxon candidate jobs whose variant fields still require explicit reviewed variant bridges. Current field gaps are tank_size 116, pH 112, temperature 107, adult_size 93, water 85, territoriality 41, predation 36, social_behavior 16.
+- Added permanent command `npm run dryrun:compatibility-research-batch -- --concurrency=4`. It dynamically rebuilds the current taxon plan, runs `GBIF exact identity -> Bailian trusted-source research -> deterministic packet assessment`, writes only a gitignored evaluation report, and declares `writesAuthority=false`.
+- Batch statistics deliberately separate exact-taxon potential closures from variant candidate evidence. Base-taxon evidence for a variant can increase `variantCandidateFieldHits`, but never `potentialCatalogFieldClosures`; no variant fact is auto-promoted. Per-field requested gaps / potential closures / variant candidates and verified-source publisher hit counts are emitted for audit.
+- A permanent contract test proves the runner is read-only and contains no admin Supabase/service-role or insert/update/upsert/delete path. The test is part of `test:backend-release-gate`.
+- Full real 75-job hit-rate numbers are **not claimed yet**. Current Mac outbound TLS fails before reliable dispatch to Alibaba Model Studio and public research sites; a corrected Vercel Preview diagnostic could not be redeployed because the team hit the >100 free deployments/day cap. The existing protected admin research API correctly requires a real Supabase admin session and was not bypassed. GitHub Actions currently exposes no AI research secret. These are execution-environment blockers, not counted as provider misses or evidence ceilings.
+- Temporary local/Vercel canary files were removed. When an external runtime with working network + existing research credentials is available, the supported runner can execute the full 75-job plan without code changes and produce `evaluation/reports/compatibility-research-dryrun.json`.
+
 ## TOP CURRENT OVERRIDE — 2026-10-13 Compatibility V4 Bailian free-quota model pool
 
 - Active branch: `codex/compatibility-v4-bailian-deepseek-20261013`; continue this branch as the Compatibility AI acceptance authority.
