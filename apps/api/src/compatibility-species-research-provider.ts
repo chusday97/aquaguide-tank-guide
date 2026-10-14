@@ -40,6 +40,16 @@ const searchOutputSchema = z.object({
   candidates: z.array(searchCandidateSchema).max(16),
 }).strict();
 
+const extractedConfidenceSchema = z.union([
+  z.enum(['high', 'medium', 'low', 'unknown']),
+  z.number().min(0).max(1).transform(value => (
+    value >= 0.9 ? 'high'
+      : value >= 0.6 ? 'medium'
+        : value > 0 ? 'low'
+          : 'unknown'
+  )),
+]);
+
 const extractedClaimSchema = z.object({
   field: z.enum([
     'water',
@@ -54,13 +64,13 @@ const extractedClaimSchema = z.object({
   proposedValue: z.unknown(),
   sourceUrl: z.string().url(),
   evidenceKind: z.literal('direct'),
-  confidence: z.enum(['high', 'medium', 'low', 'unknown']),
+  confidence: extractedConfidenceSchema,
   note: z.string().trim().max(600).optional(),
-}).strict();
+}).strip();
 
 const extractionOutputSchema = z.object({
   claims: z.array(extractedClaimSchema).max(64),
-}).strict();
+}).strip();
 
 type SearchOutput = z.infer<typeof searchOutputSchema>;
 type ExtractionOutput = z.infer<typeof extractionOutputSchema>;
@@ -81,6 +91,7 @@ const DEFAULT_TRUSTED_DOMAIN_TYPES: Array<{
   publisher: string;
 }> = [
   { domain: 'fishbase.se', sourceType: 'professional_association', publisher: 'FishBase' },
+  { domain: 'fishbase.org', sourceType: 'professional_association', publisher: 'FishBase' },
   { domain: 'seriouslyfish.com', sourceType: 'curated_husbandry', publisher: 'Seriously Fish' },
   { domain: 'animaldiversity.org', sourceType: 'university', publisher: 'Animal Diversity Web, University of Michigan' },
   { domain: 'fishipedia.fr', sourceType: 'curated_husbandry', publisher: 'Fishipedia' },
@@ -142,6 +153,25 @@ const safePublicSourceUrl = (raw: string) => {
 };
 
 const normalizeScientificName = (value: string) => value.trim().replace(/\s+/g, ' ').toLowerCase();
+
+const trustedTemplateCandidates = (scientificName: string): string[] => {
+  const parts = scientificName.trim().replace(/\s+/g, ' ').split(' ');
+  if (parts.length < 2) return [];
+  const [genus, species] = parts;
+  const safeTaxonToken = (value: string) => /^[A-Za-z][A-Za-z.-]*$/.test(value);
+  if (!safeTaxonToken(genus) || !safeTaxonToken(species)) return [];
+
+  const genusPath = encodeURIComponent(genus);
+  const speciesPath = encodeURIComponent(species);
+  const lowerSlug = encodeURIComponent((genus + '-' + species).toLowerCase());
+  return [
+    `https://www.fishbase.se/summary/${genusPath}-${speciesPath}.html`,
+    `https://www.fishbase.org/summary/${genusPath}-${speciesPath}.html`,
+    `https://www.seriouslyfish.com/species/${lowerSlug}`,
+    `https://www.fishipedia.fr/fr/poissons/${lowerSlug}`,
+    `https://animaldiversity.org/accounts/${genusPath}_${speciesPath}/`,
+  ];
+};
 
 const sourceMentionsScientificName = (text: string, scientificName: string) => (
   normalizeScientificName(text).includes(normalizeScientificName(scientificName))
@@ -229,30 +259,45 @@ const discoveryCandidates = async (
   scientificName: string,
   commonName?: string,
 ): Promise<string[]> => {
-  const output = await postJson<SearchOutput>(searchOutputSchema, config, fetchImpl, {
-    stream: false,
-    temperature: 0,
-    max_tokens: 1200,
-    enable_thinking: false,
-    enable_search: true,
-    search_options: {
-      forced_search: true,
-      search_strategy: 'max',
-    },
-    response_format: { type: 'json_object' },
-    messages: [
-      {
-        role: 'system',
-        content: 'You are a source-discovery worker. Web search is mandatory. Return candidate source URLs only as strict JSON. Never fabricate a URL.',
-      },
-      {
-        role: 'user',
-        content: searchPromptFor(scientificName, commonName),
-      },
-    ],
-  });
+  const trustedCandidates = trustedTemplateCandidates(scientificName);
+  let modelCandidates: string[] = [];
 
-  const deduped = [...new Set(output.candidates.map(item => item.url))];
+  try {
+    const output = await postJson<SearchOutput>(searchOutputSchema, {
+      ...config,
+      timeoutMs: Math.min(config.timeoutMs, 5_000),
+    }, fetchImpl, {
+      stream: false,
+      temperature: 0,
+      max_tokens: 1200,
+      enable_thinking: false,
+      enable_search: true,
+      search_options: {
+        forced_search: true,
+        search_strategy: 'max',
+      },
+      response_format: { type: 'json_object' },
+      messages: [
+        {
+          role: 'system',
+          content: 'You are a source-discovery worker. Web search is mandatory. Return candidate source URLs only as strict JSON. Never fabricate a URL.',
+        },
+        {
+          role: 'user',
+          content: searchPromptFor(scientificName, commonName),
+        },
+      ],
+    });
+    modelCandidates = output.candidates.map(item => item.url);
+  } catch {
+    // Model search is supplementary discovery only. Deterministic trusted templates
+    // must remain usable when search is empty, malformed, unavailable, or slow.
+  }
+
+  const deduped = [...new Set([
+    ...trustedCandidates,
+    ...modelCandidates,
+  ])];
   return deduped
     .filter(raw => safePublicSourceUrl(raw))
     .slice(0, config.maxSearchCandidates);
