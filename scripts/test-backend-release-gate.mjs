@@ -18,6 +18,8 @@ const gates = [
   ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],
   ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
   ['Generic Species Onboarding', 'npm', ['run', 'test:compatibility-generic-species-onboarding']],
+  ['Compatibility Auto Onboarding Blind', 'npm', ['run', 'test:compatibility-auto-onboarding-blind']],
+  ['Compatibility GBIF Identity', 'npm', ['run', 'test:compatibility-gbif-identity']],
   ['Compatibility Core Field Coverage', 'npm', ['run', 'test:compatibility-core-field-coverage']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
   ['Compatibility V4 AI Shadow', 'npm', ['run', 'test:compatibility-v4-ai-shadow']],
