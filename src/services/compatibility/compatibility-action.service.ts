@@ -190,6 +190,8 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   const hasPredationVulnerability = codes.has('predation_vulnerability_context');
   const hasTerritorialPressure = Array.from(codes).some(code => TERRITORIAL_CODES.has(code));
   const hasObservedIntervention = codes.has('observed_intervention');
+  const hasIdentityUnresolved = codes.has('species_identity_unresolved') || Array.from(codes).some(code => code.startsWith('identity_') && code.endsWith('_unresolved'));
+  const hasPublicEvidenceInsufficient = codes.has('species_public_evidence_insufficient') || Array.from(codes).some(code => code.startsWith('public_evidence_') && code.endsWith('_insufficient'));
 
   if (decision.status === 'not_recommended') {
     return {
@@ -205,10 +207,30 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   }
 
   if (decision.status === 'insufficient_data') {
+    if (hasIdentityUnresolved) {
+      return {
+        verdict: 'need_information',
+        headline: '先确认具体物种',
+        immediateAction: '先确认准确学名、商品名对应物种或具体品系；身份没确认前不要直接套用其他物种的混养结论。',
+        primaryReason: firstText(missingData, decision.summary || '当前物种身份还不能可靠确认。'),
+        observeAfterAction: null,
+        detailsLabel: '为什么需要确认身份？',
+      };
+    }
+    if (hasPublicEvidenceInsufficient) {
+      return {
+        verdict: 'need_information',
+        headline: '可靠公开资料还不够',
+        immediateAction: '这不是你少填了资料；目前可靠公开来源不足以确认关键风险，先不要据此新增，等有更强证据后再判断。',
+        primaryReason: firstText(missingData, decision.summary || '公开可靠资料不足以支持这次关键判断。'),
+        observeAfterAction: null,
+        detailsLabel: '哪项资料无法确认？',
+      };
+    }
     return {
       verdict: 'need_information',
       headline: '现在还不能可靠判断',
-      immediateAction: '先别急着加；补齐最关键的缺失信息后再算一次。',
+      immediateAction: '先别急着加；补齐这次判断真正需要的鱼缸或物种信息后再算一次。',
       primaryReason: firstText(missingData, decision.summary || '关键资料还不够。'),
       observeAfterAction: null,
       detailsLabel: '还缺什么？',
@@ -345,10 +367,16 @@ const buildCurrentTankCompatibilityAction = (
   }
 
   if (decision.status === 'insufficient_data') {
+    const hasIdentityUnresolved = codes.has('species_identity_unresolved') || Array.from(codes).some(code => code.startsWith('identity_') && code.endsWith('_unresolved'));
+    const hasPublicEvidenceInsufficient = codes.has('species_public_evidence_insufficient') || Array.from(codes).some(code => code.startsWith('public_evidence_') && code.endsWith('_insufficient'));
     return {
       ...plannedAction,
-      headline: '当前组合还不能可靠判断',
-      immediateAction: '先补齐最关键的缺失信息，再重新判断当前组合是否需要调整。',
+      headline: hasIdentityUnresolved ? '当前组合需要先确认物种身份' : hasPublicEvidenceInsufficient ? '当前组合缺少可靠公开证据' : '当前组合还不能可靠判断',
+      immediateAction: hasIdentityUnresolved
+        ? '先确认准确学名或具体品系，再判断当前组合是否需要调整。'
+        : hasPublicEvidenceInsufficient
+          ? '现有可靠公开资料不足以确认关键风险；先维持谨慎观察，不要据此继续扩大当前组合。'
+          : '先补齐这次判断真正需要的信息，再重新判断当前组合是否需要调整。',
       observeAfterAction: null,
     };
   }

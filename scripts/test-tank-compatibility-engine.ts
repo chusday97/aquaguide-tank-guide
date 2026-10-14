@@ -71,7 +71,8 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         tank: makeTank({ substrate: '无', plants: [], hardscape: [] }),
         candidateSpecies: makeFish(),
       });
-      return result.status === 'insufficient_data'
+      return result.status === 'caution'
+        && result.metadata.domainRuleCodes.includes('species_review_pending')
         && result.missingData.every(rule => !['missing_ph', 'missing_hardness'].includes(rule.code));
     },
   },
@@ -169,7 +170,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         tank: makeTank({ equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' } }),
         candidateSpecies: makeFish({ waterTemperature: '24-28°C' }),
       });
-      return result.status === 'insufficient_data'
+      return result.status === 'caution'
         && result.warningRules.some(rule => rule.code === 'heater_needed');
     },
   },
@@ -257,9 +258,9 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         existingSpecies: [aggressive],
         candidateSpecies: makeFish(),
       });
-      return result.status === 'insufficient_data'
+      return result.status === 'caution'
         && result.blockingRules.every(rule => rule.code !== 'predation_risk')
-        && result.missingData.some(rule => rule.code === 'behavior_evidence_unreviewed');
+        && result.metadata.domainRuleCodes.includes('species_review_pending');
     },
   },
   {
@@ -312,9 +313,10 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         items: [{ fishId: candidate.id, quantity: 1 }],
         speciesCatalog: [candidate],
       });
-      return direct.status === 'insufficient_data'
-        && calculator.status === 'insufficient_data'
-        && addition?.status === 'insufficient_data';
+      return direct.status === 'caution'
+        && calculator.status === 'caution'
+        && addition?.status === 'caution'
+        && addition.policy === 'confirm';
     },
   },
   {
@@ -1327,7 +1329,7 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
-    name: 'addition service requires complete information when Catalog facts are unreviewed',
+    name: 'addition service requests confirmation instead of missing information when internal Catalog review is pending',
     run: () => {
       const fish = makeFish({ waterTemperature: '24-28°C' });
       const tank = makeTank({ equipment: { filter: '瀑布过滤', heater: false, oxygen: false, light: '普通灯' } });
@@ -1349,10 +1351,11 @@ const cases: Array<{ name: string; run: () => boolean }> = [
         speciesCatalog: [fish],
         confirmedCaution: true,
       });
-      return review?.policy === 'complete_information'
-        && pending.reason === 'missing_information'
-        && !confirmed.added
-        && confirmed.aquariums[0].fishes.length === 0;
+      return review?.status === 'caution'
+        && review.policy === 'confirm'
+        && pending.reason === 'confirmation_required'
+        && confirmed.added
+        && confirmed.aquariums[0].fishes.length === 1;
     },
   },
   {

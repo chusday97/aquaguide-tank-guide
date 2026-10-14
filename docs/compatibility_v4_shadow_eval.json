@@ -49,6 +49,7 @@
         "evidenceIds": [
           "seriouslyfish-puntius-titteya",
           "fishbase-puntius-titteya",
+          "batch-02-fishbase-puntius-titteya",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"
         ]
@@ -98,6 +99,7 @@
           "fishbase-otocinclus-vittatus",
           "aquariumcoop-otocinclus-catfish",
           "scotcat-otocinclus-vittatus",
+          "batch-02-fishbase-otocinclus-vittatus",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"
         ]
@@ -193,11 +195,12 @@
         "status": "insufficient_data",
         "decisionReadiness": "unknown",
         "ruleCodes": [
-          "species_evidence_unreviewed",
+          "species_public_evidence_insufficient",
           "water_type_unknown",
           "candidate_water_type_missing"
         ],
         "evidenceIds": [
+          "batch05-fishbase-poropanchax-normani",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"
         ]

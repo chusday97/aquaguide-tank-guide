@@ -106,20 +106,32 @@ const plainRuleText = (
   if (code === 'observed_emergency' || code === 'observed_intervention') {
     return '当前鱼缸已经出现需要优先处理的追逐、进食或应激异常。';
   }
+  const factLabels: Record<string, string> = {
+    water: '水体类型',
+    temperature: '长期适温范围',
+    ph: '长期酸碱范围',
+    adult_size: '成体体型',
+    tank_size: '最低空间需求',
+    social_behavior: '社会行为',
+    territoriality: '领地行为',
+    predation: '捕食关系',
+    breeding_behavior: '繁殖期行为',
+  };
+  if (code === 'species_review_pending') return '主要风险已经可以判断，但仍有资料待补充，本次按保守结论处理。';
+  if (code === 'species_identity_unresolved') return '这个商品名或变体还不能可靠对应到明确物种。';
+  if (code === 'species_public_evidence_insufficient') return '公开可靠资料不足以确认这个组合的一项关键风险。';
+  if (code.startsWith('review_pending_')) {
+    const fact = code.slice('review_pending_'.length);
+    return `${factLabels[fact] || '一项资料'}仍在补充，本次按保守结论处理。`;
+  }
+  if (code.startsWith('public_evidence_') && code.endsWith('_insufficient')) {
+    const fact = code.slice('public_evidence_'.length, -'_insufficient'.length);
+    return `公开可靠资料仍不足以确认${factLabels[fact] || '这项关键风险'}。`;
+  }
+  if (code.startsWith('identity_') && code.endsWith('_unresolved')) return '物种身份还不能可靠确认，无法安全套用对应资料。';
   if (code.startsWith('required_fact_') && code.endsWith('_missing')) {
     const fact = code.slice('required_fact_'.length, -'_missing'.length);
-    const labels: Record<string, string> = {
-      water: '水体类型',
-      temperature: '长期适温范围',
-      ph: '长期酸碱范围',
-      adult_size: '成体体型',
-      tank_size: '最低空间需求',
-      social_behavior: '社会行为',
-      territoriality: '领地行为',
-      predation: '捕食关系',
-      breeding_behavior: '繁殖期行为',
-    };
-    return `这个物种的${labels[fact] || '关键混养资料'}还没有达到可靠判断要求。`;
+    return `这个物种的${factLabels[fact] || '关键混养资料'}还没有达到可靠判断要求。`;
   }
   if (code === 'species_evidence_unreviewed') {
     return '其中有物种的关键混养资料还没有审核完整。';
@@ -221,6 +233,16 @@ const deterministicActionsFor = (
   }
 
   if (decision.status === 'insufficient_data') {
+    if (codes.has('species_identity_unresolved') || [...codes].some(code => code.startsWith('identity_') && code.endsWith('_unresolved'))) {
+      return [assessmentMode === 'current_tank'
+        ? '先确认准确物种或品系，再重新判断当前组合。'
+        : '先确认准确物种或品系；身份没确认前不要按其他物种结论新增。'];
+    }
+    if (codes.has('species_public_evidence_insufficient') || [...codes].some(code => code.startsWith('public_evidence_') && code.endsWith('_insufficient'))) {
+      return [assessmentMode === 'current_tank'
+        ? '现有可靠公开资料不足；先维持谨慎观察，不要据此扩大当前组合。'
+        : '这不是你少填了资料；可靠公开证据不足，先不要据此新增。'];
+    }
     if ([...codes].some(code => code.startsWith('required_fact_') && code.endsWith('_missing'))) {
       return [assessmentMode === 'current_tank'
         ? '先补齐缺失的物种核心资料，再重新判断当前组合。'

@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
-import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
+import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
+import { getLifeType } from '../src/modules/species/species.service';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getCompatibilityDecision } from '../src/services/compatibility/compatibility.service';
 import {
@@ -189,4 +190,43 @@ assert.deepEqual(statusCounts, {
   insufficient_data: 5,
 });
 
-console.log('Compatibility V4 readability audit PASS: 20 real-catalog cases (5 per status) keep the main result to judgment/why/how-to, reject technical AI copy, preserve deterministic authority, and fail closed when evidence is incomplete.');
+const reviewedFish = fishData.filter(fish => getLifeType(fish) === 'fish' && getReviewedCompatibilityProfileForFish(fish));
+let reviewedPairCount = 0;
+let exceptionalUnknownCount = 0;
+const disallowedUnknowns: Array<{ pair: string; codes: string[] }> = [];
+for (let left = 0; left < reviewedFish.length; left += 1) {
+  for (let right = left + 1; right < reviewedFish.length; right += 1) {
+    const first = reviewedFish[left];
+    const second = reviewedFish[right];
+    const firstProfile = getReviewedCompatibilityProfileForFish(first)!;
+    const secondProfile = getReviewedCompatibilityProfileForFish(second)!;
+    const auditTank: Aquarium = {
+      ...tank,
+      id: `readiness-audit-${left}-${right}`,
+      waterType: firstProfile.waterType === 'saltwater' && secondProfile.waterType === 'saltwater' ? 'Saltwater' : 'Freshwater',
+      dimensions: { length: '300', width: '100', height: '80' },
+    };
+    const auditDecision = evaluateCompatibilityDecision({
+      tank: auditTank,
+      items: [
+        { species: first, quantity: Math.max(1, firstProfile.minimumGroupSize || 1), origin: 'existing' },
+        { species: second, quantity: Math.max(1, secondProfile.minimumGroupSize || 1), origin: 'candidate' },
+      ],
+    });
+    reviewedPairCount += 1;
+    if (auditDecision.status !== 'insufficient_data') continue;
+    exceptionalUnknownCount += 1;
+    const codes = auditDecision.metadata.domainRuleCodes;
+    const allowedExceptionalReason = codes.some(code => (
+      code === 'species_identity_unresolved'
+      || code === 'species_public_evidence_insufficient'
+      || code.startsWith('identity_')
+      || code.startsWith('public_evidence_')
+    ));
+    if (!allowedExceptionalReason) disallowedUnknowns.push({ pair: `${first.id}+${second.id}`, codes });
+  }
+}
+assert.deepEqual(disallowedUnknowns, [], 'reviewed fish pairs must not become 暂时无法判断 solely because internal review work is pending');
+assert.ok(reviewedPairCount > 1000, 'readiness audit should cover a broad real-catalog pair set');
+
+console.log(`Compatibility V4 readability audit PASS: 20 fixed cases plus ${reviewedPairCount} reviewed-fish pairs; 暂时无法判断 is limited to ${exceptionalUnknownCount} exceptional identity/public-evidence cases, while internal review backlog stays actionable/cautious.`);

@@ -45,8 +45,10 @@ const acrossPair = evaluateTankCompatibility({
   candidateSpecies: acrossocheilus,
   existingSpecies: [platy],
 });
-assert.equal(acrossPair.metadata.domainRuleCodes.includes('temperature_range_missing'), true, 'reviewed-unknown temperature must not fall back to stale catalog values');
-assert.equal(acrossPair.status, 'insufficient_data');
+assert.equal(acrossPair.metadata.domainRuleCodes.includes('review_pending_temperature'), true, 'reviewed-unknown temperature must stay pending instead of falling back to stale catalog values');
+assert.equal(acrossPair.metadata.domainRuleCodes.includes('temperature_range_conflict'), false, 'stale catalog temperature must not create a false hard conflict');
+assert.equal(acrossPair.status, 'caution');
+assert.equal(acrossPair.metadata.decisionReadiness, 'partial');
 
 for (const id of ['sp_0057','sp_0058']) {
   const result = evaluateTankCompatibility({
@@ -82,4 +84,4 @@ assert.deepEqual(eel?.environment?.waterTypes, ['freshwater', 'brackish']);
 assert.equal(eel?.spaceAndGrowth?.minVolumeLiters, 432);
 assert.equal(eel?.socialBehavior?.predationRisk, 'high');
 
-console.log('next-wave freshwater 04 batch verified: 8 terminal reviews, 7 profiles, 1 evidence-ceiling hold, strict unknown masking, species-tank semantics and group-size behavior');
+console.log('next-wave freshwater 04 batch verified: 8 terminal reviews, 7 profiles, 1 evidence-ceiling hold, conservative pending masking, species-tank semantics and group-size behavior');

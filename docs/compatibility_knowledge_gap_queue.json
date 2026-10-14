@@ -208,14 +208,13 @@
       "status": "insufficient_data",
       "direct_reviewed_pair_rule": false,
       "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
+        "behavior_evidence_unreviewed"
       ],
       "warning_codes": [
         "minimum_group_not_met",
         "predation_vulnerability_context"
       ],
-      "score": 29,
+      "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "trade_name_taxon_ambiguous",
@@ -245,11 +244,10 @@
       "status": "insufficient_data",
       "direct_reviewed_pair_rule": false,
       "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
+        "behavior_evidence_unreviewed"
       ],
       "warning_codes": [],
-      "score": 29,
+      "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "accepted_taxon_alias_trade_ambiguous",
@@ -278,11 +276,10 @@
       "status": "insufficient_data",
       "direct_reviewed_pair_rule": false,
       "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
+        "behavior_evidence_unreviewed"
       ],
       "warning_codes": [],
-      "score": 29,
+      "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "variant_authority_not_promotable",
@@ -512,14 +509,13 @@
       "status": "insufficient_data",
       "direct_reviewed_pair_rule": false,
       "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
+        "behavior_evidence_unreviewed"
       ],
       "warning_codes": [
         "minimum_group_not_met",
         "predation_vulnerability_context"
       ],
-      "score": 29,
+      "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "trade_name_taxon_ambiguous",
@@ -549,11 +545,10 @@
       "status": "insufficient_data",
       "direct_reviewed_pair_rule": false,
       "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
+        "behavior_evidence_unreviewed"
       ],
       "warning_codes": [],
-      "score": 29,
+      "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "accepted_taxon_alias_trade_ambiguous",
@@ -582,11 +577,10 @@
       "status": "insufficient_data",
       "direct_reviewed_pair_rule": false,
       "missing_codes": [
-        "behavior_evidence_unreviewed",
-        "species_evidence_unreviewed"
+        "behavior_evidence_unreviewed"
       ],
       "warning_codes": [],
-      "score": 29,
+      "score": 28,
       "priority_basis": "launch_cohort pair + current insufficient_data + evidence gap",
       "boundary_codes": [
         "variant_authority_not_promotable",

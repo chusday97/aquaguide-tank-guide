@@ -6,6 +6,7 @@ export type CompatibilityIntent = 'record_existing' | 'planned_addition';
 export type CompatibilityDecisionReadiness = 'reviewed' | 'partial' | 'unknown';
 export type ObservedCoexistenceStatus = 'stable' | 'observe' | 'intervene' | 'emergency';
 export type CompatibilityRequiredFact = 'water' | 'temperature' | 'ph' | 'adult_size' | 'tank_size' | 'social_behavior' | 'territoriality' | 'predation' | 'breeding_behavior';
+export type CompatibilityFactDisposition = 'ready' | 'research_pending' | 'public_evidence_insufficient' | 'identity_unresolved';
 export type BehaviorRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
 
 export type CompatibilityTraitReadiness = {
@@ -57,6 +58,7 @@ export type DomainSpeciesFact = {
   minTankLengthCm?: number | null;
   reviewed: boolean;
   compatibilityRequiredFacts?: CompatibilityRequiredFact[];
+  compatibilityFactDispositions?: Partial<Record<CompatibilityRequiredFact, CompatibilityFactDisposition>>;
   adultLengthMinCm?: number | null;
   adultLengthMaxCm?: number | null;
   socialMode?: 'solitary' | 'pair' | 'harem' | 'shoal' | 'school' | 'group' | 'colony' | 'variable' | 'unknown';
@@ -110,7 +112,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v8-generic-profile-readiness';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v9-decision-critical-readiness';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -267,6 +269,16 @@ export const evaluateCompatibility = ({
     ruleCodes.push(code);
     if (statusRank[next] > statusRank[status]) status = next;
   };
+  const factDispositionFor = (species: DomainSpeciesFact, fact: CompatibilityRequiredFact) => species.compatibilityFactDispositions?.[fact];
+  const hasCoverageMetadata = (species: DomainSpeciesFact) => Boolean(species.compatibilityFactDispositions && Object.keys(species.compatibilityFactDispositions).length > 0);
+  const raiseFactGap = (species: DomainSpeciesFact[], fact: CompatibilityRequiredFact, legacyCode: string) => {
+    const dispositions = species.map(item => factDispositionFor(item, fact)).filter(Boolean) as CompatibilityFactDisposition[];
+    if (dispositions.includes('identity_unresolved')) return raise('insufficient_data', `identity_${fact}_unresolved`);
+    if (dispositions.includes('public_evidence_insufficient')) return raise('insufficient_data', `public_evidence_${fact}_insufficient`);
+    if (dispositions.includes('research_pending')) return raise('caution', `review_pending_${fact}`);
+    return raise('insufficient_data', legacyCode);
+  };
+  const participatingSpecies = [...existingSpecies, ...(candidateSpecies ? [candidateSpecies] : [])];
 
   if (!candidateSpecies) raise('insufficient_data', 'candidate_missing');
   if (candidateSpecies && intent === 'planned_addition' && !tank) raise('insufficient_data', 'tank_missing');
@@ -274,24 +286,33 @@ export const evaluateCompatibility = ({
   const allSpeciesReviewed = Boolean(candidateSpecies)
     && existingSpecies.every(species => species.reviewed)
     && Boolean(candidateSpecies?.reviewed);
-  if (candidateSpecies && !allSpeciesReviewed) raise('insufficient_data', 'species_evidence_unreviewed');
-  const reviewedSpeciesReadiness = [
-    ...existingSpecies,
-    ...(candidateSpecies ? [candidateSpecies] : []),
-  ].filter(species => species.reviewed).map(getCompatibilityTraitReadiness);
-  const missingRequiredFacts = Array.from(new Set(reviewedSpeciesReadiness.flatMap(item => item.missingFacts)));
-  for (const fact of missingRequiredFacts) raise('insufficient_data', `required_fact_${fact}_missing`);
-  const allRequiredTraitsReady = reviewedSpeciesReadiness.every(item => item.ready);
+  const hasIdentityUnresolved = participatingSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('identity_unresolved'));
+  const unreviewedSpecies = participatingSpecies.filter(species => !species.reviewed);
+  const hasUnreviewedPublicEvidenceInsufficient = unreviewedSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('public_evidence_insufficient'));
+  const hasUnreviewedResearchPending = unreviewedSpecies.some(species => Object.values(species.compatibilityFactDispositions || {}).includes('research_pending'));
+  const hasLegacyUnreviewedSpecies = unreviewedSpecies.some(species => !hasCoverageMetadata(species));
+  if (candidateSpecies) {
+    if (hasIdentityUnresolved) raise('insufficient_data', 'species_identity_unresolved');
+    else if (hasUnreviewedPublicEvidenceInsufficient) raise('insufficient_data', 'species_public_evidence_insufficient');
+    else if (hasLegacyUnreviewedSpecies) raise('insufficient_data', 'species_evidence_unreviewed');
+    else if (hasUnreviewedResearchPending || !allSpeciesReviewed) raise('caution', 'species_review_pending');
+  }
+  const reviewedSpeciesReadiness = participatingSpecies.filter(species => species.reviewed).map(species => ({ species, readiness: getCompatibilityTraitReadiness(species) }));
+  for (const { species, readiness } of reviewedSpeciesReadiness) {
+    for (const fact of readiness.missingFacts) raiseFactGap([species], fact, `required_fact_${fact}_missing`);
+  }
+  const allRequiredTraitsReady = reviewedSpeciesReadiness.every(item => item.readiness.ready);
 
   if (candidateSpecies && existingSpecies.length > 0) {
     for (const existing of existingSpecies) {
       const speciesWaterOverlap = waterTypesOverlap(existing, candidateSpecies);
       if (speciesWaterOverlap === null) {
-        raise('insufficient_data', 'water_type_unknown');
+        const missingWater = [existing, candidateSpecies].filter(species => supportedWaterTypes(species).length === 0);
+        raiseFactGap(missingWater, 'water', 'water_type_unknown');
       } else if (!speciesWaterOverlap) {
         raise('not_recommended', 'water_type_conflict');
       }
-      if (!existing.reviewed || !candidateSpecies.reviewed) raise('insufficient_data', 'species_evidence_unreviewed');
+      if ((!existing.reviewed || !candidateSpecies.reviewed) && !hasCoverageMetadata(existing) && !hasCoverageMetadata(candidateSpecies)) raise('insufficient_data', 'species_evidence_unreviewed');
       const existingTargetsCandidate = predationTargetMatches(existing, candidateSpecies);
       const candidateTargetsExisting = predationTargetMatches(candidateSpecies, existing);
       const predator = existingTargetsCandidate ? existing : candidateTargetsExisting ? candidateSpecies : null;
@@ -376,14 +397,16 @@ export const evaluateCompatibility = ({
       }
       const temperatureOverlap = rangesOverlap(existing.temperatureMinC, existing.temperatureMaxC, candidateSpecies.temperatureMinC, candidateSpecies.temperatureMaxC);
       if (temperatureOverlap === null) {
-        raise('insufficient_data', 'temperature_range_missing');
+        const missingTemperature = [existing, candidateSpecies].filter(species => !hasFiniteRange(species.temperatureMinC, species.temperatureMaxC));
+        raiseFactGap(missingTemperature, 'temperature', 'temperature_range_missing');
       } else if (!temperatureOverlap) {
         raise('not_recommended', 'temperature_range_conflict');
       }
       const phRequired = existing.compatibilityRequiredFacts?.includes('ph') || candidateSpecies.compatibilityRequiredFacts?.includes('ph');
       const phOverlap = rangesOverlap(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax);
       if (phOverlap === null && phRequired) {
-        raise('insufficient_data', 'ph_range_missing');
+        const missingPh = [existing, candidateSpecies].filter(species => !hasFiniteRange(species.phMin, species.phMax));
+        raiseFactGap(missingPh, 'ph', 'ph_range_missing');
       } else if (phOverlap === false) {
         raise('caution', 'ph_range_conflict');
       } else if (phRequired && rangesOnlyTouchAtBoundary(existing.phMin, existing.phMax, candidateSpecies.phMin, candidateSpecies.phMax)) {
@@ -404,7 +427,7 @@ export const evaluateCompatibility = ({
   if (candidateSpecies && tank) {
     if (!tank.waterType || tank.waterType === 'unknown') raise('insufficient_data', 'tank_water_type_missing');
     const candidateTankWaterFit = supportsTankWaterType(candidateSpecies, tank.waterType);
-    if (candidateTankWaterFit === null && tank.waterType && tank.waterType !== 'unknown') raise('insufficient_data', 'candidate_water_type_missing');
+    if (candidateTankWaterFit === null && tank.waterType && tank.waterType !== 'unknown') raiseFactGap([candidateSpecies], 'water', 'candidate_water_type_missing');
     if (candidateTankWaterFit === false) {
       raise('not_recommended', 'candidate_tank_water_type_conflict');
     }
@@ -415,6 +438,7 @@ export const evaluateCompatibility = ({
       candidateSpecies.temperatureMinC,
       candidateSpecies.temperatureMaxC,
     );
+    if (candidateTankTemperatureFit === null && tank.targetTemperatureC != null) raiseFactGap([candidateSpecies], 'temperature', 'temperature_range_missing');
     if (candidateTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
     if (candidateSpecies.minTankLiters != null && tank.volumeLiters != null && tank.volumeLiters < candidateSpecies.minTankLiters) {
       raise('caution', 'tank_volume_below_species_minimum');
@@ -431,6 +455,7 @@ export const evaluateCompatibility = ({
         existing.temperatureMinC,
         existing.temperatureMaxC,
       );
+      if (existingTankTemperatureFit === null && tank.targetTemperatureC != null) raiseFactGap([existing], 'temperature', 'temperature_range_missing');
       if (existingTankTemperatureFit === false) raise('not_recommended', 'tank_temperature_conflict');
       if (existing.minTankLiters != null && tank.volumeLiters != null && tank.volumeLiters < existing.minTankLiters) {
         raise('caution', 'tank_volume_below_species_minimum');
@@ -498,15 +523,16 @@ export const evaluateCompatibility = ({
 
   if (ruleCodes.length === 0 && status === 'compatible') ruleCodes.push('compatibility_clear');
 
-  // Preserve hard safety blocks (water/temperature/predation/single-housing)
-  // even when evidence is incomplete, but never upgrade an unreviewed
-  // combination into a positive planning result.
-  const finalStatus: CompatibilityDecisionStatus = candidateSpecies && (!allSpeciesReviewed || !allRequiredTraitsReady) && statusRank[status] < statusRank.insufficient_data
-    ? 'insufficient_data'
-    : status;
-  const decisionReadiness: CompatibilityDecisionReadiness = !allSpeciesReviewed
+  // Missing internal research coverage should make the decision conservative,
+  // not erase an otherwise usable verdict. `insufficient_data` is reserved for
+  // user/tank inputs that are genuinely required, unresolved identity, public
+  // evidence ceilings, malformed reviewed authority, or legacy unreviewed data.
+  // Hard safety blocks always remain stronger than either caution or unknown.
+  const finalStatus: CompatibilityDecisionStatus = status;
+  const hasDecisionCriticalResearchGap = ruleCodes.some(code => code === 'species_review_pending' || code.startsWith('review_pending_'));
+  const decisionReadiness: CompatibilityDecisionReadiness = hasIdentityUnresolved || hasUnreviewedPublicEvidenceInsufficient || hasLegacyUnreviewedSpecies
     ? 'unknown'
-    : !allRequiredTraitsReady || isInsufficientData(finalStatus)
+    : hasDecisionCriticalResearchGap || !allSpeciesReviewed || !allRequiredTraitsReady || isInsufficientData(finalStatus)
       ? 'partial'
       : 'reviewed';
 

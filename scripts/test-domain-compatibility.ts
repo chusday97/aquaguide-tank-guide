@@ -436,4 +436,78 @@ const miniParrotEmergency = evaluateCompatibility({
 assert.equal(miniParrotEmergency.status, 'not_recommended');
 assert.equal(miniParrotEmergency.observedStatus, 'emergency');
 
+const internalResearchGap = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'research-ready-existing' }],
+  candidateSpecies: {
+    ...base,
+    id: 'research-pending-candidate',
+    minTankLiters: null,
+    compatibilityRequiredFacts: ['tank_size'],
+    compatibilityFactDispositions: { tank_size: 'research_pending' },
+  },
+});
+assert.equal(internalResearchGap.status, 'caution', 'internal research backlog must not erase an otherwise usable verdict');
+assert.equal(internalResearchGap.addPolicy, 'confirm');
+assert.equal(internalResearchGap.decisionReadiness, 'partial');
+assert.ok(internalResearchGap.ruleCodes.includes('review_pending_tank_size'));
+assert.ok(!internalResearchGap.ruleCodes.includes('required_fact_tank_size_missing'));
+
+const unreviewedButSourceTracked = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'source-tracked-existing' }],
+  candidateSpecies: {
+    ...base,
+    id: 'source-tracked-candidate',
+    reviewed: false,
+    compatibilityFactDispositions: { territoriality: 'research_pending' },
+  },
+});
+assert.equal(unreviewedButSourceTracked.status, 'caution', 'repository review work in progress must be conservative, not unavailable');
+assert.ok(unreviewedButSourceTracked.ruleCodes.includes('species_review_pending'));
+
+const publicEvidenceCeiling = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'public-evidence-existing' }],
+  candidateSpecies: {
+    ...base,
+    id: 'public-evidence-candidate',
+    reviewed: false,
+    compatibilityFactDispositions: { predation: 'public_evidence_insufficient' },
+  },
+});
+assert.equal(publicEvidenceCeiling.status, 'insufficient_data', 'true public evidence ceilings may still return unavailable');
+assert.equal(publicEvidenceCeiling.addPolicy, 'complete_information');
+assert.ok(publicEvidenceCeiling.ruleCodes.includes('species_public_evidence_insufficient'));
+
+const unresolvedIdentity = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'identity-existing' }],
+  candidateSpecies: {
+    ...base,
+    id: 'trade-name-unresolved',
+    compatibilityFactDispositions: { water: 'identity_unresolved' },
+  },
+});
+assert.equal(unresolvedIdentity.status, 'insufficient_data');
+assert.ok(unresolvedIdentity.ruleCodes.includes('species_identity_unresolved'));
+
+const hardBlockBeatsInternalGap = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'hard-block-freshwater' }],
+  candidateSpecies: {
+    ...base,
+    id: 'hard-block-saltwater',
+    waterType: 'saltwater',
+    compatibilityFactDispositions: { tank_size: 'research_pending' },
+  },
+});
+assert.equal(hardBlockBeatsInternalGap.status, 'not_recommended');
+assert.ok(hardBlockBeatsInternalGap.ruleCodes.includes('water_type_conflict'));
+
 console.log('domain compatibility policy verified: hard biological blocks + soft capacity screening + record-existing allowance');

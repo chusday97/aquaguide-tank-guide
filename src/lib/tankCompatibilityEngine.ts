@@ -23,6 +23,8 @@ import {
   evaluateCompatibility,
   getCompatibilityAddPolicy,
   type CompatibilityIntent,
+  type CompatibilityFactDisposition,
+  type CompatibilityRequiredFact,
   type DomainCompatibilityInput,
   type DomainSpeciesFact,
   type DomainTankFact,
@@ -34,6 +36,7 @@ import {
 import { estimateBioloadUnits } from '../../packages/domain-rules/src';
 import { applyCanonicalCompatibilityDecision } from './compatibility/canonical-result.adapter';
 import { LOCAL_CATALOG_VERSION } from '../data/catalogVersion';
+import { getCompatibilityCoreFieldCoverageRow } from '../services/compatibility/compatibility-field-coverage.service';
 
 export type TankCompatibilityStatus = 'compatible' | 'caution' | 'not_recommended' | 'insufficient_data';
 export type TankCompatibilityRiskLevel = 'none' | 'low' | 'medium' | 'high' | 'unknown';
@@ -759,6 +762,17 @@ const evaluateLegacyTankCompatibility = ({
 const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider): DomainSpeciesFact => {
   const profile = catalogProfileForCompatibility(fish);
   const reviewed = resolveReviewedProfileForFish(fish, provider);
+  const coverage = getCompatibilityCoreFieldCoverageRow(fish);
+  const compatibilityFactDispositions = Object.fromEntries(Object.entries(coverage.fields).map(([field, cell]) => {
+    let disposition: CompatibilityFactDisposition;
+    if (cell.disposition === 'targeted_source_expansion') disposition = 'research_pending';
+    else if (cell.disposition === 'terminal_hold' && cell.authoritySource === 'identity_boundary') disposition = reviewed ? 'ready' : 'identity_unresolved';
+    else if (cell.disposition === 'terminal_hold') disposition = reviewed?.requiredFacts?.includes(field as CompatibilityRequiredFact) ? 'ready' : 'public_evidence_insufficient';
+    else if (cell.disposition === 'domain_extension_required') disposition = reviewed ? 'ready' : 'public_evidence_insufficient';
+    else disposition = 'ready';
+    return [field, disposition];
+  })) as Partial<Record<CompatibilityRequiredFact, CompatibilityFactDisposition>>;
+  const coverageEvidenceIds = Object.values(coverage.fields).flatMap(cell => cell.evidenceIds);
   const staticReviewed = getReviewedCompatibilityProfileForFish(fish);
   const reviewedKnowledge = getReviewedSpeciesKnowledgeForFish(fish);
   const reviewedEnvironment = reviewedKnowledge?.environment?.evidence.reviewStatus === 'reviewed'
@@ -790,9 +804,10 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     minTankLengthCm: reviewedSpace?.minTankLengthCm ?? null,
     reviewed: Boolean(reviewed),
     compatibilityRequiredFacts: reviewed?.requiredFacts,
+    compatibilityFactDispositions,
     minimumGroupSize: reviewedSocial?.minimumGroupSize ?? reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
     stockingGuidance: reviewed?.stockingGuidance,
-    evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...knowledgeEvidenceIds])),
+    evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...(profile.evidenceSourceIds || []), ...knowledgeEvidenceIds, ...coverageEvidenceIds])),
     adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,
     adultLengthMaxCm: reviewedSpace?.adultLengthCm?.max ?? profile.adultLengthMaxCm,
     socialMode: reviewedSocial?.mode ?? profile.socialMode,

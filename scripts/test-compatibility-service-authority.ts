@@ -84,17 +84,18 @@ const legacyCompatibleDomainInsufficient = evaluateTankCompatibility({
   candidateSpecies: makeFish('unreviewed-candidate'),
   intent: 'planned_addition',
 });
-assert.equal(legacyCompatibleDomainInsufficient.metadata.domainStatus, 'insufficient_data');
-assert.equal(legacyCompatibleDomainInsufficient.status, 'insufficient_data');
-assert.equal(getCompatibilityDecision(legacyCompatibleDomainInsufficient).addPolicy, 'complete_information');
-assert.equal(getCompatibilityDecision(legacyCompatibleDomainInsufficient).decisionReadiness, 'unknown');
+assert.equal(legacyCompatibleDomainInsufficient.metadata.domainStatus, 'caution');
+assert.equal(legacyCompatibleDomainInsufficient.status, 'caution');
+assert.equal(getCompatibilityDecision(legacyCompatibleDomainInsufficient).addPolicy, 'confirm');
+assert.equal(getCompatibilityDecision(legacyCompatibleDomainInsufficient).decisionReadiness, 'partial');
+assert.ok(legacyCompatibleDomainInsufficient.metadata.domainRuleCodes.includes('species_review_pending'));
 const legacyEntryDecision = evaluateLegacyEntry({
   tank,
   existingSpecies: [],
   candidateSpecies: makeFish('unreviewed-candidate'),
   intent: 'planned_addition',
 });
-assert.equal(legacyEntryDecision.status, 'insufficient_data');
+assert.equal(legacyEntryDecision.status, 'caution');
 assert.equal(legacyEntryDecision.metadata.domainStatus, legacyEntryDecision.status);
 
 const recordExistingDecision = evaluateTankCompatibility({
@@ -103,7 +104,7 @@ const recordExistingDecision = evaluateTankCompatibility({
   candidateSpecies: makeFish('unreviewed-candidate'),
   intent: 'record_existing',
 });
-assert.equal(recordExistingDecision.status, 'insufficient_data');
+assert.equal(recordExistingDecision.status, 'caution');
 assert.equal(getCompatibilityDecision(recordExistingDecision, 'record_existing').addPolicy, 'allow');
 const recordReview = reviewSpeciesAdditions({
   aquarium: tank,
@@ -111,8 +112,8 @@ const recordReview = reviewSpeciesAdditions({
   speciesCatalog: [makeFish('unreviewed-candidate')],
   intent: 'record_existing',
 });
-assert.equal(recordReview?.status, 'insufficient_data');
-assert.equal(recordReview?.policy, 'save_with_unknown');
+assert.equal(recordReview?.status, 'caution');
+assert.equal(recordReview?.policy, 'save_with_warning');
 
 const plannedWithoutTank = evaluateTankCompatibility({
   existingSpecies: [{ species: reviewedA, record: { quantity: 1 } }],

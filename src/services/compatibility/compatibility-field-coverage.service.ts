@@ -233,19 +233,21 @@ const defaultFastLaneConstraint = (field: CompatibilityCoreField) => {
   return 'Promote only an exact-taxon reviewed fact with source provenance; otherwise keep reviewed_unknown.';
 };
 
+export const getCompatibilityCoreFieldCoverageRow = (fish: Fish): CompatibilityFieldCoverageRow => {
+  const directProfile = getReviewedCompatibilityProfile(fish.id);
+  const resolvedProfile = getReviewedCompatibilityProfileForFish(fish);
+  const fields = Object.fromEntries(coreFields.map(field => [field, fieldCell(fish, field)])) as Record<CompatibilityCoreField, CompatibilityFieldCoverageCell>;
+  const authoritativeFieldCount = coreFields.filter(field => isAuthoritative(fields[field].status)).length;
+  const actionableGapCount = coreFields.filter(field => fields[field].disposition === 'targeted_source_expansion').length;
+  const terminalGapCount = coreFields.filter(field => ['terminal_hold', 'domain_extension_required'].includes(fields[field].disposition)).length;
+  const declared = new Set(resolvedProfile?.requiredFacts || []);
+  const genericOnboardingReady = getLifeType(fish) === 'fish' && !getCatalogIdentityBoundary(fish.id) && Boolean(resolvedProfile)
+    && coreFields.every(field => declared.has(field) && isAuthoritative(fields[field].status));
+  return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
+};
+
 export const buildCompatibilityCoreFieldCoverage = () => {
-  const rows: CompatibilityFieldCoverageRow[] = fishData.map(fish => {
-    const directProfile = getReviewedCompatibilityProfile(fish.id);
-    const resolvedProfile = getReviewedCompatibilityProfileForFish(fish);
-    const fields = Object.fromEntries(coreFields.map(field => [field, fieldCell(fish, field)])) as Record<CompatibilityCoreField, CompatibilityFieldCoverageCell>;
-    const authoritativeFieldCount = coreFields.filter(field => isAuthoritative(fields[field].status)).length;
-    const actionableGapCount = coreFields.filter(field => fields[field].disposition === 'targeted_source_expansion').length;
-    const terminalGapCount = coreFields.filter(field => ['terminal_hold', 'domain_extension_required'].includes(fields[field].disposition)).length;
-    const declared = new Set(resolvedProfile?.requiredFacts || []);
-    const genericOnboardingReady = getLifeType(fish) === 'fish' && !getCatalogIdentityBoundary(fish.id) && Boolean(resolvedProfile)
-      && coreFields.every(field => declared.has(field) && isAuthoritative(fields[field].status));
-    return { speciesId: fish.id, name: fish.name, scientificName: fish.scientificName, lifeType: getLifeType(fish), reviewedProfile: directProfile ? 'direct' : resolvedProfile ? 'inherited' : 'none', genericOnboardingReady, authoritativeFieldCount, actionableGapCount, terminalGapCount, fields };
-  });
+  const rows: CompatibilityFieldCoverageRow[] = fishData.map(getCompatibilityCoreFieldCoverageRow);
 
   const fieldCounts = Object.fromEntries(coreFields.map(field => {
     const counts: Record<CompatibilityFieldCoverageStatus, number> = { reviewed_supported: 0, reviewed_neutral_or_negative: 0, reviewed_unknown: 0, needs_research: 0, missing_identity_or_domain: 0, not_applicable: 0 };
