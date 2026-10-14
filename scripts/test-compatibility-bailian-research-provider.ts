@@ -459,6 +459,73 @@ assert.equal(persistentNetworkPacket.sources[0].contentVerified, true);
 assert.deepEqual(persistentNetworkPacket.claims, [], 'transport outage must never synthesize unsupported claims');
 assert.equal(assessCompatibilitySpeciesResearchPacket(persistentNetworkPacket).status, 'research_pending');
 
+const planetCatfishUrl = 'https://www.planetcatfish.com/cotm/cotm.php?article_id=999';
+const planetCatfishForumUrl = 'https://www.planetcatfish.com/forum/viewtopic.php?t=999';
+let planetCatfishPageFetches = 0;
+let planetCatfishForumFetches = 0;
+const planetCatfishFetch: typeof fetch = async (input, init) => {
+  const url = new URL(String(input));
+  if (url.hostname === 'workspace.cn-beijing.maas.aliyuncs.com') {
+    const body = JSON.parse(String(init?.body || '{}')) as Record<string, unknown>;
+    if (body.enable_search === true) {
+      return new Response(JSON.stringify({
+        choices: [{ message: { content: JSON.stringify({ candidates: [
+          { url: planetCatfishUrl },
+          { url: planetCatfishForumUrl },
+        ] }) } }],
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+    return new Response(JSON.stringify({
+      choices: [{ message: { content: JSON.stringify({ claims: [
+        {
+          field: 'social_behavior',
+          proposedValue: { mode: 'group', minimumGroupSize: 6 },
+          sourceUrl: planetCatfishUrl,
+          evidenceKind: 'direct',
+          confidence: 'high',
+          note: 'Compatibility section directly recommends keeping this exact species in a group of at least six.',
+        },
+      ] }) } }],
+    }), { status: 200, headers: { 'content-type': 'application/json' } });
+  }
+  if (url.toString() === planetCatfishUrl) {
+    planetCatfishPageFetches += 1;
+    return new Response([
+      '<html><head><title>Pseudomugil luminatus specialist species profile</title></head><body>',
+      '<h1>Pseudomugil luminatus</h1>',
+      '<p>Compatibility: keep Pseudomugil luminatus in a group of at least six.</p>',
+      '<p>User data. ' + 'specialist husbandry '.repeat(70) + '</p>',
+      '</body></html>',
+    ].join(''), { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  }
+  if (url.toString() === planetCatfishForumUrl) {
+    planetCatfishForumFetches += 1;
+    throw new Error('PlanetCatfish forum URL must be rejected before fetch');
+  }
+  if (
+    url.hostname === 'www.fishbase.se'
+    || url.hostname === 'www.fishbase.org'
+    || url.hostname === 'www.seriouslyfish.com'
+    || url.hostname === 'animaldiversity.org'
+    || url.hostname === 'www.fishipedia.fr'
+  ) {
+    return new Response('not found', { status: 404, headers: { 'content-type': 'text/html' } });
+  }
+  throw new Error('unexpected PlanetCatfish policy fetch: ' + url);
+};
+const planetCatfishPacket = await createBailianCompatibilitySpeciesResearchProvider(config, planetCatfishFetch).research({
+  catalogKey: 'blind_planetcatfish_specialist_candidate',
+  scientificName,
+  targetFields: ['social_behavior'],
+});
+assert.equal(planetCatfishPageFetches, 1, 'eligible PlanetCatfish exact-taxon specialist pages may enter verified-source acquisition');
+assert.equal(planetCatfishForumFetches, 0, 'PlanetCatfish forums must be rejected before server fetch');
+assert.equal(planetCatfishPacket.sources.length, 1);
+assert.equal(planetCatfishPacket.sources[0].publisher, 'PlanetCatfish');
+assert.equal(planetCatfishPacket.sources[0].sourceType, 'curated_husbandry');
+assert.equal(planetCatfishPacket.claims.length, 1);
+assert.equal(planetCatfishPacket.claims[0].confidence, 'medium', 'specialist PlanetCatfish evidence is candidate-only and must never retain high model confidence');
+
 const sourceDiagnosticNetworkFetch: typeof fetch = async input => {
   const url = new URL(String(input));
   if (url.hostname === 'www.fishbase.se') {

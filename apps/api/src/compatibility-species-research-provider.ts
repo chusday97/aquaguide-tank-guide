@@ -133,11 +133,23 @@ const domainMatches = (host: string, domain: string) => {
   return normalized === expected || normalized.endsWith('.' + expected);
 };
 
+const isAllowedPlanetCatfishPath = (url: URL) => {
+  const path = url.pathname.toLowerCase();
+  if (path.startsWith('/forum/') || path.startsWith('/media/')) return false;
+  if (path === '/common/species.php') return /^\d+$/.test(url.searchParams.get('species_id') || '');
+  if (path === '/cotm/cotm.php') return /^\d+$/.test(url.searchParams.get('article_id') || '');
+  return /^\/[a-z0-9][a-z0-9_-]*\/?$/.test(path);
+};
+
 const classifyTrustedSource = (url: URL): {
   sourceType: CatalogEvidenceSource['sourceType'];
   publisher: string;
 } | null => {
   const host = normalizeHost(url.hostname);
+  if (domainMatches(host, 'planetcatfish.com')) {
+    if (!isAllowedPlanetCatfishPath(url)) return null;
+    return { sourceType: 'curated_husbandry', publisher: 'PlanetCatfish' };
+  }
   const explicit = DEFAULT_TRUSTED_DOMAIN_TYPES.find(item => domainMatches(host, item.domain));
   if (explicit) return { sourceType: explicit.sourceType, publisher: explicit.publisher };
 
@@ -335,7 +347,8 @@ const searchPromptFor = (
     : '',
   'Return JSON only: {"candidates":[{"url":"https://..."}]}.',
   'URLs are untrusted discovery candidates only; do not summarize or invent facts.',
-  'Prefer direct species pages from FishBase, Seriously Fish, Animal Diversity Web, Fishipedia, IUCN, government, university, or primary/peer-reviewed institutional pages.',
+  'Prefer direct species pages from FishBase, Seriously Fish, Animal Diversity Web, Fishipedia, IUCN, government, university, primary/peer-reviewed institutional pages, or PlanetCatfish species/Catfish-of-the-Month pages for specialist catfish husbandry.',
+  'PlanetCatfish forums and media PDFs are not eligible automatic sources; only exact-taxon species or Catfish-of-the-Month pages may be candidates.',
   'Avoid shops, forums, social media, SEO farms, scraped mirrors, search-result URLs, and generic genus pages.',
   'Return only pages that appear to discuss the exact scientific taxon.',
 ].filter(Boolean).join('\n');
@@ -656,7 +669,9 @@ const claimsFromExtraction = (
       proposedValue: claim.proposedValue,
       sourceId: sourceIdFor(document.url),
       evidenceKind: 'direct' as const,
-      confidence: claim.confidence,
+      confidence: document.publisher === 'PlanetCatfish' && claim.confidence === 'high'
+        ? 'medium'
+        : claim.confidence,
       ...(claim.note ? { note: claim.note } : {}),
     }];
   });
