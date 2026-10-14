@@ -15,19 +15,23 @@ export const START_REVIEWED_PAIR_RULES = 21;
 export const START_REVIEWED_STAGE_RISKS = 1;
 export const START_REVIEWED_EVIDENCE = 116;
 
-export const TARGET_MIGRATION_COUNT = 61;
-export const TARGET_LATEST_VERSION = '20261011234500';
-export const TARGET_REVIEWED_PROFILES = 85;
+export const TARGET_MIGRATION_COUNT = 65;
+export const TARGET_LATEST_VERSION = '20261013153000';
+export const TARGET_REVIEWED_PROFILES = 101;
 export const TARGET_REVIEWED_PAIR_RULES = 21;
 export const TARGET_REVIEWED_STAGE_RISKS = 1;
-export const TARGET_REVIEWED_EVIDENCE = 160;
+export const TARGET_REVIEWED_EVIDENCE = 177;
 
-export const CONFIRM_TOKEN = 'EXECUTE_UNIFIED_COMPATIBILITY_NEXT25_MIGRATION';
-export const EXPECTED_CHAIN_FINGERPRINT = 'd035142a6587f74c1266d5f770e56f20f50b0872f4871a3a6e91f77f8942e343';
+export const CONFIRM_TOKEN = 'EXECUTE_FULL_COMPATIBILITY_AUTHORITY_CHAIN_20261014';
+export const EXPECTED_CHAIN_FINGERPRINT = '1add6d6ca318e11c6828c62a050becb7d56996602b6068b6b20e05b8d6792f66';
 export const HELD_MIGRATION = '202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql';
 export const PREREQUISITE_MIGRATIONS = [];
 export const COMPATIBILITY_MIGRATIONS = [
   '20261011234500_compatibility_unified_next25_authority.sql',
+  '20261012001500_compatibility_unified_wave04_authority.sql',
+  '20261012014500_compatibility_unified_wave05_authority.sql',
+  '20261012023000_compatibility_unified_wave06_authority.sql',
+  '20261013153000_compatibility_unified_wave16_authority.sql',
 ];
 export const MIGRATIONS = [...COMPATIBILITY_MIGRATIONS];
 
@@ -40,11 +44,12 @@ const sha256 = value => createHash('sha256').update(value).digest('hex');
 export const getAuthorityKeys = () => {
   const audit = getCompatibilityEvidenceAudit();
   const allProfileKeys = audit.reviewedProfiles.map(item => item.speciesId);
-  const productionTarget = buildCompatibilityProfileRolloutKeysets(allProfileKeys).productionTarget;
+  const productionTarget = buildCompatibilityProfileRolloutKeysets(allProfileKeys).target;
   return {
-    // This guard owns PR #188 only: freeze the exact 85-key predecessor authority.
-    // Stacked wave04 (95 Profiles) has its own migration contract and must not
-    // silently broaden the currently authorized Production migration bundle.
+    // Production promotion now owns the complete reviewed rollout chain from
+    // the live 63-Profile baseline through the repository's 101-Profile target.
+    // The exact key set remains fail-closed even though the individual waves
+    // are executed as one guarded transaction.
     profiles: [...productionTarget].sort(),
     pairRules: audit.reviewedPairRules.map(item => [...item.speciesIds].sort().join('__')).sort(),
     stageRisks: audit.reviewedStageRiskProfiles.map(item => item.speciesId + ':' + item.riskType).sort(),
@@ -60,11 +65,15 @@ export const calculateChainFingerprint = () => sha256(
 
 const expectedTransitions = [
   { name: COMPATIBILITY_MIGRATIONS[0], preProfiles: 63, postProfiles: 85, preEvidence: 116, postEvidence: 160 },
+  { name: COMPATIBILITY_MIGRATIONS[1], preProfiles: 85, postProfiles: 95, preEvidence: 160, postEvidence: 171 },
+  { name: COMPATIBILITY_MIGRATIONS[2], preProfiles: 95, postProfiles: 99, preEvidence: 171, postEvidence: 175 },
+  { name: COMPATIBILITY_MIGRATIONS[3], preProfiles: 99, postProfiles: 100, preEvidence: 175, postEvidence: 176 },
+  { name: COMPATIBILITY_MIGRATIONS[4], preProfiles: 100, postProfiles: 101, preEvidence: 176, postEvidence: 177 },
 ];
 
 export const validateLocalChain = () => {
-  if (MIGRATIONS.length !== 1 || new Set(MIGRATIONS).size !== MIGRATIONS.length) {
-    throw new Error('Incremental Compatibility release must contain exactly one unique migration.');
+  if (MIGRATIONS.length !== 5 || new Set(MIGRATIONS).size !== MIGRATIONS.length) {
+    throw new Error('Compatibility Production release must contain the exact five-migration authority chain.');
   }
   if (MIGRATIONS.includes(HELD_MIGRATION)) throw new Error('Held migration entered incremental release bundle.');
 
@@ -76,9 +85,10 @@ export const validateLocalChain = () => {
       ['PRECHECK evidence', transition.preEvidence],
       ['POSTCHECK evidence', transition.postEvidence],
     ]) {
-      const prefix = label.startsWith('PRECHECK') ? 'expected' : 'expected';
       const noun = label.includes('profile') ? 'reviewed Compatibility profiles' : 'reviewed evidence sources';
-      if (!sql.includes(`${prefix} ${value} ${noun}`)) {
+      const predecessor = label.startsWith('PRECHECK') ? '(?:predecessor )?' : '';
+      const expectedCount = new RegExp(`expected ${predecessor}${value} ${noun}`);
+      if (!expectedCount.test(sql)) {
         throw new Error(`${transition.name} missing chained ${label} count ${value}`);
       }
     }

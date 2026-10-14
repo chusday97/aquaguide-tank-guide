@@ -27,14 +27,18 @@ assert.equal(START_MIGRATION_COUNT, 60);
 assert.equal(START_LATEST_VERSION, '20261011213000');
 assert.equal(START_REVIEWED_PROFILES, 63);
 assert.equal(START_REVIEWED_EVIDENCE, 116);
-assert.equal(TARGET_MIGRATION_COUNT, 61);
-assert.equal(TARGET_LATEST_VERSION, '20261011234500');
-assert.equal(TARGET_REVIEWED_PROFILES, 85);
-assert.equal(TARGET_REVIEWED_EVIDENCE, 160);
+assert.equal(TARGET_MIGRATION_COUNT, 65);
+assert.equal(TARGET_LATEST_VERSION, '20261013153000');
+assert.equal(TARGET_REVIEWED_PROFILES, 101);
+assert.equal(TARGET_REVIEWED_EVIDENCE, 177);
 assert.equal(PREREQUISITE_MIGRATIONS.length, 0);
-assert.equal(COMPATIBILITY_MIGRATIONS.length, 1);
+assert.equal(COMPATIBILITY_MIGRATIONS.length, 5);
 assert.deepEqual(MIGRATIONS, [
   '20261011234500_compatibility_unified_next25_authority.sql',
+  '20261012001500_compatibility_unified_wave04_authority.sql',
+  '20261012014500_compatibility_unified_wave05_authority.sql',
+  '20261012023000_compatibility_unified_wave06_authority.sql',
+  '20261013153000_compatibility_unified_wave16_authority.sql',
 ]);
 assert.ok(!MIGRATIONS.includes(HELD_MIGRATION));
 
@@ -42,7 +46,7 @@ assert.equal(calculateChainFingerprint(), EXPECTED_CHAIN_FINGERPRINT);
 const local = validateLocalChain();
 assert.deepEqual(
   [local.authority.profiles.length, local.authority.pairRules.length, local.authority.stageRisks.length],
-  [85, 21, 1],
+  [101, 21, 1],
 );
 assert.deepEqual(getAuthorityKeys().stageRisks, ['sp_0436:conspecific_fry_predation']);
 
@@ -86,4 +90,4 @@ assert.throws(() => validateLivePreflight({ ...good, migration_count: 61 }), /Pr
 assert.throws(() => validateLivePreflight({ ...good, profiles: 64 }), /Production preflight drift/);
 assert.throws(() => validateLivePreflight({ ...good, evidence: 117 }), /Production preflight drift/);
 
-console.log('Compatibility Production incremental migration guard verified: exact 60→61 migration state, 63→85 Profiles, 116→160 evidence, atomic one-file rollback/commit bundle.');
+console.log('Compatibility Production migration guard verified: exact 60→65 migration state, 63→101 Profiles, 116→177 evidence, atomic five-migration rollback/commit bundle.');

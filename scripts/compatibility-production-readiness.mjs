@@ -1,6 +1,7 @@
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence.ts';
 import {
   PRODUCTION_PROJECT_REF,
+  TARGET_REVIEWED_EVIDENCE,
   readLinkedProjectRef,
 } from './compatibility-production-migration-guard.mjs';
 import {
@@ -13,6 +14,7 @@ const expected = {
   profiles: audit.reviewedProfiles.length,
   pairRules: audit.reviewedPairRules.length,
   stageRisks: audit.reviewedStageRiskProfiles.length,
+  evidenceSources: TARGET_REVIEWED_EVIDENCE,
 };
 
 const envInt = (name, fallback = 0) => {
@@ -27,7 +29,7 @@ export const buildReadiness = live => {
   if (live.profiles !== expected.profiles) blockers.push(`reviewed_profiles:${live.profiles}/${expected.profiles}`);
   if (live.pairRules !== expected.pairRules) blockers.push(`reviewed_pair_rules:${live.pairRules}/${expected.pairRules}`);
   if (live.stageRisks !== expected.stageRisks) blockers.push(`reviewed_stage_risks:${live.stageRisks}/${expected.stageRisks}`);
-  if (live.evidenceSources <= 0) blockers.push('reviewed_evidence_sources_missing');
+  if (live.evidenceSources !== expected.evidenceSources) blockers.push(`reviewed_evidence_sources:${live.evidenceSources}/${expected.evidenceSources}`);
 
   return {
     phase: blockers.length ? 'BLOCKED_COMPATIBILITY_DB' : 'READY_COMPATIBILITY_DB',
