@@ -271,6 +271,7 @@
     "test:compatibility-generic-species-onboarding": "node --import tsx scripts/test-compatibility-generic-species-onboarding.ts",
     "test:compatibility-auto-onboarding-blind": "node --import tsx scripts/test-compatibility-auto-onboarding-blind.ts",
     "test:compatibility-gbif-identity": "node --import tsx scripts/test-gbif-species-identity.ts",
+    "test:compatibility-bailian-research-provider": "node --import tsx scripts/test-compatibility-bailian-research-provider.ts",
     "generate:compatibility-core-field-coverage": "node --import tsx scripts/generate-compatibility-core-field-coverage.ts",
     "test:compatibility-core-field-coverage": "node --import tsx scripts/test-compatibility-core-field-coverage.ts",
     "test:compatibility-service": "node --import tsx scripts/test-compatibility-service-authority.ts",

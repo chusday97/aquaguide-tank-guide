@@ -20,6 +20,7 @@ const gates = [
   ['Generic Species Onboarding', 'npm', ['run', 'test:compatibility-generic-species-onboarding']],
   ['Compatibility Auto Onboarding Blind', 'npm', ['run', 'test:compatibility-auto-onboarding-blind']],
   ['Compatibility GBIF Identity', 'npm', ['run', 'test:compatibility-gbif-identity']],
+  ['Compatibility Bailian Research Provider', 'npm', ['run', 'test:compatibility-bailian-research-provider']],
   ['Compatibility Core Field Coverage', 'npm', ['run', 'test:compatibility-core-field-coverage']],
   ['Compatibility Service Authority', 'npm', ['run', 'test:compatibility-service']],
   ['Compatibility V4 AI Shadow', 'npm', ['run', 'test:compatibility-v4-ai-shadow']],
