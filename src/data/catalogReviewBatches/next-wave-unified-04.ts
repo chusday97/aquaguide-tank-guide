@@ -78,7 +78,7 @@ for (const [speciesId, scientificName, variantKey, variantSource] of [
     supported(speciesId,'temperature',{min:22,max:28},ids),
     supported(speciesId,'ph',{min:5,max:8},ids),
     supported(speciesId,'adult_size',{min:null,max:90},ids),
-    unknown(speciesId,'tank_size','No new numeric tank minimum is invented for the ornamental variant.',ids),
+    supported(speciesId,'tank_size',{liters:null,lengthCm:200},ids,['The reviewed base-taxon husbandry source explicitly requires a tank at least 2 m long; the reviewed variant bridge permits reusing that same-species requirement without inventing liters.']),
     supported(speciesId,'social_behavior',{mode:'variable',minimumGroupSize:null},ids,['Reuses reviewed base-taxon social authority.']),
     unknown(speciesId,'territoriality','No separate variant territoriality rule is established.',ids),
     supported(speciesId,'predation',{targets:['small_fish']},ids,['Reuses reviewed base-taxon predation boundary.']),

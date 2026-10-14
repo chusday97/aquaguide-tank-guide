@@ -159,7 +159,11 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
   }
   if (item.id === 'sp_0447') {
     const tank = reviews.find(review => review.field === 'tank_size');
+    const social = reviews.find(review => review.field === 'social_behavior');
+    const predation = reviews.find(review => review.field === 'predation');
     if (tank) Object.assign(tank, supportedHighYield(item.id, 'tank_size', { liters: 255, lengthCm: 120 }, husbandryCitation, ['The source gives roughly 120 × 45 × 45 cm / 255 L for a few juveniles or a breeding pair; no group-size extrapolation is added.']));
+    if (social) Object.assign(social, supportedHighYield(item.id, 'social_behavior', { mode: 'group', minimumGroupSize: null }, husbandryCitation, ['The exact-taxon page states that wild fish live in schools and labels the species as needing a group; no numeric aquarium group minimum is inferred.']));
+    if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: [] }, husbandryCitation, ['The exact-taxon page describes a peaceful community fish whose natural diet is zooplankton, insects and small invertebrates; no generic fish-predation target is promoted.']));
   }
   return reviews;
 };

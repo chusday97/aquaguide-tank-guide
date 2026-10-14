@@ -12,8 +12,8 @@
     "predation"
   ],
   "genericOnboardingReadySpecies": 30,
-  "coreFieldCompleteSpecies": 32,
-  "oneFieldGapSpecies": 18,
+  "coreFieldCompleteSpecies": 33,
+  "oneFieldGapSpecies": 23,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -50,17 +50,17 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 63,
+      "reviewed_supported": 68,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 37,
+      "reviewed_unknown": 32,
       "needs_research": 87,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 83,
+      "reviewed_supported": 84,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 104,
+      "reviewed_unknown": 103,
       "needs_research": 0,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -75,8 +75,8 @@
     },
     "predation": {
       "reviewed_supported": 41,
-      "reviewed_neutral_or_negative": 12,
-      "reviewed_unknown": 130,
+      "reviewed_neutral_or_negative": 14,
+      "reviewed_unknown": 128,
       "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -85,7 +85,7 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 124
+      "count": 119
     },
     {
       "field": "ph",
@@ -109,11 +109,11 @@
     },
     {
       "field": "predation",
-      "count": 50
+      "count": 48
     },
     {
       "field": "social_behavior",
-      "count": 19
+      "count": 18
     }
   ],
   "rows": [
@@ -4589,8 +4589,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4630,14 +4630,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-altolamprologus-calvus",
             "fishipedia-altolamprologus-calvus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -4658,14 +4657,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-altolamprologus-calvus",
             "fishipedia-altolamprologus-calvus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -7998,8 +7996,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -8043,14 +8041,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-scleropages-formosus",
             "seriouslyfish-scleropages-formosus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -8089,8 +8086,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -8138,15 +8135,15 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch19-fishbase-scleropages-formosus-red",
             "batch19-fishbase-scleropages-formosus",
             "seriouslyfish-scleropages-formosus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -9097,8 +9094,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -9146,15 +9143,15 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch19-fishbase-scleropages-formosus-green",
             "batch19-fishbase-scleropages-formosus",
             "seriouslyfish-scleropages-formosus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -22875,8 +22872,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -22924,15 +22921,15 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "wave06-peer-reviewed-scleropages-formosus-super-red",
             "batch19-fishbase-scleropages-formosus",
             "seriouslyfish-scleropages-formosus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -35363,8 +35360,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 3,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35417,14 +35414,13 @@
           "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-symphysodon-aequifasciatus",
-            "batch-02-worms-symphysodon-aequifasciatus"
+            "seriouslyfish-symphysodon-aequifasciatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_unknown",
@@ -35437,14 +35433,13 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-symphysodon-aequifasciatus",
-            "batch-02-worms-symphysodon-aequifasciatus"
+            "seriouslyfish-symphysodon-aequifasciatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

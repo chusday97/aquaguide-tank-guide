@@ -694,6 +694,29 @@ const cases: Array<{ name: string; run: () => boolean }> = [
     },
   },
   {
+    name: 'reviewed Asian-arowana variants carry approved 200cm tank-length authority into Domain readiness',
+    run: () => {
+      const variants = ['sp_0104', 'sp_0116', 'sp_0283'].map(id => fishData.find(item => item.id === id));
+      if (variants.some(item => !item)) return false;
+      return variants.every(variant => {
+        const shortTank = evaluateLegacyTankCompatibility({
+          tank: makeTank({ dimensions: { length: '190', width: '100', height: '100' }, targetTemperature: '25' }),
+          candidateSpecies: variant!,
+          candidateQuantity: 1,
+        });
+        const longTank = evaluateLegacyTankCompatibility({
+          tank: makeTank({ dimensions: { length: '210', width: '100', height: '100' }, targetTemperature: '25' }),
+          candidateSpecies: variant!,
+          candidateQuantity: 1,
+        });
+        return shortTank.warningRules.some(rule => rule.code === 'tank_length_below_species_minimum')
+          && !shortTank.metadata.domainRuleCodes.includes('required_fact_tank_size_missing')
+          && !longTank.metadata.domainRuleCodes.includes('required_fact_tank_size_missing')
+          && longTank.warningRules.every(rule => rule.code !== 'tank_length_below_species_minimum');
+      });
+    },
+  },
+  {
     name: 'reviewed Discus authority enforces warm-water school and contextual breeding defense',
     run: () => {
       const discus = fishData.find(item => item.id === 'sp_0447');

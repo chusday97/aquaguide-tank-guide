@@ -63,7 +63,9 @@ export const nextWaveUnified06FieldReviews: CatalogFieldReview[] = [
   supported('sp_0283', 'temperature', { min: 22, max: 28 }, bridgeIds),
   supported('sp_0283', 'ph', { min: 5, max: 8 }, bridgeIds),
   supported('sp_0283', 'adult_size', { min: null, max: 90 }, bridgeIds),
-  unknown('sp_0283', 'tank_size', 'No new numeric tank minimum is invented for the Super Red phenotype.', bridgeIds),
+  supported('sp_0283', 'tank_size', { liters: null, lengthCm: 200 }, bridgeIds, [
+    'The reviewed base-taxon husbandry source explicitly requires a tank at least 2 m long; the peer-reviewed Super Red identity bridge permits reusing that same-species requirement without inventing liters.',
+  ]),
   supported(
     'sp_0283',
     'social_behavior',

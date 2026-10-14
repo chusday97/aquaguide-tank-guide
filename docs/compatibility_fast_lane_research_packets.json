@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 18,
+  "totalPackets": 23,
   "packets": [
     {
       "speciesId": "sp_0018",
@@ -340,6 +340,74 @@
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     },
     {
+      "speciesId": "sp_0103",
+      "name": "金龙鱼",
+      "scientificName": "Scleropages formosus",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch19-fishbase-scleropages-formosus",
+        "seriouslyfish-scleropages-formosus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch19-fishbase-scleropages-formosus",
+          "title": "Scleropages formosus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-scleropages-formosus",
+          "title": "Scleropages formosus (Asian Arowana)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0104",
+      "name": "红龙鱼",
+      "scientificName": "Scleropages formosus var. Red",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch19-fishbase-scleropages-formosus-red",
+        "batch19-fishbase-scleropages-formosus",
+        "seriouslyfish-scleropages-formosus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch19-fishbase-scleropages-formosus-red",
+          "title": "Scleropages formosus Red variant review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/6357",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "batch19-fishbase-scleropages-formosus",
+          "title": "Scleropages formosus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-scleropages-formosus",
+          "title": "Scleropages formosus (Asian Arowana)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
       "speciesId": "sp_0105",
       "name": "恐龙鱼 (大花)",
       "scientificName": "Polypterus ornatipinnis",
@@ -363,6 +431,44 @@
           "title": "Polypterus ornatapinnis (Ornate Bichir)",
           "publisher": "Seriously Fish",
           "url": "https://www.seriouslyfish.com/species/polypterus-ornatapinnis",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0116",
+      "name": "亚洲龙鱼 (青龙)",
+      "scientificName": "Scleropages formosus",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch19-fishbase-scleropages-formosus-green",
+        "batch19-fishbase-scleropages-formosus",
+        "seriouslyfish-scleropages-formosus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch19-fishbase-scleropages-formosus-green",
+          "title": "Scleropages formosus Green variant review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/Summary/Scleropages-formosus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "batch19-fishbase-scleropages-formosus",
+          "title": "Scleropages formosus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-scleropages-formosus",
+          "title": "Scleropages formosus (Asian Arowana)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
           "reviewStatus": "reviewed"
         }
       ],
@@ -400,6 +506,44 @@
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     },
     {
+      "speciesId": "sp_0283",
+      "name": "血红龙",
+      "scientificName": "Scleropages formosus var. Super Red",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "wave06-peer-reviewed-scleropages-formosus-super-red",
+        "batch19-fishbase-scleropages-formosus",
+        "seriouslyfish-scleropages-formosus"
+      ],
+      "existingSources": [
+        {
+          "id": "wave06-peer-reviewed-scleropages-formosus-super-red",
+          "title": "Cytogenetics Meets Genomics: Cytotaxonomy and Genomic Relationships among Color Variants of the Asian Arowana Scleropages formosus",
+          "publisher": "International Journal of Molecular Sciences",
+          "url": "https://pubmed.ncbi.nlm.nih.gov/37240350/",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "batch19-fishbase-scleropages-formosus",
+          "title": "Scleropages formosus species review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-scleropages-formosus",
+          "title": "Scleropages formosus (Asian Arowana)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
       "speciesId": "sp_0443",
       "name": "熊猫鼠",
       "scientificName": "Corydoras panda",
@@ -422,6 +566,21 @@
       "currentReasonCode": "reviewed_field_unknown",
       "existingEvidenceIds": [
         "batch-02-fishbase-pterophyllum-scalare"
+      ],
+      "existingSources": [],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    },
+    {
+      "speciesId": "sp_0447",
+      "name": "七彩神仙鱼（七彩鱼）",
+      "scientificName": "Symphysodon aequifasciatus",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch-02-fishbase-symphysodon-aequifasciatus",
+        "batch-02-worms-symphysodon-aequifasciatus"
       ],
       "existingSources": [],
       "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",

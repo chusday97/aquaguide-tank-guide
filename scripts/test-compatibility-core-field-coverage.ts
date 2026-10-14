@@ -64,6 +64,15 @@ assert.equal(rowOf('sp_0218')?.fields.territoriality.status, 'reviewed_supported
 assert.equal(rowOf('sp_0218')?.fields.predation.status, 'reviewed_neutral_or_negative');
 assert.equal(rowOf('sp_0187')?.fields.adult_size.status, 'reviewed_unknown', 'do not promote new Chrysiptera adult-size authority from the migration-owned AI-generated page');
 assert.equal(rowOf('sp_0187')?.fields.tank_size.status, 'reviewed_unknown', 'do not promote new Chrysiptera tank-size authority from the migration-owned AI-generated page');
+assert.equal(rowOf('sp_0057')?.fields.tank_size.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0057')?.fields.predation.status, 'reviewed_neutral_or_negative');
+assert.equal(rowOf('sp_0057')?.authoritativeFieldCount, 8);
+for (const speciesId of ['sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
+  assert.equal(rowOf(speciesId)?.fields.tank_size.status, 'reviewed_supported', `${speciesId} should inherit only the exact reviewed 200 cm base-taxon tank-length minimum`);
+  assert.equal(rowOf(speciesId)?.fields.territoriality.status, 'reviewed_unknown', `${speciesId} territoriality must remain unknown rather than inferred from general husbandry`);
+}
+assert.equal(rowOf('sp_0447')?.fields.social_behavior.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0447')?.fields.predation.status, 'reviewed_neutral_or_negative');
 
 const approvedValue = (speciesId: string, field: string) => getApprovedCatalogFieldReviews(speciesId).find(review => review.field === field)?.proposedValue;
 assert.deepEqual(approvedValue('sp_0014', 'tank_size'), { liters: 72, lengthCm: 80 });
@@ -76,6 +85,13 @@ assert.deepEqual(approvedValue('sp_0184', 'temperature'), { min: 24, max: 28 });
 assert.deepEqual(approvedValue('sp_0184', 'ph'), { min: 8.1, max: 8.4 });
 assert.deepEqual(approvedValue('sp_0184', 'adult_size'), { min: null, max: 10 });
 assert.deepEqual(approvedValue('sp_0218', 'social_behavior'), { mode: 'group', minimumGroupSize: 8 });
+assert.deepEqual(approvedValue('sp_0057', 'tank_size'), { liters: 250, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0057', 'predation'), { targets: [] });
+for (const speciesId of ['sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
+  assert.deepEqual(approvedValue(speciesId, 'tank_size'), { liters: null, lengthCm: 200 }, `${speciesId} must not invent a tank-volume minimum`);
+}
+assert.deepEqual(approvedValue('sp_0447', 'social_behavior'), { mode: 'group', minimumGroupSize: null });
+assert.deepEqual(approvedValue('sp_0447', 'predation'), { targets: [] });
 for (const field of fields) {
   assert.equal(Object.values(summary.fieldCounts[field]).reduce((sum, value) => sum + value, 0), rows.length);
 }

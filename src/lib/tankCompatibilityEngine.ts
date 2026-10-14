@@ -801,7 +801,7 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     phMin: reviewedEnvironment?.phRange?.min ?? profile.phMin,
     phMax: reviewedEnvironment?.phRange?.max ?? profile.phMax,
     minTankLiters: reviewedSpace?.minVolumeLiters ?? profile.minTankLiters,
-    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? null,
+    minTankLengthCm: reviewedSpace?.minTankLengthCm ?? profile.minTankLengthCm ?? null,
     reviewed: Boolean(reviewed),
     compatibilityRequiredFacts: reviewed?.requiredFacts,
     compatibilityFactDispositions,

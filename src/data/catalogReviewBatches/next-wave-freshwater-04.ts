@@ -240,14 +240,18 @@ export const nextWaveFreshwater04FieldReviews: CatalogFieldReview[] = [
   supported('sp_0057', 'temperature', { min: 23, max: 25 }, [calvusFishBase.id]),
   supported('sp_0057', 'ph', { min: 8.0, max: 9.0 }, [calvusFishBase.id]),
   supported('sp_0057', 'adult_size', { min: null, max: 13.5 }, [calvusFishBase.id]),
-  unknown('sp_0057', 'tank_size', 'Reviewed sources in this wave do not establish a numeric household minimum tank size.'),
+  supported('sp_0057', 'tank_size', { liters: 250, lengthCm: null }, [calvusFishipedia.id], [
+    'Fishipedia explicitly gives a 250 L minimum for community aquarium maintenance; no smaller inferred footprint is added.',
+  ], 'medium'),
   supported('sp_0057', 'social_behavior', { mode: 'variable', minimumGroupSize: null }, [calvusFishipedia.id], [
     'Fishipedia describes pair-or-solitary sociality and a calm baseline temperament.',
   ], 'medium'),
   supported('sp_0057', 'territoriality', { traits: ['territorial', 'intraspecific_aggression'] }, [calvusFishipedia.id], [
     'Territoriality is relatively mild overall but males defend space, particularly toward same-sex conspecifics.',
   ], 'medium'),
-  unknown('sp_0057', 'predation', 'FishBase supports predation on shrimps and crustaceans, but the current generic target vocabulary cannot safely map that evidence to every catalog invertebrate.'),
+  supported('sp_0057', 'predation', { targets: [] }, [calvusFishipedia.id], [
+    'Fishipedia describes the species as a specialist predator of small aquatic invertebrates and gives fish-community guidance; no generic fish-predation target is promoted.',
+  ], 'medium'),
   supported('sp_0057', 'breeding_behavior', { traits: ['female_egg_guarding', 'breeding_defense'] }, [calvusFishBase.id]),
 
   identity('sp_0058', 'Neolamprologus multifasciatus', multifasciatusFishBase.id),

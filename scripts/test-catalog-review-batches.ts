@@ -50,7 +50,7 @@ const rhodeusApprovedFields = getApprovedCatalogFieldReviews('sp_0475').map(revi
 assert.deepEqual(rhodeusApprovedFields, ['adult_size', 'identity', 'temperature']);
 assert.equal(getApprovedCatalogFieldReviews('sp_0475').some(review => review.field === 'water'), false, 'Rhodeus freshwater+brackish source must not collapse into a single freshwater runtime fact');
 assert.equal(legacyVerifiedSourceIds.size, 42);
-assert.equal(runtimeApprovedFields, 117);
-assert.equal(supported, 121);
-assert.equal(unknown, 179);
+assert.equal(runtimeApprovedFields, 119);
+assert.equal(supported, 123);
+assert.equal(unknown, 177);
 console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: legacyVerifiedSourceIds.size, runtimeApprovedFields }, null, 2));
