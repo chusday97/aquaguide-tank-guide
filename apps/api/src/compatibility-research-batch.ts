@@ -26,6 +26,8 @@ export type CompatibilityResearchBatchPreviewResult = {
     terminalHold: number;
     identityHolds: number;
     providerErrors: number;
+    requestedGapComplete: number;
+    requestedGapPending: number;
   };
   results: Array<Record<string, unknown>>;
   writesAuthority: false;
@@ -54,6 +56,8 @@ export const runCompatibilityResearchBatchPreview = async (
         terminalHold: 0,
         identityHolds: 0,
         providerErrors: 0,
+        requestedGapComplete: 0,
+        requestedGapPending: 0,
       },
       results: [],
       writesAuthority: false,
@@ -106,6 +110,9 @@ export const runCompatibilityResearchBatchPreview = async (
             scientificName: job.baseScientificName,
             commonName: job.catalogObjects[0]?.name,
           },
+          {
+            researchScopeFields: job.combinedGapFields,
+          },
         );
         results[index] = {
           ...baseResult,
@@ -141,6 +148,11 @@ export const runCompatibilityResearchBatchPreview = async (
     item => (item.assessment as { status?: string } | undefined)?.status === 'terminal_hold',
   ).length;
   const nextOffset = offset + jobs.length < allJobs.length ? offset + jobs.length : null;
+  const requestedGapComplete = assessed.filter(item => (
+    (item.researchScope as { complete?: boolean } | undefined)?.complete === true
+    && (item.assessment as { status?: string } | undefined)?.status !== 'terminal_hold'
+  )).length;
+  const requestedGapPending = assessed.length - requestedGapComplete;
 
   return {
     status: 'research_batch_assessed',
@@ -155,6 +167,8 @@ export const runCompatibilityResearchBatchPreview = async (
       terminalHold,
       identityHolds: results.filter(item => item.status === 'identity_hold').length,
       providerErrors: results.filter(item => item.status === 'provider_error').length,
+      requestedGapComplete,
+      requestedGapPending,
     },
     results,
     writesAuthority: false,

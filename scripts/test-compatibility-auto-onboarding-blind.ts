@@ -139,6 +139,37 @@ assert.deepEqual([...targetedRetryCalls[1]!].sort(), ['predation', 'territoriali
 assert.equal(targetedRetry.packet.sources.length, completePacket.sources.length, 'packet merge must dedupe already-seen sources');
 assert.equal(targetedRetry.packet.claims.length, completePacket.claims.length, 'packet merge must dedupe claims while adding targeted evidence');
 
+const scopedCalls: Array<CompatibilityOnboardingCoreField[] | undefined> = [];
+const scopedProvider: CompatibilitySpeciesResearchProvider = {
+  id: 'scoped-research-provider',
+  research: async input => {
+    scopedCalls.push(input.targetFields);
+    const requested = input.targetFields ?? [];
+    const firstPass = scopedCalls.length === 1;
+    const selectedClaims = firstPass
+      ? completePacket.claims.filter(claim => claim.field === 'territoriality')
+      : completePacket.claims.filter(claim => requested.includes(claim.field));
+    return {
+      ...completePacket,
+      packetId: firstPass ? 'scoped-initial' : 'scoped-retry',
+      providerId: 'scoped-research-provider',
+      claims: selectedClaims,
+    };
+  },
+};
+const scopedResearch = await researchAndAssessCompatibilitySpeciesDetailed(
+  scopedProvider,
+  { catalogKey, scientificName, commonName: 'Red neon blue-eye' },
+  { researchScopeFields: ['territoriality', 'predation'] },
+);
+assert.equal(scopedResearch.assessment.status, 'research_pending', 'scoped backlog research does not pretend the packet is a complete new-species profile');
+assert.equal(scopedResearch.researchScope.complete, true, 'existing-catalog research is complete when all requested backlog fields are supported');
+assert.deepEqual(scopedResearch.researchScope.unresolvedFields, []);
+assert.deepEqual(scopedCalls[0], ['territoriality', 'predation'], 'existing-catalog first pass must search only real catalog gaps');
+assert.deepEqual(scopedCalls[1], ['predation'], 'second pass must retry only the unresolved subset of the real catalog gaps');
+assert.equal(scopedResearch.targetedRetry.attempted, true);
+
+
 
 const identityHold = await runCompatibilitySpeciesOnboardingPipeline({
   id: 'blind-identity-provider',

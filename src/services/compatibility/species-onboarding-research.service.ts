@@ -68,6 +68,10 @@ export type CompatibilitySpeciesResearchInput = {
   targetFields?: CompatibilityOnboardingCoreField[];
 };
 
+export type CompatibilityResearchAssessmentOptions = {
+  researchScopeFields?: CompatibilityOnboardingCoreField[];
+};
+
 export interface CompatibilitySpeciesResearchProvider {
   id: string;
   research(input: CompatibilitySpeciesResearchInput): Promise<CompatibilitySpeciesResearchPacket>;
@@ -627,11 +631,40 @@ const retryableResearchFields = (
   .filter(resolution => resolution.status === 'missing' || resolution.status === 'invalid_or_unverified')
   .map(resolution => resolution.field);
 
+const normalizedResearchScopeFields = (
+  fields?: CompatibilityOnboardingCoreField[],
+) => {
+  if (!fields || fields.length === 0) return [...coreFields];
+  const requested = new Set(fields);
+  return coreFields.filter(field => requested.has(field));
+};
+
+const researchScopeSummary = (
+  assessment: CompatibilitySpeciesOnboardingAssessment,
+  scopeFields: CompatibilityOnboardingCoreField[],
+) => {
+  const scopedResolutions = assessment.fieldResolutions.filter(resolution => scopeFields.includes(resolution.field));
+  const unresolvedFields = scopedResolutions
+    .filter(resolution => resolution.status !== 'supported')
+    .map(resolution => resolution.field);
+  return {
+    fields: scopeFields,
+    unresolvedFields,
+    complete: scopeFields.length > 0 && unresolvedFields.length === 0,
+  };
+};
+
 export const researchAndAssessCompatibilitySpeciesDetailed = async (
   provider: CompatibilitySpeciesResearchProvider,
   input: CompatibilitySpeciesResearchInput,
+  options: CompatibilityResearchAssessmentOptions = {},
 ) => {
-  const initialInput: CompatibilitySpeciesResearchInput = { ...input, targetFields: undefined };
+  const researchScopeFields = normalizedResearchScopeFields(options.researchScopeFields);
+  const scopedExistingResearch = Boolean(options.researchScopeFields?.length);
+  const initialInput: CompatibilitySpeciesResearchInput = {
+    ...input,
+    targetFields: scopedExistingResearch ? researchScopeFields : undefined,
+  };
   const initialPacket = await provider.research(initialInput);
   const initialAssessment = withProviderContractGate(
     provider,
@@ -639,12 +672,14 @@ export const researchAndAssessCompatibilitySpeciesDetailed = async (
     initialPacket,
     assessCompatibilitySpeciesResearchPacket(initialPacket),
   );
+  const initialResearchScope = researchScopeSummary(initialAssessment, researchScopeFields);
 
-  if (initialAssessment.status !== 'research_pending') {
+  if (initialAssessment.status !== 'research_pending' || initialResearchScope.complete) {
     return {
       packet: initialPacket,
       assessment: initialAssessment,
       initialAssessment,
+      researchScope: initialResearchScope,
       targetedRetry: {
         attempted: false as const,
         targetFields: [] as CompatibilityOnboardingCoreField[],
@@ -652,12 +687,15 @@ export const researchAndAssessCompatibilitySpeciesDetailed = async (
     };
   }
 
-  const targetFields = retryableResearchFields(initialAssessment);
+  const allowedRetryFields = new Set(researchScopeFields);
+  const targetFields = retryableResearchFields(initialAssessment)
+    .filter(field => allowedRetryFields.has(field));
   if (targetFields.length === 0) {
     return {
       packet: initialPacket,
       assessment: initialAssessment,
       initialAssessment,
+      researchScope: initialResearchScope,
       targetedRetry: {
         attempted: false as const,
         targetFields,
@@ -681,6 +719,10 @@ export const researchAndAssessCompatibilitySpeciesDetailed = async (
         candidateProfile: null,
       },
       initialAssessment,
+      researchScope: {
+        ...initialResearchScope,
+        complete: false,
+      },
       targetedRetry: {
         attempted: true as const,
         targetFields,
@@ -695,6 +737,7 @@ export const researchAndAssessCompatibilitySpeciesDetailed = async (
     packet,
     assessment,
     initialAssessment,
+    researchScope: researchScopeSummary(assessment, researchScopeFields),
     targetedRetry: {
       attempted: true as const,
       targetFields,
