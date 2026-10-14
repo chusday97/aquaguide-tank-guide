@@ -11,6 +11,11 @@ const isConfiguredApiKey = (apiKey) => Boolean(
 
 const apiKey = [process.env.AI_API_KEY, process.env.DEEPSEEK_API_KEY].find(isConfiguredApiKey) || '';
 
+const compatibilityResearchApiKey = process.env.COMPATIBILITY_RESEARCH_AI_API_KEY || '';
+const compatibilityResearchBaseUrl = (process.env.COMPATIBILITY_RESEARCH_AI_BASE_URL || '').replace(/\/$/, '');
+const compatibilityResearchModel = process.env.COMPATIBILITY_RESEARCH_AI_MODEL || '';
+const compatibilityResearchTimeoutMs = Number(process.env.COMPATIBILITY_RESEARCH_TIMEOUT_MS || 20_000);
+
 export const config = {
   maxDuration: 15,
 };
@@ -34,7 +39,9 @@ export default async function handler(req, res) {
   }
 
   const requestUrl = new URL(req.url || '/api/health', 'https://aquaguide.local');
-  const shouldProbe = requestUrl.searchParams.get('probe') === '1';
+  const probe = requestUrl.searchParams.get('probe');
+  const shouldProbe = probe === '1';
+  const shouldProbeCompatibilityResearch = probe === 'compatibility-research';
   const configured = isConfiguredApiKey(apiKey);
 
   const base = {
@@ -45,6 +52,73 @@ export default async function handler(req, res) {
     configured,
     timeoutMs: aiRequestTimeoutMs,
   };
+
+  if (shouldProbeCompatibilityResearch) {
+    if (process.env.VERCEL_ENV !== 'preview') {
+      return res.status(404).json({ ok: false, error: 'Not found' });
+    }
+
+    const researchConfigured = Boolean(
+      isConfiguredApiKey(compatibilityResearchApiKey)
+      && compatibilityResearchBaseUrl
+      && compatibilityResearchModel
+    );
+    const researchBase = {
+      ok: true,
+      provider: 'bailian',
+      model: compatibilityResearchModel || null,
+      configured: researchConfigured,
+      timeoutMs: compatibilityResearchTimeoutMs,
+      previewOnly: true,
+    };
+    if (!researchConfigured) {
+      return res.status(503).json({
+        ...researchBase,
+        ok: false,
+        upstream: { ok: false, transportOk: false, reason: 'not_configured' },
+      });
+    }
+
+    try {
+      const upstreamResponse = await fetchWithTimeout(`${compatibilityResearchBaseUrl}/models`, {
+        method: 'GET',
+        headers: { Authorization: `Bearer ${compatibilityResearchApiKey}` },
+      }, Math.min(compatibilityResearchTimeoutMs, 8_000));
+      const responseText = await upstreamResponse.text();
+      let models = [];
+      try {
+        const payload = JSON.parse(responseText);
+        models = Array.isArray(payload?.data) ? payload.data.map(item => item?.id).filter(Boolean) : [];
+      } catch {
+        // An HTTP response still proves the Vercel runtime reached the provider over TLS.
+      }
+      const modelAvailable = models.length > 0 ? models.includes(compatibilityResearchModel) : null;
+      return res.status(upstreamResponse.ok ? 200 : 502).json({
+        ...researchBase,
+        ok: upstreamResponse.ok,
+        upstream: {
+          ok: upstreamResponse.ok,
+          transportOk: true,
+          status: upstreamResponse.status,
+          modelAvailable,
+          reason: upstreamResponse.ok
+            ? 'ok'
+            : upstreamResponse.status === 401 || upstreamResponse.status === 403
+              ? 'authentication_failed'
+              : upstreamResponse.status === 429
+                ? 'rate_limited'
+                : 'provider_error',
+        },
+      });
+    } catch (error) {
+      const timedOut = error?.name === 'AbortError' || error?.name === 'TimeoutError';
+      return res.status(502).json({
+        ...researchBase,
+        ok: false,
+        upstream: { ok: false, transportOk: false, reason: timedOut ? 'timeout' : 'network_error' },
+      });
+    }
+  }
 
   if (!shouldProbe) {
     return res.status(200).json(base);
