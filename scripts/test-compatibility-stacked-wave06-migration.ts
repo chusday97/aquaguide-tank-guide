@@ -29,15 +29,16 @@ assert.match(migration, /expected 176 reviewed evidence sources/);
 assert.match(migration, /expected 3 wave06 profile-source links/);
 assert.match(migration, /commit;\s*$/);
 
-let expectedLinks = 0;
+let historicalLinks = 0;
 for (const speciesId of nextWaveUnified06ProfileIds) {
   const profile = getReviewedCompatibilityProfile(speciesId);
   assert.ok(profile, 'wave06 Profile must exist: ' + speciesId);
-  expectedLinks += profile.citations.length;
   assert.equal(migration.includes("'" + speciesId + "'"), true);
-  for (const source of profile.citations) assert.equal(migration.includes(source.id), true);
+  const historicalCitations = profile.citations.filter(source => migration.includes(source.id));
+  assert.ok(historicalCitations.length > 0, 'wave06 Profile must retain historical citations: ' + speciesId);
+  historicalLinks += historicalCitations.length;
 }
-assert.equal(expectedLinks, 3);
+assert.equal(historicalLinks, 3, 'historical wave06 migration must retain its original three Profile-source links even when later additive patches append citations');
 assert.equal(Object.values(nextWaveUnified06Sources).length, 1);
 
 for (const member of batch.members.filter(item => !item.expectProfile)) {

@@ -4,6 +4,7 @@ import { getApprovedCatalogFieldReviews, getCatalogFieldReviews } from '../src/d
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../src/modules/knowledge/speciesKnowledge';
 import { getKnowledgeEvidenceCeiling } from '../src/data/knowledgeEvidenceCeilings';
+import { nextWaveFreshwater04FieldReviews } from '../src/data/catalogReviewBatches/next-wave-freshwater-04';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
 
 const ids = ['sp_0047','sp_0048','sp_0050','sp_0051','sp_0054','sp_0056','sp_0057','sp_0058'] as const;
@@ -14,9 +15,11 @@ const byId = (id: string) => {
 };
 
 for (const id of ids) {
+  const batchReviews = nextWaveFreshwater04FieldReviews.filter(item => item.speciesId === id);
+  assert.equal(batchReviews.length, 10, id + ' historical batch must retain all ten terminal field reviews');
+  assert.ok(batchReviews.every(item => item.status === 'reviewed' && item.resolution !== null));
   const reviews = getCatalogFieldReviews(id);
-  assert.equal(reviews.length, 10, id + ' must have all ten terminal field reviews');
-  assert.ok(reviews.every(item => item.status === 'reviewed' && item.resolution !== null));
+  assert.ok(reviews.length >= batchReviews.length, id + ' current authority may add later additive reviews but must not lose historical batch reviews');
   assert.ok(getApprovedCatalogFieldReviews(id).length > 0);
   assert.ok(getReviewedSpeciesKnowledgeForFish(byId(id)), id + ' direct runtime Species Knowledge must be visible');
 }

@@ -77,7 +77,7 @@ assert.equal(rowOf('sp_0057')?.fields.predation.status, 'reviewed_neutral_or_neg
 assert.equal(rowOf('sp_0057')?.authoritativeFieldCount, 8);
 for (const speciesId of ['sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
   assert.equal(rowOf(speciesId)?.fields.tank_size.status, 'reviewed_supported', `${speciesId} should inherit only the exact reviewed 200 cm base-taxon tank-length minimum`);
-  assert.equal(rowOf(speciesId)?.fields.territoriality.status, 'reviewed_unknown', `${speciesId} territoriality must remain unknown rather than inferred from general husbandry`);
+  assert.equal(rowOf(speciesId)?.fields.territoriality.status, 'reviewed_supported', `${speciesId} territoriality must require the new explicit Scleropages territoriality source plus its reviewed taxon/variant bridge`);
 }
 assert.equal(rowOf('sp_0447')?.fields.social_behavior.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0447')?.fields.predation.status, 'reviewed_neutral_or_negative');
@@ -149,12 +149,12 @@ assert.equal(fastLaneArtifact.totalPackets, fastLanePackets.length);
 assert.deepEqual(fastLaneArtifact.packets, fastLanePackets, 'Fast Lane research packets must be regenerated with current authority');
 assert.ok(fastLanePackets.every(packet => packet.existingEvidenceIds.length > 0), 'near-ready research packet must preserve existing provenance');
 assert.ok(fastLanePackets.every(packet => packet.existingSources.length > 0), 'near-ready research packet must resolve existing field provenance to source metadata');
-for (const speciesId of ['sp_0012', 'sp_0468']) {
+for (const speciesId of ['sp_0198', 'sp_0105', 'sp_0468']) {
   const packet = fastLanePackets.find(item => item.speciesId === speciesId);
   assert.ok(packet, `${speciesId} must remain represented in Fast Lane while its final field is unresolved`);
   assert.ok(packet.existingSources.length > 0, `${speciesId} Fast Lane packet must not lose source metadata when evidence comes from field review rather than Profile citations`);
 }
-for (const speciesId of ['sp_0197', 'sp_0447', 'sp_0451']) {
+for (const speciesId of ['sp_0197', 'sp_0447', 'sp_0451', 'sp_0054', 'sp_0012', 'sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
   assert.equal(fastLanePackets.find(item => item.speciesId === speciesId), undefined, `${speciesId} must leave Fast Lane only after its final core field is reviewed`);
   assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, `${speciesId} must have 8/8 authoritative core fields after Fast Lane closure`);
 }

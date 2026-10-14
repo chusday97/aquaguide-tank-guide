@@ -58,17 +58,16 @@ const waveSources = Object.values(nextWaveUnified04Sources);
 const newSourceIds = waveSources.map(source => source.id).filter(id => !predecessorSourceIds.has(id));
 assert.equal(newSourceIds.length, 11);
 
-let expectedLinks = 0;
+let historicalLinks = 0;
 for (const speciesId of nextWaveUnified04ProfileIds) {
   const profile = getReviewedCompatibilityProfile(speciesId);
   assert.ok(profile, 'wave04 Profile must exist: ' + speciesId);
-  expectedLinks += profile.citations.length;
   assert.equal(migration.includes("'" + speciesId + "'"), true, 'migration must own Profile ' + speciesId);
-  for (const source of profile.citations) {
-    assert.equal(migration.includes(source.id), true, 'migration must include Profile citation ' + source.id);
-  }
+  const historicalCitations = profile.citations.filter(source => migration.includes(source.id));
+  assert.ok(historicalCitations.length > 0, 'wave04 Profile must retain at least one historical citation: ' + speciesId);
+  historicalLinks += historicalCitations.length;
 }
-assert.equal(expectedLinks, 21);
+assert.equal(historicalLinks, 21, 'historical wave04 migration must retain its original 21 Profile-source links even when later additive patches append citations');
 
 for (const sourceId of newSourceIds) {
   assert.equal(migration.includes(sourceId), true, 'migration must insert new source ' + sourceId);

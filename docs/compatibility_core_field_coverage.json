@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 45,
-  "coreFieldCompleteSpecies": 47,
-  "oneFieldGapSpecies": 9,
+  "genericOnboardingReadySpecies": 51,
+  "coreFieldCompleteSpecies": 53,
+  "oneFieldGapSpecies": 3,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -66,17 +66,17 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 56,
+      "reviewed_supported": 61,
       "reviewed_neutral_or_negative": 8,
-      "reviewed_unknown": 118,
+      "reviewed_unknown": 113,
       "needs_research": 5,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 42,
+      "reviewed_supported": 43,
       "reviewed_neutral_or_negative": 22,
-      "reviewed_unknown": 119,
+      "reviewed_unknown": 118,
       "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -105,11 +105,11 @@
     },
     {
       "field": "territoriality",
-      "count": 50
+      "count": 45
     },
     {
       "field": "predation",
-      "count": 39
+      "count": 38
     },
     {
       "field": "social_behavior",
@@ -914,9 +914,9 @@
       "scientificName": "Puntius titteya",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -974,13 +974,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-puntius-titteya"
+            "fischwissen-puntius-titteya-territoriality"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",
@@ -4328,9 +4328,9 @@
       "scientificName": "Hemichromis bimaculatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4397,13 +4397,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-hemichromis-bimaculatus"
+            "sinica-fishdb-hemichromis-bimaculatus-diet"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -7992,9 +7992,9 @@
       "scientificName": "Scleropages formosus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -8056,14 +8056,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-scleropages-formosus",
-            "seriouslyfish-scleropages-formosus"
+            "myfish-scleropages-formosus-territoriality"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -8082,9 +8081,9 @@
       "scientificName": "Scleropages formosus var. Red",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -8154,15 +8153,14 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-scleropages-formosus-red",
-            "batch19-fishbase-scleropages-formosus",
-            "seriouslyfish-scleropages-formosus"
+            "myfish-scleropages-formosus-territoriality",
+            "batch19-fishbase-scleropages-formosus-red"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -9090,9 +9088,9 @@
       "scientificName": "Scleropages formosus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -9162,15 +9160,14 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-scleropages-formosus-green",
-            "batch19-fishbase-scleropages-formosus",
-            "seriouslyfish-scleropages-formosus"
+            "myfish-scleropages-formosus-territoriality",
+            "batch19-fishbase-scleropages-formosus-green"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -22862,9 +22859,9 @@
       "scientificName": "Scleropages formosus var. Super Red",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -22934,15 +22931,14 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "wave06-peer-reviewed-scleropages-formosus-super-red",
-            "batch19-fishbase-scleropages-formosus",
-            "seriouslyfish-scleropages-formosus"
+            "myfish-scleropages-formosus-territoriality",
+            "wave06-peer-reviewed-scleropages-formosus-super-red"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",

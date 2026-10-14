@@ -1458,25 +1458,6 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
 };
 
-const authorityPatchSourceById = new Map(
-  Object.values(compatibilityAuthorityPatchSources).map(source => [source.id, source] as const),
-);
-
-for (const patch of compatibilityProfileAuthorityPatches) {
-  const profile = profiles[patch.speciesId];
-  if (!profile) throw new Error(`Missing reviewed Compatibility profile for authority patch: ${patch.speciesId}`);
-  profile.behaviorTraits = Array.from(new Set([...profile.behaviorTraits, ...(patch.addBehaviorTraits ?? [])]));
-  if (patch.replacePredationTargets) profile.predationTargets = [...patch.replacePredationTargets];
-  const citations = [...profile.citations];
-  for (const sourceId of patch.addCitationIds) {
-    const source = authorityPatchSourceById.get(sourceId);
-    if (!source) throw new Error(`Missing Compatibility authority patch source: ${sourceId}`);
-    if (!citations.some(item => item.id === sourceId)) citations.push(source);
-  }
-  profile.citations = citations;
-  profile.requiredFacts = Array.from(new Set([...(profile.requiredFacts ?? []), ...patch.addRequiredFacts]));
-}
-
 const GENERIC_FACT_SYNC_PROFILE_IDS = new Set([
   'sp_0017', 'sp_0020', 'sp_0045', 'sp_0048', 'sp_0053', 'sp_0114',
   'sp_0018', 'sp_0050', 'sp_0056', 'sp_0057', 'sp_0058', 'sp_0126', 'sp_0131', 'sp_0133',
@@ -1605,6 +1586,25 @@ profiles.sp_0214 = {
   citations: [nextWaveUnified05Sources.pelvicachromis],
   requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation', 'breeding_behavior'],
 };
+
+const authorityPatchSourceById = new Map(
+  Object.values(compatibilityAuthorityPatchSources).map(source => [source.id, source] as const),
+);
+
+for (const patch of compatibilityProfileAuthorityPatches) {
+  const profile = profiles[patch.speciesId];
+  if (!profile) throw new Error(`Missing reviewed Compatibility profile for authority patch: ${patch.speciesId}`);
+  profile.behaviorTraits = Array.from(new Set([...profile.behaviorTraits, ...(patch.addBehaviorTraits ?? [])]));
+  if (patch.replacePredationTargets) profile.predationTargets = [...patch.replacePredationTargets];
+  const citations = [...profile.citations];
+  for (const sourceId of patch.addCitationIds) {
+    const source = authorityPatchSourceById.get(sourceId);
+    if (!source) throw new Error(`Missing Compatibility authority patch source: ${sourceId}`);
+    if (!citations.some(item => item.id === sourceId)) citations.push(source);
+  }
+  profile.citations = citations;
+  profile.requiredFacts = Array.from(new Set([...(profile.requiredFacts ?? []), ...patch.addRequiredFacts]));
+}
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
 
