@@ -41,6 +41,11 @@ export const BUSINESS_ADMIN_AUTHORITY_MIGRATIONS = [
   '20261012001500_compatibility_unified_wave04_authority.sql',
   '20261012014500_compatibility_unified_wave05_authority.sql',
   '20261012023000_compatibility_unified_wave06_authority.sql',
+  '20261013153000_compatibility_unified_wave16_authority.sql',
+  '20261014133500_compatibility_fast_lane_authority_patch.sql',
+  '20261014143000_compatibility_fast_lane_wave2_authority_patch.sql',
+  '20261014152500_compatibility_fast_lane_wave3_authority_patch.sql',
+  '20261014163500_compatibility_fast_lane_wave4_authority_patch.sql',
 ];
 
 export const BUSINESS_ADMIN_STAGING_UPGRADE_MIGRATIONS = [

@@ -149,13 +149,18 @@ assert.equal(fastLaneArtifact.totalPackets, fastLanePackets.length);
 assert.deepEqual(fastLaneArtifact.packets, fastLanePackets, 'Fast Lane research packets must be regenerated with current authority');
 assert.ok(fastLanePackets.every(packet => packet.existingEvidenceIds.length > 0), 'near-ready research packet must preserve existing provenance');
 assert.ok(fastLanePackets.every(packet => packet.existingSources.length > 0), 'near-ready research packet must resolve existing field provenance to source metadata');
-for (const speciesId of ['sp_0198', 'sp_0105', 'sp_0468']) {
-  const packet = fastLanePackets.find(item => item.speciesId === speciesId);
-  assert.ok(packet, `${speciesId} must remain represented in Fast Lane while its final field is unresolved`);
-  assert.ok(packet.existingSources.length > 0, `${speciesId} Fast Lane packet must not lose source metadata when evidence comes from field review rather than Profile citations`);
+const channaDiplogramma = rowOf('sp_0198');
+assert.ok(channaDiplogramma, 'sp_0198 coverage row must exist');
+assert.equal(channaDiplogramma.fields.tank_size.status, 'reviewed_unknown');
+assert.equal(channaDiplogramma.fields.tank_size.disposition, 'terminal_hold');
+assert.equal(channaDiplogramma.fields.tank_size.authoritySource, 'evidence_ceiling');
+assert.equal(channaDiplogramma.fields.tank_size.reasonCode, 'species_space_minimum_conflicted');
+assert.equal(fastLanePackets.find(item => item.speciesId === 'sp_0198'), undefined, 'sp_0198 must leave Fast Lane after its exact-taxon numeric minimum is classified as a terminal evidence conflict');
+assert.equal(backlog.find(item => item.speciesId === 'sp_0198' && item.field === 'tank_size'), undefined, 'terminal evidence conflict must not be repeatedly queued as ordinary actionable research');
+
+for (const speciesId of ['sp_0105', 'sp_0468', 'sp_0197', 'sp_0447', 'sp_0451', 'sp_0054', 'sp_0012', 'sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
+  assert.equal(fastLanePackets.find(item => item.speciesId === speciesId), undefined, `${speciesId} must leave Fast Lane only after its final core field is resolved or terminally classified`);
+  if (speciesId !== 'sp_0198') assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, `${speciesId} must have 8/8 authoritative core fields after Fast Lane closure`);
 }
-for (const speciesId of ['sp_0197', 'sp_0447', 'sp_0451', 'sp_0054', 'sp_0012', 'sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
-  assert.equal(fastLanePackets.find(item => item.speciesId === speciesId), undefined, `${speciesId} must leave Fast Lane only after its final core field is reviewed`);
-  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, `${speciesId} must have 8/8 authoritative core fields after Fast Lane closure`);
-}
+assert.equal(fastLanePackets.length, 0, 'Fast Lane must be empty after the last two evidence-backed closures and the Channa terminal evidence ceiling');
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

@@ -12,10 +12,7 @@ import { compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveB
 import { fishData } from '../src/data/fishData';
 import { evaluateTankCompatibility } from '../src/lib/tankCompatibilityEngine';
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
-import {
-  buildCompatibilityCoreFieldCoverage,
-  buildCompatibilityFastLaneResearchPackets,
-} from '../src/services/compatibility/compatibility-field-coverage.service';
+import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
 
 const targets = ['sp_0054', 'sp_0012', 'sp_0103', 'sp_0104', 'sp_0116', 'sp_0283'] as const;
 const patch = compatibilityUnifiedNextWave.authorityPatches.find(item => item.patchId === compatibilityFastLaneWave3AuthorityPatch.patchId);
@@ -95,12 +92,6 @@ for (const speciesId of targets) {
   assert.equal(row.authoritativeFieldCount, 8, speciesId + ' must be 8/8 after wave3');
   assert.equal(row.genericOnboardingReady, true, speciesId + ' must be generic-ready after wave3');
 }
-const fastLane = buildCompatibilityFastLaneResearchPackets();
-assert.deepEqual(
-  fastLane.map(item => [item.speciesId, item.missingField]),
-  [['sp_0198', 'tank_size'], ['sp_0105', 'territoriality'], ['sp_0468', 'territoriality']],
-  'only evidence-honest one-field gaps may remain after wave3',
-);
 assert.equal(compatibilityFastLaneWave3FieldReviews.length, 6);
 
-console.log('Compatibility Fast Lane wave3 authority PASS: six species close to 8/8 with scoped runtime behavior; Fast Lane reduced to the three evidence-honest gaps.');
+console.log('Compatibility Fast Lane wave3 authority PASS: six wave3 species retain immutable reviewed authority and scoped runtime behavior; later additive waves may legitimately close the then-remaining Fast Lane gaps.');

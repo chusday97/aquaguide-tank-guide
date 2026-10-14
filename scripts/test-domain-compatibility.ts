@@ -73,6 +73,22 @@ const tankTemperatureConflict = evaluateCompatibility({
 assert.equal(tankTemperatureConflict.status, 'not_recommended');
 assert.ok(tankTemperatureConflict.ruleCodes.includes('tank_temperature_conflict'));
 
+const conspecificTerritoriality = evaluateCompatibility({
+  intent: 'record_existing',
+  existingSpecies: [{ ...base, id: 'ornate-bichir', behaviorTraits: ['conspecific_territoriality'] }],
+  candidateSpecies: { ...base, id: 'ornate-bichir', behaviorTraits: ['conspecific_territoriality'] },
+});
+assert.equal(conspecificTerritoriality.status, 'caution');
+assert.ok(conspecificTerritoriality.ruleCodes.includes('territorial_conflict'));
+
+const conspecificTerritorialityDoesNotLeakAcrossSpecies = evaluateCompatibility({
+  intent: 'record_existing',
+  existingSpecies: [{ ...base, id: 'ornate-bichir', behaviorTraits: ['conspecific_territoriality'] }],
+  candidateSpecies: { ...base, id: 'peaceful-other-species' },
+});
+assert.equal(conspecificTerritorialityDoesNotLeakAcrossSpecies.status, 'compatible');
+assert.equal(conspecificTerritorialityDoesNotLeakAcrossSpecies.ruleCodes.includes('territorial_pressure_context'), false);
+
 const phConflict = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },

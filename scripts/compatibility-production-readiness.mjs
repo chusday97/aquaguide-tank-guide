@@ -3,7 +3,7 @@ import {
   PRODUCTION_PROJECT_REF,
   readLinkedProjectRef,
 } from './compatibility-production-migration-guard.mjs';
-import { TARGET as FAST_LANE_WAVE3_TARGET } from './compatibility-fast-lane-wave3-production-patch-guard.mjs';
+import { TARGET as FAST_LANE_WAVE4_TARGET } from './compatibility-fast-lane-wave4-production-patch-guard.mjs';
 import {
   readState,
   readDetailedState,
@@ -14,7 +14,7 @@ const expected = {
   profiles: audit.reviewedProfiles.length,
   pairRules: audit.reviewedPairRules.length,
   stageRisks: audit.reviewedStageRiskProfiles.length,
-  evidenceSources: FAST_LANE_WAVE3_TARGET.evidence,
+  evidenceSources: FAST_LANE_WAVE4_TARGET.evidence,
 };
 
 const envInt = (name, fallback = 0) => {

@@ -19,33 +19,45 @@ import {
   compatibilityFastLaneWave3Sources,
   compatibilityFastLaneWave3VerifiedSourceIds,
 } from './fast-lane-wave3-20261014';
+import {
+  compatibilityFastLaneWave4AuthorityPatch,
+  compatibilityFastLaneWave4FieldReviews,
+  compatibilityFastLaneWave4ProfilePatches,
+  compatibilityFastLaneWave4Sources,
+  compatibilityFastLaneWave4VerifiedSourceIds,
+} from './fast-lane-wave4-20261014';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
   ...compatibilityFastLaneWave2Sources,
   ...compatibilityFastLaneWave3Sources,
+  ...compatibilityFastLaneWave4Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityFastLanePatchFieldReviews,
   ...compatibilityFastLaneWave2FieldReviews,
   ...compatibilityFastLaneWave3FieldReviews,
+  ...compatibilityFastLaneWave4FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityFastLanePatchVerifiedSourceIds,
   ...compatibilityFastLaneWave2VerifiedSourceIds,
   ...compatibilityFastLaneWave3VerifiedSourceIds,
+  ...compatibilityFastLaneWave4VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
   ...compatibilityFastLaneProfilePatches,
   ...compatibilityFastLaneWave2ProfilePatches,
   ...compatibilityFastLaneWave3ProfilePatches,
+  ...compatibilityFastLaneWave4ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
   compatibilityFastLaneAuthorityPatch,
   compatibilityFastLaneWave2AuthorityPatch,
   compatibilityFastLaneWave3AuthorityPatch,
+  compatibilityFastLaneWave4AuthorityPatch,
 ] as const;
