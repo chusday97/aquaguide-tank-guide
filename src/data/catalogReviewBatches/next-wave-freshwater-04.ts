@@ -232,7 +232,9 @@ export const nextWaveFreshwater04FieldReviews: CatalogFieldReview[] = [
     'Fishipedia describes pair/group sociality and community compatibility with peaceful tankmates; no universal minimum group count is enforced.',
   ], 'medium'),
   supported('sp_0056', 'territoriality', { traits: ['territorial', 'intraspecific_aggression'] }, [herosFishipedia.id], [], 'medium'),
-  unknown('sp_0056', 'predation', 'Omnivory with carnivorous tendency is not converted into a generic small-fish predation rule.'),
+  supported('sp_0056', 'predation', { targets: [] }, [herosFishipedia.id], [
+    'Fishipedia provides reviewed community guidance with peaceful heterospecifics and does not establish a fish-prey scope; omnivory with carnivorous tendency is not converted into fish predation, while territorial and breeding aggression remain separate.',
+  ], 'medium'),
   supported('sp_0056', 'breeding_behavior', { traits: ['biparental_egg_defense', 'breeding_defense'] }, [herosFishBase.id, herosFishipedia.id]),
 
   identity('sp_0057', 'Altolamprologus calvus', calvusFishBase.id),
@@ -266,7 +268,9 @@ export const nextWaveFreshwater04FieldReviews: CatalogFieldReview[] = [
     'FishBase directly describes large aggregations with pairs in very small territories; Fishipedia recommends a minimum population of five.',
   ], 'medium'),
   supported('sp_0058', 'territoriality', { traits: ['small_territory', 'colony_territoriality'] }, [multifasciatusFishBase.id, multifasciatusFishipedia.id], [], 'medium'),
-  unknown('sp_0058', 'predation', 'Reviewed sources describe plankton feeding and do not establish a fish-predation compatibility target.'),
+  supported('sp_0058', 'predation', { targets: [] }, [multifasciatusFishipedia.id], [
+    'Reviewed husbandry describes a small shell-dwelling community fish and does not establish any fish-prey scope; plankton/invertebrate feeding and territoriality are modeled separately rather than inferred into fish predation.',
+  ], 'medium'),
   unknown('sp_0058', 'breeding_behavior', 'Reviewed sources in this wave do not add a separate breeding-defense rule.'),
 ];
 

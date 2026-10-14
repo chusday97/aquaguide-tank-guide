@@ -84,7 +84,9 @@ export const nextWaveFreshwater01FieldReviews: CatalogFieldReview[] = [
   supported('territoriality', { traits: ['territorial_males', 'rock_associated_territory'] }, [
     chindongoSocolofiFishBase.id,
   ]),
-  unknown('predation', 'Reviewed sources do not establish a species-specific aquarium prey-size or tankmate predation rule.'),
+  supported('predation', { targets: [] }, [chindongoSocolofiSeriouslyFish.id], [
+    'Seriously Fish describes this mbuna as not especially aggressive and provides reviewed community-tankmate guidance; no fish-prey scope is established, while male territoriality remains modeled separately.',
+  ], 'medium'),
   unknown('breeding_behavior', 'FishBase records female mouthbrooding, but the reviewed sources do not establish a general breeding-defense compatibility rule suitable for product enforcement.'),
 ];
 

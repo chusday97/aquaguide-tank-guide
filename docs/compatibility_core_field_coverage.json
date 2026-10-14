@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 30,
-  "coreFieldCompleteSpecies": 33,
-  "oneFieldGapSpecies": 23,
+  "genericOnboardingReadySpecies": 39,
+  "coreFieldCompleteSpecies": 41,
+  "oneFieldGapSpecies": 15,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -66,17 +66,17 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 52,
-      "reviewed_neutral_or_negative": 7,
-      "reviewed_unknown": 123,
+      "reviewed_supported": 53,
+      "reviewed_neutral_or_negative": 8,
+      "reviewed_unknown": 121,
       "needs_research": 5,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 41,
-      "reviewed_neutral_or_negative": 14,
-      "reviewed_unknown": 128,
+      "reviewed_neutral_or_negative": 20,
+      "reviewed_unknown": 122,
       "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -105,11 +105,11 @@
     },
     {
       "field": "territoriality",
-      "count": 55
+      "count": 53
     },
     {
       "field": "predation",
-      "count": 48
+      "count": 42
     },
     {
       "field": "social_behavior",
@@ -1433,9 +1433,9 @@
       "scientificName": "Chindongo socolofi",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1504,14 +1504,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-chindongo-socolofi",
             "seriouslyfish-pseudotropheus-socolofi"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -4499,9 +4498,9 @@
       "scientificName": "Heros severus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4571,14 +4570,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-heros-severus",
             "fishipedia-heros-severus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -4588,7 +4586,7 @@
       "scientificName": "Altolamprologus calvus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
+      "genericOnboardingReady": true,
       "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
       "terminalGapCount": 0,
@@ -4673,9 +4671,9 @@
       "scientificName": "Neolamprologus multifasciatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4744,14 +4742,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-neolamprologus-multifasciatus",
             "fishipedia-neolamprologus-multifasciatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -14587,9 +14584,9 @@
       "scientificName": "Gnathonemus petersii",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -14658,14 +14655,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-gnathonemus-petersii",
             "seriouslyfish-gnathonemus-petersii"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -16271,9 +16267,9 @@
       "scientificName": "Scobinancistrus aureatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -16344,14 +16340,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch11-fishbase-scobinancistrus-aureatus",
             "atlarium-scobinancistrus-aureatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -35019,9 +35014,9 @@
       "scientificName": "Corydoras panda",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35079,13 +35074,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-corydoras-panda"
+            "seriouslyfish-corydoras-panda"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",
@@ -35274,9 +35269,9 @@
       "scientificName": "Pterophyllum scalare",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35334,13 +35329,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-pterophyllum-scalare"
+            "seriouslyfish-pterophyllum-scalare"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -35542,9 +35537,9 @@
       "scientificName": "Labidochromis caeruleus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35615,14 +35610,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch17-fishbase-labidochromis-caeruleus",
             "seriouslyfish-labidochromis-caeruleus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

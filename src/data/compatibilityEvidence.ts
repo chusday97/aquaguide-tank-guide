@@ -558,6 +558,15 @@ const bronzeCorySeriouslyFish: EvidenceSourceDto = {
   reviewStatus: 'reviewed',
 };
 
+const pandaCoryFishBase: EvidenceSourceDto = {
+  id: 'batch-02-fishbase-corydoras-panda',
+  title: 'Corydoras panda species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Corydoras-panda.html',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
 const pandaCorySeriouslyFish: EvidenceSourceDto = {
   id: 'seriouslyfish-corydoras-panda',
   title: 'Corydoras panda (Panda Cory)',
@@ -581,6 +590,15 @@ const bettaSeriouslyFish: EvidenceSourceDto = {
   title: 'Betta splendens (Siamese Fighting Fish)',
   publisher: 'Seriously Fish',
   url: 'https://www.seriouslyfish.com/species/betta-splendens',
+  sourceType: 'curated_husbandry',
+  reviewStatus: 'reviewed',
+};
+
+const angelfishFishBase: EvidenceSourceDto = {
+  id: 'batch-02-fishbase-pterophyllum-scalare',
+  title: 'Pterophyllum scalare species summary',
+  publisher: 'FishBase',
+  url: 'https://www.fishbase.se/summary/Pterophyllum-scalare.html',
   sourceType: 'curated_husbandry',
   reviewStatus: 'reviewed',
 };
@@ -1305,7 +1323,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     predationTargets: [],
     confidence: 'high',
     reviewStatus: 'reviewed',
-    citations: [pandaCorySeriouslyFish],
+    citations: [pandaCoryFishBase, pandaCorySeriouslyFish],
     requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior'],
   },
   sp_0439: {
@@ -1424,7 +1442,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     predationTargets: ['very_small_fish'],
     confidence: 'high',
     reviewStatus: 'reviewed',
-    citations: [angelfishSeriouslyFish, angelfishExtensionGuide],
+    citations: [angelfishFishBase, angelfishSeriouslyFish, angelfishExtensionGuide],
     requiredFacts: ['water', 'temperature', 'adult_size', 'social_behavior', 'territoriality', 'predation'],
   },
   sp_0451: {
@@ -1441,7 +1459,8 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
 
 const GENERIC_FACT_SYNC_PROFILE_IDS = new Set([
   'sp_0017', 'sp_0020', 'sp_0045', 'sp_0048', 'sp_0053', 'sp_0114',
-  'sp_0050', 'sp_0126', 'sp_0131', 'sp_0133', 'sp_0440', 'sp_0448', 'sp_0469',
+  'sp_0018', 'sp_0050', 'sp_0056', 'sp_0057', 'sp_0058', 'sp_0126', 'sp_0131', 'sp_0133',
+  'sp_0181', 'sp_0440', 'sp_0443', 'sp_0446', 'sp_0448', 'sp_0469',
 ]);
 
 for (const speciesId of GENERIC_FACT_SYNC_PROFILE_IDS) {

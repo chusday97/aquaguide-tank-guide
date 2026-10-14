@@ -15,7 +15,7 @@ assert.deepEqual(byField.get('adult_size')?.proposedValue, { min: null, max: 11.
 assert.deepEqual(byField.get('tank_size')?.proposedValue, { liters: null, lengthCm: 90 });
 assert.deepEqual(byField.get('social_behavior')?.proposedValue, { mode: 'variable', minimumGroupSize: null });
 assert.deepEqual(byField.get('territoriality')?.proposedValue, { traits: ['territorial_males', 'rock_associated_territory'] });
-assert.equal(byField.has('predation'), false);
+assert.deepEqual(byField.get('predation')?.proposedValue, { targets: [] });
 assert.equal(byField.has('breeding_behavior'), false);
 
 const profile = getReviewedCompatibilityProfile(id);
@@ -24,6 +24,7 @@ assert.equal(profile?.waterType, 'freshwater');
 assert.ok(profile?.behaviorTraits.includes('territorial_males'));
 assert.ok(profile?.requiredFacts?.includes('tank_size'));
 assert.ok(profile?.requiredFacts?.includes('territoriality'));
+assert.ok(profile?.requiredFacts?.includes('predation'));
 
 const fish = fishData.find(item => item.id === id);
 assert.ok(fish);
@@ -36,4 +37,4 @@ assert.equal(knowledge?.spaceAndGrowth?.adultLengthCm?.max, 11.5);
 assert.equal(knowledge?.spaceAndGrowth?.minTankLengthCm, 90);
 assert.equal(knowledge?.socialBehavior?.mode, 'variable');
 
-console.log('next-wave freshwater authority verified: sp_0018 reviewed environment + conservative size/space + territorial social boundary');
+console.log('next-wave freshwater authority verified: sp_0018 reviewed environment + conservative size/space + territorial social boundary + neutral fish-predation authority');

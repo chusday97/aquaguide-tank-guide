@@ -16,8 +16,8 @@ assert.deepEqual(summary.coreFields, fields);
 assert.ok(summary.runtimeReviewedProfileSpecies >= 101);
 assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpecies);
 assert.ok(summary.oneFieldGapSpecies > 0);
-assert.ok(summary.genericOnboardingReadySpecies >= 30, 'High-yield source-first coverage should preserve at least 30 fully sourced generic-ready profiles');
-for (const speciesId of ['sp_0017','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0184','sp_0214','sp_0218','sp_0440','sp_0448','sp_0469']) {
+assert.ok(summary.genericOnboardingReadySpecies >= 39, 'High-yield source-first coverage should preserve at least 39 fully sourced generic-ready profiles');
+for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0446','sp_0448','sp_0449','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
   const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
@@ -35,7 +35,7 @@ assert.equal(rows.find(row => row.speciesId === 'sp_0441')?.fields.predation.sta
 assert.equal(rows.find(row => row.speciesId === 'sp_0450')?.fields.predation.status, 'reviewed_supported');
 assert.equal(rows.find(row => row.speciesId === 'sp_0050')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rows.find(row => row.speciesId === 'sp_0214')?.fields.predation.status, 'reviewed_neutral_or_negative');
-for (const speciesId of ['sp_0121','sp_0122','sp_0123','sp_0200','sp_0440']) {
+for (const speciesId of ['sp_0018','sp_0056','sp_0058','sp_0121','sp_0122','sp_0123','sp_0181','sp_0200','sp_0202','sp_0440','sp_0449']) {
   assert.equal(rows.find(row => row.speciesId === speciesId)?.fields.predation.status, 'reviewed_neutral_or_negative', `${speciesId} should only close predation from reviewed diet + tankmate/community evidence`);
 }
 const rowOf = (speciesId: string) => rows.find(row => row.speciesId === speciesId);
@@ -43,9 +43,11 @@ assert.equal(rowOf('sp_0014')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0014')?.fields.social_behavior.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0443')?.fields.tank_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0443')?.fields.social_behavior.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0443')?.fields.territoriality.status, 'reviewed_neutral_or_negative');
 assert.equal(rowOf('sp_0443')?.fields.predation.status, 'reviewed_neutral_or_negative');
 assert.equal(rowOf('sp_0444')?.fields.territoriality.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0446')?.fields.adult_size.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0446')?.fields.territoriality.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0446')?.fields.predation.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0447')?.fields.tank_size.status, 'reviewed_supported');
 for (const field of ['ph', 'tank_size', 'social_behavior', 'predation'] as const) assert.equal(rowOf('sp_0451')?.fields[field].status, 'reviewed_supported');
@@ -78,6 +80,8 @@ const approvedValue = (speciesId: string, field: string) => getApprovedCatalogFi
 assert.deepEqual(approvedValue('sp_0014', 'tank_size'), { liters: 72, lengthCm: 80 });
 assert.deepEqual(approvedValue('sp_0014', 'social_behavior'), { mode: 'group', minimumGroupSize: 4 });
 assert.deepEqual(approvedValue('sp_0443', 'social_behavior'), { mode: 'group', minimumGroupSize: 6 });
+assert.deepEqual(approvedValue('sp_0443', 'territoriality'), { traits: [] });
+assert.deepEqual(approvedValue('sp_0446', 'territoriality'), { traits: ['breeding_male_territoriality'] });
 assert.deepEqual(approvedValue('sp_0451', 'tank_size'), { liters: 540, lengthCm: 150 });
 assert.deepEqual(approvedValue('sp_0181', 'social_behavior'), { mode: 'group', minimumGroupSize: 5 });
 assert.deepEqual(approvedValue('sp_0062', 'social_behavior'), { mode: 'group', minimumGroupSize: 6 });

@@ -271,6 +271,7 @@ const directSubjects: DirectSubject[] = [
     socialMode: 'group', minimumGroupSize: 5,
     socialNote: 'The species is peaceful toward heterospecifics but territorial; the source explicitly recommends at least five if keeping more than one to disperse conspecific aggression.',
     territorialityTraits: ['conspecific_territoriality'],
+    predationTargets: [],
   },
 ];
 
@@ -313,8 +314,8 @@ const directReviews = directSubjects.flatMap(subject => {
     subject.territorialityTraits?.length
       ? supported(subject.speciesId, 'territoriality', { traits: subject.territorialityTraits }, [subject.husbandry.id], [], 'medium')
       : unknown(subject.speciesId, 'territoriality', 'The reviewed sources do not establish a stable territoriality rule that should affect compatibility decisions.', sourceIds),
-    subject.predationTargets?.length
-      ? supported(subject.speciesId, 'predation', { targets: subject.predationTargets }, subject.predationCitationIds ?? [subject.husbandry.id], [], 'medium')
+    subject.predationTargets !== undefined
+      ? supported(subject.speciesId, 'predation', { targets: subject.predationTargets }, subject.predationCitationIds ?? [subject.husbandry.id], subject.predationTargets.length === 0 ? ['Reviewed diet and community-tankmate evidence supports no generic fish-predation target; territorial or aggression risks remain modeled separately.'] : [], 'medium')
       : unknown(subject.speciesId, 'predation', 'The reviewed sources do not establish a compatibility-relevant fish predation target.', sourceIds),
     unknown(subject.speciesId, 'breeding_behavior', 'The reviewed sources are not used to enforce a separate breeding-context compatibility rule in this wave.', sourceIds),
   ];

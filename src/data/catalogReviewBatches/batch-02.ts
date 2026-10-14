@@ -138,9 +138,11 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
   if (item.id === 'sp_0443') {
     const tank = reviews.find(review => review.field === 'tank_size');
     const social = reviews.find(review => review.field === 'social_behavior');
+    const territoriality = reviews.find(review => review.field === 'territoriality');
     const predation = reviews.find(review => review.field === 'predation');
     if (tank) Object.assign(tank, supportedHighYield(item.id, 'tank_size', { liters: 41, lengthCm: 45 }, husbandryCitation));
     if (social) Object.assign(social, supportedHighYield(item.id, 'social_behavior', { mode: 'group', minimumGroupSize: 6 }, husbandryCitation));
+    if (territoriality) Object.assign(territoriality, supportedHighYield(item.id, 'territoriality', { traits: [] }, husbandryCitation, ['Seriously Fish states that aggression toward other species is virtually unheard of and intraspecific hostility is similarly unusual; no territorial/resource-defense trait is promoted.']));
     if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: [] }, husbandryCitation, ['The source explicitly describes the species as very peaceful and lists small characins/cyprinids among suitable tankmates; no generic fish-predation target is promoted.']));
   }
   if (item.id === 'sp_0444') {
@@ -149,8 +151,10 @@ const makeReviews = (item: BatchSpecies): CatalogFieldReview[] => {
   }
   if (item.id === 'sp_0446') {
     const adultSize = reviews.find(review => review.field === 'adult_size');
+    const territoriality = reviews.find(review => review.field === 'territoriality');
     const predation = reviews.find(review => review.field === 'predation');
     if (adultSize) Object.assign(adultSize, supportedHighYield(item.id, 'adult_size', { min: null, max: 15 }, husbandryCitation, ['Seriously Fish records 150 mm standard length; body height is not substituted for standard length.']));
+    if (territoriality) Object.assign(territoriality, supportedHighYield(item.id, 'territoriality', { traits: ['breeding_male_territoriality'] }, husbandryCitation, ['Seriously Fish explicitly states that males are more aggressive and territorial, especially when in breeding condition; no broader permanent territoriality scope is inferred.']));
     if (predation) Object.assign(predation, supportedHighYield(item.id, 'predation', { targets: ['small_fish'] }, husbandryCitation, ['The source explicitly warns that angelfish may eat small fish such as tetras.']));
   }
   if (item.id === 'sp_0468') {
