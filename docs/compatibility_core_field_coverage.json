@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 40,
-  "coreFieldCompleteSpecies": 42,
-  "oneFieldGapSpecies": 14,
+  "genericOnboardingReadySpecies": 43,
+  "coreFieldCompleteSpecies": 45,
+  "oneFieldGapSpecies": 11,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -66,17 +66,17 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 53,
+      "reviewed_supported": 55,
       "reviewed_neutral_or_negative": 8,
-      "reviewed_unknown": 121,
+      "reviewed_unknown": 119,
       "needs_research": 5,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 41,
-      "reviewed_neutral_or_negative": 21,
-      "reviewed_unknown": 121,
+      "reviewed_neutral_or_negative": 22,
+      "reviewed_unknown": 120,
       "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -105,11 +105,11 @@
     },
     {
       "field": "territoriality",
-      "count": 53
+      "count": 51
     },
     {
       "field": "predation",
-      "count": 41
+      "count": 40
     },
     {
       "field": "social_behavior",
@@ -15822,9 +15822,9 @@
       "scientificName": "Channa stewartii",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -15895,14 +15895,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-channa-stewartii",
-            "seriouslyfish-channa-stewartii"
+            "icar-cifa-channa-stewartii-live-fish"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -35353,17 +35352,16 @@
       "scientificName": "Symphysodon aequifasciatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-symphysodon-aequifasciatus",
-            "batch-02-worms-symphysodon-aequifasciatus"
+            "fishbase-symphysodon-aequifasciatus"
           ],
           "authoritySource": "catalog_field_review",
           "reasonCode": null
@@ -35372,8 +35370,7 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-symphysodon-aequifasciatus",
-            "batch-02-worms-symphysodon-aequifasciatus"
+            "fishbase-symphysodon-aequifasciatus"
           ],
           "authoritySource": "catalog_field_review",
           "reasonCode": null
@@ -35382,8 +35379,7 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-symphysodon-aequifasciatus",
-            "batch-02-worms-symphysodon-aequifasciatus"
+            "fishbase-symphysodon-aequifasciatus"
           ],
           "authoritySource": "catalog_field_review",
           "reasonCode": null
@@ -35392,8 +35388,7 @@
           "status": "reviewed_supported",
           "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-symphysodon-aequifasciatus",
-            "batch-02-worms-symphysodon-aequifasciatus"
+            "fishbase-symphysodon-aequifasciatus"
           ],
           "authoritySource": "catalog_field_review",
           "reasonCode": null
@@ -35417,14 +35412,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-symphysodon-aequifasciatus",
-            "batch-02-worms-symphysodon-aequifasciatus"
+            "fishbase-symphysodon-aequifasciatus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",
@@ -35714,9 +35708,9 @@
       "scientificName": "Astronotus ocellatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35774,13 +35768,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-astronotus-ocellatus"
+            "animaldiversity-astronotus-ocellatus-behavior"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",

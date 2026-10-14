@@ -43,6 +43,8 @@ const gates = [
   ['Compatibility Unified Wave14 Authority', 'npm', ['run', 'test:compatibility-unified-wave14-authority']],
   ['Compatibility Unified Wave15 Authority', 'npm', ['run', 'test:compatibility-unified-wave15-authority']],
   ['Compatibility Unified Wave16 Authority', 'npm', ['run', 'test:compatibility-unified-wave16-authority']],
+  ['Compatibility Fast Lane Authority Patch', 'npm', ['run', 'test:compatibility-fast-lane-authority-patch']],
+  ['Compatibility Fast Lane Production Patch Guard', 'npm', ['run', 'test:compatibility-fast-lane-production-patch-guard']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Release Badcases', 'npm', ['run', 'test:compatibility-release-badcases']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],

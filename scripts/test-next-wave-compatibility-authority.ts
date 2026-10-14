@@ -62,11 +62,15 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
     if (member.expectProfile) {
       assert.ok(migrationOwner, batch.batchId + ' Profile release must declare a DB migration owner');
       assert.ok(profile, 'released species must resolve reviewed Compatibility Profile: ' + member.speciesId);
+      const additivePatchMigrations = compatibilityUnifiedNextWave.authorityPatches
+        .filter(patch => (patch.speciesIds as readonly string[]).includes(member.speciesId))
+        .map(patch => readFileSync(patch.migrationOwner, 'utf8'));
+      const currentProfileAuthority = [migration, ...additivePatchMigrations].join('\n');
       for (const source of profile.citations) {
         assert.equal(
-          migration.includes(source.id),
+          currentProfileAuthority.includes(source.id),
           true,
-          batch.batchId + ' migration owner must include Profile source ' + source.id,
+          batch.batchId + ' original migration or additive authority patch must include Profile source ' + source.id,
         );
       }
     } else {

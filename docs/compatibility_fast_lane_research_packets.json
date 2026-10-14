@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 14,
+  "totalPackets": 11,
   "packets": [
     {
       "speciesId": "sp_0054",
@@ -24,36 +24,6 @@
       ],
       "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
       "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0197",
-      "name": "蓝宝石雷龙",
-      "scientificName": "Channa stewartii",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch21-fishbase-channa-stewartii",
-        "seriouslyfish-channa-stewartii"
-      ],
-      "existingSources": [
-        {
-          "id": "batch21-fishbase-channa-stewartii",
-          "title": "Channa stewartii species review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/search.php",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "seriouslyfish-channa-stewartii",
-          "title": "Channa genus review: Channa stewartii subsection",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/genus/channa",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "The current reviewed wave explicitly did not establish a generic small-fish predation rule. A new direct prey-scope source is required."
     },
     {
       "speciesId": "sp_0199",
@@ -335,58 +305,6 @@
           "title": "Scleropages formosus (Asian Arowana)",
           "publisher": "Seriously Fish",
           "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
-      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
-    },
-    {
-      "speciesId": "sp_0447",
-      "name": "七彩神仙鱼（七彩鱼）",
-      "scientificName": "Symphysodon aequifasciatus",
-      "missingField": "territoriality",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch-02-fishbase-symphysodon-aequifasciatus",
-        "batch-02-worms-symphysodon-aequifasciatus"
-      ],
-      "existingSources": [
-        {
-          "id": "batch-02-fishbase-symphysodon-aequifasciatus",
-          "title": "Symphysodon aequifasciatus species summary",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Symphysodon-aequifasciatus.html",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "batch-02-worms-symphysodon-aequifasciatus",
-          "title": "Symphysodon aequifasciatus taxon record",
-          "publisher": "WoRMS",
-          "url": "https://www.marinespecies.org/aphia.php?p=taxdetails&id=101196",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
-      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
-    },
-    {
-      "speciesId": "sp_0451",
-      "name": "地图鱼",
-      "scientificName": "Astronotus ocellatus",
-      "missingField": "territoriality",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch03-fishbase-astronotus-ocellatus"
-      ],
-      "existingSources": [
-        {
-          "id": "batch03-fishbase-astronotus-ocellatus",
-          "title": "Astronotus ocellatus species summary",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Astronotus-ocellatus.html",
           "reviewStatus": "reviewed"
         }
       ],

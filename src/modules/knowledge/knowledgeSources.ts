@@ -5,6 +5,7 @@ import { nextWaveUnified04Sources } from '../../data/catalogReviewBatches/next-w
 import { nextWaveUnified05Sources } from '../../data/catalogReviewBatches/next-wave-unified-05';
 import { nextWaveUnified06Sources } from '../../data/catalogReviewBatches/next-wave-unified-06';
 import { nextWaveUnified02Sources } from '../../data/catalogReviewBatches/next-wave-unified-02';
+import { compatibilityFastLanePatchSources } from '../../data/compatibilityAuthorityPatches/fast-lane-20261014';
 
 const nextWaveUnified02KnowledgeSources = Object.fromEntries([
   nextWaveUnified02Sources.macropodusSeriouslyFish,
@@ -26,6 +27,7 @@ const knowledgeSources: Record<string, EvidenceSourceDto> = {
   ...Object.fromEntries(Object.values(nextWaveUnified05Sources).map(source => [source.id, source])),
   ...Object.fromEntries(Object.values(nextWaveUnified06Sources).map(source => [source.id, source])),
   ...nextWaveUnified02KnowledgeSources,
+  ...Object.fromEntries(Object.values(compatibilityFastLanePatchSources).map(source => [source.id, source])),
   'fws-tachysurus-fulvidraco-erss': { id: 'fws-tachysurus-fulvidraco-erss', title: 'Ecological Risk Screening Summary: Yellow Catfish (Tachysurus fulvidraco)', publisher: 'U.S. Fish and Wildlife Service', url: 'https://www.fws.gov/sites/default/files/documents/Ecological-Risk-Screening-Summary-Yellow-Catfish.pdf', sourceType: 'government', reviewStatus: 'reviewed' },
   'seriouslyfish-mastacembelus-armatus': { id: 'seriouslyfish-mastacembelus-armatus', title: 'Mastacembelus armatus (Tyre-Track Eel)', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/mastacembelus-armatus', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },
   'seriouslyfish-channa-barca': { id: 'seriouslyfish-channa-barca', title: 'Channa barca', publisher: 'Seriously Fish', url: 'https://www.seriouslyfish.com/species/channa-barca', sourceType: 'curated_husbandry', reviewStatus: 'reviewed' },

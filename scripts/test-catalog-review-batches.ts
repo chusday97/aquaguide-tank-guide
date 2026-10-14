@@ -49,8 +49,9 @@ assert.deepEqual(miniParrotApprovedFields, ['adult_size']);
 const rhodeusApprovedFields = getApprovedCatalogFieldReviews('sp_0475').map(review => review.field).sort();
 assert.deepEqual(rhodeusApprovedFields, ['adult_size', 'identity', 'temperature']);
 assert.equal(getApprovedCatalogFieldReviews('sp_0475').some(review => review.field === 'water'), false, 'Rhodeus freshwater+brackish source must not collapse into a single freshwater runtime fact');
+// Immutable batch01-03 snapshot. Additive authority patches are tested separately and are not counted here.
 assert.equal(legacyVerifiedSourceIds.size, 42);
-assert.equal(runtimeApprovedFields, 119);
-assert.equal(supported, 123);
-assert.equal(unknown, 177);
+assert.equal(runtimeApprovedFields, 121);
+assert.equal(supported, 125);
+assert.equal(unknown, 175);
 console.log(JSON.stringify({ speciesCount: LAUNCH_COHORT_IDS.length, fieldCount: reviews.length, supported, unknown, contentVerifiedSources: legacyVerifiedSourceIds.size, runtimeApprovedFields }, null, 2));

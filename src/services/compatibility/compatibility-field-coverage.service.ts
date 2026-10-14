@@ -1,6 +1,6 @@
 import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../../packages/contracts/src';
 import { fishData } from '../../data/fishData';
-import { getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
+import { catalogContentVerifiedSourceIds, getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
@@ -183,7 +183,7 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
   if (identityBoundary) return { status: 'missing_identity_or_domain', disposition: 'terminal_hold', evidenceIds: identityBoundary.sourceIds, authoritySource: 'identity_boundary', reasonCode: identityBoundary.code };
 
   const exactReviews = reviewedFieldReviews(fish.id, field);
-  const supported = exactReviews.find(review => review.resolution === 'supported');
+  const supported = [...exactReviews].reverse().find(review => review.resolution === 'supported' && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id)));
   if (supported) {
     const status = supportedValueStatus(supported);
     return { status, disposition: status === 'reviewed_unknown' ? 'targeted_source_expansion' : 'ready', evidenceIds: supported.citationIds, authoritySource: 'catalog_field_review', reasonCode: status === 'reviewed_unknown' ? 'reviewed_supported_record_contains_unknown_value' : null };
@@ -222,7 +222,6 @@ const fastLaneEvidenceNeed: Record<CompatibilityCoreField, string> = {
 const fastLaneSpecialConstraint: Record<string, string> = {
   sp_0050: 'Existing reviewed sources describe only public installations / the very largest private aquaria and do not provide a numeric minimum footprint. Do not convert the legacy 640 L text into authority.',
   sp_0198: 'Existing reviewed source does not record a numeric aquarium base. Do not invent a minimum from adult size or the legacy catalog.',
-  sp_0197: 'The current reviewed wave explicitly did not establish a generic small-fish predation rule. A new direct prey-scope source is required.',
   sp_0199: 'If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed.',
   sp_0200: 'If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed.',
 };

@@ -5,6 +5,7 @@ import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfileForFish } from '../src/data/compatibilityEvidence';
 import { getApprovedCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getLifeType } from '../src/modules/species/species.service';
+import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import { buildCompatibilityCoreFieldCoverage, buildCompatibilityFastLaneResearchPackets } from '../src/services/compatibility/compatibility-field-coverage.service';
 
 const { rows, summary, backlog } = buildCompatibilityCoreFieldCoverage();
@@ -16,8 +17,8 @@ assert.deepEqual(summary.coreFields, fields);
 assert.ok(summary.runtimeReviewedProfileSpecies >= 101);
 assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpecies);
 assert.ok(summary.oneFieldGapSpecies > 0);
-assert.ok(summary.genericOnboardingReadySpecies >= 40, 'High-yield source-first coverage should preserve at least 40 fully sourced generic-ready profiles');
-for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0446','sp_0448','sp_0449','sp_0469']) {
+assert.ok(summary.genericOnboardingReadySpecies >= 43, 'High-yield source-first coverage should preserve at least 43 fully sourced generic-ready profiles');
+for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0197','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0446','sp_0447','sp_0448','sp_0449','sp_0451','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
   const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
@@ -50,7 +51,12 @@ assert.equal(rowOf('sp_0446')?.fields.adult_size.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0446')?.fields.territoriality.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0446')?.fields.predation.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0447')?.fields.tank_size.status, 'reviewed_supported');
-for (const field of ['ph', 'tank_size', 'social_behavior', 'predation'] as const) assert.equal(rowOf('sp_0451')?.fields[field].status, 'reviewed_supported');
+assert.equal(rowOf('sp_0447')?.fields.territoriality.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0447')?.genericOnboardingReady, true);
+assert.equal(rowOf('sp_0197')?.fields.predation.status, 'reviewed_neutral_or_negative');
+assert.equal(rowOf('sp_0197')?.genericOnboardingReady, true);
+for (const field of ['ph', 'tank_size', 'social_behavior', 'territoriality', 'predation'] as const) assert.equal(rowOf('sp_0451')?.fields[field].status, 'reviewed_supported');
+assert.equal(rowOf('sp_0451')?.genericOnboardingReady, true);
 assert.equal(rowOf('sp_0140')?.genericOnboardingReady, true);
 assert.equal(rowOf('sp_0140')?.fields.ph.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0140')?.fields.predation.status, 'reviewed_supported');
@@ -98,6 +104,11 @@ for (const speciesId of ['sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
 }
 assert.deepEqual(approvedValue('sp_0447', 'social_behavior'), { mode: 'group', minimumGroupSize: null });
 assert.deepEqual(approvedValue('sp_0447', 'predation'), { targets: [] });
+assert.deepEqual(approvedValue('sp_0447', 'territoriality'), { traits: ['breeding_territoriality'] });
+assert.deepEqual(approvedValue('sp_0451', 'territoriality'), { traits: ['territorial', 'territory_defense'] });
+assert.deepEqual(approvedValue('sp_0197', 'predation'), { targets: [] });
+const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
+assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
   assert.equal(Object.values(summary.fieldCounts[field]).reduce((sum, value) => sum + value, 0), rows.length);
 }
@@ -138,9 +149,13 @@ assert.equal(fastLaneArtifact.totalPackets, fastLanePackets.length);
 assert.deepEqual(fastLaneArtifact.packets, fastLanePackets, 'Fast Lane research packets must be regenerated with current authority');
 assert.ok(fastLanePackets.every(packet => packet.existingEvidenceIds.length > 0), 'near-ready research packet must preserve existing provenance');
 assert.ok(fastLanePackets.every(packet => packet.existingSources.length > 0), 'near-ready research packet must resolve existing field provenance to source metadata');
-for (const speciesId of ['sp_0012', 'sp_0447', 'sp_0451', 'sp_0468']) {
+for (const speciesId of ['sp_0012', 'sp_0468']) {
   const packet = fastLanePackets.find(item => item.speciesId === speciesId);
   assert.ok(packet, `${speciesId} must remain represented in Fast Lane while its final field is unresolved`);
   assert.ok(packet.existingSources.length > 0, `${speciesId} Fast Lane packet must not lose source metadata when evidence comes from field review rather than Profile citations`);
+}
+for (const speciesId of ['sp_0197', 'sp_0447', 'sp_0451']) {
+  assert.equal(fastLanePackets.find(item => item.speciesId === speciesId), undefined, `${speciesId} must leave Fast Lane only after its final core field is reviewed`);
+  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, `${speciesId} must have 8/8 authoritative core fields after Fast Lane closure`);
 }
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

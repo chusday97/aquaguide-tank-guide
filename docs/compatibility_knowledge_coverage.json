@@ -13,8 +13,8 @@
   "launch_cohort_species": 30,
   "launch_pair_count": 435,
   "launch_pair_status_counts": {
-    "compatible": 17,
-    "caution": 300,
+    "compatible": 14,
+    "caution": 303,
     "not_recommended": 115,
     "insufficient_data": 3
   },
