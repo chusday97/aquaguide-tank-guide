@@ -32,6 +32,19 @@ assert.equal(getCompatibilitySpeciesResearchProviderReadiness({
   baseUrl: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
 }).configured, true, 'Beijing shared DashScope endpoint must remain a valid Model Studio host');
 
+const dedicatedConfig = buildCompatibilityResearchProviderConfig({
+  COMPATIBILITY_RESEARCH_AI_API_KEY: 'dedicated-bailian-key',
+  COMPATIBILITY_RESEARCH_AI_BASE_URL: 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+  COMPATIBILITY_RESEARCH_AI_MODEL: 'qwen-dedicated-research',
+  AI_API_KEY: 'generic-deepseek-key',
+  AI_BASE_URL: 'https://api.deepseek.com',
+  AI_MODEL: 'deepseek-generic',
+});
+assert.equal(dedicatedConfig.apiKey, 'dedicated-bailian-key');
+assert.equal(dedicatedConfig.baseUrl, 'https://dashscope.aliyuncs.com/compatible-mode/v1');
+assert.equal(dedicatedConfig.model, 'qwen-dedicated-research');
+assert.equal(getCompatibilitySpeciesResearchProviderReadiness(dedicatedConfig).configured, true, 'Compatibility research must be able to use Bailian independently from the app-wide DeepSeek provider');
+
 const scientificName = 'Pseudomugil luminatus';
 const sourceUrl = 'https://www.seriouslyfish.com/species/pseudomugil-luminatus';
 const html = [
@@ -326,5 +339,48 @@ assert.equal(
   'research_pending',
   'seven directly supported fields must not synthesize missing predation evidence',
 );
+
+let transientExtractionAttempts = 0;
+const transientNetworkFetch: typeof fetch = async (input, init) => {
+  const url = new URL(String(input));
+  if (url.hostname === 'workspace.cn-beijing.maas.aliyuncs.com') {
+    const body = JSON.parse(String(init?.body || '{}')) as Record<string, unknown>;
+    if (body.enable_search === true) {
+      return new Response(JSON.stringify({
+        choices: [{ message: { content: JSON.stringify({ candidates: [{ url: sourceUrl }] }) } }],
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+    transientExtractionAttempts += 1;
+    if (transientExtractionAttempts === 1) {
+      const error = new TypeError('fetch failed');
+      (error as TypeError & { cause?: Error }).cause = new Error('Client network socket disconnected before secure TLS connection was established');
+      throw error;
+    }
+    return new Response(JSON.stringify({
+      choices: [{ message: { content: JSON.stringify({ claims: [
+        { field: 'water', proposedValue: 'freshwater', sourceUrl, evidenceKind: 'direct', confidence: 'high' },
+      ] }) } }],
+    }), { status: 200, headers: { 'content-type': 'application/json' } });
+  }
+  if (url.toString() === sourceUrl) {
+    return new Response(html, { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  }
+  if (
+    url.hostname === 'www.fishbase.se'
+    || url.hostname === 'www.fishbase.org'
+    || url.hostname === 'www.seriouslyfish.com'
+    || url.hostname === 'animaldiversity.org'
+    || url.hostname === 'www.fishipedia.fr'
+  ) {
+    return new Response('not found', { status: 404, headers: { 'content-type': 'text/html' } });
+  }
+  throw new Error('unexpected transient-network fetch: ' + url);
+};
+const transientPacket = await createBailianCompatibilitySpeciesResearchProvider(config, transientNetworkFetch).research({
+  catalogKey: 'blind_transient_tls_retry',
+  scientificName,
+});
+assert.equal(transientExtractionAttempts, 2, 'one transient provider TLS failure should retry exactly once');
+assert.deepEqual(transientPacket.claims.map(claim => claim.field), ['water']);
 
 console.log('Bailian Compatibility research provider PASS: forced web discovery -> trusted URL filter -> server fetch -> exact-taxon content verification -> fetched-text-only extraction; unfetched and unsafe redirects fail closed.');

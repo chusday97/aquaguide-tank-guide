@@ -9,7 +9,6 @@ import type {
   CompatibilitySpeciesResearchPacket,
   CompatibilitySpeciesResearchProvider,
 } from '../../../src/services/compatibility/species-onboarding-research.service';
-import { apiConfig } from './config';
 
 type FetchLike = typeof fetch;
 
@@ -190,6 +189,36 @@ const cleanJsonText = (value: string) => {
     : cleaned;
 };
 
+const isRetryableProviderNetworkError = (error: unknown) => {
+  if (!(error instanceof Error)) return false;
+  if (error.name === 'AbortError' || error.name === 'TimeoutError') return true;
+  const message = `${error.message} ${(error as Error & { cause?: unknown }).cause instanceof Error ? (error as Error & { cause?: Error }).cause?.message || '' : ''}`.toLowerCase();
+  return message.includes('fetch failed')
+    || message.includes('socket disconnected')
+    || message.includes('econnreset')
+    || message.includes('etimedout')
+    || message.includes('network');
+};
+
+const providerFetchWithRetry = async (
+  fetchImpl: FetchLike,
+  input: Parameters<FetchLike>[0],
+  init: Parameters<FetchLike>[1],
+  maxAttempts = 2,
+) => {
+  let lastError: unknown;
+  for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+    try {
+      return await fetchImpl(input, init);
+    } catch (error) {
+      lastError = error;
+      if (!isRetryableProviderNetworkError(error) || attempt >= maxAttempts) throw error;
+      await new Promise(resolve => setTimeout(resolve, 150 * attempt));
+    }
+  }
+  throw lastError;
+};
+
 const completionContent = async (
   config: CompatibilityResearchProviderConfig,
   fetchImpl: FetchLike,
@@ -201,7 +230,7 @@ const completionContent = async (
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), config.timeoutMs);
   try {
-    const response = await fetchImpl(config.baseUrl.replace(/\/$/, '') + '/chat/completions', {
+    const response = await providerFetchWithRetry(fetchImpl, config.baseUrl.replace(/\/$/, '') + '/chat/completions', {
       method: 'POST',
       headers: {
         authorization: 'Bearer ' + config.apiKey,
@@ -488,8 +517,8 @@ const claimsFromExtraction = (
 export const buildCompatibilityResearchProviderConfig = (
   env: NodeJS.ProcessEnv = process.env,
 ): CompatibilityResearchProviderConfig => ({
-  apiKey: env.AI_API_KEY || env.DEEPSEEK_API_KEY || '',
-  baseUrl: (env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || '').replace(/\/$/, ''),
+  apiKey: env.COMPATIBILITY_RESEARCH_AI_API_KEY || env.AI_API_KEY || env.DEEPSEEK_API_KEY || '',
+  baseUrl: (env.COMPATIBILITY_RESEARCH_AI_BASE_URL || env.AI_BASE_URL || env.DEEPSEEK_BASE_URL || '').replace(/\/$/, ''),
   model: env.COMPATIBILITY_RESEARCH_AI_MODEL || env.COMPATIBILITY_AI_MODEL || env.AI_MODEL || '',
   timeoutMs: Number(env.COMPATIBILITY_RESEARCH_TIMEOUT_MS || env.AI_TIMEOUT_MS || 20_000),
   maxSearchCandidates: Math.max(1, Math.min(12, Number(env.COMPATIBILITY_RESEARCH_MAX_SEARCH_CANDIDATES || 10))),
@@ -558,10 +587,6 @@ export const createBailianCompatibilitySpeciesResearchProvider = (
   },
 });
 
-export const compatibilitySpeciesResearchProvider = createBailianCompatibilitySpeciesResearchProvider({
-  ...buildCompatibilityResearchProviderConfig(),
-  apiKey: apiConfig.aiApiKey,
-  baseUrl: apiConfig.aiBaseUrl,
-  model: process.env.COMPATIBILITY_RESEARCH_AI_MODEL || apiConfig.compatibilityAiModel,
-  timeoutMs: Number(process.env.COMPATIBILITY_RESEARCH_TIMEOUT_MS || apiConfig.aiTimeoutMs),
-});
+export const compatibilitySpeciesResearchProvider = createBailianCompatibilitySpeciesResearchProvider(
+  buildCompatibilityResearchProviderConfig(),
+);

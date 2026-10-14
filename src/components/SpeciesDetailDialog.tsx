@@ -588,6 +588,11 @@ export function SpeciesDetailDialog({
   const spaceSources = useMemo(() => resolveKnowledgeSources(
     spaceKnowledge?.evidence.sourceIds || [],
   ), [spaceKnowledge]);
+  const hasAnyReviewedKnowledgeSource = sexIdentificationSources.length > 0
+    || reproductionSources.length > 0
+    || environmentSources.length > 0
+    || socialSources.length > 0
+    || spaceSources.length > 0;
   const carePresentation = useMemo(() => fish ? buildSpeciesCarePresentation(fish) : null, [fish]);
   const compatibilityDecision = useMemo(() => {
     if (!fish || !aquariumContext) return null;
@@ -1057,7 +1062,14 @@ export function SpeciesDetailDialog({
                       )}
                     </section>
 
-                    {sexIdentificationGuide && (
+                    {speciesKnowledge && !hasAnyReviewedKnowledgeSource && (
+                      <div className="rounded-[18px] border border-amber-200 bg-amber-50/70 p-3" data-species-source-gap>
+                        <div className="text-[12px] font-black text-amber-900">{isEn ? 'Reviewed sources pending' : '审核来源待补充'}</div>
+                        <p className="mt-1 text-[11px] font-semibold leading-relaxed text-amber-900/75">{isEn ? 'This profile does not yet have a resolved reviewed source for the knowledge sections below, so AquaGuide will not present those fields as confirmed guidance.' : '这个物种的知识字段目前还没有可解析的审核来源，因此不会把无来源内容作为确定养护建议展示。'}</p>
+                      </div>
+                    )}
+
+                    {sexIdentificationGuide && sexIdentificationSources.length > 0 && (
                       <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-emerald-100 bg-emerald-50/55 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
                           {sexIdentificationGuide.title === '暂无可靠的公母辨别资料' ? t('encyclopedia.sexTitlePlaceholder') : sexIdentificationGuide.title}
@@ -1087,7 +1099,7 @@ export function SpeciesDetailDialog({
                       </details>
                     )}
 
-                    {environmentKnowledge && (
+                    {environmentKnowledge && environmentSources.length > 0 && (
                       <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="environment" className="rounded-[18px] border border-cyan-100 bg-cyan-50/45 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
                           <span>{isEn ? 'Reviewed water conditions' : '已审核水质环境'}</span>
@@ -1113,7 +1125,7 @@ export function SpeciesDetailDialog({
                       </details>
                     )}
 
-                    {spaceKnowledge && (
+                    {spaceKnowledge && spaceSources.length > 0 && (
                       <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="space" className="rounded-[18px] border border-violet-100 bg-violet-50/45 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
                           <span>{isEn ? 'Adult size & space' : '成体与空间'}</span>
@@ -1141,7 +1153,7 @@ export function SpeciesDetailDialog({
                       </details>
                     )}
 
-                    {reproductionKnowledge && (
+                    {reproductionKnowledge && reproductionSources.length > 0 && (
                       <details data-disclosure-purpose="secondary_evidence" className="rounded-[18px] border border-rose-100 bg-rose-50/45 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
                           <span>{isEn ? 'Reproduction' : '繁殖与幼鱼'}</span>
@@ -1173,7 +1185,7 @@ export function SpeciesDetailDialog({
                       </details>
                     )}
 
-                    {socialKnowledge && (
+                    {socialKnowledge && socialSources.length > 0 && (
                       <details data-disclosure-purpose="secondary_evidence" data-species-knowledge="social" className="rounded-[18px] border border-sky-100 bg-sky-50/45 p-3">
                         <summary className="flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 text-[12px] font-black text-ink">
                           <span>{isEn ? 'Social & group needs' : '群体与混养习性'}</span>
