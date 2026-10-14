@@ -70,6 +70,7 @@ const gates = [
   ['API Boundary', 'npm', ['run', 'test:api-boundary']],
   ['Business API', 'npm', ['run', 'test:business-api-contract']],
   ['Repository Boundary', 'npm', ['run', 'test:repository-boundary']],
+  ['Core User-State Parity Contract', 'npm', ['run', 'test:core-user-state-parity']],
   ['Catalog Snapshot', 'npm', ['run', 'test:catalog-snapshot']],
   ['Catalog Release', 'npm', ['run', 'test:catalog-release-contract']],
   ['API Typecheck', 'npm', ['run', 'check:api']],
