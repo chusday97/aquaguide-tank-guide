@@ -1,5 +1,6 @@
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
+import './config';
 
 import type { CatalogEvidenceSource } from '../../../packages/contracts/src';
 import type {
@@ -526,6 +527,18 @@ export const buildCompatibilityResearchProviderConfig = (
   maxSourceChars: Math.max(2_000, Math.min(20_000, Number(env.COMPATIBILITY_RESEARCH_MAX_SOURCE_CHARS || 8_000))),
 });
 
+export const acquireVerifiedCompatibilitySources = async (
+  input: { scientificName: string },
+  config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
+  fetchImpl: FetchLike = fetch,
+): Promise<CompatibilityResearchSource[]> => {
+  const candidates = trustedTemplateCandidates(input.scientificName)
+    .filter(raw => safePublicSourceUrl(raw))
+    .slice(0, config.maxSearchCandidates);
+  const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
+  return sourcesFromDocuments(documents);
+};
+
 const providerHost = (baseUrl: string) => {
   try {
     return new URL(baseUrl).host;
@@ -564,9 +577,17 @@ export const createBailianCompatibilitySpeciesResearchProvider = (
 
     const candidates = await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName);
     const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
-    const extraction = documents.length > 0
-      ? await extractedClaims(config, fetchImpl, input.scientificName, documents)
-      : { claims: [] };
+    let extraction: ExtractionOutput = { claims: [] };
+    if (documents.length > 0) {
+      try {
+        extraction = await extractedClaims(config, fetchImpl, input.scientificName, documents);
+      } catch (error) {
+        if (!isRetryableProviderNetworkError(error)) throw error;
+        // Keep content-verified sources even when the model transport is temporarily
+        // unavailable. Assessment remains fail-closed because zero extracted claims
+        // cannot promote any required field to supported/ready_for_review.
+      }
+    }
     const sources = sourcesFromDocuments(documents);
     const claims = claimsFromExtraction(extraction, documents);
 

@@ -6,35 +6,6 @@
   "variantBridgeJobs": 20,
   "items": [
     {
-      "researchKey": "Corydoras aeneus",
-      "baseScientificName": "Corydoras aeneus",
-      "priorityScore": 183,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0014",
-          "name": "咖啡鼠",
-          "scientificName": "Corydoras aeneus",
-          "gaps": [
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Gymnocorymbus ternetzi",
       "baseScientificName": "Gymnocorymbus ternetzi",
       "priorityScore": 183,
@@ -142,8 +113,8 @@
       "baseScientificName": "Mikrogeophagus ramirezi",
       "priorityScore": 183,
       "catalogObjectCount": 3,
-      "exactObjectCount": 0,
-      "variantObjectCount": 3,
+      "exactObjectCount": 1,
+      "variantObjectCount": 2,
       "unresolvedObjectCount": 0,
       "combinedGapFields": [
         "territoriality",
@@ -156,13 +127,13 @@
         {
           "speciesId": "sp_0016",
           "name": "金波子",
-          "scientificName": "Mikrogeophagus ramirezi var. Gold",
+          "scientificName": "Mikrogeophagus ramirezi",
           "gaps": [
             "territoriality",
             "predation"
           ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
+          "isVariant": false,
+          "isExactBaseTaxon": true
         },
         {
           "speciesId": "sp_0146",
@@ -208,6 +179,35 @@
           "speciesId": "sp_0062",
           "name": "红眼灯",
           "scientificName": "Moenkhausia sanctaefilomenae",
+          "gaps": [
+            "territoriality",
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Osteogaster aenea",
+      "baseScientificName": "Osteogaster aenea",
+      "priorityScore": 183,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "territoriality",
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0014",
+          "name": "咖啡鼠",
+          "scientificName": "Osteogaster aenea",
           "gaps": [
             "territoriality",
             "predation"
@@ -1131,8 +1131,8 @@
       ]
     },
     {
-      "researchKey": "Hemigrammus rhodostomus",
-      "baseScientificName": "Hemigrammus rhodostomus",
+      "researchKey": "Petitella rhodostoma",
+      "baseScientificName": "Petitella rhodostoma",
       "priorityScore": 151,
       "catalogObjectCount": 1,
       "exactObjectCount": 1,
@@ -1153,7 +1153,7 @@
         {
           "speciesId": "sp_0433",
           "name": "红鼻剪刀",
-          "scientificName": "Hemigrammus rhodostomus",
+          "scientificName": "Petitella rhodostoma",
           "gaps": [
             "temperature",
             "ph",
@@ -1838,8 +1838,8 @@
       ]
     },
     {
-      "researchKey": "Pseudobagrus fulvidraco",
-      "baseScientificName": "Pseudobagrus fulvidraco",
+      "researchKey": "Tachysurus fulvidraco",
+      "baseScientificName": "Tachysurus fulvidraco",
       "priorityScore": 124,
       "catalogObjectCount": 1,
       "exactObjectCount": 1,
@@ -1856,7 +1856,7 @@
         {
           "speciesId": "sp_0047",
           "name": "长臀鮠",
-          "scientificName": "Pseudobagrus fulvidraco",
+          "scientificName": "Tachysurus fulvidraco",
           "gaps": [
             "ph",
             "tank_size"

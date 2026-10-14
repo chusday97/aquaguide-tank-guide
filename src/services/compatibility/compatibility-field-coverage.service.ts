@@ -93,6 +93,22 @@ export type CompatibilityFastLaneResearchPacket = {
 };
 
 const coreFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityCoreField[];
+
+const reviewedScientificNameForResearch = (speciesId: string, fallback: string) => {
+  const identityReview = [...getCatalogFieldReviews(speciesId)].reverse().find(review => (
+    review.field === 'identity'
+    && review.status === 'reviewed'
+    && review.resolution === 'supported'
+    && review.citationIds.length > 0
+    && review.citationIds.every(id => catalogContentVerifiedSourceIds.has(id))
+    && isCatalogFieldReviewValueValid(review)
+  ));
+  if (!identityReview || typeof identityReview.proposedValue !== 'object' || identityReview.proposedValue === null) return fallback;
+  const candidate = identityReview.proposedValue as { scientificName?: unknown };
+  return typeof candidate.scientificName === 'string' && candidate.scientificName.trim()
+    ? candidate.scientificName.trim()
+    : fallback;
+};
 const positiveNumber = (value: unknown) => typeof value === 'number' && Number.isFinite(value) && value > 0;
 const finiteRange = (min: unknown, max: unknown) => typeof min === 'number' && Number.isFinite(min) && typeof max === 'number' && Number.isFinite(max) && min <= max;
 const unique = (items: string[]) => Array.from(new Set(items.filter(Boolean)));
@@ -322,7 +338,7 @@ export const buildCompatibilityTaxonResearchPlan = (): CompatibilityTaxonResearc
     const current = bySpecies.get(item.speciesId) ?? {
       speciesId: item.speciesId,
       name: item.name,
-      scientificName: item.scientificName,
+      scientificName: reviewedScientificNameForResearch(item.speciesId, item.scientificName),
       gaps: new Set<CompatibilityCoreField>(),
       priorityScore: 0,
     };

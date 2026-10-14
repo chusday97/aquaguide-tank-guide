@@ -383,4 +383,43 @@ const transientPacket = await createBailianCompatibilitySpeciesResearchProvider(
 assert.equal(transientExtractionAttempts, 2, 'one transient provider TLS failure should retry exactly once');
 assert.deepEqual(transientPacket.claims.map(claim => claim.field), ['water']);
 
+let persistentExtractionAttempts = 0;
+const persistentNetworkFetch: typeof fetch = async (input, init) => {
+  const url = new URL(String(input));
+  if (url.hostname === 'workspace.cn-beijing.maas.aliyuncs.com') {
+    const body = JSON.parse(String(init?.body || '{}')) as Record<string, unknown>;
+    if (body.enable_search === true) {
+      return new Response(JSON.stringify({
+        choices: [{ message: { content: JSON.stringify({ candidates: [{ url: sourceUrl }] }) } }],
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+    persistentExtractionAttempts += 1;
+    const error = new TypeError('fetch failed');
+    (error as TypeError & { cause?: Error }).cause = new Error('Client network socket disconnected before secure TLS connection was established');
+    throw error;
+  }
+  if (url.toString() === sourceUrl) {
+    return new Response(html, { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  }
+  if (
+    url.hostname === 'www.fishbase.se'
+    || url.hostname === 'www.fishbase.org'
+    || url.hostname === 'www.seriouslyfish.com'
+    || url.hostname === 'animaldiversity.org'
+    || url.hostname === 'www.fishipedia.fr'
+  ) {
+    return new Response('not found', { status: 404, headers: { 'content-type': 'text/html' } });
+  }
+  throw new Error('unexpected persistent-network fetch: ' + url);
+};
+const persistentNetworkPacket = await createBailianCompatibilitySpeciesResearchProvider(config, persistentNetworkFetch).research({
+  catalogKey: 'blind_persistent_tls_source_preservation',
+  scientificName,
+});
+assert.equal(persistentExtractionAttempts, 2, 'persistent transient-class transport failure should stop after the bounded retry');
+assert.equal(persistentNetworkPacket.sources.length, 1, 'verified source work must survive model transport outage');
+assert.equal(persistentNetworkPacket.sources[0].contentVerified, true);
+assert.deepEqual(persistentNetworkPacket.claims, [], 'transport outage must never synthesize unsupported claims');
+assert.equal(assessCompatibilitySpeciesResearchPacket(persistentNetworkPacket).status, 'research_pending');
+
 console.log('Bailian Compatibility research provider PASS: forced web discovery -> trusted URL filter -> server fetch -> exact-taxon content verification -> fetched-text-only extraction; unfetched and unsafe redirects fail closed.');
