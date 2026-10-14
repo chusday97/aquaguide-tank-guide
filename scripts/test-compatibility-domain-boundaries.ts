@@ -1,6 +1,8 @@
 import assert from 'node:assert/strict';
 import { fishData } from '../src/data/fishData';
 import { getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
+import { getLifeType } from '../src/modules/species/species.service';
+import { getCompatibilityCoreFieldCoverageRow } from '../src/services/compatibility/compatibility-field-coverage.service';
 import {
   compatibilityDomainBoundaries,
   getCompatibilityDomainBoundary,
@@ -14,6 +16,10 @@ assert.deepEqual(Object.keys(compatibilityDomainBoundaries).sort(), ids);
 for (const speciesId of ids) {
   const fish = fishData.find(item => item.id === speciesId);
   assert.ok(fish, 'domain hold must resolve catalog object: ' + speciesId);
+  assert.notEqual(getLifeType(fish), 'fish', 'reviewed non-fish domain hold must not be reclassified as fish: ' + speciesId);
+  const coverage = getCompatibilityCoreFieldCoverageRow(fish);
+  assert.equal(coverage.actionableGapCount, 0, 'domain hold must not leak back into the fish research backlog: ' + speciesId);
+  assert.equal(coverage.terminalGapCount, 8, 'all eight fish-only core fields must stay behind the domain boundary: ' + speciesId);
   const boundary = getCompatibilityDomainBoundary(speciesId);
   assert.ok(boundary, 'domain hold must exist: ' + speciesId);
   assert.equal(boundary.code, 'life_type_not_supported_by_fish_compatibility_domain');
