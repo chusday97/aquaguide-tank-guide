@@ -10,9 +10,9 @@
     "vercel": {
       "status": "ACTIVE_FROZEN",
       "productionBranch": "release/production",
-      "verifiedSha": "8d33d56c5214f6a7a2e6a5b64b66158231b95011",
+      "verifiedSha": "d1229ee622a5b608f394f33e5f87095b316af48f",
       "checkedAt": "2026-10-14",
-      "evidence": "Vercel live read-back: release/production@8d33d56c deployment dpl_6YfYui5M6jbbFaxhyyJ1J9AgQDHa is READY and owns aqua-tank-guide.vercel.app; Production health HTTP 200"
+      "evidence": "Vercel live read-back: release/production@d1229ee6 deployment dpl_7NuvxYjrYnPRVUvu9t8BKPLVkdNn is READY and owns aqua-tank-guide.vercel.app; Production health HTTP 200 with deepseek-v4.1-flash"
     },
     "cloudflare": {
       "status": "INACTIVE_LEGACY",
@@ -23,7 +23,7 @@
     }
   },
   "productionAnchor": {
-    "sha": "8d33d56c5214f6a7a2e6a5b64b66158231b95011",
+    "sha": "d1229ee622a5b608f394f33e5f87095b316af48f",
     "source": "Vercel aliased production deployment metadata",
     "verifiedAt": "2026-10-14",
     "role": "rollback and production freeze anchor; no independent development"
@@ -46,7 +46,7 @@
   "releaseBranch": "main",
   "canonicalBase": {
     "branch": "main",
-    "sha": "8d33d56c5214f6a7a2e6a5b64b66158231b95011",
+    "sha": "d1229ee622a5b608f394f33e5f87095b316af48f",
     "role": "deployed business/runtime release base; canonical main may be ahead by a docs-only release-state checkpoint"
   },
   "productReference": {
@@ -79,7 +79,7 @@
     "parityStatus": "compatibility_authority_current",
     "confirmedAt": "2026-10-14",
     "lastReadOnlyCheck": "2026-10-14",
-    "evidence": "Production post-verifier READY_COMPATIBILITY_PRODUCTION at migration 68 / Profiles 101 / Pair Rules 21 / Stage Risk 1 / Evidence 184"
+    "evidence": "Production post-verifier READY_COMPATIBILITY_PRODUCTION at migration 69 / latest 20261014163500 / Profiles 101 / Pair Rules 21 / Stage Risk 1 / Evidence 189; runtimeReady true; blockers []"
   },
   "localPreview": "http://127.0.0.1:4319/_preview/interactive",
   "visualBaselinePreview": "http://127.0.0.1:4317/_preview/interactive",
