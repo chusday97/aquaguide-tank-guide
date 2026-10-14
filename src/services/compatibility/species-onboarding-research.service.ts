@@ -29,7 +29,7 @@ export type CompatibilityResearchFieldClaim = {
 };
 
 export const isCompatibilityResearchClaimScopeEligible = (
-  claim: Pick<CompatibilityResearchFieldClaim, 'field' | 'note'>,
+  claim: Pick<CompatibilityResearchFieldClaim, 'field' | 'note' | 'proposedValue'>,
 ) => {
   const note = claim.note?.trim() || '';
 
@@ -40,8 +40,24 @@ export const isCompatibilityResearchClaimScopeEligible = (
     if (breedingOnlyContext) return false;
   }
 
+  if (claim.field === 'territoriality') {
+    const traits = (claim.proposedValue as { traits?: unknown } | null)?.traits;
+    if (Array.isArray(traits) && traits.length === 0) {
+      if (!note) return false;
+      const explicitNonTerritorial = /\bnon[- ]?territorial\b|\bnot territorial\b|\bno territorial (?:behavio[u]?r|aggression|tendenc(?:y|ies))\b|\bdoes not defend (?:a )?territory\b/i.test(note);
+      const evidenceDisclaimer = /\bno direct (?:statement|evidence|information)\b|\bnot (?:stated|recorded|described)\b|\bunknown\b/i.test(note);
+      if (!explicitNonTerritorial || evidenceDisclaimer) return false;
+    }
+  }
+
   if (claim.field === 'predation') {
     if (!note) return false;
+    const targets = (claim.proposedValue as { targets?: unknown } | null)?.targets;
+    if (Array.isArray(targets) && targets.length === 0) {
+      const explicitNoPreyRisk = /\bnot predatory\b|\bno (?:known )?(?:fish(?:es)?|tankmate) prey\b|\bdo(?:es)? not (?:treat|regard|see).*\b(?:fish(?:es)?|tankmates?)\b.*\bprey\b|\b(?:fish(?:es)?|tankmates?)\b.*\bnot (?:treated|regarded|seen) as prey\b/i.test(note);
+      const evidenceDisclaimer = /\bno direct (?:statement|evidence|information)\b|\bnot (?:stated|recorded|described)\b|\bunknown\b/i.test(note);
+      if (!explicitNoPreyRisk || evidenceDisclaimer) return false;
+    }
     const compatibilityContext = /tank\s*mate|community|aquarium|fit\s+(?:in|into)\s+.*mouth|mouth.*fit|swallow|attack|hunt|predat/i.test(note);
     const dietOnlyContext = /\b(feed|feeds|feeding|diet|food|zooplankton|plankton|algae|detritus)\b/i.test(note);
     if (dietOnlyContext && !compatibilityContext) return false;

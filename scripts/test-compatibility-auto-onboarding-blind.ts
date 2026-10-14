@@ -58,7 +58,7 @@ const completePacket: CompatibilitySpeciesResearchPacket = {
     { field: 'adult_size', proposedValue: { min: 3, max: 4.5 }, sourceId: 'blind-source-b', evidenceKind: 'direct', confidence: 'high' },
     { field: 'tank_size', proposedValue: { liters: 60, lengthCm: 60 }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium' },
     { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 6 }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium', note: 'Normal husbandry guidance recommends keeping at least six together.' },
-    { field: 'territoriality', proposedValue: { traits: [] }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium' },
+    { field: 'territoriality', proposedValue: { traits: [] }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium', note: 'Direct husbandry guidance explicitly describes this species as non-territorial.' },
     { field: 'predation', proposedValue: { targets: [] }, sourceId: 'blind-source-a', evidenceKind: 'direct', confidence: 'medium', note: 'Community guidance directly states similarly sized tankmates are not treated as prey.' },
   ],
 };
@@ -281,6 +281,13 @@ const scopeRejectedPacket: CompatibilitySpeciesResearchPacket = {
         note: 'Feed on zooplankton, detritus and small fish.',
       };
     }
+    if (claim.field === 'territoriality') {
+      return {
+        ...claim,
+        proposedValue: { traits: [] },
+        note: 'No direct statement about territorial behavior or non-territoriality is given.',
+      };
+    }
     return claim;
   }),
 };
@@ -288,6 +295,7 @@ const scopeRejected = assessCompatibilitySpeciesResearchPacket(scopeRejectedPack
 assert.equal(scopeRejected.status, 'research_pending');
 assert.ok(scopeRejected.reasonCodes.includes('field_unverified_social_behavior'));
 assert.ok(scopeRejected.reasonCodes.includes('field_unverified_predation'));
+assert.ok(scopeRejected.reasonCodes.includes('field_unverified_territoriality'));
 assert.equal(scopeRejected.candidateProfile, null);
 
 

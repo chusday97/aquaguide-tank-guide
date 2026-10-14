@@ -126,7 +126,7 @@ const mockFetch: typeof fetch = async (input, init) => {
               { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 6 }, sourceUrl, evidenceKind: 'direct', confidence: 'high', note: 'Normal husbandry guidance: keep in a group of at least six.' },
               { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 10 }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Reproduction: grow up a group of 10 young fish to find a breeding pair.' },
               { field: 'territoriality', proposedValue: { traits: [] }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Directly described as non-territorial.' },
-              { field: 'predation', proposedValue: { targets: [] }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Direct community-fish prey exclusion.' },
+              { field: 'predation', proposedValue: { targets: [] }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Community guidance states adults do not treat similarly sized community fishes as prey.' },
               { field: 'predation', proposedValue: { targets: ['zooplankton', 'detritus', 'small fish'] }, sourceUrl, evidenceKind: 'direct', confidence: 'medium', note: 'Feed on zooplankton, detritus and small fish.' },
               { field: 'water', proposedValue: 'freshwater', sourceUrl: 'https://www.fishbase.se/summary/fabricated-never-fetched', evidenceKind: 'direct', confidence: 'high' },
             ],
@@ -323,7 +323,7 @@ const fishipediaFallbackFetch: typeof fetch = async (input, init) => {
         { field: 'adult_size', proposedValue: { min: 3, max: 4 }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.95 },
         { field: 'tank_size', proposedValue: { liters: 60, lengthCm: null }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.95 },
         { field: 'social_behavior', proposedValue: { mode: 'group', minimumGroupSize: 10 }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.92, note: 'Normal husbandry guidance directly recommends a group of at least 10.' },
-        { field: 'territoriality', proposedValue: { traits: [] }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.9, note: 'Source directly states Territorialité: Non.' },
+        { field: 'territoriality', proposedValue: { traits: [] }, sourceUrl: fishipediaTemplateUrl, evidenceKind: 'direct', confidence: 0.9, note: "Source directly states the species is non-territorial ('Territorialité: Non')." },
       ] }) } }],
     }), { status: 200, headers: { 'content-type': 'application/json' } });
   }
