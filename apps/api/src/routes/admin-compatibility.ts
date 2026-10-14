@@ -34,7 +34,7 @@ import {
 } from '../compatibility-species-research-provider';
 import { createGbifSpeciesIdentityResolver } from '../../../../src/services/compatibility/gbif-species-identity.service';
 import { researchAndAssessCompatibilitySpeciesDetailed } from '../../../../src/services/compatibility/species-onboarding-research.service';
-import { buildCompatibilityTaxonResearchPlan } from '../../../../src/services/compatibility/compatibility-field-coverage.service';
+import { runCompatibilityResearchBatchPreview } from '../compatibility-research-batch';
 
 const activeRevisionStatuses = ['draft', 'pending_review', 'approved'];
 const reviewedCitationsOnly = (citations: Array<{ reviewStatus: string }>) => (
@@ -249,84 +249,16 @@ adminCompatibilityRouter.post('/research-batch-preview', asyncRoute(async (reque
   const parsed = compatibilityResearchBatchPreviewInputSchema.safeParse(request.body || {});
   if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility batch research 输入无效。', parsed.error.flatten());
 
-  const readiness = getCompatibilitySpeciesResearchProviderReadiness();
-  if (!readiness.configured) {
+  const result = await runCompatibilityResearchBatchPreview(parsed.data);
+  if (result.status === 'provider_unavailable') {
     throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Compatibility research provider 尚未配置。', {
-      providerId: readiness.providerId,
-      host: readiness.host,
-      model: readiness.model,
+      providerId: result.provider.providerId,
+      host: result.provider.host,
+      model: result.provider.model,
     });
   }
 
-  const allJobs = buildCompatibilityTaxonResearchPlan();
-  const offset = Math.min(parsed.data.offset, allJobs.length);
-  const jobs = allJobs.slice(offset, offset + parsed.data.limit);
-  const results: Array<Record<string, unknown>> = new Array(jobs.length);
-  const identityResolver = createGbifSpeciesIdentityResolver();
-  let cursor = 0;
-
-  const worker = async () => {
-    while (true) {
-      const index = cursor++;
-      if (index >= jobs.length) return;
-      const job = jobs[index];
-      const baseResult = {
-        researchKey: job.researchKey,
-        scientificName: job.baseScientificName,
-        researchDisposition: job.researchDisposition,
-        catalogObjects: job.catalogObjects,
-        requestedGapFields: job.combinedGapFields,
-      };
-      if (!job.baseScientificName) {
-        results[index] = { ...baseResult, status: 'identity_hold', reasonCodes: ['research_plan_identity_unresolved'] };
-        continue;
-      }
-      try {
-        const identity = await identityResolver.resolve(job.baseScientificName);
-        if (identity.status !== 'verified') {
-          results[index] = { ...baseResult, status: 'identity_hold', identity, reasonCodes: [identity.reasonCode] };
-          continue;
-        }
-        const detailed = await researchAndAssessCompatibilitySpeciesDetailed(compatibilitySpeciesResearchProvider, {
-          catalogKey: job.researchKey.replace(/[^\\w.-]+/g, '_').slice(0, 160),
-          scientificName: job.baseScientificName,
-          commonName: job.catalogObjects[0]?.name,
-        });
-        results[index] = { ...baseResult, status: 'research_assessed', identity, ...detailed };
-      } catch (error) {
-        results[index] = {
-          ...baseResult,
-          status: 'provider_error',
-          reasonCodes: [error instanceof Error ? error.message : 'compatibility_research_failed'],
-        };
-      }
-    }
-  };
-
-  await Promise.all(Array.from({ length: Math.min(parsed.data.concurrency, Math.max(1, jobs.length)) }, () => worker()));
-  const assessed = results.filter(item => item.status === 'research_assessed');
-  const readyForReview = assessed.filter(item => (item.assessment as { status?: string } | undefined)?.status === 'ready_for_review').length;
-  const researchPending = assessed.filter(item => (item.assessment as { status?: string } | undefined)?.status === 'research_pending').length;
-  const terminalHold = assessed.filter(item => (item.assessment as { status?: string } | undefined)?.status === 'terminal_hold').length;
-  const nextOffset = offset + jobs.length < allJobs.length ? offset + jobs.length : null;
-
-  return sendData(request, response, {
-    status: 'research_batch_assessed' as const,
-    provider: readiness,
-    offset,
-    nextOffset,
-    totalPlanJobs: allJobs.length,
-    processedJobs: jobs.length,
-    summary: {
-      readyForReview,
-      researchPending,
-      terminalHold,
-      identityHolds: results.filter(item => item.status === 'identity_hold').length,
-      providerErrors: results.filter(item => item.status === 'provider_error').length,
-    },
-    results,
-    writesAuthority: false,
-  });
+  return sendData(request, response, result);
 }));
 
 adminCompatibilityRouter.get('/profile-revisions', asyncRoute(async (request, response) => {

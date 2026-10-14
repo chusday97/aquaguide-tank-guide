@@ -2,8 +2,9 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname } from 'node:path';
 
 import {
-  acquireVerifiedCompatibilitySources,
+  acquireVerifiedCompatibilitySourcesDetailed,
   buildCompatibilityResearchProviderConfig,
+  type CompatibilitySourceFetchDiagnostic,
 } from '../apps/api/src/compatibility-species-research-provider';
 import {
   buildCompatibilityTaxonResearchPlan,
@@ -19,17 +20,25 @@ const arg = (name: string) => {
 
 const unique = <T>(values: T[]) => [...new Set(values)];
 
+const isAccessBlockedDiagnostic = (diagnostic: CompatibilitySourceFetchDiagnostic) => (
+  diagnostic.status === 'network_error'
+  || (diagnostic.status === 'http_error'
+    && diagnostic.httpStatus != null
+    && (diagnostic.httpStatus === 403 || diagnostic.httpStatus === 429 || diagnostic.httpStatus >= 500))
+);
+
 type SourceAcquisitionResult = {
   researchKey: string;
   scientificName: string;
   researchDisposition: CompatibilityTaxonResearchPlanItem['researchDisposition'];
   catalogObjectCount: number;
   requestedGapFields: string[];
-  status: 'verified_sources_found' | 'no_verified_source' | 'identity_hold' | 'fetch_error';
+  status: 'verified_sources_found' | 'source_access_blocked' | 'no_verified_source' | 'identity_hold' | 'fetch_error';
   identityStatus: string;
   sourceCount: number;
   sourcePublishers: string[];
   sourceUrls: string[];
+  sourceDiagnostics: CompatibilitySourceFetchDiagnostic[];
   elapsedMs: number;
   reasonCodes: string[];
 };
@@ -69,6 +78,7 @@ const main = async () => {
           sourceCount: 0,
           sourcePublishers: [],
           sourceUrls: [],
+          sourceDiagnostics: [],
           elapsedMs: Date.now() - started,
           reasonCodes: ['research_plan_identity_unresolved'],
         };
@@ -89,26 +99,34 @@ const main = async () => {
             sourceCount: 0,
             sourcePublishers: [],
             sourceUrls: [],
+            sourceDiagnostics: [],
             elapsedMs: Date.now() - started,
             reasonCodes: [identity.reasonCode || 'identity_unresolved'],
           };
           continue;
         }
 
-        const sources = await acquireVerifiedCompatibilitySources({ scientificName }, sourceConfig);
+        const acquisition = await acquireVerifiedCompatibilitySourcesDetailed({ scientificName }, sourceConfig);
+        const sources = acquisition.sources;
+        const accessBlocked = sources.length === 0 && acquisition.diagnostics.some(isAccessBlockedDiagnostic);
         results[index] = {
           researchKey: job.researchKey,
           scientificName,
           researchDisposition: job.researchDisposition,
           catalogObjectCount: job.catalogObjectCount,
           requestedGapFields: job.combinedGapFields,
-          status: sources.length > 0 ? 'verified_sources_found' : 'no_verified_source',
+          status: sources.length > 0 ? 'verified_sources_found' : accessBlocked ? 'source_access_blocked' : 'no_verified_source',
           identityStatus: identity.status,
           sourceCount: sources.length,
           sourcePublishers: unique(sources.map(source => source.publisher)),
           sourceUrls: sources.map(source => source.url),
+          sourceDiagnostics: acquisition.diagnostics,
           elapsedMs: Date.now() - started,
-          reasonCodes: sources.length > 0 ? [] : ['trusted_exact_taxon_source_not_verified'],
+          reasonCodes: sources.length > 0
+            ? []
+            : accessBlocked
+              ? ['trusted_source_access_blocked']
+              : ['trusted_exact_taxon_source_not_verified'],
         };
       } catch (error) {
         results[index] = {
@@ -122,6 +140,7 @@ const main = async () => {
           sourceCount: 0,
           sourcePublishers: [],
           sourceUrls: [],
+          sourceDiagnostics: [],
           elapsedMs: Date.now() - started,
           reasonCodes: [error instanceof Error ? error.message : String(error)],
         };
@@ -149,6 +168,7 @@ const main = async () => {
       jobs: jobs.length,
       jobsWithVerifiedSource: withSources.length,
       jobsWithoutVerifiedSource: results.filter(result => result.status === 'no_verified_source').length,
+      sourceAccessBlocked: results.filter(result => result.status === 'source_access_blocked').length,
       identityHolds: results.filter(result => result.status === 'identity_hold').length,
       fetchErrors: results.filter(result => result.status === 'fetch_error').length,
       totalVerifiedSources: withSources.reduce((sum, result) => sum + result.sourceCount, 0),

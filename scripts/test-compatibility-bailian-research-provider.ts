@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 
 import {
+  acquireVerifiedCompatibilitySourcesDetailed,
   buildCompatibilityResearchProviderConfig,
   createBailianCompatibilitySpeciesResearchProvider,
   getCompatibilitySpeciesResearchProviderReadiness,
@@ -421,5 +422,36 @@ assert.equal(persistentNetworkPacket.sources.length, 1, 'verified source work mu
 assert.equal(persistentNetworkPacket.sources[0].contentVerified, true);
 assert.deepEqual(persistentNetworkPacket.claims, [], 'transport outage must never synthesize unsupported claims');
 assert.equal(assessCompatibilitySpeciesResearchPacket(persistentNetworkPacket).status, 'research_pending');
+
+const sourceDiagnosticNetworkFetch: typeof fetch = async input => {
+  const url = new URL(String(input));
+  if (url.hostname === 'www.fishbase.se') {
+    const error = new TypeError('fetch failed');
+    (error as TypeError & { cause?: Error }).cause = new Error('socket disconnected');
+    throw error;
+  }
+  return new Response('not found', { status: 404, headers: { 'content-type': 'text/html' } });
+};
+const blockedAcquisition = await acquireVerifiedCompatibilitySourcesDetailed(
+  { scientificName },
+  config,
+  sourceDiagnosticNetworkFetch,
+);
+assert.deepEqual(blockedAcquisition.sources, []);
+assert.ok(blockedAcquisition.diagnostics.some(item => item.status === 'network_error' && item.requestedUrl.includes('fishbase.se')));
+assert.ok(blockedAcquisition.diagnostics.some(item => item.status === 'http_error' && item.httpStatus === 404));
+
+const sourceDiagnostic404Fetch: typeof fetch = async () => new Response('not found', {
+  status: 404,
+  headers: { 'content-type': 'text/html' },
+});
+const absentAcquisition = await acquireVerifiedCompatibilitySourcesDetailed(
+  { scientificName },
+  config,
+  sourceDiagnostic404Fetch,
+);
+assert.deepEqual(absentAcquisition.sources, []);
+assert.ok(absentAcquisition.diagnostics.length > 0);
+assert.ok(absentAcquisition.diagnostics.every(item => item.status === 'http_error' && item.httpStatus === 404));
 
 console.log('Bailian Compatibility research provider PASS: forced web discovery -> trusted URL filter -> server fetch -> exact-taxon content verification -> fetched-text-only extraction; unfetched and unsafe redirects fail closed.');

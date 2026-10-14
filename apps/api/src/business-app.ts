@@ -2,6 +2,8 @@ import express from 'express';
 import { apiErrorHandler, businessCorsMiddleware, notFoundHandler, requestIdMiddleware } from './http';
 import { v1Router } from './routes/index';
 
+export { runCompatibilityResearchBatchPreview } from './compatibility-research-batch';
+
 export const createBusinessApiApp = () => {
   const app = express();
   const trustProxyHops = Math.max(0, Number.parseInt(process.env.TRUST_PROXY_HOPS || '0', 10) || 0);

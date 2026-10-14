@@ -83,6 +83,32 @@ type VerifiedDocument = {
   text: string;
 };
 
+export type CompatibilitySourceFetchDiagnosticStatus =
+  | 'verified'
+  | 'invalid_or_untrusted_url'
+  | 'network_error'
+  | 'redirect_missing_location'
+  | 'unsafe_redirect'
+  | 'http_error'
+  | 'unsupported_content_type'
+  | 'content_too_short'
+  | 'taxon_mismatch'
+  | 'untrusted_source'
+  | 'redirect_limit';
+
+export type CompatibilitySourceFetchDiagnostic = {
+  requestedUrl: string;
+  finalUrl: string | null;
+  status: CompatibilitySourceFetchDiagnosticStatus;
+  httpStatus: number | null;
+  reason: string | null;
+};
+
+export type CompatibilitySourceAcquisitionDetailedResult = {
+  sources: CompatibilityResearchSource[];
+  diagnostics: CompatibilitySourceFetchDiagnostic[];
+};
+
 const providerId = 'bailian-web-research-v1';
 
 const DEFAULT_TRUSTED_DOMAIN_TYPES: Array<{
@@ -357,14 +383,19 @@ const htmlToText = (html: string) => decodeEntities(
     .trim(),
 );
 
-const fetchOneVerifiedDocument = async (
+const fetchOneVerifiedDocumentDetailed = async (
   initialUrl: string,
   scientificName: string,
   config: CompatibilityResearchProviderConfig,
   fetchImpl: FetchLike,
-): Promise<VerifiedDocument | null> => {
+): Promise<{ document: VerifiedDocument | null; diagnostic: CompatibilitySourceFetchDiagnostic }> => {
   let current = safePublicSourceUrl(initialUrl);
-  if (!current) return null;
+  if (!current) {
+    return {
+      document: null,
+      diagnostic: { requestedUrl: initialUrl, finalUrl: null, status: 'invalid_or_untrusted_url', httpStatus: null, reason: 'candidate_url_rejected' },
+    };
+  }
 
   for (let redirectCount = 0; redirectCount <= 3; redirectCount += 1) {
     let response: Response;
@@ -378,34 +409,76 @@ const fetchOneVerifiedDocument = async (
         },
         signal: AbortSignal.timeout(Math.min(config.timeoutMs, 12_000)),
       });
-    } catch {
-      return null;
+    } catch (error) {
+      return {
+        document: null,
+        diagnostic: {
+          requestedUrl: initialUrl,
+          finalUrl: current.toString(),
+          status: 'network_error',
+          httpStatus: null,
+          reason: error instanceof Error ? error.name || 'fetch_error' : 'fetch_error',
+        },
+      };
     }
 
     if ([301, 302, 303, 307, 308].includes(response.status)) {
       const location = response.headers.get('location');
-      if (!location) return null;
+      if (!location) {
+        return {
+          document: null,
+          diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'redirect_missing_location', httpStatus: response.status, reason: 'redirect_without_location' },
+        };
+      }
       const redirected = safePublicSourceUrl(new URL(location, current).toString());
-      if (!redirected) return null;
+      if (!redirected) {
+        return {
+          document: null,
+          diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'unsafe_redirect', httpStatus: response.status, reason: 'redirect_target_rejected' },
+        };
+      }
       current = redirected;
       continue;
     }
 
-    if (!response.ok) return null;
+    if (!response.ok) {
+      return {
+        document: null,
+        diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'http_error', httpStatus: response.status, reason: 'http_' + response.status },
+      };
+    }
     const contentType = (response.headers.get('content-type') || '').toLowerCase();
     if (!contentType.includes('text/html') && !contentType.includes('application/xhtml+xml') && !contentType.includes('text/plain')) {
-      return null;
+      return {
+        document: null,
+        diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'unsupported_content_type', httpStatus: response.status, reason: contentType || 'missing_content_type' },
+      };
     }
 
     const raw = (await response.text()).slice(0, config.maxSourceChars * 4);
     const text = contentType.includes('text/plain') ? raw.replace(/\s+/g, ' ').trim() : htmlToText(raw);
-    if (text.length < 400) return null;
-    if (!sourceMentionsScientificName(text, scientificName)) return null;
+    if (text.length < 400) {
+      return {
+        document: null,
+        diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'content_too_short', httpStatus: response.status, reason: 'verified_text_below_minimum_length' },
+      };
+    }
+    if (!sourceMentionsScientificName(text, scientificName)) {
+      return {
+        document: null,
+        diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'taxon_mismatch', httpStatus: response.status, reason: 'exact_scientific_name_not_found' },
+      };
+    }
 
     const classification = classifyTrustedSource(current);
-    if (!classification) return null;
+    if (!classification) {
+      return {
+        document: null,
+        diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'untrusted_source', httpStatus: response.status, reason: 'final_source_not_trusted' },
+      };
+    }
 
-    return {
+    const document = {
       url: current.toString(),
       title: contentType.includes('text/plain')
         ? scientificName + ' source'
@@ -414,9 +487,44 @@ const fetchOneVerifiedDocument = async (
       sourceType: classification.sourceType,
       text: text.slice(0, config.maxSourceChars),
     };
+    return {
+      document,
+      diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'verified', httpStatus: response.status, reason: null },
+    };
   }
 
-  return null;
+  return {
+    document: null,
+    diagnostic: { requestedUrl: initialUrl, finalUrl: current.toString(), status: 'redirect_limit', httpStatus: null, reason: 'redirect_limit_exceeded' },
+  };
+};
+
+const fetchOneVerifiedDocument = async (
+  initialUrl: string,
+  scientificName: string,
+  config: CompatibilityResearchProviderConfig,
+  fetchImpl: FetchLike,
+): Promise<VerifiedDocument | null> => (
+  await fetchOneVerifiedDocumentDetailed(initialUrl, scientificName, config, fetchImpl)
+).document;
+
+const verifiedDocumentsDetailed = async (
+  urls: string[],
+  scientificName: string,
+  config: CompatibilityResearchProviderConfig,
+  fetchImpl: FetchLike,
+) => {
+  const documents: VerifiedDocument[] = [];
+  const diagnostics: CompatibilitySourceFetchDiagnostic[] = [];
+  for (const url of urls) {
+    const result = await fetchOneVerifiedDocumentDetailed(url, scientificName, config, fetchImpl);
+    diagnostics.push(result.diagnostic);
+    if (!result.document) continue;
+    if (documents.some(existing => existing.url === result.document?.url)) continue;
+    documents.push(result.document);
+    if (documents.length >= config.maxVerifiedSources) break;
+  }
+  return { documents, diagnostics };
 };
 
 const verifiedDocuments = async (
@@ -424,17 +532,7 @@ const verifiedDocuments = async (
   scientificName: string,
   config: CompatibilityResearchProviderConfig,
   fetchImpl: FetchLike,
-) => {
-  const documents: VerifiedDocument[] = [];
-  for (const url of urls) {
-    const document = await fetchOneVerifiedDocument(url, scientificName, config, fetchImpl);
-    if (!document) continue;
-    if (documents.some(existing => existing.url === document.url)) continue;
-    documents.push(document);
-    if (documents.length >= config.maxVerifiedSources) break;
-  }
-  return documents;
-};
+) => (await verifiedDocumentsDetailed(urls, scientificName, config, fetchImpl)).documents;
 
 const extractionPromptFor = (scientificName: string, documents: VerifiedDocument[]) => [
   'Extract only direct evidence for the exact taxon ' + scientificName + '.',
@@ -527,17 +625,25 @@ export const buildCompatibilityResearchProviderConfig = (
   maxSourceChars: Math.max(2_000, Math.min(20_000, Number(env.COMPATIBILITY_RESEARCH_MAX_SOURCE_CHARS || 8_000))),
 });
 
+export const acquireVerifiedCompatibilitySourcesDetailed = async (
+  input: { scientificName: string },
+  config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
+  fetchImpl: FetchLike = fetch,
+): Promise<CompatibilitySourceAcquisitionDetailedResult> => {
+  const candidates = trustedTemplateCandidates(input.scientificName)
+    .filter(raw => safePublicSourceUrl(raw))
+    .slice(0, config.maxSearchCandidates);
+  const { documents, diagnostics } = await verifiedDocumentsDetailed(candidates, input.scientificName, config, fetchImpl);
+  return { sources: sourcesFromDocuments(documents), diagnostics };
+};
+
 export const acquireVerifiedCompatibilitySources = async (
   input: { scientificName: string },
   config: CompatibilityResearchProviderConfig = buildCompatibilityResearchProviderConfig(),
   fetchImpl: FetchLike = fetch,
-): Promise<CompatibilityResearchSource[]> => {
-  const candidates = trustedTemplateCandidates(input.scientificName)
-    .filter(raw => safePublicSourceUrl(raw))
-    .slice(0, config.maxSearchCandidates);
-  const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
-  return sourcesFromDocuments(documents);
-};
+): Promise<CompatibilityResearchSource[]> => (
+  await acquireVerifiedCompatibilitySourcesDetailed(input, config, fetchImpl)
+).sources;
 
 const providerHost = (baseUrl: string) => {
   try {
