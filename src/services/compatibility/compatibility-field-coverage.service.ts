@@ -5,6 +5,7 @@ import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledge, getReviewedSpeciesKnowledgeForFish } from '../../modules/knowledge/speciesKnowledge';
+import { resolveKnowledgeSources } from '../../modules/knowledge/knowledgeSources';
 import { getLifeType } from '../../modules/species/species.service';
 import type { Fish } from '../../types';
 
@@ -292,8 +293,9 @@ export const buildCompatibilityFastLaneResearchPackets = (): CompatibilityFastLa
     const profile = fish ? getReviewedCompatibilityProfileForFish(fish) : undefined;
     const evidenceIds = cell.evidenceIds.length > 0 ? cell.evidenceIds : (profile?.citations.map(source => source.id) ?? []);
     const evidenceSet = new Set(evidenceIds);
-    const existingSources = (profile?.citations ?? [])
-      .filter(source => evidenceSet.has(source.id))
+    const profileSources = (profile?.citations ?? []).filter(source => evidenceSet.has(source.id));
+    const registrySources = resolveKnowledgeSources(evidenceIds);
+    const existingSources = Array.from(new Map([...profileSources, ...registrySources].map(source => [source.id, source])).values())
       .map(source => ({ id: source.id, title: source.title, publisher: source.publisher, url: source.url, reviewStatus: source.reviewStatus }));
     return [{
       speciesId: row.speciesId,

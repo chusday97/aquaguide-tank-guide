@@ -16,7 +16,7 @@ assert.deepEqual(summary.coreFields, fields);
 assert.ok(summary.runtimeReviewedProfileSpecies >= 101);
 assert.ok(summary.coreFieldCompleteSpecies >= summary.genericOnboardingReadySpecies);
 assert.ok(summary.oneFieldGapSpecies > 0);
-assert.ok(summary.genericOnboardingReadySpecies >= 39, 'High-yield source-first coverage should preserve at least 39 fully sourced generic-ready profiles');
+assert.ok(summary.genericOnboardingReadySpecies >= 40, 'High-yield source-first coverage should preserve at least 40 fully sourced generic-ready profiles');
 for (const speciesId of ['sp_0017','sp_0018','sp_0020','sp_0045','sp_0048','sp_0050','sp_0053','sp_0056','sp_0057','sp_0058','sp_0114','sp_0126','sp_0131','sp_0133','sp_0140','sp_0181','sp_0184','sp_0202','sp_0214','sp_0218','sp_0440','sp_0443','sp_0446','sp_0448','sp_0449','sp_0469']) {
   const row = rows.find(item => item.speciesId === speciesId);
   const fish = fishData.find(item => item.id === speciesId);
@@ -91,6 +91,8 @@ assert.deepEqual(approvedValue('sp_0184', 'adult_size'), { min: null, max: 10 })
 assert.deepEqual(approvedValue('sp_0218', 'social_behavior'), { mode: 'group', minimumGroupSize: 8 });
 assert.deepEqual(approvedValue('sp_0057', 'tank_size'), { liters: 250, lengthCm: null });
 assert.deepEqual(approvedValue('sp_0057', 'predation'), { targets: [] });
+assert.deepEqual(approvedValue('sp_0156', 'predation'), { targets: [] });
+assert.equal(rowOf('sp_0156')?.genericOnboardingReady, true);
 for (const speciesId of ['sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
   assert.deepEqual(approvedValue(speciesId, 'tank_size'), { liters: null, lengthCm: 200 }, `${speciesId} must not invent a tank-volume minimum`);
 }
@@ -135,4 +137,10 @@ assert.deepEqual(backlogArtifact.items, backlog, 'source-controlled field backlo
 assert.equal(fastLaneArtifact.totalPackets, fastLanePackets.length);
 assert.deepEqual(fastLaneArtifact.packets, fastLanePackets, 'Fast Lane research packets must be regenerated with current authority');
 assert.ok(fastLanePackets.every(packet => packet.existingEvidenceIds.length > 0), 'near-ready research packet must preserve existing provenance');
+assert.ok(fastLanePackets.every(packet => packet.existingSources.length > 0), 'near-ready research packet must resolve existing field provenance to source metadata');
+for (const speciesId of ['sp_0012', 'sp_0447', 'sp_0451', 'sp_0468']) {
+  const packet = fastLanePackets.find(item => item.speciesId === speciesId);
+  assert.ok(packet, `${speciesId} must remain represented in Fast Lane while its final field is unresolved`);
+  assert.ok(packet.existingSources.length > 0, `${speciesId} Fast Lane packet must not lose source metadata when evidence comes from field review rather than Profile citations`);
+}
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

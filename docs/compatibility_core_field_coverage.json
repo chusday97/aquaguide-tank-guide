@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 39,
-  "coreFieldCompleteSpecies": 41,
-  "oneFieldGapSpecies": 15,
+  "genericOnboardingReadySpecies": 40,
+  "coreFieldCompleteSpecies": 42,
+  "oneFieldGapSpecies": 14,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -75,8 +75,8 @@
     },
     "predation": {
       "reviewed_supported": 41,
-      "reviewed_neutral_or_negative": 20,
-      "reviewed_unknown": 122,
+      "reviewed_neutral_or_negative": 21,
+      "reviewed_unknown": 121,
       "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -109,7 +109,7 @@
     },
     {
       "field": "predation",
-      "count": 42
+      "count": 41
     },
     {
       "field": "social_behavior",
@@ -12512,9 +12512,9 @@
       "scientificName": "Trichopodus trichopterus var. Platinum",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -12587,14 +12587,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-trichopodus-trichopterus-platinum",
             "seriouslyfish-trichopodus-trichopterus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

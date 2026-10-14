@@ -176,7 +176,7 @@ for (const [speciesId, scientificName, variantKey, variantSource] of [
     supported('sp_0156','tank_size',{liters:81,lengthCm:90},ids),
     supported('sp_0156','social_behavior',{mode:'variable',minimumGroupSize:null},ids,['Individuals range from peaceful to spiteful as they mature.']),
     supported('sp_0156','territoriality',{traits:['male_territoriality','breeding_aggression']},[S.trichopodusSeriouslyFish.id]),
-    unknown('sp_0156','predation','Dietary invertebrate feeding is not promoted as a fish-predation rule.',ids),
+    supported('sp_0156','predation',{targets:[]},[S.trichopodusSeriouslyFish.id],['Seriously Fish gives community-tankmate guidance and records plant/algae/invertebrate/zooplankton feeding without a fish-prey scope; temperament and male territorial/breeding aggression remain modeled separately.'],'medium'),
     supported('sp_0156','breeding_behavior',{traits:['male_breeding_aggression']},[S.trichopodusSeriouslyFish.id]),
   );
 }

@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 15,
+  "totalPackets": 14,
   "packets": [
     {
       "speciesId": "sp_0054",
@@ -16,39 +16,9 @@
       "existingSources": [
         {
           "id": "batch09-fishbase-hemichromis-bimaculatus",
-          "title": "Rubricatochromis bimaculatus species summary",
+          "title": "Hemichromis bimaculatus species summary",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Rubricatochromis-bimaculatus.html",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0156",
-      "name": "白金蓝曼龙",
-      "scientificName": "Trichopodus trichopterus var. Platinum",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch21-fishbase-trichopodus-trichopterus-platinum",
-        "seriouslyfish-trichopodus-trichopterus"
-      ],
-      "existingSources": [
-        {
-          "id": "batch21-fishbase-trichopodus-trichopterus-platinum",
-          "title": "Trichopodus trichopterus Platinum variant review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Trichopodus-trichopterus",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "seriouslyfish-trichopodus-trichopterus",
-          "title": "Trichopodus trichopterus (Three-spot Gourami)",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/trichopodus-trichopterus",
+          "url": "https://www.fishbase.se/summary/Hemichromis-bimaculatus",
           "reviewStatus": "reviewed"
         }
       ],
@@ -71,7 +41,7 @@
           "id": "batch21-fishbase-channa-stewartii",
           "title": "Channa stewartii species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Channa-stewartii",
+          "url": "https://www.fishbase.se/search.php",
           "reviewStatus": "reviewed"
         },
         {
@@ -101,7 +71,7 @@
           "id": "batch21-fishbase-badis-badis",
           "title": "Badis badis species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Badis-badis",
+          "url": "https://www.fishbase.se/search.php",
           "reviewStatus": "reviewed"
         },
         {
@@ -131,7 +101,7 @@
           "id": "batch21-fishbase-channa-diplogramma",
           "title": "Channa diplogramma species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Channa-diplogramma",
+          "url": "https://www.fishbase.se/summary/Channa-diplogramma.html",
           "reviewStatus": "reviewed"
         },
         {
@@ -155,7 +125,15 @@
       "existingEvidenceIds": [
         "batch-02-fishbase-puntius-titteya"
       ],
-      "existingSources": [],
+      "existingSources": [
+        {
+          "id": "batch-02-fishbase-puntius-titteya",
+          "title": "Puntius titteya species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Puntius-titteya.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
       "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     },
@@ -175,7 +153,7 @@
           "id": "batch19-fishbase-scleropages-formosus",
           "title": "Scleropages formosus species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "url": "https://www.fishbase.se/Summary/Scleropages-formosus",
           "reviewStatus": "reviewed"
         },
         {
@@ -213,7 +191,7 @@
           "id": "batch19-fishbase-scleropages-formosus",
           "title": "Scleropages formosus species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "url": "https://www.fishbase.se/Summary/Scleropages-formosus",
           "reviewStatus": "reviewed"
         },
         {
@@ -281,7 +259,7 @@
           "id": "batch19-fishbase-scleropages-formosus",
           "title": "Scleropages formosus species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "url": "https://www.fishbase.se/Summary/Scleropages-formosus",
           "reviewStatus": "reviewed"
         },
         {
@@ -311,7 +289,7 @@
           "id": "batch20-fishbase-piaractus-brachypomus",
           "title": "Piaractus brachypomus species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Piaractus-brachypomus",
+          "url": "https://www.fishbase.se/search.php",
           "reviewStatus": "reviewed"
         },
         {
@@ -349,7 +327,7 @@
           "id": "batch19-fishbase-scleropages-formosus",
           "title": "Scleropages formosus species review",
           "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+          "url": "https://www.fishbase.se/Summary/Scleropages-formosus",
           "reviewStatus": "reviewed"
         },
         {
@@ -374,7 +352,22 @@
         "batch-02-fishbase-symphysodon-aequifasciatus",
         "batch-02-worms-symphysodon-aequifasciatus"
       ],
-      "existingSources": [],
+      "existingSources": [
+        {
+          "id": "batch-02-fishbase-symphysodon-aequifasciatus",
+          "title": "Symphysodon aequifasciatus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Symphysodon-aequifasciatus.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "batch-02-worms-symphysodon-aequifasciatus",
+          "title": "Symphysodon aequifasciatus taxon record",
+          "publisher": "WoRMS",
+          "url": "https://www.marinespecies.org/aphia.php?p=taxdetails&id=101196",
+          "reviewStatus": "reviewed"
+        }
+      ],
       "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     },
@@ -388,7 +381,15 @@
       "existingEvidenceIds": [
         "batch03-fishbase-astronotus-ocellatus"
       ],
-      "existingSources": [],
+      "existingSources": [
+        {
+          "id": "batch03-fishbase-astronotus-ocellatus",
+          "title": "Astronotus ocellatus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Astronotus-ocellatus.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
       "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     },
@@ -402,7 +403,15 @@
       "existingEvidenceIds": [
         "batch-02-fishbase-trigonostigma-heteromorpha"
       ],
-      "existingSources": [],
+      "existingSources": [
+        {
+          "id": "batch-02-fishbase-trigonostigma-heteromorpha",
+          "title": "Trigonostigma heteromorpha species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Trigonostigma-heteromorpha.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
       "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
       "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     }

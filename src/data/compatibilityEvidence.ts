@@ -1109,7 +1109,7 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
     confidence: 'medium',
     reviewStatus: 'reviewed',
     citations: [herosFishBase, herosFishipedia],
-    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'breeding_behavior'],
+    requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation', 'breeding_behavior'],
   },
   sp_0057: {
     speciesId: 'sp_0057',
@@ -1546,7 +1546,7 @@ profiles.sp_0156 = {
   confidence: 'high',
   reviewStatus: 'reviewed',
   citations: [nextWaveUnified04Sources.trichopodusPlatinum, nextWaveUnified04Sources.trichopodusSeriouslyFish],
-  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'breeding_behavior'],
+  requiredFacts: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior', 'territoriality', 'predation', 'breeding_behavior'],
 };
 
 
