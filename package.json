@@ -354,7 +354,9 @@
     "test:compatibility-production-post-migration-verifier": "node --import tsx scripts/test-compatibility-production-post-migration-verifier.mjs",
     "verify:product-care-production-snapshots": "node scripts/verify-product-care-production-snapshots.mjs",
     "test:kissing-gourami-compatibility-authority": "node --import tsx scripts/test-kissing-gourami-compatibility-authority.ts",
-    "test:compatibility-next-wave": "node --import tsx scripts/test-next-wave-compatibility-authority.ts"
+    "test:compatibility-next-wave": "node --import tsx scripts/test-next-wave-compatibility-authority.ts",
+    "dryrun:compatibility-research-batch": "node --import tsx scripts/run-compatibility-research-batch-dryrun.ts",
+    "test:compatibility-research-batch-dryrun": "node --import tsx scripts/test-compatibility-research-batch-dryrun.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",
