@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 43,
-  "coreFieldCompleteSpecies": 45,
-  "oneFieldGapSpecies": 11,
+  "genericOnboardingReadySpecies": 45,
+  "coreFieldCompleteSpecies": 47,
+  "oneFieldGapSpecies": 9,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -66,17 +66,17 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 55,
+      "reviewed_supported": 56,
       "reviewed_neutral_or_negative": 8,
-      "reviewed_unknown": 119,
+      "reviewed_unknown": 118,
       "needs_research": 5,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 41,
+      "reviewed_supported": 42,
       "reviewed_neutral_or_negative": 22,
-      "reviewed_unknown": 120,
+      "reviewed_unknown": 119,
       "needs_research": 4,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -105,11 +105,11 @@
     },
     {
       "field": "territoriality",
-      "count": 51
+      "count": 50
     },
     {
       "field": "predation",
-      "count": 40
+      "count": 39
     },
     {
       "field": "social_behavior",
@@ -11076,9 +11076,9 @@
       "scientificName": "Piaractus brachypomus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -11138,14 +11138,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-piaractus-brachypomus",
-            "seriouslyfish-piaractus-brachypomus"
+            "animaldiversity-piaractus-brachypomus"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -16001,9 +16000,9 @@
       "scientificName": "Badis badis",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -16074,14 +16073,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-badis-badis",
             "seriouslyfish-badis-badis"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

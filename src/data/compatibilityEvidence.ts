@@ -23,7 +23,7 @@ import { nextWaveUnified04Sources } from './catalogReviewBatches/next-wave-unifi
 import { nextWaveUnified05Sources } from './catalogReviewBatches/next-wave-unified-05';
 import { nextWaveUnified06Sources } from './catalogReviewBatches/next-wave-unified-06';
 import { nextWaveUnified16Sources } from './catalogReviewBatches/next-wave-unified-16';
-import { compatibilityFastLanePatchSources, compatibilityFastLaneProfilePatches } from './compatibilityAuthorityPatches/fast-lane-20261014';
+import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 
 export type ReviewedCompatibilityProfile = {
   speciesId: string;
@@ -1458,18 +1458,18 @@ const profiles: Record<string, ReviewedCompatibilityProfile> = {
   },
 };
 
-const fastLanePatchSourceById = new Map(
-  Object.values(compatibilityFastLanePatchSources).map(source => [source.id, source] as const),
+const authorityPatchSourceById = new Map(
+  Object.values(compatibilityAuthorityPatchSources).map(source => [source.id, source] as const),
 );
 
-for (const patch of compatibilityFastLaneProfilePatches) {
+for (const patch of compatibilityProfileAuthorityPatches) {
   const profile = profiles[patch.speciesId];
   if (!profile) throw new Error(`Missing reviewed Compatibility profile for authority patch: ${patch.speciesId}`);
   profile.behaviorTraits = Array.from(new Set([...profile.behaviorTraits, ...(patch.addBehaviorTraits ?? [])]));
   if (patch.replacePredationTargets) profile.predationTargets = [...patch.replacePredationTargets];
   const citations = [...profile.citations];
   for (const sourceId of patch.addCitationIds) {
-    const source = fastLanePatchSourceById.get(sourceId);
+    const source = authorityPatchSourceById.get(sourceId);
     if (!source) throw new Error(`Missing Compatibility authority patch source: ${sourceId}`);
     if (!citations.some(item => item.id === sourceId)) citations.push(source);
   }

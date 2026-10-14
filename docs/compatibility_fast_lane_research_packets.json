@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 11,
+  "totalPackets": 9,
   "packets": [
     {
       "speciesId": "sp_0054",
@@ -24,36 +24,6 @@
       ],
       "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
       "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0199",
-      "name": "珍珠麒麟",
-      "scientificName": "Badis badis",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch21-fishbase-badis-badis",
-        "seriouslyfish-badis-badis"
-      ],
-      "existingSources": [
-        {
-          "id": "batch21-fishbase-badis-badis",
-          "title": "Badis badis species review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/search.php",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "seriouslyfish-badis-badis",
-          "title": "Badis badis (Blue Perch)",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/badis-badis",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "If the evidence establishes only crustacean/invertebrate micropredation, do not coerce it to small_fish; extend reviewed prey vocabulary first if needed."
     },
     {
       "speciesId": "sp_0198",
@@ -237,36 +207,6 @@
           "title": "Scleropages formosus (Asian Arowana)",
           "publisher": "Seriously Fish",
           "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
-      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
-    },
-    {
-      "speciesId": "sp_0139",
-      "name": "淡水白鲳",
-      "scientificName": "Piaractus brachypomus",
-      "missingField": "territoriality",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch20-fishbase-piaractus-brachypomus",
-        "seriouslyfish-piaractus-brachypomus"
-      ],
-      "existingSources": [
-        {
-          "id": "batch20-fishbase-piaractus-brachypomus",
-          "title": "Piaractus brachypomus species review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/search.php",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "seriouslyfish-piaractus-brachypomus",
-          "title": "Piaractus brachypomus (Red-bellied Pacu)",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/piaractus-brachypomus",
           "reviewStatus": "reviewed"
         }
       ],

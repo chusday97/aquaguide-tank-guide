@@ -528,6 +528,12 @@ export const compatibilityUnifiedNextWave = {
       authorityOwner: 'src/data/compatibilityAuthorityPatches/fast-lane-20261014.ts',
       speciesIds: ['sp_0197', 'sp_0447', 'sp_0451'],
     },
+    {
+      patchId: 'fast-lane-evidence-wave2-20261014',
+      migrationOwner: 'supabase/migrations/20261014143000_compatibility_fast_lane_wave2_authority_patch.sql',
+      authorityOwner: 'src/data/compatibilityAuthorityPatches/fast-lane-wave2-20261014.ts',
+      speciesIds: ['sp_0139', 'sp_0199'],
+    },
   ] satisfies readonly CompatibilityAuthorityPatch[],
   activeQueueSpeciesIds: [] as const,
   identityBoundaryHoldSpeciesIds: ['sp_0055', 'sp_0110', 'sp_0120', 'sp_0158', 'sp_0163', 'sp_0175', 'sp_0176', 'sp_0177', 'sp_0178', 'sp_0179', 'sp_0182', 'sp_0201', 'sp_0208', 'sp_0216', 'sp_0217', 'sp_0219', 'sp_0220', 'sp_0221', 'sp_0227', 'sp_0228', 'sp_0229', 'sp_0234', 'sp_0235', 'sp_0236', 'sp_0240', 'sp_0241', 'sp_0242', 'sp_0243', 'sp_0247', 'sp_0248', 'sp_0256', 'sp_0257', 'sp_0263', 'sp_0264', 'sp_0265', 'sp_0266', 'sp_0268', 'sp_0269', 'sp_0270', 'sp_0271', 'sp_0272', 'sp_0273', 'sp_0282', 'sp_0284', 'sp_0285', 'sp_0286', 'sp_0288', 'sp_0294', 'sp_0296', 'sp_0297', 'sp_0334', 'sp_0338', 'sp_0340', 'sp_0341', 'sp_0359', 'sp_0372', 'sp_0373', 'sp_0374', 'sp_0376', 'sp_0388', 'sp_0393', 'sp_0394', 'sp_0399', 'sp_0407', 'sp_0408', 'sp_0409', 'sp_0410', 'sp_0411', 'sp_0412', 'sp_0414', 'sp_0415', 'sp_0416', 'sp_0417', 'sp_0420', 'sp_0365', 'sp_0421', 'sp_0442', 'sp_0445', 'sp_0211', 'sp_0077', 'sp_0089', 'sp_0065', 'sp_0124', 'sp_0141', 'sp_0142', 'sp_0143', 'sp_0145', 'sp_0154', 'sp_0155', 'sp_0159', 'sp_0160', 'sp_0167', 'sp_0170', 'sp_0066', 'sp_0144', 'sp_0204', 'sp_0205', 'sp_0206', 'sp_0210', 'sp_0212', 'sp_0225', 'sp_0226', 'sp_0230', 'sp_0231', 'sp_0232', 'sp_0244', 'sp_0245', 'sp_0246', 'sp_0067', 'sp_0255', 'sp_0280', 'sp_0281', 'sp_0287', 'sp_0339', 'sp_0358', 'sp_0068', 'sp_0360', 'sp_0361', 'sp_0366', 'sp_0375', 'sp_0392', 'sp_0418', 'sp_0474', 'sp_0162'] as const,
