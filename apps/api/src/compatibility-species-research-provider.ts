@@ -136,7 +136,11 @@ const domainMatches = (host: string, domain: string) => {
 const isAllowedPlanetCatfishPath = (url: URL) => {
   const path = url.pathname.toLowerCase();
   if (path.startsWith('/forum/') || path.startsWith('/media/')) return false;
-  if (path === '/common/species.php') return /^\d+$/.test(url.searchParams.get('species_id') || '');
+  if (
+    path === '/common/species.php'
+    || path === '/catelog/species.php'
+    || path === '/catelog/_species.php'
+  ) return /^\d+$/.test(url.searchParams.get('species_id') || '');
   if (path === '/cotm/cotm.php') return /^\d+$/.test(url.searchParams.get('article_id') || '');
   return /^\/[a-z0-9][a-z0-9_-]*\/?$/.test(path);
 };

@@ -461,6 +461,7 @@ assert.equal(assessCompatibilitySpeciesResearchPacket(persistentNetworkPacket).s
 
 const planetCatfishUrl = 'https://www.planetcatfish.com/cotm/cotm.php?article_id=999';
 const planetCatfishForumUrl = 'https://www.planetcatfish.com/forum/viewtopic.php?t=999';
+const planetCatfishLegacyUrl = 'https://www.planetcatfish.com/catelog/species.php?species_id=107';
 let planetCatfishPageFetches = 0;
 let planetCatfishForumFetches = 0;
 const planetCatfishFetch: typeof fetch = async (input, init) => {
@@ -471,6 +472,7 @@ const planetCatfishFetch: typeof fetch = async (input, init) => {
       return new Response(JSON.stringify({
         choices: [{ message: { content: JSON.stringify({ candidates: [
           { url: planetCatfishUrl },
+          { url: planetCatfishLegacyUrl },
           { url: planetCatfishForumUrl },
         ] }) } }],
       }), { status: 200, headers: { 'content-type': 'application/json' } });
@@ -488,7 +490,7 @@ const planetCatfishFetch: typeof fetch = async (input, init) => {
       ] }) } }],
     }), { status: 200, headers: { 'content-type': 'application/json' } });
   }
-  if (url.toString() === planetCatfishUrl) {
+  if (url.toString() === planetCatfishUrl || url.toString() === planetCatfishLegacyUrl) {
     planetCatfishPageFetches += 1;
     return new Response([
       '<html><head><title>Pseudomugil luminatus specialist species profile</title></head><body>',
@@ -518,11 +520,16 @@ const planetCatfishPacket = await createBailianCompatibilitySpeciesResearchProvi
   scientificName,
   targetFields: ['social_behavior'],
 });
-assert.equal(planetCatfishPageFetches, 1, 'eligible PlanetCatfish exact-taxon specialist pages may enter verified-source acquisition');
+assert.equal(planetCatfishPageFetches, 2, 'new and legacy PlanetCatfish exact-taxon specialist page URLs may enter verified-source acquisition');
 assert.equal(planetCatfishForumFetches, 0, 'PlanetCatfish forums must be rejected before server fetch');
-assert.equal(planetCatfishPacket.sources.length, 1);
-assert.equal(planetCatfishPacket.sources[0].publisher, 'PlanetCatfish');
-assert.equal(planetCatfishPacket.sources[0].sourceType, 'curated_husbandry');
+assert.equal(planetCatfishPacket.sources.length, 2);
+assert.equal(planetCatfishPacket.sources.every(source => source.publisher === 'PlanetCatfish'), true);
+assert.equal(planetCatfishPacket.sources.every(source => source.sourceType === 'curated_husbandry'), true);
+assert.deepEqual(
+  planetCatfishPacket.sources.map(source => source.url).sort(),
+  [planetCatfishLegacyUrl, planetCatfishUrl].sort(),
+  'new and legacy exact-taxon page forms must both survive source verification',
+);
 assert.equal(planetCatfishPacket.claims.length, 1);
 assert.equal(planetCatfishPacket.claims[0].confidence, 'medium', 'specialist PlanetCatfish evidence is candidate-only and must never retain high model confidence');
 
