@@ -309,7 +309,7 @@ export const assessCompatibilitySpeciesResearchPacket = (
   };
 };
 
-export const researchAndAssessCompatibilitySpecies = async (
+export const researchAndAssessCompatibilitySpeciesDetailed = async (
   provider: CompatibilitySpeciesResearchProvider,
   input: { catalogKey: string; scientificName: string; commonName?: string },
 ) => {
@@ -321,14 +321,21 @@ export const researchAndAssessCompatibilitySpecies = async (
   if (packet.scientificName.trim().toLowerCase() !== input.scientificName.trim().toLowerCase()) {
     reasonCodes.push('provider_scientific_name_mismatch');
   }
-  if (reasonCodes.length === assessment.reasonCodes.length) return assessment;
-  return {
-    ...assessment,
-    status: 'terminal_hold' as const,
-    reasonCodes: [...new Set(reasonCodes)],
-    candidateProfile: null,
-  };
+  const finalAssessment = reasonCodes.length === assessment.reasonCodes.length
+    ? assessment
+    : {
+      ...assessment,
+      status: 'terminal_hold' as const,
+      reasonCodes: [...new Set(reasonCodes)],
+      candidateProfile: null,
+    };
+  return { packet, assessment: finalAssessment };
 };
+
+export const researchAndAssessCompatibilitySpecies = async (
+  provider: CompatibilitySpeciesResearchProvider,
+  input: { catalogKey: string; scientificName: string; commonName?: string },
+) => (await researchAndAssessCompatibilitySpeciesDetailed(provider, input)).assessment;
 
 export const runCompatibilitySpeciesOnboardingPipeline = async (
   identityResolver: CompatibilitySpeciesIdentityResolver,

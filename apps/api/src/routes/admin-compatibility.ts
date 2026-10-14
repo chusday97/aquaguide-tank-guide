@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import { z } from 'zod';
 import {
   compatibilityPairRuleRevisionInputSchema,
   compatibilityPairRuleRevisionStatusMutationSchema,
@@ -27,6 +28,12 @@ import {
 } from '../compatibility-authority';
 import { ApiError, asyncRoute, sendData } from '../http';
 import { getAdminSupabase } from '../supabase';
+import {
+  compatibilitySpeciesResearchProvider,
+  getCompatibilitySpeciesResearchProviderReadiness,
+} from '../compatibility-species-research-provider';
+import { createGbifSpeciesIdentityResolver } from '../../../../src/services/compatibility/gbif-species-identity.service';
+import { researchAndAssessCompatibilitySpeciesDetailed } from '../../../../src/services/compatibility/species-onboarding-research.service';
 
 const activeRevisionStatuses = ['draft', 'pending_review', 'approved'];
 const reviewedCitationsOnly = (citations: Array<{ reviewStatus: string }>) => (
@@ -177,6 +184,59 @@ const assertProfileRegressionFresh = async (revision: Record<string, any>) => {
 };
 
 export const adminCompatibilityRouter = Router();
+
+const compatibilityResearchPreviewInputSchema = z.object({
+  catalogKey: z.string().trim().min(1).max(160).regex(/^[\\w.-]+$/),
+  scientificName: z.string().trim().min(3).max(180),
+  commonName: z.string().trim().min(1).max(180).optional(),
+}).strict();
+
+adminCompatibilityRouter.get('/research-readiness', asyncRoute(async (request, response) => sendData(request, response, {
+  identityProvider: {
+    id: 'gbif-species-match-v1',
+    configured: true,
+  },
+  researchProvider: getCompatibilitySpeciesResearchProviderReadiness(),
+  writesAuthority: false,
+})));
+
+adminCompatibilityRouter.post('/research-preview', asyncRoute(async (request, response) => {
+  const parsed = compatibilityResearchPreviewInputSchema.safeParse(request.body);
+  if (!parsed.success) throw new ApiError(400, 'VALIDATION_ERROR', 'Compatibility research 输入无效。', parsed.error.flatten());
+
+  const identity = await createGbifSpeciesIdentityResolver().resolve(parsed.data.scientificName);
+  if (identity.status !== 'verified') {
+    return sendData(request, response, {
+      status: 'identity_hold' as const,
+      identity,
+      packet: null,
+      assessment: null,
+      writesAuthority: false,
+    });
+  }
+
+  const readiness = getCompatibilitySpeciesResearchProviderReadiness();
+  if (!readiness.configured) {
+    throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Compatibility research provider 尚未配置。', {
+      providerId: readiness.providerId,
+      host: readiness.host,
+      model: readiness.model,
+    });
+  }
+
+  try {
+    const detailed = await researchAndAssessCompatibilitySpeciesDetailed(compatibilitySpeciesResearchProvider, parsed.data);
+    return sendData(request, response, {
+      status: 'research_assessed' as const,
+      identity,
+      ...detailed,
+      writesAuthority: false,
+    });
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : 'compatibility_research_failed';
+    throw new ApiError(503, 'DEPENDENCY_UNAVAILABLE', 'Compatibility research 暂时不可用。', { reason });
+  }
+}));
 
 adminCompatibilityRouter.get('/profile-revisions', asyncRoute(async (request, response) => {
   const client = getAdminSupabase();
