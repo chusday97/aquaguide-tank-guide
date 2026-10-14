@@ -201,7 +201,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         ? '先不要把这组生物放在一起；先处理下面的明确阻断风险，再重新判断。'
         : '先暂停新增，处理当前高风险项后再重新判断。',
       primaryReason: firstText(blockingRules, decision.summary || '当前存在明确风险。'),
-      observeAfterAction: null,
+      observeAfterAction: '只有在明确阻断条件已消除并重新评估通过后，才考虑新的混养方案。',
       detailsLabel: '为什么不建议？',
     };
   }
@@ -212,8 +212,8 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         verdict: 'need_information',
         headline: '先确认具体物种',
         immediateAction: '先确认准确学名、商品名对应物种或具体品系；身份没确认前不要直接套用其他物种的混养结论。',
-        primaryReason: firstText(missingData, decision.summary || '当前物种身份还不能可靠确认。'),
-        observeAfterAction: null,
+        primaryReason: '当前目录身份仍未可靠确认，不能把其他近似物种或品系的混养资料直接套用到它。',
+        observeAfterAction: '确认准确学名或具体品系后，重新运行混养判断再决定是否加入。',
         detailsLabel: '为什么需要确认身份？',
       };
     }
@@ -222,8 +222,8 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         verdict: 'need_information',
         headline: '可靠公开资料还不够',
         immediateAction: '这不是你少填了资料；目前可靠公开来源不足以确认关键风险，先不要据此新增，等有更强证据后再判断。',
-        primaryReason: firstText(missingData, decision.summary || '公开可靠资料不足以支持这次关键判断。'),
-        observeAfterAction: null,
+        primaryReason: '现有可靠公开来源不足以确认这次决策需要的关键行为或风险边界，不能据此判断为安全可加入。',
+        observeAfterAction: '只有在补到更强的可靠来源并重新审核后，再重新运行混养判断。',
         detailsLabel: '哪项资料无法确认？',
       };
     }
@@ -232,7 +232,7 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
       headline: '现在还不能可靠判断',
       immediateAction: '先别急着加；补齐这次判断真正需要的鱼缸或物种信息后再算一次。',
       primaryReason: firstText(missingData, decision.summary || '关键资料还不够。'),
-      observeAfterAction: null,
+      observeAfterAction: '补齐当前缺失的鱼缸或物种信息后，重新运行混养判断。',
       detailsLabel: '还缺什么？',
     };
   }
@@ -362,7 +362,7 @@ const buildCurrentTankCompatibilityAction = (
       ...plannedAction,
       headline: '当前组合需要尽快调整',
       immediateAction: '尽快分隔明确冲突的物种，先处理阻断风险，再重新判断当前组合。',
-      observeAfterAction: null,
+      observeAfterAction: '分隔并消除明确冲突后重新评估；没有重新通过前不要恢复原组合。',
     };
   }
 
@@ -377,7 +377,11 @@ const buildCurrentTankCompatibilityAction = (
         : hasPublicEvidenceInsufficient
           ? '现有可靠公开资料不足以确认关键风险；先维持谨慎观察，不要据此继续扩大当前组合。'
           : '先补齐这次判断真正需要的信息，再重新判断当前组合是否需要调整。',
-      observeAfterAction: null,
+      observeAfterAction: hasIdentityUnresolved
+        ? '确认准确身份后重新评估当前组合。'
+        : hasPublicEvidenceInsufficient
+          ? '获得更可靠的公开依据并重新审核后，再重新评估当前组合。'
+          : '补齐缺失信息后重新评估当前组合。',
     };
   }
 
@@ -481,6 +485,20 @@ const actionSourceRules = (decision: CompatibilityDecision) => {
   return prioritizeDistinctCompatibilityRules(decision.passedRules).slice(0, 2);
 };
 
+const criticalInformationSourceCodes = (decision: CompatibilityDecision): string[] => {
+  if (decision.status !== 'insufficient_data') return [];
+  const domainCodes = decision.metadata.domainRuleCodes || [];
+  const identityCodes = domainCodes.filter(code => (
+    code === 'species_identity_unresolved'
+    || (code.startsWith('identity_') && code.endsWith('_unresolved'))
+  ));
+  const publicEvidenceCodes = domainCodes.filter(code => (
+    code === 'species_public_evidence_insufficient'
+    || (code.startsWith('public_evidence_') && code.endsWith('_insufficient'))
+  ));
+  return Array.from(new Set([...identityCodes, ...publicEvidenceCodes])).slice(0, 2);
+};
+
 const actionAuthorityLevel = (decision: CompatibilityDecision, sourceCodes: string[]): CompatibilityActionAuthorityLevel => {
   if (decision.status === 'insufficient_data') return 'information_required';
   if (sourceCodes.some(code => HARD_BLOCK_CODES.has(code))) return 'hard_rule';
@@ -512,13 +530,18 @@ export const buildBeginnerCompatibilityAction = (
     ? buildCurrentTankCompatibilityAction(decision, plannedAction)
     : plannedAction;
   const sourceRules = actionSourceRules(decision);
-  const sourceRuleCodes = sourceRules.map(rule => rule.code);
+  const criticalSourceCodes = criticalInformationSourceCodes(decision);
+  const sourceRuleCodes = Array.from(new Set([...criticalSourceCodes, ...sourceRules.map(rule => rule.code)])).slice(0, 2);
   const ruleEvidenceIds = sourceRules.flatMap(rule => (rule.citations || []).map(source => source.id));
+  const evidenceIds = Array.from(new Set([
+    ...(criticalSourceCodes.length > 0 ? (decision.evidenceIds || []) : []),
+    ...ruleEvidenceIds,
+  ]));
   return {
     ...core,
     authorityLevel: actionAuthorityLevel(decision, sourceRuleCodes),
     sourceRuleCodes,
-    evidenceIds: Array.from(new Set(ruleEvidenceIds.length > 0 ? ruleEvidenceIds : (decision.evidenceIds || []))),
+    evidenceIds: evidenceIds.length > 0 ? evidenceIds : Array.from(new Set(decision.evidenceIds || [])),
     stopCondition: stopConditionFor(decision, mode),
   };
 };
