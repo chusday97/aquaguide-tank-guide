@@ -10,7 +10,8 @@ import { nextWaveUnified16EvidenceCeilings } from './catalogReviewBatches/next-w
 export type KnowledgeEvidenceCeilingCode =
   | 'variant_social_not_established'
   | 'variant_husbandry_not_established'
-  | 'species_social_not_established';
+  | 'species_social_not_established'
+  | 'species_space_minimum_conflicted';
 
 export type KnowledgeEvidenceField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
 
@@ -73,6 +74,21 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       sourceIds: ['batch18-fishbase-tachysurus-fulvidraco', 'fws-tachysurus-fulvidraco-erss'],
       note: 'Targeted review established accepted identity, freshwater environment, aquarium planning temperature, adult size and male nest guarding, but did not establish a stable household community/social mode or a defensible prey-size threshold for occasional fish consumption. Keep positive community compatibility fail-closed instead of repeating ordinary source search.',
       reviewedAt: '2026-10-11',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+  ],
+  sp_0198: [
+    {
+      speciesId: 'sp_0198',
+      field: 'space',
+      code: 'species_space_minimum_conflicted',
+      sourceIds: [
+        'seriouslyfish-channa-diplogramma',
+        'baqua-channa-diplogramma-tank-minimum',
+        'fishipedia-channa-diplogramma-tank-minimum',
+      ],
+      note: 'Targeted exact-taxon review found irreconcilable aquarium-minimum guidance: Seriously Fish records no numeric aquarium base and recommends only public installations or the very largest private aquaria, B-Aqua gives 500 L, and Fishi-pedia gives 3000 L. Keep tank_size terminal-unknown until a stronger exact-taxon numeric husbandry authority resolves the conflict; do not infer from adult size or choose a value merely to clear coverage.',
+      reviewedAt: '2026-10-14',
       researchDisposition: 'terminal_unknown_hold',
     },
   ],

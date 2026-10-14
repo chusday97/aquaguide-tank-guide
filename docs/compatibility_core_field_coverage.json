@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 51,
-  "coreFieldCompleteSpecies": 53,
-  "oneFieldGapSpecies": 3,
+  "genericOnboardingReadySpecies": 53,
+  "coreFieldCompleteSpecies": 55,
+  "oneFieldGapSpecies": 1,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
@@ -66,9 +66,9 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 61,
-      "reviewed_neutral_or_negative": 8,
-      "reviewed_unknown": 113,
+      "reviewed_supported": 62,
+      "reviewed_neutral_or_negative": 9,
+      "reviewed_unknown": 111,
       "needs_research": 5,
       "missing_identity_or_domain": 288,
       "not_applicable": 11
@@ -85,7 +85,7 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 119
+      "count": 118
     },
     {
       "field": "ph",
@@ -105,7 +105,7 @@
     },
     {
       "field": "territoriality",
-      "count": 45
+      "count": 43
     },
     {
       "field": "predation",
@@ -8181,9 +8181,9 @@
       "scientificName": "Polypterus ornatipinnis",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -8243,14 +8243,14 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch19-fishbase-polypterus-ornatipinnis",
-            "seriouslyfish-polypterus-ornatapinnis"
+            "aquaticarts-polypterus-ornatipinnis-conspecific-territoriality",
+            "wetwebmedia-polypterus-ornatipinnis-territoriality"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
@@ -15909,8 +15909,8 @@
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
       "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
-      "terminalGapCount": 0,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -15954,13 +15954,15 @@
         },
         "tank_size": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch21-fishbase-channa-diplogramma",
-            "seriouslyfish-channa-diplogramma"
+            "seriouslyfish-channa-diplogramma",
+            "baqua-channa-diplogramma-tank-minimum",
+            "fishipedia-channa-diplogramma-tank-minimum"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_space_minimum_conflicted"
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -36939,9 +36941,9 @@
       "scientificName": "Trigonostigma heteromorpha",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -36999,13 +37001,14 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
+            "hydrohabitats-trigonostigma-heteromorpha-nonterritorial",
             "batch-02-fishbase-trigonostigma-heteromorpha"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_neutral_or_negative",

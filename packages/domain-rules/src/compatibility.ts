@@ -339,6 +339,11 @@ export const evaluateCompatibility = ({
       if (!predator && existing.id !== candidateSpecies.id && (fishTargetsVulnerableExisting || existingFishTargetsVulnerableCandidate)) {
         raise('caution', 'predation_vulnerability_context');
       }
+      const existingConspecificTerritorial = existing.behaviorTraits?.includes('conspecific_territoriality');
+      const candidateConspecificTerritorial = candidateSpecies.behaviorTraits?.includes('conspecific_territoriality');
+      if (existing.id === candidateSpecies.id && (existingConspecificTerritorial || candidateConspecificTerritorial)) {
+        raise('caution', 'territorial_conflict');
+      }
       const existingTerritorial = existing.behaviorTraits?.includes('territorial')
         || existing.territoriality === 'medium'
         || existing.territoriality === 'high';

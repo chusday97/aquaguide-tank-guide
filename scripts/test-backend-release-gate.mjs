@@ -49,6 +49,8 @@ const gates = [
   ['Compatibility Fast Lane Wave2 Production Patch Guard', 'npm', ['run', 'test:compatibility-fast-lane-wave2-production-patch-guard']],
   ['Compatibility Fast Lane Wave3 Authority Patch', 'npm', ['run', 'test:compatibility-fast-lane-wave3-authority-patch']],
   ['Compatibility Fast Lane Wave3 Production Patch Guard', 'npm', ['run', 'test:compatibility-fast-lane-wave3-production-patch-guard']],
+  ['Compatibility Fast Lane Wave4 Authority Patch', 'npm', ['run', 'test:compatibility-fast-lane-wave4-authority-patch']],
+  ['Compatibility Fast Lane Wave4 Production Patch Guard', 'npm', ['run', 'test:compatibility-fast-lane-wave4-production-patch-guard']],
   ['Compatibility User Conclusion', 'npm', ['run', 'test:compatibility-user-conclusion']],
   ['Compatibility Release Badcases', 'npm', ['run', 'test:compatibility-release-badcases']],
   ['Compatibility Presentation', 'npm', ['run', 'test:compatibility-presentation']],
