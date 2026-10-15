@@ -138,6 +138,13 @@ import {
   compatibilityNumericWave15Sources,
   compatibilityNumericWave15VerifiedSourceIds,
 } from './numeric-wave15-20261015';
+import {
+  compatibilityPredationWave16AuthorityPatch,
+  compatibilityPredationWave16FieldReviews,
+  compatibilityPredationWave16ProfilePatches,
+  compatibilityPredationWave16Sources,
+  compatibilityPredationWave16VerifiedSourceIds,
+} from './predation-wave16-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -160,6 +167,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave13Sources,
   ...compatibilityNumericWave14Sources,
   ...compatibilityNumericWave15Sources,
+  ...compatibilityPredationWave16Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -183,6 +191,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave13FieldReviews,
   ...compatibilityNumericWave14FieldReviews,
   ...compatibilityNumericWave15FieldReviews,
+  ...compatibilityPredationWave16FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -206,6 +215,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave13VerifiedSourceIds,
   ...compatibilityNumericWave14VerifiedSourceIds,
   ...compatibilityNumericWave15VerifiedSourceIds,
+  ...compatibilityPredationWave16VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -229,6 +239,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave13ProfilePatches,
   ...compatibilityNumericWave14ProfilePatches,
   ...compatibilityNumericWave15ProfilePatches,
+  ...compatibilityPredationWave16ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -252,4 +263,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave13AuthorityPatch,
   compatibilityNumericWave14AuthorityPatch,
   compatibilityNumericWave15AuthorityPatch,
+  compatibilityPredationWave16AuthorityPatch,
 ] as const;

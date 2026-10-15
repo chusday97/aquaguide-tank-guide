@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 6,
+  "totalPackets": 4,
   "packets": [
     {
       "speciesId": "sp_0011",
@@ -20,36 +20,6 @@
           "publisher": "FishBase",
           "url": "https://www.fishbase.org/summary/Xiphophorus_maculatus.html",
           "reviewStatus": "draft"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0052",
-      "name": "月光鼠",
-      "scientificName": "Corydoras hastatus",
-      "missingField": "predation",
-      "currentStatus": "needs_research",
-      "currentReasonCode": "missing_reviewed_field_authority",
-      "existingEvidenceIds": [
-        "batch05-fishbase-gastrodermus-hastatus",
-        "fishipedia-corydoras-hastatus-wave15"
-      ],
-      "existingSources": [
-        {
-          "id": "batch05-fishbase-gastrodermus-hastatus",
-          "title": "Gastrodermus hastatus species summary",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Corydoras-hastatus",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "fishipedia-corydoras-hastatus-wave15",
-          "title": "Gastrodermus (Corydoras) hastatus • Fish sheet",
-          "publisher": "Fishipedia",
-          "url": "https://www.fishi-pedia.com/fishes/corydoras-hastatus",
-          "reviewStatus": "reviewed"
         }
       ],
       "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
@@ -109,44 +79,6 @@
           "title": "Hypancistrus inspector (Snowball Pleco)",
           "publisher": "Seriously Fish",
           "url": "https://www.seriouslyfish.com/species/hypancistrus-inspector",
-          "reviewStatus": "reviewed"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
-      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0151",
-      "name": "彩色天使鱼（彩色裙鱼）",
-      "scientificName": "Gymnocorymbus ternetzi var. Color morph",
-      "missingField": "predation",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
-        "seriouslyfish-gymnocorymbus-ternetzi",
-        "fishbase-gymnocorymbus-ternetzi"
-      ],
-      "existingSources": [
-        {
-          "id": "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
-          "title": "Gymnocorymbus ternetzi Color morph variant review",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "seriouslyfish-gymnocorymbus-ternetzi",
-          "title": "Gymnocorymbus ternetzi (Black Widow Tetra)",
-          "publisher": "Seriously Fish",
-          "url": "https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi",
-          "reviewStatus": "reviewed"
-        },
-        {
-          "id": "fishbase-gymnocorymbus-ternetzi",
-          "title": "Gymnocorymbus ternetzi (Black tetra) species summary",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
           "reviewStatus": "reviewed"
         }
       ],

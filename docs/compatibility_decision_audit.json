@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 64,
-  "genericReadyUniquePairs": 2016,
+  "genericOnboardingReadySpecies": 66,
+  "genericReadyUniquePairs": 2145,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 453,
@@ -39,16 +39,6 @@
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0052",
-        "name": "月光鼠",
-        "scientificName": "Corydoras hastatus",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
         "speciesId": "sp_0062",
         "name": "红眼灯",
         "scientificName": "Moenkhausia sanctaefilomenae",
@@ -62,16 +52,6 @@
         "speciesId": "sp_0125",
         "name": "雪球异型 (L102)",
         "scientificName": "Hypancistrus inspector",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0151",
-        "name": "彩色天使鱼（彩色裙鱼）",
-        "scientificName": "Gymnocorymbus ternetzi var. Color morph",
         "unknownPairs": 175,
         "actionableFields": [
           "predation"
@@ -171,42 +151,6 @@
       }
     ],
     "taxonDecisionImpactQueue": [
-      {
-        "researchKey": "Corydoras hastatus",
-        "baseScientificName": "Corydoras hastatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 181
-      },
-      {
-        "researchKey": "Gymnocorymbus ternetzi",
-        "baseScientificName": "Gymnocorymbus ternetzi",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": true,
-        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 191
-      },
       {
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
@@ -1255,42 +1199,6 @@
       }
     ],
     "completionEligibleTaxonQueue": [
-      {
-        "researchKey": "Corydoras hastatus",
-        "baseScientificName": "Corydoras hastatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 181
-      },
-      {
-        "researchKey": "Gymnocorymbus ternetzi",
-        "baseScientificName": "Gymnocorymbus ternetzi",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": true,
-        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 191
-      },
       {
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
@@ -2341,10 +2249,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 54,
-      "completionEligibleJobs": 17,
+      "totalResearchJobs": 52,
+      "completionEligibleJobs": 15,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 19,
+      "completionEligibleCatalogObjects": 17,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2413,7 +2321,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 365,
+    "actionableGaps": 363,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2437,7 +2345,7 @@
       },
       {
         "field": "predation",
-        "count": 15
+        "count": 13
       },
       {
         "field": "territoriality",

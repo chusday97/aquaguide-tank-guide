@@ -1,3 +1,21 @@
+## CURRENT OVERRIDE — 2026-10-15 Predation evidence wave16 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave16 is **WebCodex / WebCodex-All-Bridge only**, source-controlled/local candidate work. No RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write.
+- Wave16 closes the final predation gap for exactly two 7/8 objects at the narrow `fish_fry` scope:
+  - `sp_0052 Corydoras hastatus`: the 2024 peer-reviewed JAALAS husbandry protocol explicitly names `Corydoras hastatus` and states that this smaller species is less likely to consume its own eggs and fry, while only a small number of fry survive when eggs remain with adults. This supports a non-zero fry-consumption risk but does **not** support juvenile/adult small-fish predation.
+  - `sp_0151 Gymnocorymbus ternetzi var. Color morph`: Tropical Fish Hobbyist explicitly lists white skirt / blueberry / strawberry / mixed berry names under `Gymnocorymbus ternetzi`, directly bridging the catalog color morph, and states that parents are voracious predators on eggs and fry. Scope remains `fish_fry` only.
+- These two objects move **7/8 -> 8/8** and become generic-ready. Coverage is now **81 authoritative 8/8 fish / 66 strict generic-ready**, with **363 actionable fields across 97 catalog objects**, deduplicated to **52 base-taxon jobs**. Field gaps: `ph 75`, `tank_size 72`, `temperature 68`, `water 64`, `adult_size 60`, `predation 13`, `territoriality 11`, `social_behavior 0`.
+- Fast Lane falls **6 -> 4**, all still missing only predation: `sp_0011 Xiphophorus maculatus`, `sp_0062 Moenkhausia sanctaefilomenae`, `sp_0125 Hypancistrus inspector`, `sp_0433 Hemigrammus rhodostomus / Petitella rhodostoma`.
+- The remaining four are deliberately **not** force-closed:
+  - `sp_0011`: exact husbandry sources conflict on whether adults eat fry, so the current binary prey contract cannot safely choose a value.
+  - `sp_0062`: strong exact sources support egg predation, but not a clean fish-fry scope; weaker fry claims are insufficient to override that boundary.
+  - `sp_0125`: exact sources support “not a predator toward small fish” / non-fish stomach contents, but do not directly establish fry safety; `targets: []` would overstate the evidence.
+  - `sp_0433`: strong exact sources support egg predation, while fry claims are weaker/group-level or secondary; no egg target exists and egg evidence is not promoted to `fish_fry`.
+- Decision-impact partition is now **15 completion-eligible jobs / 17 objects** and **37 terminal-blocked jobs / 80 objects**. The four remaining Fast Lane taxa each affect 175 currently unknown pair evaluations and remain the highest near-ready evidence targets.
+- Fully informed invariant expands to **66 ready fish = 2,145 unordered pairs = 116 compatible / 865 caution / 1,164 not_recommended / 0 insufficient_data**. Fry-only authority does not create ordinary adult-fish predation blocks.
+- PASS: core-field coverage, fully-informed matrix, user conclusion, release badcases, knowledge coverage, Unified Wave16 monotonic-authority check, full `test:backend-release-gate`, project/API TypeScript checks, Business API bundle, lint, and `git diff --check`.
+- NEXT: do not repeatedly re-research the four unresolved Fast Lane taxa from the same weak/ambiguous sources. Continue only if a stronger exact-taxon source resolves their specific predation scope; otherwise shift research effort to the next high-impact multi-field completion-eligible taxon.
+
 ## CURRENT OVERRIDE — 2026-10-15 Behavioral evidence wave15 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave15 was performed through **WebCodex / WebCodex-All-Bridge only** and is source-controlled/local candidate work: no RDC, Codex agent, Vercel deployment, Production alias change, DB migration, or Production authority write.

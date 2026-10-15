@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 64,
-  "coreFieldCompleteSpecies": 79,
-  "oneFieldGapSpecies": 7,
+  "genericOnboardingReadySpecies": 66,
+  "coreFieldCompleteSpecies": 81,
+  "oneFieldGapSpecies": 5,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
@@ -74,10 +74,10 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 60,
+      "reviewed_supported": 62,
       "reviewed_neutral_or_negative": 26,
-      "reviewed_unknown": 98,
-      "needs_research": 1,
+      "reviewed_unknown": 97,
+      "needs_research": 0,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     }
@@ -105,7 +105,7 @@
     },
     {
       "field": "predation",
-      "count": 15
+      "count": 13
     },
     {
       "field": "territoriality",
@@ -4476,9 +4476,9 @@
       "scientificName": "Corydoras hastatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4545,11 +4545,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "jaalas-corydoras-hastatus-fry-predation-wave16"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },
@@ -12507,9 +12509,9 @@
       "scientificName": "Gymnocorymbus ternetzi var. Color morph",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -12590,15 +12592,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
-            "seriouslyfish-gymnocorymbus-ternetzi",
-            "fishbase-gymnocorymbus-ternetzi"
+            "tfh-gymnocorymbus-ternetzi-fry-predation-wave16"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

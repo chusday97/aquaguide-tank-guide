@@ -1,37 +1,10 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 99,
-  "totalResearchJobs": 54,
-  "variantBridgeJobs": 19,
+  "catalogObjects": 97,
+  "totalResearchJobs": 52,
+  "variantBridgeJobs": 18,
   "items": [
-    {
-      "researchKey": "Gymnocorymbus ternetzi",
-      "baseScientificName": "Gymnocorymbus ternetzi",
-      "priorityScore": 191,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 0,
-      "variantObjectCount": 1,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0151",
-          "name": "彩色天使鱼（彩色裙鱼）",
-          "scientificName": "Gymnocorymbus ternetzi var. Color morph",
-          "gaps": [
-            "predation"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        }
-      ]
-    },
     {
       "researchKey": "Hypancistrus inspector",
       "baseScientificName": "Hypancistrus inspector",
@@ -132,33 +105,6 @@
           "speciesId": "sp_0011",
           "name": "月光鱼",
           "scientificName": "Xiphophorus maculatus",
-          "gaps": [
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Corydoras hastatus",
-      "baseScientificName": "Corydoras hastatus",
-      "priorityScore": 181,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0052",
-          "name": "月光鼠",
-          "scientificName": "Corydoras hastatus",
           "gaps": [
             "predation"
           ],

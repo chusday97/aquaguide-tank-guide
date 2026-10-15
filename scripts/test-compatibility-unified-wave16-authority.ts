@@ -28,7 +28,7 @@ assert.ok(profile);
 assert.equal(profile.waterType, 'freshwater');
 assert.deepEqual(profile.behaviorTraits, ['shoaling', 'bottom_dwelling']);
 assert.equal(profile.minimumGroupSize, undefined, 'review must not invent a numeric group minimum');
-assert.deepEqual(profile.predationTargets, []);
+assert.deepEqual(profile.predationTargets, ['fish_fry'], 'current profile may gain later direct fry-predation authority without mutating the historical Unified Wave16 release');
 assert.equal(profile.confidence, 'medium');
 for (const requiredFact of ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'] as const) {
   assert.ok(profile.requiredFacts.includes(requiredFact), 'current sp_0052 profile must retain Wave16 required fact ' + requiredFact);

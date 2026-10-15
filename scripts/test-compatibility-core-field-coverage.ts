@@ -370,7 +370,7 @@ assert.ok(!(approvedValue('sp_0042', 'predation') as { targets: string[] }).targ
 
 assert.deepEqual(approvedValue('sp_0052', 'tank_size'), { liters: 54, lengthCm: 60 });
 assert.deepEqual(approvedValue('sp_0052', 'territoriality'), { traits: [] }, 'Corydoras hastatus may close territoriality only from direct exact-taxon non-territorial evidence');
-assert.equal(approvedValue('sp_0052', 'predation'), undefined, 'Corydoras hastatus predation must remain unresolved when the source only describes zooplankton diet');
+assert.deepEqual(approvedValue('sp_0052', 'predation'), { targets: ['fish_fry'] }, 'Corydoras hastatus must not close predation from diet wording alone, but later direct peer-reviewed fry-consumption evidence may close the narrow fish-fry scope');
 
 const numericWave6SourceIds = [
   'fishipedia-pseudorasbora-parva-wave6',
@@ -599,9 +599,9 @@ for (const [speciesId, expectedScientificName] of numericWave15SpeciesBindings) 
 assert.deepEqual(approvedValue('sp_0052', 'territoriality'), { traits: [] });
 assert.deepEqual(approvedValue('sp_0062', 'territoriality'), { traits: [] });
 assert.deepEqual(approvedValue('sp_0125', 'territoriality'), { traits: ['territorial'] });
-for (const speciesId of ['sp_0052', 'sp_0062', 'sp_0125']) {
+for (const speciesId of ['sp_0062', 'sp_0125']) {
   assert.equal(approvedValue(speciesId, 'predation'), undefined, speciesId + ' predation must remain fail-closed without direct fish-prey authority');
-  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 7, speciesId + ' must be exactly 7/8 after Wave15 territoriality closure');
+  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 7, speciesId + ' must remain 7/8 while predation is unresolved');
   assert.equal(rowOf(speciesId)?.genericOnboardingReady, false, speciesId + ' must not become generic-ready while predation remains unresolved');
 }
 const numericWave15SourceIds = [
@@ -613,6 +613,37 @@ assert.deepEqual(
   resolveKnowledgeSources(numericWave15SourceIds).map(source => source.id).sort(),
   [...numericWave15SourceIds].sort(),
   'numeric wave15 exact-taxon territoriality evidence must resolve to reviewed source metadata',
+);
+const predationWave16SpeciesBindings: Array<[string, string]> = [
+  ['sp_0052', 'Corydoras hastatus'],
+  ['sp_0151', 'Gymnocorymbus ternetzi var. Color morph'],
+];
+for (const [speciesId, expectedScientificName] of predationWave16SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'predation wave16 speciesId must stay bound to the reviewed exact taxon/catalog morph: ' + speciesId,
+  );
+}
+assert.deepEqual(approvedValue('sp_0052', 'predation'), { targets: ['fish_fry'] });
+assert.deepEqual(approvedValue('sp_0151', 'predation'), { targets: ['fish_fry'] });
+for (const speciesId of ['sp_0052', 'sp_0151']) {
+  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, speciesId + ' must become 8/8 after narrow fry-predation authority closes the final gap');
+  assert.equal(rowOf(speciesId)?.genericOnboardingReady, true, speciesId + ' must become generic-ready after the final reviewed field closes');
+}
+for (const speciesId of ['sp_0011', 'sp_0062', 'sp_0125', 'sp_0433']) {
+  assert.equal(approvedValue(speciesId, 'predation'), undefined, speciesId + ' predation must remain fail-closed after Wave16 because direct scope is still conflicting or incomplete');
+  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 7, speciesId + ' must remain exactly 7/8 after Wave16');
+  assert.equal(rowOf(speciesId)?.genericOnboardingReady, false, speciesId + ' must stay out of generic onboarding until predation is directly resolved');
+}
+const predationWave16SourceIds = [
+  'jaalas-corydoras-hastatus-fry-predation-wave16',
+  'tfh-gymnocorymbus-ternetzi-fry-predation-wave16',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(predationWave16SourceIds).map(source => source.id).sort(),
+  [...predationWave16SourceIds].sort(),
+  'predation wave16 fry-scoped evidence must resolve to reviewed source metadata',
 );
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
@@ -639,9 +670,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 54, '365 actionable field gaps should collapse to 54 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 52, '363 actionable field gaps should collapse to 52 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 99, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 97, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
@@ -697,12 +728,10 @@ assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
   [
     ['sp_0011', 'predation'],
-    ['sp_0052', 'predation'],
     ['sp_0062', 'predation'],
     ['sp_0125', 'predation'],
-    ['sp_0151', 'predation'],
     ['sp_0433', 'predation'],
   ],
-  'Fast Lane must expose all exact 7/8 species after Wave15 closes territoriality without guessing predation',
+  'Fast Lane must retain only the four predation cases that Wave16 cannot close without conflicting or incomplete scope evidence',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);
