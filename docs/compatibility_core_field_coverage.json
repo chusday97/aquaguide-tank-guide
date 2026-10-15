@@ -13,7 +13,7 @@
   ],
   "genericOnboardingReadySpecies": 56,
   "coreFieldCompleteSpecies": 71,
-  "oneFieldGapSpecies": 5,
+  "oneFieldGapSpecies": 6,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
@@ -26,17 +26,17 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 113,
+      "reviewed_supported": 114,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 15,
+      "reviewed_unknown": 14,
       "needs_research": 57,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 106,
+      "reviewed_supported": 107,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 20,
+      "reviewed_unknown": 19,
       "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -50,10 +50,10 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 104,
+      "reviewed_supported": 106,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 20,
-      "needs_research": 61,
+      "reviewed_unknown": 19,
+      "needs_research": 60,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
@@ -67,8 +67,8 @@
     },
     "territoriality": {
       "reviewed_supported": 69,
-      "reviewed_neutral_or_negative": 22,
-      "reviewed_unknown": 91,
+      "reviewed_neutral_or_negative": 23,
+      "reviewed_unknown": 90,
       "needs_research": 3,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -85,15 +85,15 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 80
+      "count": 78
     },
     {
       "field": "ph",
-      "count": 79
+      "count": 78
     },
     {
       "field": "temperature",
-      "count": 72
+      "count": 71
     },
     {
       "field": "water",
@@ -105,7 +105,7 @@
     },
     {
       "field": "territoriality",
-      "count": 21
+      "count": 20
     },
     {
       "field": "predation",
@@ -3598,8 +3598,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -3612,22 +3612,22 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch08-fishbase-pseudorasbora-parva"
+            "fishipedia-pseudorasbora-parva-wave6"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch08-fishbase-pseudorasbora-parva"
+            "fishipedia-pseudorasbora-parva-wave6"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -3639,15 +3639,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch08-fishbase-pseudorasbora-parva",
-            "doi-pseudorasbora-parva-spawning-competition-2004",
-            "doi-pseudorasbora-parva-shoaling-2005"
+            "fishipedia-pseudorasbora-parva-wave6"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -3660,13 +3658,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "doi-pseudorasbora-parva-spawning-competition-2004"
+            "fishipedia-pseudorasbora-parva-wave6"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -4469,8 +4467,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
-      "actionableGapCount": 3,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4510,11 +4508,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-gastrodermus-hastatus-wave6"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",

@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 4,
+  "totalPackets": 5,
   "packets": [
     {
       "speciesId": "sp_0011",
@@ -41,6 +41,28 @@
           "title": "Otocinclus vittatus species summary",
           "publisher": "FishBase",
           "url": "https://www.fishbase.se/summary/Otocinclus-vittatus.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0042",
+      "name": "麦穗鱼",
+      "scientificName": "Pseudorasbora parva",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch08-fishbase-pseudorasbora-parva"
+      ],
+      "existingSources": [
+        {
+          "id": "batch08-fishbase-pseudorasbora-parva",
+          "title": "Pseudorasbora parva species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Pseudorasbora-parva.html",
           "reviewStatus": "reviewed"
         }
       ],

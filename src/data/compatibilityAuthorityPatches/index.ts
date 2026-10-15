@@ -68,6 +68,13 @@ import {
   compatibilityNumericWave5Sources,
   compatibilityNumericWave5VerifiedSourceIds,
 } from './numeric-wave5-20261015';
+import {
+  compatibilityNumericWave6AuthorityPatch,
+  compatibilityNumericWave6FieldReviews,
+  compatibilityNumericWave6ProfilePatches,
+  compatibilityNumericWave6Sources,
+  compatibilityNumericWave6VerifiedSourceIds,
+} from './numeric-wave6-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -80,6 +87,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave3Sources,
   ...compatibilityNumericWave4Sources,
   ...compatibilityNumericWave5Sources,
+  ...compatibilityNumericWave6Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -93,6 +101,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave3FieldReviews,
   ...compatibilityNumericWave4FieldReviews,
   ...compatibilityNumericWave5FieldReviews,
+  ...compatibilityNumericWave6FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -106,6 +115,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave3VerifiedSourceIds,
   ...compatibilityNumericWave4VerifiedSourceIds,
   ...compatibilityNumericWave5VerifiedSourceIds,
+  ...compatibilityNumericWave6VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -119,6 +129,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave3ProfilePatches,
   ...compatibilityNumericWave4ProfilePatches,
   ...compatibilityNumericWave5ProfilePatches,
+  ...compatibilityNumericWave6ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -132,4 +143,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave3AuthorityPatch,
   compatibilityNumericWave4AuthorityPatch,
   compatibilityNumericWave5AuthorityPatch,
+  compatibilityNumericWave6AuthorityPatch,
 ] as const;

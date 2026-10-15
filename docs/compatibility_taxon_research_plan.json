@@ -87,6 +87,33 @@
       ]
     },
     {
+      "researchKey": "Pseudorasbora parva",
+      "baseScientificName": "Pseudorasbora parva",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0042",
+          "name": "麦穗鱼",
+          "scientificName": "Pseudorasbora parva",
+          "gaps": [
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Xiphophorus maculatus",
       "baseScientificName": "Xiphophorus maculatus",
       "priorityScore": 191,
@@ -428,6 +455,35 @@
       ]
     },
     {
+      "researchKey": "Corydoras hastatus",
+      "baseScientificName": "Corydoras hastatus",
+      "priorityScore": 173,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "territoriality",
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0052",
+          "name": "月光鼠",
+          "scientificName": "Corydoras hastatus",
+          "gaps": [
+            "territoriality",
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Pterophyllum altum",
       "baseScientificName": "Pterophyllum altum",
       "priorityScore": 173,
@@ -668,37 +724,6 @@
       ]
     },
     {
-      "researchKey": "Corydoras hastatus",
-      "baseScientificName": "Corydoras hastatus",
-      "priorityScore": 165,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "tank_size",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0052",
-          "name": "月光鼠",
-          "scientificName": "Corydoras hastatus",
-          "gaps": [
-            "tank_size",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Acrossocheilus fasciatus",
       "baseScientificName": "Acrossocheilus fasciatus",
       "priorityScore": 159,
@@ -910,41 +935,6 @@
           "speciesId": "sp_0024",
           "name": "蓝倒吊",
           "scientificName": "Paracanthurus hepatus",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Pseudorasbora parva",
-      "baseScientificName": "Pseudorasbora parva",
-      "priorityScore": 159,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0042",
-          "name": "麦穗鱼",
-          "scientificName": "Pseudorasbora parva",
           "gaps": [
             "temperature",
             "ph",

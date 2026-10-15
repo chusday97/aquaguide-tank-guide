@@ -10,18 +10,18 @@
   "genericReadyUniquePairs": 1540,
   "fishPairs": 47895,
   "statuses": {
-    "compatible": 632,
-    "caution": 1712,
-    "not_recommended": 18214,
-    "insufficient_data": 27337
+    "compatible": 568,
+    "caution": 1701,
+    "not_recommended": 18464,
+    "insufficient_data": 27162
   },
-  "decisionCoveragePct": 42.92,
+  "decisionCoveragePct": 43.29,
   "fullyInformedPairs": 5995,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
-    "unresolved_identity": 21574,
-    "public_evidence_insufficient": 5763,
+    "unresolved_identity": 21458,
+    "public_evidence_insufficient": 5704,
     "missing_species_fact": 0,
     "other": 0
   },
@@ -69,6 +69,17 @@
         "terminalReasons": []
       },
       {
+        "speciesId": "sp_0052",
+        "name": "月光鼠",
+        "scientificName": "Corydoras hastatus",
+        "unknownPairs": 175,
+        "actionableFields": [
+          "territoriality",
+          "predation"
+        ],
+        "terminalReasons": []
+      },
+      {
         "speciesId": "sp_0062",
         "name": "红眼灯",
         "scientificName": "Moenkhausia sanctaefilomenae",
@@ -91,18 +102,6 @@
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0052",
-        "name": "月光鼠",
-        "scientificName": "Corydoras hastatus",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
         "speciesId": "sp_0026",
         "name": "清道夫",
         "scientificName": "Hypostomus plecostomus",
@@ -110,20 +109,6 @@
         "actionableFields": [
           "tank_size",
           "social_behavior",
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0042",
-        "name": "麦穗鱼",
-        "scientificName": "Pseudorasbora parva",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "temperature",
-          "ph",
-          "tank_size",
           "territoriality",
           "predation"
         ],
@@ -296,6 +281,25 @@
         "existingCoveragePriorityScore": 191
       },
       {
+        "researchKey": "Corydoras hastatus",
+        "baseScientificName": "Corydoras hastatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 87.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 173
+      },
+      {
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
         "completionEligible": true,
@@ -332,26 +336,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 183
-      },
-      {
-        "researchKey": "Corydoras hastatus",
-        "baseScientificName": "Corydoras hastatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 3,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 58.33,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 165
       },
       {
         "researchKey": "Osteoglossum ferreirai",
@@ -438,28 +422,6 @@
         "existingCoveragePriorityScore": 159
       },
       {
-        "researchKey": "Pseudorasbora parva",
-        "baseScientificName": "Pseudorasbora parva",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 35,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
         "researchKey": "Opsariichthys bidens",
         "baseScientificName": "Opsariichthys bidens",
         "completionEligible": true,
@@ -500,6 +462,24 @@
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
         "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Pseudorasbora parva",
+        "baseScientificName": "Pseudorasbora parva",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
       },
       {
         "researchKey": "Pterophyllum altum",
@@ -737,11 +717,11 @@
         "researchKey": "Erpetoichthys calabaricus",
         "baseScientificName": "Erpetoichthys calabaricus",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 250,
+        "impactPerGap": 249,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -755,11 +735,11 @@
         "researchKey": "Semaprochilodus taeniurus",
         "baseScientificName": "Semaprochilodus taeniurus",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 250,
+        "impactPerGap": 249,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -773,11 +753,11 @@
         "researchKey": "Semaprochilodus insignis",
         "baseScientificName": "Semaprochilodus insignis",
         "completionEligible": false,
-        "affectedUnknownPairs": 499,
+        "affectedUnknownPairs": 497,
         "gapInstances": 2,
         "terminalGapInstances": 6,
         "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 249.5,
+        "impactPerGap": 248.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 2,
         "combinedGapFields": [
@@ -791,11 +771,11 @@
         "researchKey": "Epiplatys annulatus",
         "baseScientificName": "Epiplatys annulatus",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -809,11 +789,11 @@
         "researchKey": "Hemigrammus rodwayi",
         "baseScientificName": "Hemigrammus rodwayi",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -827,11 +807,11 @@
         "researchKey": "Hyphessobrycon herbertaxelrodi",
         "baseScientificName": "Hyphessobrycon herbertaxelrodi",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -845,11 +825,11 @@
         "researchKey": "Hyphessobrycon megalopterus",
         "baseScientificName": "Hyphessobrycon megalopterus",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -863,11 +843,11 @@
         "researchKey": "Moenkhausia pittieri",
         "baseScientificName": "Moenkhausia pittieri",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -881,11 +861,11 @@
         "researchKey": "Nannostomus beckfordi",
         "baseScientificName": "Nannostomus beckfordi",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -899,11 +879,11 @@
         "researchKey": "Pseudomugil furcatus",
         "baseScientificName": "Pseudomugil furcatus",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -917,11 +897,11 @@
         "researchKey": "Tachysurus fulvidraco",
         "baseScientificName": "Tachysurus fulvidraco",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 2,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 125,
+        "impactPerGap": 124.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -936,11 +916,11 @@
         "researchKey": "Thayeria boehlkei",
         "baseScientificName": "Thayeria boehlkei",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 2,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 116,
+        "impactPerGap": 115.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -955,11 +935,11 @@
         "researchKey": "Cobitis sinensis",
         "baseScientificName": "Cobitis sinensis",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -977,11 +957,11 @@
         "researchKey": "Pangio kuhlii",
         "baseScientificName": "Pangio kuhlii",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -999,11 +979,11 @@
         "researchKey": "Synchiropus splendidus",
         "baseScientificName": "Synchiropus splendidus",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1021,11 +1001,11 @@
         "researchKey": "Synodontis nigriventris",
         "baseScientificName": "Synodontis nigriventris",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1043,11 +1023,11 @@
         "researchKey": "Crossocheilus langei",
         "baseScientificName": "Crossocheilus langei",
         "completionEligible": false,
-        "affectedUnknownPairs": 747,
+        "affectedUnknownPairs": 744,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 49.8,
+        "impactPerGap": 49.6,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -1065,11 +1045,11 @@
         "researchKey": "Sahyadria denisonii",
         "baseScientificName": "Sahyadria denisonii",
         "completionEligible": false,
-        "affectedUnknownPairs": 747,
+        "affectedUnknownPairs": 744,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 49.8,
+        "impactPerGap": 49.6,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -1087,11 +1067,11 @@
         "researchKey": "Carassius auratus",
         "baseScientificName": "Carassius auratus",
         "completionEligible": false,
-        "affectedUnknownPairs": 2934,
+        "affectedUnknownPairs": 2922,
         "gapInstances": 60,
         "terminalGapInstances": 36,
         "terminalBlockedCatalogObjects": 12,
-        "impactPerGap": 48.9,
+        "impactPerGap": 48.7,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 12,
         "combinedGapFields": [
@@ -1109,11 +1089,11 @@
         "researchKey": "Poecilia latipinna",
         "baseScientificName": "Poecilia latipinna",
         "completionEligible": false,
-        "affectedUnknownPairs": 1222,
+        "affectedUnknownPairs": 1217,
         "gapInstances": 25,
         "terminalGapInstances": 15,
         "terminalBlockedCatalogObjects": 5,
-        "impactPerGap": 48.88,
+        "impactPerGap": 48.68,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 5,
         "combinedGapFields": [
@@ -1131,11 +1111,11 @@
         "researchKey": "Trichopodus leerii",
         "baseScientificName": "Trichopodus leerii",
         "completionEligible": false,
-        "affectedUnknownPairs": 729,
+        "affectedUnknownPairs": 726,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 48.6,
+        "impactPerGap": 48.4,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -1153,11 +1133,11 @@
         "researchKey": "Aphyocypris chinensis",
         "baseScientificName": "Aphyocypris chinensis",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 46.4,
+        "impactPerGap": 46.2,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1175,11 +1155,11 @@
         "researchKey": "Melanotaenia praecox",
         "baseScientificName": "Melanotaenia praecox",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 46.4,
+        "impactPerGap": 46.2,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1197,11 +1177,11 @@
         "researchKey": "Poecilia sphenops",
         "baseScientificName": "Poecilia sphenops",
         "completionEligible": false,
-        "affectedUnknownPairs": 693,
+        "affectedUnknownPairs": 690,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 46.2,
+        "impactPerGap": 46,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -1219,11 +1199,11 @@
         "researchKey": "Danio rerio",
         "baseScientificName": "Danio rerio",
         "completionEligible": false,
-        "affectedUnknownPairs": 1603,
+        "affectedUnknownPairs": 1596,
         "gapInstances": 35,
         "terminalGapInstances": 21,
         "terminalBlockedCatalogObjects": 7,
-        "impactPerGap": 45.8,
+        "impactPerGap": 45.6,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 7,
         "combinedGapFields": [
@@ -1547,6 +1527,25 @@
         "existingCoveragePriorityScore": 191
       },
       {
+        "researchKey": "Corydoras hastatus",
+        "baseScientificName": "Corydoras hastatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 87.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 173
+      },
+      {
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
         "completionEligible": true,
@@ -1583,26 +1582,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 183
-      },
-      {
-        "researchKey": "Corydoras hastatus",
-        "baseScientificName": "Corydoras hastatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 3,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 58.33,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 165
       },
       {
         "researchKey": "Osteoglossum ferreirai",
@@ -1689,28 +1668,6 @@
         "existingCoveragePriorityScore": 159
       },
       {
-        "researchKey": "Pseudorasbora parva",
-        "baseScientificName": "Pseudorasbora parva",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 35,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
         "researchKey": "Opsariichthys bidens",
         "baseScientificName": "Opsariichthys bidens",
         "completionEligible": true,
@@ -1751,6 +1708,24 @@
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
         "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Pseudorasbora parva",
+        "baseScientificName": "Pseudorasbora parva",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
       },
       {
         "researchKey": "Pterophyllum altum",
@@ -1990,11 +1965,11 @@
         "researchKey": "Erpetoichthys calabaricus",
         "baseScientificName": "Erpetoichthys calabaricus",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 250,
+        "impactPerGap": 249,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2008,11 +1983,11 @@
         "researchKey": "Semaprochilodus taeniurus",
         "baseScientificName": "Semaprochilodus taeniurus",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 250,
+        "impactPerGap": 249,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2026,11 +2001,11 @@
         "researchKey": "Semaprochilodus insignis",
         "baseScientificName": "Semaprochilodus insignis",
         "completionEligible": false,
-        "affectedUnknownPairs": 499,
+        "affectedUnknownPairs": 497,
         "gapInstances": 2,
         "terminalGapInstances": 6,
         "terminalBlockedCatalogObjects": 2,
-        "impactPerGap": 249.5,
+        "impactPerGap": 248.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 2,
         "combinedGapFields": [
@@ -2044,11 +2019,11 @@
         "researchKey": "Epiplatys annulatus",
         "baseScientificName": "Epiplatys annulatus",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2062,11 +2037,11 @@
         "researchKey": "Hemigrammus rodwayi",
         "baseScientificName": "Hemigrammus rodwayi",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2080,11 +2055,11 @@
         "researchKey": "Hyphessobrycon herbertaxelrodi",
         "baseScientificName": "Hyphessobrycon herbertaxelrodi",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2098,11 +2073,11 @@
         "researchKey": "Hyphessobrycon megalopterus",
         "baseScientificName": "Hyphessobrycon megalopterus",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2116,11 +2091,11 @@
         "researchKey": "Moenkhausia pittieri",
         "baseScientificName": "Moenkhausia pittieri",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2134,11 +2109,11 @@
         "researchKey": "Nannostomus beckfordi",
         "baseScientificName": "Nannostomus beckfordi",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2152,11 +2127,11 @@
         "researchKey": "Pseudomugil furcatus",
         "baseScientificName": "Pseudomugil furcatus",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 1,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 232,
+        "impactPerGap": 231,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2170,11 +2145,11 @@
         "researchKey": "Tachysurus fulvidraco",
         "baseScientificName": "Tachysurus fulvidraco",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 2,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 125,
+        "impactPerGap": 124.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2189,11 +2164,11 @@
         "researchKey": "Thayeria boehlkei",
         "baseScientificName": "Thayeria boehlkei",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 2,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 116,
+        "impactPerGap": 115.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2208,11 +2183,11 @@
         "researchKey": "Cobitis sinensis",
         "baseScientificName": "Cobitis sinensis",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2230,11 +2205,11 @@
         "researchKey": "Pangio kuhlii",
         "baseScientificName": "Pangio kuhlii",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2252,11 +2227,11 @@
         "researchKey": "Synchiropus splendidus",
         "baseScientificName": "Synchiropus splendidus",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2274,11 +2249,11 @@
         "researchKey": "Synodontis nigriventris",
         "baseScientificName": "Synodontis nigriventris",
         "completionEligible": false,
-        "affectedUnknownPairs": 250,
+        "affectedUnknownPairs": 249,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 50,
+        "impactPerGap": 49.8,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2296,11 +2271,11 @@
         "researchKey": "Crossocheilus langei",
         "baseScientificName": "Crossocheilus langei",
         "completionEligible": false,
-        "affectedUnknownPairs": 747,
+        "affectedUnknownPairs": 744,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 49.8,
+        "impactPerGap": 49.6,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -2318,11 +2293,11 @@
         "researchKey": "Sahyadria denisonii",
         "baseScientificName": "Sahyadria denisonii",
         "completionEligible": false,
-        "affectedUnknownPairs": 747,
+        "affectedUnknownPairs": 744,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 49.8,
+        "impactPerGap": 49.6,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -2340,11 +2315,11 @@
         "researchKey": "Carassius auratus",
         "baseScientificName": "Carassius auratus",
         "completionEligible": false,
-        "affectedUnknownPairs": 2934,
+        "affectedUnknownPairs": 2922,
         "gapInstances": 60,
         "terminalGapInstances": 36,
         "terminalBlockedCatalogObjects": 12,
-        "impactPerGap": 48.9,
+        "impactPerGap": 48.7,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 12,
         "combinedGapFields": [
@@ -2362,11 +2337,11 @@
         "researchKey": "Poecilia latipinna",
         "baseScientificName": "Poecilia latipinna",
         "completionEligible": false,
-        "affectedUnknownPairs": 1222,
+        "affectedUnknownPairs": 1217,
         "gapInstances": 25,
         "terminalGapInstances": 15,
         "terminalBlockedCatalogObjects": 5,
-        "impactPerGap": 48.88,
+        "impactPerGap": 48.68,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 5,
         "combinedGapFields": [
@@ -2384,11 +2359,11 @@
         "researchKey": "Trichopodus leerii",
         "baseScientificName": "Trichopodus leerii",
         "completionEligible": false,
-        "affectedUnknownPairs": 729,
+        "affectedUnknownPairs": 726,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 48.6,
+        "impactPerGap": 48.4,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -2406,11 +2381,11 @@
         "researchKey": "Aphyocypris chinensis",
         "baseScientificName": "Aphyocypris chinensis",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 46.4,
+        "impactPerGap": 46.2,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2428,11 +2403,11 @@
         "researchKey": "Melanotaenia praecox",
         "baseScientificName": "Melanotaenia praecox",
         "completionEligible": false,
-        "affectedUnknownPairs": 232,
+        "affectedUnknownPairs": 231,
         "gapInstances": 5,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 46.4,
+        "impactPerGap": 46.2,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -2450,11 +2425,11 @@
         "researchKey": "Poecilia sphenops",
         "baseScientificName": "Poecilia sphenops",
         "completionEligible": false,
-        "affectedUnknownPairs": 693,
+        "affectedUnknownPairs": 690,
         "gapInstances": 15,
         "terminalGapInstances": 9,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 46.2,
+        "impactPerGap": 46,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -2472,11 +2447,11 @@
         "researchKey": "Danio rerio",
         "baseScientificName": "Danio rerio",
         "completionEligible": false,
-        "affectedUnknownPairs": 1603,
+        "affectedUnknownPairs": 1596,
         "gapInstances": 35,
         "terminalGapInstances": 21,
         "terminalBlockedCatalogObjects": 7,
-        "impactPerGap": 45.8,
+        "impactPerGap": 45.6,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 7,
         "combinedGapFields": [
@@ -2779,39 +2754,39 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 54672
+      "count": 54322
     },
     {
       "code": "missing_ph",
-      "count": 42888
+      "count": 42738
     },
     {
       "code": "missing_hardness",
-      "count": 10492
+      "count": 10456
     },
     {
       "code": "candidate_water_type_missing",
-      "count": 463
+      "count": 461
     },
     {
       "code": "water_type_unknown",
-      "count": 123
+      "count": 121
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 396,
+    "actionableGaps": 391,
     "fieldActionableGaps": [
       {
         "field": "tank_size",
-        "count": 80
+        "count": 78
       },
       {
         "field": "ph",
-        "count": 79
+        "count": 78
       },
       {
         "field": "temperature",
-        "count": 72
+        "count": 71
       },
       {
         "field": "water",
@@ -2823,7 +2798,7 @@
       },
       {
         "field": "territoriality",
-        "count": 21
+        "count": 20
       },
       {
         "field": "predation",
