@@ -110,4 +110,22 @@ assert.deepEqual(albinoGyrinocheilusApproved.get('social_behavior')?.proposedVal
 assert.deepEqual(albinoGyrinocheilusApproved.get('territoriality')?.proposedValue, { traits: ['age_increasing_territoriality', 'similar_fish_aggression', 'bottom_dweller_aggression'] });
 assert.deepEqual(albinoGyrinocheilusApproved.get('predation')?.proposedValue, { targets: [] });
 
-console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, and Albino Gyrinocheilus corrections inherit only explicit same-species authority');
+
+const fireRedAgassiziiIdentity = getCatalogFieldReviews('sp_0221').filter(review => review.field === 'identity').at(-1);
+assert.equal(fireRedAgassiziiIdentity?.resolution, 'supported');
+assert.deepEqual(fireRedAgassiziiIdentity?.proposedValue, {
+  scientificName: 'Apistogramma agassizii var. Fire Red',
+  baseSpeciesKey: 'Apistogramma agassizii',
+  variantKey: 'Fire Red',
+});
+const fireRedAgassiziiApproved = new Map(getApprovedCatalogFieldReviews('sp_0221').map(review => [review.field, review]));
+assert.equal(fireRedAgassiziiApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(fireRedAgassiziiApproved.get('temperature')?.proposedValue, { min: 22, max: 29 });
+assert.deepEqual(fireRedAgassiziiApproved.get('ph')?.proposedValue, { min: 5, max: 7 });
+assert.deepEqual(fireRedAgassiziiApproved.get('adult_size')?.proposedValue, { min: null, max: 7.5 });
+assert.deepEqual(fireRedAgassiziiApproved.get('tank_size')?.proposedValue, { liters: 54, lengthCm: 60 });
+assert.deepEqual(fireRedAgassiziiApproved.get('social_behavior')?.proposedValue, { mode: 'variable', minimumGroupSize: null });
+assert.deepEqual(fireRedAgassiziiApproved.get('territoriality')?.proposedValue, { traits: ['breeding_defense'] });
+assert.deepEqual(fireRedAgassiziiApproved.get('predation')?.proposedValue, { targets: [] });
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, and Fire Red Agassizii corrections inherit only explicit same-species authority');

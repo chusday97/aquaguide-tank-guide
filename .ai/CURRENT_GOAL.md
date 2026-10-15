@@ -1,3 +1,45 @@
+## CURRENT OVERRIDE — 2026-10-15 Fire Red Agassizii identity + catalog correction wave25 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave25 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
+- Wave25 resolves exactly one additional identity-held fish: `sp_0221`, formerly labeled `长鳍阿卡西短鲷 / Apistogramma agassizii var. Fire Red`.
+- Two independent exact-lineage sources support Fire Red as an `Apistogramma agassizii` captive-bred colour form:
+  - Aquarium Glaser: `Apistogramma agassizii FIRE-RED`, explicitly described as an artificial/captive-bred sport from German breeders and as an `A. agassizii` form.
+  - Aquarium Co-Op: the Apistogramma care guide independently lists **Fire Red** among the colour variants of `A. agassizii`.
+- Catalog correction: the old Chinese name and description additionally claimed a distinct **long-fin** lineage, but the reviewed sources support Fire Red coloration rather than an independently evidenced long-fin morph. The object is therefore renamed **`火焰红阿卡西短鲷`** and unsupported long-fin language is removed instead of silently treating Fire Red + Longfin as a compound identity.
+- The same inspection exposed a copied Betta housing template on the reviewed base object `sp_0017 阿卡西短鲷`. Wave25 corrects only these two exact objects:
+  - `sp_0221`: housing changes from unsupported `建议单养 / 斗鱼...长鳍追咬` text to `谨慎混养` with territory/breeding-defense, floor-space, cave and line-of-sight guidance.
+  - `sp_0017`: the same erroneous Betta template is removed and replaced with authority-consistent `谨慎混养` guidance.
+  - The remaining repeated template occurrences are **not** bulk-replaced; each requires object-level audit/evidence.
+- Identity-correction map now contains five reviewed bridges:
+  - `sp_0176 -> sp_0446` Marble angelfish -> `Pterophyllum scalare`
+  - `sp_0221 -> sp_0017` Fire Red Agassizii -> `Apistogramma agassizii`
+  - `sp_0229 -> sp_0441` Albino Gyrinocheilus -> `Gyrinocheilus aymonieri`
+  - `sp_0236 -> sp_0438` Albino Red swordtail -> `Xiphophorus hellerii`
+  - `sp_0407 -> sp_0103` Blood Red A arowana -> `Scleropages formosus`
+- `sp_0221` now has explicit reviewed bridges for all eight Compatibility core fields, reusing the already-reviewed `sp_0017` authority after Fire Red identity is established:
+  - freshwater
+  - 22–29°C
+  - pH 5–7
+  - adult max 7.5 cm
+  - minimum 54 L / 60 cm pair footprint
+  - conservative variable Catalog social mode; Species Knowledge retains the more specific harem structure
+  - breeding-defense territoriality boundary
+  - no reviewed fish-predation target
+- Object-level regression confirms `sp_0221` is **8/8 authoritative + generic-ready** and arbitrary unreviewed `A. agassizii var.*` objects still cannot inherit base authority automatically.
+- Coverage after Wave25: **88 authoritative 8/8 fish / 73 strict generic-ready / 285 identity-domain held**. Ordinary research backlog remains exactly **336 actionable field gaps**, confirming no unrelated morph review leakage.
+- Global decision impact versus Wave24:
+  - decision coverage **44.62% -> 44.78%**
+  - `unresolved_identity` **20,650 -> 20,514 (-136 pairs)**
+  - total `insufficient_data` **26,524 -> 26,448 (-76 pairs)**
+  - `public_evidence_insufficient` **5,874 -> 5,934 (+60)** because identity resolution exposes the next real evidence boundary
+  - `missing_species_fact` remains **0**
+  - status totals: **379 compatible / 2,013 caution / 19,055 not_recommended / 26,448 insufficient_data**
+- Strict fully-informed invariant expands to **73 ready fish = 2,628 unordered pairs = 135 compatible / 1,088 caution / 1,405 not_recommended / 0 insufficient_data**.
+- Repository authority now contains **106 reviewed Profiles** = released target 101 + 5 source-controlled pending identity corrections (`sp_0176`, `sp_0221`, `sp_0229`, `sp_0236`, `sp_0407`). Historical release generations remain exact **63 -> 85 -> 95 -> 99 -> 100 -> 101**.
+- Historical Wave05 classified `sp_0221` as no-Profile/identity-held. The frozen migration remains unchanged; the generic later-source-controlled-correction contract permits the reviewed Wave25 bridge to supersede the historical hold without rewriting migration history.
+- PASS: catalog identity boundaries, explicit identity bridge reviews, Species Knowledge, rollout window, runtime authority, frozen Wave05 migration, core-field coverage, strict fully-informed matrix, V4 readability, user conclusion, release badcases, full `test:backend-release-gate`, API/project TypeScript, Business API bundle, lint, and `git diff --check`.
+- NEXT: continue systematic identity resolution, but prioritize candidates without compound-morph ambiguity. Compound labels such as Balloon + colour, Longfin + colour, or High Fin + albino remain fail-closed unless the compound identity itself is directly evidenced.
+
 ## CURRENT OVERRIDE — 2026-10-15 Albino Gyrinocheilus identity correction wave24 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave24 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.

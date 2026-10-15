@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 72,
-  "coreFieldCompleteSpecies": 87,
+  "genericOnboardingReadySpecies": 73,
+  "coreFieldCompleteSpecies": 88,
   "oneFieldGapSpecies": 6,
-  "runtimeReviewedProfileSpecies": 141,
-  "domainOrIdentityHeldSpecies": 286,
+  "runtimeReviewedProfileSpecies": 142,
+  "domainOrIdentityHeldSpecies": 285,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 125,
+      "reviewed_supported": 126,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 126,
+      "reviewed_supported": 127,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 6,
       "needs_research": 57,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 120,
+      "reviewed_supported": 121,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 10,
       "needs_research": 59,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 131,
+      "reviewed_supported": 132,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 1,
       "needs_research": 57,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 117,
+      "reviewed_supported": 118,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 14,
       "needs_research": 58,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 112,
+      "reviewed_supported": 113,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 77,
+      "reviewed_supported": 78,
       "reviewed_neutral_or_negative": 30,
       "reviewed_unknown": 82,
       "needs_research": 0,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 66,
-      "reviewed_neutral_or_negative": 28,
+      "reviewed_neutral_or_negative": 29,
       "reviewed_unknown": 95,
       "needs_research": 0,
-      "missing_identity_or_domain": 286,
+      "missing_identity_or_domain": 285,
       "not_applicable": 11
     }
   },
@@ -18482,86 +18482,110 @@
     },
     {
       "speciesId": "sp_0221",
-      "name": "长鳍阿卡西短鲷",
+      "name": "火焰红阿卡西短鲷",
       "scientificName": "Apistogramma agassizii var. Fire Red",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-apistogramma-agassizii"
+            "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "aquarium-coop-apistogramma-fire-red-wave25",
+            "wave25-seriouslyfish-apistogramma-agassizii-husbandry",
+            "wave25-fishbase-apistogramma-agassizii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

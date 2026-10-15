@@ -27,6 +27,7 @@ import { identityCorrectionsWave21Sources } from './catalogReviewBatches/identit
 import { identityCorrectionsWave22Sources } from './catalogReviewBatches/identity-corrections-wave22';
 import { identityCorrectionsWave23Sources } from './catalogReviewBatches/identity-corrections-wave23';
 import { identityCorrectionsWave24Sources } from './catalogReviewBatches/identity-corrections-wave24';
+import { identityCorrectionsWave25Sources } from './catalogReviewBatches/identity-corrections-wave25';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 
 export type ReviewedCompatibilityProfile = {
@@ -1634,6 +1635,11 @@ profiles.sp_0229 = wave04BridgeProfile(
   'sp_0229',
   'sp_0441',
   identityCorrectionsWave24Sources.gyrinocheilusAlbinoTetra,
+);
+profiles.sp_0221 = wave04BridgeProfile(
+  'sp_0221',
+  'sp_0017',
+  identityCorrectionsWave25Sources.fireRedAquariumGlaser,
 );
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {
