@@ -33,6 +33,13 @@ import {
   compatibilityHighLeverageWave1Sources,
   compatibilityHighLeverageWave1VerifiedSourceIds,
 } from './high-leverage-wave1-20261015';
+import {
+  compatibilityNumericWave1AuthorityPatch,
+  compatibilityNumericWave1FieldReviews,
+  compatibilityNumericWave1ProfilePatches,
+  compatibilityNumericWave1Sources,
+  compatibilityNumericWave1VerifiedSourceIds,
+} from './numeric-wave1-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -40,6 +47,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLaneWave3Sources,
   ...compatibilityFastLaneWave4Sources,
   ...compatibilityHighLeverageWave1Sources,
+  ...compatibilityNumericWave1Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -48,6 +56,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityFastLaneWave3FieldReviews,
   ...compatibilityFastLaneWave4FieldReviews,
   ...compatibilityHighLeverageWave1FieldReviews,
+  ...compatibilityNumericWave1FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -56,6 +65,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityFastLaneWave3VerifiedSourceIds,
   ...compatibilityFastLaneWave4VerifiedSourceIds,
   ...compatibilityHighLeverageWave1VerifiedSourceIds,
+  ...compatibilityNumericWave1VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -64,6 +74,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityFastLaneWave3ProfilePatches,
   ...compatibilityFastLaneWave4ProfilePatches,
   ...compatibilityHighLeverageWave1ProfilePatches,
+  ...compatibilityNumericWave1ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -72,4 +83,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityFastLaneWave3AuthorityPatch,
   compatibilityFastLaneWave4AuthorityPatch,
   compatibilityHighLeverageWave1AuthorityPatch,
+  compatibilityNumericWave1AuthorityPatch,
 ] as const;

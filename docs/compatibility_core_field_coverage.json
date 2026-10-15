@@ -18,42 +18,42 @@
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 116,
+      "reviewed_supported": 118,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 69,
+      "reviewed_unknown": 67,
       "needs_research": 0,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 89,
+      "reviewed_supported": 94,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 15,
-      "needs_research": 81,
+      "needs_research": 76,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 84,
+      "reviewed_supported": 89,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 20,
-      "needs_research": 81,
+      "needs_research": 76,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 102,
+      "reviewed_supported": 106,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 3,
-      "needs_research": 80,
+      "needs_research": 76,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 80,
+      "reviewed_supported": 86,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 20,
-      "needs_research": 85,
+      "needs_research": 79,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
@@ -85,23 +85,23 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 104
+      "count": 98
     },
     {
       "field": "ph",
-      "count": 101
-    },
-    {
-      "field": "temperature",
       "count": 96
     },
     {
+      "field": "temperature",
+      "count": 91
+    },
+    {
       "field": "adult_size",
-      "count": 83
+      "count": 79
     },
     {
       "field": "water",
-      "count": 69
+      "count": 67
     },
     {
       "field": "territoriality",
@@ -9048,8 +9048,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 1,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -9089,11 +9089,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-poropanchax-normani-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -9298,8 +9300,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 2,
-      "actionableGapCount": 3,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -9312,18 +9314,22 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-hyphessobrycon-amapaensis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-hyphessobrycon-amapaensis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -9335,11 +9341,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-hyphessobrycon-amapaensis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -10967,46 +10975,54 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch32-fishbase-iriatherina-werneri"
+            "fishipedia-iriatherina-werneri-numeric-husbandry"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-iriatherina-werneri-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-iriatherina-werneri-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-iriatherina-werneri-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-iriatherina-werneri-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -29654,8 +29670,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -29668,32 +29684,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-hemigrammus-rodwayi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-hemigrammus-rodwayi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-hemigrammus-rodwayi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-hemigrammus-rodwayi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -37642,46 +37666,54 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 5,
+      "actionableGapCount": 0,
       "terminalGapCount": 3,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch37-fishbase-kryptopterus-vitreolus"
+            "fishipedia-kryptopterus-vitreolus-numeric-husbandry"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-kryptopterus-vitreolus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-kryptopterus-vitreolus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-kryptopterus-vitreolus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-kryptopterus-vitreolus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -38867,8 +38899,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -38881,32 +38913,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-nannostomus-beckfordi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-nannostomus-beckfordi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-nannostomus-beckfordi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-nannostomus-beckfordi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",

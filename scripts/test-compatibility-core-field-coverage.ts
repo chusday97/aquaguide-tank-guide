@@ -138,6 +138,43 @@ assert.deepEqual(
   ['fishipedia-otocinclus-vittatus-direct-husbandry'],
   'new exact-taxon Otocinclus evidence must resolve to source metadata',
 );
+assert.deepEqual(approvedValue('sp_0112', 'tank_size'), { liters: 50, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0115', 'temperature'), { min: 24, max: 27 });
+assert.deepEqual(approvedValue('sp_0115', 'ph'), { min: 5.3, max: 6.5 });
+assert.deepEqual(approvedValue('sp_0115', 'tank_size'), { liters: 50, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0362', 'temperature'), { min: 24, max: 28 });
+assert.deepEqual(approvedValue('sp_0362', 'ph'), { min: 6, max: 6.5 });
+assert.deepEqual(approvedValue('sp_0362', 'adult_size'), { min: null, max: 5 });
+assert.deepEqual(approvedValue('sp_0362', 'tank_size'), { liters: 80, lengthCm: null });
+assert.equal(approvedValue('sp_0362', 'water'), undefined, 'Hemigrammus rodwayi freshwater authority must remain unresolved until the exact source states it directly');
+assert.deepEqual(approvedValue('sp_0134', 'water'), 'freshwater');
+assert.deepEqual(approvedValue('sp_0134', 'temperature'), { min: 26, max: 30 });
+assert.deepEqual(approvedValue('sp_0134', 'ph'), { min: 5.5, max: 7.5 });
+assert.deepEqual(approvedValue('sp_0134', 'adult_size'), { min: null, max: 5 });
+assert.deepEqual(approvedValue('sp_0134', 'tank_size'), { liters: 60, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0458', 'water'), 'freshwater');
+assert.deepEqual(approvedValue('sp_0458', 'temperature'), { min: 24, max: 28 });
+assert.deepEqual(approvedValue('sp_0458', 'ph'), { min: 6.8, max: 7.2 });
+assert.deepEqual(approvedValue('sp_0458', 'adult_size'), { min: null, max: 14 });
+assert.deepEqual(approvedValue('sp_0458', 'tank_size'), { liters: 250, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0473', 'temperature'), { min: 24, max: 26 });
+assert.deepEqual(approvedValue('sp_0473', 'ph'), { min: 6, max: 6.8 });
+assert.deepEqual(approvedValue('sp_0473', 'adult_size'), { min: null, max: 5 });
+assert.deepEqual(approvedValue('sp_0473', 'tank_size'), { liters: 80, lengthCm: null });
+assert.equal(approvedValue('sp_0473', 'water'), undefined, 'Nannostomus beckfordi freshwater authority must remain unresolved until the exact source states it directly');
+const numericWave1SourceIds = [
+  'fishipedia-poropanchax-normani-numeric-husbandry',
+  'fishipedia-hyphessobrycon-amapaensis-numeric-husbandry',
+  'fishipedia-hemigrammus-rodwayi-numeric-husbandry',
+  'fishipedia-iriatherina-werneri-numeric-husbandry',
+  'fishipedia-kryptopterus-vitreolus-numeric-husbandry',
+  'fishipedia-nannostomus-beckfordi-numeric-husbandry',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave1SourceIds).map(source => source.id).sort(),
+  [...numericWave1SourceIds].sort(),
+  'numeric wave1 exact-taxon evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -163,9 +200,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 68, '494 actionable field gaps should collapse to 68 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 64, '472 actionable field gaps should collapse to 64 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 113, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 109, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

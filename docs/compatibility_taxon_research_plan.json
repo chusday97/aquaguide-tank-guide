@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 113,
-  "totalResearchJobs": 68,
+  "catalogObjects": 109,
+  "totalResearchJobs": 64,
   "variantBridgeJobs": 19,
   "items": [
     {
@@ -993,6 +993,60 @@
       ]
     },
     {
+      "researchKey": "Hemigrammus rodwayi",
+      "baseScientificName": "Hemigrammus rodwayi",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0362",
+          "name": "黄金灯",
+          "scientificName": "Hemigrammus rodwayi",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Nannostomus beckfordi",
+      "baseScientificName": "Nannostomus beckfordi",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0473",
+          "name": "红肚铅笔鱼",
+          "scientificName": "Nannostomus beckfordi",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Amatitlania nigrofasciata",
       "baseScientificName": "Amatitlania nigrofasciata",
       "priorityScore": 141,
@@ -1101,64 +1155,6 @@
           "name": "长臀鮠",
           "scientificName": "Tachysurus fulvidraco",
           "gaps": [
-            "ph",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Poropanchax normani",
-      "baseScientificName": "Poropanchax normani",
-      "priorityScore": 122,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0112",
-          "name": "蓝眼灯",
-          "scientificName": "Poropanchax normani",
-          "gaps": [
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Hyphessobrycon amapaensis",
-      "baseScientificName": "Hyphessobrycon amapaensis",
-      "priorityScore": 116,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0115",
-          "name": "琥珀灯",
-          "scientificName": "Hyphessobrycon amapaensis",
-          "gaps": [
-            "temperature",
             "ph",
             "tank_size"
           ],
@@ -1819,41 +1815,6 @@
       ]
     },
     {
-      "researchKey": "Hemigrammus rodwayi",
-      "baseScientificName": "Hemigrammus rodwayi",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0362",
-          "name": "黄金灯",
-          "scientificName": "Hemigrammus rodwayi",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Hyphessobrycon herbertaxelrodi",
       "baseScientificName": "Hyphessobrycon herbertaxelrodi",
       "priorityScore": 110,
@@ -1924,76 +1885,6 @@
       ]
     },
     {
-      "researchKey": "Iriatherina werneri",
-      "baseScientificName": "Iriatherina werneri",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0134",
-          "name": "燕子美人",
-          "scientificName": "Iriatherina werneri",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Kryptopterus vitreolus",
-      "baseScientificName": "Kryptopterus vitreolus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0458",
-          "name": "玻璃猫鱼",
-          "scientificName": "Kryptopterus vitreolus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Melanotaenia praecox",
       "baseScientificName": "Melanotaenia praecox",
       "priorityScore": 110,
@@ -2051,41 +1942,6 @@
           "speciesId": "sp_0471",
           "name": "钻石灯",
           "scientificName": "Moenkhausia pittieri",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Nannostomus beckfordi",
-      "baseScientificName": "Nannostomus beckfordi",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0473",
-          "name": "红肚铅笔鱼",
-          "scientificName": "Nannostomus beckfordi",
           "gaps": [
             "water",
             "temperature",
