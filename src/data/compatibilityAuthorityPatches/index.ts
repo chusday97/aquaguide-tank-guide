@@ -96,6 +96,13 @@ import {
   compatibilityNumericWave9Sources,
   compatibilityNumericWave9VerifiedSourceIds,
 } from './numeric-wave9-20261015';
+import {
+  compatibilityNumericWave10AuthorityPatch,
+  compatibilityNumericWave10FieldReviews,
+  compatibilityNumericWave10ProfilePatches,
+  compatibilityNumericWave10Sources,
+  compatibilityNumericWave10VerifiedSourceIds,
+} from './numeric-wave10-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -112,6 +119,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave7Sources,
   ...compatibilityNumericWave8Sources,
   ...compatibilityNumericWave9Sources,
+  ...compatibilityNumericWave10Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -129,6 +137,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave7FieldReviews,
   ...compatibilityNumericWave8FieldReviews,
   ...compatibilityNumericWave9FieldReviews,
+  ...compatibilityNumericWave10FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -146,6 +155,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave7VerifiedSourceIds,
   ...compatibilityNumericWave8VerifiedSourceIds,
   ...compatibilityNumericWave9VerifiedSourceIds,
+  ...compatibilityNumericWave10VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -163,6 +173,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave7ProfilePatches,
   ...compatibilityNumericWave8ProfilePatches,
   ...compatibilityNumericWave9ProfilePatches,
+  ...compatibilityNumericWave10ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -180,4 +191,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave7AuthorityPatch,
   compatibilityNumericWave8AuthorityPatch,
   compatibilityNumericWave9AuthorityPatch,
+  compatibilityNumericWave10AuthorityPatch,
 ] as const;

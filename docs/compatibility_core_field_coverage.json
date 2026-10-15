@@ -11,8 +11,8 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 59,
-  "coreFieldCompleteSpecies": 74,
+  "genericOnboardingReadySpecies": 60,
+  "coreFieldCompleteSpecies": 75,
   "oneFieldGapSpecies": 6,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
@@ -26,17 +26,17 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 114,
+      "reviewed_supported": 115,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 14,
+      "reviewed_unknown": 13,
       "needs_research": 57,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 107,
+      "reviewed_supported": 108,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 19,
+      "reviewed_unknown": 18,
       "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -50,9 +50,9 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 109,
+      "reviewed_supported": 110,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 18,
+      "reviewed_unknown": 17,
       "needs_research": 58,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -67,8 +67,8 @@
     },
     "territoriality": {
       "reviewed_supported": 71,
-      "reviewed_neutral_or_negative": 24,
-      "reviewed_unknown": 89,
+      "reviewed_neutral_or_negative": 25,
+      "reviewed_unknown": 88,
       "needs_research": 1,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -85,15 +85,15 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 78
+      "count": 77
     },
     {
       "field": "tank_size",
-      "count": 75
+      "count": 74
     },
     {
       "field": "temperature",
-      "count": 71
+      "count": 70
     },
     {
       "field": "water",
@@ -109,7 +109,7 @@
     },
     {
       "field": "territoriality",
-      "count": 17
+      "count": 16
     },
     {
       "field": "social_behavior",
@@ -37380,9 +37380,9 @@
       "scientificName": "Pterois volitans",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 4,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -37395,22 +37395,22 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-pterois-volitans"
+            "fishipedia-pterois-volitans-wave10"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-pterois-volitans"
+            "fishipedia-pterois-volitans-wave10"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -37422,13 +37422,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-pterois-volitans"
+            "fishipedia-pterois-volitans-wave10"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -37440,13 +37440,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch26-fishbase-pterois-volitans"
+            "fishipedia-pterois-volitans-wave10"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",

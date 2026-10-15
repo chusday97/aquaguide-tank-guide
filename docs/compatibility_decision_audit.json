@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 59,
-  "genericReadyUniquePairs": 1711,
+  "genericOnboardingReadySpecies": 60,
+  "genericReadyUniquePairs": 1770,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 505,
@@ -456,27 +456,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 175
-      },
-      {
-        "researchKey": "Pterois volitans",
-        "baseScientificName": "Pterois volitans",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
       },
       {
         "researchKey": "Rhodeus ocellatus",
@@ -1645,27 +1624,6 @@
         "existingCoveragePriorityScore": 175
       },
       {
-        "researchKey": "Pterois volitans",
-        "baseScientificName": "Pterois volitans",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
-      },
-      {
         "researchKey": "Rhodeus ocellatus",
         "baseScientificName": "Rhodeus ocellatus",
         "completionEligible": true,
@@ -2560,10 +2518,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 59,
-      "completionEligibleJobs": 22,
+      "totalResearchJobs": 58,
+      "completionEligibleJobs": 21,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 24,
+      "completionEligibleCatalogObjects": 23,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2632,19 +2590,19 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 383,
+    "actionableGaps": 379,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 78
+        "count": 77
       },
       {
         "field": "tank_size",
-        "count": 75
+        "count": 74
       },
       {
         "field": "temperature",
-        "count": 71
+        "count": 70
       },
       {
         "field": "water",
@@ -2660,7 +2618,7 @@
       },
       {
         "field": "territoriality",
-        "count": 17
+        "count": 16
       },
       {
         "field": "social_behavior",

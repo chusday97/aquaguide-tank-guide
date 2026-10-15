@@ -1,15 +1,15 @@
-## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave9 via RDC (NOT RELEASED)
+## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave10 via RDC (NOT RELEASED)
 
 - Active branch: `codex/compatibility-research-runtime-20261014`. The user explicitly authorized RDC for this continuation. This checkpoint remains source-controlled/local only: **no Vercel deployment, Production alias change, DB migration, Production authority write, or Codex agent**.
-- Wave9 targeted `sp_0019 Pterophyllum altum`, which had only `tank_size` and `territoriality` unresolved. Fishipedia’s exact page explicitly recommends a minimum 600 L community aquarium and marks territoriality as `Oui`.
-- The 600 L community minimum is promoted; the page’s smaller 120 L value is explicitly breeding-pair-only and is not used as the general compatibility minimum. No tank-length minimum is inferred.
-- Territoriality is promoted as `territorial + breeding_territoriality`: the exact page says the species rarely leaves its territory and intensifies defense during reproduction. This is broad territorial pressure supported by the source, unlike the conspecific-only scope used for Hypostomus.
-- The profile patch synchronizes all eight required facts and the new behavior traits. `Pterophyllum altum` is now 8/8 and generic-ready.
-- Current coverage after wave9: **74 authoritative 8/8 fish / 59 strict generic-ready**, **383 actionable fields across 104 catalog objects**, deduplicated to **59 base-taxon jobs**. Field gaps: `ph 78`, `tank_size 75`, `temperature 71`, `water 64`, `adult_size 60`, `predation 18`, `territoriality 17`, `social_behavior 0`.
-- Fast Lane remains **five predation-only 7/8 objects**. Decision-impact queue is now **22 completion-eligible jobs / 24 objects** and **37 terminal-blocked jobs / 80 objects**.
-- Fully informed invariant expands to **59 ready fish = 1,711 unordered pairs = 89 compatible / 796 caution / 826 not_recommended / 0 insufficient_data**. The additional not-recommended outcomes are consistent with the newly authoritative broad territorial pressure.
+- Wave10 targeted `sp_0453 Pterois volitans`, which already had reviewed water/adult/social/predation authority and lacked only temperature, pH, tank size and territoriality.
+- Fishipedia’s exact page directly supplies 22–26 °C, pH 8.2–8.4, minimum 1200 L, and explicit non-territoriality. The page independently reinforces the existing predation rule by stating that any fish small enough to enter the mouth is potential prey, but Wave10 does not broaden or rewrite the already-reviewed prey scope.
+- Non-territoriality remains distinct from interspecific aggression: the exact source calls the species non-territorial while also noting occasional aggression. The field is therefore `traits: []`, without erasing predation/aggression risks already represented elsewhere.
+- The profile patch synchronizes all eight required facts. `Pterois volitans` is now 8/8 and generic-ready.
+- Current coverage after wave10: **75 authoritative 8/8 fish / 60 strict generic-ready**, **379 actionable fields across 103 catalog objects**, deduplicated to **58 base-taxon jobs**. Field gaps: `ph 77`, `tank_size 74`, `temperature 70`, `water 64`, `adult_size 60`, `predation 18`, `territoriality 16`, `social_behavior 0`.
+- Fast Lane remains **five predation-only 7/8 objects**. Decision-impact queue is now **21 completion-eligible jobs / 23 objects** and **37 terminal-blocked jobs / 80 objects**.
+- Fully informed invariant expands to **60 ready fish = 1,770 unordered pairs = 89 compatible / 796 caution / 885 not_recommended / 0 insufficient_data**.
 - Core-field coverage, decision-impact queue, fully-informed matrix, user conclusion, release badcases, knowledge coverage, research dry-run, lint, Business API build and `git diff --check` all pass under RDC.
-- NEXT: commit/push wave9, then continue exact-taxon completion candidates. Do not spend effort on variant bridge jobs unless direct bridge evidence exists.
+- NEXT: commit/push wave10, then continue exact-taxon completion candidates. Remaining actionable behavior work is only territoriality/predation; social-behavior actionable coverage remains complete.
 
 ## CURRENT CHECKPOINT — 2026-10-14 Compatibility research batch dry-run infrastructure (NOT RELEASED)
 

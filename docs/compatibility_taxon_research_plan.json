@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 104,
-  "totalResearchJobs": 59,
+  "catalogObjects": 103,
+  "totalResearchJobs": 58,
   "variantBridgeJobs": 19,
   "items": [
     {
@@ -489,39 +489,6 @@
           "speciesId": "sp_0130",
           "name": "马口鱼",
           "scientificName": "Opsariichthys bidens",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "territoriality"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Pterois volitans",
-      "baseScientificName": "Pterois volitans",
-      "priorityScore": 167,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "territoriality"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0453",
-          "name": "长鼻狮子鱼",
-          "scientificName": "Pterois volitans",
           "gaps": [
             "temperature",
             "ph",
