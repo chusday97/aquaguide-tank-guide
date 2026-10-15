@@ -112,7 +112,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v9-decision-critical-readiness';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v10-scoped-territoriality';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -251,6 +251,15 @@ const predationTargetMatches = (predator: DomainSpeciesFact, prey: DomainSpecies
     && prey.size === 'Small';
 };
 
+const hasConspecificTerritorialTrait = (species: DomainSpeciesFact) => (
+  (species.behaviorTraits || []).some(trait => {
+    const normalized = trait.toLowerCase();
+    const conspecificScope = normalized.includes('conspecific') || normalized.includes('intraspecific');
+    const territorialMeaning = normalized.includes('territorial') || normalized.includes('territory');
+    return conspecificScope && territorialMeaning;
+  })
+);
+
 export const evaluateCompatibility = ({
   intent,
   tank,
@@ -339,8 +348,8 @@ export const evaluateCompatibility = ({
       if (!predator && existing.id !== candidateSpecies.id && (fishTargetsVulnerableExisting || existingFishTargetsVulnerableCandidate)) {
         raise('caution', 'predation_vulnerability_context');
       }
-      const existingConspecificTerritorial = existing.behaviorTraits?.includes('conspecific_territoriality');
-      const candidateConspecificTerritorial = candidateSpecies.behaviorTraits?.includes('conspecific_territoriality');
+      const existingConspecificTerritorial = hasConspecificTerritorialTrait(existing);
+      const candidateConspecificTerritorial = hasConspecificTerritorialTrait(candidateSpecies);
       if (existing.id === candidateSpecies.id && (existingConspecificTerritorial || candidateConspecificTerritorial)) {
         raise('caution', 'territorial_conflict');
       }
@@ -492,6 +501,13 @@ export const evaluateCompatibility = ({
     ...existingSpecies,
     ...(candidateSpecies && !existingSpecies.some(species => species.id === candidateSpecies.id) ? [candidateSpecies] : []),
   ];
+  if (behaviorGroupSpecies.some(species => (
+    hasConspecificTerritorialTrait(species)
+    && plannedQuantityFor(species) != null
+    && plannedQuantityFor(species)! > 1
+  ))) {
+    raise('caution', 'territorial_conflict');
+  }
   if (behaviorGroupSpecies.some(species => (
     hasManagedFinNippingRisk(species)
     && species.minimumGroupSize != null

@@ -10,8 +10,8 @@
   "genericReadyUniquePairs": 1540,
   "fishPairs": 47895,
   "statuses": {
-    "compatible": 730,
-    "caution": 1614,
+    "compatible": 632,
+    "caution": 1712,
     "not_recommended": 16490,
     "insufficient_data": 29061
   },

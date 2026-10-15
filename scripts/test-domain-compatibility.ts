@@ -89,6 +89,41 @@ const conspecificTerritorialityDoesNotLeakAcrossSpecies = evaluateCompatibility(
 assert.equal(conspecificTerritorialityDoesNotLeakAcrossSpecies.status, 'compatible');
 assert.equal(conspecificTerritorialityDoesNotLeakAcrossSpecies.ruleCodes.includes('territorial_pressure_context'), false);
 
+const maleConspecificTerritoriality = evaluateCompatibility({
+  intent: 'record_existing',
+  existingSpecies: [{ ...base, id: 'swordtail', behaviorTraits: ['male_conspecific_territoriality'] }],
+  candidateSpecies: { ...base, id: 'swordtail', behaviorTraits: ['male_conspecific_territoriality'] },
+});
+assert.equal(maleConspecificTerritoriality.status, 'caution');
+assert.ok(maleConspecificTerritoriality.ruleCodes.includes('territorial_conflict'));
+
+const maleConspecificTerritorialityQuantity = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 200, lengthCm: 150, targetTemperatureC: 25 },
+  existingSpecies: [],
+  candidateSpecies: { ...base, id: 'swordtail', behaviorTraits: ['male_conspecific_territoriality'] },
+  candidateQuantity: 2,
+});
+assert.equal(maleConspecificTerritorialityQuantity.status, 'caution');
+assert.ok(maleConspecificTerritorialityQuantity.ruleCodes.includes('territorial_conflict'));
+
+const maleConspecificTerritorialitySingle = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 200, lengthCm: 150, targetTemperatureC: 25 },
+  existingSpecies: [],
+  candidateSpecies: { ...base, id: 'swordtail', behaviorTraits: ['male_conspecific_territoriality'] },
+  candidateQuantity: 1,
+});
+assert.equal(maleConspecificTerritorialitySingle.ruleCodes.includes('territorial_conflict'), false);
+
+const maleConspecificTerritorialityDoesNotLeakAcrossSpecies = evaluateCompatibility({
+  intent: 'record_existing',
+  existingSpecies: [{ ...base, id: 'swordtail', behaviorTraits: ['male_conspecific_territoriality'] }],
+  candidateSpecies: { ...base, id: 'peaceful-other-species', reviewed: true, territoriality: 'none' },
+});
+assert.equal(maleConspecificTerritorialityDoesNotLeakAcrossSpecies.ruleCodes.includes('territorial_pressure_context'), false);
+assert.equal(maleConspecificTerritorialityDoesNotLeakAcrossSpecies.ruleCodes.includes('territorial_conflict'), false);
+
 const phConflict = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 60, targetTemperatureC: 25 },
