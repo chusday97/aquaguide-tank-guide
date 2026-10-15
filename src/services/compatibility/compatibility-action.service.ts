@@ -301,8 +301,8 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
         verdict: 'add_with_conditions',
         headline: '可以养，但数量要够',
         immediateAction: minimumGroupSize
-          ? `不要只加 1–2 条；把该物种规划到至少 ${minimumGroupSize} 条/只，再观察是否正常群游和进食。`
-          : '不要只加 1–2 条；按该物种的最低群体数量规划到位，再观察是否正常群游和进食。',
+          ? `当前计划数量还不够；先把该物种规划到至少 ${minimumGroupSize} 条/只，再观察是否正常群游和进食。`
+          : '当前计划数量还不够；先按该物种的最低群体数量规划到位，再观察是否正常群游和进食。',
         primaryReason: firstText(warningRules.filter(rule => rule.code === 'minimum_group_not_met' || rule.code === 'group_requirement_gap'), '该物种需要达到最低群体数量；少量个体长期饲养并不一定更保守。'),
         observeAfterAction: '加入后持续观察是否正常结群、进食，以及是否长期躲藏或被排挤。',
         detailsLabel: '为什么数量不能太少？',

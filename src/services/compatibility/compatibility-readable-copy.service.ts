@@ -147,6 +147,22 @@ const plainRuleText = (
     return '还缺少可靠的长期水温信息。';
   }
   if (code === 'ph_range_missing') return '还缺少可靠的长期水质酸碱范围。';
+  if (code.startsWith('pair_rule_')) {
+    if (code.includes('fin_nipping') || code.includes('long_fin')) {
+      return '一方有明确追鳍倾向，另一方是长鳍或慢游类型，持续追咬和鳍损风险较高。';
+    }
+    if (code.includes('predation') || code.includes('prey')) {
+      return '这组生物之间已有直接审核的捕食风险依据，不适合按普通混养处理。';
+    }
+    if (code.includes('territor') || code.includes('aggression') || code.includes('behavior')) {
+      return '这组生物之间已有直接审核的攻击或领地冲突依据，持续追逐风险较高。';
+    }
+    if (code.includes('group_size') || code.includes('school')) {
+      return '这组生物可以共享部分环境条件，但群体数量和长期稳定性需要先满足。';
+    }
+    const evidence = cleanText(rule.evidence || rule.title || '');
+    return isCompatibilityUserReadableText(evidence) ? evidence : '这组生物之间存在已经审核确认的直接混养风险。';
+  }
   if (code === 'reviewed_pair_rule') {
     const evidence = cleanText(rule.evidence || rule.title || '');
     return isCompatibilityUserReadableText(evidence) ? evidence : '这组生物之间存在已经审核确认的混养风险。';

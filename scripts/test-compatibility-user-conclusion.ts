@@ -91,7 +91,9 @@ assert.equal(presentation.detailsLabel, '查看依据');
 const underGroupedPresentation = getCompatibilityPresentation(underGroupedNeon as unknown as CompatibilityDecision);
 assert.equal(underGroupedPresentation.headline, '有条件可以');
 assert.match(underGroupedPresentation.primaryReason, /群体|最低/);
-assert.match(underGroupedPresentation.primaryActionText, /至少|最低群体|规划/);
+assert.match(underGroupedPresentation.primaryActionText, /当前计划数量还不够/);
+assert.match(underGroupedPresentation.primaryActionText, /至少 8 条\/只/);
+assert.doesNotMatch(underGroupedPresentation.primaryActionText, /只加 1–2 条/);
 
 const predationPresentation = getCompatibilityPresentation(channaWithNeon as unknown as CompatibilityDecision);
 assert.equal(predationPresentation.headline, '不建议');
@@ -120,6 +122,12 @@ assert.equal(tigerGuppyPair.primaryReason.riskType, 'aggression');
 assert.equal(tigerGuppyPair.primaryReason.sourceRule.code, 'pair_rule_fin_nipping_long_fin_conflict');
 assert.match(tigerGuppyPair.primaryReason.evidence, /追鳍|长鳍/);
 assert.doesNotMatch(tigerGuppyPair.primaryReason.evidence, /捕食风险实验支持/);
+const tigerGuppyPlan = buildCompatibilityDecisionPlan(tigerGuppyDecision);
+assert.equal(tigerGuppyPlan.judgment, '不建议');
+assert.match(tigerGuppyPlan.riskSummary.join(' '), /追鳍|长鳍|慢游/);
+assert.doesNotMatch(tigerGuppyPlan.riskSummary.join(' '), /有一项已审核条件需要继续确认/);
+assert.ok(tigerGuppyPlan.evidence.sourceRuleCodes.includes('pair_rule_fin_nipping_long_fin_conflict'));
+assert.ok(tigerGuppyPlan.nextSteps.every(step => step !== tigerGuppyPlan.reviewCheckpoint));
 
 const multiSpeciesConflict = evaluateCompatibilityDecision({
   tank: tank(120, 50, 40, 24),

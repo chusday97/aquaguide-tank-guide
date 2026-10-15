@@ -177,6 +177,10 @@ for (const existing of readySpecies) {
   assert.ok(plan.nextSteps.length > 0, 'dynamic result must include next steps for ' + existing.id);
   assert.ok(plan.reviewCheckpoint.length > 0, 'dynamic result must include a recheck point for ' + existing.id);
   assert.ok(plan.stopCondition.length > 0, 'dynamic result must include a stop condition for ' + existing.id);
+  assert.ok(
+    plan.riskSummary.every(text => !text.includes('有一项已审核条件需要继续确认')),
+    'dynamic result must not degrade to a generic reviewed-condition placeholder for ' + existing.id,
+  );
 }
 
 assert.equal(evaluated, readySpecies.length);
