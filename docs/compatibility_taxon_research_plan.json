@@ -993,6 +993,114 @@
       ]
     },
     {
+      "researchKey": "Abbottina rivularis",
+      "baseScientificName": "Abbottina rivularis",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0041",
+          "name": "棒花鱼",
+          "scientificName": "Abbottina rivularis",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Acheilognathus macropterus",
+      "baseScientificName": "Acheilognathus macropterus",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0037",
+          "name": "大鳍鱊",
+          "scientificName": "Acheilognathus macropterus",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Beaufortia kweichowensis",
+      "baseScientificName": "Beaufortia kweichowensis",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0128",
+          "name": "吸鳅 (中国爬岩鳅)",
+          "scientificName": "Beaufortia kweichowensis",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Epiplatys annulatus",
+      "baseScientificName": "Epiplatys annulatus",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0113",
+          "name": "斑节鳉",
+          "scientificName": "Epiplatys annulatus",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Hemigrammus rodwayi",
       "baseScientificName": "Hemigrammus rodwayi",
       "priorityScore": 142,
@@ -1011,6 +1119,60 @@
           "speciesId": "sp_0362",
           "name": "黄金灯",
           "scientificName": "Hemigrammus rodwayi",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Hyphessobrycon herbertaxelrodi",
+      "baseScientificName": "Hyphessobrycon herbertaxelrodi",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0470",
+          "name": "黑莲灯",
+          "scientificName": "Hyphessobrycon herbertaxelrodi",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Hyphessobrycon megalopterus",
+      "baseScientificName": "Hyphessobrycon megalopterus",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0467",
+          "name": "黑尾大勾",
+          "scientificName": "Hyphessobrycon megalopterus",
           "gaps": [
             "water"
           ],
@@ -1164,76 +1326,6 @@
       ]
     },
     {
-      "researchKey": "Abbottina rivularis",
-      "baseScientificName": "Abbottina rivularis",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0041",
-          "name": "棒花鱼",
-          "scientificName": "Abbottina rivularis",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Acheilognathus macropterus",
-      "baseScientificName": "Acheilognathus macropterus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0037",
-          "name": "大鳍鱊",
-          "scientificName": "Acheilognathus macropterus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Aphyocypris chinensis",
       "baseScientificName": "Aphyocypris chinensis",
       "priorityScore": 110,
@@ -1256,41 +1348,6 @@
           "speciesId": "sp_0046",
           "name": "中华细鲫",
           "scientificName": "Aphyocypris chinensis",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Beaufortia kweichowensis",
-      "baseScientificName": "Beaufortia kweichowensis",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0128",
-          "name": "吸鳅 (中国爬岩鳅)",
-          "scientificName": "Beaufortia kweichowensis",
           "gaps": [
             "water",
             "temperature",
@@ -1745,41 +1802,6 @@
       ]
     },
     {
-      "researchKey": "Epiplatys annulatus",
-      "baseScientificName": "Epiplatys annulatus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0113",
-          "name": "斑节鳉",
-          "scientificName": "Epiplatys annulatus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Erpetoichthys calabaricus",
       "baseScientificName": "Erpetoichthys calabaricus",
       "priorityScore": 110,
@@ -1802,76 +1824,6 @@
           "speciesId": "sp_0106",
           "name": "恐龙鱼 (草绳)",
           "scientificName": "Erpetoichthys calabaricus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Hyphessobrycon herbertaxelrodi",
-      "baseScientificName": "Hyphessobrycon herbertaxelrodi",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0470",
-          "name": "黑莲灯",
-          "scientificName": "Hyphessobrycon herbertaxelrodi",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Hyphessobrycon megalopterus",
-      "baseScientificName": "Hyphessobrycon megalopterus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0467",
-          "name": "黑尾大勾",
-          "scientificName": "Hyphessobrycon megalopterus",
           "gaps": [
             "water",
             "temperature",

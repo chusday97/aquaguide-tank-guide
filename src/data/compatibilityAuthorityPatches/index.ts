@@ -40,6 +40,13 @@ import {
   compatibilityNumericWave1Sources,
   compatibilityNumericWave1VerifiedSourceIds,
 } from './numeric-wave1-20261015';
+import {
+  compatibilityNumericWave2AuthorityPatch,
+  compatibilityNumericWave2FieldReviews,
+  compatibilityNumericWave2ProfilePatches,
+  compatibilityNumericWave2Sources,
+  compatibilityNumericWave2VerifiedSourceIds,
+} from './numeric-wave2-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -48,6 +55,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLaneWave4Sources,
   ...compatibilityHighLeverageWave1Sources,
   ...compatibilityNumericWave1Sources,
+  ...compatibilityNumericWave2Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -57,6 +65,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityFastLaneWave4FieldReviews,
   ...compatibilityHighLeverageWave1FieldReviews,
   ...compatibilityNumericWave1FieldReviews,
+  ...compatibilityNumericWave2FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -66,6 +75,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityFastLaneWave4VerifiedSourceIds,
   ...compatibilityHighLeverageWave1VerifiedSourceIds,
   ...compatibilityNumericWave1VerifiedSourceIds,
+  ...compatibilityNumericWave2VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -75,6 +85,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityFastLaneWave4ProfilePatches,
   ...compatibilityHighLeverageWave1ProfilePatches,
   ...compatibilityNumericWave1ProfilePatches,
+  ...compatibilityNumericWave2ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -84,4 +95,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityFastLaneWave4AuthorityPatch,
   compatibilityHighLeverageWave1AuthorityPatch,
   compatibilityNumericWave1AuthorityPatch,
+  compatibilityNumericWave2AuthorityPatch,
 ] as const;

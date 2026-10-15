@@ -26,34 +26,34 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 94,
+      "reviewed_supported": 100,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 15,
-      "needs_research": 76,
+      "needs_research": 70,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 89,
+      "reviewed_supported": 95,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 20,
-      "needs_research": 76,
+      "needs_research": 70,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 106,
+      "reviewed_supported": 112,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 3,
-      "needs_research": 76,
+      "needs_research": 70,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 86,
+      "reviewed_supported": 92,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 20,
-      "needs_research": 79,
+      "needs_research": 73,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
@@ -85,19 +85,19 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 98
+      "count": 92
     },
     {
       "field": "ph",
-      "count": 96
+      "count": 90
     },
     {
       "field": "temperature",
-      "count": 91
+      "count": 85
     },
     {
       "field": "adult_size",
-      "count": 79
+      "count": 73
     },
     {
       "field": "water",
@@ -3177,8 +3177,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -3191,32 +3191,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-acheilognathus-macropterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-acheilognathus-macropterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-acheilognathus-macropterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-acheilognathus-macropterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -3497,8 +3505,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -3511,32 +3519,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-abbottina-rivularis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-abbottina-rivularis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-abbottina-rivularis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-abbottina-rivularis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -9133,8 +9149,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -9147,32 +9163,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-epiplatys-annulatus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-epiplatys-annulatus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-epiplatys-annulatus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-epiplatys-annulatus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -10466,8 +10490,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -10480,32 +10504,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-beaufortia-kweichowensis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-beaufortia-kweichowensis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-beaufortia-kweichowensis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-beaufortia-kweichowensis-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -38415,8 +38447,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -38429,32 +38461,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-megalopterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-megalopterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-megalopterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-megalopterus-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",
@@ -38668,8 +38708,8 @@
       "lifeType": "fish",
       "reviewedProfile": "none",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 1,
       "terminalGapCount": 3,
       "fields": {
         "water": {
@@ -38682,32 +38722,40 @@
           "reasonCode": "reviewed_environment_water_unknown"
         },
         "temperature": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-herbertaxelrodi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-herbertaxelrodi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-herbertaxelrodi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "seriouslyfish-hyphessobrycon-herbertaxelrodi-numeric-husbandry"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_unknown",

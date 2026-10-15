@@ -175,6 +175,49 @@ assert.deepEqual(
   [...numericWave1SourceIds].sort(),
   'numeric wave1 exact-taxon evidence must resolve to reviewed source metadata',
 );
+assert.deepEqual(approvedValue('sp_0041', 'temperature'), { min: 16, max: 24 });
+assert.deepEqual(approvedValue('sp_0041', 'ph'), { min: 6, max: 8 });
+assert.deepEqual(approvedValue('sp_0041', 'adult_size'), { min: null, max: 15 });
+assert.deepEqual(approvedValue('sp_0041', 'tank_size'), { liters: 304, lengthCm: 150 });
+assert.equal(approvedValue('sp_0041', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0037', 'temperature'), { min: 14, max: 22 });
+assert.deepEqual(approvedValue('sp_0037', 'ph'), { min: 6, max: 8 });
+assert.deepEqual(approvedValue('sp_0037', 'adult_size'), { min: null, max: 27.5 });
+assert.deepEqual(approvedValue('sp_0037', 'tank_size'), { liters: 648, lengthCm: 180 });
+assert.equal(approvedValue('sp_0037', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0128', 'temperature'), { min: 16, max: 24 });
+assert.deepEqual(approvedValue('sp_0128', 'ph'), { min: 6.5, max: 8 });
+assert.deepEqual(approvedValue('sp_0128', 'adult_size'), { min: null, max: 7.5 });
+assert.deepEqual(approvedValue('sp_0128', 'tank_size'), { liters: 54, lengthCm: 60 });
+assert.equal(approvedValue('sp_0128', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0113', 'temperature'), { min: 20, max: 26 });
+assert.deepEqual(approvedValue('sp_0113', 'ph'), { min: 4, max: 7 });
+assert.deepEqual(approvedValue('sp_0113', 'adult_size'), { min: null, max: 3.5 });
+assert.deepEqual(approvedValue('sp_0113', 'tank_size'), { liters: 41, lengthCm: 45 });
+assert.equal(approvedValue('sp_0113', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0470', 'temperature'), { min: 20, max: 28 });
+assert.deepEqual(approvedValue('sp_0470', 'ph'), { min: 5, max: 7.5 });
+assert.deepEqual(approvedValue('sp_0470', 'adult_size'), { min: null, max: 3.5 });
+assert.deepEqual(approvedValue('sp_0470', 'tank_size'), { liters: 72, lengthCm: 80 });
+assert.equal(approvedValue('sp_0470', 'water'), undefined);
+assert.deepEqual(approvedValue('sp_0467', 'temperature'), { min: 20, max: 28 });
+assert.deepEqual(approvedValue('sp_0467', 'ph'), { min: 5, max: 7 });
+assert.deepEqual(approvedValue('sp_0467', 'adult_size'), { min: null, max: 3.6 });
+assert.deepEqual(approvedValue('sp_0467', 'tank_size'), { liters: 72, lengthCm: 80 });
+assert.equal(approvedValue('sp_0467', 'water'), undefined);
+const numericWave2SourceIds = [
+  'seriouslyfish-abbottina-rivularis-numeric-husbandry',
+  'seriouslyfish-acheilognathus-macropterus-numeric-husbandry',
+  'seriouslyfish-beaufortia-kweichowensis-numeric-husbandry',
+  'seriouslyfish-epiplatys-annulatus-numeric-husbandry',
+  'seriouslyfish-hyphessobrycon-herbertaxelrodi-numeric-husbandry',
+  'seriouslyfish-hyphessobrycon-megalopterus-numeric-husbandry',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave2SourceIds).map(source => source.id).sort(),
+  [...numericWave2SourceIds].sort(),
+  'numeric wave2 exact-taxon evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -200,7 +243,7 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 64, '472 actionable field gaps should collapse to 64 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 64, '448 actionable field gaps should collapse to 64 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
 assert.equal(plannedCatalogObjects.size, 109, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
