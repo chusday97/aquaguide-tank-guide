@@ -29,15 +29,42 @@ assert.match(migration, /expected 175 reviewed evidence sources/);
 assert.match(migration, /expected 9 wave05 profile-source links/);
 assert.match(migration, /commit;\s*$/);
 
+const historicalWave05Links: Record<string, string[]> = {
+  sp_0173: [
+    'wave05-fishbase-salminus-brasiliensis',
+    'wave05-seriouslyfish-salminus-brasiliensis',
+  ],
+  sp_0174: [
+    'wave05-cbd-gymnocorymbus-albino-white',
+    'seriouslyfish-gymnocorymbus-ternetzi',
+    'fishbase-gymnocorymbus-ternetzi',
+  ],
+  sp_0207: [
+    'wave05-cbd-gymnocorymbus-albino-white',
+    'seriouslyfish-gymnocorymbus-ternetzi',
+    'fishbase-gymnocorymbus-ternetzi',
+  ],
+  sp_0214: ['wave05-seriouslyfish-pelvicachromis-pulcher'],
+};
+
 let expectedLinks = 0;
 for (const speciesId of nextWaveUnified05ProfileIds) {
   const profile = getReviewedCompatibilityProfile(speciesId);
   assert.ok(profile, 'wave05 Profile must exist: ' + speciesId);
-  expectedLinks += profile.citations.length;
+  const historicalSourceIds = historicalWave05Links[speciesId] || [];
+  expectedLinks += historicalSourceIds.length;
   assert.equal(migration.includes("'" + speciesId + "'"), true);
-  for (const source of profile.citations) assert.equal(migration.includes(source.id), true);
+  for (const sourceId of historicalSourceIds) {
+    assert.equal(profile.citations.some(source => source.id === sourceId), true, 'current Profile must retain historical wave05 citation ' + sourceId);
+    assert.equal(migration.includes(sourceId), true, 'frozen wave05 migration must retain historical citation ' + sourceId);
+  }
 }
 assert.equal(expectedLinks, 9);
+assert.equal(
+  getReviewedCompatibilityProfile('sp_0173')?.citations.some(source => source.id === 'aquaculture-international-salminus-aggression-wave20'),
+  true,
+  'later reviewed authority may grow the runtime Profile without rewriting the frozen wave05 migration',
+);
 assert.equal(Object.values(nextWaveUnified05Sources).length, 4);
 
 for (const member of batch.members.filter(item => !item.expectProfile)) {

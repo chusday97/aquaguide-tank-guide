@@ -177,6 +177,20 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       researchDisposition: 'terminal_unknown_hold',
     },
   ],
+  sp_0173: [
+    {
+      speciesId: 'sp_0173',
+      field: 'territoriality',
+      code: 'species_territoriality_not_established',
+      sourceIds: [
+        'wave05-seriouslyfish-salminus-brasiliensis',
+        'aquaculture-international-salminus-aggression-wave20',
+      ],
+      note: 'Targeted exact-species review confirms strong aggression, piscivory and juvenile intraspecific injury/cannibalism in Salminus brasiliensis, but the reviewed sources do not directly establish stable territory defense or explicit non-territoriality. Aggression is already represented by predation/social risk and must not be silently converted into a territorial trait.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+  ],
   sp_0198: [
     {
       speciesId: 'sp_0198',

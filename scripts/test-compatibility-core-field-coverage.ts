@@ -737,6 +737,30 @@ assert.deepEqual(
   [...highImpactWave19SourceIds].sort(),
   'high-impact wave19 grow-out, breeding, temperature-study and diet evidence must resolve to reviewed source metadata',
 );
+assert.deepEqual(approvedValue('sp_0173', 'temperature'), { min: 22, max: 28 });
+assert.deepEqual(approvedValue('sp_0173', 'ph'), { min: 6, max: 7.5 });
+assert.deepEqual(approvedValue('sp_0173', 'tank_size'), { liters: null, lengthCm: 610 });
+assert.equal(approvedValue('sp_0173', 'territoriality'), undefined, 'sp_0173 aggression must not be translated into territoriality without direct territory evidence');
+const salminusRow = rowOf('sp_0173');
+assert.equal(salminusRow?.authoritativeFieldCount, 7);
+assert.equal(salminusRow?.actionableGapCount, 0);
+assert.equal(salminusRow?.terminalGapCount, 1);
+assert.equal(salminusRow?.genericOnboardingReady, false);
+assert.equal(salminusRow?.fields.territoriality.disposition, 'terminal_hold');
+assert.equal(salminusRow?.fields.territoriality.authoritySource, 'evidence_ceiling');
+assert.equal(salminusRow?.fields.territoriality.reasonCode, 'species_territoriality_not_established');
+assert.equal(backlog.some(item => item.speciesId === 'sp_0173'), false, 'sp_0173 must leave ordinary backlog after the final unresolved field is terminally classified');
+assert.equal(taxonResearchPlan.find(item => item.baseScientificName === 'Salminus brasiliensis'), undefined, 'Salminus brasiliensis must leave the actionable taxon plan after Wave20');
+const highImpactWave20SourceIds = [
+  'wave05-seriouslyfish-salminus-brasiliensis',
+  'wave05-fishbase-salminus-brasiliensis',
+  'aquaculture-international-salminus-aggression-wave20',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(highImpactWave20SourceIds).map(source => source.id).sort(),
+  [...highImpactWave20SourceIds].sort(),
+  'high-impact wave20 husbandry plus peer-reviewed aggression evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -762,9 +786,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 49, '340 actionable field gaps should collapse to 49 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 48, '336 actionable field gaps should collapse to 48 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 92, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 91, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

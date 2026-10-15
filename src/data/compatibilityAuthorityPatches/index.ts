@@ -166,6 +166,13 @@ import {
   compatibilityHighImpactWave19Sources,
   compatibilityHighImpactWave19VerifiedSourceIds,
 } from './high-impact-wave19-20261015';
+import {
+  compatibilityHighImpactWave20AuthorityPatch,
+  compatibilityHighImpactWave20FieldReviews,
+  compatibilityHighImpactWave20ProfilePatches,
+  compatibilityHighImpactWave20Sources,
+  compatibilityHighImpactWave20VerifiedSourceIds,
+} from './high-impact-wave20-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -192,6 +199,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityHighImpactWave17Sources,
   ...compatibilityHighImpactWave18Sources,
   ...compatibilityHighImpactWave19Sources,
+  ...compatibilityHighImpactWave20Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -219,6 +227,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityHighImpactWave17FieldReviews,
   ...compatibilityHighImpactWave18FieldReviews,
   ...compatibilityHighImpactWave19FieldReviews,
+  ...compatibilityHighImpactWave20FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -246,6 +255,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityHighImpactWave17VerifiedSourceIds,
   ...compatibilityHighImpactWave18VerifiedSourceIds,
   ...compatibilityHighImpactWave19VerifiedSourceIds,
+  ...compatibilityHighImpactWave20VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -273,6 +283,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityHighImpactWave17ProfilePatches,
   ...compatibilityHighImpactWave18ProfilePatches,
   ...compatibilityHighImpactWave19ProfilePatches,
+  ...compatibilityHighImpactWave20ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -300,4 +311,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityHighImpactWave17AuthorityPatch,
   compatibilityHighImpactWave18AuthorityPatch,
   compatibilityHighImpactWave19AuthorityPatch,
+  compatibilityHighImpactWave20AuthorityPatch,
 ] as const;

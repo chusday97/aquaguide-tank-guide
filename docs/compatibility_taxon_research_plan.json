@@ -1,9 +1,9 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 92,
-  "totalResearchJobs": 49,
-  "variantBridgeJobs": 17,
+  "catalogObjects": 91,
+  "totalResearchJobs": 48,
+  "variantBridgeJobs": 16,
   "items": [
     {
       "researchKey": "Hypancistrus inspector",
@@ -370,39 +370,6 @@
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Salminus brasiliensis",
-      "baseScientificName": "Salminus brasiliensis",
-      "priorityScore": 167,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 0,
-      "variantObjectCount": 1,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "territoriality"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0173",
-          "name": "黄金河虎",
-          "scientificName": "Salminus brasiliensis var.",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "territoriality"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
         }
       ]
     },

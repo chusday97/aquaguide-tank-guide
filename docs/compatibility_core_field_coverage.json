@@ -13,7 +13,7 @@
   ],
   "genericOnboardingReadySpecies": 68,
   "coreFieldCompleteSpecies": 83,
-  "oneFieldGapSpecies": 5,
+  "oneFieldGapSpecies": 6,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
@@ -26,17 +26,17 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 121,
+      "reviewed_supported": 122,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 7,
+      "reviewed_unknown": 6,
       "needs_research": 57,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 115,
+      "reviewed_supported": 116,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 11,
+      "reviewed_unknown": 10,
       "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -50,9 +50,9 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 112,
+      "reviewed_supported": 113,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 15,
+      "reviewed_unknown": 14,
       "needs_research": 58,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -85,11 +85,11 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 70
+      "count": 69
     },
     {
       "field": "tank_size",
-      "count": 69
+      "count": 68
     },
     {
       "field": "water",
@@ -97,7 +97,7 @@
     },
     {
       "field": "temperature",
-      "count": 63
+      "count": 62
     },
     {
       "field": "adult_size",
@@ -109,7 +109,7 @@
     },
     {
       "field": "territoriality",
-      "count": 6
+      "count": 5
     },
     {
       "field": "social_behavior",
@@ -14380,9 +14380,9 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 4,
-      "terminalGapCount": 0,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 0,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -14394,24 +14394,24 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "wave05-fishbase-salminus-brasiliensis",
-            "wave05-seriouslyfish-salminus-brasiliensis"
+            "wave05-seriouslyfish-salminus-brasiliensis",
+            "wave05-fishbase-salminus-brasiliensis"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "wave05-fishbase-salminus-brasiliensis",
-            "wave05-seriouslyfish-salminus-brasiliensis"
+            "wave05-seriouslyfish-salminus-brasiliensis",
+            "wave05-fishbase-salminus-brasiliensis"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -14423,13 +14423,14 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "wave05-seriouslyfish-salminus-brasiliensis"
+            "wave05-seriouslyfish-salminus-brasiliensis",
+            "wave05-fishbase-salminus-brasiliensis"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -14442,13 +14443,14 @@
         },
         "territoriality": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "wave05-fishbase-salminus-brasiliensis",
-            "wave05-seriouslyfish-salminus-brasiliensis"
+            "wave05-seriouslyfish-salminus-brasiliensis",
+            "aquaculture-international-salminus-aggression-wave20"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_territoriality_not_established"
         },
         "predation": {
           "status": "reviewed_supported",
