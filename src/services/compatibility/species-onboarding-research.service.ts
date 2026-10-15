@@ -76,6 +76,11 @@ export type CompatibilitySpeciesResearchPacket = {
   identityStatus: 'verified' | 'ambiguous' | 'unresolved';
   sources: CompatibilityResearchSource[];
   claims: CompatibilityResearchFieldClaim[];
+  diagnostics?: {
+    extractionStatus: 'ok' | 'not_attempted' | 'partial_transport_unavailable' | 'transport_unavailable';
+    verifiedSourceCount: number;
+    transportErrorCode?: 'retryable_network_error';
+  };
 };
 
 export type CompatibilitySpeciesResearchInput = {
@@ -548,6 +553,7 @@ export const assessCompatibilitySpeciesResearchPacket = (
   if (duplicateSourceIds.length > 0) reasonCodes.push('duplicate_source_id');
   if (invalidSourceIds.length > 0) reasonCodes.push('invalid_source_schema');
   if (unknownClaimSources.length > 0) reasonCodes.push('claim_source_missing');
+  if (packet.diagnostics?.extractionStatus === 'transport_unavailable' || packet.diagnostics?.extractionStatus === 'partial_transport_unavailable') reasonCodes.push('provider_extraction_transport_unavailable');
   for (const field of fieldResolutions) {
     if (field.status === 'conflicted') reasonCodes.push('field_conflict_' + field.field);
     if (field.status === 'missing') reasonCodes.push('field_missing_' + field.field);
@@ -649,11 +655,18 @@ const mergeResearchPackets = (
     claims.push(claim);
   }
 
+  const mergedDiagnostics = supplement.diagnostics
+    ? { ...supplement.diagnostics, verifiedSourceCount: sources.length }
+    : primary.diagnostics
+      ? { ...primary.diagnostics, verifiedSourceCount: sources.length }
+      : undefined;
+
   return {
     ...primary,
     packetId: primary.packetId + '+targeted+' + supplement.packetId,
     sources,
     claims,
+    ...(mergedDiagnostics ? { diagnostics: mergedDiagnostics } : {}),
   };
 };
 
@@ -705,6 +718,19 @@ export const researchAndAssessCompatibilitySpeciesDetailed = async (
     assessCompatibilitySpeciesResearchPacket(initialPacket),
   );
   const initialResearchScope = researchScopeSummary(initialAssessment, researchScopeFields);
+
+  if (initialPacket.diagnostics?.extractionStatus === 'transport_unavailable') {
+    return {
+      packet: initialPacket,
+      assessment: initialAssessment,
+      initialAssessment,
+      researchScope: initialResearchScope,
+      targetedRetry: {
+        attempted: false as const,
+        targetFields: [] as CompatibilityOnboardingCoreField[],
+      },
+    };
+  }
 
   if (initialAssessment.status !== 'research_pending' || initialResearchScope.complete) {
     return {

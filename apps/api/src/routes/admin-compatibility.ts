@@ -34,6 +34,7 @@ import {
 } from '../compatibility-species-research-provider';
 import { createGbifSpeciesIdentityResolver } from '../../../../src/services/compatibility/gbif-species-identity.service';
 import { researchAndAssessCompatibilitySpeciesDetailed } from '../../../../src/services/compatibility/species-onboarding-research.service';
+import { buildCompatibilityOnboardingReviewPacket, buildCompatibilityOnboardingReviewWorkItem } from '../../../../src/services/compatibility/onboarding-review-packet.service';
 import { runCompatibilityResearchBatchPreview } from '../compatibility-research-batch';
 
 const activeRevisionStatuses = ['draft', 'pending_review', 'approved'];
@@ -233,10 +234,14 @@ adminCompatibilityRouter.post('/research-preview', asyncRoute(async (request, re
 
   try {
     const detailed = await researchAndAssessCompatibilitySpeciesDetailed(compatibilitySpeciesResearchProvider, parsed.data);
+    const reviewPacket = buildCompatibilityOnboardingReviewPacket(detailed.assessment);
+    const reviewWorkItem = buildCompatibilityOnboardingReviewWorkItem(reviewPacket, parsed.data.commonName || parsed.data.scientificName);
     return sendData(request, response, {
       status: 'research_assessed' as const,
       identity,
       ...detailed,
+      reviewPacket,
+      reviewWorkItem,
       writesAuthority: false,
     });
   } catch (error) {

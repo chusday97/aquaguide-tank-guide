@@ -275,6 +275,7 @@ const completionContent = async (
   config: CompatibilityResearchProviderConfig,
   fetchImpl: FetchLike,
   body: Record<string, unknown>,
+  maxAttempts = 2,
 ) => {
   if (!config.apiKey || !config.baseUrl || !config.model) {
     throw new Error('compatibility_research_provider_not_configured');
@@ -290,7 +291,7 @@ const completionContent = async (
       },
       body: JSON.stringify({ model: config.model, ...body }),
       signal: controller.signal,
-    });
+    }, maxAttempts);
     if (!response.ok) throw new Error('compatibility_research_provider_http_' + response.status);
     const payload = await response.json() as {
       choices?: Array<{ message?: { content?: unknown } }>;
@@ -310,8 +311,9 @@ const postJson = async <T>(
   config: CompatibilityResearchProviderConfig,
   fetchImpl: FetchLike,
   body: Record<string, unknown>,
+  maxAttempts = 2,
 ): Promise<T> => {
-  const content = await completionContent(config, fetchImpl, body);
+  const content = await completionContent(config, fetchImpl, body, maxAttempts);
   let parsed: unknown;
   try {
     parsed = JSON.parse(cleanJsonText(content));
@@ -615,29 +617,61 @@ const extractionPromptFor = (
   }))),
 ].join('\n');
 
+type ExtractionBatchResult = {
+  output: ExtractionOutput;
+  successfulDocuments: number;
+  transportFailures: number;
+};
+
 const extractedClaims = async (
   config: CompatibilityResearchProviderConfig,
   fetchImpl: FetchLike,
   scientificName: string,
   documents: VerifiedDocument[],
   targetFields: CompatibilityOnboardingCoreField[] = [],
-): Promise<ExtractionOutput> => postJson<ExtractionOutput>(extractionOutputSchema, config, fetchImpl, {
-  stream: false,
-  temperature: 0,
-  max_tokens: 3000,
-  enable_thinking: false,
-  response_format: { type: 'json_object' },
-  messages: [
-    {
-      role: 'system',
-      content: 'You are a conservative evidence extractor. Use only supplied fetched documents. Never use model memory, never search, never infer missing husbandry facts.',
-    },
-    {
-      role: 'user',
-      content: extractionPromptFor(scientificName, documents, targetFields),
-    },
-  ],
-});
+): Promise<ExtractionBatchResult> => {
+  const claims: ExtractionOutput['claims'] = [];
+  const seenClaims = new Set<string>();
+  let successfulDocuments = 0;
+  let transportFailures = 0;
+
+  for (const document of documents) {
+    try {
+      const output = await postJson<ExtractionOutput>(extractionOutputSchema, config, fetchImpl, {
+        stream: false,
+        temperature: 0,
+        max_tokens: 3000,
+        enable_thinking: false,
+        response_format: { type: 'json_object' },
+        messages: [
+          {
+            role: 'system',
+            content: 'You are a conservative evidence extractor. Use only supplied fetched documents. Never use model memory, never search, never infer missing husbandry facts.',
+          },
+          {
+            role: 'user',
+            content: extractionPromptFor(scientificName, [document], targetFields),
+          },
+        ],
+      }, 3);
+      successfulDocuments += 1;
+      for (const claim of output.claims) {
+        const key = [claim.field, canonicalSourceUrl(claim.sourceUrl) ?? claim.sourceUrl, JSON.stringify(claim.proposedValue)].join('|');
+        if (seenClaims.has(key)) continue;
+        seenClaims.add(key);
+        claims.push(claim);
+      }
+    } catch (error) {
+      if (!isRetryableProviderNetworkError(error)) throw error;
+      transportFailures += 1;
+      // A provider transport failure before any successful extraction is treated as
+      // a provider outage rather than triggering N identical failures for every source.
+      if (successfulDocuments === 0) break;
+    }
+  }
+
+  return { output: { claims }, successfulDocuments, transportFailures };
+};
 
 const sourceIdFor = (url: string) => 'research-' + createHash('sha256')
   .update(canonicalSourceUrl(url) ?? url)
@@ -753,14 +787,14 @@ export const createBailianCompatibilitySpeciesResearchProvider = (
     const candidates = await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName, targetFields);
     const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
     let extraction: ExtractionOutput = { claims: [] };
+    let extractionStatus: 'ok' | 'not_attempted' | 'partial_transport_unavailable' | 'transport_unavailable' = documents.length > 0 ? 'ok' : 'not_attempted';
+    let transportErrorCode: 'retryable_network_error' | undefined;
     if (documents.length > 0) {
-      try {
-        extraction = await extractedClaims(config, fetchImpl, input.scientificName, documents, targetFields);
-      } catch (error) {
-        if (!isRetryableProviderNetworkError(error)) throw error;
-        // Keep content-verified sources even when the model transport is temporarily
-        // unavailable. Assessment remains fail-closed because zero extracted claims
-        // cannot promote any required field to supported/ready_for_review.
+      const extracted = await extractedClaims(config, fetchImpl, input.scientificName, documents, targetFields);
+      extraction = extracted.output;
+      if (extracted.transportFailures > 0) {
+        extractionStatus = extracted.successfulDocuments > 0 ? 'partial_transport_unavailable' : 'transport_unavailable';
+        transportErrorCode = 'retryable_network_error';
       }
     }
     const sources = sourcesFromDocuments(documents);
@@ -778,6 +812,11 @@ export const createBailianCompatibilitySpeciesResearchProvider = (
       identityStatus: 'verified',
       sources,
       claims,
+      diagnostics: {
+        extractionStatus,
+        verifiedSourceCount: sources.length,
+        ...(transportErrorCode ? { transportErrorCode } : {}),
+      },
     };
     return packet;
   },

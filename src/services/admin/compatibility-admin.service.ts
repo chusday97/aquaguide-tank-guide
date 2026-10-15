@@ -8,6 +8,8 @@ import type {
 import { apiRequest, createIdempotencyKey } from '../api/api-client';
 import { isLocalBusinessAdminMode } from './local-business-admin.store';
 import { localCompatibilityAdminStore } from './local-compatibility-admin.store';
+import type { CompatibilitySpeciesOnboardingAssessment, CompatibilitySpeciesIdentityResolution } from '../compatibility/species-onboarding-research.service';
+import type { CompatibilityOnboardingReviewPacket, CompatibilityOnboardingReviewWorkItem } from '../compatibility/onboarding-review-packet.service';
 
 export type CompatibilityRevisionImpactReport = {
   kind: 'profile' | 'pair_rule';
@@ -92,7 +94,20 @@ export type AdminCompatibilityPairRuleRevision = {
 
 export type AdminCompatibilityPairRuleRevisionWorkspace = { revisions: AdminCompatibilityPairRuleRevision[]; writablePairKeys: string[] };
 
+export type CompatibilityOnboardingResearchPreview = {
+  status: 'identity_hold' | 'research_assessed';
+  identity: CompatibilitySpeciesIdentityResolution;
+  assessment: CompatibilitySpeciesOnboardingAssessment | null;
+  reviewPacket?: CompatibilityOnboardingReviewPacket;
+  reviewWorkItem?: CompatibilityOnboardingReviewWorkItem;
+  writesAuthority: false;
+};
+
 export const compatibilityAdminService = {
+  researchOnboardingPreview: (input: { catalogKey: string; scientificName: string; commonName?: string }) => apiRequest<CompatibilityOnboardingResearchPreview>('/admin/compatibility/research-preview', {
+    method: 'POST',
+    body: input,
+  }),
   listProfileRevisions: () => isLocalBusinessAdminMode ? localCompatibilityAdminStore.listProfileRevisions() : apiRequest<AdminCompatibilityProfileRevisionWorkspace>('/admin/compatibility/profile-revisions'),
   listPairRuleRevisions: () => isLocalBusinessAdminMode ? localCompatibilityAdminStore.listPairRuleRevisions() : apiRequest<AdminCompatibilityPairRuleRevisionWorkspace>('/admin/compatibility/pair-rule-revisions'),
 

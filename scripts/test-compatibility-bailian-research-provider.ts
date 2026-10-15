@@ -419,6 +419,7 @@ const transientPacket = await createBailianCompatibilitySpeciesResearchProvider(
 });
 assert.equal(transientExtractionAttempts, 2, 'one transient provider TLS failure should retry exactly once');
 assert.deepEqual(transientPacket.claims.map(claim => claim.field), ['water']);
+assert.equal(transientPacket.diagnostics?.extractionStatus, 'ok');
 
 let persistentExtractionAttempts = 0;
 const persistentNetworkFetch: typeof fetch = async (input, init) => {
@@ -453,11 +454,16 @@ const persistentNetworkPacket = await createBailianCompatibilitySpeciesResearchP
   catalogKey: 'blind_persistent_tls_source_preservation',
   scientificName,
 });
-assert.equal(persistentExtractionAttempts, 2, 'persistent transient-class transport failure should stop after the bounded retry');
+assert.equal(persistentExtractionAttempts, 3, 'persistent transient-class extraction transport failure should stop after three bounded attempts');
 assert.equal(persistentNetworkPacket.sources.length, 1, 'verified source work must survive model transport outage');
 assert.equal(persistentNetworkPacket.sources[0].contentVerified, true);
 assert.deepEqual(persistentNetworkPacket.claims, [], 'transport outage must never synthesize unsupported claims');
-assert.equal(assessCompatibilitySpeciesResearchPacket(persistentNetworkPacket).status, 'research_pending');
+assert.equal(persistentNetworkPacket.diagnostics?.extractionStatus, 'transport_unavailable');
+assert.equal(persistentNetworkPacket.diagnostics?.transportErrorCode, 'retryable_network_error');
+assert.equal(persistentNetworkPacket.diagnostics?.verifiedSourceCount, 1);
+const persistentAssessment = assessCompatibilitySpeciesResearchPacket(persistentNetworkPacket);
+assert.equal(persistentAssessment.status, 'research_pending');
+assert.ok(persistentAssessment.reasonCodes.includes('provider_extraction_transport_unavailable'));
 
 const planetCatfishUrl = 'https://www.planetcatfish.com/cotm/cotm.php?article_id=999';
 const planetCatfishForumUrl = 'https://www.planetcatfish.com/forum/viewtopic.php?t=999';

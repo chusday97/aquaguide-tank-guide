@@ -1,3 +1,56 @@
+## CURRENT OVERRIDE — 2026-10-15 Bailian onboarding review packet + extraction transport diagnostics via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. This checkpoint is local/source-controlled only: **no push, deploy, Production alias change, DB migration, catalog promotion, or Production authority write**.
+- Extended the existing `POST /admin/compatibility/research-preview` instead of creating a second research endpoint.
+- Research preview now returns:
+  - original identity + research packet + assessment;
+  - a standardized `CompatibilityOnboardingReviewPacket`;
+  - an actionable `CompatibilityOnboardingReviewWorkItem`;
+  - `writesAuthority=false` remains invariant.
+- Front-end `compatibilityAdminService` now exposes `researchOnboardingPreview(...)` so Admin/Operations can consume the same review payload.
+- Review packet gates are explicit:
+  - **8/8 supported** -> `manual_review_required` / decision work item;
+  - field gaps -> `research_incomplete` / attention work item;
+  - unresolved identity or terminal evidence conflict -> `terminal_hold` / blocker work item.
+- New regression `scripts/test-compatibility-onboarding-review-packet.ts` is part of `test:backend-release-gate`.
+- The review-packet regression proves:
+  - 8/8 research output is still Draft and does not write reviewed authority;
+  - missing `tank_size` remains non-approvable and asks only for the missing evidence;
+  - ambiguous identity remains a blocker;
+  - provider extraction transport failure is not mislabelled as public evidence absence.
+- Bailian provider diagnostics were upgraded:
+  - `CompatibilitySpeciesResearchPacket.diagnostics.extractionStatus` now distinguishes `ok`, `not_attempted`, `partial_transport_unavailable`, and `transport_unavailable`;
+  - persistent retryable model-network failures add `provider_extraction_transport_unavailable`;
+  - verified sources are preserved and unsupported claims are never synthesized;
+  - extraction retries are bounded at **3 attempts**;
+  - ordinary discovery/search retry behavior is not broadened.
+- Extraction now processes **one verified source at a time** instead of sending up to six fetched pages in one model prompt. Claims are deduplicated by field + canonical source URL + proposed value. Independent sources remain independent evidence.
+- A circuit breaker prevents one provider outage from becoming N-sources × 3 failed requests: if the first verified source exhausts all three extraction attempts before any successful extraction, the batch stops and returns transport-unavailable diagnostics.
+- `researchAndAssessCompatibilitySpeciesDetailed` no longer launches a targeted evidence-search retry when the initial failure is a full extraction transport outage. A provider outage is not an evidence gap.
+- Operations copy now distinguishes the two cases:
+  - actual missing evidence -> “只补缺失字段的直接来源”;
+  - extraction transport outage -> “重试已验证来源的结构化 extraction；不要重新补来源，也不要人工猜测 8 个 facts”.
+- Existing network regression updated:
+  - one transient extraction TLS failure still recovers;
+  - persistent transport failure performs exactly 3 bounded attempts;
+  - content-verified sources survive;
+  - claims remain empty;
+  - assessment explicitly reports `provider_extraction_transport_unavailable`.
+- **Live provider diagnosis, not mock-only:**
+  - configured research provider = Alibaba Model Studio / `qwen3.7-flash-2026-07-15`;
+  - `Pterophyllum scalare` source acquisition successfully server-verified **FishBase + Seriously Fish + Fishipedia**;
+  - extraction returned `transport_unavailable`, `verifiedSourceCount=3`, `transportErrorCode=retryable_network_error`;
+  - zero claims were therefore correctly classified as provider transport failure, not “no public evidence”;
+  - targetedRetry = **false** after the transport/evidence split;
+  - work item correctly says `Compatibility extraction 暂不可用`;
+  - no authority write occurred.
+- A direct minimal call to the official `dashscope.aliyuncs.com/compatible-mode/v1` endpoint also failed at the network/TLS layer from this runtime, so changing prompt/model or blindly cycling fallback models would not solve the current environment-level connection issue.
+- Local environment has one AI endpoint host; configured Compatibility fallback model names (`qwen3.8-27b`, `deepseek-v4.1-flash`) share that same endpoint, so model fallback is intentionally **not** used for a host-level transport outage.
+- This does **not** change Compatibility decision logic, reviewed evidence thresholds, the 76-ready/2,850-pair invariant, or dynamic no-pair-precompute architecture.
+- Full validation: **`BACKEND_RELEASE_GATE=PASS`**, Bailian provider regressions, onboarding blind/approval/review-packet tests, API TypeScript, project TypeScript, bundle, lint, and `git diff --check` pass.
+- Current system interpretation:
+  **Compatibility engine = stable; dynamic onboarding/runtime authority = implemented; review packet/API = implemented; current remaining blocker for automatic live 8-field draft generation = external Alibaba text-model transport from this runtime.**
+
 ## CURRENT OVERRIDE — 2026-10-15 reviewed onboarding approval gate + product integration via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. This checkpoint is local/source-controlled only: **no push, deploy, Production alias change, DB migration, catalog promotion, or Production authority write**.
