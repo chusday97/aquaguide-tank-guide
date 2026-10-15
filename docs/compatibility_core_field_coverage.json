@@ -11,8 +11,8 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 56,
-  "coreFieldCompleteSpecies": 71,
+  "genericOnboardingReadySpecies": 57,
+  "coreFieldCompleteSpecies": 72,
   "oneFieldGapSpecies": 6,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
@@ -50,9 +50,9 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 106,
+      "reviewed_supported": 107,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 19,
+      "reviewed_unknown": 18,
       "needs_research": 60,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -67,8 +67,8 @@
     },
     "territoriality": {
       "reviewed_supported": 69,
-      "reviewed_neutral_or_negative": 23,
-      "reviewed_unknown": 90,
+      "reviewed_neutral_or_negative": 24,
+      "reviewed_unknown": 89,
       "needs_research": 3,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -84,12 +84,12 @@
   },
   "fieldActionableGaps": [
     {
-      "field": "tank_size",
+      "field": "ph",
       "count": 78
     },
     {
-      "field": "ph",
-      "count": 78
+      "field": "tank_size",
+      "count": 77
     },
     {
       "field": "temperature",
@@ -105,7 +105,7 @@
     },
     {
       "field": "territoriality",
-      "count": 20
+      "count": 19
     },
     {
       "field": "predation",
@@ -9645,9 +9645,9 @@
       "scientificName": "Osteoglossum ferreirai",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -9691,14 +9691,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-osteoglossum-ferreirai",
-            "aquaristatlas-osteoglossum-ferreirai"
+            "fishipedia-osteoglossum-ferreirai-wave7"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -9710,14 +9709,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch20-fishbase-osteoglossum-ferreirai",
-            "aquaristatlas-osteoglossum-ferreirai"
+            "fishipedia-osteoglossum-ferreirai-wave7"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",

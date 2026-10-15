@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 107,
-  "totalResearchJobs": 62,
+  "catalogObjects": 106,
+  "totalResearchJobs": 61,
   "variantBridgeJobs": 19,
   "items": [
     {
@@ -192,35 +192,6 @@
           "gaps": [
             "territoriality",
             "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Osteoglossum ferreirai",
-      "baseScientificName": "Osteoglossum ferreirai",
-      "priorityScore": 183,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "tank_size",
-        "territoriality"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0118",
-          "name": "黑龙鱼",
-          "scientificName": "Osteoglossum ferreirai",
-          "gaps": [
-            "tank_size",
-            "territoriality"
           ],
           "isVariant": false,
           "isExactBaseTaxon": true

@@ -378,6 +378,30 @@ assert.deepEqual(
   [...numericWave6SourceIds].sort(),
   'numeric wave6 exact-taxon evidence must resolve to reviewed source metadata',
 );
+const wave7SpeciesBindings: Array<[string, string]> = [
+  ['sp_0118', 'Osteoglossum ferreirai'],
+];
+for (const [speciesId, expectedScientificName] of wave7SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'numeric wave7 speciesId must stay bound to the exact reviewed taxon: ' + speciesId,
+  );
+}
+
+assert.deepEqual(approvedValue('sp_0118', 'tank_size'), { liters: 4500, lengthCm: 500 });
+assert.deepEqual(approvedValue('sp_0118', 'territoriality'), { traits: [] });
+assert.equal(rowOf('sp_0118')?.authoritativeFieldCount, 8);
+assert.equal(rowOf('sp_0118')?.genericOnboardingReady, true, 'Osteoglossum ferreirai must become generic-ready once all 8 reviewed core facts are declared');
+
+const numericWave7SourceIds = [
+  'fishipedia-osteoglossum-ferreirai-wave7',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave7SourceIds).map(source => source.id).sort(),
+  [...numericWave7SourceIds].sort(),
+  'numeric wave7 exact-taxon evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -403,9 +427,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 62, '391 actionable field gaps should collapse to 62 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 61, '389 actionable field gaps should collapse to 61 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 107, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 106, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

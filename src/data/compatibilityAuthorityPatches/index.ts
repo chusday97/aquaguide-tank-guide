@@ -75,6 +75,13 @@ import {
   compatibilityNumericWave6Sources,
   compatibilityNumericWave6VerifiedSourceIds,
 } from './numeric-wave6-20261015';
+import {
+  compatibilityNumericWave7AuthorityPatch,
+  compatibilityNumericWave7FieldReviews,
+  compatibilityNumericWave7ProfilePatches,
+  compatibilityNumericWave7Sources,
+  compatibilityNumericWave7VerifiedSourceIds,
+} from './numeric-wave7-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -88,6 +95,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave4Sources,
   ...compatibilityNumericWave5Sources,
   ...compatibilityNumericWave6Sources,
+  ...compatibilityNumericWave7Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -102,6 +110,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave4FieldReviews,
   ...compatibilityNumericWave5FieldReviews,
   ...compatibilityNumericWave6FieldReviews,
+  ...compatibilityNumericWave7FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -116,6 +125,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave4VerifiedSourceIds,
   ...compatibilityNumericWave5VerifiedSourceIds,
   ...compatibilityNumericWave6VerifiedSourceIds,
+  ...compatibilityNumericWave7VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -130,6 +140,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave4ProfilePatches,
   ...compatibilityNumericWave5ProfilePatches,
   ...compatibilityNumericWave6ProfilePatches,
+  ...compatibilityNumericWave7ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -144,4 +155,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave4AuthorityPatch,
   compatibilityNumericWave5AuthorityPatch,
   compatibilityNumericWave6AuthorityPatch,
+  compatibilityNumericWave7AuthorityPatch,
 ] as const;

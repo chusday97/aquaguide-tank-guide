@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 56,
-  "genericReadyUniquePairs": 1540,
+  "genericOnboardingReadySpecies": 57,
+  "genericReadyUniquePairs": 1596,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 568,
@@ -153,17 +153,6 @@
           "adult_size",
           "territoriality",
           "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0118",
-        "name": "黑龙鱼",
-        "scientificName": "Osteoglossum ferreirai",
-        "unknownPairs": 109,
-        "actionableFields": [
-          "tank_size",
-          "territoriality"
         ],
         "terminalReasons": []
       },
@@ -332,25 +321,6 @@
         "combinedGapFields": [
           "territoriality",
           "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
-      },
-      {
-        "researchKey": "Osteoglossum ferreirai",
-        "baseScientificName": "Osteoglossum ferreirai",
-        "completionEligible": true,
-        "affectedUnknownPairs": 109,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 54.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "territoriality"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
@@ -1584,25 +1554,6 @@
         "existingCoveragePriorityScore": 183
       },
       {
-        "researchKey": "Osteoglossum ferreirai",
-        "baseScientificName": "Osteoglossum ferreirai",
-        "completionEligible": true,
-        "affectedUnknownPairs": 109,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 54.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
-      },
-      {
         "researchKey": "Hypostomus plecostomus",
         "baseScientificName": "Hypostomus plecostomus",
         "completionEligible": true,
@@ -2702,10 +2653,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 62,
-      "completionEligibleJobs": 25,
+      "totalResearchJobs": 61,
+      "completionEligibleJobs": 24,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 27,
+      "completionEligibleCatalogObjects": 26,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2774,15 +2725,15 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 391,
+    "actionableGaps": 389,
     "fieldActionableGaps": [
-      {
-        "field": "tank_size",
-        "count": 78
-      },
       {
         "field": "ph",
         "count": 78
+      },
+      {
+        "field": "tank_size",
+        "count": 77
       },
       {
         "field": "temperature",
@@ -2798,7 +2749,7 @@
       },
       {
         "field": "territoriality",
-        "count": 20
+        "count": 19
       },
       {
         "field": "predation",
