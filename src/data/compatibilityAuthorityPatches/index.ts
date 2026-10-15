@@ -47,6 +47,13 @@ import {
   compatibilityNumericWave2Sources,
   compatibilityNumericWave2VerifiedSourceIds,
 } from './numeric-wave2-20261015';
+import {
+  compatibilityNumericWave3AuthorityPatch,
+  compatibilityNumericWave3FieldReviews,
+  compatibilityNumericWave3ProfilePatches,
+  compatibilityNumericWave3Sources,
+  compatibilityNumericWave3VerifiedSourceIds,
+} from './numeric-wave3-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -56,6 +63,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityHighLeverageWave1Sources,
   ...compatibilityNumericWave1Sources,
   ...compatibilityNumericWave2Sources,
+  ...compatibilityNumericWave3Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -66,6 +74,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityHighLeverageWave1FieldReviews,
   ...compatibilityNumericWave1FieldReviews,
   ...compatibilityNumericWave2FieldReviews,
+  ...compatibilityNumericWave3FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -76,6 +85,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityHighLeverageWave1VerifiedSourceIds,
   ...compatibilityNumericWave1VerifiedSourceIds,
   ...compatibilityNumericWave2VerifiedSourceIds,
+  ...compatibilityNumericWave3VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -86,6 +96,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityHighLeverageWave1ProfilePatches,
   ...compatibilityNumericWave1ProfilePatches,
   ...compatibilityNumericWave2ProfilePatches,
+  ...compatibilityNumericWave3ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -96,4 +107,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityHighLeverageWave1AuthorityPatch,
   compatibilityNumericWave1AuthorityPatch,
   compatibilityNumericWave2AuthorityPatch,
+  compatibilityNumericWave3AuthorityPatch,
 ] as const;

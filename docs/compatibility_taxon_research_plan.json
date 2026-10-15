@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 109,
-  "totalResearchJobs": 64,
+  "catalogObjects": 108,
+  "totalResearchJobs": 63,
   "variantBridgeJobs": 19,
   "items": [
     {
@@ -1182,6 +1182,33 @@
       ]
     },
     {
+      "researchKey": "Moenkhausia pittieri",
+      "baseScientificName": "Moenkhausia pittieri",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0471",
+          "name": "钻石灯",
+          "scientificName": "Moenkhausia pittieri",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Nannostomus beckfordi",
       "baseScientificName": "Nannostomus beckfordi",
       "priorityScore": 142,
@@ -1200,6 +1227,97 @@
           "speciesId": "sp_0473",
           "name": "红肚铅笔鱼",
           "scientificName": "Nannostomus beckfordi",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Pseudomugil furcatus",
+      "baseScientificName": "Pseudomugil furcatus",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0135",
+          "name": "霓虹燕子",
+          "scientificName": "Pseudomugil furcatus",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Sawbwa resplendens",
+      "baseScientificName": "Sawbwa resplendens",
+      "priorityScore": 142,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0111",
+          "name": "亚洲红鼻",
+          "scientificName": "Sawbwa resplendens",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Sphaerichthys osphromenoides",
+      "baseScientificName": "Sphaerichthys osphromenoides",
+      "priorityScore": 142,
+      "catalogObjectCount": 2,
+      "exactObjectCount": 2,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0060",
+          "name": "巧克力曼龙",
+          "scientificName": "Sphaerichthys osphromenoides",
+          "gaps": [
+            "water"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        },
+        {
+          "speciesId": "sp_0136",
+          "name": "巧克力曼龙",
+          "scientificName": "Sphaerichthys osphromenoides",
           "gaps": [
             "water"
           ],
@@ -1872,41 +1990,6 @@
       ]
     },
     {
-      "researchKey": "Moenkhausia pittieri",
-      "baseScientificName": "Moenkhausia pittieri",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0471",
-          "name": "钻石灯",
-          "scientificName": "Moenkhausia pittieri",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Pangio kuhlii",
       "baseScientificName": "Pangio kuhlii",
       "priorityScore": 110,
@@ -1938,41 +2021,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Parambassis ranga",
-      "baseScientificName": "Parambassis ranga",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0132",
-          "name": "玻璃拉拉",
-          "scientificName": "Parambassis ranga",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },
@@ -2166,41 +2214,6 @@
       ]
     },
     {
-      "researchKey": "Pseudomugil furcatus",
-      "baseScientificName": "Pseudomugil furcatus",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0135",
-          "name": "霓虹燕子",
-          "scientificName": "Pseudomugil furcatus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Pterapogon kauderni",
       "baseScientificName": "Pterapogon kauderni",
       "priorityScore": 110,
@@ -2299,41 +2312,6 @@
       ]
     },
     {
-      "researchKey": "Sawbwa resplendens",
-      "baseScientificName": "Sawbwa resplendens",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0111",
-          "name": "亚洲红鼻",
-          "scientificName": "Sawbwa resplendens",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Semaprochilodus insignis",
       "baseScientificName": "Semaprochilodus insignis",
       "priorityScore": 110,
@@ -2405,55 +2383,6 @@
           "speciesId": "sp_0107",
           "name": "飞凤鱼 (国旗飞凤)",
           "scientificName": "Semaprochilodus taeniurus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Sphaerichthys osphromenoides",
-      "baseScientificName": "Sphaerichthys osphromenoides",
-      "priorityScore": 110,
-      "catalogObjectCount": 2,
-      "exactObjectCount": 2,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0060",
-          "name": "巧克力曼龙",
-          "scientificName": "Sphaerichthys osphromenoides",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        },
-        {
-          "speciesId": "sp_0136",
-          "name": "巧克力曼龙",
-          "scientificName": "Sphaerichthys osphromenoides",
           "gaps": [
             "water",
             "temperature",
