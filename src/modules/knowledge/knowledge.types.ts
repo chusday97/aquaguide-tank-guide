@@ -173,8 +173,17 @@ export type PairCompatibilityResult = {
   actions: string[];
 };
 
+export type CompatibilityAssessmentItemSnapshot = {
+  speciesId: string;
+  name: string;
+  quantity: number;
+  origin: 'candidate' | 'existing' | 'unknown';
+};
+
 export type CompatibilityDecision = {
   status: TankCompatibilityStatus;
+  /** Read-only input context for user-facing action specificity; never used as decision authority. */
+  assessmentItems?: CompatibilityAssessmentItemSnapshot[];
   riskLevel: TankCompatibilityResult['riskLevel'];
   summary: string;
   pairResults: PairCompatibilityResult[];

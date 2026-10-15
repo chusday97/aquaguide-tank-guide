@@ -62,7 +62,10 @@ const plainRuleText = (
   if (code.includes('water_type_conflict') || code === 'species_water_type_conflict') {
     return '这些生物需要的水体类型不同，长期放在同一缸不合适。';
   }
-  if (code.includes('temperature') && (code.includes('conflict') || code.includes('no_overlap'))) {
+  if (code === 'tank_temperature_conflict') {
+    return '当前鱼缸目标温度不在其中一方的已审核适温范围内；需要先调整目标温度，并确认仍与其余物种有共同适温区间。';
+  }
+  if (code === 'temperature_range_conflict' || code === 'temperature_no_overlap') {
     return '它们适合的长期水温没有安全重叠，勉强取中间值也不适合长期饲养。';
   }
   if (code === 'fry_predation_risk') {
@@ -223,6 +226,7 @@ const blockingActionFor = (
     if (rule.code === 'fry_predation_risk') return '把鱼苗转入育苗隔离区或独立育苗缸；不要依赖水草躲避来消除已知吞食风险。';
     if (family === 'predation') return '尽快分隔存在捕食关系的物种，并重新调整现有组合。';
     if (family === 'housing') return '按单养方案分开饲养，或重新调整现有组合。';
+    if (rule.code === 'tank_temperature_conflict') return '先把鱼缸目标温度调整到相关物种的已审核适温范围，并确认与其余物种仍有共同区间，再重新评估。';
     if (family === 'temperature') return '不要硬取中间温度；分缸，或调整成温度需求更接近的组合。';
     if (family === 'aggression') return '先分隔持续冲突的物种，确认恢复稳定后再重新评估。';
     if (family === 'territory') return '增加遮挡和退让空间；如果持续压迫就分缸。';
@@ -233,6 +237,7 @@ const blockingActionFor = (
   if (rule.code === 'fry_predation_risk') return '不要把鱼苗直接放入该组合；优先使用育苗隔离区或独立育苗缸，待脱离鱼苗阶段后再重新评估。';
   if (family === 'predation') return '不要直接混养；更换体型更接近、没有明显捕食关系的混养对象。';
   if (family === 'housing') return '按单养方案处理，或更换更适合混养的物种。';
+  if (rule.code === 'tank_temperature_conflict') return '先调整鱼缸目标温度到相关物种的已审核适温范围，并确认与现有物种仍有共同区间，再重新判断。';
   if (family === 'temperature') return '不要为了兼顾双方硬取中间温度；分缸，或更换温度需求更接近的物种。';
   if (family === 'aggression') return '不要直接混养；优先更换冲突物种，或先准备可靠分隔方案。';
   if (family === 'territory') return '先不要继续加入；重新规划领地和躲避空间，无法缓解就分缸。';

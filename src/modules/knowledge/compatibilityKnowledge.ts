@@ -331,6 +331,12 @@ export const evaluateCompatibilityDecision = ({
 
   return {
     status: aggregateResult.status,
+    assessmentItems: normalized.map(item => ({
+      speciesId: item.species.id,
+      name: item.species.name,
+      quantity: getQuantity(item.quantity),
+      origin: item.origin || 'unknown',
+    })),
     riskLevel: aggregateResult.riskLevel,
     summary: aggregateResult.summary,
     pairResults,

@@ -70,8 +70,8 @@ assert.equal(plannedPlan.riskSummary.length, plannedPlan.evidence.sourceRuleCode
 assert.ok(plannedPlan.evidence.evidenceIds.length > 0);
 assert.match(plannedPlan.riskSummary[0] || '', /水体类型/);
 assert.match(plannedPlan.riskSummary[1] || '', /捕食|吞食/);
-assert.match(plannedPlan.nextSteps[0] || '', /不要放在同一缸|淡水|海水/);
-assert.match(plannedPlan.nextSteps[1] || '', /不要直接混养|体型|捕食/);
+assert.match(plannedPlan.nextSteps[0] || '', /水体需求不一致|分缸|淡水|海水/);
+assert.match(plannedPlan.nextSteps[1] || '', /捕食|体型/);
 assert.doesNotMatch(plannedPlan.nextSteps.join(' '), /先处理下面的明确阻断风险/);
 assert.doesNotMatch(plannedPlan.nextSteps.join(' '), /观察看看|继续观察/);
 assert.match(plannedPlan.stopCondition, /不要执行当前混养计划/);
@@ -92,8 +92,8 @@ assert.deepEqual(
   currentPlan.evidence.sourceRuleCodes.map(getCompatibilityRuleFamily),
   ['water_type', 'predation'],
 );
-assert.match(currentPlan.nextSteps[0] || '', /尽快分缸|淡水|海水/);
-assert.match(currentPlan.nextSteps[1] || '', /尽快分隔|捕食/);
+assert.match(currentPlan.nextSteps[0] || '', /水体需求不一致|尽快分缸|淡水|海水/);
+assert.match(currentPlan.nextSteps[1] || '', /分隔|捕食/);
 assert.doesNotMatch(currentPlan.nextSteps.join(' '), /新增|计划加入|观察看看/);
 assert.match(currentPlan.stopCondition, /保持分隔|原组合/);
 
