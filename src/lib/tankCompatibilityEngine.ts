@@ -80,6 +80,7 @@ export type CompatibilityEvidenceProvider = {
   getProfile: (speciesId: string) => ReviewedCompatibilityProfile | undefined;
   getPairRule: (leftId: string, rightId: string) => ReviewedPairRule | undefined;
   getStageRisks: (speciesId: string) => ReviewedStageRiskProfile[];
+  getReviewedSpeciesFact?: (species: Fish) => DomainSpeciesFact | undefined;
   authorityVersion: string;
 };
 
@@ -760,6 +761,15 @@ const evaluateLegacyTankCompatibility = ({
 };
 
 const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider): DomainSpeciesFact => {
+  const injectedReviewedFact = provider.getReviewedSpeciesFact?.(fish);
+  if (injectedReviewedFact) {
+    return {
+      ...injectedReviewedFact,
+      id: fish.id,
+      lifeType: injectedReviewedFact.lifeType ?? getLifeType(fish),
+      size: injectedReviewedFact.size ?? fish.size,
+    };
+  }
   const profile = catalogProfileForCompatibility(fish);
   const reviewed = resolveReviewedProfileForFish(fish, provider);
   const coverage = getCompatibilityCoreFieldCoverageRow(fish);

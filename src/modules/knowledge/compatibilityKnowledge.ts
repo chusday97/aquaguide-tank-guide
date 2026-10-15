@@ -1,5 +1,5 @@
 import type { Aquarium, Fish } from '../../types';
-import { evaluateTankCompatibility, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
+import { evaluateTankCompatibility, type CompatibilityEvidenceProvider, type TankCompatibilityResult, type TankCompatibilityRule, type TankCompatibilityStatus } from '../../services/compatibility/compatibility.service';
 import type { CompatibilityDecisionReadiness } from '../../../packages/domain-rules/src';
 import { getReviewedCompatibilityProfileForFish, getReviewedPairRule } from '../../data/compatibilityEvidence';
 import type { CompatibilityDecision, CompatibilityRelationship, CompatibilityRiskType, PairCompatibilityResult } from './knowledge.types';
@@ -13,6 +13,7 @@ export type CompatibilityItem = {
 export type EvaluateCompatibilityDecisionInput = {
   tank?: Aquarium | null;
   items: CompatibilityItem[];
+  evidenceProvider?: CompatibilityEvidenceProvider;
 };
 
 const getQuantity = (value?: number) => {
@@ -169,13 +170,14 @@ const annotatePairInference = (
   result: TankCompatibilityResult,
   itemA: CompatibilityItem,
   itemB: CompatibilityItem,
+  evidenceProvider?: CompatibilityEvidenceProvider,
 ): TankCompatibilityResult => {
   if (result.status === 'not_recommended' || getReviewedPairRule(itemA.species.id, itemB.species.id)) {
     return result;
   }
 
-  const profileA = getReviewedCompatibilityProfileForFish(itemA.species);
-  const profileB = getReviewedCompatibilityProfileForFish(itemB.species);
+  const profileA = evidenceProvider?.getProfile(itemA.species.id) || getReviewedCompatibilityProfileForFish(itemA.species);
+  const profileB = evidenceProvider?.getProfile(itemB.species.id) || getReviewedCompatibilityProfileForFish(itemB.species);
   if (!profileA || !profileB) return result;
 
   const pairInferenceRule: TankCompatibilityRule = {
@@ -200,6 +202,7 @@ const buildPairResult = (
   tank: Aquarium | null | undefined,
   itemA: CompatibilityItem,
   itemB: CompatibilityItem,
+  evidenceProvider?: CompatibilityEvidenceProvider,
 ): PairCompatibilityResult => {
   const quantityA = getQuantity(itemA.quantity);
   const quantityB = getQuantity(itemB.quantity);
@@ -208,17 +211,20 @@ const buildPairResult = (
     existingSpecies: [{ species: itemA.species, record: { quantity: quantityA } }],
     candidateSpecies: itemB.species,
     candidateQuantity: quantityB,
+    evidenceProvider,
   });
   const reverseResult = evaluateTankCompatibility({
     tank,
     existingSpecies: [{ species: itemB.species, record: { quantity: quantityB } }],
     candidateSpecies: itemA.species,
     candidateQuantity: quantityA,
+    evidenceProvider,
   });
   const rawResult = annotatePairInference(
     mergeDirectionalResults([forwardResult, reverseResult]),
     itemA,
     itemB,
+    evidenceProvider,
   );
 
   const blocking = rawResult.blockingRules.map(rule => toRelationship(rule, 'not_recommended', rawResult.suggestions));
@@ -246,6 +252,7 @@ const buildPairResult = (
 const buildWholeTankResult = (
   tank: Aquarium | null | undefined,
   items: CompatibilityItem[],
+  evidenceProvider?: CompatibilityEvidenceProvider,
 ): TankCompatibilityResult | undefined => {
   if (items.length < 3) return undefined;
 
@@ -259,6 +266,7 @@ const buildWholeTankResult = (
       })),
     candidateSpecies: candidate.species,
     candidateQuantity: getQuantity(candidate.quantity),
+    evidenceProvider,
   }));
 
   return mergeDirectionalResults(results);
@@ -296,20 +304,21 @@ const buildAggregateResult = (
 export const evaluateCompatibilityDecision = ({
   tank,
   items,
+  evidenceProvider,
 }: EvaluateCompatibilityDecisionInput): CompatibilityDecision => {
   const normalized = normalizeCompatibilityItems(items);
   const pairResults: PairCompatibilityResult[] = [];
 
   for (let indexA = 0; indexA < normalized.length; indexA += 1) {
     for (let indexB = indexA + 1; indexB < normalized.length; indexB += 1) {
-      pairResults.push(buildPairResult(tank, normalized[indexA], normalized[indexB]));
+      pairResults.push(buildPairResult(tank, normalized[indexA], normalized[indexB], evidenceProvider));
     }
   }
 
-  const tankAggregateResult = buildWholeTankResult(tank, normalized);
+  const tankAggregateResult = buildWholeTankResult(tank, normalized, evidenceProvider);
   const aggregateResult = pairResults.length > 0
     ? buildAggregateResult(pairResults, tankAggregateResult)
-    : evaluateTankCompatibility({ tank, candidateSpecies: normalized[0]?.species || null, candidateQuantity: normalized[0]?.quantity });
+    : evaluateTankCompatibility({ tank, candidateSpecies: normalized[0]?.species || null, candidateQuantity: normalized[0]?.quantity, evidenceProvider });
   const primaryConflict = pairResults
     .filter(pair => pair.primaryReason)
     .sort((a, b) => severityRank(b.primaryReason!) - severityRank(a.primaryReason!))[0];

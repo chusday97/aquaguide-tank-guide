@@ -1,3 +1,56 @@
+## CURRENT OVERRIDE — 2026-10-15 dynamic reviewed-facts onboarding proof via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. This checkpoint changes Compatibility architecture/tests only: **no catalog species promotion, no pair-rule expansion, no push, deploy, Production alias change, DB migration, or Production authority write**.
+- The existing **76 ready species / 2,850 unordered pair** matrix remains an exhaustive regression test only; it is not a prerequisite pair database.
+- Product-level Compatibility now accepts an optional trusted `CompatibilityEvidenceProvider` all the way through `evaluateCompatibilityDecision`, pair evaluation, and whole-tank aggregation.
+- `CompatibilityEvidenceProvider` now has an optional `getReviewedSpeciesFact(species)` hook. When a provider supplies a complete reviewed `DomainSpeciesFact`, the engine can evaluate that species without requiring it to exist in static `fishData`, Species Knowledge, or the static Compatibility Profile registry.
+- This does **not** weaken fail-closed behavior:
+  - only an explicit provider-supplied reviewed fact can take this runtime path;
+  - normal catalog/runtime authority lookup remains unchanged;
+  - missing required facts still produce `insufficient_data`;
+  - existing identity/domain/evidence ceilings remain unchanged.
+- New mandatory regression: `scripts/test-compatibility-dynamic-onboarding.ts`.
+- Synthetic fixture `sp_dynamic_unregistered_fixture / Fixtureus dynamicus` is deliberately absent from:
+  - the 486-object catalog;
+  - static Compatibility Profile authority;
+  - all reviewed Pair Rules.
+- The synthetic species receives only one runtime reviewed 8/8 fact object:
+  - freshwater
+  - 24–28°C
+  - pH 6.5–7.5
+  - adult 3–5 cm
+  - minimum 60 L / 60 cm
+  - group social mode, minimum 6
+  - no reviewed territoriality
+  - no reviewed fish predation
+- Dynamic pair proof against the existing ready cohort:
+  - **76 runtime pair evaluations**
+  - **0 precomputed Pair Rules added**
+  - **12 compatible / 29 caution / 35 not_recommended / 0 insufficient_data**
+  - every decision is `decisionReadiness=reviewed`
+  - every decision produces a non-unknown judgment plus `nextSteps`, `reviewCheckpoint`, and `stopCondition`
+  - synthetic-involving decisions do not use `reviewed_pair_rule`
+- Whole-tank proof:
+  - synthetic species + 4 existing reviewed species = **5 species**
+  - engine dynamically evaluates all **10 unique pairs**
+  - whole-tank aggregation returns **caution**, fully informed, not `insufficient_data`
+  - synthetic-involving pairs still have no reviewed Pair Rule.
+- Negative control:
+  - remove one required runtime fact (pH max)
+  - the same unseen species immediately becomes `insufficient_data`
+  - rule code includes `required_fact_ph_missing`
+  - therefore runtime injection is not an escape hatch around completeness/evidence requirements.
+- Existing tests remain green:
+  - Generic Species Onboarding
+  - Auto Onboarding Blind
+  - Compatibility Service Authority
+  - 76 / 2,850 Fully Informed Matrix
+  - User Conclusion
+  - Release Badcases
+- Dynamic Species Onboarding is now part of `test:backend-release-gate`, so future backend releases must preserve this no-pair-precompute invariant.
+- Full validation: **`BACKEND_RELEASE_GATE=PASS`**, project/API TypeScript, lint, and `git diff --check` pass.
+- Product interpretation: a future species does **not** need A+B/A+C/... pair records. Once identity/evidence review has produced complete reviewed facts, the generic deterministic engine can evaluate it immediately against existing species and in whole-tank aggregation. AI can assist upstream research/extraction and downstream explanation/actions, but deterministic reviewed facts/rules remain final authority.
+
 ## CURRENT OVERRIDE — 2026-10-15 Super Red / Red Devil angelfish identity + catalog correction wave28 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave28 is source-controlled candidate work only: **no push, deploy, Production alias change, DB migration, or Production authority write**.

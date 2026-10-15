@@ -18,6 +18,7 @@ const gates = [
   ['Compatibility Regression', 'npm', ['run', 'test:compatibility-regression-gate']],
   ['Domain Compatibility', 'npm', ['run', 'test:domain-compatibility']],
   ['Generic Species Onboarding', 'npm', ['run', 'test:compatibility-generic-species-onboarding']],
+  ['Dynamic Species Onboarding', 'node', ['--import', 'tsx', 'scripts/test-compatibility-dynamic-onboarding.ts']],
   ['Compatibility Auto Onboarding Blind', 'npm', ['run', 'test:compatibility-auto-onboarding-blind']],
   ['Compatibility GBIF Identity', 'npm', ['run', 'test:compatibility-gbif-identity']],
   ['Compatibility Bailian Research Provider', 'npm', ['run', 'test:compatibility-bailian-research-provider']],
