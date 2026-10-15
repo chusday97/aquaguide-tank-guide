@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 5,
+  "totalPackets": 4,
   "packets": [
     {
       "speciesId": "sp_0011",
@@ -106,28 +106,6 @@
       ],
       "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
       "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
-    },
-    {
-      "speciesId": "sp_0438",
-      "name": "红剑鱼",
-      "scientificName": "Xiphophorus hellerii",
-      "missingField": "territoriality",
-      "currentStatus": "reviewed_unknown",
-      "currentReasonCode": "reviewed_field_unknown",
-      "existingEvidenceIds": [
-        "catalog-fishbase-xiphophorus-hellerii"
-      ],
-      "existingSources": [
-        {
-          "id": "catalog-fishbase-xiphophorus-hellerii",
-          "title": "Xiphophorus hellerii (Green swordtail) species summary",
-          "publisher": "FishBase",
-          "url": "https://www.fishbase.org/Summary/Xiphophorus-hellerii",
-          "reviewStatus": "draft"
-        }
-      ],
-      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
-      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
     }
   ]
 }

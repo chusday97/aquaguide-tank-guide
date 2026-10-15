@@ -113,6 +113,19 @@ assert.deepEqual(approvedValue('sp_0447', 'predation'), { targets: [] });
 assert.deepEqual(approvedValue('sp_0447', 'territoriality'), { traits: ['breeding_territoriality'] });
 assert.deepEqual(approvedValue('sp_0451', 'territoriality'), { traits: ['territorial', 'territory_defense'] });
 assert.deepEqual(approvedValue('sp_0197', 'predation'), { targets: [] });
+assert.deepEqual(approvedValue('sp_0438', 'territoriality'), { traits: ['male_conspecific_territoriality'] });
+assert.equal(rowOf('sp_0438')?.genericOnboardingReady, true, 'reviewed swordtail territoriality plus existing reviewed tank-size/predation authority should complete the generic onboarding contract');
+assert.deepEqual(
+  resolveKnowledgeSources([
+    'australian-government-xiphophorus-hellerii-territoriality',
+    'fishbase-xiphophorus-hellerii-male-aggression',
+  ]).map(source => source.id).sort(),
+  [
+    'australian-government-xiphophorus-hellerii-territoriality',
+    'fishbase-xiphophorus-hellerii-male-aggression',
+  ].sort(),
+  'new exact-taxon swordtail territoriality evidence must resolve to source metadata',
+);
 assert.deepEqual(approvedValue('sp_0013', 'tank_size'), { liters: 60, lengthCm: null });
 assert.deepEqual(approvedValue('sp_0013', 'social_behavior'), { mode: 'group', minimumGroupSize: 6 });
 assert.deepEqual(approvedValue('sp_0013', 'territoriality'), { traits: [] });
@@ -150,9 +163,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 69, '495 actionable field gaps should collapse to 69 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 68, '494 actionable field gaps should collapse to 68 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 114, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 113, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
@@ -211,7 +224,6 @@ assert.deepEqual(
     ['sp_0013', 'predation'],
     ['sp_0151', 'predation'],
     ['sp_0433', 'predation'],
-    ['sp_0438', 'territoriality'],
   ],
   'Fast Lane must expose the exact 7/8 species after historical reviewed_unknown records stop masking later reviewed authority',
 );

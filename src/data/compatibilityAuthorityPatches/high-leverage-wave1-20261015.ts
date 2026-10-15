@@ -27,6 +27,20 @@ export const compatibilityHighLeverageWave1Sources = {
     'https://www.fishipedia.fr/fr/poissons/otocinclus-vittatus',
     'curated_husbandry',
   ),
+  swordtailGovernmentReview: source(
+    'australian-government-xiphophorus-hellerii-territoriality',
+    'Review of the impacts of introduced ornamental fish species that have established wild populations in Australia',
+    'Australian Government Department of the Environment, Water, Heritage and the Arts',
+    'https://www.agriculture.gov.au/sites/default/files/documents/ornamental-fish.pdf',
+    'government',
+  ),
+  swordtailFishBase: source(
+    'fishbase-xiphophorus-hellerii-male-aggression',
+    'Xiphophorus hellerii (Green swordtail) species summary',
+    'FishBase',
+    'https://www.fishbase.se/summary/Xiphophorus-hellerii.html',
+    'curated_husbandry',
+  ),
 } satisfies Record<string, CatalogEvidenceSource>;
 
 const supported = (
@@ -49,6 +63,10 @@ const supported = (
 });
 
 const otocinclusSourceId = compatibilityHighLeverageWave1Sources.otocinclusFishipedia.id;
+const swordtailTerritorialitySourceIds = [
+  compatibilityHighLeverageWave1Sources.swordtailGovernmentReview.id,
+  compatibilityHighLeverageWave1Sources.swordtailFishBase.id,
+];
 
 export const compatibilityHighLeverageWave1FieldReviews: CatalogFieldReview[] = [
   supported(
@@ -79,25 +97,43 @@ export const compatibilityHighLeverageWave1FieldReviews: CatalogFieldReview[] = 
       'Fishipedia explicitly marks territoriality as “Non” on the exact O. vittatus species page. This is direct negative evidence, not an inference from peaceful temperament.',
     ],
   ),
+  supported(
+    'sp_0438',
+    'territoriality',
+    { traits: ['male_conspecific_territoriality'] },
+    swordtailTerritorialitySourceIds,
+    [
+      'The Australian Government review reports that X. hellerii males form long-term hierarchies, are territorial to an extent, and spend much of their time fighting conspecifics; the same review limits uncertainty to whether aggression extends to other species.',
+      'FishBase independently records that males are aggressive toward each other in aquaria. The promoted trait is therefore restricted to male conspecific territoriality and is not widened to general interspecific aggression.',
+    ],
+    'medium',
+  ),
 ];
 
 export const compatibilityHighLeverageWave1VerifiedSourceIds = Object.values(
   compatibilityHighLeverageWave1Sources,
 ).map(item => item.id);
 
-const additionalRequiredFacts: CompatibilityRequiredFact[] = ['tank_size', 'territoriality'];
+const otocinclusAdditionalRequiredFacts: CompatibilityRequiredFact[] = ['tank_size', 'territoriality'];
+const swordtailAdditionalRequiredFacts: CompatibilityRequiredFact[] = ['tank_size', 'territoriality', 'predation'];
 
 export const compatibilityHighLeverageWave1ProfilePatches: readonly CompatibilityProfileAuthorityPatch[] = [
   {
     speciesId: 'sp_0013',
     addCitationIds: [],
-    addRequiredFacts: additionalRequiredFacts,
+    addRequiredFacts: otocinclusAdditionalRequiredFacts,
+  },
+  {
+    speciesId: 'sp_0438',
+    addCitationIds: swordtailTerritorialitySourceIds,
+    addRequiredFacts: swordtailAdditionalRequiredFacts,
+    addBehaviorTraits: ['male_conspecific_territoriality'],
   },
 ] as const;
 
 export const compatibilityHighLeverageWave1AuthorityPatch = {
   patchId: 'high-leverage-evidence-wave1-20261015',
-  speciesIds: ['sp_0013'],
+  speciesIds: ['sp_0013', 'sp_0438'],
   authorityOwner: 'src/data/compatibilityAuthorityPatches/high-leverage-wave1-20261015.ts',
   runtimeScope: 'source_controlled_only',
   writesProductionAuthority: false,

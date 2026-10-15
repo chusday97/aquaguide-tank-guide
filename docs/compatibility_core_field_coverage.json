@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 55,
-  "coreFieldCompleteSpecies": 70,
-  "oneFieldGapSpecies": 6,
+  "genericOnboardingReadySpecies": 56,
+  "coreFieldCompleteSpecies": 71,
+  "oneFieldGapSpecies": 5,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
@@ -66,9 +66,9 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 68,
+      "reviewed_supported": 69,
       "reviewed_neutral_or_negative": 22,
-      "reviewed_unknown": 92,
+      "reviewed_unknown": 91,
       "needs_research": 3,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -105,7 +105,7 @@
     },
     {
       "field": "territoriality",
-      "count": 22
+      "count": 21
     },
     {
       "field": "predation",
@@ -35926,9 +35926,9 @@
       "scientificName": "Xiphophorus hellerii",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35987,13 +35987,14 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "australian-government-xiphophorus-hellerii-territoriality",
+            "fishbase-xiphophorus-hellerii-male-aggression"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
