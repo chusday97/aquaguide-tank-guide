@@ -6,12 +6,12 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 57,
-  "genericReadyUniquePairs": 1596,
+  "genericOnboardingReadySpecies": 58,
+  "genericReadyUniquePairs": 1653,
   "fishPairs": 47895,
   "statuses": {
-    "compatible": 568,
-    "caution": 1701,
+    "compatible": 505,
+    "caution": 1764,
     "not_recommended": 18464,
     "insufficient_data": 27162
   },
@@ -96,19 +96,6 @@
         "scientificName": "Hypancistrus inspector",
         "unknownPairs": 175,
         "actionableFields": [
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0026",
-        "name": "清道夫",
-        "scientificName": "Hypostomus plecostomus",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "tank_size",
-          "social_behavior",
           "territoriality",
           "predation"
         ],
@@ -325,27 +312,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 183
-      },
-      {
-        "researchKey": "Hypostomus plecostomus",
-        "baseScientificName": "Hypostomus plecostomus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 43.75,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
       },
       {
         "researchKey": "Cyprinus carpio",
@@ -1554,27 +1520,6 @@
         "existingCoveragePriorityScore": 183
       },
       {
-        "researchKey": "Hypostomus plecostomus",
-        "baseScientificName": "Hypostomus plecostomus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 43.75,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
-      },
-      {
         "researchKey": "Cyprinus carpio",
         "baseScientificName": "Cyprinus carpio",
         "completionEligible": true,
@@ -2653,10 +2598,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 61,
-      "completionEligibleJobs": 24,
+      "totalResearchJobs": 60,
+      "completionEligibleJobs": 23,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 26,
+      "completionEligibleCatalogObjects": 25,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2725,7 +2670,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 389,
+    "actionableGaps": 385,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2733,7 +2678,7 @@
       },
       {
         "field": "tank_size",
-        "count": 77
+        "count": 76
       },
       {
         "field": "temperature",
@@ -2749,15 +2694,15 @@
       },
       {
         "field": "territoriality",
-        "count": 19
+        "count": 18
       },
       {
         "field": "predation",
-        "count": 19
+        "count": 18
       },
       {
         "field": "social_behavior",
-        "count": 1
+        "count": 0
       }
     ],
     "domainOrIdentityHeldSpecies": 290

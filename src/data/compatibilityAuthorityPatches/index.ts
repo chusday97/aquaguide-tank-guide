@@ -82,6 +82,13 @@ import {
   compatibilityNumericWave7Sources,
   compatibilityNumericWave7VerifiedSourceIds,
 } from './numeric-wave7-20261015';
+import {
+  compatibilityNumericWave8AuthorityPatch,
+  compatibilityNumericWave8FieldReviews,
+  compatibilityNumericWave8ProfilePatches,
+  compatibilityNumericWave8Sources,
+  compatibilityNumericWave8VerifiedSourceIds,
+} from './numeric-wave8-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -96,6 +103,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave5Sources,
   ...compatibilityNumericWave6Sources,
   ...compatibilityNumericWave7Sources,
+  ...compatibilityNumericWave8Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -111,6 +119,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave5FieldReviews,
   ...compatibilityNumericWave6FieldReviews,
   ...compatibilityNumericWave7FieldReviews,
+  ...compatibilityNumericWave8FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -126,6 +135,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave5VerifiedSourceIds,
   ...compatibilityNumericWave6VerifiedSourceIds,
   ...compatibilityNumericWave7VerifiedSourceIds,
+  ...compatibilityNumericWave8VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -141,6 +151,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave5ProfilePatches,
   ...compatibilityNumericWave6ProfilePatches,
   ...compatibilityNumericWave7ProfilePatches,
+  ...compatibilityNumericWave8ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -156,4 +167,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave5AuthorityPatch,
   compatibilityNumericWave6AuthorityPatch,
   compatibilityNumericWave7AuthorityPatch,
+  compatibilityNumericWave8AuthorityPatch,
 ] as const;
