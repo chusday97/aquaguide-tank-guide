@@ -10,21 +10,24 @@ import {
 } from '../../../src/services/compatibility/compatibility.service';
 import { getReviewedCompatibilityProfile } from '../../../src/data/compatibilityEvidence';
 import { getReviewedSpeciesKnowledgeForFish } from '../../../src/modules/knowledge/speciesKnowledge';
-import type { CompatibilityAssessmentMode } from '../../../src/services/compatibility/compatibility-action.service';
+import {
+  prioritizeDistinctCompatibilityRules,
+  type CompatibilityAssessmentMode,
+} from '../../../src/services/compatibility/compatibility-action.service';
 
-export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v3-current-tank-context';
+export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v4-primary-risk-clamp';
 
 const verdictSchema = z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']);
 const groundedItemSchema = z.object({
   text: z.string().trim().min(1).max(360),
-  ruleCodes: z.array(z.string().trim().min(1)).max(8),
+  ruleCodes: z.array(z.string().trim().min(1)).min(1).max(3),
 }).strict();
 
 export const compatibilityAiProviderOutputSchema = z.object({
   suggestedVerdict: verdictSchema,
-  reasons: z.array(groundedItemSchema).min(1).max(8),
-  adjustments: z.array(groundedItemSchema).max(8),
-  uncertainties: z.array(groundedItemSchema).max(8),
+  reasons: z.array(groundedItemSchema).min(1).max(3),
+  adjustments: z.array(groundedItemSchema).max(2),
+  uncertainties: z.array(groundedItemSchema).max(3),
   confidence: z.enum(['low', 'medium', 'high']),
   evidenceIds: z.array(z.string().trim().min(1)).max(48),
 }).strict();
@@ -126,7 +129,19 @@ export type CompatibilityAiShadowResult = {
 const reviewedKnowledgeSnapshot = (species: Fish) => {
   const profile = getReviewedCompatibilityProfile(species.id);
   const knowledge = getReviewedSpeciesKnowledgeForFish(species);
-  if (!profile || !knowledge) return null;
+  const identity = {
+    catalogKey: species.id,
+    commonName: species.name,
+    scientificName: species.scientificName,
+  };
+  if (!profile || !knowledge) {
+    return {
+      ...identity,
+      factScope: 'identity_only' as const,
+      compatibilityProfile: undefined,
+      reviewedKnowledge: {},
+    };
+  }
   const reviewedField = <T extends { evidence?: { reviewStatus?: string; sourceIds?: string[] } } | undefined>(field: T) => (
     field?.evidence?.reviewStatus === 'reviewed' ? field : undefined
   );
@@ -134,9 +149,8 @@ const reviewedKnowledgeSnapshot = (species: Fish) => {
   const social = reviewedField(knowledge.socialBehavior);
   const space = reviewedField(knowledge.spaceAndGrowth);
   return {
-    catalogKey: species.id,
-    commonName: species.name,
-    scientificName: species.scientificName,
+    ...identity,
+    factScope: 'reviewed_profile' as const,
     compatibilityProfile: {
       waterType: profile.waterType,
       waterTypes: profile.waterTypes,
@@ -198,10 +212,31 @@ const ruleSnapshot = (result: TankCompatibilityResult) => (
     }))
 );
 
-const allowedRuleCodes = (result: TankCompatibilityResult) => new Set([
-  ...result.metadata.domainRuleCodes,
-  ...ruleSnapshot(result).map(rule => rule.code),
-]);
+const primaryNarrativeRules = (
+  result: TankCompatibilityResult,
+  assessmentMode: CompatibilityAssessmentMode,
+) => {
+  const finalDecision = getCompatibilityDecision(result, decisionIntentFor(assessmentMode));
+  const relevantRules = finalDecision.status === 'not_recommended'
+    ? result.blockingRules
+    : finalDecision.status === 'caution'
+      ? [...result.warningRules, ...result.missingData]
+      : finalDecision.status === 'insufficient_data'
+        ? result.missingData
+        : result.passedRules;
+  const selected = prioritizeDistinctCompatibilityRules(relevantRules).slice(0, 3);
+  if (selected.length > 0) return selected;
+  const domainCodes = new Set(result.metadata.domainRuleCodes || []);
+  return prioritizeDistinctCompatibilityRules(
+    [...result.blockingRules, ...result.warningRules, ...result.missingData, ...result.passedRules]
+      .filter(rule => domainCodes.has(rule.code)),
+  ).slice(0, 3);
+};
+
+const allowedNarrativeRuleCodes = (
+  result: TankCompatibilityResult,
+  assessmentMode: CompatibilityAssessmentMode,
+) => new Set(primaryNarrativeRules(result, assessmentMode).map(rule => rule.code));
 
 const allowedEvidenceIds = (result: TankCompatibilityResult) => new Set([
   ...(result.evidenceIds || []),
@@ -251,6 +286,8 @@ const promptsFor = (
   const result = input.deterministicResult;
   const assessmentMode = assessmentModeFor(input);
   const finalDecision = getCompatibilityDecision(result, decisionIntentFor(assessmentMode));
+  const primaryRules = primaryNarrativeRules(result, assessmentMode);
+  const narrativeRuleCodes = primaryRules.map(rule => rule.code);
   const system = [
     'You are AquaGuide Compatibility V4 in SHADOW mode.',
     'You are not the final authority. Deterministic hard rules and reviewed pair authority remain final.',
@@ -259,12 +296,15 @@ const promptsFor = (
     'If INPUT says insufficient_data, suggestedVerdict must remain insufficient_data.',
     'If INPUT contains a hard/blocking rule or final verdict not_recommended, suggestedVerdict must remain not_recommended.',
     'If final verdict is caution, never upgrade it to compatible.',
+    'Focus only on the supplied PRIMARY rules. Do not mention lower-priority risk families even if other species facts could suggest them.',
+    'Return at most 3 concise primary reasons and at most 2 immediate actions.',
     'For caution or not_recommended decisions, adjustments MUST contain at least one grounded actionable item.',
     assessmentMode === 'current_tank'
       ? 'All listed items are already in the aquarium. Do not tell the user not to add a candidate. For not_recommended/caution, explain grounded actions for the current combination such as separate, reduce, adjust, confirm or monitor only when supported by supplied rules.'
       : 'For not_recommended, a valid action is to not add the candidate under the current plan, grounded in the blocking/conflict rule; do not invent a new threshold or biological fact.',
     'For caution, give at least one concrete mitigation directly supported by the supplied caution rule.',
-    'Ground every reason/adjustment/uncertainty in ruleCodes supplied by INPUT.',
+    'Every reason/adjustment/uncertainty must cite one or more ruleCodes from allowedRuleCodes. Do not cite or discuss any other rule.',
+    'You may name a species only when the supplied primary rule identifies it via affectedSpeciesIds; use the exact supplied commonName mapping.',
     'Return one JSON object only.',
   ].join(' ');
   const user = JSON.stringify({
@@ -274,8 +314,8 @@ const promptsFor = (
     assessmentMode,
     requiredOutput: {
       suggestedVerdict: 'compatible|caution|not_recommended|insufficient_data',
-      reasons: [{ text: 'grounded explanation', ruleCodes: ['exact_input_rule_code'] }],
-      adjustments: [{ text: 'grounded action', ruleCodes: ['exact_input_rule_code'] }],
+      reasons: [{ text: 'natural-language rewrite of a PRIMARY grounded risk; max 3 items', ruleCodes: ['exact_allowed_rule_code'] }],
+      adjustments: [{ text: 'grounded immediate action; max 2 items', ruleCodes: ['exact_allowed_rule_code'] }],
       adjustmentRequirement: 'non-empty when deterministic finalDecision is caution or not_recommended',
       uncertainties: [{ text: 'grounded uncertainty', ruleCodes: ['exact_input_rule_code'] }],
       confidence: 'low|medium|high',
@@ -285,7 +325,16 @@ const promptsFor = (
       finalDecision,
       riskLevel: result.riskLevel,
       summary: result.summary,
-      rules: ruleSnapshot(result),
+      rules: primaryRules.map(rule => ({
+        code: rule.code,
+        title: rule.title,
+        evidence: rule.evidence,
+        severity: rule.severity,
+        reviewStatus: rule.reviewStatus,
+        confidence: rule.confidence,
+        affectedSpeciesIds: rule.affectedSpeciesIds,
+        evidenceIds: rule.citations.map(item => item.id),
+      })),
     },
     tank: tankSnapshot(input.tank),
     species: speciesFacts,
@@ -296,7 +345,8 @@ const promptsFor = (
       existingQuantity: item.existingQuantity ?? (item.origin === 'existing' ? item.quantity : 0),
       plannedQuantity: item.plannedQuantity ?? (item.origin === 'planned' ? item.quantity : 0),
     })),
-    allowedRuleCodes: [...allowedRuleCodes(result)],
+    primaryRiskRuleCodes: narrativeRuleCodes,
+    allowedRuleCodes: narrativeRuleCodes,
     allowedEvidenceIds: [...allowedEvidenceIds(result)],
   }, null, 2);
   return { system, user };
@@ -407,14 +457,6 @@ export const createCompatibilityAiCombinationAssessment = async (
 
   const species = input.items.map(item => item.species);
   const speciesFacts = species.map(reviewedKnowledgeSnapshot);
-  if (speciesFacts.some(item => !item)) {
-    return {
-      mode: 'shadow',
-      finalDecision,
-      ai: emptyAi('skipped', 'missing_exact_reviewed_profile_or_runtime_knowledge'),
-      provenance: baseProvenance,
-    };
-  }
 
   const providerReadiness = provider.readiness?.();
   if (providerReadiness && !providerReadiness.configured) {
@@ -427,7 +469,7 @@ export const createCompatibilityAiCombinationAssessment = async (
   }
 
   try {
-    const { system, user } = promptsFor(input, speciesFacts as NonNullable<(typeof speciesFacts)[number]>[]);
+    const { system, user } = promptsFor(input, speciesFacts);
     let providerResult = await provider({ system, user });
     let parsed = compatibilityAiProviderOutputSchema.safeParse(providerResult.output);
     let repairCount = 0;
@@ -459,7 +501,7 @@ export const createCompatibilityAiCombinationAssessment = async (
     }
 
     let output = parsed.data;
-    if (hasUnknownGrounding(output, allowedRuleCodes(input.deterministicResult), allowedEvidenceIds(input.deterministicResult))) {
+    if (hasUnknownGrounding(output, allowedNarrativeRuleCodes(input.deterministicResult, assessmentMode), allowedEvidenceIds(input.deterministicResult))) {
       return {
         mode: 'shadow',
         finalDecision,
@@ -487,7 +529,7 @@ export const createCompatibilityAiCombinationAssessment = async (
         };
       }
       output = parsed.data;
-      if (hasUnknownGrounding(output, allowedRuleCodes(input.deterministicResult), allowedEvidenceIds(input.deterministicResult))) {
+      if (hasUnknownGrounding(output, allowedNarrativeRuleCodes(input.deterministicResult, assessmentMode), allowedEvidenceIds(input.deterministicResult))) {
         return {
           mode: 'shadow',
           finalDecision,

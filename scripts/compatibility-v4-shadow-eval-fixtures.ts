@@ -118,12 +118,16 @@ const buildCase = async (fixture: Fixture): Promise<CompatibilityV4ShadowEvalCas
   let providerCalls = 0;
   let attemptedVerdict: string | null = null;
   const ruleCodes = deterministic.metadata.domainRuleCodes;
-  const provider: CompatibilityAiReasoningProvider = async () => {
+  const provider: CompatibilityAiReasoningProvider = async ({ user }) => {
     providerCalls += 1;
     if (fixture.providerMode === 'must_skip') {
       throw new Error('Provider must not run for incomplete authority.');
     }
-    const selectedRule = ruleCodes.find(code => code !== 'compatibility_clear') || ruleCodes[0] || 'compatibility_clear';
+    const payload = JSON.parse(user) as { allowedRuleCodes?: string[] };
+    const allowedRuleCodes = payload.allowedRuleCodes || [];
+    const selectedRule = allowedRuleCodes.find(code => code !== 'compatibility_clear')
+      || allowedRuleCodes[0]
+      || 'compatibility_clear';
     attemptedVerdict = fixture.providerMode === 'attempt_weaken_block'
       ? 'compatible'
       : deterministic.status === 'compatible'

@@ -154,10 +154,12 @@ assert.equal(blockedMain.howTo.length, 2);
 
 const blockedProduct = buildCompatibilityProductAssessment(blocked.decision, genericAiShadow);
 const productFamilies = blockedProduct.details.reasons
-  .slice(0, 4)
+  .slice(0, 3)
   .map(item => getCompatibilityRuleFamily(item.ruleCodes[0] || ''));
-assert.deepEqual(productFamilies, ['water_type', 'predation', 'housing', 'temperature']);
-assert.equal(new Set(productFamilies).size, 4);
+assert.deepEqual(productFamilies, ['water_type', 'predation', 'housing']);
+assert.equal(new Set(productFamilies).size, 3);
+assert.equal(blockedProduct.details.explanation.source, 'deterministic_fallback');
+assert.equal(blockedProduct.details.explanation.narrativeAccepted, false);
 assert.equal(blockedProduct.main.why.includes('这组生物存在多项风险，需要谨慎处理。'), false);
 
 assert.throws(
