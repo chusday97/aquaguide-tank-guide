@@ -1,9 +1,9 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 97,
-  "totalResearchJobs": 52,
-  "variantBridgeJobs": 18,
+  "catalogObjects": 95,
+  "totalResearchJobs": 51,
+  "variantBridgeJobs": 17,
   "items": [
     {
       "researchKey": "Hypancistrus inspector",
@@ -554,55 +554,6 @@
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Cyprinus carpio",
-      "baseScientificName": "Cyprinus carpio",
-      "priorityScore": 159,
-      "catalogObjectCount": 2,
-      "exactObjectCount": 0,
-      "variantObjectCount": 2,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "adult_size",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0069",
-          "name": "红白锦鲤",
-          "scientificName": "Cyprinus carpio var.",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0070",
-          "name": "蝴蝶鲤",
-          "scientificName": "Cyprinus carpio var. Longfin",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
         }
       ]
     },

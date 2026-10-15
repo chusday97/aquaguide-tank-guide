@@ -11,8 +11,8 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 66,
-  "coreFieldCompleteSpecies": 81,
+  "genericOnboardingReadySpecies": 68,
+  "coreFieldCompleteSpecies": 83,
   "oneFieldGapSpecies": 5,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
@@ -26,25 +26,25 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 117,
+      "reviewed_supported": 119,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 11,
+      "reviewed_unknown": 9,
       "needs_research": 57,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 110,
+      "reviewed_supported": 112,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 16,
+      "reviewed_unknown": 14,
       "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 125,
+      "reviewed_supported": 127,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 3,
+      "reviewed_unknown": 1,
       "needs_research": 57,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -67,16 +67,16 @@
     },
     "territoriality": {
       "reviewed_supported": 73,
-      "reviewed_neutral_or_negative": 28,
-      "reviewed_unknown": 84,
+      "reviewed_neutral_or_negative": 30,
+      "reviewed_unknown": 82,
       "needs_research": 0,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 62,
+      "reviewed_supported": 64,
       "reviewed_neutral_or_negative": 26,
-      "reviewed_unknown": 97,
+      "reviewed_unknown": 95,
       "needs_research": 0,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -85,7 +85,7 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 75
+      "count": 73
     },
     {
       "field": "tank_size",
@@ -93,7 +93,7 @@
     },
     {
       "field": "temperature",
-      "count": 68
+      "count": 66
     },
     {
       "field": "water",
@@ -101,15 +101,15 @@
     },
     {
       "field": "adult_size",
-      "count": 60
+      "count": 58
     },
     {
       "field": "predation",
-      "count": 13
+      "count": 11
     },
     {
       "field": "territoriality",
-      "count": 11
+      "count": 9
     },
     {
       "field": "social_behavior",
@@ -5923,9 +5923,9 @@
       "scientificName": "Cyprinus carpio var.",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -5938,31 +5938,34 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-var"
+            "batch09-fishbase-cyprinus-carpio-var",
+            "petmd-koi-husbandry-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-var"
+            "batch09-fishbase-cyprinus-carpio-var",
+            "petmd-koi-husbandry-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-var"
+            "batch09-fishbase-cyprinus-carpio-var",
+            "petmd-koi-husbandry-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "tank_size": {
           "status": "reviewed_supported",
@@ -5983,22 +5986,26 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-var"
+            "batch09-fishbase-cyprinus-carpio-var",
+            "petmd-koi-husbandry-wave17",
+            "fishipedia-cyprinus-carpio-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-var"
+            "batch09-fishbase-cyprinus-carpio-var",
+            "petmd-koi-husbandry-wave17",
+            "plos-cyprinus-carpio-small-fish-predation-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
@@ -6008,9 +6015,9 @@
       "scientificName": "Cyprinus carpio var. Longfin",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -6023,31 +6030,34 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-longfin"
+            "batch09-fishbase-cyprinus-carpio-longfin",
+            "petmd-koi-husbandry-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-longfin"
+            "batch09-fishbase-cyprinus-carpio-longfin",
+            "petmd-koi-husbandry-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-longfin"
+            "batch09-fishbase-cyprinus-carpio-longfin",
+            "petmd-koi-husbandry-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "tank_size": {
           "status": "reviewed_supported",
@@ -6068,22 +6078,26 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-longfin"
+            "batch09-fishbase-cyprinus-carpio-longfin",
+            "petmd-koi-husbandry-wave17",
+            "fishipedia-cyprinus-carpio-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-cyprinus-carpio-longfin"
+            "batch09-fishbase-cyprinus-carpio-longfin",
+            "petmd-koi-husbandry-wave17",
+            "plos-cyprinus-carpio-small-fish-predation-wave17"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

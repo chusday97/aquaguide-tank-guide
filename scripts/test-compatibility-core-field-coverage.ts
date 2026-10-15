@@ -645,6 +645,34 @@ assert.deepEqual(
   [...predationWave16SourceIds].sort(),
   'predation wave16 fry-scoped evidence must resolve to reviewed source metadata',
 );
+const highImpactWave17SpeciesBindings: Array<[string, string]> = [
+  ['sp_0069', 'Cyprinus carpio var.'],
+  ['sp_0070', 'Cyprinus carpio var. Longfin'],
+];
+for (const [speciesId, expectedScientificName] of highImpactWave17SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'high-impact wave17 catalog object must retain its reviewed ornamental Cyprinus identity: ' + speciesId,
+  );
+  assert.deepEqual(approvedValue(speciesId, 'temperature'), { min: 17.8, max: 23.9 });
+  assert.deepEqual(approvedValue(speciesId, 'ph'), { min: 7, max: 8.6 });
+  assert.deepEqual(approvedValue(speciesId, 'adult_size'), { min: null, max: 91.4 });
+  assert.deepEqual(approvedValue(speciesId, 'territoriality'), { traits: [] });
+  assert.deepEqual(approvedValue(speciesId, 'predation'), { targets: ['small_fish'] });
+  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, speciesId + ' must become 8/8 after the reviewed koi variant bridge closes all five remaining fields');
+  assert.equal(rowOf(speciesId)?.genericOnboardingReady, true, speciesId + ' must become generic-ready after Wave17');
+}
+const highImpactWave17SourceIds = [
+  'petmd-koi-husbandry-wave17',
+  'fishipedia-cyprinus-carpio-wave17',
+  'plos-cyprinus-carpio-small-fish-predation-wave17',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(highImpactWave17SourceIds).map(source => source.id).sort(),
+  [...highImpactWave17SourceIds].sort(),
+  'high-impact wave17 koi husbandry, territoriality and rare small-fish predation evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -670,9 +698,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 52, '363 actionable field gaps should collapse to 52 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 51, '353 actionable field gaps should collapse to 51 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 97, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 95, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

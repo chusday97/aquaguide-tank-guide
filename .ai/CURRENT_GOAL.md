@@ -1,3 +1,20 @@
+## CURRENT OVERRIDE — 2026-10-15 High-impact koi evidence wave17 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave17 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
+- Wave17 deliberately moves past the four predation-only Fast Lane evidence-boundary cases and closes the highest-impact multi-field variant job that had defensible reviewed evidence: `Cyprinus carpio`, covering `sp_0069 红白锦鲤` and `sp_0070 蝴蝶鲤`.
+- Existing Unified Wave04 identity authority already binds both catalog objects to `baseSpeciesKey: Cyprinus carpio`; Wave17 does not add automatic variant inheritance. Every promoted base-taxon fact is paired with the pre-existing reviewed variant bridge and direct koi-form husbandry coverage.
+- Both koi objects close **five fields at once**:
+  - `temperature 17.8–23.9°C`, `pH 7.0–8.6`, and `adult_size max 91.4 cm` from PetMD veterinary koi husbandry guidance that explicitly covers **Kohaku** and **Butterfly koi**. The husbandry range is preferred over FishBase's much wider wild survival envelope.
+  - `territoriality = non-territorial` from Fishipedia's explicit exact-`Cyprinus carpio` territoriality field, with the reviewed koi variant bridge retained.
+  - `predation = small_fish` from peer-reviewed PLOS ONE direct diet evidence: common carp consumed 37–52 mm young-of-year perch during an unusual food-deficit event. The source describes piscivory as extremely rare, so authority is narrowly scoped to `small_fish`; koi are not characterized as routine piscivores.
+- `sp_0069` and `sp_0070` move **3/8 -> 8/8** and become generic-ready. This single base-taxon job removes **10 actionable field gaps**.
+- Coverage after Wave17: **83 authoritative 8/8 fish / 68 strict generic-ready**, **353 actionable fields across 95 catalog objects**, deduplicated to **51 base-taxon jobs**. Field gaps: `ph 73`, `tank_size 72`, `temperature 66`, `water 64`, `adult_size 58`, `predation 11`, `territoriality 9`, `social_behavior 0`.
+- Decision coverage rises to **44.02%**. Decision-impact partition is **14 completion-eligible jobs / 15 objects** and **37 terminal-blocked jobs / 80 objects**.
+- Fast Lane remains the same four deliberate predation holds: `sp_0011`, `sp_0062`, `sp_0125`, `sp_0433`; Wave17 does not weaken those evidence boundaries.
+- Fully informed invariant expands to **68 ready fish = 2,278 unordered pairs = 116 compatible / 865 caution / 1,297 not_recommended / 0 insufficient_data**.
+- PASS: core-field coverage, fully-informed matrix, user conclusion, release badcases, knowledge coverage, full `test:backend-release-gate`, historical migration/authority contracts, API/project TypeScript checks, Business API bundle, lint, and `git diff --check`.
+- NEXT: continue multi-field completion rather than rechecking the four known evidence-boundary holds. Highest remaining non-Fast-Lane total decision impact is `Opsariichthys bidens` (**218 affected unknown pairs across two catalog objects; gaps: temperature / pH / tank_size / territoriality**), followed by `Acrossocheilus fasciatus` (**175; five gaps**) and `Salminus brasiliensis` (**109; four gaps**). Promote only fields backed by exact/base-taxon reviewed evidence plus an explicit object bridge where required.
+
 ## CURRENT OVERRIDE — 2026-10-15 Predation evidence wave16 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave16 is **WebCodex / WebCodex-All-Bridge only**, source-controlled/local candidate work. No RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write.
