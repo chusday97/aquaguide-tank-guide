@@ -3,7 +3,7 @@ import { getKnowledgeEvidenceCeiling, knowledgeEvidenceCeilings } from '../src/d
 import { resolveKnowledgeSources } from '../src/modules/knowledge/knowledgeSources';
 import { getReviewedSpeciesKnowledge } from '../src/modules/knowledge/speciesKnowledge';
 
-assert.deepEqual(Object.keys(knowledgeEvidenceCeilings).sort(), ['sp_0025','sp_0037','sp_0038','sp_0039','sp_0040','sp_0041','sp_0046','sp_0047','sp_0060','sp_0061','sp_0063','sp_0064','sp_0106','sp_0107','sp_0111','sp_0112','sp_0113','sp_0115','sp_0128','sp_0130','sp_0132','sp_0134','sp_0135','sp_0136','sp_0137','sp_0147','sp_0148','sp_0149','sp_0150','sp_0152','sp_0153','sp_0161','sp_0168','sp_0169','sp_0171','sp_0172','sp_0180','sp_0186','sp_0196','sp_0198','sp_0203','sp_0209','sp_0213','sp_0215','sp_0222','sp_0223','sp_0224','sp_0233','sp_0237','sp_0252','sp_0253','sp_0254','sp_0258','sp_0259','sp_0260','sp_0261','sp_0262','sp_0267','sp_0289','sp_0290','sp_0291','sp_0292','sp_0293','sp_0295','sp_0348','sp_0349','sp_0350','sp_0351','sp_0362','sp_0363','sp_0364','sp_0385','sp_0386','sp_0387','sp_0389','sp_0390','sp_0391','sp_0395','sp_0406','sp_0413','sp_0419','sp_0426','sp_0458','sp_0467','sp_0470','sp_0471','sp_0472','sp_0473']);
+assert.deepEqual(Object.keys(knowledgeEvidenceCeilings).sort(), ['sp_0025','sp_0037','sp_0038','sp_0039','sp_0040','sp_0041','sp_0046','sp_0047','sp_0051','sp_0060','sp_0061','sp_0063','sp_0064','sp_0106','sp_0107','sp_0111','sp_0112','sp_0113','sp_0115','sp_0128','sp_0130','sp_0132','sp_0134','sp_0135','sp_0136','sp_0137','sp_0147','sp_0148','sp_0149','sp_0150','sp_0152','sp_0153','sp_0161','sp_0168','sp_0169','sp_0171','sp_0172','sp_0180','sp_0186','sp_0196','sp_0198','sp_0203','sp_0209','sp_0213','sp_0215','sp_0222','sp_0223','sp_0224','sp_0233','sp_0237','sp_0252','sp_0253','sp_0254','sp_0258','sp_0259','sp_0260','sp_0261','sp_0262','sp_0267','sp_0289','sp_0290','sp_0291','sp_0292','sp_0293','sp_0295','sp_0348','sp_0349','sp_0350','sp_0351','sp_0362','sp_0363','sp_0364','sp_0385','sp_0386','sp_0387','sp_0389','sp_0390','sp_0391','sp_0395','sp_0406','sp_0413','sp_0419','sp_0426','sp_0458','sp_0467','sp_0470','sp_0471','sp_0472','sp_0473']);
 
 for (const speciesId of ['sp_0038', 'sp_0130']) {
   const space = getKnowledgeEvidenceCeiling(speciesId, 'space');
@@ -15,6 +15,22 @@ for (const speciesId of ['sp_0038', 'sp_0130']) {
   assert.equal(territoriality?.researchDisposition, 'terminal_unknown_hold');
   assert.match(territoriality?.note || '', /territor|领地|territoriality/i);
 }
+
+const acrossocheilusEnvironment = getKnowledgeEvidenceCeiling('sp_0051', 'environment');
+const acrossocheilusSpace = getKnowledgeEvidenceCeiling('sp_0051', 'space');
+const acrossocheilusTerritoriality = getKnowledgeEvidenceCeiling('sp_0051', 'territoriality');
+const acrossocheilusPredation = getKnowledgeEvidenceCeiling('sp_0051', 'predation');
+assert.equal(acrossocheilusEnvironment?.code, 'species_temperature_husbandry_not_established');
+assert.equal(acrossocheilusSpace?.code, 'species_space_minimum_not_established');
+assert.equal(acrossocheilusTerritoriality?.code, 'species_territoriality_not_established');
+assert.equal(acrossocheilusPredation?.code, 'species_fish_predation_not_established');
+for (const ceiling of [acrossocheilusEnvironment, acrossocheilusSpace, acrossocheilusTerritoriality, acrossocheilusPredation]) {
+  assert.equal(ceiling?.researchDisposition, 'terminal_unknown_hold');
+}
+assert.match(acrossocheilusEnvironment?.note || '', /life-stage|fry|generic/i);
+assert.match(acrossocheilusSpace?.note || '', /production|minimum tank|aquarium/i);
+assert.match(acrossocheilusTerritoriality?.note || '', /territor|territory/i);
+assert.match(acrossocheilusPredation?.note || '', /fish-prey|predation|prey/i);
 
 const yellowCatfishSocial = getKnowledgeEvidenceCeiling('sp_0047', 'social');
 assert.equal(yellowCatfishSocial?.code, 'species_social_not_established');

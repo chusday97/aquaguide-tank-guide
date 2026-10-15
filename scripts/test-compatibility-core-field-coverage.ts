@@ -706,6 +706,37 @@ assert.deepEqual(
   [...highImpactWave18SourceIds].sort(),
   'high-impact wave18 exact-taxon managed husbandry evidence must resolve to reviewed source metadata',
 );
+assert.equal(fishData.find(fish => fish.id === 'sp_0051')?.scientificName, 'Acrossocheilus fasciatus');
+assert.deepEqual(approvedValue('sp_0051', 'ph'), { min: 7.2, max: 7.8 });
+for (const field of ['temperature', 'tank_size', 'territoriality', 'predation'] as const) {
+  assert.equal(approvedValue('sp_0051', field), undefined, 'sp_0051 must not force-promote terminally unresolved field ' + field);
+}
+const acrossocheilusRow = rowOf('sp_0051');
+assert.equal(acrossocheilusRow?.authoritativeFieldCount, 4);
+assert.equal(acrossocheilusRow?.actionableGapCount, 0);
+assert.equal(acrossocheilusRow?.terminalGapCount, 4);
+assert.equal(acrossocheilusRow?.genericOnboardingReady, false);
+assert.equal(acrossocheilusRow?.fields.temperature.reasonCode, 'species_temperature_husbandry_not_established');
+assert.equal(acrossocheilusRow?.fields.tank_size.reasonCode, 'species_space_minimum_not_established');
+assert.equal(acrossocheilusRow?.fields.territoriality.reasonCode, 'species_territoriality_not_established');
+assert.equal(acrossocheilusRow?.fields.predation.reasonCode, 'species_fish_predation_not_established');
+for (const field of ['temperature', 'tank_size', 'territoriality', 'predation'] as const) {
+  assert.equal(acrossocheilusRow?.fields[field].disposition, 'terminal_hold');
+  assert.equal(acrossocheilusRow?.fields[field].authoritySource, 'evidence_ceiling');
+}
+assert.equal(backlog.some(item => item.speciesId === 'sp_0051'), false, 'sp_0051 must leave ordinary backlog after all unresolved fields receive explicit evidence ceilings');
+assert.equal(taxonResearchPlan.find(item => item.baseScientificName === 'Acrossocheilus fasciatus'), undefined, 'Acrossocheilus fasciatus must leave the actionable taxon plan after targeted evidence review reaches terminal boundaries');
+const highImpactWave19SourceIds = [
+  'cnipa-acrossocheilus-fasciatus-growout-wave19',
+  'cnipa-acrossocheilus-fasciatus-breeding-wave19',
+  'jwas-acrossocheilus-fasciatus-temperature-wave19',
+  'dlou-acrossocheilus-fasciatus-diet-wave19',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(highImpactWave19SourceIds).map(source => source.id).sort(),
+  [...highImpactWave19SourceIds].sort(),
+  'high-impact wave19 grow-out, breeding, temperature-study and diet evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -731,9 +762,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 50, '345 actionable field gaps should collapse to 50 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 49, '340 actionable field gaps should collapse to 49 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 93, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 92, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

@@ -212,8 +212,13 @@ const profileCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFi
 };
 
 const evidenceCeilingForField = (fish: Fish, field: CompatibilityCoreField) => {
+  const ceilings = getKnowledgeEvidenceCeilings(fish.id);
+  if (field === 'territoriality' || field === 'predation') {
+    const fieldSpecific = ceilings.find(item => item.field === field);
+    if (fieldSpecific) return fieldSpecific;
+  }
   const mapped = field === 'water' || field === 'temperature' || field === 'ph' ? 'environment' : field === 'adult_size' || field === 'tank_size' ? 'space' : 'social';
-  return getKnowledgeEvidenceCeilings(fish.id).find(item => item.field === mapped);
+  return ceilings.find(item => item.field === mapped);
 };
 
 const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell => {

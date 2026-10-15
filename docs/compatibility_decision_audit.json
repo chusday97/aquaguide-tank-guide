@@ -11,17 +11,17 @@
   "fishPairs": 47895,
   "statuses": {
     "compatible": 381,
-    "caution": 1741,
+    "caution": 1669,
     "not_recommended": 18961,
-    "insufficient_data": 26812
+    "insufficient_data": 26884
   },
-  "decisionCoveragePct": 44.02,
-  "fullyInformedPairs": 6105,
+  "decisionCoveragePct": 43.87,
+  "fullyInformedPairs": 6144,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
     "unresolved_identity": 21226,
-    "public_evidence_insufficient": 5586,
+    "public_evidence_insufficient": 5658,
     "missing_species_fact": 0,
     "other": 0
   },
@@ -32,7 +32,7 @@
         "speciesId": "sp_0011",
         "name": "月光鱼",
         "scientificName": "Xiphophorus maculatus",
-        "unknownPairs": 175,
+        "unknownPairs": 176,
         "actionableFields": [
           "predation"
         ],
@@ -42,7 +42,7 @@
         "speciesId": "sp_0062",
         "name": "红眼灯",
         "scientificName": "Moenkhausia sanctaefilomenae",
-        "unknownPairs": 175,
+        "unknownPairs": 176,
         "actionableFields": [
           "predation"
         ],
@@ -52,7 +52,7 @@
         "speciesId": "sp_0125",
         "name": "雪球异型 (L102)",
         "scientificName": "Hypancistrus inspector",
-        "unknownPairs": 175,
+        "unknownPairs": 176,
         "actionableFields": [
           "predation"
         ],
@@ -62,22 +62,8 @@
         "speciesId": "sp_0433",
         "name": "红鼻剪刀",
         "scientificName": "Hemigrammus rhodostomus",
-        "unknownPairs": 175,
+        "unknownPairs": 176,
         "actionableFields": [
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0051",
-        "name": "光唇鱼",
-        "scientificName": "Acrossocheilus fasciatus",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
           "predation"
         ],
         "terminalReasons": []
@@ -86,7 +72,7 @@
         "speciesId": "sp_0173",
         "name": "黄金河虎",
         "scientificName": "Salminus brasiliensis var.",
-        "unknownPairs": 109,
+        "unknownPairs": 110,
         "actionableFields": [
           "temperature",
           "ph",
@@ -101,11 +87,11 @@
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -119,11 +105,11 @@
         "researchKey": "Moenkhausia sanctaefilomenae",
         "baseScientificName": "Moenkhausia sanctaefilomenae",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -137,11 +123,11 @@
         "researchKey": "Petitella rhodostoma",
         "baseScientificName": "Petitella rhodostoma",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -155,11 +141,11 @@
         "researchKey": "Xiphophorus maculatus",
         "baseScientificName": "Xiphophorus maculatus",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -170,36 +156,14 @@
         "existingCoveragePriorityScore": 191
       },
       {
-        "researchKey": "Acrossocheilus fasciatus",
-        "baseScientificName": "Acrossocheilus fasciatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 35,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
         "researchKey": "Salminus brasiliensis",
         "baseScientificName": "Salminus brasiliensis",
         "completionEligible": true,
-        "affectedUnknownPairs": 109,
+        "affectedUnknownPairs": 110,
         "gapInstances": 4,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 27.25,
+        "impactPerGap": 27.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -869,11 +833,11 @@
         "researchKey": "Amatitlania nigrofasciata",
         "baseScientificName": "Amatitlania nigrofasciata",
         "completionEligible": false,
-        "affectedUnknownPairs": 525,
+        "affectedUnknownPairs": 528,
         "gapInstances": 12,
         "terminalGapInstances": 6,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 43.75,
+        "impactPerGap": 44,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -1106,11 +1070,11 @@
         "researchKey": "Hypancistrus inspector",
         "baseScientificName": "Hypancistrus inspector",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1124,11 +1088,11 @@
         "researchKey": "Moenkhausia sanctaefilomenae",
         "baseScientificName": "Moenkhausia sanctaefilomenae",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1142,11 +1106,11 @@
         "researchKey": "Petitella rhodostoma",
         "baseScientificName": "Petitella rhodostoma",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1160,11 +1124,11 @@
         "researchKey": "Xiphophorus maculatus",
         "baseScientificName": "Xiphophorus maculatus",
         "completionEligible": true,
-        "affectedUnknownPairs": 175,
+        "affectedUnknownPairs": 176,
         "gapInstances": 1,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
+        "impactPerGap": 176,
         "nearReadyCatalogObjects": 1,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1175,36 +1139,14 @@
         "existingCoveragePriorityScore": 191
       },
       {
-        "researchKey": "Acrossocheilus fasciatus",
-        "baseScientificName": "Acrossocheilus fasciatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 35,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
         "researchKey": "Salminus brasiliensis",
         "baseScientificName": "Salminus brasiliensis",
         "completionEligible": true,
-        "affectedUnknownPairs": 109,
+        "affectedUnknownPairs": 110,
         "gapInstances": 4,
         "terminalGapInstances": 0,
         "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 27.25,
+        "impactPerGap": 27.5,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
@@ -1876,11 +1818,11 @@
         "researchKey": "Amatitlania nigrofasciata",
         "baseScientificName": "Amatitlania nigrofasciata",
         "completionEligible": false,
-        "affectedUnknownPairs": 525,
+        "affectedUnknownPairs": 528,
         "gapInstances": 12,
         "terminalGapInstances": 6,
         "terminalBlockedCatalogObjects": 3,
-        "impactPerGap": 43.75,
+        "impactPerGap": 44,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 3,
         "combinedGapFields": [
@@ -2109,10 +2051,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 50,
-      "completionEligibleJobs": 13,
+      "totalResearchJobs": 49,
+      "completionEligibleJobs": 12,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 13,
+      "completionEligibleCatalogObjects": 12,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2146,11 +2088,11 @@
       },
       {
         "reason": "species_space_minimum_not_established",
-        "speciesCount": 2
+        "speciesCount": 3
       },
       {
         "reason": "species_territoriality_not_established",
-        "speciesCount": 2
+        "speciesCount": 3
       },
       {
         "reason": "catalog_common_name_identity_mismatch",
@@ -2158,6 +2100,14 @@
       },
       {
         "reason": "catalog_object_type_mismatch",
+        "speciesCount": 1
+      },
+      {
+        "reason": "species_fish_predation_not_established",
+        "speciesCount": 1
+      },
+      {
+        "reason": "species_temperature_husbandry_not_established",
         "speciesCount": 1
       },
       {
@@ -2173,11 +2123,11 @@
     },
     {
       "code": "missing_ph",
-      "count": 42124
+      "count": 42265
     },
     {
       "code": "missing_hardness",
-      "count": 10384
+      "count": 10406
     },
     {
       "code": "candidate_water_type_missing",
@@ -2189,15 +2139,15 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 345,
+    "actionableGaps": 340,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 71
+        "count": 70
       },
       {
         "field": "tank_size",
-        "count": 70
+        "count": 69
       },
       {
         "field": "water",
@@ -2205,7 +2155,7 @@
       },
       {
         "field": "temperature",
-        "count": 64
+        "count": 63
       },
       {
         "field": "adult_size",
@@ -2213,11 +2163,11 @@
       },
       {
         "field": "predation",
-        "count": 11
+        "count": 10
       },
       {
         "field": "territoriality",
-        "count": 7
+        "count": 6
       },
       {
         "field": "social_behavior",

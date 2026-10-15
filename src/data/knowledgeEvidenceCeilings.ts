@@ -13,9 +13,11 @@ export type KnowledgeEvidenceCeilingCode =
   | 'species_social_not_established'
   | 'species_space_minimum_conflicted'
   | 'species_space_minimum_not_established'
-  | 'species_territoriality_not_established';
+  | 'species_temperature_husbandry_not_established'
+  | 'species_territoriality_not_established'
+  | 'species_fish_predation_not_established';
 
-export type KnowledgeEvidenceField = 'feeding' | 'environment' | 'space' | 'social' | 'care';
+export type KnowledgeEvidenceField = 'feeding' | 'environment' | 'space' | 'social' | 'care' | 'territoriality' | 'predation';
 
 export type KnowledgeEvidenceCeiling = {
   speciesId: string;
@@ -88,6 +90,54 @@ export const knowledgeEvidenceCeilings: Record<string, KnowledgeEvidenceCeiling[
       code: 'species_territoriality_not_established',
       sourceIds: ['doi-opsariichthys-bidens-enrichment-2024'],
       note: 'The exact-taxon enrichment study documents chasing, nipping, clustering and dominance-hierarchy effects, but does not directly establish territory defense or non-territoriality for Opsariichthys bidens. Keep territoriality terminal-unknown rather than translating general aggression or dominance into a territorial trait.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+  ],
+  sp_0051: [
+    {
+      speciesId: 'sp_0051',
+      field: 'environment',
+      code: 'species_temperature_husbandry_not_established',
+      sourceIds: [
+        'cnipa-acrossocheilus-fasciatus-growout-wave19',
+        'cnipa-acrossocheilus-fasciatus-breeding-wave19',
+        'jwas-acrossocheilus-fasciatus-temperature-wave19',
+      ],
+      note: 'Targeted exact-taxon review found several valid but life-stage/context-specific temperature observations rather than one defensible all-stage aquarium planning range: grow-out uses a seasonally varying 3–28°C water source and begins feeding around 13–15°C, breeding work uses >=22°C for spawning and 22–25°C for larvae, while the peer-reviewed fry study estimates 23.81–26.57°C as the growth/feeding optimum for fry. Do not collapse these different purposes into a single generic Compatibility temperature range.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+    {
+      speciesId: 'sp_0051',
+      field: 'space',
+      code: 'species_space_minimum_not_established',
+      sourceIds: [
+        'batch08-fishbase-acrossocheilus-fasciatus',
+        'cnipa-acrossocheilus-fasciatus-growout-wave19',
+      ],
+      note: 'Exact-taxon review found production grow-out pools (including 15 m × 4 m commercial culture units) but no defensible household-aquarium minimum length or volume. A production facility dimension is not a minimum tank requirement and must not be promoted merely to clear Compatibility coverage.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+    {
+      speciesId: 'sp_0051',
+      field: 'territoriality',
+      code: 'species_territoriality_not_established',
+      sourceIds: ['doi-acrossocheilus-fasciatus-behavior-2024'],
+      note: 'Peer-reviewed exact-taxon behavior work supports shoal cohesion, synchronization, sociability and individual behavioral variation, but does not directly establish stable territory defense or explicit non-territoriality. Keep territoriality fail-closed instead of translating general social or aggressive behavior into a territory rule.',
+      reviewedAt: '2026-10-15',
+      researchDisposition: 'terminal_unknown_hold',
+    },
+    {
+      speciesId: 'sp_0051',
+      field: 'predation',
+      code: 'species_fish_predation_not_established',
+      sourceIds: [
+        'dlou-acrossocheilus-fasciatus-diet-wave19',
+        'batch08-fishbase-acrossocheilus-fasciatus',
+      ],
+      note: 'Recent exact-species literature describes juveniles feeding on plankton and adults mainly on attached algae, aquatic-insect larvae and organic detritus, but does not directly test or state fish-prey safety. Absence of fish from the reported diet is not sufficient evidence for predation targets: []; keep fish-predation scope terminal-unknown until direct prey-scope evidence exists.',
       reviewedAt: '2026-10-15',
       researchDisposition: 'terminal_unknown_hold',
     },

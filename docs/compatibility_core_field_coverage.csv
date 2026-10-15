@@ -49,7 +49,7 @@ sp_0047,长臀鮠,Pseudobagrus fulvidraco,fish,none,no,3,2,3,reviewed_supported,
 sp_0048,大刺鳅,Mastacembelus armatus,fish,direct,yes,8,0,0,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported
 sp_0049,珍珠赤雷龙,Channa asiatica,fish,direct,no,6,2,0,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_supported,reviewed_unknown,reviewed_supported,reviewed_supported,reviewed_supported
 sp_0050,巴卡雷龙,Channa barca,fish,direct,yes,8,0,0,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported
-sp_0051,光唇鱼,Acrossocheilus fasciatus,fish,direct,no,3,5,0,reviewed_supported,reviewed_unknown,reviewed_unknown,reviewed_supported,reviewed_unknown,reviewed_supported,reviewed_unknown,reviewed_unknown
+sp_0051,光唇鱼,Acrossocheilus fasciatus,fish,direct,no,4,0,4,reviewed_supported,reviewed_unknown,reviewed_supported,reviewed_supported,reviewed_unknown,reviewed_supported,reviewed_unknown,reviewed_unknown
 sp_0052,月光鼠,Corydoras hastatus,fish,direct,yes,8,0,0,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_neutral_or_negative,reviewed_supported
 sp_0053,精灵鼠,Corydoras pygmaeus,fish,direct,yes,8,0,0,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_neutral_or_negative,reviewed_supported
 sp_0054,红宝石鱼,Hemichromis bimaculatus,fish,direct,yes,8,0,0,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported,reviewed_supported

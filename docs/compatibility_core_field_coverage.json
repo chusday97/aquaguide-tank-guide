@@ -34,9 +34,9 @@
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 114,
+      "reviewed_supported": 115,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 12,
+      "reviewed_unknown": 11,
       "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -85,11 +85,11 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 71
+      "count": 70
     },
     {
       "field": "tank_size",
-      "count": 70
+      "count": 69
     },
     {
       "field": "water",
@@ -97,7 +97,7 @@
     },
     {
       "field": "temperature",
-      "count": 64
+      "count": 63
     },
     {
       "field": "adult_size",
@@ -105,11 +105,11 @@
     },
     {
       "field": "predation",
-      "count": 11
+      "count": 10
     },
     {
       "field": "territoriality",
-      "count": 7
+      "count": 6
     },
     {
       "field": "social_behavior",
@@ -4386,9 +4386,9 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
-      "terminalGapCount": 0,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 0,
+      "terminalGapCount": 4,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -4401,23 +4401,26 @@
         },
         "temperature": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch08-fishbase-acrossocheilus-fasciatus",
-            "doi-acrossocheilus-fasciatus-behavior-2024"
+            "doi-acrossocheilus-fasciatus-behavior-2024",
+            "cnipa-acrossocheilus-fasciatus-growout-wave19",
+            "cnipa-acrossocheilus-fasciatus-breeding-wave19",
+            "jwas-acrossocheilus-fasciatus-temperature-wave19"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_temperature_husbandry_not_established"
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch08-fishbase-acrossocheilus-fasciatus",
-            "doi-acrossocheilus-fasciatus-behavior-2024"
+            "cnipa-acrossocheilus-fasciatus-growout-wave19",
+            "cnipa-acrossocheilus-fasciatus-breeding-wave19"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -4430,13 +4433,14 @@
         },
         "tank_size": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch08-fishbase-acrossocheilus-fasciatus",
-            "doi-acrossocheilus-fasciatus-behavior-2024"
+            "doi-acrossocheilus-fasciatus-behavior-2024",
+            "cnipa-acrossocheilus-fasciatus-growout-wave19"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_space_minimum_not_established"
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -4449,23 +4453,24 @@
         },
         "territoriality": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch08-fishbase-acrossocheilus-fasciatus",
             "doi-acrossocheilus-fasciatus-behavior-2024"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_territoriality_not_established"
         },
         "predation": {
           "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "disposition": "terminal_hold",
           "evidenceIds": [
             "batch08-fishbase-acrossocheilus-fasciatus",
-            "doi-acrossocheilus-fasciatus-behavior-2024"
+            "doi-acrossocheilus-fasciatus-behavior-2024",
+            "dlou-acrossocheilus-fasciatus-diet-wave19"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "evidence_ceiling",
+          "reasonCode": "species_fish_predation_not_established"
         }
       }
     },
