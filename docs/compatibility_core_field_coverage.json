@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 69,
-  "coreFieldCompleteSpecies": 84,
+  "genericOnboardingReadySpecies": 70,
+  "coreFieldCompleteSpecies": 85,
   "oneFieldGapSpecies": 6,
-  "runtimeReviewedProfileSpecies": 138,
-  "domainOrIdentityHeldSpecies": 289,
+  "runtimeReviewedProfileSpecies": 139,
+  "domainOrIdentityHeldSpecies": 288,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 122,
+      "reviewed_supported": 123,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 123,
+      "reviewed_supported": 124,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 6,
       "needs_research": 57,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 117,
+      "reviewed_supported": 118,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 10,
       "needs_research": 59,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 128,
+      "reviewed_supported": 129,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 1,
       "needs_research": 57,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 114,
+      "reviewed_supported": 115,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 14,
       "needs_research": 58,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 109,
+      "reviewed_supported": 110,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 74,
+      "reviewed_supported": 75,
       "reviewed_neutral_or_negative": 30,
       "reviewed_unknown": 82,
       "needs_research": 0,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 65,
+      "reviewed_supported": 66,
       "reviewed_neutral_or_negative": 26,
       "reviewed_unknown": 95,
       "needs_research": 0,
-      "missing_identity_or_domain": 289,
+      "missing_identity_or_domain": 288,
       "not_applicable": 11
     }
   },
@@ -33566,83 +33566,103 @@
       "name": "血红龙 (A级)",
       "scientificName": "Scleropages formosus var. Blood Red A",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "batch19-fishbase-scleropages-formosus",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "myfish-scleropages-formosus-territoriality"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch25-fishbase-scleropages-formosus-blood-red-a"
+            "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "kkp-scleropages-blood-red-first-grade-wave22",
+            "seriouslyfish-scleropages-formosus"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

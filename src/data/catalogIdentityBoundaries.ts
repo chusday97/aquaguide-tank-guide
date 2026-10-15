@@ -5,7 +5,7 @@ import { nextWaveUnified12IdentityOutcomes } from './catalogReviewBatches/next-w
 import { nextWaveUnified13IdentityOutcomes } from './catalogReviewBatches/next-wave-unified-13';
 import { nextWaveUnified14IdentityOutcomes } from './catalogReviewBatches/next-wave-unified-14';
 import { nextWaveUnified15IdentityOutcomes } from './catalogReviewBatches/next-wave-unified-15';
-import { resolvedCatalogIdentityCorrectionSpeciesIds } from './catalogReviewBatches/identity-corrections-wave21';
+import { resolvedCatalogIdentityCorrectionSpeciesIds } from './catalogIdentityCorrections';
 
 export type CatalogIdentityBoundaryCode =
   | 'trade_name_taxon_ambiguous'

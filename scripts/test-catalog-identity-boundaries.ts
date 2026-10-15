@@ -66,6 +66,23 @@ assert.ok(marbleCorrection?.citationIds.includes('ifrj-pterophyllum-scalare-marb
 assert.equal(getCatalogIdentityBoundary('sp_0176'), undefined, 'a later explicit reviewed object-level identity correction must supersede the historical category mismatch at runtime');
 assert.ok(getReviewedCompatibilityProfile('sp_0176'), 'resolved Marble angelfish must have an explicit same-species Compatibility bridge');
 
+
+const historicalBloodRedHold = catalogIdentityBoundaries.sp_0407;
+assert.equal(historicalBloodRedHold?.code, 'catalog_variant_identity_unresolved');
+assert.equal(historicalBloodRedHold?.resolvedGranularity, 'variant_identity_unresolved');
+const bloodRedCorrection = getCatalogFieldReviews('sp_0407').filter(review => review.field === 'identity').at(-1);
+assert.equal(bloodRedCorrection?.resolution, 'supported');
+assert.deepEqual(bloodRedCorrection?.proposedValue, {
+  scientificName: 'Scleropages formosus var. Blood Red A',
+  baseSpeciesKey: 'Scleropages formosus',
+  variantKey: 'Blood Red A',
+});
+assert.ok(bloodRedCorrection?.citationIds.includes('aquaculture-research-scleropages-blood-red-identity-wave22'));
+assert.ok(bloodRedCorrection?.citationIds.includes('kkp-scleropages-blood-red-first-grade-wave22'));
+assert.equal(getCatalogIdentityBoundary('sp_0407'), undefined, 'reviewed Blood Red + first-grade evidence must supersede the historical variant hold at runtime');
+assert.ok(getReviewedCompatibilityProfile('sp_0407'), 'resolved Blood Red A arowana must have an explicit same-species Compatibility bridge');
+assert.equal(getCatalogIdentityBoundary('sp_0408')?.code, 'catalog_variant_identity_unresolved', 'Gold Head must remain fail-closed without equivalent object-level identity evidence');
+
 const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
 assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');
 assert.equal(parentTaxonHold?.resolvedGranularity, 'parent_taxon_unresolved');

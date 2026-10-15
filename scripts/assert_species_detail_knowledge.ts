@@ -665,6 +665,18 @@ assert.equal(marbleAngelfishKnowledge.spaceAndGrowth?.adultLengthCm.max, 15);
 assert.equal(marbleAngelfishKnowledge.spaceAndGrowth?.minTankLengthCm, 100);
 assert.equal(marbleAngelfishKnowledge.socialBehavior?.mode, 'group');
 
+
+const bloodRedArowana = fishData.find(fish => fish.id === 'sp_0407');
+assert.ok(bloodRedArowana, 'Blood Red A Asian arowana must exist in catalog');
+const bloodRedArowanaKnowledge = getReviewedSpeciesKnowledgeForFish(bloodRedArowana);
+assert.ok(bloodRedArowanaKnowledge, 'reviewed Blood Red A identity correction must resolve Species Knowledge through the explicit base-species bridge');
+assert.deepEqual(bloodRedArowanaKnowledge.environment?.temperatureRangeC, { min: 22, max: 28 });
+assert.deepEqual(bloodRedArowanaKnowledge.environment?.phRange, { min: 5, max: 8 });
+assert.equal(bloodRedArowanaKnowledge.spaceAndGrowth?.adultLengthCm.max, 90);
+assert.equal(bloodRedArowanaKnowledge.spaceAndGrowth?.minTankLengthCm, 200);
+assert.equal(bloodRedArowanaKnowledge.socialBehavior?.territoriality, 'unknown', 'Species Knowledge must preserve the base authority boundary instead of importing Compatibility-only territoriality');
+assert.equal(bloodRedArowanaKnowledge.socialBehavior?.predationRisk, 'high');
+
 const reviewedAuthorityGaps = fishData
   .filter(fish => getReviewedCompatibilityProfileForFish(fish) && !getReviewedSpeciesKnowledgeForFish(fish))
   .map(fish => ({ id: fish.id, name: fish.name, scientificName: fish.scientificName }));

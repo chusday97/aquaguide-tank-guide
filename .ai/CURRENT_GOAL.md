@@ -1,3 +1,32 @@
+## CURRENT OVERRIDE — 2026-10-15 Blood Red Asian arowana identity correction wave22 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave22 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
+- Wave22 continues the systematic identity-resolution lane and resolves exactly one additional catalog object: `sp_0407 血红龙(A级) / Scleropages formosus var. Blood Red A`.
+- Exact identity evidence is stronger than the old catalog trade-name hold:
+  - Aquaculture Research (2003), **“A strain-specific and a sex-associated STS marker for Asian arowana (Scleropages formosus, Osteoglossidae)”**, explicitly identifies the **blood-red strain** as Asian arowana `Scleropages formosus`.
+  - Kementerian Kelautan dan Perikanan fisheries journal (2022), **“Peningkatan Total Karotenoid pada Ikan Arwana Super Red (Scleropages formosus)…”**, explicitly states **Blood Red and Chili Red are first-grade red arowana**, covering the catalog object's Blood Red + A/first-grade wording.
+- The correction is deliberately object-scoped. `sp_0408 金头过背金龙 / Gold Head`, `sp_0242 Albino`, and `sp_0284 Silver Platinum` remain fail-closed because equivalent object-level reviewed evidence was not found. Trade/farm pages are not promoted to the same identity threshold.
+- Wave22 adds a reusable `catalogIdentityCorrections.ts` aggregation layer so Wave21/Wave22 corrections merge through one runtime set/map rather than requiring each consumer to import individual waves.
+- Cross-layer correction map now contains:
+  - `sp_0176 -> sp_0446` (Marble angelfish -> reviewed `Pterophyllum scalare`)
+  - `sp_0407 -> sp_0103` (Blood Red A -> reviewed `Scleropages formosus`)
+- Important systemic repair: reviewed identity-correction Compatibility bridges are now created **after** all base Profile authority patches. This prevents a corrected variant from copying a stale pre-patch base Profile. The bug was exposed because `sp_0407` initially had 8 authoritative fields but missed the later-added `territoriality` required-fact contract and therefore was not generic-ready.
+- After the ordering repair, `sp_0407` inherits the final reviewed base Compatibility authority: freshwater; 22–28°C; pH 5–8; max 90 cm; minimum 200 cm tank length; variable social mode; territoriality; small-fish predation risk. It is now **8/8 authoritative + generic-ready**.
+- Species Knowledge uses the same explicit identity correction bridge, but preserves its own evidence boundary: `Scleropages formosus` Knowledge V2 still records territoriality as `unknown` while predation risk is high. Wave22 does **not** copy Compatibility-only territoriality into Species Knowledge.
+- Coverage after Wave22: **85 authoritative 8/8 fish / 70 strict generic-ready**; identity/domain held objects **289 -> 288**. Ordinary actionable field gaps remain **336**.
+- Global decision impact:
+  - decision coverage **44.02% -> 44.31%**
+  - `unresolved_identity` **21,094 -> 20,919 (-175 pairs)**
+  - total `insufficient_data` **26,812 -> 26,673 (-139 pairs)**
+  - `public_evidence_insufficient` **5,718 -> 5,754 (+36)** because identity resolution correctly exposes the next evidence boundary for those pairs
+  - `missing_species_fact` remains **0**
+  - status totals: **355 compatible / 1,812 caution / 19,055 not_recommended / 26,673 insufficient_data**
+- Strict fully-informed invariant expands to **70 ready fish = 2,415 unordered pairs = 121 compatible / 946 caution / 1,348 not_recommended / 0 insufficient_data**.
+- Repository authority now contains **103 reviewed Profiles** = released target 101 + 2 source-controlled pending identity corrections (`sp_0176`, `sp_0407`). Historical release generations remain exact **63 -> 85 -> 95 -> 99 -> 100 -> 101**; neither correction is silently treated as Production.
+- Historical Wave07 originally classified `sp_0407` as a terminal variant hold. The frozen Wave07 authority remains unchanged for audit, while its regression contract now generically allows later explicitly reviewed source-controlled identity corrections to supersede a historical hold.
+- PASS: Wave22 object-level identity regressions, catalog identity boundaries, identity bridge reviews, Species Knowledge parity, core-field coverage, fully-informed matrix, V4 readability, user conclusion, rollout window, runtime authority, unified next-wave contract, historical migration/authority contracts, full `test:backend-release-gate`, API/project TypeScript, Business API bundle, lint, and `git diff --check`.
+- NEXT: keep prioritizing fish identity holds where a ready base species exists and direct object-level lineage evidence can be found. A high-probability next candidate is reviewed albino `Xiphophorus hellerii` lineage evidence; do not auto-resolve compound swordtail trade names until the exact catalog object wording is defensibly bridged.
+
 ## CURRENT OVERRIDE — 2026-10-15 Reviewed identity correction pipeline wave21 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave21 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.

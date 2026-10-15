@@ -56,4 +56,22 @@ assert.deepEqual(marbleApproved.get('tank_size')?.proposedValue, { liters: null,
 assert.deepEqual(marbleApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
 assert.deepEqual(marbleApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
 
-console.log('Identity-bound catalog bridges passed: partial unresolved bridges stay bounded and reviewed Marble identity correction inherits only explicit same-species authority');
+
+const bloodRedIdentity = getCatalogFieldReviews('sp_0407').filter(review => review.field === 'identity').at(-1);
+assert.equal(bloodRedIdentity?.resolution, 'supported');
+assert.deepEqual(bloodRedIdentity?.proposedValue, {
+  scientificName: 'Scleropages formosus var. Blood Red A',
+  baseSpeciesKey: 'Scleropages formosus',
+  variantKey: 'Blood Red A',
+});
+const bloodRedApproved = new Map(getApprovedCatalogFieldReviews('sp_0407').map(review => [review.field, review]));
+assert.equal(bloodRedApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(bloodRedApproved.get('temperature')?.proposedValue, { min: 22, max: 28 });
+assert.deepEqual(bloodRedApproved.get('ph')?.proposedValue, { min: 5, max: 8 });
+assert.deepEqual(bloodRedApproved.get('adult_size')?.proposedValue, { min: null, max: 90 });
+assert.deepEqual(bloodRedApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 200 });
+assert.deepEqual(bloodRedApproved.get('social_behavior')?.proposedValue, { mode: 'variable', minimumGroupSize: null });
+assert.deepEqual(bloodRedApproved.get('territoriality')?.proposedValue, { traits: ['territorial'] });
+assert.deepEqual(bloodRedApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble and Blood Red A corrections inherit only explicit same-species authority');

@@ -1,7 +1,7 @@
 import type { Fish } from '../../types';
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
-import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogReviewBatches/identity-corrections-wave21';
+import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
 import { phase2Batch02Knowledge } from './phase2Batch02Authority';
 import { phase2Batch03Knowledge } from './phase2Batch03Authority';
 import { phase2Batch04Knowledge } from './phase2Batch04Authority';
