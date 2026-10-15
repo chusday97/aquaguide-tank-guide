@@ -164,8 +164,23 @@ assert.ok(pandaAngelfishCorrection?.citationIds.includes('aquatic-arts-pterophyl
 assert.ok(pandaAngelfishCorrection?.citationIds.includes('aquapets-pterophyllum-scalare-panda-wave27'));
 assert.equal(getCatalogIdentityBoundary('sp_0178'), undefined, 'reviewed Panda angelfish evidence must supersede the historical Panda lineage hold at runtime');
 assert.ok(getReviewedCompatibilityProfile('sp_0178'), 'resolved Panda angelfish must have an explicit same-species Compatibility bridge');
-assert.equal(getCatalogIdentityBoundary('sp_0175')?.code, 'catalog_variant_identity_unresolved', 'Red angelfish must remain fail-closed without its own exact lineage evidence');
-assert.equal(getCatalogIdentityBoundary('sp_0388')?.code, 'catalog_variant_identity_unresolved', 'Super Red angelfish must remain fail-closed without its own exact lineage evidence');
+
+
+const historicalSuperRedAngelfishHold = catalogIdentityBoundaries.sp_0388;
+assert.equal(historicalSuperRedAngelfishHold?.code, 'catalog_variant_identity_unresolved');
+assert.equal(historicalSuperRedAngelfishHold?.resolvedGranularity, 'variant_identity_unresolved');
+const superRedAngelfishCorrection = getCatalogFieldReviews('sp_0388').filter(review => review.field === 'identity').at(-1);
+assert.equal(superRedAngelfishCorrection?.resolution, 'supported');
+assert.deepEqual(superRedAngelfishCorrection?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Super Red',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Super Red / Red Devil',
+});
+assert.ok(superRedAngelfishCorrection?.citationIds.includes('aquatic-arts-pterophyllum-scalare-red-devil-wave28'));
+assert.ok(superRedAngelfishCorrection?.citationIds.includes('garage-aquatics-pterophyllum-scalare-super-red-wave28'));
+assert.equal(getCatalogIdentityBoundary('sp_0388'), undefined, 'reviewed Super Red / Red Devil evidence must supersede the historical Super Red lineage hold at runtime');
+assert.ok(getReviewedCompatibilityProfile('sp_0388'), 'resolved Super Red angelfish must have an explicit same-species Compatibility bridge');
+assert.equal(getCatalogIdentityBoundary('sp_0175')?.code, 'catalog_variant_identity_unresolved', 'generic Red angelfish must remain fail-closed because Red is broader than the reviewed Super Red / Red Devil trade line');
 
 const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
 assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');

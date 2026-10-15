@@ -164,4 +164,22 @@ assert.deepEqual(pandaAngelfishApproved.get('social_behavior')?.proposedValue, {
 assert.deepEqual(pandaAngelfishApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
 assert.deepEqual(pandaAngelfishApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
 
-console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, Fire Red Agassizii, and Blue Diamond and Panda angelfish corrections inherit only explicit same-species authority');
+
+const superRedAngelfishIdentity = getCatalogFieldReviews('sp_0388').filter(review => review.field === 'identity').at(-1);
+assert.equal(superRedAngelfishIdentity?.resolution, 'supported');
+assert.deepEqual(superRedAngelfishIdentity?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Super Red',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Super Red / Red Devil',
+});
+const superRedAngelfishApproved = new Map(getApprovedCatalogFieldReviews('sp_0388').map(review => [review.field, review]));
+assert.equal(superRedAngelfishApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(superRedAngelfishApproved.get('temperature')?.proposedValue, { min: 24, max: 30 });
+assert.deepEqual(superRedAngelfishApproved.get('ph')?.proposedValue, { min: 6, max: 8 });
+assert.deepEqual(superRedAngelfishApproved.get('adult_size')?.proposedValue, { min: null, max: 15 });
+assert.deepEqual(superRedAngelfishApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 100 });
+assert.deepEqual(superRedAngelfishApproved.get('social_behavior')?.proposedValue, { mode: 'group', minimumGroupSize: 5 });
+assert.deepEqual(superRedAngelfishApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
+assert.deepEqual(superRedAngelfishApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, Fire Red Agassizii, and Blue Diamond, Panda, and Super Red angelfish corrections inherit only explicit same-species authority');

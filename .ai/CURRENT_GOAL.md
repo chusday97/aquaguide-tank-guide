@@ -1,3 +1,33 @@
+## CURRENT OVERRIDE — 2026-10-15 Super Red / Red Devil angelfish identity + catalog correction wave28 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave28 is source-controlled candidate work only: **no push, deploy, Production alias change, DB migration, or Production authority write**.
+- Wave28 resolves exactly one additional identity-held fish: `sp_0388`, formerly labeled `血钻神仙 (改良) / Pterophyllum scalare var. Super Red`.
+- Two independent exact-trade-line sources support this object as a `Pterophyllum scalare` ornamental line:
+  - Aquatic Arts: `Red Devil Angelfish (Pterophyllum scalare 'Red Devil')`.
+  - Garage Aquatics: `Red Devil Super Red Angelfish (Pterophyllum scalare)`.
+- Because red angelfish trade names are not standardized, Wave28 is deliberately scoped to the existing `Super Red` object. The broader `sp_0175 Pterophyllum scalare var. Red` remains fail-closed.
+- Catalog correction:
+  - display name -> **`超级红神仙（Red Devil）`**
+  - scientificName stays `Pterophyllum scalare var. Super Red`
+  - copied `建议单养 / 斗鱼...追咬` text removed
+  - pH display aligned to reviewed base authority: 6–8
+  - tank copy aligned to at least 100 cm horizontal length plus adequate height
+  - user-facing housing becomes `谨慎混养`, preserving adult/breeding territoriality and small-fish predation risk
+- Identity-correction map now contains eight reviewed bridges; `sp_0388 -> sp_0446` is the newest.
+- `sp_0388` is now **8/8 authoritative + generic-ready**, while `sp_0175 Red` remains 0/8 identity-held.
+- Coverage after Wave28: **91 authoritative 8/8 fish / 76 strict generic-ready / 282 identity-domain held**. Ordinary research backlog remains exactly **336 actionable field gaps**.
+- Global decision impact versus Wave27:
+  - decision coverage **45.10% -> 45.27%**
+  - `unresolved_identity` **20,239 -> 20,100 (-139 pairs)**
+  - total `insufficient_data` **26,293 -> 26,214 (-79 pairs)**
+  - `public_evidence_insufficient` **6,054 -> 6,114 (+60)** because identity resolution exposes the next real evidence boundary
+  - `missing_species_fact` remains **0**
+  - status totals: **397 compatible / 2,229 caution / 19,055 not_recommended / 26,214 insufficient_data**
+- Strict fully-informed invariant expands to **76 ready fish = 2,850 unordered pairs = 144 compatible / 1,244 caution / 1,462 not_recommended / 0 insufficient_data**.
+- Repository authority now contains **109 reviewed Profiles** = released target 101 + 8 source-controlled pending identity corrections. Historical release generations remain exact **63 -> 85 -> 95 -> 99 -> 100 -> 101**.
+- PASS: catalog identity boundaries, identity bridge reviews, Species Knowledge, rollout/runtime authority, historical migrations, core-field coverage, strict fully-informed matrix, readability, user conclusion, release badcases, full `test:backend-release-gate`, API/project TypeScript, Business API bundle, lint, and `git diff --check`.
+- NEXT: continue only with exact-lineage objects. `sp_0175 Red`, Gold Dario, Gold/Super Gold L134, Albino Asian arowana, and compound Balloon/Longfin/High-Fin objects remain held until stronger direct evidence exists.
+
 ## CURRENT OVERRIDE — 2026-10-15 Panda angelfish identity + catalog correction wave27 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave27 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.

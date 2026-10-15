@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 75,
-  "coreFieldCompleteSpecies": 90,
+  "genericOnboardingReadySpecies": 76,
+  "coreFieldCompleteSpecies": 91,
   "oneFieldGapSpecies": 6,
-  "runtimeReviewedProfileSpecies": 144,
-  "domainOrIdentityHeldSpecies": 283,
+  "runtimeReviewedProfileSpecies": 145,
+  "domainOrIdentityHeldSpecies": 282,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 128,
+      "reviewed_supported": 129,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 129,
+      "reviewed_supported": 130,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 6,
       "needs_research": 57,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 123,
+      "reviewed_supported": 124,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 10,
       "needs_research": 59,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 134,
+      "reviewed_supported": 135,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 1,
       "needs_research": 57,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 120,
+      "reviewed_supported": 121,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 14,
       "needs_research": 58,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 115,
+      "reviewed_supported": 116,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 80,
+      "reviewed_supported": 81,
       "reviewed_neutral_or_negative": 30,
       "reviewed_unknown": 82,
       "needs_research": 0,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 68,
+      "reviewed_supported": 69,
       "reviewed_neutral_or_negative": 29,
       "reviewed_unknown": 95,
       "needs_research": 0,
-      "missing_identity_or_domain": 283,
+      "missing_identity_or_domain": 282,
       "not_applicable": 11
     }
   },
@@ -32098,86 +32098,110 @@
     },
     {
       "speciesId": "sp_0388",
-      "name": "血钻神仙 (改良)",
+      "name": "超级红神仙（Red Devil）",
       "scientificName": "Pterophyllum scalare var. Super Red",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch16-fishbase-pterophyllum-scalare-super-red"
+            "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "garage-aquatics-pterophyllum-scalare-super-red-wave28",
+            "wave28-fishbase-pterophyllum-scalare-husbandry",
+            "wave28-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

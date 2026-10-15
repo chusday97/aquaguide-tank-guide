@@ -457,8 +457,16 @@ assert.equal(pandaAngelfishKnowledge.spaceAndGrowth?.adultLengthCm.max, 15);
 assert.equal(pandaAngelfishKnowledge.spaceAndGrowth?.minTankLengthCm, 100);
 assert.equal(pandaAngelfishKnowledge.socialBehavior?.mode, 'group');
 assert.equal(pandaAngelfishKnowledge.socialBehavior?.territoriality, 'medium');
-assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0175', scientificName: 'Pterophyllum scalare var. Red' }), undefined, 'unreviewed Red angelfish must not inherit standard-species authority automatically');
-assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0388', scientificName: 'Pterophyllum scalare var. Super Red' }), undefined, 'unreviewed Super Red angelfish must not inherit standard-species authority automatically');
+
+const superRedAngelfishKnowledge = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0388', scientificName: 'Pterophyllum scalare var. Super Red' });
+assert.ok(superRedAngelfishKnowledge, 'explicit reviewed Super Red identity correction must resolve Pterophyllum scalare Species Knowledge');
+assert.deepEqual(superRedAngelfishKnowledge.environment?.temperatureRangeC, { min: 24, max: 30 });
+assert.deepEqual(superRedAngelfishKnowledge.environment?.phRange, { min: 6, max: 8 });
+assert.equal(superRedAngelfishKnowledge.spaceAndGrowth?.adultLengthCm.max, 15);
+assert.equal(superRedAngelfishKnowledge.spaceAndGrowth?.minTankLengthCm, 100);
+assert.equal(superRedAngelfishKnowledge.socialBehavior?.mode, 'group');
+assert.equal(superRedAngelfishKnowledge.socialBehavior?.territoriality, 'medium');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0175', scientificName: 'Pterophyllum scalare var. Red' }), undefined, 'broader unreviewed Red angelfish must not inherit Super Red/base authority automatically');
 const agassiziiSources = resolveKnowledgeSources(agassiziiKnowledge.knowledge.environment?.evidence.sourceIds || []);
 assert.equal(agassiziiSources.length, 2);
 assert.ok(agassiziiSources.some(source => source.publisher === 'Seriously Fish'));
