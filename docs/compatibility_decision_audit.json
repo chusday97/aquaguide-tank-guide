@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 58,
-  "genericReadyUniquePairs": 1653,
+  "genericOnboardingReadySpecies": 59,
+  "genericReadyUniquePairs": 1711,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 505,
@@ -416,25 +416,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 191
-      },
-      {
-        "researchKey": "Pterophyllum altum",
-        "baseScientificName": "Pterophyllum altum",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 173
       },
       {
         "researchKey": "Pomacanthus annularis",
@@ -1624,25 +1605,6 @@
         "existingCoveragePriorityScore": 191
       },
       {
-        "researchKey": "Pterophyllum altum",
-        "baseScientificName": "Pterophyllum altum",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 173
-      },
-      {
         "researchKey": "Pomacanthus annularis",
         "baseScientificName": "Pomacanthus annularis",
         "completionEligible": true,
@@ -2598,10 +2560,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 60,
-      "completionEligibleJobs": 23,
+      "totalResearchJobs": 59,
+      "completionEligibleJobs": 22,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 25,
+      "completionEligibleCatalogObjects": 24,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2670,7 +2632,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 385,
+    "actionableGaps": 383,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2678,7 +2640,7 @@
       },
       {
         "field": "tank_size",
-        "count": 76
+        "count": 75
       },
       {
         "field": "temperature",
@@ -2693,12 +2655,12 @@
         "count": 60
       },
       {
-        "field": "territoriality",
+        "field": "predation",
         "count": 18
       },
       {
-        "field": "predation",
-        "count": 18
+        "field": "territoriality",
+        "count": 17
       },
       {
         "field": "social_behavior",

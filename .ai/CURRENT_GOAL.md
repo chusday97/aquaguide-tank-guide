@@ -1,15 +1,15 @@
-## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave8 via RDC (NOT RELEASED)
+## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave9 via RDC (NOT RELEASED)
 
 - Active branch: `codex/compatibility-research-runtime-20261014`. The user explicitly authorized RDC for this continuation. This checkpoint remains source-controlled/local only: **no Vercel deployment, Production alias change, DB migration, Production authority write, or Codex agent**.
-- Wave8 targeted `sp_0026 Hypostomus plecostomus`, whose exact Fishipedia page closes all four remaining gaps: minimum 600 L, aquarium social mode `variable` with no forced group minimum, male-conspecific territoriality, and an explicit negative fish-predation scope.
-- Social evidence is intentionally conservative: Fishipedia describes natural large groups but also gives aquarium population minimum 1, so the runtime does not force an aquarium school size. Territoriality is scoped to `male_conspecific_territoriality`; it is not widened to generic aggression against unrelated tankmates.
-- Predation authority is also scope-limited: Fishipedia explicitly says the species poses no cohabitation problem with small fish, so fish prey targets are empty; the same source warns that large individuals may capture small shrimp while suction-feeding, and that invertebrate risk is preserved in the evidence note rather than being erased.
-- The profile patch synchronizes all eight required facts and preserves the scoped conspecific territorial trait. `Hypostomus plecostomus` is now 8/8 and generic-ready.
-- Current coverage after wave8: **73 authoritative 8/8 fish / 58 strict generic-ready**, **385 actionable fields across 105 catalog objects**, deduplicated to **60 base-taxon jobs**. Field gaps: `ph 78`, `tank_size 76`, `temperature 71`, `water 64`, `adult_size 60`, `territoriality 18`, `predation 18`, `social_behavior 0`.
-- Fast Lane remains **five predation-only 7/8 objects**: `sp_0011 Xiphophorus maculatus`, `sp_0013 Otocinclus vittatus`, `sp_0042 Pseudorasbora parva`, `sp_0151 Gymnocorymbus ternetzi color morph`, and `sp_0433 Hemigrammus rhodostomus`.
-- Decision-impact queue is now **23 completion-eligible jobs / 25 objects** and **37 terminal-blocked jobs / 80 objects**. Fully informed invariant expands to **58 ready fish = 1,653 unordered pairs = 89 compatible / 796 caution / 768 not_recommended / 0 insufficient_data**.
+- Wave9 targeted `sp_0019 Pterophyllum altum`, which had only `tank_size` and `territoriality` unresolved. Fishipedia’s exact page explicitly recommends a minimum 600 L community aquarium and marks territoriality as `Oui`.
+- The 600 L community minimum is promoted; the page’s smaller 120 L value is explicitly breeding-pair-only and is not used as the general compatibility minimum. No tank-length minimum is inferred.
+- Territoriality is promoted as `territorial + breeding_territoriality`: the exact page says the species rarely leaves its territory and intensifies defense during reproduction. This is broad territorial pressure supported by the source, unlike the conspecific-only scope used for Hypostomus.
+- The profile patch synchronizes all eight required facts and the new behavior traits. `Pterophyllum altum` is now 8/8 and generic-ready.
+- Current coverage after wave9: **74 authoritative 8/8 fish / 59 strict generic-ready**, **383 actionable fields across 104 catalog objects**, deduplicated to **59 base-taxon jobs**. Field gaps: `ph 78`, `tank_size 75`, `temperature 71`, `water 64`, `adult_size 60`, `predation 18`, `territoriality 17`, `social_behavior 0`.
+- Fast Lane remains **five predation-only 7/8 objects**. Decision-impact queue is now **22 completion-eligible jobs / 24 objects** and **37 terminal-blocked jobs / 80 objects**.
+- Fully informed invariant expands to **59 ready fish = 1,711 unordered pairs = 89 compatible / 796 caution / 826 not_recommended / 0 insufficient_data**. The additional not-recommended outcomes are consistent with the newly authoritative broad territorial pressure.
 - Core-field coverage, decision-impact queue, fully-informed matrix, user conclusion, release badcases, knowledge coverage, research dry-run, lint, Business API build and `git diff --check` all pass under RDC.
-- NEXT: commit/push wave8, then continue the remaining completion-eligible exact taxa by decision impact. Social-behavior actionable coverage is now complete; remaining work is concentrated in numeric environment/space plus territoriality/predation.
+- NEXT: commit/push wave9, then continue exact-taxon completion candidates. Do not spend effort on variant bridge jobs unless direct bridge evidence exists.
 
 ## CURRENT CHECKPOINT — 2026-10-14 Compatibility research batch dry-run infrastructure (NOT RELEASED)
 

@@ -89,6 +89,13 @@ import {
   compatibilityNumericWave8Sources,
   compatibilityNumericWave8VerifiedSourceIds,
 } from './numeric-wave8-20261015';
+import {
+  compatibilityNumericWave9AuthorityPatch,
+  compatibilityNumericWave9FieldReviews,
+  compatibilityNumericWave9ProfilePatches,
+  compatibilityNumericWave9Sources,
+  compatibilityNumericWave9VerifiedSourceIds,
+} from './numeric-wave9-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -104,6 +111,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave6Sources,
   ...compatibilityNumericWave7Sources,
   ...compatibilityNumericWave8Sources,
+  ...compatibilityNumericWave9Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -120,6 +128,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave6FieldReviews,
   ...compatibilityNumericWave7FieldReviews,
   ...compatibilityNumericWave8FieldReviews,
+  ...compatibilityNumericWave9FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -136,6 +145,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave6VerifiedSourceIds,
   ...compatibilityNumericWave7VerifiedSourceIds,
   ...compatibilityNumericWave8VerifiedSourceIds,
+  ...compatibilityNumericWave9VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -152,6 +162,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave6ProfilePatches,
   ...compatibilityNumericWave7ProfilePatches,
   ...compatibilityNumericWave8ProfilePatches,
+  ...compatibilityNumericWave9ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -168,4 +179,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave6AuthorityPatch,
   compatibilityNumericWave7AuthorityPatch,
   compatibilityNumericWave8AuthorityPatch,
+  compatibilityNumericWave9AuthorityPatch,
 ] as const;

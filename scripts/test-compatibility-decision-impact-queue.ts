@@ -22,10 +22,10 @@ assert.equal(summary.totalResearchJobs, plan.length);
 assert.equal(summary.completionEligibleJobs + summary.terminalBlockedJobs, summary.totalResearchJobs);
 assert.equal(summary.completionEligibleCatalogObjects + summary.terminalBlockedCatalogObjects, plan.reduce((sum, job) => sum + job.catalogObjectCount, 0));
 
-assert.equal(summary.totalResearchJobs, 60, 'current source-controlled checkpoint must retain 60 actionable base-taxon jobs');
-assert.equal(summary.completionEligibleJobs, 23, 'only 23 jobs can currently finish without a terminal hold');
+assert.equal(summary.totalResearchJobs, 59, 'current source-controlled checkpoint must retain 59 actionable base-taxon jobs');
+assert.equal(summary.completionEligibleJobs, 22, 'only 22 jobs can currently finish without a terminal hold');
 assert.equal(summary.terminalBlockedJobs, 37, '37 jobs must remain outside the active completion queue');
-assert.equal(summary.completionEligibleCatalogObjects, 25);
+assert.equal(summary.completionEligibleCatalogObjects, 24);
 assert.equal(summary.terminalBlockedCatalogObjects, 80);
 
 assert.equal(allQueue.length, summary.totalResearchJobs);

@@ -11,8 +11,8 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 58,
-  "coreFieldCompleteSpecies": 73,
+  "genericOnboardingReadySpecies": 59,
+  "coreFieldCompleteSpecies": 74,
   "oneFieldGapSpecies": 6,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
@@ -50,10 +50,10 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 108,
+      "reviewed_supported": 109,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 18,
-      "needs_research": 59,
+      "needs_research": 58,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
@@ -66,10 +66,10 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 70,
+      "reviewed_supported": 71,
       "reviewed_neutral_or_negative": 24,
       "reviewed_unknown": 89,
-      "needs_research": 2,
+      "needs_research": 1,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
@@ -89,7 +89,7 @@
     },
     {
       "field": "tank_size",
-      "count": 76
+      "count": 75
     },
     {
       "field": "temperature",
@@ -104,12 +104,12 @@
       "count": 60
     },
     {
-      "field": "territoriality",
+      "field": "predation",
       "count": 18
     },
     {
-      "field": "predation",
-      "count": 18
+      "field": "territoriality",
+      "count": 17
     },
     {
       "field": "social_behavior",
@@ -1645,9 +1645,9 @@
       "scientificName": "Pterophyllum altum",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1690,11 +1690,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-pterophyllum-altum-wave9"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -1706,11 +1708,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_supported",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-pterophyllum-altum-wave9"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_supported",
