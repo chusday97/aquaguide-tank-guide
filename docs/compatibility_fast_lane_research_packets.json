@@ -1,7 +1,7 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 3,
+  "totalPackets": 6,
   "packets": [
     {
       "speciesId": "sp_0011",
@@ -20,6 +20,96 @@
           "publisher": "FishBase",
           "url": "https://www.fishbase.org/summary/Xiphophorus_maculatus.html",
           "reviewStatus": "draft"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0052",
+      "name": "月光鼠",
+      "scientificName": "Corydoras hastatus",
+      "missingField": "predation",
+      "currentStatus": "needs_research",
+      "currentReasonCode": "missing_reviewed_field_authority",
+      "existingEvidenceIds": [
+        "batch05-fishbase-gastrodermus-hastatus",
+        "fishipedia-corydoras-hastatus-wave15"
+      ],
+      "existingSources": [
+        {
+          "id": "batch05-fishbase-gastrodermus-hastatus",
+          "title": "Gastrodermus hastatus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Corydoras-hastatus",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "fishipedia-corydoras-hastatus-wave15",
+          "title": "Gastrodermus (Corydoras) hastatus • Fish sheet",
+          "publisher": "Fishipedia",
+          "url": "https://www.fishi-pedia.com/fishes/corydoras-hastatus",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0062",
+      "name": "红眼灯",
+      "scientificName": "Moenkhausia sanctaefilomenae",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch09-fishbase-moenkhausia-sanctaefilomenae",
+        "seriouslyfish-moenkhausia-sanctaefilomenae"
+      ],
+      "existingSources": [
+        {
+          "id": "batch09-fishbase-moenkhausia-sanctaefilomenae",
+          "title": "Moenkhausia sanctaefilomenae species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/moenkhausia-sanctaefilomenae.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-moenkhausia-sanctaefilomenae",
+          "title": "Moenkhausia sanctaefilomenae (Red-eye Tetra)",
+          "publisher": "Seriously Fish",
+          "url": "https://seriouslyfish.com/species/moenkhausia-sanctaefilomenae",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0125",
+      "name": "雪球异型 (L102)",
+      "scientificName": "Hypancistrus inspector",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch10-fishbase-hypancistrus-inspector",
+        "seriouslyfish-hypancistrus-inspector"
+      ],
+      "existingSources": [
+        {
+          "id": "batch10-fishbase-hypancistrus-inspector",
+          "title": "Hypancistrus inspector species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Hypancistrus-inspector.html",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-hypancistrus-inspector",
+          "title": "Hypancistrus inspector (Snowball Pleco)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/hypancistrus-inspector",
+          "reviewStatus": "reviewed"
         }
       ],
       "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",

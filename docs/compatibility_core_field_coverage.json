@@ -13,7 +13,7 @@
   ],
   "genericOnboardingReadySpecies": 64,
   "coreFieldCompleteSpecies": 79,
-  "oneFieldGapSpecies": 4,
+  "oneFieldGapSpecies": 7,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
@@ -66,10 +66,10 @@
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 72,
-      "reviewed_neutral_or_negative": 26,
-      "reviewed_unknown": 86,
-      "needs_research": 1,
+      "reviewed_supported": 73,
+      "reviewed_neutral_or_negative": 28,
+      "reviewed_unknown": 84,
+      "needs_research": 0,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
@@ -109,7 +109,7 @@
     },
     {
       "field": "territoriality",
-      "count": 14
+      "count": 11
     },
     {
       "field": "social_behavior",
@@ -4477,8 +4477,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4536,11 +4536,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "needs_research",
-          "disposition": "targeted_source_expansion",
-          "evidenceIds": [],
-          "authoritySource": "none",
-          "reasonCode": "missing_reviewed_field_authority"
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
+          "evidenceIds": [
+            "fishipedia-corydoras-hastatus-wave15"
+          ],
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
           "status": "needs_research",
@@ -5338,8 +5340,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -5399,14 +5401,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch09-fishbase-moenkhausia-sanctaefilomenae",
-            "seriouslyfish-moenkhausia-sanctaefilomenae"
+            "fishipedia-moenkhausia-sanctaefilomenae-wave15"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -10269,8 +10270,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -10332,14 +10333,13 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch10-fishbase-hypancistrus-inspector",
-            "seriouslyfish-hypancistrus-inspector"
+            "fishipedia-hypancistrus-inspector-wave15"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",

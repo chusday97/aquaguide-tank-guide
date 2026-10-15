@@ -33,6 +33,60 @@
       ]
     },
     {
+      "researchKey": "Hypancistrus inspector",
+      "baseScientificName": "Hypancistrus inspector",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0125",
+          "name": "雪球异型 (L102)",
+          "scientificName": "Hypancistrus inspector",
+          "gaps": [
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Moenkhausia sanctaefilomenae",
+      "baseScientificName": "Moenkhausia sanctaefilomenae",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0062",
+          "name": "红眼灯",
+          "scientificName": "Moenkhausia sanctaefilomenae",
+          "gaps": [
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Petitella rhodostoma",
       "baseScientificName": "Petitella rhodostoma",
       "priorityScore": 191,
@@ -87,15 +141,14 @@
       ]
     },
     {
-      "researchKey": "Hypancistrus inspector",
-      "baseScientificName": "Hypancistrus inspector",
-      "priorityScore": 183,
+      "researchKey": "Corydoras hastatus",
+      "baseScientificName": "Corydoras hastatus",
+      "priorityScore": 181,
       "catalogObjectCount": 1,
       "exactObjectCount": 1,
       "variantObjectCount": 0,
       "unresolvedObjectCount": 0,
       "combinedGapFields": [
-        "territoriality",
         "predation"
       ],
       "requiresVariantBridgeReview": false,
@@ -103,40 +156,10 @@
       "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
       "catalogObjects": [
         {
-          "speciesId": "sp_0125",
-          "name": "雪球异型 (L102)",
-          "scientificName": "Hypancistrus inspector",
+          "speciesId": "sp_0052",
+          "name": "月光鼠",
+          "scientificName": "Corydoras hastatus",
           "gaps": [
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Moenkhausia sanctaefilomenae",
-      "baseScientificName": "Moenkhausia sanctaefilomenae",
-      "priorityScore": 183,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0062",
-          "name": "红眼灯",
-          "scientificName": "Moenkhausia sanctaefilomenae",
-          "gaps": [
-            "territoriality",
             "predation"
           ],
           "isVariant": false,
@@ -368,35 +391,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Corydoras hastatus",
-      "baseScientificName": "Corydoras hastatus",
-      "priorityScore": 173,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0052",
-          "name": "月光鼠",
-          "scientificName": "Corydoras hastatus",
-          "gaps": [
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },

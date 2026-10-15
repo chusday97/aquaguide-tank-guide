@@ -8,6 +8,7 @@ import './test-next-wave-freshwater-03';
 import './test-next-wave-freshwater-04';
 
 import { compatibilityReleasedSpeciesIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { compatibilityAuthorityPatchManifests } from '../src/data/compatibilityAuthorityPatches';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 import { getCompatibilityDomainBoundary } from '../src/data/compatibilityDomainBoundaries';
@@ -65,12 +66,15 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
       const additivePatchMigrations = compatibilityUnifiedNextWave.authorityPatches
         .filter(patch => (patch.speciesIds as readonly string[]).includes(member.speciesId))
         .map(patch => readFileSync(patch.migrationOwner, 'utf8'));
-      const currentProfileAuthority = [migration, ...additivePatchMigrations].join('\n');
+      const sourceControlledPatchOwners = compatibilityAuthorityPatchManifests
+        .filter(patch => (patch.speciesIds as readonly string[]).includes(member.speciesId))
+        .map(patch => readFileSync(patch.authorityOwner, 'utf8'));
+      const currentProfileAuthority = [migration, ...additivePatchMigrations, ...sourceControlledPatchOwners].join('\n');
       for (const source of profile.citations) {
         assert.equal(
           currentProfileAuthority.includes(source.id),
           true,
-          batch.batchId + ' original migration or additive authority patch must include Profile source ' + source.id,
+          batch.batchId + ' original migration or later reviewed authority patch must include Profile source ' + source.id,
         );
       }
     } else {

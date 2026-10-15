@@ -19,19 +19,22 @@ assert.deepEqual(byField.get('social_behavior')?.proposedValue, { mode: 'variabl
 const breedingReview = getCatalogFieldReviews('sp_0042').find(item => item.field === 'breeding_behavior');
 assert.equal(breedingReview?.resolution, 'unknown');
 assert.equal(byField.has('breeding_behavior'), false);
-assert.equal(byField.has('temperature'), false);
-assert.equal(byField.has('ph'), false);
-assert.equal(byField.has('tank_size'), false);
-assert.equal(byField.has('territoriality'), false);
-assert.equal(byField.has('predation'), false);
+for (const laterReviewed of ['temperature', 'ph', 'tank_size', 'territoriality', 'predation']) {
+  assert.equal(byField.has(laterReviewed as any), true, 'later reviewed authority may extend the original next-wave profile: ' + laterReviewed);
+}
 
 const profile = getReviewedCompatibilityProfile('sp_0042');
 assert.ok(profile);
 assert.equal(profile?.waterType, 'freshwater');
 assert.deepEqual(profile?.waterTypes, ['freshwater', 'brackish']);
 assert.deepEqual(profile?.behaviorTraits, ['shoaling', 'breeding_defense']);
-assert.deepEqual(profile?.predationTargets, []);
-assert.deepEqual(profile?.requiredFacts, ['water', 'adult_size', 'social_behavior', 'breeding_behavior']);
+assert.deepEqual(profile?.predationTargets, ['fish_fry']);
+for (const originalFact of ['water', 'adult_size', 'social_behavior', 'breeding_behavior'] as const) {
+  assert.ok(profile?.requiredFacts.includes(originalFact), 'current profile must retain original next-wave fact: ' + originalFact);
+}
+for (const laterFact of ['temperature', 'ph', 'tank_size', 'territoriality', 'predation'] as const) {
+  assert.ok(profile?.requiredFacts.includes(laterFact), 'current profile may include later reviewed fact: ' + laterFact);
+}
 
 const knowledge = getReviewedSpeciesKnowledgeForFish(fish!);
 assert.ok(knowledge);
@@ -69,4 +72,4 @@ const breeding = evaluateTankCompatibility({
 });
 assert.equal(breeding.warningRules.some(rule => rule.code === 'breeding_territory_active'), true);
 
-console.log('next-wave freshwater authority verified: sp_0042 multi-water + context-dependent shoaling + breeding-only defense without generic small-fish overblock');
+console.log('next-wave freshwater authority verified: original multi-water/breeding semantics remain intact while later reviewed environment and fry-predation authority grows monotonically');

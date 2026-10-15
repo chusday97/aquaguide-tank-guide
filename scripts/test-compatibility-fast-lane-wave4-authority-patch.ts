@@ -89,7 +89,12 @@ assert.equal(row('sp_0198')?.authoritativeFieldCount, 7);
 assert.equal(row('sp_0198')?.fields.tank_size.status, 'reviewed_unknown');
 assert.equal(row('sp_0198')?.fields.tank_size.disposition, 'terminal_hold');
 assert.equal(row('sp_0198')?.fields.tank_size.reasonCode, 'species_space_minimum_conflicted');
-assert.equal(buildCompatibilityFastLaneResearchPackets().length, 0);
+const currentFastLane = buildCompatibilityFastLaneResearchPackets();
+assert.equal(
+  currentFastLane.some(packet => ['sp_0105', 'sp_0468', 'sp_0198'].includes(packet.speciesId)),
+  false,
+  'Wave4 species must stay closed/terminal even when later reviewed waves add new Fast Lane candidates',
+);
 assert.equal(compatibilityFastLaneWave4FieldReviews.length, 3);
 
-console.log('Compatibility Fast Lane wave4 authority PASS: two final fields close with scoped semantics, Channa numeric tank conflict becomes terminal evidence ceiling, Fast Lane = 0.');
+console.log('Compatibility Fast Lane wave4 authority PASS: Wave4 closures remain closed/terminal while later reviewed waves may add new Fast Lane candidates.');

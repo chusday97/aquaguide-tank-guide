@@ -10,8 +10,8 @@
   "genericReadyUniquePairs": 2016,
   "fishPairs": 47895,
   "statuses": {
-    "compatible": 505,
-    "caution": 1764,
+    "compatible": 453,
+    "caution": 1816,
     "not_recommended": 18464,
     "insufficient_data": 27162
   },
@@ -39,6 +39,36 @@
         "terminalReasons": []
       },
       {
+        "speciesId": "sp_0052",
+        "name": "月光鼠",
+        "scientificName": "Corydoras hastatus",
+        "unknownPairs": 175,
+        "actionableFields": [
+          "predation"
+        ],
+        "terminalReasons": []
+      },
+      {
+        "speciesId": "sp_0062",
+        "name": "红眼灯",
+        "scientificName": "Moenkhausia sanctaefilomenae",
+        "unknownPairs": 175,
+        "actionableFields": [
+          "predation"
+        ],
+        "terminalReasons": []
+      },
+      {
+        "speciesId": "sp_0125",
+        "name": "雪球异型 (L102)",
+        "scientificName": "Hypancistrus inspector",
+        "unknownPairs": 175,
+        "actionableFields": [
+          "predation"
+        ],
+        "terminalReasons": []
+      },
+      {
         "speciesId": "sp_0151",
         "name": "彩色天使鱼（彩色裙鱼）",
         "scientificName": "Gymnocorymbus ternetzi var. Color morph",
@@ -54,39 +84,6 @@
         "scientificName": "Hemigrammus rhodostomus",
         "unknownPairs": 175,
         "actionableFields": [
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0052",
-        "name": "月光鼠",
-        "scientificName": "Corydoras hastatus",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0062",
-        "name": "红眼灯",
-        "scientificName": "Moenkhausia sanctaefilomenae",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0125",
-        "name": "雪球异型 (L102)",
-        "scientificName": "Hypancistrus inspector",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "territoriality",
           "predation"
         ],
         "terminalReasons": []
@@ -175,6 +172,24 @@
     ],
     "taxonDecisionImpactQueue": [
       {
+        "researchKey": "Corydoras hastatus",
+        "baseScientificName": "Corydoras hastatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 175,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 181
+      },
+      {
         "researchKey": "Gymnocorymbus ternetzi",
         "baseScientificName": "Gymnocorymbus ternetzi",
         "completionEligible": true,
@@ -190,6 +205,42 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Hypancistrus inspector",
+        "baseScientificName": "Hypancistrus inspector",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 175,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Moenkhausia sanctaefilomenae",
+        "baseScientificName": "Moenkhausia sanctaefilomenae",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 175,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 191
       },
       {
@@ -227,63 +278,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 191
-      },
-      {
-        "researchKey": "Corydoras hastatus",
-        "baseScientificName": "Corydoras hastatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 87.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 173
-      },
-      {
-        "researchKey": "Hypancistrus inspector",
-        "baseScientificName": "Hypancistrus inspector",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 87.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
-      },
-      {
-        "researchKey": "Moenkhausia sanctaefilomenae",
-        "baseScientificName": "Moenkhausia sanctaefilomenae",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 87.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
       },
       {
         "researchKey": "Cyprinus carpio",
@@ -1262,6 +1256,24 @@
     ],
     "completionEligibleTaxonQueue": [
       {
+        "researchKey": "Corydoras hastatus",
+        "baseScientificName": "Corydoras hastatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 175,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 181
+      },
+      {
         "researchKey": "Gymnocorymbus ternetzi",
         "baseScientificName": "Gymnocorymbus ternetzi",
         "completionEligible": true,
@@ -1277,6 +1289,42 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Hypancistrus inspector",
+        "baseScientificName": "Hypancistrus inspector",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 175,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Moenkhausia sanctaefilomenae",
+        "baseScientificName": "Moenkhausia sanctaefilomenae",
+        "completionEligible": true,
+        "affectedUnknownPairs": 175,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 175,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 191
       },
       {
@@ -1314,63 +1362,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 191
-      },
-      {
-        "researchKey": "Corydoras hastatus",
-        "baseScientificName": "Corydoras hastatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 87.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 173
-      },
-      {
-        "researchKey": "Hypancistrus inspector",
-        "baseScientificName": "Hypancistrus inspector",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 87.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
-      },
-      {
-        "researchKey": "Moenkhausia sanctaefilomenae",
-        "baseScientificName": "Moenkhausia sanctaefilomenae",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 2,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 87.5,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 183
       },
       {
         "researchKey": "Cyprinus carpio",
@@ -2422,7 +2413,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 368,
+    "actionableGaps": 365,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2450,7 +2441,7 @@
       },
       {
         "field": "territoriality",
-        "count": 14
+        "count": 11
       },
       {
         "field": "social_behavior",

@@ -28,8 +28,10 @@ assert.match(migration, /commit;\s*$/);
 
 const profile = getReviewedCompatibilityProfile('sp_0052');
 assert.ok(profile);
-assert.equal(profile.citations.length, 1);
-assert.equal(profile.citations[0]?.id, nextWaveUnified16Sources.corydorasHastatusFishBase.id);
+assert.ok(
+  profile.citations.some(citation => citation.id === nextWaveUnified16Sources.corydorasHastatusFishBase.id),
+  'current sp_0052 profile must retain the Wave16 FishBase source even when later reviewed authority appends new citations',
+);
 assert.equal(migration.includes("'sp_0052'"), true);
 assert.equal(migration.includes(nextWaveUnified16Sources.corydorasHastatusFishBase.id), true);
 

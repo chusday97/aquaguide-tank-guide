@@ -25,7 +25,7 @@ const fixtures: Fixture[] = [
   { id: 'R-COMP-02', ids: ['sp_0010', 'sp_0014'], expected: 'compatible', reviewed: true },
   { id: 'R-COMP-03', ids: ['sp_0010', 'sp_0017'], expected: 'compatible', reviewed: true },
   { id: 'R-COMP-04', ids: ['sp_0010', 'sp_0020'], expected: 'compatible', reviewed: true },
-  { id: 'R-COMP-05', ids: ['sp_0010', 'sp_0042'], expected: 'compatible', reviewed: true },
+  { id: 'R-COMP-05', ids: ['sp_0010', 'sp_0114'], expected: 'compatible', reviewed: true },
 
   { id: 'R-CAUTION-01', ids: ['sp_0001', 'sp_0002'], expected: 'caution', reviewed: true },
   { id: 'R-CAUTION-02', ids: ['sp_0001', 'sp_0010'], expected: 'caution', reviewed: true },
@@ -43,7 +43,7 @@ const fixtures: Fixture[] = [
   { id: 'R-UNKNOWN-02', ids: ['sp_0001', 'sp_0005'], expected: 'insufficient_data', reviewed: false },
   { id: 'R-UNKNOWN-03', ids: ['sp_0001', 'sp_0006'], expected: 'insufficient_data', reviewed: false },
   { id: 'R-UNKNOWN-04', ids: ['sp_0001', 'sp_0009'], expected: 'insufficient_data', reviewed: false },
-  { id: 'R-UNKNOWN-05', ids: ['sp_0001', 'sp_0025'], expected: 'insufficient_data', reviewed: false },
+  { id: 'R-UNKNOWN-05', ids: ['sp_0114', 'sp_0112'], expected: 'insufficient_data', reviewed: false },
 ];
 
 const expectedJudgment: Record<ExpectedStatus, string> = {

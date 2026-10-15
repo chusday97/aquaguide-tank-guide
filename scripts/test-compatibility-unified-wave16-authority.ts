@@ -30,8 +30,13 @@ assert.deepEqual(profile.behaviorTraits, ['shoaling', 'bottom_dwelling']);
 assert.equal(profile.minimumGroupSize, undefined, 'review must not invent a numeric group minimum');
 assert.deepEqual(profile.predationTargets, []);
 assert.equal(profile.confidence, 'medium');
-assert.deepEqual(profile.requiredFacts, ['water', 'temperature', 'ph', 'adult_size', 'social_behavior']);
-assert.deepEqual(profile.citations.map(item => item.id), [nextWaveUnified16Sources.corydorasHastatusFishBase.id]);
+for (const requiredFact of ['water', 'temperature', 'ph', 'adult_size', 'social_behavior'] as const) {
+  assert.ok(profile.requiredFacts.includes(requiredFact), 'current sp_0052 profile must retain Wave16 required fact ' + requiredFact);
+}
+assert.ok(
+  profile.citations.some(item => item.id === nextWaveUnified16Sources.corydorasHastatusFishBase.id),
+  'current sp_0052 profile must retain the Wave16 FishBase source when later reviewed authority grows the profile',
+);
 
 for (const outcome of nextWaveUnified16EvidenceCeilings) {
   assert.equal(getReviewedCompatibilityProfile(outcome.speciesId), undefined);

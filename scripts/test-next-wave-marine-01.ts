@@ -16,14 +16,17 @@ for (const [id, expectation] of Object.entries(expected)) {
   assert.equal(byField.get('water')?.proposedValue, expectation.water, id + ': water authority');
   assert.deepEqual(byField.get('adult_size')?.proposedValue, { min: null, max: expectation.adultMax }, id + ': adult-size authority');
   assert.deepEqual(byField.get('social_behavior')?.proposedValue, { mode: expectation.social, minimumGroupSize: null }, id + ': social authority');
-  for (const unsupported of ['temperature', 'ph', 'tank_size', 'territoriality', 'predation', 'breeding_behavior']) {
-    assert.equal(byField.has(unsupported as any), false, id + ': unsupported field must remain fail-closed: ' + unsupported);
+  const stillUnsupported = id === 'sp_0022'
+    ? ['breeding_behavior']
+    : ['temperature', 'ph', 'tank_size', 'territoriality', 'predation', 'breeding_behavior'];
+  for (const unsupported of stillUnsupported) {
+    assert.equal(byField.has(unsupported as any), false, id + ': field without later reviewed authority must remain fail-closed: ' + unsupported);
   }
 
   const profile = getReviewedCompatibilityProfile(id);
   assert.ok(profile, id + ': compatibility profile');
   assert.equal(profile?.waterType, 'saltwater');
-  assert.deepEqual(profile?.predationTargets, []);
+  assert.deepEqual(profile?.predationTargets, id === 'sp_0022' ? ['small_fish'] : []);
   assert.equal(profile?.confidence, 'medium');
 
   const fish = fishData.find(item => item.id === id);
@@ -33,4 +36,4 @@ for (const [id, expectation] of Object.entries(expected)) {
   assert.equal(catalogProfile.adultLengthMaxCm, expectation.adultMax);
 }
 
-console.log('next-wave marine authority verified: sp_0022/sp_0023/sp_0024 reviewed water + size + social, unsupported fields fail closed');
+console.log('next-wave marine authority verified: original water/size/social authority is retained; later reviewed sp_0022 completion is allowed while remaining unsupported fields stay fail closed');

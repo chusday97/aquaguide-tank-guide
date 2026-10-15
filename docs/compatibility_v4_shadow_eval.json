@@ -100,7 +100,9 @@
           "fishbase-otocinclus-vittatus",
           "aquariumcoop-otocinclus-catfish",
           "scotcat-otocinclus-vittatus",
+          "aquainfo-otocinclus-vittatus-wave12",
           "batch-02-fishbase-otocinclus-vittatus",
+          "fishipedia-otocinclus-vittatus-direct-husbandry",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"
         ]
@@ -201,6 +203,7 @@
           "candidate_water_type_missing"
         ],
         "evidenceIds": [
+          "fishipedia-poropanchax-normani-numeric-husbandry",
           "batch05-fishbase-poropanchax-normani",
           "seriouslyfish-hyphessobrycon-amandae",
           "fishbase-hyphessobrycon-amandae"

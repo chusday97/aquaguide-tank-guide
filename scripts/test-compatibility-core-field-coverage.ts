@@ -369,7 +369,7 @@ assert.deepEqual(approvedValue('sp_0042', 'predation'), { targets: ['fish_fry'] 
 assert.ok(!(approvedValue('sp_0042', 'predation') as { targets: string[] }).targets.includes('small_fish'), 'fish-egg/fry evidence must never be widened to generic small-fish predation');
 
 assert.deepEqual(approvedValue('sp_0052', 'tank_size'), { liters: 54, lengthCm: 60 });
-assert.equal(approvedValue('sp_0052', 'territoriality'), undefined, 'Corydoras hastatus territoriality must remain unresolved when the source only says peaceful/gregarious');
+assert.deepEqual(approvedValue('sp_0052', 'territoriality'), { traits: [] }, 'Corydoras hastatus may close territoriality only from direct exact-taxon non-territorial evidence');
 assert.equal(approvedValue('sp_0052', 'predation'), undefined, 'Corydoras hastatus predation must remain unresolved when the source only describes zooplankton diet');
 
 const numericWave6SourceIds = [
@@ -583,6 +583,37 @@ assert.deepEqual(
   [...numericWave14SourceIds].sort(),
   'numeric wave14 exact-taxon evidence must resolve to reviewed source metadata',
 );
+const numericWave15SpeciesBindings: Array<[string, string]> = [
+  ['sp_0052', 'Corydoras hastatus'],
+  ['sp_0062', 'Moenkhausia sanctaefilomenae'],
+  ['sp_0125', 'Hypancistrus inspector'],
+];
+for (const [speciesId, expectedScientificName] of numericWave15SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'numeric wave15 speciesId must stay bound to the exact reviewed taxon: ' + speciesId,
+  );
+}
+
+assert.deepEqual(approvedValue('sp_0052', 'territoriality'), { traits: [] });
+assert.deepEqual(approvedValue('sp_0062', 'territoriality'), { traits: [] });
+assert.deepEqual(approvedValue('sp_0125', 'territoriality'), { traits: ['territorial'] });
+for (const speciesId of ['sp_0052', 'sp_0062', 'sp_0125']) {
+  assert.equal(approvedValue(speciesId, 'predation'), undefined, speciesId + ' predation must remain fail-closed without direct fish-prey authority');
+  assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 7, speciesId + ' must be exactly 7/8 after Wave15 territoriality closure');
+  assert.equal(rowOf(speciesId)?.genericOnboardingReady, false, speciesId + ' must not become generic-ready while predation remains unresolved');
+}
+const numericWave15SourceIds = [
+  'fishipedia-corydoras-hastatus-wave15',
+  'fishipedia-moenkhausia-sanctaefilomenae-wave15',
+  'fishipedia-hypancistrus-inspector-wave15',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave15SourceIds).map(source => source.id).sort(),
+  [...numericWave15SourceIds].sort(),
+  'numeric wave15 exact-taxon territoriality evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -608,7 +639,7 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 54, '368 actionable field gaps should collapse to 54 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 54, '365 actionable field gaps should collapse to 54 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
 assert.equal(plannedCatalogObjects.size, 99, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
@@ -666,9 +697,12 @@ assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
   [
     ['sp_0011', 'predation'],
+    ['sp_0052', 'predation'],
+    ['sp_0062', 'predation'],
+    ['sp_0125', 'predation'],
     ['sp_0151', 'predation'],
     ['sp_0433', 'predation'],
   ],
-  'Fast Lane must expose the exact 7/8 species after historical reviewed_unknown records stop masking later reviewed authority',
+  'Fast Lane must expose all exact 7/8 species after Wave15 closes territoriality without guessing predation',
 );
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);

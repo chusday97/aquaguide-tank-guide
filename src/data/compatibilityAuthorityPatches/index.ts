@@ -131,6 +131,13 @@ import {
   compatibilityNumericWave14Sources,
   compatibilityNumericWave14VerifiedSourceIds,
 } from './numeric-wave14-20261015';
+import {
+  compatibilityNumericWave15AuthorityPatch,
+  compatibilityNumericWave15FieldReviews,
+  compatibilityNumericWave15ProfilePatches,
+  compatibilityNumericWave15Sources,
+  compatibilityNumericWave15VerifiedSourceIds,
+} from './numeric-wave15-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -152,6 +159,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave12Sources,
   ...compatibilityNumericWave13Sources,
   ...compatibilityNumericWave14Sources,
+  ...compatibilityNumericWave15Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -174,6 +182,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave12FieldReviews,
   ...compatibilityNumericWave13FieldReviews,
   ...compatibilityNumericWave14FieldReviews,
+  ...compatibilityNumericWave15FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -196,6 +205,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave12VerifiedSourceIds,
   ...compatibilityNumericWave13VerifiedSourceIds,
   ...compatibilityNumericWave14VerifiedSourceIds,
+  ...compatibilityNumericWave15VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -218,6 +228,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave12ProfilePatches,
   ...compatibilityNumericWave13ProfilePatches,
   ...compatibilityNumericWave14ProfilePatches,
+  ...compatibilityNumericWave15ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -240,4 +251,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave12AuthorityPatch,
   compatibilityNumericWave13AuthorityPatch,
   compatibilityNumericWave14AuthorityPatch,
+  compatibilityNumericWave15AuthorityPatch,
 ] as const;

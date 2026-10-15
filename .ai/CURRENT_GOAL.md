@@ -1,3 +1,15 @@
+## CURRENT OVERRIDE — 2026-10-15 Behavioral evidence wave15 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave15 was performed through **WebCodex / WebCodex-All-Bridge only** and is source-controlled/local candidate work: no RDC, Codex agent, Vercel deployment, Production alias change, DB migration, or Production authority write.
+- Wave15 closes **territoriality only** for three exact taxa using direct Fishipedia territoriality fields: `sp_0052 Corydoras hastatus` = non-territorial, `sp_0062 Moenkhausia sanctaefilomenae` = non-territorial, and `sp_0125 Hypancistrus inspector` = territorial. Peaceful/community/diet wording is not promoted into predation authority.
+- All three objects move from 6/8 to **7/8**. Their remaining `predation` field stays fail-closed until direct fish-prey authority exists; none is promoted to generic-ready from this wave.
+- Current coverage after Wave15: **79 authoritative 8/8 fish / 64 strict generic-ready**, **365 actionable fields across 99 catalog objects**, deduplicated to **54 base-taxon jobs**. Field gaps: `ph 75`, `tank_size 72`, `temperature 68`, `water 64`, `adult_size 60`, `predation 15`, `territoriality 11`, `social_behavior 0`.
+- Fast Lane now contains six 7/8 objects, all missing only predation: `sp_0011`, `sp_0052`, `sp_0062`, `sp_0125`, `sp_0151`, `sp_0433`. The older three retain their prior conflict/variant/life-stage holds; the new three require direct exact-taxon fish-prey evidence rather than inference.
+- Decision-impact partition remains **17 completion-eligible jobs / 19 objects** and **37 terminal-blocked jobs / 80 objects**. The highest near-ready impact is now the six predation-only taxa.
+- Fully informed invariant remains **64 ready fish = 2,016 unordered pairs = 89 compatible / 827 caution / 1,100 not_recommended / 0 insufficient_data**.
+- PASS: core-field coverage, fully-informed matrix, user conclusion, release badcases, knowledge coverage, V4 shadow/live/product/readability, result-card, runtime/rollout/migration/next-wave authority checks, full `test:backend-release-gate`, project/API TypeScript checks, Business API bundle, lint, and `git diff --check`. The locally missing locked Express transitive dependency (`accepts@1.3.8`) was restored from the existing npm cache without changing `package.json` or `package-lock.json`.
+- NEXT: continue predation-only exact-taxon research for the six 7/8 Fast Lane objects without weakening the evidence contract. Do not deploy, migrate, or write Production authority as part of this checkpoint.
+
 ## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave14 via WebCodex (NOT RELEASED)
 
 - Active branch: `codex/compatibility-research-runtime-20261014`. This checkpoint was continued through **WebCodex / WebCodex-All-Bridge only**. No RDC, Codex agent, Vercel deployment, Production alias change, DB migration, or Production authority write is part of Wave14.
