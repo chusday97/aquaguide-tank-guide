@@ -6,6 +6,7 @@ import {
   compatibilityStackedWave05PendingProfileIds,
   compatibilityStackedWave06PendingProfileIds,
   compatibilityStackedWave16PendingProfileIds,
+  compatibilitySourceControlledPendingProfileIds,
 } from '../src/data/compatibilityNextWaveBatch';
 import {
   buildCompatibilityProfileRolloutKeysets,
@@ -15,7 +16,7 @@ import {
 
 const audit = getCompatibilityEvidenceAudit();
 const targetIds = audit.reviewedProfiles.map(item => item.speciesId);
-assert.equal(targetIds.length, 101);
+assert.equal(targetIds.length, 102, 'repository authority includes the source-controlled Wave21 Marble profile');
 
 const keysets = buildCompatibilityProfileRolloutKeysets(targetIds);
 assert.equal(keysets.currentProduction.size, 63);
@@ -24,6 +25,9 @@ assert.equal(keysets.wave04Target.size, 95);
 assert.equal(keysets.wave05Target.size, 99);
 assert.equal(keysets.wave06Target.size, 100);
 assert.equal(keysets.target.size, 101);
+assert.equal(compatibilitySourceControlledPendingProfileIds.length, 1);
+assert.equal(compatibilitySourceControlledPendingProfileIds[0], 'sp_0176');
+assert.equal(keysets.target.has('sp_0176'), false, 'source-controlled Wave21 authority must not silently enter the released 101-Profile target');
 
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.target], targetIds), 'target');
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.wave06Target], targetIds), 'wave06-target');
@@ -32,7 +36,7 @@ assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.wave04Target],
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.productionTarget], targetIds), 'production-target');
 assert.equal(getCompatibilityProfileRolloutGeneration([...keysets.currentProduction], targetIds), 'current-production');
 const futureProfile = 'sp_future_generic';
-assert.equal(getCompatibilityProfileAuthorityGeneration(targetIds, targetIds), 'target');
+assert.equal(getCompatibilityProfileAuthorityGeneration(targetIds, targetIds), 'post-target-superset', 'full repository authority may grow beyond the released target without changing Production generations');
 assert.equal(
   getCompatibilityProfileAuthorityGeneration([...targetIds, futureProfile], targetIds),
   'post-target-superset',

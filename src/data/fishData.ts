@@ -6933,7 +6933,7 @@ export const fishData: Fish[] = [
     "id": "sp_0176",
     "name": "黑白大理石神仙",
     "scientificName": "Pterophyllum scalare var. Marble",
-    "category": "硬景/底床",
+    "category": "慈鲷/斗鱼",
     "image": "/species-transparent/morph_batch_023_sheet_05_黑白大理石神仙_Pterophyllum_scalare_var._Marble.png?v=cutfix5_20260601",
     "difficulty": "Easy",
     "waterTemperature": "24-30°C",
@@ -6945,7 +6945,7 @@ export const fishData: Fish[] = [
     "temperament": "Territorial",
     "size": "Medium",
     "housingMode": "适合混养",
-    "housingReason": "属于造景或植物类，不会主动攻击鱼虾；主要注意光照、底床和是否会被草食性鱼啃食。",
+    "housingReason": "属于神仙鱼的大理石观赏品系；按神仙鱼的体型、繁殖期领地性和吞食小型鱼风险评估混养。",
     "feedingProfile": {
       "dietType": "Omnivore",
       "feedingType": "杂食性",

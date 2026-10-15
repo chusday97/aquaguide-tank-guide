@@ -7,7 +7,7 @@ import './test-next-wave-freshwater-02';
 import './test-next-wave-freshwater-03';
 import './test-next-wave-freshwater-04';
 
-import { compatibilityReleasedSpeciesIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { compatibilityReleasedSpeciesIds, compatibilitySourceControlledPendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import { compatibilityAuthorityPatchManifests } from '../src/data/compatibilityAuthorityPatches';
 import { getCatalogFieldReviews } from '../src/data/catalogFieldReviews';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
@@ -78,18 +78,25 @@ for (const batch of compatibilityUnifiedNextWave.releasedBatches) {
         );
       }
     } else {
-      assert.equal(profile, undefined, 'explicit hold species must remain without direct Compatibility Profile: ' + member.speciesId);
-      if (identityBoundary) {
-        assert.equal(identityBoundary.researchDisposition, 'terminal_unknown_hold');
-      } else if (domainBoundary) {
-        assert.equal(domainBoundary.researchDisposition, 'terminal_unknown_hold');
+      const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(member.speciesId);
+      if (laterSourceControlledProfile) {
+        assert.ok(profile, 'later reviewed source-controlled identity correction may add a Profile without rewriting the frozen release batch: ' + member.speciesId);
+        assert.equal(identityBoundary, undefined);
+        assert.equal(domainBoundary, undefined);
       } else {
-        const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
-        assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
-        assert.ok(
-          getKnowledgeEvidenceCeiling(member.speciesId, evidenceCeilingField),
-          'profile hold must retain an explicit reviewed evidence ceiling: ' + member.speciesId,
-        );
+        assert.equal(profile, undefined, 'explicit hold species must remain without direct Compatibility Profile: ' + member.speciesId);
+        if (identityBoundary) {
+          assert.equal(identityBoundary.researchDisposition, 'terminal_unknown_hold');
+        } else if (domainBoundary) {
+          assert.equal(domainBoundary.researchDisposition, 'terminal_unknown_hold');
+        } else {
+          const evidenceCeilingField = 'evidenceCeilingField' in member ? member.evidenceCeilingField : undefined;
+          assert.ok(evidenceCeilingField, 'profile hold must declare an evidence ceiling field: ' + member.speciesId);
+          assert.ok(
+            getKnowledgeEvidenceCeiling(member.speciesId, evidenceCeilingField),
+            'profile hold must retain an explicit reviewed evidence ceiling: ' + member.speciesId,
+          );
+        }
       }
     }
 

@@ -52,9 +52,19 @@ assert.ok(pakistaniLoach?.candidateTaxa.includes('Botia almorhae sensu stricto')
 assert.ok(pakistaniLoach?.candidateTaxa.includes('Botia lohachata'));
 assert.ok(pakistaniLoach?.sourceIds.includes('seriouslyfish-botia-almorhae-trade-boundary'));
 
-const categoryMismatch = getCatalogIdentityBoundary('sp_0176');
-assert.equal(categoryMismatch?.code, 'catalog_category_mismatch');
-assert.equal(categoryMismatch?.resolvedGranularity, 'catalog_category_mismatch');
+const historicalMarbleMismatch = catalogIdentityBoundaries.sp_0176;
+assert.equal(historicalMarbleMismatch?.code, 'catalog_category_mismatch');
+assert.equal(historicalMarbleMismatch?.resolvedGranularity, 'catalog_category_mismatch');
+const marbleCorrection = getCatalogFieldReviews('sp_0176').filter(review => review.field === 'identity').at(-1);
+assert.equal(marbleCorrection?.resolution, 'supported');
+assert.deepEqual(marbleCorrection?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Marble',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Marble',
+});
+assert.ok(marbleCorrection?.citationIds.includes('ifrj-pterophyllum-scalare-marble-identity-wave21'));
+assert.equal(getCatalogIdentityBoundary('sp_0176'), undefined, 'a later explicit reviewed object-level identity correction must supersede the historical category mismatch at runtime');
+assert.ok(getReviewedCompatibilityProfile('sp_0176'), 'resolved Marble angelfish must have an explicit same-species Compatibility bridge');
 
 const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
 assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');
@@ -105,4 +115,4 @@ for (const boundary of Object.values(catalogIdentityBoundaries)) {
   assert.ok(boundary.candidateTaxa.length > 0);
 }
 
-console.log('catalog identity boundaries passed: unresolved trade identities are granular and Koi Betta identity is reviewed-supported');
+console.log('catalog identity boundaries passed: unresolved trade identities stay fail-closed while explicit reviewed identity corrections can supersede historical holds');

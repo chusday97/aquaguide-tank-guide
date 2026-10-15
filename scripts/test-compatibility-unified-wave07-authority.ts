@@ -24,7 +24,7 @@ for (const outcome of nextWaveUnified07Outcomes) {
 }
 
 const audit = getCompatibilityEvidenceAudit();
-assert.equal(audit.reviewedProfiles.length, 101);
+assert.equal(audit.reviewedProfiles.length, 102, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 

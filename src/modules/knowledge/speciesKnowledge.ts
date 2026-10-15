@@ -1,6 +1,7 @@
 import type { Fish } from '../../types';
 import type { SpeciesKnowledgeProfile } from './knowledge.types';
 import { getBaseSpeciesScientificName } from '../species/speciesTaxonomy';
+import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogReviewBatches/identity-corrections-wave21';
 import { phase2Batch02Knowledge } from './phase2Batch02Authority';
 import { phase2Batch03Knowledge } from './phase2Batch03Authority';
 import { phase2Batch04Knowledge } from './phase2Batch04Authority';
@@ -1769,6 +1770,12 @@ export const getReviewedSpeciesKnowledge = (speciesId: string) => (
 );
 
 export const getReviewedSpeciesKnowledgeForFish = (fish: Pick<Fish, 'id' | 'scientificName'>) => {
+  const correctedBaseSpeciesId = catalogIdentityCorrectionBaseSpeciesIds[
+    fish.id as keyof typeof catalogIdentityCorrectionBaseSpeciesIds
+  ];
+  if (correctedBaseSpeciesId) {
+    return reviewedKnowledgeBySpeciesId[correctedBaseSpeciesId];
+  }
   // Channa argus Platinum has a direct Phase 2 completion record, but the
   // existing reviewed Compatibility Profile remains the runtime authority for
   // its predator/solitary boundary. The completion matrix reads the direct

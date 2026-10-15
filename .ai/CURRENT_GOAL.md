@@ -1,3 +1,32 @@
+## CURRENT OVERRIDE — 2026-10-15 Reviewed identity correction pipeline wave21 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave21 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
+- Wave21 starts the post-Wave20 main lane: systematic **identity/domain resolution**, not ordinary per-species field completion.
+- Global identity/domain decomposition found **290 held catalog objects** before this wave: 125 fish identity holds plus 165 non-fish domain objects (64 plants / 49 invertebrates / 42 corals / 10 reptiles). Non-fish objects remain routed to future domain-specific work rather than being forced through the fish engine.
+- First reviewed correction candidate is `sp_0176 黑白大理石神仙 / Pterophyllum scalare var. Marble`. The catalog had incorrectly labeled this fish as `硬景/底床` and carried a historical `catalog_category_mismatch` hold.
+- New peer-reviewed identity authority: Indonesian Fisheries Research Journal, **“Reproduction of Three Colour Varieties of Angelfish (Pterophyllum scalare)”**, explicitly treats Black, Black & White, and Marble as colour varieties of `Pterophyllum scalare`. Wave21 therefore resolves **only `sp_0176`**. Other Pterophyllum trade morphs (Red / Blue / Balloon / Platinum Longfin / Super Red etc.) stay fail-closed unless separately bridged.
+- A reusable **reviewed identity correction registry** is added:
+  - historical raw identity boundary remains preserved for audit;
+  - runtime `getCatalogIdentityBoundary` may suppress it only for an explicitly listed later reviewed correction;
+  - correction registry maps the corrected catalog object to one reviewed base catalog object for cross-layer authority;
+  - scientific-name suffixes / `var.` text alone never trigger inheritance.
+- `sp_0176` category is corrected from `硬景/底床` to `慈鲷/斗鱼`, and its incorrect plant/hardscape housing explanation is replaced with fish-specific mixed-tank guidance.
+- Compatibility adds an explicit `sp_0176 -> sp_0446` same-species Profile bridge. Species Knowledge V2 uses the same reviewed correction mapping, so Compatibility and Species Knowledge cannot drift apart.
+- `sp_0176` becomes **8/8 authoritative + generic-ready** using the already-reviewed `Pterophyllum scalare` authority: freshwater; 24–30°C; pH 6–8; max 15 cm; minimum 100 cm tank length; group social mode; breeding-male territoriality; small-fish predation risk.
+- Coverage after Wave21: **84 authoritative 8/8 fish / 69 strict generic-ready**; identity/domain held objects **290 -> 289**. Ordinary actionable field gaps remain **336**, because this wave resolves an identity boundary rather than ordinary field backlog.
+- Global decision impact improves:
+  - decision coverage **43.87% -> 44.02%**
+  - `unresolved_identity` **21,226 -> 21,094 (-132 pairs)**
+  - total `insufficient_data` **26,884 -> 26,812 (-72 pairs)**
+  - `public_evidence_insufficient` **5,658 -> 5,718 (+60)** because some formerly identity-unknown pairs now correctly expose the next evidence boundary
+  - `missing_species_fact` remains **0**.
+- Strict fully-informed invariant expands to **69 ready fish = 2,346 unordered pairs = 119 compatible / 911 caution / 1,316 not_recommended / 0 insufficient_data**.
+- Release isolation is preserved. The historical released rollout chain remains exact **63 -> 85 -> 95 -> 99 -> 100 -> 101**. The new Wave21 Profile is explicitly registered as **source-controlled pending**, so the complete repository has 102 reviewed Profiles but runtime classifies it as post-target authority growth rather than silently treating it as Production.
+- Historical Wave05 and unified migration tests were updated only to allow monotonic later reviewed authority growth; frozen migrations and historical membership/count contracts remain unchanged.
+- PASS: catalog identity boundaries, identity-bound bridges, Species Knowledge parity, core-field coverage, fully-informed matrix, V4 readability, user conclusion, runtime authority, rollout window, historical stacked/unified migration contracts, unified next-wave contract, full `test:backend-release-gate`, API/project TypeScript, Business API bundle, lint, and `git diff --check`.
+- Data-quality discovery: the incorrect plant/hardscape `housingReason` template appears on many catalog rows, so **do not bulk replace it by string match**. NEXT should audit category/template mismatches as object-level identity candidates, then expand the correction registry only where direct reviewed identity evidence exists.
+- NEXT main lane: prioritize other high-impact fish identity holds where a ready base species already exists and a direct object-level trade/variant bridge can be sourced; in parallel, design separate Compatibility domains for plant / invertebrate / coral / reptile rather than forcing those 165 objects through fish semantics.
+
 ## CURRENT OVERRIDE — 2026-10-15 Salminus husbandry authority + positive-impact completion cutoff wave20 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave20 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.

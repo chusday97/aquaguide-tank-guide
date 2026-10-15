@@ -23,6 +23,7 @@ import { nextWaveUnified04Sources } from './catalogReviewBatches/next-wave-unifi
 import { nextWaveUnified05Sources } from './catalogReviewBatches/next-wave-unified-05';
 import { nextWaveUnified06Sources } from './catalogReviewBatches/next-wave-unified-06';
 import { nextWaveUnified16Sources } from './catalogReviewBatches/next-wave-unified-16';
+import { identityCorrectionsWave21Sources } from './catalogReviewBatches/identity-corrections-wave21';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 
 export type ReviewedCompatibilityProfile = {
@@ -1492,6 +1493,11 @@ profiles.sp_0104 = wave04BridgeProfile('sp_0104', 'sp_0103', nextWaveUnified04So
 profiles.sp_0146 = wave04BridgeProfile('sp_0146', 'sp_0448', nextWaveUnified04Sources.ramPlatinum);
 profiles.sp_0157 = wave04BridgeProfile('sp_0157', 'sp_0448', nextWaveUnified04Sources.ramBlue);
 profiles.sp_0151 = wave04BridgeProfile('sp_0151', 'sp_0010', nextWaveUnified04Sources.blackTetraColor);
+profiles.sp_0176 = wave04BridgeProfile(
+  'sp_0176',
+  'sp_0446',
+  identityCorrectionsWave21Sources.angelfishColourVarieties,
+);
 
 profiles.sp_0452 = {
   speciesId: 'sp_0452',

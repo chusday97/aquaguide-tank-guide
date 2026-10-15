@@ -655,6 +655,16 @@ assert.equal(otocinclusKnowledge.knowledge.socialBehavior?.minimumGroupSize, und
 assert.equal(otocinclusKnowledge.knowledge.socialBehavior?.predationVulnerability, 'high');
 assert.equal(resolveKnowledgeSources(otocinclusKnowledge.knowledge.socialBehavior?.evidence.sourceIds || []).length, 2);
 
+const marbleAngelfish = fishData.find(fish => fish.id === 'sp_0176');
+assert.ok(marbleAngelfish, 'Marble angelfish must exist in catalog');
+const marbleAngelfishKnowledge = getReviewedSpeciesKnowledgeForFish(marbleAngelfish);
+assert.ok(marbleAngelfishKnowledge, 'reviewed Marble identity correction must resolve Species Knowledge through the explicit base-species bridge');
+assert.deepEqual(marbleAngelfishKnowledge.environment?.temperatureRangeC, { min: 24, max: 30 });
+assert.deepEqual(marbleAngelfishKnowledge.environment?.phRange, { min: 6, max: 8 });
+assert.equal(marbleAngelfishKnowledge.spaceAndGrowth?.adultLengthCm.max, 15);
+assert.equal(marbleAngelfishKnowledge.spaceAndGrowth?.minTankLengthCm, 100);
+assert.equal(marbleAngelfishKnowledge.socialBehavior?.mode, 'group');
+
 const reviewedAuthorityGaps = fishData
   .filter(fish => getReviewedCompatibilityProfileForFish(fish) && !getReviewedSpeciesKnowledgeForFish(fish))
   .map(fish => ({ id: fish.id, name: fish.name, scientificName: fish.scientificName }));

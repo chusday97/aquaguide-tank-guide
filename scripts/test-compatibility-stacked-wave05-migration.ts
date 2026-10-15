@@ -9,7 +9,7 @@ const migrationPath = 'supabase/migrations/20261012014500_compatibility_unified_
 const migration = readFileSync(migrationPath, 'utf8');
 const audit = getCompatibilityEvidenceAudit();
 
-assert.equal(audit.reviewedProfiles.length, 101);
+assert.equal(audit.reviewedProfiles.length, 102, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 assert.deepEqual([...compatibilityStackedWave05PendingProfileIds].sort(), [...nextWaveUnified05ProfileIds].sort());
@@ -68,9 +68,14 @@ assert.equal(
 assert.equal(Object.values(nextWaveUnified05Sources).length, 4);
 
 for (const member of batch.members.filter(item => !item.expectProfile)) {
+  assert.equal(migration.includes("'" + member.speciesId + "'"), true);
+  if (member.speciesId === 'sp_0176') {
+    assert.ok(getReviewedCompatibilityProfile(member.speciesId), 'Wave21 may resolve Marble angelfish after the frozen Wave05 migration classified it as no-Profile');
+    assert.equal(getCatalogIdentityBoundary(member.speciesId), undefined, 'later reviewed object-level identity correction may supersede the historical Wave05 hold');
+    continue;
+  }
   assert.equal(getReviewedCompatibilityProfile(member.speciesId), undefined);
   assert.equal(getCatalogIdentityBoundary(member.speciesId)?.researchDisposition, 'terminal_unknown_hold');
-  assert.equal(migration.includes("'" + member.speciesId + "'"), true);
 }
 
 console.log('Compatibility stacked wave05 migration PASS: predecessor 95/171 -> target 99/175, 4 Profiles, 21 identity holds, 4 new sources, 9 links.');

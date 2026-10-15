@@ -4,6 +4,7 @@ import {
   compatibilityStackedWave05PendingProfileIds,
   compatibilityStackedWave06PendingProfileIds,
   compatibilityStackedWave16PendingProfileIds,
+  compatibilitySourceControlledPendingProfileIds,
 } from './compatibilityNextWaveBatch';
 
 export type CompatibilityProfileRolloutGeneration =
@@ -24,7 +25,9 @@ export const exactStringSet = (
 ) => actual.size === expected.size && [...expected].every(key => actual.has(key));
 
 export const buildCompatibilityProfileRolloutKeysets = (targetKeys: Iterable<string>) => {
-  const target = new Set(targetKeys);
+  const repositoryTarget = new Set(targetKeys);
+  const sourceControlledPending = new Set<string>(compatibilitySourceControlledPendingProfileIds);
+  const target = new Set([...repositoryTarget].filter(key => !sourceControlledPending.has(key)));
   const productionPending = new Set<string>(compatibilityProductionRolloutPendingProfileIds);
   const wave04Pending = new Set<string>(compatibilityStackedWave04PendingProfileIds);
   const wave05Pending = new Set<string>(compatibilityStackedWave05PendingProfileIds);
@@ -32,10 +35,18 @@ export const buildCompatibilityProfileRolloutKeysets = (targetKeys: Iterable<str
   const wave16Pending = new Set<string>(compatibilityStackedWave16PendingProfileIds);
 
   const generations = [productionPending, wave04Pending, wave05Pending, wave06Pending, wave16Pending];
+  for (const speciesId of sourceControlledPending) {
+    if (!repositoryTarget.has(speciesId)) {
+      throw new Error('Compatibility source-controlled pending Profile is not present in repository authority: ' + speciesId);
+    }
+  }
   for (const pending of generations) {
     for (const speciesId of pending) {
       if (!target.has(speciesId)) {
-        throw new Error('Compatibility rollout pending Profile is not present in target authority: ' + speciesId);
+        throw new Error('Compatibility rollout pending Profile is not present in release target authority: ' + speciesId);
+      }
+      if (sourceControlledPending.has(speciesId)) {
+        throw new Error('Compatibility source-controlled pending Profile must not overlap a released rollout generation: ' + speciesId);
       }
     }
   }
@@ -102,7 +113,7 @@ export const getCompatibilityProfileAuthorityGeneration = (
   const rollout = getCompatibilityProfileRolloutGeneration(actualKeys, targetKeys);
   if (rollout) return rollout;
   const actual = new Set(actualKeys);
-  const target = new Set(targetKeys);
+  const target = buildCompatibilityProfileRolloutKeysets(targetKeys).target;
   if (actual.size > target.size && [...target].every(key => actual.has(key))) return 'post-target-superset';
   return null;
 };

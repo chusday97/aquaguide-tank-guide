@@ -160,10 +160,24 @@ assert.equal(wave06TargetStatus.profiles, 100);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
+const releasedTargetProfiles = profilesFor(rolloutKeysets.target);
+assert.equal(releasedTargetProfiles.length, 101);
+applyReviewedCompatibilityBootstrap({
+  ...bootstrap,
+  profiles: releasedTargetProfiles,
+  counts: { profiles: releasedTargetProfiles.length, pairRules: bootstrap.pairRules.length },
+});
+const releasedTargetStatus = getRuntimeCompatibilityStatus();
+assert.equal(releasedTargetStatus.source, 'reviewed-db', 'exact 101-Profile released repository target must remain usable');
+assert.equal(releasedTargetStatus.profiles, 101);
+
+resetRuntimeCompatibilityEvidenceForTest();
+
+assert.equal(bootstrap.profiles.length, 102, 'source-controlled Wave21 grows repository authority beyond the released 101-Profile target');
 applyReviewedCompatibilityBootstrap(bootstrap);
-const targetStatus = getRuntimeCompatibilityStatus();
-assert.equal(targetStatus.source, 'reviewed-db', 'exact 101-Profile repository target must be usable');
-assert.equal(targetStatus.profiles, 101);
+const postTargetStatus = getRuntimeCompatibilityStatus();
+assert.equal(postTargetStatus.source, 'reviewed-db', 'complete released target plus reviewed source-controlled Profiles must be accepted as post-target authority growth');
+assert.equal(postTargetStatus.profiles, 102);
 
 resetRuntimeCompatibilityEvidenceForTest();
 

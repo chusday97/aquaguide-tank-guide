@@ -41,4 +41,19 @@ assert.equal(koi?.spaceAndGrowth?.minTankLengthCm, undefined);
 assert.notEqual(koi?.spaceAndGrowth?.evidence.confidence, 'unknown');
 assert.equal(koi?.socialBehavior?.evidence.confidence, 'unknown');
 
-console.log('Identity-bound catalog bridges passed: approved fields promoted without resolving trade-form identity');
+const marbleIdentity = getCatalogFieldReviews('sp_0176').filter(review => review.field === 'identity').at(-1);
+assert.equal(marbleIdentity?.resolution, 'supported');
+assert.deepEqual(marbleIdentity?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Marble',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Marble',
+});
+const marbleApproved = new Map(getApprovedCatalogFieldReviews('sp_0176').map(review => [review.field, review]));
+assert.deepEqual(marbleApproved.get('temperature')?.proposedValue, { min: 24, max: 30 });
+assert.deepEqual(marbleApproved.get('ph')?.proposedValue, { min: 6, max: 8 });
+assert.deepEqual(marbleApproved.get('adult_size')?.proposedValue, { min: null, max: 15 });
+assert.deepEqual(marbleApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 100 });
+assert.deepEqual(marbleApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
+assert.deepEqual(marbleApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
+
+console.log('Identity-bound catalog bridges passed: partial unresolved bridges stay bounded and reviewed Marble identity correction inherits only explicit same-species authority');
