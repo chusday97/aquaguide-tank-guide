@@ -1,6 +1,7 @@
 import { GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS } from '../../../packages/contracts/src';
 import { fishData } from '../../data/fishData';
 import { catalogContentVerifiedSourceIds, getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
+import { getCatalogReviewSourceCandidates } from '../../data/catalogReviewSourceCandidates';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
 import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
@@ -179,10 +180,8 @@ const knowledgeCell = (fish: Fish, field: CompatibilityCoreField): Compatibility
   }
   if (field === 'predation') {
     const risk = section.predationRisk;
-    const vulnerability = section.predationVulnerability;
-    if ((risk === 'unknown' || risk == null) && (vulnerability === 'unknown' || vulnerability == null)) return null;
-    const neutral = (risk === 'none' || risk == null) && (vulnerability === 'none' || vulnerability == null);
-    return { status: neutral ? 'reviewed_neutral_or_negative' : 'reviewed_supported', disposition: 'ready', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: null };
+    if (risk === 'unknown' || risk == null) return null;
+    return { status: risk === 'none' ? 'reviewed_neutral_or_negative' : 'reviewed_supported', disposition: 'ready', evidenceIds: section.evidence.sourceIds, authoritySource: 'species_knowledge', reasonCode: null };
   }
   return null;
 };
@@ -232,17 +231,23 @@ const fieldCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFiel
     const status = supportedValueStatus(supported);
     return { status, disposition: status === 'reviewed_unknown' ? 'targeted_source_expansion' : 'ready', evidenceIds: supported.citationIds, authoritySource: 'catalog_field_review', reasonCode: status === 'reviewed_unknown' ? 'reviewed_supported_record_contains_unknown_value' : null };
   }
+  // A historical reviewed_unknown means only “this source did not establish the
+  // field at that time”. It must not permanently suppress a later explicit,
+  // reviewed species-knowledge or Compatibility-profile conclusion.
+  const knowledge = knowledgeCell(fish, field);
+  if (knowledge && knowledge.status !== 'reviewed_unknown') return knowledge;
+  const profile = profileCell(fish, field);
+  if (profile && profile.status !== 'reviewed_unknown') return profile;
+
   const unknown = exactReviews.find(review => review.resolution === 'unknown');
   if (unknown) {
     const ceiling = evidenceCeilingForField(fish, field);
     return { status: 'reviewed_unknown', disposition: ceiling ? 'terminal_hold' : 'targeted_source_expansion', evidenceIds: unique([...(unknown.citationIds || []), ...(ceiling?.sourceIds || [])]), authoritySource: ceiling ? 'evidence_ceiling' : 'catalog_field_review', reasonCode: ceiling?.code ?? 'reviewed_field_unknown' };
   }
-  const knowledge = knowledgeCell(fish, field);
   if (knowledge) {
-    const ceiling = knowledge.status === 'reviewed_unknown' ? evidenceCeilingForField(fish, field) : undefined;
+    const ceiling = evidenceCeilingForField(fish, field);
     return ceiling ? { ...knowledge, disposition: 'terminal_hold', evidenceIds: unique([...knowledge.evidenceIds, ...ceiling.sourceIds]), authoritySource: 'evidence_ceiling', reasonCode: ceiling.code } : knowledge;
   }
-  const profile = profileCell(fish, field);
   if (profile) return profile;
   const ceiling = evidenceCeilingForField(fish, field);
   if (ceiling) return { status: 'reviewed_unknown', disposition: 'terminal_hold', evidenceIds: ceiling.sourceIds, authoritySource: 'evidence_ceiling', reasonCode: ceiling.code };
@@ -431,7 +436,14 @@ export const buildCompatibilityFastLaneResearchPackets = (): CompatibilityFastLa
     const evidenceSet = new Set(evidenceIds);
     const profileSources = (profile?.citations ?? []).filter(source => evidenceSet.has(source.id));
     const registrySources = resolveKnowledgeSources(evidenceIds);
-    const existingSources = Array.from(new Map([...profileSources, ...registrySources].map(source => [source.id, source])).values())
+    const catalogSources = fish
+      ? getCatalogReviewSourceCandidates(fish.id)
+        .filter(source => evidenceSet.has(source.id))
+        .map(source => catalogContentVerifiedSourceIds.has(source.id)
+          ? { ...source, reviewStatus: 'reviewed' as const }
+          : source)
+      : [];
+    const existingSources = Array.from(new Map([...profileSources, ...registrySources, ...catalogSources].map(source => [source.id, source])).values())
       .map(source => ({ id: source.id, title: source.title, publisher: source.publisher, url: source.url, reviewStatus: source.reviewStatus }));
     return [{
       speciesId: row.speciesId,

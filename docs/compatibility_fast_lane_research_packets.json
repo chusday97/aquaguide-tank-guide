@@ -1,6 +1,133 @@
 {
   "generatedFrom": "compatibility_core_field_coverage.json",
   "policy": "only one-field-away fish; promote only direct reviewed exact-taxon evidence; never guess missing authority",
-  "totalPackets": 0,
-  "packets": []
+  "totalPackets": 5,
+  "packets": [
+    {
+      "speciesId": "sp_0011",
+      "name": "月光鱼",
+      "scientificName": "Xiphophorus maculatus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "catalog-fishbase-xiphophorus-maculatus"
+      ],
+      "existingSources": [
+        {
+          "id": "catalog-fishbase-xiphophorus-maculatus",
+          "title": "Xiphophorus maculatus (Platy) species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.org/summary/Xiphophorus_maculatus.html",
+          "reviewStatus": "draft"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0013",
+      "name": "小精灵",
+      "scientificName": "Otocinclus vittatus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch-02-fishbase-otocinclus-vittatus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch-02-fishbase-otocinclus-vittatus",
+          "title": "Otocinclus vittatus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Otocinclus-vittatus.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0151",
+      "name": "彩色天使鱼（彩色裙鱼）",
+      "scientificName": "Gymnocorymbus ternetzi var. Color morph",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
+        "seriouslyfish-gymnocorymbus-ternetzi",
+        "fishbase-gymnocorymbus-ternetzi"
+      ],
+      "existingSources": [
+        {
+          "id": "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
+          "title": "Gymnocorymbus ternetzi Color morph variant review",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "seriouslyfish-gymnocorymbus-ternetzi",
+          "title": "Gymnocorymbus ternetzi (Black Widow Tetra)",
+          "publisher": "Seriously Fish",
+          "url": "https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi",
+          "reviewStatus": "reviewed"
+        },
+        {
+          "id": "fishbase-gymnocorymbus-ternetzi",
+          "title": "Gymnocorymbus ternetzi (Black tetra) species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0433",
+      "name": "红鼻剪刀",
+      "scientificName": "Hemigrammus rhodostomus",
+      "missingField": "predation",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "batch-02-fishbase-hemigrammus-rhodostomus"
+      ],
+      "existingSources": [
+        {
+          "id": "batch-02-fishbase-hemigrammus-rhodostomus",
+          "title": "Hemigrammus rhodostomus species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.se/summary/Hemigrammus-rhodostomus.html",
+          "reviewStatus": "reviewed"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence defining fish-prey scope, or explicit evidence that no fish-predation target should be enforced.",
+      "resolutionConstraint": "Do not infer fish-predation safety from a diet label alone, and do not widen prey scope beyond the reviewed source."
+    },
+    {
+      "speciesId": "sp_0438",
+      "name": "红剑鱼",
+      "scientificName": "Xiphophorus hellerii",
+      "missingField": "territoriality",
+      "currentStatus": "reviewed_unknown",
+      "currentReasonCode": "reviewed_field_unknown",
+      "existingEvidenceIds": [
+        "catalog-fishbase-xiphophorus-hellerii"
+      ],
+      "existingSources": [
+        {
+          "id": "catalog-fishbase-xiphophorus-hellerii",
+          "title": "Xiphophorus hellerii (Green swordtail) species summary",
+          "publisher": "FishBase",
+          "url": "https://www.fishbase.org/Summary/Xiphophorus-hellerii",
+          "reviewStatus": "draft"
+        }
+      ],
+      "neededEvidenceType": "Direct reviewed evidence for stable territorial/resource-defense behavior and the affected tankmate scope.",
+      "resolutionConstraint": "Do not convert generic aggression, dominance or solitary behavior into territoriality without direct scope evidence."
+    }
+  ]
 }

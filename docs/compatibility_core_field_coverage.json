@@ -11,72 +11,72 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 53,
-  "coreFieldCompleteSpecies": 55,
-  "oneFieldGapSpecies": 1,
+  "genericOnboardingReadySpecies": 55,
+  "coreFieldCompleteSpecies": 70,
+  "oneFieldGapSpecies": 6,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 100,
+      "reviewed_supported": 116,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 85,
+      "reviewed_unknown": 69,
       "needs_research": 0,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 78,
+      "reviewed_supported": 89,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 26,
+      "reviewed_unknown": 15,
       "needs_research": 81,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 73,
+      "reviewed_supported": 84,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 31,
+      "reviewed_unknown": 20,
       "needs_research": 81,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 92,
+      "reviewed_supported": 102,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 13,
+      "reviewed_unknown": 3,
       "needs_research": 80,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 68,
+      "reviewed_supported": 80,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 32,
+      "reviewed_unknown": 20,
       "needs_research": 85,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 84,
+      "reviewed_supported": 107,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 101,
+      "reviewed_unknown": 78,
       "needs_research": 0,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 62,
-      "reviewed_neutral_or_negative": 9,
-      "reviewed_unknown": 111,
+      "reviewed_supported": 68,
+      "reviewed_neutral_or_negative": 22,
+      "reviewed_unknown": 92,
       "needs_research": 3,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 43,
-      "reviewed_neutral_or_negative": 22,
-      "reviewed_unknown": 118,
+      "reviewed_supported": 58,
+      "reviewed_neutral_or_negative": 24,
+      "reviewed_unknown": 101,
       "needs_research": 2,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -85,35 +85,35 @@
   "fieldActionableGaps": [
     {
       "field": "tank_size",
-      "count": 116
+      "count": 104
     },
     {
       "field": "ph",
-      "count": 112
+      "count": 101
     },
     {
       "field": "temperature",
-      "count": 107
+      "count": 96
     },
     {
       "field": "adult_size",
-      "count": 93
+      "count": 83
     },
     {
       "field": "water",
-      "count": 85
+      "count": 69
     },
     {
       "field": "territoriality",
-      "count": 41
+      "count": 22
     },
     {
       "field": "predation",
-      "count": 36
+      "count": 19
     },
     {
       "field": "social_behavior",
-      "count": 16
+      "count": 1
     }
   ],
   "rows": [
@@ -857,81 +857,89 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-gymnocorymbus-ternetzi"
+            "seriouslyfish-gymnocorymbus-ternetzi",
+            "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -942,72 +950,77 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus",
+            "fishbase-xiphophorus-maculatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus",
+            "fishbase-xiphophorus-maculatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus",
+            "fishbase-xiphophorus-maculatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus",
+            "fishbase-xiphophorus-maculatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus",
+            "fishbase-xiphophorus-maculatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-maculatus"
+            "seriouslyfish-xiphophorus-maculatus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -1112,8 +1125,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 4,
-      "actionableGapCount": 4,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1153,31 +1166,31 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-otocinclus-vittatus"
+            "fishipedia-otocinclus-vittatus-direct-husbandry"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-otocinclus-vittatus"
+            "fishipedia-otocinclus-vittatus-direct-husbandry"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-otocinclus-vittatus"
+            "fishipedia-otocinclus-vittatus-direct-husbandry"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -1197,8 +1210,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1256,22 +1269,22 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-corydoras-aeneus"
+            "seriouslyfish-corydoras-aeneus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-corydoras-aeneus"
+            "seriouslyfish-corydoras-aeneus"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -1368,8 +1381,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1427,22 +1440,22 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-mikrogeophagus-ramirezi"
+            "aquarium-industries-ramirezi-care-sheet"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-mikrogeophagus-ramirezi"
+            "aquarium-industries-ramirezi-care-sheet"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -4168,8 +4181,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 6,
+      "actionableGapCount": 2,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -4218,31 +4231,34 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-channa-asiatica"
+            "small-snakehead-fws-assessment",
+            "batch33-fishbase-channa-asiatica"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-channa-asiatica"
+            "small-snakehead-fws-assessment",
+            "batch33-fishbase-channa-asiatica"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-channa-asiatica"
+            "small-snakehead-fws-assessment",
+            "batch33-fishbase-channa-asiatica"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -11946,9 +11962,9 @@
       "scientificName": "Mikrogeophagus ramirezi var. Platinum",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -12018,26 +12034,26 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch10-fishbase-mikrogeophagus-ramirezi-platinum",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
             "batch10-fishbase-mikrogeophagus-ramirezi-platinum",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         }
       }
     },
@@ -12048,18 +12064,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 2,
+      "actionableGapCount": 4,
       "terminalGapCount": 2,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch39-fishbase-amatitlania-nigrofasciata-blue"
+            "convict-cichlid-territory-study"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -12125,18 +12141,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 2,
+      "actionableGapCount": 4,
       "terminalGapCount": 2,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch39-fishbase-amatitlania-nigrofasciata-white"
+            "convict-cichlid-territory-study"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -12356,8 +12372,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -12427,15 +12443,15 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
             "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -12871,9 +12887,9 @@
       "scientificName": "Mikrogeophagus ramirezi var. Blue",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -12943,26 +12959,26 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "batch10-fishbase-mikrogeophagus-ramirezi-blue",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
             "batch10-fishbase-mikrogeophagus-ramirezi-blue",
             "seriouslyfish-mikrogeophagus-ramirezi",
             "fishbase-mikrogeophagus-ramirezi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         }
       }
     },
@@ -14297,8 +14313,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -14368,26 +14384,26 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
             "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -17132,8 +17148,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -17203,26 +17219,26 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
             "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
             "wave05-cbd-gymnocorymbus-albino-white",
             "seriouslyfish-gymnocorymbus-ternetzi",
             "fishbase-gymnocorymbus-ternetzi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -18387,18 +18403,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 2,
+      "actionableGapCount": 4,
       "terminalGapCount": 2,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch39-fishbase-amatitlania-nigrofasciata-jellybean"
+            "convict-cichlid-territory-study"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -18464,18 +18480,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 2,
-      "actionableGapCount": 5,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
       "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch40-sciencedirect-channa-asiatica-albino"
+            "small-snakehead-fws-assessment"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -21397,9 +21413,9 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 5,
+      "authoritativeFieldCount": 6,
       "actionableGapCount": 1,
-      "terminalGapCount": 2,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
           "status": "reviewed_supported",
@@ -21447,15 +21463,13 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-betta-splendens",
-            "sciadv-betta-phenotypic-diversity",
-            "ygcen-betta-behavior-variation-2022"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -21486,18 +21500,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
-      "terminalGapCount": 2,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch43-fishbase-betta-splendens-halfmoon"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -21528,13 +21542,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch43-fishbase-betta-splendens-halfmoon"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -21563,18 +21577,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
-      "terminalGapCount": 2,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch43-fishbase-betta-splendens-crown-tail"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -21605,13 +21619,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch43-fishbase-betta-splendens-crown-tail"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -21640,18 +21654,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
-      "terminalGapCount": 2,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-large-ear"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -21682,13 +21696,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-large-ear"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -21717,18 +21731,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
-      "terminalGapCount": 2,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-blue-dragon"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -21759,13 +21773,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-blue-dragon"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -31887,18 +31901,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
-      "terminalGapCount": 2,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-platinum-halfmoon"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -31929,13 +31943,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-platinum-halfmoon"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -31964,18 +31978,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
-      "terminalGapCount": 2,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-red-white-crown"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -32006,13 +32020,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-red-white-crown"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -32041,18 +32055,18 @@
       "lifeType": "fish",
       "reviewedProfile": "inherited",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 5,
-      "terminalGapCount": 2,
+      "authoritativeFieldCount": 3,
+      "actionableGapCount": 4,
+      "terminalGapCount": 1,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-blue-dragon-crown"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "species_knowledge",
-          "reasonCode": "reviewed_environment_water_unknown"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "temperature": {
           "status": "needs_research",
@@ -32083,13 +32097,13 @@
           "reasonCode": "missing_reviewed_field_authority"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch44-fishbase-betta-splendens-blue-dragon-crown"
+            "seriouslyfish-betta-splendens"
           ],
-          "authoritySource": "evidence_ceiling",
-          "reasonCode": "variant_social_not_established"
+          "authoritySource": "compatibility_profile",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -35313,8 +35327,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 7,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35327,67 +35341,67 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-innesi"
+            "batch33-fishbase-paracheirodon-innesi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-innesi"
+            "batch33-fishbase-paracheirodon-innesi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-innesi"
+            "seriouslyfish-paracheirodon-innesi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-innesi"
+            "seriouslyfish-paracheirodon-innesi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-innesi"
+            "seriouslyfish-paracheirodon-innesi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-innesi"
+            "seriouslyfish-paracheirodon-innesi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-innesi"
+            "seriouslyfish-paracheirodon-innesi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -35398,8 +35412,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 7,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35412,67 +35426,67 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-axelrodi"
+            "batch33-fishbase-paracheirodon-axelrodi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-axelrodi"
+            "batch33-fishbase-paracheirodon-axelrodi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-axelrodi"
+            "seriouslyfish-paracheirodon-axelrodi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-axelrodi"
+            "seriouslyfish-paracheirodon-axelrodi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-axelrodi"
+            "seriouslyfish-paracheirodon-axelrodi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-axelrodi"
+            "seriouslyfish-paracheirodon-axelrodi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-paracheirodon-axelrodi"
+            "seriouslyfish-paracheirodon-axelrodi"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -35483,8 +35497,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 2,
-      "actionableGapCount": 6,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35497,22 +35511,24 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-hemigrammus-rhodostomus"
+            "seriouslyfish-petitella-rhodostoma",
+            "fishbase-petitella-rhodostoma"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-hemigrammus-rhodostomus"
+            "seriouslyfish-petitella-rhodostoma",
+            "fishbase-petitella-rhodostoma"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -35524,31 +35540,34 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-hemigrammus-rhodostomus"
+            "seriouslyfish-petitella-rhodostoma",
+            "fishbase-petitella-rhodostoma"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-hemigrammus-rhodostomus"
+            "seriouslyfish-petitella-rhodostoma",
+            "fishbase-petitella-rhodostoma"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-hemigrammus-rhodostomus"
+            "seriouslyfish-petitella-rhodostoma",
+            "fishbase-petitella-rhodostoma"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
           "status": "reviewed_unknown",
@@ -35568,8 +35587,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 7,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35582,67 +35601,67 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-tanichthys-albonubes"
+            "batch42-fishbase-tanichthys-albonubes"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-tanichthys-albonubes"
+            "batch42-fishbase-tanichthys-albonubes"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-tanichthys-albonubes"
+            "seriouslyfish-tanichthys-albonubes"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-tanichthys-albonubes"
+            "seriouslyfish-tanichthys-albonubes"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-tanichthys-albonubes"
+            "seriouslyfish-tanichthys-albonubes"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-tanichthys-albonubes"
+            "seriouslyfish-tanichthys-albonubes"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-tanichthys-albonubes"
+            "seriouslyfish-tanichthys-albonubes"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -35653,8 +35672,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 7,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35667,67 +35686,67 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-danio-rerio"
+            "batch42-fishbase-danio-rerio"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-danio-rerio"
+            "batch42-fishbase-danio-rerio"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-danio-rerio"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-danio-rerio"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-danio-rerio"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-danio-rerio"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-danio-rerio"
+            "seriouslyfish-danio-rerio"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -35738,8 +35757,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 7,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -35752,67 +35771,67 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-reticulata"
+            "batch33-fishbase-poecilia-reticulata"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-reticulata"
+            "batch33-fishbase-poecilia-reticulata"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-reticulata"
+            "seriouslyfish-poecilia-reticulata"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-reticulata"
+            "seriouslyfish-poecilia-reticulata"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-reticulata"
+            "seriouslyfish-poecilia-reticulata"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-reticulata"
+            "seriouslyfish-poecilia-reticulata"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-reticulata"
+            "seriouslyfish-poecilia-reticulata"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -35823,81 +35842,81 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-poecilia-sphenops"
+            "seriouslyfish-poecilia-sphenops"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -35908,63 +35927,64 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
-      "actionableGapCount": 8,
+      "authoritativeFieldCount": 7,
+      "actionableGapCount": 1,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "seriouslyfish-xiphophorus-hellerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "seriouslyfish-xiphophorus-hellerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "seriouslyfish-xiphophorus-hellerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "seriouslyfish-xiphophorus-hellerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "seriouslyfish-xiphophorus-hellerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "seriouslyfish-xiphophorus-hellerii",
+            "fishbase-xiphophorus-hellerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_unknown",
@@ -35976,13 +35996,14 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-xiphophorus-hellerii"
+            "seriouslyfish-xiphophorus-hellerii",
+            "fishbase-xiphophorus-hellerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -35993,8 +36014,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 1,
-      "actionableGapCount": 7,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -36007,67 +36028,67 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-puntigrus-tetrazona"
+            "batch37-fishbase-puntigrus-tetrazona"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-puntigrus-tetrazona"
+            "batch37-fishbase-puntigrus-tetrazona"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-puntigrus-tetrazona"
+            "seriouslyfish-puntigrus-tetrazona"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-puntigrus-tetrazona"
+            "seriouslyfish-puntigrus-tetrazona"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-puntigrus-tetrazona"
+            "seriouslyfish-puntigrus-tetrazona"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-puntigrus-tetrazona"
+            "seriouslyfish-puntigrus-tetrazona"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "catalog-fishbase-puntigrus-tetrazona"
+            "seriouslyfish-puntigrus-tetrazona"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -36430,8 +36451,8 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 6,
-      "actionableGapCount": 2,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -36480,13 +36501,13 @@
           "reasonCode": null
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-trichopodus-leerii"
+            "seriouslyfish-trichopodus-leerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_supported",
@@ -36498,13 +36519,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-trichopodus-leerii"
+            "seriouslyfish-trichopodus-leerii"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         }
       }
     },
@@ -39007,18 +39028,19 @@
       "lifeType": "fish",
       "reviewedProfile": "direct",
       "genericOnboardingReady": false,
-      "authoritativeFieldCount": 2,
-      "actionableGapCount": 6,
+      "authoritativeFieldCount": 4,
+      "actionableGapCount": 4,
       "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-rhodeus-ocellatus"
+            "batch03-fishbase-rhodeus-ocellatus",
+            "jstage-rhodeus-ocellatus-reproductive-cycle"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "temperature": {
           "status": "reviewed_supported",
@@ -39057,13 +39079,13 @@
           "reasonCode": "reviewed_field_unknown"
         },
         "social_behavior": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch03-fishbase-rhodeus-ocellatus"
+            "jstage-rhodeus-ocellatus-schooling"
           ],
-          "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "authoritySource": "species_knowledge",
+          "reasonCode": null
         },
         "territoriality": {
           "status": "reviewed_unknown",

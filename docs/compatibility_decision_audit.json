@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 53,
-  "genericReadyUniquePairs": 1378,
+  "genericOnboardingReadySpecies": 55,
+  "genericReadyUniquePairs": 1485,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 730,
@@ -29,24 +29,52 @@
     "policy": "Prioritize exact-taxon evidence gaps that unlock the most UNKNOWN pairs; keep identity/domain holds in a separate queue.",
     "highestLeverageEvidenceTargets": [
       {
-        "speciesId": "sp_0014",
-        "name": "咖啡鼠",
-        "scientificName": "Corydoras aeneus",
+        "speciesId": "sp_0011",
+        "name": "月光鱼",
+        "scientificName": "Xiphophorus maculatus",
         "unknownPairs": 182,
         "actionableFields": [
-          "territoriality",
           "predation"
         ],
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0016",
-        "name": "金波子",
-        "scientificName": "Mikrogeophagus ramirezi var. Gold",
+        "speciesId": "sp_0013",
+        "name": "小精灵",
+        "scientificName": "Otocinclus vittatus",
         "unknownPairs": 182,
         "actionableFields": [
-          "territoriality",
           "predation"
+        ],
+        "terminalReasons": []
+      },
+      {
+        "speciesId": "sp_0151",
+        "name": "彩色天使鱼（彩色裙鱼）",
+        "scientificName": "Gymnocorymbus ternetzi var. Color morph",
+        "unknownPairs": 182,
+        "actionableFields": [
+          "predation"
+        ],
+        "terminalReasons": []
+      },
+      {
+        "speciesId": "sp_0433",
+        "name": "红鼻剪刀",
+        "scientificName": "Hemigrammus rhodostomus",
+        "unknownPairs": 182,
+        "actionableFields": [
+          "predation"
+        ],
+        "terminalReasons": []
+      },
+      {
+        "speciesId": "sp_0438",
+        "name": "红剑鱼",
+        "scientificName": "Xiphophorus hellerii",
+        "unknownPairs": 182,
+        "actionableFields": [
+          "territoriality"
         ],
         "terminalReasons": []
       },
@@ -73,69 +101,12 @@
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0151",
-        "name": "彩色天使鱼（彩色裙鱼）",
-        "scientificName": "Gymnocorymbus ternetzi var. Color morph",
-        "unknownPairs": 182,
-        "actionableFields": [
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0174",
-        "name": "红眼白子红裙",
-        "scientificName": "Gymnocorymbus ternetzi var. Albino",
-        "unknownPairs": 182,
-        "actionableFields": [
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0207",
-        "name": "白金黑裙",
-        "scientificName": "Gymnocorymbus ternetzi var. White",
-        "unknownPairs": 182,
-        "actionableFields": [
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0444",
-        "name": "珍珠马甲",
-        "scientificName": "Trichopodus leerii",
-        "unknownPairs": 182,
-        "actionableFields": [
-          "social_behavior",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
         "speciesId": "sp_0052",
         "name": "月光鼠",
         "scientificName": "Corydoras hastatus",
         "unknownPairs": 182,
         "actionableFields": [
           "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0013",
-        "name": "小精灵",
-        "scientificName": "Otocinclus vittatus",
-        "unknownPairs": 182,
-        "actionableFields": [
-          "tank_size",
-          "social_behavior",
           "territoriality",
           "predation"
         ],
@@ -211,81 +182,52 @@
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0433",
-        "name": "红鼻剪刀",
-        "scientificName": "Hemigrammus rhodostomus",
-        "unknownPairs": 182,
+        "speciesId": "sp_0118",
+        "name": "黑龙鱼",
+        "scientificName": "Osteoglossum ferreirai",
+        "unknownPairs": 113,
         "actionableFields": [
-          "temperature",
-          "ph",
           "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
+          "territoriality"
         ],
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0431",
-        "name": "红绿灯",
-        "scientificName": "Paracheirodon innesi",
-        "unknownPairs": 182,
+        "speciesId": "sp_0038",
+        "name": "马口鱼",
+        "scientificName": "Opsariichthys bidens",
+        "unknownPairs": 113,
         "actionableFields": [
           "temperature",
           "ph",
-          "adult_size",
           "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
+          "territoriality"
         ],
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0432",
-        "name": "宝莲灯",
-        "scientificName": "Paracheirodon axelrodi",
-        "unknownPairs": 182,
+        "speciesId": "sp_0130",
+        "name": "马口鱼",
+        "scientificName": "Opsariichthys bidens",
+        "unknownPairs": 113,
         "actionableFields": [
           "temperature",
           "ph",
-          "adult_size",
           "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
+          "territoriality"
         ],
         "terminalReasons": []
       },
       {
-        "speciesId": "sp_0436",
-        "name": "孔雀鱼",
-        "scientificName": "Poecilia reticulata",
-        "unknownPairs": 182,
+        "speciesId": "sp_0173",
+        "name": "黄金河虎",
+        "scientificName": "Salminus brasiliensis var.",
+        "unknownPairs": 113,
         "actionableFields": [
           "temperature",
           "ph",
-          "adult_size",
           "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0439",
-        "name": "虎皮鱼",
-        "scientificName": "Puntigrus tetrazona",
-        "unknownPairs": 182,
-        "actionableFields": [
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size",
-          "social_behavior",
-          "territoriality",
-          "predation"
+          "territoriality"
         ],
         "terminalReasons": []
       }
@@ -356,39 +298,39 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 606,
+    "actionableGaps": 495,
     "fieldActionableGaps": [
       {
         "field": "tank_size",
-        "count": 116
+        "count": 104
       },
       {
         "field": "ph",
-        "count": 112
+        "count": 101
       },
       {
         "field": "temperature",
-        "count": 107
+        "count": 96
       },
       {
         "field": "adult_size",
-        "count": 93
+        "count": 83
       },
       {
         "field": "water",
-        "count": 85
+        "count": 69
       },
       {
         "field": "territoriality",
-        "count": 41
+        "count": 22
       },
       {
         "field": "predation",
-        "count": 36
+        "count": 19
       },
       {
         "field": "social_behavior",
-        "count": 16
+        "count": 1
       }
     ],
     "domainOrIdentityHeldSpecies": 290

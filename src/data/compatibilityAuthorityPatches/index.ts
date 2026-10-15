@@ -26,12 +26,20 @@ import {
   compatibilityFastLaneWave4Sources,
   compatibilityFastLaneWave4VerifiedSourceIds,
 } from './fast-lane-wave4-20261014';
+import {
+  compatibilityHighLeverageWave1AuthorityPatch,
+  compatibilityHighLeverageWave1FieldReviews,
+  compatibilityHighLeverageWave1ProfilePatches,
+  compatibilityHighLeverageWave1Sources,
+  compatibilityHighLeverageWave1VerifiedSourceIds,
+} from './high-leverage-wave1-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
   ...compatibilityFastLaneWave2Sources,
   ...compatibilityFastLaneWave3Sources,
   ...compatibilityFastLaneWave4Sources,
+  ...compatibilityHighLeverageWave1Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -39,6 +47,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityFastLaneWave2FieldReviews,
   ...compatibilityFastLaneWave3FieldReviews,
   ...compatibilityFastLaneWave4FieldReviews,
+  ...compatibilityHighLeverageWave1FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -46,6 +55,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityFastLaneWave2VerifiedSourceIds,
   ...compatibilityFastLaneWave3VerifiedSourceIds,
   ...compatibilityFastLaneWave4VerifiedSourceIds,
+  ...compatibilityHighLeverageWave1VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -53,6 +63,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityFastLaneWave2ProfilePatches,
   ...compatibilityFastLaneWave3ProfilePatches,
   ...compatibilityFastLaneWave4ProfilePatches,
+  ...compatibilityHighLeverageWave1ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -60,4 +71,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityFastLaneWave2AuthorityPatch,
   compatibilityFastLaneWave3AuthorityPatch,
   compatibilityFastLaneWave4AuthorityPatch,
+  compatibilityHighLeverageWave1AuthorityPatch,
 ] as const;

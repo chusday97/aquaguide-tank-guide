@@ -1,26 +1,19 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 129,
-  "totalResearchJobs": 75,
-  "variantBridgeJobs": 20,
+  "catalogObjects": 114,
+  "totalResearchJobs": 69,
+  "variantBridgeJobs": 19,
   "items": [
     {
       "researchKey": "Gymnocorymbus ternetzi",
       "baseScientificName": "Gymnocorymbus ternetzi",
-      "priorityScore": 183,
-      "catalogObjectCount": 4,
-      "exactObjectCount": 1,
-      "variantObjectCount": 3,
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 0,
+      "variantObjectCount": 1,
       "unresolvedObjectCount": 0,
       "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
         "predation"
       ],
       "requiresVariantBridgeReview": true,
@@ -28,54 +21,122 @@
       "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
       "catalogObjects": [
         {
-          "speciesId": "sp_0010",
-          "name": "黑裙鱼",
-          "scientificName": "Gymnocorymbus ternetzi",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        },
-        {
           "speciesId": "sp_0151",
           "name": "彩色天使鱼（彩色裙鱼）",
           "scientificName": "Gymnocorymbus ternetzi var. Color morph",
           "gaps": [
-            "territoriality",
             "predation"
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        },
+        }
+      ]
+    },
+    {
+      "researchKey": "Otocinclus vittatus",
+      "baseScientificName": "Otocinclus vittatus",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
         {
-          "speciesId": "sp_0174",
-          "name": "红眼白子红裙",
-          "scientificName": "Gymnocorymbus ternetzi var. Albino",
+          "speciesId": "sp_0013",
+          "name": "小精灵",
+          "scientificName": "Otocinclus vittatus",
           "gaps": [
-            "territoriality",
             "predation"
           ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Petitella rhodostoma",
+      "baseScientificName": "Petitella rhodostoma",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
         {
-          "speciesId": "sp_0207",
-          "name": "白金黑裙",
-          "scientificName": "Gymnocorymbus ternetzi var. White",
+          "speciesId": "sp_0433",
+          "name": "红鼻剪刀",
+          "scientificName": "Petitella rhodostoma",
           "gaps": [
-            "territoriality",
             "predation"
           ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Xiphophorus hellerii",
+      "baseScientificName": "Xiphophorus hellerii",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "territoriality"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0438",
+          "name": "红剑鱼",
+          "scientificName": "Xiphophorus hellerii",
+          "gaps": [
+            "territoriality"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Xiphophorus maculatus",
+      "baseScientificName": "Xiphophorus maculatus",
+      "priorityScore": 191,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0011",
+          "name": "月光鱼",
+          "scientificName": "Xiphophorus maculatus",
+          "gaps": [
+            "predation"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
         }
       ]
     },
@@ -109,57 +170,6 @@
       ]
     },
     {
-      "researchKey": "Mikrogeophagus ramirezi",
-      "baseScientificName": "Mikrogeophagus ramirezi",
-      "priorityScore": 183,
-      "catalogObjectCount": 3,
-      "exactObjectCount": 1,
-      "variantObjectCount": 2,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0016",
-          "name": "金波子",
-          "scientificName": "Mikrogeophagus ramirezi",
-          "gaps": [
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        },
-        {
-          "speciesId": "sp_0146",
-          "name": "白金波子",
-          "scientificName": "Mikrogeophagus ramirezi var. Platinum",
-          "gaps": [
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0157",
-          "name": "蓝宝石短鲷",
-          "scientificName": "Mikrogeophagus ramirezi var. Blue",
-          "gaps": [
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
       "researchKey": "Moenkhausia sanctaefilomenae",
       "baseScientificName": "Moenkhausia sanctaefilomenae",
       "priorityScore": 183,
@@ -179,35 +189,6 @@
           "speciesId": "sp_0062",
           "name": "红眼灯",
           "scientificName": "Moenkhausia sanctaefilomenae",
-          "gaps": [
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Osteogaster aenea",
-      "baseScientificName": "Osteogaster aenea",
-      "priorityScore": 183,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0014",
-          "name": "咖啡鼠",
-          "scientificName": "Osteogaster aenea",
           "gaps": [
             "territoriality",
             "predation"
@@ -240,82 +221,6 @@
           "gaps": [
             "tank_size",
             "territoriality"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Trichopodus leerii",
-      "baseScientificName": "Trichopodus leerii",
-      "priorityScore": 183,
-      "catalogObjectCount": 4,
-      "exactObjectCount": 1,
-      "variantObjectCount": 3,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0153",
-          "name": "球形珍珠马甲",
-          "scientificName": "Trichopodus leerii var. Balloon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0233",
-          "name": "球形珍珠马甲 (红眼)",
-          "scientificName": "Trichopodus leerii var. Albino Balloon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0267",
-          "name": "红头珍珠马甲",
-          "scientificName": "Trichopodus leerii var. Red Head",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0444",
-          "name": "珍珠马甲",
-          "scientificName": "Trichopodus leerii",
-          "gaps": [
-            "social_behavior",
-            "predation"
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
@@ -381,6 +286,171 @@
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Betta splendens",
+      "baseScientificName": "Betta splendens",
+      "priorityScore": 173,
+      "catalogObjectCount": 8,
+      "exactObjectCount": 0,
+      "variantObjectCount": 8,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "requiresVariantBridgeReview": true,
+      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0258",
+          "name": "糖果KOI斗鱼",
+          "scientificName": "Betta splendens var. Koi",
+          "gaps": [
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0259",
+          "name": "半月斗鱼 (蓝蝴蝶)",
+          "scientificName": "Betta splendens var. Halfmoon",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0260",
+          "name": "狮王斗鱼 (红黑)",
+          "scientificName": "Betta splendens var. Crowntail",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0261",
+          "name": "大耳半月斗鱼",
+          "scientificName": "Betta splendens var. Dumbo Halfmoon",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0262",
+          "name": "将军斗鱼 (蓝龙)",
+          "scientificName": "Betta splendens var. Dragon",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0389",
+          "name": "白金半月斗鱼",
+          "scientificName": "Betta splendens var. Platinum",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0390",
+          "name": "红白狮头斗鱼",
+          "scientificName": "Betta splendens var. Kohaku Crown",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0391",
+          "name": "蓝龙将军斗鱼",
+          "scientificName": "Betta splendens var. Blue Dragon",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        }
+      ]
+    },
+    {
+      "researchKey": "Channa asiatica",
+      "baseScientificName": "Channa asiatica",
+      "priorityScore": 173,
+      "catalogObjectCount": 2,
+      "exactObjectCount": 1,
+      "variantObjectCount": 1,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "requiresVariantBridgeReview": true,
+      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0049",
+          "name": "珍珠赤雷龙",
+          "scientificName": "Channa asiatica",
+          "gaps": [
+            "ph",
+            "tank_size"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        },
+        {
+          "speciesId": "sp_0223",
+          "name": "红眼白子雷龙",
+          "scientificName": "Channa asiatica var. Albino",
+          "gaps": [
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
         }
       ]
     },
@@ -493,39 +563,6 @@
       ]
     },
     {
-      "researchKey": "Otocinclus vittatus",
-      "baseScientificName": "Otocinclus vittatus",
-      "priorityScore": 167,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0013",
-          "name": "小精灵",
-          "scientificName": "Otocinclus vittatus",
-          "gaps": [
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Pterois volitans",
       "baseScientificName": "Pterois volitans",
       "priorityScore": 167,
@@ -552,6 +589,39 @@
             "ph",
             "tank_size",
             "territoriality"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Rhodeus ocellatus",
+      "baseScientificName": "Rhodeus ocellatus",
+      "priorityScore": 167,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "ph",
+        "tank_size",
+        "territoriality",
+        "predation"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0475",
+          "name": "高体鳑鲏",
+          "scientificName": "Rhodeus ocellatus",
+          "gaps": [
+            "ph",
+            "tank_size",
+            "territoriality",
+            "predation"
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
@@ -621,135 +691,6 @@
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Betta splendens",
-      "baseScientificName": "Betta splendens",
-      "priorityScore": 165,
-      "catalogObjectCount": 8,
-      "exactObjectCount": 0,
-      "variantObjectCount": 8,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0258",
-          "name": "糖果KOI斗鱼",
-          "scientificName": "Betta splendens var. Koi",
-          "gaps": [
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0259",
-          "name": "半月斗鱼 (蓝蝴蝶)",
-          "scientificName": "Betta splendens var. Halfmoon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0260",
-          "name": "狮王斗鱼 (红黑)",
-          "scientificName": "Betta splendens var. Crowntail",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0261",
-          "name": "大耳半月斗鱼",
-          "scientificName": "Betta splendens var. Dumbo Halfmoon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0262",
-          "name": "将军斗鱼 (蓝龙)",
-          "scientificName": "Betta splendens var. Dragon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0389",
-          "name": "白金半月斗鱼",
-          "scientificName": "Betta splendens var. Platinum",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0390",
-          "name": "红白狮头斗鱼",
-          "scientificName": "Betta splendens var. Kohaku Crown",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0391",
-          "name": "蓝龙将军斗鱼",
-          "scientificName": "Betta splendens var. Blue Dragon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
         }
       ]
     },
@@ -851,58 +792,6 @@
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Channa asiatica",
-      "baseScientificName": "Channa asiatica",
-      "priorityScore": 159,
-      "catalogObjectCount": 2,
-      "exactObjectCount": 1,
-      "variantObjectCount": 1,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0049",
-          "name": "珍珠赤雷龙",
-          "scientificName": "Channa asiatica",
-          "gaps": [
-            "ph",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        },
-        {
-          "speciesId": "sp_0223",
-          "name": "红眼白子雷龙",
-          "scientificName": "Channa asiatica var. Albino",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
         }
       ]
     },
@@ -1131,89 +1020,14 @@
       ]
     },
     {
-      "researchKey": "Petitella rhodostoma",
-      "baseScientificName": "Petitella rhodostoma",
-      "priorityScore": 151,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0433",
-          "name": "红鼻剪刀",
-          "scientificName": "Petitella rhodostoma",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Rhodeus ocellatus",
-      "baseScientificName": "Rhodeus ocellatus",
-      "priorityScore": 151,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "ph",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0475",
-          "name": "高体鳑鲏",
-          "scientificName": "Rhodeus ocellatus",
-          "gaps": [
-            "water",
-            "ph",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
       "researchKey": "Amatitlania nigrofasciata",
       "baseScientificName": "Amatitlania nigrofasciata",
-      "priorityScore": 143,
+      "priorityScore": 141,
       "catalogObjectCount": 3,
       "exactObjectCount": 0,
       "variantObjectCount": 3,
       "unresolvedObjectCount": 0,
       "combinedGapFields": [
-        "water",
         "temperature",
         "ph",
         "adult_size",
@@ -1228,7 +1042,6 @@
           "name": "蓝宝鹦鹉鱼",
           "scientificName": "Amatitlania nigrofasciata var. Blue",
           "gaps": [
-            "water",
             "temperature",
             "ph",
             "adult_size",
@@ -1242,7 +1055,6 @@
           "name": "雪玉鹦鹉鱼",
           "scientificName": "Amatitlania nigrofasciata var. White",
           "gaps": [
-            "water",
             "temperature",
             "ph",
             "adult_size",
@@ -1256,7 +1068,6 @@
           "name": "蓝宝鹦鹉 (球形)",
           "scientificName": "Amatitlania nigrofasciata var. Jellybean",
           "gaps": [
-            "water",
             "temperature",
             "ph",
             "adult_size",
@@ -1264,547 +1075,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Danio rerio",
-      "baseScientificName": "Danio rerio",
-      "priorityScore": 143,
-      "catalogObjectCount": 8,
-      "exactObjectCount": 1,
-      "variantObjectCount": 7,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0152",
-          "name": "荧光斑马鱼",
-          "scientificName": "Danio rerio var. GloFish",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0289",
-          "name": "荧光红斑马",
-          "scientificName": "Danio rerio var. Glo Red",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0290",
-          "name": "荧光绿斑马",
-          "scientificName": "Danio rerio var. Glo Green",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0291",
-          "name": "荧光橙斑马",
-          "scientificName": "Danio rerio var. Glo Orange",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0363",
-          "name": "荧光紫斑马",
-          "scientificName": "Danio rerio var. Glo Purple",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0364",
-          "name": "荧光粉斑马",
-          "scientificName": "Danio rerio var. Glo Pink",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0419",
-          "name": "荧光橙斑马 (长鳍)",
-          "scientificName": "Danio rerio var. Glo Orange Longfin",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0435",
-          "name": "斑马鱼",
-          "scientificName": "Danio rerio",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Paracheirodon axelrodi",
-      "baseScientificName": "Paracheirodon axelrodi",
-      "priorityScore": 143,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0432",
-          "name": "宝莲灯",
-          "scientificName": "Paracheirodon axelrodi",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Paracheirodon innesi",
-      "baseScientificName": "Paracheirodon innesi",
-      "priorityScore": 143,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0431",
-          "name": "红绿灯",
-          "scientificName": "Paracheirodon innesi",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Poecilia reticulata",
-      "baseScientificName": "Poecilia reticulata",
-      "priorityScore": 143,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0436",
-          "name": "孔雀鱼",
-          "scientificName": "Poecilia reticulata",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Puntigrus tetrazona",
-      "baseScientificName": "Puntigrus tetrazona",
-      "priorityScore": 143,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0439",
-          "name": "虎皮鱼",
-          "scientificName": "Puntigrus tetrazona",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Tanichthys albonubes",
-      "baseScientificName": "Tanichthys albonubes",
-      "priorityScore": 143,
-      "catalogObjectCount": 4,
-      "exactObjectCount": 1,
-      "variantObjectCount": 3,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0171",
-          "name": "白玉金丝鱼",
-          "scientificName": "Tanichthys albonubes var. Albino",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0172",
-          "name": "长鳍白云金丝",
-          "scientificName": "Tanichthys albonubes var. Longfin",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0426",
-          "name": "极地白云金丝",
-          "scientificName": "Tanichthys albonubes var. Polar",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0434",
-          "name": "白云金丝",
-          "scientificName": "Tanichthys albonubes",
-          "gaps": [
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Poecilia sphenops",
-      "baseScientificName": "Poecilia sphenops",
-      "priorityScore": 135,
-      "catalogObjectCount": 4,
-      "exactObjectCount": 1,
-      "variantObjectCount": 3,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": true,
-      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0161",
-          "name": "巧克力皮球",
-          "scientificName": "Poecilia sphenops var. Chocolate",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0203",
-          "name": "绿赏皮球",
-          "scientificName": "Poecilia sphenops var. Green",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0293",
-          "name": "球形黑玛丽",
-          "scientificName": "Poecilia sphenops var. Black Balloon",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": true,
-          "isExactBaseTaxon": false
-        },
-        {
-          "speciesId": "sp_0437",
-          "name": "玛丽鱼",
-          "scientificName": "Poecilia sphenops",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Xiphophorus hellerii",
-      "baseScientificName": "Xiphophorus hellerii",
-      "priorityScore": 135,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0438",
-          "name": "红剑鱼",
-          "scientificName": "Xiphophorus hellerii",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Xiphophorus maculatus",
-      "baseScientificName": "Xiphophorus maculatus",
-      "priorityScore": 135,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size",
-        "social_behavior",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0011",
-          "name": "月光鱼",
-          "scientificName": "Xiphophorus maculatus",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size",
-            "social_behavior",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },
@@ -2387,6 +1657,125 @@
       ]
     },
     {
+      "researchKey": "Danio rerio",
+      "baseScientificName": "Danio rerio",
+      "priorityScore": 110,
+      "catalogObjectCount": 7,
+      "exactObjectCount": 0,
+      "variantObjectCount": 7,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "requiresVariantBridgeReview": true,
+      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0152",
+          "name": "荧光斑马鱼",
+          "scientificName": "Danio rerio var. GloFish",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0289",
+          "name": "荧光红斑马",
+          "scientificName": "Danio rerio var. Glo Red",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0290",
+          "name": "荧光绿斑马",
+          "scientificName": "Danio rerio var. Glo Green",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0291",
+          "name": "荧光橙斑马",
+          "scientificName": "Danio rerio var. Glo Orange",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0363",
+          "name": "荧光紫斑马",
+          "scientificName": "Danio rerio var. Glo Purple",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0364",
+          "name": "荧光粉斑马",
+          "scientificName": "Danio rerio var. Glo Pink",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0419",
+          "name": "荧光橙斑马 (长鳍)",
+          "scientificName": "Danio rerio var. Glo Orange Longfin",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        }
+      ]
+    },
+    {
       "researchKey": "Epiplatys annulatus",
       "baseScientificName": "Epiplatys annulatus",
       "priorityScore": 110,
@@ -2898,6 +2287,69 @@
       ]
     },
     {
+      "researchKey": "Poecilia sphenops",
+      "baseScientificName": "Poecilia sphenops",
+      "priorityScore": 110,
+      "catalogObjectCount": 3,
+      "exactObjectCount": 0,
+      "variantObjectCount": 3,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "requiresVariantBridgeReview": true,
+      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0161",
+          "name": "巧克力皮球",
+          "scientificName": "Poecilia sphenops var. Chocolate",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0203",
+          "name": "绿赏皮球",
+          "scientificName": "Poecilia sphenops var. Green",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0293",
+          "name": "球形黑玛丽",
+          "scientificName": "Poecilia sphenops var. Black Balloon",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        }
+      ]
+    },
+    {
       "researchKey": "Pseudogastromyzon fangi",
       "baseScientificName": "Pseudogastromyzon fangi",
       "priorityScore": 110,
@@ -3304,6 +2756,69 @@
       ]
     },
     {
+      "researchKey": "Tanichthys albonubes",
+      "baseScientificName": "Tanichthys albonubes",
+      "priorityScore": 110,
+      "catalogObjectCount": 3,
+      "exactObjectCount": 0,
+      "variantObjectCount": 3,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "requiresVariantBridgeReview": true,
+      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0171",
+          "name": "白玉金丝鱼",
+          "scientificName": "Tanichthys albonubes var. Albino",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0172",
+          "name": "长鳍白云金丝",
+          "scientificName": "Tanichthys albonubes var. Longfin",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0426",
+          "name": "极地白云金丝",
+          "scientificName": "Tanichthys albonubes var. Polar",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        }
+      ]
+    },
+    {
       "researchKey": "Thayeria boehlkei",
       "baseScientificName": "Thayeria boehlkei",
       "priorityScore": 110,
@@ -3335,6 +2850,69 @@
           ],
           "isVariant": false,
           "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
+      "researchKey": "Trichopodus leerii",
+      "baseScientificName": "Trichopodus leerii",
+      "priorityScore": 110,
+      "catalogObjectCount": 3,
+      "exactObjectCount": 0,
+      "variantObjectCount": 3,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "water",
+        "temperature",
+        "ph",
+        "adult_size",
+        "tank_size"
+      ],
+      "requiresVariantBridgeReview": true,
+      "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+      "promotionPolicy": "Research the base taxon once for source discovery only. Base-taxon facts are candidate evidence for variants and must never auto-promote; each affected field requires a reviewed variant-to-base bridge or variant-specific evidence.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0153",
+          "name": "球形珍珠马甲",
+          "scientificName": "Trichopodus leerii var. Balloon",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0233",
+          "name": "球形珍珠马甲 (红眼)",
+          "scientificName": "Trichopodus leerii var. Albino Balloon",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
+        },
+        {
+          "speciesId": "sp_0267",
+          "name": "红头珍珠马甲",
+          "scientificName": "Trichopodus leerii var. Red Head",
+          "gaps": [
+            "water",
+            "temperature",
+            "ph",
+            "adult_size",
+            "tank_size"
+          ],
+          "isVariant": true,
+          "isExactBaseTaxon": false
         }
       ]
     }

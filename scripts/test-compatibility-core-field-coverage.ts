@@ -82,6 +82,11 @@ for (const speciesId of ['sp_0103', 'sp_0104', 'sp_0116', 'sp_0283']) {
 }
 assert.equal(rowOf('sp_0447')?.fields.social_behavior.status, 'reviewed_supported');
 assert.equal(rowOf('sp_0447')?.fields.predation.status, 'reviewed_neutral_or_negative');
+assert.equal(rowOf('sp_0013')?.fields.social_behavior.status, 'reviewed_supported', 'later reviewed Otocinclus group evidence must supersede the older field-level reviewed_unknown');
+assert.equal(rowOf('sp_0013')?.fields.social_behavior.authoritySource, 'catalog_field_review');
+assert.equal(rowOf('sp_0013')?.fields.territoriality.status, 'reviewed_neutral_or_negative', 'explicit reviewed non-territorial Otocinclus evidence must supersede the older reviewed_unknown');
+assert.equal(rowOf('sp_0013')?.fields.territoriality.authoritySource, 'catalog_field_review');
+assert.equal(rowOf('sp_0013')?.fields.predation.status, 'reviewed_unknown', 'predation vulnerability must not be treated as evidence that Otocinclus preys on tankmates');
 
 const approvedValue = (speciesId: string, field: string) => getApprovedCatalogFieldReviews(speciesId).find(review => review.field === field)?.proposedValue;
 assert.deepEqual(approvedValue('sp_0014', 'tank_size'), { liters: 72, lengthCm: 80 });
@@ -108,6 +113,18 @@ assert.deepEqual(approvedValue('sp_0447', 'predation'), { targets: [] });
 assert.deepEqual(approvedValue('sp_0447', 'territoriality'), { traits: ['breeding_territoriality'] });
 assert.deepEqual(approvedValue('sp_0451', 'territoriality'), { traits: ['territorial', 'territory_defense'] });
 assert.deepEqual(approvedValue('sp_0197', 'predation'), { targets: [] });
+assert.deepEqual(approvedValue('sp_0013', 'tank_size'), { liters: 60, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0013', 'social_behavior'), { mode: 'group', minimumGroupSize: 6 });
+assert.deepEqual(approvedValue('sp_0013', 'territoriality'), { traits: [] });
+assert.equal(approvedValue('sp_0013', 'predation'), undefined, 'Otocinclus fish-predation authority must remain unresolved until direct prey-risk evidence exists');
+assert.equal(rowOf('sp_0013')?.fields.tank_size.status, 'reviewed_supported');
+assert.equal(rowOf('sp_0013')?.fields.predation.status, 'reviewed_unknown');
+assert.equal(rowOf('sp_0013')?.actionableGapCount, 1);
+assert.deepEqual(
+  resolveKnowledgeSources(['fishipedia-otocinclus-vittatus-direct-husbandry']).map(source => source.id),
+  ['fishipedia-otocinclus-vittatus-direct-husbandry'],
+  'new exact-taxon Otocinclus evidence must resolve to source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -133,9 +150,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 75, '606 actionable field gaps should collapse to 75 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 69, '495 actionable field gaps should collapse to 69 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 129, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 114, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
@@ -187,5 +204,15 @@ for (const speciesId of ['sp_0105', 'sp_0468', 'sp_0197', 'sp_0447', 'sp_0451', 
   assert.equal(fastLanePackets.find(item => item.speciesId === speciesId), undefined, `${speciesId} must leave Fast Lane only after its final core field is resolved or terminally classified`);
   if (speciesId !== 'sp_0198') assert.equal(rowOf(speciesId)?.authoritativeFieldCount, 8, `${speciesId} must have 8/8 authoritative core fields after Fast Lane closure`);
 }
-assert.equal(fastLanePackets.length, 0, 'Fast Lane must be empty after the last two evidence-backed closures and the Channa terminal evidence ceiling');
+assert.deepEqual(
+  fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
+  [
+    ['sp_0011', 'predation'],
+    ['sp_0013', 'predation'],
+    ['sp_0151', 'predation'],
+    ['sp_0433', 'predation'],
+    ['sp_0438', 'territoriality'],
+  ],
+  'Fast Lane must expose the exact 7/8 species after historical reviewed_unknown records stop masking later reviewed authority',
+);
 console.log(`Compatibility core-field coverage PASS: ${rows.length} catalog objects × ${fields.length} fields; ${summary.genericOnboardingReadySpecies} generic-ready; ${backlog.length} actionable field gaps; terminal/domain holds excluded.`);
