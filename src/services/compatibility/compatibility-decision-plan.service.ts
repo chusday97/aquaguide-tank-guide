@@ -17,6 +17,20 @@ export type CompatibilityUnknownReason =
   | 'missing_species_fact'
   | null;
 
+export type CompatibilityResolutionMode =
+  | 'deterministic_clearance'
+  | 'parameter_recheck'
+  | 'behavioral_recheck'
+  | 'information_required';
+
+export type CompatibilityResolutionTarget = {
+  riskFamily: string;
+  resolutionMode: CompatibilityResolutionMode;
+  criterion: string;
+  sourceRuleCode: string;
+  speciesIds: string[];
+};
+
 export type CompatibilityDecisionPlan = {
   judgment: '可以养' | '有条件可以' | '不建议' | '暂时无法判断';
   verdict: BeginnerCompatibilityVerdict;
@@ -27,6 +41,12 @@ export type CompatibilityDecisionPlan = {
   reviewCheckpoint: string;
   stopCondition: string;
   unknownReason: CompatibilityUnknownReason;
+  /**
+   * Machine-readable criteria for deciding whether the surfaced risk has
+   * actually been removed or still requires a parameter/behavior recheck.
+   * This is advisory metadata only and never changes deterministic authority.
+   */
+  resolutionTargets: CompatibilityResolutionTarget[];
   evidence: {
     authorityLevel: CompatibilityActionAuthorityLevel;
     sourceRuleCodes: string[];
@@ -109,7 +129,15 @@ const namedItemForFamily = (decision: CompatibilityDecision, family: string) => 
     .filter(candidate => (candidate.affectedSpeciesIds || []).some(id => items.has(id)))
     .sort((a, b) => (b.affectedSpeciesIds?.length || 0) - (a.affectedSpeciesIds?.length || 0))[0];
   const id = rule?.affectedSpeciesIds?.find(speciesId => items.has(speciesId));
-  return id ? items.get(id) : undefined;
+  if (id) return items.get(id);
+
+  // Tank-level rules do not always carry affectedSpeciesIds. A single
+  // candidate (or a single assessed species) is safe to name; multiple items
+  // remain intentionally unresolved so presentation never guesses the subject.
+  const candidates = (decision.assessmentItems || []).filter(item => item.origin === 'candidate');
+  if (candidates.length === 1) return candidates[0];
+  if ((decision.assessmentItems || []).length === 1) return decision.assessmentItems?.[0];
+  return undefined;
 };
 
 const pairContextFor = (decision: CompatibilityDecision, family: string, mode: CompatibilityAssessmentMode) => {
@@ -135,6 +163,7 @@ const pairContextFor = (decision: CompatibilityDecision, family: string, mode: C
     pairLabel: `${preferred.speciesA.name} 与 ${preferred.speciesB.name}`,
     candidate,
     otherName: other.name,
+    speciesIds: [preferred.speciesA.id, preferred.speciesB.id],
   };
 };
 
@@ -203,6 +232,198 @@ const specificActionFor = (
   }
 
   return null;
+};
+
+const uniqueSpeciesIds = (values: Array<string | null | undefined>) => Array.from(new Set(
+  values.filter((value): value is string => Boolean(value)),
+));
+
+const targetSpeciesIdsFor = (
+  decision: CompatibilityDecision,
+  rule: TankCompatibilityRule,
+  mode: CompatibilityAssessmentMode,
+) => {
+  const family = getCompatibilityRuleFamily(rule.code);
+  const pair = pairContextFor(decision, family, mode);
+  const namedItem = namedItemForFamily(decision, family);
+  return uniqueSpeciesIds([
+    ...(pair?.speciesIds || []),
+    ...(rule.affectedSpeciesIds || []),
+    namedItem?.speciesId,
+  ]);
+};
+
+const resolutionTargetFor = (
+  decision: CompatibilityDecision,
+  rule: TankCompatibilityRule,
+  mode: CompatibilityAssessmentMode,
+): CompatibilityResolutionTarget => {
+  const family = getCompatibilityRuleFamily(rule.code);
+  const pair = pairContextFor(decision, family, mode);
+  const namedItem = namedItemForFamily(decision, family);
+  const minimumGroupSize = decision.stockingGuidance?.recommendedMin;
+  const speciesIds = targetSpeciesIdsFor(decision, rule, mode);
+
+  const target = (
+    resolutionMode: CompatibilityResolutionMode,
+    criterion: string,
+  ): CompatibilityResolutionTarget => ({
+    riskFamily: family,
+    resolutionMode,
+    criterion,
+    sourceRuleCode: rule.code,
+    speciesIds,
+  });
+
+  if (decision.status === 'insufficient_data' || family === 'missing_information') {
+    return target(
+      'information_required',
+      '补齐对应身份、公开证据、物种核心事实或鱼缸输入后重新运行混养判断；新结论生成前不得把风险视为已解除。',
+    );
+  }
+
+  if (family === 'water_type') {
+    return target(
+      'deterministic_clearance',
+      pair
+        ? `${pair.pairLabel} 不再共享同一水体（分缸或替换其中一方），且重新评估后不再出现 water_type 阻断。`
+        : '水体需求冲突的物种不再共享同一水体，并重新评估确认不再出现 water_type 阻断。',
+    );
+  }
+
+  if (family === 'housing') {
+    return target(
+      'deterministic_clearance',
+      namedItem
+        ? `${namedItem.name} 已从普通混养组合中移除并按单养要求处理，重新评估后不再出现 housing 阻断。`
+        : '要求单养的物种已从普通混养组合中移除，重新评估后不再出现 housing 阻断。',
+    );
+  }
+
+  if (family === 'predation') {
+    if (decision.status === 'not_recommended') {
+      return target(
+        'deterministic_clearance',
+        pair
+          ? `${pair.pairLabel} 不再直接接触（分隔、分缸或替换组合），重新评估后不再出现该捕食阻断。`
+          : '存在明确捕食关系的组合已分隔或替换，重新评估后不再出现该捕食阻断。',
+      );
+    }
+    return target(
+      'behavioral_recheck',
+      pair
+        ? `${pair.pairLabel} 只能在实际追食、躲藏、受伤与进食状态持续稳定后维持；出现持续异常立即分隔并重新评估，不能预先宣告风险已解除。`
+        : '确认实际追食、躲藏、受伤与进食状态持续稳定；出现持续异常立即分隔并重新评估，不能预先宣告风险已解除。',
+    );
+  }
+
+  if (family === 'aggression') {
+    if (decision.status === 'not_recommended') {
+      return target(
+        'deterministic_clearance',
+        pair
+          ? `${pair.pairLabel} 的直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。`
+          : '直接追鳍/攻击冲突已通过分隔或替换组合消除，重新评估后不再出现该直接冲突。',
+      );
+    }
+    return target(
+      'behavioral_recheck',
+      '调整群体、遮挡或退让路线后，持续复查追逐、破鳍、躲藏和进食；只有实际状态稳定才能继续当前组合。',
+    );
+  }
+
+  if (family === 'temperature') {
+    if (hasHardTemperatureNoOverlap(decision)) {
+      return target(
+        'deterministic_clearance',
+        pair
+          ? `${pair.pairLabel} 已分缸或替换，使组合重新具备已审核的共同适温区间，并重新评估确认不再出现 temperature 无交集阻断。`
+          : '通过分缸或替换物种使组合重新具备已审核的共同适温区间，并重新评估确认不再出现 temperature 无交集阻断。',
+      );
+    }
+    return target(
+      'parameter_recheck',
+      namedItem
+        ? `把鱼缸目标温度调整到 ${namedItem.name} 的已审核适温范围，同时保持与其余物种的共同适温区间；重新评估后 tank_temperature_conflict 必须消失。`
+        : '把鱼缸目标温度调整到相关物种的已审核共同适温区间；重新评估后 tank_temperature_conflict 必须消失。',
+    );
+  }
+
+  if (family === 'group_size') {
+    return target(
+      'parameter_recheck',
+      minimumGroupSize != null
+        ? `${namedItem?.name ? `${namedItem.name} 数量达到至少 ${minimumGroupSize} 条/只` : `群体数量达到至少 ${minimumGroupSize} 条/只`}，重新评估后 group_size 风险必须消失。`
+        : '群体数量达到该物种已审核最低要求，并重新评估确认 group_size 风险消失。',
+    );
+  }
+
+  if (family === 'ph') {
+    if (rule.code === 'ph_range_conflict') {
+      return target(
+        'deterministic_clearance',
+        pair
+          ? `${pair.pairLabel} 已分缸或替换，使组合重新具备可长期维持的共同 pH 区间，并重新评估确认 pH 冲突消失。`
+          : '通过分缸或替换物种使组合重新具备可长期维持的共同 pH 区间，并重新评估确认 pH 冲突消失。',
+      );
+    }
+    return target(
+      'parameter_recheck',
+      '实际稳定 pH 进入已审核共同区间，并重新评估确认 pH 风险消失；不能只按一次测量值或理论中间值判断。',
+    );
+  }
+
+  if (family === 'space') {
+    return target(
+      'parameter_recheck',
+      '调整鱼缸尺寸或数量后重新评估；相关 tank length / volume / space 规则必须不再触发，并继续确认实际活动与进食正常。',
+    );
+  }
+
+  if (family === 'bioload') {
+    return target(
+      'parameter_recheck',
+      '降低总负荷或提升过滤维护能力后重新评估；bioload 风险不再触发，且实际呼吸、进食与水质波动保持稳定。',
+    );
+  }
+
+  if (family === 'territory') {
+    return target(
+      'behavioral_recheck',
+      pair
+        ? `为 ${pair.pairLabel} 增加遮挡、退让路线或分区后复查持续追逐、堵角、躲藏与进食；只有实际压迫消失才能继续原组合。`
+        : '增加遮挡、退让路线或分区后复查持续追逐、堵角、躲藏与进食；只有实际压迫消失才能继续原组合。',
+    );
+  }
+
+  if (family === 'observed') {
+    return target(
+      'behavioral_recheck',
+      '当前异常行为或生理状态恢复稳定并经过重新评估前，不得把风险视为已解除。',
+    );
+  }
+
+  if (family === 'equipment') {
+    return target(
+      'parameter_recheck',
+      '补齐或修复对应设备条件后重新评估，确认相关 equipment 风险不再触发。',
+    );
+  }
+
+  return target(
+    'behavioral_recheck',
+    '完成建议调整后重新评估，并用实际状态确认风险是否仍存在；没有新的确定性依据时不自动宣告风险已解除。',
+  );
+};
+
+export const buildCompatibilityResolutionTargets = (
+  decision: CompatibilityDecision,
+  mode: CompatibilityAssessmentMode = 'planned_addition',
+): CompatibilityResolutionTarget[] => {
+  if (decision.status === 'compatible') return [];
+  return sourceRulesForPlan(decision)
+    .map(rule => resolutionTargetFor(decision, rule, mode))
+    .slice(0, 2);
 };
 
 const primaryFamilyFor = (sourceRules: TankCompatibilityRule[]) => (
@@ -344,6 +565,7 @@ export const buildCompatibilityDecisionPlan = (
     reviewCheckpoint: reviewCheckpointFor(decision, sourceRules, action.observeAfterAction),
     stopCondition: stopConditionForPlan(decision, mode, sourceRules, action.stopCondition),
     unknownReason: unknownReasonFor(decision),
+    resolutionTargets: buildCompatibilityResolutionTargets(decision, mode),
     evidence: {
       authorityLevel: action.authorityLevel,
       sourceRuleCodes: action.sourceRuleCodes,
