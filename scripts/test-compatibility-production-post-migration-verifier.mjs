@@ -7,7 +7,11 @@ import {
   classifyState,
   validateDetailedState,
 } from './compatibility-production-post-migration-verifier.mjs';
-import { getAuthorityKeys } from './compatibility-production-migration-guard.mjs';
+import {
+  getAuthorityKeys,
+  START_MIGRATION_COUNT, START_LATEST_VERSION, START_REVIEWED_PROFILES, START_REVIEWED_PAIR_RULES, START_REVIEWED_EVIDENCE, START_REVIEWED_STAGE_RISKS,
+  TARGET_MIGRATION_COUNT, TARGET_LATEST_VERSION, TARGET_REVIEWED_PROFILES, TARGET_REVIEWED_PAIR_RULES, TARGET_REVIEWED_EVIDENCE, TARGET_REVIEWED_STAGE_RISKS,
+} from './compatibility-production-migration-guard.mjs';
 import {
   START as FAST_LANE_WAVE1_START,
 } from './compatibility-fast-lane-production-patch-guard.mjs';
@@ -43,10 +47,10 @@ const stateFor = point => ({
   stage_risks_exists: true,
 });
 
-assert.equal(CURRENT_PRODUCTION_MIGRATION_COUNT, FAST_LANE_WAVE4_START.migrationCount);
-assert.equal(CURRENT_PRODUCTION_LATEST_VERSION, FAST_LANE_WAVE4_START.latestVersion);
-assert.equal(TARGET_PRODUCTION_MIGRATION_COUNT, FAST_LANE_WAVE4_TARGET.migrationCount);
-assert.equal(TARGET_PRODUCTION_LATEST_VERSION, FAST_LANE_WAVE4_TARGET.latestVersion);
+assert.equal(CURRENT_PRODUCTION_MIGRATION_COUNT, START_MIGRATION_COUNT);
+assert.equal(CURRENT_PRODUCTION_LATEST_VERSION, START_LATEST_VERSION);
+assert.equal(TARGET_PRODUCTION_MIGRATION_COUNT, TARGET_MIGRATION_COUNT);
+assert.equal(TARGET_PRODUCTION_LATEST_VERSION, TARGET_LATEST_VERSION);
 assert.deepEqual(FAST_LANE_WAVE2_TARGET, FAST_LANE_WAVE3_START, 'wave2 target must exactly equal wave3 start');
 assert.deepEqual(FAST_LANE_WAVE3_TARGET, FAST_LANE_WAVE4_START, 'wave3 target must exactly equal wave4 start');
 
@@ -62,18 +66,20 @@ assert.equal(classifyState(wave3Start), 'READY_FOR_FAST_LANE_WAVE3_MIGRATION');
 const wave4Start = stateFor(FAST_LANE_WAVE4_START);
 assert.equal(classifyState(wave4Start), 'READY_FOR_FAST_LANE_WAVE4_MIGRATION');
 
-const post = stateFor(FAST_LANE_WAVE4_TARGET);
+const reconciliationStart = stateFor({ migrationCount: START_MIGRATION_COUNT, latestVersion: START_LATEST_VERSION, profiles: START_REVIEWED_PROFILES, pairRules: START_REVIEWED_PAIR_RULES, evidence: START_REVIEWED_EVIDENCE, stageRisks: START_REVIEWED_STAGE_RISKS });
+assert.equal(classifyState(reconciliationStart), 'READY_FOR_FULL_CHAIN_MIGRATION');
+const post = stateFor({ migrationCount: TARGET_MIGRATION_COUNT, latestVersion: TARGET_LATEST_VERSION, profiles: TARGET_REVIEWED_PROFILES, pairRules: TARGET_REVIEWED_PAIR_RULES, evidence: TARGET_REVIEWED_EVIDENCE, stageRisks: TARGET_REVIEWED_STAGE_RISKS });
 assert.equal(classifyState(post), 'VERIFY_POST_MIGRATION');
 assert.equal(classifyState({ ...current, migration_count: current.migration_count - 1 }), 'BLOCKED_STATE_DRIFT');
 assert.equal(classifyState({ ...current, profiles: 100 }), 'BLOCKED_STATE_DRIFT');
-assert.equal(classifyState({ ...post, evidence: FAST_LANE_WAVE4_TARGET.evidence - 1 }), 'BLOCKED_STATE_DRIFT');
+assert.equal(classifyState({ ...post, evidence: TARGET_REVIEWED_EVIDENCE - 1 }), 'BLOCKED_STATE_DRIFT');
 
 const keys = getAuthorityKeys();
 const detail = {
   profile_keys: keys.profiles,
   pair_keys: keys.pairRules,
   stage_risk_keys: keys.stageRisks,
-  reviewed_evidence: FAST_LANE_WAVE4_TARGET.evidence,
+  reviewed_evidence: TARGET_REVIEWED_EVIDENCE,
   authority_singleton: 1,
   tiger_guppy: {
     verdict: 'not_recommended',
@@ -97,11 +103,11 @@ const detail = {
 assert.equal(validateDetailedState(post, detail).ready, true);
 const bad = validateDetailedState(post, {
   ...detail,
-  reviewed_evidence: FAST_LANE_WAVE4_TARGET.evidence - 1,
+  reviewed_evidence: TARGET_REVIEWED_EVIDENCE - 1,
   tiger_guppy: { ...detail.tiger_guppy, verdict: 'caution' },
 });
 assert.equal(bad.ready, false);
-assert.ok(bad.blockers.includes('reviewed_evidence:188/189'));
+assert.ok(bad.blockers.includes('reviewed_evidence:199/200'));
 assert.ok(bad.blockers.includes('tiger_guppy_verdict:caution'));
 
-console.log('Compatibility Production post-migration verifier contract PASS: 65/177 -> wave1, 66/180 -> wave2, 67/181 -> wave3, 68/184 -> wave4, 69/189 -> final verification.');
+console.log('Compatibility Production post-migration verifier contract PASS: historical fast lanes remain recognized, 69/101/189 is the reconciliation start, and 70/109/200 is final verification.');

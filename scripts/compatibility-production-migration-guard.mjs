@@ -4,34 +4,29 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { getCompatibilityEvidenceAudit } from '../src/data/compatibilityEvidence.ts';
-import { buildCompatibilityProfileRolloutKeysets } from '../src/data/compatibilityAuthorityRollout.ts';
 
 export const PRODUCTION_PROJECT_REF = 'ydiygvhuqpogmqlcvgob';
 
-export const START_MIGRATION_COUNT = 60;
-export const START_LATEST_VERSION = '20261011213000';
-export const START_REVIEWED_PROFILES = 63;
+export const START_MIGRATION_COUNT = 69;
+export const START_LATEST_VERSION = '20261014163500';
+export const START_REVIEWED_PROFILES = 101;
 export const START_REVIEWED_PAIR_RULES = 21;
 export const START_REVIEWED_STAGE_RISKS = 1;
-export const START_REVIEWED_EVIDENCE = 116;
+export const START_REVIEWED_EVIDENCE = 189;
 
-export const TARGET_MIGRATION_COUNT = 65;
-export const TARGET_LATEST_VERSION = '20261013153000';
-export const TARGET_REVIEWED_PROFILES = 101;
+export const TARGET_MIGRATION_COUNT = 70;
+export const TARGET_LATEST_VERSION = '20261015211500';
+export const TARGET_REVIEWED_PROFILES = 109;
 export const TARGET_REVIEWED_PAIR_RULES = 21;
 export const TARGET_REVIEWED_STAGE_RISKS = 1;
-export const TARGET_REVIEWED_EVIDENCE = 177;
+export const TARGET_REVIEWED_EVIDENCE = 200;
 
-export const CONFIRM_TOKEN = 'EXECUTE_FULL_COMPATIBILITY_AUTHORITY_CHAIN_20261014';
-export const EXPECTED_CHAIN_FINGERPRINT = '1add6d6ca318e11c6828c62a050becb7d56996602b6068b6b20e05b8d6792f66';
+export const CONFIRM_TOKEN = 'EXECUTE_COMPATIBILITY_IDENTITY_BRIDGE_RECONCILIATION_20261015';
+export const EXPECTED_CHAIN_FINGERPRINT = '2a60020397ae035f57c14fb6ad369a609985753d95d5587c632d68f9c88a259f';
 export const HELD_MIGRATION = '202610090001_compatibility_gold_ram_rhodeus_profile_owner.sql';
 export const PREREQUISITE_MIGRATIONS = [];
 export const COMPATIBILITY_MIGRATIONS = [
-  '20261011234500_compatibility_unified_next25_authority.sql',
-  '20261012001500_compatibility_unified_wave04_authority.sql',
-  '20261012014500_compatibility_unified_wave05_authority.sql',
-  '20261012023000_compatibility_unified_wave06_authority.sql',
-  '20261013153000_compatibility_unified_wave16_authority.sql',
+  '20261015211500_compatibility_identity_bridge_reconciliation.sql',
 ];
 export const MIGRATIONS = [...COMPATIBILITY_MIGRATIONS];
 
@@ -44,13 +39,10 @@ const sha256 = value => createHash('sha256').update(value).digest('hex');
 export const getAuthorityKeys = () => {
   const audit = getCompatibilityEvidenceAudit();
   const allProfileKeys = audit.reviewedProfiles.map(item => item.speciesId);
-  const productionTarget = buildCompatibilityProfileRolloutKeysets(allProfileKeys).target;
   return {
-    // Production promotion now owns the complete reviewed rollout chain from
-    // the live 63-Profile baseline through the repository's 101-Profile target.
-    // The exact key set remains fail-closed even though the individual waves
-    // are executed as one guarded transaction.
-    profiles: [...productionTarget].sort(),
+    // This reconciliation promotes the full reviewed repository authority, including
+    // the eight identity-correction bridge Profiles previously held out of Production.
+    profiles: [...allProfileKeys].sort(),
     pairRules: audit.reviewedPairRules.map(item => [...item.speciesIds].sort().join('__')).sort(),
     stageRisks: audit.reviewedStageRiskProfiles.map(item => item.speciesId + ':' + item.riskType).sort(),
   };
@@ -64,16 +56,12 @@ export const calculateChainFingerprint = () => sha256(
 );
 
 const expectedTransitions = [
-  { name: COMPATIBILITY_MIGRATIONS[0], preProfiles: 63, postProfiles: 85, preEvidence: 116, postEvidence: 160 },
-  { name: COMPATIBILITY_MIGRATIONS[1], preProfiles: 85, postProfiles: 95, preEvidence: 160, postEvidence: 171 },
-  { name: COMPATIBILITY_MIGRATIONS[2], preProfiles: 95, postProfiles: 99, preEvidence: 171, postEvidence: 175 },
-  { name: COMPATIBILITY_MIGRATIONS[3], preProfiles: 99, postProfiles: 100, preEvidence: 175, postEvidence: 176 },
-  { name: COMPATIBILITY_MIGRATIONS[4], preProfiles: 100, postProfiles: 101, preEvidence: 176, postEvidence: 177 },
+  { name: COMPATIBILITY_MIGRATIONS[0], preProfiles: 101, postProfiles: 109, preEvidence: 189, postEvidence: 200 },
 ];
 
 export const validateLocalChain = () => {
-  if (MIGRATIONS.length !== 5 || new Set(MIGRATIONS).size !== MIGRATIONS.length) {
-    throw new Error('Compatibility Production release must contain the exact five-migration authority chain.');
+  if (MIGRATIONS.length !== 1 || new Set(MIGRATIONS).size !== MIGRATIONS.length) {
+    throw new Error('Compatibility Production release must contain the exact identity-bridge reconciliation migration.');
   }
   if (MIGRATIONS.includes(HELD_MIGRATION)) throw new Error('Held migration entered incremental release bundle.');
 

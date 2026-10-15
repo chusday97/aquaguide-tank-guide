@@ -8,6 +8,12 @@ import {
   START_REVIEWED_PAIR_RULES as FULL_CHAIN_START_REVIEWED_PAIR_RULES,
   START_REVIEWED_STAGE_RISKS as FULL_CHAIN_START_REVIEWED_STAGE_RISKS,
   START_REVIEWED_EVIDENCE as FULL_CHAIN_START_REVIEWED_EVIDENCE,
+  TARGET_LATEST_VERSION as FULL_CHAIN_TARGET_LATEST_VERSION,
+  TARGET_MIGRATION_COUNT as FULL_CHAIN_TARGET_MIGRATION_COUNT,
+  TARGET_REVIEWED_PROFILES as FULL_CHAIN_TARGET_REVIEWED_PROFILES,
+  TARGET_REVIEWED_PAIR_RULES as FULL_CHAIN_TARGET_REVIEWED_PAIR_RULES,
+  TARGET_REVIEWED_STAGE_RISKS as FULL_CHAIN_TARGET_REVIEWED_STAGE_RISKS,
+  TARGET_REVIEWED_EVIDENCE as FULL_CHAIN_TARGET_REVIEWED_EVIDENCE,
   getAuthorityKeys,
   readLinkedProjectRef,
   validateProductionCodeCompatibility,
@@ -29,10 +35,10 @@ import {
 } from './compatibility-fast-lane-wave4-production-patch-guard.mjs';
 
 const root = resolve(import.meta.dirname, '..');
-export const CURRENT_PRODUCTION_LATEST_VERSION = FAST_LANE_WAVE4_START.latestVersion;
-export const CURRENT_PRODUCTION_MIGRATION_COUNT = FAST_LANE_WAVE4_START.migrationCount;
-export const TARGET_PRODUCTION_LATEST_VERSION = FAST_LANE_WAVE4_TARGET.latestVersion;
-export const TARGET_PRODUCTION_MIGRATION_COUNT = FAST_LANE_WAVE4_TARGET.migrationCount;
+export const CURRENT_PRODUCTION_LATEST_VERSION = FULL_CHAIN_START_LATEST_VERSION;
+export const CURRENT_PRODUCTION_MIGRATION_COUNT = FULL_CHAIN_START_MIGRATION_COUNT;
+export const TARGET_PRODUCTION_LATEST_VERSION = FULL_CHAIN_TARGET_LATEST_VERSION;
+export const TARGET_PRODUCTION_MIGRATION_COUNT = FULL_CHAIN_TARGET_MIGRATION_COUNT;
 
 const run = (cmd, args) => {
   const result = spawnSync(cmd, args, { cwd: root, encoding: 'utf8' });
@@ -95,12 +101,12 @@ export const classifyState = state => {
     && schemaReady;
   if (wave4Start) return 'READY_FOR_FAST_LANE_WAVE4_MIGRATION';
 
-  const post = state.migration_count === FAST_LANE_WAVE4_TARGET.migrationCount
-    && state.latest_version === FAST_LANE_WAVE4_TARGET.latestVersion
-    && state.profiles === FAST_LANE_WAVE4_TARGET.profiles
-    && state.pair_rules === FAST_LANE_WAVE4_TARGET.pairRules
-    && state.evidence === FAST_LANE_WAVE4_TARGET.evidence
-    && state.stage_risks === FAST_LANE_WAVE4_TARGET.stageRisks
+  const post = state.migration_count === FULL_CHAIN_TARGET_MIGRATION_COUNT
+    && state.latest_version === FULL_CHAIN_TARGET_LATEST_VERSION
+    && state.profiles === FULL_CHAIN_TARGET_REVIEWED_PROFILES
+    && state.pair_rules === FULL_CHAIN_TARGET_REVIEWED_PAIR_RULES
+    && state.evidence === FULL_CHAIN_TARGET_REVIEWED_EVIDENCE
+    && state.stage_risks === FULL_CHAIN_TARGET_REVIEWED_STAGE_RISKS
     && schemaReady;
   return post ? 'VERIFY_POST_MIGRATION' : 'BLOCKED_STATE_DRIFT';
 };
@@ -118,7 +124,7 @@ export const validateDetailedState = (state, detail) => {
   if (JSON.stringify(detail.profile_keys) !== JSON.stringify(expected.profiles)) blockers.push('profile_key_set_mismatch');
   if (JSON.stringify(detail.pair_keys) !== JSON.stringify(expected.pairRules)) blockers.push('pair_key_set_mismatch');
   if (JSON.stringify(detail.stage_risk_keys) !== JSON.stringify(expected.stageRisks)) blockers.push('stage_risk_key_set_mismatch');
-  if (detail.reviewed_evidence !== FAST_LANE_WAVE4_TARGET.evidence) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${FAST_LANE_WAVE4_TARGET.evidence}`);
+  if (detail.reviewed_evidence !== FULL_CHAIN_TARGET_REVIEWED_EVIDENCE) blockers.push(`reviewed_evidence:${detail.reviewed_evidence}/${FULL_CHAIN_TARGET_REVIEWED_EVIDENCE}`);
   if (detail.authority_singleton !== 1) blockers.push(`authority_singleton:${detail.authority_singleton}/1`);
 
   const pair = detail.tiger_guppy;
@@ -152,7 +158,7 @@ export const validateDetailedState = (state, detail) => {
       profiles: expected.profiles.length,
       pairRules: expected.pairRules.length,
       stageRisks: expected.stageRisks.length,
-      evidenceSources: FAST_LANE_WAVE4_TARGET.evidence,
+      evidenceSources: FULL_CHAIN_TARGET_REVIEWED_EVIDENCE,
     },
   };
 };

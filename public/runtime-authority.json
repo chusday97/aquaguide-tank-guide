@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "authority": "local-file-git",
-  "generatedAt": "2026-10-09T08:33:40.259Z",
+  "generatedAt": "2026-10-15T13:04:58.985Z",
   "source": {
     "businessUpdatedAt": null,
     "compatibilityUpdatedAt": null,
@@ -14,6 +14,1262 @@
   "compatibility": {
     "authority": "reviewed-git",
     "profiles": [
+      {
+        "catalogKey": "sp_0103",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_space_requirement",
+          "jumper",
+          "territorial"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-scleropages-formosus",
+            "title": "Scleropages formosus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-scleropages-formosus",
+            "title": "Scleropages formosus (Asian Arowana)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "myfish-scleropages-formosus-territoriality",
+            "title": "Scleropages formosus – Asiatischer Arowana",
+            "publisher": "my-fish / WZF",
+            "url": "https://my-fish.org/my-fishothek/scleropages-formosus-asiatischer-gabelbart/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0117",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_space_requirement",
+          "variable_social"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch20-fishbase-osteoglossum-bicirrhosum",
+            "title": "Osteoglossum bicirrhosum species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Osteoglossum-bicirrhosum",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-osteoglossum-bicirrhosum",
+            "title": "Osteoglossum bicirrhosum (Silver Arowana)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/osteoglossum-bicirrhosum",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0118",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_space_requirement",
+          "surface_predator"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch20-fishbase-osteoglossum-ferreirai",
+            "title": "Osteoglossum ferreirai species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Osteoglossum-ferreirai",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "aquaristatlas-osteoglossum-ferreirai",
+            "title": "Black Arowana (Osteoglossum ferreirai) Care Guide",
+            "publisher": "Aquarist Atlas",
+            "url": "https://www.aquaristatlas.com/bonytongues/osteoglossum-ferreirai/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-osteoglossum-ferreirai-wave7",
+            "title": "Arowana noir • Osteoglossum ferreirai • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/osteoglossum-ferreirai",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "predation",
+          "tank_size",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0121",
+        "behaviorTraits": [
+          "bottom_dwelling",
+          "cave_territoriality",
+          "peaceful_to_dissimilar_fish"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-peckoltia-compta",
+            "title": "Peckoltia compta species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Peckoltia-compta",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "aquaristatlas-peckoltia-compta",
+            "title": "Leopard Frog Pleco (Peckoltia compta) Care Guide",
+            "publisher": "Aquarist Atlas",
+            "url": "https://www.aquaristatlas.com/plecos/peckoltia-compta/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0122",
+        "behaviorTraits": [
+          "bottom_dwelling",
+          "very_large_space_requirement",
+          "resource_territoriality"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-panaque-nigrolineatus",
+            "title": "Panaque nigrolineatus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Panaque-nigrolineatus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "aquaristatlas-panaque-nigrolineatus",
+            "title": "Royal Pleco (Panaque nigrolineatus) Care Guide",
+            "publisher": "Aquarist Atlas",
+            "url": "https://www.aquaristatlas.com/plecos/panaque-nigrolineatus/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0123",
+        "behaviorTraits": [
+          "bottom_dwelling",
+          "very_large_space_requirement",
+          "peaceful_to_dissimilar_fish"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch10-fishbase-pterygoplichthys-gibbiceps",
+            "title": "Pterygoplichthys gibbiceps species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pterygoplichthys-gibbiceps",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "aquaristatlas-pterygoplichthys-gibbiceps",
+            "title": "Sailfin Pleco (Pterygoplichthys gibbiceps) Care Guide",
+            "publisher": "Aquarist Atlas",
+            "url": "https://www.aquaristatlas.com/plecos/pterygoplichthys-gibbiceps/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0125",
+        "behaviorTraits": [
+          "bottom_dwelling",
+          "peaceful",
+          "hybridisation_risk_with_hypancistrus",
+          "territorial"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch10-fishbase-hypancistrus-inspector",
+            "title": "Hypancistrus inspector species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Hypancistrus-inspector",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-hypancistrus-inspector",
+            "title": "Hypancistrus inspector (Snowball Pleco)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/hypancistrus-inspector",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-hypancistrus-inspector-wave15",
+            "title": "Hypancistrus inspector • catfish • Fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishi-pedia.com/fishes/hypancistrus-inspector",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0129",
+        "behaviorTraits": [
+          "group_living",
+          "cool_flowing_water",
+          "predatory"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch10-fishbase-zacco-platypus",
+            "title": "Zacco platypus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Zacco-platypus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "journal-ethology-zacco-platypus-sociability",
+            "title": "Effects of habitat conditions on the boldness and sociability of wild-caught fish (Zacco platypus) along a river",
+            "publisher": "Journal of Ethology",
+            "url": "https://link.springer.com/article/10.1007/s10164-021-00715-0",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0140",
+        "behaviorTraits": [
+          "solitary",
+          "species_tank_required",
+          "severe_conspecific_aggression",
+          "predatory"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch20-fishbase-serrasalmus-rhombeus",
+            "title": "Serrasalmus rhombeus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Serrasalmus-rhombeus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-serrasalmus-rhombeus",
+            "title": "Serrasalmus rhombeus (Black Piranha)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/serrasalmus-rhombeus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0183",
+        "behaviorTraits": [
+          "relatively_mellow",
+          "variable_social",
+          "open_water",
+          "breeding_territoriality",
+          "breeding_defense"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-xanthichthys-mento",
+            "title": "Xanthichthys mento species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Xanthichthys-mento",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "reefs-xanthichthys-mento",
+            "title": "Aquarium Fish: The Crosshatch Triggerfish, Xanthichthys mento",
+            "publisher": "Reefs.com",
+            "url": "https://reefs.com/magazine/aquarium-fish-the-crosshatch-triggerfish-xanthichthys-mento/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "saltcorner-xanthichthys-mento-wave11",
+            "title": "Xanthichthys mento • Redtail / Crosshatch Triggerfish",
+            "publisher": "Saltcorner Aquarium Library",
+            "url": "https://www.saltcorner.com/AquariumLibrary/browsespecies.php?CritterID=1765",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "liveaquaria-xanthichthys-mento-wave11",
+            "title": "Crosshatch Triggerfish (Xanthichthys mento)",
+            "publisher": "LiveAquaria",
+            "url": "https://www.liveaquaria.com/products/crosshatch-triggerfish",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "kawase-2003-xanthichthys-mento-spawning-territory",
+            "title": "Spawning Behavior and Biparental Egg Care of the Crosshatch Triggerfish, Xanthichthys mento (Balistidae)",
+            "publisher": "Environmental Biology of Fishes",
+            "url": "https://doi.org/10.1023/A:1023978722744",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "predation",
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0184",
+        "behaviorTraits": [
+          "semi_aggressive",
+          "territorial_to_similar_fish"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-centropyge-heraldi",
+            "title": "Centropyge heraldi species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Centropyge-heraldi",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "reeflings-centropyge-heraldi",
+            "title": "Centropyge heraldi species guide",
+            "publisher": "Reeflings",
+            "url": "https://reeflings.com/species/centropyge-heraldi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0185",
+        "behaviorTraits": [
+          "aggressive",
+          "very_large_space_requirement",
+          "not_reef_safe"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-pomacanthus-annularis",
+            "title": "Pomacanthus annularis species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pomacanthus-annularis",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "reefapp-pomacanthus-annularis",
+            "title": "Pomacanthus annularis",
+            "publisher": "Reef App",
+            "url": "https://reefapp.net/en/encyclopedia/pomacanthus-annularis",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0187",
+        "behaviorTraits": [
+          "territorial",
+          "aggressive_for_size"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch11-fishbase-chrysiptera-cyanea",
+            "title": "Chrysiptera cyanea species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Chrysiptera-cyanea",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "atlarium-chrysiptera-cyanea",
+            "title": "Chrysiptera cyanea species guide",
+            "publisher": "Atlarium",
+            "url": "https://atlarium.bio/en/catalog/fish/chrysiptera-cyanea",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "social_behavior",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0197",
+        "behaviorTraits": [
+          "intraspecific_aggression",
+          "snakehead"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-channa-stewartii",
+            "title": "Channa stewartii species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Channa-stewartii",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-channa-stewartii",
+            "title": "Channa genus review: Channa stewartii subsection",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/genus/channa",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "icar-cifa-channa-stewartii-live-fish",
+            "title": "ICAR-CIFA Annual Report 2019: stock development of indigenous ornamental Channa species",
+            "publisher": "ICAR-Central Institute of Freshwater Aquaculture",
+            "url": "https://cifa.nic.in/sites/default/files/Report_2019.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0198",
+        "behaviorTraits": [
+          "species_tank_required",
+          "predatory",
+          "adult_conspecific_aggression",
+          "very_large_space_requirement"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-channa-diplogramma",
+            "title": "Channa diplogramma species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Channa-diplogramma",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-channa-diplogramma",
+            "title": "Channa diplogramma",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/channa-diplogramma",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0199",
+        "behaviorTraits": [
+          "slow_feeder",
+          "rival_male_aggression",
+          "vulnerable_to_aggressive_tankmates"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-badis-badis",
+            "title": "Badis badis species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Badis-badis",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-badis-badis",
+            "title": "Badis badis (Blue Perch)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/badis-badis",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0200",
+        "behaviorTraits": [
+          "slow_feeder",
+          "rival_male_aggression",
+          "vulnerable_to_aggressive_tankmates"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch22-fishbase-dario-dario",
+            "title": "Dario dario species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Dario-dario",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-dario-dario",
+            "title": "Dario dario (Scarlet Badis)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/dario-dario",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0202",
+        "behaviorTraits": [
+          "bottom_dwelling",
+          "severe_cave_territoriality",
+          "very_large_space_requirement"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch11-fishbase-scobinancistrus-aureatus",
+            "title": "Scobinancistrus aureatus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Scobinancistrus-aureatus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "atlarium-scobinancistrus-aureatus",
+            "title": "Scobinancistrus aureatus species guide",
+            "publisher": "Atlarium",
+            "url": "https://atlarium.bio/en/catalog/fish/scobinancistrus-aureatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0218",
+        "behaviorTraits": [
+          "group_living",
+          "peaceful",
+          "adult_male_territoriality"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch12-fishbase-hyphessobrycon-erythrostigma",
+            "title": "Hyphessobrycon erythrostigma species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Hyphessobrycon-erythrostigma",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-megalamphodus-erythrostigma",
+            "title": "Megalamphodus erythrostigma (Bleeding Heart Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/megalamphodus-erythrostigma",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0441",
+        "behaviorTraits": [
+          "territorial",
+          "age_increasing_aggression",
+          "mucus_grazing_risk"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch25-fishbase-gyrinocheilus-aymonieri",
+            "title": "Gyrinocheilus aymonieri species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gyrinocheilus-aymonieri",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-gyrinocheilus-aymonieri",
+            "title": "Gyrinocheilus aymonieri (Chinese Algae Eater)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/gyrinocheilus-aymonieri",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0449",
+        "behaviorTraits": [
+          "relatively_peaceful_mbuna",
+          "hard_alkaline_water",
+          "hybridisation_risk_with_labidochromis",
+          "breeding_territoriality"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch17-fishbase-labidochromis-caeruleus",
+            "title": "Labidochromis caeruleus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Labidochromis-caeruleus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-labidochromis-caeruleus",
+            "title": "Labidochromis caeruleus",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/labidochromis-caeruleus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0450",
+        "behaviorTraits": [
+          "pair_living",
+          "breeding_territoriality",
+          "relatively_peaceful_cichlid"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch17-fishbase-andinoacara-pulcher",
+            "title": "Andinoacara pulcher species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Andinoacara-pulcher",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-andinoacara-pulcher",
+            "title": "Andinoacara pulcher (Blue Acara)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/andinoacara-pulcher",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0019",
+        "behaviorTraits": [
+          "small_fish_predation",
+          "territorial",
+          "breeding_territoriality"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-pterophyllum-altum",
+            "title": "Pterophyllum altum species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/pterophyllum-altum.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-pterophyllum-altum",
+            "title": "Pterophyllum altum (Altum Angel)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pterophyllum-altum",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-pterophyllum-altum-wave9",
+            "title": "Scalaire altum • Pterophyllum altum • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/pterophyllum-altum",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "predation",
+          "tank_size",
+          "social_behavior",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0026",
+        "behaviorTraits": [
+          "bottom_dwelling",
+          "male_conspecific_territoriality"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-hypostomus-plecostomus",
+            "title": "Hypostomus plecostomus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/summary/3057",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-hypostomus-plecostomus-wave8",
+            "title": "Pléco • Hypostomus plecostomus • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/hypostomus-plecostomus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0042",
+        "behaviorTraits": [
+          "shoaling",
+          "breeding_defense"
+        ],
+        "predationTargets": [
+          "fish_fry"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch08-fishbase-pseudorasbora-parva",
+            "title": "Pseudorasbora parva species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pseudorasbora-parva.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "doi-pseudorasbora-parva-spawning-competition-2004",
+            "title": "Size-dependent male-male competition for a spawning substrate between Pseudorasbora parva and Pseudorasbora pumila",
+            "publisher": "Ichthyological Research",
+            "url": "https://doi.org/10.1007/s10228-003-0203-5",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "doi-pseudorasbora-parva-shoaling-2005",
+            "title": "Foraging of a Small Planktivore (Pseudorasbora parva: Cyprinidae) and its Behavioral Flexibility in an Artificial Stream",
+            "publisher": "Hydrobiologia",
+            "url": "https://doi.org/10.1007/s10750-005-5442-1",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "wiley-pseudorasbora-parva-fry-predation-wave13",
+            "title": "Population structure and dietary plasticity of four invasive populations of the topmouth gudgeon Pseudorasbora parva",
+            "publisher": "International Review of Hydrobiology",
+            "url": "https://doi.org/10.1002/iroh.202302142",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior",
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0043",
+        "behaviorTraits": [
+          "breeding_defense",
+          "territorial"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-macropodus-ocellatus",
+            "title": "Macropodus ocellatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Macropodus-ocellatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-macropodus-ocellatus",
+            "title": "Macropodus ocellatus (Roundtail Paradise Fish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/macropodus-ocellatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "territoriality",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0044",
+        "behaviorTraits": [
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-macropodus-spechti",
+            "title": "Macropodus spechti species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/summary/Macropodus-spechti.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-macropodus-spechti",
+            "title": "Macropodus spechti (Black Paradise Fish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/macropodus-spechti",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
       {
         "catalogKey": "sp_0133",
         "behaviorTraits": [
@@ -49,7 +1305,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -90,7 +1349,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -99,7 +1361,8 @@
         "catalogKey": "sp_0447",
         "behaviorTraits": [
           "shoaling",
-          "breeding_defense"
+          "breeding_defense",
+          "breeding_territoriality"
         ],
         "minimumGroupSize": 5,
         "predationTargets": [],
@@ -131,7 +1394,10 @@
           "ph",
           "adult_size",
           "social_behavior",
-          "breeding_behavior"
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -171,7 +1437,10 @@
           "ph",
           "adult_size",
           "social_behavior",
-          "breeding_behavior"
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -250,7 +1519,10 @@
           "ph",
           "adult_size",
           "social_behavior",
-          "breeding_behavior"
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -330,7 +1602,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -370,7 +1645,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -410,7 +1688,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -450,7 +1731,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -459,7 +1743,8 @@
         "catalogKey": "sp_0012",
         "behaviorTraits": [
           "shoaling",
-          "peaceful"
+          "peaceful",
+          "breeding_territoriality"
         ],
         "minimumGroupSize": 6,
         "predationTargets": [],
@@ -483,6 +1768,15 @@
             "sourceType": "curated_husbandry",
             "reviewStatus": "reviewed",
             "version": 1
+          },
+          {
+            "id": "fischwissen-puntius-titteya-territoriality",
+            "title": "Bitterlingsbarbe (Puntius titteya) species profile",
+            "publisher": "Fachstelle Fischwissen / SWILD",
+            "url": "https://fischwissen.ch/de/artenportraits/bitterlingsbarbe-puntius-titteya",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
           }
         ],
         "requiredFacts": [
@@ -490,7 +1784,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -612,6 +1909,15 @@
             "sourceType": "curated_husbandry",
             "reviewStatus": "reviewed",
             "version": 1
+          },
+          {
+            "id": "aquainfo-otocinclus-vittatus-wave12",
+            "title": "Otocinclus vittatus – LDA023",
+            "publisher": "AquaInfo",
+            "url": "https://aquainfo.nl/en/article/otocinclus-vittatus-lda023/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
           }
         ],
         "requiredFacts": [
@@ -619,7 +1925,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -652,6 +1961,15 @@
             "sourceType": "curated_husbandry",
             "reviewStatus": "reviewed",
             "version": 1
+          },
+          {
+            "id": "hydrohabitats-trigonostigma-heteromorpha-nonterritorial",
+            "title": "Harlequin Rasbora care guide",
+            "publisher": "Hydro Habitats",
+            "url": "https://www.hydrohabitats.com/guides/freshwater-fish-harlequin-rasbora",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
           }
         ],
         "requiredFacts": [
@@ -659,7 +1977,10 @@
           "temperature",
           "ph",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -736,7 +2057,8 @@
         "catalogKey": "sp_0438",
         "behaviorTraits": [
           "shoaling",
-          "male_dominance"
+          "male_dominance",
+          "male_conspecific_territoriality"
         ],
         "predationTargets": [],
         "confidence": "high",
@@ -759,6 +2081,24 @@
             "sourceType": "curated_husbandry",
             "reviewStatus": "reviewed",
             "version": 1
+          },
+          {
+            "id": "australian-government-xiphophorus-hellerii-territoriality",
+            "title": "Review of the impacts of introduced ornamental fish species that have established wild populations in Australia",
+            "publisher": "Australian Government Department of the Environment, Water, Heritage and the Arts",
+            "url": "https://www.agriculture.gov.au/sites/default/files/documents/ornamental-fish.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-xiphophorus-hellerii-male-aggression",
+            "title": "Xiphophorus hellerii (Green swordtail) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Xiphophorus-hellerii.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
           }
         ],
         "requiredFacts": [
@@ -767,7 +2107,10 @@
           "ph",
           "adult_size",
           "social_behavior",
-          "breeding_behavior"
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -799,7 +2142,329 @@
           "ph",
           "adult_size",
           "social_behavior",
+          "territoriality",
+          "tank_size",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0048",
+        "behaviorTraits": [
+          "predatory",
+          "intraspecific_aggression",
+          "bottom_dwelling"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-mastacembelus-armatus",
+            "title": "Mastacembelus armatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Mastacembelus-armatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-mastacembelus-armatus",
+            "title": "Mastacembelus armatus (Tyre-Track Eel)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/mastacembelus-armatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
           "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0050",
+        "behaviorTraits": [
+          "predatory",
+          "species_tank_required",
+          "intraspecific_aggression"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-channa-barca",
+            "title": "Channa barca species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Channa-barca.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-channa-barca",
+            "title": "Channa barca",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/channa-barca",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "tank_size"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0051",
+        "behaviorTraits": [
+          "shoaling"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch08-fishbase-acrossocheilus-fasciatus",
+            "title": "Acrossocheilus fasciatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Acrossocheilus-fasciatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "doi-acrossocheilus-fasciatus-behavior-2024",
+            "title": "Behavioural differences between farmed and wild Acrossocheilus fasciatus",
+            "publisher": "Applied Animal Behaviour Science",
+            "url": "https://doi.org/10.1016/j.applanim.2024.106460",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "cnipa-acrossocheilus-fasciatus-growout-wave19",
+            "title": "High-density green ecological culture method for Acrossocheilus fasciatus (CN104509469A)",
+            "publisher": "China National Intellectual Property Administration",
+            "url": "https://patents.google.com/patent/CN104509469A/zh",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "cnipa-acrossocheilus-fasciatus-breeding-wave19",
+            "title": "Artificial breeding method for Acrossocheilus fasciatus (CN102090361A)",
+            "publisher": "China National Intellectual Property Administration",
+            "url": "https://patents.google.com/patent/CN102090361A/zh",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "ph"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0054",
+        "behaviorTraits": [
+          "territorial",
+          "interspecific_aggression"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-hemichromis-bimaculatus",
+            "title": "Rubricatochromis bimaculatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Rubricatochromis-bimaculatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "sinica-fishdb-hemichromis-bimaculatus-diet",
+            "title": "Hemichromis bimaculatus species ecology and diet",
+            "publisher": "Taiwan Fish Database, Academia Sinica",
+            "url": "https://fishdb.sinica.edu.tw/taxon/395635-fishdb",
+            "sourceType": "university",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0056",
+        "behaviorTraits": [
+          "territorial",
+          "breeding_defense",
+          "intraspecific_aggression"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-heros-severus",
+            "title": "Heros severus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Heros-severus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-heros-severus",
+            "title": "Heros severus fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishi-pedia.com/fishes/heros-severus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0057",
+        "behaviorTraits": [
+          "territorial",
+          "breeding_defense",
+          "intraspecific_aggression"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-altolamprologus-calvus",
+            "title": "Altolamprologus calvus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Altolamprologus-calvus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-altolamprologus-calvus",
+            "title": "Altolamprologus calvus fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/altolamprologus-calvus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "breeding_behavior",
+          "tank_size",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0058",
+        "behaviorTraits": [
+          "territorial",
+          "group_living"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-neolamprologus-multifasciatus",
+            "title": "Neolamprologus multifasciatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Neolamprologus-multifasciatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-neolamprologus-multifasciatus",
+            "title": "Neolamprologus multifasciatus fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishi-pedia.com/fishes/neolamprologus-multifasciatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -838,6 +2503,763 @@
           "water",
           "temperature",
           "ph",
+          "adult_size",
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0059",
+        "behaviorTraits": [
+          "pair_living",
+          "territorial_males",
+          "breeding_aggression"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-macropodus-opercularis",
+            "title": "Macropodus opercularis species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Macropodus-opercularis",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-macropodus-opercularis",
+            "title": "Macropodus opercularis (Paradise Fish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/macropodus-opercularis",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0062",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-moenkhausia-sanctaefilomenae",
+            "title": "Moenkhausia sanctaefilomenae species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Moenkhausia-sanctaefilomenae",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-moenkhausia-sanctaefilomenae",
+            "title": "Moenkhausia sanctaefilomenae (Red-eye Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://seriouslyfish.com/species/moenkhausia-sanctaefilomenae",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-moenkhausia-sanctaefilomenae-wave15",
+            "title": "Moenkhausia sanctaefilomenae • Fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishi-pedia.com/fishes/moenkhausia-sanctaefilomenae",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0105",
+        "behaviorTraits": [
+          "predatory",
+          "large_fish_community",
+          "conspecific_territoriality"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-polypterus-ornatipinnis",
+            "title": "Polypterus ornatipinnis species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Polypterus-ornatipinnis.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-polypterus-ornatapinnis",
+            "title": "Polypterus ornatapinnis (Ornate Bichir)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/polypterus-ornatapinnis",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "aquaticarts-polypterus-ornatipinnis-conspecific-territoriality",
+            "title": "Ornate Bichir (Polypterus ornatipinnis), Tank-Bred",
+            "publisher": "Aquatic Arts",
+            "url": "https://aquaticarts.com/products/ornate-bichir",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "wetwebmedia-polypterus-ornatipinnis-territoriality",
+            "title": "Bichirs compatibility FAQ: Polypterus ornatipinnis territoriality",
+            "publisher": "WetWebMedia",
+            "url": "https://www.wetwebmedia.com/FWSubWebIndex/polypcompfaqs.htm",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0108",
+        "behaviorTraits": [
+          "pair_living",
+          "adult_conspecific_aggression",
+          "predatory"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-channa-bleheri",
+            "title": "Channa bleheri species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Channa-bleheri.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-channa-bleheri",
+            "title": "Channa bleheri (Rainbow snakehead)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/channa-bleheri",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0109",
+        "behaviorTraits": [
+          "predatory",
+          "species_tank_required",
+          "intraspecific_aggression"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-channa-aurantimaculata",
+            "title": "Channa aurantimaculata species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Channa-aurantimaculata.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-channa-aurantimaculata",
+            "title": "Channa aurantimaculata (Orange-spotted Snakehead)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/channa-aurantimaculata",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0119",
+        "behaviorTraits": [
+          "surface_dwelling",
+          "conspecific_aggression",
+          "surface_zone_aggression",
+          "predatory"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch20-fishbase-pantodon-buchholzi",
+            "title": "Pantodon buchholzi species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pantodon-buchholzi",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-pantodon-buchholzi",
+            "title": "Pantodon buchholzi (African Butterfly Fish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pantodon-buchholzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0130",
+        "behaviorTraits": [
+          "predatory",
+          "interspecific_aggression",
+          "dominance_hierarchy"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-opsariichthys-bidens",
+            "title": "Opsariichthys bidens species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Opsariichthys-bidens",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "doi-opsariichthys-bidens-ontogeny-diet",
+            "title": "The relationship between ontogeny, morphology, and diet in the Chinese hook snout carp (Opsariichthys bidens)",
+            "publisher": "Ichthyological Research",
+            "url": "https://doi.org/10.1007/s10228-005-0316-0",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "doi-opsariichthys-bidens-enrichment-2024",
+            "title": "Effects of Environmental Enrichment on the Growth, Gonadal Development, and Welfare of the Chinese Hooksnout Carp (Opsariichthys bidens)",
+            "publisher": "Fishes",
+            "url": "https://doi.org/10.3390/fishes9090339",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "cnipa-opsariichthys-bidens-parent-culture-wave18",
+            "title": "Artificial spawning induction method for Opsariichthys bidens (CN110612931B)",
+            "publisher": "China National Intellectual Property Administration / Zhejiang Academy of Agricultural Sciences",
+            "url": "https://patents.google.com/patent/CN110612931B/en",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "predation",
+          "temperature",
+          "ph"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0131",
+        "behaviorTraits": [
+          "predatory",
+          "intraspecific_aggression",
+          "bottom_dwelling"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-mastacembelus-armatus",
+            "title": "Mastacembelus armatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Mastacembelus-armatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-mastacembelus-armatus",
+            "title": "Mastacembelus armatus (Tyre-Track Eel)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/mastacembelus-armatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0138",
+        "behaviorTraits": [
+          "conditional_group_living",
+          "conspecific_quarrelsome",
+          "predatory"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch20-fishbase-leporinus-fasciatus",
+            "title": "Leporinus fasciatus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Leporinus-fasciatus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-leporinus-fasciatus",
+            "title": "Leporinus fasciatus (Banded Leporinus)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/leporinus-fasciatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0139",
+        "behaviorTraits": [
+          "group_living",
+          "peaceful",
+          "very_large_space_requirement",
+          "territorial",
+          "age_increasing_territoriality"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch20-fishbase-piaractus-brachypomus",
+            "title": "Piaractus brachypomus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Piaractus-brachypomus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-piaractus-brachypomus",
+            "title": "Piaractus brachypomus (Red-bellied Pacu)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/piaractus-brachypomus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "animaldiversity-piaractus-brachypomus",
+            "title": "Piaractus brachypomus (Cachama) behavior and natural history",
+            "publisher": "Animal Diversity Web, University of Michigan",
+            "url": "https://animaldiversity.org/accounts/Piaractus_brachypomus/",
+            "sourceType": "university",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0181",
+        "behaviorTraits": [
+          "group_living",
+          "peaceful",
+          "water_quality_sensitive"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-gnathonemus-petersii",
+            "title": "Gnathonemus petersii species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gnathonemus-petersii",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-gnathonemus-petersii",
+            "title": "Gnathonemus petersii (Elephantnose Fish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/gnathonemus-petersii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0018",
+        "behaviorTraits": [
+          "territorial_males",
+          "rock_associated_territory",
+          "mbuna"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-chindongo-socolofi",
+            "title": "Chindongo socolofi species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Chindongo-socolofi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-pseudotropheus-socolofi",
+            "title": "Pseudotropheus socolofi (Powder Blue Cichlid)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pseudotropheus-socolofi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0038",
+        "behaviorTraits": [
+          "predatory",
+          "interspecific_aggression",
+          "dominance_hierarchy"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-opsariichthys-bidens",
+            "title": "Opsariichthys bidens species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Opsariichthys-bidens",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "doi-opsariichthys-bidens-ontogeny-diet",
+            "title": "The relationship between ontogeny, morphology, and diet in the Chinese hook snout carp (Opsariichthys bidens)",
+            "publisher": "Ichthyological Research",
+            "url": "https://doi.org/10.1007/s10228-005-0316-0",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "doi-opsariichthys-bidens-enrichment-2024",
+            "title": "Effects of Environmental Enrichment on the Growth, Gonadal Development, and Welfare of the Chinese Hooksnout Carp (Opsariichthys bidens)",
+            "publisher": "Fishes",
+            "url": "https://doi.org/10.3390/fishes9090339",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "cnipa-opsariichthys-bidens-parent-culture-wave18",
+            "title": "Artificial spawning induction method for Opsariichthys bidens (CN110612931B)",
+            "publisher": "China National Intellectual Property Administration / Zhejiang Academy of Agricultural Sciences",
+            "url": "https://patents.google.com/patent/CN110612931B/en",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "predation",
+          "temperature",
+          "ph"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0022",
+        "behaviorTraits": [
+          "group_living"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-lutjanus-kasmira",
+            "title": "Lutjanus kasmira species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Lutjanus-kasmira",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-lutjanus-kasmira-wave14",
+            "title": "Vivaneau à raies bleues • Lutjanus kasmira • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/lutjanus-kasmira",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "liveaquaria-lutjanus-kasmira-wave14",
+            "title": "Bluestripe Snapper • Lutjanus kasmira",
+            "publisher": "LiveAquaria",
+            "url": "https://www.liveaquaria.com/products/bluestripe-snapper",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0023",
+        "behaviorTraits": [
+          "variable_social"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-zebrasoma-flavescens",
+            "title": "Zebrasoma flavescens species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/6018",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0024",
+        "behaviorTraits": [
+          "group_living"
+        ],
+        "predationTargets": [],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-paracanthurus-hepatus",
+            "title": "Paracanthurus hepatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Paracanthurus-hepatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
           "adult_size",
           "social_behavior"
         ],
@@ -886,6 +3308,15 @@
         "reviewStatus": "reviewed",
         "citations": [
           {
+            "id": "batch-02-fishbase-corydoras-panda",
+            "title": "Corydoras panda species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Corydoras-panda.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
             "id": "seriouslyfish-corydoras-panda",
             "title": "Corydoras panda (Panda Cory)",
             "publisher": "Seriously Fish",
@@ -899,7 +3330,11 @@
           "water",
           "temperature",
           "adult_size",
-          "social_behavior"
+          "social_behavior",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -962,6 +3397,49 @@
           "temperature",
           "territoriality",
           "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0015",
+        "behaviorTraits": [
+          "interspecific_aggression"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "fishbase-helostoma-temminkii",
+            "title": "Helostoma temminkii (Kissing gourami) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Helostoma-temminckii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-helostoma-temminkii",
+            "title": "Helostoma temminkii (Kissing Gourami)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/helostoma-temminkii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -1252,6 +3730,15 @@
         "reviewStatus": "reviewed",
         "citations": [
           {
+            "id": "batch-02-fishbase-pterophyllum-scalare",
+            "title": "Pterophyllum scalare species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pterophyllum-scalare.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
             "id": "seriouslyfish-pterophyllum-scalare",
             "title": "Pterophyllum scalare (Angelfish)",
             "publisher": "Seriously Fish",
@@ -1276,7 +3763,9 @@
           "adult_size",
           "social_behavior",
           "territoriality",
-          "predation"
+          "predation",
+          "ph",
+          "tank_size"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -1284,7 +3773,9 @@
       {
         "catalogKey": "sp_0451",
         "behaviorTraits": [
-          "predatory"
+          "predatory",
+          "territorial",
+          "territory_defense"
         ],
         "predationTargets": [
           "small_fish"
@@ -1309,13 +3800,1369 @@
             "sourceType": "curated_husbandry",
             "reviewStatus": "reviewed",
             "version": 1
+          },
+          {
+            "id": "batch03-fishbase-astronotus-ocellatus",
+            "title": "Astronotus ocellatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Astronotus-ocellatus.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "animaldiversity-astronotus-ocellatus-behavior",
+            "title": "Astronotus ocellatus behavior and reproduction",
+            "publisher": "Animal Diversity Web, University of Michigan",
+            "url": "https://animaldiversity.org/accounts/Astronotus_ocellatus/",
+            "sourceType": "university",
+            "reviewStatus": "reviewed",
+            "version": 1
           }
         ],
         "requiredFacts": [
           "water",
           "temperature",
           "adult_size",
+          "predation",
+          "ph",
+          "tank_size",
+          "social_behavior",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0116",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_space_requirement",
+          "jumper",
+          "territorial"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-scleropages-formosus-green",
+            "title": "Scleropages formosus Green variant review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/Summary/Scleropages-formosus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch19-fishbase-scleropages-formosus",
+            "title": "Scleropages formosus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-scleropages-formosus",
+            "title": "Scleropages formosus (Asian Arowana)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "myfish-scleropages-formosus-territoriality",
+            "title": "Scleropages formosus – Asiatischer Arowana",
+            "publisher": "my-fish / WZF",
+            "url": "https://my-fish.org/my-fishothek/scleropages-formosus-asiatischer-gabelbart/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0104",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_space_requirement",
+          "jumper",
+          "territorial"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch19-fishbase-scleropages-formosus-red",
+            "title": "Scleropages formosus Red variant review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/6357",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch19-fishbase-scleropages-formosus",
+            "title": "Scleropages formosus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-scleropages-formosus",
+            "title": "Scleropages formosus (Asian Arowana)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "myfish-scleropages-formosus-territoriality",
+            "title": "Scleropages formosus – Asiatischer Arowana",
+            "publisher": "my-fish / WZF",
+            "url": "https://my-fish.org/my-fishothek/scleropages-formosus-asiatischer-gabelbart/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0146",
+        "behaviorTraits": [
+          "peaceful",
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch10-fishbase-mikrogeophagus-ramirezi-platinum",
+            "title": "Mikrogeophagus ramirezi Platinum variant review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/mikrogeophagus-ramirezi.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi (Ram)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/12305",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
           "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0157",
+        "behaviorTraits": [
+          "peaceful",
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch10-fishbase-mikrogeophagus-ramirezi-blue",
+            "title": "Mikrogeophagus ramirezi Blue variant review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/mikrogeophagus-ramirezi.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi (Ram)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/mikrogeophagus-ramirezi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-mikrogeophagus-ramirezi",
+            "title": "Mikrogeophagus ramirezi species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/12305",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0151",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful",
+          "fin_nipping"
+        ],
+        "minimumGroupSize": 12,
+        "predationTargets": [
+          "fish_fry"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-gymnocorymbus-ternetzi-color-morph",
+            "title": "Gymnocorymbus ternetzi Color morph variant review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black Widow Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "tfh-gymnocorymbus-ternetzi-fry-predation-wave16",
+            "title": "Gymnocorymbus ternetzi",
+            "publisher": "Tropical Fish Hobbyist Magazine",
+            "url": "https://www.tfhmagazine.com/articles/freshwater/gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0452",
+        "behaviorTraits": [
+          "pair_living",
+          "anemone_association",
+          "male_egg_guarding"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch17-fishbase-amphiprion-ocellaris",
+            "title": "Amphiprion ocellaris species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/amphiprion-ocellaris.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0453",
+        "behaviorTraits": [
+          "solitary",
+          "predatory",
+          "venomous_spines"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch26-fishbase-pterois-volitans",
+            "title": "Pterois volitans species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pterois-volitans.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-pterois-volitans-wave10",
+            "title": "Rascasse volante • Pterois volitans • Fiche poissons",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishipedia.fr/fr/poissons/pterois-volitans",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "predation",
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0069",
+        "behaviorTraits": [
+          "group_living",
+          "pond_scale",
+          "very_large_space_requirement"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-cyprinus-carpio-var",
+            "title": "Cyprinus carpio var. catalog taxon review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Cyprinus-carpio.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "petmd-koi-husbandry-wave17",
+            "title": "Koi Fish Care Sheet",
+            "publisher": "PetMD",
+            "url": "https://www.petmd.com/fish/koi-fish-care-sheet",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-cyprinus-carpio-wave17",
+            "title": "Common carp • Cyprinus carpio • Fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishi-pedia.com/fishes/cyprinus-carpio",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "plos-cyprinus-carpio-small-fish-predation-wave17",
+            "title": "Who Is Who: An Anomalous Predator-Prey Role Exchange between Cyprinids and Perch",
+            "publisher": "PLOS ONE",
+            "url": "https://doi.org/10.1371/journal.pone.0156430",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "tank_size",
+          "social_behavior",
+          "temperature",
+          "ph",
+          "adult_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0070",
+        "behaviorTraits": [
+          "group_living",
+          "pond_scale",
+          "very_large_space_requirement"
+        ],
+        "minimumGroupSize": 5,
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch09-fishbase-cyprinus-carpio-longfin",
+            "title": "Cyprinus carpio var. Longfin catalog variant review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Cyprinus-carpio.html",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "petmd-koi-husbandry-wave17",
+            "title": "Koi Fish Care Sheet",
+            "publisher": "PetMD",
+            "url": "https://www.petmd.com/fish/koi-fish-care-sheet",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-cyprinus-carpio-wave17",
+            "title": "Common carp • Cyprinus carpio • Fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishi-pedia.com/fishes/cyprinus-carpio",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "plos-cyprinus-carpio-small-fish-predation-wave17",
+            "title": "Who Is Who: An Anomalous Predator-Prey Role Exchange between Cyprinids and Perch",
+            "publisher": "PLOS ONE",
+            "url": "https://doi.org/10.1371/journal.pone.0156430",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "tank_size",
+          "social_behavior",
+          "temperature",
+          "ph",
+          "adult_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0156",
+        "behaviorTraits": [
+          "variable_temperament",
+          "male_territoriality",
+          "breeding_aggression"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch21-fishbase-trichopodus-trichopterus-platinum",
+            "title": "Trichopodus trichopterus Platinum variant review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Trichopodus-trichopterus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-trichopodus-trichopterus",
+            "title": "Trichopodus trichopterus (Three-spot Gourami)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/trichopodus-trichopterus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0174",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful",
+          "fin_nipping"
+        ],
+        "minimumGroupSize": 12,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "wave05-cbd-gymnocorymbus-albino-white",
+            "title": "Gymnocorymbus ternetzi organism record including albino/white variant",
+            "publisher": "Biosafety Clearing-House / Convention on Biological Diversity",
+            "url": "https://bch.cbd.int/en/database/ORGA%7D/BCH-ORGA-SCBD-281063-2",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black Widow Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0207",
+        "behaviorTraits": [
+          "shoaling",
+          "peaceful",
+          "fin_nipping"
+        ],
+        "minimumGroupSize": 12,
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "wave05-cbd-gymnocorymbus-albino-white",
+            "title": "Gymnocorymbus ternetzi organism record including albino/white variant",
+            "publisher": "Biosafety Clearing-House / Convention on Biological Diversity",
+            "url": "https://bch.cbd.int/en/database/ORGA%7D/BCH-ORGA-SCBD-281063-2",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black Widow Tetra)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-gymnocorymbus-ternetzi",
+            "title": "Gymnocorymbus ternetzi (Black tetra) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gymnocorymbus-ternetzi",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0283",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_space_requirement",
+          "jumper",
+          "territorial"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "wave06-peer-reviewed-scleropages-formosus-super-red",
+            "title": "Cytogenetics Meets Genomics: Cytotaxonomy and Genomic Relationships among Color Variants of the Asian Arowana Scleropages formosus",
+            "publisher": "International Journal of Molecular Sciences",
+            "url": "https://pubmed.ncbi.nlm.nih.gov/37240350/",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch19-fishbase-scleropages-formosus",
+            "title": "Scleropages formosus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-scleropages-formosus",
+            "title": "Scleropages formosus (Asian Arowana)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "myfish-scleropages-formosus-territoriality",
+            "title": "Scleropages formosus – Asiatischer Arowana",
+            "publisher": "my-fish / WZF",
+            "url": "https://my-fish.org/my-fishothek/scleropages-formosus-asiatischer-gabelbart/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0052",
+        "behaviorTraits": [
+          "shoaling",
+          "bottom_dwelling"
+        ],
+        "predationTargets": [
+          "fish_fry"
+        ],
+        "confidence": "medium",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "batch05-fishbase-gastrodermus-hastatus",
+            "title": "Gastrodermus hastatus species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Corydoras-hastatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishipedia-corydoras-hastatus-wave15",
+            "title": "Gastrodermus (Corydoras) hastatus • Fish sheet",
+            "publisher": "Fishipedia",
+            "url": "https://www.fishi-pedia.com/fishes/corydoras-hastatus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "jaalas-corydoras-hastatus-fry-predation-wave16",
+            "title": "Comprehensive Husbandry Protocol for Corydoras Catfish and Many Other Amazonian Species",
+            "publisher": "Journal of the American Association for Laboratory Animal Science",
+            "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC11467888/",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "tank_size",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0173",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_open_water_predator",
+          "home_aquarium_unsuitable"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "wave05-fishbase-salminus-brasiliensis",
+            "title": "Salminus brasiliensis species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Salminus-brasiliensis",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "wave05-seriouslyfish-salminus-brasiliensis",
+            "title": "Salminus brasiliensis (Dorado)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/salminus-brasiliensis",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "aquaculture-international-salminus-aggression-wave20",
+            "title": "Biofloc technology (BFT) improves the productive performance and survival rate of Salminus brasiliensis",
+            "publisher": "Aquaculture International",
+            "url": "https://doi.org/10.1007/s10499-024-01644-8",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "adult_size",
+          "social_behavior",
+          "predation",
+          "temperature",
+          "ph",
+          "tank_size"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0214",
+        "behaviorTraits": [
+          "pair_living",
+          "breeding_defense",
+          "pair_parental_care"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "wave05-seriouslyfish-pelvicachromis-pulcher",
+            "title": "Pelvicachromis pulcher (Kribensis)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pelvicachromis-pulcher",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "breeding_behavior"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0176",
+        "behaviorTraits": [
+          "territorial",
+          "small_fish_predation"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "ifrj-pterophyllum-scalare-marble-identity-wave21",
+            "title": "Reproduction of Three Colour Varieties of Angelfish (Pterophyllum scalare)",
+            "publisher": "Indonesian Fisheries Research Journal",
+            "url": "https://doi.org/10.15578/ifrj.5.1.1999.19-22",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch-02-fishbase-pterophyllum-scalare",
+            "title": "Pterophyllum scalare species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pterophyllum-scalare.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-pterophyllum-scalare",
+            "title": "Pterophyllum scalare (Angelfish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pterophyllum-scalare",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "tamu-pterophyllum-scalare-reproduction",
+            "title": "Reproduction of Angelfish (Pterophyllum scalare)",
+            "publisher": "Texas A&M AgriLife Extension",
+            "url": "https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "ph",
+          "tank_size"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0407",
+        "behaviorTraits": [
+          "predatory",
+          "very_large_space_requirement",
+          "jumper",
+          "territorial"
+        ],
+        "predationTargets": [
+          "small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "aquaculture-research-scleropages-blood-red-identity-wave22",
+            "title": "A strain-specific and a sex-associated STS marker for Asian arowana (Scleropages formosus, Osteoglossidae)",
+            "publisher": "Aquaculture Research",
+            "url": "https://doi.org/10.1046/j.1365-2109.2003.00949.x",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch19-fishbase-scleropages-formosus",
+            "title": "Scleropages formosus species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Scleropages-formosus",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-scleropages-formosus",
+            "title": "Scleropages formosus (Asian Arowana)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/scleropages-formosus",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "myfish-scleropages-formosus-territoriality",
+            "title": "Scleropages formosus – Asiatischer Arowana",
+            "publisher": "my-fish / WZF",
+            "url": "https://my-fish.org/my-fishothek/scleropages-formosus-asiatischer-gabelbart/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "predation",
+          "territoriality"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0236",
+        "behaviorTraits": [
+          "shoaling",
+          "male_dominance",
+          "male_conspecific_territoriality"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "title": "A Recessive oca2 Mutation Underlies Albinism in Xiphophorus Fish",
+            "publisher": "Pigment Cell & Melanoma Research",
+            "url": "https://doi.org/10.1111/pcmr.70113",
+            "sourceType": "peer_reviewed",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-xiphophorus-hellerii",
+            "title": "Xiphophorus hellerii (Green Swordtail)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/xiphophorus-hellerii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-xiphophorus-hellerii",
+            "title": "Xiphophorus hellerii (Green swordtail) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.org/Summary/Xiphophorus-hellerii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "australian-government-xiphophorus-hellerii-territoriality",
+            "title": "Review of the impacts of introduced ornamental fish species that have established wild populations in Australia",
+            "publisher": "Australian Government Department of the Environment, Water, Heritage and the Arts",
+            "url": "https://www.agriculture.gov.au/sites/default/files/documents/ornamental-fish.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-xiphophorus-hellerii-male-aggression",
+            "title": "Xiphophorus hellerii (Green swordtail) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Xiphophorus-hellerii.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0229",
+        "behaviorTraits": [
+          "territorial",
+          "age_increasing_aggression",
+          "mucus_grazing_risk"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "tetra-gyrinocheilus-aymonieri-albino-wave24",
+            "title": "Chinese Algae Eater – un pește fascinant, util în acvariu",
+            "publisher": "Tetra Advanced Fishkeeper Blog",
+            "url": "https://blog.tetra.net/ro-ro/chinese-algae-eater-un-peste-fascinant-util-in-acvariu/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch25-fishbase-gyrinocheilus-aymonieri",
+            "title": "Gyrinocheilus aymonieri species review",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Gyrinocheilus-aymonieri",
+            "sourceType": "professional_association",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-gyrinocheilus-aymonieri",
+            "title": "Gyrinocheilus aymonieri (Chinese Algae Eater)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/gyrinocheilus-aymonieri",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0221",
+        "behaviorTraits": [
+          "breeding_defense"
+        ],
+        "predationTargets": [],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "aquarium-glaser-apistogramma-agassizii-fire-red-wave25",
+            "title": "Apistogramma agassizii FIRE-RED",
+            "publisher": "Aquarium Glaser GmbH",
+            "url": "https://www.aquariumglaser.de/en/25-perchlike-fishes/25d-perchlike-fishes-4-south-american-dwarf-cichlids/apistogramma_agassizii_fire_red_en/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-apistogramma-agassizii",
+            "title": "Apistogramma agassizii (Agassizi's Dwarf Cichlid)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/apistogramma-agassizii/",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "fishbase-apistogramma-agassizii",
+            "title": "Apistogramma agassizii (Agassiz's dwarf cichlid) species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/Fieldguide/FieldGuideSummary.php?c_code=076&genusname=Apistogramma&speciesname=agassizii",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "social_behavior",
+          "breeding_behavior",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0177",
+        "behaviorTraits": [
+          "territorial",
+          "small_fish_predation"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "title": "Blue Diamond Angelfish (Pterophyllum scalare) - Tank-Bred!",
+            "publisher": "Aquatic Arts",
+            "url": "https://aquaticarts.com/products/blue-diamond-angelfish",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch-02-fishbase-pterophyllum-scalare",
+            "title": "Pterophyllum scalare species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pterophyllum-scalare.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-pterophyllum-scalare",
+            "title": "Pterophyllum scalare (Angelfish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pterophyllum-scalare",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "tamu-pterophyllum-scalare-reproduction",
+            "title": "Reproduction of Angelfish (Pterophyllum scalare)",
+            "publisher": "Texas A&M AgriLife Extension",
+            "url": "https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "ph",
+          "tank_size"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0178",
+        "behaviorTraits": [
+          "territorial",
+          "small_fish_predation"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "aquatic-arts-pterophyllum-scalare-panda-wave27",
+            "title": "Panda Angelfish (Pterophyllum scalare - variant), USA Bred",
+            "publisher": "Aquatic Arts",
+            "url": "https://aquaticarts.com/collections/locally-bred-fish/products/panda-angelfish-pterophyllum-scalare-variant-usa-bred",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch-02-fishbase-pterophyllum-scalare",
+            "title": "Pterophyllum scalare species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pterophyllum-scalare.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-pterophyllum-scalare",
+            "title": "Pterophyllum scalare (Angelfish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pterophyllum-scalare",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "tamu-pterophyllum-scalare-reproduction",
+            "title": "Reproduction of Angelfish (Pterophyllum scalare)",
+            "publisher": "Texas A&M AgriLife Extension",
+            "url": "https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "ph",
+          "tank_size"
+        ],
+        "stageRiskRules": [],
+        "version": 1
+      },
+      {
+        "catalogKey": "sp_0388",
+        "behaviorTraits": [
+          "territorial",
+          "small_fish_predation"
+        ],
+        "predationTargets": [
+          "very_small_fish"
+        ],
+        "confidence": "high",
+        "reviewStatus": "reviewed",
+        "citations": [
+          {
+            "id": "aquatic-arts-pterophyllum-scalare-red-devil-wave28",
+            "title": "Red Devil Angelfish (Pterophyllum scalare 'Red Devil') - Tank Bred",
+            "publisher": "Aquatic Arts",
+            "url": "https://aquaticarts.com/products/red-devil-angelfish-pterophyllum-scalare-red-devil-tank-bred",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "batch-02-fishbase-pterophyllum-scalare",
+            "title": "Pterophyllum scalare species summary",
+            "publisher": "FishBase",
+            "url": "https://www.fishbase.se/summary/Pterophyllum-scalare.html",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "seriouslyfish-pterophyllum-scalare",
+            "title": "Pterophyllum scalare (Angelfish)",
+            "publisher": "Seriously Fish",
+            "url": "https://www.seriouslyfish.com/species/pterophyllum-scalare",
+            "sourceType": "curated_husbandry",
+            "reviewStatus": "reviewed",
+            "version": 1
+          },
+          {
+            "id": "tamu-pterophyllum-scalare-reproduction",
+            "title": "Reproduction of Angelfish (Pterophyllum scalare)",
+            "publisher": "Texas A&M AgriLife Extension",
+            "url": "https://extension.rwfm.tamu.edu/wp-content/uploads/sites/8/2013/09/Reproduction-of-Angelfish-Pterphyllum-scalare.pdf",
+            "sourceType": "government",
+            "reviewStatus": "reviewed",
+            "version": 1
+          }
+        ],
+        "requiredFacts": [
+          "water",
+          "temperature",
+          "adult_size",
+          "social_behavior",
+          "territoriality",
+          "predation",
+          "ph",
+          "tank_size"
         ],
         "stageRiskRules": [],
         "version": 1
@@ -2101,7 +5948,7 @@
       }
     ],
     "counts": {
-      "profiles": 34,
+      "profiles": 109,
       "pairRules": 21
     }
   }
