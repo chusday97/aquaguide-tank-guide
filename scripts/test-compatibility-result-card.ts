@@ -103,21 +103,36 @@ assert.equal(
 
 const aquariumSource = readFileSync(new URL('../src/pages/Aquarium.tsx', import.meta.url), 'utf8');
 const cardStart = aquariumSource.indexOf(') : addFishCompatibilityReview ? (');
-const cardEnd = aquariumSource.indexOf(') : (', cardStart + 10);
+const cardEnd = aquariumSource.indexOf('\n                </section>\n              ) : (', cardStart + 10);
 assert.ok(cardStart >= 0 && cardEnd > cardStart, 'add-species compatibility result card must exist');
 const cardSource = aquariumSource.slice(cardStart, cardEnd);
 
 assert.match(cardSource, /addFishAssessmentView\?\.main\.judgment/);
 assert.match(cardSource, /addFishAssessmentView\?\.main\.why/);
 assert.match(cardSource, /addFishAssessmentView\?\.main\.howTo/);
+assert.match(cardSource, /data-compatibility-risk-level/);
+assert.match(cardSource, /高风险/);
+assert.match(cardSource, /需要调整/);
+assert.match(cardSource, /可混养/);
+assert.match(cardSource, /信息不足/);
+assert.match(cardSource, /data-compatibility-next-steps/);
+assert.match(cardSource, /decisionPlan\.nextSteps\.slice\(0, 2\)/);
+assert.match(cardSource, /现在先做/);
 assert.match(cardSource, /data-compatibility-decision-plan/);
 assert.match(cardSource, /decisionPlan\.expectedAfterAdjustment/);
 assert.match(cardSource, /decisionPlan\.reviewCheckpoint/);
 assert.match(cardSource, /decisionPlan\.stopCondition/);
+assert.match(cardSource, /必须停止 \/ 分隔的情况/);
 assert.match(cardSource, /<details/);
 assert.match(cardSource, /查看依据/);
 assert.match(cardSource, /data-add-fish-compatibility-result/);
+assert.match(cardSource, /border-red-200 bg-red-50/);
+assert.match(cardSource, /border-amber-100 bg-amber-50/);
 assert.match(cardSource, /border-emerald-100 bg-emerald-50/);
+assert.match(cardSource, /border-slate-200 bg-slate-50/);
+assert.match(cardSource, /border-slate-200 bg-slate-100 text-slate-700/);
+assert.match(cardSource, /bg-red-700/);
+assert.match(cardSource, /bg-amber-600/);
 assert.match(cardSource, /已结合当前鱼缸/);
 
 const defaultResultEnd = cardSource.indexOf('<details');
