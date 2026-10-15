@@ -22,10 +22,10 @@ assert.equal(summary.totalResearchJobs, plan.length);
 assert.equal(summary.completionEligibleJobs + summary.terminalBlockedJobs, summary.totalResearchJobs);
 assert.equal(summary.completionEligibleCatalogObjects + summary.terminalBlockedCatalogObjects, plan.reduce((sum, job) => sum + job.catalogObjectCount, 0));
 
-assert.equal(summary.totalResearchJobs, 57, 'current source-controlled checkpoint must retain 57 actionable base-taxon jobs');
-assert.equal(summary.completionEligibleJobs, 20, 'only 20 jobs can currently finish without a terminal hold');
+assert.equal(summary.totalResearchJobs, 56, 'current source-controlled checkpoint must retain 56 actionable base-taxon jobs');
+assert.equal(summary.completionEligibleJobs, 19, 'only 19 jobs can currently finish without a terminal hold');
 assert.equal(summary.terminalBlockedJobs, 37, '37 jobs must remain outside the active completion queue');
-assert.equal(summary.completionEligibleCatalogObjects, 22);
+assert.equal(summary.completionEligibleCatalogObjects, 21);
 assert.equal(summary.terminalBlockedCatalogObjects, 80);
 
 assert.equal(allQueue.length, summary.totalResearchJobs);
@@ -47,16 +47,15 @@ for (const item of blocked) {
 
 const expectedFastLane = [
   'Gymnocorymbus ternetzi',
-  'Otocinclus vittatus',
   'Petitella rhodostoma',
   'Xiphophorus maculatus',
 ];
 assert.deepEqual(
-  eligible.slice(0, 4).map((item: { researchKey: string }) => item.researchKey),
+  eligible.slice(0, 3).map((item: { researchKey: string }) => item.researchKey),
   expectedFastLane,
-  'the four 7/8 predation Fast Lane taxa must remain the highest completion-eligible queue',
+  'the remaining three high-impact 7/8 predation Fast Lane taxa must lead the completion-eligible queue',
 );
-for (const item of eligible.slice(0, 4)) {
+for (const item of eligible.slice(0, 3)) {
   assert.ok(item.affectedUnknownPairs > 0, 'Fast Lane taxon must still participate in current UNKNOWN pairs');
   assert.equal(item.gapInstances, 1);
   assert.equal(item.impactPerGap, item.affectedUnknownPairs, 'single-gap Fast Lane impact-per-gap must track the current dynamic pair impact');

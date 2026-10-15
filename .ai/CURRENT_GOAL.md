@@ -1,15 +1,15 @@
-## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave11 via RDC (NOT RELEASED)
+## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave12 via RDC (NOT RELEASED)
 
 - Active branch: `codex/compatibility-research-runtime-20261014`. This checkpoint remains source-controlled/local only: **no Vercel deployment, Production alias change, DB migration, Production authority write, or Codex agent**.
-- Wave11 targeted `sp_0183 Xanthichthys mento`, which lacked temperature, pH, tank size and territoriality while its water/adult/social/predation authority was already reviewed.
-- Exact-species husbandry values are reconciled conservatively from Saltcorner and LiveAquaria: promoted temperature **22.2–25.6 °C**, pH **8.1–8.4**, and minimum **180 US gal ≈ 681 L**. The stricter direct minimum/range intersection is used rather than the more permissive source values.
-- Territoriality is not generalized from temperament labels. Kawase (2003, Environmental Biology of Fishes) directly documents males establishing territories for spawning and parental egg care; the field is therefore scoped to `breeding_territoriality`. Runtime gets `breeding_defense`, which only raises risk when spawning/egg/fry-guarding context is active.
-- The profile patch synchronizes all eight required facts. `Xanthichthys mento` is now 8/8 and generic-ready.
-- Current coverage after wave11: **76 authoritative 8/8 fish / 61 strict generic-ready**, **375 actionable fields across 102 catalog objects**, deduplicated to **57 base-taxon jobs**. Field gaps: `ph 76`, `tank_size 73`, `temperature 69`, `water 64`, `adult_size 60`, `predation 18`, `territoriality 15`, `social_behavior 0`.
-- Decision-impact queue is now **20 completion-eligible jobs / 22 objects** and **37 terminal-blocked jobs / 80 objects**.
-- Fully informed invariant expands to **61 ready fish = 1,830 unordered pairs = 89 compatible / 796 caution / 945 not_recommended / 0 insufficient_data**.
+- Wave12 closes the final `predation` gap for `sp_0013 Otocinclus vittatus` with an exact-species AquaInfo husbandry page. Under behavior toward other species the page directly states that O. vittatus are very peaceful and harm no other fish; this is direct tankmate-harm evidence, not a herbivore/diet inference.
+- The same source notes occasional attachment to slow-moving discus as a non-aggressive husbandry caveat. That caveat is preserved in the review note and is not misclassified as fish predation.
+- The profile already carried an empty fish-prey target set; Wave12 adds reviewed provenance plus the missing `predation` required-fact declaration. `Otocinclus vittatus` is now 8/8 and generic-ready.
+- Current coverage after wave12: **77 authoritative 8/8 fish / 62 strict generic-ready**, **374 actionable fields across 101 catalog objects**, deduplicated to **56 base-taxon jobs**. Field gaps: `ph 76`, `tank_size 73`, `temperature 69`, `water 64`, `adult_size 60`, `predation 17`, `territoriality 15`, `social_behavior 0`.
+- Fast Lane now contains four predation-only 7/8 objects: `sp_0011 Xiphophorus maculatus`, `sp_0042 Pseudorasbora parva`, `sp_0151 Gymnocorymbus ternetzi var. Color morph`, and `sp_0433 Hemigrammus rhodostomus`. The high-impact queue leaders are Gymnocorymbus / Petitella / Xiphophorus; Pseudorasbora currently has zero pair-impact in the audit but still has a real unresolved predation field.
+- Decision-impact queue is now **19 completion-eligible jobs / 21 objects** and **37 terminal-blocked jobs / 80 objects**.
+- Fully informed invariant expands to **62 ready fish = 1,891 unordered pairs = 89 compatible / 827 caution / 975 not_recommended / 0 insufficient_data**.
 - Core-field coverage, decision-impact queue, fully-informed matrix, user conclusion, release badcases, knowledge coverage, research dry-run, lint, Business API build and `git diff --check` all pass under RDC.
-- NEXT: commit/push wave11, then re-audit the predation-only Fast Lane with exact tankmate/prey language. Peaceful/herbivore/diet-only descriptions remain insufficient for a negative predation authority.
+- NEXT: commit/push wave12, then model Pseudorasbora parva’s documented fish-egg/fry predation as a positive scoped risk instead of continuing to wait for a negative-safety source.
 
 ## CURRENT CHECKPOINT — 2026-10-14 Compatibility research batch dry-run infrastructure (NOT RELEASED)
 

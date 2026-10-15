@@ -110,6 +110,13 @@ import {
   compatibilityNumericWave11Sources,
   compatibilityNumericWave11VerifiedSourceIds,
 } from './numeric-wave11-20261015';
+import {
+  compatibilityNumericWave12AuthorityPatch,
+  compatibilityNumericWave12FieldReviews,
+  compatibilityNumericWave12ProfilePatches,
+  compatibilityNumericWave12Sources,
+  compatibilityNumericWave12VerifiedSourceIds,
+} from './numeric-wave12-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -128,6 +135,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave9Sources,
   ...compatibilityNumericWave10Sources,
   ...compatibilityNumericWave11Sources,
+  ...compatibilityNumericWave12Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -147,6 +155,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave9FieldReviews,
   ...compatibilityNumericWave10FieldReviews,
   ...compatibilityNumericWave11FieldReviews,
+  ...compatibilityNumericWave12FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -166,6 +175,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave9VerifiedSourceIds,
   ...compatibilityNumericWave10VerifiedSourceIds,
   ...compatibilityNumericWave11VerifiedSourceIds,
+  ...compatibilityNumericWave12VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -185,6 +195,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave9ProfilePatches,
   ...compatibilityNumericWave10ProfilePatches,
   ...compatibilityNumericWave11ProfilePatches,
+  ...compatibilityNumericWave12ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -204,4 +215,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave9AuthorityPatch,
   compatibilityNumericWave10AuthorityPatch,
   compatibilityNumericWave11AuthorityPatch,
+  compatibilityNumericWave12AuthorityPatch,
 ] as const;

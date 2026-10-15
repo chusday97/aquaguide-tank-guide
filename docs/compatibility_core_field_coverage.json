@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 61,
-  "coreFieldCompleteSpecies": 76,
-  "oneFieldGapSpecies": 6,
+  "genericOnboardingReadySpecies": 62,
+  "coreFieldCompleteSpecies": 77,
+  "oneFieldGapSpecies": 5,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
@@ -75,8 +75,8 @@
     },
     "predation": {
       "reviewed_supported": 58,
-      "reviewed_neutral_or_negative": 25,
-      "reviewed_unknown": 101,
+      "reviewed_neutral_or_negative": 26,
+      "reviewed_unknown": 100,
       "needs_research": 1,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -105,7 +105,7 @@
     },
     {
       "field": "predation",
-      "count": 18
+      "count": 17
     },
     {
       "field": "territoriality",
@@ -1124,9 +1124,9 @@
       "scientificName": "Otocinclus vittatus",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1193,13 +1193,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch-02-fishbase-otocinclus-vittatus"
+            "aquainfo-otocinclus-vittatus-wave12"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

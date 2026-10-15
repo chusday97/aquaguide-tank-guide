@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 102,
-  "totalResearchJobs": 57,
+  "catalogObjects": 101,
+  "totalResearchJobs": 56,
   "variantBridgeJobs": 19,
   "items": [
     {
@@ -29,33 +29,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Otocinclus vittatus",
-      "baseScientificName": "Otocinclus vittatus",
-      "priorityScore": 191,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0013",
-          "name": "小精灵",
-          "scientificName": "Otocinclus vittatus",
-          "gaps": [
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },

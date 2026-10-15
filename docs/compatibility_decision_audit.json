@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 61,
-  "genericReadyUniquePairs": 1830,
+  "genericOnboardingReadySpecies": 62,
+  "genericReadyUniquePairs": 1891,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 505,
@@ -32,16 +32,6 @@
         "speciesId": "sp_0011",
         "name": "月光鱼",
         "scientificName": "Xiphophorus maculatus",
-        "unknownPairs": 175,
-        "actionableFields": [
-          "predation"
-        ],
-        "terminalReasons": []
-      },
-      {
-        "speciesId": "sp_0013",
-        "name": "小精灵",
-        "scientificName": "Otocinclus vittatus",
         "unknownPairs": 175,
         "actionableFields": [
           "predation"
@@ -200,24 +190,6 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 191
-      },
-      {
-        "researchKey": "Otocinclus vittatus",
-        "baseScientificName": "Otocinclus vittatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 191
       },
       {
@@ -1348,24 +1320,6 @@
         "existingCoveragePriorityScore": 191
       },
       {
-        "researchKey": "Otocinclus vittatus",
-        "baseScientificName": "Otocinclus vittatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 175,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 175,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 191
-      },
-      {
         "researchKey": "Petitella rhodostoma",
         "baseScientificName": "Petitella rhodostoma",
         "completionEligible": true,
@@ -2476,10 +2430,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 57,
-      "completionEligibleJobs": 20,
+      "totalResearchJobs": 56,
+      "completionEligibleJobs": 19,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 22,
+      "completionEligibleCatalogObjects": 21,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2548,7 +2502,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 375,
+    "actionableGaps": 374,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2572,7 +2526,7 @@
       },
       {
         "field": "predation",
-        "count": 18
+        "count": 17
       },
       {
         "field": "territoriality",
