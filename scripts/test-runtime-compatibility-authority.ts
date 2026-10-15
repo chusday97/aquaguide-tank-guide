@@ -75,22 +75,24 @@ const signature = () => {
   };
 };
 
+const rolloutKeysets = buildCompatibilityProfileRolloutKeysets(bootstrap.profiles.map(profile => profile.catalogKey));
+const profilesFor = (keys: ReadonlySet<string>) => bootstrap.profiles.filter(profile => keys.has(profile.catalogKey));
+
 resetRuntimeCompatibilityEvidenceForTest();
 const staticSignature = signature();
 assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback');
 assert.equal(staticSignature.status, 'caution');
 assert.equal(staticSignature.ruleVersion, COMPATIBILITY_RULE_VERSION);
 assert.equal(staticSignature.authorityVersion, 'tank-compatibility-v3-reviewed-evidence');
+const invalidPartialProfiles = profilesFor(rolloutKeysets.target).slice(0, -3);
+assert.equal(invalidPartialProfiles.length, 98);
 applyReviewedCompatibilityBootstrap({
   ...bootstrap,
-  profiles: bootstrap.profiles.slice(0, -3),
-  counts: { profiles: bootstrap.profiles.length - 3, pairRules: bootstrap.pairRules.length },
+  profiles: invalidPartialProfiles,
+  counts: { profiles: invalidPartialProfiles.length, pairRules: bootstrap.pairRules.length },
 });
 assert.equal(getRuntimeCompatibilityStatus().source, 'static-fallback', 'invalid 98-Profile partial DB authority must fail closed');
 assert.deepEqual(signature(), staticSignature, 'partial DB authority must not change Compatibility decisions');
-
-const rolloutKeysets = buildCompatibilityProfileRolloutKeysets(bootstrap.profiles.map(profile => profile.catalogKey));
-const profilesFor = (keys: ReadonlySet<string>) => bootstrap.profiles.filter(profile => keys.has(profile.catalogKey));
 
 const currentProductionProfiles = profilesFor(rolloutKeysets.currentProduction);
 assert.equal(currentProductionProfiles.length, 63);
@@ -173,11 +175,11 @@ assert.equal(releasedTargetStatus.profiles, 101);
 
 resetRuntimeCompatibilityEvidenceForTest();
 
-assert.equal(bootstrap.profiles.length, 103, 'reviewed source-controlled identity corrections may grow repository authority beyond the released 101-Profile target');
+assert.equal(bootstrap.profiles.length, 104, 'reviewed source-controlled identity corrections may grow repository authority beyond the released 101-Profile target');
 applyReviewedCompatibilityBootstrap(bootstrap);
 const postTargetStatus = getRuntimeCompatibilityStatus();
 assert.equal(postTargetStatus.source, 'reviewed-db', 'complete released target plus reviewed source-controlled Profiles must be accepted as post-target authority growth');
-assert.equal(postTargetStatus.profiles, 103);
+assert.equal(postTargetStatus.profiles, 104);
 
 resetRuntimeCompatibilityEvidenceForTest();
 

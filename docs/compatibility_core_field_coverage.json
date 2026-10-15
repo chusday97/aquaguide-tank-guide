@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 70,
-  "coreFieldCompleteSpecies": 85,
+  "genericOnboardingReadySpecies": 71,
+  "coreFieldCompleteSpecies": 86,
   "oneFieldGapSpecies": 6,
-  "runtimeReviewedProfileSpecies": 139,
-  "domainOrIdentityHeldSpecies": 288,
+  "runtimeReviewedProfileSpecies": 140,
+  "domainOrIdentityHeldSpecies": 287,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 123,
+      "reviewed_supported": 124,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 124,
+      "reviewed_supported": 125,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 6,
       "needs_research": 57,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 118,
+      "reviewed_supported": 119,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 10,
       "needs_research": 59,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 129,
+      "reviewed_supported": 130,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 1,
       "needs_research": 57,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 115,
+      "reviewed_supported": 116,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 14,
       "needs_research": 58,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 110,
+      "reviewed_supported": 111,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 75,
+      "reviewed_supported": 76,
       "reviewed_neutral_or_negative": 30,
       "reviewed_unknown": 82,
       "needs_research": 0,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     },
     "predation": {
       "reviewed_supported": 66,
-      "reviewed_neutral_or_negative": 26,
+      "reviewed_neutral_or_negative": 27,
       "reviewed_unknown": 95,
       "needs_research": 0,
-      "missing_identity_or_domain": 288,
+      "missing_identity_or_domain": 287,
       "not_applicable": 11
     }
   },
@@ -19742,83 +19742,102 @@
       "name": "红眼白子红剑",
       "scientificName": "Xiphophorus hellerii var. Albino Red",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "wave23-seriouslyfish-xiphophorus-hellerii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "wave23-seriouslyfish-xiphophorus-hellerii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "wave23-seriouslyfish-xiphophorus-hellerii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "wave23-seriouslyfish-xiphophorus-hellerii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "wave23-seriouslyfish-xiphophorus-hellerii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "wave23-seriouslyfish-xiphophorus-hellerii-husbandry",
+            "wave23-fishbase-xiphophorus-hellerii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "australian-government-xiphophorus-hellerii-territoriality",
+            "fishbase-xiphophorus-hellerii-male-aggression"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-xiphophorus-hellerii"
+            "pcmr-xiphophorus-hellerii-red-albino-wave23",
+            "txstate-xgsc-xiphophorus-hellerii-albino-wave23",
+            "wave23-seriouslyfish-xiphophorus-hellerii-husbandry",
+            "wave23-fishbase-xiphophorus-hellerii-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

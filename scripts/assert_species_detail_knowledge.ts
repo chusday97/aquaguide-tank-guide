@@ -135,7 +135,18 @@ assert.equal(swordtailKnowledge.knowledge.spaceAndGrowth?.minVolumeLiters, 108);
 assert.equal(swordtailKnowledge.knowledge.spaceAndGrowth?.minTankLengthCm, 120);
 assert.equal(swordtailKnowledge.knowledge.reproduction?.gestationOrIncubation?.minDays, 24);
 assert.ok(swordtailKnowledge.knowledge.sexIdentification.maleTraits?.some(item => item.includes('交接器')));
-assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0236', scientificName: 'Xiphophorus hellerii var. Albino Red' }), undefined, 'commercial swordtail variants must not inherit standard-species authority automatically');
+const reviewedAlbinoRedSwordtail = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0236', scientificName: 'Xiphophorus hellerii var. Albino Red' });
+assert.ok(reviewedAlbinoRedSwordtail, 'an explicit reviewed Albino Red identity correction may inherit the reviewed Xiphophorus hellerii authority');
+for (const unresolvedSwordtail of [
+  { id: 'sp_0158', scientificName: 'Xiphophorus hellerii var.' },
+  { id: 'sp_0415', scientificName: 'Xiphophorus hellerii var. High Fin' },
+]) {
+  assert.equal(
+    getReviewedSpeciesKnowledgeForFish(unresolvedSwordtail),
+    undefined,
+    'unresolved commercial swordtail variants must not inherit standard-species authority automatically: ' + unresolvedSwordtail.id,
+  );
+}
 
 const blackSkirtKnowledge = buildSpeciesKnowledgeProfile({
   ...baseFish,
@@ -676,6 +687,19 @@ assert.equal(bloodRedArowanaKnowledge.spaceAndGrowth?.adultLengthCm.max, 90);
 assert.equal(bloodRedArowanaKnowledge.spaceAndGrowth?.minTankLengthCm, 200);
 assert.equal(bloodRedArowanaKnowledge.socialBehavior?.territoriality, 'unknown', 'Species Knowledge must preserve the base authority boundary instead of importing Compatibility-only territoriality');
 assert.equal(bloodRedArowanaKnowledge.socialBehavior?.predationRisk, 'high');
+
+
+const albinoRedSwordtail = fishData.find(fish => fish.id === 'sp_0236');
+assert.ok(albinoRedSwordtail, 'Albino Red swordtail must exist in catalog');
+const albinoRedSwordtailKnowledge = getReviewedSpeciesKnowledgeForFish(albinoRedSwordtail);
+assert.ok(albinoRedSwordtailKnowledge, 'reviewed Albino Red identity correction must resolve Species Knowledge through the explicit Xiphophorus hellerii base-species bridge');
+assert.deepEqual(albinoRedSwordtailKnowledge.environment?.temperatureRangeC, { min: 16, max: 28 });
+assert.deepEqual(albinoRedSwordtailKnowledge.environment?.phRange, { min: 7, max: 8 });
+assert.equal(albinoRedSwordtailKnowledge.spaceAndGrowth?.adultLengthCm.max, 14);
+assert.equal(albinoRedSwordtailKnowledge.spaceAndGrowth?.minVolumeLiters, 108);
+assert.equal(albinoRedSwordtailKnowledge.spaceAndGrowth?.minTankLengthCm, 120);
+assert.equal(albinoRedSwordtailKnowledge.socialBehavior?.mode, 'shoal');
+assert.equal(albinoRedSwordtailKnowledge.socialBehavior?.predationRisk, 'low');
 
 const reviewedAuthorityGaps = fishData
   .filter(fish => getReviewedCompatibilityProfileForFish(fish) && !getReviewedSpeciesKnowledgeForFish(fish))

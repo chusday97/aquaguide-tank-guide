@@ -2,14 +2,14 @@ import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { getCompatibilityEvidenceAudit, getReviewedCompatibilityProfile } from '../src/data/compatibilityEvidence';
 import { nextWaveUnified05ProfileIds, nextWaveUnified05Sources } from '../src/data/catalogReviewBatches/next-wave-unified-05';
-import { compatibilityStackedWave05PendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
+import { compatibilitySourceControlledPendingProfileIds, compatibilityStackedWave05PendingProfileIds, compatibilityUnifiedNextWave } from '../src/data/compatibilityNextWaveBatch';
 import { getCatalogIdentityBoundary } from '../src/data/catalogIdentityBoundaries';
 
 const migrationPath = 'supabase/migrations/20261012014500_compatibility_unified_wave05_authority.sql';
 const migration = readFileSync(migrationPath, 'utf8');
 const audit = getCompatibilityEvidenceAudit();
 
-assert.equal(audit.reviewedProfiles.length, 103, 'repository authority may grow beyond the released 101-Profile rollout target');
+assert.equal(audit.reviewedProfiles.length, 104, 'repository authority may grow beyond the released 101-Profile rollout target');
 assert.equal(audit.reviewedPairRules.length, 21);
 assert.equal(audit.reviewedStageRiskProfiles.length, 1);
 assert.deepEqual([...compatibilityStackedWave05PendingProfileIds].sort(), [...nextWaveUnified05ProfileIds].sort());
@@ -69,9 +69,10 @@ assert.equal(Object.values(nextWaveUnified05Sources).length, 4);
 
 for (const member of batch.members.filter(item => !item.expectProfile)) {
   assert.equal(migration.includes("'" + member.speciesId + "'"), true);
-  if (member.speciesId === 'sp_0176') {
-    assert.ok(getReviewedCompatibilityProfile(member.speciesId), 'Wave21 may resolve Marble angelfish after the frozen Wave05 migration classified it as no-Profile');
-    assert.equal(getCatalogIdentityBoundary(member.speciesId), undefined, 'later reviewed object-level identity correction may supersede the historical Wave05 hold');
+  const laterSourceControlledProfile = (compatibilitySourceControlledPendingProfileIds as readonly string[]).includes(member.speciesId);
+  if (laterSourceControlledProfile) {
+    assert.ok(getReviewedCompatibilityProfile(member.speciesId), 'later reviewed identity correction may add a Profile without rewriting the frozen Wave05 migration: ' + member.speciesId);
+    assert.equal(getCatalogIdentityBoundary(member.speciesId), undefined, 'later reviewed object-level identity correction may supersede the historical Wave05 hold: ' + member.speciesId);
     continue;
   }
   assert.equal(getReviewedCompatibilityProfile(member.speciesId), undefined);

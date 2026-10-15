@@ -25,6 +25,7 @@ import { nextWaveUnified06Sources } from './catalogReviewBatches/next-wave-unifi
 import { nextWaveUnified16Sources } from './catalogReviewBatches/next-wave-unified-16';
 import { identityCorrectionsWave21Sources } from './catalogReviewBatches/identity-corrections-wave21';
 import { identityCorrectionsWave22Sources } from './catalogReviewBatches/identity-corrections-wave22';
+import { identityCorrectionsWave23Sources } from './catalogReviewBatches/identity-corrections-wave23';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 
 export type ReviewedCompatibilityProfile = {
@@ -1622,6 +1623,11 @@ profiles.sp_0407 = wave04BridgeProfile(
   'sp_0407',
   'sp_0103',
   identityCorrectionsWave22Sources.arowanaBloodRedStrain,
+);
+profiles.sp_0236 = wave04BridgeProfile(
+  'sp_0236',
+  'sp_0438',
+  identityCorrectionsWave23Sources.swordtailAlbinoRedStudy,
 );
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {

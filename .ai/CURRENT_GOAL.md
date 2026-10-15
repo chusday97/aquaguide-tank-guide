@@ -1,3 +1,33 @@
+## CURRENT OVERRIDE — 2026-10-15 Albino Red swordtail identity correction wave23 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave23 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
+- Wave23 resolves exactly one additional identity-held fish: `sp_0236 红眼白子红剑 / Xiphophorus hellerii var. Albino Red`.
+- Exact object-level identity evidence:
+  - Pigment Cell & Melanoma Research (2026), **“A Recessive oca2 Mutation Underlies Albinism in Xiphophorus Fish”** (`10.1111/pcmr.70113`), directly reports `Xiphophorus hellerii` experimental phenotypes including **Red albino** and documents the red-eyed albino phenotype while retaining erythrophore pigmentation.
+  - Texas State University Xiphophorus Genetic Stock Center, **“Xiphophorus hellerii, Albino — Strain Protocol HeAlb”**, maintains an albino `X. hellerii` stock produced by continual backcrossing to the Lancetilla `X. hellerii` line and describes it as essentially pure `X. hellerii` selected for albinism.
+- The correction is deliberately narrow. `sp_0415 红眼白子红剑(高鳍)` stays fail-closed because High Fin adds an independent fin-form identity not established by the Red albino evidence. `sp_0158 红苹果剑尾` also remains fail-closed because equivalent exact trade-line evidence is absent.
+- Identity-correction map now contains three reviewed bridges:
+  - `sp_0176 -> sp_0446` Marble angelfish -> `Pterophyllum scalare`
+  - `sp_0236 -> sp_0438` Albino Red swordtail -> `Xiphophorus hellerii`
+  - `sp_0407 -> sp_0103` Blood Red A arowana -> `Scleropages formosus`
+- `sp_0236` receives explicit reviewed Catalog field bridges for all eight Compatibility core fields, backed by the exact identity sources plus Wave23-scoped reviewed copies of the already-reviewed `X. hellerii` husbandry authority. This avoids globally whitelisting generic source IDs and accidentally promoting unrelated historical reviews.
+- Wave23 also repairs the Species Knowledge/coverage precedence contract: an explicit object listed in `catalogIdentityCorrectionBaseSpeciesIds` may resolve through its reviewed base authority before a stale direct placeholder; **all other catalog variants retain direct-first/fail-closed behavior**. A temporary broad resolver change was rejected after it incorrectly removed 15 adult-size/tank-size gaps from unreviewed Betta trade morphs.
+- `sp_0236` is now **8/8 authoritative + generic-ready**: freshwater; 16–28°C; pH 7–8; max 14 cm; 108 L / 120 cm minimum planning; shoal/community social authority; male-conspecific territoriality; no reviewed fish-predation target.
+- Coverage after Wave23: **86 authoritative 8/8 fish / 71 strict generic-ready**; identity/domain held objects **288 -> 287**. Ordinary actionable field backlog remains exactly **336 gaps / 91 catalog objects / 48 base-taxon jobs**, confirming no unrelated variant authority leaked through the correction.
+- Global decision impact:
+  - decision coverage **44.31% -> 44.46%**
+  - `unresolved_identity` **20,919 -> 20,785 (-134 pairs)**
+  - total `insufficient_data` **26,673 -> 26,599 (-74 pairs)**
+  - `public_evidence_insufficient` **5,754 -> 5,814 (+60)** because resolving identity correctly exposes the next genuine evidence boundary instead of fabricating certainty
+  - `missing_species_fact` remains **0**
+  - status totals: **355 compatible / 1,886 caution / 19,055 not_recommended / 26,599 insufficient_data**
+- Strict fully-informed invariant expands to **71 ready fish = 2,485 unordered pairs = 121 compatible / 997 caution / 1,367 not_recommended / 0 insufficient_data**.
+- Repository authority now contains **104 reviewed Profiles** = released target 101 + 3 source-controlled pending identity corrections (`sp_0176`, `sp_0236`, `sp_0407`). Historical release generations remain exact **63 -> 85 -> 95 -> 99 -> 100 -> 101**.
+- Historical Wave05 classified `sp_0236` as no-Profile/identity-held. The frozen migration remains unchanged; its regression now generically allows any later explicitly reviewed source-controlled identity correction to supersede an old hold without rewriting historical authority.
+- Runtime fail-closed regression was hardened: the invalid 98-Profile case is now built from the explicit released-target keyset rather than array slicing, so future repository growth cannot accidentally turn the test fixture into a valid rollout generation.
+- PASS: catalog identity boundaries, identity bridge reviews, Species Knowledge, core-field coverage, rollout window, runtime authority, frozen Wave05 migration, strict fully-informed matrix, V4 readability, user conclusion, release badcases, full `test:backend-release-gate`, API/project TypeScript, Business API bundle, lint, and `git diff --check`.
+- NEXT: continue identity-resolution only where a ready base species and exact object-level lineage evidence can be paired. Do not broaden the Albino Red correction to High Fin, Red Apple, or generic swordtail trade morphs.
+
 ## CURRENT OVERRIDE — 2026-10-15 Blood Red Asian arowana identity correction wave22 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave22 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.

@@ -83,6 +83,23 @@ assert.equal(getCatalogIdentityBoundary('sp_0407'), undefined, 'reviewed Blood R
 assert.ok(getReviewedCompatibilityProfile('sp_0407'), 'resolved Blood Red A arowana must have an explicit same-species Compatibility bridge');
 assert.equal(getCatalogIdentityBoundary('sp_0408')?.code, 'catalog_variant_identity_unresolved', 'Gold Head must remain fail-closed without equivalent object-level identity evidence');
 
+
+const historicalAlbinoRedHold = catalogIdentityBoundaries.sp_0236;
+assert.equal(historicalAlbinoRedHold?.code, 'catalog_variant_identity_unresolved');
+assert.equal(historicalAlbinoRedHold?.resolvedGranularity, 'variant_identity_unresolved');
+const albinoRedCorrection = getCatalogFieldReviews('sp_0236').filter(review => review.field === 'identity').at(-1);
+assert.equal(albinoRedCorrection?.resolution, 'supported');
+assert.deepEqual(albinoRedCorrection?.proposedValue, {
+  scientificName: 'Xiphophorus hellerii var. Albino Red',
+  baseSpeciesKey: 'Xiphophorus hellerii',
+  variantKey: 'Albino Red',
+});
+assert.ok(albinoRedCorrection?.citationIds.includes('pcmr-xiphophorus-hellerii-red-albino-wave23'));
+assert.ok(albinoRedCorrection?.citationIds.includes('txstate-xgsc-xiphophorus-hellerii-albino-wave23'));
+assert.equal(getCatalogIdentityBoundary('sp_0236'), undefined, 'reviewed Red albino X. hellerii evidence must supersede the historical Albino Red variant hold at runtime');
+assert.ok(getReviewedCompatibilityProfile('sp_0236'), 'resolved Albino Red swordtail must have an explicit same-species Compatibility bridge');
+assert.equal(getCatalogIdentityBoundary('sp_0415')?.code, 'catalog_variant_identity_unresolved', 'High Fin must remain fail-closed because the extra fin-form identity is not covered by the Albino Red correction');
+
 const parentTaxonHold = getCatalogIdentityBoundary('sp_0217');
 assert.equal(parentTaxonHold?.code, 'catalog_parent_taxon_unresolved');
 assert.equal(parentTaxonHold?.resolvedGranularity, 'parent_taxon_unresolved');
@@ -115,7 +132,7 @@ assert.equal(superRedReview?.resolution, 'supported');
 assert.equal(getCatalogIdentityBoundary('sp_0283'), undefined);
 assert.ok(getReviewedCompatibilityProfile('sp_0283'));
 
-for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0177','sp_0178','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0221','sp_0227','sp_0228','sp_0229','sp_0234','sp_0235','sp_0236','sp_0240','sp_0242','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0272','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
+for (const speciesId of ['sp_0158','sp_0163','sp_0175','sp_0177','sp_0178','sp_0179','sp_0182','sp_0201','sp_0208','sp_0216','sp_0219','sp_0220','sp_0221','sp_0227','sp_0228','sp_0229','sp_0234','sp_0235','sp_0240','sp_0242','sp_0247','sp_0248','sp_0256','sp_0257','sp_0263','sp_0264','sp_0268','sp_0269','sp_0270','sp_0272','sp_0273','sp_0282','sp_0284','sp_0285','sp_0286','sp_0288','sp_0294']) {
   const boundary = getCatalogIdentityBoundary(speciesId);
   assert.equal(boundary?.code, 'catalog_variant_identity_unresolved');
   assert.equal(boundary?.resolvedGranularity, 'variant_identity_unresolved');

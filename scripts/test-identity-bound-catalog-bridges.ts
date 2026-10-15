@@ -74,4 +74,22 @@ assert.deepEqual(bloodRedApproved.get('social_behavior')?.proposedValue, { mode:
 assert.deepEqual(bloodRedApproved.get('territoriality')?.proposedValue, { traits: ['territorial'] });
 assert.deepEqual(bloodRedApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
 
-console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble and Blood Red A corrections inherit only explicit same-species authority');
+
+const albinoRedIdentity = getCatalogFieldReviews('sp_0236').filter(review => review.field === 'identity').at(-1);
+assert.equal(albinoRedIdentity?.resolution, 'supported');
+assert.deepEqual(albinoRedIdentity?.proposedValue, {
+  scientificName: 'Xiphophorus hellerii var. Albino Red',
+  baseSpeciesKey: 'Xiphophorus hellerii',
+  variantKey: 'Albino Red',
+});
+const albinoRedApproved = new Map(getApprovedCatalogFieldReviews('sp_0236').map(review => [review.field, review]));
+assert.equal(albinoRedApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(albinoRedApproved.get('temperature')?.proposedValue, { min: 16, max: 28 });
+assert.deepEqual(albinoRedApproved.get('ph')?.proposedValue, { min: 7, max: 8 });
+assert.deepEqual(albinoRedApproved.get('adult_size')?.proposedValue, { min: null, max: 14 });
+assert.deepEqual(albinoRedApproved.get('tank_size')?.proposedValue, { liters: 108, lengthCm: 120 });
+assert.deepEqual(albinoRedApproved.get('social_behavior')?.proposedValue, { mode: 'group', minimumGroupSize: null });
+assert.deepEqual(albinoRedApproved.get('territoriality')?.proposedValue, { traits: ['male_conspecific_territoriality'] });
+assert.deepEqual(albinoRedApproved.get('predation')?.proposedValue, { targets: [] });
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, and Albino Red corrections inherit only explicit same-species authority');

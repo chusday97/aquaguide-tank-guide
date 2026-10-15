@@ -3,6 +3,7 @@ import { fishData } from '../../data/fishData';
 import { catalogContentVerifiedSourceIds, getCatalogFieldReviews, isCatalogFieldReviewValueValid, type CatalogFieldReview } from '../../data/catalogFieldReviews';
 import { getCatalogReviewSourceCandidates } from '../../data/catalogReviewSourceCandidates';
 import { getCatalogIdentityBoundary } from '../../data/catalogIdentityBoundaries';
+import { catalogIdentityCorrectionBaseSpeciesIds } from '../../data/catalogIdentityCorrections';
 import { getCompatibilityDomainBoundary } from '../../data/compatibilityDomainBoundaries';
 import { getKnowledgeEvidenceCeilings } from '../../data/knowledgeEvidenceCeilings';
 import { getReviewedCompatibilityProfile, getReviewedCompatibilityProfileForFish } from '../../data/compatibilityEvidence';
@@ -148,7 +149,10 @@ const supportedValueStatus = (review: CatalogFieldReview): CompatibilityFieldCov
 };
 
 const knowledgeCell = (fish: Fish, field: CompatibilityCoreField): CompatibilityFieldCoverageCell | null => {
-  const knowledge = getReviewedSpeciesKnowledge(fish.id) ?? getReviewedSpeciesKnowledgeForFish(fish);
+  const hasReviewedIdentityCorrection = fish.id in catalogIdentityCorrectionBaseSpeciesIds;
+  const knowledge = hasReviewedIdentityCorrection
+    ? getReviewedSpeciesKnowledgeForFish(fish)
+    : getReviewedSpeciesKnowledge(fish.id) ?? getReviewedSpeciesKnowledgeForFish(fish);
   if (!knowledge) return null;
   if (field === 'water' || field === 'temperature' || field === 'ph') {
     const section = knowledge.environment;
