@@ -11,9 +11,9 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 62,
-  "coreFieldCompleteSpecies": 77,
-  "oneFieldGapSpecies": 5,
+  "genericOnboardingReadySpecies": 63,
+  "coreFieldCompleteSpecies": 78,
+  "oneFieldGapSpecies": 4,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
   "fieldCounts": {
@@ -74,9 +74,9 @@
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 58,
+      "reviewed_supported": 59,
       "reviewed_neutral_or_negative": 26,
-      "reviewed_unknown": 100,
+      "reviewed_unknown": 99,
       "needs_research": 1,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -105,7 +105,7 @@
     },
     {
       "field": "predation",
-      "count": 17
+      "count": 16
     },
     {
       "field": "territoriality",
@@ -3607,9 +3607,9 @@
       "scientificName": "Pseudorasbora parva",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 7,
-      "actionableGapCount": 1,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -3677,13 +3677,13 @@
           "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "batch08-fishbase-pseudorasbora-parva"
+            "wiley-pseudorasbora-parva-fry-predation-wave13"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },

@@ -112,7 +112,7 @@ export type CompatibilityDecision = {
   evidenceIds: string[];
 };
 
-export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v10-scoped-territoriality';
+export const COMPATIBILITY_RULE_VERSION = 'compatibility-domain-v11-fry-prey-scope';
 
 const statusRank: Record<CompatibilityDecisionStatus, number> = {
   compatible: 0,
@@ -235,20 +235,27 @@ const rangeContains = (value: number | null | undefined, min?: number | null, ma
   return value >= min && value <= max;
 };
 
-const predationTargetMatches = (predator: DomainSpeciesFact, prey: DomainSpeciesFact) => {
+const predationTargetMatch = (
+  predator: DomainSpeciesFact,
+  prey: DomainSpeciesFact,
+  preyContext?: CompatibilityIndividualContext,
+): string | null => {
   const targets = predator.predationTargets ?? [];
   if (targets.length > 0) {
-    if (targets.includes(prey.id)) return true;
-    if (targets.includes('small_fish') && prey.lifeType === 'fish' && prey.size === 'Small') return true;
+    if (targets.includes(prey.id)) return prey.id;
+    if (targets.includes('fish_fry') && prey.lifeType === 'fish' && preyContext?.lifeStage === 'fry') return 'fish_fry';
+    if (targets.includes('small_fish') && prey.lifeType === 'fish' && prey.size === 'Small') return 'small_fish';
     // `very_small_fish` intentionally has no generic size mapping yet: the
     // reviewed evidence does not define a numeric threshold that Domain can
     // safely infer from the coarse Small/Medium/Large catalogue class.
-    return false;
+    return null;
   }
   // Backward-compatible fallback for older reviewed profiles that only carry
   // a broad predatory/high-risk trait and no explicit target scope.
   return (predator.behaviorTraits?.includes('predatory') || predator.predationRisk === 'high')
-    && prey.size === 'Small';
+    && prey.size === 'Small'
+    ? 'legacy_small_fish'
+    : null;
 };
 
 const hasConspecificTerritorialTrait = (species: DomainSpeciesFact) => (
@@ -322,22 +329,28 @@ export const evaluateCompatibility = ({
         raise('not_recommended', 'water_type_conflict');
       }
       if ((!existing.reviewed || !candidateSpecies.reviewed) && !hasCoverageMetadata(existing) && !hasCoverageMetadata(candidateSpecies)) raise('insufficient_data', 'species_evidence_unreviewed');
-      const existingTargetsCandidate = predationTargetMatches(existing, candidateSpecies);
-      const candidateTargetsExisting = predationTargetMatches(candidateSpecies, existing);
+      const existingPreyContext = individualContexts?.[existing.id];
+      const existingTargetsCandidate = predationTargetMatch(existing, candidateSpecies, candidateContext);
+      const candidateTargetsExisting = predationTargetMatch(candidateSpecies, existing, existingPreyContext);
       const predator = existingTargetsCandidate ? existing : candidateTargetsExisting ? candidateSpecies : null;
+      const matchedTarget = existingTargetsCandidate || candidateTargetsExisting;
       const preyIsCandidate = predator?.id !== candidateSpecies.id;
-      if (predator) {
+      if (predator && matchedTarget) {
         const preyContext = preyIsCandidate
           ? candidateContext
-          : individualContexts?.[existing.id];
-        const juvenile = preyContext?.lifeStage === 'fry'
-          || preyContext?.lifeStage === 'juvenile'
-          || preyContext?.lifeStage === 'subadult';
-        const currentSizeClearlyBelowAdultRisk = juvenile
-          && preyContext?.averageLengthCm != null
-          && predator.adultLengthMaxCm != null
-          && preyContext.averageLengthCm < predator.adultLengthMaxCm * 0.4;
-        raise(currentSizeClearlyBelowAdultRisk ? 'caution' : 'not_recommended', currentSizeClearlyBelowAdultRisk ? 'juvenile_predation_risk' : 'predation_risk');
+          : existingPreyContext;
+        if (matchedTarget === 'fish_fry') {
+          raise('not_recommended', 'fry_predation_risk');
+        } else {
+          const juvenile = preyContext?.lifeStage === 'fry'
+            || preyContext?.lifeStage === 'juvenile'
+            || preyContext?.lifeStage === 'subadult';
+          const currentSizeClearlyBelowAdultRisk = juvenile
+            && preyContext?.averageLengthCm != null
+            && predator.adultLengthMaxCm != null
+            && preyContext.averageLengthCm < predator.adultLengthMaxCm * 0.4;
+          raise(currentSizeClearlyBelowAdultRisk ? 'caution' : 'not_recommended', currentSizeClearlyBelowAdultRisk ? 'juvenile_predation_risk' : 'predation_risk');
+        }
       }
       const isPredationVulnerable = (species: DomainSpeciesFact) => (
         species.predationVulnerability === 'medium'

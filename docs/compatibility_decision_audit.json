@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 62,
-  "genericReadyUniquePairs": 1891,
+  "genericOnboardingReadySpecies": 63,
+  "genericReadyUniquePairs": 1953,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 505,
@@ -370,24 +370,6 @@
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
         "existingCoveragePriorityScore": 167
-      },
-      {
-        "researchKey": "Pseudorasbora parva",
-        "baseScientificName": "Pseudorasbora parva",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 191
       },
       {
         "researchKey": "Pomacanthus annularis",
@@ -1499,24 +1481,6 @@
         "existingCoveragePriorityScore": 167
       },
       {
-        "researchKey": "Pseudorasbora parva",
-        "baseScientificName": "Pseudorasbora parva",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 1,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 1,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 191
-      },
-      {
         "researchKey": "Pomacanthus annularis",
         "baseScientificName": "Pomacanthus annularis",
         "completionEligible": true,
@@ -2430,10 +2394,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 56,
-      "completionEligibleJobs": 19,
+      "totalResearchJobs": 55,
+      "completionEligibleJobs": 18,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 21,
+      "completionEligibleCatalogObjects": 20,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2502,7 +2466,7 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 374,
+    "actionableGaps": 373,
     "fieldActionableGaps": [
       {
         "field": "ph",
@@ -2526,7 +2490,7 @@
       },
       {
         "field": "predation",
-        "count": 17
+        "count": 16
       },
       {
         "field": "territoriality",

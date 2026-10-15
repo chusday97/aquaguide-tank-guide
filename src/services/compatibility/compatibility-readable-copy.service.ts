@@ -65,6 +65,9 @@ const plainRuleText = (
   if (code.includes('temperature') && (code.includes('conflict') || code.includes('no_overlap'))) {
     return '它们适合的长期水温没有安全重叠，勉强取中间值也不适合长期饲养。';
   }
+  if (code === 'fry_predation_risk') {
+    return '已审核资料明确记录该物种会取食鱼卵或鱼苗；鱼苗阶段不能按普通成鱼混养关系处理。';
+  }
   if (code === 'predation_risk') {
     return '体型和捕食关系存在明显风险，较小的一方可能被追逐或吞食。';
   }
@@ -201,6 +204,7 @@ const blockingActionFor = (
   const family = getCompatibilityRuleFamily(rule.code);
   if (assessmentMode === 'current_tank') {
     if (family === 'water_type') return '尽快分缸；分别按淡水或海水需求饲养。';
+    if (rule.code === 'fry_predation_risk') return '把鱼苗转入育苗隔离区或独立育苗缸；不要依赖水草躲避来消除已知吞食风险。';
     if (family === 'predation') return '尽快分隔存在捕食关系的物种，并重新调整现有组合。';
     if (family === 'housing') return '按单养方案分开饲养，或重新调整现有组合。';
     if (family === 'temperature') return '不要硬取中间温度；分缸，或调整成温度需求更接近的组合。';
@@ -210,6 +214,7 @@ const blockingActionFor = (
     return '先分隔或调整高风险组合，再重新判断当前鱼缸。';
   }
   if (family === 'water_type') return '不要放在同一缸；分别按淡水或海水需求饲养，或更换其中一种。';
+  if (rule.code === 'fry_predation_risk') return '不要把鱼苗直接放入该组合；优先使用育苗隔离区或独立育苗缸，待脱离鱼苗阶段后再重新评估。';
   if (family === 'predation') return '不要直接混养；更换体型更接近、没有明显捕食关系的混养对象。';
   if (family === 'housing') return '按单养方案处理，或更换更适合混养的物种。';
   if (family === 'temperature') return '不要为了兼顾双方硬取中间温度；分缸，或更换温度需求更接近的物种。';

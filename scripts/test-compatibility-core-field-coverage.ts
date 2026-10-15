@@ -365,7 +365,8 @@ assert.deepEqual(approvedValue('sp_0042', 'temperature'), { min: 5, max: 22 });
 assert.deepEqual(approvedValue('sp_0042', 'ph'), { min: 6, max: 7 });
 assert.deepEqual(approvedValue('sp_0042', 'tank_size'), { liters: 200, lengthCm: null });
 assert.deepEqual(approvedValue('sp_0042', 'territoriality'), { traits: [] });
-assert.equal(approvedValue('sp_0042', 'predation'), undefined, 'Pseudorasbora predation must remain unresolved without direct fish/tankmate prey evidence');
+assert.deepEqual(approvedValue('sp_0042', 'predation'), { targets: ['fish_fry'] }, 'later peer-reviewed evidence may close Pseudorasbora predation only at the narrow fish-fry scope');
+assert.ok(!(approvedValue('sp_0042', 'predation') as { targets: string[] }).targets.includes('small_fish'), 'fish-egg/fry evidence must never be widened to generic small-fish predation');
 
 assert.deepEqual(approvedValue('sp_0052', 'tank_size'), { liters: 54, lengthCm: 60 });
 assert.equal(approvedValue('sp_0052', 'territoriality'), undefined, 'Corydoras hastatus territoriality must remain unresolved when the source only says peaceful/gregarious');
@@ -531,6 +532,29 @@ assert.deepEqual(
   [...numericWave12SourceIds].sort(),
   'numeric wave12 exact-taxon evidence must resolve to reviewed source metadata',
 );
+const wave13SpeciesBindings: Array<[string, string]> = [
+  ['sp_0042', 'Pseudorasbora parva'],
+];
+for (const [speciesId, expectedScientificName] of wave13SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'numeric wave13 speciesId must stay bound to the exact reviewed taxon: ' + speciesId,
+  );
+}
+
+assert.deepEqual(approvedValue('sp_0042', 'predation'), { targets: ['fish_fry'] });
+assert.equal(rowOf('sp_0042')?.authoritativeFieldCount, 8);
+assert.equal(rowOf('sp_0042')?.genericOnboardingReady, true, 'Pseudorasbora parva must become generic-ready once fry-only predation scope is reviewed');
+
+const numericWave13SourceIds = [
+  'wiley-pseudorasbora-parva-fry-predation-wave13',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave13SourceIds).map(source => source.id).sort(),
+  [...numericWave13SourceIds].sort(),
+  'numeric wave13 peer-reviewed predation evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -556,9 +580,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 56, '374 actionable field gaps should collapse to 56 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 55, '373 actionable field gaps should collapse to 55 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 101, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 100, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
@@ -614,7 +638,6 @@ assert.deepEqual(
   fastLanePackets.map(packet => [packet.speciesId, packet.missingField]),
   [
     ['sp_0011', 'predation'],
-    ['sp_0042', 'predation'],
     ['sp_0151', 'predation'],
     ['sp_0433', 'predation'],
   ],

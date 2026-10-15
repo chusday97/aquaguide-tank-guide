@@ -211,6 +211,25 @@ assert.throws(
   'complete species facts + complete tank inputs must make 暂时无法判断 an invariant violation, not a normal product state',
 );
 
+
+const pseudorasboraAdultTankmate = evaluateTankCompatibility({
+  scope: 'species_only',
+  existingSpecies: [{ species: byId('sp_0042'), record: { quantity: 8 } }],
+  candidateSpecies: byId('sp_0434'),
+  candidateLifeStage: 'adult',
+});
+assert.ok(pseudorasboraAdultTankmate.blockingRules.every(rule => rule.code !== 'fry_predation_risk'));
+
+const pseudorasboraWithFry = evaluateTankCompatibility({
+  scope: 'species_only',
+  existingSpecies: [{ species: byId('sp_0042'), record: { quantity: 8 } }],
+  candidateSpecies: byId('sp_0434'),
+  candidateLifeStage: 'fry',
+});
+assert.equal(pseudorasboraWithFry.status, 'not_recommended');
+assert.ok(pseudorasboraWithFry.blockingRules.some(rule => rule.code === 'fry_predation_risk'));
+assert.match(pseudorasboraWithFry.blockingRules.find(rule => rule.code === 'fry_predation_risk')?.evidence || '', /鱼卵|鱼苗|幼体/);
+
 const mergedDuplicateSpecies = evaluateCompatibilityDecision({
   tank: tank(80, 35, 40, 24),
   items: [

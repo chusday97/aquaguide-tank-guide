@@ -805,7 +805,9 @@ const toDomainSpeciesFact = (fish: Fish, provider: CompatibilityEvidenceProvider
     reviewed: Boolean(reviewed),
     compatibilityRequiredFacts: reviewed?.requiredFacts,
     compatibilityFactDispositions,
-    minimumGroupSize: reviewedSocial?.minimumGroupSize ?? reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null,
+    minimumGroupSize: reviewedSocial
+      ? (reviewedSocial.minimumGroupSize ?? reviewed?.minimumGroupSize ?? null)
+      : (reviewed?.minimumGroupSize ?? profile.minimumGroupSize ?? null),
     stockingGuidance: reviewed?.stockingGuidance,
     evidenceIds: Array.from(new Set([...(reviewed?.citations.map(citation => citation.id) || []), ...(profile.evidenceSourceIds || []), ...knowledgeEvidenceIds, ...coverageEvidenceIds])),
     adultLengthMinCm: reviewedSpace?.adultLengthCm?.min ?? profile.adultLengthMinCm,

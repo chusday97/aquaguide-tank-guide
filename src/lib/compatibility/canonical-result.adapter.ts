@@ -45,6 +45,9 @@ const DOMAIN_RULE_EVIDENCE: Record<string, TankCompatibilityRule> = {
   predation_risk: {
     code: 'predation_risk', title: '捕食或吞食风险', evidence: '已审核资料显示组合存在捕食或吞食风险。', severity: 'high', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
+  fry_predation_risk: {
+    code: 'fry_predation_risk', title: '鱼苗阶段存在已知捕食风险', evidence: '已审核资料明确记录该物种会取食鱼卵或鱼苗；该风险只在对应幼体阶段触发，不外推为对成鱼的普遍捕食。', severity: 'high', basis: 'species_trait', confidence: 'high', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
+  },
   juvenile_predation_risk: {
     code: 'juvenile_predation_risk', title: '幼体阶段仍有捕食风险', evidence: '当前体型可能暂时降低捕食风险，但成体体型和行为仍需纳入长期规划，不能据此确认长期兼容。', severity: 'medium', basis: 'species_trait', confidence: 'medium', reviewStatus: 'reviewed', affectedSpeciesIds: [], citations: [],
   },
@@ -205,7 +208,7 @@ export const applyCanonicalCompatibilityDecision = (
   const domainRules = decision.ruleCodes
     .map(code => DOMAIN_RULE_EVIDENCE[code])
     .filter((rule): rule is TankCompatibilityRule => Boolean(rule));
-  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'predation_risk', 'species_tank_required', 'single_housing_required', 'observed_emergency']);
+  const blockingCodes = new Set(['water_type_conflict', 'candidate_tank_water_type_conflict', 'temperature_range_conflict', 'tank_temperature_conflict', 'fry_predation_risk', 'predation_risk', 'species_tank_required', 'single_housing_required', 'observed_emergency']);
   const warningCodes = new Set(['reviewed_pair_rule', 'ph_range_conflict', 'ph_range_edge_overlap', 'tank_volume_below_species_minimum', 'tank_length_below_species_minimum', 'territorial_conflict', 'territorial_pressure_context', 'breeding_territory_active', 'juvenile_predation_risk', 'observed_intervention', 'bioload_screening_high', 'bioload_screening_elevated', 'bioload_screening_high_stable_context', 'minimum_group_not_met', 'fin_nipping_group_pressure', 'fin_nipping_target_vulnerability', 'predation_vulnerability_context']);
   const domainBlockingRules = domainRules.filter(rule => blockingCodes.has(rule.code));
   const domainWarningRules = domainRules.filter(rule => warningCodes.has(rule.code));
@@ -252,10 +255,11 @@ export const applyCanonicalCompatibilityDecision = (
     water_type_conflict: 1,
     temperature_range_conflict: 2,
     tank_temperature_conflict: 3,
-    predation_risk: 4,
-    species_tank_required: 5,
-    single_housing_required: 6,
-    observed_emergency: 7,
+    fry_predation_risk: 4,
+    predation_risk: 5,
+    species_tank_required: 6,
+    single_housing_required: 7,
+    observed_emergency: 8,
   };
   const orderedDomainBlockingRules = [...domainBlockingWithoutGenericPair].sort(
     (left, right) => (domainBlockingPriority[left.code] ?? 99) - (domainBlockingPriority[right.code] ?? 99),

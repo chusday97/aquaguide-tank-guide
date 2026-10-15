@@ -190,6 +190,38 @@ const scopedPredatorVsSmallInvertebrate = evaluateCompatibility({
 });
 assert.equal(scopedPredatorVsSmallInvertebrate.ruleCodes.includes('predation_risk'), false);
 
+const fryScopedPredatorVsAdultFish = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'fry-predator', predationTargets: ['fish_fry'], lifeType: 'fish', size: 'Small' }],
+  candidateSpecies: { ...base, id: 'adult-fish', lifeType: 'fish', size: 'Small' },
+  candidateContext: { lifeStage: 'adult', reproductiveState: 'normal' },
+});
+assert.equal(fryScopedPredatorVsAdultFish.ruleCodes.includes('fry_predation_risk'), false, 'fish_fry scope must not block adult fish');
+
+const fryScopedPredatorVsFry = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'fry-predator', predationTargets: ['fish_fry'], lifeType: 'fish', size: 'Small' }],
+  candidateSpecies: { ...base, id: 'fish-fry', lifeType: 'fish', size: 'Small' },
+  candidateContext: { lifeStage: 'fry', reproductiveState: 'normal' },
+});
+assert.equal(fryScopedPredatorVsFry.status, 'not_recommended');
+assert.ok(fryScopedPredatorVsFry.ruleCodes.includes('fry_predation_risk'));
+
+const fryScopedReverseOrder = evaluateCompatibility({
+  intent: 'planned_addition',
+  tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 24 },
+  existingSpecies: [{ ...base, id: 'fish-fry', lifeType: 'fish', size: 'Small' }],
+  candidateSpecies: { ...base, id: 'fry-predator', predationTargets: ['fish_fry'], lifeType: 'fish', size: 'Small' },
+  candidateContext: { lifeStage: 'adult', reproductiveState: 'normal' },
+  individualContexts: {
+    'fish-fry': { lifeStage: 'fry', reproductiveState: 'normal' },
+  },
+});
+assert.equal(fryScopedReverseOrder.status, 'not_recommended');
+assert.ok(fryScopedReverseOrder.ruleCodes.includes('fry_predation_risk'));
+
 const territorialCaution = evaluateCompatibility({
   intent: 'planned_addition',
   tank: { waterType: 'freshwater', volumeLiters: 120, targetTemperatureC: 25 },

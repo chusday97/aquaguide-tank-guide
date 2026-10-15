@@ -39,6 +39,7 @@ const HARD_BLOCK_CODES = new Set([
   'temperature_no_overlap',
   'tank_temperature_conflict',
   'predation_risk',
+  'fry_predation_risk',
   'species_tank_required',
   'single_housing_required',
   'observed_emergency',
@@ -83,6 +84,7 @@ const RULE_PRIORITY: Record<string, number> = {
   water_type_conflict: 10,
   species_water_type_conflict: 10,
   candidate_tank_water_type_conflict: 10,
+  fry_predation_risk: 19,
   predation_risk: 20,
   species_tank_required: 22,
   single_housing_required: 25,
@@ -194,15 +196,20 @@ const buildPlannedAdditionCompatibilityAction = (decision: CompatibilityDecision
   const hasPublicEvidenceInsufficient = codes.has('species_public_evidence_insufficient') || Array.from(codes).some(code => code.startsWith('public_evidence_') && code.endsWith('_insufficient'));
 
   if (decision.status === 'not_recommended') {
+    const fryPredation = codes.has('fry_predation_risk');
     return {
       verdict: 'do_not_mix',
-      headline: hasHardBlock ? '不建议混养' : '现在先不要加',
-      immediateAction: hasHardBlock
-        ? '先不要把这组生物放在一起；先处理下面的明确阻断风险，再重新判断。'
-        : '先暂停新增，处理当前高风险项后再重新判断。',
+      headline: fryPredation ? '鱼苗需要隔离' : hasHardBlock ? '不建议混养' : '现在先不要加',
+      immediateAction: fryPredation
+        ? '不要把鱼苗直接放入当前组合；使用育苗隔离区或独立育苗缸，脱离鱼苗阶段后再重新评估。'
+        : hasHardBlock
+          ? '先不要把这组生物放在一起；先处理下面的明确阻断风险，再重新判断。'
+          : '先暂停新增，处理当前高风险项后再重新判断。',
       primaryReason: firstText(blockingRules, decision.summary || '当前存在明确风险。'),
-      observeAfterAction: '只有在明确阻断条件已消除并重新评估通过后，才考虑新的混养方案。',
-      detailsLabel: '为什么不建议？',
+      observeAfterAction: fryPredation
+        ? '鱼苗隔离饲养；只有在生命阶段变化后重新评估通过，才考虑恢复普通混养。'
+        : '只有在明确阻断条件已消除并重新评估通过后，才考虑新的混养方案。',
+      detailsLabel: fryPredation ? '为什么鱼苗要隔离？' : '为什么不建议？',
     };
   }
 
