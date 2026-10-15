@@ -197,6 +197,7 @@ const compatibilityResearchBatchPreviewInputSchema = z.object({
   offset: z.number().int().min(0).default(0),
   limit: z.number().int().min(1).max(4).default(4),
   concurrency: z.number().int().min(1).max(2).default(2),
+  queueMode: z.enum(['plan', 'active_completion']).default('plan'),
 }).strict();
 
 adminCompatibilityRouter.get('/research-readiness', asyncRoute(async (request, response) => sendData(request, response, {

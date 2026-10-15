@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 76,
-  "genericReadyUniquePairs": 2850,
+  "genericOnboardingReadySpecies": 77,
+  "genericReadyUniquePairs": 2926,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 397,
@@ -16,7 +16,7 @@
     "insufficient_data": 26214
   },
   "decisionCoveragePct": 45.27,
-  "fullyInformedPairs": 7060,
+  "fullyInformedPairs": 6941,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
@@ -143,8 +143,65 @@
         "existingCoveragePriorityScore": 191
       },
       {
+        "researchKey": "Chrysiptera cyanea",
+        "baseScientificName": "Chrysiptera cyanea",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 178
+      },
+      {
         "researchKey": "Pomacanthus annularis",
         "baseScientificName": "Pomacanthus annularis",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Rhodeus ocellatus",
+        "baseScientificName": "Rhodeus ocellatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Amphiprion ocellaris",
+        "baseScientificName": "Amphiprion ocellaris",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
         "gapInstances": 3,
@@ -154,8 +211,8 @@
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "temperature",
           "ph",
+          "territoriality",
           "predation"
         ],
         "requiresVariantBridgeReview": false,
@@ -181,71 +238,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 175
-      },
-      {
-        "researchKey": "Rhodeus ocellatus",
-        "baseScientificName": "Rhodeus ocellatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
-      },
-      {
-        "researchKey": "Amphiprion ocellaris",
-        "baseScientificName": "Amphiprion ocellaris",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
-        "researchKey": "Chrysiptera cyanea",
-        "baseScientificName": "Chrysiptera cyanea",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
       },
       {
         "researchKey": "Paracanthurus hepatus",
@@ -514,22 +506,40 @@
         "baseScientificName": "Cobitis sinensis",
         "completionEligible": false,
         "affectedUnknownPairs": 247,
-        "gapInstances": 5,
+        "gapInstances": 3,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 49.4,
+        "impactPerGap": 82.33,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "water",
           "temperature",
           "ph",
-          "adult_size",
           "tank_size"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
+        "existingCoveragePriorityScore": 116
+      },
+      {
+        "researchKey": "Aphyocypris chinensis",
+        "baseScientificName": "Aphyocypris chinensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 228,
+        "gapInstances": 3,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 76,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 116
       },
       {
         "researchKey": "Pangio kuhlii",
@@ -705,28 +715,6 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Aphyocypris chinensis",
-        "baseScientificName": "Aphyocypris chinensis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 45.6,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 110
       },
       {
@@ -949,34 +937,32 @@
         "baseScientificName": "Pseudogastromyzon fangi",
         "completionEligible": false,
         "affectedUnknownPairs": 0,
-        "gapInstances": 5,
+        "gapInstances": 3,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
         "impactPerGap": 0,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "water",
           "temperature",
           "ph",
-          "adult_size",
           "tank_size"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
+        "existingCoveragePriorityScore": 116
       },
       {
         "researchKey": "Channa asiatica",
         "baseScientificName": "Channa asiatica",
         "completionEligible": false,
         "affectedUnknownPairs": 0,
-        "gapInstances": 6,
+        "gapInstances": 4,
         "terminalGapInstances": 1,
         "terminalBlockedCatalogObjects": 1,
         "impactPerGap": 0,
         "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
+        "catalogObjectCount": 1,
         "combinedGapFields": [
           "temperature",
           "ph",
@@ -985,7 +971,7 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 173
+        "existingCoveragePriorityScore": 149
       },
       {
         "researchKey": "Tanichthys albonubes",
@@ -1105,8 +1091,65 @@
         "existingCoveragePriorityScore": 191
       },
       {
+        "researchKey": "Chrysiptera cyanea",
+        "baseScientificName": "Chrysiptera cyanea",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 178
+      },
+      {
         "researchKey": "Pomacanthus annularis",
         "baseScientificName": "Pomacanthus annularis",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Rhodeus ocellatus",
+        "baseScientificName": "Rhodeus ocellatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Amphiprion ocellaris",
+        "baseScientificName": "Amphiprion ocellaris",
         "completionEligible": true,
         "affectedUnknownPairs": 0,
         "gapInstances": 3,
@@ -1116,8 +1159,8 @@
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "temperature",
           "ph",
+          "territoriality",
           "predation"
         ],
         "requiresVariantBridgeReview": false,
@@ -1143,71 +1186,6 @@
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 175
-      },
-      {
-        "researchKey": "Rhodeus ocellatus",
-        "baseScientificName": "Rhodeus ocellatus",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
-      },
-      {
-        "researchKey": "Amphiprion ocellaris",
-        "baseScientificName": "Amphiprion ocellaris",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
-        "researchKey": "Chrysiptera cyanea",
-        "baseScientificName": "Chrysiptera cyanea",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
       },
       {
         "researchKey": "Paracanthurus hepatus",
@@ -1478,22 +1456,40 @@
         "baseScientificName": "Cobitis sinensis",
         "completionEligible": false,
         "affectedUnknownPairs": 247,
-        "gapInstances": 5,
+        "gapInstances": 3,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 49.4,
+        "impactPerGap": 82.33,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "water",
           "temperature",
           "ph",
-          "adult_size",
           "tank_size"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
+        "existingCoveragePriorityScore": 116
+      },
+      {
+        "researchKey": "Aphyocypris chinensis",
+        "baseScientificName": "Aphyocypris chinensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 228,
+        "gapInstances": 3,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 76,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 116
       },
       {
         "researchKey": "Pangio kuhlii",
@@ -1669,28 +1665,6 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 110
-      },
-      {
-        "researchKey": "Aphyocypris chinensis",
-        "baseScientificName": "Aphyocypris chinensis",
-        "completionEligible": false,
-        "affectedUnknownPairs": 228,
-        "gapInstances": 5,
-        "terminalGapInstances": 3,
-        "terminalBlockedCatalogObjects": 1,
-        "impactPerGap": 45.6,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "water",
-          "temperature",
-          "ph",
-          "adult_size",
-          "tank_size"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
         "existingCoveragePriorityScore": 110
       },
       {
@@ -1913,34 +1887,32 @@
         "baseScientificName": "Pseudogastromyzon fangi",
         "completionEligible": false,
         "affectedUnknownPairs": 0,
-        "gapInstances": 5,
+        "gapInstances": 3,
         "terminalGapInstances": 3,
         "terminalBlockedCatalogObjects": 1,
         "impactPerGap": 0,
         "nearReadyCatalogObjects": 0,
         "catalogObjectCount": 1,
         "combinedGapFields": [
-          "water",
           "temperature",
           "ph",
-          "adult_size",
           "tank_size"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 110
+        "existingCoveragePriorityScore": 116
       },
       {
         "researchKey": "Channa asiatica",
         "baseScientificName": "Channa asiatica",
         "completionEligible": false,
         "affectedUnknownPairs": 0,
-        "gapInstances": 6,
+        "gapInstances": 4,
         "terminalGapInstances": 1,
         "terminalBlockedCatalogObjects": 1,
         "impactPerGap": 0,
         "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 2,
+        "catalogObjectCount": 1,
         "combinedGapFields": [
           "temperature",
           "ph",
@@ -1949,7 +1921,7 @@
         ],
         "requiresVariantBridgeReview": true,
         "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
-        "existingCoveragePriorityScore": 173
+        "existingCoveragePriorityScore": 149
       },
       {
         "researchKey": "Tanichthys albonubes",
@@ -2000,7 +1972,7 @@
       "completionEligibleJobs": 11,
       "terminalBlockedJobs": 37,
       "completionEligibleCatalogObjects": 11,
-      "terminalBlockedCatalogObjects": 80
+      "terminalBlockedCatalogObjects": 79
     },
     "terminalReasonCounts": [
       {
@@ -2080,35 +2052,35 @@
     },
     {
       "code": "water_type_unknown",
-      "count": 131
+      "count": 135
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 336,
+    "actionableGaps": 320,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 69
+        "count": 66
       },
       {
         "field": "tank_size",
-        "count": 68
+        "count": 65
       },
       {
         "field": "water",
-        "count": 64
+        "count": 61
       },
       {
         "field": "temperature",
-        "count": 62
+        "count": 59
       },
       {
         "field": "adult_size",
-        "count": 58
+        "count": 55
       },
       {
         "field": "predation",
-        "count": 10
+        "count": 9
       },
       {
         "field": "territoriality",
