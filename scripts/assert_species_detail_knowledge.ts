@@ -701,6 +701,19 @@ assert.equal(albinoRedSwordtailKnowledge.spaceAndGrowth?.minTankLengthCm, 120);
 assert.equal(albinoRedSwordtailKnowledge.socialBehavior?.mode, 'shoal');
 assert.equal(albinoRedSwordtailKnowledge.socialBehavior?.predationRisk, 'low');
 
+
+const albinoGyrinocheilus = fishData.find(fish => fish.id === 'sp_0229');
+assert.ok(albinoGyrinocheilus, 'Albino Gyrinocheilus must exist in catalog');
+const albinoGyrinocheilusKnowledge = getReviewedSpeciesKnowledgeForFish(albinoGyrinocheilus);
+assert.ok(albinoGyrinocheilusKnowledge, 'reviewed Albino identity correction must resolve Species Knowledge through the explicit Gyrinocheilus aymonieri base-species bridge');
+assert.deepEqual(albinoGyrinocheilusKnowledge.environment?.temperatureRangeC, { min: 22, max: 26 });
+assert.deepEqual(albinoGyrinocheilusKnowledge.environment?.phRange, { min: 6, max: 8 });
+assert.equal(albinoGyrinocheilusKnowledge.spaceAndGrowth?.adultLengthCm.max, 28);
+assert.equal(albinoGyrinocheilusKnowledge.spaceAndGrowth?.minTankLengthCm, 150);
+assert.equal(albinoGyrinocheilusKnowledge.socialBehavior?.mode, 'variable');
+assert.equal(albinoGyrinocheilusKnowledge.socialBehavior?.territoriality, 'medium');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0442', scientificName: 'Gyrinocheilus aymonieri var.' }), undefined, 'unresolved blank-variety Gyrinocheilus must not inherit reviewed base authority automatically');
+
 const reviewedAuthorityGaps = fishData
   .filter(fish => getReviewedCompatibilityProfileForFish(fish) && !getReviewedSpeciesKnowledgeForFish(fish))
   .map(fish => ({ id: fish.id, name: fish.name, scientificName: fish.scientificName }));

@@ -10,15 +10,21 @@ import {
   catalogIdentityCorrectionBaseSpeciesIds as wave23BaseSpeciesIds,
   resolvedCatalogIdentityCorrectionSpeciesIds as wave23ResolvedSpeciesIds,
 } from './catalogReviewBatches/identity-corrections-wave23';
+import {
+  catalogIdentityCorrectionBaseSpeciesIds as wave24BaseSpeciesIds,
+  resolvedCatalogIdentityCorrectionSpeciesIds as wave24ResolvedSpeciesIds,
+} from './catalogReviewBatches/identity-corrections-wave24';
 
 export const resolvedCatalogIdentityCorrectionSpeciesIds = new Set([
   ...wave21ResolvedSpeciesIds,
   ...wave22ResolvedSpeciesIds,
   ...wave23ResolvedSpeciesIds,
+  ...wave24ResolvedSpeciesIds,
 ]);
 
 export const catalogIdentityCorrectionBaseSpeciesIds = {
   ...wave21BaseSpeciesIds,
   ...wave22BaseSpeciesIds,
   ...wave23BaseSpeciesIds,
+  ...wave24BaseSpeciesIds,
 } as const;

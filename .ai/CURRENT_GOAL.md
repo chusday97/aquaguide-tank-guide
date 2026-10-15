@@ -1,3 +1,40 @@
+## CURRENT OVERRIDE — 2026-10-15 Albino Gyrinocheilus identity correction wave24 via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. Wave24 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.
+- Wave24 resolves exactly one additional identity-held fish: `sp_0229 白化金苔鼠 / Gyrinocheilus aymonieri var. Albino`.
+- Exact object-level identity evidence:
+  - Seriously Fish’s exact `Gyrinocheilus aymonieri` species account explicitly says the species is commercially produced in several ornamental strains and separately lists **albino**, golden, piebald, and short-bodied forms.
+  - Tetra’s exact Chinese Algae Eater / `Gyrinocheilus aymonieri` care article independently lists wild, golden, marbled, and **albino** colour forms.
+- The identity bridge is deliberately object-scoped. The sources separate albino from golden/xanthic-like colour forms, so Wave24 does **not** reinterpret golden, leucistic, marbled, or generic trade morphs as albino. `sp_0442 青苔鼠 / Gyrinocheilus aymonieri var.` remains `catalog_scientific_name_unresolved`, 0/8 and fail-closed.
+- Identity-correction map now contains four reviewed bridges:
+  - `sp_0176 -> sp_0446` Marble angelfish -> `Pterophyllum scalare`
+  - `sp_0229 -> sp_0441` Albino Gyrinocheilus -> `Gyrinocheilus aymonieri`
+  - `sp_0236 -> sp_0438` Albino Red swordtail -> `Xiphophorus hellerii`
+  - `sp_0407 -> sp_0103` Blood Red A arowana -> `Scleropages formosus`
+- `sp_0229` now has explicit reviewed Catalog bridges for all eight Compatibility core fields, reusing only the already-reviewed `sp_0441` same-species authority after the Albino object identity is established:
+  - freshwater
+  - 22–26°C
+  - pH 6–8
+  - adult max 28 cm
+  - minimum horizontal tank length 150 cm
+  - variable social mode, no invented group minimum
+  - age-increasing territoriality plus similar-fish / bottom-dweller aggression
+  - no reviewed fish-predation target; mucus-grazing remains a behavioral risk rather than being mislabeled as predation
+- Object-level regression confirms `sp_0229` is **8/8 authoritative + generic-ready**, while unresolved `sp_0442` remains 0/8 with an identity terminal hold. No generic sibling auto-inheritance was introduced.
+- Coverage after Wave24: **87 authoritative 8/8 fish / 72 strict generic-ready / 286 identity-domain held**. The ordinary research backlog remains exactly **336 actionable field gaps** (pH 69 / tank size 68 / water 64 / temperature 62 / adult size 58 / predation 10 / territoriality 5 / social 0), confirming no unrelated review leakage.
+- Global decision impact versus Wave23:
+  - decision coverage **44.46% -> 44.62%**
+  - `unresolved_identity` **20,785 -> 20,650 (-135 pairs)**
+  - total `insufficient_data` **26,599 -> 26,524 (-75 pairs)**
+  - `public_evidence_insufficient` **5,814 -> 5,874 (+60)** because identity resolution exposes the next genuine public-evidence boundary rather than fabricating certainty
+  - `missing_species_fact` remains **0**
+  - status totals: **361 compatible / 1,955 caution / 19,055 not_recommended / 26,524 insufficient_data**
+- Strict fully-informed invariant expands to **72 ready fish = 2,556 unordered pairs = 124 compatible / 1,046 caution / 1,386 not_recommended / 0 insufficient_data**.
+- Repository authority now contains **105 reviewed Profiles** = released target 101 + 4 source-controlled pending identity corrections (`sp_0176`, `sp_0229`, `sp_0236`, `sp_0407`). Historical release generations remain exact **63 -> 85 -> 95 -> 99 -> 100 -> 101**.
+- Historical Wave05 classified `sp_0229` as no-Profile/identity-held. The frozen migration remains unchanged; the generic later-source-controlled-correction contract allows the reviewed Wave24 bridge to supersede that historical hold without rewriting migration history.
+- PASS: catalog identity boundaries, identity bridge reviews, Species Knowledge resolver, rollout window, runtime authority, frozen Wave05 migration, core-field coverage, strict fully-informed matrix, V4 readability, user conclusion, release badcases, full `test:backend-release-gate`, API/project TypeScript, Business API bundle, lint, and `git diff --check`.
+- NEXT: continue the identity-resolution queue only when the base species is already ready and at least two independent exact-species / lineage-aware sources directly support the catalog object. Compound morphs (e.g. Balloon + colour, Longfin + colour) remain fail-closed unless the compound identity itself is evidenced.
+
 ## CURRENT OVERRIDE — 2026-10-15 Albino Red swordtail identity correction wave23 via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. Wave23 is WebCodex / WebCodex-All-Bridge source-controlled candidate work only: **no RDC, Codex agent, push, Vercel deploy, Production alias change, DB migration, or Production authority write**.

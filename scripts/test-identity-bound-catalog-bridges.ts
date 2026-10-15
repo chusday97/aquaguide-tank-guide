@@ -92,4 +92,22 @@ assert.deepEqual(albinoRedApproved.get('social_behavior')?.proposedValue, { mode
 assert.deepEqual(albinoRedApproved.get('territoriality')?.proposedValue, { traits: ['male_conspecific_territoriality'] });
 assert.deepEqual(albinoRedApproved.get('predation')?.proposedValue, { targets: [] });
 
-console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, and Albino Red corrections inherit only explicit same-species authority');
+
+const albinoGyrinocheilusIdentity = getCatalogFieldReviews('sp_0229').filter(review => review.field === 'identity').at(-1);
+assert.equal(albinoGyrinocheilusIdentity?.resolution, 'supported');
+assert.deepEqual(albinoGyrinocheilusIdentity?.proposedValue, {
+  scientificName: 'Gyrinocheilus aymonieri var. Albino',
+  baseSpeciesKey: 'Gyrinocheilus aymonieri',
+  variantKey: 'Albino',
+});
+const albinoGyrinocheilusApproved = new Map(getApprovedCatalogFieldReviews('sp_0229').map(review => [review.field, review]));
+assert.equal(albinoGyrinocheilusApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(albinoGyrinocheilusApproved.get('temperature')?.proposedValue, { min: 22, max: 26 });
+assert.deepEqual(albinoGyrinocheilusApproved.get('ph')?.proposedValue, { min: 6, max: 8 });
+assert.deepEqual(albinoGyrinocheilusApproved.get('adult_size')?.proposedValue, { min: null, max: 28 });
+assert.deepEqual(albinoGyrinocheilusApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 150 });
+assert.deepEqual(albinoGyrinocheilusApproved.get('social_behavior')?.proposedValue, { mode: 'variable', minimumGroupSize: null });
+assert.deepEqual(albinoGyrinocheilusApproved.get('territoriality')?.proposedValue, { traits: ['age_increasing_territoriality', 'similar_fish_aggression', 'bottom_dweller_aggression'] });
+assert.deepEqual(albinoGyrinocheilusApproved.get('predation')?.proposedValue, { targets: [] });
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, and Albino Gyrinocheilus corrections inherit only explicit same-species authority');
