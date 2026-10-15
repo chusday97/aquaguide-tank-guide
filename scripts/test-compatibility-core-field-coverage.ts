@@ -555,6 +555,34 @@ assert.deepEqual(
   [...numericWave13SourceIds].sort(),
   'numeric wave13 peer-reviewed predation evidence must resolve to reviewed source metadata',
 );
+const wave14SpeciesBindings: Array<[string, string]> = [
+  ['sp_0022', 'Lutjanus kasmira'],
+];
+for (const [speciesId, expectedScientificName] of wave14SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'numeric wave14 speciesId must stay bound to the exact reviewed taxon: ' + speciesId,
+  );
+}
+
+assert.deepEqual(approvedValue('sp_0022', 'temperature'), { min: 22.2, max: 25.6 });
+assert.deepEqual(approvedValue('sp_0022', 'ph'), { min: 8.1, max: 8.4 });
+assert.deepEqual(approvedValue('sp_0022', 'tank_size'), { liters: 1136, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0022', 'territoriality'), { traits: [] });
+assert.deepEqual(approvedValue('sp_0022', 'predation'), { targets: ['small_fish'] });
+assert.equal(rowOf('sp_0022')?.authoritativeFieldCount, 8);
+assert.equal(rowOf('sp_0022')?.genericOnboardingReady, true, 'Lutjanus kasmira must become generic-ready after the five exact-taxon Wave14 gaps close');
+
+const numericWave14SourceIds = [
+  'fishipedia-lutjanus-kasmira-wave14',
+  'liveaquaria-lutjanus-kasmira-wave14',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave14SourceIds).map(source => source.id).sort(),
+  [...numericWave14SourceIds].sort(),
+  'numeric wave14 exact-taxon evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -580,9 +608,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 55, '373 actionable field gaps should collapse to 55 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 54, '368 actionable field gaps should collapse to 54 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 100, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 99, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

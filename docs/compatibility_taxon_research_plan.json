@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 100,
-  "totalResearchJobs": 55,
+  "catalogObjects": 99,
+  "totalResearchJobs": 54,
   "variantBridgeJobs": 19,
   "items": [
     {
@@ -663,41 +663,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Lutjanus kasmira",
-      "baseScientificName": "Lutjanus kasmira",
-      "priorityScore": 159,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "temperature",
-        "ph",
-        "tank_size",
-        "territoriality",
-        "predation"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0022",
-          "name": "红利",
-          "scientificName": "Lutjanus kasmira",
-          "gaps": [
-            "temperature",
-            "ph",
-            "tank_size",
-            "territoriality",
-            "predation"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },

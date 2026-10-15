@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 63,
-  "genericReadyUniquePairs": 1953,
+  "genericOnboardingReadySpecies": 64,
+  "genericReadyUniquePairs": 2016,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 505,
@@ -470,28 +470,6 @@
           "ph",
           "adult_size",
           "tank_size",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
-        "researchKey": "Lutjanus kasmira",
-        "baseScientificName": "Lutjanus kasmira",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
           "predation"
         ],
         "requiresVariantBridgeReview": false,
@@ -1586,28 +1564,6 @@
         "existingCoveragePriorityScore": 159
       },
       {
-        "researchKey": "Lutjanus kasmira",
-        "baseScientificName": "Lutjanus kasmira",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 5,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality",
-          "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 159
-      },
-      {
         "researchKey": "Paracanthurus hepatus",
         "baseScientificName": "Paracanthurus hepatus",
         "completionEligible": true,
@@ -2394,10 +2350,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 55,
-      "completionEligibleJobs": 18,
+      "totalResearchJobs": 54,
+      "completionEligibleJobs": 17,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 20,
+      "completionEligibleCatalogObjects": 19,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2466,19 +2422,19 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 373,
+    "actionableGaps": 368,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 76
+        "count": 75
       },
       {
         "field": "tank_size",
-        "count": 73
+        "count": 72
       },
       {
         "field": "temperature",
-        "count": 69
+        "count": 68
       },
       {
         "field": "water",
@@ -2490,11 +2446,11 @@
       },
       {
         "field": "predation",
-        "count": 16
+        "count": 15
       },
       {
         "field": "territoriality",
-        "count": 15
+        "count": 14
       },
       {
         "field": "social_behavior",

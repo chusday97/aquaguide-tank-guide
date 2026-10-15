@@ -11,8 +11,8 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 63,
-  "coreFieldCompleteSpecies": 78,
+  "genericOnboardingReadySpecies": 64,
+  "coreFieldCompleteSpecies": 79,
   "oneFieldGapSpecies": 4,
   "runtimeReviewedProfileSpecies": 137,
   "domainOrIdentityHeldSpecies": 290,
@@ -26,17 +26,17 @@
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 116,
+      "reviewed_supported": 117,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 12,
+      "reviewed_unknown": 11,
       "needs_research": 57,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 109,
+      "reviewed_supported": 110,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 17,
+      "reviewed_unknown": 16,
       "needs_research": 59,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -50,9 +50,9 @@
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 111,
+      "reviewed_supported": 112,
       "reviewed_neutral_or_negative": 0,
-      "reviewed_unknown": 16,
+      "reviewed_unknown": 15,
       "needs_research": 58,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -67,16 +67,16 @@
     },
     "territoriality": {
       "reviewed_supported": 72,
-      "reviewed_neutral_or_negative": 25,
-      "reviewed_unknown": 87,
+      "reviewed_neutral_or_negative": 26,
+      "reviewed_unknown": 86,
       "needs_research": 1,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 59,
+      "reviewed_supported": 60,
       "reviewed_neutral_or_negative": 26,
-      "reviewed_unknown": 99,
+      "reviewed_unknown": 98,
       "needs_research": 1,
       "missing_identity_or_domain": 290,
       "not_applicable": 11
@@ -85,15 +85,15 @@
   "fieldActionableGaps": [
     {
       "field": "ph",
-      "count": 76
+      "count": 75
     },
     {
       "field": "tank_size",
-      "count": 73
+      "count": 72
     },
     {
       "field": "temperature",
-      "count": 69
+      "count": 68
     },
     {
       "field": "water",
@@ -105,11 +105,11 @@
     },
     {
       "field": "predation",
-      "count": 16
+      "count": 15
     },
     {
       "field": "territoriality",
-      "count": 15
+      "count": 14
     },
     {
       "field": "social_behavior",
@@ -1919,9 +1919,9 @@
       "scientificName": "Lutjanus kasmira",
       "lifeType": "fish",
       "reviewedProfile": "direct",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 3,
-      "actionableGapCount": 5,
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
+      "actionableGapCount": 0,
       "terminalGapCount": 0,
       "fields": {
         "water": {
@@ -1934,22 +1934,22 @@
           "reasonCode": null
         },
         "temperature": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-lutjanus-kasmira"
+            "liveaquaria-lutjanus-kasmira-wave14"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "ph": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-lutjanus-kasmira"
+            "liveaquaria-lutjanus-kasmira-wave14"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "adult_size": {
           "status": "reviewed_supported",
@@ -1961,13 +1961,13 @@
           "reasonCode": null
         },
         "tank_size": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-lutjanus-kasmira"
+            "liveaquaria-lutjanus-kasmira-wave14"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "social_behavior": {
           "status": "reviewed_supported",
@@ -1979,22 +1979,22 @@
           "reasonCode": null
         },
         "territoriality": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_neutral_or_negative",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-lutjanus-kasmira"
+            "fishipedia-lutjanus-kasmira-wave14"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         },
         "predation": {
-          "status": "reviewed_unknown",
-          "disposition": "targeted_source_expansion",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "fishbase-lutjanus-kasmira"
+            "fishipedia-lutjanus-kasmira-wave14"
           ],
           "authoritySource": "catalog_field_review",
-          "reasonCode": "reviewed_field_unknown"
+          "reasonCode": null
         }
       }
     },
