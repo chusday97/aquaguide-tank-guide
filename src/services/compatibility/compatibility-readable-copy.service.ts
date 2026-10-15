@@ -31,7 +31,7 @@ const JUDGMENT: Record<CompatibilityDecision['status'], CompatibilityReadableCon
 };
 
 const forbiddenTechnicalPattern = /(?:\b(?:ruleCodes|evidenceIds|finalDecision|decisionReadiness|deterministic|domainStatus|provider|schema|model|compatibility)\b|sp_\d+|[a-z0-9]+_[a-z0-9_]+|https?:\/\/|\{[^}]*\}|\[[^\]]*\]|阻断性冲突|阻断规则|配对研究证据|基于物种特征的推断|高脆弱性)/i;
-const actionablePattern = /(先|不要|暂停|减少|降低|增加|补足|补齐|调整|分隔|隔离|更换|确认|测|保持|准备|加入|观察|重新判断|重新评估|换缸)/;
+const actionablePattern = /(先|不要|暂停|减少|降低|增加|补足|补齐|调整|分隔|分缸|分开|隔离|更换|确认|测|保持|准备|加入|观察|重新判断|重新评估|换缸)/;
 
 const cleanText = (value: string) => (
   value

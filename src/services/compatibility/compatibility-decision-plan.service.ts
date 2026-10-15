@@ -100,9 +100,9 @@ export const buildCompatibilityDecisionPlan = (
   }
 
   const nextSteps = unique([
-    action.immediateAction,
     ...readable.howTo.filter(step => step !== action.observeAfterAction),
-  ]).slice(0, 3);
+    action.immediateAction,
+  ]).slice(0, 2);
 
   return {
     judgment: readable.judgment,

@@ -360,8 +360,9 @@
     "dryrun:compatibility-research-batch": "node --import tsx scripts/run-compatibility-research-batch-dryrun.ts",
     "dryrun:compatibility-source-acquisition": "node --import tsx scripts/run-compatibility-source-acquisition-dryrun.ts",
     "test:compatibility-research-batch-dryrun": "node --import tsx scripts/test-compatibility-research-batch-dryrun.ts",
-    "test:compatibility-user-canary": "npm run test:compatibility-user-conclusion && npm run test:compatibility-dynamic-onboarding && npm run test:compatibility-complex-whole-tank && npm run test:compatibility-release-badcases",
-    "test:compatibility-dynamic-onboarding": "node --import tsx scripts/test-compatibility-dynamic-onboarding.ts"
+    "test:compatibility-user-canary": "npm run test:compatibility-user-conclusion && npm run test:compatibility-dynamic-onboarding && npm run test:compatibility-complex-whole-tank && npm run test:compatibility-priority-compression && npm run test:compatibility-release-badcases",
+    "test:compatibility-dynamic-onboarding": "node --import tsx scripts/test-compatibility-dynamic-onboarding.ts",
+    "test:compatibility-priority-compression": "node --import tsx scripts/test-compatibility-priority-compression.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.4.0",

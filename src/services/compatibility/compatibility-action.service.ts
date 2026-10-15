@@ -524,7 +524,9 @@ const stopConditionFor = (
   if (decision.status === 'insufficient_data') return mode === 'current_tank'
     ? '关键资料补齐并重新评估前，不要据此继续扩大当前组合。'
     : '关键资料补齐并重新评估前，不要新增。';
-  if (decision.status === 'caution') return '若出现持续追逐、受伤、拒食、长期躲藏或呼吸异常，停止新增并分隔冲突个体后重新评估。';
+  if (decision.status === 'caution') return mode === 'current_tank'
+    ? '若出现持续追逐、受伤、拒食、长期躲藏或呼吸异常，立即分隔冲突个体并重新评估，不要继续按原组合观察等待。'
+    : '若出现持续追逐、受伤、拒食、长期躲藏或呼吸异常，停止新增并分隔冲突个体后重新评估。';
   return '若出现持续追逐、受伤、拒食或呼吸异常，停止继续新增并重新评估。';
 };
 
