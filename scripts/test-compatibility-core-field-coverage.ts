@@ -478,6 +478,34 @@ assert.deepEqual(
   [...numericWave10SourceIds].sort(),
   'numeric wave10 exact-taxon evidence must resolve to reviewed source metadata',
 );
+const wave11SpeciesBindings: Array<[string, string]> = [
+  ['sp_0183', 'Xanthichthys mento'],
+];
+for (const [speciesId, expectedScientificName] of wave11SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'numeric wave11 speciesId must stay bound to the exact reviewed taxon: ' + speciesId,
+  );
+}
+
+assert.deepEqual(approvedValue('sp_0183', 'temperature'), { min: 22.2, max: 25.6 });
+assert.deepEqual(approvedValue('sp_0183', 'ph'), { min: 8.1, max: 8.4 });
+assert.deepEqual(approvedValue('sp_0183', 'tank_size'), { liters: 681, lengthCm: null });
+assert.deepEqual(approvedValue('sp_0183', 'territoriality'), { traits: ['breeding_territoriality'] });
+assert.equal(rowOf('sp_0183')?.authoritativeFieldCount, 8);
+assert.equal(rowOf('sp_0183')?.genericOnboardingReady, true, 'Xanthichthys mento must become generic-ready after the four exact-taxon Wave11 gaps close');
+
+const numericWave11SourceIds = [
+  'saltcorner-xanthichthys-mento-wave11',
+  'liveaquaria-xanthichthys-mento-wave11',
+  'kawase-2003-xanthichthys-mento-spawning-territory',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave11SourceIds).map(source => source.id).sort(),
+  [...numericWave11SourceIds].sort(),
+  'numeric wave11 evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -503,9 +531,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 58, '379 actionable field gaps should collapse to 58 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 57, '375 actionable field gaps should collapse to 57 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 103, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 102, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

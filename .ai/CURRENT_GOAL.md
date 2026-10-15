@@ -1,15 +1,15 @@
-## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave10 via RDC (NOT RELEASED)
+## CURRENT OVERRIDE — 2026-10-15 Numeric evidence wave11 via RDC (NOT RELEASED)
 
-- Active branch: `codex/compatibility-research-runtime-20261014`. The user explicitly authorized RDC for this continuation. This checkpoint remains source-controlled/local only: **no Vercel deployment, Production alias change, DB migration, Production authority write, or Codex agent**.
-- Wave10 targeted `sp_0453 Pterois volitans`, which already had reviewed water/adult/social/predation authority and lacked only temperature, pH, tank size and territoriality.
-- Fishipedia’s exact page directly supplies 22–26 °C, pH 8.2–8.4, minimum 1200 L, and explicit non-territoriality. The page independently reinforces the existing predation rule by stating that any fish small enough to enter the mouth is potential prey, but Wave10 does not broaden or rewrite the already-reviewed prey scope.
-- Non-territoriality remains distinct from interspecific aggression: the exact source calls the species non-territorial while also noting occasional aggression. The field is therefore `traits: []`, without erasing predation/aggression risks already represented elsewhere.
-- The profile patch synchronizes all eight required facts. `Pterois volitans` is now 8/8 and generic-ready.
-- Current coverage after wave10: **75 authoritative 8/8 fish / 60 strict generic-ready**, **379 actionable fields across 103 catalog objects**, deduplicated to **58 base-taxon jobs**. Field gaps: `ph 77`, `tank_size 74`, `temperature 70`, `water 64`, `adult_size 60`, `predation 18`, `territoriality 16`, `social_behavior 0`.
-- Fast Lane remains **five predation-only 7/8 objects**. Decision-impact queue is now **21 completion-eligible jobs / 23 objects** and **37 terminal-blocked jobs / 80 objects**.
-- Fully informed invariant expands to **60 ready fish = 1,770 unordered pairs = 89 compatible / 796 caution / 885 not_recommended / 0 insufficient_data**.
+- Active branch: `codex/compatibility-research-runtime-20261014`. This checkpoint remains source-controlled/local only: **no Vercel deployment, Production alias change, DB migration, Production authority write, or Codex agent**.
+- Wave11 targeted `sp_0183 Xanthichthys mento`, which lacked temperature, pH, tank size and territoriality while its water/adult/social/predation authority was already reviewed.
+- Exact-species husbandry values are reconciled conservatively from Saltcorner and LiveAquaria: promoted temperature **22.2–25.6 °C**, pH **8.1–8.4**, and minimum **180 US gal ≈ 681 L**. The stricter direct minimum/range intersection is used rather than the more permissive source values.
+- Territoriality is not generalized from temperament labels. Kawase (2003, Environmental Biology of Fishes) directly documents males establishing territories for spawning and parental egg care; the field is therefore scoped to `breeding_territoriality`. Runtime gets `breeding_defense`, which only raises risk when spawning/egg/fry-guarding context is active.
+- The profile patch synchronizes all eight required facts. `Xanthichthys mento` is now 8/8 and generic-ready.
+- Current coverage after wave11: **76 authoritative 8/8 fish / 61 strict generic-ready**, **375 actionable fields across 102 catalog objects**, deduplicated to **57 base-taxon jobs**. Field gaps: `ph 76`, `tank_size 73`, `temperature 69`, `water 64`, `adult_size 60`, `predation 18`, `territoriality 15`, `social_behavior 0`.
+- Decision-impact queue is now **20 completion-eligible jobs / 22 objects** and **37 terminal-blocked jobs / 80 objects**.
+- Fully informed invariant expands to **61 ready fish = 1,830 unordered pairs = 89 compatible / 796 caution / 945 not_recommended / 0 insufficient_data**.
 - Core-field coverage, decision-impact queue, fully-informed matrix, user conclusion, release badcases, knowledge coverage, research dry-run, lint, Business API build and `git diff --check` all pass under RDC.
-- NEXT: commit/push wave10, then continue exact-taxon completion candidates. Remaining actionable behavior work is only territoriality/predation; social-behavior actionable coverage remains complete.
+- NEXT: commit/push wave11, then re-audit the predation-only Fast Lane with exact tankmate/prey language. Peaceful/herbivore/diet-only descriptions remain insufficient for a negative predation authority.
 
 ## CURRENT CHECKPOINT — 2026-10-14 Compatibility research batch dry-run infrastructure (NOT RELEASED)
 

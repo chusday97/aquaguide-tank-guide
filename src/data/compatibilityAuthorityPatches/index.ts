@@ -103,6 +103,13 @@ import {
   compatibilityNumericWave10Sources,
   compatibilityNumericWave10VerifiedSourceIds,
 } from './numeric-wave10-20261015';
+import {
+  compatibilityNumericWave11AuthorityPatch,
+  compatibilityNumericWave11FieldReviews,
+  compatibilityNumericWave11ProfilePatches,
+  compatibilityNumericWave11Sources,
+  compatibilityNumericWave11VerifiedSourceIds,
+} from './numeric-wave11-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -120,6 +127,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave8Sources,
   ...compatibilityNumericWave9Sources,
   ...compatibilityNumericWave10Sources,
+  ...compatibilityNumericWave11Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -138,6 +146,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave8FieldReviews,
   ...compatibilityNumericWave9FieldReviews,
   ...compatibilityNumericWave10FieldReviews,
+  ...compatibilityNumericWave11FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -156,6 +165,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave8VerifiedSourceIds,
   ...compatibilityNumericWave9VerifiedSourceIds,
   ...compatibilityNumericWave10VerifiedSourceIds,
+  ...compatibilityNumericWave11VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -174,6 +184,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave8ProfilePatches,
   ...compatibilityNumericWave9ProfilePatches,
   ...compatibilityNumericWave10ProfilePatches,
+  ...compatibilityNumericWave11ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -192,4 +203,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave8AuthorityPatch,
   compatibilityNumericWave9AuthorityPatch,
   compatibilityNumericWave10AuthorityPatch,
+  compatibilityNumericWave11AuthorityPatch,
 ] as const;

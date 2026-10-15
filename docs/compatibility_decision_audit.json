@@ -6,8 +6,8 @@
   "catalogObjects": 486,
   "compatibilityDomainObjects": 411,
   "fishDomainSpecies": 310,
-  "genericOnboardingReadySpecies": 60,
-  "genericReadyUniquePairs": 1770,
+  "genericOnboardingReadySpecies": 61,
+  "genericReadyUniquePairs": 1830,
   "fishPairs": 47895,
   "statuses": {
     "compatible": 505,
@@ -473,27 +473,6 @@
           "tank_size",
           "territoriality",
           "predation"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
-      },
-      {
-        "researchKey": "Xanthichthys mento",
-        "baseScientificName": "Xanthichthys mento",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
         ],
         "requiresVariantBridgeReview": false,
         "researchDisposition": "exact_taxon_research",
@@ -1645,27 +1624,6 @@
         "existingCoveragePriorityScore": 167
       },
       {
-        "researchKey": "Xanthichthys mento",
-        "baseScientificName": "Xanthichthys mento",
-        "completionEligible": true,
-        "affectedUnknownPairs": 0,
-        "gapInstances": 4,
-        "terminalGapInstances": 0,
-        "terminalBlockedCatalogObjects": 0,
-        "impactPerGap": 0,
-        "nearReadyCatalogObjects": 0,
-        "catalogObjectCount": 1,
-        "combinedGapFields": [
-          "temperature",
-          "ph",
-          "tank_size",
-          "territoriality"
-        ],
-        "requiresVariantBridgeReview": false,
-        "researchDisposition": "exact_taxon_research",
-        "existingCoveragePriorityScore": 167
-      },
-      {
         "researchKey": "Amphiprion ocellaris",
         "baseScientificName": "Amphiprion ocellaris",
         "completionEligible": true,
@@ -2518,10 +2476,10 @@
       }
     ],
     "taxonQueueSummary": {
-      "totalResearchJobs": 58,
-      "completionEligibleJobs": 21,
+      "totalResearchJobs": 57,
+      "completionEligibleJobs": 20,
       "terminalBlockedJobs": 37,
-      "completionEligibleCatalogObjects": 23,
+      "completionEligibleCatalogObjects": 22,
       "terminalBlockedCatalogObjects": 80
     },
     "terminalReasonCounts": [
@@ -2590,19 +2548,19 @@
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 379,
+    "actionableGaps": 375,
     "fieldActionableGaps": [
       {
         "field": "ph",
-        "count": 77
+        "count": 76
       },
       {
         "field": "tank_size",
-        "count": 74
+        "count": 73
       },
       {
         "field": "temperature",
-        "count": 70
+        "count": 69
       },
       {
         "field": "water",
@@ -2618,7 +2576,7 @@
       },
       {
         "field": "territoriality",
-        "count": 16
+        "count": 15
       },
       {
         "field": "social_behavior",
