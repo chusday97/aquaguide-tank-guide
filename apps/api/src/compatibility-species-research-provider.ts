@@ -436,6 +436,49 @@ const htmlToText = (html: string) => decodeEntities(
     .trim(),
 );
 
+const compatibilityEvidenceExcerpt = (text: string, maxChars: number) => {
+  if (text.length <= maxChars) return text;
+  const anchors = [
+    /\bEnvironment\s*:/gi,
+    /(?:Température|Temperature)\s+\d/gi,
+    /\bpH(?:\s*\([^)]{0,40}\))?\s+\d/gi,
+    /\bMax(?:imum)?\s+length\s*:?\s*\d/gi,
+    /\bTaille\s+max(?:imale)?\.?\s*:?\s*\d/gi,
+    /\bVolume\s+(?:min\.?|minimum|minimal)\s*:?\s*\d/gi,
+    /(?:vit|évolue|evolue|se rencontre)[^.!?]{0,100}eau (?:douce|de mer|saum[aâ]tre)/gi,
+    /\bCohabitation\b|\bCompatibility\b|\bComportement\b/gi,
+  ];
+  const ranges: Array<[number, number]> = [];
+  for (const pattern of anchors) {
+    let match: RegExpExecArray | null;
+    let count = 0;
+    while ((match = pattern.exec(text)) && count < 4) {
+      ranges.push([Math.max(0, match.index - 320), Math.min(text.length, match.index + 1000)]);
+      count += 1;
+    }
+  }
+  if (ranges.length === 0) return text.slice(0, maxChars);
+  ranges.sort((a, b) => a[0] - b[0]);
+  const merged: Array<[number, number]> = [];
+  for (const range of ranges) {
+    const last = merged.at(-1);
+    if (last && range[0] <= last[1] + 80) last[1] = Math.max(last[1], range[1]);
+    else merged.push([...range]);
+  }
+  const excerpts: string[] = [];
+  let used = 0;
+  for (const [start, end] of merged) {
+    const part = text.slice(start, end).trim();
+    if (!part) continue;
+    const separatorCost = excerpts.length > 0 ? 5 : 0;
+    const available = maxChars - used - separatorCost;
+    if (available <= 0) break;
+    excerpts.push(part.slice(0, available));
+    used += Math.min(part.length, available) + separatorCost;
+  }
+  return excerpts.join(' \n---\n ').slice(0, maxChars);
+};
+
 const fetchOneVerifiedDocumentDetailed = async (
   initialUrl: string,
   scientificName: string,
@@ -508,8 +551,11 @@ const fetchOneVerifiedDocumentDetailed = async (
       };
     }
 
-    const raw = (await response.text()).slice(0, config.maxSourceChars * 4);
-    const text = contentType.includes('text/plain') ? raw.replace(/\s+/g, ' ').trim() : htmlToText(raw);
+    const rawResponse = await response.text();
+    const rawLimit = Math.min(300_000, Math.max(100_000, config.maxSourceChars * 20));
+    const raw = rawResponse.slice(0, rawLimit);
+    const fullText = contentType.includes('text/plain') ? raw.replace(/\s+/g, ' ').trim() : htmlToText(raw);
+    const text = compatibilityEvidenceExcerpt(fullText, config.maxSourceChars);
     if (text.length < 400) {
       return {
         document: null,
@@ -616,6 +662,149 @@ const extractionPromptFor = (
     text: document.text,
   }))),
 ].join('\n');
+
+const deterministicNumericFields = new Set<CompatibilityOnboardingCoreField>([
+  'water',
+  'temperature',
+  'ph',
+  'adult_size',
+  'tank_size',
+]);
+
+const normalizedEvidenceText = (value: string) => value
+  .replace(/\u00a0/g, ' ')
+  .replace(/[–—−]/g, '-')
+  .replace(/\s+/g, ' ')
+  .trim();
+
+const parsedNumber = (value: string) => {
+  const parsed = Number(value.replace(',', '.'));
+  return Number.isFinite(parsed) ? parsed : null;
+};
+
+const centimeters = (value: number, unit: string) => {
+  const normalized = unit.toLowerCase();
+  if (normalized === 'mm') return value / 10;
+  if (normalized === 'm') return value * 100;
+  return value;
+};
+
+const explicitWaterFromDocument = (document: VerifiedDocument) => {
+  const text = normalizedEvidenceText(document.text);
+  const candidates = new Set<'freshwater' | 'saltwater' | 'brackish'>();
+
+  if (document.publisher === 'FishBase') {
+    const environment = text.match(/\bEnvironment\s*:\s*([^.!?]{1,160})/i)?.[1] || '';
+    if (/\bfreshwater\b/i.test(environment)) candidates.add('freshwater');
+    if (/\bbrackish\b/i.test(environment)) candidates.add('brackish');
+    if (/\bmarine\b|\bsaltwater\b/i.test(environment)) candidates.add('saltwater');
+  }
+
+  if (document.publisher === 'Fishipedia') {
+    const habitatStatements = text.match(/(?:vit|évolue|evolue|se rencontre)[^.!?]{0,100}(?:eau douce|eau saum[aâ]tre|eau de mer)/gi) || [];
+    for (const statement of habitatStatements) {
+      if (/eau douce/i.test(statement)) candidates.add('freshwater');
+      if (/eau saum[aâ]tre/i.test(statement)) candidates.add('brackish');
+      if (/eau de mer/i.test(statement)) candidates.add('saltwater');
+    }
+  }
+
+  return candidates.size === 1 ? [...candidates][0] : null;
+};
+
+const explicitRange = (text: string, label: RegExp) => {
+  const normalized = normalizedEvidenceText(text);
+  const match = normalized.match(new RegExp(
+    `${label.source}\\s*:?\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:°\\s*C)?\\s*(?:-|à|a|to)\\s*(\\d+(?:[.,]\\d+)?)\\s*(?:°\\s*C)?`,
+    label.flags.includes('i') ? 'i' : undefined,
+  ));
+  if (!match) return null;
+  const first = parsedNumber(match[1]);
+  const second = parsedNumber(match[2]);
+  if (first === null || second === null) return null;
+  return { min: Math.min(first, second), max: Math.max(first, second) };
+};
+
+const explicitAdultSizeFromDocument = (document: VerifiedDocument) => {
+  const text = normalizedEvidenceText(document.text);
+  const pattern = document.publisher === 'FishBase'
+    ? /\bMax(?:imum)?\s+length\s*:?\s*(\d+(?:[.,]\d+)?)\s*(mm|cm|m)\b/i
+    : document.publisher === 'Fishipedia'
+      ? /\btaille\s+max(?:imale)?\.?\s*:?\s*(\d+(?:[.,]\d+)?)\s*(mm|cm|m)\b/i
+      : null;
+  if (!pattern) return null;
+  const match = text.match(pattern);
+  if (!match) return null;
+  const value = parsedNumber(match[1]);
+  if (value === null) return null;
+  return { min: null, max: centimeters(value, match[2]) };
+};
+
+const explicitTankSizeFromDocument = (document: VerifiedDocument) => {
+  if (document.publisher !== 'Fishipedia') return null;
+  const text = normalizedEvidenceText(document.text);
+  const match = text.match(/\bvolume\s+(?:min\.?|minimum|minimal)\s*:?\s*(\d+(?:[.,]\d+)?)\s*(l|litres?|liters?)\b/i);
+  if (!match) return null;
+  const liters = parsedNumber(match[1]);
+  return liters === null ? null : { liters, lengthCm: null };
+};
+
+const deterministicClaimsFromDocuments = (
+  documents: VerifiedDocument[],
+  targetFields: CompatibilityOnboardingCoreField[] = [],
+): ExtractionOutput => {
+  const targetSet = new Set(targetFields);
+  const allows = (field: CompatibilityOnboardingCoreField) => (
+    deterministicNumericFields.has(field) && (targetSet.size === 0 || targetSet.has(field))
+  );
+  const claims: ExtractionOutput['claims'] = [];
+
+  for (const document of documents) {
+    if (!['FishBase', 'Fishipedia'].includes(document.publisher)) continue;
+    const push = (field: CompatibilityOnboardingCoreField, proposedValue: unknown, note: string) => {
+      if (!allows(field) || proposedValue === null) return;
+      claims.push({
+        field,
+        proposedValue,
+        sourceUrl: document.url,
+        evidenceKind: 'direct',
+        confidence: 'high',
+        note,
+      });
+    };
+
+    push('water', explicitWaterFromDocument(document), 'Deterministic parser matched an explicit water/environment statement on the verified exact-taxon source.');
+
+    if (document.publisher === 'Fishipedia') {
+      push('temperature', explicitRange(document.text, /(?:Température|Temperature)/i), 'Deterministic parser matched an explicit labelled temperature range on the verified exact-taxon source.');
+      push('ph', explicitRange(document.text, /\bpH(?:\s*\([^)]{0,40}\))?/i), 'Deterministic parser matched an explicit labelled pH range on the verified exact-taxon source.');
+    }
+
+    push('adult_size', explicitAdultSizeFromDocument(document), 'Deterministic parser matched an explicit maximum adult-length label on the verified exact-taxon source.');
+    push('tank_size', explicitTankSizeFromDocument(document), 'Deterministic parser matched an explicit minimum aquarium-volume label on the verified exact-taxon source.');
+  }
+
+  return { claims };
+};
+
+const mergeExtractionOutputs = (...outputs: ExtractionOutput[]): ExtractionOutput => {
+  let claims: ExtractionOutput['claims'] = [];
+  outputs.forEach((output, outputIndex) => {
+    if (outputIndex > 0) {
+      const replacementKeys = new Set(output.claims.map(claim => (
+        [claim.field, canonicalSourceUrl(claim.sourceUrl) ?? claim.sourceUrl].join('|')
+      )));
+      // A later extractor replaces earlier fallback claims for the same
+      // field+source, but multiple claims from the later extractor are retained
+      // for the domain-scope and conflict filters to evaluate independently.
+      claims = claims.filter(claim => !replacementKeys.has(
+        [claim.field, canonicalSourceUrl(claim.sourceUrl) ?? claim.sourceUrl].join('|'),
+      ));
+    }
+    claims.push(...output.claims);
+  });
+  return { claims };
+};
 
 type ExtractionBatchResult = {
   output: ExtractionOutput;
@@ -786,12 +975,13 @@ export const createBailianCompatibilitySpeciesResearchProvider = (
     const targetFields = input.targetFields ?? [];
     const candidates = await discoveryCandidates(config, fetchImpl, input.scientificName, input.commonName, targetFields);
     const documents = await verifiedDocuments(candidates, input.scientificName, config, fetchImpl);
-    let extraction: ExtractionOutput = { claims: [] };
+    const deterministicExtraction = deterministicClaimsFromDocuments(documents, targetFields);
+    let extraction: ExtractionOutput = deterministicExtraction;
     let extractionStatus: 'ok' | 'not_attempted' | 'partial_transport_unavailable' | 'transport_unavailable' = documents.length > 0 ? 'ok' : 'not_attempted';
     let transportErrorCode: 'retryable_network_error' | undefined;
     if (documents.length > 0) {
       const extracted = await extractedClaims(config, fetchImpl, input.scientificName, documents, targetFields);
-      extraction = extracted.output;
+      extraction = mergeExtractionOutputs(deterministicExtraction, extracted.output);
       if (extracted.transportFailures > 0) {
         extractionStatus = extracted.successfulDocuments > 0 ? 'partial_transport_unavailable' : 'transport_unavailable';
         transportErrorCode = 'retryable_network_error';

@@ -786,9 +786,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 48, '336 actionable field gaps should collapse to 48 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 48, '320 actionable field gaps should collapse to 48 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 91, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 90, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');

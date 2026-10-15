@@ -28,6 +28,13 @@ type BatchResult = {
   variantCandidateFieldHits: number;
   assessmentStatus: string;
   reasonCodes: string[];
+  reviewCandidates: Array<{
+    field: string;
+    proposedValue: unknown;
+    sourceIds: string[];
+    sourceUrls: string[];
+    notes: string[];
+  }>;
   elapsedMs: number;
 };
 
@@ -146,6 +153,7 @@ export const runCompatibilityResearchBatchDryRun = async ({
           variantCandidateFieldHits: 0,
           assessmentStatus: 'identity_hold',
           reasonCodes: ['research_plan_identity_unresolved'],
+          reviewCandidates: [],
           elapsedMs: Date.now() - started,
         };
         continue;
@@ -171,6 +179,7 @@ export const runCompatibilityResearchBatchDryRun = async ({
             variantCandidateFieldHits: 0,
             assessmentStatus: 'identity_hold',
             reasonCodes: [identity.reasonCode || 'identity_unresolved'],
+            reviewCandidates: [],
             elapsedMs: Date.now() - started,
           };
           continue;
@@ -180,12 +189,23 @@ export const runCompatibilityResearchBatchDryRun = async ({
           catalogKey: job.researchKey.replace(/[^\w.-]+/g, '_').slice(0, 160),
           scientificName,
           commonName: job.catalogObjects[0]?.name,
+          targetFields: job.combinedGapFields,
         });
         const assessment = assessCompatibilitySpeciesResearchPacket(packet);
         const supportedFields = assessment.fieldResolutions
           .filter(field => field.status === 'supported')
           .map(field => field.field);
         const gapHits = job.combinedGapFields.filter(field => supportedFields.includes(field));
+        const sourceUrlById = new Map(packet.sources.map(source => [source.id, source.url] as const));
+        const reviewCandidates = assessment.fieldResolutions
+          .filter(field => field.status === 'supported' && gapHits.includes(field.field))
+          .map(field => ({
+            field: field.field,
+            proposedValue: field.proposedValue,
+            sourceIds: field.sourceIds,
+            sourceUrls: field.sourceIds.map(id => sourceUrlById.get(id)).filter((url): url is string => Boolean(url)),
+            notes: field.notes,
+          }));
         const potentialCatalogFieldClosures = job.catalogObjects.reduce((count, object) => (
           count + (object.isVariant ? 0 : object.gaps.filter(field => gapHits.includes(field)).length)
         ), 0);
@@ -209,6 +229,7 @@ export const runCompatibilityResearchBatchDryRun = async ({
           variantCandidateFieldHits,
           assessmentStatus: assessment.status,
           reasonCodes: assessment.reasonCodes,
+          reviewCandidates,
           elapsedMs: Date.now() - started,
         };
       } catch (error) {
@@ -229,6 +250,7 @@ export const runCompatibilityResearchBatchDryRun = async ({
           variantCandidateFieldHits: 0,
           assessmentStatus: 'provider_error',
           reasonCodes: [error instanceof Error ? error.message : String(error)],
+          reviewCandidates: [],
           elapsedMs: Date.now() - started,
         };
       }
@@ -254,11 +276,13 @@ const main = async () => {
   const readiness = getCompatibilitySpeciesResearchProviderReadiness();
   if (!readiness.configured) throw new Error('compatibility_research_provider_not_configured');
   const allJobs = buildCompatibilityTaxonResearchPlan();
-  const limit = Math.max(1, Math.min(allJobs.length, Number(arg('limit') || allJobs.length)));
+  const offset = Math.max(0, Math.min(allJobs.length, Number(arg('offset') || 0)));
+  const remaining = Math.max(0, allJobs.length - offset);
+  const limit = Math.max(1, Math.min(remaining || 1, Number(arg('limit') || remaining || 1)));
   const concurrency = Math.max(1, Math.min(8, Number(arg('concurrency') || 4)));
   const output = arg('output') || 'evaluation/reports/compatibility-research-dryrun.json';
-  const jobs = allJobs.slice(0, limit);
-  console.log(JSON.stringify({ readiness, jobs: jobs.length, totalPlanJobs: allJobs.length, concurrency, writesAuthority: false }, null, 2));
+  const jobs = allJobs.slice(offset, offset + limit);
+  console.log(JSON.stringify({ readiness, jobs: jobs.length, totalPlanJobs: allJobs.length, offset, limit, concurrency, writesAuthority: false }, null, 2));
   const report = await runCompatibilityResearchBatchDryRun({
     jobs,
     identityResolver: createGbifSpeciesIdentityResolver(),

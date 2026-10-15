@@ -465,6 +465,90 @@ const persistentAssessment = assessCompatibilitySpeciesResearchPacket(persistent
 assert.equal(persistentAssessment.status, 'research_pending');
 assert.ok(persistentAssessment.reasonCodes.includes('provider_extraction_transport_unavailable'));
 
+let deterministicFishBaseExtractionAttempts = 0;
+const deterministicFishBaseOutageFetch: typeof fetch = async (input, init) => {
+  const url = new URL(String(input));
+  if (url.hostname === 'workspace.cn-beijing.maas.aliyuncs.com') {
+    const body = JSON.parse(String(init?.body || '{}')) as Record<string, unknown>;
+    if (body.enable_search === true) {
+      return new Response(JSON.stringify({
+        choices: [{ message: { content: JSON.stringify({ candidates: [{ url: fishBaseTemplateUrl }] }) } }],
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+    deterministicFishBaseExtractionAttempts += 1;
+    const error = new TypeError('fetch failed');
+    (error as TypeError & { cause?: Error }).cause = new Error('Client network socket disconnected before secure TLS connection was established');
+    throw error;
+  }
+  if (url.toString() === fishBaseTemplateUrl) {
+    return new Response(fishBaseHtml, { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  }
+  if (
+    url.hostname === 'www.fishbase.se'
+    || url.hostname === 'www.fishbase.org'
+    || url.hostname === 'www.seriouslyfish.com'
+    || url.hostname === 'animaldiversity.org'
+    || url.hostname === 'www.fishipedia.fr'
+  ) return new Response('not found', { status: 404, headers: { 'content-type': 'text/html' } });
+  throw new Error('unexpected deterministic FishBase outage fetch: ' + url);
+};
+const deterministicFishBasePacket = await createBailianCompatibilitySpeciesResearchProvider(config, deterministicFishBaseOutageFetch).research({
+  catalogKey: 'deterministic_fishbase_transport_fallback',
+  scientificName,
+  targetFields: ['water', 'adult_size', 'predation'],
+});
+assert.equal(deterministicFishBaseExtractionAttempts, 3, 'AI extraction still gets its bounded retry budget before deterministic fallback is used');
+assert.deepEqual(
+  deterministicFishBasePacket.claims.map(claim => claim.field).sort(),
+  ['adult_size', 'water'],
+  'verified FishBase labels may deterministically preserve only explicit environment/size facts during AI transport failure',
+);
+assert.equal(deterministicFishBasePacket.claims.some(claim => claim.field === 'predation'), false, 'deterministic fallback must never infer predation from FishBase diet/ecology text');
+assert.equal(deterministicFishBasePacket.diagnostics?.extractionStatus, 'transport_unavailable');
+const deterministicFishBaseAssessment = assessCompatibilitySpeciesResearchPacket(deterministicFishBasePacket);
+assert.equal(deterministicFishBaseAssessment.fieldResolutions.find(item => item.field === 'water')?.status, 'supported');
+assert.equal(deterministicFishBaseAssessment.fieldResolutions.find(item => item.field === 'adult_size')?.status, 'supported');
+
+let deterministicFishipediaExtractionAttempts = 0;
+const deterministicFishipediaOutageFetch: typeof fetch = async (input, init) => {
+  const url = new URL(String(input));
+  if (url.hostname === 'workspace.cn-beijing.maas.aliyuncs.com') {
+    const body = JSON.parse(String(init?.body || '{}')) as Record<string, unknown>;
+    if (body.enable_search === true) {
+      return new Response(JSON.stringify({
+        choices: [{ message: { content: JSON.stringify({ candidates: [{ url: fishipediaTemplateUrl }] }) } }],
+      }), { status: 200, headers: { 'content-type': 'application/json' } });
+    }
+    deterministicFishipediaExtractionAttempts += 1;
+    const error = new TypeError('fetch failed');
+    (error as TypeError & { cause?: Error }).cause = new Error('Client network socket disconnected before secure TLS connection was established');
+    throw error;
+  }
+  if (url.toString() === fishipediaTemplateUrl) {
+    const longLeadingNavigation = '<p>' + 'Navigation filler without husbandry evidence. '.repeat(1800) + '</p>';
+    return new Response(fishipediaHtml.replace('<body>', '<body>' + longLeadingNavigation), { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } });
+  }
+  if (
+    url.hostname === 'www.fishbase.se'
+    || url.hostname === 'www.fishbase.org'
+    || url.hostname === 'www.seriouslyfish.com'
+    || url.hostname === 'animaldiversity.org'
+  ) return new Response('not found', { status: 404, headers: { 'content-type': 'text/html' } });
+  throw new Error('unexpected deterministic Fishipedia outage fetch: ' + url);
+};
+const deterministicFishipediaPacket = await createBailianCompatibilitySpeciesResearchProvider(config, deterministicFishipediaOutageFetch).research({
+  catalogKey: 'deterministic_fishipedia_transport_fallback',
+  scientificName,
+  targetFields: ['water', 'temperature', 'ph', 'adult_size', 'tank_size', 'social_behavior'],
+});
+assert.equal(deterministicFishipediaExtractionAttempts, 3);
+assert.deepEqual(
+  deterministicFishipediaPacket.claims.map(claim => claim.field).sort(),
+  ['adult_size', 'ph', 'tank_size', 'temperature', 'water'],
+  'verified Fishipedia explicit labels may close numeric/environment fields without widening into social inference',
+);
+assert.equal(deterministicFishipediaPacket.claims.some(claim => claim.field === 'social_behavior'), false);
+
 const planetCatfishUrl = 'https://www.planetcatfish.com/cotm/cotm.php?article_id=999';
 const planetCatfishForumUrl = 'https://www.planetcatfish.com/forum/viewtopic.php?t=999';
 const planetCatfishLegacyUrl = 'https://www.planetcatfish.com/catelog/species.php?species_id=107';

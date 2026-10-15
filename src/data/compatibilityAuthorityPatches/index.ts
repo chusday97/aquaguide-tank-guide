@@ -173,6 +173,20 @@ import {
   compatibilityHighImpactWave20Sources,
   compatibilityHighImpactWave20VerifiedSourceIds,
 } from './high-impact-wave20-20261015';
+import {
+  compatibilityResearchCoverageWave21AuthorityPatch,
+  compatibilityResearchCoverageWave21FieldReviews,
+  compatibilityResearchCoverageWave21ProfilePatches,
+  compatibilityResearchCoverageWave21Sources,
+  compatibilityResearchCoverageWave21VerifiedSourceIds,
+} from './research-coverage-wave21-20261015';
+import {
+  compatibilityPredationWave22AuthorityPatch,
+  compatibilityPredationWave22FieldReviews,
+  compatibilityPredationWave22ProfilePatches,
+  compatibilityPredationWave22Sources,
+  compatibilityPredationWave22VerifiedSourceIds,
+} from './predation-wave22-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -200,6 +214,8 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityHighImpactWave18Sources,
   ...compatibilityHighImpactWave19Sources,
   ...compatibilityHighImpactWave20Sources,
+  ...compatibilityResearchCoverageWave21Sources,
+  ...compatibilityPredationWave22Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -228,6 +244,8 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityHighImpactWave18FieldReviews,
   ...compatibilityHighImpactWave19FieldReviews,
   ...compatibilityHighImpactWave20FieldReviews,
+  ...compatibilityResearchCoverageWave21FieldReviews,
+  ...compatibilityPredationWave22FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -256,6 +274,8 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityHighImpactWave18VerifiedSourceIds,
   ...compatibilityHighImpactWave19VerifiedSourceIds,
   ...compatibilityHighImpactWave20VerifiedSourceIds,
+  ...compatibilityResearchCoverageWave21VerifiedSourceIds,
+  ...compatibilityPredationWave22VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -284,6 +304,8 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityHighImpactWave18ProfilePatches,
   ...compatibilityHighImpactWave19ProfilePatches,
   ...compatibilityHighImpactWave20ProfilePatches,
+  ...compatibilityResearchCoverageWave21ProfilePatches,
+  ...compatibilityPredationWave22ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -312,4 +334,6 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityHighImpactWave18AuthorityPatch,
   compatibilityHighImpactWave19AuthorityPatch,
   compatibilityHighImpactWave20AuthorityPatch,
+  compatibilityResearchCoverageWave21AuthorityPatch,
+  compatibilityPredationWave22AuthorityPatch,
 ] as const;
