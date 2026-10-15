@@ -12,27 +12,27 @@
   "statuses": {
     "compatible": 632,
     "caution": 1712,
-    "not_recommended": 16490,
-    "insufficient_data": 29061
+    "not_recommended": 16729,
+    "insufficient_data": 28822
   },
-  "decisionCoveragePct": 39.32,
+  "decisionCoveragePct": 39.82,
   "fullyInformedPairs": 5995,
   "fullyInformedUnknownPairs": 0,
   "unknownReasons": {
     "missing_user_input": 0,
-    "unresolved_identity": 22386,
-    "public_evidence_insufficient": 6675,
+    "unresolved_identity": 22270,
+    "public_evidence_insufficient": 6552,
     "missing_species_fact": 0,
     "other": 0
   },
   "leverageQueues": {
-    "policy": "Prioritize exact-taxon evidence gaps that unlock the most UNKNOWN pairs; keep identity/domain holds in a separate queue.",
+    "policy": "Prioritize reviewed evidence work by actual UNKNOWN-pair impact. affectedUnknownPairs means the taxon participates in that many current UNKNOWN pairs; it is not a guarantee that resolving the taxon alone will unlock every pair because the opposite species or non-core facts can remain blocking.",
     "highestLeverageEvidenceTargets": [
       {
         "speciesId": "sp_0011",
         "name": "月光鱼",
         "scientificName": "Xiphophorus maculatus",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "predation"
         ],
@@ -42,7 +42,7 @@
         "speciesId": "sp_0013",
         "name": "小精灵",
         "scientificName": "Otocinclus vittatus",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "predation"
         ],
@@ -52,7 +52,7 @@
         "speciesId": "sp_0151",
         "name": "彩色天使鱼（彩色裙鱼）",
         "scientificName": "Gymnocorymbus ternetzi var. Color morph",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "predation"
         ],
@@ -62,7 +62,7 @@
         "speciesId": "sp_0433",
         "name": "红鼻剪刀",
         "scientificName": "Hemigrammus rhodostomus",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "predation"
         ],
@@ -72,7 +72,7 @@
         "speciesId": "sp_0062",
         "name": "红眼灯",
         "scientificName": "Moenkhausia sanctaefilomenae",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "territoriality",
           "predation"
@@ -83,7 +83,7 @@
         "speciesId": "sp_0125",
         "name": "雪球异型 (L102)",
         "scientificName": "Hypancistrus inspector",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "territoriality",
           "predation"
@@ -94,7 +94,7 @@
         "speciesId": "sp_0052",
         "name": "月光鼠",
         "scientificName": "Corydoras hastatus",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "tank_size",
           "territoriality",
@@ -106,7 +106,7 @@
         "speciesId": "sp_0026",
         "name": "清道夫",
         "scientificName": "Hypostomus plecostomus",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "tank_size",
           "social_behavior",
@@ -119,7 +119,7 @@
         "speciesId": "sp_0042",
         "name": "麦穗鱼",
         "scientificName": "Pseudorasbora parva",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "temperature",
           "ph",
@@ -133,7 +133,7 @@
         "speciesId": "sp_0051",
         "name": "光唇鱼",
         "scientificName": "Acrossocheilus fasciatus",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "temperature",
           "ph",
@@ -147,7 +147,7 @@
         "speciesId": "sp_0069",
         "name": "红白锦鲤",
         "scientificName": "Cyprinus carpio var.",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "temperature",
           "ph",
@@ -161,7 +161,7 @@
         "speciesId": "sp_0070",
         "name": "蝴蝶鲤",
         "scientificName": "Cyprinus carpio var. Longfin",
-        "unknownPairs": 182,
+        "unknownPairs": 181,
         "actionableFields": [
           "temperature",
           "ph",
@@ -222,6 +222,2721 @@
         "terminalReasons": []
       }
     ],
+    "taxonDecisionImpactQueue": [
+      {
+        "researchKey": "Gymnocorymbus ternetzi",
+        "baseScientificName": "Gymnocorymbus ternetzi",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Otocinclus vittatus",
+        "baseScientificName": "Otocinclus vittatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Petitella rhodostoma",
+        "baseScientificName": "Petitella rhodostoma",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Xiphophorus maculatus",
+        "baseScientificName": "Xiphophorus maculatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Hypancistrus inspector",
+        "baseScientificName": "Hypancistrus inspector",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 90.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Moenkhausia sanctaefilomenae",
+        "baseScientificName": "Moenkhausia sanctaefilomenae",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 90.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Corydoras hastatus",
+        "baseScientificName": "Corydoras hastatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 3,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 60.33,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 165
+      },
+      {
+        "researchKey": "Osteoglossum ferreirai",
+        "baseScientificName": "Osteoglossum ferreirai",
+        "completionEligible": true,
+        "affectedUnknownPairs": 113,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 56.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Hypostomus plecostomus",
+        "baseScientificName": "Hypostomus plecostomus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 45.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Cyprinus carpio",
+        "baseScientificName": "Cyprinus carpio",
+        "completionEligible": true,
+        "affectedUnknownPairs": 362,
+        "gapInstances": 10,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 36.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Acrossocheilus fasciatus",
+        "baseScientificName": "Acrossocheilus fasciatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 36.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Pseudorasbora parva",
+        "baseScientificName": "Pseudorasbora parva",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 36.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Opsariichthys bidens",
+        "baseScientificName": "Opsariichthys bidens",
+        "completionEligible": true,
+        "affectedUnknownPairs": 226,
+        "gapInstances": 8,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 28.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Salminus brasiliensis",
+        "baseScientificName": "Salminus brasiliensis",
+        "completionEligible": true,
+        "affectedUnknownPairs": 113,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 28.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Pterophyllum altum",
+        "baseScientificName": "Pterophyllum altum",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 173
+      },
+      {
+        "researchKey": "Pomacanthus annularis",
+        "baseScientificName": "Pomacanthus annularis",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 3,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 175
+      },
+      {
+        "researchKey": "Zacco platypus",
+        "baseScientificName": "Zacco platypus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 3,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 175
+      },
+      {
+        "researchKey": "Pterois volitans",
+        "baseScientificName": "Pterois volitans",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Rhodeus ocellatus",
+        "baseScientificName": "Rhodeus ocellatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Xanthichthys mento",
+        "baseScientificName": "Xanthichthys mento",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Amphiprion ocellaris",
+        "baseScientificName": "Amphiprion ocellaris",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Chrysiptera cyanea",
+        "baseScientificName": "Chrysiptera cyanea",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Lutjanus kasmira",
+        "baseScientificName": "Lutjanus kasmira",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Paracanthurus hepatus",
+        "baseScientificName": "Paracanthurus hepatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Zebrasoma flavescens",
+        "baseScientificName": "Zebrasoma flavescens",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Hemigrammus rodwayi",
+        "baseScientificName": "Hemigrammus rodwayi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 238,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Nannostomus beckfordi",
+        "baseScientificName": "Nannostomus beckfordi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 238,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Tachysurus fulvidraco",
+        "baseScientificName": "Tachysurus fulvidraco",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 2,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 128,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 124
+      },
+      {
+        "researchKey": "Abbottina rivularis",
+        "baseScientificName": "Abbottina rivularis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Acheilognathus macropterus",
+        "baseScientificName": "Acheilognathus macropterus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Chaetodon auriga",
+        "baseScientificName": "Chaetodon auriga",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Cobitis sinensis",
+        "baseScientificName": "Cobitis sinensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Erpetoichthys calabaricus",
+        "baseScientificName": "Erpetoichthys calabaricus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pangio kuhlii",
+        "baseScientificName": "Pangio kuhlii",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Parambassis ranga",
+        "baseScientificName": "Parambassis ranga",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pterapogon kauderni",
+        "baseScientificName": "Pterapogon kauderni",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Semaprochilodus taeniurus",
+        "baseScientificName": "Semaprochilodus taeniurus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Synchiropus splendidus",
+        "baseScientificName": "Synchiropus splendidus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Synodontis nigriventris",
+        "baseScientificName": "Synodontis nigriventris",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Semaprochilodus insignis",
+        "baseScientificName": "Semaprochilodus insignis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 511,
+        "gapInstances": 10,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 2,
+        "impactPerGap": 51.1,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Crossocheilus langei",
+        "baseScientificName": "Crossocheilus langei",
+        "completionEligible": false,
+        "affectedUnknownPairs": 765,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 51,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Sahyadria denisonii",
+        "baseScientificName": "Sahyadria denisonii",
+        "completionEligible": false,
+        "affectedUnknownPairs": 765,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 51,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Carassius auratus",
+        "baseScientificName": "Carassius auratus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 3006,
+        "gapInstances": 60,
+        "terminalGapInstances": 36,
+        "terminalBlockedCatalogObjects": 12,
+        "impactPerGap": 50.1,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 12,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Poecilia latipinna",
+        "baseScientificName": "Poecilia latipinna",
+        "completionEligible": false,
+        "affectedUnknownPairs": 1252,
+        "gapInstances": 25,
+        "terminalGapInstances": 15,
+        "terminalBlockedCatalogObjects": 5,
+        "impactPerGap": 50.08,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 5,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Trichopodus leerii",
+        "baseScientificName": "Trichopodus leerii",
+        "completionEligible": false,
+        "affectedUnknownPairs": 747,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 49.8,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Aphyocypris chinensis",
+        "baseScientificName": "Aphyocypris chinensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Epiplatys annulatus",
+        "baseScientificName": "Epiplatys annulatus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Hyphessobrycon herbertaxelrodi",
+        "baseScientificName": "Hyphessobrycon herbertaxelrodi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Hyphessobrycon megalopterus",
+        "baseScientificName": "Hyphessobrycon megalopterus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Melanotaenia praecox",
+        "baseScientificName": "Melanotaenia praecox",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Moenkhausia pittieri",
+        "baseScientificName": "Moenkhausia pittieri",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pseudomugil furcatus",
+        "baseScientificName": "Pseudomugil furcatus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Thayeria boehlkei",
+        "baseScientificName": "Thayeria boehlkei",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Sphaerichthys osphromenoides",
+        "baseScientificName": "Sphaerichthys osphromenoides",
+        "completionEligible": false,
+        "affectedUnknownPairs": 475,
+        "gapInstances": 10,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 2,
+        "impactPerGap": 47.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Poecilia sphenops",
+        "baseScientificName": "Poecilia sphenops",
+        "completionEligible": false,
+        "affectedUnknownPairs": 711,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 47.4,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Danio rerio",
+        "baseScientificName": "Danio rerio",
+        "completionEligible": false,
+        "affectedUnknownPairs": 1645,
+        "gapInstances": 35,
+        "terminalGapInstances": 21,
+        "terminalBlockedCatalogObjects": 7,
+        "impactPerGap": 47,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 7,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Amatitlania nigrofasciata",
+        "baseScientificName": "Amatitlania nigrofasciata",
+        "completionEligible": false,
+        "affectedUnknownPairs": 543,
+        "gapInstances": 12,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 45.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 141
+      },
+      {
+        "researchKey": "Channa argus",
+        "baseScientificName": "Channa argus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 124
+      },
+      {
+        "researchKey": "Beaufortia kweichowensis",
+        "baseScientificName": "Beaufortia kweichowensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pseudogastromyzon fangi",
+        "baseScientificName": "Pseudogastromyzon fangi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Sawbwa resplendens",
+        "baseScientificName": "Sawbwa resplendens",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Channa asiatica",
+        "baseScientificName": "Channa asiatica",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 6,
+        "terminalGapInstances": 1,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 173
+      },
+      {
+        "researchKey": "Tanichthys albonubes",
+        "baseScientificName": "Tanichthys albonubes",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Betta splendens",
+        "baseScientificName": "Betta splendens",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 29,
+        "terminalGapInstances": 8,
+        "terminalBlockedCatalogObjects": 8,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 8,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 173
+      }
+    ],
+    "completionEligibleTaxonQueue": [
+      {
+        "researchKey": "Gymnocorymbus ternetzi",
+        "baseScientificName": "Gymnocorymbus ternetzi",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Otocinclus vittatus",
+        "baseScientificName": "Otocinclus vittatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Petitella rhodostoma",
+        "baseScientificName": "Petitella rhodostoma",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Xiphophorus maculatus",
+        "baseScientificName": "Xiphophorus maculatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 1,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 181,
+        "nearReadyCatalogObjects": 1,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 191
+      },
+      {
+        "researchKey": "Hypancistrus inspector",
+        "baseScientificName": "Hypancistrus inspector",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 90.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Moenkhausia sanctaefilomenae",
+        "baseScientificName": "Moenkhausia sanctaefilomenae",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 90.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Corydoras hastatus",
+        "baseScientificName": "Corydoras hastatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 3,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 60.33,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 165
+      },
+      {
+        "researchKey": "Osteoglossum ferreirai",
+        "baseScientificName": "Osteoglossum ferreirai",
+        "completionEligible": true,
+        "affectedUnknownPairs": 113,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 56.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 183
+      },
+      {
+        "researchKey": "Hypostomus plecostomus",
+        "baseScientificName": "Hypostomus plecostomus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 45.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "social_behavior",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Cyprinus carpio",
+        "baseScientificName": "Cyprinus carpio",
+        "completionEligible": true,
+        "affectedUnknownPairs": 362,
+        "gapInstances": 10,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 36.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Acrossocheilus fasciatus",
+        "baseScientificName": "Acrossocheilus fasciatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 36.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Pseudorasbora parva",
+        "baseScientificName": "Pseudorasbora parva",
+        "completionEligible": true,
+        "affectedUnknownPairs": 181,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 36.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Opsariichthys bidens",
+        "baseScientificName": "Opsariichthys bidens",
+        "completionEligible": true,
+        "affectedUnknownPairs": 226,
+        "gapInstances": 8,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 28.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Salminus brasiliensis",
+        "baseScientificName": "Salminus brasiliensis",
+        "completionEligible": true,
+        "affectedUnknownPairs": 113,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 28.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Pterophyllum altum",
+        "baseScientificName": "Pterophyllum altum",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 173
+      },
+      {
+        "researchKey": "Pomacanthus annularis",
+        "baseScientificName": "Pomacanthus annularis",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 3,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 175
+      },
+      {
+        "researchKey": "Zacco platypus",
+        "baseScientificName": "Zacco platypus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 3,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 175
+      },
+      {
+        "researchKey": "Pterois volitans",
+        "baseScientificName": "Pterois volitans",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Rhodeus ocellatus",
+        "baseScientificName": "Rhodeus ocellatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Xanthichthys mento",
+        "baseScientificName": "Xanthichthys mento",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 4,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 167
+      },
+      {
+        "researchKey": "Amphiprion ocellaris",
+        "baseScientificName": "Amphiprion ocellaris",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Chrysiptera cyanea",
+        "baseScientificName": "Chrysiptera cyanea",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Lutjanus kasmira",
+        "baseScientificName": "Lutjanus kasmira",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Paracanthurus hepatus",
+        "baseScientificName": "Paracanthurus hepatus",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      },
+      {
+        "researchKey": "Zebrasoma flavescens",
+        "baseScientificName": "Zebrasoma flavescens",
+        "completionEligible": true,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 0,
+        "terminalBlockedCatalogObjects": 0,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "tank_size",
+          "territoriality",
+          "predation"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 159
+      }
+    ],
+    "terminalBlockedTaxonQueue": [
+      {
+        "researchKey": "Hemigrammus rodwayi",
+        "baseScientificName": "Hemigrammus rodwayi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 238,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Nannostomus beckfordi",
+        "baseScientificName": "Nannostomus beckfordi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 1,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 238,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 142
+      },
+      {
+        "researchKey": "Tachysurus fulvidraco",
+        "baseScientificName": "Tachysurus fulvidraco",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 2,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 128,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 124
+      },
+      {
+        "researchKey": "Abbottina rivularis",
+        "baseScientificName": "Abbottina rivularis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Acheilognathus macropterus",
+        "baseScientificName": "Acheilognathus macropterus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Chaetodon auriga",
+        "baseScientificName": "Chaetodon auriga",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Cobitis sinensis",
+        "baseScientificName": "Cobitis sinensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Erpetoichthys calabaricus",
+        "baseScientificName": "Erpetoichthys calabaricus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pangio kuhlii",
+        "baseScientificName": "Pangio kuhlii",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Parambassis ranga",
+        "baseScientificName": "Parambassis ranga",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pterapogon kauderni",
+        "baseScientificName": "Pterapogon kauderni",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Semaprochilodus taeniurus",
+        "baseScientificName": "Semaprochilodus taeniurus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Synchiropus splendidus",
+        "baseScientificName": "Synchiropus splendidus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Synodontis nigriventris",
+        "baseScientificName": "Synodontis nigriventris",
+        "completionEligible": false,
+        "affectedUnknownPairs": 256,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 51.2,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Semaprochilodus insignis",
+        "baseScientificName": "Semaprochilodus insignis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 511,
+        "gapInstances": 10,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 2,
+        "impactPerGap": 51.1,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Crossocheilus langei",
+        "baseScientificName": "Crossocheilus langei",
+        "completionEligible": false,
+        "affectedUnknownPairs": 765,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 51,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Sahyadria denisonii",
+        "baseScientificName": "Sahyadria denisonii",
+        "completionEligible": false,
+        "affectedUnknownPairs": 765,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 51,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Carassius auratus",
+        "baseScientificName": "Carassius auratus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 3006,
+        "gapInstances": 60,
+        "terminalGapInstances": 36,
+        "terminalBlockedCatalogObjects": 12,
+        "impactPerGap": 50.1,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 12,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Poecilia latipinna",
+        "baseScientificName": "Poecilia latipinna",
+        "completionEligible": false,
+        "affectedUnknownPairs": 1252,
+        "gapInstances": 25,
+        "terminalGapInstances": 15,
+        "terminalBlockedCatalogObjects": 5,
+        "impactPerGap": 50.08,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 5,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Trichopodus leerii",
+        "baseScientificName": "Trichopodus leerii",
+        "completionEligible": false,
+        "affectedUnknownPairs": 747,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 49.8,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Aphyocypris chinensis",
+        "baseScientificName": "Aphyocypris chinensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Epiplatys annulatus",
+        "baseScientificName": "Epiplatys annulatus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Hyphessobrycon herbertaxelrodi",
+        "baseScientificName": "Hyphessobrycon herbertaxelrodi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Hyphessobrycon megalopterus",
+        "baseScientificName": "Hyphessobrycon megalopterus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Melanotaenia praecox",
+        "baseScientificName": "Melanotaenia praecox",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Moenkhausia pittieri",
+        "baseScientificName": "Moenkhausia pittieri",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pseudomugil furcatus",
+        "baseScientificName": "Pseudomugil furcatus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Thayeria boehlkei",
+        "baseScientificName": "Thayeria boehlkei",
+        "completionEligible": false,
+        "affectedUnknownPairs": 238,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 47.6,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Sphaerichthys osphromenoides",
+        "baseScientificName": "Sphaerichthys osphromenoides",
+        "completionEligible": false,
+        "affectedUnknownPairs": 475,
+        "gapInstances": 10,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 2,
+        "impactPerGap": 47.5,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Poecilia sphenops",
+        "baseScientificName": "Poecilia sphenops",
+        "completionEligible": false,
+        "affectedUnknownPairs": 711,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 47.4,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Danio rerio",
+        "baseScientificName": "Danio rerio",
+        "completionEligible": false,
+        "affectedUnknownPairs": 1645,
+        "gapInstances": 35,
+        "terminalGapInstances": 21,
+        "terminalBlockedCatalogObjects": 7,
+        "impactPerGap": 47,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 7,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Amatitlania nigrofasciata",
+        "baseScientificName": "Amatitlania nigrofasciata",
+        "completionEligible": false,
+        "affectedUnknownPairs": 543,
+        "gapInstances": 12,
+        "terminalGapInstances": 6,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 45.25,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 141
+      },
+      {
+        "researchKey": "Channa argus",
+        "baseScientificName": "Channa argus",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 2,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "ph",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 124
+      },
+      {
+        "researchKey": "Beaufortia kweichowensis",
+        "baseScientificName": "Beaufortia kweichowensis",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Pseudogastromyzon fangi",
+        "baseScientificName": "Pseudogastromyzon fangi",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Sawbwa resplendens",
+        "baseScientificName": "Sawbwa resplendens",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 5,
+        "terminalGapInstances": 3,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 1,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": false,
+        "researchDisposition": "exact_taxon_research",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Channa asiatica",
+        "baseScientificName": "Channa asiatica",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 6,
+        "terminalGapInstances": 1,
+        "terminalBlockedCatalogObjects": 1,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 2,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 173
+      },
+      {
+        "researchKey": "Tanichthys albonubes",
+        "baseScientificName": "Tanichthys albonubes",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 15,
+        "terminalGapInstances": 9,
+        "terminalBlockedCatalogObjects": 3,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 3,
+        "combinedGapFields": [
+          "water",
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 110
+      },
+      {
+        "researchKey": "Betta splendens",
+        "baseScientificName": "Betta splendens",
+        "completionEligible": false,
+        "affectedUnknownPairs": 0,
+        "gapInstances": 29,
+        "terminalGapInstances": 8,
+        "terminalBlockedCatalogObjects": 8,
+        "impactPerGap": 0,
+        "nearReadyCatalogObjects": 0,
+        "catalogObjectCount": 8,
+        "combinedGapFields": [
+          "temperature",
+          "ph",
+          "adult_size",
+          "tank_size"
+        ],
+        "requiresVariantBridgeReview": true,
+        "researchDisposition": "base_taxon_candidate_research_with_variant_bridge",
+        "existingCoveragePriorityScore": 173
+      }
+    ],
+    "taxonQueueSummary": {
+      "totalResearchJobs": 64,
+      "completionEligibleJobs": 25,
+      "terminalBlockedJobs": 39,
+      "completionEligibleCatalogObjects": 27,
+      "terminalBlockedCatalogObjects": 82
+    },
     "terminalReasonCounts": [
       {
         "reason": "catalog_variant_identity_unresolved",
@@ -233,7 +2948,7 @@
       },
       {
         "reason": "species_social_not_established",
-        "speciesCount": 26
+        "speciesCount": 25
       },
       {
         "reason": "catalog_scientific_name_unresolved",
@@ -268,47 +2983,47 @@
   "topUnknownRuleCodes": [
     {
       "code": "behavior_evidence_unreviewed",
-      "count": 58119
+      "count": 57641
     },
     {
       "code": "missing_ph",
-      "count": 46102
+      "count": 45755
     },
     {
       "code": "missing_hardness",
-      "count": 11446
+      "count": 11207
     },
     {
       "code": "candidate_water_type_missing",
-      "count": 477
+      "count": 475
     },
     {
       "code": "water_type_unknown",
-      "count": 119
+      "count": 121
     }
   ],
   "coreFieldBacklog": {
-    "actionableGaps": 494,
+    "actionableGaps": 472,
     "fieldActionableGaps": [
       {
         "field": "tank_size",
-        "count": 104
+        "count": 98
       },
       {
         "field": "ph",
-        "count": 101
-      },
-      {
-        "field": "temperature",
         "count": 96
       },
       {
+        "field": "temperature",
+        "count": 91
+      },
+      {
         "field": "adult_size",
-        "count": 83
+        "count": 79
       },
       {
         "field": "water",
-        "count": 69
+        "count": 67
       },
       {
         "field": "territoriality",

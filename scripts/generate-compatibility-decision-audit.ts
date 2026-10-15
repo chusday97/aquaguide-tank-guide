@@ -2,7 +2,10 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { fishData } from '../src/data/fishData';
 import { evaluateCompatibilityDecision } from '../src/modules/knowledge/compatibilityKnowledge';
 import { getLifeType } from '../src/modules/species/species.service';
-import { buildCompatibilityCoreFieldCoverage } from '../src/services/compatibility/compatibility-field-coverage.service';
+import {
+  buildCompatibilityCoreFieldCoverage,
+  buildCompatibilityTaxonResearchPlan,
+} from '../src/services/compatibility/compatibility-field-coverage.service';
 import {
   buildCompatibilityDecisionPlan,
   isCompatibilityDecisionFullyInformed,
@@ -14,6 +17,10 @@ const outputDir = `${root}docs`;
 mkdirSync(outputDir, { recursive: true });
 
 const coverage = buildCompatibilityCoreFieldCoverage();
+const taxonResearchPlan = buildCompatibilityTaxonResearchPlan();
+const researchKeyBySpeciesId = new Map(
+  taxonResearchPlan.flatMap(job => job.catalogObjects.map(object => [object.speciesId, job.researchKey] as const)),
+);
 const compatibilityDomainObjects = fishData.filter(
   species => !['plant', 'hardscape'].includes(getLifeType(species)),
 );
@@ -49,6 +56,7 @@ const unknownReasons: Record<string, number> = {
 };
 const unknownRuleCodes = new Map<string, number>();
 const unknownPairImpactBySpecies = new Map<string, number>();
+const unknownPairImpactByTaxon = new Map<string, number>();
 let fullyInformedPairs = 0;
 let fullyInformedUnknownPairs = 0;
 
@@ -74,6 +82,13 @@ for (let leftIndex = 0; leftIndex < fishDomainSpecies.length; leftIndex += 1) {
     if (decision.status === 'insufficient_data') {
       unknownPairImpactBySpecies.set(left.id, (unknownPairImpactBySpecies.get(left.id) || 0) + 1);
       unknownPairImpactBySpecies.set(right.id, (unknownPairImpactBySpecies.get(right.id) || 0) + 1);
+      const affectedTaxa = new Set(
+        [researchKeyBySpeciesId.get(left.id), researchKeyBySpeciesId.get(right.id)]
+          .filter((researchKey): researchKey is string => Boolean(researchKey)),
+      );
+      for (const researchKey of affectedTaxa) {
+        unknownPairImpactByTaxon.set(researchKey, (unknownPairImpactByTaxon.get(researchKey) || 0) + 1);
+      }
       if (fullyInformed) fullyInformedUnknownPairs += 1;
       const plan = buildCompatibilityDecisionPlan(decision);
       const reason = plan.unknownReason || 'other';
@@ -112,6 +127,48 @@ const highestLeverageEvidenceTargets = speciesImpactRows
   .sort((a, b) => b.unknownPairs - a.unknownPairs || a.actionableFields.length - b.actionableFields.length || a.speciesId.localeCompare(b.speciesId))
   .slice(0, 20);
 
+const taxonDecisionImpactQueue = taxonResearchPlan.map(job => {
+  const gapInstances = job.catalogObjects.reduce((sum, object) => sum + object.gaps.length, 0);
+  const nearReadyCatalogObjects = job.catalogObjects.filter(object => (
+    coverageRowsById.get(object.speciesId)?.authoritativeFieldCount === 7
+  )).length;
+  const terminalGapInstances = job.catalogObjects.reduce((sum, object) => (
+    sum + (coverageRowsById.get(object.speciesId)?.terminalGapCount || 0)
+  ), 0);
+  const terminalBlockedCatalogObjects = job.catalogObjects.filter(object => (
+    (coverageRowsById.get(object.speciesId)?.terminalGapCount || 0) > 0
+  )).length;
+  const completionEligible = terminalGapInstances === 0;
+  const affectedUnknownPairs = unknownPairImpactByTaxon.get(job.researchKey) || 0;
+  return {
+    researchKey: job.researchKey,
+    baseScientificName: job.baseScientificName,
+    completionEligible,
+    affectedUnknownPairs,
+    gapInstances,
+    terminalGapInstances,
+    terminalBlockedCatalogObjects,
+    impactPerGap: gapInstances > 0 ? Number((affectedUnknownPairs / gapInstances).toFixed(2)) : 0,
+    nearReadyCatalogObjects,
+    catalogObjectCount: job.catalogObjectCount,
+    combinedGapFields: job.combinedGapFields,
+    requiresVariantBridgeReview: job.requiresVariantBridgeReview,
+    researchDisposition: job.researchDisposition,
+    existingCoveragePriorityScore: job.priorityScore,
+  };
+}).sort((a, b) => (
+  Number(b.completionEligible) - Number(a.completionEligible)
+  || b.impactPerGap - a.impactPerGap
+  || b.affectedUnknownPairs - a.affectedUnknownPairs
+  || b.nearReadyCatalogObjects - a.nearReadyCatalogObjects
+  || a.gapInstances - b.gapInstances
+  || b.catalogObjectCount - a.catalogObjectCount
+  || a.researchKey.localeCompare(b.researchKey)
+));
+
+const completionEligibleTaxonQueue = taxonDecisionImpactQueue.filter(item => item.completionEligible);
+const terminalBlockedTaxonQueue = taxonDecisionImpactQueue.filter(item => !item.completionEligible);
+
 const terminalReasonCounts = new Map<string, number>();
 for (const item of speciesImpactRows) {
   for (const reason of item.terminalReasons) {
@@ -137,8 +194,18 @@ const report = {
   fullyInformedUnknownPairs,
   unknownReasons,
   leverageQueues: {
-    policy: 'Prioritize exact-taxon evidence gaps that unlock the most UNKNOWN pairs; keep identity/domain holds in a separate queue.',
+    policy: 'Prioritize reviewed evidence work by actual UNKNOWN-pair impact. affectedUnknownPairs means the taxon participates in that many current UNKNOWN pairs; it is not a guarantee that resolving the taxon alone will unlock every pair because the opposite species or non-core facts can remain blocking.',
     highestLeverageEvidenceTargets,
+    taxonDecisionImpactQueue,
+    completionEligibleTaxonQueue,
+    terminalBlockedTaxonQueue,
+    taxonQueueSummary: {
+      totalResearchJobs: taxonDecisionImpactQueue.length,
+      completionEligibleJobs: completionEligibleTaxonQueue.length,
+      terminalBlockedJobs: terminalBlockedTaxonQueue.length,
+      completionEligibleCatalogObjects: completionEligibleTaxonQueue.reduce((sum, item) => sum + item.catalogObjectCount, 0),
+      terminalBlockedCatalogObjects: terminalBlockedTaxonQueue.reduce((sum, item) => sum + item.catalogObjectCount, 0),
+    },
     terminalReasonCounts: [...terminalReasonCounts.entries()]
       .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
       .map(([reason, speciesCount]) => ({ reason, speciesCount })),
