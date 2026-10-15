@@ -61,6 +61,13 @@ import {
   compatibilityNumericWave4Sources,
   compatibilityNumericWave4VerifiedSourceIds,
 } from './numeric-wave4-20261015';
+import {
+  compatibilityNumericWave5AuthorityPatch,
+  compatibilityNumericWave5FieldReviews,
+  compatibilityNumericWave5ProfilePatches,
+  compatibilityNumericWave5Sources,
+  compatibilityNumericWave5VerifiedSourceIds,
+} from './numeric-wave5-20261015';
 
 export const compatibilityAuthorityPatchSources = {
   ...compatibilityFastLanePatchSources,
@@ -72,6 +79,7 @@ export const compatibilityAuthorityPatchSources = {
   ...compatibilityNumericWave2Sources,
   ...compatibilityNumericWave3Sources,
   ...compatibilityNumericWave4Sources,
+  ...compatibilityNumericWave5Sources,
 };
 
 export const compatibilityAuthorityPatchFieldReviews = [
@@ -84,6 +92,7 @@ export const compatibilityAuthorityPatchFieldReviews = [
   ...compatibilityNumericWave2FieldReviews,
   ...compatibilityNumericWave3FieldReviews,
   ...compatibilityNumericWave4FieldReviews,
+  ...compatibilityNumericWave5FieldReviews,
 ];
 
 export const compatibilityAuthorityPatchVerifiedSourceIds = [
@@ -96,6 +105,7 @@ export const compatibilityAuthorityPatchVerifiedSourceIds = [
   ...compatibilityNumericWave2VerifiedSourceIds,
   ...compatibilityNumericWave3VerifiedSourceIds,
   ...compatibilityNumericWave4VerifiedSourceIds,
+  ...compatibilityNumericWave5VerifiedSourceIds,
 ];
 
 export const compatibilityProfileAuthorityPatches = [
@@ -108,6 +118,7 @@ export const compatibilityProfileAuthorityPatches = [
   ...compatibilityNumericWave2ProfilePatches,
   ...compatibilityNumericWave3ProfilePatches,
   ...compatibilityNumericWave4ProfilePatches,
+  ...compatibilityNumericWave5ProfilePatches,
 ];
 
 export const compatibilityAuthorityPatchManifests = [
@@ -120,4 +131,5 @@ export const compatibilityAuthorityPatchManifests = [
   compatibilityNumericWave2AuthorityPatch,
   compatibilityNumericWave3AuthorityPatch,
   compatibilityNumericWave4AuthorityPatch,
+  compatibilityNumericWave5AuthorityPatch,
 ] as const;

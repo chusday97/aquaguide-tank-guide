@@ -1,8 +1,8 @@
 {
   "generatedFrom": "compatibility_core_field_backlog.json",
   "policy": "deduplicate source discovery by biological base taxon; base-taxon evidence for catalog variants is candidate-only and must never auto-promote without reviewed field-scoped variant bridging",
-  "catalogObjects": 108,
-  "totalResearchJobs": 63,
+  "catalogObjects": 107,
+  "totalResearchJobs": 62,
   "variantBridgeJobs": 19,
   "items": [
     {
@@ -1564,6 +1564,35 @@
       ]
     },
     {
+      "researchKey": "Chaetodon auriga",
+      "baseScientificName": "Chaetodon auriga",
+      "priorityScore": 114,
+      "catalogObjectCount": 1,
+      "exactObjectCount": 1,
+      "variantObjectCount": 0,
+      "unresolvedObjectCount": 0,
+      "combinedGapFields": [
+        "ph",
+        "tank_size"
+      ],
+      "requiresVariantBridgeReview": false,
+      "researchDisposition": "exact_taxon_research",
+      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
+      "catalogObjects": [
+        {
+          "speciesId": "sp_0186",
+          "name": "人字蝶",
+          "scientificName": "Chaetodon auriga",
+          "gaps": [
+            "ph",
+            "tank_size"
+          ],
+          "isVariant": false,
+          "isExactBaseTaxon": true
+        }
+      ]
+    },
+    {
       "researchKey": "Aphyocypris chinensis",
       "baseScientificName": "Aphyocypris chinensis",
       "priorityScore": 110,
@@ -1784,41 +1813,6 @@
           ],
           "isVariant": true,
           "isExactBaseTaxon": false
-        }
-      ]
-    },
-    {
-      "researchKey": "Chaetodon auriga",
-      "baseScientificName": "Chaetodon auriga",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0186",
-          "name": "人字蝶",
-          "scientificName": "Chaetodon auriga",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
         }
       ]
     },
@@ -2286,41 +2280,6 @@
           "speciesId": "sp_0039",
           "name": "方氏拟腹吸鳅",
           "scientificName": "Pseudogastromyzon fangi",
-          "gaps": [
-            "water",
-            "temperature",
-            "ph",
-            "adult_size",
-            "tank_size"
-          ],
-          "isVariant": false,
-          "isExactBaseTaxon": true
-        }
-      ]
-    },
-    {
-      "researchKey": "Pterapogon kauderni",
-      "baseScientificName": "Pterapogon kauderni",
-      "priorityScore": 110,
-      "catalogObjectCount": 1,
-      "exactObjectCount": 1,
-      "variantObjectCount": 0,
-      "unresolvedObjectCount": 0,
-      "combinedGapFields": [
-        "water",
-        "temperature",
-        "ph",
-        "adult_size",
-        "tank_size"
-      ],
-      "requiresVariantBridgeReview": false,
-      "researchDisposition": "exact_taxon_research",
-      "promotionPolicy": "Research this exact base taxon once. Any field still requires fetched source verification and reviewed field authority before promotion.",
-      "catalogObjects": [
-        {
-          "speciesId": "sp_0025",
-          "name": "泗水玫瑰",
-          "scientificName": "Pterapogon kauderni",
           "gaps": [
             "water",
             "temperature",

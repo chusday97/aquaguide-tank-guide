@@ -314,6 +314,39 @@ assert.deepEqual(
   [...numericWave4SourceIds].sort(),
   'numeric wave4 exact-taxon evidence must resolve to reviewed source metadata',
 );
+const wave5SpeciesBindings: Array<[string, string]> = [
+  ['sp_0186', 'Chaetodon auriga'],
+  ['sp_0025', 'Pterapogon kauderni'],
+];
+for (const [speciesId, expectedScientificName] of wave5SpeciesBindings) {
+  assert.equal(
+    fishData.find(fish => fish.id === speciesId)?.scientificName,
+    expectedScientificName,
+    'numeric wave5 speciesId must stay bound to the exact reviewed taxon: ' + speciesId,
+  );
+}
+
+assert.deepEqual(approvedValue('sp_0186', 'water'), 'saltwater');
+assert.deepEqual(approvedValue('sp_0186', 'temperature'), { min: 23, max: 27 });
+assert.deepEqual(approvedValue('sp_0186', 'adult_size'), { min: null, max: 23 });
+assert.equal(approvedValue('sp_0186', 'ph'), undefined, 'Chaetodon auriga aquarium pH must remain unresolved without direct species-specific authority');
+assert.equal(approvedValue('sp_0186', 'tank_size'), undefined, 'Chaetodon auriga minimum tank size must remain unresolved without direct species-specific authority');
+
+assert.deepEqual(approvedValue('sp_0025', 'water'), 'saltwater');
+assert.deepEqual(approvedValue('sp_0025', 'temperature'), { min: 25, max: 28 });
+assert.deepEqual(approvedValue('sp_0025', 'ph'), { min: 8.2, max: 8.4 });
+assert.deepEqual(approvedValue('sp_0025', 'adult_size'), { min: null, max: 8 });
+assert.deepEqual(approvedValue('sp_0025', 'tank_size'), { liters: 150, lengthCm: null });
+
+const numericWave5SourceIds = [
+  'fishipedia-chaetodon-auriga-numeric-husbandry',
+  'fishipedia-pterapogon-kauderni-numeric-husbandry',
+];
+assert.deepEqual(
+  resolveKnowledgeSources(numericWave5SourceIds).map(source => source.id).sort(),
+  [...numericWave5SourceIds].sort(),
+  'numeric wave5 exact-taxon evidence must resolve to reviewed source metadata',
+);
 const newSourceIds = ['animaldiversity-astronotus-ocellatus-behavior', 'icar-cifa-channa-stewartii-live-fish'];
 assert.deepEqual(resolveKnowledgeSources(newSourceIds).map(source => source.id).sort(), [...newSourceIds].sort(), 'new Fast Lane evidence must resolve to source metadata');
 for (const field of fields) {
@@ -339,9 +372,9 @@ assert.ok(backlog.every(item => rows.find(row => row.speciesId === item.speciesI
 assert.ok(backlog.every((item, index) => item.rank === index + 1));
 assert.ok(!backlog.some(item => getLifeType(fishData.find(fish => fish.id === item.speciesId)!) !== 'fish'));
 assert.ok(summary.fieldActionableGaps.every((item, index, all) => index === 0 || all[index - 1].count >= item.count));
-assert.equal(taxonResearchPlan.length, 63, '404 actionable field gaps should collapse to 63 base-taxon research jobs at this checkpoint');
+assert.equal(taxonResearchPlan.length, 62, '396 actionable field gaps should collapse to 62 base-taxon research jobs at this checkpoint');
 const plannedCatalogObjects = new Set(taxonResearchPlan.flatMap(item => item.catalogObjects.map(object => object.speciesId)));
-assert.equal(plannedCatalogObjects.size, 108, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
+assert.equal(plannedCatalogObjects.size, 107, 'all actionable catalog objects must appear in the taxon research plan exactly by species id');
 const plannedGapKeys = taxonResearchPlan.flatMap(item => item.catalogObjects.flatMap(object => object.gaps.map(field => `${object.speciesId}:${field}`))).sort();
 const backlogGapKeys = backlog.map(item => `${item.speciesId}:${item.field}`).sort();
 assert.deepEqual(plannedGapKeys, backlogGapKeys, 'taxon research plan must represent every actionable field gap exactly once');
