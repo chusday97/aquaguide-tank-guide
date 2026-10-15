@@ -12,6 +12,7 @@ import {
   isCatalogFieldReviewValueValid,
   type CatalogFieldReview,
 } from '../../data/catalogFieldReviews';
+import type { ReviewedCompatibilityProfile } from '../../data/compatibilityEvidence';
 
 export type CompatibilityOnboardingCoreField = typeof GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS[number];
 
@@ -151,6 +152,21 @@ export type CompatibilitySpeciesOnboardingAssessment = {
   fieldResolutions: CompatibilityOnboardingFieldResolution[];
   draftFieldReviews: CatalogFieldReview[];
   candidateProfile: CompatibilityOnboardingCandidateProfile | null;
+};
+
+export type CompatibilityOnboardingApprovalBundle = {
+  fieldReviews: CatalogFieldReview[];
+  reviewedSourceIds: string[];
+  approvedAt: string;
+};
+
+export type ReviewedCompatibilityOnboardingAuthority = {
+  catalogKey: string;
+  approvedAt: string;
+  reviewedSourceIds: string[];
+  reviewedFieldReviews: CatalogFieldReview[];
+  fact: DomainSpeciesFact;
+  profile: ReviewedCompatibilityProfile;
 };
 
 const coreFields = [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS] as CompatibilityOnboardingCoreField[];
@@ -780,8 +796,9 @@ export const runCompatibilitySpeciesOnboardingPipeline = async (
   return { status: 'research_assessed', identity, assessment };
 };
 
-export const buildPostReviewCompatibilityPreviewFact = (
+const buildCompatibilityFactFromAssessment = (
   assessment: CompatibilitySpeciesOnboardingAssessment,
+  reviewed: boolean,
 ): DomainSpeciesFact => {
   if (assessment.status !== 'ready_for_review' || !assessment.candidateProfile) {
     throw new Error('Compatibility onboarding candidate is not review-ready: ' + assessment.status);
@@ -818,7 +835,7 @@ export const buildPostReviewCompatibilityPreviewFact = (
     phMax: ph.max,
     minTankLiters: tank.liters,
     minTankLengthCm: tank.lengthCm,
-    reviewed: true,
+    reviewed,
     compatibilityRequiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
     compatibilityFactDispositions: dispositions,
     adultLengthMinCm: adult.min,
@@ -836,5 +853,87 @@ export const buildPostReviewCompatibilityPreviewFact = (
     swimmingPace: 'moderate',
     lifeType: 'fish',
     size: maxLength == null ? 'Medium' : maxLength < 10 ? 'Small' : maxLength < 30 ? 'Medium' : 'Large',
+  };
+};
+
+/** Research-complete preview only. ready_for_review is not runtime authority. */
+export const buildReviewReadyCompatibilityPreviewFact = (
+  assessment: CompatibilitySpeciesOnboardingAssessment,
+): DomainSpeciesFact => buildCompatibilityFactFromAssessment(assessment, false);
+
+/** @deprecated Misleading historical name; kept for callers but remains an unreviewed preview. */
+export const buildPostReviewCompatibilityPreviewFact = buildReviewReadyCompatibilityPreviewFact;
+
+const sameStringSet = (left: string[], right: string[]) => {
+  const a = [...new Set(left)].sort();
+  const b = [...new Set(right)].sort();
+  return a.length === b.length && a.every((value, index) => value === b[index]);
+};
+
+export const buildReviewedCompatibilityOnboardingAuthority = (
+  assessment: CompatibilitySpeciesOnboardingAssessment,
+  approval: CompatibilityOnboardingApprovalBundle,
+): ReviewedCompatibilityOnboardingAuthority => {
+  if (assessment.status !== 'ready_for_review' || !assessment.candidateProfile) {
+    throw new Error('Compatibility onboarding approval requires a review-ready assessment.');
+  }
+  if (!Number.isFinite(Date.parse(approval.approvedAt))) {
+    throw new Error('Compatibility onboarding approval requires a valid approvedAt timestamp.');
+  }
+
+  const reviewedSourceIds = [...new Set(approval.reviewedSourceIds)];
+  const reviewedSourceSet = new Set(reviewedSourceIds);
+  const sourceById = new Map(assessment.candidateProfile.citations.map(source => [source.id, source]));
+  const approvedReviews: CatalogFieldReview[] = [];
+
+  for (const field of coreFields) {
+    const resolution = assessment.fieldResolutions.find(item => item.field === field);
+    if (!resolution || resolution.status !== 'supported') {
+      throw new Error('Approval bundle cannot promote unresolved field: ' + field);
+    }
+    const matchingReview = approval.fieldReviews.find(review => (
+      review.speciesId === assessment.catalogKey
+      && review.field === field
+      && review.status === 'reviewed'
+      && review.resolution === 'supported'
+      && Boolean(review.reviewedAt)
+      && stableValueKey(review.proposedValue) === stableValueKey(resolution.proposedValue)
+      && sameStringSet(review.citationIds, resolution.sourceIds)
+      && review.citationIds.every(sourceId => reviewedSourceSet.has(sourceId))
+      && review.citationIds.every(sourceId => sourceById.get(sourceId)?.contentVerified === true)
+      && isCatalogFieldReviewValueValid(review)
+    ));
+    if (!matchingReview) {
+      throw new Error('Approval bundle is missing an exact reviewed field decision for: ' + field);
+    }
+    approvedReviews.push(matchingReview);
+  }
+
+  const usedSourceIds = [...new Set(approvedReviews.flatMap(review => review.citationIds))];
+  const citations = usedSourceIds.map(sourceId => {
+    const source = sourceById.get(sourceId);
+    if (!source) throw new Error('Approval bundle references an unknown source: ' + sourceId);
+    return { ...source, reviewStatus: 'reviewed' as const };
+  });
+  const fact = buildCompatibilityFactFromAssessment(assessment, true);
+  const profile: ReviewedCompatibilityProfile = {
+    speciesId: assessment.catalogKey,
+    waterType: fact.waterType === 'unknown' ? undefined : fact.waterType,
+    behaviorTraits: [...(fact.behaviorTraits || [])],
+    minimumGroupSize: fact.minimumGroupSize ?? undefined,
+    predationTargets: [...(fact.predationTargets || [])],
+    confidence: assessment.candidateProfile.confidence,
+    reviewStatus: 'reviewed',
+    citations,
+    requiredFacts: [...GENERIC_COMPATIBILITY_ONBOARDING_REQUIRED_FACTS],
+  };
+
+  return {
+    catalogKey: assessment.catalogKey,
+    approvedAt: approval.approvedAt,
+    reviewedSourceIds: usedSourceIds,
+    reviewedFieldReviews: approvedReviews,
+    fact,
+    profile,
   };
 };

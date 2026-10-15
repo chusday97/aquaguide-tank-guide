@@ -1,3 +1,54 @@
+## CURRENT OVERRIDE — 2026-10-15 reviewed onboarding approval gate + product integration via WebCodex (NOT RELEASED)
+
+- Active branch remains `codex/compatibility-research-runtime-20261014`. This checkpoint is local/source-controlled only: **no push, deploy, Production alias change, DB migration, catalog promotion, or Production authority write**.
+- The previous dynamic-onboarding proof is now converted into a safe product path rather than remaining a test-only injection.
+- Fixed an authority-boundary bug in `buildPostReviewCompatibilityPreviewFact`: a `ready_for_review` research assessment previously returned `reviewed: true`. It now remains **unreviewed preview authority** (`reviewed: false`) until explicit field approval exists.
+- Research-complete but not approved behavior is now intentionally conservative:
+  - generic preview can still show a provisional result;
+  - Domain decision becomes `caution` / `decisionReadiness=partial`;
+  - `species_review_pending` is explicit;
+  - research/AI output cannot self-promote to runtime reviewed authority.
+- Added `CompatibilityOnboardingApprovalBundle` and `buildReviewedCompatibilityOnboardingAuthority`.
+- Promotion to runtime reviewed authority now requires, for **all 8 Compatibility core facts**:
+  - exact species/catalog key match;
+  - field review status = `reviewed`;
+  - resolution = `supported`;
+  - non-null review timestamp;
+  - approved field value exactly matches the reconciled research value;
+  - field citation set exactly matches the research resolution citation set;
+  - every citation is included in the explicitly reviewed source set;
+  - every source was content-verified;
+  - reviewed field value still passes the source-controlled field schema.
+- Missing, draft, tampered, citation-mismatched, or unresolved field approval fails closed and cannot create runtime authority.
+- Added `createReviewedOnboardingEvidenceProvider`:
+  - approved onboarding authorities can supply both reviewed Profile and reviewed DomainSpeciesFact at runtime;
+  - any pair containing a newly approved onboarding species has **no automatic Pair Rule**;
+  - existing static Profiles / Pair Rules / stage-risk authority remain fallback for normal catalog species.
+- `reviewSpeciesAdditions`, `assessSpeciesAddition`, and `executeSpeciesAddition` now accept an optional trusted `CompatibilityEvidenceProvider`, so the normal product-level planned-addition workflow can evaluate a newly approved species before it is persisted into the static catalog.
+- New mandatory regression: `scripts/test-compatibility-onboarding-approval.ts`.
+- Approval regression proves:
+  - research status = `ready_for_review`;
+  - preview reviewed = **false**;
+  - **8 / 8** explicit field approvals required;
+  - approved runtime fact reviewed = **true**;
+  - product-level `reviewSpeciesAdditions` result = **compatible** in the fixture;
+  - decision readiness = **reviewed**;
+  - precomputed Pair Rule used = **false**;
+  - next-step / recheck / stop-condition contract remains available.
+- Negative controls PASS:
+  - all draft field reviews -> rejected;
+  - omit pH approval -> rejected;
+  - tamper reviewed temperature value away from research result -> rejected.
+- The existing Dynamic Species Onboarding regression remains PASS:
+  - unregistered species + reviewed 8/8 runtime facts vs 76 ready species -> 76 dynamic evaluations / 0 pair rules added / 0 insufficient_data;
+  - 5-species whole-tank aggregation -> 10 dynamically evaluated pairs, fully informed.
+- The existing 76-ready / 2,850 fully-informed regression remains unchanged and is still a **test matrix, not a pair prerequisite**.
+- `Compatibility Onboarding Approval` is now part of `test:backend-release-gate`.
+- Full validation: **`BACKEND_RELEASE_GATE=PASS`**, API/project TypeScript, lint, and `git diff --check` pass.
+- Product architecture after this checkpoint:
+  **identity verification -> AI/research extraction -> 8-field reconciliation -> human/reviewed evidence approval -> runtime reviewed facts -> deterministic Compatibility -> judgment / why / next step / recheck / stop condition**.
+  AI can assist research and explanation, but cannot cross the approval boundary or override deterministic authority.
+
 ## CURRENT OVERRIDE — 2026-10-15 dynamic reviewed-facts onboarding proof via WebCodex (NOT RELEASED)
 
 - Active branch remains `codex/compatibility-research-runtime-20261014`. This checkpoint changes Compatibility architecture/tests only: **no catalog species promotion, no pair-rule expansion, no push, deploy, Production alias change, DB migration, or Production authority write**.

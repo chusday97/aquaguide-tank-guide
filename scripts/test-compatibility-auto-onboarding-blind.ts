@@ -248,8 +248,10 @@ const compatible = evaluateCompatibility({
   candidateSpecies: blindFact,
   candidateQuantity: 6,
 });
-assert.equal(compatible.status, 'compatible');
-assert.equal(compatible.decisionReadiness, 'reviewed');
+assert.equal(blindFact.reviewed, false, 'research-complete preview must remain unreviewed until explicit approval');
+assert.equal(compatible.status, 'caution');
+assert.equal(compatible.decisionReadiness, 'partial');
+assert.ok(compatible.ruleCodes.includes('species_review_pending'));
 assert.equal(compatible.ruleCodes.includes('reviewed_pair_rule'), false);
 assert.ok(compatible.evidenceIds.includes('blind-source-a'));
 

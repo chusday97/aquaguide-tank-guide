@@ -5,6 +5,7 @@ import {
   type TankCompatibilityResult,
   type TankCompatibilityRule,
   type TankCompatibilityStatus,
+  type CompatibilityEvidenceProvider,
 } from '../compatibility/compatibility.service';
 import { getSpeciesAdditionPolicy } from './species-addition-policy';
 import { evaluateCompatibilityDecision } from '../../modules/knowledge/compatibilityKnowledge';
@@ -42,11 +43,12 @@ export type PlannedAdditionResult = {
   policy: ReturnType<typeof getSpeciesAdditionPolicy> | null;
 };
 
-type ReviewSpeciesAdditionsInput = {
+export type ReviewSpeciesAdditionsInput = {
   aquarium: Aquarium;
   items: SpeciesAdditionItem[];
   speciesCatalog: Fish[];
   intent?: 'record_existing' | 'planned_addition';
+  evidenceProvider?: CompatibilityEvidenceProvider;
 };
 
 type ExecuteSpeciesAdditionInput = ReviewSpeciesAdditionsInput & {
@@ -92,8 +94,9 @@ export const reviewSpeciesAdditions = ({
   items,
   speciesCatalog,
   intent = 'planned_addition',
+  evidenceProvider,
 }: ReviewSpeciesAdditionsInput): SpeciesAdditionReview | null => {
-  const assessment = assessSpeciesAddition({ aquarium, items, speciesCatalog, intent });
+  const assessment = assessSpeciesAddition({ aquarium, items, speciesCatalog, intent, evidenceProvider });
   if (!assessment) return null;
   return {
     ...assessment,
@@ -106,6 +109,7 @@ export const assessSpeciesAddition = ({
   items,
   speciesCatalog,
   intent = 'planned_addition',
+  evidenceProvider,
 }: ReviewSpeciesAdditionsInput): SpeciesAdditionAssessment | null => {
   const normalizedItems = normalizeSpeciesAdditionItems(items, speciesCatalog);
   if (normalizedItems.length === 0) return null;
@@ -126,7 +130,7 @@ export const assessSpeciesAddition = ({
       return species ? [{ species, quantity: item.quantity, origin: 'candidate' as const }] : [];
     }),
   ];
-  const decision = evaluateCompatibilityDecision({ tank: aquarium, items: wholeTankItems });
+  const decision = evaluateCompatibilityDecision({ tank: aquarium, items: wholeTankItems, evidenceProvider });
 
   const evaluations = normalizedItems.flatMap(item => {
     const fish = catalogById.get(item.fishId);
@@ -145,6 +149,7 @@ export const assessSpeciesAddition = ({
         candidateSpecies: fish,
         candidateQuantity: item.quantity,
         intent,
+        evidenceProvider,
       }),
     }];
   });
@@ -182,10 +187,11 @@ export const executeSpeciesAddition = ({
   aquarium,
   items,
   speciesCatalog,
+  evidenceProvider,
   confirmedCaution = false,
   now = new Date().toISOString(),
 }: ExecuteSpeciesAdditionInput): SpeciesAdditionExecution => {
-  const review = reviewSpeciesAdditions({ aquarium, items, speciesCatalog, intent: 'planned_addition' });
+  const review = reviewSpeciesAdditions({ aquarium, items, speciesCatalog, intent: 'planned_addition', evidenceProvider });
   if (!review) return { added: false, review, aquariums, reason: 'no_valid_species' };
   if (review.policy === 'block') return { added: false, review, aquariums, reason: 'blocked' };
   if (review.policy === 'complete_information') {
