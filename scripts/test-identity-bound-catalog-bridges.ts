@@ -128,4 +128,22 @@ assert.deepEqual(fireRedAgassiziiApproved.get('social_behavior')?.proposedValue,
 assert.deepEqual(fireRedAgassiziiApproved.get('territoriality')?.proposedValue, { traits: ['breeding_defense'] });
 assert.deepEqual(fireRedAgassiziiApproved.get('predation')?.proposedValue, { targets: [] });
 
-console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, and Fire Red Agassizii corrections inherit only explicit same-species authority');
+
+const blueDiamondIdentity = getCatalogFieldReviews('sp_0177').filter(review => review.field === 'identity').at(-1);
+assert.equal(blueDiamondIdentity?.resolution, 'supported');
+assert.deepEqual(blueDiamondIdentity?.proposedValue, {
+  scientificName: 'Pterophyllum scalare var. Blue Diamond',
+  baseSpeciesKey: 'Pterophyllum scalare',
+  variantKey: 'Blue Diamond',
+});
+const blueDiamondApproved = new Map(getApprovedCatalogFieldReviews('sp_0177').map(review => [review.field, review]));
+assert.equal(blueDiamondApproved.get('water')?.proposedValue, 'freshwater');
+assert.deepEqual(blueDiamondApproved.get('temperature')?.proposedValue, { min: 24, max: 30 });
+assert.deepEqual(blueDiamondApproved.get('ph')?.proposedValue, { min: 6, max: 8 });
+assert.deepEqual(blueDiamondApproved.get('adult_size')?.proposedValue, { min: null, max: 15 });
+assert.deepEqual(blueDiamondApproved.get('tank_size')?.proposedValue, { liters: null, lengthCm: 100 });
+assert.deepEqual(blueDiamondApproved.get('social_behavior')?.proposedValue, { mode: 'group', minimumGroupSize: 5 });
+assert.deepEqual(blueDiamondApproved.get('territoriality')?.proposedValue, { traits: ['breeding_male_territoriality'] });
+assert.deepEqual(blueDiamondApproved.get('predation')?.proposedValue, { targets: ['small_fish'] });
+
+console.log('Identity-bound catalog bridges passed: unresolved variants stay bounded while reviewed Marble, Blood Red A, Albino Red, Albino Gyrinocheilus, Fire Red Agassizii, and Blue Diamond angelfish corrections inherit only explicit same-species authority');

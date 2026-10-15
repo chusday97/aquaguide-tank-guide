@@ -11,74 +11,74 @@
     "territoriality",
     "predation"
   ],
-  "genericOnboardingReadySpecies": 73,
-  "coreFieldCompleteSpecies": 88,
+  "genericOnboardingReadySpecies": 74,
+  "coreFieldCompleteSpecies": 89,
   "oneFieldGapSpecies": 6,
-  "runtimeReviewedProfileSpecies": 142,
-  "domainOrIdentityHeldSpecies": 285,
+  "runtimeReviewedProfileSpecies": 143,
+  "domainOrIdentityHeldSpecies": 284,
   "fieldCounts": {
     "water": {
-      "reviewed_supported": 126,
+      "reviewed_supported": 127,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 64,
       "needs_research": 0,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     },
     "temperature": {
-      "reviewed_supported": 127,
+      "reviewed_supported": 128,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 6,
       "needs_research": 57,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     },
     "ph": {
-      "reviewed_supported": 121,
+      "reviewed_supported": 122,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 10,
       "needs_research": 59,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     },
     "adult_size": {
-      "reviewed_supported": 132,
+      "reviewed_supported": 133,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 1,
       "needs_research": 57,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     },
     "tank_size": {
-      "reviewed_supported": 118,
+      "reviewed_supported": 119,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 14,
       "needs_research": 58,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     },
     "social_behavior": {
-      "reviewed_supported": 113,
+      "reviewed_supported": 114,
       "reviewed_neutral_or_negative": 0,
       "reviewed_unknown": 77,
       "needs_research": 0,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     },
     "territoriality": {
-      "reviewed_supported": 78,
+      "reviewed_supported": 79,
       "reviewed_neutral_or_negative": 30,
       "reviewed_unknown": 82,
       "needs_research": 0,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     },
     "predation": {
-      "reviewed_supported": 66,
+      "reviewed_supported": 67,
       "reviewed_neutral_or_negative": 29,
       "reviewed_unknown": 95,
       "needs_research": 0,
-      "missing_identity_or_domain": 285,
+      "missing_identity_or_domain": 284,
       "not_applicable": 11
     }
   },
@@ -14745,86 +14745,110 @@
     },
     {
       "speciesId": "sp_0177",
-      "name": "红眼蓝钻神仙",
-      "scientificName": "Pterophyllum scalare var. Blue",
+      "name": "蓝钻神仙",
+      "scientificName": "Pterophyllum scalare var. Blue Diamond",
       "lifeType": "fish",
-      "reviewedProfile": "none",
-      "genericOnboardingReady": false,
-      "authoritativeFieldCount": 0,
+      "reviewedProfile": "direct",
+      "genericOnboardingReady": true,
+      "authoritativeFieldCount": 8,
       "actionableGapCount": 0,
-      "terminalGapCount": 8,
+      "terminalGapCount": 0,
       "fields": {
         "water": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "temperature": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "ph": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "adult_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "tank_size": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "social_behavior": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "territoriality": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         },
         "predation": {
-          "status": "missing_identity_or_domain",
-          "disposition": "terminal_hold",
+          "status": "reviewed_supported",
+          "disposition": "ready",
           "evidenceIds": [
-            "seriouslyfish-pterophyllum-scalare"
+            "aquatic-arts-pterophyllum-scalare-blue-diamond-wave26",
+            "swelluk-pterophyllum-scalare-blue-diamond-wave26",
+            "wave26-fishbase-pterophyllum-scalare-husbandry",
+            "wave26-seriouslyfish-pterophyllum-scalare-husbandry"
           ],
-          "authoritySource": "identity_boundary",
-          "reasonCode": "catalog_variant_identity_unresolved"
+          "authoritySource": "catalog_field_review",
+          "reasonCode": null
         }
       }
     },

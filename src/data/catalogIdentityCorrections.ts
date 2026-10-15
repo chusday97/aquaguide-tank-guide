@@ -18,6 +18,10 @@ import {
   catalogIdentityCorrectionBaseSpeciesIds as wave25BaseSpeciesIds,
   resolvedCatalogIdentityCorrectionSpeciesIds as wave25ResolvedSpeciesIds,
 } from './catalogReviewBatches/identity-corrections-wave25';
+import {
+  catalogIdentityCorrectionBaseSpeciesIds as wave26BaseSpeciesIds,
+  resolvedCatalogIdentityCorrectionSpeciesIds as wave26ResolvedSpeciesIds,
+} from './catalogReviewBatches/identity-corrections-wave26';
 
 export const resolvedCatalogIdentityCorrectionSpeciesIds = new Set([
   ...wave21ResolvedSpeciesIds,
@@ -25,6 +29,7 @@ export const resolvedCatalogIdentityCorrectionSpeciesIds = new Set([
   ...wave23ResolvedSpeciesIds,
   ...wave24ResolvedSpeciesIds,
   ...wave25ResolvedSpeciesIds,
+  ...wave26ResolvedSpeciesIds,
 ]);
 
 export const catalogIdentityCorrectionBaseSpeciesIds = {
@@ -33,4 +38,5 @@ export const catalogIdentityCorrectionBaseSpeciesIds = {
   ...wave23BaseSpeciesIds,
   ...wave24BaseSpeciesIds,
   ...wave25BaseSpeciesIds,
+  ...wave26BaseSpeciesIds,
 } as const;

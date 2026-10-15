@@ -16,7 +16,7 @@ import {
 
 const audit = getCompatibilityEvidenceAudit();
 const targetIds = audit.reviewedProfiles.map(item => item.speciesId);
-assert.equal(targetIds.length, 106, 'repository authority includes five reviewed source-controlled identity-correction Profiles beyond the released target');
+assert.equal(targetIds.length, 107, 'repository authority includes six reviewed source-controlled identity-correction Profiles beyond the released target');
 
 const keysets = buildCompatibilityProfileRolloutKeysets(targetIds);
 assert.equal(keysets.currentProduction.size, 63);
@@ -25,7 +25,7 @@ assert.equal(keysets.wave04Target.size, 95);
 assert.equal(keysets.wave05Target.size, 99);
 assert.equal(keysets.wave06Target.size, 100);
 assert.equal(keysets.target.size, 101);
-assert.deepEqual([...compatibilitySourceControlledPendingProfileIds].sort(), ['sp_0176', 'sp_0221', 'sp_0229', 'sp_0236', 'sp_0407']);
+assert.deepEqual([...compatibilitySourceControlledPendingProfileIds].sort(), ['sp_0176', 'sp_0177', 'sp_0221', 'sp_0229', 'sp_0236', 'sp_0407']);
 for (const speciesId of compatibilitySourceControlledPendingProfileIds) {
   assert.equal(keysets.target.has(speciesId), false, 'source-controlled identity corrections must not silently enter the released 101-Profile target: ' + speciesId);
 }

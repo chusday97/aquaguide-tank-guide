@@ -28,6 +28,7 @@ import { identityCorrectionsWave22Sources } from './catalogReviewBatches/identit
 import { identityCorrectionsWave23Sources } from './catalogReviewBatches/identity-corrections-wave23';
 import { identityCorrectionsWave24Sources } from './catalogReviewBatches/identity-corrections-wave24';
 import { identityCorrectionsWave25Sources } from './catalogReviewBatches/identity-corrections-wave25';
+import { identityCorrectionsWave26Sources } from './catalogReviewBatches/identity-corrections-wave26';
 import { compatibilityAuthorityPatchSources, compatibilityProfileAuthorityPatches } from './compatibilityAuthorityPatches';
 
 export type ReviewedCompatibilityProfile = {
@@ -1640,6 +1641,11 @@ profiles.sp_0221 = wave04BridgeProfile(
   'sp_0221',
   'sp_0017',
   identityCorrectionsWave25Sources.fireRedAquariumGlaser,
+);
+profiles.sp_0177 = wave04BridgeProfile(
+  'sp_0177',
+  'sp_0446',
+  identityCorrectionsWave26Sources.blueDiamondAquaticArts,
 );
 
 const baseSpeciesProfiles: Record<string, ReviewedCompatibilityProfile> = {

@@ -438,6 +438,18 @@ assert.equal(fireRedAgassiziiKnowledge.spaceAndGrowth?.minVolumeLiters, 54);
 assert.equal(fireRedAgassiziiKnowledge.spaceAndGrowth?.minTankLengthCm, 60);
 assert.equal(fireRedAgassiziiKnowledge.socialBehavior?.mode, 'harem');
 assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'unreviewed-agassizii-morph', scientificName: 'Apistogramma agassizii var. Blue' }), undefined, 'unreviewed Agassizii ornamental variants must not inherit standard-species authority automatically');
+
+
+const blueDiamondKnowledge = getReviewedSpeciesKnowledgeForFish({ id: 'sp_0177', scientificName: 'Pterophyllum scalare var. Blue Diamond' });
+assert.ok(blueDiamondKnowledge, 'explicit reviewed Blue Diamond identity correction must resolve Pterophyllum scalare Species Knowledge');
+assert.deepEqual(blueDiamondKnowledge.environment?.temperatureRangeC, { min: 24, max: 30 });
+assert.deepEqual(blueDiamondKnowledge.environment?.phRange, { min: 6, max: 8 });
+assert.equal(blueDiamondKnowledge.spaceAndGrowth?.adultLengthCm.max, 15);
+assert.equal(blueDiamondKnowledge.spaceAndGrowth?.minTankLengthCm, 100);
+assert.equal(blueDiamondKnowledge.socialBehavior?.mode, 'group');
+assert.equal(blueDiamondKnowledge.socialBehavior?.territoriality, 'medium');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0175', scientificName: 'Pterophyllum scalare var. Red' }), undefined, 'unreviewed Red angelfish must not inherit standard-species authority automatically');
+assert.equal(getReviewedSpeciesKnowledgeForFish({ id: 'sp_0178', scientificName: 'Pterophyllum scalare var. Panda' }), undefined, 'unreviewed Panda angelfish must not inherit standard-species authority automatically');
 const agassiziiSources = resolveKnowledgeSources(agassiziiKnowledge.knowledge.environment?.evidence.sourceIds || []);
 assert.equal(agassiziiSources.length, 2);
 assert.ok(agassiziiSources.some(source => source.publisher === 'Seriously Fish'));
