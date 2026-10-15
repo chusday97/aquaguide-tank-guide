@@ -14,8 +14,9 @@ import {
   prioritizeDistinctCompatibilityRules,
   type CompatibilityAssessmentMode,
 } from '../../../src/services/compatibility/compatibility-action.service';
+import type { CompatibilityResolutionTarget } from '../../../src/services/compatibility/compatibility-decision-plan.service';
 
-export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v4-primary-risk-clamp';
+export const COMPATIBILITY_AI_PROMPT_VERSION = 'compatibility-v4-shadow-v5-resolution-grounding';
 
 const verdictSchema = z.enum(['compatible', 'caution', 'not_recommended', 'insufficient_data']);
 const groundedItemSchema = z.object({
@@ -90,6 +91,7 @@ export type CompatibilityAiCombinationInput = {
   tank?: Aquarium | null;
   items: CompatibilityAiCombinationItem[];
   assessmentMode?: CompatibilityAssessmentMode;
+  resolutionTargets?: CompatibilityResolutionTarget[];
 };
 
 const assessmentModeFor = (input: CompatibilityAiCombinationInput): CompatibilityAssessmentMode => (
@@ -279,6 +281,42 @@ const tankSnapshot = (tank?: Aquarium | null) => {
   };
 };
 
+const RESOLUTION_CLAIM_PATTERN = /(风险.{0,4}(已)?(解除|消失|解决)|已经(可以|安全)|可以安全混养|安全混养|已解决|已解除|resolved|cleared|risk.{0,8}(gone|resolved)|safe to mix)/i;
+
+const RESOLUTION_ACTION_PATTERNS: Record<CompatibilityResolutionTarget['resolutionMode'], RegExp> = {
+  deterministic_clearance: /(分缸|分隔|隔离|更换|替换|移除|单养|不要.*同一缸|不再.*接触|不再.*同一水体|淡水|海水|separate|isolate|replace|remove|single)/i,
+  parameter_recheck: /(调整|达到|增加|补足|减少|升级|温度|水温|pH|数量|空间|体积|长度|过滤|维护|重新评估|复查|adjust|increase|reduce|temperature|group|space|volume|filter|recheck)/i,
+  behavioral_recheck: /(观察|复查|监测|遮挡|退让|追逐|受伤|破鳍|躲藏|进食|分隔|隔离|observe|monitor|recheck|chasing|injury|hiding|feeding|separate|isolate)/i,
+  information_required: /(补齐|确认|核验|证据|身份|信息|资料|等待|verify|confirm|evidence|identity|information|complete)/i,
+};
+
+const relevantResolutionTargets = (
+  item: { text: string; ruleCodes: string[] },
+  targets: CompatibilityResolutionTarget[],
+) => targets.filter(target => item.ruleCodes.includes(target.sourceRuleCode));
+
+const violatesResolutionTargets = (
+  output: CompatibilityAiProviderOutput,
+  targets: CompatibilityResolutionTarget[] = [],
+) => {
+  if (targets.length === 0) return false;
+  const items = [...output.reasons, ...output.adjustments, ...output.uncertainties];
+  for (const item of items) {
+    const relevant = relevantResolutionTargets(item, targets);
+    if (relevant.some(target => target.resolutionMode === 'behavioral_recheck') && RESOLUTION_CLAIM_PATTERN.test(item.text)) {
+      return true;
+    }
+  }
+  for (const adjustment of output.adjustments) {
+    const relevant = relevantResolutionTargets(adjustment, targets);
+    if (relevant.length === 0) continue;
+    if (relevant.some(target => !RESOLUTION_ACTION_PATTERNS[target.resolutionMode].test(adjustment.text))) {
+      return true;
+    }
+  }
+  return false;
+};
+
 const promptsFor = (
   input: CompatibilityAiCombinationInput,
   speciesFacts: NonNullable<ReturnType<typeof reviewedKnowledgeSnapshot>>[],
@@ -303,6 +341,9 @@ const promptsFor = (
       ? 'All listed items are already in the aquarium. Do not tell the user not to add a candidate. For not_recommended/caution, explain grounded actions for the current combination such as separate, reduce, adjust, confirm or monitor only when supported by supplied rules.'
       : 'For not_recommended, a valid action is to not add the candidate under the current plan, grounded in the blocking/conflict rule; do not invent a new threshold or biological fact.',
     'For caution, give at least one concrete mitigation directly supported by the supplied caution rule.',
+    'resolutionTargets are deterministic constraints on what counts as progress; use them only to explain the next action or recheck criterion, never to claim the criterion is already satisfied.',
+    'For behavioral_recheck targets, never say the risk is solved, cleared, safe, or resolved; explain what behavior must be monitored and when to separate/reassess.',
+    'For deterministic_clearance targets, only describe structural separation/removal/replacement or the exact supplied clearance criterion. For parameter_recheck, describe the supplied measurable adjustment and re-evaluation.',
     'Every reason/adjustment/uncertainty must cite one or more ruleCodes from allowedRuleCodes. Do not cite or discuss any other rule.',
     'You may name a species only when the supplied primary rule identifies it via affectedSpeciesIds; use the exact supplied commonName mapping.',
     'Return one JSON object only.',
@@ -346,6 +387,9 @@ const promptsFor = (
       plannedQuantity: item.plannedQuantity ?? (item.origin === 'planned' ? item.quantity : 0),
     })),
     primaryRiskRuleCodes: narrativeRuleCodes,
+    resolutionTargets: (input.resolutionTargets || [])
+      .filter(target => narrativeRuleCodes.includes(target.sourceRuleCode))
+      .slice(0, 2),
     allowedRuleCodes: narrativeRuleCodes,
     allowedEvidenceIds: [...allowedEvidenceIds(result)],
   }, null, 2);
@@ -517,6 +561,14 @@ export const createCompatibilityAiCombinationAssessment = async (
         provenance: { ...baseProvenance, model: providerResult.model, repairCount },
       };
     }
+    if (violatesResolutionTargets(output, input.resolutionTargets)) {
+      return {
+        mode: 'shadow',
+        finalDecision,
+        ai: emptyAi('rejected', 'provider_output_conflicts_with_resolution_target'),
+        provenance: { ...baseProvenance, model: providerResult.model, repairCount },
+      };
+    }
 
     if (requiresActionableAdjustment(input.deterministicResult) && output.adjustments.length === 0 && repairCount === 0) {
       await repair('The previous JSON omitted the required actionable adjustment for a caution/not_recommended decision.');
@@ -542,6 +594,14 @@ export const createCompatibilityAiCombinationAssessment = async (
           mode: 'shadow',
           finalDecision,
           ai: emptyAi('rejected', 'provider_output_conflicts_with_deterministic_authority'),
+          provenance: { ...baseProvenance, model: providerResult.model, repairCount },
+        };
+      }
+      if (violatesResolutionTargets(output, input.resolutionTargets)) {
+        return {
+          mode: 'shadow',
+          finalDecision,
+          ai: emptyAi('rejected', 'provider_output_conflicts_with_resolution_target'),
           provenance: { ...baseProvenance, model: providerResult.model, repairCount },
         };
       }

@@ -65,7 +65,7 @@ const provider: CompatibilityAiReasoningProvider = async ({ user }) => {
     output: {
       suggestedVerdict: 'caution',
       reasons: [{ text: '组合里有更容易被追食的一方，需要先确认实际捕食风险。', ruleCodes: [ruleCode] }],
-      adjustments: [{ text: '先确认实际捕食风险，再决定是否加入。', ruleCodes: [ruleCode] }],
+      adjustments: [{ text: '先观察实际追食、躲藏和进食；若持续异常就立即分隔，再决定是否加入。', ruleCodes: [ruleCode] }],
       uncertainties: [],
       confidence: 'high',
       evidenceIds: cautionDecision.aggregateResult.evidenceIds || [],
@@ -89,7 +89,7 @@ assert.equal(product.main.judgment, '有条件可以');
 assert.ok(product.main.why.length > 0);
 assert.ok(product.main.howTo.length > 0);
 assert.equal(product.main.why[0], '组合里有更容易被追食的一方，需要先确认实际捕食风险。');
-assert.equal(product.main.howTo[0], '先确认实际捕食风险，再决定是否加入。');
+assert.equal(product.main.howTo[0], '先观察实际追食、躲藏和进食；若持续异常就立即分隔，再决定是否加入。');
 assert.equal(product.details.label, '查看依据');
 assert.equal(product.details.explanation.source, 'ai_grounded');
 assert.equal(product.details.explanation.narrativeAccepted, true);

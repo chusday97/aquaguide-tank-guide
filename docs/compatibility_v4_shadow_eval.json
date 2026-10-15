@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "promptVersion": "compatibility-v4-shadow-v4-primary-risk-clamp",
+  "promptVersion": "compatibility-v4-shadow-v5-resolution-grounding",
   "tank": {
     "dimensionsCm": [
       120,

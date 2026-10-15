@@ -38,6 +38,7 @@ import { fishData } from '../../../../src/data/fishData';
 import { LOCAL_CATALOG_VERSION } from '../../../../src/data/catalogVersion';
 import { evaluateTankCompatibility, getCompatibilityDecision } from '../../../../src/services/compatibility/compatibility.service';
 import { evaluateCompatibilityDecision } from '../../../../src/modules/knowledge/compatibilityKnowledge';
+import { buildCompatibilityResolutionTargets } from '../../../../src/services/compatibility/compatibility-decision-plan.service';
 import {
   createCompatibilityAiCombinationAssessment,
   createCompatibilityAiShadowAssessment,
@@ -422,6 +423,7 @@ aquariumsRouter.get('/aquariums/:id/compatibility-assessment', asyncRoute(async 
     tank: context.tank,
     items: context.items,
     assessmentMode,
+    resolutionTargets: buildCompatibilityResolutionTargets(context.decision, assessmentMode),
   });
   const assessment = buildCompatibilityProductAssessment(context.decision, shadow, assessmentMode);
   return sendData(request, response, {

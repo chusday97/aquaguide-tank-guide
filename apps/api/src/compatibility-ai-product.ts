@@ -5,6 +5,10 @@ import {
   type CompatibilityAssessmentMode,
 } from '../../../src/services/compatibility/compatibility-action.service';
 import { getCompatibilityPresentation } from '../../../src/services/compatibility/compatibility-presentation.service';
+import {
+  buildCompatibilityResolutionTargets,
+  type CompatibilityResolutionTarget,
+} from '../../../src/services/compatibility/compatibility-decision-plan.service';
 import { getCompatibilityDecision } from '../../../src/services/compatibility/compatibility.service';
 import { COMPATIBILITY_PRODUCT_SCHEMA_VERSION, type CompatibilityProductSchemaVersion } from '../../../src/services/compatibility/compatibility-product-contract';
 import {
@@ -136,15 +140,40 @@ const itemMatchesRuleMeaning = (
   return pattern ? pattern.test(item.text) : false;
 });
 
+const PRODUCT_RESOLUTION_CLAIM_PATTERN = /(风险.{0,4}(已)?(解除|消失|解决)|已经(可以|安全)|可以安全混养|安全混养|已解决|已解除|resolved|cleared|risk.{0,8}(gone|resolved)|safe to mix)/i;
+
+const PRODUCT_RESOLUTION_ACTION_PATTERNS: Record<CompatibilityResolutionTarget['resolutionMode'], RegExp> = {
+  deterministic_clearance: /(分缸|分隔|隔离|更换|替换|移除|单养|不要.*同一缸|不再.*接触|不再.*同一水体|淡水|海水|separate|isolate|replace|remove|single)/i,
+  parameter_recheck: /(调整|达到|增加|补足|减少|升级|温度|水温|pH|数量|空间|体积|长度|过滤|维护|重新评估|复查|adjust|increase|reduce|temperature|group|space|volume|filter|recheck)/i,
+  behavioral_recheck: /(观察|复查|监测|遮挡|退让|追逐|受伤|破鳍|躲藏|进食|分隔|隔离|observe|monitor|recheck|chasing|injury|hiding|feeding|separate|isolate)/i,
+  information_required: /(补齐|确认|核验|证据|身份|信息|资料|等待|verify|confirm|evidence|identity|information|complete)/i,
+};
+
+const itemMatchesResolutionTargets = (
+  item: CompatibilityProductGroundedItem,
+  targets: CompatibilityResolutionTarget[],
+  kind: 'reason' | 'action',
+) => {
+  const relevant = targets.filter(target => item.ruleCodes.includes(target.sourceRuleCode));
+  if (relevant.length === 0) return true;
+  if (relevant.some(target => target.resolutionMode === 'behavioral_recheck') && PRODUCT_RESOLUTION_CLAIM_PATTERN.test(item.text)) {
+    return false;
+  }
+  if (kind !== 'action') return true;
+  return relevant.every(target => PRODUCT_RESOLUTION_ACTION_PATTERNS[target.resolutionMode].test(item.text));
+};
+
 const clampAiItems = (
   items: CompatibilityProductGroundedItem[],
   allowedRuleCodes: ReadonlySet<string>,
   kind: 'reason' | 'action',
+  resolutionTargets: CompatibilityResolutionTarget[] = [],
 ) => uniqueItems(items.filter(item => (
   item.ruleCodes.length > 0
   && item.ruleCodes.every(code => allowedRuleCodes.has(code))
   && isCompatibilityUserReadableText(item.text, kind)
   && itemMatchesRuleMeaning(item, kind)
+  && itemMatchesResolutionTargets(item, resolutionTargets, kind)
 ))).slice(0, kind === 'reason' ? 3 : 2);
 
 const mergeReadableText = (
@@ -174,15 +203,16 @@ export const buildCompatibilityProductAssessment = (
     throw new Error(`COMPATIBILITY_AUTHORITY_STATUS_MISMATCH:${decision.status}:${finalDecision.status}`);
   }
   const presentation = getCompatibilityPresentation(decision, assessmentMode);
+  const resolutionTargets = buildCompatibilityResolutionTargets(decision, assessmentMode);
   const deterministicReasonItems = deterministicReasons(decision);
   const primaryRuleCodes = new Set(deterministicReasonItems.flatMap(item => item.ruleCodes));
   const aiAuthorityMatches = shadow.ai.status === 'accepted'
     && shadow.ai.suggestedVerdict === finalDecision.status;
   const clampedAiReasons = aiAuthorityMatches
-    ? clampAiItems(shadow.ai.reasons, primaryRuleCodes, 'reason')
+    ? clampAiItems(shadow.ai.reasons, primaryRuleCodes, 'reason', resolutionTargets)
     : [];
   const clampedAiAdjustments = aiAuthorityMatches
-    ? clampAiItems(shadow.ai.adjustments, primaryRuleCodes, 'action')
+    ? clampAiItems(shadow.ai.adjustments, primaryRuleCodes, 'action', resolutionTargets)
     : [];
   const requiresAction = decision.status === 'caution' || decision.status === 'not_recommended';
   const aiNarrativeMatchesAuthority = aiAuthorityMatches
@@ -202,7 +232,7 @@ export const buildCompatibilityProductAssessment = (
     ? uniqueItems([...clampedAiAdjustments, ...deterministicAdjustmentItems]).slice(0, 2)
     : deterministicAdjustmentItems;
   const uncertainties = aiNarrativeMatchesAuthority
-    ? clampAiItems(shadow.ai.uncertainties, primaryRuleCodes, 'reason')
+    ? clampAiItems(shadow.ai.uncertainties, primaryRuleCodes, 'reason', resolutionTargets)
     : decision.status === 'insufficient_data'
       ? uniqueItems(prioritizeDistinctCompatibilityRules(decision.missingData).map(rule => ({
         text: rule.evidence || rule.title,
